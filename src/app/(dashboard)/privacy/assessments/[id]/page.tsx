@@ -1,13 +1,22 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowLeft,
   ClipboardCheck,
@@ -18,6 +27,8 @@ import {
   Loader2,
   FileText,
   Shield,
+  Save,
+  Edit,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -51,6 +62,8 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
+  const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
 
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -64,6 +77,59 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       utils.assessment.getById.invalidate();
     },
   });
+
+  const saveResponse = trpc.assessment.saveResponse.useMutation({
+    onSuccess: () => {
+      utils.assessment.getById.invalidate();
+      setEditingQuestion(null);
+    },
+  });
+
+  const handleSaveResponse = useCallback((questionId: string, sectionId: string, question: any) => {
+    if (!organization?.id) return;
+    const draft = draftResponses[questionId];
+    if (!draft?.response) return;
+
+    saveResponse.mutate({
+      organizationId: organization.id,
+      assessmentId: id,
+      questionId,
+      sectionId,
+      response: draft.response,
+      notes: draft.notes || undefined,
+      riskScore: question.riskScore,
+    });
+  }, [organization?.id, id, draftResponses, saveResponse]);
+
+  const startEditingQuestion = useCallback((questionId: string, existingResponse?: any) => {
+    setEditingQuestion(questionId);
+    if (existingResponse) {
+      setDraftResponses(prev => ({
+        ...prev,
+        [questionId]: {
+          response: typeof existingResponse.response === "string"
+            ? existingResponse.response
+            : JSON.stringify(existingResponse.response),
+          notes: existingResponse.notes || "",
+        },
+      }));
+    } else {
+      setDraftResponses(prev => ({
+        ...prev,
+        [questionId]: { response: "", notes: "" },
+      }));
+    }
+  }, []);
+
+  const updateDraftResponse = useCallback((questionId: string, field: "response" | "notes", value: string) => {
+    setDraftResponses(prev => ({
+      ...prev,
+      [questionId]: {
+        ...prev[questionId],
+        [field]: value,
+      },
+    }));
+  }, []);
 
   if (isLoading) {
     return (
@@ -274,21 +340,104 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     {question.helpText}
                                   </p>
                                 )}
-                                {response && (
-                                  <div className="mt-3 p-3 bg-muted/50">
-                                    <p className="text-sm">
-                                      <strong>Answer:</strong>{" "}
-                                      {typeof response.response === "string"
-                                        ? response.response
-                                        : JSON.stringify(response.response)}
-                                    </p>
-                                    {response.notes && (
-                                      <p className="text-sm text-muted-foreground mt-1">
-                                        <strong>Notes:</strong> {response.notes}
-                                      </p>
+                                {/* Answer Section */}
+                                {editingQuestion === question.id ? (
+                                  <div className="mt-3 p-3 bg-muted/50 space-y-3">
+                                    {question.type === "select" && question.options ? (
+                                      <Select
+                                        value={draftResponses[question.id]?.response || ""}
+                                        onValueChange={(value) => updateDraftResponse(question.id, "response", value)}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select an option" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {(question.options as string[]).map((option: string) => (
+                                            <SelectItem key={option} value={option}>
+                                              {option}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    ) : question.type === "textarea" ? (
+                                      <Textarea
+                                        placeholder="Enter your response..."
+                                        rows={3}
+                                        value={draftResponses[question.id]?.response || ""}
+                                        onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
+                                      />
+                                    ) : (
+                                      <Input
+                                        placeholder="Enter your response..."
+                                        value={draftResponses[question.id]?.response || ""}
+                                        onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
+                                      />
                                     )}
+                                    <Textarea
+                                      placeholder="Additional notes (optional)..."
+                                      rows={2}
+                                      value={draftResponses[question.id]?.notes || ""}
+                                      onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
+                                    />
+                                    <div className="flex gap-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleSaveResponse(question.id, section.id, question)}
+                                        disabled={saveResponse.isPending || !draftResponses[question.id]?.response}
+                                      >
+                                        {saveResponse.isPending ? (
+                                          <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                                        ) : (
+                                          <Save className="w-4 h-4 mr-1" />
+                                        )}
+                                        Save
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => setEditingQuestion(null)}
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
                                   </div>
-                                )}
+                                ) : response ? (
+                                  <div className="mt-3 p-3 bg-muted/50">
+                                    <div className="flex items-start justify-between">
+                                      <div className="flex-1">
+                                        <p className="text-sm">
+                                          <strong>Answer:</strong>{" "}
+                                          {typeof response.response === "string"
+                                            ? response.response
+                                            : JSON.stringify(response.response)}
+                                        </p>
+                                        {response.notes && (
+                                          <p className="text-sm text-muted-foreground mt-1">
+                                            <strong>Notes:</strong> {response.notes}
+                                          </p>
+                                        )}
+                                      </div>
+                                      {canSubmit && (
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => startEditingQuestion(question.id, response)}
+                                        >
+                                          <Edit className="w-4 h-4" />
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </div>
+                                ) : canSubmit ? (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => startEditingQuestion(question.id)}
+                                  >
+                                    Answer Question
+                                  </Button>
+                                ) : null}
                               </div>
                             </div>
                           </div>
