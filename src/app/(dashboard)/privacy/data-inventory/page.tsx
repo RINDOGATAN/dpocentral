@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { DataFlowVisualization } from "@/components/privacy/data-flow";
 
 const assetTypeIcons: Record<string, any> = {
   DATABASE: Server,
@@ -232,13 +233,10 @@ export default function DataInventoryPage() {
         </TabsContent>
 
         <TabsContent value="flows" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Data flow visualization coming soon</p>
-              <p className="text-sm">Track how data moves between your systems</p>
-            </CardContent>
-          </Card>
+          <DataFlowVisualization
+            mode="all"
+            organizationId={organization?.id ?? ""}
+          />
         </TabsContent>
 
         <TabsContent value="transfers" className="mt-4">

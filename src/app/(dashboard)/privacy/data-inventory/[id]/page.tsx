@@ -39,6 +39,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
+import { DataFlowVisualization } from "@/components/privacy/data-flow";
 
 const sensitivityColors: Record<string, string> = {
   PUBLIC: "border-primary text-primary",
@@ -370,12 +371,12 @@ export default function DataAssetDetailPage() {
         </TabsContent>
 
         <TabsContent value="flows" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Data flow visualization coming soon</p>
-            </CardContent>
-          </Card>
+          <DataFlowVisualization
+            mode="asset"
+            assetId={id}
+            organizationId={organization?.id ?? ""}
+            height="400px"
+          />
         </TabsContent>
       </Tabs>
 
