@@ -582,6 +582,31 @@ export const dataInventoryRouter = createTRPCRouter({
       });
     }),
 
+  // Get a single data flow
+  getFlow: organizationProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const flow = await ctx.prisma.dataFlow.findFirst({
+        where: {
+          id: input.id,
+          organizationId: ctx.organization.id,
+        },
+        include: {
+          sourceAsset: true,
+          destinationAsset: true,
+        },
+      });
+
+      if (!flow) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data flow not found",
+        });
+      }
+
+      return flow;
+    }),
+
   // Create data flow
   createFlow: organizationProcedure
     .input(
@@ -618,7 +643,98 @@ export const dataInventoryRouter = createTRPCRouter({
         },
       });
 
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataFlow",
+          entityId: flow.id,
+          action: "CREATE",
+          changes: input,
+        },
+      });
+
       return flow;
+    }),
+
+  // Update data flow
+  updateFlow: organizationProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        name: z.string().min(1).max(200).optional(),
+        description: z.string().optional().nullable(),
+        sourceAssetId: z.string().optional(),
+        destinationAssetId: z.string().optional(),
+        dataCategories: z.array(z.nativeEnum(DataCategory)).optional(),
+        frequency: z.string().optional().nullable(),
+        volume: z.string().optional().nullable(),
+        encryptionMethod: z.string().optional().nullable(),
+        isAutomated: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, organizationId, ...data } = input;
+
+      const flow = await ctx.prisma.dataFlow.updateMany({
+        where: { id, organizationId: ctx.organization.id },
+        data,
+      });
+
+      if (flow.count === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data flow not found",
+        });
+      }
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataFlow",
+          entityId: id,
+          action: "UPDATE",
+          changes: data,
+        },
+      });
+
+      return ctx.prisma.dataFlow.findFirst({
+        where: { id, organizationId: ctx.organization.id },
+        include: {
+          sourceAsset: true,
+          destinationAsset: true,
+        },
+      });
+    }),
+
+  // Delete data flow
+  deleteFlow: organizationProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const flow = await ctx.prisma.dataFlow.deleteMany({
+        where: { id: input.id, organizationId: ctx.organization.id },
+      });
+
+      if (flow.count === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data flow not found",
+        });
+      }
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataFlow",
+          entityId: input.id,
+          action: "DELETE",
+        },
+      });
+
+      return { success: true };
     }),
 
   // ============================================================

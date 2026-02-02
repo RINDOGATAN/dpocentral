@@ -161,3 +161,40 @@
     border-color: #13e9d1;
   }
 }
+
+/* React Flow brutalist overrides */
+.react-flow {
+  --xy-background-color: transparent;
+  --xy-edge-stroke: hsl(var(--primary) / 0.5);
+  --xy-edge-stroke-selected: hsl(var(--primary));
+  --xy-node-color: hsl(var(--foreground));
+  --xy-node-background: hsl(var(--card));
+  --xy-node-border-color: hsl(var(--border));
+  --xy-minimap-background: hsl(var(--card));
+  --xy-minimap-mask-background: hsl(var(--background) / 0.8);
+  --xy-controls-background: hsl(var(--background));
+  --xy-controls-button-background: hsl(var(--background));
+  --xy-controls-button-background-hover: hsl(var(--muted));
+  --xy-controls-button-color: hsl(var(--foreground));
+  --xy-controls-button-border-color: hsl(var(--border));
+}
+
+.react-flow__node {
+  border-radius: 0 !important;
+}
+
+.react-flow__controls {
+  border-radius: 0 !important;
+}
+
+.react-flow__controls-button {
+  border-radius: 0 !important;
+}
+
+.react-flow__minimap {
+  border-radius: 0 !important;
+}
+
+.react-flow__edge-path {
+  stroke-linecap: square;
+}
