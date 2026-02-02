@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import {
   Shield,
   Database,
@@ -16,6 +17,7 @@ import {
   Settings,
   LayoutDashboard,
   ChevronDown,
+  Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +26,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useOrganization } from "@/lib/organization-context";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
 
@@ -44,6 +53,7 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading, setOrganization } = useOrganization();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   if (status === "loading" || orgLoading) {
     return (
@@ -66,23 +76,92 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
-        <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/privacy" className="flex items-center gap-2">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            {/* Mobile Menu Button */}
+            <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden shrink-0">
+                  <Menu className="w-5 h-5" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] sm:w-[320px]">
+                <SheetHeader>
+                  <SheetTitle className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-primary flex items-center justify-center">
+                      <Shield className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                    Privacy Suite
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="mt-6 flex flex-col gap-1">
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href ||
+                      (item.href !== "/privacy" && pathname.startsWith(item.href));
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileNavOpen(false)}
+                      >
+                        <Button
+                          variant="ghost"
+                          className={`w-full justify-start gap-3 h-12 text-base ${
+                            isActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""
+                          }`}
+                        >
+                          <Icon className="w-5 h-5" />
+                          {item.label}
+                        </Button>
+                      </Link>
+                    );
+                  })}
+                </nav>
+                {/* Mobile org selector */}
+                {organizations.length > 1 && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <p className="text-xs text-muted-foreground mb-2 px-3">Organization</p>
+                    <div className="space-y-1">
+                      {organizations.map((org) => (
+                        <Button
+                          key={org.id}
+                          variant="ghost"
+                          className={`w-full justify-start gap-3 h-10 ${
+                            org.id === organization?.id ? "bg-primary/10 text-primary" : ""
+                          }`}
+                          onClick={() => {
+                            setOrganization(org);
+                            setMobileNavOpen(false);
+                          }}
+                        >
+                          <Building2 className="w-4 h-4" />
+                          <span className="truncate">{org.name}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
+
+            <Link href="/privacy" className="flex items-center gap-2 shrink-0">
               <div className="w-8 h-8 bg-primary flex items-center justify-center">
                 <Shield className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold text-lg">Privacy Suite</span>
+              <span className="font-semibold text-lg hidden sm:inline">Privacy Suite</span>
             </Link>
 
-            {/* Organization Selector */}
+            {/* Organization Selector - Desktop */}
             {organizations.length > 1 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Building2 className="w-4 h-4" />
-                    {organization?.name}
-                    <ChevronDown className="w-3 h-3" />
+                  <Button variant="outline" size="sm" className="gap-2 hidden sm:flex max-w-[200px]">
+                    <Building2 className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{organization?.name}</span>
+                    <ChevronDown className="w-3 h-3 shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
@@ -100,6 +179,7 @@ export default function DashboardLayout({
             )}
           </div>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -114,20 +194,21 @@ export default function DashboardLayout({
                     className={`gap-2 ${isActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""}`}
                   >
                     <Icon className="w-4 h-4" />
-                    {item.label}
+                    <span className="hidden lg:inline">{item.label}</span>
                   </Button>
                 </Link>
               );
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
+          {/* Right side actions */}
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <Button variant="ghost" size="icon" className="hidden sm:flex">
               <Settings className="w-4 h-4" />
             </Button>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground border-l pl-3 ml-2">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground border-l pl-3 ml-2">
               <User className="w-4 h-4" />
-              <span className="hidden sm:inline">{session?.user?.email}</span>
+              <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
             </div>
             <Button
               variant="ghost"
@@ -142,7 +223,7 @@ export default function DashboardLayout({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-6 py-6">
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {children}
       </main>
     </div>
