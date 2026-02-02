@@ -211,7 +211,6 @@ export default function NewAssessmentPage() {
                       <SelectValue placeholder="Select activity (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
                       {activities.map((activity) => (
                         <SelectItem key={activity.id} value={activity.id}>
                           {activity.name}
@@ -232,7 +231,6 @@ export default function NewAssessmentPage() {
                         <SelectValue placeholder="Select vendor (optional)" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
                         {vendors.map((vendor) => (
                           <SelectItem key={vendor.id} value={vendor.id}>
                             {vendor.name}

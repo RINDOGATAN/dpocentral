@@ -1,11 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import {
   ArrowLeft,
   Database,
@@ -18,6 +38,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { DataCategory, DataSensitivity } from "@prisma/client";
 
 const sensitivityColors: Record<string, string> = {
   PUBLIC: "border-primary text-primary",
@@ -27,11 +48,47 @@ const sensitivityColors: Record<string, string> = {
   SPECIAL_CATEGORY: "border-muted-foreground bg-muted-foreground text-foreground",
 };
 
+const categoryLabels: Record<DataCategory, string> = {
+  IDENTIFIERS: "Identifiers",
+  DEMOGRAPHICS: "Demographics",
+  FINANCIAL: "Financial",
+  HEALTH: "Health",
+  BIOMETRIC: "Biometric",
+  LOCATION: "Location",
+  BEHAVIORAL: "Behavioral",
+  EMPLOYMENT: "Employment",
+  EDUCATION: "Education",
+  POLITICAL: "Political",
+  RELIGIOUS: "Religious",
+  GENETIC: "Genetic",
+  SEXUAL_ORIENTATION: "Sexual Orientation",
+  CRIMINAL: "Criminal",
+  OTHER: "Other",
+};
+
+const sensitivityLabels: Record<DataSensitivity, string> = {
+  PUBLIC: "Public",
+  INTERNAL: "Internal",
+  CONFIDENTIAL: "Confidential",
+  RESTRICTED: "Restricted",
+  SPECIAL_CATEGORY: "Special Category",
+};
+
 export default function DataAssetDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
   const { organization } = useOrganization();
+  const [isAddElementOpen, setIsAddElementOpen] = useState(false);
+  const [elementForm, setElementForm] = useState({
+    name: "",
+    description: "",
+    category: "IDENTIFIERS" as DataCategory,
+    sensitivity: "INTERNAL" as DataSensitivity,
+    isPersonalData: true,
+    isSpecialCategory: false,
+    retentionDays: "",
+  });
 
   const { data: asset, isLoading } = trpc.dataInventory.getAsset.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -47,9 +104,53 @@ export default function DataAssetDetailPage() {
     },
   });
 
+  const addElement = trpc.dataInventory.addElement.useMutation({
+    onSuccess: () => {
+      utils.dataInventory.getAsset.invalidate();
+      setIsAddElementOpen(false);
+      setElementForm({
+        name: "",
+        description: "",
+        category: "IDENTIFIERS",
+        sensitivity: "INTERNAL",
+        isPersonalData: true,
+        isSpecialCategory: false,
+        retentionDays: "",
+      });
+    },
+  });
+
+  const deleteElement = trpc.dataInventory.deleteElement.useMutation({
+    onSuccess: () => {
+      utils.dataInventory.getAsset.invalidate();
+    },
+  });
+
   const handleDelete = () => {
     if (!organization?.id || !confirm("Are you sure you want to delete this asset?")) return;
     deleteAsset.mutate({ organizationId: organization.id, id });
+  };
+
+  const handleAddElement = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!organization?.id || !elementForm.name) return;
+
+    addElement.mutate({
+      organizationId: organization.id,
+      dataAssetId: id,
+      name: elementForm.name,
+      description: elementForm.description || undefined,
+      category: elementForm.category,
+      sensitivity: elementForm.sensitivity,
+      isPersonalData: elementForm.isPersonalData,
+      isSpecialCategory: elementForm.isSpecialCategory,
+      retentionDays: elementForm.retentionDays ? parseInt(elementForm.retentionDays) : undefined,
+    });
+  };
+
+  const handleDeleteElement = (elementId: string, elementName: string) => {
+    if (!organization?.id || !confirm(`Delete "${elementName}"?`)) return;
+    deleteElement.mutate({ organizationId: organization.id, id: elementId });
   };
 
   if (isLoading) {
@@ -182,7 +283,7 @@ export default function DataAssetDetailPage() {
                 <CardTitle>Data Elements</CardTitle>
                 <CardDescription>Fields and data points stored in this asset</CardDescription>
               </div>
-              <Button size="sm">
+              <Button size="sm" onClick={() => setIsAddElementOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Element
               </Button>
@@ -209,6 +310,14 @@ export default function DataAssetDetailPage() {
                         {element.isPersonalData && (
                           <Badge variant="outline">Personal Data</Badge>
                         )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          onClick={() => handleDeleteElement(element.id, element.name)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -269,6 +378,130 @@ export default function DataAssetDetailPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Add Element Sheet */}
+      <Sheet open={isAddElementOpen} onOpenChange={setIsAddElementOpen}>
+        <SheetContent className="sm:max-w-md overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Add Data Element</SheetTitle>
+            <SheetDescription>
+              Add a new data field or element to this asset
+            </SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleAddElement} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="element-name">Element Name *</Label>
+              <Input
+                id="element-name"
+                placeholder="e.g., email_address, phone_number"
+                value={elementForm.name}
+                onChange={(e) => setElementForm({ ...elementForm, name: e.target.value })}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="element-description">Description</Label>
+              <Textarea
+                id="element-description"
+                placeholder="Brief description of this data element"
+                rows={2}
+                value={elementForm.description}
+                onChange={(e) => setElementForm({ ...elementForm, description: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="element-category">Category *</Label>
+              <Select
+                value={elementForm.category}
+                onValueChange={(value) => setElementForm({ ...elementForm, category: value as DataCategory })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(categoryLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="element-sensitivity">Sensitivity *</Label>
+              <Select
+                value={elementForm.sensitivity}
+                onValueChange={(value) => setElementForm({ ...elementForm, sensitivity: value as DataSensitivity })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(sensitivityLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="element-retention">Retention Period (days)</Label>
+              <Input
+                id="element-retention"
+                type="number"
+                placeholder="e.g., 365"
+                value={elementForm.retentionDays}
+                onChange={(e) => setElementForm({ ...elementForm, retentionDays: e.target.value })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="is-personal-data" className="text-sm">Is Personal Data</Label>
+              <Switch
+                id="is-personal-data"
+                checked={elementForm.isPersonalData}
+                onCheckedChange={(checked) => setElementForm({ ...elementForm, isPersonalData: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="is-special-category" className="text-sm">Is Special Category</Label>
+              <Switch
+                id="is-special-category"
+                checked={elementForm.isSpecialCategory}
+                onCheckedChange={(checked) => setElementForm({ ...elementForm, isSpecialCategory: checked })}
+              />
+            </div>
+
+            {addElement.error && (
+              <div className="text-sm text-destructive">
+                Error: {addElement.error.message}
+              </div>
+            )}
+
+            <SheetFooter className="pt-4">
+              <Button type="button" variant="outline" onClick={() => setIsAddElementOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={addElement.isPending || !elementForm.name}>
+                {addElement.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  "Add Element"
+                )}
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
