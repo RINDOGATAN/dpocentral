@@ -39,7 +39,7 @@ const statusColors: Record<string, string> = {
 
 const typeLabels: Record<string, string> = {
   DATA_BREACH: "Data Breach",
-  UNAUTHORIZED_ACCESS: "Unauthorized Access",
+  UNAUTHORIZED_ACCESS: "Unauth Access",
   DATA_LOSS: "Data Loss",
   SYSTEM_COMPROMISE: "System Compromise",
   PHISHING: "Phishing",
@@ -74,17 +74,17 @@ export default function IncidentsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Incident Management</h1>
-          <p className="text-muted-foreground">
-            Track and respond to security incidents and data breaches
+          <h1 className="text-xl sm:text-2xl font-semibold">Incident Management</h1>
+          <p className="text-sm text-muted-foreground">
+            Track security incidents and breaches
           </p>
         </div>
         <Link href="/privacy/incidents/new">
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Plus className="w-4 h-4 mr-2" />
             Report Incident
           </Button>
@@ -92,39 +92,39 @@ export default function IncidentsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{stats.total}</div>
-            <p className="text-sm text-muted-foreground">Total Incidents</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.total}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{stats.open}</div>
-            <p className="text-sm text-muted-foreground">Open Incidents</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.open}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Open</p>
           </CardContent>
         </Card>
         <Card className={stats.critical > 0 ? "border-muted-foreground" : ""}>
-          <CardContent className="pt-6">
-            <div className={`text-2xl font-bold ${stats.critical > 0 ? "text-foreground" : "text-primary"}`}>
+          <CardContent className="p-4 sm:pt-6">
+            <div className={`text-xl sm:text-2xl font-bold ${stats.critical > 0 ? "text-foreground" : "text-primary"}`}>
               {stats.critical > 0 && <span className="bg-destructive/20 px-2 py-0.5">{stats.critical}</span>}
               {stats.critical === 0 && stats.critical}
             </div>
-            <p className="text-sm text-muted-foreground">Critical Severity</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Critical</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{stats.pendingNotification}</div>
-            <p className="text-sm text-muted-foreground">Pending Notification</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.pendingNotification}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Pending DPA</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Search */}
-      <div className="flex gap-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex gap-2 sm:gap-4">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search incidents..."
@@ -133,7 +133,10 @@ export default function IncidentsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button variant="outline">
+        <Button variant="outline" size="icon" className="shrink-0 sm:hidden">
+          <Filter className="w-4 h-4" />
+        </Button>
+        <Button variant="outline" className="shrink-0 hidden sm:flex">
           <Filter className="w-4 h-4 mr-2" />
           Filters
         </Button>
@@ -145,14 +148,40 @@ export default function IncidentsPage() {
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : incidents.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {incidents.map((incident) => (
             <Link key={incident.id} href={`/privacy/incidents/${incident.id}`}>
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-                <CardContent className="py-4">
-                  <div className="flex items-center gap-6">
-                    {/* Severity Icon */}
-                    <div className={`w-10 h-10 flex items-center justify-center border-2 ${
+                <CardContent className="p-4">
+                  {/* Mobile Layout - Stacked */}
+                  <div className="flex flex-col gap-3 sm:hidden">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-medium font-mono text-primary text-sm">{incident.publicId}</span>
+                      <Badge variant="outline" className={`text-xs shrink-0 ${severityColors[incident.severity] || ""}`}>
+                        {incident.severity}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {incident.title}
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge variant="outline" className="text-xs">{typeLabels[incident.type] || incident.type}</Badge>
+                      <Badge variant="outline" className={`text-xs ${statusColors[incident.status] || ""}`}>
+                        {incident.status.replace("_", " ")}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{incident.affectedRecords?.toLocaleString() ?? 0} records</span>
+                      <span>
+                        <Clock className="inline h-3 w-3 mr-1" />
+                        {new Date(incident.discoveredAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Desktop Layout - Horizontal */}
+                  <div className="hidden sm:flex items-center gap-6">
+                    <div className={`w-10 h-10 flex items-center justify-center border-2 shrink-0 ${
                       incident.severity === "CRITICAL" ? "border-muted-foreground bg-muted-foreground/30" :
                       incident.severity === "HIGH" ? "border-muted-foreground bg-muted-foreground/20" :
                       incident.severity === "MEDIUM" ? "border-muted-foreground" :
@@ -167,7 +196,6 @@ export default function IncidentsPage() {
                       )}
                     </div>
 
-                    {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary">{incident.publicId}</span>
@@ -184,16 +212,14 @@ export default function IncidentsPage() {
                       </p>
                     </div>
 
-                    {/* Affected Records */}
-                    <div className="text-center">
+                    <div className="text-center shrink-0">
                       <p className="text-lg font-semibold text-primary">
                         {incident.affectedRecords?.toLocaleString() ?? 0}
                       </p>
                       <p className="text-xs text-muted-foreground">Records</p>
                     </div>
 
-                    {/* Discovery Time */}
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <p className="text-sm text-muted-foreground">
                         <Clock className="inline w-3 h-3 mr-1" />
                         {new Date(incident.discoveredAt).toLocaleDateString()}
@@ -221,25 +247,27 @@ export default function IncidentsPage() {
         </Card>
       )}
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Stack on mobile */}
       <Card>
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-base">Response Resources</CardTitle>
-          <CardDescription>Quick access to incident response tools</CardDescription>
+          <CardDescription className="text-xs sm:text-sm">Quick access to incident response tools</CardDescription>
         </CardHeader>
-        <CardContent className="flex gap-4">
-          <Button variant="outline">
-            <Shield className="w-4 h-4 mr-2" />
-            Incident Response Plan
-          </Button>
-          <Button variant="outline">
-            <Bell className="w-4 h-4 mr-2" />
-            DPA Notification Templates
-          </Button>
-          <Button variant="outline">
-            <AlertTriangle className="w-4 h-4 mr-2" />
-            Breach Assessment Checklist
-          </Button>
+        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+            <Button variant="outline" className="justify-start sm:justify-center">
+              <Shield className="w-4 h-4 mr-2 shrink-0" />
+              <span className="truncate">Response Plan</span>
+            </Button>
+            <Button variant="outline" className="justify-start sm:justify-center">
+              <Bell className="w-4 h-4 mr-2 shrink-0" />
+              <span className="truncate">DPA Templates</span>
+            </Button>
+            <Button variant="outline" className="justify-start sm:justify-center">
+              <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />
+              <span className="truncate">Breach Checklist</span>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
