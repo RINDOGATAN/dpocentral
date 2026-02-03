@@ -269,20 +269,22 @@ export default function PrivacyDashboardPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{vendor.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{vendor.category}</p>
+                      <p className="text-xs text-muted-foreground truncate">{vendor.categories?.[0] || "Vendor"}</p>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs shrink-0 ${
-                        vendor.riskLevel === "HIGH"
-                          ? "border-destructive/50 text-destructive"
-                          : vendor.riskLevel === "LOW"
-                          ? "border-green-500/50 text-green-500"
-                          : ""
-                      }`}
-                    >
-                      {vendor.riskLevel}
-                    </Badge>
+                    {vendor.riskTier && (
+                      <Badge
+                        variant="outline"
+                        className={`text-xs shrink-0 ${
+                          vendor.riskTier === "CRITICAL" || vendor.riskTier === "HIGH"
+                            ? "border-destructive/50 text-destructive"
+                            : vendor.riskTier === "LOW"
+                            ? "border-green-500/50 text-green-500"
+                            : ""
+                        }`}
+                      >
+                        {vendor.riskTier}
+                      </Badge>
+                    )}
                   </div>
                 </Link>
               ))
