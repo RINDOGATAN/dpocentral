@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,7 +83,7 @@ export default function SignInPage() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <div className="mx-auto mb-4">
-          <Image src="/logo.png" alt="DPO Central" width={48} height={48} className="w-12 h-12" />
+          <img src="/nel-icon.png" alt="DPO Central" className="h-12" />
         </div>
         <CardTitle>Welcome to DPO Central</CardTitle>
         <CardDescription>
