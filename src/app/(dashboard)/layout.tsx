@@ -223,7 +223,7 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
-          <p>DPO Central, a North End Law service</p>
+          <p>DPO Central is a North End Law service.</p>
           <div className="flex justify-center gap-4">
             <a href="https://northend.law/terms-of-use" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
               Terms of Use
