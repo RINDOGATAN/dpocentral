@@ -84,7 +84,7 @@ export function DataFlowVisualization({
     },
   });
 
-  const isLoading = assetsLoading || flowsLoading;
+  const dataLoading = assetsLoading || flowsLoading;
 
   // Transform assets to our format
   const assets: AssetData[] = useMemo(() => {
@@ -140,7 +140,7 @@ export function DataFlowVisualization({
   }, [flowsData]);
 
   // Build graph
-  const { nodes: graphNodes, edges: graphEdges } = useDataFlowGraph({
+  const { nodes: graphNodes, edges: graphEdges, isLoading: graphLoading } = useDataFlowGraph({
     mode,
     assetId,
     assets,
@@ -198,7 +198,7 @@ export function DataFlowVisualization({
   };
 
   // Loading state
-  if (isLoading) {
+  if (dataLoading || graphLoading) {
     return (
       <Card>
         <CardContent className="py-12">

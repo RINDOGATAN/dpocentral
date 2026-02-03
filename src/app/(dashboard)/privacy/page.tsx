@@ -31,6 +31,11 @@ export default function PrivacyDashboardPage() {
     { enabled: !!organization?.id }
   );
 
+  const { data: vendorList } = trpc.vendor.list.useQuery(
+    { organizationId: organization?.id ?? "", limit: 3 },
+    { enabled: !!organization?.id }
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -151,13 +156,22 @@ export default function PrivacyDashboardPage() {
                       <p className="text-xs sm:text-sm text-muted-foreground truncate">{dsar.requesterName}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-xs sm:text-sm font-medium text-muted-foreground">
-                        <Clock className="inline h-3 w-3 mr-1" />
-                        {dsar.slaStatus === "overdue"
-                          ? <span className="text-foreground">Overdue</span>
-                          : `${dsar.daysUntilDue ?? 0}d`
-                        }
-                      </p>
+                      {dsar.status === "COMPLETED" ? (
+                        <Badge variant="outline" className="text-xs border-primary bg-primary text-primary-foreground">
+                          <CheckCircle2 className="inline h-3 w-3 mr-1" />
+                          Done
+                        </Badge>
+                      ) : dsar.slaStatus === "overdue" ? (
+                        <p className="text-xs sm:text-sm font-medium">
+                          <Clock className="inline h-3 w-3 mr-1" />
+                          <span className="text-foreground">Overdue</span>
+                        </p>
+                      ) : (
+                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+                          <Clock className="inline h-3 w-3 mr-1" />
+                          {dsar.daysUntilDue ?? 0}d
+                        </p>
+                      )}
                     </div>
                   </div>
                 </Link>
@@ -245,11 +259,39 @@ export default function PrivacyDashboardPage() {
               </Link>
             </div>
           </CardHeader>
-          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-center py-4 text-muted-foreground">
-              <Building2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs sm:text-sm">Add vendors to track third-party risk</p>
-            </div>
+          <CardContent className="space-y-3 sm:space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
+            {vendorList?.vendors && vendorList.vendors.length > 0 ? (
+              vendorList.vendors.map((vendor) => (
+                <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block">
+                  <div className="flex items-center gap-3 p-2 -mx-2 hover:bg-muted/50 transition-colors">
+                    <div className="p-1.5 border border-primary/50 text-primary shrink-0">
+                      <Building2 className="h-3 w-3" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{vendor.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{vendor.category}</p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs shrink-0 ${
+                        vendor.riskLevel === "HIGH"
+                          ? "border-destructive/50 text-destructive"
+                          : vendor.riskLevel === "LOW"
+                          ? "border-green-500/50 text-green-500"
+                          : ""
+                      }`}
+                    >
+                      {vendor.riskLevel}
+                    </Badge>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="text-center py-4 text-muted-foreground">
+                <Building2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-xs sm:text-sm">Add vendors to track third-party risk</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

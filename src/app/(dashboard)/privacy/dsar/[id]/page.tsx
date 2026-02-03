@@ -194,8 +194,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const totalTasks = request.tasks?.length ?? 0;
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   const daysRemaining = request.daysUntilDue ?? 0;
-  const isOverdue = daysRemaining < 0;
-  const isAtRisk = daysRemaining <= 7 && daysRemaining >= 0;
+  const isCompleted = request.status === "COMPLETED" || request.status === "CANCELLED" || request.status === "REJECTED";
+  const isOverdue = !isCompleted && daysRemaining < 0;
+  const isAtRisk = !isCompleted && daysRemaining <= 7 && daysRemaining >= 0;
 
   return (
     <div className="space-y-6">
@@ -265,13 +266,18 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </CardContent>
         </Card>
 
-        <Card className={isOverdue ? "border-destructive" : isAtRisk ? "border-muted-foreground" : ""}>
+        <Card className={isCompleted ? "border-primary" : isOverdue ? "border-destructive" : isAtRisk ? "border-muted-foreground" : ""}>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">SLA Status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {isOverdue ? (
+              {isCompleted ? (
+                <span className="text-primary flex items-center gap-2">
+                  <CheckCircle2 className="w-8 h-8" />
+                  {request.status === "COMPLETED" ? "COMPLETED" : request.status}
+                </span>
+              ) : isOverdue ? (
                 <span className="bg-destructive/20 text-foreground px-2 py-1">OVERDUE</span>
               ) : isAtRisk ? (
                 <span className="bg-muted-foreground/20 text-foreground px-2 py-1">{daysRemaining} days</span>
@@ -280,7 +286,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              Due: {new Date(request.dueDate).toLocaleDateString()}
+              {isCompleted ? "Closed" : "Due"}: {new Date(request.dueDate).toLocaleDateString()}
             </p>
           </CardContent>
         </Card>

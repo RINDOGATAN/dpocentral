@@ -172,31 +172,42 @@ export default function DSARPage() {
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{request._count?.tasks ?? 0} tasks</span>
-                      <span className={request.slaStatus === "overdue" ? "bg-destructive/20 text-foreground px-1.5 py-0.5" : ""}>
-                        <Clock className="inline h-3 w-3 mr-1" />
-                        {request.slaStatus === "overdue"
-                          ? `${Math.abs(request.daysUntilDue ?? 0)}d overdue`
-                          : request.daysUntilDue === 0
-                            ? "Due today"
-                            : `${request.daysUntilDue ?? 0}d left`
-                        }
-                      </span>
+                      {request.status === "COMPLETED" || request.status === "REJECTED" ? (
+                        <span>
+                          <Clock className="inline h-3 w-3 mr-1" />
+                          {new Date(request.dueDate).toLocaleDateString()}
+                        </span>
+                      ) : (
+                        <span className={request.slaStatus === "overdue" ? "bg-destructive/20 text-foreground px-1.5 py-0.5" : ""}>
+                          <Clock className="inline h-3 w-3 mr-1" />
+                          {request.slaStatus === "overdue"
+                            ? `${Math.abs(request.daysUntilDue ?? 0)}d overdue`
+                            : request.daysUntilDue === 0
+                              ? "Due today"
+                              : `${request.daysUntilDue ?? 0}d left`
+                          }
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   {/* Desktop Layout - Horizontal */}
                   <div className="hidden sm:flex items-center gap-6">
                     <div className={`w-10 h-10 flex items-center justify-center border-2 shrink-0 ${
-                      request.slaStatus === "overdue"
-                        ? "border-muted-foreground bg-muted-foreground/20"
-                        : request.status === "COMPLETED"
-                          ? "border-primary bg-primary"
-                          : "border-primary"
+                      request.status === "COMPLETED"
+                        ? "border-primary bg-primary"
+                        : request.status === "REJECTED"
+                          ? "border-muted-foreground"
+                          : request.slaStatus === "overdue"
+                            ? "border-muted-foreground bg-muted-foreground/20"
+                            : "border-primary"
                     }`}>
-                      {request.slaStatus === "overdue" ? (
-                        <AlertTriangle className="w-5 h-5 text-foreground" />
-                      ) : request.status === "COMPLETED" ? (
+                      {request.status === "COMPLETED" ? (
                         <CheckCircle2 className="w-5 h-5 text-primary-foreground" />
+                      ) : request.status === "REJECTED" ? (
+                        <FileText className="w-5 h-5 text-muted-foreground" />
+                      ) : request.slaStatus === "overdue" ? (
+                        <AlertTriangle className="w-5 h-5 text-foreground" />
                       ) : (
                         <Clock className="w-5 h-5 text-primary" />
                       )}
@@ -223,17 +234,30 @@ export default function DSARPage() {
                     </div>
 
                     <div className="text-right shrink-0">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {request.slaStatus === "overdue"
-                          ? <span className="bg-destructive/20 text-foreground px-1.5 py-0.5">{Math.abs(request.daysUntilDue ?? 0)} days overdue</span>
-                          : request.daysUntilDue === 0
-                            ? "Due today"
-                            : `${request.daysUntilDue ?? 0} days left`
-                        }
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Due: {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : "N/A"}
-                      </p>
+                      {request.status === "COMPLETED" || request.status === "REJECTED" ? (
+                        <>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {request.status === "COMPLETED" ? "Completed" : "Rejected"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : "N/A"}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {request.slaStatus === "overdue"
+                              ? <span className="bg-destructive/20 text-foreground px-1.5 py-0.5">{Math.abs(request.daysUntilDue ?? 0)} days overdue</span>
+                              : request.daysUntilDue === 0
+                                ? "Due today"
+                                : `${request.daysUntilDue ?? 0} days left`
+                            }
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Due: {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : "N/A"}
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </CardContent>
