@@ -26,7 +26,7 @@ export default function AuthLayout({
       {/* Footer */}
       <footer className="border-t border-border py-6">
         <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-          <p>Privacy management platform</p>
+          <p>DPO Central is a North End Law service.</p>
         </div>
       </footer>
     </div>
