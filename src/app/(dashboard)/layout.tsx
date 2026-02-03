@@ -13,7 +13,6 @@ import {
   Building2,
   LogOut,
   User,
-  Settings,
   LayoutDashboard,
   ChevronDown,
   Menu,
@@ -196,10 +195,7 @@ export default function DashboardLayout({
 
           {/* Right side actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <Settings className="w-4 h-4" />
-            </Button>
-            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground border-l pl-3 ml-2">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
               <User className="w-4 h-4" />
               <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
             </div>
