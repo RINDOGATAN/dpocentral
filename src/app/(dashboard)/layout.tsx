@@ -92,7 +92,7 @@ export default function DashboardLayout({
                     <div className="w-8 h-8 bg-primary flex items-center justify-center">
                       <Shield className="w-5 h-5 text-primary-foreground" />
                     </div>
-                    Privacy Suite
+                    DPO Central
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
@@ -151,7 +151,7 @@ export default function DashboardLayout({
               <div className="w-8 h-8 bg-primary flex items-center justify-center">
                 <Shield className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold text-lg hidden sm:inline">Privacy Suite</span>
+              <span className="font-semibold text-lg hidden sm:inline">DPO Central</span>
             </Link>
 
             {/* Organization Selector - Desktop */}
@@ -226,6 +226,21 @@ export default function DashboardLayout({
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {children}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border mt-auto py-4">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
+          <p>DPO Central, a North End Law service</p>
+          <div className="flex justify-center gap-4">
+            <a href="https://northend.law/terms-of-use" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+              Terms of Use
+            </a>
+            <a href="https://northend.law/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+              Privacy Policy
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

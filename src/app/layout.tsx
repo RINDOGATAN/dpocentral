@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Privacy Suite",
-  description: "Privacy Program Management Suite",
+  title: "DPO Central",
+  description: "DPO Central is a single source of truth for your privacy management program.",
 };
 
 export default function RootLayout({

@@ -67,12 +67,12 @@ export const authOptions: NextAuthOptions = {
                 await resend!.emails.send({
                   from: process.env.EMAIL_FROM || "onboarding@resend.dev",
                   to: email,
-                  subject: "Sign in to Privacy Suite",
+                  subject: "Sign in to DPO Central",
                   html: `
                     <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                      <h1 style="color: #13e9d1; background: #1c1f37; padding: 20px; margin: 0;">Privacy Suite</h1>
+                      <h1 style="color: #13e9d1; background: #1c1f37; padding: 20px; margin: 0;">DPO Central</h1>
                       <div style="padding: 20px; background: #232742; color: #e5e5e5;">
-                        <p>Click the button below to sign in to Privacy Suite:</p>
+                        <p>Click the button below to sign in to DPO Central:</p>
                         <a href="${url}" style="display: inline-block; background: #13e9d1; color: #1c1f37; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In</a>
                         <p style="color: #d0d0d0; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
                         <p style="color: #d0d0d0; font-size: 12px;">Or copy this link: ${url}</p>
