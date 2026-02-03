@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, Mail, Loader2, Terminal } from "lucide-react";
+import { Mail, Loader2, Terminal } from "lucide-react";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -82,8 +83,8 @@ export default function SignInPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-4 w-12 h-12 border-2 border-primary flex items-center justify-center">
-          <Shield className="w-6 h-6 text-primary" />
+        <div className="mx-auto mb-4">
+          <Image src="/logo.png" alt="DPO Central" width={48} height={48} className="w-12 h-12" />
         </div>
         <CardTitle>Welcome to DPO Central</CardTitle>
         <CardDescription>
