@@ -51,7 +51,7 @@ export function OrganizationSetup() {
           <div className="mx-auto mb-4 w-12 h-12 border-2 border-primary flex items-center justify-center">
             <Shield className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle>Welcome to Privacy Suite</CardTitle>
+          <CardTitle>Welcome to DPO Central</CardTitle>
           <CardDescription>
             Create your organization to get started with privacy management
           </CardDescription>
