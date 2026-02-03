@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -89,8 +88,7 @@ export default function DashboardLayout({
               <SheetContent side="left" className="w-[280px] sm:w-[320px]">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <Image src="/logo.png" alt="DPO Central" width={32} height={32} className="w-8 h-8" />
-                    DPO Central
+                    <img src="/nel-icon.png" alt="DPO Central" className="h-8" />
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
@@ -145,9 +143,8 @@ export default function DashboardLayout({
               </SheetContent>
             </Sheet>
 
-            <Link href="/privacy" className="flex items-center gap-2 shrink-0">
-              <Image src="/logo.png" alt="DPO Central" width={32} height={32} className="w-8 h-8" />
-              <span className="font-semibold text-lg hidden sm:inline">DPO Central</span>
+            <Link href="/privacy" className="flex items-center shrink-0">
+              <img src="/nel-icon.png" alt="DPO Central" className="h-8" />
             </Link>
 
             {/* Organization Selector - Desktop */}
