@@ -108,3 +108,32 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
 export const organizationProcedure = t.procedure
   .use(enforceUserIsAuthed)
   .use(withOrganization);
+
+// Platform admin middleware - checks if user is a platform admin
+const enforcePlatformAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user?.email) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const admin = await ctx.prisma.platformAdmin.findUnique({
+    where: { email: ctx.session.user.email },
+  });
+
+  if (!admin || !admin.isActive) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Platform admin access required",
+    });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+      admin,
+    },
+  });
+});
+
+export const adminProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(enforcePlatformAdmin);

@@ -2,6 +2,11 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, protectedProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { AssessmentType, AssessmentStatus, RiskLevel, MitigationStatus, ApprovalStatus } from "@prisma/client";
+import {
+  checkAssessmentEntitlement,
+  isPremiumAssessmentType,
+  getEntitledAssessmentTypes,
+} from "../../services/licensing/entitlement";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -298,6 +303,21 @@ export const assessmentRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Template not found",
         });
+      }
+
+      // Check entitlement for premium assessment types
+      if (isPremiumAssessmentType(template.type)) {
+        const entitlementResult = await checkAssessmentEntitlement(
+          ctx.organization.id,
+          template.type
+        );
+
+        if (!entitlementResult.entitled) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: `${template.type} assessments require a premium license. Contact North End Law to enable this feature.`,
+          });
+        }
       }
 
       const assessment = await ctx.prisma.assessment.create({
@@ -775,5 +795,13 @@ export const assessmentRouter = createTRPCRouter({
         byRiskLevel: byRiskLevel.reduce((acc, r) => ({ ...acc, [r.riskLevel!]: r._count }), {}),
         templateCount: byType.length,
       };
+    }),
+
+  // Get entitled assessment types for the current organization
+  getEntitledTypes: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const entitledTypes = await getEntitledAssessmentTypes(ctx.organization.id);
+      return { entitledTypes };
     }),
 });

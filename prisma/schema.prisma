@@ -112,6 +112,7 @@ model Organization {
   incidents            Incident[]
   vendors              Vendor[]
   auditLogs            AuditLog[]
+  customerLinks        CustomerOrganization[]
 
   @@map("organizations")
 }
@@ -1125,6 +1126,102 @@ model VendorReview {
 
   @@index([vendorId])
   @@map("vendor_reviews")
+}
+
+// ============================================================
+// LICENSING & PREMIUM FEATURES
+// ============================================================
+
+enum CustomerType {
+  SAAS
+  SELF_HOSTED
+}
+
+enum LicenseType {
+  TRIAL
+  SUBSCRIPTION
+  PERPETUAL
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+}
+
+model SkillPackage {
+  id             String         @id @default(cuid())
+  skillId        String         @unique // e.g., "com.nel.dpocentral.dpia"
+  name           String
+  displayName    String
+  assessmentType AssessmentType
+  description    String?        @db.Text
+  isPremium      Boolean        @default(true)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  entitlements SkillEntitlement[]
+
+  @@map("skill_packages")
+}
+
+model Customer {
+  id               String       @id @default(cuid())
+  name             String
+  email            String       @unique
+  type             CustomerType
+  stripeCustomerId String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  organizations CustomerOrganization[]
+  entitlements  SkillEntitlement[]
+
+  @@map("customers")
+}
+
+model CustomerOrganization {
+  id             String   @id @default(cuid())
+  customerId     String
+  organizationId String
+  createdAt      DateTime @default(now())
+
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, organizationId])
+  @@index([organizationId])
+  @@map("customer_organizations")
+}
+
+model SkillEntitlement {
+  id             String            @id @default(cuid())
+  customerId     String
+  skillPackageId String
+  licenseKey     String            @unique @default(cuid())
+  licenseType    LicenseType
+  status         EntitlementStatus @default(ACTIVE)
+  expiresAt      DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  skillPackage SkillPackage @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, skillPackageId])
+  @@index([status])
+  @@map("skill_entitlements")
+}
+
+model PlatformAdmin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("platform_admins")
 }
 
 // ============================================================
