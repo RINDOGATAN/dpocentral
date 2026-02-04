@@ -91,11 +91,11 @@ async function main() {
   console.log("Creating platform admin...");
 
   await prisma.platformAdmin.upsert({
-    where: { email: "sean@northend.law" },
+    where: { email: "smaldonado@privacycloud.com" },
     update: { isActive: true },
     create: {
-      email: "sean@northend.law",
-      name: "Sean (North End Law)",
+      email: "smaldonado@privacycloud.com",
+      name: "Sergio Maldonado",
       isActive: true,
     },
   });
