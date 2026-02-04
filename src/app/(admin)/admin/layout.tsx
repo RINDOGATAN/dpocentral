@@ -34,6 +34,13 @@ export default function AdminLayout({
       enabled: status === "authenticated",
     });
 
+  // Skip auth check for sign-in page
+  const isSignInPage = pathname === "/admin/sign-in";
+
+  if (isSignInPage) {
+    return <>{children}</>;
+  }
+
   if (status === "loading" || adminCheckLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
