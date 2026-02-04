@@ -6,6 +6,7 @@ import { assessmentRouter } from "./privacy/assessment";
 import { incidentRouter } from "./privacy/incident";
 import { vendorRouter } from "./privacy/vendor";
 import { platformAdminRouter } from "./platformAdmin";
+import { vendorCatalogRouter } from "./vendorCatalog";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   incident: incidentRouter,
   vendor: vendorRouter,
   platformAdmin: platformAdminRouter,
+  vendorCatalog: vendorCatalogRouter,
 });
 
 export type AppRouter = typeof appRouter;

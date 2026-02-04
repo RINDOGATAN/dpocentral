@@ -1225,6 +1225,52 @@ model PlatformAdmin {
 }
 
 // ============================================================
+// SHARED VENDOR REFERENCE CATALOG (Platform-wide, not org-scoped)
+// ============================================================
+
+model VendorCatalog {
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  name              String
+  category          String
+  subcategory       String?
+  description       String?   @db.Text
+
+  // Contact & Links
+  website           String?
+  privacyPolicyUrl  String?
+  trustCenterUrl    String?
+  dpaUrl            String?
+  securityPageUrl   String?
+
+  // Compliance & Certifications
+  certifications    String[]  // ["ISO 27001", "SOC 2 Type II"]
+  frameworks        String[]  // ["GDPR", "CCPA", "HIPAA"]
+  gdprCompliant     Boolean?
+  ccpaCompliant     Boolean?
+  hipaaCompliant    Boolean?
+
+  // Data Processing
+  dataLocations     String[]  // ["US", "EU", "UK"]
+  hasEuDataCenter   Boolean?
+  subprocessors     Json?     // [{name, purpose, location}]
+
+  // Metadata
+  logoUrl           String?
+  isVerified        Boolean   @default(false)
+  verifiedAt        DateTime?
+  verifiedBy        String?
+  source            String?   // "processors.json", "manual", "ai-enriched"
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([category])
+  @@index([name])
+  @@map("vendor_catalog")
+}
+
+// ============================================================
 // AUDIT LOG
 // ============================================================
 
