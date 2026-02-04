@@ -1,9 +1,106 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, AssessmentType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
+
+  // ============================================================
+  // SKILL PACKAGES (Premium Features)
+  // ============================================================
+
+  console.log("Creating skill packages...");
+
+  const skillPackages = [
+    {
+      id: "skill-dpia",
+      skillId: "com.nel.dpocentral.dpia",
+      name: "DPIA",
+      displayName: "Data Protection Impact Assessment",
+      assessmentType: AssessmentType.DPIA,
+      description: "Conduct GDPR Article 35 compliant Data Protection Impact Assessments for high-risk processing activities.",
+      isPremium: true,
+      isActive: true,
+    },
+    {
+      id: "skill-pia",
+      skillId: "com.nel.dpocentral.pia",
+      name: "PIA",
+      displayName: "Privacy Impact Assessment",
+      assessmentType: AssessmentType.PIA,
+      description: "Comprehensive privacy impact assessments for new projects, systems, and initiatives.",
+      isPremium: true,
+      isActive: true,
+    },
+    {
+      id: "skill-tia",
+      skillId: "com.nel.dpocentral.tia",
+      name: "TIA",
+      displayName: "Transfer Impact Assessment",
+      assessmentType: AssessmentType.TIA,
+      description: "Assess the risks of international data transfers and document appropriate safeguards.",
+      isPremium: true,
+      isActive: true,
+    },
+    {
+      id: "skill-vendor",
+      skillId: "com.nel.dpocentral.vendor",
+      name: "VENDOR",
+      displayName: "Vendor Risk Assessment",
+      assessmentType: AssessmentType.VENDOR,
+      description: "Evaluate third-party vendor privacy and security risks with comprehensive questionnaires.",
+      isPremium: true,
+      isActive: true,
+    },
+    {
+      id: "skill-lia",
+      skillId: "com.nel.dpocentral.lia",
+      name: "LIA",
+      displayName: "Legitimate Interest Assessment",
+      assessmentType: AssessmentType.LIA,
+      description: "Document and balance legitimate interests against data subject rights.",
+      isPremium: false,
+      isActive: true,
+    },
+    {
+      id: "skill-custom",
+      skillId: "com.nel.dpocentral.custom",
+      name: "CUSTOM",
+      displayName: "Custom Assessment",
+      assessmentType: AssessmentType.CUSTOM,
+      description: "Create and conduct custom assessments tailored to your organization's needs.",
+      isPremium: false,
+      isActive: true,
+    },
+  ];
+
+  for (const pkg of skillPackages) {
+    await prisma.skillPackage.upsert({
+      where: { id: pkg.id },
+      update: pkg,
+      create: pkg,
+    });
+  }
+
+  console.log(`Created ${skillPackages.length} skill packages`);
+
+  // ============================================================
+  // PLATFORM ADMIN
+  // ============================================================
+
+  console.log("Creating platform admin...");
+
+  await prisma.platformAdmin.upsert({
+    where: { email: "sean@northend.law" },
+    update: { isActive: true },
+    create: {
+      email: "sean@northend.law",
+      name: "Sean (North End Law)",
+      isActive: true,
+    },
+  });
+
+  console.log("Created platform admin");
 
   // Seed Jurisdictions
   const jurisdictions = [
@@ -497,6 +594,367 @@ async function main() {
     where: { id: "system-vendor-template" },
     update: vendorAssessmentTemplate,
     create: { id: "system-vendor-template", ...vendorAssessmentTemplate },
+  });
+
+  // PIA Template
+  const piaTemplate = {
+    type: "PIA" as const,
+    name: "Standard Privacy Impact Assessment",
+    description: "Assess privacy risks for new projects, systems, or initiatives.",
+    version: "1.0",
+    isSystem: true,
+    isActive: true,
+    sections: [
+      {
+        id: "pia1",
+        title: "Project Overview",
+        description: "Describe the project or initiative being assessed",
+        questions: [
+          {
+            id: "pia1_1",
+            text: "What is the name and purpose of this project?",
+            type: "textarea",
+            required: true,
+          },
+          {
+            id: "pia1_2",
+            text: "Who is the project owner/sponsor?",
+            type: "text",
+            required: true,
+          },
+          {
+            id: "pia1_3",
+            text: "What is the expected go-live date?",
+            type: "text",
+            required: false,
+          },
+        ],
+      },
+      {
+        id: "pia2",
+        title: "Data Collection",
+        description: "Understand what data will be collected",
+        questions: [
+          {
+            id: "pia2_1",
+            text: "What personal data will be collected?",
+            type: "multiselect",
+            required: true,
+            options: ["Names", "Email", "Phone", "Address", "Financial", "Health", "Biometric", "Location", "Behavioral", "Other"],
+            riskWeight: 2,
+          },
+          {
+            id: "pia2_2",
+            text: "How will the data be collected?",
+            type: "multiselect",
+            required: true,
+            options: ["Web forms", "Mobile app", "Third-party", "Automated collection", "Manual entry", "Other"],
+          },
+          {
+            id: "pia2_3",
+            text: "Is collection of this data necessary for the stated purpose?",
+            type: "select",
+            required: true,
+            options: ["Yes, essential", "Mostly necessary", "Partially necessary", "Not clearly necessary"],
+            riskWeight: 1.5,
+          },
+        ],
+      },
+      {
+        id: "pia3",
+        title: "Privacy Risks",
+        description: "Identify and assess privacy risks",
+        questions: [
+          {
+            id: "pia3_1",
+            text: "Could this project result in unauthorized access to personal data?",
+            type: "select",
+            required: true,
+            options: ["Very unlikely", "Unlikely", "Possible", "Likely", "Very likely"],
+            riskWeight: 2,
+          },
+          {
+            id: "pia3_2",
+            text: "Could this project lead to function creep (data used for unintended purposes)?",
+            type: "select",
+            required: true,
+            options: ["Very unlikely", "Unlikely", "Possible", "Likely", "Very likely"],
+            riskWeight: 1.5,
+          },
+          {
+            id: "pia3_3",
+            text: "What is the potential impact on individuals if data is misused?",
+            type: "select",
+            required: true,
+            options: ["Minimal", "Minor", "Moderate", "Significant", "Severe"],
+            riskWeight: 2,
+          },
+        ],
+      },
+    ],
+    scoringLogic: {
+      method: "weighted_average",
+      riskLevels: {
+        LOW: { min: 0, max: 25 },
+        MEDIUM: { min: 26, max: 50 },
+        HIGH: { min: 51, max: 75 },
+        CRITICAL: { min: 76, max: 100 },
+      },
+    },
+  };
+
+  await prisma.assessmentTemplate.upsert({
+    where: { id: "system-pia-template" },
+    update: piaTemplate,
+    create: { id: "system-pia-template", ...piaTemplate },
+  });
+
+  // TIA Template
+  const tiaTemplate = {
+    type: "TIA" as const,
+    name: "Transfer Impact Assessment",
+    description: "Assess risks of international data transfers following Schrems II requirements.",
+    version: "1.0",
+    isSystem: true,
+    isActive: true,
+    sections: [
+      {
+        id: "tia1",
+        title: "Transfer Details",
+        description: "Describe the data transfer",
+        questions: [
+          {
+            id: "tia1_1",
+            text: "What is the destination country for the transfer?",
+            type: "text",
+            required: true,
+          },
+          {
+            id: "tia1_2",
+            text: "Who is the data importer?",
+            type: "text",
+            required: true,
+          },
+          {
+            id: "tia1_3",
+            text: "What transfer mechanism is being used?",
+            type: "select",
+            required: true,
+            options: ["Standard Contractual Clauses", "Binding Corporate Rules", "Adequacy Decision", "Derogation", "Certification"],
+          },
+        ],
+      },
+      {
+        id: "tia2",
+        title: "Legal Framework Assessment",
+        description: "Assess the legal framework in the destination country",
+        questions: [
+          {
+            id: "tia2_1",
+            text: "Does the destination country have data protection legislation?",
+            type: "select",
+            required: true,
+            options: ["Comprehensive legislation", "Sector-specific only", "Limited protection", "No legislation"],
+            riskWeight: 2,
+          },
+          {
+            id: "tia2_2",
+            text: "Are there government surveillance laws that could affect the data?",
+            type: "select",
+            required: true,
+            options: ["No known surveillance laws", "Limited surveillance powers", "Broad surveillance powers", "Mass surveillance"],
+            riskWeight: 3,
+          },
+          {
+            id: "tia2_3",
+            text: "Can data subjects enforce their rights in the destination country?",
+            type: "select",
+            required: true,
+            options: ["Full enforcement available", "Partial enforcement", "Limited enforcement", "No enforcement mechanism"],
+            riskWeight: 2,
+          },
+        ],
+      },
+      {
+        id: "tia3",
+        title: "Supplementary Measures",
+        description: "Identify supplementary measures to protect the transfer",
+        questions: [
+          {
+            id: "tia3_1",
+            text: "What technical measures will be implemented?",
+            type: "multiselect",
+            required: true,
+            options: ["Encryption in transit", "Encryption at rest", "Pseudonymization", "Key management in EU", "Split processing", "None"],
+          },
+          {
+            id: "tia3_2",
+            text: "What contractual measures will be implemented?",
+            type: "multiselect",
+            required: true,
+            options: ["Enhanced SCCs", "Audit rights", "Transparency reporting", "Challenge commitments", "None"],
+          },
+          {
+            id: "tia3_3",
+            text: "Are the supplementary measures sufficient to address identified risks?",
+            type: "select",
+            required: true,
+            options: ["Fully sufficient", "Mostly sufficient", "Partially sufficient", "Insufficient"],
+            riskWeight: 2,
+          },
+        ],
+      },
+    ],
+    scoringLogic: {
+      method: "weighted_average",
+      riskLevels: {
+        LOW: { min: 0, max: 25 },
+        MEDIUM: { min: 26, max: 50 },
+        HIGH: { min: 51, max: 75 },
+        CRITICAL: { min: 76, max: 100 },
+      },
+    },
+  };
+
+  await prisma.assessmentTemplate.upsert({
+    where: { id: "system-tia-template" },
+    update: tiaTemplate,
+    create: { id: "system-tia-template", ...tiaTemplate },
+  });
+
+  // LIA Template (Free)
+  const liaTemplate = {
+    type: "LIA" as const,
+    name: "Legitimate Interest Assessment",
+    description: "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f)).",
+    version: "1.0",
+    isSystem: true,
+    isActive: true,
+    sections: [
+      {
+        id: "lia1",
+        title: "Purpose Test",
+        description: "Identify the legitimate interest",
+        questions: [
+          {
+            id: "lia1_1",
+            text: "What is the legitimate interest being pursued?",
+            type: "textarea",
+            required: true,
+            helpText: "Describe the specific interest, not just 'business purposes'",
+          },
+          {
+            id: "lia1_2",
+            text: "Is this interest recognized as legitimate under law?",
+            type: "select",
+            required: true,
+            options: ["Yes, explicitly recognized", "Yes, generally accepted", "Possibly", "Uncertain"],
+          },
+          {
+            id: "lia1_3",
+            text: "What benefit does pursuing this interest provide?",
+            type: "textarea",
+            required: true,
+          },
+        ],
+      },
+      {
+        id: "lia2",
+        title: "Necessity Test",
+        description: "Assess whether processing is necessary",
+        questions: [
+          {
+            id: "lia2_1",
+            text: "Is the processing necessary to achieve the interest?",
+            type: "select",
+            required: true,
+            options: ["Essential", "Highly beneficial", "Somewhat beneficial", "Not clearly necessary"],
+            riskWeight: 1.5,
+          },
+          {
+            id: "lia2_2",
+            text: "Are there less intrusive ways to achieve the same goal?",
+            type: "select",
+            required: true,
+            options: ["No alternatives exist", "Alternatives less effective", "Alternatives available", "Better alternatives exist"],
+            riskWeight: 1.5,
+          },
+        ],
+      },
+      {
+        id: "lia3",
+        title: "Balancing Test",
+        description: "Balance interests against data subject rights",
+        questions: [
+          {
+            id: "lia3_1",
+            text: "What is the nature of the data being processed?",
+            type: "select",
+            required: true,
+            options: ["Non-sensitive only", "Mix of sensitivity levels", "Includes sensitive data"],
+            riskWeight: 2,
+          },
+          {
+            id: "lia3_2",
+            text: "Would data subjects reasonably expect this processing?",
+            type: "select",
+            required: true,
+            options: ["Definitely expected", "Probably expected", "Possibly unexpected", "Likely unexpected"],
+            riskWeight: 2,
+          },
+          {
+            id: "lia3_3",
+            text: "What is the potential impact on data subjects?",
+            type: "select",
+            required: true,
+            options: ["Positive/Neutral", "Minor negative", "Moderate negative", "Significant negative"],
+            riskWeight: 2,
+          },
+          {
+            id: "lia3_4",
+            text: "Are there vulnerable individuals affected?",
+            type: "boolean",
+            required: true,
+            riskWeight: 2,
+          },
+        ],
+      },
+      {
+        id: "lia4",
+        title: "Safeguards",
+        description: "Document safeguards to protect data subjects",
+        questions: [
+          {
+            id: "lia4_1",
+            text: "What safeguards are in place to protect data subjects?",
+            type: "multiselect",
+            required: true,
+            options: ["Opt-out mechanism", "Data minimization", "Retention limits", "Access controls", "Transparency measures", "Other"],
+          },
+          {
+            id: "lia4_2",
+            text: "Have you provided clear privacy information about this processing?",
+            type: "boolean",
+            required: true,
+          },
+        ],
+      },
+    ],
+    scoringLogic: {
+      method: "weighted_average",
+      riskLevels: {
+        LOW: { min: 0, max: 25 },
+        MEDIUM: { min: 26, max: 50 },
+        HIGH: { min: 51, max: 75 },
+        CRITICAL: { min: 76, max: 100 },
+      },
+    },
+  };
+
+  await prisma.assessmentTemplate.upsert({
+    where: { id: "system-lia-template" },
+    update: liaTemplate,
+    create: { id: "system-lia-template", ...liaTemplate },
   });
 
   console.log("Created assessment templates");

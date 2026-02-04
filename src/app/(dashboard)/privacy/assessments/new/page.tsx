@@ -16,9 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Loader2, ClipboardCheck, FileText } from "lucide-react";
+import { ArrowLeft, Loader2, ClipboardCheck, FileText, Lock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
+
+// Premium assessment types that require entitlements
+const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
 
 const typeLabels: Record<string, string> = {
   DPIA: "Data Protection Impact Assessment",
@@ -34,6 +38,8 @@ export default function NewAssessmentPage() {
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
+  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
+  const [accessRequiredFeature, setAccessRequiredFeature] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -48,6 +54,14 @@ export default function NewAssessmentPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
+
+  // Query entitled assessment types
+  const { data: entitledData } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+
+  const entitledTypes = entitledData?.entitledTypes ?? [];
 
   const { data: activitiesData } = trpc.dataInventory.listActivities.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -71,8 +85,19 @@ export default function NewAssessmentPage() {
     onError: (error) => {
       console.error("Failed to create assessment:", error);
       setIsSubmitting(false);
+
+      // Handle FORBIDDEN error for premium features
+      if (error.data?.code === "FORBIDDEN") {
+        const templateType = selectedTemplate?.type || "Assessment";
+        setAccessRequiredFeature(typeLabels[templateType] || templateType);
+        setAccessRequiredOpen(true);
+      }
     },
   });
+
+  // Helper to check if a template type is entitled
+  const isTypeEntitled = (type: string) => entitledTypes.includes(type as any);
+  const isPremiumType = (type: string) => PREMIUM_TYPES.includes(type);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,40 +147,64 @@ export default function NewAssessmentPage() {
             </div>
           ) : templates && templates.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {templates.map((template) => (
-                <Card
-                  key={template.id}
-                  className={`cursor-pointer transition-colors ${
-                    selectedTemplateId === template.id
-                      ? "border-primary bg-primary/5"
-                      : "hover:border-primary/50"
-                  }`}
-                  onClick={() => setSelectedTemplateId(template.id)}
-                >
-                  <CardContent className="pt-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="w-10 h-10 border-2 border-primary flex items-center justify-center">
-                        <ClipboardCheck className="w-5 h-5 text-primary" />
+              {templates.map((template) => {
+                const isPremium = isPremiumType(template.type);
+                const isEntitled = isTypeEntitled(template.type);
+                const isLocked = isPremium && !isEntitled;
+
+                return (
+                  <Card
+                    key={template.id}
+                    className={`cursor-pointer transition-colors ${
+                      selectedTemplateId === template.id
+                        ? "border-primary bg-primary/5"
+                        : isLocked
+                        ? "border-dashed opacity-75 hover:border-amber-500/50"
+                        : "hover:border-primary/50"
+                    }`}
+                    onClick={() => setSelectedTemplateId(template.id)}
+                  >
+                    <CardContent className="pt-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className={`w-10 h-10 border-2 flex items-center justify-center ${
+                          isLocked ? "border-amber-500" : "border-primary"
+                        }`}>
+                          {isLocked ? (
+                            <Lock className="w-5 h-5 text-amber-500" />
+                          ) : (
+                            <ClipboardCheck className="w-5 h-5 text-primary" />
+                          )}
+                        </div>
+                        <div className="flex gap-2 flex-wrap justify-end">
+                          <Badge variant="outline">{template.type}</Badge>
+                          {isPremium && (
+                            <Badge variant={isEntitled ? "default" : "secondary"} className={!isEntitled ? "bg-amber-100 text-amber-800 hover:bg-amber-100" : ""}>
+                              {isEntitled ? "Licensed" : "Premium"}
+                            </Badge>
+                          )}
+                          {template.isSystem && (
+                            <Badge variant="secondary">System</Badge>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Badge variant="outline">{template.type}</Badge>
-                        {template.isSystem && (
-                          <Badge variant="secondary">System</Badge>
-                        )}
-                      </div>
-                    </div>
-                    <h4 className="font-medium mt-3">{template.name}</h4>
-                    {template.description && (
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {template.description}
+                      <h4 className="font-medium mt-3">{template.name}</h4>
+                      {template.description && (
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                          {template.description}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {(template.sections as any[])?.length || 0} sections
                       </p>
-                    )}
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {(template.sections as any[])?.length || 0} sections
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
+                      {isLocked && (
+                        <p className="text-xs text-amber-600 mt-2 font-medium">
+                          Contact North End Law to enable
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
@@ -267,6 +316,13 @@ export default function NewAssessmentPage() {
           </div>
         </form>
       )}
+
+      {/* Access Required Dialog */}
+      <AccessRequiredDialog
+        open={accessRequiredOpen}
+        onClose={() => setAccessRequiredOpen(false)}
+        featureName={accessRequiredFeature}
+      />
     </div>
   );
 }
