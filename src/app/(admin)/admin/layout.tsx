@@ -10,6 +10,7 @@ import {
   Package,
   LogOut,
   Shield,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -18,6 +19,7 @@ const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/skills", label: "Skill Packages", icon: Package },
+  { href: "/admin/vendor-catalog", label: "Vendor Catalog", icon: Store },
 ];
 
 export default function AdminLayout({
