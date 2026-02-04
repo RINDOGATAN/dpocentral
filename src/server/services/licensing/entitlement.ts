@@ -219,3 +219,88 @@ export async function reactivateEntitlement(entitlementId: string) {
 export function isPremiumAssessmentType(assessmentType: AssessmentType): boolean {
   return PREMIUM_ASSESSMENT_TYPES.includes(assessmentType);
 }
+
+// ============================================================
+// Feature-based Entitlements (for non-assessment skills)
+// ============================================================
+
+export const VENDOR_CATALOG_SKILL_ID = "com.nel.dpocentral.vendor-catalog";
+
+/**
+ * Check if an organization has entitlement to a specific skill by skillId
+ */
+export async function checkSkillEntitlement(
+  organizationId: string,
+  skillId: string
+): Promise<EntitlementCheckResult> {
+  // Find the skill package by skillId
+  const skillPackage = await prisma.skillPackage.findFirst({
+    where: {
+      skillId,
+      isActive: true,
+    },
+  });
+
+  if (!skillPackage) {
+    return {
+      entitled: false,
+      reason: `Skill package ${skillId} not found`,
+    };
+  }
+
+  // Find any customer linked to this organization with an active entitlement
+  const customerOrg = await prisma.customerOrganization.findFirst({
+    where: { organizationId },
+    include: {
+      customer: {
+        include: {
+          entitlements: {
+            where: {
+              skillPackageId: skillPackage.id,
+              status: EntitlementStatus.ACTIVE,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!customerOrg) {
+    return {
+      entitled: false,
+      reason: "Organization is not linked to any customer account",
+    };
+  }
+
+  const activeEntitlement = customerOrg.customer.entitlements.find((e) => {
+    if (e.status !== EntitlementStatus.ACTIVE) return false;
+    if (e.expiresAt && e.expiresAt < new Date()) return false;
+    return true;
+  });
+
+  if (!activeEntitlement) {
+    return {
+      entitled: false,
+      reason: `No active ${skillId} license found`,
+    };
+  }
+
+  return {
+    entitled: true,
+    entitlement: {
+      id: activeEntitlement.id,
+      licenseType: activeEntitlement.licenseType,
+      expiresAt: activeEntitlement.expiresAt,
+    },
+  };
+}
+
+/**
+ * Check if organization has vendor catalog access
+ */
+export async function hasVendorCatalogAccess(
+  organizationId: string
+): Promise<boolean> {
+  const result = await checkSkillEntitlement(organizationId, VENDOR_CATALOG_SKILL_ID);
+  return result.entitled;
+}
