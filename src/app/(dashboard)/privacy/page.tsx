@@ -60,9 +60,9 @@ export default function PrivacyDashboardPage() {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-semibold">Privacy Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || "Privacy Dashboard"}</h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Overview of your privacy program
+          Privacy Dashboard
         </p>
       </div>
 
