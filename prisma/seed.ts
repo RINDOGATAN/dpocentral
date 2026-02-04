@@ -523,11 +523,12 @@ async function main() {
   // Create demo organization
   const demoOrg = await prisma.organization.upsert({
     where: { slug: "demo" },
-    update: {},
+    update: { domain: "privacycloud.com" },
     create: {
       id: "demo-organization",
       name: "Acme Corporation (Demo)",
       slug: "demo",
+      domain: "privacycloud.com",
       settings: { isDemo: true },
     },
   });
