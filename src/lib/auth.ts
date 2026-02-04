@@ -93,6 +93,51 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async signIn({ user }) {
+      // Auto-join organization by email domain
+      if (user.email) {
+        const emailDomain = user.email.split("@")[1];
+
+        // Find organization with matching domain
+        const matchingOrg = await prisma.organization.findFirst({
+          where: { domain: emailDomain },
+        });
+
+        if (matchingOrg) {
+          // Check if user is already a member
+          const existingMembership = await prisma.organizationMember.findFirst({
+            where: {
+              organizationId: matchingOrg.id,
+              userId: user.id,
+            },
+          });
+
+          if (!existingMembership) {
+            // Auto-add user as MEMBER
+            await prisma.organizationMember.create({
+              data: {
+                organizationId: matchingOrg.id,
+                userId: user.id,
+                role: "MEMBER",
+              },
+            });
+
+            // Log the auto-join
+            await prisma.auditLog.create({
+              data: {
+                organizationId: matchingOrg.id,
+                userId: user.id,
+                entityType: "OrganizationMember",
+                entityId: user.id,
+                action: "AUTO_JOIN",
+                changes: { domain: emailDomain, email: user.email },
+              },
+            });
+          }
+        }
+      }
+      return true;
+    },
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
