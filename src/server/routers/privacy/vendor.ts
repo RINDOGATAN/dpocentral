@@ -12,8 +12,21 @@ import {
   DataCategory,
 } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
+import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
 
 export const vendorRouter = createTRPCRouter({
+  // ============================================================
+  // VENDOR CATALOG ACCESS
+  // ============================================================
+
+  // Check if organization has vendor catalog access
+  hasVendorCatalogAccess: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const hasAccess = await hasVendorCatalogAccess(ctx.organization.id);
+      return { hasAccess };
+    }),
+
   // ============================================================
   // VENDORS
   // ============================================================

@@ -17,6 +17,10 @@ import {
   AlertTriangle,
   Filter,
   Loader2,
+  Database,
+  Lock,
+  Mail,
+  Sparkles,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -49,6 +53,13 @@ export default function VendorsPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
+
+  const { data: catalogAccess } = trpc.vendor.hasVendorCatalogAccess.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+
+  const hasVendorCatalog = catalogAccess?.hasAccess ?? false;
 
   const vendors = vendorsData?.vendors ?? [];
   const byStatus = statsData?.byStatus as Record<string, number> | undefined;
@@ -116,6 +127,65 @@ export default function VendorsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Vendor Catalog Feature Card */}
+      {hasVendorCatalog ? (
+        <Card className="border-primary/50 bg-primary/5">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 border-2 border-primary flex items-center justify-center">
+                  <Database className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">Vendor Catalog</h3>
+                    <Badge className="bg-primary">Active</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Search 400+ pre-audited MarTech, AI, and SaaS vendors
+                  </p>
+                </div>
+              </div>
+              <Link href="/privacy/vendors/new?catalog=true">
+                <Button>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Add from Catalog
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-dashed border-amber-500/50 bg-amber-500/5">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 border-2 border-amber-500 flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-amber-500" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">Vendor Catalog</h3>
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-800">
+                      Premium
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Get access to 400+ pre-audited vendors with compliance data, certifications, and DPA links
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" asChild>
+                <a href="mailto:hello@northend.law?subject=DPO%20Central%20Vendor%20Catalog">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Contact Us
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Search */}
       <div className="flex gap-4">
