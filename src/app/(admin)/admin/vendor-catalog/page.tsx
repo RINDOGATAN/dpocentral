@@ -32,8 +32,8 @@ import { trpc } from "@/lib/trpc";
 
 export default function VendorCatalogPage() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("");
-  const [verifiedFilter, setVerifiedFilter] = useState<string>("");
+  const [category, setCategory] = useState<string>("all");
+  const [verifiedFilter, setVerifiedFilter] = useState<string>("all");
 
   const { data: stats } = trpc.vendorCatalog.getStats.useQuery();
 
@@ -43,7 +43,7 @@ export default function VendorCatalogPage() {
     trpc.vendorCatalog.list.useInfiniteQuery(
       {
         search: search || undefined,
-        category: category || undefined,
+        category: category === "all" ? undefined : category,
         isVerified:
           verifiedFilter === "verified"
             ? true
@@ -137,7 +137,7 @@ export default function VendorCatalogPage() {
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+            <SelectItem value="all">All Categories</SelectItem>
             {categories?.map((cat: string) => (
               <SelectItem key={cat} value={cat}>
                 {cat}
@@ -150,7 +150,7 @@ export default function VendorCatalogPage() {
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Status</SelectItem>
+            <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="verified">Verified</SelectItem>
             <SelectItem value="unverified">Unverified</SelectItem>
           </SelectContent>
@@ -272,7 +272,7 @@ export default function VendorCatalogPage() {
             <Store className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
             <h3 className="font-medium">No vendors found</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              {search || category || verifiedFilter
+              {search || category !== "all" || verifiedFilter !== "all"
                 ? "Try adjusting your filters"
                 : "Run the seed script to populate the vendor catalog"}
             </p>
