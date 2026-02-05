@@ -24,6 +24,7 @@ export interface EntitlementCheckResult {
 
 /**
  * Check if an organization has entitlement to a specific assessment type
+ * Also checks if they have the Complete package which grants access to all premium types
  */
 export async function checkAssessmentEntitlement(
   organizationId: string,
@@ -49,7 +50,15 @@ export async function checkAssessmentEntitlement(
     };
   }
 
-  // Find any customer linked to this organization with an active entitlement
+  // Also find the Complete package for bundle check
+  const completePackage = await prisma.skillPackage.findFirst({
+    where: {
+      skillId: "com.nel.dpocentral.complete",
+      isActive: true,
+    },
+  });
+
+  // Find any customer linked to this organization
   const customerOrg = await prisma.customerOrganization.findFirst({
     where: { organizationId },
     include: {
@@ -57,8 +66,12 @@ export async function checkAssessmentEntitlement(
         include: {
           entitlements: {
             where: {
-              skillPackageId: skillPackage.id,
               status: EntitlementStatus.ACTIVE,
+              skillPackageId: {
+                in: completePackage
+                  ? [skillPackage.id, completePackage.id]
+                  : [skillPackage.id],
+              },
             },
           },
         },
@@ -225,6 +238,16 @@ export function isPremiumAssessmentType(assessmentType: AssessmentType): boolean
 // ============================================================
 
 export const VENDOR_CATALOG_SKILL_ID = "com.nel.dpocentral.vendor-catalog";
+export const COMPLETE_PACKAGE_SKILL_ID = "com.nel.dpocentral.complete";
+
+// The Complete package grants access to all premium assessment types and Vendor Catalog
+const COMPLETE_PACKAGE_INCLUDES = [
+  "com.nel.dpocentral.dpia",
+  "com.nel.dpocentral.pia",
+  "com.nel.dpocentral.tia",
+  "com.nel.dpocentral.vendor",
+  "com.nel.dpocentral.vendor-catalog",
+];
 
 /**
  * Check if an organization has entitlement to a specific skill by skillId
@@ -297,10 +320,24 @@ export async function checkSkillEntitlement(
 
 /**
  * Check if organization has vendor catalog access
+ * Granted by either the Vendor Catalog skill or the Complete package
  */
 export async function hasVendorCatalogAccess(
   organizationId: string
 ): Promise<boolean> {
-  const result = await checkSkillEntitlement(organizationId, VENDOR_CATALOG_SKILL_ID);
-  return result.entitled;
+  // Check direct Vendor Catalog entitlement
+  const vendorCatalogResult = await checkSkillEntitlement(
+    organizationId,
+    VENDOR_CATALOG_SKILL_ID
+  );
+  if (vendorCatalogResult.entitled) {
+    return true;
+  }
+
+  // Check Complete package (includes Vendor Catalog)
+  const completeResult = await checkSkillEntitlement(
+    organizationId,
+    COMPLETE_PACKAGE_SKILL_ID
+  );
+  return completeResult.entitled;
 }
