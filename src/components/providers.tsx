@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import superjson from "superjson";
 import { trpc } from "@/lib/trpc";
 import { OrganizationProvider } from "@/lib/organization-context";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -22,14 +23,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <SessionProvider>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <OrganizationProvider>
-            {children}
-          </OrganizationProvider>
-        </QueryClientProvider>
-      </trpc.Provider>
-    </SessionProvider>
+    <ThemeProvider>
+      <SessionProvider>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <OrganizationProvider>
+              {children}
+            </OrganizationProvider>
+          </QueryClientProvider>
+        </trpc.Provider>
+      </SessionProvider>
+    </ThemeProvider>
   );
 }

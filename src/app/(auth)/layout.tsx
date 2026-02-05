@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 export default function AuthLayout({
   children,
@@ -13,7 +14,7 @@ export default function AuthLayout({
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <Link href="/">
-            <img src="/nel-icon.png" alt="DPO Central" className="h-8" />
+            <img src={brand.logoPath} alt={brand.name} className="h-8" />
           </Link>
         </div>
       </header>
@@ -26,7 +27,7 @@ export default function AuthLayout({
       {/* Footer */}
       <footer className="border-t border-border py-6">
         <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-          <p>DPO Central is a North End Law service.</p>
+          <p>{brand.name} is a {brand.companyName} service.</p>
         </div>
       </footer>
     </div>
