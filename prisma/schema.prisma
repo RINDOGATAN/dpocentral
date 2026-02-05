@@ -1158,6 +1158,9 @@ model SkillPackage {
   description    String?         @db.Text
   isPremium      Boolean         @default(true)
   isActive       Boolean         @default(true)
+  stripePriceId  String?         // Stripe Price ID for self-service checkout
+  priceAmount    Int?            // Price in cents (e.g., 4900 = $49.00)
+  priceCurrency  String?         @default("usd")
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
@@ -1196,21 +1199,23 @@ model CustomerOrganization {
 }
 
 model SkillEntitlement {
-  id             String            @id @default(cuid())
-  customerId     String
-  skillPackageId String
-  licenseKey     String            @unique @default(cuid())
-  licenseType    LicenseType
-  status         EntitlementStatus @default(ACTIVE)
-  expiresAt      DateTime?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id                   String            @id @default(cuid())
+  customerId           String
+  skillPackageId       String
+  licenseKey           String            @unique @default(cuid())
+  licenseType          LicenseType
+  status               EntitlementStatus @default(ACTIVE)
+  stripeSubscriptionId String?           // Stripe Subscription ID for recurring billing
+  expiresAt            DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
 
   customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
   skillPackage SkillPackage @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
 
   @@unique([customerId, skillPackageId])
   @@index([status])
+  @@index([stripeSubscriptionId])
   @@map("skill_entitlements")
 }
 

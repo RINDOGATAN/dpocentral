@@ -3,12 +3,15 @@
 import { AlertTriangle, Mail, X } from "lucide-react";
 import { Button } from "./button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
+import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 
 interface AccessRequiredDialogProps {
   open: boolean;
   onClose: () => void;
   featureName: string;
   message?: string;
+  onUpgrade?: () => void;
 }
 
 export function AccessRequiredDialog({
@@ -16,10 +19,11 @@ export function AccessRequiredDialog({
   onClose,
   featureName,
   message,
+  onUpgrade,
 }: AccessRequiredDialogProps) {
   if (!open) return null;
 
-  const defaultMessage = `${featureName} assessments require a premium license. Contact North End Law to enable this feature for your organization.`;
+  const defaultMessage = `${featureName} assessments require a premium license. Contact ${brand.companyName} to enable this feature for your organization.`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -60,7 +64,7 @@ export function AccessRequiredDialog({
           <div className="mt-4 rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">Premium Feature</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              This assessment type is part of the DPO Central premium suite.
+              This assessment type is part of the {brand.name} premium suite.
               Upgrade your plan to access advanced privacy assessment tools.
             </p>
           </div>
@@ -70,12 +74,18 @@ export function AccessRequiredDialog({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button asChild>
-            <a href="mailto:hello@northend.law?subject=DPO%20Central%20Premium%20Features">
-              <Mail className="mr-2 h-4 w-4" />
-              Contact Us
-            </a>
-          </Button>
+          {features.selfServiceUpgrade && onUpgrade ? (
+            <Button onClick={onUpgrade}>
+              Upgrade Now
+            </Button>
+          ) : (
+            <Button asChild>
+              <a href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(brand.name + ' Premium Features')}`}>
+                <Mail className="mr-2 h-4 w-4" />
+                Contact Us
+              </a>
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </div>
