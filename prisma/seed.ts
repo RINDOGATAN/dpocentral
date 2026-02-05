@@ -13,6 +13,11 @@ async function main() {
 
   console.log("Creating skill packages...");
 
+  // Stripe Price IDs - Set these from environment or after creating products in Stripe Dashboard
+  const STRIPE_PRICE_DPIA = process.env.STRIPE_PRICE_DPIA || null;
+  const STRIPE_PRICE_COMPLETE = process.env.STRIPE_PRICE_COMPLETE || null;
+  const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || null;
+
   const skillPackages = [
     {
       id: "skill-vendor-catalog",
@@ -23,6 +28,9 @@ async function main() {
       description: "Access to pre-audited vendor database with 400+ MarTech, AI, and SaaS vendors. Search, autofill, and track vendor compliance information.",
       isPremium: true,
       isActive: true,
+      stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
+      priceAmount: 2900, // $29/month
+      priceCurrency: "usd",
     },
     {
       id: "skill-dpia",
@@ -33,6 +41,9 @@ async function main() {
       description: "Conduct GDPR Article 35 compliant Data Protection Impact Assessments for high-risk processing activities.",
       isPremium: true,
       isActive: true,
+      stripePriceId: STRIPE_PRICE_DPIA,
+      priceAmount: 4900, // $49/month
+      priceCurrency: "usd",
     },
     {
       id: "skill-pia",
@@ -43,6 +54,10 @@ async function main() {
       description: "Comprehensive privacy impact assessments for new projects, systems, and initiatives.",
       isPremium: true,
       isActive: true,
+      // Part of Complete package - no individual price
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
     },
     {
       id: "skill-tia",
@@ -53,6 +68,10 @@ async function main() {
       description: "Assess the risks of international data transfers and document appropriate safeguards.",
       isPremium: true,
       isActive: true,
+      // Part of Complete package - no individual price
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
     },
     {
       id: "skill-vendor",
@@ -63,6 +82,10 @@ async function main() {
       description: "Evaluate third-party vendor privacy and security risks with comprehensive questionnaires.",
       isPremium: true,
       isActive: true,
+      // Part of Complete package - no individual price
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
     },
     {
       id: "skill-lia",
@@ -73,6 +96,9 @@ async function main() {
       description: "Document and balance legitimate interests against data subject rights.",
       isPremium: false,
       isActive: true,
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
     },
     {
       id: "skill-custom",
@@ -83,6 +109,23 @@ async function main() {
       description: "Create and conduct custom assessments tailored to your organization's needs.",
       isPremium: false,
       isActive: true,
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
+    },
+    // Complete Package - bundle of all premium assessment types
+    {
+      id: "skill-complete",
+      skillId: "com.nel.dpocentral.complete",
+      name: "COMPLETE",
+      displayName: "Complete Assessment Suite",
+      assessmentType: null, // Bundle - grants access to DPIA, PIA, TIA, VENDOR
+      description: "Full access to all premium assessment types: DPIA, PIA, TIA, and Vendor Risk Assessments. Includes Vendor Catalog access.",
+      isPremium: true,
+      isActive: true,
+      stripePriceId: STRIPE_PRICE_COMPLETE,
+      priceAmount: 14900, // $149/month
+      priceCurrency: "usd",
     },
   ];
 
