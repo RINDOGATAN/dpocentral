@@ -46,7 +46,7 @@ export function PricingTable({
   entitledSkillIds,
 }: PricingTableProps) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {plans.map((plan) => {
         const isEntitled =
           plan.skillPackageId && entitledSkillIds.includes(plan.skillPackageId);
@@ -137,6 +137,23 @@ export const defaultPricingPlans: PricingPlan[] = [
     ],
   },
   {
+    id: "vendor-catalog",
+    name: "Vendor Catalog",
+    description: "Pre-audited vendor database",
+    price: "$29",
+    period: "month",
+    isPremium: true,
+    skillPackageId: "com.nel.dpocentral.vendor-catalog",
+    features: [
+      "Everything in Core",
+      "400+ Pre-audited Vendors",
+      "Search & Autofill",
+      "GDPR/CCPA Compliance Info",
+      "Vendor Certifications",
+      "Regular Database Updates",
+    ],
+  },
+  {
     id: "dpia",
     name: "DPIA",
     description: "Data Protection Impact Assessments",
@@ -163,12 +180,12 @@ export const defaultPricingPlans: PricingPlan[] = [
     isPremium: true,
     skillPackageId: "com.nel.dpocentral.complete",
     features: [
-      "Everything in DPIA",
-      "PIA Assessments",
-      "TIA Assessments",
+      "Everything in Core",
+      "All Assessment Types (DPIA, PIA, TIA)",
       "Vendor Risk Assessments",
       "Vendor Catalog Access",
       "Advanced Reporting",
+      "Export to PDF/Word",
       "Priority Support",
     ],
   },
