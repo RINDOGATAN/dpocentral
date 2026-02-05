@@ -1,8 +1,29 @@
-# Privacy Suite
+# DPO Central (Privacy Suite)
 
 Next.js 16 + tRPC + Prisma + PostgreSQL + NextAuth
 
 **Production**: https://privacysuite-ten.vercel.app
+
+## License
+
+Open Core model:
+- **Core Platform**: AGPL-3.0 (see `LICENSE`)
+- **Premium Skills**: Proprietary, requires commercial license
+
+### Core (AGPL-3.0 - Open Source)
+- Data Inventory & ROPA
+- DSAR management & public portal
+- Incident tracking
+- Basic assessments (LIA, Custom)
+- Vendor management (basic)
+
+### Premium (Proprietary - Requires License)
+- DPIA, PIA, TIA assessments
+- Vendor risk assessments
+- Vendor Catalog database
+- Advanced audit features
+
+Premium features require entitlements via `src/server/services/licensing/`
 
 ## Modules
 - **Data Inventory** - Assets, elements, processing activities, data flow visualization
