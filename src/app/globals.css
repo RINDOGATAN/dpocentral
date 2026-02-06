@@ -38,19 +38,23 @@
   --color-card: var(--card);
   --color-lime: var(--lime);
   --color-lime-foreground: var(--lime-foreground);
-  /* Brutalist: No rounded corners */
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
-  --radius-3xl: 0;
-  --radius-4xl: 0;
+  /* Rounded edge design */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
 }
 
-/* Brutalist Dark Theme - Always dark */
+/* Dark Theme - Always dark */
 :root {
-  --radius: 0;
+  --radius: 1rem;
+  /* Shadow system */
+  --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.2), 0 8px 24px hsl(0 0% 0% / 0.3);
+  --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.2), 0 4px 12px hsl(0 0% 0% / 0.4);
+  --shadow-hover: 0 4px 16px hsl(195 53% 56% / 0.15), 0 12px 32px hsl(0 0% 0% / 0.4);
   /* Dark background */
   --background: #1a1a1a;
   --foreground: #fefeff;
@@ -118,25 +122,33 @@
 }
 
 @layer components {
-  /* Brutalist button variants */
+  /* Button variants */
   .btn-brutal {
-    @apply bg-[#53aecc] text-[#1a1a1a] font-semibold px-6 py-3 border-2 border-[#53aecc];
-    @apply hover:bg-transparent hover:text-[#53aecc] transition-colors;
+    @apply bg-[#53aecc] text-[#1a1a1a] font-semibold px-6 py-3 border-2 border-[#53aecc] rounded-full;
+    @apply hover:bg-transparent hover:text-[#53aecc] hover:translate-y-[-1px] transition-all duration-200;
+    box-shadow: var(--shadow-soft);
   }
   .btn-brutal-outline {
-    @apply bg-transparent text-[#53aecc] font-semibold px-6 py-3 border-2 border-[#53aecc];
-    @apply hover:bg-[#53aecc] hover:text-[#1a1a1a] transition-colors;
+    @apply bg-transparent text-[#53aecc] font-semibold px-6 py-3 border-2 border-[#53aecc] rounded-full;
+    @apply hover:bg-[#53aecc] hover:text-[#1a1a1a] hover:translate-y-[-1px] transition-all duration-200;
+    box-shadow: var(--shadow-soft);
   }
-  /* Brutalist card */
+  /* Card */
   .card-brutal {
-    @apply bg-[#242424] border border-[#333333] p-6;
+    @apply bg-[#242424] border border-[#333333] p-6 rounded-2xl;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  /* Brutalist input */
+  .card-brutal:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+  /* Input */
   .input-brutal {
-    @apply bg-[#242424] border border-[#333333] text-[#fefeff] px-4 py-3;
+    @apply bg-[#242424] border border-[#333333] text-[#fefeff] px-4 py-3 rounded-lg;
     @apply focus:border-[#53aecc] focus:outline-none;
   }
-  /* Brutalist tabs */
+  /* Tabs */
   .tab-brutal {
     @apply px-4 py-2 text-sm font-medium text-[#a0a0a0] border border-transparent;
     @apply hover:text-[#fefeff];
@@ -180,21 +192,21 @@
 }
 
 .react-flow__node {
-  border-radius: 0 !important;
+  border-radius: 1rem !important;
 }
 
 .react-flow__controls {
-  border-radius: 0 !important;
+  border-radius: 1rem !important;
 }
 
 .react-flow__controls-button {
-  border-radius: 0 !important;
+  border-radius: 0.5rem !important;
 }
 
 .react-flow__minimap {
-  border-radius: 0 !important;
+  border-radius: 1rem !important;
 }
 
 .react-flow__edge-path {
-  stroke-linecap: square;
+  stroke-linecap: round;
 }
