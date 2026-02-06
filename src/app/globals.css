@@ -6,7 +6,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --font-sans: var(--font-inter);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -76,7 +80,10 @@
   /* Accent = Blue */
   --accent: #53aecc;
   --accent-foreground: #1a1a1a;
-  /* Warning/Destructive - Amber instead of Red */
+  /* Warning */
+  --warning: #eab308;
+  --warning-foreground: #1a1a1a;
+  /* Destructive - Amber instead of Red */
   --destructive: #f59e0b;
   /* Borders - visible but subtle */
   --border: #333333;
@@ -160,6 +167,55 @@
   ::selection {
     @apply bg-[#53aecc] text-[#1a1a1a];
   }
+
+  /* Landing page components */
+  .paper-card {
+    @apply bg-[#242424] rounded-2xl border border-[#333333] p-6 transition-all duration-300;
+    box-shadow: var(--shadow-card);
+  }
+  .paper-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .section-label {
+    @apply text-xs uppercase tracking-[0.2em] text-[#a0a0a0] mb-4 font-medium block;
+    font-family: var(--font-body);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-[#53aecc] text-[#1a1a1a] rounded-full font-medium transition-all duration-200;
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-primary:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-[#242424] text-[#fefeff] rounded-full font-medium border border-[#333333] transition-all duration-200;
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-secondary:hover {
+    @apply bg-[#2a2a2a];
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .nav-header {
+    @apply bg-[#242424]/80 backdrop-blur-md rounded-xl md:rounded-full border border-[#333333];
+    box-shadow: var(--shadow-soft);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
 }
 
 @layer utilities {
@@ -172,6 +228,18 @@
   .border-lime {
     border-color: #53aecc;
   }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Landing page animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
 }
 
 /* React Flow brutalist overrides */
