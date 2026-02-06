@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Cloud, AlertTriangle, ArrowRight, X } from "lucide-react";
 
 interface HostedModalProps {
@@ -70,15 +71,13 @@ export function HostedModal({ open, onClose }: HostedModalProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <a
-            href="https://dpocentral.northend.law"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/sign-in"
             className="btn-primary text-sm flex-1 text-center"
           >
             Continue to DPO Central
             <ArrowRight className="w-4 h-4 ml-2 inline" />
-          </a>
+          </Link>
           <button
             onClick={onClose}
             className="btn-secondary text-sm"
