@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   ChevronDown,
   Menu,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +44,7 @@ const navItems = [
   { href: "/privacy/assessments", label: "Assessments", icon: ClipboardCheck },
   { href: "/privacy/incidents", label: "Incidents", icon: AlertTriangle },
   { href: "/privacy/vendors", label: "Vendors", icon: Building2 },
+  { href: "/privacy/docs", label: "User Guide", icon: BookOpen },
 ];
 
 export default function DashboardLayout({
