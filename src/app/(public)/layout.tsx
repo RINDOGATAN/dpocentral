@@ -12,12 +12,9 @@ export default function PublicLayout({
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             href="/"
-            className="font-display text-lg tracking-tight text-foreground"
+            className="text-lg font-bold tracking-tight text-foreground"
           >
-            TODO.LAW
-            <span className="text-[10px] align-super text-muted-foreground ml-0.5">
-              TM
-            </span>
+            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
           </Link>
 
           <div className="flex items-center gap-6">
@@ -42,7 +39,7 @@ export default function PublicLayout({
 
       {/* Footer */}
       <footer className="border-t border-border py-6">
-        <div className="max-w-6xl mx-auto px-6 flex justify-center gap-6 text-xs text-muted-foreground font-display uppercase tracking-wider">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <a
             href="https://todo.law/privacy"
             target="_blank"
@@ -51,6 +48,7 @@ export default function PublicLayout({
           >
             Privacy Policy
           </a>
+          <span className="hidden sm:inline">&middot;</span>
           <a
             href="https://todo.law/terms"
             target="_blank"
@@ -59,11 +57,12 @@ export default function PublicLayout({
           >
             Terms of Service
           </a>
+          <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
-            User Guide
+            How It Works
           </Link>
         </div>
       </footer>
