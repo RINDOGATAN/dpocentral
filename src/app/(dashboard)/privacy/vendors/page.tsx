@@ -177,7 +177,7 @@ export default function VendorsPage() {
                 </div>
               </div>
               <Button variant="outline" asChild>
-                <a href="mailto:hello@northend.law?subject=DPO%20Central%20Vendor%20Catalog">
+                <a href="mailto:hello@todo.law?subject=DPO%20Central%20Vendor%20Catalog">
                   <Mail className="w-4 h-4 mr-2" />
                   Contact Us
                 </a>

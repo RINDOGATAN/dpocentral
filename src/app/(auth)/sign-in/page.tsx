@@ -102,8 +102,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">DEALROOM</h1>
-          <p className="text-muted-foreground text-base mb-2">Contract Negotiation Platform</p>
+          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">DPO CENTRAL</h1>
           <p className="text-muted-foreground text-sm">
             Enter your email to receive a magic link
           </p>
