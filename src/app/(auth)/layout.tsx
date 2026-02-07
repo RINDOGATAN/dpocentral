@@ -12,8 +12,8 @@ export default function AuthLayout({
       {/* Header */}
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
-          <Link href="/" className="font-display text-lg tracking-tight text-foreground">
-            TODO.LAW<span className="text-[10px] align-super text-muted-foreground ml-0.5">TM</span>
+          <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
+            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
           </Link>
         </div>
       </header>
@@ -25,7 +25,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <footer className="border-t border-border py-6">
-        <div className="container mx-auto px-6 flex justify-center gap-6 text-xs text-muted-foreground font-display uppercase tracking-wider">
+        <div className="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <a
             href="https://todo.law/privacy"
             target="_blank"
@@ -34,6 +34,7 @@ export default function AuthLayout({
           >
             Privacy Policy
           </a>
+          <span className="hidden sm:inline">&middot;</span>
           <a
             href="https://todo.law/terms"
             target="_blank"
@@ -42,11 +43,12 @@ export default function AuthLayout({
           >
             Terms of Service
           </a>
+          <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
-            User Guide
+            How It Works
           </Link>
         </div>
       </footer>
