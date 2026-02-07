@@ -14,7 +14,7 @@ export default function PublicLayout({
             href="/"
             className="text-lg font-bold tracking-tight text-foreground"
           >
-            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
+            DEALROOM <span className="text-muted-foreground font-normal">- Contract Negotiation Platform</span>
           </Link>
 
           <div className="flex items-center gap-6">

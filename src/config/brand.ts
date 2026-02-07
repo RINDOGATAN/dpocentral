@@ -40,13 +40,13 @@ export interface BrandConfig {
 }
 
 /**
- * Default brand configuration for DPO Central
+ * Default brand configuration for DEALROOM
  */
 const defaultBrand: BrandConfig = {
-  name: "DPO Central",
-  tagline: "Privacy Management Made Simple",
+  name: "DEALROOM",
+  tagline: "Contract Negotiation Platform",
   description:
-    "A single source of truth for your privacy management program.",
+    "A single source of truth for your contract negotiation workflow.",
   companyName: "North End Law",
   companyWebsite: "https://northend.law",
   termsOfUseUrl: "https://northend.law/terms-of-use",
