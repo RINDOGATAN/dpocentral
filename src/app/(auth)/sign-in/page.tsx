@@ -106,12 +106,12 @@ export default function SignInPage() {
           <p className="text-muted-foreground mb-4">
             {brand.description}, powered by{" "}
             <a
-              href={brand.companyWebsite}
+              href="https://todo.law"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              {brand.companyName}
+              todo.law
             </a>
           </p>
           <p className="text-muted-foreground text-sm">
@@ -237,16 +237,16 @@ export default function SignInPage() {
           <p className="text-xs text-muted-foreground">
             By signing in, you agree to our{" "}
             <a
-              href={brand.termsOfUseUrl}
+              href="https://todo.law/terms"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              Terms of Use
+              Terms of Service
             </a>{" "}
             and{" "}
             <a
-              href={brand.privacyPolicyUrl}
+              href="https://todo.law/privacy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
