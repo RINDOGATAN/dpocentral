@@ -224,12 +224,12 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
-          <p>{brand.name} is a {brand.companyName} service.</p>
+          <p>{brand.name} is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">todo.law</a> service.</p>
           <div className="flex justify-center gap-4">
-            <a href={brand.termsOfUseUrl} target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
-              Terms of Use
+            <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+              Terms of Service
             </a>
-            <a href={brand.privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+            <a href="https://todo.law/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
               Privacy Policy
             </a>
           </div>
