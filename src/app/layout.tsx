@@ -18,7 +18,7 @@ const archivoBlack = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: `${brand.name} - ${brand.tagline}`,
+  title: `DPO CENTRAL - ${brand.tagline}`,
   description: `${brand.name} is ${brand.description.toLowerCase()}`,
 };
 
