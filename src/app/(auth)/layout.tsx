@@ -12,8 +12,8 @@ export default function AuthLayout({
       {/* Header */}
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
-          <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-            todo.law<span className="text-xs align-super text-muted-foreground ml-0.5">TM</span>
+          <Link href="/" className="font-display text-lg tracking-tight text-foreground">
+            TODO.LAW<span className="text-[10px] align-super text-muted-foreground ml-0.5">TM</span>
           </Link>
         </div>
       </header>
