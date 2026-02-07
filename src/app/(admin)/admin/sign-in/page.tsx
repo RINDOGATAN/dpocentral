@@ -29,7 +29,7 @@ export default function AdminSignInPage() {
           </div>
           <CardTitle>Platform Admin</CardTitle>
           <CardDescription>
-            Sign in to access DEALROOM administration
+            Sign in to access DPO Central administration
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

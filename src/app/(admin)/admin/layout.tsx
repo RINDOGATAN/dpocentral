@@ -88,7 +88,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-6">
             <Link href="/admin" className="flex items-center gap-2">
               <Shield className="w-6 h-6 text-primary" />
-              <span className="font-semibold">DEALROOM Admin</span>
+              <span className="font-semibold">DPO Central Admin</span>
             </Link>
 
             {/* Navigation */}
@@ -146,7 +146,7 @@ export default function AdminLayout({
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-6 text-center text-xs text-muted-foreground">
-          <p>DEALROOM Platform Administration - North End Law</p>
+          <p>DPO Central Platform Administration - TODO.LAW</p>
         </div>
       </footer>
     </div>
