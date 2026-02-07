@@ -104,7 +104,7 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">DPO CENTRAL</h1>
           <p className="text-muted-foreground text-sm">
-            Enter your email to receive a magic link
+            Privacy Program Management
           </p>
         </div>
 
