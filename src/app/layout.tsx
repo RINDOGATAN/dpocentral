@@ -18,7 +18,7 @@ const archivoBlack = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: brand.name,
+  title: `${brand.name} - ${brand.tagline}`,
   description: `${brand.name} is ${brand.description.toLowerCase()}`,
 };
 
