@@ -198,7 +198,7 @@ export default function NewAssessmentPage() {
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          Contact North End Law to enable
+                          Contact TODO.LAW to enable
                         </p>
                       )}
                     </CardContent>

@@ -315,7 +315,7 @@ export const assessmentRouter = createTRPCRouter({
         if (!entitlementResult.entitled) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: `${template.type} assessments require a premium license. Contact North End Law to enable this feature.`,
+            message: `${template.type} assessments require a premium license. Contact TODO.LAW to enable this feature.`,
           });
         }
       }

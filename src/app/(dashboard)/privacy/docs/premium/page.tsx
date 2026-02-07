@@ -34,7 +34,7 @@ export default function DocsPremiumPage() {
                 Contact our team to enable premium features for your organization.
               </p>
               <Button variant="outline" size="sm" className="mt-3" asChild>
-                <a href="mailto:hello@northend.law">
+                <a href="mailto:hello@todo.law">
                   <Mail className="h-4 w-4 mr-2" />
                   Contact Us
                 </a>
@@ -76,7 +76,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable DPIA">
-          Contact your account manager or email hello@northend.law to enable DPIA assessments for your organization.
+          Contact your account manager or email hello@todo.law to enable DPIA assessments for your organization.
         </InfoCallout>
       </DocSection>
 
@@ -99,7 +99,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable PIA">
-          Contact your account manager or email hello@northend.law to enable PIA assessments for your organization.
+          Contact your account manager or email hello@todo.law to enable PIA assessments for your organization.
         </InfoCallout>
       </DocSection>
 
@@ -133,7 +133,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable TIA">
-          Contact your account manager or email hello@northend.law to enable TIA assessments for your organization.
+          Contact your account manager or email hello@todo.law to enable TIA assessments for your organization.
         </InfoCallout>
       </DocSection>
 
@@ -162,7 +162,7 @@ export default function DocsPremiumPage() {
           The assessment provides the formal risk evaluation, while questionnaires gather detailed evidence from the vendor.
         </InfoCallout>
         <InfoCallout type="info" title="Enable Vendor Risk Assessment">
-          Contact your account manager or email hello@northend.law to enable vendor risk assessments.
+          Contact your account manager or email hello@todo.law to enable vendor risk assessments.
         </InfoCallout>
       </DocSection>
 
@@ -202,7 +202,7 @@ export default function DocsPremiumPage() {
           </Card>
         </div>
         <InfoCallout type="info" title="Enable Vendor Catalog">
-          Contact your account manager or email hello@northend.law to enable the Vendor Catalog for your organization.
+          Contact your account manager or email hello@todo.law to enable the Vendor Catalog for your organization.
         </InfoCallout>
       </DocSection>
 
