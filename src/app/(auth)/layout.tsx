@@ -13,7 +13,7 @@ export default function AuthLayout({
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
+            DEALROOM <span className="text-muted-foreground font-normal">- Contract Negotiation Platform</span>
           </Link>
         </div>
       </header>
