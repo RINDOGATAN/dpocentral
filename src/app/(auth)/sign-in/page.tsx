@@ -102,18 +102,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display mb-2 text-white uppercase tracking-wide">DPO CENTRAL</h1>
-          <p className="text-muted-foreground mb-4">
-            {brand.description}, powered by{" "}
-            <a
-              href="https://todo.law"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              todo.law
-            </a>
-          </p>
+          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">DPO CENTRAL</h1>
           <p className="text-muted-foreground text-sm">
             Enter your email to receive a magic link
           </p>
