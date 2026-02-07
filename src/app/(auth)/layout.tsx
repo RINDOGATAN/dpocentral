@@ -43,7 +43,7 @@ export default function AuthLayout({
             Terms of Service
           </a>
           <Link
-            href="/privacy/docs"
+            href="/docs"
             className="hover:text-foreground transition-colors"
           >
             User Guide
