@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { brand } from "@/config/brand";
+
 
 export function OrganizationSetup() {
   const [name, setName] = useState("");
@@ -49,10 +49,10 @@ export function OrganizationSetup() {
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4">
-            <img src={brand.logoPath} alt={brand.name} className="h-12" />
+          <div className="mx-auto mb-4 text-lg font-bold tracking-tight text-foreground">
+            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
           </div>
-          <CardTitle>Welcome to {brand.name}</CardTitle>
+          <CardTitle>Welcome to DPO CENTRAL</CardTitle>
           <CardDescription>
             Create your organization to get started with privacy management
           </CardDescription>
