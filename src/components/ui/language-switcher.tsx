@@ -23,14 +23,18 @@ import { locales, localeNames, type Locale } from "@/i18n/config";
 import { features } from "@/config/features";
 
 export function LanguageSwitcher() {
-  const locale = useLocale() as Locale;
-  const router = useRouter();
-  const pathname = usePathname();
-
-  // Don't render if i18n is disabled
+  // Don't render if i18n is disabled - must check before hooks
   if (!features.i18nEnabled) {
     return null;
   }
+
+  return <LanguageSwitcherInner />;
+}
+
+function LanguageSwitcherInner() {
+  const locale = useLocale() as Locale;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleLocaleChange = (newLocale: Locale) => {
     // Remove current locale from pathname if present
