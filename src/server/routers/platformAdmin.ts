@@ -13,17 +13,18 @@ export const platformAdminRouter = createTRPCRouter({
   // ADMIN CHECK
   // ============================================================
 
-  // Check if current user is a platform admin
+  // Check if current user is a platform admin (via ADMIN_EMAILS env var)
   isAdmin: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.session.user?.email) {
       return { isAdmin: false };
     }
 
-    const admin = await ctx.prisma.platformAdmin.findUnique({
-      where: { email: ctx.session.user.email },
-    });
+    const adminEmails = (process.env.ADMIN_EMAILS || "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
 
-    return { isAdmin: !!admin?.isActive };
+    return { isAdmin: adminEmails.includes(ctx.session.user.email.toLowerCase()) };
   }),
 
   // ============================================================
