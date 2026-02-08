@@ -91,7 +91,7 @@ export default function DashboardLayout({
               <SheetContent side="left" className="w-[280px] sm:w-[320px]">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <img src={brand.logoPath} alt={brand.name} className="h-8" />
+                    <span className="text-lg font-bold tracking-tight">DPO CENTRAL</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
@@ -146,8 +146,8 @@ export default function DashboardLayout({
               </SheetContent>
             </Sheet>
 
-            <Link href="/privacy" className="flex items-center shrink-0">
-              <img src={brand.logoPath} alt={brand.name} className="h-8" />
+            <Link href="/privacy" className="flex items-center shrink-0 text-lg font-bold tracking-tight">
+              DPO CENTRAL
             </Link>
 
             {/* Organization Selector - Desktop */}
@@ -224,7 +224,7 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
-          <p>{brand.name} is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">todo.law</a> service.</p>
+          <p>DPO CENTRAL is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">TODO.LAW</a> service.</p>
           <div className="flex justify-center gap-4">
             <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
               Terms of Service
