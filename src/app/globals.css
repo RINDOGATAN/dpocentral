@@ -74,9 +74,9 @@
   /* Muted */
   --muted: #242424;
   --muted-foreground: #a0a0a0;
-  /* Accent = Blue */
+  /* Accent = Blue (subtle tint for hover states) */
   --accent: #53aecc;
-  --accent-foreground: #1a1a1a;
+  --accent-foreground: #fefeff;
   /* Warning/Destructive - Amber instead of Red */
   --destructive: #f59e0b;
   /* Borders - visible but subtle */
