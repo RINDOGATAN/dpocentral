@@ -47,9 +47,20 @@ export default function SignInPage() {
     setError(null);
 
     try {
-      await signIn("google", {
+      // Use redirect:false so signIn returns a result instead of navigating,
+      // then redirect manually. This avoids next-auth/react's redirect
+      // silently failing on Next.js 16 App Router.
+      const result = await signIn("google", {
+        redirect: false,
         callbackUrl: "/privacy",
       });
+
+      if (result?.url) {
+        window.location.href = result.url;
+      } else if (result?.error) {
+        setError("Google sign-in failed. Please try again.");
+        setIsGoogleLoading(false);
+      }
     } catch (err) {
       setError("Google sign-in failed.");
       setIsGoogleLoading(false);
