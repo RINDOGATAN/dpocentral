@@ -16,13 +16,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Loader2, ClipboardCheck, FileText, Lock } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  ClipboardCheck,
+  Lock,
+  Scale,
+  FileText,
+  ShieldCheck,
+  ArrowRightLeft,
+  Building2,
+  Settings2,
+} from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
+
+const ASSESSMENT_TYPES = [
+  {
+    type: "LIA",
+    name: "Legitimate Interest Assessment",
+    shortName: "LIA",
+    description: "Balance legitimate interests against data subject rights under GDPR Article 6(1)(f).",
+    icon: Scale,
+    premium: false,
+  },
+  {
+    type: "CUSTOM",
+    name: "Custom Assessment",
+    shortName: "Custom",
+    description: "Flexible assessment template for custom privacy reviews and evaluations.",
+    icon: Settings2,
+    premium: false,
+  },
+  {
+    type: "DPIA",
+    name: "Data Protection Impact Assessment",
+    shortName: "DPIA",
+    description: "Comprehensive assessment for high-risk processing activities under GDPR Article 35.",
+    icon: ShieldCheck,
+    premium: true,
+  },
+  {
+    type: "PIA",
+    name: "Privacy Impact Assessment",
+    shortName: "PIA",
+    description: "Evaluate privacy risks and impacts of projects, systems, or processes.",
+    icon: ClipboardCheck,
+    premium: true,
+  },
+  {
+    type: "TIA",
+    name: "Transfer Impact Assessment",
+    shortName: "TIA",
+    description: "Assess risks of international data transfers and supplementary measures needed.",
+    icon: ArrowRightLeft,
+    premium: true,
+  },
+  {
+    type: "VENDOR",
+    name: "Vendor Risk Assessment",
+    shortName: "Vendor",
+    description: "Evaluate privacy and security risks associated with third-party vendors.",
+    icon: Building2,
+    premium: true,
+  },
+];
 
 const typeLabels: Record<string, string> = {
   DPIA: "Data Protection Impact Assessment",
@@ -37,6 +99,7 @@ export default function NewAssessmentPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
   const [accessRequiredFeature, setAccessRequiredFeature] = useState("");
@@ -50,11 +113,6 @@ export default function NewAssessmentPage() {
 
   const utils = trpc.useUtils();
 
-  const { data: templates, isLoading: templatesLoading } = trpc.assessment.listTemplates.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
-  );
-
   // Query entitled assessment types
   const { data: entitledData } = trpc.assessment.getEntitledTypes.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -63,19 +121,33 @@ export default function NewAssessmentPage() {
 
   const entitledTypes = entitledData?.entitledTypes ?? [];
 
+  // Load templates filtered by selected type
+  const { data: templates, isLoading: templatesLoading } = trpc.assessment.listTemplates.useQuery(
+    { organizationId: organization?.id ?? "", type: selectedType as any },
+    { enabled: !!organization?.id && !!selectedType }
+  );
+
   const { data: activitiesData } = trpc.dataInventory.listActivities.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && !!selectedType }
   );
 
   const { data: vendorsData } = trpc.vendor.list.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && selectedType === "VENDOR" }
   );
 
   const activities = activitiesData?.activities ?? [];
   const vendors = vendorsData?.vendors ?? [];
-  const selectedTemplate = templates?.find((t) => t.id === selectedTemplateId);
+
+  // Auto-select template when templates load for selected type
+  const effectiveTemplateId = (() => {
+    if (selectedTemplateId) return selectedTemplateId;
+    if (templates && templates.length === 1) return templates[0].id;
+    return "";
+  })();
+
+  const selectedTemplate = templates?.find((t) => t.id === effectiveTemplateId);
 
   const createAssessment = trpc.assessment.create.useMutation({
     onSuccess: (data) => {
@@ -86,28 +158,40 @@ export default function NewAssessmentPage() {
       console.error("Failed to create assessment:", error);
       setIsSubmitting(false);
 
-      // Handle FORBIDDEN error for premium features
       if (error.data?.code === "FORBIDDEN") {
-        const templateType = selectedTemplate?.type || "Assessment";
-        setAccessRequiredFeature(typeLabels[templateType] || templateType);
+        setAccessRequiredFeature(typeLabels[selectedType ?? ""] || "Assessment");
         setAccessRequiredOpen(true);
       }
     },
   });
 
-  // Helper to check if a template type is entitled
   const isTypeEntitled = (type: string) => entitledTypes.includes(type as any);
   const isPremiumType = (type: string) => PREMIUM_TYPES.includes(type);
 
+  const handleTypeSelect = (type: string) => {
+    const isPremium = isPremiumType(type);
+    const isEntitled = isTypeEntitled(type);
+
+    if (isPremium && !isEntitled) {
+      setAccessRequiredFeature(typeLabels[type] || type);
+      setAccessRequiredOpen(true);
+      return;
+    }
+
+    setSelectedType(type);
+    setSelectedTemplateId("");
+    setFormData({ name: "", description: "", processingActivityId: "", vendorId: "" });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!organization?.id || !formData.name || !selectedTemplateId) return;
+    if (!organization?.id || !formData.name || !effectiveTemplateId) return;
 
     setIsSubmitting(true);
 
     createAssessment.mutate({
       organizationId: organization.id,
-      templateId: selectedTemplateId,
+      templateId: effectiveTemplateId,
       name: formData.name,
       description: formData.description || undefined,
       processingActivityId: formData.processingActivityId || undefined,
@@ -127,74 +211,82 @@ export default function NewAssessmentPage() {
         <div>
           <h1 className="text-2xl font-semibold">New Assessment</h1>
           <p className="text-muted-foreground">
-            Start a new privacy impact assessment
+            {selectedType
+              ? `Creating ${typeLabels[selectedType] || selectedType}`
+              : "Choose an assessment type to get started"}
           </p>
         </div>
       </div>
 
-      {/* Template Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Select Template</CardTitle>
-          <CardDescription>
-            Choose an assessment template to get started
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {templatesLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-primary" />
-            </div>
-          ) : templates && templates.length > 0 ? (
+      {/* Step 1: Type Selection */}
+      {!selectedType && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Select Assessment Type</CardTitle>
+            <CardDescription>
+              Choose the type of assessment you need to perform
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {templates.map((template) => {
-                const isPremium = isPremiumType(template.type);
-                const isEntitled = isTypeEntitled(template.type);
+              {ASSESSMENT_TYPES.map((at) => {
+                const Icon = at.icon;
+                const isPremium = at.premium;
+                const isEntitled = isTypeEntitled(at.type);
                 const isLocked = isPremium && !isEntitled;
 
                 return (
                   <Card
-                    key={template.id}
-                    className={`cursor-pointer transition-colors ${
-                      selectedTemplateId === template.id
-                        ? "border-primary bg-primary/5"
-                        : isLocked
+                    key={at.type}
+                    className={`cursor-pointer transition-all ${
+                      isLocked
                         ? "border-dashed opacity-75 hover:border-amber-500/50"
-                        : "hover:border-primary/50"
+                        : "hover:border-primary/50 hover:shadow-md"
                     }`}
-                    onClick={() => setSelectedTemplateId(template.id)}
+                    onClick={() => handleTypeSelect(at.type)}
                   >
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className={`w-10 h-10 border-2 flex items-center justify-center ${
-                          isLocked ? "border-amber-500" : "border-primary"
-                        }`}>
+                    <CardContent className="pt-5 pb-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div
+                          className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center ${
+                            isLocked
+                              ? "border-amber-500 bg-amber-500/10"
+                              : "border-primary bg-primary/10"
+                          }`}
+                        >
                           {isLocked ? (
                             <Lock className="w-5 h-5 text-amber-500" />
                           ) : (
-                            <ClipboardCheck className="w-5 h-5 text-primary" />
+                            <Icon className="w-5 h-5 text-primary" />
                           )}
                         </div>
-                        <div className="flex gap-2 flex-wrap justify-end">
-                          <Badge variant="outline">{template.type}</Badge>
-                          {isPremium && (
-                            <Badge variant={isEntitled ? "default" : "secondary"} className={!isEntitled ? "bg-amber-100 text-amber-800 hover:bg-amber-100" : ""}>
-                              {isEntitled ? "Licensed" : "Premium"}
+                        <div className="flex gap-1.5">
+                          {isPremium ? (
+                            isEntitled ? (
+                              <Badge variant="default" className="text-xs">
+                                Licensed
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant="secondary"
+                                className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
+                              >
+                                Premium
+                              </Badge>
+                            )
+                          ) : (
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
+                            >
+                              Free
                             </Badge>
-                          )}
-                          {template.isSystem && (
-                            <Badge variant="secondary">System</Badge>
                           )}
                         </div>
                       </div>
-                      <h4 className="font-medium mt-3">{template.name}</h4>
-                      {template.description && (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                          {template.description}
-                        </p>
-                      )}
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {(template.sections as any[])?.length || 0} sections
+                      <h4 className="font-medium">{at.name}</h4>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {at.description}
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
@@ -206,32 +298,110 @@ export default function NewAssessmentPage() {
                 );
               })}
             </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No templates available</p>
-              <p className="text-sm">Create a template first or seed the database with system templates</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Assessment Details */}
-      {selectedTemplateId && (
+      {/* Step 2: Template picker (only if multiple templates for this type) */}
+      {selectedType && templates && templates.length > 1 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Select Template</CardTitle>
+                <CardDescription>
+                  Multiple templates available for {typeLabels[selectedType]}
+                </CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+                Change type
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              {templates.map((template) => (
+                <Card
+                  key={template.id}
+                  className={`cursor-pointer transition-colors ${
+                    effectiveTemplateId === template.id
+                      ? "border-primary bg-primary/5"
+                      : "hover:border-primary/50"
+                  }`}
+                  onClick={() => setSelectedTemplateId(template.id)}
+                >
+                  <CardContent className="pt-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <ClipboardCheck className="w-5 h-5 text-primary" />
+                      {template.isSystem && (
+                        <Badge variant="secondary" className="text-xs">System</Badge>
+                      )}
+                    </div>
+                    <h4 className="font-medium mt-2">{template.name}</h4>
+                    {template.description && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {template.description}
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {(template.sections as any[])?.length || 0} sections
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Loading templates */}
+      {selectedType && templatesLoading && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+        </div>
+      )}
+
+      {/* No templates found */}
+      {selectedType && !templatesLoading && templates && templates.length === 0 && (
+        <Card>
+          <CardContent className="py-8 text-center">
+            <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <p className="font-medium">No templates available</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              No template found for {typeLabels[selectedType]}. Run the template seed script or create a template first.
+            </p>
+            <Button variant="outline" className="mt-4" onClick={() => setSelectedType(null)}>
+              Choose a different type
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Step 3: Assessment Details Form */}
+      {selectedType && effectiveTemplateId && !templatesLoading && (
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Assessment Details</CardTitle>
-              <CardDescription>
-                Using template: {selectedTemplate?.name} ({typeLabels[selectedTemplate?.type ?? ""] || selectedTemplate?.type})
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Assessment Details</CardTitle>
+                  <CardDescription>
+                    {selectedTemplate
+                      ? `Using template: ${selectedTemplate.name}`
+                      : `Creating ${typeLabels[selectedType]}`}
+                  </CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+                  Change type
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Assessment Name *</Label>
                 <Input
                   id="name"
-                  placeholder="e.g., Customer Analytics Platform DPIA"
+                  placeholder={`e.g., ${typeLabels[selectedType]} - Q1 2026`}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
@@ -269,7 +439,7 @@ export default function NewAssessmentPage() {
                   </Select>
                 </div>
 
-                {selectedTemplate?.type === "VENDOR" && (
+                {selectedType === "VENDOR" && (
                   <div className="space-y-2">
                     <Label htmlFor="vendor">Link to Vendor</Label>
                     <Select
@@ -303,7 +473,7 @@ export default function NewAssessmentPage() {
             <Link href="/privacy/assessments">
               <Button variant="outline" type="button">Cancel</Button>
             </Link>
-            <Button type="submit" disabled={isSubmitting || !formData.name || !selectedTemplateId}>
+            <Button type="submit" disabled={isSubmitting || !formData.name || !effectiveTemplateId}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
