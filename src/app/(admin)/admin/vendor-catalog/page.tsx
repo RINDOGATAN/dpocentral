@@ -151,7 +151,7 @@ export default function VendorCatalogPage() {
         </Button>
         {enrichBulk.isPending && (
           <p className="text-sm text-muted-foreground">
-            This may take a few minutes. Processing up to 50 vendors...
+            Processing up to 5 vendors per batch...
           </p>
         )}
       </div>
