@@ -384,7 +384,7 @@ export const vendorCatalogRouter = createTRPCRouter({
           },
         ],
       },
-      take: 50,
+      take: 5,
       orderBy: { name: "asc" },
     });
 
@@ -466,8 +466,6 @@ export const vendorCatalogRouter = createTRPCRouter({
         });
       }
 
-      // 1s delay between vendors to avoid rate limits
-      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     return {
