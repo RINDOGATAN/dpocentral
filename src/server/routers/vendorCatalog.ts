@@ -366,12 +366,14 @@ export const vendorCatalogRouter = createTRPCRouter({
   // Bulk enrichment — processes up to 50 vendors, auto-saves results
   enrichBulk: adminProcedure.mutation(async ({ ctx }) => {
     // Find vendors that have a website but are missing trust center data
+    // Exclude vendors already enriched by AI to avoid re-processing
     const candidates = await ctx.prisma.vendorCatalog.findMany({
       where: {
         OR: [
           { website: { not: null } },
           { trustCenterUrl: { not: null } },
         ],
+        NOT: { source: "ai-enriched" },
         AND: [
           {
             OR: [
