@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Jost, Archivo_Black } from "next/font/google";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -22,15 +24,17 @@ export const metadata: Metadata = {
   description: `${brand.name} is ${brand.description.toLowerCase()}`,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={`${jost.variable} ${archivoBlack.variable} font-sans antialiased`}>
-        <Providers>
+        <Providers session={session}>
           {children}
           <Toaster />
         </Providers>
