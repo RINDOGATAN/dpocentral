@@ -27,6 +27,7 @@ import {
   CheckCircle2,
   Globe,
   Shield,
+  Sparkles,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
@@ -35,9 +36,17 @@ export default function VendorCatalogPage() {
   const [category, setCategory] = useState<string>("all");
   const [verifiedFilter, setVerifiedFilter] = useState<string>("all");
 
+  const utils = trpc.useUtils();
   const { data: stats } = trpc.vendorCatalog.getStats.useQuery();
 
   const { data: categories } = trpc.vendorCatalog.listCategories.useQuery();
+
+  const enrichBulk = trpc.vendorCatalog.enrichBulk.useMutation({
+    onSuccess: () => {
+      utils.vendorCatalog.list.invalidate();
+      utils.vendorCatalog.getStats.invalidate();
+    },
+  });
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     trpc.vendorCatalog.list.useInfiniteQuery(
@@ -119,6 +128,71 @@ export default function VendorCatalogPage() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* AI Enrichment */}
+      <div className="flex items-center gap-4">
+        <Button
+          variant="outline"
+          disabled={enrichBulk.isPending}
+          onClick={() => enrichBulk.mutate()}
+        >
+          {enrichBulk.isPending ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Enriching vendors...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              Enrich All Unenriched
+            </>
+          )}
+        </Button>
+        {enrichBulk.isPending && (
+          <p className="text-sm text-muted-foreground">
+            This may take a few minutes. Processing up to 50 vendors...
+          </p>
+        )}
+      </div>
+
+      {/* Bulk Enrichment Results */}
+      {enrichBulk.data && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Enrichment Results
+            </CardTitle>
+            <CardDescription>
+              {enrichBulk.data.successful} of {enrichBulk.data.totalCandidates} vendors enriched successfully
+              {enrichBulk.data.failed > 0 && `, ${enrichBulk.data.failed} failed`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2 max-h-60 overflow-y-auto">
+              {enrichBulk.data.results.map((r) => (
+                <div
+                  key={r.slug}
+                  className="flex items-center justify-between text-sm py-1 border-b border-border/50 last:border-0"
+                >
+                  <span className="font-medium">{r.name}</span>
+                  <div className="flex items-center gap-2">
+                    {r.success ? (
+                      <Badge variant="default" className="bg-green-600">
+                        {r.fieldsEnriched} fields
+                      </Badge>
+                    ) : (
+                      <Badge variant="destructive">
+                        {r.error?.slice(0, 40) || "Failed"}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Filters */}
