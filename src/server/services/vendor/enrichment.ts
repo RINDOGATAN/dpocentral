@@ -209,7 +209,7 @@ async function extractWithClaude(
     .join("\n\n");
 
   const response = await client.messages.create({
-    model: "claude-haiku-4-20250414",
+    model: "claude-haiku-4-5-20251001",
     max_tokens: 2048,
     messages: [
       {
