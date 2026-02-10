@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { enrichVendor } from "../services/vendor/enrichment";
 
 const vendorCatalogUpdateSchema = z.object({
   slug: z.string(),
@@ -295,4 +296,185 @@ export const vendorCatalogRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  // ============================================================
+  // AI ENRICHMENT
+  // ============================================================
+
+  // Single vendor enrichment — returns enriched fields for form review (no auto-save)
+  enrich: adminProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+        overwriteExisting: z.boolean().default(false),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const vendor = await ctx.prisma.vendorCatalog.findUnique({
+        where: { slug: input.slug },
+      });
+
+      if (!vendor) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Vendor not found in catalog",
+        });
+      }
+
+      if (!vendor.website && !vendor.trustCenterUrl) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Vendor has no website or trust center URL to enrich from",
+        });
+      }
+
+      const result = await enrichVendor({
+        vendorName: vendor.name,
+        website: vendor.website,
+        trustCenterUrl: vendor.trustCenterUrl,
+        privacyPolicyUrl: vendor.privacyPolicyUrl,
+        dpaUrl: vendor.dpaUrl,
+        securityPageUrl: vendor.securityPageUrl,
+        existing: {
+          certifications: vendor.certifications,
+          frameworks: vendor.frameworks,
+          gdprCompliant: vendor.gdprCompliant,
+          ccpaCompliant: vendor.ccpaCompliant,
+          hipaaCompliant: vendor.hipaaCompliant,
+          dataLocations: vendor.dataLocations,
+          hasEuDataCenter: vendor.hasEuDataCenter,
+          subprocessors: vendor.subprocessors,
+          description: vendor.description,
+          trustCenterUrl: vendor.trustCenterUrl,
+          privacyPolicyUrl: vendor.privacyPolicyUrl,
+          dpaUrl: vendor.dpaUrl,
+          securityPageUrl: vendor.securityPageUrl,
+        },
+        overwriteExisting: input.overwriteExisting,
+      });
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: result.error || "Enrichment failed",
+        });
+      }
+
+      return result;
+    }),
+
+  // Bulk enrichment — processes up to 50 vendors, auto-saves results
+  enrichBulk: adminProcedure.mutation(async ({ ctx }) => {
+    // Find vendors that have a website but are missing trust center data
+    const candidates = await ctx.prisma.vendorCatalog.findMany({
+      where: {
+        OR: [
+          { website: { not: null } },
+          { trustCenterUrl: { not: null } },
+        ],
+        AND: [
+          {
+            OR: [
+              { certifications: { isEmpty: true } },
+              { frameworks: { isEmpty: true } },
+              { dataLocations: { isEmpty: true } },
+              { gdprCompliant: null },
+              { description: null },
+            ],
+          },
+        ],
+      },
+      take: 50,
+      orderBy: { name: "asc" },
+    });
+
+    const results: Array<{
+      slug: string;
+      name: string;
+      success: boolean;
+      fieldsEnriched: number;
+      error?: string;
+    }> = [];
+
+    for (const vendor of candidates) {
+      try {
+        const result = await enrichVendor({
+          vendorName: vendor.name,
+          website: vendor.website,
+          trustCenterUrl: vendor.trustCenterUrl,
+          privacyPolicyUrl: vendor.privacyPolicyUrl,
+          dpaUrl: vendor.dpaUrl,
+          securityPageUrl: vendor.securityPageUrl,
+          existing: {
+            certifications: vendor.certifications,
+            frameworks: vendor.frameworks,
+            gdprCompliant: vendor.gdprCompliant,
+            ccpaCompliant: vendor.ccpaCompliant,
+            hipaaCompliant: vendor.hipaaCompliant,
+            dataLocations: vendor.dataLocations,
+            hasEuDataCenter: vendor.hasEuDataCenter,
+            subprocessors: vendor.subprocessors,
+            description: vendor.description,
+            trustCenterUrl: vendor.trustCenterUrl,
+            privacyPolicyUrl: vendor.privacyPolicyUrl,
+            dpaUrl: vendor.dpaUrl,
+            securityPageUrl: vendor.securityPageUrl,
+          },
+          overwriteExisting: false,
+        });
+
+        const fields = result.enrichedFields;
+        const fieldsEnriched = Object.keys(fields).length;
+
+        if (result.success && fieldsEnriched > 0) {
+          // Auto-save enriched data
+          await ctx.prisma.vendorCatalog.update({
+            where: { slug: vendor.slug },
+            data: {
+              ...(fields.certifications && { certifications: fields.certifications }),
+              ...(fields.frameworks && { frameworks: fields.frameworks }),
+              ...(fields.gdprCompliant !== undefined && { gdprCompliant: fields.gdprCompliant }),
+              ...(fields.ccpaCompliant !== undefined && { ccpaCompliant: fields.ccpaCompliant }),
+              ...(fields.hipaaCompliant !== undefined && { hipaaCompliant: fields.hipaaCompliant }),
+              ...(fields.dataLocations && { dataLocations: fields.dataLocations }),
+              ...(fields.hasEuDataCenter !== undefined && { hasEuDataCenter: fields.hasEuDataCenter }),
+              ...(fields.subprocessors && { subprocessors: fields.subprocessors }),
+              ...(fields.description && { description: fields.description }),
+              ...(fields.trustCenterUrl && { trustCenterUrl: fields.trustCenterUrl }),
+              ...(fields.privacyPolicyUrl && { privacyPolicyUrl: fields.privacyPolicyUrl }),
+              ...(fields.dpaUrl && { dpaUrl: fields.dpaUrl }),
+              ...(fields.securityPageUrl && { securityPageUrl: fields.securityPageUrl }),
+              source: "ai-enriched",
+            },
+          });
+        }
+
+        results.push({
+          slug: vendor.slug,
+          name: vendor.name,
+          success: result.success,
+          fieldsEnriched,
+          error: result.error,
+        });
+      } catch (err) {
+        results.push({
+          slug: vendor.slug,
+          name: vendor.name,
+          success: false,
+          fieldsEnriched: 0,
+          error: err instanceof Error ? err.message : "Unknown error",
+        });
+      }
+
+      // 1s delay between vendors to avoid rate limits
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    return {
+      totalCandidates: candidates.length,
+      successful: results.filter((r) => r.success).length,
+      failed: results.filter((r) => !r.success).length,
+      results,
+    };
+  }),
 });

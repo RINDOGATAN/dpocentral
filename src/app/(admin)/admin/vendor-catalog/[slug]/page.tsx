@@ -28,6 +28,7 @@ import {
   Link as LinkIcon,
   Trash2,
   AlertTriangle,
+  Sparkles,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
@@ -106,6 +107,68 @@ export default function VendorCatalogEditPage() {
   const deleteVendor = trpc.vendorCatalog.delete.useMutation({
     onSuccess: () => {
       router.push("/admin/vendor-catalog");
+    },
+  });
+
+  const enrichVendor = trpc.vendorCatalog.enrich.useMutation({
+    onSuccess: (data) => {
+      const fields = data.enrichedFields;
+      const newFormData = { ...formData };
+      let updated = false;
+
+      // Only populate empty fields
+      if (fields.description && !formData.description) {
+        newFormData.description = fields.description;
+        updated = true;
+      }
+      if (fields.gdprCompliant !== undefined && fields.gdprCompliant !== null && !formData.gdprCompliant) {
+        newFormData.gdprCompliant = fields.gdprCompliant;
+        updated = true;
+      }
+      if (fields.ccpaCompliant !== undefined && fields.ccpaCompliant !== null && !formData.ccpaCompliant) {
+        newFormData.ccpaCompliant = fields.ccpaCompliant;
+        updated = true;
+      }
+      if (fields.hipaaCompliant !== undefined && fields.hipaaCompliant !== null && !formData.hipaaCompliant) {
+        newFormData.hipaaCompliant = fields.hipaaCompliant;
+        updated = true;
+      }
+      if (fields.hasEuDataCenter !== undefined && fields.hasEuDataCenter !== null && !formData.hasEuDataCenter) {
+        newFormData.hasEuDataCenter = fields.hasEuDataCenter;
+        updated = true;
+      }
+      if (fields.trustCenterUrl && !formData.trustCenterUrl) {
+        newFormData.trustCenterUrl = fields.trustCenterUrl;
+        updated = true;
+      }
+      if (fields.privacyPolicyUrl && !formData.privacyPolicyUrl) {
+        newFormData.privacyPolicyUrl = fields.privacyPolicyUrl;
+        updated = true;
+      }
+      if (fields.dpaUrl && !formData.dpaUrl) {
+        newFormData.dpaUrl = fields.dpaUrl;
+        updated = true;
+      }
+      if (fields.securityPageUrl && !formData.securityPageUrl) {
+        newFormData.securityPageUrl = fields.securityPageUrl;
+        updated = true;
+      }
+
+      // Merge array fields into comma-separated inputs
+      if (fields.certifications?.length && !certificationsInput.trim()) {
+        setCertificationsInput(fields.certifications.join(", "));
+        newFormData.certifications = fields.certifications;
+        updated = true;
+      }
+      if (fields.dataLocations?.length && !dataLocationsInput.trim()) {
+        setDataLocationsInput(fields.dataLocations.join(", "));
+        newFormData.dataLocations = fields.dataLocations;
+        updated = true;
+      }
+
+      if (updated) {
+        setFormData(newFormData);
+      }
     },
   });
 
@@ -512,6 +575,25 @@ export default function VendorCatalogEditPage() {
                 Cancel
               </Button>
             </Link>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={enrichVendor.isPending || !formData.website}
+              onClick={() => enrichVendor.mutate({ slug, overwriteExisting: false })}
+              title={!formData.website ? "Add a website URL first" : "Use AI to discover compliance data from the vendor's public pages"}
+            >
+              {enrichVendor.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Enriching...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Enrich from Trust Center
+                </>
+              )}
+            </Button>
             <Button type="submit" disabled={updateVendor.isPending}>
               {updateVendor.isPending ? (
                 <>
@@ -533,6 +615,14 @@ export default function VendorCatalogEditPage() {
         )}
         {updateVendor.error && (
           <p className="text-sm text-destructive">{updateVendor.error.message}</p>
+        )}
+        {enrichVendor.isSuccess && (
+          <p className="text-sm text-green-600">
+            AI enrichment complete — {enrichVendor.data.pagesScraped} page(s) scraped, {Object.keys(enrichVendor.data.enrichedFields).length} field(s) populated. Review the form and click Save.
+          </p>
+        )}
+        {enrichVendor.error && (
+          <p className="text-sm text-destructive">{enrichVendor.error.message}</p>
         )}
       </form>
 
