@@ -31,6 +31,9 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
+import { UpgradeModal } from "@/components/premium/upgrade-modal";
+import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
+import { features } from "@/config/features";
 
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
@@ -103,6 +106,8 @@ export default function NewAssessmentPage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
   const [accessRequiredFeature, setAccessRequiredFeature] = useState("");
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeSkillKey, setUpgradeSkillKey] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -174,6 +179,7 @@ export default function NewAssessmentPage() {
 
     if (isPremium && !isEntitled) {
       setAccessRequiredFeature(typeLabels[type] || type);
+      setUpgradeSkillKey(type);
       setAccessRequiredOpen(true);
       return;
     }
@@ -290,7 +296,7 @@ export default function NewAssessmentPage() {
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          Contact TODO.LAW to enable
+                          {features.selfServiceUpgrade ? "Click to upgrade" : "Contact TODO.LAW to enable"}
                         </p>
                       )}
                     </CardContent>
@@ -492,6 +498,19 @@ export default function NewAssessmentPage() {
         open={accessRequiredOpen}
         onClose={() => setAccessRequiredOpen(false)}
         featureName={accessRequiredFeature}
+        onUpgrade={() => {
+          setAccessRequiredOpen(false);
+          setUpgradeModalOpen(true);
+        }}
+      />
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        organizationId={organization?.id ?? ""}
+        skillPackageId={SKILL_PACKAGE_IDS[upgradeSkillKey] ?? ""}
+        skillName={SKILL_DISPLAY_NAMES[upgradeSkillKey] ?? accessRequiredFeature}
       />
     </div>
   );

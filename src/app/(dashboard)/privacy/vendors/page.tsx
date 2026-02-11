@@ -24,6 +24,9 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { UpgradeModal } from "@/components/premium/upgrade-modal";
+import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
+import { features } from "@/config/features";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -42,6 +45,7 @@ const riskColors: Record<string, string> = {
 
 export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
   const { data: vendorsData, isLoading } = trpc.vendor.list.useQuery(
@@ -176,12 +180,19 @@ export default function VendorsPage() {
                   </p>
                 </div>
               </div>
-              <Button variant="outline" asChild>
-                <a href="mailto:hello@todo.law?subject=DPO%20Central%20Vendor%20Catalog">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Contact Us
-                </a>
-              </Button>
+              {features.selfServiceUpgrade ? (
+                <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Upgrade
+                </Button>
+              ) : (
+                <Button variant="outline" asChild>
+                  <a href="mailto:hello@todo.law?subject=DPO%20Central%20Vendor%20Catalog">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Contact Us
+                  </a>
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -305,6 +316,16 @@ export default function VendorsPage() {
           <p className="text-muted-foreground">High risk vendors will be filtered here</p>
         </TabsContent>
       </Tabs>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        organizationId={organization?.id ?? ""}
+        skillPackageId={SKILL_PACKAGE_IDS.VENDOR_CATALOG}
+        skillName={SKILL_DISPLAY_NAMES.VENDOR_CATALOG}
+        skillDescription="Get access to 400+ pre-audited vendors with compliance data, certifications, and DPA links."
+      />
     </div>
   );
 }
