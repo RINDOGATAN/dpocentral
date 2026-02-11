@@ -15,7 +15,9 @@ async function main() {
 
   // Stripe Price IDs - Set these from environment or after creating products in Stripe Dashboard
   const STRIPE_PRICE_DPIA = process.env.STRIPE_PRICE_DPIA || null;
-  const STRIPE_PRICE_COMPLETE = process.env.STRIPE_PRICE_COMPLETE || null;
+  const STRIPE_PRICE_PIA = process.env.STRIPE_PRICE_PIA || null;
+  const STRIPE_PRICE_TIA = process.env.STRIPE_PRICE_TIA || null;
+  const STRIPE_PRICE_VENDOR = process.env.STRIPE_PRICE_VENDOR || null;
   const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || null;
 
   const skillPackages = [
@@ -29,8 +31,8 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
-      priceAmount: 2900, // $29/month
-      priceCurrency: "usd",
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
     },
     {
       id: "skill-dpia",
@@ -42,8 +44,8 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_DPIA,
-      priceAmount: 4900, // $49/month
-      priceCurrency: "usd",
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
     },
     {
       id: "skill-pia",
@@ -54,10 +56,9 @@ async function main() {
       description: "Comprehensive privacy impact assessments for new projects, systems, and initiatives.",
       isPremium: true,
       isActive: true,
-      // Part of Complete package - no individual price
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
+      stripePriceId: STRIPE_PRICE_PIA,
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
     },
     {
       id: "skill-tia",
@@ -68,10 +69,9 @@ async function main() {
       description: "Assess the risks of international data transfers and document appropriate safeguards.",
       isPremium: true,
       isActive: true,
-      // Part of Complete package - no individual price
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
+      stripePriceId: STRIPE_PRICE_TIA,
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
     },
     {
       id: "skill-vendor",
@@ -82,10 +82,9 @@ async function main() {
       description: "Evaluate third-party vendor privacy and security risks with comprehensive questionnaires.",
       isPremium: true,
       isActive: true,
-      // Part of Complete package - no individual price
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
+      stripePriceId: STRIPE_PRICE_VENDOR,
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
     },
     {
       id: "skill-lia",
@@ -113,7 +112,7 @@ async function main() {
       priceAmount: null,
       priceCurrency: null,
     },
-    // Complete Package - bundle of all premium assessment types
+    // Complete Package - kept for existing entitlements, no longer sold individually
     {
       id: "skill-complete",
       skillId: "com.nel.dpocentral.complete",
@@ -123,9 +122,9 @@ async function main() {
       description: "Full access to all premium assessment types: DPIA, PIA, TIA, and Vendor Risk Assessments. Includes Vendor Catalog access.",
       isPremium: true,
       isActive: true,
-      stripePriceId: STRIPE_PRICE_COMPLETE,
-      priceAmount: 14900, // $149/month
-      priceCurrency: "usd",
+      stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
     },
   ];
 
