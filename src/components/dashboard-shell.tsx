@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Menu,
   BookOpen,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +35,7 @@ import {
 import { useOrganization } from "@/lib/organization-context";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { features } from "@/config/features";
 
 const navItems = [
   { href: "/privacy", label: "Dashboard", icon: LayoutDashboard },
@@ -43,6 +45,9 @@ const navItems = [
   { href: "/privacy/incidents", label: "Incidents", icon: AlertTriangle },
   { href: "/privacy/vendors", label: "Vendors", icon: Building2 },
   { href: "/privacy/docs", label: "User Guide", icon: BookOpen },
+  ...(features.selfServiceUpgrade
+    ? [{ href: "/privacy/billing", label: "Billing", icon: CreditCard }]
+    : []),
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
