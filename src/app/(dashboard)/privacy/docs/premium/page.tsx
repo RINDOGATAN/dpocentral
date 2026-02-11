@@ -1,4 +1,5 @@
-import { Lock, Shield, Globe, Building2, Search, Sparkles, Mail } from "lucide-react";
+import Link from "next/link";
+import { Lock, Shield, Globe, Building2, Search, Sparkles, Mail, CreditCard } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { DocSection } from "@/components/docs/doc-section";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { features } from "@/config/features";
 
 export default function DocsPremiumPage() {
   return (
@@ -31,14 +33,25 @@ export default function DocsPremiumPage() {
               </div>
               <p className="text-sm text-muted-foreground">
                 The features on this page require a premium license. They are not included in the open-source core.
-                Contact our team to enable premium features for your organization.
+                {features.selfServiceUpgrade
+                  ? " Upgrade your plan to access advanced privacy tools."
+                  : " Contact our team to enable premium features for your organization."}
               </p>
-              <Button variant="outline" size="sm" className="mt-3" asChild>
-                <a href="mailto:hello@todo.law">
-                  <Mail className="h-4 w-4 mr-2" />
-                  Contact Us
-                </a>
-              </Button>
+              {features.selfServiceUpgrade ? (
+                <Button variant="outline" size="sm" className="mt-3" asChild>
+                  <Link href="/privacy/billing">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    View Plans & Upgrade
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" className="mt-3" asChild>
+                  <a href="mailto:hello@todo.law">
+                    <Mail className="h-4 w-4 mr-2" />
+                    Contact Us
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -76,7 +89,9 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable DPIA">
-          Contact your account manager or email hello@todo.law to enable DPIA assessments for your organization.
+          {features.selfServiceUpgrade
+            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable DPIA assessments.</>
+            : "Contact your account manager or email hello@todo.law to enable DPIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -99,7 +114,9 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable PIA">
-          Contact your account manager or email hello@todo.law to enable PIA assessments for your organization.
+          {features.selfServiceUpgrade
+            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable PIA assessments.</>
+            : "Contact your account manager or email hello@todo.law to enable PIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -133,7 +150,9 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title="Enable TIA">
-          Contact your account manager or email hello@todo.law to enable TIA assessments for your organization.
+          {features.selfServiceUpgrade
+            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable TIA assessments.</>
+            : "Contact your account manager or email hello@todo.law to enable TIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -162,7 +181,9 @@ export default function DocsPremiumPage() {
           The assessment provides the formal risk evaluation, while questionnaires gather detailed evidence from the vendor.
         </InfoCallout>
         <InfoCallout type="info" title="Enable Vendor Risk Assessment">
-          Contact your account manager or email hello@todo.law to enable vendor risk assessments.
+          {features.selfServiceUpgrade
+            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable vendor risk assessments.</>
+            : "Contact your account manager or email hello@todo.law to enable vendor risk assessments."}
         </InfoCallout>
       </DocSection>
 
@@ -202,7 +223,9 @@ export default function DocsPremiumPage() {
           </Card>
         </div>
         <InfoCallout type="info" title="Enable Vendor Catalog">
-          Contact your account manager or email hello@todo.law to enable the Vendor Catalog for your organization.
+          {features.selfServiceUpgrade
+            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable the Vendor Catalog.</>
+            : "Contact your account manager or email hello@todo.law to enable the Vendor Catalog for your organization."}
         </InfoCallout>
       </DocSection>
 

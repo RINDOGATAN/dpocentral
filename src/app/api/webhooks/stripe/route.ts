@@ -9,9 +9,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
+import { Resend } from "resend";
 import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
+
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 export async function POST(request: NextRequest) {
   // Check if Stripe is enabled
@@ -323,5 +329,31 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   console.log(`Suspended entitlements for customer ${customer.id} due to payment failure`);
 
-  // TODO: Send notification email to customer
+  // Send notification email to customer
+  if (resend && customer.email) {
+    try {
+      await resend.emails.send({
+        from: process.env.EMAIL_FROM || "noreply@todo.law",
+        to: customer.email,
+        subject: `${brand.name} — Payment Failed`,
+        html: `
+          <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; overflow: hidden;">
+            <div style="padding: 24px 24px 16px; border-bottom: 1px solid #2a2a2a;">
+              <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DPO CENTRAL</span>
+            </div>
+            <div style="padding: 32px 24px;">
+              <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">We were unable to process your latest payment. Your premium features have been temporarily suspended.</p>
+              <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">Please update your payment method to restore access.</p>
+              <a href="${process.env.NEXTAUTH_URL}/privacy/billing" style="display: inline-block; background: #53aecc; color: #1a1a1a; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">Update Payment Method</a>
+            </div>
+            <div style="padding: 16px 24px; border-top: 1px solid #2a2a2a;">
+              <p style="color: #666666; font-size: 11px; margin: 0;">TODO.LAW\u2122 \u00b7 DPO CENTRAL \u00b7 <a href="https://dpocentral.todo.law" style="color: #53aecc; text-decoration: none;">dpocentral.todo.law</a></p>
+            </div>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error("Failed to send payment failure email:", emailErr);
+    }
+  }
 }
