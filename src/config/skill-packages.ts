@@ -11,7 +11,6 @@ export const SKILL_PACKAGE_IDS: Record<string, string> = {
   TIA: "com.nel.dpocentral.tia",
   VENDOR: "com.nel.dpocentral.vendor",
   VENDOR_CATALOG: "com.nel.dpocentral.vendor-catalog",
-  COMPLETE: "com.nel.dpocentral.complete",
 };
 
 export const SKILL_DISPLAY_NAMES: Record<string, string> = {
@@ -20,5 +19,4 @@ export const SKILL_DISPLAY_NAMES: Record<string, string> = {
   TIA: "Transfer Impact Assessment (TIA)",
   VENDOR: "Vendor Risk Assessment",
   VENDOR_CATALOG: "Vendor Catalog",
-  COMPLETE: "DPO Central Complete",
 };

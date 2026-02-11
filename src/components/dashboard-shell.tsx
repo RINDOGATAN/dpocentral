@@ -15,8 +15,6 @@ import {
   LayoutDashboard,
   ChevronDown,
   Menu,
-  BookOpen,
-  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,10 +42,6 @@ const navItems = [
   { href: "/privacy/assessments", label: "Assessments", icon: ClipboardCheck },
   { href: "/privacy/incidents", label: "Incidents", icon: AlertTriangle },
   { href: "/privacy/vendors", label: "Vendors", icon: Building2 },
-  { href: "/privacy/docs", label: "User Guide", icon: BookOpen },
-  ...(features.selfServiceUpgrade
-    ? [{ href: "/privacy/billing", label: "Billing", icon: CreditCard }]
-    : []),
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -221,6 +215,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>DPO CENTRAL is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">TODO.LAW</a> service.</p>
           <div className="flex justify-center gap-4">
+            <Link href="/privacy/docs" className="hover:text-foreground underline">
+              User Guide
+            </Link>
+            {features.selfServiceUpgrade && (
+              <Link href="/privacy/billing" className="hover:text-foreground underline">
+                Billing
+              </Link>
+            )}
             <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
               Terms of Service
             </a>
