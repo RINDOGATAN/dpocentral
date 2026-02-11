@@ -89,14 +89,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get or create Stripe price ID from skill package metadata
-    // Note: In production, stripePriceId would be stored on SkillPackage
-    const stripePriceId = (skillPackage as { stripePriceId?: string }).stripePriceId;
+    // Get Stripe price ID — fall back to Complete bundle for skills without individual pricing
+    let stripePriceId = skillPackage.stripePriceId;
+    let effectiveSkillPackageId = skillPackageId;
+
     if (!stripePriceId) {
-      return NextResponse.json(
-        { error: "Skill package is not configured for purchase" },
-        { status: 400 }
-      );
+      // Skill has no individual price — try the Complete bundle
+      const completePackage = await prisma.skillPackage.findUnique({
+        where: { skillId: "com.nel.dpocentral.complete" },
+      });
+
+      if (completePackage?.stripePriceId) {
+        stripePriceId = completePackage.stripePriceId;
+        effectiveSkillPackageId = completePackage.id;
+      } else {
+        return NextResponse.json(
+          { error: "Skill package is not configured for purchase" },
+          { status: 400 }
+        );
+      }
     }
 
     // Get or create customer
@@ -154,7 +165,7 @@ export async function POST(request: NextRequest) {
       customerEmail: session.user.email,
       organizationId,
       priceId: stripePriceId,
-      skillPackageId,
+      skillPackageId: effectiveSkillPackageId,
       successUrl: `${origin}/privacy?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${origin}/privacy?checkout=cancelled`,
       metadata: {

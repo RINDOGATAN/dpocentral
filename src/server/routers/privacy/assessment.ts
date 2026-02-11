@@ -7,6 +7,7 @@ import {
   isPremiumAssessmentType,
   getEntitledAssessmentTypes,
 } from "../../services/licensing/entitlement";
+import { features } from "@/config/features";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -315,7 +316,7 @@ export const assessmentRouter = createTRPCRouter({
         if (!entitlementResult.entitled) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: `${template.type} assessments require a premium license. Contact TODO.LAW to enable this feature.`,
+            message: `${template.type} assessments require a premium license. ${features.selfServiceUpgrade ? "Upgrade your plan to access this feature." : "Contact TODO.LAW to enable this feature."}`,
           });
         }
       }
