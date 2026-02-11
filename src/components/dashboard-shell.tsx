@@ -12,7 +12,6 @@ import {
   Building2,
   LogOut,
   User,
-  LayoutDashboard,
   ChevronDown,
   Menu,
 } from "lucide-react";
@@ -36,7 +35,6 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
 
 const navItems = [
-  { href: "/privacy", label: "Dashboard", icon: LayoutDashboard },
   { href: "/privacy/data-inventory", label: "Data Inventory", icon: Database },
   { href: "/privacy/dsar", label: "DSAR", icon: FileText },
   { href: "/privacy/assessments", label: "Assessments", icon: ClipboardCheck },
