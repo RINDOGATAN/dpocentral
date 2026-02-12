@@ -12,14 +12,21 @@ import {
   ArrowRight,
   Clock,
   CheckCircle2,
+  ChevronDown,
   Loader2,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
 export default function PrivacyDashboardPage() {
-  const { organization } = useOrganization();
+  const { organization, organizations, setOrganization } = useOrganization();
 
   const { data: stats, isLoading } = trpc.organization.getDashboardStats.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -59,11 +66,35 @@ export default function PrivacyDashboardPage() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || "Privacy Dashboard"}</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          Privacy Dashboard
-        </p>
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || "Privacy Dashboard"}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Privacy Dashboard
+          </p>
+        </div>
+        {organizations.length > 1 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 shrink-0">
+                <Building2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Switch</span>
+                <ChevronDown className="w-3 h-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {organizations.map((org) => (
+                <DropdownMenuItem
+                  key={org.id}
+                  onClick={() => setOrganization(org)}
+                  className={org.id === organization?.id ? "bg-primary/10" : ""}
+                >
+                  {org.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {/* Quick Stats - 2 columns on mobile, 4 on desktop */}
