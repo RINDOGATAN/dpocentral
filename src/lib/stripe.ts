@@ -174,6 +174,54 @@ export async function createPortalSession(
 }
 
 /**
+ * Remove a single subscription item (by price) from a subscription.
+ * If it's the only item, cancels the entire subscription immediately.
+ *
+ * Returns { cancelled: true } if the whole subscription was cancelled,
+ * or { cancelled: false } if only the item was removed.
+ */
+export async function removeSubscriptionItem(
+  subscriptionId: string,
+  stripePriceId: string
+): Promise<{ cancelled: boolean }> {
+  const stripe = getStripe();
+
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+    expand: ["items"],
+  });
+
+  const items = subscription.items.data;
+  const target = items.find((item) => item.price.id === stripePriceId);
+
+  if (!target) {
+    throw new Error(
+      `No subscription item found for price ${stripePriceId} on subscription ${subscriptionId}`
+    );
+  }
+
+  if (items.length === 1) {
+    // Only item — cancel the entire subscription immediately
+    await stripe.subscriptions.cancel(subscriptionId);
+    return { cancelled: true };
+  }
+
+  // Multiple items — remove just this one with proration
+  await stripe.subscriptionItems.del(target.id, {
+    proration_behavior: "create_prorations",
+  });
+
+  // Update subscription metadata to remove the cancelled skillPackageId
+  const currentSkillIds = (subscription.metadata?.skillPackageIds ?? "")
+    .split(",")
+    .filter(Boolean);
+
+  // We don't know the skillPackageId here, but the caller can handle metadata
+  // if needed. For now, we just remove the item.
+
+  return { cancelled: false };
+}
+
+/**
  * Verify Stripe webhook signature
  */
 export function verifyWebhookSignature(

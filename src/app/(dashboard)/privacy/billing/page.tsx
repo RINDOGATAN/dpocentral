@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { ManageBillingButton } from "@/components/billing";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +30,10 @@ export default function BillingPage() {
     { id: string; name: string }[] | null
   >(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [cancelSkill, setCancelSkill] = useState<{
+    entitlementId: string;
+    name: string;
+  } | null>(null);
 
   const { data: status, isLoading: statusLoading } =
     trpc.billing.getSubscriptionStatus.useQuery(
@@ -43,6 +46,16 @@ export default function BillingPage() {
       { organizationId: organization?.id ?? "" },
       { enabled: !!organization?.id }
     );
+
+  const utils = trpc.useUtils();
+
+  const cancelFeature = trpc.billing.cancelFeature.useMutation({
+    onSuccess: () => {
+      setCancelSkill(null);
+      utils.billing.getSubscriptionStatus.invalidate();
+      utils.billing.getAvailablePlans.invalidate();
+    },
+  });
 
   if (statusLoading || plansLoading || !organization) {
     return (
@@ -66,6 +79,8 @@ export default function BillingPage() {
       skillId: pkg.skillId,
       name: pkg.name,
       isActive,
+      entitlementId: entitlement?.id ?? null,
+      stripeSubscriptionId: entitlement?.stripeSubscriptionId ?? null,
       renewsAt: entitlement?.expiresAt
         ? new Date(entitlement.expiresAt).toLocaleDateString()
         : null,
@@ -140,6 +155,9 @@ export default function BillingPage() {
                 <TableHead>Feature</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Details</TableHead>
+                {features.selfServiceUpgrade && (
+                  <TableHead className="w-24"></TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -195,6 +213,25 @@ export default function BillingPage() {
                       </div>
                     )}
                   </TableCell>
+                  {features.selfServiceUpgrade && (
+                    <TableCell>
+                      {row.isActive && row.stripeSubscriptionId && row.entitlementId && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive"
+                          onClick={() =>
+                            setCancelSkill({
+                              entitlementId: row.entitlementId!,
+                              name: row.name,
+                            })
+                          }
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -229,9 +266,42 @@ export default function BillingPage() {
         </div>
       )}
 
-      {/* Manage payment method */}
-      {status?.stripeCustomerId && (
-        <ManageBillingButton organizationId={organization.id} />
+      {/* Cancel confirmation */}
+      {cancelSkill && (
+        <Card className="border-destructive">
+          <CardContent className="pt-6">
+            <p className="text-sm">
+              Cancel <span className="font-semibold">{cancelSkill.name}</span>?
+              You&apos;ll lose access immediately and receive a prorated credit.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCancelSkill(null)}
+                disabled={cancelFeature.isPending}
+              >
+                Keep Feature
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() =>
+                  cancelFeature.mutate({
+                    organizationId: organization.id,
+                    entitlementId: cancelSkill.entitlementId,
+                  })
+                }
+                disabled={cancelFeature.isPending}
+              >
+                {cancelFeature.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : null}
+                Confirm Cancellation
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Enable single feature modal */}
