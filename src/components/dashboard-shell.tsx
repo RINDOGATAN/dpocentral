@@ -12,16 +12,9 @@ import {
   Building2,
   LogOut,
   User,
-  ChevronDown,
   Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -45,7 +38,7 @@ const navItems = [
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const { organization, organizations, isLoading: orgLoading, setOrganization } = useOrganization();
+  const { organization, organizations, isLoading: orgLoading } = useOrganization();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   if (orgLoading) {
@@ -106,30 +99,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     );
                   })}
                 </nav>
-                {/* Mobile org selector */}
-                {organizations.length > 1 && (
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <p className="text-xs text-muted-foreground mb-2 px-3">Organization</p>
-                    <div className="space-y-1">
-                      {organizations.map((org) => (
-                        <Button
-                          key={org.id}
-                          variant="ghost"
-                          className={`w-full justify-start gap-3 h-10 ${
-                            org.id === organization?.id ? "bg-primary/10 text-primary" : ""
-                          }`}
-                          onClick={() => {
-                            setOrganization(org);
-                            setMobileNavOpen(false);
-                          }}
-                        >
-                          <Building2 className="w-4 h-4" />
-                          <span className="truncate">{org.name}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </SheetContent>
             </Sheet>
 
@@ -137,29 +106,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               DPO CENTRAL
             </Link>
 
-            {/* Organization Selector - Desktop */}
-            {organizations.length > 1 && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2 hidden sm:flex max-w-[200px]">
-                    <Building2 className="w-4 h-4 shrink-0" />
-                    <span className="truncate">{organization?.name}</span>
-                    <ChevronDown className="w-3 h-3 shrink-0" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  {organizations.map((org) => (
-                    <DropdownMenuItem
-                      key={org.id}
-                      onClick={() => setOrganization(org)}
-                      className={org.id === organization?.id ? "bg-primary/10" : ""}
-                    >
-                      {org.name}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
           </div>
 
           {/* Desktop Navigation */}
