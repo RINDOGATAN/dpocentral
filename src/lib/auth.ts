@@ -61,11 +61,11 @@ export const authOptions: NextAuthOptions = {
     ...(process.env.RESEND_API_KEY && resend
       ? [
           EmailProvider({
-            from: process.env.EMAIL_FROM,
+            from: `DPO CENTRAL by TODO.LAW <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
             sendVerificationRequest: async ({ identifier: email, url }) => {
               try {
                 await resend!.emails.send({
-                  from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+                  from: `DPO CENTRAL by TODO.LAW <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
                   to: email,
                   subject: "Sign in to DPO CENTRAL",
                   html: `
