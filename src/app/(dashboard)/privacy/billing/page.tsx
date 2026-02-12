@@ -1,22 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Circle, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { ManageBillingButton } from "@/components/billing";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  SubscriptionStatusCard,
-  ManageBillingButton,
-} from "@/components/billing";
-import {
-  PricingTable,
-  defaultPricingPlans,
-} from "@/components/premium/pricing-table";
-import { UpgradeModal } from "@/components/premium/upgrade-modal";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { features } from "@/config/features";
 
 export default function BillingPage() {
   const { organization } = useOrganization();
-  const [upgradeSkillId, setUpgradeSkillId] = useState<string | null>(null);
+  const [enableSkill, setEnableSkill] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const { data: status, isLoading: statusLoading } =
     trpc.billing.getSubscriptionStatus.useQuery(
@@ -24,7 +32,13 @@ export default function BillingPage() {
       { enabled: !!organization?.id }
     );
 
-  if (statusLoading || !organization) {
+  const { data: plans, isLoading: plansLoading } =
+    trpc.billing.getAvailablePlans.useQuery(
+      { organizationId: organization?.id ?? "" },
+      { enabled: !!organization?.id }
+    );
+
+  if (statusLoading || plansLoading || !organization) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -32,53 +46,131 @@ export default function BillingPage() {
     );
   }
 
-  const entitledSkillIds = (status?.entitlements ?? []).map((e) => e.skillId);
+  const entitlements = status?.entitlements ?? [];
+  const entitlementsBySkill = new Map(
+    entitlements.map((e) => [e.skillId, e])
+  );
 
-  // Find skill name for upgrade modal
-  const upgradeSkill = upgradeSkillId
-    ? defaultPricingPlans.find((p) => p.skillPackageId === upgradeSkillId)
-    : null;
+  // Build rows from available plans (all premium add-ons)
+  const addOnRows = (plans ?? []).map((pkg) => {
+    const entitlement = entitlementsBySkill.get(pkg.skillId);
+    const isActive = !!entitlement || pkg.isEntitled;
+    return {
+      id: pkg.id,
+      skillId: pkg.skillId,
+      name: pkg.name,
+      isActive,
+      renewsAt: entitlement?.expiresAt
+        ? new Date(entitlement.expiresAt).toLocaleDateString()
+        : null,
+    };
+  });
+
+  const activeCount = addOnRows.filter((r) => r.isActive).length;
+  const monthlyTotal = activeCount * 9;
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Billing</h1>
         <p className="text-muted-foreground">
-          Manage your subscription and premium features
+          Manage your add-on features
         </p>
       </div>
 
-      {/* Current plan */}
-      <SubscriptionStatusCard
-        plan={status?.plan ?? "free"}
-        entitlements={status?.entitlements ?? []}
-      />
+      {/* Add-on features table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Add-on Features</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Feature</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {addOnRows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell className="font-medium">{row.name}</TableCell>
+                  <TableCell>
+                    {row.isActive ? (
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        <span className="text-sm">Active</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        <Circle className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">—</span>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {row.isActive ? (
+                      row.renewsAt ? (
+                        <span className="text-sm text-muted-foreground">
+                          Renews {row.renewsAt}
+                        </span>
+                      ) : (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                          Active
+                        </Badge>
+                      )
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">€9/mo</span>
+                        {features.selfServiceUpgrade && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setEnableSkill({ id: row.id, name: row.name })
+                            }
+                          >
+                            Enable
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
-      {/* Manage billing button (only if they have a Stripe customer) */}
+      {/* Monthly total */}
+      {activeCount > 0 && (
+        <div className="text-sm text-muted-foreground">
+          <p>
+            Your current monthly total:{" "}
+            <span className="font-semibold text-foreground">€{monthlyTotal}</span>
+          </p>
+          <p>
+            Based on {activeCount} active add-on{activeCount !== 1 ? "s" : ""} at
+            €9/month each.
+          </p>
+        </div>
+      )}
+
+      {/* Manage payment method */}
       {status?.stripeCustomerId && (
         <ManageBillingButton organizationId={organization.id} />
       )}
 
-      {/* Pricing table */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Available Plans</h2>
-        <PricingTable
-          plans={defaultPricingPlans}
+      {/* Enable feature modal */}
+      {enableSkill && (
+        <EnableFeatureModal
+          open={!!enableSkill}
+          onClose={() => setEnableSkill(null)}
           organizationId={organization.id}
-          onUpgrade={(skillPackageId) => setUpgradeSkillId(skillPackageId)}
-          entitledSkillIds={entitledSkillIds}
-        />
-      </div>
-
-      {/* Upgrade modal */}
-      {upgradeSkill && (
-        <UpgradeModal
-          open={!!upgradeSkillId}
-          onClose={() => setUpgradeSkillId(null)}
-          organizationId={organization.id}
-          skillPackageId={upgradeSkillId!}
-          skillName={upgradeSkill.name}
-          skillDescription={upgradeSkill.description}
+          skillPackageId={enableSkill.id}
+          skillName={enableSkill.name}
         />
       )}
     </div>

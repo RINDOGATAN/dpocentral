@@ -6,6 +6,4 @@
  * AGPL-3.0 License - Part of the open-source core
  */
 
-export { UpgradeModal } from "./upgrade-modal";
-export { PricingTable, defaultPricingPlans } from "./pricing-table";
-export type { } from "./pricing-table";
+export { EnableFeatureModal } from "./enable-feature-modal";

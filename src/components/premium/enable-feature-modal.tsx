@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * Upgrade Modal Component
+ * Enable Feature Modal Component
  *
- * Allows users to upgrade to premium features via Stripe Checkout.
+ * Allows users to enable add-on features via Stripe Checkout.
  *
  * AGPL-3.0 License - Part of the open-source core
  */
 
 import { useState } from "react";
-import { Loader2, Sparkles, X, Check } from "lucide-react";
+import { Loader2, Sparkles, X, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +22,7 @@ import {
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 
-interface UpgradeModalProps {
+interface EnableFeatureModalProps {
   open: boolean;
   onClose: () => void;
   organizationId: string;
@@ -31,14 +31,14 @@ interface UpgradeModalProps {
   skillDescription?: string;
 }
 
-export function UpgradeModal({
+export function EnableFeatureModal({
   open,
   onClose,
   organizationId,
   skillPackageId,
   skillName,
   skillDescription,
-}: UpgradeModalProps) {
+}: EnableFeatureModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,7 +58,7 @@ export function UpgradeModal({
             <div className="flex items-start justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                Upgrade to {skillName}
+                Enable {skillName}
               </CardTitle>
               <Button
                 variant="ghost"
@@ -71,13 +71,12 @@ export function UpgradeModal({
             </div>
             <CardDescription>
               {skillDescription ||
-                `Get access to ${skillName} and advanced privacy assessment tools.`}
+                `Add ${skillName} to your organization.`}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Contact our sales team to enable this premium feature for your
-              organization.
+              Contact us to enable this feature for your organization.
             </p>
           </CardContent>
           <CardFooter className="flex justify-end gap-3">
@@ -87,12 +86,13 @@ export function UpgradeModal({
             <Button asChild>
               <a
                 href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(
-                  `${brand.name} - ${skillName} Upgrade Request`
+                  `${brand.name} - Enable ${skillName}`
                 )}&body=${encodeURIComponent(
-                  `Hi,\n\nI would like to upgrade to ${skillName} for my organization.\n\nOrganization ID: ${organizationId}\n\nPlease contact me with pricing and next steps.\n\nThank you.`
+                  `Hi,\n\nI would like to enable ${skillName} for my organization.\n\nOrganization ID: ${organizationId}\n\nPlease contact me with next steps.\n\nThank you.`
                 )}`}
               >
-                Contact Sales
+                <Mail className="mr-2 h-4 w-4" />
+                Contact Us
               </a>
             </Button>
           </CardFooter>
@@ -101,7 +101,7 @@ export function UpgradeModal({
     );
   }
 
-  const handleUpgrade = async () => {
+  const handleEnable = async () => {
     setIsLoading(true);
     setError(null);
 
@@ -143,7 +143,7 @@ export function UpgradeModal({
           <div className="flex items-start justify-between">
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              Upgrade to {skillName}
+              Enable {skillName}
             </CardTitle>
             <Button
               variant="ghost"
@@ -156,30 +156,14 @@ export function UpgradeModal({
           </div>
           <CardDescription>
             {skillDescription ||
-              `Get access to ${skillName} and advanced privacy assessment tools.`}
+              `Add ${skillName} to your organization.`}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg bg-muted p-4">
-            <h4 className="font-medium mb-2">What you'll get:</h4>
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-primary" />
-                Full access to {skillName}
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-primary" />
-                Professional assessment templates
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-primary" />
-                Export reports in multiple formats
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-primary" />
-                Priority support
-              </li>
-            </ul>
+            <p className="text-sm font-medium">
+              €9/month — cancel anytime
+            </p>
           </div>
 
           {error && (
@@ -192,14 +176,14 @@ export function UpgradeModal({
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handleUpgrade} disabled={isLoading}>
+          <Button onClick={handleEnable} disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Redirecting...
+                Redirecting to payment...
               </>
             ) : (
-              "Upgrade Now"
+              "Enable Feature"
             )}
           </Button>
         </CardFooter>
