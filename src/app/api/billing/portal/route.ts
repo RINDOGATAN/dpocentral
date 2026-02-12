@@ -38,12 +38,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify user has OWNER or ADMIN role
+    // Verify user is a member of this organization
     const membership = await prisma.organizationMember.findFirst({
       where: {
         organizationId,
         user: { email: session.user.email },
-        role: { in: ["OWNER", "ADMIN"] },
       },
     });
 
