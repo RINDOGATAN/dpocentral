@@ -4,34 +4,39 @@ import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft,
-  Plus,
-  Search,
   FileText,
   ClipboardList,
   Send,
-  Clock,
   CheckCircle2,
   Loader2,
+  Eye,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
 export default function VendorQuestionnairesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const { organization } = useOrganization();
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { data: questionnaires, isLoading } = trpc.vendor.listQuestionnaires.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    {
+      enabled: !!organization?.id,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const systemQuestionnaires = questionnaires?.filter((q) => q.isSystem) ?? [];
   const customQuestionnaires = questionnaires?.filter((q) => !q.isSystem) ?? [];
+
+  const totalQuestions = (sections: any[]) =>
+    sections?.reduce((sum: number, s: any) => sum + (s.questions?.length ?? 0), 0) ?? 0;
 
   return (
     <div className="space-y-6">
@@ -50,20 +55,16 @@ export default function VendorQuestionnairesPage() {
             </p>
           </div>
         </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Create Questionnaire
-        </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-primary">
               {questionnaires?.length ?? 0}
             </div>
-            <p className="text-sm text-muted-foreground">Total Questionnaires</p>
+            <p className="text-sm text-muted-foreground">Total Templates</p>
           </CardContent>
         </Card>
         <Card>
@@ -82,25 +83,6 @@ export default function VendorQuestionnairesPage() {
             <p className="text-sm text-muted-foreground">Custom Templates</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">0</div>
-            <p className="text-sm text-muted-foreground">Pending Responses</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Search */}
-      <div className="flex gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search questionnaires..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
       </div>
 
       {/* Tabs */}
@@ -117,61 +99,101 @@ export default function VendorQuestionnairesPage() {
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           ) : questionnaires && questionnaires.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {questionnaires.map((questionnaire) => (
-                <Card
-                  key={questionnaire.id}
-                  className="hover:border-primary/50 transition-colors"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="w-10 h-10 border-2 border-primary flex items-center justify-center">
-                        <ClipboardList className="w-5 h-5 text-primary" />
+            <div className="space-y-4">
+              {questionnaires.map((questionnaire) => {
+                const sections = (questionnaire.sections as any[]) ?? [];
+                const questionCount = totalQuestions(sections);
+                const isExpanded = expandedId === questionnaire.id;
+
+                return (
+                  <Card
+                    key={questionnaire.id}
+                    className="hover:border-primary/50 transition-colors"
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 border-2 border-primary flex items-center justify-center shrink-0">
+                            <ClipboardList className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg">{questionnaire.name}</CardTitle>
+                            {questionnaire.description && (
+                              <CardDescription className="mt-1">
+                                {questionnaire.description}
+                              </CardDescription>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                          {questionnaire.isSystem && (
+                            <Badge variant="secondary">System</Badge>
+                          )}
+                          <Badge variant="outline">v{questionnaire.version}</Badge>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        {questionnaire.isSystem && (
-                          <Badge variant="secondary">System</Badge>
-                        )}
-                      </div>
-                    </div>
-                    <CardTitle className="mt-3">{questionnaire.name}</CardTitle>
-                    {questionnaire.description && (
-                      <CardDescription className="line-clamp-2">
-                        {questionnaire.description}
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {(questionnaire.sections as any[])?.length || 0} sections
-                      </span>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span>{sections.length} sections</span>
+                          <span>{questionCount} questions</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setExpandedId(isExpanded ? null : questionnaire.id)}
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
                           Preview
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Send className="w-4 h-4 mr-1" />
-                          Send
+                          {isExpanded ? (
+                            <ChevronUp className="w-4 h-4 ml-1" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 ml-1" />
+                          )}
                         </Button>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+
+                      {/* Expanded preview */}
+                      {isExpanded && (
+                        <div className="mt-4 border-t pt-4 space-y-4">
+                          {sections.map((section: any, idx: number) => (
+                            <div key={section.id}>
+                              <h4 className="font-medium text-sm">
+                                {idx + 1}. {section.title}
+                              </h4>
+                              {section.description && (
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                  {section.description}
+                                </p>
+                              )}
+                              <ul className="mt-2 space-y-1.5">
+                                {section.questions?.map((q: any) => (
+                                  <li key={q.id} className="flex items-start gap-2 text-sm">
+                                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0 mt-0.5">
+                                      {q.type}
+                                    </Badge>
+                                    <span className="text-muted-foreground">{q.text}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No questionnaire templates yet</p>
-                <p className="text-sm mb-4">
-                  Create questionnaires to assess vendor security and privacy practices
+                <p className="text-sm">
+                  Questionnaire templates will appear here once configured
                 </p>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Questionnaire
-                </Button>
               </CardContent>
             </Card>
           )}
@@ -213,13 +235,14 @@ export default function VendorQuestionnairesPage() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 text-sm">
             <div>
-              <h4 className="font-medium mb-2">Recommended Questions</h4>
+              <h4 className="font-medium mb-2">Assessment Coverage</h4>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>Data security measures and certifications</li>
-                <li>Subprocessor usage and locations</li>
-                <li>Incident response procedures</li>
-                <li>Data retention and deletion practices</li>
-                <li>Employee training and access controls</li>
+                <li>Security governance and certifications</li>
+                <li>Data protection and encryption practices</li>
+                <li>Access control and authentication</li>
+                <li>Incident response and breach notification</li>
+                <li>Subprocessor management (GDPR Art. 28)</li>
+                <li>International data transfers (GDPR Ch. V)</li>
               </ul>
             </div>
             <div>

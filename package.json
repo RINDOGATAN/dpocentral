@@ -13,7 +13,8 @@
     "db:studio": "prisma studio",
     "db:seed-skills": "tsx scripts/seed-skills.ts",
     "db:seed-vendors": "tsx scripts/seed-vendor-catalog.ts",
-    "db:seed-templates": "tsx scripts/seed-templates.ts"
+    "db:seed-templates": "tsx scripts/seed-templates.ts",
+    "db:seed-questionnaire": "tsx scripts/seed-vendor-questionnaire.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
