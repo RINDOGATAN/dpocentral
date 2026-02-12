@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDebounce } from "@/hooks/use-debounce";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
@@ -45,6 +46,7 @@ const riskColors: Record<string, string> = {
 
 export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
