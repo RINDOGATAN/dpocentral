@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { UpgradeModal } from "@/components/premium/upgrade-modal";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
 
@@ -172,7 +172,7 @@ export default function VendorsPage() {
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold">Vendor Catalog</h3>
                     <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-                      Premium
+                      €9/mo
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -183,7 +183,7 @@ export default function VendorsPage() {
               {features.selfServiceUpgrade ? (
                 <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Upgrade
+                  Enable
                 </Button>
               ) : (
                 <Button variant="outline" asChild>
@@ -317,8 +317,8 @@ export default function VendorsPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Upgrade Modal */}
-      <UpgradeModal
+      {/* Enable Feature Modal */}
+      <EnableFeatureModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}

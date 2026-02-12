@@ -13,10 +13,10 @@ export default function DocsPremiumPage() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Premium Features</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Add-on Features</h1>
         <p className="text-muted-foreground mt-1">
-          Premium features extend DPO Central with advanced assessment types, vendor intelligence,
-          and specialized compliance tools. They require a commercial license.
+          Add-on features extend DPO Central with advanced assessment types, vendor intelligence,
+          and specialized compliance tools. Each is available for €9/month.
         </p>
       </div>
 
@@ -28,20 +28,20 @@ export default function DocsPremiumPage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold">Premium License Required</h3>
+                <h3 className="font-semibold">Add-on Features</h3>
                 <PremiumBadge />
               </div>
               <p className="text-sm text-muted-foreground">
-                The features on this page require a premium license. They are not included in the open-source core.
+                These features are available as add-ons for €9/month each. They are not included in the open-source core.
                 {features.selfServiceUpgrade
-                  ? " Upgrade your plan to access advanced privacy tools."
-                  : " Contact our team to enable premium features for your organization."}
+                  ? " Enable any feature instantly from the billing page."
+                  : " Contact our team to enable features for your organization."}
               </p>
               {features.selfServiceUpgrade ? (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
                   <Link href="/privacy/billing">
                     <CreditCard className="h-4 w-4 mr-2" />
-                    View Plans & Upgrade
+                    View Add-ons
                   </Link>
                 </Button>
               ) : (
@@ -90,8 +90,8 @@ export default function DocsPremiumPage() {
         </div>
         <InfoCallout type="info" title="Enable DPIA">
           {features.selfServiceUpgrade
-            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable DPIA assessments.</>
-            : "Contact your account manager or email hello@todo.law to enable DPIA assessments for your organization."}
+            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable DPIA assessments.</>
+            : "Available as an add-on. Contact hello@todo.law to enable DPIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -115,8 +115,8 @@ export default function DocsPremiumPage() {
         </div>
         <InfoCallout type="info" title="Enable PIA">
           {features.selfServiceUpgrade
-            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable PIA assessments.</>
-            : "Contact your account manager or email hello@todo.law to enable PIA assessments for your organization."}
+            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable PIA assessments.</>
+            : "Available as an add-on. Contact hello@todo.law to enable PIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -151,8 +151,8 @@ export default function DocsPremiumPage() {
         </div>
         <InfoCallout type="info" title="Enable TIA">
           {features.selfServiceUpgrade
-            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable TIA assessments.</>
-            : "Contact your account manager or email hello@todo.law to enable TIA assessments for your organization."}
+            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable TIA assessments.</>
+            : "Available as an add-on. Contact hello@todo.law to enable TIA assessments for your organization."}
         </InfoCallout>
       </DocSection>
 
@@ -182,8 +182,8 @@ export default function DocsPremiumPage() {
         </InfoCallout>
         <InfoCallout type="info" title="Enable Vendor Risk Assessment">
           {features.selfServiceUpgrade
-            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable vendor risk assessments.</>
-            : "Contact your account manager or email hello@todo.law to enable vendor risk assessments."}
+            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable vendor risk assessments.</>
+            : "Available as an add-on. Contact hello@todo.law to enable vendor risk assessments."}
         </InfoCallout>
       </DocSection>
 
@@ -224,8 +224,8 @@ export default function DocsPremiumPage() {
         </div>
         <InfoCallout type="info" title="Enable Vendor Catalog">
           {features.selfServiceUpgrade
-            ? <>Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to upgrade and enable the Vendor Catalog.</>
-            : "Contact your account manager or email hello@todo.law to enable the Vendor Catalog for your organization."}
+            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable the Vendor Catalog.</>
+            : "Available as an add-on. Contact hello@todo.law to enable the Vendor Catalog for your organization."}
         </InfoCallout>
       </DocSection>
 

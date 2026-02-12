@@ -31,7 +31,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
-import { UpgradeModal } from "@/components/premium/upgrade-modal";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
 
@@ -269,15 +269,18 @@ export default function NewAssessmentPage() {
                         <div className="flex gap-1.5">
                           {isPremium ? (
                             isEntitled ? (
-                              <Badge variant="default" className="text-xs">
-                                Licensed
+                              <Badge
+                                variant="secondary"
+                                className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
+                              >
+                                Active
                               </Badge>
                             ) : (
                               <Badge
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                Premium
+                                €9/mo
                               </Badge>
                             )
                           ) : (
@@ -285,7 +288,7 @@ export default function NewAssessmentPage() {
                               variant="secondary"
                               className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
                             >
-                              Free
+                              Included
                             </Badge>
                           )}
                         </div>
@@ -296,7 +299,7 @@ export default function NewAssessmentPage() {
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          {features.selfServiceUpgrade ? "Click to upgrade" : "Contact TODO.LAW to enable"}
+                          {features.selfServiceUpgrade ? "Click to enable" : "Contact TODO.LAW to enable"}
                         </p>
                       )}
                     </CardContent>
@@ -504,8 +507,8 @@ export default function NewAssessmentPage() {
         }}
       />
 
-      {/* Upgrade Modal */}
-      <UpgradeModal
+      {/* Enable Feature Modal */}
+      <EnableFeatureModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}
