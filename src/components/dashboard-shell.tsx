@@ -13,6 +13,10 @@ import {
   LogOut,
   User,
   Menu,
+  BookOpen,
+  CreditCard,
+  Scale,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -158,19 +162,28 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>DPO CENTRAL is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">TODO.LAW</a> service.</p>
-          <div className="flex justify-center gap-4">
-            <Link href="/privacy/docs" className="hover:text-foreground underline">
+          <div className="flex items-center justify-center gap-3">
+            <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <BookOpen className="w-3.5 h-3.5" />
               User Guide
             </Link>
             {features.selfServiceUpgrade && (
-              <Link href="/privacy/billing" className="hover:text-foreground underline">
-                Billing
-              </Link>
+              <>
+                <span className="text-border">&middot;</span>
+                <Link href="/privacy/billing" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+                  <CreditCard className="w-3.5 h-3.5" />
+                  Billing
+                </Link>
+              </>
             )}
-            <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+            <span className="text-border">&middot;</span>
+            <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Scale className="w-3.5 h-3.5" />
               Terms of Service
             </a>
-            <a href="https://todo.law/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">
+            <span className="text-border">&middot;</span>
+            <a href="https://todo.law/privacy" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Shield className="w-3.5 h-3.5" />
               Privacy Policy
             </a>
           </div>
