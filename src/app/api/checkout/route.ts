@@ -55,9 +55,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get skill package
-    const skillPackage = await prisma.skillPackage.findUnique({
-      where: { id: skillPackageId },
+    // Get skill package (skillPackageId may be either the DB id or the skillId)
+    const skillPackage = await prisma.skillPackage.findFirst({
+      where: {
+        OR: [{ id: skillPackageId }, { skillId: skillPackageId }],
+      },
     });
 
     if (!skillPackage) {
@@ -74,7 +76,7 @@ export async function POST(request: NextRequest) {
         customer: {
           include: {
             entitlements: {
-              where: { skillPackageId, status: "ACTIVE" },
+              where: { skillPackageId: skillPackage.id, status: "ACTIVE" },
             },
           },
         },
@@ -153,7 +155,7 @@ export async function POST(request: NextRequest) {
       customerEmail: session.user.email,
       organizationId,
       priceId: stripePriceId,
-      skillPackageId,
+      skillPackageId: skillPackage.id,
       successUrl: `${origin}/privacy?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${origin}/privacy?checkout=cancelled`,
       metadata: {
