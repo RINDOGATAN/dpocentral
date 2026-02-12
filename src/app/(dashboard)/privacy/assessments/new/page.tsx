@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -100,9 +100,12 @@ const typeLabels: Record<string, string> = {
 
 export default function NewAssessmentPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(
+    searchParams.get("type")
+  );
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
   const [accessRequiredFeature, setAccessRequiredFeature] = useState("");

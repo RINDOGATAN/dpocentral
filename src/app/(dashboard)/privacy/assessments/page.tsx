@@ -268,23 +268,25 @@ export default function AssessmentsPage() {
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
               {templates.slice(0, 3).map((template) => (
-                <Card key={template.id} className="hover:border-primary/50 transition-colors cursor-pointer">
-                  <CardContent className="pt-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline">{template.type}</Badge>
-                      {template.isSystem && (
-                        <Badge variant="secondary">System</Badge>
-                      )}
-                    </div>
-                    <h4 className="font-medium">{template.name}</h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {(template.sections as any[])?.length || 0} sections
-                    </p>
-                    <Button variant="ghost" size="sm" className="mt-2 w-full">
-                      Use Template <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
+                <Link key={template.id} href={`/privacy/assessments/new?type=${template.type}`}>
+                  <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge variant="outline">{template.type}</Badge>
+                        {template.isSystem && (
+                          <Badge variant="secondary">System</Badge>
+                        )}
+                      </div>
+                      <h4 className="font-medium">{template.name}</h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {(template.sections as any[])?.length || 0} sections
+                      </p>
+                      <Button variant="ghost" size="sm" className="mt-2 w-full">
+                        Use Template <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </CardContent>
