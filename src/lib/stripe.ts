@@ -57,41 +57,40 @@ export interface CreateCheckoutParams {
   customerId?: string;
   customerEmail: string;
   organizationId: string;
-  priceId: string;
-  skillPackageId: string;
+  lineItems: { priceId: string; skillPackageId: string }[];
   successUrl: string;
   cancelUrl: string;
   metadata?: Record<string, string>;
 }
 
 /**
- * Create a Stripe Checkout session for skill purchase
+ * Create a Stripe Checkout session for skill purchase (supports multiple line items)
  */
 export async function createCheckoutSession(
   params: CreateCheckoutParams
 ): Promise<Stripe.Checkout.Session> {
   const stripe = getStripe();
 
+  const skillPackageIds = params.lineItems.map((li) => li.skillPackageId).join(",");
+
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     mode: "subscription",
     payment_method_types: ["card"],
-    line_items: [
-      {
-        price: params.priceId,
-        quantity: 1,
-      },
-    ],
+    line_items: params.lineItems.map((li) => ({
+      price: li.priceId,
+      quantity: 1,
+    })),
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
     metadata: {
       organizationId: params.organizationId,
-      skillPackageId: params.skillPackageId,
+      skillPackageIds,
       ...params.metadata,
     },
     subscription_data: {
       metadata: {
         organizationId: params.organizationId,
-        skillPackageId: params.skillPackageId,
+        skillPackageIds,
       },
     },
   };

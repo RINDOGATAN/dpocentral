@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Circle, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ManageBillingButton } from "@/components/billing";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -25,6 +27,10 @@ export default function BillingPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [enableSkills, setEnableSkills] = useState<
+    { id: string; name: string }[] | null
+  >(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const { data: status, isLoading: statusLoading } =
     trpc.billing.getSubscriptionStatus.useQuery(
@@ -66,8 +72,40 @@ export default function BillingPage() {
     };
   });
 
+  const inactiveRows = addOnRows.filter((r) => !r.isActive);
   const activeCount = addOnRows.filter((r) => r.isActive).length;
   const monthlyTotal = activeCount * 9;
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === inactiveRows.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(inactiveRows.map((r) => r.id)));
+    }
+  };
+
+  const handleEnableSelected = () => {
+    const selected = inactiveRows
+      .filter((r) => selectedIds.has(r.id))
+      .map((r) => ({ id: r.id, name: r.name }));
+    if (selected.length === 1) {
+      setEnableSkill(selected[0]);
+    } else if (selected.length > 1) {
+      setEnableSkills(selected);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -87,6 +125,18 @@ export default function BillingPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                {features.selfServiceUpgrade && inactiveRows.length > 0 && (
+                  <TableHead className="w-10">
+                    <Checkbox
+                      checked={
+                        inactiveRows.length > 0 &&
+                        selectedIds.size === inactiveRows.length
+                      }
+                      onCheckedChange={toggleSelectAll}
+                      aria-label="Select all inactive features"
+                    />
+                  </TableHead>
+                )}
                 <TableHead>Feature</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Details</TableHead>
@@ -95,6 +145,17 @@ export default function BillingPage() {
             <TableBody>
               {addOnRows.map((row) => (
                 <TableRow key={row.id}>
+                  {features.selfServiceUpgrade && inactiveRows.length > 0 && (
+                    <TableCell>
+                      {!row.isActive ? (
+                        <Checkbox
+                          checked={selectedIds.has(row.id)}
+                          onCheckedChange={() => toggleSelect(row.id)}
+                          aria-label={`Select ${row.name}`}
+                        />
+                      ) : null}
+                    </TableCell>
+                  )}
                   <TableCell className="font-medium">{row.name}</TableCell>
                   <TableCell>
                     {row.isActive ? (
@@ -103,10 +164,7 @@ export default function BillingPage() {
                         <span className="text-sm">Active</span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1.5">
-                        <Circle className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">—</span>
-                      </div>
+                      <span className="text-sm text-muted-foreground">Inactive</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -141,6 +199,19 @@ export default function BillingPage() {
               ))}
             </TableBody>
           </Table>
+
+          {/* Selection summary */}
+          {features.selfServiceUpgrade && selectedIds.size > 0 && (
+            <div className="mt-4 flex items-center justify-between rounded-lg border p-3">
+              <p className="text-sm text-muted-foreground">
+                {selectedIds.size} feature{selectedIds.size !== 1 ? "s" : ""} selected
+                &mdash; €{selectedIds.size * 9}/month
+              </p>
+              <Button size="sm" onClick={handleEnableSelected}>
+                Enable Selected ({selectedIds.size})
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -163,7 +234,7 @@ export default function BillingPage() {
         <ManageBillingButton organizationId={organization.id} />
       )}
 
-      {/* Enable feature modal */}
+      {/* Enable single feature modal */}
       {enableSkill && (
         <EnableFeatureModal
           open={!!enableSkill}
@@ -171,6 +242,19 @@ export default function BillingPage() {
           organizationId={organization.id}
           skillPackageId={enableSkill.id}
           skillName={enableSkill.name}
+        />
+      )}
+
+      {/* Enable multiple features modal */}
+      {enableSkills && (
+        <EnableMultipleFeaturesModal
+          open={!!enableSkills}
+          onClose={() => {
+            setEnableSkills(null);
+            setSelectedIds(new Set());
+          }}
+          organizationId={organization.id}
+          skills={enableSkills}
         />
       )}
     </div>

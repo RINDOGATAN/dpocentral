@@ -19,6 +19,20 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
+/**
+ * Parse skill package IDs from metadata (supports both legacy single and new multi format)
+ */
+function parseSkillPackageIds(metadata: Record<string, string> | null): string[] {
+  if (!metadata) return [];
+  if (metadata.skillPackageIds) {
+    return metadata.skillPackageIds.split(",").filter(Boolean);
+  }
+  if (metadata.skillPackageId) {
+    return [metadata.skillPackageId];
+  }
+  return [];
+}
+
 export async function POST(request: NextRequest) {
   // Check if Stripe is enabled
   if (!features.stripeEnabled) {
@@ -89,9 +103,10 @@ export async function POST(request: NextRequest) {
  * Handle successful checkout session
  */
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  const { organizationId, skillPackageId, customerId } = session.metadata || {};
+  const { organizationId, customerId } = session.metadata || {};
+  const skillPackageIds = parseSkillPackageIds(session.metadata as Record<string, string> | null);
 
-  if (!organizationId || !skillPackageId) {
+  if (!organizationId || !skillPackageIds.length) {
     console.error("Missing metadata in checkout session:", session.id);
     return;
   }
@@ -156,34 +171,38 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Get current_period_end from subscription
   const periodEnd = (subscription as unknown as { current_period_end?: number }).current_period_end;
 
-  // Create or update entitlement
-  await prisma.skillEntitlement.upsert({
-    where: {
-      customerId_skillPackageId: {
+  // Create or update entitlement for each skill package
+  for (const skillPackageId of skillPackageIds) {
+    await prisma.skillEntitlement.upsert({
+      where: {
+        customerId_skillPackageId: {
+          customerId: customer.id,
+          skillPackageId,
+        },
+      },
+      update: {
+        status: "ACTIVE",
+        licenseType: "SUBSCRIPTION",
+        stripeSubscriptionId: subscriptionId,
+        expiresAt: periodEnd
+          ? new Date(periodEnd * 1000)
+          : null,
+      },
+      create: {
         customerId: customer.id,
         skillPackageId,
+        licenseType: "SUBSCRIPTION",
+        status: "ACTIVE",
+        stripeSubscriptionId: subscriptionId,
+        expiresAt: periodEnd
+          ? new Date(periodEnd * 1000)
+          : null,
       },
-    },
-    update: {
-      status: "ACTIVE",
-      licenseType: "SUBSCRIPTION",
-      expiresAt: periodEnd
-        ? new Date(periodEnd * 1000)
-        : null,
-    },
-    create: {
-      customerId: customer.id,
-      skillPackageId,
-      licenseType: "SUBSCRIPTION",
-      status: "ACTIVE",
-      expiresAt: periodEnd
-        ? new Date(periodEnd * 1000)
-        : null,
-    },
-  });
+    });
+  }
 
   console.log(
-    `Created entitlement for customer ${customer.id}, skill ${skillPackageId}`
+    `Created entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
   );
 }
 
@@ -191,9 +210,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
  * Handle subscription changes (create, update)
  */
 async function handleSubscriptionChange(subscription: Stripe.Subscription) {
-  const { organizationId, skillPackageId } = subscription.metadata || {};
+  const { organizationId } = subscription.metadata || {};
+  const skillPackageIds = parseSkillPackageIds(subscription.metadata as Record<string, string> | null);
 
-  if (!organizationId || !skillPackageId) {
+  if (!organizationId || !skillPackageIds.length) {
     // Might be a subscription not related to our app
     return;
   }
@@ -231,38 +251,42 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
   // Get current_period_end from subscription (may be on different property depending on Stripe version)
   const periodEnd = (subscription as unknown as { current_period_end?: number }).current_period_end;
 
-  await prisma.skillEntitlement.upsert({
-    where: {
-      customerId_skillPackageId: {
+  for (const skillPackageId of skillPackageIds) {
+    await prisma.skillEntitlement.upsert({
+      where: {
+        customerId_skillPackageId: {
+          customerId: customer.id,
+          skillPackageId,
+        },
+      },
+      update: {
+        status: entitlementStatus,
+        stripeSubscriptionId: subscription.id,
+        expiresAt: periodEnd
+          ? new Date(periodEnd * 1000)
+          : null,
+      },
+      create: {
         customerId: customer.id,
         skillPackageId,
+        licenseType: "SUBSCRIPTION",
+        status: entitlementStatus,
+        stripeSubscriptionId: subscription.id,
+        expiresAt: periodEnd
+          ? new Date(periodEnd * 1000)
+          : null,
       },
-    },
-    update: {
-      status: entitlementStatus,
-      expiresAt: periodEnd
-        ? new Date(periodEnd * 1000)
-        : null,
-    },
-    create: {
-      customerId: customer.id,
-      skillPackageId,
-      licenseType: "SUBSCRIPTION",
-      status: entitlementStatus,
-      expiresAt: periodEnd
-        ? new Date(periodEnd * 1000)
-        : null,
-    },
-  });
+    });
+  }
 }
 
 /**
  * Handle subscription deletion
  */
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const { skillPackageId } = subscription.metadata || {};
+  const skillPackageIds = parseSkillPackageIds(subscription.metadata as Record<string, string> | null);
 
-  if (!skillPackageId) {
+  if (!skillPackageIds.length) {
     return;
   }
 
@@ -279,11 +303,11 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     return;
   }
 
-  // Mark entitlement as expired
+  // Mark entitlements as expired (bulk)
   await prisma.skillEntitlement.updateMany({
     where: {
       customerId: customer.id,
-      skillPackageId,
+      skillPackageId: { in: skillPackageIds },
     },
     data: {
       status: "EXPIRED",
@@ -291,7 +315,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   });
 
   console.log(
-    `Expired entitlement for customer ${customer.id}, skill ${skillPackageId}`
+    `Expired entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
   );
 }
 
