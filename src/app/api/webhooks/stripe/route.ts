@@ -357,7 +357,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (resend && customer.email) {
     try {
       await resend.emails.send({
-        from: process.env.EMAIL_FROM || "noreply@todo.law",
+        from: `DPO CENTRAL by TODO.LAW <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
         to: customer.email,
         subject: `${brand.name} — Payment Failed`,
         html: `
