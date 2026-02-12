@@ -31,11 +31,18 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { skillPackageId, organizationId } = body;
+    const { skillPackageId, skillPackageIds: rawIds, organizationId } = body;
 
-    if (!skillPackageId || !organizationId) {
+    // Support both single ID (backward compat) and array of IDs
+    const requestedIds: string[] = rawIds
+      ? rawIds
+      : skillPackageId
+        ? [skillPackageId]
+        : [];
+
+    if (!requestedIds.length || !organizationId) {
       return NextResponse.json(
-        { error: "Missing required fields: skillPackageId, organizationId" },
+        { error: "Missing required fields: skillPackageId(s), organizationId" },
         { status: 400 }
       );
     }
@@ -55,28 +62,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get skill package (skillPackageId may be either the DB id or the skillId)
-    const skillPackage = await prisma.skillPackage.findFirst({
+    // Look up all requested skill packages (IDs may be DB id or skillId)
+    const skillPackages = await prisma.skillPackage.findMany({
       where: {
-        OR: [{ id: skillPackageId }, { skillId: skillPackageId }],
+        OR: requestedIds.flatMap((id) => [{ id }, { skillId: id }]),
       },
     });
 
-    if (!skillPackage) {
+    if (skillPackages.length !== requestedIds.length) {
       return NextResponse.json(
-        { error: "Skill package not found" },
+        { error: "One or more skill packages not found" },
         { status: 404 }
       );
     }
 
-    // Check for existing entitlement
+    // Verify all have a Stripe price
+    const missingPrice = skillPackages.find((p) => !p.stripePriceId);
+    if (missingPrice) {
+      return NextResponse.json(
+        { error: `Skill package "${missingPrice.name}" is not configured for purchase` },
+        { status: 400 }
+      );
+    }
+
+    // Check for existing entitlements
     const customerOrg = await prisma.customerOrganization.findFirst({
       where: { organizationId },
       include: {
         customer: {
           include: {
             entitlements: {
-              where: { skillPackageId: skillPackage.id, status: "ACTIVE" },
+              where: {
+                skillPackageId: { in: skillPackages.map((p) => p.id) },
+                status: "ACTIVE",
+              },
             },
           },
         },
@@ -84,18 +103,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (customerOrg?.customer.entitlements.length) {
+      const alreadyEntitled = customerOrg.customer.entitlements
+        .map((e) => skillPackages.find((p) => p.id === e.skillPackageId)?.name)
+        .filter(Boolean);
       return NextResponse.json(
-        { error: "Organization already has an active entitlement for this skill" },
-        { status: 400 }
-      );
-    }
-
-    // Get Stripe price ID
-    const stripePriceId = skillPackage.stripePriceId;
-
-    if (!stripePriceId) {
-      return NextResponse.json(
-        { error: "Skill package is not configured for purchase" },
+        { error: `Already entitled: ${alreadyEntitled.join(", ")}` },
         { status: 400 }
       );
     }
@@ -148,16 +160,21 @@ export async function POST(request: NextRequest) {
       stripeCustomerId = stripeCustomer.id;
     }
 
+    // Build line items
+    const lineItems = skillPackages.map((pkg) => ({
+      priceId: pkg.stripePriceId!,
+      skillPackageId: pkg.id,
+    }));
+
     // Create checkout session
     const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL;
     const checkoutSession = await createCheckoutSession({
       customerId: stripeCustomerId || undefined,
       customerEmail: session.user.email,
       organizationId,
-      priceId: stripePriceId,
-      skillPackageId: skillPackage.id,
-      successUrl: `${origin}/privacy?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${origin}/privacy?checkout=cancelled`,
+      lineItems,
+      successUrl: `${origin}/privacy/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${origin}/privacy/billing?checkout=cancelled`,
       metadata: {
         customerId: customerId!,
         userName: session.user.name || "",
