@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -49,6 +50,7 @@ const typeLabels: Record<string, string> = {
 
 export default function AssessmentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
 
   const { data: assessmentsData, isLoading } = trpc.assessment.list.useQuery(
