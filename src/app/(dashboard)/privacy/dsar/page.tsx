@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FileText,
   Plus,
@@ -13,13 +14,13 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle2,
-  Filter,
   Settings,
   ExternalLink,
   Loader2,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-primary text-primary",
@@ -41,12 +42,16 @@ const typeLabels: Record<string, string> = {
   RESTRICTION: "Restriction",
 };
 
+const OPEN_STATUSES = ["SUBMITTED", "IDENTITY_PENDING", "IDENTITY_VERIFIED", "IN_PROGRESS", "DATA_COLLECTED", "REVIEW_PENDING"];
+
 export default function DSARPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery);
+  const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
 
   const { data: dsarData, isLoading } = trpc.dsar.list.useQuery(
-    { organizationId: organization?.id ?? "" },
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
     { enabled: !!organization?.id }
   );
 
@@ -69,6 +74,19 @@ export default function DSARPage() {
     atRisk: 0,
   };
 
+  const filteredRequests = (() => {
+    switch (activeTab) {
+      case "open":
+        return requests.filter((r) => OPEN_STATUSES.includes(r.status));
+      case "overdue":
+        return requests.filter((r) => r.slaStatus === "overdue" && OPEN_STATUSES.includes(r.status));
+      case "completed":
+        return requests.filter((r) => r.status === "COMPLETED" || r.status === "REJECTED");
+      default:
+        return requests;
+    }
+  })();
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
@@ -86,15 +104,17 @@ export default function DSARPage() {
               <span className="hidden sm:inline">Settings</span>
             </Button>
           </Link>
-          <Button className="flex-1 sm:flex-none">
-            <Plus className="w-4 h-4 sm:mr-2" />
-            <span className="hidden sm:inline">New Request</span>
-            <span className="sm:hidden">New</span>
-          </Button>
+          <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
+            <Button className="w-full sm:w-auto">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">New Request</span>
+              <span className="sm:hidden">New</span>
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {/* Stats - 2x2 on mobile */}
+      {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4 sm:pt-6">
@@ -125,34 +145,35 @@ export default function DSARPage() {
         </Card>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex gap-2 sm:gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <Button variant="outline" size="icon" className="shrink-0 sm:hidden">
-          <Filter className="w-4 h-4" />
-        </Button>
-        <Button variant="outline" className="shrink-0 hidden sm:flex">
-          <Filter className="w-4 h-4 mr-2" />
-          Filters
-        </Button>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search requests..."
+          className="pl-9"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="open">Open</TabsTrigger>
+          <TabsTrigger value="overdue">Overdue</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Request List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
-      ) : requests.length > 0 ? (
+      ) : filteredRequests.length > 0 ? (
         <div className="space-y-3">
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <Link key={request.id} href={`/privacy/dsar/${request.id}`}>
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">
@@ -265,16 +286,29 @@ export default function DSARPage() {
             </Link>
           ))}
         </div>
-      ) : (
+      ) : activeTab === "all" ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>No data subject requests yet</p>
             <p className="text-sm mb-4">Create a request or set up a public intake form</p>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              New Request
-            </Button>
+            <Link href="/privacy/dsar/new">
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                New Request
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>
+              {activeTab === "open" && "No open requests"}
+              {activeTab === "overdue" && "No overdue requests"}
+              {activeTab === "completed" && "No completed requests"}
+            </p>
           </CardContent>
         </Card>
       )}
@@ -288,10 +322,12 @@ export default function DSARPage() {
               Share this link with data subjects
             </p>
           </div>
-          <Button variant="outline" className="w-full sm:w-auto">
-            <ExternalLink className="w-4 h-4 mr-2" />
-            Open Portal
-          </Button>
+          <a href={`/dsar/${organization?.slug || ""}`} target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Open Portal
+            </Button>
+          </a>
         </CardContent>
       </Card>
     </div>

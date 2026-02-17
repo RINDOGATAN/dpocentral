@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ClipboardCheck,
   Plus,
@@ -15,7 +15,6 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Filter,
   ArrowRight,
   Loader2,
   Lock,
@@ -52,10 +51,11 @@ const typeLabels: Record<string, string> = {
 export default function AssessmentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
+  const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
 
   const { data: assessmentsData, isLoading } = trpc.assessment.list.useQuery(
-    { organizationId: organization?.id ?? "" },
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
     { enabled: !!organization?.id }
   );
 
@@ -78,186 +78,221 @@ export default function AssessmentsPage() {
   const pendingReviewCount = (byStatus?.PENDING_REVIEW ?? 0) + (byStatus?.PENDING_APPROVAL ?? 0);
   const highRiskCount = (byRiskLevel?.HIGH ?? 0) + (byRiskLevel?.CRITICAL ?? 0);
 
+  const filteredAssessments = (() => {
+    switch (activeTab) {
+      case "dpia":
+        return assessments.filter((a) => a.template?.type === "DPIA");
+      case "vendor":
+        return assessments.filter((a) => a.template?.type === "VENDOR");
+      case "tia":
+        return assessments.filter((a) => a.template?.type === "TIA");
+      default:
+        return assessments;
+    }
+  })();
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Assessments</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl sm:text-2xl font-semibold">Assessments</h1>
+          <p className="text-sm text-muted-foreground">
             Privacy impact assessments and vendor evaluations
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/privacy/assessments/templates">
-            <Button variant="outline">
-              <FileText className="w-4 h-4 mr-2" />
-              Templates
+          <Link href="/privacy/assessments/templates" className="flex-1 sm:flex-none">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <FileText className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Templates</span>
             </Button>
           </Link>
-          <Link href="/privacy/assessments/new">
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              New Assessment
+          <Link href="/privacy/assessments/new" className="flex-1 sm:flex-none">
+            <Button className="w-full sm:w-auto">
+              <Plus className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">New Assessment</span>
+              <span className="sm:hidden">New</span>
             </Button>
           </Link>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{assessments.length}</div>
-            <p className="text-sm text-muted-foreground">Total Assessments</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{assessments.length}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Total Assessments</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{inProgressCount}</div>
-            <p className="text-sm text-muted-foreground">In Progress</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{inProgressCount}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">In Progress</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-primary">{pendingReviewCount}</div>
-            <p className="text-sm text-muted-foreground">Pending Review</p>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-primary">{pendingReviewCount}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Pending Review</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-foreground">
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">
               {highRiskCount > 0 ? (
                 <span className="bg-destructive/20 px-2 py-0.5">{highRiskCount}</span>
               ) : (
                 <span className="text-primary">0</span>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">High Risk</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">High Risk</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Search */}
-      <div className="flex gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search assessments..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <Button variant="outline">
-          <Filter className="w-4 h-4 mr-2" />
-          Filters
-        </Button>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search assessments..."
+          className="pl-9"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="all">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All Assessments</TabsTrigger>
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="dpia">DPIA</TabsTrigger>
           <TabsTrigger value="vendor">Vendor</TabsTrigger>
           <TabsTrigger value="tia">TIA</TabsTrigger>
         </TabsList>
+      </Tabs>
 
-        <TabsContent value="all" className="mt-4 space-y-4">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
-          ) : assessments.length > 0 ? (
-            assessments.map((assessment) => (
-              <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`}>
-                <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-                  <CardContent className="py-4">
-                    <div className="flex items-center gap-6">
-                      {/* Icon */}
-                      <div className={`w-10 h-10 flex items-center justify-center border-2 ${
-                        assessment.status === "APPROVED" ? "border-primary bg-primary" :
-                        assessment.status === "PENDING_APPROVAL" ? "border-muted-foreground" :
-                        "border-primary"
-                      }`}>
-                        {assessment.status === "APPROVED" ? (
-                          <CheckCircle2 className="w-5 h-5 text-primary-foreground" />
-                        ) : assessment.status === "PENDING_APPROVAL" ? (
-                          <AlertCircle className="w-5 h-5 text-muted-foreground" />
-                        ) : (
-                          <ClipboardCheck className="w-5 h-5 text-primary" />
+      {/* Assessment List */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : filteredAssessments.length > 0 ? (
+        <div className="space-y-3">
+          {filteredAssessments.map((assessment) => (
+            <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`}>
+              <Card className="hover:border-primary/50 transition-colors cursor-pointer">
+                <CardContent className="p-4">
+                  {/* Mobile Layout - Stacked */}
+                  <div className="flex flex-col gap-2 sm:hidden">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-medium text-sm">{assessment.name}</span>
+                      <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[assessment.status] || ""}`}>
+                        {assessment.status.replace("_", " ")}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge variant="outline" className="text-xs">
+                        {typeLabels[assessment.template?.type ?? ""] || assessment.template?.type}
+                      </Badge>
+                      {assessment.riskLevel && (
+                        <Badge variant="outline" className={`text-xs ${riskColors[assessment.riskLevel] || ""}`}>
+                          {assessment.riskLevel} Risk
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {assessment.template?.name || "Unknown"}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{assessment._count?.responses ?? 0} responses</span>
+                      <span>
+                        <Clock className="inline h-3 w-3 mr-1" />
+                        {new Date(assessment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Desktop Layout - Horizontal */}
+                  <div className="hidden sm:flex items-center gap-6">
+                    <div className={`w-10 h-10 flex items-center justify-center border-2 shrink-0 ${
+                      assessment.status === "APPROVED" ? "border-primary bg-primary" :
+                      assessment.status === "PENDING_APPROVAL" ? "border-muted-foreground" :
+                      "border-primary"
+                    }`}>
+                      {assessment.status === "APPROVED" ? (
+                        <CheckCircle2 className="w-5 h-5 text-primary-foreground" />
+                      ) : assessment.status === "PENDING_APPROVAL" ? (
+                        <AlertCircle className="w-5 h-5 text-muted-foreground" />
+                      ) : (
+                        <ClipboardCheck className="w-5 h-5 text-primary" />
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-medium">{assessment.name}</span>
+                        <Badge variant="outline">{typeLabels[assessment.template?.type ?? ""] || assessment.template?.type}</Badge>
+                        <Badge variant="outline" className={statusColors[assessment.status] || ""}>
+                          {assessment.status.replace("_", " ")}
+                        </Badge>
+                        {assessment.riskLevel && (
+                          <Badge variant="outline" className={riskColors[assessment.riskLevel] || ""}>
+                            {assessment.riskLevel} Risk
+                          </Badge>
                         )}
                       </div>
-
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{assessment.name}</span>
-                          <Badge variant="outline">{typeLabels[assessment.template?.type ?? ""] || assessment.template?.type}</Badge>
-                          <Badge variant="outline" className={statusColors[assessment.status] || ""}>
-                            {assessment.status.replace("_", " ")}
-                          </Badge>
-                          {assessment.riskLevel && (
-                            <Badge variant="outline" className={riskColors[assessment.riskLevel] || ""}>
-                              {assessment.riskLevel} Risk
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Template: {assessment.template?.name || "Unknown"}
-                        </p>
-                      </div>
-
-                      {/* Responses */}
-                      <div className="text-center">
-                        <p className="text-lg font-semibold text-primary">
-                          {assessment._count?.responses ?? 0}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Responses</p>
-                      </div>
-
-                      {/* Date */}
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
-                          <Clock className="inline w-3 h-3 mr-1" />
-                          {new Date(assessment.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Template: {assessment.template?.name || "Unknown"}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))
-          ) : (
-            <Card>
-              <CardContent className="py-8 text-center text-muted-foreground">
-                <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No assessments yet</p>
-                <p className="text-sm mb-4">Start your first privacy impact assessment</p>
-                <Link href="/privacy/assessments/new">
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Assessment
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
 
-        <TabsContent value="dpia" className="mt-4">
-          <p className="text-muted-foreground">DPIA assessments will be filtered here</p>
-        </TabsContent>
+                    <div className="text-center shrink-0">
+                      <p className="text-lg font-semibold text-primary">
+                        {assessment._count?.responses ?? 0}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Responses</p>
+                    </div>
 
-        <TabsContent value="vendor" className="mt-4">
-          <p className="text-muted-foreground">Vendor assessments will be filtered here</p>
-        </TabsContent>
-
-        <TabsContent value="tia" className="mt-4">
-          <p className="text-muted-foreground">TIA assessments will be filtered here</p>
-        </TabsContent>
-      </Tabs>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm text-muted-foreground">
+                        <Clock className="inline w-3 h-3 mr-1" />
+                        {new Date(assessment.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      ) : activeTab === "all" ? (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>No assessments yet</p>
+            <p className="text-sm mb-4">Start your first privacy impact assessment</p>
+            <Link href="/privacy/assessments/new">
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                New Assessment
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>
+              {activeTab === "dpia" && "No DPIA assessments"}
+              {activeTab === "vendor" && "No vendor assessments"}
+              {activeTab === "tia" && "No TIA assessments"}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Quick Start Templates */}
       <Card>
@@ -266,7 +301,7 @@ export default function AssessmentsPage() {
           <CardDescription>Start a new assessment from a template</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             {[
               { type: "LIA", name: "Legitimate Interest Assessment", premium: false },
               { type: "CUSTOM", name: "Custom Assessment", premium: false },
