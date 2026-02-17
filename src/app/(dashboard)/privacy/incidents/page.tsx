@@ -2,23 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertTriangle,
   Plus,
   Search,
   Clock,
-  Shield,
-  Bell,
-  Filter,
   AlertCircle,
   Loader2,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
@@ -50,12 +49,16 @@ const typeLabels: Record<string, string> = {
   OTHER: "Other",
 };
 
+const OPEN_STATUSES = ["REPORTED", "INVESTIGATING", "CONTAINED", "ERADICATED", "RECOVERING"];
+
 export default function IncidentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery);
+  const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
 
   const { data: incidentsData, isLoading } = trpc.incident.list.useQuery(
-    { organizationId: organization?.id ?? "" },
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
     { enabled: !!organization?.id }
   );
 
@@ -72,6 +75,19 @@ export default function IncidentsPage() {
     critical: bySeverity?.CRITICAL ?? 0,
     pendingNotification: statsData?.overdueNotifications ?? 0,
   };
+
+  const filteredIncidents = (() => {
+    switch (activeTab) {
+      case "open":
+        return incidents.filter((i) => OPEN_STATUSES.includes(i.status));
+      case "critical":
+        return incidents.filter((i) => i.severity === "CRITICAL");
+      case "closed":
+        return incidents.filter((i) => i.status === "CLOSED" || i.status === "FALSE_POSITIVE");
+      default:
+        return incidents;
+    }
+  })();
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -123,33 +139,34 @@ export default function IncidentsPage() {
       </div>
 
       {/* Search */}
-      <div className="flex gap-2 sm:gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search incidents..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <Button variant="outline" size="icon" className="shrink-0 sm:hidden">
-          <Filter className="w-4 h-4" />
-        </Button>
-        <Button variant="outline" className="shrink-0 hidden sm:flex">
-          <Filter className="w-4 h-4 mr-2" />
-          Filters
-        </Button>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search incidents..."
+          className="pl-9"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="open">Open</TabsTrigger>
+          <TabsTrigger value="critical">Critical</TabsTrigger>
+          <TabsTrigger value="closed">Closed</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Incident List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
-      ) : incidents.length > 0 ? (
+      ) : filteredIncidents.length > 0 ? (
         <div className="space-y-3">
-          {incidents.map((incident) => (
+          {filteredIncidents.map((incident) => (
             <Link key={incident.id} href={`/privacy/incidents/${incident.id}`}>
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">
@@ -231,7 +248,7 @@ export default function IncidentsPage() {
             </Link>
           ))}
         </div>
-      ) : (
+      ) : activeTab === "all" ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -245,31 +262,18 @@ export default function IncidentsPage() {
             </Link>
           </CardContent>
         </Card>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>
+              {activeTab === "open" && "No open incidents"}
+              {activeTab === "critical" && "No critical incidents"}
+              {activeTab === "closed" && "No closed incidents"}
+            </p>
+          </CardContent>
+        </Card>
       )}
-
-      {/* Quick Actions - Stack on mobile */}
-      <Card>
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-base">Response Resources</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Quick access to incident response tools</CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <Button variant="outline" className="justify-start sm:justify-center">
-              <Shield className="w-4 h-4 mr-2 shrink-0" />
-              <span className="truncate">Response Plan</span>
-            </Button>
-            <Button variant="outline" className="justify-start sm:justify-center">
-              <Bell className="w-4 h-4 mr-2 shrink-0" />
-              <span className="truncate">DPA Templates</span>
-            </Button>
-            <Button variant="outline" className="justify-start sm:justify-center">
-              <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />
-              <span className="truncate">Breach Checklist</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
