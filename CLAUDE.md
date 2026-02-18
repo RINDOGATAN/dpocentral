@@ -32,6 +32,8 @@ Premium features require entitlements via `src/server/services/licensing/`
 - **Incidents** - Breach tracking, DPA notifications, timeline
 - **Vendors** - Contracts, questionnaires, risk tiers
 
+All module list pages share consistent patterns: debounced search wired to tRPC `search` param, controlled Tabs for client-side filtering, mobile/desktop dual layouts, responsive stats grids.
+
 ## Structure
 ```
 prisma/schema.prisma          # ~25 models
@@ -57,6 +59,7 @@ python3 scripts/verify-app.py  # Run verification agent
 ## Auth
 - Google OAuth + Email Magic Link (Resend)
 - Callback: `/api/auth/callback/google`
+- `signIn` callback auto-joins users to orgs by email domain (wrapped in try/catch so DB failures don't block sign-in)
 
 ## Roles
 OWNER > ADMIN > PRIVACY_OFFICER > MEMBER > VIEWER
