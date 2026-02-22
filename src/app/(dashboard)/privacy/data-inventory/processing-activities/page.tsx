@@ -7,10 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
   ArrowLeft,
   Plus,
   Search,
   FileSpreadsheet,
+  FileText,
   Download,
   Loader2,
   Scale,
@@ -37,8 +44,21 @@ const legalBasisColors: Record<string, string> = {
   LEGITIMATE_INTERESTS: "border-primary text-primary",
 };
 
+function escapeCSV(value: string): string {
+  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+    return `"${value.replace(/"/g, '""')}"`;
+  }
+  return value;
+}
+
+function formatArray(arr: unknown): string {
+  if (Array.isArray(arr)) return arr.join("; ");
+  return String(arr ?? "");
+}
+
 export default function ProcessingActivitiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
   const { organization } = useOrganization();
 
   const { data: activitiesData, isLoading } = trpc.dataInventory.listActivities.useQuery(
@@ -46,7 +66,68 @@ export default function ProcessingActivitiesPage() {
     { enabled: !!organization?.id }
   );
 
+  const { refetch: fetchROPA } = trpc.dataInventory.exportROPA.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: false }
+  );
+
   const activities = activitiesData?.activities ?? [];
+
+  async function handleExport(format: "csv" | "json") {
+    setIsExporting(true);
+    try {
+      const { data } = await fetchROPA();
+      if (!data) return;
+
+      let content: string;
+      let mimeType: string;
+      const ext = format;
+
+      if (format === "csv") {
+        const headers = [
+          "Activity Name", "Description", "Purpose", "Legal Basis",
+          "Legal Basis Detail", "Data Subjects", "Data Categories",
+          "Recipients", "Retention Period", "Systems",
+          "International Transfers", "Last Reviewed",
+        ];
+        const rows = data.map((entry) => [
+          entry.name,
+          entry.description ?? "",
+          entry.purpose,
+          entry.legalBasis,
+          entry.legalBasisDetail ?? "",
+          formatArray(entry.dataSubjects),
+          formatArray(entry.dataCategories),
+          formatArray(entry.recipients),
+          entry.retentionPeriod ?? "",
+          entry.systems.map((s) => s.name).join("; "),
+          entry.transfers.map((t) => `${t.destination} (${t.mechanism})`).join("; "),
+          entry.lastReviewed ? new Date(entry.lastReviewed).toLocaleDateString() : "",
+        ]);
+        content = [
+          headers.map(escapeCSV).join(","),
+          ...rows.map((row) => row.map(escapeCSV).join(",")),
+        ].join("\n");
+        mimeType = "text/csv;charset=utf-8;";
+      } else {
+        content = JSON.stringify(data, null, 2);
+        mimeType = "application/json;charset=utf-8;";
+      }
+
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const date = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `ROPA-${organization?.name ?? "export"}-${date}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   const filteredActivities = activities.filter(
     (activity) =>
@@ -72,10 +153,28 @@ export default function ProcessingActivitiesPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
-            Export ROPA
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={isExporting}>
+                {isExporting ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                Export ROPA
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleExport("csv")}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                Download as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport("json")}>
+                <FileText className="w-4 h-4 mr-2" />
+                Download as JSON
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button>
             <Plus className="w-4 h-4 mr-2" />
             Add Activity
