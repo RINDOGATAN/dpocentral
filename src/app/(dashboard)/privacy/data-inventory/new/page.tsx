@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -57,11 +58,12 @@ export default function NewDataAssetPage() {
 
   const createAsset = trpc.dataInventory.createAsset.useMutation({
     onSuccess: () => {
+      toast.success("Data asset created");
       utils.dataInventory.listAssets.invalidate();
       router.push("/privacy/data-inventory");
     },
     onError: (error) => {
-      console.error("Failed to create asset:", error);
+      toast.error(error.message || "Failed to create asset");
       setIsSubmitting(false);
     },
   });

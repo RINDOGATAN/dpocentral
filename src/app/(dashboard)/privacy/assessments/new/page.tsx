@@ -28,6 +28,7 @@ import {
   Building2,
   Settings2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
@@ -159,11 +160,12 @@ export default function NewAssessmentPage() {
 
   const createAssessment = trpc.assessment.create.useMutation({
     onSuccess: (data) => {
+      toast.success("Assessment created");
       utils.assessment.list.invalidate();
       router.push(`/privacy/assessments/${data.id}`);
     },
     onError: (error) => {
-      console.error("Failed to create assessment:", error);
+      toast.error(error.message || "Failed to create assessment");
       setIsSubmitting(false);
 
       if (error.data?.code === "FORBIDDEN") {

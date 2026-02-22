@@ -23,6 +23,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
@@ -139,9 +140,7 @@ export default function DataInventoryPage() {
 
         <TabsContent value="assets" className="mt-4">
           {assetsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
+            <ListPageSkeleton />
           ) : dataAssets.length > 0 ? (
             <>
               <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -212,9 +211,7 @@ export default function DataInventoryPage() {
 
         <TabsContent value="activities" className="mt-4">
           {activitiesLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
+            <ListPageSkeleton />
           ) : processingActivities.length > 0 ? (
             <>
               <div className="space-y-3">

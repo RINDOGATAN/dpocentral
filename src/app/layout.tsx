@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Jost, Archivo_Black } from "next/font/google";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -18,6 +18,11 @@ const archivoBlack = Archivo_Black({
   subsets: ["latin"],
   variable: "--font-display",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: `DPO CENTRAL - ${brand.tagline}`,

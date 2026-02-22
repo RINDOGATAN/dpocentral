@@ -21,6 +21,7 @@ import {
   Loader2,
   Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -53,8 +54,12 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
 
   const deleteVendor = trpc.vendor.delete.useMutation({
     onSuccess: () => {
+      toast.success("Vendor deleted");
       utils.vendor.list.invalidate();
       router.push("/privacy/vendors");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete vendor");
     },
   });
 
@@ -117,7 +122,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
-            <Trash2 className="w-4 h-4 mr-2" />
+            {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
             Delete
           </Button>
           <Button>Edit Vendor</Button>

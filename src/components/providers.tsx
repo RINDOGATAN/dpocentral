@@ -11,7 +11,15 @@ import { OrganizationProvider } from "@/lib/organization-context";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export function Providers({ children, session }: { children: React.ReactNode; session?: Session | null }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 30_000,
+        refetchOnWindowFocus: false,
+        retry: 1,
+      },
+    },
+  }));
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

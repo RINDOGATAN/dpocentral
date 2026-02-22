@@ -13,12 +13,12 @@ import {
   Search,
   FileText,
   Clock,
-  Loader2,
   Database,
   Lock,
   Mail,
   Sparkles,
 } from "lucide-react";
+import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -235,9 +235,7 @@ export default function VendorsPage() {
 
       {/* Vendor List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
+        <ListPageSkeleton />
       ) : filteredVendors.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {filteredVendors.map((vendor) => (
