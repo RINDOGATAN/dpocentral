@@ -37,6 +37,7 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
@@ -105,13 +106,18 @@ export default function DataAssetDetailPage() {
 
   const deleteAsset = trpc.dataInventory.deleteAsset.useMutation({
     onSuccess: () => {
+      toast.success("Asset deleted");
       utils.dataInventory.listAssets.invalidate();
       router.push("/privacy/data-inventory");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete asset");
     },
   });
 
   const addElement = trpc.dataInventory.addElement.useMutation({
     onSuccess: () => {
+      toast.success("Data element added");
       utils.dataInventory.getAsset.invalidate();
       setIsAddElementOpen(false);
       setElementForm({
@@ -124,11 +130,18 @@ export default function DataAssetDetailPage() {
         retentionDays: "",
       });
     },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add element");
+    },
   });
 
   const deleteElement = trpc.dataInventory.deleteElement.useMutation({
     onSuccess: () => {
+      toast.success("Element deleted");
       utils.dataInventory.getAsset.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete element");
     },
   });
 
@@ -218,7 +231,7 @@ export default function DataAssetDetailPage() {
             onClick={handleDelete}
             disabled={deleteAsset.isPending}
           >
-            <Trash2 className="w-4 h-4 mr-2" />
+            {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
             Delete
           </Button>
         </div>

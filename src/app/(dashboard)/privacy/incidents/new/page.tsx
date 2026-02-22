@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -87,11 +88,12 @@ export default function NewIncidentPage() {
 
   const createIncident = trpc.incident.create.useMutation({
     onSuccess: (data) => {
+      toast.success("Incident reported");
       utils.incident.list.invalidate();
       router.push(`/privacy/incidents/${data.id}`);
     },
     onError: (error) => {
-      console.error("Failed to create incident:", error);
+      toast.error(error.message || "Failed to create incident");
       setIsSubmitting(false);
     },
   });

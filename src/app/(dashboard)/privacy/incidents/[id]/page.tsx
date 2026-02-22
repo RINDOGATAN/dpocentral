@@ -20,6 +20,7 @@ import {
   FileText,
   MessageSquare,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -67,7 +68,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
 
   const updateStatus = trpc.incident.updateStatus.useMutation({
     onSuccess: () => {
+      toast.success("Incident status updated");
       utils.incident.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update status");
     },
   });
 
@@ -133,6 +138,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           {incident.status !== "CLOSED" && incident.status !== "FALSE_POSITIVE" && (
             <Button
               variant="outline"
+              disabled={updateStatus.isPending}
               onClick={() =>
                 updateStatus.mutate({
                   organizationId: organization?.id ?? "",
@@ -141,7 +147,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 })
               }
             >
-              <CheckCircle2 className="w-4 h-4 mr-2" />
+              {updateStatus.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
               Close Incident
             </Button>
           )}

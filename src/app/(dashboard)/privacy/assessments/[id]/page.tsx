@@ -30,6 +30,7 @@ import {
   Save,
   Edit,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -74,14 +75,22 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const submitAssessment = trpc.assessment.submit.useMutation({
     onSuccess: () => {
+      toast.success("Assessment submitted for review");
       utils.assessment.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit assessment");
     },
   });
 
   const saveResponse = trpc.assessment.saveResponse.useMutation({
     onSuccess: () => {
+      toast.success("Response saved");
       utils.assessment.getById.invalidate();
       setEditingQuestion(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to save response");
     },
   });
 
@@ -203,7 +212,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               }
               disabled={submitAssessment.isPending || completionPercentage < 100}
             >
-              <Send className="w-4 h-4 mr-2" />
+              {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               Submit for Review
             </Button>
           )}

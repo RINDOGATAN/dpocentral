@@ -27,6 +27,7 @@ import {
   ExternalLink,
   Sparkles,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -142,11 +143,12 @@ function NewVendorPageContent() {
 
   const createVendor = trpc.vendor.create.useMutation({
     onSuccess: () => {
+      toast.success("Vendor created");
       utils.vendor.list.invalidate();
       router.push("/privacy/vendors");
     },
     onError: (error) => {
-      console.error("Failed to create vendor:", error);
+      toast.error(error.message || "Failed to create vendor");
       setIsSubmitting(false);
     },
   });

@@ -13,8 +13,8 @@ import {
   Search,
   Clock,
   AlertCircle,
-  Loader2,
 } from "lucide-react";
+import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -161,9 +161,7 @@ export default function IncidentsPage() {
 
       {/* Incident List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
+        <ListPageSkeleton />
       ) : filteredIncidents.length > 0 ? (
         <div className="space-y-3">
           {filteredIncidents.map((incident) => (
