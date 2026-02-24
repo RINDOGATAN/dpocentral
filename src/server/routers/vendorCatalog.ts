@@ -328,6 +328,12 @@ export const vendorCatalogRouter = createTRPCRouter({
         });
       }
 
+      // Build catalog slug set for subprocessor linking
+      const allVendors = await ctx.prisma.vendorCatalog.findMany({
+        select: { slug: true },
+      });
+      const catalogSlugs = new Set(allVendors.map((v: { slug: string }) => v.slug));
+
       const result = await enrichVendor({
         vendorName: vendor.name,
         website: vendor.website,
@@ -351,6 +357,7 @@ export const vendorCatalogRouter = createTRPCRouter({
           securityPageUrl: vendor.securityPageUrl,
         },
         overwriteExisting: input.overwriteExisting,
+        catalogSlugs,
       });
 
       if (!result.success) {
@@ -363,7 +370,7 @@ export const vendorCatalogRouter = createTRPCRouter({
       return result;
     }),
 
-  // Bulk enrichment — processes up to 50 vendors, auto-saves results
+  // Bulk enrichment — processes up to 5 vendors, auto-saves results
   enrichBulk: adminProcedure.mutation(async ({ ctx }) => {
     // Find vendors that have a website but are missing trust center data
     // Exclude vendors already enriched by AI to avoid re-processing
@@ -389,6 +396,12 @@ export const vendorCatalogRouter = createTRPCRouter({
       take: 5,
       orderBy: { name: "asc" },
     });
+
+    // Build catalog slug set once for subprocessor linking
+    const allVendors = await ctx.prisma.vendorCatalog.findMany({
+      select: { slug: true },
+    });
+    const catalogSlugs = new Set(allVendors.map((v: { slug: string }) => v.slug));
 
     const results: Array<{
       slug: string;
@@ -423,10 +436,13 @@ export const vendorCatalogRouter = createTRPCRouter({
             securityPageUrl: vendor.securityPageUrl,
           },
           overwriteExisting: false,
+          catalogSlugs,
         });
 
         const fields = result.enrichedFields;
-        const fieldsEnriched = Object.keys(fields).length;
+        // Don't count certEvidenceUrls in the field count (it's metadata, not a catalog field)
+        const { certEvidenceUrls: _, ...catalogFields } = fields;
+        const fieldsEnriched = Object.keys(catalogFields).length;
 
         if (result.success && fieldsEnriched > 0) {
           // Auto-save enriched data
