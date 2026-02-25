@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,22 @@ export default function SignInPage() {
   const [isDevLoading, setIsDevLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  // Capture OAuth errors from next-auth redirect (e.g. ?error=OAuthAccountNotLinked)
+  useEffect(() => {
+    const authError = searchParams.get("error");
+    if (authError) {
+      const messages: Record<string, string> = {
+        OAuthAccountNotLinked: "This email is already associated with a different sign-in method. Try using your magic link instead.",
+        OAuthCallback: "Google sign-in failed. Please try again.",
+        OAuthSignin: "Could not start Google sign-in. Please try again.",
+        Default: "Sign-in failed. Please try again.",
+      };
+      setError(messages[authError] || messages.Default);
+      setIsGoogleLoading(false);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
