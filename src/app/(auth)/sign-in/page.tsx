@@ -113,9 +113,9 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">DPO CENTRAL</h1>
+          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">{brand.nameUppercase}</h1>
           <p className="text-muted-foreground text-sm">
-            Privacy Program Management
+            {brand.tagline}
           </p>
         </div>
 
@@ -237,7 +237,7 @@ export default function SignInPage() {
           <p className="text-xs text-muted-foreground">
             By signing in, you agree to our{" "}
             <a
-              href="https://todo.law/terms"
+              href={brand.termsOfUseUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
@@ -246,7 +246,7 @@ export default function SignInPage() {
             </a>{" "}
             and{" "}
             <a
-              href="https://todo.law/privacy"
+              href={brand.privacyPolicyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 export default function PublicLayout({
   children,
@@ -14,7 +15,7 @@ export default function PublicLayout({
             href="/"
             className="text-lg font-bold tracking-tight text-foreground"
           >
-            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
+            {brand.companyTrademark} <span className="text-muted-foreground">{brand.nameUppercase}</span>
           </Link>
 
           <div className="flex items-center gap-6">
@@ -41,7 +42,7 @@ export default function PublicLayout({
       <footer className="border-t border-border py-6">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <a
-            href="https://todo.law/privacy"
+            href={brand.privacyPolicyUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
@@ -50,7 +51,7 @@ export default function PublicLayout({
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <a
-            href="https://todo.law/terms"
+            href={brand.termsOfUseUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 export default function AuthLayout({
   children,
@@ -13,7 +14,7 @@ export default function AuthLayout({
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-            TODO.LAW<sup className="text-xs align-super">™</sup> <span className="text-muted-foreground">DPO CENTRAL</span>
+            {brand.companyTrademark} <span className="text-muted-foreground">{brand.nameUppercase}</span>
           </Link>
         </div>
       </header>
@@ -27,7 +28,7 @@ export default function AuthLayout({
       <footer className="border-t border-border py-6">
         <div className="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <a
-            href="https://todo.law/privacy"
+            href={brand.privacyPolicyUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
@@ -36,7 +37,7 @@ export default function AuthLayout({
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <a
-            href="https://todo.law/terms"
+            href={brand.termsOfUseUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"

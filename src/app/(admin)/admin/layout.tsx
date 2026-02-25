@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { brand } from "@/config/brand";
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -146,7 +147,7 @@ export default function AdminLayout({
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-6 text-center text-xs text-muted-foreground">
-          <p>DPO Central Platform Administration - TODO.LAW</p>
+          <p>{brand.name} Platform Administration - {brand.companyName}</p>
         </div>
       </footer>
     </div>

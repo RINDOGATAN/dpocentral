@@ -25,6 +25,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -201,7 +202,7 @@ export default function VendorsPage() {
                 </Button>
               ) : (
                 <Button variant="outline" className="w-full sm:w-auto" asChild>
-                  <a href="mailto:hello@todo.law?subject=DPO%20Central%20Vendor%20Catalog">
+                  <a href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(brand.name + " Vendor Catalog")}`}>
                     <Mail className="w-4 h-4 mr-2" />
                     Contact Us
                   </a>

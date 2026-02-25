@@ -35,6 +35,7 @@ import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
 
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
@@ -304,7 +305,7 @@ export default function NewAssessmentPage() {
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          {features.selfServiceUpgrade ? "Click to enable" : "Contact TODO.LAW to enable"}
+                          {features.selfServiceUpgrade ? "Click to enable" : `Contact ${brand.companyName} to enable`}
                         </p>
                       )}
                     </CardContent>

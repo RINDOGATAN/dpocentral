@@ -8,6 +8,7 @@ import { InfoCallout } from "@/components/docs/info-callout";
 import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
 
 export default function DocsPremiumPage() {
   return (
@@ -46,7 +47,7 @@ export default function DocsPremiumPage() {
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
-                  <a href="mailto:hello@todo.law">
+                  <a href={`mailto:${brand.supportEmail}`}>
                     <Mail className="h-4 w-4 mr-2" />
                     Contact Us
                   </a>
@@ -91,7 +92,7 @@ export default function DocsPremiumPage() {
         <InfoCallout type="info" title="Enable DPIA">
           {features.selfServiceUpgrade
             ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable DPIA assessments.</>
-            : "Available as an add-on. Contact hello@todo.law to enable DPIA assessments for your organization."}
+            : <>Available as an add-on. Contact {brand.supportEmail} to enable DPIA assessments for your organization.</>}
         </InfoCallout>
       </DocSection>
 
@@ -116,7 +117,7 @@ export default function DocsPremiumPage() {
         <InfoCallout type="info" title="Enable PIA">
           {features.selfServiceUpgrade
             ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable PIA assessments.</>
-            : "Available as an add-on. Contact hello@todo.law to enable PIA assessments for your organization."}
+            : <>Available as an add-on. Contact {brand.supportEmail} to enable PIA assessments for your organization.</>}
         </InfoCallout>
       </DocSection>
 
@@ -152,7 +153,7 @@ export default function DocsPremiumPage() {
         <InfoCallout type="info" title="Enable TIA">
           {features.selfServiceUpgrade
             ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable TIA assessments.</>
-            : "Available as an add-on. Contact hello@todo.law to enable TIA assessments for your organization."}
+            : <>Available as an add-on. Contact {brand.supportEmail} to enable TIA assessments for your organization.</>}
         </InfoCallout>
       </DocSection>
 
@@ -183,7 +184,7 @@ export default function DocsPremiumPage() {
         <InfoCallout type="info" title="Enable Vendor Risk Assessment">
           {features.selfServiceUpgrade
             ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable vendor risk assessments.</>
-            : "Available as an add-on. Contact hello@todo.law to enable vendor risk assessments."}
+            : <>Available as an add-on. Contact {brand.supportEmail} to enable vendor risk assessments.</>}
         </InfoCallout>
       </DocSection>
 
@@ -225,7 +226,7 @@ export default function DocsPremiumPage() {
         <InfoCallout type="info" title="Enable Vendor Catalog">
           {features.selfServiceUpgrade
             ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable the Vendor Catalog.</>
-            : "Available as an add-on. Contact hello@todo.law to enable the Vendor Catalog for your organization."}
+            : <>Available as an add-on. Contact {brand.supportEmail} to enable the Vendor Catalog for your organization.</>}
         </InfoCallout>
       </DocSection>
 
