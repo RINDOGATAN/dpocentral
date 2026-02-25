@@ -20,8 +20,12 @@ Open Core model:
 ### Premium (Proprietary - Requires License)
 - DPIA, PIA, TIA assessments
 - Vendor risk assessments
-- Vendor Catalog database
 - Advanced audit features
+
+## Vendor Catalog — READ-ONLY
+- `vendor_catalog` table is now **owned by Vendor.Watch** (admin CRUD, enrichment, seeding)
+- DPO Central retains **read-only** access via `vendorCatalog.search`, `getBySlug`, `listCategories`
+- Admin catalog pages and AI enrichment have been removed from this project
 
 Premium features require entitlements via `src/server/services/licensing/`
 
