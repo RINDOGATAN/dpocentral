@@ -5,8 +5,8 @@
  * for white-label deployments. All values can be overridden via environment
  * variables to support different deployments without code changes.
  *
- * Quick start: set NEXT_PUBLIC_BRAND=nel to switch to North End Law branding.
- * Or set individual NEXT_PUBLIC_* vars to customize further.
+ * Quick start: set individual NEXT_PUBLIC_* env vars to customize branding
+ * for white-label deployments without code changes.
  *
  * AGPL-3.0 License - Part of the open-source core
  */
@@ -57,78 +57,47 @@ export interface BrandConfig {
 }
 
 /**
- * Brand presets — selectable via NEXT_PUBLIC_BRAND env var
+ * Default brand configuration for DPO Central by TODO.LAW
+ *
+ * White-label deployments override these via NEXT_PUBLIC_* env vars.
  */
-const presets: Record<string, BrandConfig> = {
-  todolaw: {
-    name: "DPO Central",
-    nameUppercase: "DPO CENTRAL",
-    tagline: "Privacy Management Made Simple",
-    description:
-      "A single source of truth for your privacy management program.",
-    companyName: "TODO.LAW",
-    companyTrademark: "TODO.LAW™",
-    companyWebsite: "https://todo.law",
-    appUrl: "https://dpocentral.todo.law",
-    termsOfUseUrl: "https://todo.law/terms",
-    privacyPolicyUrl: "https://todo.law/privacy",
-    supportEmail: "hello@todo.law",
-    emailFrom: "noreply@todo.law",
-    logoPath: "/nel-icon.png",
-    faviconPath: "/favicon.png",
-    colors: {
-      primary: "#53aecc",
-      primaryForeground: "#1a1a1a",
-      background: "#1a1a1a",
-      foreground: "#fefeff",
-      card: "#242424",
-      cardForeground: "#fefeff",
-      border: "#333333",
-      muted: "#242424",
-      mutedForeground: "#a0a0a0",
-      accent: "#53aecc",
-      accentForeground: "#fefeff",
-    },
-  },
-  nel: {
-    name: "DPO Central",
-    nameUppercase: "DPO CENTRAL",
-    tagline: "Privacy Program Management",
-    description:
-      "A single source of truth for your privacy management program.",
-    companyName: "North End Law",
-    companyTrademark: "North End Law",
-    companyWebsite: "https://northend.law",
-    appUrl: "https://privacysuite-ten.vercel.app",
-    termsOfUseUrl: "https://northend.law/terms-of-use",
-    privacyPolicyUrl: "https://northend.law/privacy-policy",
-    supportEmail: "hello@northend.law",
-    emailFrom: "noreply@northend.law",
-    logoPath: "/nel-icon.png",
-    faviconPath: "/favicon.png",
-    colors: {
-      primary: "#13e9d1",
-      primaryForeground: "#1c1f37",
-      background: "#1c1f37",
-      foreground: "#e5e5e5",
-      card: "#232742",
-      cardForeground: "#e5e5e5",
-      border: "#2d3154",
-      muted: "#232742",
-      mutedForeground: "#a0a0a0",
-      accent: "#13e9d1",
-      accentForeground: "#1c1f37",
-    },
+const defaultBrand: BrandConfig = {
+  name: "DPO Central",
+  nameUppercase: "DPO CENTRAL",
+  tagline: "Privacy Management Made Simple",
+  description:
+    "A single source of truth for your privacy management program.",
+  companyName: "TODO.LAW",
+  companyTrademark: "TODO.LAW™",
+  companyWebsite: "https://todo.law",
+  appUrl: "https://dpocentral.todo.law",
+  termsOfUseUrl: "https://todo.law/terms",
+  privacyPolicyUrl: "https://todo.law/privacy",
+  supportEmail: "hello@todo.law",
+  emailFrom: "noreply@todo.law",
+  logoPath: "/logo-icon.png",
+  faviconPath: "/favicon.png",
+  colors: {
+    primary: "#53aecc",
+    primaryForeground: "#1a1a1a",
+    background: "#1a1a1a",
+    foreground: "#fefeff",
+    card: "#242424",
+    cardForeground: "#fefeff",
+    border: "#333333",
+    muted: "#242424",
+    mutedForeground: "#a0a0a0",
+    accent: "#53aecc",
+    accentForeground: "#fefeff",
   },
 };
 
 /**
  * Get brand configuration with preset + environment overrides
  *
- * Priority: individual env vars > preset > todolaw default
+ * Priority: env vars > defaults
  *
  * Environment variables:
- * - NEXT_PUBLIC_BRAND             — preset name ("todolaw" | "nel")
  * - NEXT_PUBLIC_BRAND_NAME
  * - NEXT_PUBLIC_BRAND_NAME_UPPER
  * - NEXT_PUBLIC_BRAND_TAGLINE
@@ -156,62 +125,59 @@ const presets: Record<string, BrandConfig> = {
  * - NEXT_PUBLIC_COLOR_ACCENT_FG
  */
 export function getBrandConfig(): BrandConfig {
-  const presetKey = process.env.NEXT_PUBLIC_BRAND || "todolaw";
-  const base = presets[presetKey] || presets.todolaw;
-
   return {
-    name: process.env.NEXT_PUBLIC_BRAND_NAME || base.name,
+    name: process.env.NEXT_PUBLIC_BRAND_NAME || defaultBrand.name,
     nameUppercase:
-      process.env.NEXT_PUBLIC_BRAND_NAME_UPPER || base.nameUppercase,
-    tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || base.tagline,
+      process.env.NEXT_PUBLIC_BRAND_NAME_UPPER || defaultBrand.nameUppercase,
+    tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || defaultBrand.tagline,
     description:
-      process.env.NEXT_PUBLIC_BRAND_DESCRIPTION || base.description,
+      process.env.NEXT_PUBLIC_BRAND_DESCRIPTION || defaultBrand.description,
     companyName:
-      process.env.NEXT_PUBLIC_COMPANY_NAME || base.companyName,
+      process.env.NEXT_PUBLIC_COMPANY_NAME || defaultBrand.companyName,
     companyTrademark:
-      process.env.NEXT_PUBLIC_COMPANY_TRADEMARK || base.companyTrademark,
+      process.env.NEXT_PUBLIC_COMPANY_TRADEMARK || defaultBrand.companyTrademark,
     companyWebsite:
-      process.env.NEXT_PUBLIC_COMPANY_WEBSITE || base.companyWebsite,
-    appUrl: process.env.NEXT_PUBLIC_APP_URL || base.appUrl,
+      process.env.NEXT_PUBLIC_COMPANY_WEBSITE || defaultBrand.companyWebsite,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL || defaultBrand.appUrl,
     termsOfUseUrl:
-      process.env.NEXT_PUBLIC_TERMS_URL || base.termsOfUseUrl,
+      process.env.NEXT_PUBLIC_TERMS_URL || defaultBrand.termsOfUseUrl,
     privacyPolicyUrl:
-      process.env.NEXT_PUBLIC_PRIVACY_URL || base.privacyPolicyUrl,
+      process.env.NEXT_PUBLIC_PRIVACY_URL || defaultBrand.privacyPolicyUrl,
     supportEmail:
-      process.env.NEXT_PUBLIC_SUPPORT_EMAIL || base.supportEmail,
+      process.env.NEXT_PUBLIC_SUPPORT_EMAIL || defaultBrand.supportEmail,
     emailFrom:
-      process.env.NEXT_PUBLIC_EMAIL_FROM || base.emailFrom,
-    logoPath: process.env.NEXT_PUBLIC_LOGO_PATH || base.logoPath,
+      process.env.NEXT_PUBLIC_EMAIL_FROM || defaultBrand.emailFrom,
+    logoPath: process.env.NEXT_PUBLIC_LOGO_PATH || defaultBrand.logoPath,
     faviconPath:
-      process.env.NEXT_PUBLIC_FAVICON_PATH || base.faviconPath,
+      process.env.NEXT_PUBLIC_FAVICON_PATH || defaultBrand.faviconPath,
     colors: {
       primary:
-        process.env.NEXT_PUBLIC_COLOR_PRIMARY || base.colors.primary,
+        process.env.NEXT_PUBLIC_COLOR_PRIMARY || defaultBrand.colors.primary,
       primaryForeground:
         process.env.NEXT_PUBLIC_COLOR_PRIMARY_FG ||
-        base.colors.primaryForeground,
+        defaultBrand.colors.primaryForeground,
       background:
         process.env.NEXT_PUBLIC_COLOR_BACKGROUND ||
-        base.colors.background,
+        defaultBrand.colors.background,
       foreground:
         process.env.NEXT_PUBLIC_COLOR_FOREGROUND ||
-        base.colors.foreground,
-      card: process.env.NEXT_PUBLIC_COLOR_CARD || base.colors.card,
+        defaultBrand.colors.foreground,
+      card: process.env.NEXT_PUBLIC_COLOR_CARD || defaultBrand.colors.card,
       cardForeground:
         process.env.NEXT_PUBLIC_COLOR_CARD_FG ||
-        base.colors.cardForeground,
+        defaultBrand.colors.cardForeground,
       border:
-        process.env.NEXT_PUBLIC_COLOR_BORDER || base.colors.border,
+        process.env.NEXT_PUBLIC_COLOR_BORDER || defaultBrand.colors.border,
       muted:
-        process.env.NEXT_PUBLIC_COLOR_MUTED || base.colors.muted,
+        process.env.NEXT_PUBLIC_COLOR_MUTED || defaultBrand.colors.muted,
       mutedForeground:
         process.env.NEXT_PUBLIC_COLOR_MUTED_FG ||
-        base.colors.mutedForeground,
+        defaultBrand.colors.mutedForeground,
       accent:
-        process.env.NEXT_PUBLIC_COLOR_ACCENT || base.colors.accent,
+        process.env.NEXT_PUBLIC_COLOR_ACCENT || defaultBrand.colors.accent,
       accentForeground:
         process.env.NEXT_PUBLIC_COLOR_ACCENT_FG ||
-        base.colors.accentForeground,
+        defaultBrand.colors.accentForeground,
     },
   };
 }
