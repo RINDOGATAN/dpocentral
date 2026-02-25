@@ -1,5 +1,4 @@
 // Privacy Program Management Suite - Prisma Schema
-// Built on the NEL Deal Room patterns
 
 generator client {
   provider = "prisma-client-js"
