@@ -122,32 +122,28 @@ export default function AssessmentsPage() {
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{assessments.length}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{assessments.length}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Total Assessments</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{inProgressCount}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{inProgressCount}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">In Progress</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{pendingReviewCount}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{pendingReviewCount}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Pending Review</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-foreground">
-              {highRiskCount > 0 ? (
-                <span className="bg-destructive/20 px-2 py-0.5">{highRiskCount}</span>
-              ) : (
-                <span className="text-primary">0</span>
-              )}
+            <div className={`text-xl sm:text-2xl font-bold ${highRiskCount > 0 ? "text-amber-400" : "text-foreground"}`}>
+              {highRiskCount}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">High Risk</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">High Risk</p>
           </CardContent>
         </Card>
       </div>

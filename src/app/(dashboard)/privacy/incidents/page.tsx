@@ -111,28 +111,27 @@ export default function IncidentsPage() {
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.total}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.open}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.open}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Open</p>
-          </CardContent>
-        </Card>
-        <Card className={stats.critical > 0 ? "border-muted-foreground" : ""}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.critical > 0 ? "text-foreground" : "text-primary"}`}>
-              {stats.critical > 0 && <span className="bg-destructive/20 px-2 py-0.5">{stats.critical}</span>}
-              {stats.critical === 0 && stats.critical}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Critical</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.pendingNotification}</div>
+            <div className={`text-xl sm:text-2xl font-bold ${stats.critical > 0 ? "text-amber-400" : "text-foreground"}`}>
+              {stats.critical}
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Critical</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.pendingNotification}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Pending DPA</p>
           </CardContent>
         </Card>

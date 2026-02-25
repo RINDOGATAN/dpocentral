@@ -118,28 +118,27 @@ export default function DSARPage() {
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.total}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Total Requests</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.open}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.open}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Open</p>
-          </CardContent>
-        </Card>
-        <Card className={stats.overdue > 0 ? "border-muted-foreground" : ""}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.overdue > 0 ? "text-foreground" : "text-primary"}`}>
-              {stats.overdue > 0 && <span className="bg-destructive/20 px-2 py-0.5">{stats.overdue}</span>}
-              {stats.overdue === 0 && stats.overdue}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Overdue</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.atRisk}</div>
+            <div className={`text-xl sm:text-2xl font-bold ${stats.overdue > 0 ? "text-amber-400" : "text-foreground"}`}>
+              {stats.overdue}
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Overdue</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.atRisk}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">At Risk</p>
           </CardContent>
         </Card>
@@ -197,7 +196,7 @@ export default function DSARPage() {
                           {new Date(request.dueDate).toLocaleDateString()}
                         </span>
                       ) : (
-                        <span className={request.slaStatus === "overdue" ? "bg-destructive/20 text-foreground px-1.5 py-0.5" : ""}>
+                        <span className={request.slaStatus === "overdue" ? "text-amber-400 font-medium" : ""}>
                           <Clock className="inline h-3 w-3 mr-1" />
                           {request.slaStatus === "overdue"
                             ? `${Math.abs(request.daysUntilDue ?? 0)}d overdue`
@@ -266,7 +265,7 @@ export default function DSARPage() {
                         <>
                           <p className="text-sm font-medium text-muted-foreground">
                             {request.slaStatus === "overdue"
-                              ? <span className="bg-destructive/20 text-foreground px-1.5 py-0.5">{Math.abs(request.daysUntilDue ?? 0)} days overdue</span>
+                              ? <span className="text-amber-400 font-medium">{Math.abs(request.daysUntilDue ?? 0)} days overdue</span>
                               : request.daysUntilDue === 0
                                 ? "Due today"
                                 : `${request.daysUntilDue ?? 0} days left`

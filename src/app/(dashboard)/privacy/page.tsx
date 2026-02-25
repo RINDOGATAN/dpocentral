@@ -105,8 +105,8 @@ export default function PrivacyDashboardPage() {
             <Database className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{dashboardStats.dataAssets}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.dataAssets}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               {dashboardStats.processingActivities} activities
             </p>
           </CardContent>
@@ -118,10 +118,10 @@ export default function PrivacyDashboardPage() {
             <FileText className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{dashboardStats.openDSARs}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.openDSARs}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               {dashboardStats.overdueDSARs > 0 ? (
-                <span className="bg-destructive/20 text-foreground px-1.5 py-0.5">{dashboardStats.overdueDSARs} overdue</span>
+                <span className="text-amber-400/90 font-medium">{dashboardStats.overdueDSARs} overdue</span>
               ) : (
                 "All on track"
               )}
@@ -135,8 +135,8 @@ export default function PrivacyDashboardPage() {
             <ClipboardCheck className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{dashboardStats.activeAssessments}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.activeAssessments}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               In progress
             </p>
           </CardContent>
@@ -148,8 +148,8 @@ export default function PrivacyDashboardPage() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{dashboardStats.openIncidents}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.openIncidents}</div>
+            <p className="text-xs text-muted-foreground mt-1">
               Open cases
             </p>
           </CardContent>

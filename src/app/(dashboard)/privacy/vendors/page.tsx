@@ -120,28 +120,27 @@ export default function VendorsPage() {
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.total}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Total Vendors</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.active}</div>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.active}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Active Vendors</p>
-          </CardContent>
-        </Card>
-        <Card className={stats.highRisk > 0 ? "border-muted-foreground" : ""}>
-          <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.highRisk > 0 ? "text-foreground" : "text-primary"}`}>
-              {stats.highRisk > 0 && <span className="bg-destructive/20 px-2 py-0.5">{stats.highRisk}</span>}
-              {stats.highRisk === 0 && stats.highRisk}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">High Risk</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className="text-xl sm:text-2xl font-bold text-primary">{stats.pendingReview}</div>
+            <div className={`text-xl sm:text-2xl font-bold ${stats.highRisk > 0 ? "text-amber-400" : "text-foreground"}`}>
+              {stats.highRisk}
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">High Risk</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 sm:pt-6">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.pendingReview}</div>
             <p className="text-xs sm:text-sm text-muted-foreground">Pending Review</p>
           </CardContent>
         </Card>

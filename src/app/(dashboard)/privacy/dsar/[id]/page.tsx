@@ -299,7 +299,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                   {request.status === "COMPLETED" ? "COMPLETED" : request.status}
                 </span>
               ) : isOverdue ? (
-                <span className="bg-destructive/20 text-foreground px-2 py-1">OVERDUE</span>
+                <span className="text-amber-400 font-semibold">OVERDUE</span>
               ) : isAtRisk ? (
                 <span className="bg-muted-foreground/20 text-foreground px-2 py-1">{daysRemaining} days</span>
               ) : (
