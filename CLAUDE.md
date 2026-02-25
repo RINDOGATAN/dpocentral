@@ -63,3 +63,12 @@ python3 scripts/verify-app.py  # Run verification agent
 
 ## Roles
 OWNER > ADMIN > PRIVACY_OFFICER > MEMBER > VIEWER
+
+## Git Identity
+- **Name**: `sergiomaldo`
+- **Email**: `206754515+sergiomaldo@users.noreply.github.com`
+- ALWAYS use `-c user.name="sergiomaldo" -c user.email="206754515+sergiomaldo@users.noreply.github.com"` for every commit
+
+## Authorized Committers
+- `sergiomaldo` — https://github.com/sergiomaldo
+- `todolaw` — https://github.com/todolaw
