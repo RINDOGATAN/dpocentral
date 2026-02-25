@@ -42,29 +42,15 @@ export default function SignInPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
     setError(null);
 
-    try {
-      // Use redirect:false so signIn returns a result instead of navigating,
-      // then redirect manually. This avoids next-auth/react's redirect
-      // silently failing on Next.js 16 App Router.
-      const result = await signIn("google", {
-        redirect: false,
-        callbackUrl: "/privacy",
-      });
-
-      if (result?.url) {
-        window.location.href = result.url;
-      } else if (result?.error) {
-        setError("Google sign-in failed. Please try again.");
-        setIsGoogleLoading(false);
-      }
-    } catch (err) {
-      setError("Google sign-in failed.");
-      setIsGoogleLoading(false);
-    }
+    // Google OAuth requires a full browser redirect (to Google and back).
+    // Using redirect:false loses the callbackUrl after the round trip,
+    // causing next-auth to land back on /sign-in instead of /privacy.
+    // Let next-auth handle the full redirect flow natively.
+    signIn("google", { callbackUrl: "/privacy" });
   };
 
   const handleDevSignIn = async (e: React.FormEvent) => {
