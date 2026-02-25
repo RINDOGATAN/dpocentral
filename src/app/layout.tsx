@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { BrandTheme } from "@/components/brand-theme";
 import { brand } from "@/config/brand";
 
 const jost = Jost({
@@ -25,7 +26,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: `DPO CENTRAL - ${brand.tagline}`,
+  title: `${brand.nameUppercase} - ${brand.tagline}`,
   description: `${brand.name} is ${brand.description.toLowerCase()}`,
 };
 
@@ -39,6 +40,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${jost.variable} ${archivoBlack.variable} font-sans antialiased`}>
+        <BrandTheme />
         <Providers session={session}>
           {children}
           <Toaster />

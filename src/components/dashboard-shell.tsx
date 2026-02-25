@@ -30,6 +30,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
 
 const navItems = [
   { href: "/privacy/data-inventory", label: "Data Inventory", icon: Database },
@@ -75,7 +76,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <SheetContent side="left" className="w-[280px] sm:w-[320px]">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <span className="text-lg font-bold tracking-tight">DPO CENTRAL</span>
+                    <span className="text-lg font-bold tracking-tight">{brand.nameUppercase}</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
@@ -107,7 +108,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </Sheet>
 
             <Link href="/privacy" className="flex items-center shrink-0 text-lg font-bold tracking-tight">
-              DPO CENTRAL
+              {brand.nameUppercase}
             </Link>
 
           </div>
@@ -161,7 +162,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
-          <p>DPO CENTRAL is a <a href="https://todo.law" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">TODO.LAW</a> service.</p>
+          <p>{brand.nameUppercase} is a <a href={brand.companyWebsite} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">{brand.companyName}</a> service.</p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-3.5 h-3.5" />
@@ -177,12 +178,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </>
             )}
             <span className="text-border">&middot;</span>
-            <a href="https://todo.law/terms" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+            <a href={brand.termsOfUseUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Scale className="w-3.5 h-3.5" />
               Terms of Service
             </a>
             <span className="text-border">&middot;</span>
-            <a href="https://todo.law/privacy" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+            <a href={brand.privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Shield className="w-3.5 h-3.5" />
               Privacy Policy
             </a>

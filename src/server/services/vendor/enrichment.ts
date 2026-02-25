@@ -255,7 +255,7 @@ async function fetchPageContent(url: string): Promise<string> {
       signal: controller.signal,
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (compatible; DPOCentral/1.0; +https://dpocentral.todo.law)",
+          `Mozilla/5.0 (compatible; DPOCentral/1.0; +${process.env.NEXT_PUBLIC_APP_URL || "https://dpocentral.todo.law"})`,
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
     });

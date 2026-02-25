@@ -1,5 +1,6 @@
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+import { brand } from "@/config/brand";
 
 export default function DSARPage() {
   return (
@@ -188,7 +189,7 @@ export default function DSARPage() {
         <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
           <p className="text-xs text-primary font-medium mb-2">Portal URL</p>
           <code className="text-sm text-muted-foreground">
-            https://dpocentral.todo.law/dsar/your-org-slug
+            {brand.appUrl}/dsar/your-org-slug
           </code>
           <p className="text-xs text-muted-foreground mt-2">
             Share this URL in your privacy policy so data subjects can submit
