@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import {
   Database,
@@ -145,7 +145,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => signOut({ callbackUrl: "/sign-in" })}
+              onClick={async () => {
+                await fetch("/api/auth/cross-logout", { method: "POST" });
+                window.location.href = "/sign-in";
+              }}
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />
