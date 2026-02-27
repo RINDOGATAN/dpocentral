@@ -12,6 +12,11 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 const isDev = process.env.NODE_ENV === "development";
 
+// Cross-app SSO: share session cookie across *.todo.law subdomains
+const isProduction = process.env.NODE_ENV === "production";
+const cookieDomain = isProduction ? ".todo.law" : undefined;
+const cookiePrefix = isProduction ? "__Secure-" : "";
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
   providers: [
@@ -175,6 +180,40 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: "/verify-request",
     error: "/auth-error",
   },
+  // Cross-app SSO cookie config for *.todo.law
+  ...(cookieDomain && {
+    cookies: {
+      sessionToken: {
+        name: `${cookiePrefix}next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+      callbackUrl: {
+        name: `${cookiePrefix}next-auth.callback-url`,
+        options: {
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+      csrfToken: {
+        name: `next-auth.csrf-token`,
+        options: {
+          httpOnly: true,
+          sameSite: "lax" as const,
+          path: "/",
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+    },
+  }),
   // Allow credentials in development
   ...(isDev && {
     debug: true,
