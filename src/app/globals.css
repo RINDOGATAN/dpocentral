@@ -57,6 +57,7 @@
   --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.2), 0 8px 24px hsl(0 0% 0% / 0.3);
   --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.2), 0 4px 12px hsl(0 0% 0% / 0.4);
   --shadow-hover: 0 4px 16px hsl(195 53% 56% / 0.15), 0 12px 32px hsl(0 0% 0% / 0.4);
+  --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   /* Dark background */
   --background: #1a1a1a;
   --foreground: #fefeff;
@@ -114,8 +115,27 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: var(--paper-texture);
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .font-body {
+    font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   }
   /* Brutalist focus states */
   *:focus-visible {
