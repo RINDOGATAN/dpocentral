@@ -17,6 +17,7 @@ import {
   CreditCard,
   Scale,
   Shield,
+  MessageSquareWarning,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +32,7 @@ import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 const navItems = [
   { href: "/privacy/data-inventory", label: "Data Inventory", icon: Database },
@@ -45,6 +47,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading } = useOrganization();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   if (orgLoading) {
     return (
@@ -103,6 +106,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       </Link>
                     );
                   })}
+                  <div className="h-px bg-border my-2" />
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 h-12 text-base"
+                    onClick={() => { setMobileNavOpen(false); setFeedbackOpen(true); }}
+                  >
+                    <MessageSquareWarning className="w-5 h-5" />
+                    Feedback
+                  </Button>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -138,6 +150,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           {/* Right side actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <LanguageSwitcher />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setFeedbackOpen(true)}
+              title="Feedback"
+            >
+              <MessageSquareWarning className="w-4 h-4" />
+            </Button>
             <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
               <User className="w-4 h-4" />
               <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
@@ -193,6 +213,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </footer>
+
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </div>
   );
 }
