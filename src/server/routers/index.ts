@@ -8,6 +8,7 @@ import { vendorRouter } from "./privacy/vendor";
 import { platformAdminRouter } from "./platformAdmin";
 import { vendorCatalogRouter } from "./vendorCatalog";
 import { billingRouter } from "./billing";
+import { feedbackRouter } from "./feedback";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   platformAdmin: platformAdminRouter,
   vendorCatalog: vendorCatalogRouter,
   billing: billingRouter,
+  feedback: feedbackRouter,
 });
 
 export type AppRouter = typeof appRouter;
