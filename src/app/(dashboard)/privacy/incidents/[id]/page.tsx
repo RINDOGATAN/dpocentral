@@ -438,8 +438,8 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
               <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No documents uploaded</p>
-              <Button className="mt-4">Upload Document</Button>
+              <p>Document uploads coming soon</p>
+              <p className="text-sm mt-1">Attach evidence, reports, and communications to incidents.</p>
             </CardContent>
           </Card>
         </TabsContent>
