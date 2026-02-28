@@ -2,6 +2,7 @@
  * Stripe Integration
  *
  * Provides Stripe client and utility functions for payment processing.
+ * Supports promotion codes for content subscriber discounts.
  * This module is only active when Stripe is enabled via feature flags.
  *
  * AGPL-3.0 License - Part of the open-source core
