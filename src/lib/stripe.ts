@@ -76,6 +76,7 @@ export async function createCheckoutSession(
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     mode: "subscription",
     payment_method_types: ["card"],
+    allow_promotion_codes: true,
     line_items: params.lineItems.map((li) => ({
       price: li.priceId,
       quantity: 1,
