@@ -117,29 +117,46 @@ export async function POST(request: NextRequest) {
     let stripeCustomerId = customerOrg?.customer?.stripeCustomerId;
 
     if (!customerId) {
-      // Create new customer
-      const stripeCustomer = await createCustomer({
-        email: session.user.email,
-        name: session.user.name || undefined,
-        metadata: {
-          organizationId,
-        },
+      // Check if customer exists by email but isn't linked to this org
+      const existingByEmail = await prisma.customer.findUnique({
+        where: { email: session.user.email },
       });
 
-      const newCustomer = await prisma.customer.create({
-        data: {
-          name: session.user.name || session.user.email,
-          email: session.user.email,
-          type: "SAAS",
-          stripeCustomerId: stripeCustomer.id,
-          organizations: {
-            create: { organizationId },
+      if (existingByEmail) {
+        // Link existing customer to this organization
+        await prisma.customerOrganization.create({
+          data: {
+            customerId: existingByEmail.id,
+            organizationId,
           },
-        },
-      });
+        });
+        customerId = existingByEmail.id;
+        stripeCustomerId = existingByEmail.stripeCustomerId;
+      } else {
+        // Create new customer
+        const stripeCustomer = await createCustomer({
+          email: session.user.email,
+          name: session.user.name || undefined,
+          metadata: {
+            organizationId,
+          },
+        });
 
-      customerId = newCustomer.id;
-      stripeCustomerId = stripeCustomer.id;
+        const newCustomer = await prisma.customer.create({
+          data: {
+            name: session.user.name || session.user.email,
+            email: session.user.email,
+            type: "SAAS",
+            stripeCustomerId: stripeCustomer.id,
+            organizations: {
+              create: { organizationId },
+            },
+          },
+        });
+
+        customerId = newCustomer.id;
+        stripeCustomerId = newCustomer.stripeCustomerId;
+      }
     } else if (!stripeCustomerId && customerOrg?.customer) {
       // Create Stripe customer for existing customer
       const existingCustomer = customerOrg.customer;
