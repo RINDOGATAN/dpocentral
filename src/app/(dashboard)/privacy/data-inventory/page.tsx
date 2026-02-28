@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,11 +20,16 @@ import {
   ArrowRight,
   Filter,
   Loader2,
+  Lock,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
+import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { SKILL_PACKAGE_IDS } from "@/config/skill-packages";
+import { features } from "@/config/features";
 
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
@@ -42,6 +48,15 @@ export default function DataInventoryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
+  const router = useRouter();
+  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+
+  const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const hasRopaAccess = ropaAccess?.hasAccess ?? false;
 
   const {
     data: assetsPages,
@@ -85,12 +100,29 @@ export default function DataInventoryPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/privacy/data-inventory/processing-activities" className="flex-1 sm:flex-none">
-            <Button variant="outline" className="w-full sm:w-auto">
-              <FileSpreadsheet className="w-4 h-4 sm:mr-2" />
+          <div className="flex-1 sm:flex-none">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => {
+                if (hasRopaAccess) {
+                  router.push("/privacy/data-inventory/processing-activities");
+                } else {
+                  setAccessRequiredOpen(true);
+                }
+              }}
+            >
+              {hasRopaAccess ? (
+                <FileSpreadsheet className="w-4 h-4 sm:mr-2" />
+              ) : (
+                <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
+              )}
               <span className="hidden sm:inline">Export ROPA</span>
+              {!hasRopaAccess && (
+                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 hidden sm:inline-flex">€9/mo</Badge>
+              )}
             </Button>
-          </Link>
+          </div>
           <Link href="/privacy/data-inventory/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
@@ -299,6 +331,25 @@ export default function DataInventoryPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* ROPA Export Premium Gating */}
+      <AccessRequiredDialog
+        open={accessRequiredOpen}
+        onClose={() => setAccessRequiredOpen(false)}
+        featureName="ROPA Export"
+        onUpgrade={() => {
+          setAccessRequiredOpen(false);
+          setUpgradeModalOpen(true);
+        }}
+      />
+
+      <EnableFeatureModal
+        open={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        organizationId={organization?.id ?? ""}
+        skillPackageId="skill-ropa-export"
+        skillName="ROPA Export"
+      />
     </div>
   );
 }

@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Loader2, ExternalLink, Copy, Check } from "lucide-react";
+import { ArrowLeft, Loader2, ExternalLink, Copy, Check, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 
 const dsarTypes = [
   { value: "ACCESS", label: "Access Request", description: "Request to access personal data" },
@@ -108,6 +109,44 @@ export default function DSARSettingsPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.DSAR_PORTAL)) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/privacy/dsar">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-semibold">DSAR Intake Settings</h1>
+            <p className="text-muted-foreground">
+              Configure your public data subject request portal
+            </p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 mx-auto mb-4">
+              <Clock className="w-8 h-8 text-amber-500" />
+            </div>
+            <h2 className="text-lg font-semibold mb-2">Coming Soon</h2>
+            <p className="text-muted-foreground max-w-md mx-auto mb-6">
+              The DSAR Public Portal is currently under development. This feature will allow data subjects
+              to submit access, erasure, and other GDPR requests directly through a branded intake form.
+            </p>
+            <Link href="/privacy/dsar">
+              <Button variant="outline">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to DSAR
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

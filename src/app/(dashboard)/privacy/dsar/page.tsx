@@ -16,7 +16,9 @@ import {
   CheckCircle2,
   Settings,
   ExternalLink,
+  Lock,
 } from "lucide-react";
+import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -43,6 +45,8 @@ const typeLabels: Record<string, string> = {
 };
 
 const OPEN_STATUSES = ["SUBMITTED", "IDENTITY_PENDING", "IDENTITY_VERIFIED", "IN_PROGRESS", "DATA_COLLECTED", "REVIEW_PENDING"];
+
+const isPortalComingSoon = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.DSAR_PORTAL);
 
 export default function DSARPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -98,12 +102,22 @@ export default function DSARPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/privacy/dsar/settings" className="flex-1 sm:flex-none">
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Settings className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Settings</span>
-            </Button>
-          </Link>
+          {isPortalComingSoon ? (
+            <div className="flex-1 sm:flex-none">
+              <Button variant="outline" className="w-full sm:w-auto" disabled>
+                <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
+                <span className="hidden sm:inline">Settings</span>
+                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500 hidden sm:inline-flex">Coming Soon</Badge>
+              </Button>
+            </div>
+          ) : (
+            <Link href="/privacy/dsar/settings" className="flex-1 sm:flex-none">
+              <Button variant="outline" className="w-full sm:w-auto">
+                <Settings className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Settings</span>
+              </Button>
+            </Link>
+          )}
           <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
@@ -313,18 +327,38 @@ export default function DSARPage() {
       {/* Public Portal Link */}
       <Card>
         <CardContent className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <p className="font-medium text-sm sm:text-base">Public Intake Portal</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Share this link with data subjects
-            </p>
-          </div>
-          <a href={`/dsar/${organization?.slug || ""}`} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="w-full sm:w-auto">
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Open Portal
-            </Button>
-          </a>
+          {isPortalComingSoon ? (
+            <>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-sm sm:text-base">Public Intake Portal</p>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">Coming Soon</Badge>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  A public-facing portal for data subjects to submit GDPR requests. Currently under development.
+                </p>
+              </div>
+              <Button variant="outline" className="w-full sm:w-auto" disabled>
+                <Lock className="w-4 h-4 mr-2 text-amber-500" />
+                Open Portal
+              </Button>
+            </>
+          ) : (
+            <>
+              <div>
+                <p className="font-medium text-sm sm:text-base">Public Intake Portal</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Share this link with data subjects
+                </p>
+              </div>
+              <a href={`/dsar/${organization?.slug || ""}`} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Open Portal
+                </Button>
+              </a>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

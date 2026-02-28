@@ -22,9 +22,12 @@ import {
   Loader2,
   Scale,
   Clock,
+  Lock,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 const legalBasisLabels: Record<string, string> = {
   CONSENT: "Consent",
@@ -59,7 +62,15 @@ function formatArray(arr: unknown): string {
 export default function ProcessingActivitiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isExporting, setIsExporting] = useState(false);
+  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
+
+  const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const hasRopaAccess = ropaAccess?.hasAccess ?? false;
 
   const { data: activitiesData, isLoading } = trpc.dataInventory.listActivities.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -153,28 +164,36 @@ export default function ProcessingActivitiesPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" disabled={isExporting}>
-                {isExporting ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Download className="w-4 h-4 mr-2" />
-                )}
-                Export ROPA
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleExport("csv")}>
-                <FileSpreadsheet className="w-4 h-4 mr-2" />
-                Download as CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport("json")}>
-                <FileText className="w-4 h-4 mr-2" />
-                Download as JSON
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {hasRopaAccess ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={isExporting}>
+                  {isExporting ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="w-4 h-4 mr-2" />
+                  )}
+                  Export ROPA
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => handleExport("csv")}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                  Download as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport("json")}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Download as JSON
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="outline" onClick={() => setAccessRequiredOpen(true)}>
+              <Lock className="w-4 h-4 mr-2 text-amber-500" />
+              Export ROPA
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">€9/mo</Badge>
+            </Button>
+          )}
           <Button>
             <Plus className="w-4 h-4 mr-2" />
             Add Activity
@@ -348,6 +367,25 @@ export default function ProcessingActivitiesPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* ROPA Export Premium Gating */}
+      <AccessRequiredDialog
+        open={accessRequiredOpen}
+        onClose={() => setAccessRequiredOpen(false)}
+        featureName="ROPA Export"
+        onUpgrade={() => {
+          setAccessRequiredOpen(false);
+          setUpgradeModalOpen(true);
+        }}
+      />
+
+      <EnableFeatureModal
+        open={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        organizationId={organization?.id ?? ""}
+        skillPackageId="skill-ropa-export"
+        skillName="ROPA Export"
+      />
     </div>
   );
 }
