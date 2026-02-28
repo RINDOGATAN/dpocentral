@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,8 @@ export default function DSARSettingsPage() {
   const { organization } = useOrganization();
   const [isSaving, setIsSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const initializedRef = useRef(false);
 
   const [formData, setFormData] = useState({
     name: "DSAR Intake Form",
@@ -53,15 +55,16 @@ export default function DSARSettingsPage() {
   });
 
   useEffect(() => {
-    if (existingForm) {
+    if (existingForm && !initializedRef.current) {
+      initializedRef.current = true;
       setFormData({
-        name: existingForm.name ?? formData.name,
-        slug: existingForm.slug ?? formData.slug,
-        title: existingForm.title ?? formData.title,
-        description: existingForm.description ?? formData.description,
-        enabledTypes: (existingForm.enabledTypes as string[]) ?? formData.enabledTypes,
-        customCss: existingForm.customCss ?? "",
-        thankYouMessage: existingForm.thankYouMessage ?? formData.thankYouMessage,
+        name: existingForm.name || "DSAR Intake Form",
+        slug: existingForm.slug || "request",
+        title: existingForm.title || "Data Subject Request",
+        description: existingForm.description || "Submit a request regarding your personal data",
+        enabledTypes: (existingForm.enabledTypes as string[]) || ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"],
+        customCss: existingForm.customCss || "",
+        thankYouMessage: existingForm.thankYouMessage || "Thank you for your request. We will process it within the legally required timeframe.",
         isActive: existingForm.isActive ?? true,
       });
     }
@@ -248,6 +251,7 @@ export default function DSARSettingsPage() {
                     <Switch
                       checked={formData.enabledTypes.includes(type.value)}
                       onCheckedChange={() => toggleType(type.value)}
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">{type.description}</p>
