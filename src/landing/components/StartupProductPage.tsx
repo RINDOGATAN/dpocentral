@@ -324,9 +324,6 @@ const StartupProductPage = ({
       <section className="py-6 border-y border-border bg-secondary/20">
         <div className="container px-6">
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
-            <span className="text-xs text-muted-foreground font-body uppercase tracking-wider">
-              {t("social.title")}
-            </span>
             {socialProofs.map((proof) => (
               <div key={proof} className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-accent" />
