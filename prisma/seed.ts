@@ -1021,7 +1021,7 @@ async function main() {
   // ============================================================
 
   const completedDsar = await prisma.dSARRequest.upsert({
-    where: { id: "demo-dsar-completed" },
+    where: { publicId: "DSAR-2025-0042" },
     update: {},
     create: {
       id: "demo-dsar-completed",
@@ -1216,7 +1216,16 @@ async function main() {
 
   // ============================================================
   // DEMO COMPLETED ASSESSMENT
+  // (requires assessment templates — run `npm run db:seed-templates` first)
   // ============================================================
+
+  const dpiaTemplate = await prisma.assessmentTemplate.findUnique({
+    where: { id: "system-dpia-template" },
+  });
+
+  if (!dpiaTemplate) {
+    console.log("Skipping demo assessment — DPIA template not found (run `npm run db:seed-templates` first)");
+  } else {
 
   const completedAssessment = await prisma.assessment.upsert({
     where: { id: "demo-assessment-completed" },
@@ -1409,6 +1418,8 @@ async function main() {
       evidence: "Quarterly review process documented and first review completed. Identified and removed 3 unnecessary data fields.",
     },
   });
+
+  } // end if dpiaTemplate
 
   console.log("Created demo organization with sample data");
 
