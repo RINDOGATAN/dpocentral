@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
+import { COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -74,11 +75,13 @@ export default function BillingPage() {
   const addOnRows = (plans ?? []).map((pkg) => {
     const entitlement = entitlementsBySkill.get(pkg.skillId);
     const isActive = !!entitlement || pkg.isEntitled;
+    const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId);
     return {
       id: pkg.id,
       skillId: pkg.skillId,
       name: pkg.name,
       isActive,
+      isComingSoon,
       entitlementId: entitlement?.id ?? null,
       stripeSubscriptionId: entitlement?.stripeSubscriptionId ?? null,
       renewsAt: entitlement?.expiresAt
@@ -87,7 +90,7 @@ export default function BillingPage() {
     };
   });
 
-  const inactiveRows = addOnRows.filter((r) => !r.isActive);
+  const inactiveRows = addOnRows.filter((r) => !r.isActive && !r.isComingSoon);
   const activeCount = addOnRows.filter((r) => r.isActive).length;
   const monthlyTotal = activeCount * 9;
 
@@ -162,10 +165,10 @@ export default function BillingPage() {
             </TableHeader>
             <TableBody>
               {addOnRows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className={row.isComingSoon ? "opacity-60" : ""}>
                   {features.selfServiceUpgrade && inactiveRows.length > 0 && (
                     <TableCell>
-                      {!row.isActive ? (
+                      {!row.isActive && !row.isComingSoon ? (
                         <Checkbox
                           checked={selectedIds.has(row.id)}
                           onCheckedChange={() => toggleSelect(row.id)}
@@ -176,7 +179,12 @@ export default function BillingPage() {
                   )}
                   <TableCell className="font-medium">{row.name}</TableCell>
                   <TableCell>
-                    {row.isActive ? (
+                    {row.isComingSoon ? (
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4 text-amber-500" />
+                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">Coming Soon</Badge>
+                      </div>
+                    ) : row.isActive ? (
                       <div className="flex items-center gap-1.5">
                         <CheckCircle2 className="h-4 w-4 text-primary" />
                         <span className="text-sm">Active</span>
@@ -186,7 +194,9 @@ export default function BillingPage() {
                     )}
                   </TableCell>
                   <TableCell>
-                    {row.isActive ? (
+                    {row.isComingSoon ? (
+                      <span className="text-sm text-muted-foreground">-</span>
+                    ) : row.isActive ? (
                       row.renewsAt ? (
                         <span className="text-sm text-muted-foreground">
                           Renews {row.renewsAt}
@@ -215,7 +225,7 @@ export default function BillingPage() {
                   </TableCell>
                   {features.selfServiceUpgrade && (
                     <TableCell>
-                      {row.isActive && row.stripeSubscriptionId && row.entitlementId && (
+                      {row.isActive && !row.isComingSoon && row.stripeSubscriptionId && row.entitlementId && (
                         <Button
                           variant="ghost"
                           size="sm"

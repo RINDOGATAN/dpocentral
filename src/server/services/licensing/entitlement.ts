@@ -238,6 +238,7 @@ export function isPremiumAssessmentType(assessmentType: AssessmentType): boolean
 // ============================================================
 
 export const VENDOR_CATALOG_SKILL_ID = "com.nel.dpocentral.vendor-catalog";
+export const ROPA_EXPORT_SKILL_ID = "com.nel.dpocentral.ropa-export";
 export const COMPLETE_PACKAGE_SKILL_ID = "com.nel.dpocentral.complete";
 
 // The Complete package grants access to all premium assessment types and Vendor Catalog
@@ -247,6 +248,7 @@ const COMPLETE_PACKAGE_INCLUDES = [
   "com.nel.dpocentral.tia",
   "com.nel.dpocentral.vendor",
   "com.nel.dpocentral.vendor-catalog",
+  "com.nel.dpocentral.ropa-export",
 ];
 
 /**
@@ -335,6 +337,28 @@ export async function hasVendorCatalogAccess(
   }
 
   // Check Complete package (includes Vendor Catalog)
+  const completeResult = await checkSkillEntitlement(
+    organizationId,
+    COMPLETE_PACKAGE_SKILL_ID
+  );
+  return completeResult.entitled;
+}
+
+/**
+ * Check if organization has ROPA export access
+ * Granted by either the ROPA Export skill or the Complete package
+ */
+export async function hasRopaExportAccess(
+  organizationId: string
+): Promise<boolean> {
+  const ropaResult = await checkSkillEntitlement(
+    organizationId,
+    ROPA_EXPORT_SKILL_ID
+  );
+  if (ropaResult.entitled) {
+    return true;
+  }
+
   const completeResult = await checkSkillEntitlement(
     organizationId,
     COMPLETE_PACKAGE_SKILL_ID

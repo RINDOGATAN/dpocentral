@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism } from "@prisma/client";
+import { hasRopaExportAccess } from "../../services/licensing/entitlement";
 
 export const dataInventoryRouter = createTRPCRouter({
   // ============================================================
@@ -802,10 +803,27 @@ export const dataInventoryRouter = createTRPCRouter({
   // ROPA EXPORT
   // ============================================================
 
+  // Check if organization has ROPA export access
+  hasRopaExportAccess: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const hasAccess = await hasRopaExportAccess(ctx.organization.id);
+      return { hasAccess };
+    }),
+
   // Export ROPA data
   exportROPA: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
+      // Premium feature guard
+      const hasAccess = await hasRopaExportAccess(ctx.organization.id);
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "ROPA Export requires a premium subscription. Enable this add-on to export your Record of Processing Activities.",
+        });
+      }
+
       const activities = await ctx.prisma.processingActivity.findMany({
         where: {
           organizationId: ctx.organization.id,

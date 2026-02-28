@@ -19,6 +19,7 @@ async function main() {
   const STRIPE_PRICE_TIA = process.env.STRIPE_PRICE_TIA || null;
   const STRIPE_PRICE_VENDOR = process.env.STRIPE_PRICE_VENDOR || null;
   const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || null;
+  const STRIPE_PRICE_ROPA_EXPORT = process.env.STRIPE_PRICE_ROPA_EXPORT || null;
 
   const skillPackages = [
     {
@@ -109,6 +110,32 @@ async function main() {
       isPremium: false,
       isActive: true,
       stripePriceId: null,
+      priceAmount: null,
+      priceCurrency: null,
+    },
+    {
+      id: "skill-ropa-export",
+      skillId: "com.nel.dpocentral.ropa-export",
+      name: "ROPA_EXPORT",
+      displayName: "ROPA Export",
+      assessmentType: null,
+      description: "Export your Record of Processing Activities (ROPA) as CSV or JSON for GDPR Article 30 compliance.",
+      isPremium: true,
+      isActive: true,
+      stripePriceId: STRIPE_PRICE_ROPA_EXPORT,
+      priceAmount: 900, // €9/month
+      priceCurrency: "eur",
+    },
+    {
+      id: "skill-dsar-portal",
+      skillId: "com.nel.dpocentral.dsar-portal",
+      name: "DSAR_PORTAL",
+      displayName: "DSAR Public Portal",
+      assessmentType: null,
+      description: "Public-facing portal for data subjects to submit access, erasure, and other GDPR requests.",
+      isPremium: true,
+      isActive: true,
+      stripePriceId: null, // Coming soon — not purchasable yet
       priceAmount: null,
       priceCurrency: null,
     },
