@@ -1255,16 +1255,40 @@ model VendorCatalog {
   hipaaCompliant Boolean?
 
   // Data Processing
-  dataLocations   String[] // ["US", "EU", "UK"]
-  hasEuDataCenter Boolean?
-  subprocessors   Json? // [{name, purpose, location}]
+  dataLocations      String[] // ["US", "EU", "UK"]
+  hasEuDataCenter    Boolean?
+  subprocessors      Json? // [{name, purpose, location}]
+  transferSafeguards String?
+  supportsDsars      Boolean?
+  hasDesignatedDpo   Boolean?
+  hasRecentBreach    Boolean?
+
+  // AI Governance
+  euAiActCompliant           Boolean?
+  aiCapabilities             String[]
+  modelHosting               String?
+  aiTechniques               String[]
+  euAiActRole                String?
+  euAiActAnnexIIIDomains     String[]
+  iso42001Certified          Boolean?
+  supportsAuditLogs          Boolean?
+  supportsExplainability     Boolean?
+  hasBiasMonitoring          Boolean?
+  hasModelCard               Boolean?
+  aiIncidentNotificationSLA  String?
+  dataProcessingTransparency Boolean?
+  aiModels                   Json?
+
+  // Tags (for AI Sentinel integration)
+  tags String[]
 
   // Metadata
-  logoUrl    String?
-  isVerified Boolean   @default(false)
-  verifiedAt DateTime?
-  verifiedBy String?
-  source     String? // "processors.json", "manual", "ai-enriched"
+  logoUrl          String?
+  isVerified       Boolean   @default(false)
+  verifiedAt       DateTime?
+  verifiedBy       String?
+  source           String? // "processors.json", "manual", "ai-enriched"
+  senecaLitigation Json?     @map("seneca_litigation")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1272,6 +1296,171 @@ model VendorCatalog {
   @@index([category])
   @@index([name])
   @@map("vendor_catalog")
+}
+
+// ============================================================
+// VENDOR.WATCH STUBS — DO NOT MODIFY
+// These tables are owned by Vendor.Watch (vendorwatch repo).
+// They are listed here as stubs so that `prisma db push` from
+// DPO Central does NOT drop them. DPC never reads or writes
+// to these tables. If VW adds columns, update stubs to match.
+// ============================================================
+
+/// Stub: Vendor.Watch user vendor portfolios
+model VwPortfolioVendor {
+  id               String    @id @default(cuid())
+  accountId        String
+  vendorSlug       String
+  dataCategories   String[]
+  purposes         String[]
+  criticality      String    @default("medium")
+  notes            String?   @db.Text
+  isSubprocessor   Boolean   @default(true) @map("is_subprocessor")
+  riskScore        Int?
+  riskLevel        String?
+  riskFactors      Json?
+  riskCalculatedAt DateTime?
+  addedBy          String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([accountId, vendorSlug])
+  @@index([accountId])
+  @@index([vendorSlug])
+  @@map("portfolio_vendors")
+}
+
+/// Stub: Vendor.Watch vendor claim requests
+model VwVendorClaim {
+  id                    String    @id @default(cuid())
+  vendorSlug            String
+  claimantEmail         String
+  claimantName          String?
+  status                String    @default("pending")
+  userId                String?
+  accountId             String?
+  emailDomain           String?
+  vendorDomain          String?
+  domainMatch           Boolean   @default(false)
+  verificationEmail     String?
+  verificationCode      String?
+  verificationExpiresAt DateTime?
+  reviewedBy            String?
+  reviewNotes           String?   @db.Text
+  verifiedAt            DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([vendorSlug])
+  @@index([claimantEmail])
+  @@index([userId])
+  @@map("vendor_claims")
+}
+
+/// Stub: Vendor.Watch vendor self-reported compliance questionnaires
+model VwVendorQuestionnaire {
+  id                         String    @id @default(cuid())
+  vendorSlug                 String    @unique
+  certifications             String[]
+  frameworks                 String[]
+  gdprCompliant              Boolean?
+  ccpaCompliant              Boolean?
+  hipaaCompliant             Boolean?
+  dataLocations              String[]
+  hasEuDataCenter            Boolean?
+  subprocessors              Json?
+  privacyPolicyUrl           String?
+  trustCenterUrl             String?
+  dpaUrl                     String?
+  securityPageUrl            String?
+  dataRetentionPolicy        String?   @db.Text
+  breachNotificationDays     Int?
+  encryptionAtRest           Boolean?
+  encryptionInTransit        Boolean?
+  penTestFrequency           String?
+  transferSafeguards         String?
+  supportsDsars              Boolean?
+  hasDesignatedDpo           Boolean?
+  hasRecentBreach            Boolean?
+  euAiActCompliant           Boolean?
+  aiCapabilities             String[]
+  modelHosting               String?
+  aiTechniques               String[]
+  euAiActRole                String?
+  euAiActAnnexIIIDomains     String[]
+  iso42001Certified          Boolean?
+  supportsAuditLogs          Boolean?
+  supportsExplainability     Boolean?
+  hasBiasMonitoring          Boolean?
+  hasModelCard               Boolean?
+  aiIncidentNotificationSLA  String?
+  dataProcessingTransparency Boolean?
+  aiModels                   Json?
+  submittedBy                String?
+  status                     String    @default("draft")
+  submittedAt                DateTime?
+  approvedAt                 DateTime?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  @@map("vw_vendor_questionnaires")
+}
+
+/// Stub: Vendor.Watch user-submitted vendor suggestions
+model VwVendorSuggestion {
+  id            String   @id @default(cuid())
+  vendorName    String
+  vendorWebsite String?
+  suggestedBy   String?
+  notes         String?  @db.Text
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+
+  @@map("vendor_suggestions")
+}
+
+/// Stub: Vendor.Watch enrichment requests (5 free per user)
+model VwEnrichmentRequest {
+  id                 String    @id @default(cuid())
+  userId             String    @map("user_id")
+  vendorSlug         String    @map("vendor_slug")
+  status             String    @default("pending")
+  priority           String    @default("standard")
+  isFree             Boolean   @default(true) @map("is_free")
+  stripePaymentId    String?   @map("stripe_payment_id")
+  amountCents        Int?      @map("amount_cents")
+  completenessBefore Json?     @map("completeness_before")
+  completenessAfter  Json?     @map("completeness_after")
+  completedBy        String?   @map("completed_by")
+  requestedAt        DateTime  @default(now()) @map("requested_at")
+  completedAt        DateTime? @map("completed_at")
+  dueAt              DateTime? @map("due_at")
+
+  @@unique([userId, vendorSlug])
+  @@index([userId])
+  @@index([status])
+  @@index([priority, status])
+  @@map("vw_enrichment_requests")
+}
+
+/// Stub: Vendor.Watch certification evidence
+model VwCertEvidence {
+  id           String   @id @default(cuid())
+  vendorSlug   String
+  certName     String
+  evidenceType String   @default("url")
+  url          String?
+  blobUrl      String?
+  fileName     String?
+  uploadedBy   String
+  uploaderRole String   @default("vendor")
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([vendorSlug])
+  @@index([vendorSlug, certName])
+  @@map("vw_cert_evidence")
 }
 
 // ============================================================
