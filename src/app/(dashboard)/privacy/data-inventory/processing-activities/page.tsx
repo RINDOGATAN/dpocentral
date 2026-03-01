@@ -28,6 +28,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { formatPrice } from "@/lib/currency";
 
 const legalBasisLabels: Record<string, string> = {
   CONSENT: "Consent",
@@ -191,7 +192,7 @@ export default function ProcessingActivitiesPage() {
             <Button variant="outline" onClick={() => setAccessRequiredOpen(true)}>
               <Lock className="w-4 h-4 mr-2 text-amber-500" />
               Export ROPA
-              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">€9/mo</Badge>
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{formatPrice(9)}/mo</Badge>
             </Button>
           )}
           <Button>

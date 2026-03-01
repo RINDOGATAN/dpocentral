@@ -26,6 +26,7 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { formatPrice } from "@/lib/currency";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -186,7 +187,7 @@ export default function VendorsPage() {
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-sm sm:text-base">Vendor Catalog</h3>
                     <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-                      &euro;9/mo
+                      {formatPrice(9)}/mo
                     </Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Lock, Shield, Globe, Building2, Search, Sparkles, Mail, CreditCard } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +11,7 @@ import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { formatPrice } from "@/lib/currency";
 
 export default function DocsPremiumPage() {
   return (
@@ -17,7 +20,7 @@ export default function DocsPremiumPage() {
         <h1 className="text-2xl font-bold tracking-tight">Add-on Features</h1>
         <p className="text-muted-foreground mt-1">
           Add-on features extend DPO Central with advanced assessment types, vendor intelligence,
-          and specialized compliance tools. Each is available for €9/month.
+          and specialized compliance tools. Each is available for {formatPrice(9)}/month.
         </p>
       </div>
 
@@ -33,7 +36,7 @@ export default function DocsPremiumPage() {
                 <PremiumBadge />
               </div>
               <p className="text-sm text-muted-foreground">
-                These features are available as add-ons for €9/month each. They are not included in the open-source core.
+                These features are available as add-ons for {formatPrice(9)}/month each. They are not included in the open-source core.
                 {features.selfServiceUpgrade
                   ? " Enable any feature instantly from the billing page."
                   : " Contact our team to enable features for your organization."}

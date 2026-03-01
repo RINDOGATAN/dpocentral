@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
+import { formatPrice } from "@/lib/currency";
 
 interface EnableMultipleFeaturesModalProps {
   open: boolean;
@@ -166,7 +167,7 @@ export function EnableMultipleFeaturesModal({
 
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">
-              &euro;{total}/month &mdash; cancel anytime
+              {formatPrice(total)}/month &mdash; cancel anytime
             </p>
           </div>
 

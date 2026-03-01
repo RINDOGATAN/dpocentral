@@ -30,6 +30,7 @@ import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 import { features } from "@/config/features";
+import { formatPrice } from "@/lib/currency";
 
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
@@ -119,7 +120,7 @@ export default function DataInventoryPage() {
               )}
               <span className="hidden sm:inline">Export ROPA</span>
               {!hasRopaAccess && (
-                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 hidden sm:inline-flex">€9/mo</Badge>
+                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 hidden sm:inline-flex">{formatPrice(9)}/mo</Badge>
               )}
             </Button>
           </div>
