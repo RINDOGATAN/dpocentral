@@ -193,7 +193,15 @@ export async function removeSubscriptionItem(
   });
 
   const items = subscription.items.data;
-  const target = items.find((item) => item.price.id === stripePriceId);
+  // Try the given price first, then fall back to USD price (subscription may
+  // have been created with the USD override while the DB stores the EUR price)
+  let target = items.find((item) => item.price.id === stripePriceId);
+  if (!target) {
+    const usdPriceId = process.env.STRIPE_PRICE_ID_USD;
+    if (usdPriceId) {
+      target = items.find((item) => item.price.id === usdPriceId);
+    }
+  }
 
   if (!target) {
     throw new Error(
