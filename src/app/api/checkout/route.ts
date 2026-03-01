@@ -177,9 +177,14 @@ export async function POST(request: NextRequest) {
       stripeCustomerId = stripeCustomer.id;
     }
 
-    // Build line items
+    // Determine currency from geo-IP (US → USD, else EUR)
+    const country = request.headers.get("x-vercel-ip-country") || "";
+    const isUSD = country === "US";
+    const usdPriceId = process.env.STRIPE_PRICE_ID_USD;
+
+    // Build line items (use USD price for US visitors if available)
     const lineItems = skillPackages.map((pkg) => ({
-      priceId: pkg.stripePriceId!,
+      priceId: isUSD && usdPriceId ? usdPriceId : pkg.stripePriceId!,
       skillPackageId: pkg.id,
     }));
 

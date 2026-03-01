@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { features } from "@/config/features";
+import { formatPrice } from "@/lib/currency";
 
 export default function BillingPage() {
   const { organization } = useOrganization();
@@ -208,7 +209,7 @@ export default function BillingPage() {
                       )
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">€9/mo</span>
+                        <span className="text-sm text-muted-foreground">{formatPrice(9)}/mo</span>
                         {features.selfServiceUpgrade && (
                           <Button
                             variant="outline"
@@ -252,7 +253,7 @@ export default function BillingPage() {
             <div className="mt-4 flex items-center justify-between rounded-lg border p-3">
               <p className="text-sm text-muted-foreground">
                 {selectedIds.size} feature{selectedIds.size !== 1 ? "s" : ""} selected
-                &mdash; €{selectedIds.size * 9}/month
+                &mdash; {formatPrice(selectedIds.size * 9)}/month
               </p>
               <Button size="sm" onClick={handleEnableSelected}>
                 Enable Selected ({selectedIds.size})
@@ -267,11 +268,11 @@ export default function BillingPage() {
         <div className="text-sm text-muted-foreground">
           <p>
             Your current monthly total:{" "}
-            <span className="font-semibold text-foreground">€{monthlyTotal}</span>
+            <span className="font-semibold text-foreground">{formatPrice(monthlyTotal)}</span>
           </p>
           <p>
             Based on {activeCount} active add-on{activeCount !== 1 ? "s" : ""} at
-            €9/month each.
+            {formatPrice(9)}/month each.
           </p>
         </div>
       )}

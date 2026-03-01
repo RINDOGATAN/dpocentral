@@ -19,6 +19,20 @@ const intlMiddleware = createMiddleware({
 });
 
 export default function middleware(request: NextRequest) {
+  // Set currency cookie based on geo-IP (US → USD, else EUR)
+  const hasCurrency = request.cookies.has("currency");
+  let currencyResponse: NextResponse | null = null;
+  if (!hasCurrency) {
+    const country = request.headers.get("x-vercel-ip-country") || "";
+    const currency = country === "US" ? "USD" : "EUR";
+    currencyResponse = NextResponse.next();
+    currencyResponse.cookies.set("currency", currency, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      sameSite: "lax",
+    });
+  }
+
   // Check if i18n is enabled via environment variable
   const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
@@ -30,16 +44,30 @@ export default function middleware(request: NextRequest) {
     pathname.startsWith("/dsar") || // Public DSAR portal
     pathname.includes(".") // Static files
   ) {
-    return NextResponse.next();
+    return currencyResponse || NextResponse.next();
   }
 
   // If i18n is disabled, just pass through
   if (!i18nEnabled) {
-    return NextResponse.next();
+    return currencyResponse || NextResponse.next();
   }
 
   // Use next-intl middleware for locale handling
-  return intlMiddleware(request);
+  const intlResponse = intlMiddleware(request);
+
+  // Copy currency cookie to intl response if needed
+  if (currencyResponse) {
+    const cookieValue = currencyResponse.cookies.get("currency")?.value;
+    if (cookieValue) {
+      intlResponse.cookies.set("currency", cookieValue, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+        sameSite: "lax",
+      });
+    }
+  }
+
+  return intlResponse;
 }
 
 export const config = {

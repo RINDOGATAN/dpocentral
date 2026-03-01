@@ -36,6 +36,7 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { formatPrice } from "@/lib/currency";
 
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
@@ -286,7 +287,7 @@ export default function NewAssessmentPage() {
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                €9/mo
+                                {formatPrice(9)}/mo
                               </Badge>
                             )
                           ) : (
