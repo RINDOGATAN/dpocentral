@@ -159,24 +159,30 @@ function NewVendorPageContent() {
     setShowCatalogResults(false);
     setCatalogSearch(vendor.name);
 
-    // Map catalog category to our categories
+    // Map catalog category to our categories (all 22 canonical VW categories)
     const categoryMapping: Record<string, string> = {
+      "Cloud Infrastructure": "CLOUD_SERVICES",
+      "Data Warehouse & Integration": "DATA_PROCESSING",
+      "Analytics & BI": "ANALYTICS",
+      "Customer Data Platform": "DATA_PROCESSING",
+      "CRM & Sales": "MARKETING",
       "Marketing Automation": "MARKETING",
-      "Email Marketing": "MARKETING",
-      "AB Testing": "ANALYTICS",
-      "Lead Generation": "MARKETING",
-      "AI Chatbot": "CUSTOMER_SUPPORT",
-      "AI Model": "DATA_PROCESSING",
-      "AI Assistants": "DATA_PROCESSING",
-      "Analytics": "ANALYTICS",
-      "Web Analytics": "ANALYTICS",
-      "Social Media": "MARKETING",
       "Advertising": "MARKETING",
-      "Cloud Services": "CLOUD_SERVICES",
-      "Payment": "PAYMENT_PROCESSING",
-      "HR": "HR_SERVICES",
-      "Security": "IT_SECURITY",
-      "Legal": "LEGAL",
+      "Content Management": "DATA_PROCESSING",
+      "E-commerce": "PAYMENT_PROCESSING",
+      "Payment Processing": "PAYMENT_PROCESSING",
+      "Communication": "OTHER",
+      "Customer Support": "CUSTOMER_SUPPORT",
+      "Personalization & Engagement": "MARKETING",
+      "HR & People": "HR_SERVICES",
+      "Productivity & Collaboration": "OTHER",
+      "Developer Tools": "CLOUD_SERVICES",
+      "Security & Identity": "IT_SECURITY",
+      "Privacy & Consent": "LEGAL",
+      "AI & Machine Learning": "DATA_PROCESSING",
+      "Legal & Compliance": "LEGAL",
+      "Design & Creative": "OTHER",
+      "Surveys & Research": "ANALYTICS",
     };
 
     const mappedCategory = categoryMapping[vendor.category] || "OTHER";
@@ -436,7 +442,7 @@ function NewVendorPageContent() {
                               )}
                             </div>
                             <p className="text-sm text-muted-foreground truncate">
-                              {vendor.category}
+                              {vendor.category}{vendor.subcategory ? ` / ${vendor.subcategory}` : ""}
                               {vendor.description && ` • ${vendor.description.substring(0, 50)}...`}
                             </p>
                           </div>
