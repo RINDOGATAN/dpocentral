@@ -26,10 +26,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
-import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
-import { SKILL_PACKAGE_IDS } from "@/config/skill-packages";
-import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
 
 const DataFlowVisualization = dynamic(
@@ -50,7 +47,6 @@ export default function DataInventoryPage() {
   const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
   const router = useRouter();
-  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
@@ -109,7 +105,7 @@ export default function DataInventoryPage() {
                 if (hasRopaAccess) {
                   router.push("/privacy/data-inventory/processing-activities");
                 } else {
-                  setAccessRequiredOpen(true);
+                  setUpgradeModalOpen(true);
                 }
               }}
             >
@@ -334,16 +330,6 @@ export default function DataInventoryPage() {
       </Tabs>
 
       {/* ROPA Export Premium Gating */}
-      <AccessRequiredDialog
-        open={accessRequiredOpen}
-        onClose={() => setAccessRequiredOpen(false)}
-        featureName="ROPA Export"
-        onUpgrade={() => {
-          setAccessRequiredOpen(false);
-          setUpgradeModalOpen(true);
-        }}
-      />
-
       <EnableFeatureModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}

@@ -177,11 +177,11 @@ export function EnableFeatureModal({
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={handleEnable} disabled={isLoading}>
+          <Button onClick={handleEnable} disabled={isLoading} className="whitespace-nowrap">
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Redirecting to payment...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />
+                Redirecting...
               </>
             ) : (
               "Enable Feature"

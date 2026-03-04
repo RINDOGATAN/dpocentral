@@ -31,7 +31,6 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
@@ -110,10 +109,9 @@ export default function NewAssessmentPage() {
     searchParams.get("type")
   );
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
-  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
-  const [accessRequiredFeature, setAccessRequiredFeature] = useState("");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeSkillKey, setUpgradeSkillKey] = useState("");
+  const [upgradeFeatureName, setUpgradeFeatureName] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -171,8 +169,9 @@ export default function NewAssessmentPage() {
       setIsSubmitting(false);
 
       if (error.data?.code === "FORBIDDEN") {
-        setAccessRequiredFeature(typeLabels[selectedType ?? ""] || "Assessment");
-        setAccessRequiredOpen(true);
+        setUpgradeFeatureName(typeLabels[selectedType ?? ""] || "Assessment");
+        setUpgradeSkillKey(selectedType ?? "");
+        setUpgradeModalOpen(true);
       }
     },
   });
@@ -185,9 +184,9 @@ export default function NewAssessmentPage() {
     const isEntitled = isTypeEntitled(type);
 
     if (isPremium && !isEntitled) {
-      setAccessRequiredFeature(typeLabels[type] || type);
+      setUpgradeFeatureName(typeLabels[type] || type);
       setUpgradeSkillKey(type);
-      setAccessRequiredOpen(true);
+      setUpgradeModalOpen(true);
       return;
     }
 
@@ -503,24 +502,13 @@ export default function NewAssessmentPage() {
         </form>
       )}
 
-      {/* Access Required Dialog */}
-      <AccessRequiredDialog
-        open={accessRequiredOpen}
-        onClose={() => setAccessRequiredOpen(false)}
-        featureName={accessRequiredFeature}
-        onUpgrade={() => {
-          setAccessRequiredOpen(false);
-          setUpgradeModalOpen(true);
-        }}
-      />
-
       {/* Enable Feature Modal */}
       <EnableFeatureModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}
         skillPackageId={SKILL_PACKAGE_IDS[upgradeSkillKey] ?? ""}
-        skillName={SKILL_DISPLAY_NAMES[upgradeSkillKey] ?? accessRequiredFeature}
+        skillName={SKILL_DISPLAY_NAMES[upgradeSkillKey] ?? upgradeFeatureName}
       />
     </div>
   );
