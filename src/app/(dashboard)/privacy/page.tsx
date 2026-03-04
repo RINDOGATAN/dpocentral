@@ -44,6 +44,12 @@ export default function PrivacyDashboardPage() {
     { enabled: !!organization?.id }
   );
 
+  // Detect Vendor.Watch portfolio for the current user
+  const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -101,7 +107,49 @@ export default function PrivacyDashboardPage() {
       {/* Quickstart Card — shown when org has few records */}
       {dashboardStats.dataAssets <= 2 &&
         dashboardStats.processingActivities <= 1 &&
-        dashboardStats.activeVendors <= 1 && (
+        dashboardStats.activeVendors <= 1 &&
+        (portfolio?.hasPortfolio ? (
+          /* VW portfolio detected — show tailored card */
+          <Card className="border-primary/50 bg-primary/5">
+            <CardContent className="p-4 sm:p-6 space-y-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                  <Building2 className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm sm:text-base">
+                    Build your privacy program from your vendor portfolio
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
+                    your Vendor.Watch portfolio. We can auto-generate data assets,
+                    processing activities, and data flows — you&apos;ll be able to add
+                    more later.
+                  </p>
+                </div>
+                <Link href="/privacy/quickstart?from=vendorwatch">
+                  <Button size="sm" className="shrink-0 gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    <span>Build Now</span>
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-2 ml-0 sm:ml-12">
+                {portfolio.vendors.slice(0, 5).map((v) => (
+                  <Badge key={v!.slug} variant="secondary" className="text-xs">
+                    {v!.name}
+                  </Badge>
+                ))}
+                {portfolio.vendors.length > 5 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{portfolio.vendors.length - 5} more
+                  </Badge>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          /* No VW portfolio — show generic quickstart card */
           <Card className="border-primary/50 bg-primary/5">
             <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="p-2 rounded-lg bg-primary/10 shrink-0">
@@ -125,7 +173,7 @@ export default function PrivacyDashboardPage() {
               </Link>
             </CardContent>
           </Card>
-        )}
+        ))}
 
       {/* Quick Stats - 2 columns on mobile, 4 on desktop */}
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">

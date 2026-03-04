@@ -153,13 +153,48 @@ If both paths are selected, the wizard flows: Choose > Vendors > Industry > Revi
 
 ---
 
-## Dashboard Integration
+## Vendor.Watch Integration
 
-A **"Get Started with Quickstart"** card appears at the top of the Privacy Dashboard (`/privacy`) when the organization has few records:
+Users who have built a vendor portfolio in Vendor.Watch get a seamless onboarding experience.
 
+### How it works
+
+1. DPO Central and Vendor.Watch share the same Neon PostgreSQL database and NextAuth session (SSO via `.todo.law` cookies)
+2. `VwPortfolioVendor.accountId` maps to the shared `User.id` from the NextAuth users table
+3. When a user arrives at the DPO Central dashboard, the system queries their VW portfolio
+4. If a portfolio is detected and the org has few records, a tailored card appears showing the portfolio vendors and a "Build Now" button
+5. Clicking the button navigates to `/privacy/quickstart?from=vendorwatch`
+6. The quickstart wizard shows a **Welcome step** with the portfolio listed, offering three choices:
+   - "Yes, build my privacy program" — proceeds straight to vendor review
+   - "Yes, and also add an industry template" — enables both paths
+   - "Let me choose manually" — falls through to the normal wizard
+
+### Dashboard detection
+
+When the org is fresh (few records), the dashboard shows one of two cards:
+
+```
+If portfolio exists → VW-specific card with vendor names and "Build Now" button
+If no portfolio    → Generic quickstart card with "Get Started" button
+```
+
+Both cards use the same condition:
 ```
 showQuickstart = totalAssets <= 2 AND totalActivities <= 1 AND activeVendors <= 1
 ```
+
+### Portfolio pre-selection
+
+When arriving via `?from=vendorwatch`, the wizard automatically:
+- Fetches the user's VW portfolio via `quickstart.getPortfolio`
+- Pre-selects all non-imported vendor slugs
+- If no portfolio is found, falls back to the normal "choose" step
+
+---
+
+## Dashboard Integration
+
+A quickstart card appears at the top of the Privacy Dashboard (`/privacy`) when the organization has few records. The card variant depends on whether the user has a Vendor.Watch portfolio (see above).
 
 The card disappears automatically once the organization has populated its privacy program.
 
@@ -173,6 +208,7 @@ All endpoints require authentication and organization membership (`organizationP
 
 | Endpoint | Type | Description |
 |----------|------|-------------|
+| `quickstart.getPortfolio` | Query | Detects VW portfolio for the current user, returns vendor list with dedup info |
 | `quickstart.listTemplates` | Query | Returns lightweight list of all 6 industry templates with counts |
 | `quickstart.previewVendorImport` | Query | Returns preview of what vendor import would create, including dedup info |
 | `quickstart.previewIndustryTemplate` | Query | Returns full template preview with existing-record detection |

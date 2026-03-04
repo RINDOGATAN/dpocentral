@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Card,
@@ -36,6 +36,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -58,7 +59,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
 // TYPES
 // ============================================================
 
-type WizardStep = "choose" | "vendors" | "industry" | "review" | "success";
+type WizardStep = "welcome" | "choose" | "vendors" | "industry" | "review" | "success";
 
 // ============================================================
 // PAGE COMPONENT
@@ -66,13 +67,18 @@ type WizardStep = "choose" | "vendors" | "industry" | "review" | "success";
 
 export default function QuickstartPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
 
-  // Wizard state
-  const [step, setStep] = useState<WizardStep>("choose");
+  // Detect if user arrived from Vendor.Watch
+  const fromVendorWatch = searchParams.get("from") === "vendorwatch";
+
+  // Wizard state — start at "welcome" if from VW, otherwise "choose"
+  const [step, setStep] = useState<WizardStep>(fromVendorWatch ? "welcome" : "choose");
   const [useVendors, setUseVendors] = useState(false);
   const [useIndustry, setUseIndustry] = useState(false);
+  const [portfolioInitialized, setPortfolioInitialized] = useState(false);
 
   // Vendor selection
   const [vendorSearch, setVendorSearch] = useState("");
@@ -102,6 +108,31 @@ export default function QuickstartPage() {
   );
 
   // ─── QUERIES ──────────────────────────────────────
+
+  // Fetch Vendor.Watch portfolio (always — used for both VW flow and dashboard detection)
+  const { data: portfolio, isLoading: portfolioLoading } =
+    trpc.quickstart.getPortfolio.useQuery(
+      { organizationId: orgId },
+      { enabled: !!orgId }
+    );
+
+  // When portfolio loads and we're in VW flow, pre-select vendors
+  useEffect(() => {
+    if (portfolioInitialized) return;
+    if (!portfolio?.hasPortfolio) return;
+    if (portfolio.slugs.length > 0) {
+      setSelectedSlugs(portfolio.slugs);
+      setUseVendors(true);
+      setPortfolioInitialized(true);
+    }
+  }, [portfolio, portfolioInitialized]);
+
+  // If user came from VW but has no portfolio, fall through to normal choose step
+  useEffect(() => {
+    if (fromVendorWatch && !portfolioLoading && portfolio && !portfolio.hasPortfolio) {
+      setStep("choose");
+    }
+  }, [fromVendorWatch, portfolioLoading, portfolio]);
 
   const { data: catalogAccess } = trpc.vendor.hasVendorCatalogAccess.useQuery(
     { organizationId: orgId },
@@ -234,43 +265,171 @@ export default function QuickstartPage() {
         </div>
       </div>
 
-      {/* Step indicator */}
-      <div className="flex items-center gap-2 text-sm">
-        {[
-          { key: "choose", label: "Choose Path" },
-          ...(useVendors
-            ? [{ key: "vendors", label: "Select Vendors" }]
-            : []),
-          ...(useIndustry
-            ? [{ key: "industry", label: "Industry Template" }]
-            : []),
-          { key: "review", label: "Review & Confirm" },
-        ].map((s, i, arr) => (
-          <span key={s.key} className="flex items-center gap-2">
-            <span
-              className={`px-2 py-0.5 rounded text-xs font-medium ${
-                step === s.key
-                  ? "bg-primary text-primary-foreground"
-                  : step === "success" || arr.findIndex((x) => x.key === step) > i
-                  ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {i + 1}
+      {/* Step indicator — hidden on welcome step */}
+      {step !== "welcome" && (
+        <div className="flex items-center gap-2 text-sm flex-wrap">
+          {[
+            ...(!fromVendorWatch
+              ? [{ key: "choose", label: "Choose Path" }]
+              : []),
+            ...(useVendors
+              ? [{ key: "vendors", label: fromVendorWatch ? "Your Vendors" : "Select Vendors" }]
+              : []),
+            ...(useIndustry
+              ? [{ key: "industry", label: "Industry Template" }]
+              : []),
+            { key: "review", label: "Review & Confirm" },
+          ].map((s, i, arr) => (
+            <span key={s.key} className="flex items-center gap-2">
+              <span
+                className={`px-2 py-0.5 rounded text-xs font-medium ${
+                  step === s.key
+                    ? "bg-primary text-primary-foreground"
+                    : step === "success" || arr.findIndex((x) => x.key === step) > i
+                    ? "bg-primary/20 text-primary"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {i + 1}
+              </span>
+              <span
+                className={
+                  step === s.key ? "font-medium" : "text-muted-foreground"
+                }
+              >
+                {s.label}
+              </span>
+              {i < arr.length - 1 && (
+                <ArrowRight className="w-3 h-3 text-muted-foreground" />
+              )}
             </span>
-            <span
-              className={
-                step === s.key ? "font-medium" : "text-muted-foreground"
-              }
-            >
-              {s.label}
-            </span>
-            {i < arr.length - 1 && (
-              <ArrowRight className="w-3 h-3 text-muted-foreground" />
-            )}
-          </span>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════
+          WELCOME — Vendor.Watch portfolio detected
+          ════════════════════════════════════════════════ */}
+      {step === "welcome" && (
+        <div className="space-y-6">
+          {portfolioLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : portfolio?.hasPortfolio ? (
+            <>
+              <Card className="border-primary/50 bg-primary/5">
+                <CardContent className="p-6 sm:p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                      <Building2 className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-lg sm:text-xl font-semibold">
+                        Welcome from Vendor.Watch!
+                      </h2>
+                      <p className="text-muted-foreground mt-2">
+                        We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
+                        your portfolio. Can we help you build your privacy program
+                        around your initial vendor portfolio?
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        You will be able to add more vendors and processing activities
+                        later on.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Portfolio vendor list */}
+                  <div className="mt-6 space-y-2">
+                    {portfolio.vendors.map((v) => (
+                      <div
+                        key={v!.slug}
+                        className={`flex items-center justify-between p-3 rounded border ${
+                          v!.alreadyImported ? "opacity-50 border-dashed" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Building2 className="w-4 h-4 text-primary shrink-0" />
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-medium text-sm">{v!.name}</span>
+                              {v!.isVerified && (
+                                <Badge variant="outline" className="text-xs border-primary/50 text-primary">
+                                  Verified
+                                </Badge>
+                              )}
+                              {v!.criticality === "high" && (
+                                <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500">
+                                  High criticality
+                                </Badge>
+                              )}
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {v!.category} — {v!.mappingLabel} — {v!.elementCount} data elements
+                            </span>
+                          </div>
+                        </div>
+                        {v!.alreadyImported && (
+                          <Badge variant="secondary" className="text-xs shrink-0">
+                            Already imported
+                          </Badge>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                    <Button
+                      size="lg"
+                      onClick={() => {
+                        setUseVendors(true);
+                        setStep("vendors");
+                      }}
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Yes, build my privacy program
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => {
+                        setUseVendors(true);
+                        setUseIndustry(true);
+                        setStep("vendors");
+                      }}
+                    >
+                      <Package className="w-4 h-4 mr-2" />
+                      Yes, and also add an industry template
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      onClick={() => setStep("choose")}
+                    >
+                      Let me choose manually
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <p className="text-xs text-muted-foreground text-center">
+                Portfolio imported from{" "}
+                <a
+                  href="https://vendorwatch.todo.law"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-primary hover:underline"
+                >
+                  Vendor.Watch
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </p>
+            </>
+          ) : null}
+        </div>
+      )}
 
       {/* ════════════════════════════════════════════════
           STEP 1: Choose Path
@@ -383,7 +542,7 @@ export default function QuickstartPage() {
                 uses.
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setStep("choose")}>
+            <Button variant="ghost" size="sm" onClick={() => setStep(fromVendorWatch && portfolio?.hasPortfolio ? "welcome" : "choose")}>
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back
             </Button>
