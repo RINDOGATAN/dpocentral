@@ -14,12 +14,14 @@ async function main() {
   console.log("Creating skill packages...");
 
   // Stripe Price IDs - Set these from environment or after creating products in Stripe Dashboard
-  const STRIPE_PRICE_DPIA = process.env.STRIPE_PRICE_DPIA || null;
-  const STRIPE_PRICE_PIA = process.env.STRIPE_PRICE_PIA || null;
-  const STRIPE_PRICE_TIA = process.env.STRIPE_PRICE_TIA || null;
-  const STRIPE_PRICE_VENDOR = process.env.STRIPE_PRICE_VENDOR || null;
-  const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || null;
-  const STRIPE_PRICE_ROPA_EXPORT = process.env.STRIPE_PRICE_ROPA_EXPORT || null;
+  // Falls back to shared STRIPE_PRICE_ID when a skill-specific env var is not set
+  const STRIPE_PRICE_DEFAULT = process.env.STRIPE_PRICE_ID || null;
+  const STRIPE_PRICE_DPIA = process.env.STRIPE_PRICE_DPIA || STRIPE_PRICE_DEFAULT;
+  const STRIPE_PRICE_PIA = process.env.STRIPE_PRICE_PIA || STRIPE_PRICE_DEFAULT;
+  const STRIPE_PRICE_TIA = process.env.STRIPE_PRICE_TIA || STRIPE_PRICE_DEFAULT;
+  const STRIPE_PRICE_VENDOR = process.env.STRIPE_PRICE_VENDOR || STRIPE_PRICE_DEFAULT;
+  const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || STRIPE_PRICE_DEFAULT;
+  const STRIPE_PRICE_ROPA_EXPORT = process.env.STRIPE_PRICE_ROPA_EXPORT || STRIPE_PRICE_DEFAULT;
 
   const skillPackages = [
     {
