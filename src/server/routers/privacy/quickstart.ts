@@ -75,6 +75,86 @@ function buildVendorPreview(
 
 export const quickstartRouter = createTRPCRouter({
   // ──────────────────────────────────────────────────
+  // Detect Vendor.Watch portfolio for the current user
+  // ──────────────────────────────────────────────────
+  getPortfolio: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const userId = ctx.session.user.id;
+
+      // VwPortfolioVendor.accountId = NextAuth User.id (shared DB)
+      const portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
+        where: { accountId: userId },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (portfolioVendors.length === 0) {
+        return { hasPortfolio: false as const, vendors: [], slugs: [] };
+      }
+
+      // Join with VendorCatalog to get display info
+      const slugs = portfolioVendors.map((pv) => pv.vendorSlug);
+      const catalogVendors = await ctx.prisma.vendorCatalog.findMany({
+        where: { slug: { in: slugs } },
+        select: {
+          slug: true,
+          name: true,
+          category: true,
+          description: true,
+          website: true,
+          dataLocations: true,
+          certifications: true,
+          gdprCompliant: true,
+          isVerified: true,
+        },
+      });
+
+      const catalogBySlug = new Map(catalogVendors.map((v) => [v.slug, v]));
+
+      // Check which are already imported as DPC Vendors
+      const existingVendors = await ctx.prisma.vendor.findMany({
+        where: {
+          organizationId: ctx.organization.id,
+          name: { in: catalogVendors.map((v) => v.name) },
+        },
+        select: { name: true },
+      });
+      const existingNames = new Set(existingVendors.map((v) => v.name));
+
+      const vendors = portfolioVendors
+        .map((pv) => {
+          const catalog = catalogBySlug.get(pv.vendorSlug);
+          if (!catalog) return null;
+          const mapping =
+            findMappingForCategory(catalog.category) ?? GENERIC_VENDOR_MAPPING;
+          return {
+            slug: pv.vendorSlug,
+            name: catalog.name,
+            category: catalog.category,
+            description: catalog.description,
+            criticality: pv.criticality,
+            dataCategories: pv.dataCategories,
+            purposes: pv.purposes,
+            isVerified: catalog.isVerified,
+            gdprCompliant: catalog.gdprCompliant,
+            alreadyImported: existingNames.has(catalog.name),
+            mappingLabel: mapping.label,
+            elementCount: mapping.elements.length,
+            isHighRisk: mapping.isHighRisk,
+          };
+        })
+        .filter(Boolean);
+
+      return {
+        hasPortfolio: true as const,
+        vendors,
+        slugs: vendors
+          .filter((v) => v && !v.alreadyImported)
+          .map((v) => v!.slug),
+      };
+    }),
+
+  // ──────────────────────────────────────────────────
   // Preview what importing selected vendors would create
   // ──────────────────────────────────────────────────
   previewVendorImport: organizationProcedure
