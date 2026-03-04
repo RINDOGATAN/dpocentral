@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -95,17 +95,15 @@ export default function QuickstartPage() {
   const [skipActivityNames, setSkipActivityNames] = useState<string[]>([]);
 
   // Debounce search
-  const debounceTimeout = useState<ReturnType<typeof setTimeout> | null>(null);
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setVendorSearch(value);
-      if (debounceTimeout[0]) clearTimeout(debounceTimeout[0]);
-      debounceTimeout[0] = setTimeout(() => {
-        setDebouncedSearch(value);
-      }, 300);
-    },
-    [debounceTimeout]
-  );
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSearchChange = useCallback((value: string) => {
+    setVendorSearch(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(value);
+    }, 300);
+  }, []);
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   // ─── QUERIES ──────────────────────────────────────
 
@@ -142,7 +140,7 @@ export default function QuickstartPage() {
   const { data: catalogResults, isLoading: catalogLoading } =
     trpc.vendorCatalog.search.useQuery(
       { query: debouncedSearch, limit: 20 },
-      { enabled: debouncedSearch.length >= 2 }
+      { enabled: debouncedSearch.length >= 2 && step === "vendors" }
     );
 
   const { data: templates } = trpc.quickstart.listTemplates.useQuery(
@@ -152,7 +150,7 @@ export default function QuickstartPage() {
 
   const { data: vendorPreview } = trpc.quickstart.previewVendorImport.useQuery(
     { organizationId: orgId, vendorSlugs: selectedSlugs },
-    { enabled: !!orgId && selectedSlugs.length > 0 && catalogAccess?.hasAccess === true }
+    { enabled: !!orgId && selectedSlugs.length > 0 && catalogAccess?.hasAccess === true && (step === "vendors" || step === "review") }
   );
 
   const { data: industryPreview } =
@@ -316,118 +314,184 @@ export default function QuickstartPage() {
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
-          ) : portfolio?.hasPortfolio ? (
-            <>
-              <Card className="border-primary/50 bg-primary/5">
-                <CardContent className="p-6 sm:p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-lg bg-primary/10 shrink-0">
-                      <Building2 className="w-8 h-8 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-lg sm:text-xl font-semibold">
-                        Welcome from Vendor.Watch!
-                      </h2>
-                      <p className="text-muted-foreground mt-2">
-                        We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
-                        your portfolio. Can we help you build your privacy program
-                        around your initial vendor portfolio?
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        You will be able to add more vendors and processing activities
-                        later on.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Portfolio vendor list */}
-                  <div className="mt-6 space-y-2">
-                    {portfolio.vendors.map((v) => (
-                      <div
-                        key={v!.slug}
-                        className={`flex items-center justify-between p-3 rounded border ${
-                          v!.alreadyImported ? "opacity-50 border-dashed" : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <Building2 className="w-4 h-4 text-primary shrink-0" />
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-medium text-sm">{v!.name}</span>
-                              {v!.isVerified && (
-                                <Badge variant="outline" className="text-xs border-primary/50 text-primary">
-                                  Verified
-                                </Badge>
-                              )}
-                              {v!.criticality === "high" && (
-                                <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500">
-                                  High criticality
-                                </Badge>
-                              )}
-                            </div>
-                            <span className="text-xs text-muted-foreground">
-                              {v!.category} — {v!.mappingLabel} — {v!.elementCount} data elements
-                            </span>
-                          </div>
-                        </div>
-                        {v!.alreadyImported && (
-                          <Badge variant="secondary" className="text-xs shrink-0">
-                            Already imported
-                          </Badge>
+          ) : portfolio?.hasPortfolio ? (() => {
+            const allImported = portfolio.slugs.length === 0;
+            const hasEntitlement = catalogAccess?.hasAccess === true;
+            return (
+              <>
+                <Card className="border-primary/50 bg-primary/5">
+                  <CardContent className="p-6 sm:p-8">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                        {allImported ? (
+                          <CheckCircle2 className="w-8 h-8 text-primary" />
+                        ) : (
+                          <Building2 className="w-8 h-8 text-primary" />
                         )}
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex-1">
+                        <h2 className="text-lg sm:text-xl font-semibold">
+                          {allImported
+                            ? "Your vendors are already imported!"
+                            : "Welcome from Vendor.Watch!"}
+                        </h2>
+                        {allImported ? (
+                          <p className="text-muted-foreground mt-2">
+                            All <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> from
+                            your Vendor.Watch portfolio have already been imported. You can
+                            still add an industry template to fill in processing activities
+                            and data flows.
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-muted-foreground mt-2">
+                              We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
+                              your portfolio{portfolio.slugs.length < portfolio.vendors.length
+                                ? ` (${portfolio.slugs.length} new)`
+                                : ""}. Can we help you build your privacy program
+                              around your initial vendor portfolio?
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              You will be able to add more vendors and processing activities
+                              later on.
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </div>
 
-                  {/* Action buttons */}
-                  <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                    <Button
-                      size="lg"
-                      onClick={() => {
-                        setUseVendors(true);
-                        setStep("vendors");
-                      }}
-                    >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Yes, build my privacy program
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={() => {
-                        setUseVendors(true);
-                        setUseIndustry(true);
-                        setStep("vendors");
-                      }}
-                    >
-                      <Package className="w-4 h-4 mr-2" />
-                      Yes, and also add an industry template
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      onClick={() => setStep("choose")}
-                    >
-                      Let me choose manually
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                    {/* Portfolio vendor list */}
+                    <div className="mt-6 space-y-2">
+                      {portfolio.vendors.map((v) => (
+                        <div
+                          key={v!.slug}
+                          className={`flex items-center justify-between p-3 rounded border ${
+                            v!.alreadyImported ? "opacity-50 border-dashed" : ""
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <Building2 className="w-4 h-4 text-primary shrink-0" />
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-medium text-sm">{v!.name}</span>
+                                {v!.isVerified && (
+                                  <Badge variant="outline" className="text-xs border-primary/50 text-primary">
+                                    Verified
+                                  </Badge>
+                                )}
+                                {v!.criticality === "high" && (
+                                  <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500">
+                                    High criticality
+                                  </Badge>
+                                )}
+                              </div>
+                              <span className="text-xs text-muted-foreground">
+                                {v!.category} — {v!.mappingLabel} — {v!.elementCount} data elements
+                              </span>
+                            </div>
+                          </div>
+                          {v!.alreadyImported && (
+                            <Badge variant="secondary" className="text-xs shrink-0">
+                              Already imported
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
 
-              <p className="text-xs text-muted-foreground text-center">
-                Portfolio imported from{" "}
-                <a
-                  href="https://vendorwatch.todo.law"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-primary hover:underline"
-                >
-                  Vendor.Watch
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </p>
-            </>
-          ) : null}
+                    {/* Action buttons — vary by state */}
+                    <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                      {allImported ? (
+                        <>
+                          <Button
+                            size="lg"
+                            onClick={() => {
+                              setUseIndustry(true);
+                              setStep("industry");
+                            }}
+                          >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Add an industry template
+                          </Button>
+                          <Link href="/privacy">
+                            <Button variant="ghost" size="lg">
+                              Back to Dashboard
+                            </Button>
+                          </Link>
+                        </>
+                      ) : !hasEntitlement ? (
+                        <>
+                          <Button
+                            size="lg"
+                            onClick={() => {
+                              setUseIndustry(true);
+                              setStep("industry");
+                            }}
+                          >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Start with an industry template
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={() => setStep("choose")}
+                          >
+                            <Lock className="w-4 h-4 mr-2" />
+                            Unlock vendor import
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            size="lg"
+                            onClick={() => {
+                              setUseVendors(true);
+                              setStep("vendors");
+                            }}
+                          >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Yes, build my privacy program
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={() => {
+                              setUseVendors(true);
+                              setUseIndustry(true);
+                              setStep("vendors");
+                            }}
+                          >
+                            <Package className="w-4 h-4 mr-2" />
+                            Yes, and also add an industry template
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="lg"
+                            onClick={() => setStep("choose")}
+                          >
+                            Let me choose manually
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <p className="text-xs text-muted-foreground text-center">
+                  Portfolio imported from{" "}
+                  <a
+                    href="https://vendorwatch.todo.law"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-primary hover:underline"
+                  >
+                    Vendor.Watch
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </p>
+              </>
+            );
+          })() : null}
         </div>
       )}
 

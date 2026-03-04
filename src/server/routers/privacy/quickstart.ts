@@ -44,6 +44,7 @@ function buildVendorPreview(
     slug: string;
     name: string;
     category: string;
+    subcategory?: string | null;
     dataLocations: string[];
   },
   mapping: VendorDataMapping
@@ -100,6 +101,7 @@ export const quickstartRouter = createTRPCRouter({
           slug: true,
           name: true,
           category: true,
+          subcategory: true,
           description: true,
           website: true,
           dataLocations: true,
@@ -126,11 +128,13 @@ export const quickstartRouter = createTRPCRouter({
           const catalog = catalogBySlug.get(pv.vendorSlug);
           if (!catalog) return null;
           const mapping =
-            findMappingForCategory(catalog.category) ?? GENERIC_VENDOR_MAPPING;
+            findMappingForCategory(catalog.category, catalog.subcategory) ?? GENERIC_VENDOR_MAPPING;
           return {
             slug: pv.vendorSlug,
             name: catalog.name,
-            category: catalog.category,
+            category: catalog.subcategory
+              ? `${catalog.category} > ${catalog.subcategory}`
+              : catalog.category,
             description: catalog.description,
             criticality: pv.criticality,
             dataCategories: pv.dataCategories,
@@ -182,6 +186,7 @@ export const quickstartRouter = createTRPCRouter({
           slug: true,
           name: true,
           category: true,
+          subcategory: true,
           description: true,
           website: true,
           dataLocations: true,
@@ -203,7 +208,7 @@ export const quickstartRouter = createTRPCRouter({
       const previews: VendorPreviewItem[] = [];
       for (const vendor of catalogVendors) {
         const mapping =
-          findMappingForCategory(vendor.category) ?? GENERIC_VENDOR_MAPPING;
+          findMappingForCategory(vendor.category, vendor.subcategory) ?? GENERIC_VENDOR_MAPPING;
         const preview = buildVendorPreview(vendor, mapping);
         previews.push(preview);
       }
@@ -392,33 +397,19 @@ export const quickstartRouter = createTRPCRouter({
             })
           : [];
 
-      // Fetch existing names for deduplication
-      const existingVendorNames = new Set(
-        (
-          await ctx.prisma.vendor.findMany({
-            where: { organizationId: orgId },
-            select: { name: true },
-          })
-        ).map((v) => v.name)
-      );
-
-      const existingAssetNames = new Set(
-        (
-          await ctx.prisma.dataAsset.findMany({
-            where: { organizationId: orgId },
-            select: { name: true },
-          })
-        ).map((a) => a.name)
-      );
-
-      const existingActivityNames = new Set(
-        (
-          await ctx.prisma.processingActivity.findMany({
-            where: { organizationId: orgId },
-            select: { name: true },
-          })
-        ).map((a) => a.name)
-      );
+      // Fetch existing names for deduplication (parallel)
+      const [existingVendorNames, existingAssetNames, existingActivityNames] =
+        await Promise.all([
+          ctx.prisma.vendor
+            .findMany({ where: { organizationId: orgId }, select: { name: true } })
+            .then((v) => new Set(v.map((x) => x.name))),
+          ctx.prisma.dataAsset
+            .findMany({ where: { organizationId: orgId }, select: { name: true } })
+            .then((a) => new Set(a.map((x) => x.name))),
+          ctx.prisma.processingActivity
+            .findMany({ where: { organizationId: orgId }, select: { name: true } })
+            .then((a) => new Set(a.map((x) => x.name))),
+        ]);
 
       // Execute everything in a transaction
       const result = await ctx.prisma.$transaction(async (tx) => {
@@ -447,7 +438,7 @@ export const quickstartRouter = createTRPCRouter({
           if (existingVendorNames.has(catalogVendor.name)) continue;
 
           const mapping =
-            findMappingForCategory(catalogVendor.category) ??
+            findMappingForCategory(catalogVendor.category, catalogVendor.subcategory) ??
             GENERIC_VENDOR_MAPPING;
 
           // Create vendor
@@ -501,22 +492,20 @@ export const quickstartRouter = createTRPCRouter({
               changes: { source: "quickstart" },
             });
 
-            // Create data elements
-            for (const elem of mapping.elements) {
-              await tx.dataElement.create({
-                data: {
-                  organizationId: orgId,
-                  dataAssetId: asset.id,
-                  name: elem.name,
-                  category: elem.category,
-                  sensitivity: elem.sensitivity,
-                  isPersonalData: elem.isPersonalData,
-                  isSpecialCategory: elem.isSpecialCategory,
-                  retentionDays: elem.retentionDays,
-                },
-              });
-              counts.elements++;
-            }
+            // Create data elements (batch)
+            await tx.dataElement.createMany({
+              data: mapping.elements.map((elem) => ({
+                organizationId: orgId,
+                dataAssetId: asset.id,
+                name: elem.name,
+                category: elem.category,
+                sensitivity: elem.sensitivity,
+                isPersonalData: elem.isPersonalData,
+                isSpecialCategory: elem.isSpecialCategory,
+                retentionDays: elem.retentionDays,
+              })),
+            });
+            counts.elements += mapping.elements.length;
 
             // Create processing activity for this vendor
             const activityName = `${mapping.activity.name} — ${catalogVendor.name}`;
@@ -557,12 +546,13 @@ export const quickstartRouter = createTRPCRouter({
               });
 
               // Create data transfers for non-EU countries
+              // Create data transfers for non-EU countries (batch)
               const nonEuLocations = (
                 catalogVendor.dataLocations || []
               ).filter(requiresTransferSafeguards);
-              for (const country of nonEuLocations) {
-                await tx.dataTransfer.create({
-                  data: {
+              if (nonEuLocations.length > 0) {
+                await tx.dataTransfer.createMany({
+                  data: nonEuLocations.map((country) => ({
                     organizationId: orgId,
                     processingActivityId: activity.id,
                     name: `Transfer to ${catalogVendor.name} (${country})`,
@@ -573,9 +563,9 @@ export const quickstartRouter = createTRPCRouter({
                     safeguards:
                       "Standard Contractual Clauses (SCCs) with supplementary measures",
                     isActive: true,
-                  },
+                  })),
                 });
-                counts.transfers++;
+                counts.transfers += nonEuLocations.length;
               }
             }
           }
@@ -627,22 +617,20 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
 
-            // Create data elements
-            for (const elem of templateAsset.elements) {
-              await tx.dataElement.create({
-                data: {
-                  organizationId: orgId,
-                  dataAssetId: asset.id,
-                  name: elem.name,
-                  category: elem.category,
-                  sensitivity: elem.sensitivity,
-                  isPersonalData: elem.isPersonalData,
-                  isSpecialCategory: elem.isSpecialCategory,
-                  retentionDays: elem.retentionDays,
-                },
-              });
-              counts.elements++;
-            }
+            // Create data elements (batch)
+            await tx.dataElement.createMany({
+              data: templateAsset.elements.map((elem) => ({
+                organizationId: orgId,
+                dataAssetId: asset.id,
+                name: elem.name,
+                category: elem.category,
+                sensitivity: elem.sensitivity,
+                isPersonalData: elem.isPersonalData,
+                isSpecialCategory: elem.isSpecialCategory,
+                retentionDays: elem.retentionDays,
+              })),
+            });
+            counts.elements += templateAsset.elements.length;
           }
 
           // Create processing activities
@@ -717,10 +705,10 @@ export const quickstartRouter = createTRPCRouter({
           }
         }
 
-        // ─── AUDIT LOG ENTRIES ─────────────────────────
-        for (const entry of auditEntries) {
-          await tx.auditLog.create({
-            data: {
+        // ─── AUDIT LOG ENTRIES (batch) ──────────────────
+        if (auditEntries.length > 0) {
+          await tx.auditLog.createMany({
+            data: auditEntries.map((entry) => ({
               organizationId: orgId,
               userId,
               entityType: entry.entityType,
@@ -728,7 +716,7 @@ export const quickstartRouter = createTRPCRouter({
               action: entry.action,
               changes: entry.changes,
               metadata: { source: "quickstart" },
-            },
+            })),
           });
         }
 

@@ -44,10 +44,15 @@ export default function PrivacyDashboardPage() {
     { enabled: !!organization?.id }
   );
 
-  // Detect Vendor.Watch portfolio for the current user
+  // Only check VW portfolio when quickstart card would be shown
+  const showQuickstart = !isLoading &&
+    (stats?.totalAssets ?? 0) <= 2 &&
+    (stats?.totalActivities ?? 0) <= 1 &&
+    (stats?.activeVendors ?? 0) <= 1;
+
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && showQuickstart === true }
   );
 
   if (isLoading) {
@@ -105,9 +110,7 @@ export default function PrivacyDashboardPage() {
       </div>
 
       {/* Quickstart Card — shown when org has few records */}
-      {dashboardStats.dataAssets <= 2 &&
-        dashboardStats.processingActivities <= 1 &&
-        dashboardStats.activeVendors <= 1 &&
+      {showQuickstart &&
         (portfolio?.hasPortfolio ? (
           /* VW portfolio detected — show tailored card */
           <Card className="border-primary/50 bg-primary/5">
