@@ -73,9 +73,16 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   analytics: {
     label: "Analytics & BI",
     catalogCategories: [
+      // VW canonical
+      "Analytics & BI",
+      "Personalization & Engagement",
+      // VW subcategories
+      "Web Analytics", "Session Replay", "Attribution", "Product Analytics", "Heatmaps",
+      "A/B Testing", "Conversion Optimization", "Customer Success", "Loyalty", "Digital Adoption",
+      // Legacy
       "Digital Analytics", "Advanced Analytics", "Integrated Analytics",
       "Mobile App Analytics", "Video Analytics", "Data Layer Optimization",
-      "AB Testing", "Digital Experience Optimization", "Session Replay",
+      "AB Testing", "Digital Experience Optimization",
     ],
     asset: {
       type: "CLOUD_SERVICE",
@@ -108,8 +115,14 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   marketing: {
     label: "Marketing & Advertising",
     catalogCategories: [
-      "Email Marketing", "Marketing Automation", "Retargeting",
-      "Lead Generation", "Lead Capturing", "Account Based Marketing",
+      // VW canonical
+      "Marketing Automation",
+      "Advertising",
+      // VW subcategories
+      "Email Marketing", "Social Media", "ABM", "Growth & Lifecycle", "Affiliate",
+      "Retargeting", "Lead Generation", "Programmatic", "Social Ads",
+      // Legacy
+      "Lead Capturing", "Account Based Marketing",
       "Social Media Automation", "Social Management", "Social Sharing",
       "Web Creative Automation", "Personalization", "Buyer Profiling",
     ],
@@ -142,8 +155,13 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   crm: {
     label: "CRM & Sales",
     catalogCategories: [
+      // VW canonical
+      "CRM & Sales",
+      // VW subcategories
+      "CRM Platform", "Sales Engagement", "Revenue Intelligence",
+      // Legacy
       "CRM", "Sales Enablement", "Customer Journey Orchestration",
-      "Customer Sign-up", "Conversion Optimization", "Cart Abandonment",
+      "Customer Sign-up", "Cart Abandonment",
     ],
     asset: {
       type: "CLOUD_SERVICE",
@@ -175,8 +193,12 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   cdp: {
     label: "Customer Data Platform",
     catalogCategories: [
-      "Customer Data Platform", "DMP", "Data Management Platform",
-      "Identity Resolution", "Data Clean Room",
+      // VW canonical
+      "Customer Data Platform",
+      // VW subcategories
+      "CDP", "DMP", "Identity Resolution", "Data Enrichment",
+      // Legacy
+      "Data Management Platform", "Data Clean Room",
     ],
     asset: {
       type: "CLOUD_SERVICE",
@@ -206,7 +228,14 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   cloud: {
     label: "Cloud Infrastructure",
     catalogCategories: [
-      "Cloud Hosting", "Data warehouse", "Reverse ETL", "API Integration",
+      // VW canonical
+      "Cloud Infrastructure",
+      "Data Warehouse & Integration",
+      // VW subcategories
+      "CDN", "PaaS", "Hosting", "Storage",
+      "Data Warehouse", "ETL",
+      // Legacy
+      "Cloud Hosting", "Reverse ETL", "API Integration",
     ],
     asset: {
       type: "CLOUD_SERVICE",
@@ -233,8 +262,15 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   },
 
   cms: {
-    label: "Content Management",
+    label: "Content & E-commerce",
     catalogCategories: [
+      // VW canonical
+      "Content Management",
+      "E-commerce",
+      // VW subcategories
+      "CMS", "DAM", "Landing Pages",
+      "Platform", "Cart & Checkout", "Subscription Billing",
+      // Legacy
       "Content Management Platform", "Content Curation",
       "Online store management", "Enterprise Ecommerce", "eCommerce Platform",
     ],
@@ -265,6 +301,13 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   support: {
     label: "Customer Support",
     catalogCategories: [
+      // VW canonical
+      "Customer Support",
+      "Communication",
+      // VW subcategories
+      "Chatbot", "Live Chat", "Helpdesk",
+      "Email Delivery", "Messaging", "Video",
+      // Legacy
       "Customer Communications Platform", "Call tracking",
     ],
     asset: {
@@ -293,8 +336,13 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   },
 
   ai: {
-    label: "AI & Chatbot",
+    label: "AI & Machine Learning",
     catalogCategories: [
+      // VW canonical
+      "AI & Machine Learning",
+      // VW subcategories
+      "LLM Provider", "ML Platform", "AI Tools",
+      // Legacy
       "AI Bot", "AI Chatbot", "AI SEO", "AI Widget",
       "AI-driven data insights",
     ],
@@ -325,6 +373,11 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   surveys: {
     label: "Surveys & Feedback",
     catalogCategories: [
+      // VW canonical
+      "Surveys & Research",
+      // VW subcategories
+      "Surveys", "Feedback", "Reviews",
+      // Legacy
       "Online Surveys", "Site Optimization",
     ],
     asset: {
@@ -384,6 +437,9 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   tag_management: {
     label: "Tag Management",
     catalogCategories: [
+      // VW subcategory
+      "Tag Management",
+      // Legacy
       "Tag Management Platform",
     ],
     asset: {
@@ -411,8 +467,9 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
   },
 
   messaging: {
-    label: "B2C Messaging",
+    label: "Communication & Messaging",
     catalogCategories: [
+      // Legacy
       "B2C video messaging",
     ],
     asset: {
@@ -435,6 +492,260 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       recipients: ["Messaging platform provider"],
       retentionPeriod: "1 year",
       retentionDays: 365,
+    },
+    isHighRisk: false,
+  },
+
+  // ──────────────────────────────────────────────────
+  // NEW GROUPS — VW canonical categories with no prior match
+  // ──────────────────────────────────────────────────
+
+  payment: {
+    label: "Payment Processing",
+    catalogCategories: [
+      "Payment Processing",
+      // VW subcategories
+      "Gateway", "Invoicing", "Fraud Detection",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Payment processing gateway handling financial transactions",
+    },
+    elements: [
+      { name: "Cardholder Name", category: "IDENTIFIERS", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Payment Card Data (tokenized)", category: "FINANCIAL", sensitivity: "RESTRICTED", isPersonalData: true, isSpecialCategory: false },
+      { name: "Billing Address", category: "IDENTIFIERS", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Transaction Records", category: "FINANCIAL", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Fraud Signals", category: "BEHAVIORAL", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Payment Processing",
+      purpose: "Process financial transactions, verify payment methods, and detect fraudulent activity",
+      legalBasis: "CONTRACT",
+      dataSubjects: ["Customers", "Buyers"],
+      categories: ["IDENTIFIERS", "FINANCIAL", "BEHAVIORAL"],
+      recipients: ["Payment processor", "Card networks", "Fraud detection provider"],
+      retentionPeriod: "7 years (legal/tax requirement)",
+      retentionDays: 2555,
+    },
+    isHighRisk: false,
+  },
+
+  hr: {
+    label: "HR & People",
+    catalogCategories: [
+      "HR & People",
+      // VW subcategories
+      "HRIS", "Recruiting", "Payroll",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Human resources management system processing employee and candidate data",
+    },
+    elements: [
+      { name: "Employee Name & Contact", category: "IDENTIFIERS", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "National ID / Tax Number", category: "IDENTIFIERS", sensitivity: "RESTRICTED", isPersonalData: true, isSpecialCategory: false },
+      { name: "Salary & Compensation", category: "FINANCIAL", sensitivity: "RESTRICTED", isPersonalData: true, isSpecialCategory: false },
+      { name: "Employment History", category: "EMPLOYMENT", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Performance Records", category: "EMPLOYMENT", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "HR & Employee Management",
+      purpose: "Manage employee lifecycle including recruitment, onboarding, payroll, and performance tracking",
+      legalBasis: "CONTRACT",
+      dataSubjects: ["Employees", "Job candidates", "Contractors"],
+      categories: ["IDENTIFIERS", "FINANCIAL", "EMPLOYMENT"],
+      recipients: ["HR platform provider", "Payroll provider"],
+      retentionPeriod: "Duration of employment + 7 years",
+      retentionDays: 2555,
+    },
+    isHighRisk: true,
+  },
+
+  developer: {
+    label: "Developer Tools",
+    catalogCategories: [
+      "Developer Tools",
+      // VW subcategories
+      "Observability", "DevOps", "Error Tracking", "Feature Flags",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Developer tooling for application monitoring, deployment, and quality assurance",
+    },
+    elements: [
+      { name: "Server Logs", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Error Stack Traces", category: "OTHER", sensitivity: "INTERNAL", isPersonalData: false, isSpecialCategory: false },
+      { name: "User Session Context", category: "BEHAVIORAL", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "IP Addresses", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Application Monitoring & DevOps",
+      purpose: "Monitor application health, track errors, manage deployments, and control feature rollouts",
+      legalBasis: "LEGITIMATE_INTERESTS",
+      dataSubjects: ["Users", "Developers"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL", "OTHER"],
+      recipients: ["DevOps tool provider"],
+      retentionPeriod: "90 days for logs, 1 year for metrics",
+      retentionDays: 365,
+    },
+    isHighRisk: false,
+  },
+
+  security: {
+    label: "Security & Identity",
+    catalogCategories: [
+      "Security & Identity",
+      // VW subcategories
+      "SIEM", "IAM", "Endpoint Security",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Security and identity management platform protecting systems and user access",
+    },
+    elements: [
+      { name: "User Credentials (hashed)", category: "IDENTIFIERS", sensitivity: "RESTRICTED", isPersonalData: true, isSpecialCategory: false },
+      { name: "Access Logs", category: "BEHAVIORAL", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "IP Addresses", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Device Identifiers", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Security Events", category: "OTHER", sensitivity: "CONFIDENTIAL", isPersonalData: false, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Security & Access Management",
+      purpose: "Authenticate users, manage access control, detect security threats, and maintain audit trails",
+      legalBasis: "LEGITIMATE_INTERESTS",
+      dataSubjects: ["Employees", "Users", "System administrators"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL", "OTHER"],
+      recipients: ["Security platform provider"],
+      retentionPeriod: "1 year for access logs, 2 years for security events",
+      retentionDays: 730,
+    },
+    isHighRisk: false,
+  },
+
+  privacy: {
+    label: "Privacy & Consent",
+    catalogCategories: [
+      "Privacy & Consent",
+      // VW subcategories
+      "Cookie Compliance", "Consent Management", "Data Governance",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Privacy management and consent collection platform",
+    },
+    elements: [
+      { name: "Consent Records", category: "OTHER", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Cookie Preferences", category: "BEHAVIORAL", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "User Identifiers", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Data Subject Requests", category: "OTHER", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Privacy & Consent Management",
+      purpose: "Collect and manage user consent preferences, handle cookie compliance, and support data governance processes",
+      legalBasis: "LEGAL_OBLIGATION",
+      dataSubjects: ["Website visitors", "Customers", "Data subjects"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL", "OTHER"],
+      recipients: ["Consent management provider"],
+      retentionPeriod: "5 years (proof of consent)",
+      retentionDays: 1825,
+    },
+    isHighRisk: false,
+  },
+
+  productivity: {
+    label: "Productivity & Collaboration",
+    catalogCategories: [
+      "Productivity & Collaboration",
+      // VW subcategories
+      "Workplace", "Project Management", "File Sharing",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Collaboration and productivity tools for team communication and project management",
+    },
+    elements: [
+      { name: "User Profiles", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Messages & Comments", category: "OTHER", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Shared Files", category: "OTHER", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Activity Logs", category: "BEHAVIORAL", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Team Collaboration",
+      purpose: "Enable team communication, project tracking, and file sharing across the organization",
+      legalBasis: "LEGITIMATE_INTERESTS",
+      dataSubjects: ["Employees", "Contractors", "External collaborators"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL", "OTHER"],
+      recipients: ["Collaboration tool provider"],
+      retentionPeriod: "Duration of account + 1 year",
+      retentionDays: 365,
+    },
+    isHighRisk: false,
+  },
+
+  legal: {
+    label: "Legal & Compliance",
+    catalogCategories: [
+      "Legal & Compliance",
+      // VW subcategories
+      "RegTech", "E-Signature",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Legal and compliance technology platform",
+    },
+    elements: [
+      { name: "Signatory Name & Email", category: "IDENTIFIERS", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Contract/Document Content", category: "OTHER", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Digital Signatures", category: "IDENTIFIERS", sensitivity: "CONFIDENTIAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Audit Trail", category: "BEHAVIORAL", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Legal Document Management",
+      purpose: "Manage contracts, collect digital signatures, and ensure regulatory compliance",
+      legalBasis: "CONTRACT",
+      dataSubjects: ["Customers", "Employees", "Business partners"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL", "OTHER"],
+      recipients: ["Legal tech provider"],
+      retentionPeriod: "10 years (legal retention)",
+      retentionDays: 3650,
+    },
+    isHighRisk: false,
+  },
+
+  design: {
+    label: "Design & Creative",
+    catalogCategories: [
+      "Design & Creative",
+      // VW subcategories
+      "Design Tools", "Brand Management",
+    ],
+    asset: {
+      type: "CLOUD_SERVICE",
+      hostingType: "Cloud",
+      description: "Design and creative tools for brand assets and visual content",
+    },
+    elements: [
+      { name: "User Accounts", category: "IDENTIFIERS", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+      { name: "Creative Assets", category: "OTHER", sensitivity: "INTERNAL", isPersonalData: false, isSpecialCategory: false },
+      { name: "Collaboration Data", category: "BEHAVIORAL", sensitivity: "INTERNAL", isPersonalData: true, isSpecialCategory: false },
+    ],
+    activity: {
+      name: "Design Asset Management",
+      purpose: "Create, manage, and collaborate on visual content and brand assets",
+      legalBasis: "LEGITIMATE_INTERESTS",
+      dataSubjects: ["Employees", "Designers", "External collaborators"],
+      categories: ["IDENTIFIERS", "BEHAVIORAL"],
+      recipients: ["Design platform provider"],
+      retentionPeriod: "Duration of account",
+      retentionDays: undefined,
     },
     isHighRisk: false,
   },
