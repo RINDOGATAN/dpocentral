@@ -82,15 +82,22 @@ export const quickstartRouter = createTRPCRouter({
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const userId = ctx.session.user.id;
+      const empty = { hasPortfolio: false as const, vendors: [], slugs: [] };
 
       // VwPortfolioVendor.accountId = NextAuth User.id (shared DB)
-      const portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
-        where: { accountId: userId },
-        orderBy: { createdAt: "desc" },
-      });
+      // Wrapped in try-catch: table may not exist in dev or fresh environments
+      let portfolioVendors;
+      try {
+        portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
+          where: { accountId: userId },
+          orderBy: { createdAt: "desc" },
+        });
+      } catch {
+        return empty;
+      }
 
       if (portfolioVendors.length === 0) {
-        return { hasPortfolio: false as const, vendors: [], slugs: [] };
+        return empty;
       }
 
       // Join with VendorCatalog to get display info
