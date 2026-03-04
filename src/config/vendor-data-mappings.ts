@@ -759,7 +759,21 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
  * Find the mapping group for a given vendor catalog category string.
  * Returns undefined if no mapping exists (falls back to generic).
  */
-export function findMappingForCategory(catalogCategory: string): VendorDataMapping | undefined {
+export function findMappingForCategory(
+  catalogCategory: string,
+  subcategory?: string | null,
+): VendorDataMapping | undefined {
+  // Try subcategory first for more precise mapping
+  // e.g. "Developer Tools" > "Tag Management" → tag_management instead of developer
+  if (subcategory) {
+    const subLower = subcategory.toLowerCase();
+    for (const mapping of Object.values(VENDOR_DATA_MAPPINGS)) {
+      if (mapping.catalogCategories.some(c => c.toLowerCase() === subLower)) {
+        return mapping;
+      }
+    }
+  }
+  // Fall back to top-level category
   const lower = catalogCategory.toLowerCase();
   for (const mapping of Object.values(VENDOR_DATA_MAPPINGS)) {
     if (mapping.catalogCategories.some(c => c.toLowerCase() === lower)) {
