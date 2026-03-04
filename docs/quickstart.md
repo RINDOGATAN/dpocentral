@@ -37,22 +37,30 @@ Both approaches are **non-destructive** — they only create new records and nev
 
 ### Category mapping groups
 
-Vendor catalog categories are mapped into 12 groups, each with a tailored data profile:
+Vendor catalog categories are mapped into 20 groups, each with a tailored data profile. Groups accept both the new VW canonical category names and legacy freeform names for backwards compatibility.
 
-| Group | Catalog categories covered | Typical elements |
-|-------|---------------------------|------------------|
-| Analytics & BI | Digital Analytics, Advanced Analytics, Integrated Analytics, Mobile App Analytics, Video Analytics, Data Layer Optimization, AB Testing, Digital Experience Optimization, Session Replay | IP Address, Device Fingerprint, Page Views, Session Data, Click Events |
-| Marketing & Advertising | Email Marketing, Marketing Automation, Retargeting, Lead Generation, Lead Capturing, Account Based Marketing, Social Media Automation, Social Management, Social Sharing, Web Creative Automation, Personalization, Buyer Profiling | Email, Name, Company, Marketing Preferences, Campaign Interactions, Cookies |
-| CRM & Sales | CRM, Sales Enablement, Customer Journey Orchestration, Customer Sign-up, Conversion Optimization, Cart Abandonment | Name, Email, Phone, Company & Job Title, Deal Data, Communication History |
-| Customer Data Platform | Customer Data Platform, DMP, Data Management Platform, Identity Resolution, Data Clean Room | Unified Profile, Cross-device IDs, Behavioral Segments, Transaction History |
-| Cloud Infrastructure | Cloud Hosting, Data warehouse, Reverse ETL, API Integration | Application Data, Server Logs, Stored Records, Backups |
-| Content Management | Content Management Platform, Content Curation, Online store management, Enterprise Ecommerce, eCommerce Platform | User Accounts, Orders, Shipping Address, Content Interactions |
-| Customer Support | Customer Communications Platform, Call tracking | Name, Email, Phone, Ticket Content, Call Recordings |
-| AI & Chatbot | AI Bot, AI Chatbot, AI SEO, AI Widget, AI-driven data insights | User Prompts, Chat Transcripts, User Identifiers |
-| Surveys & Feedback | Online Surveys, Site Optimization | Respondent Email, Survey Responses, NPS Scores |
-| Events & Webinars | Event Management | Attendee Name, Email, Company, Dietary Requirements |
-| Tag Management | Tag Management Platform | Page URLs, Event Data, Cookie Data, User Agent |
-| B2C Messaging | B2C video messaging | Contact Info, Message Content, Video Recordings |
+| Group | VW Canonical Categories | Typical elements |
+|-------|------------------------|------------------|
+| Analytics & BI | Analytics & BI, Personalization & Engagement | IP Address, Device Fingerprint, Page Views, Session Data, Click Events |
+| Marketing & Advertising | Marketing Automation, Advertising | Email, Name, Company, Marketing Preferences, Campaign Interactions, Cookies |
+| CRM & Sales | CRM & Sales | Name, Email, Phone, Company & Job Title, Deal Data, Communication History |
+| Customer Data Platform | Customer Data Platform | Unified Profile, Cross-device IDs, Behavioral Segments, Transaction History |
+| Cloud Infrastructure | Cloud Infrastructure, Data Warehouse & Integration | Application Data, Server Logs, Stored Records, Backups |
+| Content & E-commerce | Content Management, E-commerce | User Accounts, Orders, Shipping Address, Content Interactions |
+| Customer Support | Customer Support, Communication | Name, Email, Phone, Ticket Content, Call Recordings |
+| AI & Machine Learning | AI & Machine Learning | User Prompts, Chat Transcripts, User Identifiers, AI Model Outputs |
+| Surveys & Feedback | Surveys & Research | Respondent Email, Survey Responses, NPS Scores |
+| Payment Processing | Payment Processing | Cardholder Name, Payment Card Data, Billing Address, Transaction Records |
+| HR & People | HR & People | Employee Name, National ID, Salary, Employment History, Performance Records |
+| Developer Tools | Developer Tools | Server Logs, Error Stack Traces, User Session Context, IP Addresses |
+| Security & Identity | Security & Identity | User Credentials, Access Logs, IP Addresses, Security Events |
+| Privacy & Consent | Privacy & Consent | Consent Records, Cookie Preferences, Data Subject Requests |
+| Productivity & Collaboration | Productivity & Collaboration | User Profiles, Messages, Shared Files, Activity Logs |
+| Legal & Compliance | Legal & Compliance | Signatory Info, Contract Content, Digital Signatures, Audit Trail |
+| Design & Creative | Design & Creative | User Accounts, Creative Assets, Collaboration Data |
+| Events & Webinars | *(legacy only)* | Attendee Name, Email, Company, Dietary Requirements |
+| Tag Management | *(Developer Tools > Tag Management subcategory)* | Page URLs, Event Data, Cookie Data, User Agent |
+| Communication & Messaging | *(legacy only)* | Contact Info, Message Content, Video Recordings |
 
 Vendors whose category doesn't match any group get a **generic "Third-Party Service"** mapping with basic identifiers and usage data elements.
 
