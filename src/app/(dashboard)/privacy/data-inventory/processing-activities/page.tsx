@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { AccessRequiredDialog } from "@/components/ui/access-required-dialog";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { formatPrice } from "@/lib/currency";
 
@@ -63,7 +62,6 @@ function formatArray(arr: unknown): string {
 export default function ProcessingActivitiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isExporting, setIsExporting] = useState(false);
-  const [accessRequiredOpen, setAccessRequiredOpen] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
@@ -189,7 +187,7 @@ export default function ProcessingActivitiesPage() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="outline" onClick={() => setAccessRequiredOpen(true)}>
+            <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
               <Lock className="w-4 h-4 mr-2 text-amber-500" />
               Export ROPA
               <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{formatPrice(9)}/mo</Badge>
@@ -370,16 +368,6 @@ export default function ProcessingActivitiesPage() {
       </Card>
 
       {/* ROPA Export Premium Gating */}
-      <AccessRequiredDialog
-        open={accessRequiredOpen}
-        onClose={() => setAccessRequiredOpen(false)}
-        featureName="ROPA Export"
-        onUpgrade={() => {
-          setAccessRequiredOpen(false);
-          setUpgradeModalOpen(true);
-        }}
-      />
-
       <EnableFeatureModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
