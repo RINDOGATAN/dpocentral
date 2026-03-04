@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   Building2,
   Sparkles,
+  Zap,
   ChevronRight,
 } from "lucide-react";
 import { PremiumBadge } from "./premium-badge";
@@ -36,6 +37,7 @@ const tocSections: TocSection[] = [
     icon: BookOpen,
     children: [
       { label: "Dashboard Overview", hash: "#dashboard" },
+      { label: "Quickstart Wizard", hash: "#quickstart" },
       { label: "Navigation", hash: "#navigation" },
       { label: "User Roles", hash: "#roles" },
       { label: "Quick Actions", hash: "#quick-actions" },

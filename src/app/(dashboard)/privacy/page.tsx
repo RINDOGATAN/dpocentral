@@ -44,11 +44,11 @@ export default function PrivacyDashboardPage() {
     { enabled: !!organization?.id }
   );
 
-  // Only check VW portfolio when quickstart card would be shown
+  // Show quickstart card for orgs that haven't built out their privacy program yet
   const showQuickstart = !isLoading &&
-    (stats?.totalAssets ?? 0) <= 2 &&
-    (stats?.totalActivities ?? 0) <= 1 &&
-    (stats?.activeVendors ?? 0) <= 1;
+    (stats?.totalAssets ?? 0) <= 5 &&
+    (stats?.totalActivities ?? 0) <= 3 &&
+    (stats?.activeVendors ?? 0) <= 3;
 
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -350,6 +350,12 @@ export default function PrivacyDashboardPage() {
               <Button variant="outline" className="w-full justify-start h-11">
                 <Building2 className="w-4 h-4 mr-2 shrink-0" />
                 <span className="truncate">Add Vendor</span>
+              </Button>
+            </Link>
+            <Link href="/privacy/quickstart">
+              <Button variant="outline" className="w-full justify-start h-11">
+                <Sparkles className="w-4 h-4 mr-2 shrink-0" />
+                <span className="truncate">Quickstart Wizard</span>
               </Button>
             </Link>
           </CardContent>

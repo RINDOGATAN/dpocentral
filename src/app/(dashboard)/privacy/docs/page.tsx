@@ -7,6 +7,9 @@ import {
   Shield,
   LayoutDashboard,
   Plus,
+  Zap,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +18,7 @@ import { DocSection } from "@/components/docs/doc-section";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import Link from "next/link";
 
 export default function DocsGettingStartedPage() {
   return (
@@ -75,6 +79,54 @@ export default function DocsGettingStartedPage() {
         <InfoCallout type="tip" title="Stat cards are interactive">
           Click on any stat card to navigate directly to that module&apos;s list view.
         </InfoCallout>
+      </DocSection>
+
+      <DocSection id="quickstart" title="Quickstart Wizard" description="Bootstrap your entire privacy program in minutes instead of building everything from scratch.">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex items-start gap-3 rounded-lg border p-3">
+            <div className="rounded-md bg-primary/10 p-2">
+              <Building2 className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">Import from Vendors</p>
+              <p className="text-xs text-muted-foreground">
+                Select vendors you already use from the catalog. The wizard auto-generates
+                data assets, data elements, processing activities, and cross-border transfers
+                for each vendor based on its category.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3 rounded-lg border p-3">
+            <div className="rounded-md bg-primary/10 p-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">Industry Template</p>
+              <p className="text-xs text-muted-foreground">
+                Pick your industry (E-commerce, SaaS, Healthcare, Fintech, Media, or
+                Professional Services) and get a pre-built scaffold of assets, activities,
+                and data flows.
+              </p>
+            </div>
+          </div>
+        </div>
+        <InfoCallout type="tip" title="Vendor.Watch integration">
+          If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects
+          your vendors and pre-selects them — no manual searching needed.
+        </InfoCallout>
+        <InfoCallout type="info" title="Non-destructive">
+          The quickstart only creates new records. It never modifies or deletes existing
+          data and automatically skips duplicates. You can run it multiple times safely.
+        </InfoCallout>
+        <div className="mt-2">
+          <Link href="/privacy/quickstart">
+            <Button className="gap-2">
+              <Zap className="w-4 h-4" />
+              Open Quickstart Wizard
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
       </DocSection>
 
       <DocSection id="navigation" title="Navigation" description="The main navigation bar provides access to all modules.">
