@@ -94,6 +94,9 @@ export default function QuickstartPage() {
   const [skipAssetNames, setSkipAssetNames] = useState<string[]>([]);
   const [skipActivityNames, setSkipActivityNames] = useState<string[]>([]);
 
+  // Result data from execute mutation
+  const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number } | null>(null);
+
   // Debounce search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = useCallback((value: string) => {
@@ -161,9 +164,17 @@ export default function QuickstartPage() {
 
   const executeMutation = trpc.quickstart.execute.useMutation({
     onSuccess: (data) => {
-      toast.success(
-        `Created ${data.assets} assets, ${data.activities} activities, ${data.vendors} vendors`
-      );
+      setExecutionResult(data);
+      const total = data.assets + data.activities + data.vendors;
+      if (total === 0) {
+        toast.info("All records already exist — nothing new to create");
+      } else {
+        const parts = [];
+        if (data.vendors > 0) parts.push(`${data.vendors} vendor${data.vendors !== 1 ? "s" : ""}`);
+        if (data.assets > 0) parts.push(`${data.assets} asset${data.assets !== 1 ? "s" : ""}`);
+        if (data.activities > 0) parts.push(`${data.activities} activit${data.activities !== 1 ? "ies" : "y"}`);
+        toast.success(`Created ${parts.join(", ")}`);
+      }
       setStep("success");
     },
     onError: (err) => {
@@ -1191,17 +1202,25 @@ export default function QuickstartPage() {
       {/* ════════════════════════════════════════════════
           SUCCESS
           ════════════════════════════════════════════════ */}
-      {step === "success" && (
+      {step === "success" && (() => {
+        const totalCreated = executionResult
+          ? executionResult.assets + executionResult.activities + executionResult.vendors
+          : 0;
+        const nothingCreated = totalCreated === 0;
+        return (
         <div className="space-y-6">
-          <Card className="border-green-500/30 bg-green-500/5">
+          <Card className={nothingCreated ? "border-primary/30 bg-primary/5" : "border-green-500/30 bg-green-500/5"}>
             <CardContent className="p-8 text-center">
-              <CheckCircle2 className="w-12 h-12 mx-auto text-green-500 mb-4" />
+              <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${nothingCreated ? "text-primary" : "text-green-500"}`} />
               <h2 className="text-xl font-semibold mb-2">
-                Privacy Program Created!
+                {nothingCreated
+                  ? "Everything is already set up!"
+                  : "Privacy Program Created!"}
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Your privacy program has been bootstrapped. Explore your new
-                records and customize them as needed.
+                {nothingCreated
+                  ? "All the selected records already exist in your privacy program. You're good to go!"
+                  : "Your privacy program has been bootstrapped. Explore your new records and customize them as needed."}
               </p>
             </CardContent>
           </Card>
@@ -1261,7 +1280,8 @@ export default function QuickstartPage() {
             </Link>
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
