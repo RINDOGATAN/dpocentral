@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -96,6 +97,35 @@ export default function PrivacyDashboardPage() {
           </DropdownMenu>
         )}
       </div>
+
+      {/* Quickstart Card — shown when org has few records */}
+      {dashboardStats.dataAssets <= 2 &&
+        dashboardStats.processingActivities <= 1 &&
+        dashboardStats.activeVendors <= 1 && (
+          <Card className="border-primary/50 bg-primary/5">
+            <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm sm:text-base">
+                  Get Started with Quickstart
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                  Bootstrap your privacy program in minutes. Import vendors from
+                  the catalog or start from an industry template to auto-generate
+                  data assets, processing activities, and data flows.
+                </p>
+              </div>
+              <Link href="/privacy/quickstart">
+                <Button size="sm" className="shrink-0 gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Get Started</span>
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
 
       {/* Quick Stats - 2 columns on mobile, 4 on desktop */}
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">

@@ -9,6 +9,7 @@ import { platformAdminRouter } from "./platformAdmin";
 import { vendorCatalogRouter } from "./vendorCatalog";
 import { billingRouter } from "./billing";
 import { feedbackRouter } from "./feedback";
+import { quickstartRouter } from "./privacy/quickstart";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   vendorCatalog: vendorCatalogRouter,
   billing: billingRouter,
   feedback: feedbackRouter,
+  quickstart: quickstartRouter,
 });
 
 export type AppRouter = typeof appRouter;
