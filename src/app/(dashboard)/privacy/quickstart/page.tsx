@@ -151,9 +151,11 @@ export default function QuickstartPage() {
     { enabled: !!orgId }
   );
 
+  const isPortfolioFlow = fromVendorWatch && portfolio?.hasPortfolio === true;
+
   const { data: vendorPreview } = trpc.quickstart.previewVendorImport.useQuery(
-    { organizationId: orgId, vendorSlugs: selectedSlugs },
-    { enabled: !!orgId && selectedSlugs.length > 0 && catalogAccess?.hasAccess === true && (step === "vendors" || step === "review") }
+    { organizationId: orgId, vendorSlugs: selectedSlugs, fromPortfolio: isPortfolioFlow },
+    { enabled: !!orgId && selectedSlugs.length > 0 && (isPortfolioFlow || catalogAccess?.hasAccess === true) && (step === "vendors" || step === "review") }
   );
 
   const { data: industryPreview } =
@@ -225,6 +227,7 @@ export default function QuickstartPage() {
       industryId: useIndustry ? selectedIndustryId ?? undefined : undefined,
       skipAssetNames,
       skipActivityNames,
+      fromPortfolio: isPortfolioFlow && useVendors,
     });
   };
 
@@ -435,20 +438,31 @@ export default function QuickstartPage() {
                           <Button
                             size="lg"
                             onClick={() => {
-                              setUseIndustry(true);
-                              setStep("industry");
+                              setUseVendors(true);
+                              setStep("vendors");
                             }}
                           >
                             <Sparkles className="w-4 h-4 mr-2" />
-                            Start with an industry template
+                            Yes, build my privacy program
                           </Button>
                           <Button
                             variant="outline"
                             size="lg"
+                            onClick={() => {
+                              setUseVendors(true);
+                              setUseIndustry(true);
+                              setStep("vendors");
+                            }}
+                          >
+                            <Package className="w-4 h-4 mr-2" />
+                            Yes, and also add an industry template
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="lg"
                             onClick={() => setStep("choose")}
                           >
-                            <Lock className="w-4 h-4 mr-2" />
-                            Unlock vendor import
+                            Let me choose manually
                           </Button>
                         </>
                       ) : (
