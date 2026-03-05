@@ -44,6 +44,17 @@ const tocSections: TocSection[] = [
     ],
   },
   {
+    href: "/privacy/docs/quickstart",
+    label: "Quickstart",
+    icon: Zap,
+    children: [
+      { label: "How It Works", hash: "#how-it-works" },
+      { label: "Vendor.Watch Import", hash: "#vendor-watch" },
+      { label: "Industry Templates", hash: "#industry-templates" },
+      { label: "After Quickstart", hash: "#after-quickstart" },
+    ],
+  },
+  {
     href: "/privacy/docs/data-inventory",
     label: "Data Inventory",
     icon: Database,

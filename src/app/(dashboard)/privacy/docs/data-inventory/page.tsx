@@ -169,7 +169,7 @@ export default function DocsDataInventoryPage() {
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Getting Started", href: "/privacy/docs" }}
+        previous={{ title: "Quickstart", href: "/privacy/docs/quickstart" }}
         next={{ title: "DSAR Management", href: "/privacy/docs/dsar" }}
       />
     </div>
