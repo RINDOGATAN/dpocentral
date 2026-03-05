@@ -173,17 +173,52 @@ export const quickstartRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         vendorSlugs: z.array(z.string()).min(1).max(20),
+        fromPortfolio: z.boolean().default(false),
       })
     )
     .query(async ({ ctx, input }) => {
-      // Check entitlement
-      const hasAccess = await hasVendorCatalogAccess(ctx.organization.id);
-      if (!hasAccess) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message:
-            "Vendor Catalog access is required to import vendors. Enable this add-on to get started.",
+      if (input.fromPortfolio) {
+        // Validate slugs belong to the user's VW portfolio
+        const portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
+          where: {
+            accountId: ctx.session.user.id,
+            vendorSlug: { in: input.vendorSlugs },
+          },
+          select: { vendorSlug: true },
         });
+        const validSlugs = new Set(portfolioVendors.map((pv) => pv.vendorSlug));
+        const invalidSlugs = input.vendorSlugs.filter((s) => !validSlugs.has(s));
+        if (invalidSlugs.length > 0) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Some vendor slugs are not in your Vendor.Watch portfolio.",
+          });
+        }
+
+        // Count already-imported free portfolio vendors
+        const usedFreeSlots = await ctx.prisma.vendor.count({
+          where: {
+            organizationId: ctx.organization.id,
+            metadata: { path: ["fromPortfolio"], equals: true },
+          },
+        });
+        const remainingFree = Math.max(0, 5 - usedFreeSlots);
+        if (input.vendorSlugs.length > remainingFree) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: `You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have ${remainingFree} free slot${remainingFree !== 1 ? "s" : ""} remaining. Subscribe to the Vendor Catalog add-on to import more.`,
+          });
+        }
+      } else {
+        // Standard entitlement check
+        const hasAccess = await hasVendorCatalogAccess(ctx.organization.id);
+        if (!hasAccess) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Vendor Catalog access is required to import vendors. Enable this add-on to get started.",
+          });
+        }
       }
 
       // Fetch selected catalog vendors
@@ -355,6 +390,7 @@ export const quickstartRouter = createTRPCRouter({
         industryId: z.string().optional(),
         skipAssetNames: z.array(z.string()).default([]),
         skipActivityNames: z.array(z.string()).default([]),
+        fromPortfolio: z.boolean().default(false),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -374,13 +410,47 @@ export const quickstartRouter = createTRPCRouter({
 
       // Validate vendor catalog access if vendor path selected
       if (input.vendorSlugs.length > 0) {
-        const hasAccess = await hasVendorCatalogAccess(orgId);
-        if (!hasAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message:
-              "Vendor Catalog access is required to import vendors.",
+        if (input.fromPortfolio) {
+          // Validate slugs belong to the user's VW portfolio
+          const portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
+            where: {
+              accountId: userId,
+              vendorSlug: { in: input.vendorSlugs },
+            },
+            select: { vendorSlug: true },
           });
+          const validSlugs = new Set(portfolioVendors.map((pv) => pv.vendorSlug));
+          const invalidSlugs = input.vendorSlugs.filter((s) => !validSlugs.has(s));
+          if (invalidSlugs.length > 0) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Some vendor slugs are not in your Vendor.Watch portfolio.",
+            });
+          }
+
+          // Count already-imported free portfolio vendors
+          const usedFreeSlots = await ctx.prisma.vendor.count({
+            where: {
+              organizationId: orgId,
+              metadata: { path: ["fromPortfolio"], equals: true },
+            },
+          });
+          const remainingFree = Math.max(0, 5 - usedFreeSlots);
+          if (input.vendorSlugs.length > remainingFree) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: `You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have ${remainingFree} free slot${remainingFree !== 1 ? "s" : ""} remaining. Subscribe to the Vendor Catalog add-on to import more.`,
+            });
+          }
+        } else {
+          const hasAccess = await hasVendorCatalogAccess(orgId);
+          if (!hasAccess) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message:
+                "Vendor Catalog access is required to import vendors.",
+            });
+          }
         }
       }
 
@@ -465,6 +535,9 @@ export const quickstartRouter = createTRPCRouter({
                 ) as DataCategory[],
               countries: catalogVendor.dataLocations || [],
               certifications: catalogVendor.certifications || [],
+              ...(input.fromPortfolio
+                ? { metadata: { source: "quickstart", fromPortfolio: true } }
+                : {}),
             },
           });
           counts.vendors++;
