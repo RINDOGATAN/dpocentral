@@ -90,9 +90,9 @@ export default function DocsGettingStartedPage() {
             <div>
               <p className="font-medium text-sm">Import from Vendors</p>
               <p className="text-xs text-muted-foreground">
-                Select vendors you already use from the catalog. The wizard auto-generates
-                data assets, data elements, processing activities, and cross-border transfers
-                for each vendor based on its category.
+                Select vendors you already use from the catalog, or import up to 5 for free
+                from your Vendor.Watch portfolio. The wizard auto-generates data assets,
+                data elements, processing activities, and cross-border transfers for each vendor.
               </p>
             </div>
           </div>
@@ -112,17 +112,24 @@ export default function DocsGettingStartedPage() {
         </div>
         <InfoCallout type="tip" title="Vendor.Watch integration">
           If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects
-          your vendors and pre-selects them — no manual searching needed.
+          your vendors and pre-selects them — no manual searching needed. Up to 5 vendors
+          can be imported for free.
         </InfoCallout>
         <InfoCallout type="info" title="Non-destructive">
           The quickstart only creates new records. It never modifies or deletes existing
           data and automatically skips duplicates. You can run it multiple times safely.
         </InfoCallout>
-        <div className="mt-2">
+        <div className="mt-2 flex gap-3">
           <Link href="/privacy/quickstart">
             <Button className="gap-2">
               <Zap className="w-4 h-4" />
               Open Quickstart Wizard
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link href="/privacy/docs/quickstart">
+            <Button variant="outline" className="gap-2">
+              Full Quickstart Guide
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
@@ -218,7 +225,7 @@ export default function DocsGettingStartedPage() {
       </DocSection>
 
       <DocNavFooter
-        next={{ title: "Data Inventory", href: "/privacy/docs/data-inventory" }}
+        next={{ title: "Quickstart", href: "/privacy/docs/quickstart" }}
       />
     </div>
   );
