@@ -504,7 +504,7 @@ export const quickstartRouter = createTRPCRouter({
             .then((a) => new Set(a.map((x) => x.name))),
         ]);
 
-      // Execute everything in a transaction
+      // Execute everything in a transaction (extended timeout for large imports)
       const result = await ctx.prisma.$transaction(async (tx) => {
         const counts = {
           vendors: 0,
@@ -817,7 +817,7 @@ export const quickstartRouter = createTRPCRouter({
         }
 
         return counts;
-      });
+      }, { timeout: 30000 });
 
       return result;
     }),
