@@ -6,6 +6,7 @@ import {
   getSpecializations,
   getCountries,
   getLanguages,
+  getExpertTypes,
 } from "../../services/dealroom/client";
 
 export const expertsRouter = createTRPCRouter({
@@ -16,6 +17,9 @@ export const expertsRouter = createTRPCRouter({
         specialization: z.string().optional(),
         country: z.string().optional(),
         language: z.string().optional(),
+        expertType: z.enum(["legal", "technical", "both"]).optional(),
+        limit: z.number().min(1).max(100).optional(),
+        offset: z.number().min(0).optional(),
       })
     )
     .query(async ({ input }) => {
@@ -33,6 +37,7 @@ export const expertsRouter = createTRPCRouter({
       specializations: getSpecializations(),
       countries: getCountries(),
       languages: getLanguages(),
+      expertTypes: getExpertTypes(),
     };
   }),
 });
