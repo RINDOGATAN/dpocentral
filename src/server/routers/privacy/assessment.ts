@@ -9,6 +9,7 @@ import {
 } from "../../services/licensing/entitlement";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappings";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -758,6 +759,81 @@ export const assessmentRouter = createTRPCRouter({
       });
 
       return updated;
+    }),
+
+  // ============================================================
+  // PET-BASED MITIGATION SUGGESTIONS
+  // ============================================================
+
+  getSuggestedMitigations: organizationProcedure
+    .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.assessmentId, organizationId: ctx.organization.id },
+        include: {
+          template: true,
+          responses: true,
+          vendor: true,
+          mitigations: { select: { title: true } },
+        },
+      });
+
+      if (!assessment) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+
+      // 1. Detect risks from template questions and responses
+      const sections = (assessment.template.sections as any[]) || [];
+      const detectedRiskIds = new Set<string>();
+
+      for (const section of sections) {
+        for (const question of (section.questions || []) as any[]) {
+          // Check question text for risk signals
+          const questionRisks = detectRisksFromText(question.text || "");
+          if (question.helpText) {
+            detectRisksFromText(question.helpText).forEach((r) => questionRisks.push(r));
+          }
+
+          // Only include if question has a high-risk response
+          const response = assessment.responses.find((r) => r.questionId === question.id);
+          const riskScore = response?.riskScore ?? question.riskScore ?? 0;
+
+          if (riskScore > 0.3 || questionRisks.length > 0) {
+            questionRisks.forEach((r) => detectedRiskIds.add(r));
+          }
+        }
+      }
+
+      // 2. Build risk-based suggestions
+      const existingTitles = new Set(assessment.mitigations.map((m) => m.title));
+
+      const riskBasedSuggestions = PET_RISK_MAPPINGS
+        .filter((m) => detectedRiskIds.has(m.riskId))
+        .map((mapping) => ({
+          riskId: mapping.riskId,
+          label: mapping.label,
+          description: mapping.description,
+          gdprReference: mapping.gdprReference,
+          recommendedPets: mapping.recommendedPets.filter(
+            (pet) => !existingTitles.has(`Implement ${pet}`)
+          ),
+        }))
+        .filter((s) => s.recommendedPets.length > 0);
+
+      // 3. Extract vendor PETs
+      const vendorPets: string[] = [];
+      if (assessment.vendor?.metadata) {
+        const meta = assessment.vendor.metadata as any;
+        if (Array.isArray(meta.privacyTechnologies)) {
+          vendorPets.push(...meta.privacyTechnologies);
+        }
+      }
+
+      return {
+        riskBasedSuggestions,
+        vendorPets,
+        vendorName: assessment.vendor?.name ?? null,
+      };
     }),
 
   // ============================================================

@@ -143,7 +143,7 @@ export default function NewAssessmentPage() {
 
   const { data: vendorsData } = trpc.vendor.list.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && selectedType === "VENDOR" }
+    { enabled: !!organization?.id && !!selectedType && ["VENDOR", "DPIA", "PIA", "TIA"].includes(selectedType) }
   );
 
   const activities = activitiesData?.activities ?? [];
@@ -454,9 +454,11 @@ export default function NewAssessmentPage() {
                   </Select>
                 </div>
 
-                {selectedType === "VENDOR" && (
+                {selectedType && ["VENDOR", "DPIA", "PIA", "TIA"].includes(selectedType) && (
                   <div className="space-y-2">
-                    <Label htmlFor="vendor">Link to Vendor</Label>
+                    <Label htmlFor="vendor">
+                      {selectedType === "VENDOR" ? "Link to Vendor" : "Link to Vendor (optional)"}
+                    </Label>
                     <Select
                       value={formData.vendorId}
                       onValueChange={(value) => setFormData({ ...formData, vendorId: value })}

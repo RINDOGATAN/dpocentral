@@ -7,9 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -27,12 +36,17 @@ import {
   Loader2,
   FileText,
   Shield,
+  ShieldCheck,
   Save,
   Edit,
+  Plus,
+  Lightbulb,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -50,6 +64,15 @@ const riskColors: Record<string, string> = {
   CRITICAL: "border-destructive bg-destructive text-destructive-foreground",
 };
 
+const mitigationStatusColors: Record<string, string> = {
+  IDENTIFIED: "border-muted-foreground text-muted-foreground",
+  PLANNED: "border-blue-500 text-blue-600",
+  IN_PROGRESS: "border-primary text-primary",
+  IMPLEMENTED: "border-green-500 text-green-600",
+  VERIFIED: "border-green-600 bg-green-600 text-white",
+  NOT_REQUIRED: "border-muted-foreground/50 text-muted-foreground/50",
+};
+
 const typeLabels: Record<string, string> = {
   DPIA: "Data Protection Impact Assessment",
   PIA: "Privacy Impact Assessment",
@@ -59,6 +82,15 @@ const typeLabels: Record<string, string> = {
   CUSTOM: "Custom Assessment",
 };
 
+const MITIGATION_STATUSES = [
+  "IDENTIFIED",
+  "PLANNED",
+  "IN_PROGRESS",
+  "IMPLEMENTED",
+  "VERIFIED",
+  "NOT_REQUIRED",
+] as const;
+
 export default function AssessmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
@@ -66,9 +98,36 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
 
+  // Mitigation dialog state
+  const [addMitigationOpen, setAddMitigationOpen] = useState(false);
+  const [addMitigationTab, setAddMitigationTab] = useState<"manual" | "suggested">("manual");
+  const [mitigationForm, setMitigationForm] = useState({
+    title: "",
+    description: "",
+    priority: 3,
+    owner: "",
+    dueDate: "",
+  });
+
+  // Update mitigation dialog state
+  const [updateMitigationOpen, setUpdateMitigationOpen] = useState(false);
+  const [editingMitigation, setEditingMitigation] = useState<any>(null);
+  const [updateForm, setUpdateForm] = useState({
+    status: "",
+    owner: "",
+    dueDate: "",
+    evidence: "",
+  });
+
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
     { enabled: !!organization?.id }
+  );
+
+  // Fetch PET-based suggestions when assessment loads
+  const { data: suggestions } = trpc.assessment.getSuggestedMitigations.useQuery(
+    { organizationId: organization?.id ?? "", assessmentId: id },
+    { enabled: !!organization?.id && !!assessment }
   );
 
   const utils = trpc.useUtils();
@@ -91,6 +150,31 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     },
     onError: (error) => {
       toast.error(error.message || "Failed to save response");
+    },
+  });
+
+  const addMitigation = trpc.assessment.addMitigation.useMutation({
+    onSuccess: () => {
+      toast.success("Mitigation added");
+      utils.assessment.getById.invalidate();
+      utils.assessment.getSuggestedMitigations.invalidate();
+      setAddMitigationOpen(false);
+      setMitigationForm({ title: "", description: "", priority: 3, owner: "", dueDate: "" });
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add mitigation");
+    },
+  });
+
+  const updateMitigation = trpc.assessment.updateMitigation.useMutation({
+    onSuccess: () => {
+      toast.success("Mitigation updated");
+      utils.assessment.getById.invalidate();
+      setUpdateMitigationOpen(false);
+      setEditingMitigation(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update mitigation");
     },
   });
 
@@ -140,6 +224,66 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }));
   }, []);
 
+  const handleAddMitigation = () => {
+    if (!organization?.id || !mitigationForm.title) return;
+    addMitigation.mutate({
+      organizationId: organization.id,
+      assessmentId: id,
+      riskId: "manual",
+      title: mitigationForm.title,
+      description: mitigationForm.description || undefined,
+      priority: mitigationForm.priority,
+      owner: mitigationForm.owner || undefined,
+      dueDate: mitigationForm.dueDate ? new Date(mitigationForm.dueDate) : undefined,
+    });
+  };
+
+  const handleAcceptSuggestion = (pet: string, riskLabel: string, gdprRef: string) => {
+    if (!organization?.id) return;
+    const vendorName = suggestions?.vendorName;
+    const isVendorPet = suggestions?.vendorPets.includes(pet);
+    const description = isVendorPet
+      ? `Address ${riskLabel} risk (${gdprRef}). ${vendorName} implements this technology.`
+      : `Address ${riskLabel} risk (${gdprRef}). Consider implementing ${pet} as a technical safeguard.`;
+
+    addMitigation.mutate({
+      organizationId: organization.id,
+      assessmentId: id,
+      riskId: "pet_suggestion",
+      title: `Implement ${pet}`,
+      description,
+      priority: 2,
+    });
+  };
+
+  const openUpdateDialog = (mitigation: any) => {
+    setEditingMitigation(mitigation);
+    setUpdateForm({
+      status: mitigation.status,
+      owner: mitigation.owner || "",
+      dueDate: mitigation.dueDate ? new Date(mitigation.dueDate).toISOString().split("T")[0] : "",
+      evidence: mitigation.evidence || "",
+    });
+    setUpdateMitigationOpen(true);
+  };
+
+  const handleUpdateMitigation = () => {
+    if (!organization?.id || !editingMitigation) return;
+    updateMitigation.mutate({
+      organizationId: organization.id,
+      id: editingMitigation.id,
+      status: updateForm.status as any,
+      owner: updateForm.owner || null,
+      dueDate: updateForm.dueDate ? new Date(updateForm.dueDate) : null,
+      evidence: updateForm.evidence || null,
+    });
+  };
+
+  const openAddDialogWithSuggestions = () => {
+    setAddMitigationTab("suggested");
+    setAddMitigationOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -169,6 +313,10 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const canSubmit =
     assessment.status === "IN_PROGRESS" || assessment.status === "DRAFT";
+
+  const vendorPets = suggestions?.vendorPets ?? [];
+  const vendorName = suggestions?.vendorName ?? null;
+  const hasSuggestions = (suggestions?.riskBasedSuggestions?.length ?? 0) > 0 || vendorPets.length > 0;
 
   return (
     <div className="space-y-6">
@@ -467,40 +615,108 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           )}
         </TabsContent>
 
-        <TabsContent value="mitigations" className="mt-4">
+        <TabsContent value="mitigations" className="mt-4 space-y-4">
+          {/* Vendor PETs Card */}
+          {vendorPets.length > 0 && vendorName && (
+            <Card className="border-primary/30 bg-primary/5">
+              <CardContent className="py-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <ShieldCheck className="w-5 h-5 text-primary" />
+                      <span className="font-medium">Vendor Privacy Technologies</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {vendorName} implements these PETs:
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {vendorPets.map((pet) => (
+                        <Badge key={pet} variant="outline" className="border-primary/50">
+                          <ShieldCheck className="w-3 h-3 mr-1" />
+                          {pet}
+                        </Badge>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-3">
+                      These can be referenced as mitigating measures in your assessment.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={openAddDialogWithSuggestions}
+                  >
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Suggest as Mitigations
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Existing Mitigations */}
           {assessment.mitigations && assessment.mitigations.length > 0 ? (
             <div className="space-y-4">
               {assessment.mitigations.map((mitigation) => (
                 <Card key={mitigation.id}>
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <AlertTriangle className="w-4 h-4 text-primary" />
                           <span className="font-medium">{mitigation.title}</span>
-                          <Badge variant="outline">{mitigation.status}</Badge>
+                          <Badge variant="outline" className={mitigationStatusColors[mitigation.status] || ""}>
+                            {mitigation.status.replace("_", " ")}
+                          </Badge>
                           <Badge variant="outline">Priority {mitigation.priority}</Badge>
+                          {mitigation.owner && (
+                            <span className="text-xs text-muted-foreground">
+                              Owner: {mitigation.owner}
+                            </span>
+                          )}
                         </div>
                         {mitigation.description && (
                           <p className="text-sm text-muted-foreground mt-1">
                             {mitigation.description}
                           </p>
                         )}
+                        {mitigation.evidence && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            <strong>Evidence:</strong> {mitigation.evidence}
+                          </p>
+                        )}
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openUpdateDialog(mitigation)}
+                      >
                         Update
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
               ))}
+              <Button
+                variant="outline"
+                onClick={() => { setAddMitigationTab("manual"); setAddMitigationOpen(true); }}
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add Mitigation
+              </Button>
             </div>
           ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No mitigations identified</p>
-                <Button className="mt-4">Add Mitigation</Button>
+                <Button
+                  className="mt-4"
+                  onClick={() => { setAddMitigationTab(hasSuggestions ? "suggested" : "manual"); setAddMitigationOpen(true); }}
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Mitigation
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -584,6 +800,292 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Add Mitigation Dialog */}
+      <Dialog open={addMitigationOpen} onOpenChange={setAddMitigationOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add Mitigation</DialogTitle>
+            <DialogDescription>
+              Add a mitigating measure to address identified risks.
+            </DialogDescription>
+          </DialogHeader>
+
+          {hasSuggestions && (
+            <Tabs value={addMitigationTab} onValueChange={(v) => setAddMitigationTab(v as "manual" | "suggested")}>
+              <TabsList className="w-full">
+                <TabsTrigger value="manual" className="flex-1">Manual</TabsTrigger>
+                <TabsTrigger value="suggested" className="flex-1">
+                  <Lightbulb className="w-4 h-4 mr-1" />
+                  Suggested
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="manual" className="mt-4">
+                <MitigationFormFields
+                  form={mitigationForm}
+                  onChange={setMitigationForm}
+                />
+              </TabsContent>
+
+              <TabsContent value="suggested" className="mt-4 space-y-4">
+                {/* Vendor PET suggestions */}
+                {vendorPets.length > 0 && vendorName && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
+                      <ShieldCheck className="w-4 h-4 text-primary" />
+                      {vendorName} Privacy Technologies
+                    </h4>
+                    <div className="space-y-2">
+                      {vendorPets.map((pet) => {
+                        const risks = getRisksAddressedByPet(pet);
+                        return (
+                          <div key={pet} className="flex items-center justify-between p-3 border rounded-md">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-sm">{pet}</span>
+                                <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                  Vendor implements
+                                </Badge>
+                              </div>
+                              {risks.length > 0 && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Addresses: {risks.map((r) => r.label).join(", ")}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleAcceptSuggestion(
+                                pet,
+                                risks[0]?.label ?? "identified",
+                                risks[0]?.gdprReference ?? "GDPR"
+                              )}
+                              disabled={addMitigation.isPending}
+                            >
+                              <Plus className="w-3 h-3 mr-1" />
+                              Accept
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Risk-based suggestions */}
+                {(suggestions?.riskBasedSuggestions ?? []).map((suggestion) => (
+                  <div key={suggestion.riskId}>
+                    <h4 className="text-sm font-medium mb-2">
+                      {suggestion.label}
+                      <span className="text-xs text-muted-foreground ml-2">
+                        {suggestion.gdprReference}
+                      </span>
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-2">{suggestion.description}</p>
+                    <div className="space-y-2">
+                      {suggestion.recommendedPets.map((pet) => {
+                        const isVendorPet = vendorPets.includes(pet);
+                        return (
+                          <div key={pet} className="flex items-center justify-between p-3 border rounded-md">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm">{pet}</span>
+                              {isVendorPet && (
+                                <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                  Vendor implements
+                                </Badge>
+                              )}
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleAcceptSuggestion(pet, suggestion.label, suggestion.gdprReference)}
+                              disabled={addMitigation.isPending}
+                            >
+                              <Plus className="w-3 h-3 mr-1" />
+                              Accept
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+
+                {!hasSuggestions && (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    No suggestions yet. Answer assessment questions to get PET-based recommendations.
+                  </p>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
+
+          {!hasSuggestions && (
+            <MitigationFormFields
+              form={mitigationForm}
+              onChange={setMitigationForm}
+            />
+          )}
+
+          {(addMitigationTab === "manual" || !hasSuggestions) && (
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setAddMitigationOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAddMitigation}
+                disabled={!mitigationForm.title || addMitigation.isPending}
+              >
+                {addMitigation.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+                Add Mitigation
+              </Button>
+            </DialogFooter>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Update Mitigation Dialog */}
+      <Dialog open={updateMitigationOpen} onOpenChange={setUpdateMitigationOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Mitigation</DialogTitle>
+            <DialogDescription>
+              {editingMitigation?.title}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <Select
+                value={updateForm.status}
+                onValueChange={(v) => setUpdateForm({ ...updateForm, status: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {MITIGATION_STATUSES.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s.replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Owner</Label>
+              <Input
+                placeholder="Person responsible"
+                value={updateForm.owner}
+                onChange={(e) => setUpdateForm({ ...updateForm, owner: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Due Date</Label>
+              <Input
+                type="date"
+                value={updateForm.dueDate}
+                onChange={(e) => setUpdateForm({ ...updateForm, dueDate: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Evidence</Label>
+              <Textarea
+                placeholder="Evidence of implementation (documents, links, screenshots...)"
+                rows={3}
+                value={updateForm.evidence}
+                onChange={(e) => setUpdateForm({ ...updateForm, evidence: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setUpdateMitigationOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateMitigation}
+              disabled={updateMitigation.isPending}
+            >
+              {updateMitigation.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+/** Reusable form fields for manual mitigation entry */
+function MitigationFormFields({
+  form,
+  onChange,
+}: {
+  form: { title: string; description: string; priority: number; owner: string; dueDate: string };
+  onChange: (f: typeof form) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label>Title *</Label>
+        <Input
+          placeholder="e.g., Implement pseudonymization for customer records"
+          value={form.title}
+          onChange={(e) => onChange({ ...form, title: e.target.value })}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Description</Label>
+        <Textarea
+          placeholder="Describe the mitigation measure and how it addresses the risk..."
+          rows={3}
+          value={form.description}
+          onChange={(e) => onChange({ ...form, description: e.target.value })}
+        />
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="space-y-2">
+          <Label>Priority</Label>
+          <Select
+            value={String(form.priority)}
+            onValueChange={(v) => onChange({ ...form, priority: parseInt(v) })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1 - Critical</SelectItem>
+              <SelectItem value="2">2 - High</SelectItem>
+              <SelectItem value="3">3 - Medium</SelectItem>
+              <SelectItem value="4">4 - Low</SelectItem>
+              <SelectItem value="5">5 - Minimal</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Owner</Label>
+          <Input
+            placeholder="Person responsible"
+            value={form.owner}
+            onChange={(e) => onChange({ ...form, owner: e.target.value })}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Due Date</Label>
+          <Input
+            type="date"
+            value={form.dueDate}
+            onChange={(e) => onChange({ ...form, dueDate: e.target.value })}
+          />
+        </div>
+      </div>
     </div>
   );
 }
