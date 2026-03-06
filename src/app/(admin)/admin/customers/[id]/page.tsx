@@ -15,6 +15,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Loader2,
   Plus,
@@ -25,6 +33,8 @@ import {
   Pause,
   X,
   Search,
+  Copy,
+  Check,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { LicenseType } from "@prisma/client";
@@ -34,6 +44,8 @@ export default function CustomerDetailPage() {
   const router = useRouter();
   const customerId = params.id as string;
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [showAddEntitlement, setShowAddEntitlement] = useState(false);
   const [showLinkOrg, setShowLinkOrg] = useState(false);
   const [orgSearch, setOrgSearch] = useState("");
@@ -99,6 +111,20 @@ export default function CustomerDetailPage() {
     },
   });
 
+  const deleteCustomerMutation = trpc.platformAdmin.deleteCustomer.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listCustomers.invalidate();
+      utils.platformAdmin.getDashboardStats.invalidate();
+      router.push("/admin/customers");
+    },
+  });
+
+  const copyLicenseKey = (key: string) => {
+    navigator.clipboard.writeText(key);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
   const handleAddEntitlement = (e: React.FormEvent) => {
     e.preventDefault();
     createEntitlement.mutate({
@@ -148,6 +174,16 @@ export default function CustomerDetailPage() {
         <Badge variant="outline" className="ml-2">
           {customer.type}
         </Badge>
+        <div className="ml-auto">
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Customer
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -398,6 +434,24 @@ export default function CustomerDetailPage() {
                           {entitlement.expiresAt &&
                             ` - Expires ${new Date(entitlement.expiresAt).toLocaleDateString()}`}
                         </p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                            {entitlement.licenseKey}
+                          </code>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            title="Copy license key"
+                            onClick={() => copyLicenseKey(entitlement.licenseKey)}
+                          >
+                            {copiedKey === entitlement.licenseKey ? (
+                              <Check className="w-3 h-3 text-green-500" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-1">
@@ -455,6 +509,42 @@ export default function CustomerDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Customer</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <strong>{customer.name}</strong>? This will:
+            </DialogDescription>
+          </DialogHeader>
+          <ul className="text-sm text-muted-foreground list-disc pl-6 space-y-1">
+            <li>Remove all organization links</li>
+            <li>Delete all skill entitlements</li>
+            <li>This action cannot be undone</li>
+          </ul>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => deleteCustomerMutation.mutate({ id: customerId })}
+              disabled={deleteCustomerMutation.isPending}
+            >
+              {deleteCustomerMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete Customer"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
