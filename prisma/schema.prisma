@@ -13,12 +13,18 @@ datasource db {
 // AUTHENTICATION & USERS (Base from Deal Room)
 // ============================================================
 
+enum UserType {
+  BUSINESS_OWNER
+  PRIVACY_PROFESSIONAL
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  userType      UserType?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

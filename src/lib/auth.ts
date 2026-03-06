@@ -165,12 +165,22 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
+        session.user.userType = token.userType ?? null;
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+      }
+      // Fetch userType on sign-in or when session is updated (e.g. after persona selection)
+      const userId = token.sub ?? (token.id as string | undefined);
+      if ((user || trigger === "update") && userId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { userType: true },
+        });
+        token.userType = dbUser?.userType ?? null;
       }
       return token;
     },

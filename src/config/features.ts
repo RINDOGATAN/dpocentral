@@ -25,6 +25,9 @@ export interface FeatureFlags {
   tiaEnabled: boolean;
   vendorAssessmentEnabled: boolean;
 
+  // Expert Directory
+  expertDirectoryEnabled: boolean;
+
   // Internationalization
   i18nEnabled: boolean;
   availableLocales: string[];
@@ -50,6 +53,9 @@ const defaultFeatures: FeatureFlags = {
   piaEnabled: true,
   tiaEnabled: true,
   vendorAssessmentEnabled: true,
+
+  // Expert Directory
+  expertDirectoryEnabled: true,
 
   // i18n
   i18nEnabled: false,
@@ -91,6 +97,9 @@ export function getFeatureFlags(): FeatureFlags {
     piaEnabled: defaultFeatures.piaEnabled,
     tiaEnabled: defaultFeatures.tiaEnabled,
     vendorAssessmentEnabled: defaultFeatures.vendorAssessmentEnabled,
+    expertDirectoryEnabled:
+      process.env.NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED !== "false" &&
+      defaultFeatures.expertDirectoryEnabled,
     i18nEnabled:
       process.env.NEXT_PUBLIC_I18N_ENABLED === "true" ||
       defaultFeatures.i18nEnabled,

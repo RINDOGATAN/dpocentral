@@ -18,6 +18,9 @@ import {
   Scale,
   Shield,
   MessageSquareWarning,
+  Briefcase,
+  Search,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +31,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useOrganization } from "@/lib/organization-context";
+import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
+import { PersonaSelector } from "@/components/privacy/persona-selector";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
@@ -46,10 +51,22 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading } = useOrganization();
+  const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  if (orgLoading) {
+  // Build nav items dynamically based on user type
+  const allNavItems = [
+    ...(isProfessional
+      ? [{ href: "/privacy/clients", label: "My Clients", icon: Briefcase }]
+      : []),
+    ...navItems,
+    ...(isBusinessOwner && features.expertDirectoryEnabled
+      ? [{ href: "/privacy/experts", label: "Find Expert", icon: Search }]
+      : []),
+  ];
+
+  if (orgLoading || userTypeLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-muted-foreground">Loading...</div>
@@ -57,7 +74,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Show organization setup if user has no organizations
+  // Step 1: Show persona selection if user hasn't chosen yet
+  if (needsOnboarding) {
+    return <PersonaSelector />;
+  }
+
+  // Step 2: Show organization setup if user has no organizations
   if (!organization && organizations.length === 0) {
     return <OrganizationSetup />;
   }
@@ -83,7 +105,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
-                  {navItems.map((item) => {
+                  {allNavItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href ||
                       (item.href !== "/privacy" && pathname.startsWith(item.href));
@@ -107,6 +129,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     );
                   })}
                   <div className="h-px bg-border my-2" />
+                  <Link href="/privacy/settings" onClick={() => setMobileNavOpen(false)}>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 h-12 text-base"
+                    >
+                      <Settings className="w-5 h-5" />
+                      Settings
+                    </Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     className="w-full justify-start gap-3 h-12 text-base"
@@ -127,7 +158,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
+            {allNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href ||
                 (item.href !== "/privacy" && pathname.startsWith(item.href));
@@ -162,6 +193,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <User className="w-4 h-4" />
               <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
             </div>
+            <Link href="/privacy/settings">
+              <Button variant="ghost" size="icon" title="Settings">
+                <Settings className="w-4 h-4" />
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"

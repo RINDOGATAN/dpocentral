@@ -13,6 +13,7 @@ import {
   Sparkles,
   Zap,
   ChevronRight,
+  Search,
 } from "lucide-react";
 import { PremiumBadge } from "./premium-badge";
 import { cn } from "@/lib/utils";
@@ -110,6 +111,17 @@ const tocSections: TocSection[] = [
       { label: "Contracts", hash: "#contracts" },
       { label: "Questionnaires", hash: "#questionnaires" },
       { label: "Risk Reviews", hash: "#risk-reviews" },
+    ],
+  },
+  {
+    href: "/privacy/docs/experts",
+    label: "Expert Help & Personas",
+    icon: Search,
+    children: [
+      { label: "User Personas", hash: "#personas" },
+      { label: "Expert Directory", hash: "#expert-directory" },
+      { label: "Client Dashboard", hash: "#client-dashboard" },
+      { label: "Settings", hash: "#settings" },
     ],
   },
   {

@@ -18,6 +18,7 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
@@ -271,6 +272,8 @@ export default function IncidentsPage() {
           </CardContent>
         </Card>
       )}
+
+      <ExpertHelpCta context="incident" />
     </div>
   );
 }

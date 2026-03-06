@@ -25,6 +25,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { formatPrice } from "@/lib/currency";
@@ -328,6 +329,10 @@ export default function DataInventoryPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {dataAssets.length === 0 && processingActivities.length === 0 && (
+        <ExpertHelpCta context="empty-state" />
+      )}
 
       {/* ROPA Export Premium Gating */}
       <EnableFeatureModal
