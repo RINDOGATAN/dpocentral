@@ -29,6 +29,27 @@ Open Core model:
 
 Premium features require entitlements via `src/server/services/licensing/`
 
+## Quickstart — Free Tier (5 Vendors)
+- Vendor catalog import in quickstart allows **5 free vendors** without premium license
+- Tracked via `Vendor.metadata.source = "quickstart"` (counted per organization)
+- Portfolio imports (from Vendor.Watch) also use this budget (`metadata.fromPortfolio: true`)
+- After 5 free imports, users need the Vendor Catalog add-on for more
+- Industry templates are always free (no limit)
+- Transaction timeout: 30s (default 5s was too short for multi-vendor imports)
+
+## Admin Panel (`/admin`)
+Platform admin panel gated by `ADMIN_EMAILS` env var. 6 sections:
+- **Dashboard** — stats (customers, orgs, entitlements, active licenses, new users 7d/30d, active subs), activity feed, quick actions
+- **Customers** — CRUD, link/unlink orgs, manage entitlements, delete with cascade confirmation, license key display with copy
+- **Skill Packages** — browse packages
+- **Organizations** — search/browse all orgs, detail view with members, stats (assets/activities/DSARs/assessments/incidents/vendors), audit logs
+- **Users** — search/browse all users, detail view with inline userType editor, org memberships, activity log
+- **Audit Logs** — filterable table (entity type, action, date range, search), expandable rows with changes JSON
+
+Key files:
+- `src/server/routers/platformAdmin.ts` — all admin tRPC endpoints
+- `src/app/(admin)/admin/` — all admin pages
+
 ## Modules
 - **Data Inventory** - Assets, elements, processing activities, data flow visualization
 - **DSAR** - Subject access requests, SLA tracking, public portal
