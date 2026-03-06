@@ -210,14 +210,22 @@ export const quickstartRouter = createTRPCRouter({
           });
         }
       } else {
-        // Standard entitlement check
+        // Allow up to 5 free quickstart imports; require license after that
         const hasAccess = await hasVendorCatalogAccess(ctx.organization.id);
         if (!hasAccess) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message:
-              "Vendor Catalog access is required to import vendors. Enable this add-on to get started.",
+          const usedFreeSlots = await ctx.prisma.vendor.count({
+            where: {
+              organizationId: ctx.organization.id,
+              metadata: { path: ["source"], equals: "quickstart" },
+            },
           });
+          const remainingFree = Math.max(0, 5 - usedFreeSlots);
+          if (input.vendorSlugs.length > remainingFree) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: `You can import up to 5 vendors for free during quickstart. You have ${remainingFree} free slot${remainingFree !== 1 ? "s" : ""} remaining. Subscribe to the Vendor Catalog add-on to import more.`,
+            });
+          }
         }
       }
 
@@ -445,11 +453,19 @@ export const quickstartRouter = createTRPCRouter({
         } else {
           const hasAccess = await hasVendorCatalogAccess(orgId);
           if (!hasAccess) {
-            throw new TRPCError({
-              code: "FORBIDDEN",
-              message:
-                "Vendor Catalog access is required to import vendors.",
+            const usedFreeSlots = await ctx.prisma.vendor.count({
+              where: {
+                organizationId: orgId,
+                metadata: { path: ["source"], equals: "quickstart" },
+              },
             });
+            const remainingFree = Math.max(0, 5 - usedFreeSlots);
+            if (input.vendorSlugs.length > remainingFree) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: `You can import up to 5 vendors for free during quickstart. You have ${remainingFree} free slot${remainingFree !== 1 ? "s" : ""} remaining. Subscribe to the Vendor Catalog add-on to import more.`,
+              });
+            }
           }
         }
       }
@@ -535,9 +551,9 @@ export const quickstartRouter = createTRPCRouter({
                 ) as DataCategory[],
               countries: catalogVendor.dataLocations || [],
               certifications: catalogVendor.certifications || [],
-              ...(input.fromPortfolio
-                ? { metadata: { source: "quickstart", fromPortfolio: true } }
-                : {}),
+              metadata: input.fromPortfolio
+                ? { source: "quickstart", fromPortfolio: true }
+                : { source: "quickstart" },
             },
           });
           counts.vendors++;

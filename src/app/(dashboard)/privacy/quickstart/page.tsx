@@ -32,7 +32,6 @@ import {
   CheckCircle2,
   Package,
   Sparkles,
-  Lock,
   ChevronDown,
   ChevronUp,
   X,
@@ -156,7 +155,7 @@ export default function QuickstartPage() {
 
   const { data: vendorPreview } = trpc.quickstart.previewVendorImport.useQuery(
     { organizationId: orgId, vendorSlugs: selectedSlugs, fromPortfolio: isPortfolioFlow },
-    { enabled: !!orgId && selectedSlugs.length > 0 && (isPortfolioFlow || catalogAccess?.hasAccess === true) && (step === "vendors" || step === "review") }
+    { enabled: !!orgId && selectedSlugs.length > 0 && (step === "vendors" || step === "review") }
   );
 
   const { data: industryPreview } =
@@ -538,18 +537,15 @@ export default function QuickstartPage() {
                 useVendors
                   ? "border-primary ring-2 ring-primary/20"
                   : "hover:border-primary/50"
-              } ${!catalogAccess?.hasAccess ? "opacity-70" : ""}`}
-              onClick={() => {
-                if (catalogAccess?.hasAccess) setUseVendors(!useVendors);
-              }}
+              }`}
+              onClick={() => setUseVendors(!useVendors)}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <Building2 className="w-8 h-8 text-primary" />
                   {!catalogAccess?.hasAccess && (
-                    <Badge variant="outline" className="gap-1">
-                      <Lock className="w-3 h-3" />
-                      Premium
+                    <Badge variant="outline" className="text-green-600 border-green-600/50">
+                      5 Free
                     </Badge>
                   )}
                   {useVendors && (
