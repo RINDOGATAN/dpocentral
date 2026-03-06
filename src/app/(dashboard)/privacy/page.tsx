@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 
 export default function PrivacyDashboardPage() {
   const { organization, organizations, setOrganization } = useOrganization();
@@ -177,6 +178,8 @@ export default function PrivacyDashboardPage() {
             </CardContent>
           </Card>
         ))}
+
+      <ExpertHelpCta context="general" />
 
       {/* Quick Stats - 2 columns on mobile, 4 on desktop */}
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">

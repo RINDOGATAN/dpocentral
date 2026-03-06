@@ -41,6 +41,7 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 
 // ============================================================
 // ICON MAP
@@ -1238,6 +1239,8 @@ export default function QuickstartPage() {
               </p>
             </CardContent>
           </Card>
+
+          <ExpertHelpCta context="quickstart" />
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/privacy/data-inventory">
