@@ -36,6 +36,7 @@ import {
   ChevronUp,
   X,
   ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -811,6 +812,19 @@ export default function QuickstartPage() {
                           )}
                         </div>
                       )}
+                      {p.privacyTechnologies.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          <span className="text-xs text-muted-foreground">
+                            Privacy technologies:
+                          </span>
+                          {p.privacyTechnologies.map((pet) => (
+                            <Badge key={pet} variant="outline" className="text-xs">
+                              <ShieldCheck className="w-3 h-3 mr-1" />
+                              {pet}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -1186,6 +1200,16 @@ export default function QuickstartPage() {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* Contextual expert nudges based on risk signals */}
+          {useVendors && vendorPreview && vendorPreview.previews.some(
+            (p) => p.isHighRisk && !vendorPreview.existingVendorNames.includes(p.vendorName)
+          ) && (
+            <ExpertHelpCta context="high-risk" />
+          )}
+          {useVendors && vendorPreview && reviewTotals.transfers > 0 && (
+            <ExpertHelpCta context="transfer" />
           )}
 
           <div className="flex justify-end">

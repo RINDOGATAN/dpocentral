@@ -27,6 +27,7 @@ import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages"
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
+import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -319,6 +320,8 @@ export default function VendorsPage() {
           </CardContent>
         </Card>
       )}
+
+      <ExpertHelpCta context="vendor" />
 
       {/* Enable Feature Modal */}
       <EnableFeatureModal

@@ -81,6 +81,7 @@ interface CatalogVendor {
   hipaaCompliant: boolean | null;
   dataLocations: string[];
   hasEuDataCenter: boolean | null;
+  privacyTechnologies: string[];
   isVerified: boolean;
 }
 
@@ -217,6 +218,10 @@ function NewVendorPageContent() {
       categories: formData.categories,
       dataProcessed: formData.dataProcessed as any[],
       countries: formData.countries,
+      certifications: formData.certifications,
+      ...(selectedCatalogVendor?.privacyTechnologies?.length
+        ? { metadata: { privacyTechnologies: selectedCatalogVendor.privacyTechnologies } }
+        : {}),
     });
   };
 
@@ -447,6 +452,11 @@ function NewVendorPageContent() {
                             </p>
                           </div>
                           <div className="flex gap-1 shrink-0">
+                            {vendor.privacyTechnologies?.length > 0 && (
+                              <Badge variant="secondary" className="text-xs">
+                                {vendor.privacyTechnologies.length} PETs
+                              </Badge>
+                            )}
                             {vendor.gdprCompliant && (
                               <Badge variant="outline" className="text-xs px-1.5">GDPR</Badge>
                             )}

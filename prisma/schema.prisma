@@ -1285,6 +1285,9 @@ model VendorCatalog {
   dataProcessingTransparency Boolean?
   aiModels                   Json?
 
+  // Privacy Engineering
+  privacyTechnologies String[] // PETs: ["Tokenization", "Differential Privacy", ...]
+
   // Tags (for AI Sentinel integration)
   tags String[]
 

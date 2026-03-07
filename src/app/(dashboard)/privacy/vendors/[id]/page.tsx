@@ -15,6 +15,7 @@ import {
   User,
   Globe,
   Shield,
+  ShieldCheck,
   FileText,
   Clock,
   AlertTriangle,
@@ -270,6 +271,26 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               )}
             </CardContent>
           </Card>
+
+          {/* Privacy Technologies */}
+          {(vendor.metadata as any)?.privacyTechnologies?.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Privacy Technologies</CardTitle>
+                <CardDescription>Privacy enhancing technologies used by this vendor</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {((vendor.metadata as any).privacyTechnologies as string[]).map((pet: string) => (
+                    <Badge key={pet} variant="outline">
+                      <ShieldCheck className="w-3 h-3 mr-1" />
+                      {pet}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="contracts" className="mt-4">

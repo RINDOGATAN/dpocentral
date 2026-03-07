@@ -7,9 +7,18 @@ import { Search } from "lucide-react";
 import { useUserType } from "@/lib/use-user-type";
 import { features } from "@/config/features";
 
-type CtaContext = "quickstart" | "assessment" | "incident" | "empty-state" | "general";
+type CtaContext =
+  | "quickstart"
+  | "assessment"
+  | "incident"
+  | "empty-state"
+  | "general"
+  | "vendor"
+  | "dsar"
+  | "high-risk"
+  | "transfer";
 
-const ctaCopy: Record<CtaContext, { heading: string; body: string }> = {
+const ctaCopy: Record<CtaContext, { heading: string; body: string; filter?: string }> = {
   quickstart: {
     heading: "Need help setting up your privacy program?",
     body: "Connect with a certified privacy expert who can guide you through GDPR compliance and help tailor your program.",
@@ -21,6 +30,7 @@ const ctaCopy: Record<CtaContext, { heading: string; body: string }> = {
   incident: {
     heading: "Need expert guidance on incident response?",
     body: "A privacy professional can help you manage breach notifications, DPA communications, and remediation.",
+    filter: "Incident Response",
   },
   "empty-state": {
     heading: "Not sure where to start?",
@@ -30,6 +40,26 @@ const ctaCopy: Record<CtaContext, { heading: string; body: string }> = {
     heading: "Get expert privacy advice",
     body: "Connect with certified privacy professionals who can help with GDPR compliance, assessments, and more.",
   },
+  vendor: {
+    heading: "Need help with vendor due diligence?",
+    body: "A privacy expert can review your vendor contracts, DPAs, and help assess third-party data processing risks.",
+    filter: "Vendor Management",
+  },
+  dsar: {
+    heading: "Need help managing subject access requests?",
+    body: "Privacy professionals can help you establish efficient DSAR workflows and ensure timely, compliant responses.",
+    filter: "DSAR / Subject Rights",
+  },
+  "high-risk": {
+    heading: "High-risk processing detected",
+    body: "Your selection includes vendors that process sensitive data. A DPIA specialist can help you assess and mitigate these risks.",
+    filter: "DPIA / Impact Assessments",
+  },
+  transfer: {
+    heading: "International transfers detected",
+    body: "Data leaving the EEA requires appropriate safeguards. A transfer specialist can help with TIAs and SCCs.",
+    filter: "Cross-Border Transfers",
+  },
 };
 
 export function ExpertHelpCta({ context }: { context: CtaContext }) {
@@ -38,6 +68,9 @@ export function ExpertHelpCta({ context }: { context: CtaContext }) {
   if (!isBusinessOwner || !features.expertDirectoryEnabled) return null;
 
   const copy = ctaCopy[context];
+  const href = copy.filter
+    ? `/privacy/experts?specialization=${encodeURIComponent(copy.filter)}`
+    : "/privacy/experts";
 
   return (
     <Card className="border-dashed">
@@ -49,7 +82,7 @@ export function ExpertHelpCta({ context }: { context: CtaContext }) {
           <h4 className="text-sm font-medium">{copy.heading}</h4>
           <p className="text-xs text-muted-foreground mt-0.5">{copy.body}</p>
         </div>
-        <Link href="/privacy/experts">
+        <Link href={href}>
           <Button variant="outline" size="sm" className="shrink-0 gap-2">
             <Search className="w-3.5 h-3.5" />
             Find Expert

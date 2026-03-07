@@ -24,12 +24,13 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 20;
 
 export default function ExpertsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!features.expertDirectoryEnabled) {
@@ -40,7 +41,9 @@ export default function ExpertsPage() {
   if (!features.expertDirectoryEnabled) return null;
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [specialization, setSpecialization] = useState<string>("");
+  const [specialization, setSpecialization] = useState<string>(
+    searchParams.get("specialization") ?? ""
+  );
   const [country, setCountry] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
   const [expertType, setExpertType] = useState<string>("");
