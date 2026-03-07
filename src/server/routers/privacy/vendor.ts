@@ -144,6 +144,7 @@ export const vendorRouter = createTRPCRouter({
         dataProcessed: z.array(z.nativeEnum(DataCategory)).default([]),
         countries: z.array(z.string()).default([]),
         certifications: z.array(z.string()).default([]),
+        metadata: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -162,6 +163,7 @@ export const vendorRouter = createTRPCRouter({
           dataProcessed: input.dataProcessed,
           countries: input.countries,
           certifications: input.certifications,
+          ...(input.metadata ? { metadata: input.metadata as any } : {}),
         },
       });
 
@@ -172,7 +174,7 @@ export const vendorRouter = createTRPCRouter({
           entityType: "Vendor",
           entityId: vendor.id,
           action: "CREATE",
-          changes: input,
+          changes: input as any,
         },
       });
 

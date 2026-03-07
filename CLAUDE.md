@@ -18,9 +18,18 @@ Open Core model:
 - Vendor management (basic)
 
 ### Premium (Proprietary - Requires License)
-- DPIA, PIA, TIA assessments
-- Vendor risk assessments
+- DPIA, PIA, TIA assessment templates & scoring
+- Vendor risk scoring (`calculateVendorRiskScore`, `calculateAssessmentRiskScore`)
 - Advanced audit features
+
+### Premium Skills Package
+Private repo: `RINDOGATAN/dpocentral-premium-skills` (`@dpocentral/premium-skills`)
+- Loaded dynamically via `src/lib/skills/loader.ts` + `src/instrumentation.ts`
+- `optionalDependencies` in package.json — `npm install` succeeds without access
+- `serverExternalPackages` in next.config.ts prevents webpack bundling
+- `scripts/seed-templates.ts` dynamically imports templates from package (falls back gracefully)
+- Templates: DPIA, PIA (new), TIA (new) — seeded only when package is installed
+- Open repo keeps: skill loader/registry/types, entitlement checks, LIA/Custom templates
 
 ## Vendor Catalog — READ-ONLY
 - `vendor_catalog` table is now **owned by Vendor.Watch** (admin CRUD, enrichment, seeding)
@@ -57,7 +66,16 @@ Key files:
 - **Incidents** - Breach tracking, DPA notifications, timeline
 - **Vendors** - Contracts, questionnaires, risk tiers
 
-All module list pages share consistent patterns: debounced search wired to tRPC `search` param, controlled Tabs for client-side filtering, mobile/desktop dual layouts, responsive stats grids.
+All module list pages share consistent patterns: debounced search wired to tRPC `search` param, controlled Tabs for client-side filtering, mobile/desktop dual layouts, responsive stats grids. Every module page includes an `ExpertHelpCta` with context-specific copy.
+
+## Expert Directory & Dealroom Integration
+- `/privacy/experts` — searchable directory with filters (specialization, country, language, type)
+- `src/server/services/dealroom/client.ts` — Dealroom API client with mock fallback (12 experts)
+- Env vars: `DEALROOM_API_URL`, `DEALROOM_API_KEY` (falls back to mock data if unset)
+- `ExpertHelpCta` component (9 contexts): quickstart, assessment, incident, empty-state, general, vendor, dsar, high-risk, transfer
+- Contextual CTAs pass `?specialization=` to deep-link into filtered expert search
+- Quickstart review step shows expert nudges when high-risk vendors or international transfers detected
+- Gated by `features.expertDirectoryEnabled` + `isBusinessOwner` user type
 
 ## Structure
 ```

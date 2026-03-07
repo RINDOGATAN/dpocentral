@@ -37,6 +37,7 @@ interface VendorPreviewItem {
   activityName: string;
   isHighRisk: boolean;
   transfers: { country: string; mechanism: string }[];
+  privacyTechnologies: string[];
 }
 
 function buildVendorPreview(
@@ -46,6 +47,7 @@ function buildVendorPreview(
     category: string;
     subcategory?: string | null;
     dataLocations: string[];
+    privacyTechnologies?: string[];
   },
   mapping: VendorDataMapping
 ): VendorPreviewItem {
@@ -67,6 +69,7 @@ function buildVendorPreview(
     activityName: `${mapping.activity.name} — ${catalogVendor.name}`,
     isHighRisk: mapping.isHighRisk,
     transfers,
+    privacyTechnologies: catalogVendor.privacyTechnologies || [],
   };
 }
 
@@ -114,6 +117,7 @@ export const quickstartRouter = createTRPCRouter({
           dataLocations: true,
           certifications: true,
           gdprCompliant: true,
+          privacyTechnologies: true,
           isVerified: true,
         },
       });
@@ -242,6 +246,7 @@ export const quickstartRouter = createTRPCRouter({
           dataLocations: true,
           certifications: true,
           gdprCompliant: true,
+          privacyTechnologies: true,
         },
       });
 
@@ -551,9 +556,13 @@ export const quickstartRouter = createTRPCRouter({
                 ) as DataCategory[],
               countries: catalogVendor.dataLocations || [],
               certifications: catalogVendor.certifications || [],
-              metadata: input.fromPortfolio
-                ? { source: "quickstart", fromPortfolio: true }
-                : { source: "quickstart" },
+              metadata: {
+                source: "quickstart",
+                ...(input.fromPortfolio ? { fromPortfolio: true } : {}),
+                ...(catalogVendor.privacyTechnologies?.length
+                  ? { privacyTechnologies: catalogVendor.privacyTechnologies }
+                  : {}),
+              },
             },
           });
           counts.vendors++;
