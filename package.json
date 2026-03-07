@@ -72,6 +72,9 @@
     "uuid": "^13.0.0",
     "zod": "^4.3.5"
   },
+  "optionalDependencies": {
+    "@dpocentral/premium-skills": "github:RINDOGATAN/dpocentral-premium-skills"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/d3-hierarchy": "^3.1.7",
