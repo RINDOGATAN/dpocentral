@@ -283,158 +283,37 @@ async function main() {
   });
   console.log("  Upserted CUSTOM template (system-custom-template)");
 
-  // DPIA Template (Premium)
-  const dpiaTemplate = {
-    type: "DPIA" as const,
-    name: "Data Protection Impact Assessment",
-    description:
-      "GDPR Article 35 compliant DPIA for high-risk processing activities.",
-    version: "1.0",
-    isSystem: true,
-    isActive: true,
-    sections: [
-      {
-        id: "s1",
-        title: "Processing Description",
-        description: "Describe the processing operation and its purpose",
-        questions: [
-          {
-            id: "q1_1",
-            text: "What personal data is being processed?",
-            type: "textarea",
-            required: true,
-            helpText:
-              "List all categories of personal data involved (e.g., identifiers, behavioral data, special categories)",
-          },
-          {
-            id: "q1_2",
-            text: "What is the purpose of the processing?",
-            type: "textarea",
-            required: true,
-            helpText:
-              "Describe the specific, explicit, and legitimate purpose(s)",
-          },
-          {
-            id: "q1_3",
-            text: "What is the legal basis for processing?",
-            type: "select",
-            required: true,
-            options: [
-              "Consent",
-              "Contract",
-              "Legal Obligation",
-              "Vital Interests",
-              "Public Task",
-              "Legitimate Interests",
-            ],
-          },
-          {
-            id: "q1_4",
-            text: "Who are the data subjects?",
-            type: "multiselect",
-            required: true,
-            options: [
-              "Customers",
-              "Employees",
-              "Website Visitors",
-              "Minors",
-              "Patients",
-              "Other",
-            ],
-          },
-          {
-            id: "q1_5",
-            text: "How many data subjects are affected (estimated)?",
-            type: "number",
-            required: true,
-            helpText: "Approximate number of individuals",
-          },
-        ],
-      },
-      {
-        id: "s2",
-        title: "Necessity & Proportionality",
-        description:
-          "Assess whether the processing is necessary and proportionate",
-        questions: [
-          {
-            id: "q2_1",
-            text: "Is the processing necessary to achieve the stated purpose?",
-            type: "select",
-            required: true,
-            options: [
-              "Yes, essential",
-              "Highly beneficial",
-              "Somewhat beneficial",
-              "Not clearly necessary",
-            ],
-            riskWeight: 1.5,
-          },
-          {
-            id: "q2_2",
-            text: "Have less intrusive alternatives been considered?",
-            type: "textarea",
-            required: false,
-            helpText:
-              "Describe any alternatives considered and why they were not chosen",
-          },
-        ],
-      },
-      {
-        id: "s3",
-        title: "Risk Assessment",
-        description:
-          "Identify and assess risks to the rights and freedoms of data subjects",
-        questions: [
-          {
-            id: "q3_1",
-            text: "Does the processing involve automated decision-making or profiling?",
-            type: "boolean",
-            required: true,
-            riskWeight: 2,
-          },
-          {
-            id: "q3_2",
-            text: "Does the processing involve special category data or criminal offence data?",
-            type: "boolean",
-            required: true,
-            riskWeight: 2,
-          },
-          {
-            id: "q3_3",
-            text: "Does the processing involve systematic monitoring of a publicly accessible area?",
-            type: "boolean",
-            required: false,
-            riskWeight: 1.5,
-          },
-          {
-            id: "q3_4",
-            text: "What measures are in place to mitigate identified risks?",
-            type: "textarea",
-            required: true,
-            helpText:
-              "Describe technical and organisational measures (e.g., encryption, access controls, pseudonymisation)",
-          },
-        ],
-      },
-    ],
-    scoringLogic: {
-      method: "weighted_average",
-      riskLevels: {
-        LOW: { min: 0, max: 25 },
-        MEDIUM: { min: 26, max: 50 },
-        HIGH: { min: 51, max: 75 },
-        CRITICAL: { min: 76, max: 100 },
-      },
-    },
-  };
-
-  await prisma.assessmentTemplate.upsert({
-    where: { id: "system-dpia-template" },
-    update: dpiaTemplate,
-    create: { id: "system-dpia-template", ...dpiaTemplate },
-  });
-  console.log("  Upserted DPIA template (system-dpia-template)");
+  // Load premium templates from @dpocentral/premium-skills (if installed)
+  try {
+    const pkg = "@dpocentral/premium-skills";
+    const mod = await import(/* webpackIgnore: true */ pkg);
+    const skills: Array<{ assessmentType?: string; templates?: Array<{ id: string; name: string; description?: string; version: string; sections: unknown; scoringLogic?: unknown }> }> = mod.skills;
+    for (const skill of skills) {
+      if (skill.templates && skill.assessmentType) {
+        for (const template of skill.templates) {
+          const templateId = `system-${skill.assessmentType.toLowerCase()}-template`;
+          const data = {
+            type: skill.assessmentType as "DPIA" | "PIA" | "TIA" | "VENDOR",
+            name: template.name,
+            description: template.description ?? "",
+            version: template.version,
+            isSystem: true,
+            isActive: true,
+            sections: template.sections as any,
+            scoringLogic: template.scoringLogic as any,
+          };
+          await prisma.assessmentTemplate.upsert({
+            where: { id: templateId },
+            update: data,
+            create: { id: templateId, ...data },
+          });
+          console.log(`  Upserted ${skill.assessmentType} template (${templateId})`);
+        }
+      }
+    }
+  } catch {
+    console.log("  Premium skills not installed. Skipping premium templates.");
+  }
 
   console.log("Done! Assessment templates seeded successfully.");
 }
