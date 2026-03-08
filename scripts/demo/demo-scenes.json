@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "app": "DPO Central",
+    "baseUrl": "http://localhost:3001",
+    "viewport": { "width": 1280, "height": 720 },
+    "defaultPauseBetweenActions": 1500,
+    "scrollSpeed": 500
+  },
+  "auth": {
+    "method": "GET",
+    "url": "/api/auth/dev-login?email=demo@privacysuite.example",
+    "description": "Auto-login as demo user, sets session cookie, redirects to /privacy",
+    "expectedRedirect": "/privacy"
+  },
+  "scenes": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard Overview",
+      "duration": 10,
+      "url": "/privacy",
+      "actions": [
+        { "type": "wait", "ms": 2000, "note": "Let dashboard fully load" },
+        { "type": "screenshot", "name": "dashboard-overview" },
+        { "type": "scroll", "to": "bottom", "speed": "slow", "note": "Reveal DSAR Queue, Activity, Quick Actions, Vendors" },
+        { "type": "screenshot", "name": "dashboard-bottom" }
+      ]
+    },
+    {
+      "id": "data-inventory",
+      "title": "Data Inventory",
+      "duration": 20,
+      "url": "/privacy/data-inventory",
+      "actions": [
+        { "type": "wait", "ms": 1500, "note": "Asset grid loads" },
+        { "type": "screenshot", "name": "data-inventory-assets" },
+        { "type": "scroll", "to": "bottom", "speed": "slow" },
+        { "type": "click", "target": "tab:Activities", "note": "Switch to Activities tab" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "data-inventory-activities" },
+        { "type": "click", "target": "tab:Data Flows", "note": "Switch to Data Flows tab" },
+        { "type": "wait", "ms": 1500, "note": "Flow visualization renders" },
+        { "type": "screenshot", "name": "data-inventory-flows" },
+        { "type": "click", "target": "tab:Transfers", "note": "Switch to Transfers tab" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "data-inventory-transfers" },
+        { "type": "click", "target": "tab:Assets" },
+        { "type": "click", "target": "card:Customer Database", "note": "Open asset detail" }
+      ]
+    },
+    {
+      "id": "asset-detail",
+      "title": "Asset Detail — Customer Database",
+      "duration": 8,
+      "url": "/privacy/data-inventory/demo-asset-customer-db",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "asset-detail-customer-db" },
+        { "type": "scroll", "to": "bottom", "speed": "slow", "note": "Show data elements, linked activities" },
+        { "type": "screenshot", "name": "asset-detail-elements" },
+        { "type": "click", "target": "link:back", "note": "Navigate back" }
+      ]
+    },
+    {
+      "id": "dsars",
+      "title": "DSAR Management",
+      "duration": 20,
+      "url": "/privacy/dsar",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "dsar-list-all" },
+        { "type": "click", "target": "tab:Open", "note": "Filter to open DSARs" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "dsar-list-open" },
+        { "type": "click", "target": "tab:All" },
+        { "type": "click", "target": "card:DSAR-2025-0042", "note": "Open completed DSAR" }
+      ]
+    },
+    {
+      "id": "dsar-detail",
+      "title": "DSAR Detail — Completed Access Request",
+      "duration": 10,
+      "url": "/privacy/dsar/demo-dsar-1",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "dsar-detail-header" },
+        { "type": "scroll", "to": "bottom", "speed": "slow", "note": "Show tasks, communications, audit trail" },
+        { "type": "screenshot", "name": "dsar-detail-comms" },
+        { "type": "click", "target": "link:back" }
+      ]
+    },
+    {
+      "id": "assessments",
+      "title": "Assessments Overview",
+      "duration": 10,
+      "url": "/privacy/assessments",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "assessments-all" },
+        { "type": "scroll", "to": "bottom", "speed": "slow" },
+        { "type": "click", "target": "card:DPIA: Customer Analytics Platform", "note": "Open the DPIA" }
+      ]
+    },
+    {
+      "id": "dpia-showcase",
+      "title": "DPIA Deep Dive — Customer Analytics Platform",
+      "duration": 40,
+      "url": "/privacy/assessments/demo-assess-dpia-analytics",
+      "importance": "HIGH",
+      "actions": [
+        { "type": "wait", "ms": 2000, "note": "Let full DPIA load" },
+        { "type": "screenshot", "name": "dpia-header" },
+        { "type": "scroll", "to": "bottom", "speed": "very-slow", "note": "Scroll through all DPIA responses" },
+        { "type": "screenshot", "name": "dpia-responses-overview" },
+        { "type": "scroll", "to": "top" },
+        { "type": "click", "target": "tab:Mitigations", "note": "Show 6 mitigations" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "dpia-mitigations" },
+        { "type": "scroll", "to": "bottom", "speed": "slow" },
+        { "type": "click", "target": "tab:Approvals", "note": "Show 2-level approval chain" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "dpia-approvals" },
+        { "type": "click", "target": "button:Export PDF", "note": "Demonstrate export capability" },
+        { "type": "wait", "ms": 2000, "note": "PDF downloads" },
+        { "type": "screenshot", "name": "dpia-export" }
+      ]
+    },
+    {
+      "id": "incidents",
+      "title": "Incident Management",
+      "duration": 15,
+      "url": "/privacy/incidents",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "incidents-all" },
+        { "type": "click", "target": "card:INC-2026-0002", "note": "Open active investigation" }
+      ]
+    },
+    {
+      "id": "incident-detail",
+      "title": "Incident Detail — Unauthorized DB Query",
+      "duration": 10,
+      "url": "/privacy/incidents/demo-incident-db-access",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "incident-detail-header" },
+        { "type": "scroll", "to": "bottom", "speed": "slow", "note": "Show timeline, tasks, DPA notification, affected assets" },
+        { "type": "screenshot", "name": "incident-detail-timeline" },
+        { "type": "click", "target": "link:back" }
+      ]
+    },
+    {
+      "id": "vendors",
+      "title": "Vendor Management",
+      "duration": 15,
+      "url": "/privacy/vendors",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "vendors-all" },
+        { "type": "click", "target": "tab:High Risk", "note": "Filter to high risk vendors" },
+        { "type": "wait", "ms": 1000 },
+        { "type": "screenshot", "name": "vendors-high-risk" },
+        { "type": "click", "target": "tab:All" },
+        { "type": "click", "target": "card:Stripe", "note": "Open Stripe vendor detail" }
+      ]
+    },
+    {
+      "id": "vendor-detail",
+      "title": "Vendor Detail — Stripe",
+      "duration": 8,
+      "url": "/privacy/vendors/demo-vendor-stripe",
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "vendor-detail-stripe" },
+        { "type": "scroll", "to": "bottom", "speed": "slow", "note": "Show contracts, reviews, questionnaire" },
+        { "type": "screenshot", "name": "vendor-detail-stripe-bottom" },
+        { "type": "click", "target": "link:back" }
+      ]
+    },
+    {
+      "id": "public-dsar-portal",
+      "title": "Public DSAR Intake Portal",
+      "duration": 10,
+      "url": "/dsar/demo",
+      "skipAuth": true,
+      "actions": [
+        { "type": "wait", "ms": 1500 },
+        { "type": "screenshot", "name": "public-dsar-form" },
+        { "type": "scroll", "to": "bottom", "speed": "slow" },
+        { "type": "screenshot", "name": "public-dsar-form-bottom" }
+      ]
+    }
+  ],
+  "verticalDemos": {
+    "description": "Optional: record the same flow for each vertical. Login with the vertical-specific email, then follow the same scene sequence.",
+    "logins": {
+      "saas": "/api/auth/dev-login?email=demo-saas@privacysuite.example",
+      "healthcare": "/api/auth/dev-login?email=demo-healthcare@privacysuite.example",
+      "fintech": "/api/auth/dev-login?email=demo-fintech@privacysuite.example",
+      "media": "/api/auth/dev-login?email=demo-media@privacysuite.example",
+      "professional-services": "/api/auth/dev-login?email=demo-proserv@privacysuite.example"
+    },
+    "keyPages": {
+      "saas": {
+        "dpia": "/privacy/assessments/saas-assess-dpia-analytics",
+        "incident": "/privacy/incidents/saas-incident-pii-logging"
+      },
+      "healthcare": {
+        "dpia": "/privacy/assessments/healthcare-assess-dpia-telemedicine",
+        "incident": "/privacy/incidents/healthcare-incident-staff-access"
+      },
+      "fintech": {
+        "dpia": "/privacy/assessments/fintech-assess-kyc-dpia",
+        "incident": "/privacy/incidents/fintech-incident-kyc-breach"
+      },
+      "media": {
+        "dpia": "/privacy/assessments/media-assess-dpia-advertising",
+        "incident": "/privacy/incidents/media-incident-consent-misconfig"
+      },
+      "professional-services": {
+        "dpia": "/privacy/assessments/proserv-assess-dpia-ai-review",
+        "incident": "/privacy/incidents/proserv-incident-deal-room"
+      }
+    }
+  }
+}

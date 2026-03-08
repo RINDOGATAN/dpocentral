@@ -17,7 +17,15 @@ import {
   Lock,
   Mail,
   Sparkles,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -102,6 +110,24 @@ export default function VendorsPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                <Download className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Export Register</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => window.open(`/api/export/vendor-register?organizationId=${organization?.id}`, "_blank")}>
+                <FileText className="w-4 h-4 mr-2" />
+                Download as PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open(`/api/export/vendor-register?organizationId=${organization?.id}&format=csv`, "_blank")}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                Download as CSV
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Link href="/privacy/vendors/questionnaires" className="flex-1 sm:flex-none">
             <Button variant="outline" className="w-full sm:w-auto">
               <FileText className="w-4 h-4 sm:mr-2" />

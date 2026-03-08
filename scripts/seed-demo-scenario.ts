@@ -3,6 +3,7 @@
 // Usage: npm run db:seed-demo
 
 import { PrismaClient } from "@prisma/client";
+import { dpiaTemplateData, DPIA_TEMPLATE_ID } from "../src/config/dpia-template-v2";
 
 const prisma = new PrismaClient();
 const ORG_ID = "demo-organization";
@@ -29,6 +30,32 @@ async function main() {
     process.exit(1);
   }
   console.log("✓ Prerequisites verified\n");
+
+  // ── Phase 0.6: Upsert enriched DPIA template ────────────────
+  console.log("Phase 0.5: Upserting DPIA v2 template...");
+  const dpiaTemplate = await prisma.assessmentTemplate.upsert({
+    where: { id: DPIA_TEMPLATE_ID },
+    update: {
+      name: dpiaTemplateData.name,
+      description: dpiaTemplateData.description,
+      version: dpiaTemplateData.version,
+      sections: dpiaTemplateData.sections as any,
+      scoringLogic: dpiaTemplateData.scoringLogic as any,
+      isActive: true,
+    },
+    create: {
+      id: dpiaTemplateData.id,
+      type: dpiaTemplateData.type,
+      name: dpiaTemplateData.name,
+      description: dpiaTemplateData.description,
+      version: dpiaTemplateData.version,
+      sections: dpiaTemplateData.sections as any,
+      scoringLogic: dpiaTemplateData.scoringLogic as any,
+      isSystem: true,
+      isActive: true,
+    },
+  });
+  console.log("  ✓ DPIA template v2.0 (7 sections, 27 questions)\n");
 
   // ── Phase 0.5: Cleanup ─────────────────────────────────────
   console.log("Phase 0: Cleaning existing demo data...");
@@ -762,7 +789,232 @@ async function main() {
     data: { assessmentId: "demo-assess-custom-marketing", questionId: "custom1_1", sectionId: "custom1", response: "Evaluate privacy and consent requirements for a new SMS marketing campaign targeting Meridian Rewards members.", responderId: sophie.id },
   });
 
-  console.log("  4 assessments, 21 responses, 2 approvals, 4 mitigations\n");
+  // ── Assessment 5: DPIA — Customer Analytics Platform ────────
+  // Comprehensive, fully answered DPIA modeled on real-world retail analytics scenario
+  const assessDpia = await prisma.assessment.create({
+    data: {
+      id: "demo-assess-dpia-analytics", organizationId: org.id,
+      templateId: dpiaTemplate.id, processingActivityId: paAnalytics.id,
+      name: "DPIA: Customer Analytics Platform",
+      description: "Data Protection Impact Assessment for Meridian Retail Group's customer analytics platform, covering behavioral analytics, purchase pattern analysis, and personalized recommendations powered by the Snowflake data warehouse.",
+      status: "APPROVED", riskLevel: "MEDIUM", riskScore: 48,
+      startedAt: d("2025-09-01"), submittedAt: d("2025-10-15"), completedAt: d("2025-10-28"),
+      dueDate: d("2025-11-01"),
+    },
+  });
+
+  const dpiaResponses: Array<{ questionId: string; sectionId: string; response: any }> = [
+    // S1: Processing Description
+    {
+      questionId: "q1_1", sectionId: "s1",
+      response: "The following categories of personal data are processed:\n\n• Identifiers: Customer name, email address, phone number, loyalty program ID, cookie identifiers, IP addresses\n• Behavioral data: Website browsing history (pages viewed, time on page, click paths), search queries, product views, cart additions/abandonments, purchase history (items, amounts, dates, payment method)\n• Demographics: Age range (derived from self-reported birthday for loyalty program), language preference, country/region\n• Location data: Shipping addresses, approximate location from IP (city-level), store visit frequency (loyalty card scans)\n• Device/technical: Browser type, device type, operating system, screen resolution\n• Preference data: Marketing consent status, communication channel preferences, product category interests",
+    },
+    {
+      questionId: "q1_2", sectionId: "s1",
+      response: "Primary purpose: To analyze customer behavior and purchase patterns in order to improve product offerings, optimize the e-commerce experience, and generate business intelligence reports for merchandising, inventory planning, and marketing strategy.\n\nSecondary purposes:\n1. Personalized product recommendations on the website and in email campaigns (based on browsing and purchase history)\n2. Customer segmentation for targeted marketing campaigns (identifying high-value customers, at-risk churners, seasonal buyers)\n3. Conversion funnel optimization (identifying friction points in the checkout process)\n4. Demand forecasting for inventory management across 3 EU distribution centers\n5. A/B testing of website features and pricing strategies",
+    },
+    {
+      questionId: "q1_3", sectionId: "s1",
+      response: "Legitimate interests (Art. 6(1)(f))",
+    },
+    {
+      questionId: "q1_4", sectionId: "s1",
+      response: ["Customers", "Website visitors"],
+    },
+    {
+      questionId: "q1_5", sectionId: "s1",
+      response: "100,000 – 1,000,000",
+    },
+    {
+      questionId: "q1_6", sectionId: "s1",
+      response: "Data flows through the following pipeline:\n\n1. Collection: Customer interactions are captured by the Shopify e-commerce platform (browsing events, purchases) and Cookiebot consent management platform (consent signals). Loyalty program data is captured at point of sale and online.\n\n2. Primary storage: Customer account data is stored in the Customer Database (PostgreSQL, AWS eu-west-1 Ireland). Consent records are maintained in Cookiebot (EU-hosted).\n\n3. ETL to analytics: A nightly ETL job extracts pseudonymized customer behavior data from the Customer Database and loads it into the Snowflake Analytics Warehouse (AWS eu-west-1). Volume: ~2 GB/day. Pseudonymization replaces customer email/name with hashed loyalty IDs.\n\n4. Analytics processing: Snowflake runs SQL-based analytics queries, dbt transformations, and Looker dashboards. The Data Team (4 analysts) and Product Team (3 members) have read-only access.\n\n5. Downstream recipients:\n   - Klaviyo (US): Receives customer segment lists (email + segment tag only) for email campaigns — every 6 hours\n   - Looker dashboards: Aggregated KPIs visible to management (no individual-level data)\n   - Data Science models: Run within Snowflake, output segment scores (not individual predictions)\n\n6. Deletion: Raw behavioral data is purged after 2 years. Aggregated metrics are retained indefinitely. Customer account deletion triggers downstream pseudonymization.",
+    },
+
+    // S2: Scope & Context
+    {
+      questionId: "q2_1", sectionId: "s2",
+      response: "Mix of non-sensitive and sensitive indicators",
+    },
+    {
+      questionId: "q2_2", sectionId: "s2",
+      response: "Retention periods by data category:\n\n• Raw behavioral events (clicks, page views, searches): 2 years from collection — justified by the need to identify annual seasonal patterns (e.g. holiday shopping) and year-over-year comparisons. Automatically purged via Snowflake time-travel policy.\n\n• Purchase history: 7 years — required for tax/accounting compliance under Dutch fiscal retention obligations (AWR Art. 52). Anonymized after 2 years for analytics; raw records retained in Customer Database for legal compliance only.\n\n• Customer segments and scores: Refreshed monthly, previous versions retained for 6 months to enable model performance monitoring. Older versions permanently deleted.\n\n• Aggregated analytics (KPIs, dashboards): Retained indefinitely — fully anonymized, no individual-level data.\n\n• Cookie identifiers and IP addresses: 13 months maximum (ePrivacy alignment). Automatically expired.\n\nJustification review: Retention periods were reviewed against EDPB guidelines on storage limitation (May 2020) and benchmarked against industry practice for EU e-commerce retailers.",
+    },
+    {
+      questionId: "q2_3", sectionId: "s2",
+      response: "Geographic scope:\n• Primary processing: EU (Netherlands, Ireland) — Customer Database on AWS eu-west-1 (Ireland), Snowflake on AWS eu-west-1\n• Secondary processing: US — Snowflake Inc. is a US-headquartered company; while data resides in EU, certain platform management functions may be accessible from the US. Klaviyo (US-headquartered) receives customer segment lists for email marketing.\n\nInternational transfers:\n1. EU → US (Snowflake): EU SCCs Module 2 (Controller to Processor) executed June 2025. Supplementary measures include: encryption in transit (TLS 1.3) and at rest (AES-256), Snowflake's Tri-Secret Secure key management, customer-managed encryption keys. Transfer Impact Assessment completed June 2025 — concluded that supplementary measures adequately address Schrems II concerns given data is pseudonymized before transfer.\n\n2. EU → US (Klaviyo): EU SCCs Module 2 executed with Klaviyo. Only email addresses and segment tags are transferred — no behavioral data. Klaviyo has committed to EU data residency for customer data by Q4 2025.\n\n3. EU → UK (Zendesk — indirect): Customer support data related to analytics complaints may be stored in Zendesk's UK data center. Covered by UK adequacy decision (June 2021).\n\nNo transfers to other third countries.",
+    },
+    {
+      questionId: "q2_4", sectionId: "s2",
+      response: "Probably expected — a reasonable extension of the service",
+    },
+
+    // S3: Necessity & Proportionality
+    {
+      questionId: "q3_1", sectionId: "s3",
+      response: "Highly beneficial — significantly more effective than alternatives",
+    },
+    {
+      questionId: "q3_2", sectionId: "s3",
+      response: "Alternatives considered:\n\n1. Fully anonymized analytics only (no pseudonymized individual-level data):\n   Rejected — anonymous aggregate data cannot support personalized product recommendations, individual customer journey analysis, or cohort-based segmentation. These capabilities drive an estimated 18% of online revenue through improved recommendations and targeted marketing.\n\n2. First-party cookies and session-based analytics only (no cross-session tracking):\n   Rejected — would lose the ability to understand customer lifetime value, repeat purchase patterns, and long-term behavioral trends. Reduces forecast accuracy for inventory planning by an estimated 35%.\n\n3. Consent-based processing instead of legitimate interests:\n   Considered but supplemented rather than replaced — analytics processing relies on legitimate interests (supported by completed LIA, August 2025), while marketing personalization uses consent obtained through Cookiebot. This hybrid approach provides the strongest legal footing while respecting data subject choice.\n\n4. On-premise analytics (no cloud/US transfer):\n   Rejected — Snowflake's cloud-native architecture provides significantly better performance, cost efficiency, and scalability compared to on-premise alternatives. The supplementary measures and EU data residency mitigate transfer risks adequately.\n\nConclusion: The chosen approach (pseudonymized analytics in Snowflake with legitimate interests basis + consent for marketing) represents the least intrusive effective option.",
+    },
+    {
+      questionId: "q3_3", sectionId: "s3",
+      response: "Data minimization measures:\n\n1. Pseudonymization at ETL: Customer identifiers (name, email, phone) are replaced with hashed loyalty IDs before data enters the analytics warehouse. The mapping table is stored separately in the Customer Database with strict access controls.\n\n2. Field-level restrictions: The analytics warehouse schema excludes payment data (card numbers, billing addresses), exact date of birth, and postal codes more specific than the first 4 digits.\n\n3. Purpose-limited views: Snowflake roles restrict analysts to purpose-specific views. The Product Team can only access product interaction data; the Marketing Team can only access segment-level data, not individual browsing history.\n\n4. Aggregation thresholds: Any analytics query that would return results for fewer than 30 individuals is automatically suppressed (k-anonymity enforcement via Snowflake row access policies).\n\n5. Consent-gated collection: Behavioral tracking (cookies, browsing history) is only activated after the customer provides consent via Cookiebot. Non-consented visitors see only aggregate analytics (page view counts, no individual tracking).\n\n6. Automated retention: Snowflake time-travel policies automatically purge raw behavioral data older than 2 years. No manual intervention required.",
+    },
+
+    // S4: Consultation
+    {
+      questionId: "q4_1", sectionId: "s4",
+      response: ["Data Protection Officer", "IT / Information Security", "Legal counsel", "Processor / vendor"],
+    },
+    {
+      questionId: "q4_2", sectionId: "s4",
+      response: "Consultation outcomes:\n\n1. DPO (Maria Torres, September 2025): Reviewed the processing description and risk assessment. Recommended adding the k-anonymity threshold (implemented as 30-individual minimum) and strengthening the Snowflake access controls to enforce purpose-specific views. Both recommendations were implemented before assessment completion.\n\n2. IT / Information Security (James Mitchell, September 2025): Reviewed the technical architecture and data flow diagram. Confirmed that encryption measures (TLS 1.3, AES-256) meet the organization's security baseline. Recommended enabling Snowflake's Tri-Secret Secure for customer-managed keys — this was subsequently enabled in October 2025.\n\n3. Legal counsel (external — Van Doorne Attorneys, September 2025): Reviewed the legitimate interest basis and Transfer Impact Assessment for Snowflake. Confirmed that the LIA balancing test was properly conducted and documented. Advised strengthening the supplementary measures section of the TIA to explicitly reference the pseudonymization step — updated accordingly.\n\n4. Snowflake (vendor, October 2025): Provided updated information on their EU data residency roadmap and confirmed that customer-managed encryption keys prevent Snowflake personnel from accessing plaintext data. Provided SOC 2 Type II report (September 2025) and ISO 27001 certificate for review.\n\nNo consultation with data subjects was conducted for this assessment. Justification: The processing is a reasonable extension of the e-commerce service, data subjects are informed via the privacy notice, and an opt-out mechanism is available through the privacy center.",
+    },
+
+    // S5: Risk Identification
+    { questionId: "q5_1", sectionId: "s5", response: false },
+    { questionId: "q5_2", sectionId: "s5", response: false },
+    { questionId: "q5_3", sectionId: "s5", response: false },
+    { questionId: "q5_4", sectionId: "s5", response: true },
+    { questionId: "q5_5", sectionId: "s5", response: false },
+    {
+      questionId: "q5_6", sectionId: "s5",
+      response: "Risk 1 — Excessive profiling beyond customer expectations\nCustomer purchase history combined with browsing behavior, loyalty data, and location information could enable detailed behavioral profiles that go beyond what customers expect from a retail relationship. Customers may not anticipate that their browsing patterns are being used to categorize them into marketing segments.\nLikelihood: Possible. Severity: Significant.\nAffected rights: Right to privacy, right not to be subject to automated decisions.\n\nRisk 2 — Re-identification of pseudonymized analytics data\nPseudonymized datasets in the Snowflake analytics warehouse could theoretically be re-identified through linkage with the loyalty program database (which contains the hash mapping) or through unique behavioral patterns (e.g. a customer with a very distinctive purchase history).\nLikelihood: Remote. Severity: Severe.\nAffected rights: Confidentiality of personal data, right to data protection.\n\nRisk 3 — International data transfer to US (Schrems II residual risk)\nAnalytics data processed by Snowflake involves a US-headquartered processor. Despite EU data residency and SCCs, there remains a theoretical risk of US government access under FISA 702 or Executive Order 12333. The EU-US Data Privacy Framework provides additional safeguards, but legal challenges remain possible.\nLikelihood: Remote. Severity: Significant.\nAffected rights: Right to effective judicial remedy, right to data protection.\n\nRisk 4 — Unauthorized internal access to individual-level analytics\nAnalytics warehouse contains pseudonymized but individual-level behavioral data accessible to ~7 team members. A malicious or negligent insider could attempt to extract individual-level insights or combine analytics data with identifying information.\nLikelihood: Remote. Severity: Significant.\nAffected rights: Confidentiality, right to privacy.\n\nRisk 5 — Data breach exposing behavioral profiles\nA security breach affecting the Snowflake analytics warehouse could expose pseudonymized behavioral data for up to 450,000 customers. Even pseudonymized, the detailed behavioral profiles could be damaging if combined with publicly available information.\nLikelihood: Remote. Severity: Severe.\nAffected rights: Confidentiality of personal data, right to data protection, potential financial harm.\n\nRisk 6 — Consent mechanism failure\nIf the Cookiebot consent integration fails silently, behavioral tracking could continue for customers who have withdrawn consent, leading to unlawful processing.\nLikelihood: Possible. Severity: Significant.\nAffected rights: Right to withdraw consent, right to object.",
+    },
+
+    // S6: Mitigation Measures
+    {
+      questionId: "q6_1", sectionId: "s6",
+      response: ["Encryption at rest", "Encryption in transit", "Pseudonymization", "Access controls / RBAC", "Audit logging", "Backup & recovery", "Network segmentation", "Automated retention enforcement", "Anonymization / aggregation"],
+    },
+    {
+      questionId: "q6_2", sectionId: "s6",
+      response: ["Staff training / awareness", "Data processing agreements (DPAs)", "Privacy policies & procedures", "Regular audits / reviews", "Breach response plan", "Vendor management program", "Privacy by design process"],
+    },
+    {
+      questionId: "q6_3", sectionId: "s6",
+      response: "Safeguards for individual rights:\n\n1. Transparency: The Meridian Retail Group privacy notice (updated October 2025) includes a dedicated section on analytics processing, explaining what data is collected, how it is used, the legal basis (legitimate interests), and how to opt out. The notice is accessible from every page footer and the customer account settings.\n\n2. Consent mechanism: Cookiebot integration provides granular cookie consent with separate categories for 'Essential', 'Analytics', and 'Marketing'. Customers can modify their preferences at any time via the cookie settings widget in the page footer. Consent records are stored for 5 years as evidence.\n\n3. Opt-out mechanism: A dedicated 'Analytics Opt-Out' toggle is available in the customer privacy center (accessible from Account Settings > Privacy). When activated, it suppresses all behavioral tracking and removes the customer from analytics segments within 24 hours.\n\n4. Data subject access: Customers can request a copy of their analytics profile through the DSAR portal or by emailing privacy@meridianretail.com. The Data Team can generate an export of all analytics data associated with a customer's loyalty ID within 5 working days.\n\n5. Right to erasure: Customer account deletion triggers automatic pseudonymization of analytics data (loyalty ID hash is rotated, severing the link). Raw behavioral data is purged from Snowflake within 30 days.\n\n6. Data portability: Analytics data can be exported in JSON format via the DSAR process. The export includes browsing events, purchase history, and segment assignments in a structured, machine-readable format.",
+    },
+
+    // S7: Residual Risk & Conclusion
+    {
+      questionId: "q7_1", sectionId: "s7",
+      response: "Medium",
+    },
+    {
+      questionId: "q7_2", sectionId: "s7",
+      response: "No — residual risk has been sufficiently mitigated",
+    },
+    {
+      questionId: "q7_3", sectionId: "s7",
+      response: "DPO Recommendation (Maria Torres, Head of Privacy & Data Protection):\n\nHaving reviewed this DPIA in full, I am satisfied that the Customer Analytics Platform processing can proceed subject to the following conditions:\n\n1. All six identified mitigations must be implemented according to the agreed timeline. The two highest-priority items (purpose limitation controls and consent preference center) have already been verified as implemented.\n\n2. The Transfer Impact Assessment for Snowflake US processing must be completed by December 2025 and reviewed annually thereafter.\n\n3. An annual DPIA review must be conducted, or sooner if there are material changes to the processing (e.g. introduction of AI/ML models for individual-level predictions, expansion to new data categories, change of analytics provider).\n\n4. The k-anonymity threshold of 30 individuals must be maintained and tested quarterly.\n\nOverall assessment: The residual risk level is MEDIUM. The processing involves large-scale behavioral analytics but is mitigated by robust pseudonymization, access controls, retention enforcement, and individual rights safeguards. The residual risk does not meet the threshold for prior consultation with the Autoriteit Persoonsgegevens under Article 36.\n\nRecommended next review date: October 2026.",
+    },
+  ];
+
+  for (const r of dpiaResponses) {
+    await prisma.assessmentResponse.create({
+      data: { assessmentId: assessDpia.id, ...r, responderId: maria.id },
+    });
+  }
+
+  // DPIA Mitigations — 6 at various stages
+  const dpiaMitigations = [
+    {
+      id: "demo-dpia-mit1",
+      riskId: "risk-1-profiling",
+      title: "Implement purpose limitation controls in Snowflake",
+      description: "Configure Snowflake role-based access controls to enforce purpose-specific views: Product Team sees only product interaction data, Marketing Team sees only segment-level data. Individual browsing history is not accessible to any role except the Data Team lead (for debugging purposes only).",
+      status: "IMPLEMENTED" as const,
+      priority: 1,
+      owner: "Data Team",
+      completedAt: d("2025-10-10"),
+      evidence: "Row-level security policies deployed in Snowflake (October 2025). Access audit confirms 4 purpose-specific roles created: ANALYST_PRODUCT, ANALYST_MARKETING, ANALYST_OPERATIONS, DATA_TEAM_LEAD. Quarterly access review scheduled. Screenshot of role configuration and sample query results attached to internal wiki.",
+    },
+    {
+      id: "demo-dpia-mit2",
+      riskId: "risk-1-profiling",
+      title: "Deploy consent preference center for analytics opt-out",
+      description: "Integrate a customer-facing analytics opt-out toggle in the privacy center, connected to Cookiebot consent records and the Snowflake data pipeline. When a customer opts out, behavioral tracking stops within 1 hour and existing analytics data is excluded from future queries within 24 hours.",
+      status: "VERIFIED" as const,
+      priority: 1,
+      owner: "Engineering",
+      completedAt: d("2025-10-01"),
+      evidence: "OneTrust/Cookiebot integration live since October 2025. End-to-end testing confirmed: opt-out toggle → Cookiebot consent update → analytics pipeline exclusion → Snowflake view filter. Tested with 50 QA accounts. Customer privacy center accessible at meridianretail.com/account/privacy. Monthly monitoring dashboard tracks opt-out rates (currently 3.2%).",
+    },
+    {
+      id: "demo-dpia-mit3",
+      riskId: "risk-3-transfer",
+      title: "Complete Transfer Impact Assessment for Snowflake US processing",
+      description: "Conduct and document a comprehensive TIA for the EU→US data transfer to Snowflake, assessing the legal framework, government access risks, and supplementary measures in light of Schrems II and the EU-US Data Privacy Framework.",
+      status: "IN_PROGRESS" as const,
+      priority: 2,
+      owner: "Legal / Privacy",
+      dueDate: d("2025-12-15"),
+    },
+    {
+      id: "demo-dpia-mit4",
+      riskId: "risk-4-internal-access",
+      title: "Implement automated data retention enforcement",
+      description: "Configure Snowflake time-travel and data retention policies to automatically purge raw behavioral data older than 2 years. Aggregated metrics are retained separately. Implement monitoring alerts for retention policy failures.",
+      status: "IMPLEMENTED" as const,
+      priority: 2,
+      owner: "Data Team",
+      completedAt: d("2025-09-20"),
+      evidence: "Snowflake retention policies configured for all behavioral data tables. Time-travel set to 2 years with automatic purge. Weekly purge job runs Sunday 03:00 UTC — verified through Snowflake task history. Monitoring alert configured in PagerDuty for purge job failures. Last successful run: 2025-10-20 (purged 1.2M rows).",
+    },
+    {
+      id: "demo-dpia-mit5",
+      riskId: "risk-2-reidentification",
+      title: "Add data minimization layer to analytics pipeline",
+      description: "Enhance the ETL pipeline to apply k-anonymity enforcement (minimum group size of 30) and remove fields not required for analytics purposes before loading into Snowflake. Implement field-level encryption for the pseudonymization mapping table.",
+      status: "PLANNED" as const,
+      priority: 2,
+      owner: "Engineering",
+      dueDate: d("2025-12-01"),
+    },
+    {
+      id: "demo-dpia-mit6",
+      riskId: "risk-all",
+      title: "Conduct annual DPIA review",
+      description: "Schedule and conduct an annual review of this DPIA to reassess risks in light of any changes to the processing, technology, legal framework, or organizational context. Review to be led by the DPO with input from IT Security and Legal.",
+      status: "IDENTIFIED" as const,
+      priority: 3,
+      owner: "DPO",
+      dueDate: d("2026-10-01"),
+    },
+  ];
+  for (const m of dpiaMitigations) {
+    await prisma.assessmentMitigation.create({
+      data: { assessmentId: assessDpia.id, ...m },
+    });
+  }
+
+  // DPIA Approvals — DPO + Head of Privacy
+  await prisma.assessmentApproval.create({
+    data: {
+      id: "demo-dpia-approval1",
+      assessmentId: assessDpia.id,
+      approverId: maria.id,
+      level: 1,
+      status: "APPROVED",
+      comments: "As DPO, I have reviewed this DPIA in full. The processing is necessary and proportionate. All high-priority mitigations have been implemented and verified. The residual risk level of MEDIUM is acceptable given the safeguards in place. Approved subject to completion of the outstanding TIA for Snowflake and the annual review.",
+      decidedAt: d("2025-10-25"),
+    },
+  });
+  await prisma.assessmentApproval.create({
+    data: {
+      id: "demo-dpia-approval2",
+      assessmentId: assessDpia.id,
+      approverId: james.id,
+      level: 2,
+      status: "APPROVED",
+      comments: "Reviewed from an information security perspective. The technical measures (pseudonymization, RBAC, encryption, retention enforcement) are robust and aligned with our security baseline. The outstanding TIA should be prioritized. Approved.",
+      decidedAt: d("2025-10-28"),
+    },
+  });
+
+  console.log("  5 assessments, 48 responses, 4 approvals, 10 mitigations\n");
 
   // ── Phase 6: Incidents ─────────────────────────────────────
   console.log("Phase 6: Incidents...");
@@ -892,6 +1144,8 @@ async function main() {
     { id: "demo-audit-07", userId: maria.id, entityType: "DSARRequest", entityId: dsar5.id, action: "UPDATE", changes: { status: { from: "SUBMITTED", to: "REJECTED" } }, createdAt: d("2025-08-12T15:00:00Z") },
     { id: "demo-audit-08", userId: maria.id, entityType: "Assessment", entityId: assess1.id, action: "CREATE", changes: { name: "LIA: Customer Analytics & BI" }, createdAt: d("2025-08-01T09:00:00Z") },
     { id: "demo-audit-09", userId: maria.id, entityType: "Assessment", entityId: assess1.id, action: "UPDATE", changes: { status: { from: "IN_PROGRESS", to: "APPROVED" } }, createdAt: d("2025-08-25T16:00:00Z") },
+    { id: "demo-audit-19", userId: maria.id, entityType: "Assessment", entityId: assessDpia.id, action: "CREATE", changes: { name: "DPIA: Customer Analytics Platform" }, createdAt: d("2025-09-01T10:00:00Z") },
+    { id: "demo-audit-20", userId: maria.id, entityType: "Assessment", entityId: assessDpia.id, action: "UPDATE", changes: { status: { from: "IN_PROGRESS", to: "APPROVED" } }, createdAt: d("2025-10-28T15:00:00Z") },
     { id: "demo-audit-10", userId: james.id, entityType: "Incident", entityId: inc1.id, action: "CREATE", changes: { title: "Phishing Attack Targeting Finance Team" }, createdAt: d("2025-09-15T10:00:00Z") },
     { id: "demo-audit-11", userId: james.id, entityType: "Incident", entityId: inc1.id, action: "UPDATE", changes: { status: { from: "INVESTIGATING", to: "CLOSED" } }, createdAt: d("2025-09-20T14:00:00Z") },
     { id: "demo-audit-12", userId: maria.id, entityType: "DSARRequest", entityId: dsar1.id, action: "UPDATE", changes: { status: { from: "IN_PROGRESS", to: "COMPLETED" } }, createdAt: d("2025-10-25T17:00:00Z") },
@@ -907,7 +1161,7 @@ async function main() {
       data: { ...log, organizationId: org.id },
     });
   }
-  console.log("  18 audit log entries\n");
+  console.log("  20 audit log entries\n");
 
   // ── Summary ────────────────────────────────────────────────
   console.log("╔══════════════════════════════════════════════════╗");
@@ -923,11 +1177,11 @@ async function main() {
   console.log("║  Data Transfers:4                               ║");
   console.log("║  Vendors:       10 (+ 8 contracts, 4 reviews)  ║");
   console.log("║  DSARs:         5 (+ 15 tasks, 12 comms)       ║");
-  console.log("║  Assessments:   4 (+ 21 responses, 4 mits)     ║");
+  console.log("║  Assessments:   5 (+ 48 responses, 10 mits)    ║");
   console.log("║  Incidents:     4 (+ 16 timeline, 10 tasks)    ║");
-  console.log("║  Audit Logs:    18                              ║");
+  console.log("║  Audit Logs:    20                              ║");
   console.log("║──────────────────────────────────────────────────║");
-  console.log("║  Total:         ~240 records                    ║");
+  console.log("║  Total:         ~275 records                    ║");
   console.log("╚══════════════════════════════════════════════════╝");
 }
 

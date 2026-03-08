@@ -21,14 +21,22 @@ import {
   Filter,
   Loader2,
   Lock,
+  Download,
+  FileText,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
-import { formatPrice } from "@/lib/currency";
+
 
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
@@ -98,29 +106,40 @@ export default function DataInventoryPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <div className="flex-1 sm:flex-none">
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto"
-              onClick={() => {
-                if (hasRopaAccess) {
-                  router.push("/privacy/data-inventory/processing-activities");
-                } else {
-                  setUpgradeModalOpen(true);
-                }
-              }}
-            >
-              {hasRopaAccess ? (
-                <FileSpreadsheet className="w-4 h-4 sm:mr-2" />
-              ) : (
-                <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
-              )}
-              <span className="hidden sm:inline">Export ROPA</span>
-              {!hasRopaAccess && (
-                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 hidden sm:inline-flex">{formatPrice(9)}/mo</Badge>
-              )}
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                <Download className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Export</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => window.open(`/api/export/data-inventory?organizationId=${organization?.id}`, "_blank")}>
+                <FileText className="w-4 h-4 mr-2" />
+                Inventory as PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open(`/api/export/data-inventory?organizationId=${organization?.id}&format=csv`, "_blank")}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                Inventory as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  if (hasRopaAccess) {
+                    router.push("/privacy/data-inventory/processing-activities");
+                  } else {
+                    setUpgradeModalOpen(true);
+                  }
+                }}
+              >
+                {hasRopaAccess ? (
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                ) : (
+                  <Lock className="w-4 h-4 mr-2 text-amber-500" />
+                )}
+                ROPA Export
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Link href="/privacy/data-inventory/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />

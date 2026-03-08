@@ -34,7 +34,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
@@ -47,7 +47,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_DPIA,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
@@ -60,7 +60,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_PIA,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
@@ -73,7 +73,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_TIA,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
@@ -86,7 +86,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
@@ -125,7 +125,7 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_ROPA_EXPORT,
-      priceAmount: 900, // €9/month
+      priceAmount: 900,
       priceCurrency: "eur",
     },
     {
