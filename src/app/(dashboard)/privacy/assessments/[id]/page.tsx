@@ -35,6 +35,7 @@ import {
   Send,
   Loader2,
   FileText,
+  Download,
   Shield,
   ShieldCheck,
   Save,
@@ -350,6 +351,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           </div>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => window.open(`/api/export/assessment/${id}`, "_blank")}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Export PDF</span>
+          </Button>
           {canSubmit && (
             <Button
               onClick={() =>

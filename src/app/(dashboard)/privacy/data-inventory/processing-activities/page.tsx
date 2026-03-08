@@ -176,6 +176,10 @@ export default function ProcessingActivitiesPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open(`/api/export/ropa?organizationId=${organization?.id}`, "_blank")}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Download as PDF
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport("csv")}>
                   <FileSpreadsheet className="w-4 h-4 mr-2" />
                   Download as CSV
