@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Database,
   FileText,
@@ -39,14 +40,6 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 
-const navItems = [
-  { href: "/privacy/data-inventory", label: "Data Inventory", icon: Database },
-  { href: "/privacy/dsar", label: "DSAR", icon: FileText },
-  { href: "/privacy/assessments", label: "Assessments", icon: ClipboardCheck },
-  { href: "/privacy/incidents", label: "Incidents", icon: AlertTriangle },
-  { href: "/privacy/vendors", label: "Vendors", icon: Building2 },
-];
-
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -54,15 +47,25 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const tNav = useTranslations("nav");
+  const tFooter = useTranslations("footer");
+
+  const navItems = [
+    { href: "/privacy/data-inventory", label: tNav("dataInventory"), icon: Database },
+    { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
+    { href: "/privacy/assessments", label: tNav("assessments"), icon: ClipboardCheck },
+    { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
+    { href: "/privacy/vendors", label: tNav("vendors"), icon: Building2 },
+  ];
 
   // Build nav items dynamically based on user type
   const allNavItems = [
     ...(isProfessional
-      ? [{ href: "/privacy/clients", label: "My Clients", icon: Briefcase }]
+      ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
     ...navItems,
     ...(isBusinessOwner && features.expertDirectoryEnabled
-      ? [{ href: "/privacy/experts", label: "Find Expert", icon: Search }]
+      ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
       : []),
   ];
 
@@ -95,7 +98,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden shrink-0">
                   <Menu className="w-5 h-5" />
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">{tNav("openMenu")}</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] sm:w-[320px]">
@@ -135,7 +138,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       className="w-full justify-start gap-3 h-12 text-base"
                     >
                       <Settings className="w-5 h-5" />
-                      Settings
+                      {tNav("settings")}
                     </Button>
                   </Link>
                   <Button
@@ -144,7 +147,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     onClick={() => { setMobileNavOpen(false); setFeedbackOpen(true); }}
                   >
                     <MessageSquareWarning className="w-5 h-5" />
-                    Feedback
+                    {tNav("feedback")}
                   </Button>
                 </nav>
               </SheetContent>
@@ -180,12 +183,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
           {/* Right side actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <LanguageSwitcher />
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setFeedbackOpen(true)}
-              title="Feedback"
+              title={tNav("feedback")}
             >
               <MessageSquareWarning className="w-4 h-4" />
             </Button>
@@ -194,7 +196,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
             </div>
             <Link href="/privacy/settings">
-              <Button variant="ghost" size="icon" title="Settings">
+              <Button variant="ghost" size="icon" title={tNav("settings")}>
                 <Settings className="w-4 h-4" />
               </Button>
             </Link>
@@ -205,7 +207,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 await fetch("/api/auth/cross-logout", { method: "POST" });
                 window.location.href = "/sign-in";
               }}
-              title="Sign out"
+              title={tNav("signOut")}
             >
               <LogOut className="w-4 h-4" />
             </Button>
@@ -221,31 +223,33 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
-          <p>{brand.nameUppercase} is a <a href={brand.companyWebsite} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">{brand.companyName}</a> service.</p>
+          <p>{tFooter("serviceBy", { brandName: brand.nameUppercase, companyName: brand.companyName })}</p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-3.5 h-3.5" />
-              User Guide
+              {tFooter("userGuide")}
             </Link>
             {features.selfServiceUpgrade && (
               <>
                 <span className="text-border">&middot;</span>
                 <Link href="/privacy/billing" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                   <CreditCard className="w-3.5 h-3.5" />
-                  Billing
+                  {tFooter("billing")}
                 </Link>
               </>
             )}
             <span className="text-border">&middot;</span>
             <a href={brand.termsOfUseUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Scale className="w-3.5 h-3.5" />
-              Terms of Service
+              {tFooter("termsOfService")}
             </a>
             <span className="text-border">&middot;</span>
             <a href={brand.privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Shield className="w-3.5 h-3.5" />
-              Privacy Policy
+              {tFooter("privacyPolicy")}
             </a>
+            <span className="text-border">&middot;</span>
+            <LanguageSwitcher />
           </div>
         </div>
       </footer>

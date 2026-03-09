@@ -7,16 +7,14 @@
  * AGPL-3.0 License - Part of the open-source core
  */
 
-export const locales = ["en", "es", "fr", "de"] as const;
+export const locales = ["en", "es"] as const;
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "en";
 
 export const localeNames: Record<Locale, string> = {
   en: "English",
-  es: "Espanol",
-  fr: "Francais",
-  de: "Deutsch",
+  es: "Español",
 };
 
 export function isValidLocale(locale: string): locale is Locale {

@@ -58,8 +58,8 @@ const defaultFeatures: FeatureFlags = {
   expertDirectoryEnabled: true,
 
   // i18n
-  i18nEnabled: false,
-  availableLocales: ["en"],
+  i18nEnabled: true,
+  availableLocales: ["en", "es"],
   defaultLocale: "en",
 };
 

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Jost, Archivo_Black } from "next/font/google";
 import { getServerSession } from "next-auth";
+import { getLocale, getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 import { authOptions } from "@/lib/auth";
 import "./globals.css";
 import { Providers } from "@/components/providers";
@@ -36,19 +38,23 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
         <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
       </head>
       <body className={`${jost.variable} ${archivoBlack.variable} font-sans antialiased`}>
         <BrandTheme />
-        <Providers session={session}>
-          {children}
-          <Toaster />
-        </Providers>
+        <NextIntlClientProvider messages={messages}>
+          <Providers session={session}>
+            {children}
+            <Toaster />
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
