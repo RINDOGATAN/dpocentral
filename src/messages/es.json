@@ -12,49 +12,49 @@
     "import": "Importar",
     "submit": "Enviar",
     "confirm": "Confirmar",
-    "back": "Atras",
+    "back": "Atrás",
     "next": "Siguiente",
     "close": "Cerrar",
-    "yes": "Si",
+    "yes": "Sí",
     "no": "No",
     "all": "Todo",
     "none": "Ninguno",
     "actions": "Acciones",
     "status": "Estado",
     "name": "Nombre",
-    "description": "Descripcion",
+    "description": "Descripción",
     "date": "Fecha",
     "type": "Tipo",
     "details": "Detalles",
     "notes": "Notas",
-    "more": "Mas",
+    "more": "Más",
     "less": "Menos",
     "showAll": "Mostrar todo",
     "viewDetails": "Ver detalles"
   },
   "auth": {
-    "signIn": "Iniciar sesion",
-    "signOut": "Cerrar sesion",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
     "signUp": "Registrarse",
-    "email": "Correo electronico",
-    "password": "Contrasena",
-    "enterEmail": "Introduce tu correo para recibir un enlace magico",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "enterEmail": "Introduce tu correo para recibir un enlace mágico",
     "continueWithEmail": "Continuar con correo",
     "continueWithGoogle": "Continuar con Google",
     "orContinueWith": "O continuar con",
-    "noPasswordNeeded": "No se necesita contrasena. Te enviaremos un enlace seguro.",
+    "noPasswordNeeded": "No se necesita contraseña. Te enviaremos un enlace seguro.",
     "checkEmail": "Revisa tu correo",
-    "magicLinkSent": "Hemos enviado un enlace magico a {email}. Haz clic en el enlace del correo para iniciar sesion.",
-    "didntReceive": "No lo recibiste?",
-    "tryAgain": "Intentar de nuevo",
+    "magicLinkSent": "Hemos enviado un enlace mágico a {email}. Haz clic en el enlace del correo para iniciar sesión.",
+    "didntReceive": "¿No lo has recibido?",
+    "tryAgain": "Inténtalo de nuevo",
     "sendingLink": "Enviando...",
-    "signingIn": "Iniciando sesion...",
-    "bySigningIn": "Al iniciar sesion, aceptas nuestros",
-    "termsOfUse": "Terminos de uso",
+    "signingIn": "Iniciando sesión...",
+    "bySigningIn": "Al iniciar sesión, aceptas nuestros",
+    "termsOfUse": "Términos de uso",
     "and": "y",
-    "privacyPolicy": "Politica de privacidad",
+    "privacyPolicy": "Política de privacidad",
     "developmentMode": "Modo de desarrollo",
-    "devSignIn": "Inicio rapido (Dev)"
+    "devSignIn": "Inicio rápido (Dev)"
   },
   "nav": {
     "dashboard": "Panel",
@@ -63,26 +63,34 @@
     "assessments": "Evaluaciones",
     "incidents": "Incidentes",
     "vendors": "Proveedores",
-    "settings": "Configuracion",
-    "openMenu": "Abrir menu"
+    "settings": "Configuración",
+    "openMenu": "Abrir menú",
+    "findExpert": "Buscar experto",
+    "myClients": "Mis clientes",
+    "feedback": "Comentarios",
+    "signOut": "Cerrar sesión"
   },
   "footer": {
-    "serviceBy": "{brandName} es un servicio de {companyName}."
+    "serviceBy": "{brandName} es un servicio de {companyName}.",
+    "userGuide": "Guía de usuario",
+    "billing": "Facturación",
+    "termsOfService": "Términos de servicio",
+    "privacyPolicy": "Política de privacidad"
   },
   "organization": {
     "welcome": "Bienvenido a {brandName}",
-    "createOrg": "Crea tu organizacion para comenzar con la gestion de privacidad",
-    "orgName": "Nombre de la organizacion",
+    "createOrg": "Crea tu organización para comenzar con la gestión de privacidad",
+    "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "ej., Acme Corporation",
-    "createOrganization": "Crear organizacion",
+    "createOrganization": "Crear organización",
     "creating": "Creando...",
-    "switchOrg": "Cambiar organizacion"
+    "switchOrg": "Cambiar organización"
   },
   "dashboard": {
     "title": "Panel de privacidad",
     "overview": "Resumen",
     "recentActivity": "Actividad reciente",
-    "quickActions": "Acciones rapidas",
+    "quickActions": "Acciones rápidas",
     "metrics": {
       "totalAssets": "Total de activos",
       "activeRequests": "Solicitudes activas",
@@ -94,7 +102,7 @@
     "title": "Inventario de datos",
     "assets": "Activos de datos",
     "elements": "Elementos de datos",
-    "activities": "Actividades de procesamiento",
+    "activities": "Actividades de tratamiento",
     "flows": "Flujos de datos",
     "transfers": "Transferencias de datos",
     "newAsset": "Nuevo activo",
@@ -102,95 +110,134 @@
     "newActivity": "Nueva actividad",
     "assetType": "Tipo de activo",
     "sensitivity": "Sensibilidad",
-    "owner": "Propietario",
-    "location": "Ubicacion"
+    "owner": "Responsable",
+    "location": "Ubicación"
   },
   "dsar": {
-    "title": "Solicitudes de acceso a datos",
+    "title": "Solicitudes de acceso de los interesados",
     "newRequest": "Nueva solicitud",
     "allRequests": "Todas las solicitudes",
     "pending": "Pendiente",
-    "inProgress": "En progreso",
-    "completed": "Completado",
-    "overdue": "Vencido",
+    "inProgress": "En curso",
+    "completed": "Completada",
+    "overdue": "Fuera de plazo",
     "requesterName": "Nombre del solicitante",
     "requesterEmail": "Correo del solicitante",
     "requestType": "Tipo de solicitud",
-    "dueDate": "Fecha limite",
-    "receivedDate": "Fecha de recepcion",
+    "dueDate": "Fecha límite",
+    "receivedDate": "Fecha de recepción",
     "types": {
       "access": "Derecho de acceso",
-      "rectification": "Derecho de rectificacion",
-      "erasure": "Derecho de supresion",
-      "portability": "Derecho de portabilidad",
-      "objection": "Derecho de oposicion",
-      "restriction": "Derecho de limitacion"
+      "rectification": "Derecho de rectificación",
+      "erasure": "Derecho de supresión",
+      "portability": "Derecho a la portabilidad",
+      "objection": "Derecho de oposición",
+      "restriction": "Derecho a la limitación del tratamiento"
     }
   },
   "assessments": {
     "title": "Evaluaciones",
-    "newAssessment": "Nueva evaluacion",
+    "newAssessment": "Nueva evaluación",
     "templates": "Plantillas",
     "draft": "Borrador",
-    "inProgress": "En progreso",
-    "pendingReview": "Pendiente de revision",
-    "approved": "Aprobado",
+    "inProgress": "En curso",
+    "pendingReview": "Pendiente de revisión",
+    "approved": "Aprobada",
     "types": {
-      "dpia": "Evaluacion de impacto en proteccion de datos",
-      "pia": "Evaluacion de impacto en privacidad",
-      "tia": "Evaluacion de impacto de transferencia",
-      "lia": "Evaluacion de interes legitimo",
-      "vendor": "Evaluacion de riesgo de proveedores",
-      "custom": "Evaluacion personalizada"
+      "dpia": "Evaluación de impacto en protección de datos",
+      "pia": "Evaluación de impacto en la privacidad",
+      "tia": "Evaluación de impacto de transferencia",
+      "lia": "Evaluación de interés legítimo",
+      "vendor": "Evaluación de riesgo de proveedores",
+      "custom": "Evaluación personalizada"
     },
     "riskLevel": "Nivel de riesgo",
     "startDate": "Fecha de inicio",
-    "completedDate": "Fecha de finalizacion"
+    "completedDate": "Fecha de finalización"
   },
   "incidents": {
     "title": "Incidentes",
     "newIncident": "Nuevo incidente",
-    "reported": "Reportado",
-    "investigating": "Investigando",
-    "contained": "Contenido",
+    "reported": "Comunicado",
+    "investigating": "En investigación",
+    "contained": "Controlado",
     "resolved": "Resuelto",
-    "severity": "Severidad",
+    "severity": "Gravedad",
     "severityLevels": {
-      "low": "Bajo",
-      "medium": "Medio",
-      "high": "Alto",
-      "critical": "Critico"
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "critical": "Crítica"
     },
-    "discoveredAt": "Descubierto el",
+    "discoveredAt": "Fecha de detección",
     "affectedRecords": "Registros afectados",
-    "notificationRequired": "Notificacion requerida"
+    "notificationRequired": "Notificación requerida"
   },
   "vendors": {
     "title": "Proveedores",
     "newVendor": "Nuevo proveedor",
     "active": "Activo",
-    "prospective": "Prospecto",
-    "underReview": "En revision",
+    "prospective": "Potencial",
+    "underReview": "En revisión",
     "suspended": "Suspendido",
     "riskTier": "Nivel de riesgo",
     "contracts": "Contratos",
     "questionnaires": "Cuestionarios",
-    "lastAssessed": "Ultima evaluacion",
-    "nextReview": "Proxima revision"
+    "lastAssessed": "Última evaluación",
+    "nextReview": "Próxima revisión"
   },
   "premium": {
     "accessRequired": "Acceso requerido",
-    "premiumFeature": "Funcion premium",
-    "upgradeRequired": "Esta funcion requiere una licencia premium.",
-    "contactUs": "Contactanos",
+    "premiumFeature": "Función premium",
+    "upgradeRequired": "Esta función requiere una licencia premium.",
+    "contactUs": "Contáctanos",
     "upgradeNow": "Actualizar ahora",
-    "premiumSuite": "Este tipo de evaluacion es parte de la suite premium de {brandName}. Actualiza tu plan para acceder a herramientas avanzadas de evaluacion de privacidad."
+    "premiumSuite": "Este tipo de evaluación forma parte de la suite premium de {brandName}. Actualiza tu plan para acceder a herramientas avanzadas de evaluación de privacidad."
+  },
+  "expertCta": {
+    "findExpert": "Buscar experto",
+    "quickstart": {
+      "heading": "¿Necesitas ayuda para configurar tu programa de privacidad?",
+      "body": "Contacta con un experto certificado en privacidad que te guíe en el cumplimiento del RGPD y te ayude a personalizar tu programa."
+    },
+    "assessment": {
+      "heading": "¿Necesitas ayuda con tu evaluación?",
+      "body": "Los expertos en privacidad pueden ayudarte a realizar EIPD, EIP y otras evaluaciones para garantizar un cumplimiento exhaustivo."
+    },
+    "incident": {
+      "heading": "¿Necesitas orientación experta sobre respuesta a incidentes?",
+      "body": "Un profesional de privacidad puede ayudarte a gestionar notificaciones de brechas, comunicaciones con la AEPD y la remediación."
+    },
+    "emptyState": {
+      "heading": "¿No sabes por dónde empezar?",
+      "body": "Un experto en privacidad puede ayudarte a construir tu inventario de datos y establecer procesos conformes desde el primer día."
+    },
+    "general": {
+      "heading": "Solicita ayuda profesional con tu programa de protección de datos",
+      "body": "Contacta con profesionales certificados en privacidad que pueden ayudarte con el cumplimiento del RGPD, evaluaciones y más."
+    },
+    "vendor": {
+      "heading": "¿Necesitas ayuda con la diligencia debida de proveedores?",
+      "body": "Un experto en privacidad puede revisar tus contratos con proveedores, los acuerdos de tratamiento de datos y ayudar a evaluar los riesgos de terceros."
+    },
+    "dsar": {
+      "heading": "¿Necesitas ayuda gestionando solicitudes de acceso?",
+      "body": "Los profesionales de privacidad pueden ayudarte a establecer flujos de trabajo eficientes para las solicitudes de los interesados y garantizar respuestas oportunas y conformes."
+    },
+    "highRisk": {
+      "heading": "Tratamiento de alto riesgo detectado",
+      "body": "Tu selección incluye proveedores que tratan datos sensibles. Un especialista en EIPD puede ayudarte a evaluar y mitigar estos riesgos."
+    },
+    "transfer": {
+      "heading": "Transferencias internacionales detectadas",
+      "body": "Los datos que salen del EEE requieren garantías adecuadas. Un especialista en transferencias puede ayudarte con las ETI y las cláusulas contractuales tipo."
+    }
   },
   "errors": {
-    "generic": "Ocurrio un error. Por favor intenta de nuevo.",
+    "generic": "Se ha producido un error. Por favor, inténtalo de nuevo.",
     "notFound": "No encontrado",
-    "unauthorized": "No estas autorizado para realizar esta accion.",
-    "sessionExpired": "Tu sesion ha expirado. Por favor inicia sesion de nuevo.",
-    "networkError": "Error de red. Por favor verifica tu conexion."
+    "unauthorized": "No tienes autorización para realizar esta acción.",
+    "sessionExpired": "Tu sesión ha caducado. Por favor, inicia sesión de nuevo.",
+    "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
   }
 }

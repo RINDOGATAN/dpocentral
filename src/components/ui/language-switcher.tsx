@@ -3,7 +3,7 @@
 /**
  * Language Switcher Component
  *
- * Allows users to switch between available locales.
+ * Compact locale switcher for the dashboard footer.
  * Only visible when i18n is enabled.
  *
  * AGPL-3.0 License - Part of the open-source core
@@ -12,7 +12,6 @@
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { Globe } from "lucide-react";
-import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,13 +55,11 @@ function LanguageSwitcherInner() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{localeNames[locale]}</span>
-        </Button>
+      <DropdownMenuTrigger className="flex items-center gap-1.5 hover:text-foreground transition-colors cursor-pointer">
+        <Globe className="w-3.5 h-3.5" />
+        {localeNames[locale]}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="center">
         {locales.map((loc) => (
           <DropdownMenuItem
             key={loc}

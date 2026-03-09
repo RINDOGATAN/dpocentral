@@ -64,10 +64,18 @@
     "incidents": "Incidents",
     "vendors": "Vendors",
     "settings": "Settings",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "findExpert": "Find Expert",
+    "myClients": "My Clients",
+    "feedback": "Feedback",
+    "signOut": "Sign out"
   },
   "footer": {
-    "serviceBy": "{brandName} is a {companyName} service."
+    "serviceBy": "{brandName} is a {companyName} service.",
+    "userGuide": "User Guide",
+    "billing": "Billing",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
   },
   "organization": {
     "welcome": "Welcome to {brandName}",
@@ -185,6 +193,45 @@
     "contactUs": "Contact Us",
     "upgradeNow": "Upgrade Now",
     "premiumSuite": "This assessment type is part of the {brandName} premium suite. Upgrade your plan to access advanced privacy assessment tools."
+  },
+  "expertCta": {
+    "findExpert": "Find Expert",
+    "quickstart": {
+      "heading": "Need help setting up your privacy program?",
+      "body": "Connect with a certified privacy expert who can guide you through GDPR compliance and help tailor your program."
+    },
+    "assessment": {
+      "heading": "Need help with your assessment?",
+      "body": "Privacy experts can help you conduct DPIAs, PIAs, and other assessments to ensure thorough compliance."
+    },
+    "incident": {
+      "heading": "Need expert guidance on incident response?",
+      "body": "A privacy professional can help you manage breach notifications, DPA communications, and remediation."
+    },
+    "emptyState": {
+      "heading": "Not sure where to start?",
+      "body": "A privacy expert can help you build your data inventory and establish compliant processes from day one."
+    },
+    "general": {
+      "heading": "Get professional help with your privacy program",
+      "body": "Connect with certified privacy professionals who can help with GDPR compliance, assessments, and more."
+    },
+    "vendor": {
+      "heading": "Need help with vendor due diligence?",
+      "body": "A privacy expert can review your vendor contracts, DPAs, and help assess third-party data processing risks."
+    },
+    "dsar": {
+      "heading": "Need help managing subject access requests?",
+      "body": "Privacy professionals can help you establish efficient DSAR workflows and ensure timely, compliant responses."
+    },
+    "highRisk": {
+      "heading": "High-risk processing detected",
+      "body": "Your selection includes vendors that process sensitive data. A DPIA specialist can help you assess and mitigate these risks."
+    },
+    "transfer": {
+      "heading": "International transfers detected",
+      "body": "Data leaving the EEA requires appropriate safeguards. A transfer specialist can help with TIAs and SCCs."
+    }
   },
   "errors": {
     "generic": "An error occurred. Please try again.",
