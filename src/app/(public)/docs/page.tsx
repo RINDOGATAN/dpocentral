@@ -231,7 +231,7 @@ export default function DocsOverviewPage() {
             <ul className="space-y-1 text-muted-foreground">
               <li>&#8226; DPIA, PIA, TIA assessments</li>
               <li>&#8226; Vendor risk assessments</li>
-              <li>&#8226; Vendor Catalog (400+ vendors)</li>
+              <li>&#8226; Vendor Catalog (700+ vendors)</li>
               <li>&#8226; Advanced audit features</li>
             </ul>
           </div>

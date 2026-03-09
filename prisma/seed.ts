@@ -30,7 +30,7 @@ async function main() {
       name: "VENDOR_CATALOG",
       displayName: "Vendor Catalog",
       assessmentType: null, // Not an assessment - it's a feature skill
-      description: "Access to pre-audited vendor database with 400+ MarTech, AI, and SaaS vendors. Search, autofill, and track vendor compliance information.",
+      description: "Access to pre-audited vendor database with 700+ MarTech, AI, and SaaS vendors. Search, autofill, and track vendor compliance information.",
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,

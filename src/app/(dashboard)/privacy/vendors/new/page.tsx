@@ -304,7 +304,7 @@ function NewVendorPageContent() {
               <CardTitle>Vendor Catalog Search</CardTitle>
             </div>
             <CardDescription>
-              Search 400+ pre-audited MarTech, AI, and SaaS vendors with compliance data
+              Search 700+ pre-audited MarTech, AI, and SaaS vendors with compliance data
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

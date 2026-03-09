@@ -191,7 +191,7 @@ export default function DocsPremiumPage() {
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="vendor-catalog" title="Vendor Catalog" description="Search and import from a database of 400+ pre-audited MarTech, AI, and SaaS vendors.">
+      <DocSection id="vendor-catalog" title="Vendor Catalog" description="Search and import from a database of 700+ pre-audited MarTech, AI, and SaaS vendors.">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Search className="h-5 w-5 text-primary" />
@@ -205,7 +205,7 @@ export default function DocsPremiumPage() {
                 <Sparkles className="h-5 w-5 text-primary" />
                 <div>
                   <p className="font-medium text-sm">Vendor Catalog</p>
-                  <p className="text-xs text-muted-foreground">Search 400+ pre-audited vendors with compliance data</p>
+                  <p className="text-xs text-muted-foreground">Search 700+ pre-audited vendors with compliance data</p>
                 </div>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">

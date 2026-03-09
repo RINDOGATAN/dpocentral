@@ -189,7 +189,7 @@ export default function VendorsPage() {
                     <Badge className="bg-primary">Active</Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    Search 400+ pre-audited MarTech, AI, and SaaS vendors
+                    Search 700+ pre-audited MarTech, AI, and SaaS vendors
                   </p>
                 </div>
               </div>
@@ -218,7 +218,7 @@ export default function VendorsPage() {
                     </Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    Get access to 400+ pre-audited vendors with compliance data, certifications, and DPA links
+                    Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links
                   </p>
                 </div>
               </div>
@@ -356,7 +356,7 @@ export default function VendorsPage() {
         organizationId={organization?.id ?? ""}
         skillPackageId={SKILL_PACKAGE_IDS.VENDOR_CATALOG}
         skillName={SKILL_DISPLAY_NAMES.VENDOR_CATALOG}
-        skillDescription="Get access to 400+ pre-audited vendors with compliance data, certifications, and DPA links."
+        skillDescription="Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links."
       />
     </div>
   );
