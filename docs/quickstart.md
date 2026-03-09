@@ -19,7 +19,7 @@ Both approaches are **non-destructive** — they only create new records and nev
 
 ### How it works
 
-1. User searches the Vendor Catalog (400+ pre-audited SaaS vendors)
+1. User searches the Vendor Catalog (700+ pre-audited SaaS vendors)
 2. Selects the vendors their organization actually uses (multi-select, up to 20)
 3. For each vendor, the system looks up the vendor's **catalog category** and maps it to a predefined data profile
 4. A preview shows exactly what will be created per vendor
