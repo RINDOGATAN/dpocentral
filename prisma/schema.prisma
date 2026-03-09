@@ -1291,6 +1291,9 @@ model VendorCatalog {
   // Tags (for AI Sentinel integration)
   tags String[]
 
+  // Vendor.Watch public profile
+  publicProfileEnabled Boolean? @default(false)
+
   // Metadata
   logoUrl          String?
   isVerified       Boolean   @default(false)
@@ -1405,6 +1408,7 @@ model VwVendorQuestionnaire {
   aiIncidentNotificationSLA  String?
   dataProcessingTransparency Boolean?
   aiModels                   Json?
+  privacyTechnologies        String[]
   submittedBy                String?
   status                     String    @default("draft")
   submittedAt                DateTime?
@@ -1470,6 +1474,61 @@ model VwCertEvidence {
   @@index([vendorSlug])
   @@index([vendorSlug, certName])
   @@map("vw_cert_evidence")
+}
+
+/// Stub: Vendor.Watch DPA document analysis
+model VwDpaDocument {
+  id                 String    @id @default(cuid())
+  vendorSlug         String    @map("vendor_slug")
+  sourceUrl          String    @map("source_url")
+  finalUrl           String?   @map("final_url")
+  contentType        String    @map("content_type")
+  textContent        String?   @db.Text @map("text_content")
+  contentHash        String?   @map("content_hash")
+  contentLengthBytes Int?      @map("content_length_bytes")
+  isValidDpa         Boolean?  @map("is_valid_dpa")
+  validationMethod   String?   @map("validation_method")
+  complianceAnalysis Json?     @map("compliance_analysis")
+  analyzedAt         DateTime? @map("analyzed_at")
+  uploadedBy         String?   @map("uploaded_by")
+  uploadSource       String?   @default("fetch") @map("upload_source")
+  fetchedAt          DateTime  @default(now()) @map("fetched_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@index([vendorSlug])
+  @@map("vw_dpa_documents")
+}
+
+/// Stub: Vendor.Watch expert privacy reviews
+model VwExpertReview {
+  id               String    @id @default(cuid())
+  vendorSlug       String    @map("vendor_slug")
+  requestedBy      String    @map("requested_by")
+  expertId         String?   @map("expert_id")
+  expertRefCode    String?   @map("expert_ref_code")
+  expertType       String?   @map("expert_type")
+  status           String    @default("pending")
+  stripePaymentId  String?   @map("stripe_payment_id")
+  amountCents      Int?      @map("amount_cents")
+  isFree           Boolean   @default(false) @map("is_free")
+  transparency     Json?     @default("{\"status\": \"pending\"}")
+  dataMinimization Json?     @default("{\"status\": \"pending\"}") @map("data_minimization")
+  accountability   Json?     @default("{\"status\": \"pending\"}")
+  security         Json?     @default("{\"status\": \"pending\"}")
+  quality          Json?     @default("{\"status\": \"pending\"}")
+  participation    Json?     @default("{\"status\": \"pending\"}")
+  summaryReport    String?   @db.Text @map("summary_report")
+  assignedAt       DateTime? @map("assigned_at")
+  completedAt      DateTime? @map("completed_at")
+  dueAt            DateTime? @map("due_at")
+  requestedAt      DateTime  @default(now()) @map("requested_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  @@index([vendorSlug])
+  @@index([requestedBy])
+  @@map("vw_expert_reviews")
 }
 
 // ============================================================
