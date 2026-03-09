@@ -1,0 +1,373 @@
+{
+  "meta": {
+    "title": "DPO Central Training Videos",
+    "description": "Short training videos mapping legal requirements to DPO Central features, using demo data.",
+    "baseUrl": "http://localhost:3001",
+    "viewport": { "width": 1280, "height": 720 },
+    "auth": "/api/auth/dev-login?email=demo@privacysuite.example",
+    "pauseBetweenScenes": 2000,
+    "scrollSpeed": 600
+  },
+
+  "videos": [
+    {
+      "id": "ropa-art30",
+      "title": "ROPA — Building Your Record of Processing Activities",
+      "subtitle": "GDPR Article 30 Compliance",
+      "targetDuration": 90,
+      "legalContext": {
+        "primaryArticles": ["GDPR Art. 30"],
+        "relatedArticles": ["GDPR Art. 5(2) (accountability)", "GDPR Art. 24 (responsibility of controller)", "GDPR Art. 35 (DPIA link)"],
+        "summary": "Article 30 GDPR requires every controller and processor to maintain a written record of processing activities. The ROPA must include the purposes of processing, categories of data subjects and personal data, recipients, international transfers, retention periods, and security measures.",
+        "whoMustComply": "All organizations that process personal data regularly, process special category data, or have 250+ employees.",
+        "requiredFields": [
+          "Name and contact details of the controller/DPO",
+          "Purposes of processing",
+          "Categories of data subjects",
+          "Categories of personal data",
+          "Categories of recipients",
+          "International transfers and safeguards",
+          "Retention periods",
+          "Description of technical and organizational security measures"
+        ]
+      },
+      "scenes": [
+        {
+          "id": "intro",
+          "narration": "Article 30 of the GDPR requires every organization to maintain a Record of Processing Activities — the ROPA. Think of it as your privacy program's backbone: a living document that maps exactly what personal data you process, why, and how. Let's see how DPO Central makes this easy.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy" },
+            { "type": "wait", "ms": 2000 },
+            { "type": "screenshot", "name": "ropa-01-dashboard" }
+          ]
+        },
+        {
+          "id": "data-assets",
+          "narration": "It starts with your Data Inventory. Every system that stores personal data is registered as a Data Asset — your databases, SaaS tools, cloud services. Each asset tracks what it stores, who owns it, and where it's hosted. This is the foundation your ROPA is built on.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "ropa-02-assets-grid" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "ropa-03-assets-scroll" }
+          ]
+        },
+        {
+          "id": "asset-detail",
+          "narration": "Drill into any asset to see its Data Elements — the specific categories of personal data it holds. Here's our Customer Database: it stores names, emails, phone numbers, shipping addresses, and purchase history. Each element is tagged with its data category, sensitivity level, and retention period — exactly what Article 30 requires.",
+          "actions": [
+            { "type": "click", "target": "card:Customer Database" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "ropa-04-asset-detail" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "ropa-05-data-elements" }
+          ]
+        },
+        {
+          "id": "processing-activities",
+          "narration": "Now the core of the ROPA: Processing Activities. Each activity answers the key Article 30 questions — what's the purpose? What's the legal basis? Who are the data subjects? What data categories? Who receives the data? How long is it kept? Here you can see all eight activities for Meridian Retail Group, from Order Processing to Fraud Detection.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "tab:Activities" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "ropa-06-activities-tab" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "ropa-07-activities-scroll" }
+          ]
+        },
+        {
+          "id": "ropa-page",
+          "narration": "The dedicated ROPA page shows all your processing activities with their legal basis, data subjects, categories, recipients, and retention periods — laid out exactly as a supervisory authority would expect to see them. Notice how each activity is linked to specific data assets, so you always know which systems support each processing purpose.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory/processing-activities" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "ropa-08-ropa-page" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "ropa-09-ropa-detail" }
+          ]
+        },
+        {
+          "id": "data-flows",
+          "narration": "Article 30 also requires you to document data recipients and transfers. The Data Flows tab visualizes how personal data moves between your systems — from your e-commerce platform to your payment gateway, from your customer database to your analytics warehouse. Each flow documents the data categories, frequency, and encryption method.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "tab:Data Flows" },
+            { "type": "wait", "ms": 2000 },
+            { "type": "screenshot", "name": "ropa-10-data-flows" }
+          ]
+        },
+        {
+          "id": "transfers",
+          "narration": "International transfers get special treatment under Article 30 and Chapter V of the GDPR. The Transfers tab shows every cross-border data flow — where the data goes, which organization receives it, and what safeguard mechanism is in place: adequacy decisions, Standard Contractual Clauses, or Binding Corporate Rules.",
+          "actions": [
+            { "type": "click", "target": "tab:Transfers" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "ropa-11-transfers" }
+          ]
+        },
+        {
+          "id": "export",
+          "narration": "When your DPA asks to see your ROPA, or when you need it for an audit, you can export it as a PDF or CSV with one click. The export includes every Article 30 field: purposes, legal basis, data subjects, categories, recipients, retention periods, transfers, and safeguards — ready for regulatory review.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory/processing-activities" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "click", "target": "button:Export" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "ropa-12-export-menu" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "dsar-rights",
+      "title": "Data Subject Rights — Managing Access, Erasure & Portability Requests",
+      "subtitle": "GDPR Articles 15–22 & CCPA Consumer Rights",
+      "targetDuration": 120,
+      "legalContext": {
+        "primaryArticles": ["GDPR Art. 15 (Access)", "GDPR Art. 16 (Rectification)", "GDPR Art. 17 (Erasure)", "GDPR Art. 18 (Restriction)", "GDPR Art. 20 (Portability)", "GDPR Art. 21 (Objection)", "GDPR Art. 22 (Automated Decisions)"],
+        "relatedArticles": ["GDPR Art. 12 (Transparent communication)", "CCPA § 1798.100 (Right to Know)", "CCPA § 1798.105 (Right to Delete)", "CCPA § 1798.110 (Right to Disclosure)", "CCPA § 1798.125 (Non-Discrimination)"],
+        "summary": "The GDPR grants data subjects 8 rights (Articles 15–22) that organizations must facilitate within 30 days. The CCPA provides similar rights (Know, Delete, Correct, Opt-Out) within 45 days. Both require identity verification, systematic data search across all systems, and complete audit trails.",
+        "deadlines": {
+          "GDPR": "30 days (extendable by 60 days for complex requests)",
+          "CCPA": "45 days (extendable by 45 days)",
+          "UK_GDPR": "30 days",
+          "LGPD": "15 days"
+        },
+        "requestTypes": [
+          { "type": "ACCESS", "gdpr": "Art. 15", "ccpa": "§ 1798.100/110", "description": "Right to obtain a copy of all personal data" },
+          { "type": "ERASURE", "gdpr": "Art. 17", "ccpa": "§ 1798.105", "description": "Right to have personal data deleted" },
+          { "type": "PORTABILITY", "gdpr": "Art. 20", "ccpa": "N/A", "description": "Right to receive data in machine-readable format" },
+          { "type": "RECTIFICATION", "gdpr": "Art. 16", "ccpa": "§ 1798.106", "description": "Right to correct inaccurate data" },
+          { "type": "OBJECTION", "gdpr": "Art. 21", "ccpa": "§ 1798.120 (Opt-Out)", "description": "Right to object to processing / opt out of sale" },
+          { "type": "RESTRICTION", "gdpr": "Art. 18", "ccpa": "N/A", "description": "Right to restrict (freeze) processing" },
+          { "type": "AUTOMATED_DECISION", "gdpr": "Art. 22", "ccpa": "§ 1798.185(a)(16)", "description": "Right not to be subject to solely automated decisions" }
+        ]
+      },
+      "scenes": [
+        {
+          "id": "intro",
+          "narration": "Under the GDPR, every individual has the right to access, correct, delete, or port their personal data — and you have 30 days to respond. The CCPA gives Californians similar rights with a 45-day window. Managing these requests manually across multiple systems is error-prone and risky. Let's see how DPO Central systematizes the entire process.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy" },
+            { "type": "wait", "ms": 2000 },
+            { "type": "screenshot", "name": "dsar-01-dashboard" }
+          ]
+        },
+        {
+          "id": "public-portal",
+          "narration": "It starts with how data subjects submit their request. Article 12 GDPR requires you to make it easy. DPO Central provides a public intake portal — a branded form where individuals select their request type, provide their details, and submit. No login required. The portal supports all seven GDPR request types: access, erasure, portability, rectification, objection, restriction, and automated decision rights.",
+          "actions": [
+            { "type": "navigate", "url": "/dsar/demo" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-02-public-portal" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "dsar-03-portal-form" }
+          ]
+        },
+        {
+          "id": "dsar-list",
+          "narration": "Back in the dashboard, all requests appear in a single queue with real-time SLA tracking. You can see at a glance: how many are open, which are overdue, and which are at risk of missing their deadline. Each request shows its type, status, requester, and days remaining. Let's look at what a healthy DSAR pipeline looks like with five requests in different stages.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/dsar" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-04-list-all" },
+            { "type": "click", "target": "tab:Open" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "dsar-05-list-open" },
+            { "type": "click", "target": "tab:All" }
+          ]
+        },
+        {
+          "id": "completed-request",
+          "narration": "Let's look at a completed access request. Anna van der Berg asked for a copy of all her personal data under Article 15. The system tracked every step: identity verification via order number match, three extraction tasks assigned to different team members across three systems — Customer Database, Marketing Platform, and Loyalty Program. Every outbound communication is logged, creating the audit trail Article 5(2) requires for accountability.",
+          "actions": [
+            { "type": "click", "target": "card:DSAR-2025-0042" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-06-completed-header" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "dsar-07-completed-tasks" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "dsar-08-completed-comms" }
+          ]
+        },
+        {
+          "id": "erasure-request",
+          "narration": "Erasure requests under Article 17 are trickier — you can't just delete everything. Tax records, legal hold data, and contractual obligations create exemptions. Here's Thomas Muller's erasure request: some tasks are complete, like removing him from marketing lists, but others are pending because order history must be retained for 7 years under tax law. DPO Central tracks these exemptions per data asset so you can explain exactly what was deleted and what wasn't.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/dsar" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "card:DSAR-2026-0003" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-09-erasure-header" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "dsar-10-erasure-tasks" }
+          ]
+        },
+        {
+          "id": "identity-verification",
+          "narration": "Before processing any request, you need to verify the requester's identity — Article 12(6) allows you to refuse requests where identity can't be confirmed. Here's a request stuck in Identity Pending status: Sarah Johnson used a different email than her account. The system paused processing until verification is complete, protecting against fraudulent requests while preserving the SLA clock.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/dsar" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "card:DSAR-2026-0007" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-11-identity-pending" }
+          ]
+        },
+        {
+          "id": "rejected-request",
+          "narration": "Not every request must be fulfilled. Article 12(5) lets you refuse requests that are manifestly unfounded or excessive. This anonymous request from a temporary email couldn't be verified — no matching account, no identity provided. The rejection is documented with the legal basis, and the requester was informed of their right to complain to the supervisory authority.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/dsar" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "card:DSAR-2025-0038" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-12-rejected" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "dsar-13-rejected-comms" }
+          ]
+        },
+        {
+          "id": "summary",
+          "narration": "Every action — status change, communication, task assignment, identity verification — is recorded in an immutable audit log. When the supervisory authority asks how you handle data subject rights, you have a complete, timestamped trail. That's GDPR Article 5(2) accountability in practice.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/dsar" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "dsar-14-final-overview" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "vendor-art28",
+      "title": "Managing Data Processors — Vendor Due Diligence & Contracts",
+      "subtitle": "GDPR Article 28, CCPA Service Provider Rules",
+      "targetDuration": 100,
+      "legalContext": {
+        "primaryArticles": ["GDPR Art. 28 (Processor obligations)", "GDPR Art. 44-49 (International transfers)"],
+        "relatedArticles": ["GDPR Art. 32 (Security of processing)", "GDPR Art. 33 (Breach notification)", "CCPA § 1798.140(ag) (Service provider definition)", "CCPA § 1798.100(d) (Service provider contracts)"],
+        "summary": "Article 28 requires controllers to only use processors that provide 'sufficient guarantees' of GDPR compliance. This means written contracts (DPAs), ongoing due diligence, sub-processor management, and documented security measures. The CCPA similarly requires 'service provider' contracts that restrict how vendors use consumer data.",
+        "art28Requirements": [
+          "Written contract between controller and processor (DPA)",
+          "Processing only on documented instructions from the controller",
+          "Confidentiality obligations for processor staff",
+          "Appropriate technical and organizational security measures",
+          "Sub-processor management with prior authorization",
+          "Assistance with data subject rights requests",
+          "Data return or deletion after contract ends",
+          "Audit rights and compliance demonstrations",
+          "Notification obligations for international transfers"
+        ]
+      },
+      "scenes": [
+        {
+          "id": "intro",
+          "narration": "Every SaaS tool, cloud provider, and outsourced service that touches personal data is a 'processor' under GDPR Article 28 — and you're legally responsible for their compliance. From your payment gateway to your HR system, each vendor relationship needs a Data Processing Agreement, ongoing due diligence, and documented risk assessment. Let's see how DPO Central manages this.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy" },
+            { "type": "wait", "ms": 2000 },
+            { "type": "screenshot", "name": "vendor-01-dashboard" }
+          ]
+        },
+        {
+          "id": "vendor-overview",
+          "narration": "The Vendor Management module gives you a single view of all your data processors. Each vendor is classified by risk tier — Low, Medium, High, or Critical — based on the sensitivity of data they process, their certifications, and their geographic scope. Stats at the top show your total vendor count, how many are active, how many are high risk, and how many are pending review. Meridian Retail Group has 10 vendors across the full risk spectrum.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/vendors" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "vendor-02-overview" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "vendor-03-grid" }
+          ]
+        },
+        {
+          "id": "risk-tiers",
+          "narration": "Article 28 requires you to use processors that provide 'sufficient guarantees.' The risk tier system helps you prioritize. High-risk vendors — those processing sensitive data, operating in non-adequate countries, or lacking key certifications — need more frequent reviews and stronger contractual protections. Let's filter to see just the high-risk vendors.",
+          "actions": [
+            { "type": "click", "target": "tab:High Risk" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "vendor-04-high-risk" },
+            { "type": "click", "target": "tab:All" }
+          ]
+        },
+        {
+          "id": "vendor-detail-stripe",
+          "narration": "Let's look at Stripe, our payment processor. The vendor profile captures everything Article 28 requires: what data categories they process — financial and identifiers — which countries they operate in, what certifications they hold — PCI DSS Level 1, SOC 2 Type II, ISO 27001. This is your 'sufficient guarantees' documentation.",
+          "actions": [
+            { "type": "click", "target": "card:Stripe" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "vendor-05-stripe-profile" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "vendor-06-stripe-detail" }
+          ]
+        },
+        {
+          "id": "contracts",
+          "narration": "The Contract section tracks your Data Processing Agreements — the written contracts Article 28(3) mandates. Each contract has a type — DPA, SCC, MSA, NDA — a status, and key dates. You can see Stripe's DPA is active, auto-renewing, and covers the period from 2024 through 2027. For vendors in non-EU countries, you'll also track Standard Contractual Clauses as a separate contract.",
+          "actions": [
+            { "type": "scroll", "to": "section:Contracts" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "vendor-07-contracts" }
+          ]
+        },
+        {
+          "id": "due-diligence",
+          "narration": "Article 28 isn't a one-time check — it requires ongoing compliance verification. The review system supports initial assessments during onboarding, periodic reviews on a schedule matched to risk tier, triggered reviews after security incidents, and renewal reviews when contracts come up. Each review documents findings, risk level, and recommendations.",
+          "actions": [
+            { "type": "scroll", "to": "section:Reviews" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "vendor-08-reviews" }
+          ]
+        },
+        {
+          "id": "questionnaires",
+          "narration": "Due diligence questionnaires are how you verify a processor's claims. DPO Central provides a standardized security questionnaire covering 18 questions across five categories: governance, data protection, access controls, incident response, and sub-processor management. Vendors complete the questionnaire via a secure portal link — no account needed — and you review and score their responses.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/vendors/questionnaires" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "vendor-09-questionnaires" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "vendor-10-questionnaire-detail" }
+          ]
+        },
+        {
+          "id": "prospective-vendor",
+          "narration": "For new vendors, the workflow mirrors Article 28's requirement for prior assessment. Here's TechServe Solutions — a prospective offshore IT support provider. They're flagged as high risk because they process employee data from India, with only ISO 27001 certification. Their MSA is pending signature, and the initial review is in progress. You wouldn't activate this vendor until due diligence is complete.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/vendors" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "card:TechServe Solutions" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "vendor-11-prospective" },
+            { "type": "scroll", "to": "bottom", "speed": "slow" },
+            { "type": "screenshot", "name": "vendor-12-prospective-detail" }
+          ]
+        },
+        {
+          "id": "transfers-link",
+          "narration": "When your vendors are in third countries — the US, India, or anywhere without an adequacy decision — Articles 44 to 49 require additional safeguards. The Data Inventory's Transfers tab tracks each cross-border flow: the destination country, the receiving organization, the legal mechanism, and any supplementary safeguards like encryption or pseudonymization. Each transfer links back to the relevant vendor and processing activity.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/data-inventory" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "click", "target": "tab:Transfers" },
+            { "type": "wait", "ms": 1000 },
+            { "type": "screenshot", "name": "vendor-13-transfers" }
+          ]
+        },
+        {
+          "id": "export",
+          "narration": "For audits or regulatory requests, export your entire Vendor Register as a PDF or CSV. The export includes every vendor's status, risk tier, data categories processed, certifications, contract details, and review schedule — a complete Article 28 compliance snapshot ready for your supervisory authority.",
+          "actions": [
+            { "type": "navigate", "url": "/privacy/vendors" },
+            { "type": "wait", "ms": 1500 },
+            { "type": "screenshot", "name": "vendor-14-final-overview" }
+          ]
+        }
+      ]
+    }
+  ]
+}
