@@ -8,7 +8,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Database,
   Plus,
@@ -23,6 +38,9 @@ import {
   Lock,
   Download,
   FileText,
+  Globe,
+  Shield,
+  CheckCircle2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -51,12 +69,33 @@ const assetTypeIcons: Record<string, any> = {
   FILE_SYSTEM: FileSpreadsheet,
 };
 
+const mechanismLabels: Record<string, string> = {
+  ADEQUACY_DECISION: "Adequacy Decision",
+  STANDARD_CONTRACTUAL_CLAUSES: "SCCs",
+  BINDING_CORPORATE_RULES: "BCRs",
+  DEROGATION: "Derogation",
+  CERTIFICATION: "Certification",
+  CODE_OF_CONDUCT: "Code of Conduct",
+  OTHER: "Other",
+};
+
+const INITIAL_TRANSFER_FORM = {
+  name: "",
+  destinationCountry: "",
+  destinationOrg: "",
+  mechanism: "" as string,
+  safeguards: "",
+  description: "",
+};
+
 export default function DataInventoryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+  const [transferForm, setTransferForm] = useState(INITIAL_TRANSFER_FORM);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -92,6 +131,23 @@ export default function DataInventoryPage() {
     }
   );
 
+  const {
+    data: transfers,
+    isLoading: transfersLoading,
+  } = trpc.dataInventory.listTransfers.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+
+  const utils = trpc.useUtils();
+  const createTransfer = trpc.dataInventory.createTransfer.useMutation({
+    onSuccess: () => {
+      utils.dataInventory.listTransfers.invalidate();
+      setTransferDialogOpen(false);
+      setTransferForm(INITIAL_TRANSFER_FORM);
+    },
+  });
+
   const dataAssets = assetsPages?.pages.flatMap((p) => p.assets) ?? [];
   const processingActivities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
 
@@ -108,7 +164,7 @@ export default function DataInventoryPage() {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Export</span>
               </Button>
@@ -183,7 +239,7 @@ export default function DataInventoryPage() {
             Data Flows
           </TabsTrigger>
           <TabsTrigger value="transfers" className="text-xs sm:text-sm hidden sm:inline-flex">
-            Transfers
+            Transfers{transfers?.length ? ` (${transfers.length})` : ""}
           </TabsTrigger>
         </TabsList>
 
@@ -339,19 +395,171 @@ export default function DataInventoryPage() {
         </TabsContent>
 
         <TabsContent value="transfers" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Cross-border transfer records</p>
-              <p className="text-sm">Document international data transfers and safeguards</p>
-            </CardContent>
-          </Card>
+          {transfersLoading ? (
+            <ListPageSkeleton />
+          ) : transfers && transfers.length > 0 ? (
+            <div className="space-y-4">
+              <div className="flex justify-end">
+                <Button onClick={() => setTransferDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Transfer
+                </Button>
+              </div>
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {transfers.map((transfer) => (
+                  <Card key={transfer.id}>
+                    <CardHeader className="pb-3 p-4 sm:p-6 sm:pb-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/10 flex items-center justify-center shrink-0">
+                          <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        </div>
+                        <Badge variant="outline" className="text-xs shrink-0">
+                          {mechanismLabels[transfer.mechanism] || transfer.mechanism}
+                        </Badge>
+                      </div>
+                      <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{transfer.name}</CardTitle>
+                      <CardDescription className="text-xs sm:text-sm">
+                        {transfer.destinationOrg ? `${transfer.destinationOrg} — ` : ""}{transfer.destinationCountry}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+                      <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          {transfer.tiaCompleted ? (
+                            <><CheckCircle2 className="w-3 h-3 text-green-500" /> TIA completed</>
+                          ) : (
+                            <><Shield className="w-3 h-3 text-amber-500" /> TIA pending</>
+                          )}
+                        </span>
+                        {transfer.processingActivity && (
+                          <span className="truncate ml-2">{transfer.processingActivity.name}</span>
+                        )}
+                      </div>
+                      {transfer.safeguards && (
+                        <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{transfer.safeguards}</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="py-8 text-center text-muted-foreground">
+                <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No international transfers recorded</p>
+                <p className="text-sm mb-4">Document cross-border data transfers and safeguards (Art. 44–49 GDPR)</p>
+                <Button onClick={() => setTransferDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Transfer
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
 
       {dataAssets.length === 0 && processingActivities.length === 0 && (
         <ExpertHelpCta context="empty-state" />
       )}
+
+      {/* Add Transfer Dialog */}
+      <Dialog open={transferDialogOpen} onOpenChange={setTransferDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Add International Transfer</DialogTitle>
+            <DialogDescription>
+              Record a cross-border data transfer under GDPR Art. 44–49.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!transferForm.name || !transferForm.destinationCountry || !transferForm.mechanism) return;
+              createTransfer.mutate({
+                organizationId: organization?.id ?? "",
+                name: transferForm.name,
+                destinationCountry: transferForm.destinationCountry,
+                destinationOrg: transferForm.destinationOrg || undefined,
+                mechanism: transferForm.mechanism as any,
+                safeguards: transferForm.safeguards || undefined,
+                description: transferForm.description || undefined,
+              });
+            }}
+          >
+            <div className="space-y-2">
+              <Label htmlFor="transfer-name">Transfer Name</Label>
+              <Input
+                id="transfer-name"
+                placeholder="e.g. Customer data to US analytics provider"
+                value={transferForm.name}
+                onChange={(e) => setTransferForm((f) => ({ ...f, name: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="transfer-country">Destination Country</Label>
+                <Input
+                  id="transfer-country"
+                  placeholder="e.g. US, IN, GB"
+                  value={transferForm.destinationCountry}
+                  onChange={(e) => setTransferForm((f) => ({ ...f, destinationCountry: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="transfer-org">Receiving Organization</Label>
+                <Input
+                  id="transfer-org"
+                  placeholder="e.g. Stripe Inc."
+                  value={transferForm.destinationOrg}
+                  onChange={(e) => setTransferForm((f) => ({ ...f, destinationOrg: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Transfer Mechanism</Label>
+              <Select
+                value={transferForm.mechanism}
+                onValueChange={(v) => setTransferForm((f) => ({ ...f, mechanism: v }))}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select mechanism..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(mechanismLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="transfer-safeguards">Safeguards</Label>
+              <Input
+                id="transfer-safeguards"
+                placeholder="e.g. EU SCCs (2021) + supplementary measures"
+                value={transferForm.safeguards}
+                onChange={(e) => setTransferForm((f) => ({ ...f, safeguards: e.target.value }))}
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setTransferDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={createTransfer.isPending || !transferForm.name || !transferForm.destinationCountry || !transferForm.mechanism}
+              >
+                {createTransfer.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Add Transfer
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* ROPA Export Premium Gating */}
       <EnableFeatureModal

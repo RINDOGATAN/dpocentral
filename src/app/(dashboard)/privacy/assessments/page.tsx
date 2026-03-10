@@ -103,8 +103,8 @@ export default function AssessmentsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/privacy/assessments/templates" className="flex-1 sm:flex-none">
-            <Button variant="outline" className="w-full sm:w-auto">
+          <Link href="/privacy/assessments/templates" className="sm:flex-none">
+            <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
               <FileText className="w-4 h-4 sm:mr-2" />
               <span className="hidden sm:inline">Templates</span>
             </Button>
