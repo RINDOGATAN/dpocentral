@@ -112,7 +112,7 @@ export default function IncidentsPage() {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Export Register</span>
               </Button>

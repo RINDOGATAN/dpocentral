@@ -104,16 +104,16 @@ export default function DSARPage() {
         </div>
         <div className="flex gap-2">
           {isPortalComingSoon ? (
-            <div className="flex-1 sm:flex-none">
-              <Button variant="outline" className="w-full sm:w-auto" disabled>
+            <div className="sm:flex-none">
+              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>
                 <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
                 <span className="hidden sm:inline">Settings</span>
                 <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500 hidden sm:inline-flex">Coming Soon</Badge>
               </Button>
             </div>
           ) : (
-            <Link href="/privacy/dsar/settings" className="flex-1 sm:flex-none">
-              <Button variant="outline" className="w-full sm:w-auto">
+            <Link href="/privacy/dsar/settings" className="sm:flex-none">
+              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Settings className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Settings</span>
               </Button>

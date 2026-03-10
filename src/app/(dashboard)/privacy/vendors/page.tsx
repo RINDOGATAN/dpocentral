@@ -112,7 +112,7 @@ export default function VendorsPage() {
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Export Register</span>
               </Button>
@@ -128,8 +128,8 @@ export default function VendorsPage() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/privacy/vendors/questionnaires" className="flex-1 sm:flex-none">
-            <Button variant="outline" className="w-full sm:w-auto">
+          <Link href="/privacy/vendors/questionnaires" className="sm:flex-none">
+            <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
               <FileText className="w-4 h-4 sm:mr-2" />
               <span className="hidden sm:inline">Questionnaires</span>
             </Button>
