@@ -5,7 +5,7 @@ export interface ExpertProfile {
   title: string | null;
   firm: string | null;
   bio: string | null;
-  expertType: "legal" | "technical" | "both";
+  expertTypes: string[];
   specializations: string[];
   certifications: string[];
   languages: string[]; // ISO 639-1
@@ -68,7 +68,7 @@ export const mockExperts: ExpertProfile[] = [
     title: "Managing Partner",
     firm: "TODO.LAW",
     bio: "Privacy lawyer and technologist with over 15 years of experience at the intersection of data protection, marketing technology, and AI governance. Advises organisations across the EU on GDPR compliance, DPIAs, vendor risk management, cross-border transfers, and the EU AI Act. Builder of DPO Central and Vendor.Watch.",
-    expertType: "both",
+    expertTypes: ["legal", "technical"],
     specializations: [
       "GDPR",
       "DPIA / Impact Assessments",
@@ -94,7 +94,7 @@ export const mockExperts: ExpertProfile[] = [
     title: "Deployment Specialist",
     firm: "TODO.LAW",
     bio: "Helps organizations deploy and maintain self-hosted instances of DPO Central on their own infrastructure — Docker, Kubernetes, bare metal, or private cloud.",
-    expertType: "technical",
+    expertTypes: ["technical", "deployment"],
     specializations: ["Self-Hosting / Deployment", "Privacy by Design"],
     certifications: [],
     languages: ["en", "es"],
@@ -139,5 +139,5 @@ export const specializations = [
 export const expertTypes = [
   { value: "legal", label: "Legal" },
   { value: "technical", label: "Technical" },
-  { value: "both", label: "Legal & Technical" },
+  { value: "deployment", label: "Deployment" },
 ] as const;

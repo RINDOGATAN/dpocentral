@@ -64,7 +64,7 @@ export default function ExpertsPage() {
     language: language && language !== "all" ? language : undefined,
     expertType:
       expertType && expertType !== "all"
-        ? (expertType as "legal" | "technical" | "both")
+        ? (expertType as "legal" | "technical" | "deployment")
         : undefined,
     limit: PAGE_SIZE,
     offset,
@@ -189,13 +189,11 @@ export default function ExpertsPage() {
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <Badge variant="outline" className="text-[10px]">
-                        {expert.expertType === "both"
-                          ? "Legal & Tech"
-                          : expert.expertType === "legal"
-                            ? "Legal"
-                            : "Technical"}
-                      </Badge>
+                      {expert.expertTypes.map((et: string) => (
+                        <Badge key={et} variant="outline" className="text-[10px]">
+                          {et === "legal" ? "Legal" : et === "technical" ? "Technical" : et === "deployment" ? "Deployment" : et}
+                        </Badge>
+                      ))}
                       {expert.acceptingClients && (
                         <span className="flex items-center gap-1 text-[10px] text-green-600">
                           <CheckCircle2 className="w-3 h-3" />
