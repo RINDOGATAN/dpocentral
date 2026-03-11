@@ -19,7 +19,7 @@ export interface ExpertSearchParams {
   specialization?: string;
   country?: string; // ISO 3166-1 alpha-2
   language?: string; // ISO 639-1
-  expertType?: "legal" | "technical" | "both";
+  expertType?: "legal" | "technical" | "deployment";
   limit?: number;
   offset?: number;
 }
@@ -68,7 +68,7 @@ function filterMockExperts(params: ExpertSearchParams): ExpertSearchResult {
   }
 
   if (params.expertType) {
-    results = results.filter((e) => e.expertType === params.expertType);
+    results = results.filter((e) => e.expertTypes.includes(params.expertType!));
   }
 
   // Sort by profileCompleteness descending (best profiles first)
