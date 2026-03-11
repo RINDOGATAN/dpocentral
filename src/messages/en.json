@@ -233,6 +233,12 @@
       "body": "Data leaving the EEA requires appropriate safeguards. A transfer specialist can help with TIAs and SCCs."
     }
   },
+  "deploymentCta": {
+    "heading": "Want to self-host DPO Central?",
+    "body": "Deployment experts can help you set up and maintain your own instance.",
+    "findExpert": "Find Expert",
+    "dismiss": "Dismiss"
+  },
   "errors": {
     "generic": "An error occurred. Please try again.",
     "notFound": "Not found",

@@ -233,6 +233,12 @@
       "body": "Los datos que salen del EEE requieren garantías adecuadas. Un especialista en transferencias puede ayudarte con las ETI y las cláusulas contractuales tipo."
     }
   },
+  "deploymentCta": {
+    "heading": "¿Quieres alojar DPO Central en tu infraestructura?",
+    "body": "Expertos en despliegue pueden ayudarte a configurar y mantener tu propia instancia.",
+    "findExpert": "Buscar experto",
+    "dismiss": "Cerrar"
+  },
   "errors": {
     "generic": "Se ha producido un error. Por favor, inténtalo de nuevo.",
     "notFound": "No encontrado",

@@ -64,7 +64,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
     ...navItems,
-    ...(isBusinessOwner && features.expertDirectoryEnabled
+    ...(features.expertDirectoryEnabled
       ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
       : []),
   ];
