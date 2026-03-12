@@ -178,3 +178,89 @@ export function getLanguages(): { code: string; name: string }[] {
 export function getExpertTypes() {
   return expertTypes;
 }
+
+export interface ContactExpertParams {
+  expertId: string;
+  requesterName: string;
+  requesterEmail: string;
+  requesterCompany?: string;
+  subject: string;
+  message?: string;
+  governingLaw?: string;
+}
+
+export interface ContactExpertResult {
+  requestId: string;
+  status: string;
+  createdAt: string;
+}
+
+export async function contactExpert(
+  params: ContactExpertParams
+): Promise<ContactExpertResult> {
+  if (useMock) {
+    return {
+      requestId: `req-mock-${Date.now()}`,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  const { expertId, ...body } = params;
+  const res = await fetch(
+    `${DEALROOM_API_URL}/api/v1/experts/${expertId}/contact`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${DEALROOM_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Contact request failed (${res.status}): ${text}`);
+  }
+
+  return res.json();
+}
+
+export interface ContactRequestResult {
+  requestId: string;
+  expertId: string;
+  expertName: string;
+  subject: string;
+  status: string;
+  message: string | null;
+  requesterName: string;
+  requesterEmail: string;
+  requesterCompany: string | null;
+  governingLaw: string | null;
+  respondedAt: string | null;
+  createdAt: string;
+}
+
+export async function getContactRequest(
+  requestId: string
+): Promise<ContactRequestResult | null> {
+  if (useMock) {
+    return null;
+  }
+
+  const res = await fetch(
+    `${DEALROOM_API_URL}/api/v1/experts/requests/${requestId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${DEALROOM_API_KEY}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    return null;
+  }
+
+  return res.json();
+}

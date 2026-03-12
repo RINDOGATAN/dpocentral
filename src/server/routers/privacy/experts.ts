@@ -7,6 +7,8 @@ import {
   getCountries,
   getLanguages,
   getExpertTypes,
+  contactExpert,
+  getContactRequest,
 } from "../../services/dealroom/client";
 
 export const expertsRouter = createTRPCRouter({
@@ -40,4 +42,26 @@ export const expertsRouter = createTRPCRouter({
       expertTypes: getExpertTypes(),
     };
   }),
+
+  contact: protectedProcedure
+    .input(
+      z.object({
+        expertId: z.string(),
+        requesterName: z.string().min(1).max(200),
+        requesterEmail: z.string().email(),
+        requesterCompany: z.string().max(200).optional(),
+        subject: z.string().min(1).max(500),
+        message: z.string().max(5000).optional(),
+        governingLaw: z.string().max(200).optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return contactExpert(input);
+    }),
+
+  getContactRequest: protectedProcedure
+    .input(z.object({ requestId: z.string() }))
+    .query(async ({ input }) => {
+      return getContactRequest(input.requestId);
+    }),
 });

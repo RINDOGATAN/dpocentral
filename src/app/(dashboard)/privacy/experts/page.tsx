@@ -15,7 +15,7 @@ import {
 import {
   Search,
   MapPin,
-  ExternalLink,
+  Mail,
   Award,
   Loader2,
   CheckCircle2,
@@ -25,6 +25,7 @@ import { trpc } from "@/lib/trpc";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ExpertContactDialog } from "@/components/privacy/expert-contact-dialog";
 
 const PAGE_SIZE = 20;
 
@@ -48,6 +49,7 @@ export default function ExpertsPage() {
   const [language, setLanguage] = useState<string>("");
   const [expertType, setExpertType] = useState<string>("");
   const [offset, setOffset] = useState(0);
+  const [contactExpert, setContactExpert] = useState<{ id: string; name: string } | null>(null);
   const debouncedSearch = useDebounce(searchQuery);
 
   // Reset pagination when filters change
@@ -240,24 +242,20 @@ export default function ExpertsPage() {
                     )}
                   </div>
 
-                  {expert.contactUrl ? (
-                    <a
-                      href={expert.contactUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <Button variant="outline" size="sm" className="w-full gap-2">
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        Contact Expert
-                      </Button>
-                    </a>
-                  ) : (
-                    <Button variant="outline" size="sm" className="w-full gap-2" disabled>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      No Contact Available
-                    </Button>
-                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2"
+                    onClick={() =>
+                      setContactExpert({
+                        id: expert.id,
+                        name: expert.name ?? "Expert",
+                      })
+                    }
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    Contact Expert
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -296,6 +294,15 @@ export default function ExpertsPage() {
               : "No experts available at this time."}
           </p>
         </div>
+      )}
+
+      {contactExpert && (
+        <ExpertContactDialog
+          open={!!contactExpert}
+          onOpenChange={(open) => { if (!open) setContactExpert(null); }}
+          expertId={contactExpert.id}
+          expertName={contactExpert.name}
+        />
       )}
     </div>
   );
