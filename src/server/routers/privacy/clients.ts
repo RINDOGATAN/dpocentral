@@ -1,4 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { logger } from "@/lib/logger";
 
 const MAX_CLIENT_ORGS = 50;
 
@@ -83,7 +84,7 @@ export const clientsRouter = createTRPCRouter({
             needsAttention: overdueDsars > 0 || openIncidents > 0,
           };
         } catch (error) {
-          console.error(`Failed to fetch stats for org ${orgId}:`, error);
+          logger.error("Failed to fetch stats for org", error, { orgId });
           return {
             ...base,
             openDsars: 0,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, publicProcedure, organizationProcedure, writerProcedure, adminOrgProcedure, sanitizeInput } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   VendorStatus,
@@ -91,11 +91,14 @@ export const vendorRouter = createTRPCRouter({
         },
         include: {
           contracts: {
+            select: { id: true, name: true, type: true, status: true, startDate: true, endDate: true, renewalDate: true, autoRenewal: true, value: true, currency: true },
             orderBy: { endDate: "asc" },
           },
           questionnaireResponses: {
             include: {
-              questionnaire: true,
+              questionnaire: {
+                select: { id: true, name: true },
+              },
             },
             orderBy: { createdAt: "desc" },
           },
@@ -129,7 +132,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Create vendor
-  create: organizationProcedure
+  create: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -182,7 +185,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Update vendor
-  update: organizationProcedure
+  update: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -234,7 +237,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Delete vendor
-  delete: organizationProcedure
+  delete: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const vendor = await ctx.prisma.vendor.deleteMany({
@@ -266,7 +269,7 @@ export const vendorRouter = createTRPCRouter({
   // ============================================================
 
   // Add contract
-  addContract: organizationProcedure
+  addContract: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -317,7 +320,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Update contract
-  updateContract: organizationProcedure
+  updateContract: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -360,7 +363,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Delete contract
-  deleteContract: organizationProcedure
+  deleteContract: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const contract = await ctx.prisma.vendorContract.findFirst({
@@ -401,7 +404,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Send questionnaire to vendor
-  sendQuestionnaire: organizationProcedure
+  sendQuestionnaire: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -450,7 +453,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Review questionnaire response
-  reviewQuestionnaireResponse: organizationProcedure
+  reviewQuestionnaireResponse: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -534,7 +537,8 @@ export const vendorRouter = createTRPCRouter({
         responses: z.record(z.string(), z.any()),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input: rawInput }) => {
+      const input = sanitizeInput(rawInput);
       const response = await ctx.prisma.vendorQuestionnaireResponse.findUnique({
         where: { token: input.token },
       });
@@ -571,7 +575,8 @@ export const vendorRouter = createTRPCRouter({
         responses: z.record(z.string(), z.any()),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input: rawInput }) => {
+      const input = sanitizeInput(rawInput);
       const response = await ctx.prisma.vendorQuestionnaireResponse.findUnique({
         where: { token: input.token },
       });
@@ -580,6 +585,13 @@ export const vendorRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Questionnaire not found",
+        });
+      }
+
+      if (response.expiresAt && response.expiresAt < new Date()) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This questionnaire has expired",
         });
       }
 
@@ -597,7 +609,7 @@ export const vendorRouter = createTRPCRouter({
   // ============================================================
 
   // Schedule review
-  scheduleReview: organizationProcedure
+  scheduleReview: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -636,7 +648,7 @@ export const vendorRouter = createTRPCRouter({
     }),
 
   // Complete review
-  completeReview: organizationProcedure
+  completeReview: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),

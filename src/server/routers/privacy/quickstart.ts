@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   DataAssetType,
@@ -395,7 +395,7 @@ export const quickstartRouter = createTRPCRouter({
   // ──────────────────────────────────────────────────
   // Execute quickstart — create all records in a transaction
   // ──────────────────────────────────────────────────
-  execute: organizationProcedure
+  execute: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),

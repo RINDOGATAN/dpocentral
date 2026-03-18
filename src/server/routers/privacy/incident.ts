@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   IncidentType,
@@ -112,10 +112,13 @@ export const incidentRouter = createTRPCRouter({
           },
           affectedAssets: {
             include: {
-              dataAsset: true,
+              dataAsset: {
+                select: { id: true, name: true, type: true, owner: true },
+              },
             },
           },
           documents: {
+            select: { id: true, name: true, type: true, url: true, mimeType: true, size: true, createdAt: true },
             orderBy: { createdAt: "desc" },
           },
         },
@@ -132,7 +135,7 @@ export const incidentRouter = createTRPCRouter({
     }),
 
   // Create incident
-  create: organizationProcedure
+  create: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -249,7 +252,7 @@ export const incidentRouter = createTRPCRouter({
     }),
 
   // Update incident
-  update: organizationProcedure
+  update: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -304,7 +307,7 @@ export const incidentRouter = createTRPCRouter({
     }),
 
   // Update incident status
-  updateStatus: organizationProcedure
+  updateStatus: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -359,7 +362,7 @@ export const incidentRouter = createTRPCRouter({
   // ============================================================
 
   // Update notification
-  updateNotification: organizationProcedure
+  updateNotification: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -419,7 +422,7 @@ export const incidentRouter = createTRPCRouter({
   // ============================================================
 
   // Add timeline entry
-  addTimelineEntry: organizationProcedure
+  addTimelineEntry: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -464,7 +467,7 @@ export const incidentRouter = createTRPCRouter({
   // ============================================================
 
   // Create task
-  createTask: organizationProcedure
+  createTask: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -507,7 +510,7 @@ export const incidentRouter = createTRPCRouter({
     }),
 
   // Update task
-  updateTask: organizationProcedure
+  updateTask: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -557,7 +560,7 @@ export const incidentRouter = createTRPCRouter({
   // ============================================================
 
   // Link affected asset
-  linkAsset: organizationProcedure
+  linkAsset: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -610,7 +613,7 @@ export const incidentRouter = createTRPCRouter({
   // ============================================================
 
   // Add document
-  addDocument: organizationProcedure
+  addDocument: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),

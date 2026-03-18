@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
@@ -96,7 +96,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Create a data asset
-  createAsset: organizationProcedure
+  createAsset: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -142,7 +142,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Update a data asset
-  updateAsset: organizationProcedure
+  updateAsset: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -194,7 +194,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Delete a data asset
-  deleteAsset: organizationProcedure
+  deleteAsset: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const asset = await ctx.prisma.dataAsset.deleteMany({
@@ -226,7 +226,7 @@ export const dataInventoryRouter = createTRPCRouter({
   // ============================================================
 
   // Add data element to asset
-  addElement: organizationProcedure
+  addElement: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -273,7 +273,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Update data element
-  updateElement: organizationProcedure
+  updateElement: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -310,7 +310,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Delete data element
-  deleteElement: organizationProcedure
+  deleteElement: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const element = await ctx.prisma.dataElement.deleteMany({
@@ -420,7 +420,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Create a processing activity
-  createActivity: organizationProcedure
+  createActivity: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -476,7 +476,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Update a processing activity
-  updateActivity: organizationProcedure
+  updateActivity: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -529,7 +529,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Link assets to activity
-  linkAssets: organizationProcedure
+  linkAssets: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -609,7 +609,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Create data flow
-  createFlow: organizationProcedure
+  createFlow: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -659,7 +659,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Update data flow
-  updateFlow: organizationProcedure
+  updateFlow: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -711,7 +711,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Delete data flow
-  deleteFlow: organizationProcedure
+  deleteFlow: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const flow = await ctx.prisma.dataFlow.deleteMany({
@@ -757,7 +757,7 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Create data transfer
-  createTransfer: organizationProcedure
+  createTransfer: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),

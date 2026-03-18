@@ -5,6 +5,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { getSecurityModule } from "@/lib/security";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -37,7 +38,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       data: {
         ...shape.data,
         zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+          process.env.NODE_ENV === "development" && error.cause instanceof ZodError
+            ? error.cause.flatten()
+            : null,
       },
     };
   },
@@ -45,6 +48,14 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
+
+// Sanitize string inputs — delegates to @dpocentral/security if installed,
+// otherwise passes through unchanged.
+export function sanitizeInput<T>(input: T): T {
+  const security = getSecurityModule();
+  if (security?.sanitizeInput) return security.sanitizeInput(input);
+  return input;
+}
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
@@ -59,7 +70,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
-// Organization context middleware
+// Organization context middleware — membership check only (any role)
 export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -108,6 +119,79 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
 export const organizationProcedure = t.procedure
   .use(enforceUserIsAuthed)
   .use(withOrganization);
+
+// Role-based access control — uses @dpocentral/security for role enforcement
+// if installed, otherwise falls back to membership-only check (any member can access).
+type OrgRole = "OWNER" | "ADMIN" | "PRIVACY_OFFICER" | "MEMBER" | "VIEWER";
+
+const withOrganizationAndRole = (...roles: OrgRole[]) =>
+  t.middleware(async ({ ctx, next, getRawInput }) => {
+    if (!ctx.session || !ctx.session.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    const rawInput = await getRawInput();
+    const input = rawInput as { organizationId?: string } | undefined;
+    const organizationId = input?.organizationId;
+
+    if (!organizationId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Organization ID is required",
+      });
+    }
+
+    const membership = await ctx.prisma.organizationMember.findUnique({
+      where: {
+        organizationId_userId: {
+          organizationId,
+          userId: ctx.session.user.id,
+        },
+      },
+      include: {
+        organization: true,
+      },
+    });
+
+    if (!membership) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You do not have access to this organization",
+      });
+    }
+
+    // Role check — only enforced when @dpocentral/security is installed
+    const security = getSecurityModule();
+    if (security && !roles.includes(membership.role as OrgRole)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You do not have permission to perform this action",
+      });
+    }
+
+    return next({
+      ctx: {
+        session: { ...ctx.session, user: ctx.session.user },
+        organization: membership.organization,
+        membership,
+      },
+    });
+  });
+
+// Writer: can create/update records (everyone except VIEWER)
+export const writerProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER"));
+
+// Officer: DSAR management, incidents, assessments
+export const officerProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER"));
+
+// Admin org: delete operations, org settings
+export const adminOrgProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(withOrganizationAndRole("OWNER", "ADMIN"));
 
 // Admin emails from environment variable (comma-separated)
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")

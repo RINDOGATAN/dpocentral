@@ -6,6 +6,7 @@ import {
   languageNames,
   type ExpertProfile,
 } from "./mock-data";
+import { logger } from "@/lib/logger";
 
 const DEALROOM_API_URL = process.env.DEALROOM_API_URL;
 const DEALROOM_API_KEY = process.env.DEALROOM_API_KEY;
@@ -108,7 +109,7 @@ export async function searchExperts(
   });
 
   if (!res.ok) {
-    console.error("Dealroom search failed:", res.status);
+    logger.error("Dealroom search failed", undefined, { status: res.status });
     return filterMockExperts(params); // Fallback to mock
   }
 

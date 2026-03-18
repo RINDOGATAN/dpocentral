@@ -14,6 +14,7 @@ import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
+import { logger } from "@/lib/logger";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
     try {
       event = verifyWebhookSignature(body, signature);
     } catch (err) {
-      console.error("Webhook signature verification failed:", err);
+      logger.error("Webhook signature verification failed", err);
       return NextResponse.json(
         { error: "Invalid signature" },
         { status: 400 }
@@ -86,12 +87,13 @@ export async function POST(request: NextRequest) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.info("Unhandled Stripe event type", { type: event.type });
     }
 
+    logger.info("Stripe webhook processed", { type: event.type, id: event.id });
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    logger.error("Webhook error", error);
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }
@@ -107,13 +109,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const skillPackageIds = parseSkillPackageIds(session.metadata as Record<string, string> | null);
 
   if (!organizationId || !skillPackageIds.length) {
-    console.error("Missing metadata in checkout session:", session.id);
+    logger.error("Missing metadata in checkout session", undefined, { sessionId: session.id });
     return;
   }
 
   // Get subscription details
   if (!session.subscription) {
-    console.error("No subscription in checkout session:", session.id);
+    logger.error("No subscription in checkout session", undefined, { sessionId: session.id });
     return;
   }
 
@@ -136,7 +138,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   if (!customer) {
-    console.error("Customer not found for checkout session:", session.id);
+    logger.error("Customer not found for checkout session", undefined, { sessionId: session.id });
     return;
   }
 
@@ -201,9 +203,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
   }
 
-  console.log(
-    `Created entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
-  );
+  logger.info("Created entitlements", { customerId: customer.id, skills: skillPackageIds });
 }
 
 /**
@@ -229,10 +229,7 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
   });
 
   if (!customer) {
-    console.error(
-      "Customer not found for Stripe customer:",
-      stripeCustomerId
-    );
+    logger.error("Customer not found for Stripe customer", undefined, { stripeCustomerId });
     return;
   }
 
@@ -314,9 +311,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     },
   });
 
-  console.log(
-    `Expired entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
-  );
+  logger.info("Expired entitlements", { customerId: customer.id, skills: skillPackageIds });
 }
 
 /**
@@ -351,7 +346,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     },
   });
 
-  console.log(`Suspended entitlements for customer ${customer.id} due to payment failure`);
+  logger.info("Suspended entitlements due to payment failure", { customerId: customer.id });
 
   // Send notification email to customer
   if (resend && customer.email) {
@@ -377,7 +372,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
         `,
       });
     } catch (emailErr) {
-      console.error("Failed to send payment failure email:", emailErr);
+      logger.error("Failed to send payment failure email", emailErr);
     }
   }
 }
