@@ -1,20 +1,80 @@
 /**
- * Rate limiting stubs
+ * In-memory sliding-window rate limiter.
  *
- * When @dpocentral/security is installed, these are replaced with
- * real sliding-window rate limiters. Without it, all requests pass through.
+ * For production at scale, replace with Upstash Redis (@upstash/ratelimit).
  *
  * AGPL-3.0 License - Part of the open-source core
  */
 
-import type { RateLimiter } from "./security/types";
+interface RateLimitEntry {
+  timestamps: number[];
+}
 
-const noopLimiter: RateLimiter = {
-  check: () => ({ success: true, remaining: Infinity, limit: 0, reset: 0 }),
-};
+const store = new Map<string, RateLimitEntry>();
 
-export const authLimiter: RateLimiter = noopLimiter;
-export const dsarPublicLimiter: RateLimiter = noopLimiter;
-export const feedbackLimiter: RateLimiter = noopLimiter;
-export const catalogSearchLimiter: RateLimiter = noopLimiter;
-export const checkoutLimiter: RateLimiter = noopLimiter;
+let lastCleanup = Date.now();
+const CLEANUP_INTERVAL = 5 * 60 * 1000;
+
+function cleanup(windowMs: number) {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  const cutoff = now - windowMs;
+  for (const [key, entry] of store.entries()) {
+    entry.timestamps = entry.timestamps.filter((t) => t > cutoff);
+    if (entry.timestamps.length === 0) store.delete(key);
+  }
+}
+
+interface RateLimitConfig {
+  limit: number;
+  windowMs: number;
+}
+
+export interface RateLimitResult {
+  success: boolean;
+  remaining: number;
+  limit: number;
+  reset: number;
+}
+
+export function rateLimit(config: RateLimitConfig) {
+  return {
+    check(key: string): RateLimitResult {
+      cleanup(config.windowMs);
+
+      const now = Date.now();
+      const cutoff = now - config.windowMs;
+
+      let entry = store.get(key);
+      if (!entry) {
+        entry = { timestamps: [] };
+        store.set(key, entry);
+      }
+
+      entry.timestamps = entry.timestamps.filter((t) => t > cutoff);
+
+      if (entry.timestamps.length >= config.limit) {
+        const oldestInWindow = entry.timestamps[0]!;
+        return {
+          success: false,
+          remaining: 0,
+          limit: config.limit,
+          reset: oldestInWindow + config.windowMs,
+        };
+      }
+
+      entry.timestamps.push(now);
+      return {
+        success: true,
+        remaining: config.limit - entry.timestamps.length,
+        limit: config.limit,
+        reset: now + config.windowMs,
+      };
+    },
+  };
+}
+
+// Pre-configured limiters
+export const authLimiter = rateLimit({ limit: 5, windowMs: 60 * 1000 });
+export const checkoutLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 });
