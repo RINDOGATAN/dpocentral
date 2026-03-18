@@ -30,6 +30,12 @@ const StartupsFooter = ({ t }: StartupsFooterProps) => {
               {t("footer.terms")}
             </a>
             <a
+              href="/security"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("footer.security")}
+            </a>
+            <a
               href="https://todo.law/home"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >

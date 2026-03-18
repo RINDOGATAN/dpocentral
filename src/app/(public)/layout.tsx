@@ -60,6 +60,13 @@ export default function PublicLayout({
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <Link
+            href="/security"
+            className="hover:text-foreground transition-colors"
+          >
+            Data Security
+          </Link>
+          <span className="hidden sm:inline">&middot;</span>
+          <Link
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
