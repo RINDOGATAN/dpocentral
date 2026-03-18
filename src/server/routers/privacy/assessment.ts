@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, protectedProcedure, writerProcedure, officerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { AssessmentType, AssessmentStatus, RiskLevel, MitigationStatus, ApprovalStatus } from "@prisma/client";
 import {
@@ -87,7 +87,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Create custom template
-  createTemplate: organizationProcedure
+  createTemplate: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -115,7 +115,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Clone system template
-  cloneTemplate: organizationProcedure
+  cloneTemplate: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -225,9 +225,15 @@ export const assessmentRouter = createTRPCRouter({
           organizationId: ctx.organization.id,
         },
         include: {
-          template: true,
-          processingActivity: true,
-          vendor: true,
+          template: {
+            select: { id: true, name: true, type: true, description: true, sections: true, scoringLogic: true, version: true },
+          },
+          processingActivity: {
+            select: { id: true, name: true, purpose: true },
+          },
+          vendor: {
+            select: { id: true, name: true, riskTier: true, metadata: true },
+          },
           responses: {
             include: {
               responder: {
@@ -248,6 +254,7 @@ export const assessmentRouter = createTRPCRouter({
             orderBy: { level: "asc" },
           },
           versions: {
+            select: { id: true, version: true, changedBy: true, changeNotes: true, createdAt: true },
             orderBy: { version: "desc" },
             take: 5,
           },
@@ -277,7 +284,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Create assessment
-  create: organizationProcedure
+  create: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -354,7 +361,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Save response
-  saveResponse: organizationProcedure
+  saveResponse: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -423,7 +430,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Calculate and update risk score
-  calculateRisk: organizationProcedure
+  calculateRisk: writerProcedure
     .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const assessment = await ctx.prisma.assessment.findFirst({
@@ -458,7 +465,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Submit for review
-  submit: organizationProcedure
+  submit: writerProcedure
     .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const assessment = await ctx.prisma.assessment.findFirst({
@@ -550,7 +557,7 @@ export const assessmentRouter = createTRPCRouter({
   // ============================================================
 
   // Add mitigation
-  addMitigation: organizationProcedure
+  addMitigation: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -590,7 +597,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Update mitigation
-  updateMitigation: organizationProcedure
+  updateMitigation: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -635,7 +642,7 @@ export const assessmentRouter = createTRPCRouter({
   // ============================================================
 
   // Request approval
-  requestApproval: organizationProcedure
+  requestApproval: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -696,7 +703,7 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Process approval decision
-  processApproval: organizationProcedure
+  processApproval: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),

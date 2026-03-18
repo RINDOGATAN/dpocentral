@@ -82,7 +82,8 @@
     "zod": "^4.3.5"
   },
   "optionalDependencies": {
-    "@dpocentral/premium-skills": "github:RINDOGATAN/dpocentral-premium-skills"
+    "@dpocentral/premium-skills": "github:RINDOGATAN/dpocentral-premium-skills",
+    "@dpocentral/security": "github:RINDOGATAN/dpocentral-security"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

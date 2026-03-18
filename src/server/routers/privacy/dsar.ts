@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, publicProcedure, organizationProcedure, officerProcedure, adminOrgProcedure, sanitizeInput } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
@@ -130,7 +130,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Create a DSAR request (internal)
-  create: organizationProcedure
+  create: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -204,7 +204,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Update DSAR request status
-  updateStatus: organizationProcedure
+  updateStatus: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -257,7 +257,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Extend deadline
-  extendDeadline: organizationProcedure
+  extendDeadline: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -311,7 +311,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Create task
-  createTask: organizationProcedure
+  createTask: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -357,7 +357,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Update task
-  updateTask: organizationProcedure
+  updateTask: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -404,7 +404,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Auto-generate tasks from data assets
-  generateTasks: organizationProcedure
+  generateTasks: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -463,7 +463,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Add communication
-  addCommunication: organizationProcedure
+  addCommunication: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -532,7 +532,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Create/update intake form
-  upsertIntakeForm: organizationProcedure
+  upsertIntakeForm: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -615,10 +615,15 @@ export const dsarRouter = createTRPCRouter({
         requestedData: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input: rawInput }) => {
+      const input = sanitizeInput(rawInput);
       const org = await ctx.prisma.organization.findUnique({
         where: { slug: input.orgSlug },
         include: {
+          dsarIntakeForms: {
+            where: { isActive: true },
+            take: 1,
+          },
           jurisdictions: {
             where: { isPrimary: true },
             include: { jurisdiction: true },
@@ -626,10 +631,10 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      if (!org) {
+      if (!org || org.dsarIntakeForms.length === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Organization not found",
+          message: "Organization or intake form not found",
         });
       }
 

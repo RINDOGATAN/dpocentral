@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 import { encode } from "next-auth/jwt";
 
 /**
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Dev login error:", error);
+    logger.error("Dev login error", error);
     return NextResponse.json(
       { error: "Failed to create dev session" },
       { status: 500 }

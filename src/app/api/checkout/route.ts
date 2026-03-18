@@ -12,6 +12,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, createCustomer } from "@/lib/stripe";
 import { features } from "@/config/features";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   // Check if Stripe is enabled
@@ -203,10 +204,22 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Audit log the checkout attempt
+    await prisma.auditLog.create({
+      data: {
+        organizationId,
+        userId: membership.userId,
+        entityType: "Checkout",
+        entityId: checkoutSession.id,
+        action: "CHECKOUT_INITIATED",
+        changes: { skillPackageIds: requestedIds },
+      },
+    });
+
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error("Checkout error:", message, error);
+    logger.error("Checkout error", error);
     return NextResponse.json(
       { error: `Failed to create checkout session: ${message}` },
       { status: 500 }

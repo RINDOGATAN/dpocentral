@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { OrganizationRole } from "@prisma/client";
+import { getSecurityModule } from "@/lib/security";
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
@@ -146,6 +147,15 @@ export const organizationRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You do not have permission to update this organization",
+        });
+      }
+
+      // Reject public email domains as org domains (requires @dpocentral/security)
+      const security = getSecurityModule();
+      if (input.domain && security?.isPublicEmailDomain?.(input.domain.toLowerCase())) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Public email domains (e.g. gmail.com) cannot be used as organization domains",
         });
       }
 

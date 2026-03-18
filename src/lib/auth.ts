@@ -6,6 +6,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Resend } from "resend";
 import prisma from "@/lib/prisma";
 import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
+import { logger } from "@/lib/logger";
+import { getSecurityModule } from "@/lib/security";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -17,8 +19,20 @@ const isProduction = process.env.NODE_ENV === "production";
 const cookieDomain = isProduction ? ".todo.law" : undefined;
 const cookiePrefix = isProduction ? "__Secure-" : "";
 
+// Wrap PrismaAdapter to strip OAuth tokens before storage.
+// DPO Central uses JWT sessions and never reads these tokens,
+// so storing them is unnecessary risk.
+const baseAdapter = PrismaAdapter(prisma) as NextAuthOptions["adapter"];
+const adapter: NextAuthOptions["adapter"] = {
+  ...baseAdapter!,
+  linkAccount: (account: Record<string, unknown>) => {
+    const { refresh_token, access_token, id_token, ...safeAccount } = account;
+    return baseAdapter!.linkAccount!(safeAccount as any);
+  },
+};
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
+  adapter,
   providers: [
     // Development-only credentials provider for easy local testing
     ...(isDev
@@ -61,7 +75,6 @@ export const authOptions: NextAuthOptions = {
           GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            allowDangerousEmailAccountLinking: true,
             authorization: {
               params: {
                 prompt: "select_account",
@@ -100,7 +113,7 @@ export const authOptions: NextAuthOptions = {
                   `,
                 });
               } catch (error) {
-                console.error("Failed to send verification email:", error);
+                logger.error("Failed to send verification email", error);
                 throw new Error("Failed to send verification email");
               }
             },
@@ -118,6 +131,12 @@ export const authOptions: NextAuthOptions = {
       try {
         if (user.email) {
           const emailDomain = user.email.split("@")[1];
+
+          // Skip auto-join for public email domains (requires @dpocentral/security)
+          const security = getSecurityModule();
+          if (security?.isPublicEmailDomain?.(emailDomain?.toLowerCase() ?? "")) {
+            return true;
+          }
 
           // Find organization with matching domain
           const matchingOrg = await prisma.organization.findFirst({
@@ -158,7 +177,7 @@ export const authOptions: NextAuthOptions = {
           }
         }
       } catch (error) {
-        console.error("Auto-join organization failed during sign-in:", error);
+        logger.error("Auto-join organization failed during sign-in", error);
       }
       return true;
     },

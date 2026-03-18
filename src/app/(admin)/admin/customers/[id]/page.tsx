@@ -436,7 +436,9 @@ export default function CustomerDetailPage() {
                         </p>
                         <div className="flex items-center gap-1 mt-1">
                           <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                            {entitlement.licenseKey}
+                            {entitlement.licenseKey.length > 8
+                              ? `${entitlement.licenseKey.slice(0, 4)}...${entitlement.licenseKey.slice(-4)}`
+                              : "****"}
                           </code>
                           <Button
                             variant="ghost"

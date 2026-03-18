@@ -31,6 +31,14 @@ Private repo: `RINDOGATAN/dpocentral-premium-skills` (`@dpocentral/premium-skill
 - Templates: DPIA, PIA (new), TIA (new) — seeded only when package is installed
 - Open repo keeps: skill loader/registry/types, entitlement checks, LIA/Custom templates
 
+### Security Package
+Private repo: `RINDOGATAN/dpocentral-security` (`@dpocentral/security`)
+- Loaded dynamically via `src/lib/security/loader.ts` + `src/instrumentation.ts`
+- `optionalDependencies` in package.json — `npm install` succeeds without access
+- `serverExternalPackages` in next.config.ts prevents webpack bundling
+- Provides: rate limiting, RBAC role enforcement, input sanitization, public domain blocklist, CSP nonce generation
+- Without package: rate limits disabled, RBAC falls back to membership-only, sanitization is no-op, all domains allowed for auto-join, CSP uses static headers
+
 ## Vendor Catalog — READ-ONLY
 - `vendor_catalog` table is now **owned by Vendor.Watch** (admin CRUD, enrichment, seeding)
 - DPO Central retains **read-only** access via `vendorCatalog.search`, `getBySlug`, `listCategories`

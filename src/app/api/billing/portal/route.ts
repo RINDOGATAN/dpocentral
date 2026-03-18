@@ -13,6 +13,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { createPortalSession } from "@/lib/stripe";
 import { features } from "@/config/features";
+import { logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   if (!features.stripeEnabled || !features.selfServiceUpgrade) {
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: portalSession.url });
   } catch (error) {
-    console.error("Portal session error:", error);
+    logger.error("Portal session error", error);
     return NextResponse.json(
       { error: "Failed to create portal session" },
       { status: 500 }
