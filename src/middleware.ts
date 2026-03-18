@@ -1,8 +1,5 @@
 /**
- * Middleware for i18n locale detection, rate limiting, and CSP
- *
- * Rate limiting and CSP nonces require @dpocentral/security.
- * Without it, requests pass through without rate limits and CSP uses a static fallback.
+ * Middleware for i18n locale detection, rate limiting, and CSP nonces
  *
  * AGPL-3.0 License - Part of the open-source core
  */
@@ -10,24 +7,14 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale } from "./i18n/config";
-import type { SecurityModule } from "./lib/security/types";
+import { authLimiter, checkoutLimiter } from "./lib/rate-limit";
 
 // next-intl middleware for locale routing
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: "as-needed", // Only add prefix for non-default locales
+  localePrefix: "as-needed",
 });
-
-// Attempt to load security module (optional dependency)
-let security: SecurityModule | null = null;
-try {
-  // @ts-ignore — optional dependency, may not be installed
-  const mod = await import(/* webpackIgnore: true */ "@dpocentral/security");
-  security = mod as SecurityModule;
-} catch {
-  // Security package not installed — rate limiting and CSP nonces disabled
-}
 
 function getClientIp(request: NextRequest): string {
   return (
@@ -51,28 +38,49 @@ function rateLimitResponse(result: { limit: number; reset: number }) {
   );
 }
 
-function applyCspToResponse(response: NextResponse) {
-  if (security?.generateNonce && security?.applyCspHeaders) {
-    const nonce = security.generateNonce();
-    security.applyCspHeaders(response, nonce);
+function generateNonce(): string {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  let binary = "";
+  for (const byte of array) {
+    binary += String.fromCharCode(byte);
   }
+  return btoa(binary);
+}
+
+function applyCsp(response: NextResponse) {
+  const nonce = generateNonce();
+  const csp = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com https://va.vercel-scripts.com`,
+    `style-src 'self' 'nonce-${nonce}'`,
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self' https://api.stripe.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+    "frame-src https://js.stripe.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
+  response.headers.set("Content-Security-Policy-Report-Only", csp);
+  response.headers.set("x-nonce", nonce);
 }
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
 
-  // Rate limit auth/sign-in routes (when security package is installed)
-  if (security && pathname.startsWith("/api/auth")) {
-    const result = security.authLimiter.check(`auth:${ip}`);
+  // Rate limit auth routes
+  if (pathname.startsWith("/api/auth")) {
+    const result = authLimiter.check(`auth:${ip}`);
     if (!result.success) {
       return rateLimitResponse(result);
     }
   }
 
   // Rate limit checkout/billing routes
-  if (security && (pathname.startsWith("/api/checkout") || pathname.startsWith("/api/billing"))) {
-    const result = security.checkoutLimiter.check(`checkout:${ip}`);
+  if (pathname.startsWith("/api/checkout") || pathname.startsWith("/api/billing")) {
+    const result = checkoutLimiter.check(`checkout:${ip}`);
     if (!result.success) {
       return rateLimitResponse(result);
     }
@@ -87,7 +95,7 @@ export default function middleware(request: NextRequest) {
     currencyResponse = NextResponse.next();
     currencyResponse.cookies.set("currency", currency, {
       path: "/",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+      maxAge: 60 * 60 * 24 * 30,
       sameSite: "lax",
     });
   }
@@ -96,28 +104,25 @@ export default function middleware(request: NextRequest) {
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/dsar") || // Public DSAR portal
-    pathname.includes(".") // Static files
+    pathname.startsWith("/dsar") ||
+    pathname.includes(".")
   ) {
     const response = currencyResponse || NextResponse.next();
-    applyCspToResponse(response);
+    applyCsp(response);
     return response;
   }
 
-  // Check if i18n is enabled via environment variable
+  // Check if i18n is enabled
   const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
-  // If i18n is disabled, just pass through
   if (!i18nEnabled) {
     const response = currencyResponse || NextResponse.next();
-    applyCspToResponse(response);
+    applyCsp(response);
     return response;
   }
 
-  // Use next-intl middleware for locale handling
   const intlResponse = intlMiddleware(request);
 
-  // Copy currency cookie to intl response if needed
   if (currencyResponse) {
     const cookieValue = currencyResponse.cookies.get("currency")?.value;
     if (cookieValue) {
@@ -129,11 +134,10 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  applyCspToResponse(intlResponse);
+  applyCsp(intlResponse);
   return intlResponse;
 }
 
 export const config = {
-  // Match all routes except static files
   matcher: ["/((?!_next|.*\\..*).*)"],
 };
