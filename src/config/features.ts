@@ -28,6 +28,15 @@ export interface FeatureFlags {
   // Expert Directory
   expertDirectoryEnabled: boolean;
 
+  // New Features
+  notificationsEnabled: boolean;
+  complianceDashboardEnabled: boolean;
+  dpiaAutoFillEnabled: boolean;
+  transferComplianceEnabled: boolean;
+  regulatoryTrackerEnabled: boolean;
+  aiGovernanceEnabled: boolean;
+  aiSentinelIntegrationEnabled: boolean;
+
   // Internationalization
   i18nEnabled: boolean;
   availableLocales: string[];
@@ -56,6 +65,15 @@ const defaultFeatures: FeatureFlags = {
 
   // Expert Directory
   expertDirectoryEnabled: true,
+
+  // New Features
+  notificationsEnabled: true,
+  complianceDashboardEnabled: true,
+  dpiaAutoFillEnabled: true,
+  transferComplianceEnabled: true,
+  regulatoryTrackerEnabled: true,
+  aiGovernanceEnabled: true,
+  aiSentinelIntegrationEnabled: true,
 
   // i18n
   i18nEnabled: true,
@@ -100,6 +118,27 @@ export function getFeatureFlags(): FeatureFlags {
     expertDirectoryEnabled:
       process.env.NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED !== "false" &&
       defaultFeatures.expertDirectoryEnabled,
+    notificationsEnabled:
+      process.env.NEXT_PUBLIC_NOTIFICATIONS_ENABLED !== "false" &&
+      defaultFeatures.notificationsEnabled,
+    complianceDashboardEnabled:
+      process.env.NEXT_PUBLIC_COMPLIANCE_DASHBOARD_ENABLED !== "false" &&
+      defaultFeatures.complianceDashboardEnabled,
+    dpiaAutoFillEnabled:
+      process.env.NEXT_PUBLIC_DPIA_AUTO_FILL_ENABLED !== "false" &&
+      defaultFeatures.dpiaAutoFillEnabled,
+    transferComplianceEnabled:
+      process.env.NEXT_PUBLIC_TRANSFER_COMPLIANCE_ENABLED !== "false" &&
+      defaultFeatures.transferComplianceEnabled,
+    regulatoryTrackerEnabled:
+      process.env.NEXT_PUBLIC_REGULATORY_TRACKER_ENABLED !== "false" &&
+      defaultFeatures.regulatoryTrackerEnabled,
+    aiGovernanceEnabled:
+      process.env.NEXT_PUBLIC_AI_GOVERNANCE_ENABLED !== "false" &&
+      defaultFeatures.aiGovernanceEnabled,
+    aiSentinelIntegrationEnabled:
+      process.env.NEXT_PUBLIC_AI_SENTINEL_ENABLED !== "false" &&
+      defaultFeatures.aiSentinelIntegrationEnabled,
     i18nEnabled:
       process.env.NEXT_PUBLIC_I18N_ENABLED === "true" ||
       defaultFeatures.i18nEnabled,
