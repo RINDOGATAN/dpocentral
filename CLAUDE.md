@@ -47,23 +47,15 @@ Private repo: `RINDOGATAN/dpocentral-security` (`@dpocentral/security`)
 Premium features require entitlements via `src/server/services/licensing/`
 
 ## Quickstart — Free Tier (5 Vendors)
-- Vendor catalog import in quickstart allows **5 free vendors** without premium license
-- Tracked via `Vendor.metadata.source = "quickstart"` (counted per organization)
-- Portfolio imports (from Vendor.Watch) also use this budget (`metadata.fromPortfolio: true`)
-- After 5 free imports, users need the Vendor Catalog add-on for more
+- Vendor catalog import allows **5 free vendors** without premium license
+- Tracked via `Vendor.metadata.source = "quickstart"` (counted per org)
+- Portfolio imports (from Vendor.Watch) share the same 5-vendor budget (`metadata.fromPortfolio: true`)
+- AI-capable vendors auto-create `AISystem` records (detected from catalog AI fields)
 - Industry templates are always free (no limit)
-- Transaction timeout: 30s (default 5s was too short for multi-vendor imports)
+- Transaction timeout: 30s
 
 ## Admin Panel (`/admin`)
-Platform admin panel gated by `ADMIN_EMAILS` env var. 6 sections:
-- **Dashboard** — stats (customers, orgs, entitlements, active licenses, new users 7d/30d, active subs), activity feed, quick actions
-- **Customers** — CRUD, link/unlink orgs, manage entitlements, delete with cascade confirmation, license key display with copy
-- **Skill Packages** — browse packages
-- **Organizations** — search/browse all orgs, detail view with members, stats (assets/activities/DSARs/assessments/incidents/vendors), audit logs
-- **Users** — search/browse all users, detail view with inline userType editor, org memberships, activity log
-- **Audit Logs** — filterable table (entity type, action, date range, search), expandable rows with changes JSON
-
-Key files:
+Gated by `ADMIN_EMAILS` env var. 6 sections: Dashboard, Customers, Skill Packages, Organizations, Users, Audit Logs.
 - `src/server/routers/platformAdmin.ts` — all admin tRPC endpoints
 - `src/app/(admin)/admin/` — all admin pages
 
@@ -73,25 +65,38 @@ Key files:
 - **Assessments** - DPIA/PIA/TIA/Vendor with templates & approvals
 - **Incidents** - Breach tracking, DPA notifications, timeline
 - **Vendors** - Contracts, questionnaires, risk tiers
+- **AI Governance** - EU AI Act register, risk classification, AI system CRUD
+- **Notifications** - Event-driven alerts, deadline monitoring, preferences
+- **Reports** - Compliance score, module breakdown, trend snapshots
+- **Regulations** - Jurisdiction catalog, applicability wizard
 
-All module list pages share consistent patterns: debounced search wired to tRPC `search` param, controlled Tabs for client-side filtering, mobile/desktop dual layouts, responsive stats grids. Every module page includes an `ExpertHelpCta` with context-specific copy.
+All module list pages share consistent patterns: debounced search, controlled Tabs, mobile/desktop dual layouts, responsive stats grids, `ExpertHelpCta` per module.
 
 ## Expert Directory & Dealroom Integration
 - `/privacy/experts` — searchable directory with filters (specialization, country, language, type)
 - `src/server/services/dealroom/client.ts` — Dealroom API client with mock fallback (12 experts)
 - Env vars: `DEALROOM_API_URL`, `DEALROOM_API_KEY` (falls back to mock data if unset)
-- `ExpertHelpCta` component (9 contexts): quickstart, assessment, incident, empty-state, general, vendor, dsar, high-risk, transfer
-- Contextual CTAs pass `?specialization=` to deep-link into filtered expert search
-- Quickstart review step shows expert nudges when high-risk vendors or international transfers detected
+- `ExpertHelpCta` component (9 contexts) with `?specialization=` deep links
 - Gated by `features.expertDirectoryEnabled` + `isBusinessOwner` user type
+
+## AI Sentinel Integration
+- DPO Central = lightweight AI register; AI Sentinel = deep governance (separate app/DB at `aisentinel.todo.law`)
+- Quickstart auto-creates `AISystem` records for AI-capable vendors (detected via `src/config/vendor-ai-detection.ts`)
+- Export DPC AI Systems → AIS via `POST /api/import/dpc-ai-systems` (x-api-key auth)
+- `src/server/services/ai-sentinel/client.ts` — REST client (follows Dealroom pattern, no-op when not configured)
+- Env vars: `AI_SENTINEL_API_URL`, `AI_SENTINEL_API_KEY`
+- Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
+- Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
 
 ## Structure
 ```
-prisma/schema.prisma          # ~25 models
-src/server/routers/privacy/   # tRPC routers
-src/app/(dashboard)/privacy/  # Dashboard pages
-src/app/dsar/                 # Public DSAR portal
-scripts/                      # Verification & testing scripts
+prisma/schema.prisma              # ~25 models
+src/server/routers/privacy/       # tRPC routers
+src/server/services/              # External API clients (Dealroom, AI Sentinel)
+src/config/                       # Feature flags, AI Act classifications, vendor mappings
+src/app/(dashboard)/privacy/      # Dashboard pages
+src/app/dsar/                     # Public DSAR portal
+scripts/                          # Verification, seeding & demo scripts
 ```
 
 ## Multi-tenancy
