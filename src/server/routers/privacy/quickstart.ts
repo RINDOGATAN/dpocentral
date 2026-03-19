@@ -21,6 +21,12 @@ import {
   type IndustryTemplate,
 } from "../../../config/industry-templates";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
+import { createAssessmentFromActivity } from "../../services/assessment-auto-create";
+import {
+  isAiCapableVendor,
+  buildAISystemFromCatalog,
+  type VendorCatalogAIFields,
+} from "../../../config/vendor-ai-detection";
 
 // ============================================================
 // HELPERS
@@ -38,6 +44,8 @@ interface VendorPreviewItem {
   isHighRisk: boolean;
   transfers: { country: string; mechanism: string }[];
   privacyTechnologies: string[];
+  isAiCapable: boolean;
+  aiCapabilities: string[];
 }
 
 function buildVendorPreview(
@@ -48,6 +56,14 @@ function buildVendorPreview(
     subcategory?: string | null;
     dataLocations: string[];
     privacyTechnologies?: string[];
+    aiCapabilities?: string[];
+    aiTechniques?: string[];
+    euAiActRole?: string | null;
+    euAiActCompliant?: boolean | null;
+    iso42001Certified?: boolean | null;
+    aiModels?: unknown;
+    euAiActAnnexIIIDomains?: string[];
+    tags?: string[];
   },
   mapping: VendorDataMapping
 ): VendorPreviewItem {
@@ -57,6 +73,21 @@ function buildVendorPreview(
       country,
       mechanism: "Standard Contractual Clauses",
     }));
+
+  const aiFields: VendorCatalogAIFields = {
+    slug: catalogVendor.slug,
+    name: catalogVendor.name,
+    category: catalogVendor.category,
+    subcategory: catalogVendor.subcategory,
+    aiCapabilities: catalogVendor.aiCapabilities ?? [],
+    aiTechniques: catalogVendor.aiTechniques ?? [],
+    euAiActRole: catalogVendor.euAiActRole,
+    euAiActCompliant: catalogVendor.euAiActCompliant,
+    iso42001Certified: catalogVendor.iso42001Certified,
+    aiModels: catalogVendor.aiModels,
+    euAiActAnnexIIIDomains: catalogVendor.euAiActAnnexIIIDomains,
+    tags: catalogVendor.tags,
+  };
 
   return {
     vendorName: catalogVendor.name,
@@ -70,6 +101,8 @@ function buildVendorPreview(
     isHighRisk: mapping.isHighRisk,
     transfers,
     privacyTechnologies: catalogVendor.privacyTechnologies || [],
+    isAiCapable: isAiCapableVendor(aiFields),
+    aiCapabilities: catalogVendor.aiCapabilities ?? [],
   };
 }
 
@@ -247,6 +280,14 @@ export const quickstartRouter = createTRPCRouter({
           certifications: true,
           gdprCompliant: true,
           privacyTechnologies: true,
+          aiCapabilities: true,
+          aiTechniques: true,
+          euAiActRole: true,
+          euAiActCompliant: true,
+          iso42001Certified: true,
+          aiModels: true,
+          euAiActAnnexIIIDomains: true,
+          tags: true,
         },
       });
 
@@ -268,25 +309,20 @@ export const quickstartRouter = createTRPCRouter({
         previews.push(preview);
       }
 
+      const newPreviews = previews.filter(
+        (p) => !existingVendorNames.has(p.vendorName)
+      );
+
       return {
         previews,
         existingVendorNames: Array.from(existingVendorNames),
         totals: {
-          vendors: previews.filter(
-            (p) => !existingVendorNames.has(p.vendorName)
-          ).length,
-          assets: previews.filter(
-            (p) => !existingVendorNames.has(p.vendorName)
-          ).length,
-          elements: previews
-            .filter((p) => !existingVendorNames.has(p.vendorName))
-            .reduce((sum, p) => sum + p.elementCount, 0),
-          activities: previews.filter(
-            (p) => !existingVendorNames.has(p.vendorName)
-          ).length,
-          transfers: previews
-            .filter((p) => !existingVendorNames.has(p.vendorName))
-            .reduce((sum, p) => sum + p.transfers.length, 0),
+          vendors: newPreviews.length,
+          assets: newPreviews.length,
+          elements: newPreviews.reduce((sum, p) => sum + p.elementCount, 0),
+          activities: newPreviews.length,
+          transfers: newPreviews.reduce((sum, p) => sum + p.transfers.length, 0),
+          aiSystems: newPreviews.filter((p) => p.isAiCapable).length,
         },
       };
     }),
@@ -487,7 +523,7 @@ export const quickstartRouter = createTRPCRouter({
         }
       }
 
-      // Fetch catalog vendors if needed
+      // Fetch catalog vendors if needed (include AI fields for auto-registration)
       const catalogVendors =
         input.vendorSlugs.length > 0
           ? await ctx.prisma.vendorCatalog.findMany({
@@ -518,7 +554,17 @@ export const quickstartRouter = createTRPCRouter({
           activities: 0,
           flows: 0,
           transfers: 0,
+          assessments: 0,
+          aiSystems: 0,
         };
+
+        // Track high-risk vendors for auto-assessment creation
+        const highRiskVendors: {
+          vendorId: string;
+          vendorName: string;
+          activityId: string;
+          hasTransfers: boolean;
+        }[] = [];
 
         const auditEntries: {
           entityType: string;
@@ -572,6 +618,56 @@ export const quickstartRouter = createTRPCRouter({
             action: "CREATE",
             changes: { source: "quickstart", catalogSlug: catalogVendor.slug },
           });
+
+          // Auto-create AISystem record for AI-capable vendors
+          const aiSystemData = buildAISystemFromCatalog(
+            {
+              slug: catalogVendor.slug,
+              name: catalogVendor.name,
+              category: catalogVendor.category,
+              subcategory: catalogVendor.subcategory,
+              aiCapabilities: catalogVendor.aiCapabilities,
+              aiTechniques: catalogVendor.aiTechniques,
+              euAiActRole: catalogVendor.euAiActRole,
+              euAiActCompliant: catalogVendor.euAiActCompliant,
+              iso42001Certified: catalogVendor.iso42001Certified,
+              aiModels: catalogVendor.aiModels,
+              euAiActAnnexIIIDomains: catalogVendor.euAiActAnnexIIIDomains,
+              tags: catalogVendor.tags,
+            },
+            vendor.id,
+            catalogVendor.name,
+          );
+          if (aiSystemData) {
+            const aiSystem = await tx.aISystem.create({
+              data: {
+                organizationId: orgId,
+                name: aiSystemData.name,
+                description: aiSystemData.description,
+                purpose: aiSystemData.purpose,
+                riskLevel: aiSystemData.riskLevel,
+                category: aiSystemData.category,
+                modelType: aiSystemData.modelType,
+                provider: aiSystemData.provider,
+                vendorId: aiSystemData.vendorId,
+                aiCapabilities: aiSystemData.aiCapabilities,
+                aiTechniques: aiSystemData.aiTechniques,
+                euAiActRole: aiSystemData.euAiActRole,
+                euAiActCompliant: aiSystemData.euAiActCompliant,
+                iso42001Certified: aiSystemData.iso42001Certified,
+                aiModels: aiSystemData.aiModels ?? undefined,
+                catalogSlug: aiSystemData.catalogSlug,
+                status: "DRAFT",
+              },
+            });
+            counts.aiSystems++;
+            auditEntries.push({
+              entityType: "AISystem",
+              entityId: aiSystem.id,
+              action: "AUTO_CREATE",
+              changes: { source: "quickstart", catalogSlug: catalogVendor.slug, vendorId: vendor.id },
+            });
+          }
 
           // Create data asset for this vendor
           const assetName = `${catalogVendor.name} (${mapping.label})`;
@@ -672,7 +768,34 @@ export const quickstartRouter = createTRPCRouter({
                 });
                 counts.transfers += nonEuLocations.length;
               }
+
+              // Track high-risk vendors for auto-assessment
+              if (mapping.isHighRisk) {
+                highRiskVendors.push({
+                  vendorId: vendor.id,
+                  vendorName: catalogVendor.name,
+                  activityId: activity.id,
+                  hasTransfers: nonEuLocations.length > 0,
+                });
+              }
             }
+          }
+        }
+
+        // ─── AUTO-ASSESSMENT FOR HIGH-RISK VENDORS ───
+        for (const hrVendor of highRiskVendors) {
+          const result = await createAssessmentFromActivity({
+            tx,
+            organizationId: orgId,
+            userId,
+            processingActivityId: hrVendor.activityId,
+            vendorId: hrVendor.vendorId,
+            vendorName: hrVendor.vendorName,
+            assessmentType: "DPIA",
+            reason: `Auto-generated: ${hrVendor.vendorName} flagged as high-risk during quickstart import${hrVendor.hasTransfers ? " (includes international transfers)" : ""}`,
+          });
+          if (result.created) {
+            counts.assessments++;
           }
         }
 

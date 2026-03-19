@@ -37,6 +37,7 @@ import {
   X,
   ExternalLink,
   ShieldCheck,
+  Bot,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -96,7 +97,7 @@ export default function QuickstartPage() {
   const [skipActivityNames, setSkipActivityNames] = useState<string[]>([]);
 
   // Result data from execute mutation
-  const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number } | null>(null);
+  const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number; aiSystems?: number } | null>(null);
 
   // Debounce search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -246,6 +247,7 @@ export default function QuickstartPage() {
       (industryPreview?.totals.activities ?? 0),
     flows: industryPreview?.totals.flows ?? 0,
     transfers: vendorPreview?.totals.transfers ?? 0,
+    aiSystems: vendorPreview?.totals.aiSystems ?? 0,
   };
 
   // ─── RENDER ───────────────────────────────────────
@@ -1106,6 +1108,12 @@ export default function QuickstartPage() {
                 icon: ArrowRightLeft,
                 show: useVendors && reviewTotals.transfers > 0,
               },
+              {
+                label: "AI Systems",
+                count: reviewTotals.aiSystems,
+                icon: Bot,
+                show: useVendors && reviewTotals.aiSystems > 0,
+              },
             ]
               .filter((s) => s.show)
               .map((s) => (
@@ -1161,11 +1169,19 @@ export default function QuickstartPage() {
                         key={p.vendorSlug}
                         className="flex items-center justify-between text-sm py-1"
                       >
-                        <span>{p.vendorName}</span>
+                        <span className="flex items-center gap-1.5">
+                          {p.vendorName}
+                          {p.isAiCapable && (
+                            <span title="AI-capable vendor — AI System record will be created">
+                              <Bot className="w-3.5 h-3.5 text-blue-500" />
+                            </span>
+                          )}
+                        </span>
                         <span className="text-xs text-muted-foreground">
                           {p.elementCount} elements, 1 activity
                           {p.transfers.length > 0 &&
                             `, ${p.transfers.length} transfer${p.transfers.length !== 1 ? "s" : ""}`}
+                          {p.isAiCapable && ", 1 AI system"}
                         </span>
                       </div>
                     ))}
@@ -1302,6 +1318,21 @@ export default function QuickstartPage() {
                 </CardContent>
               </Card>
             </Link>
+            {executionResult && (executionResult.aiSystems ?? 0) > 0 && (
+              <Link href="/privacy/ai-systems">
+                <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <Bot className="w-5 h-5 text-primary shrink-0" />
+                    <div>
+                      <p className="font-medium text-sm">AI Systems</p>
+                      <p className="text-xs text-muted-foreground">
+                        {executionResult.aiSystems} AI system(s) created
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
             <Link href="/privacy">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardContent className="p-4 flex items-center gap-3">
