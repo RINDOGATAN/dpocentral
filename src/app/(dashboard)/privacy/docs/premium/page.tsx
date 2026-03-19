@@ -234,7 +234,7 @@ export default function DocsPremiumPage() {
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Vendor Management", href: "/privacy/docs/vendors" }}
+        previous={{ title: "AI Governance", href: "/privacy/docs/ai-governance" }}
       />
     </div>
   );

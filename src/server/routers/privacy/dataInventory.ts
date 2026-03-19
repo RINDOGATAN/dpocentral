@@ -800,6 +800,164 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // ============================================================
+  // TRANSFER COMPLIANCE (Feature 4)
+  // ============================================================
+
+  // Get transfer compliance stats
+  getTransferStats: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const transfers = await ctx.prisma.dataTransfer.findMany({
+        where: { organizationId: ctx.organization.id, isActive: true },
+        select: {
+          id: true,
+          destinationCountry: true,
+          mechanism: true,
+          complianceStatus: true,
+          sccExpiryDate: true,
+          tiaCompleted: true,
+        },
+      });
+
+      const total = transfers.length;
+      const compliant = transfers.filter((t) => t.complianceStatus === "COMPLIANT").length;
+      const needsReview = transfers.filter((t) => t.complianceStatus === "NEEDS_REVIEW").length;
+      const nonCompliant = transfers.filter((t) => t.complianceStatus === "NON_COMPLIANT").length;
+      const pending = transfers.filter((t) => !t.complianceStatus || t.complianceStatus === "PENDING").length;
+      const withoutTia = transfers.filter((t) => !t.tiaCompleted && t.mechanism === "STANDARD_CONTRACTUAL_CLAUSES").length;
+
+      const now = new Date();
+      const thirtyDays = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const expiringSoon = transfers.filter(
+        (t) => t.sccExpiryDate && t.sccExpiryDate > now && t.sccExpiryDate <= thirtyDays
+      ).length;
+
+      const countries = [...new Set(transfers.map((t) => t.destinationCountry))];
+
+      return {
+        total,
+        compliant,
+        needsReview,
+        nonCompliant,
+        pending,
+        withoutTia,
+        expiringSoon,
+        destinationCountries: countries,
+      };
+    }),
+
+  // Update transfer compliance details
+  updateTransferCompliance: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        complianceStatus: z.enum(["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT", "PENDING"]).optional(),
+        sccExpiryDate: z.date().optional().nullable(),
+        supplementaryMeasures: z.any().optional(),
+        tiaCompleted: z.boolean().optional(),
+        tiaDate: z.date().optional().nullable(),
+        safeguards: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, organizationId, ...data } = input;
+
+      const transfer = await ctx.prisma.dataTransfer.findFirst({
+        where: { id, organizationId: ctx.organization.id },
+      });
+
+      if (!transfer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data transfer not found",
+        });
+      }
+
+      const updated = await ctx.prisma.dataTransfer.update({
+        where: { id },
+        data,
+        include: {
+          processingActivity: true,
+          jurisdiction: true,
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataTransfer",
+          entityId: id,
+          action: "UPDATE_COMPLIANCE",
+          changes: data,
+        },
+      });
+
+      return updated;
+    }),
+
+  // Get Schrems II compliance checklist for a transfer
+  getTransferComplianceChecklist: organizationProcedure
+    .input(z.object({ organizationId: z.string(), transferId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const transfer = await ctx.prisma.dataTransfer.findFirst({
+        where: { id: input.transferId, organizationId: ctx.organization.id },
+        include: {
+          processingActivity: true,
+          jurisdiction: true,
+        },
+      });
+
+      if (!transfer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data transfer not found",
+        });
+      }
+
+      const {
+        SCHREMS_II_CHECKLIST,
+        SUPPLEMENTARY_MEASURES,
+        ADEQUACY_DECISIONS,
+        isAdequateCountry,
+        getTransferComplianceStatus,
+      } = await import("@/config/transfer-compliance-rules");
+
+      const isAdequate = isAdequateCountry(transfer.destinationCountry);
+      const adequacyDecision = ADEQUACY_DECISIONS.find(
+        (d) => d.countryCode === transfer.destinationCountry
+      );
+
+      const autoStatus = getTransferComplianceStatus({
+        mechanism: transfer.mechanism,
+        destinationCountry: transfer.destinationCountry,
+        tiaCompleted: transfer.tiaCompleted,
+        sccExpiryDate: transfer.sccExpiryDate,
+        supplementaryMeasures: transfer.supplementaryMeasures as Record<string, unknown> | undefined,
+      });
+
+      return {
+        transfer: {
+          id: transfer.id,
+          name: transfer.name,
+          destinationCountry: transfer.destinationCountry,
+          destinationOrg: transfer.destinationOrg,
+          mechanism: transfer.mechanism,
+          complianceStatus: transfer.complianceStatus ?? autoStatus,
+          suggestedStatus: autoStatus,
+          sccExpiryDate: transfer.sccExpiryDate,
+          tiaCompleted: transfer.tiaCompleted,
+          supplementaryMeasures: transfer.supplementaryMeasures,
+        },
+        isAdequateCountry: isAdequate,
+        adequacyDecision,
+        checklist: SCHREMS_II_CHECKLIST,
+        supplementaryMeasures: SUPPLEMENTARY_MEASURES,
+      };
+    }),
+
+  // ============================================================
   // ROPA EXPORT
   // ============================================================
 
