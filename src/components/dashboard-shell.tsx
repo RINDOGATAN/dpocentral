@@ -22,6 +22,10 @@ import {
   Briefcase,
   Search,
   Settings,
+  Bell,
+  BarChart3,
+  Globe,
+  Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,12 +62,21 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { href: "/privacy/vendors", label: tNav("vendors"), icon: Building2 },
   ];
 
-  // Build nav items dynamically based on user type
+  // Build nav items dynamically based on user type and feature flags
   const allNavItems = [
     ...(isProfessional
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
     ...navItems,
+    ...(features.complianceDashboardEnabled
+      ? [{ href: "/privacy/reports", label: "Reports", icon: BarChart3 }]
+      : []),
+    ...(features.regulatoryTrackerEnabled
+      ? [{ href: "/privacy/regulations", label: "Regulations", icon: Globe }]
+      : []),
+    ...(features.aiGovernanceEnabled
+      ? [{ href: "/privacy/ai-systems", label: "AI Systems", icon: Bot }]
+      : []),
     ...(features.expertDirectoryEnabled
       ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
       : []),

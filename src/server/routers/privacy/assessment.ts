@@ -889,4 +889,240 @@ export const assessmentRouter = createTRPCRouter({
       const entitledTypes = await getEntitledAssessmentTypes(ctx.organization.id);
       return { entitledTypes };
     }),
+
+  // ============================================================
+  // DPIA AUTO-FILL FROM PROCESSING ACTIVITY (Feature 3)
+  // ============================================================
+
+  generateDpiaFromActivity: organizationProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        processingActivityId: z.string(),
+        vendorId: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Load the processing activity with all linked data
+      const activity = await ctx.prisma.processingActivity.findFirst({
+        where: {
+          id: input.processingActivityId,
+          organizationId: ctx.organization.id,
+        },
+        include: {
+          assets: {
+            include: {
+              dataAsset: {
+                include: {
+                  dataElements: true,
+                },
+              },
+            },
+          },
+          transfers: true,
+        },
+      });
+
+      if (!activity) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Processing activity not found",
+        });
+      }
+
+      // Load vendor if specified
+      const vendor = input.vendorId
+        ? await ctx.prisma.vendor.findFirst({
+            where: { id: input.vendorId, organizationId: ctx.organization.id },
+          })
+        : null;
+
+      // Build auto-fill context
+      const assets: { name: string; type: string; hostingType: string | null; vendor: string | null }[] =
+        activity.assets.map((pa: any) => ({
+          name: pa.dataAsset.name,
+          type: pa.dataAsset.type,
+          hostingType: pa.dataAsset.hostingType,
+          vendor: pa.dataAsset.vendor,
+        }));
+
+      const elements: { name: string; category: string; sensitivity: string; isSpecialCategory: boolean }[] =
+        activity.assets.flatMap((pa: any) =>
+          pa.dataAsset.dataElements.map((e: any) => ({
+            name: e.name,
+            category: e.category,
+            sensitivity: e.sensitivity,
+            isSpecialCategory: e.isSpecialCategory,
+          }))
+        );
+
+      const transfers: { destinationCountry: string; mechanism: string; safeguards: string | null }[] =
+        activity.transfers.map((t: any) => ({
+          destinationCountry: t.destinationCountry,
+          mechanism: t.mechanism,
+          safeguards: t.safeguards,
+        }));
+
+      // Generate auto-fill responses using rule engine
+      const suggestions: {
+        sectionId: string;
+        questionId: string;
+        suggestedResponse: string;
+        confidence: "high" | "medium" | "low";
+        source: string;
+      }[] = [];
+
+      // Section 1: Processing Description
+      suggestions.push({
+        sectionId: "s1",
+        questionId: "s1_processing_description",
+        suggestedResponse: `${activity.name}: ${activity.purpose || activity.description || "Processing activity as part of organizational operations."}`,
+        confidence: "high",
+        source: "Processing activity purpose",
+      });
+
+      // Legal basis
+      const legalBasisMap: Record<string, string> = {
+        CONSENT: "Processing is based on the data subject's consent (Art. 6(1)(a) GDPR). Consent is freely given, specific, informed, and unambiguous.",
+        CONTRACT: "Processing is necessary for the performance of a contract with the data subject (Art. 6(1)(b) GDPR).",
+        LEGAL_OBLIGATION: "Processing is necessary for compliance with a legal obligation to which the controller is subject (Art. 6(1)(c) GDPR).",
+        VITAL_INTERESTS: "Processing is necessary to protect vital interests of the data subject or another natural person (Art. 6(1)(d) GDPR).",
+        PUBLIC_TASK: "Processing is necessary for the performance of a task carried out in the public interest (Art. 6(1)(e) GDPR).",
+        LEGITIMATE_INTERESTS: "Processing is based on the legitimate interests of the controller (Art. 6(1)(f) GDPR). A balancing test has been conducted to ensure interests do not override the rights of data subjects.",
+      };
+      if (activity.legalBasis) {
+        suggestions.push({
+          sectionId: "s1",
+          questionId: "s1_legal_basis",
+          suggestedResponse: legalBasisMap[activity.legalBasis] || `Legal basis: ${activity.legalBasis}`,
+          confidence: "high",
+          source: "Processing activity legal basis",
+        });
+      }
+
+      // Data categories
+      if (elements.length > 0) {
+        const categories = [...new Set(elements.map((e) => e.category))];
+        const specialCat = elements.filter((e) => e.isSpecialCategory);
+        suggestions.push({
+          sectionId: "s3",
+          questionId: "s3_data_categories",
+          suggestedResponse: `Data categories processed: ${categories.join(", ")}. Specific data elements include: ${elements.map((e) => e.name).join(", ")}.`,
+          confidence: "high",
+          source: "Linked data elements",
+        });
+
+        if (specialCat.length > 0) {
+          suggestions.push({
+            sectionId: "s3",
+            questionId: "s3_special_categories",
+            suggestedResponse: `Special category data is processed: ${specialCat.map((e) => e.name).join(", ")}. Additional safeguards are required under Art. 9 GDPR.`,
+            confidence: "high",
+            source: "Special category data elements",
+          });
+        }
+      }
+
+      // Data subjects
+      if (activity.dataSubjects.length > 0) {
+        suggestions.push({
+          sectionId: "s3",
+          questionId: "s3_data_subjects",
+          suggestedResponse: `Data subjects affected: ${activity.dataSubjects.join(", ")}.`,
+          confidence: "high",
+          source: "Processing activity data subjects",
+        });
+      }
+
+      // Recipients
+      if (activity.recipients.length > 0) {
+        suggestions.push({
+          sectionId: "s3",
+          questionId: "s3_recipients",
+          suggestedResponse: `Data recipients: ${activity.recipients.join(", ")}.`,
+          confidence: "high",
+          source: "Processing activity recipients",
+        });
+      }
+
+      // Retention
+      if (activity.retentionPeriod) {
+        suggestions.push({
+          sectionId: "s4",
+          questionId: "s4_retention",
+          suggestedResponse: `Data retention period: ${activity.retentionPeriod}${activity.retentionDays ? ` (${activity.retentionDays} days)` : ""}. Data is deleted or anonymized after the retention period expires.`,
+          confidence: "high",
+          source: "Processing activity retention policy",
+        });
+      }
+
+      // Security measures
+      if (vendor) {
+        const certs = vendor.certifications.length > 0
+          ? `Vendor ${vendor.name} holds: ${vendor.certifications.join(", ")}.`
+          : "";
+        suggestions.push({
+          sectionId: "s4",
+          questionId: "s4_security",
+          suggestedResponse: `Data is processed by ${vendor.name}.${certs ? " " + certs : ""} Technical and organizational measures include encryption in transit and at rest, access controls, and regular security assessments.`,
+          confidence: vendor.certifications.length > 0 ? "medium" : "low",
+          source: "Vendor compliance profile",
+        });
+      }
+
+      // International transfers
+      if (transfers.length > 0) {
+        const transferSummary = transfers
+          .map((t) => `${t.destinationCountry} (${t.mechanism.replace(/_/g, " ")})`)
+          .join("; ");
+        suggestions.push({
+          sectionId: "s5",
+          questionId: "s5_transfers",
+          suggestedResponse: `International data transfers: ${transferSummary}. ${transfers.some((t) => t.safeguards) ? "Safeguards include: " + transfers.filter((t) => t.safeguards).map((t) => t.safeguards).join("; ") + "." : "Appropriate safeguards must be verified."}`,
+          confidence: "medium",
+          source: "Data transfer records",
+        });
+      }
+
+      // Necessity and proportionality
+      suggestions.push({
+        sectionId: "s2",
+        questionId: "s2_necessity",
+        suggestedResponse: `The processing of ${elements.length} data elements across ${assets.length} system(s) is necessary to achieve the stated purpose: ${activity.purpose || activity.name}. Data minimization has been considered — only data elements essential to the processing purpose are collected.`,
+        confidence: "medium",
+        source: "Activity and data element analysis",
+      });
+
+      // Risk assessment
+      const hasSpecialData = elements.some((e) => e.isSpecialCategory);
+      const hasTransfers = transfers.length > 0;
+      const isLargeScale = elements.length > 10;
+      const riskFactors = [
+        ...(hasSpecialData ? ["special category data processed"] : []),
+        ...(hasTransfers ? [`international transfers to ${transfers.length} destination(s)`] : []),
+        ...(isLargeScale ? ["large-scale data processing"] : []),
+      ];
+
+      suggestions.push({
+        sectionId: "s7",
+        questionId: "s7_risk_assessment",
+        suggestedResponse: riskFactors.length > 0
+          ? `Risk factors identified: ${riskFactors.join(", ")}. Mitigation measures should address each factor. Overall risk level requires assessment against the likelihood and severity of harm to data subjects.`
+          : "No elevated risk factors identified based on available data. Standard data protection measures apply.",
+        confidence: riskFactors.length > 0 ? "medium" : "low",
+        source: "Automated risk factor analysis",
+      });
+
+      return {
+        activityName: activity.name,
+        vendorName: vendor?.name ?? null,
+        suggestions,
+        context: {
+          assetCount: assets.length,
+          elementCount: elements.length,
+          transferCount: transfers.length,
+          hasSpecialCategory: hasSpecialData,
+        },
+      };
+    }),
 });

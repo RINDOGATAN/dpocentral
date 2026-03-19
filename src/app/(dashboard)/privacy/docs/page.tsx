@@ -10,6 +10,7 @@ import {
   Zap,
   Sparkles,
   ArrowRight,
+  Scale,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -145,6 +146,9 @@ export default function DocsGettingStartedPage() {
             { icon: ClipboardCheck, label: "Assessments", desc: "DPIA, PIA, TIA, LIA with templates & approvals" },
             { icon: AlertTriangle, label: "Incidents", desc: "Breach tracking, DPA notifications, timelines" },
             { icon: Building2, label: "Vendors", desc: "Contracts, questionnaires, risk tiers" },
+            { icon: Shield, label: "Reports", desc: "Compliance posture score, trend tracking, board reports" },
+            { icon: Scale, label: "Regulations", desc: "40+ jurisdictions, applicability wizard, deadline config" },
+            { icon: Shield, label: "AI Systems", desc: "EU AI Act register, risk classification, governance" },
           ].map((item) => {
             const Icon = item.icon;
             return (
