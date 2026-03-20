@@ -66,11 +66,19 @@ Gated by `ADMIN_EMAILS` env var. 6 sections: Dashboard, Customers, Skill Package
 - **Incidents** - Breach tracking, DPA notifications, timeline
 - **Vendors** - Contracts, questionnaires, risk tiers
 - **AI Governance** - EU AI Act register, risk classification, AI system CRUD
-- **Notifications** - Event-driven alerts, deadline monitoring, preferences
-- **Reports** - Compliance score, module breakdown, trend snapshots
-- **Regulations** - Jurisdiction catalog, applicability wizard
+- **Notifications** - Multi-channel dispatcher (in-app, email, Slack), user preferences, daily cron
+- **Reports** - Weighted compliance score (ROPA 25%, Assessment 20%, DSAR 25%, Incident 15%, Vendor 15%), module breakdown, risk indicators, trend snapshots, board report data
+- **Regulations** - 40-jurisdiction catalog, applicability wizard, org-level jurisdiction management
+- **DPIA Auto-Fill** - Rule-based pre-population from processing activities, optional AI narrative (OpenAI/Anthropic)
+- **Transfer Compliance** - Schrems II checklist, EU adequacy decisions, supplementary measures, compliance status evaluator
 
 All module list pages share consistent patterns: debounced search, controlled Tabs, mobile/desktop dual layouts, responsive stats grids, `ExpertHelpCta` per module.
+
+## Dashboard Navigation
+- **Top bar (desktop)**: 5 core modules flat — Data Inventory, DSAR, Assessments, Incidents, Vendors
+- **More dropdown**: Reports, Regulations, AI Systems, Find Expert, My Clients (professional)
+- **Mobile**: All items flat in slide-out sheet
+- Feature-flagged via `src/config/features.ts` (19 flags, all enabled by default)
 
 ## Expert Directory & Dealroom Integration
 - `/privacy/experts` — searchable directory with filters (specialization, country, language, type)
@@ -88,14 +96,28 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 - Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
 - Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
 
+## Data Security Page
+- Public page at `/security` (under `(public)` layout)
+- Linked from dashboard footer and public site footer
+- 10 security sections grouped into 4 categories with accordion UI
+- Uses shadcn Accordion component (`src/components/ui/accordion.tsx`)
+
+## Cron Jobs
+- `vercel.json` defines daily cron at 08:00 UTC: `/api/cron/notifications`
+- Checks: DSAR deadlines, incident notification deadlines, vendor contract expiry, assessment due dates, SCC expiry
+- Protected by `CRON_SECRET` env var (set in Vercel production)
+
 ## Structure
 ```
 prisma/schema.prisma              # ~25 models
-src/server/routers/privacy/       # tRPC routers
-src/server/services/              # External API clients (Dealroom, AI Sentinel)
-src/config/                       # Feature flags, AI Act classifications, vendor mappings
+src/server/routers/privacy/       # tRPC routers (12 routers)
+src/server/services/              # External API clients (Dealroom, AI Sentinel), notifications dispatcher, AI assessment generator
+src/config/                       # Feature flags, AI Act classifications, vendor mappings, jurisdiction catalog, transfer compliance rules, DPIA auto-fill rules
 src/app/(dashboard)/privacy/      # Dashboard pages
+src/app/(public)/security/        # Public Data Security page
 src/app/dsar/                     # Public DSAR portal
+src/app/api/cron/                 # Vercel cron endpoints
+src/components/docs/              # Reusable doc components (DocSection, StepList, FeatureMockup, InfoCallout, DocNavFooter)
 scripts/                          # Verification, seeding & demo scripts
 ```
 
