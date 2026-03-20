@@ -112,10 +112,10 @@ export default function middleware(request: NextRequest) {
     return response;
   }
 
-  // Check if i18n is enabled
-  const i18nEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
+  // Check if i18n is enabled (default: true, can be disabled via env var)
+  const i18nDisabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "false";
 
-  if (!i18nEnabled) {
+  if (i18nDisabled) {
     const response = currencyResponse || NextResponse.next();
     applyCsp(response);
     return response;
