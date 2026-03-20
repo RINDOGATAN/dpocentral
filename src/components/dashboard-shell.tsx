@@ -18,6 +18,7 @@ import {
   CreditCard,
   Scale,
   Shield,
+  Lock,
   MessageSquareWarning,
   Briefcase,
   Search,
@@ -26,6 +27,7 @@ import {
   BarChart3,
   Globe,
   Bot,
+  MoreHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +37,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
@@ -54,7 +62,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const tNav = useTranslations("nav");
   const tFooter = useTranslations("footer");
 
-  const navItems = [
+  // Primary nav: always visible in the top bar
+  const primaryNavItems = [
     { href: "/privacy/data-inventory", label: tNav("dataInventory"), icon: Database },
     { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
     { href: "/privacy/assessments", label: tNav("assessments"), icon: ClipboardCheck },
@@ -62,12 +71,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { href: "/privacy/vendors", label: tNav("vendors"), icon: Building2 },
   ];
 
-  // Build nav items dynamically based on user type and feature flags
-  const allNavItems = [
+  // Secondary nav: shown in "More" dropdown on desktop, flat in mobile sheet
+  const moreNavItems = [
     ...(isProfessional
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
-    ...navItems,
     ...(features.complianceDashboardEnabled
       ? [{ href: "/privacy/reports", label: "Reports", icon: BarChart3 }]
       : []),
@@ -81,6 +89,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
       : []),
   ];
+
+  // All items combined (used by mobile sheet)
+  const allNavItems = [...primaryNavItems, ...moreNavItems];
+
+  // Check if any "More" item is active (to highlight the More button)
+  const isMoreActive = moreNavItems.some(
+    (item) => pathname === item.href || (item.href !== "/privacy" && pathname.startsWith(item.href))
+  );
 
   if (orgLoading || userTypeLoading) {
     return (
@@ -174,7 +190,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {allNavItems.map((item) => {
+            {primaryNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href ||
                 (item.href !== "/privacy" && pathname.startsWith(item.href));
@@ -192,6 +208,39 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            {moreNavItems.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`gap-2 ${isMoreActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""}`}
+                  >
+                    <MoreHorizontal className="w-4 h-4" />
+                    <span className="hidden lg:inline">More</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  {moreNavItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href ||
+                      (item.href !== "/privacy" && pathname.startsWith(item.href));
+
+                    return (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link
+                          href={item.href}
+                          className={`flex items-center gap-2 ${isActive ? "text-primary" : ""}`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </nav>
 
           {/* Right side actions */}
@@ -261,6 +310,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <Shield className="w-3.5 h-3.5" />
               {tFooter("privacyPolicy")}
             </a>
+            <span className="text-border">&middot;</span>
+            <Link href="/security" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+              <Lock className="w-3.5 h-3.5" />
+              Data Security
+            </Link>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />
           </div>
