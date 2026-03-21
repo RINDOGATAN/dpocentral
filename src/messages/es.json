@@ -75,7 +75,8 @@
     "userGuide": "Guía de usuario",
     "billing": "Facturación",
     "termsOfService": "Términos de servicio",
-    "privacyPolicy": "Política de privacidad"
+    "privacyPolicy": "Política de privacidad",
+    "dataSecurity": "Seguridad de los datos"
   },
   "organization": {
     "welcome": "Bienvenido a {brandName}",
@@ -238,6 +239,98 @@
     "body": "Expertos en despliegue pueden ayudarte a configurar y mantener tu propia instancia.",
     "findExpert": "Buscar experto",
     "dismiss": "Cerrar"
+  },
+  "security": {
+    "badge": "Defensa en profundidad",
+    "title": "Seguridad de los datos",
+    "subtitle": "DPO Central se ha construido con defensa en profundidad en cada capa. Como plataforma de gestión de privacidad que maneja resultados de evaluaciones, registros de incidentes, contratos con proveedores y solicitudes de interesados, la seguridad es un requisito fundamental, no algo secundario.",
+    "stats": {
+      "layers": "Capas de seguridad",
+      "headers": "Cabeceras HTTP",
+      "roles": "Niveles de rol",
+      "hsts": "HSTS máximo"
+    },
+    "categories": {
+      "identityAccess": "Identidad y acceso",
+      "identityAccessDesc": "Autenticación, autorización y gestión de sesiones",
+      "appSecurity": "Seguridad de la aplicación",
+      "appSecurityDesc": "Tratamiento de entradas, protección de API y prevención de abusos",
+      "dataProtection": "Protección de datos",
+      "dataProtectionDesc": "Seguridad del transporte, registro de auditoría, minimización y pagos",
+      "infrastructure": "Infraestructura",
+      "infrastructureDesc": "Alojamiento, cifrado y aislamiento de entornos"
+    },
+    "controlsLabel": "Controles de seguridad",
+    "sections": {
+      "authentication": "Autenticación",
+      "authorization": "Autorización y control de acceso",
+      "inputValidation": "Validación y saneamiento de entradas",
+      "apiSecurity": "Seguridad de la API",
+      "rateLimiting": "Limitación de tasa y prevención de abusos",
+      "transport": "Seguridad del transporte y del navegador",
+      "audit": "Registro de auditoría",
+      "minimization": "Minimización de datos",
+      "payment": "Seguridad de pagos",
+      "hosting": "Alojamiento y entorno"
+    },
+    "badges": {
+      "zeroKnowledge": "Conocimiento cero",
+      "fiveTierRbac": "RBAC 5 niveles",
+      "perEndpoint": "Por endpoint",
+      "sixHeaders": "6 cabeceras",
+      "stripeVerified": "Verificado por Stripe",
+      "edgeNetwork": "Red perimetral"
+    },
+    "items": {
+      "auth1": "Inicio de sesión multifactor mediante Google OAuth y enlaces mágicos por correo electrónico",
+      "auth2": "Sesiones JWT sin estado — sin estado de sesión en el servidor que pueda comprometerse",
+      "auth3": "Los tokens OAuth nunca se almacenan en la base de datos",
+      "auth4": "Aislamiento de cuentas — cada método de inicio de sesión se mantiene separado",
+      "auth5": "SSO entre aplicaciones mediante cookies de sesión seguras y con alcance definido",
+      "authHighlight": "No se almacenan contraseñas. La autenticación se delega en proveedores de identidad de confianza o en enlaces mágicos firmados criptográficamente.",
+      "authz1": "Multitenencia estricta — cada consulta está limitada a vuestra organización",
+      "authz2": "Jerarquía de roles en cinco niveles: Propietario, Administrador, Delegado de Protección de Datos, Miembro, Lector",
+      "authz3": "Control de acceso basado en roles en todas las operaciones de creación, actualización y eliminación",
+      "authz4": "Acciones destructivas restringidas exclusivamente a Administradores y Propietarios",
+      "authz5": "Sin SQL directo — todo el acceso mediante consultas ORM parametrizadas",
+      "authzHighlight": "Todo el acceso a la base de datos utiliza consultas ORM parametrizadas. La inyección SQL se previene estructuralmente, no solo se mitiga.",
+      "input1": "Validación de esquema en cada endpoint de la API",
+      "input2": "Saneamiento de HTML en todas las entradas de cara al público",
+      "input3": "Las consultas parametrizadas a la base de datos previenen la inyección SQL",
+      "input4": "Los detalles de errores de validación se ocultan en producción",
+      "api1": "Verificación de claves API con tiempo constante en los endpoints administrativos",
+      "api2": "Validación del tamaño de las cargas útiles en operaciones por lotes",
+      "api3": "Control de caducidad de tokens en todas las operaciones de cuestionarios a proveedores",
+      "api4": "El portal público de DSAR valida la configuración activa antes de aceptar solicitudes",
+      "apiHighlight": "Las comparaciones de claves API utilizan algoritmos de tiempo constante para prevenir ataques de temporización en los endpoints administrativos.",
+      "rate1": "Endpoints de autenticación limitados contra ataques de relleno de credenciales",
+      "rate2": "Rutas de pago y facturación protegidas contra fraude",
+      "rate3": "Endpoints de envío público limitados para prevenir spam",
+      "rate4": "Respuestas 429 correctas con cabeceras Retry-After",
+      "transport1": "HSTS con duración de 2 años, subdominios y precarga",
+      "transport2": "Política de Seguridad de Contenidos con nonces por solicitud",
+      "transport3": "Protección contra clickjacking mediante X-Frame-Options: DENY",
+      "transport4": "Prevención de detección de tipo MIME y política de referencia estricta",
+      "transport5": "Cámara, micrófono y geolocalización deshabilitados por política",
+      "transportHighlight": "Los nonces CSP se generan por solicitud, previniendo la inyección de scripts en línea incluso si un atacante encuentra un vector XSS.",
+      "audit1": "Registro exhaustivo de todas las operaciones de creación, actualización y eliminación",
+      "audit2": "Acciones administrativas registradas con metadatos completos",
+      "audit3": "Registro de producción estructurado sin trazas de pila ni contexto sensible",
+      "min1": "Las respuestas de la API devuelven solo los campos necesarios para la interfaz",
+      "min2": "Las claves sensibles se enmascaran en las vistas administrativas",
+      "min3": "Los dominios de correo electrónico públicos se bloquean para la membresía automática en organizaciones",
+      "pay1": "Verificación de firma de webhooks de Stripe mediante HMAC-SHA256",
+      "pay2": "Proceso de pago del lado del servidor que impide la manipulación de precios del lado del cliente",
+      "pay3": "Los derechos se suspenden automáticamente en caso de fallo en el pago",
+      "infra1": "Alojado en Vercel con TLS automático y red perimetral global",
+      "infra2": "Base de datos PostgreSQL con conexiones cifradas",
+      "infra3": "Los secretos del entorno se excluyen de los paquetes del cliente",
+      "infra4": "Los endpoints exclusivos de desarrollo están protegidos por comprobaciones del entorno de ejecución"
+    },
+    "disclosure": {
+      "title": "Divulgación responsable",
+      "body": "Si descubrís una vulnerabilidad de seguridad, os rogamos que la comuniquéis de forma responsable. No abráis una incidencia pública. Poneos en contacto directamente con nosotros a través de la dirección de correo electrónico indicada en el repositorio."
+    }
   },
   "errors": {
     "generic": "Se ha producido un error. Por favor, inténtalo de nuevo.",
