@@ -64,7 +64,7 @@ export const mockExperts: ExpertProfile[] = [
   {
     id: "exp-001",
     name: "Sergio Maldonado",
-    email: "sergio@todo.law",
+    email: "info@privacycloud.com",
     title: "Managing Partner",
     firm: "TODO.LAW",
     bio: "Privacy lawyer and technologist with over 15 years of experience at the intersection of data protection, marketing technology, and AI governance. Advises organisations across the EU on GDPR compliance, DPIAs, vendor risk management, cross-border transfers, and the EU AI Act. Builder of DPO Central and Vendor.Watch.",
@@ -90,7 +90,7 @@ export const mockExperts: ExpertProfile[] = [
   {
     id: "exp-002",
     name: "DPO Central Deployment Team",
-    email: "deploy@todo.law",
+    email: "info@privacycloud.com",
     title: "Deployment Specialist",
     firm: "TODO.LAW",
     bio: "Helps organizations deploy and maintain self-hosted instances of DPO Central on their own infrastructure — Docker, Kubernetes, bare metal, or private cloud.",
