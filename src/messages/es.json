@@ -206,31 +206,31 @@
     "findExpert": "Buscar experto",
     "quickstart": {
       "heading": "¿Necesitas ayuda para configurar tu programa de privacidad?",
-      "body": "Contacta con un experto certificado en privacidad que te guíe en el cumplimiento del RGPD y te ayude a personalizar tu programa."
+      "body": "Contacta con un experto certificado en protección de datos que te guíe en el cumplimiento del RGPD y te ayude a personalizar tu programa."
     },
     "assessment": {
       "heading": "¿Necesitas ayuda con tu evaluación?",
-      "body": "Los expertos en privacidad pueden ayudarte a realizar EIPD, EIP y otras evaluaciones para garantizar un cumplimiento exhaustivo."
+      "body": "Los expertos en protección de datos pueden ayudarte a realizar EIPD, EIP y otras evaluaciones para garantizar un cumplimiento exhaustivo."
     },
     "incident": {
       "heading": "¿Necesitas orientación experta sobre respuesta a incidentes?",
-      "body": "Un profesional de privacidad puede ayudarte a gestionar notificaciones de brechas, comunicaciones con la AEPD y la remediación."
+      "body": "Un profesional de protección de datos puede ayudarte a gestionar notificaciones de brechas, comunicaciones con la AEPD y la remediación."
     },
     "emptyState": {
       "heading": "¿No sabes por dónde empezar?",
-      "body": "Un experto en privacidad puede ayudarte a construir tu inventario de datos y establecer procesos conformes desde el primer día."
+      "body": "Un experto en protección de datos puede ayudarte a construir tu inventario de datos y establecer procesos conformes desde el primer día."
     },
     "general": {
       "heading": "Solicita ayuda profesional con tu programa de protección de datos",
-      "body": "Contacta con profesionales certificados en privacidad que pueden ayudarte con el cumplimiento del RGPD, evaluaciones y más."
+      "body": "Contacta con profesionales certificados en protección de datos que pueden ayudarte con el cumplimiento del RGPD, evaluaciones y más."
     },
     "vendor": {
       "heading": "¿Necesitas ayuda con la diligencia debida de proveedores?",
-      "body": "Un experto en privacidad puede revisar tus contratos con proveedores, los acuerdos de tratamiento de datos y ayudar a evaluar los riesgos de terceros."
+      "body": "Un experto en protección de datos puede revisar tus contratos con proveedores, los acuerdos de tratamiento de datos y ayudar a evaluar los riesgos de terceros."
     },
     "dsar": {
       "heading": "¿Necesitas ayuda gestionando solicitudes de acceso?",
-      "body": "Los profesionales de privacidad pueden ayudarte a establecer flujos de trabajo eficientes para las solicitudes de los interesados y garantizar respuestas oportunas y conformes."
+      "body": "Los profesionales de protección de datos pueden ayudarte a establecer flujos de trabajo eficientes para las solicitudes de los interesados y garantizar respuestas oportunas y conformes."
     },
     "highRisk": {
       "heading": "Tratamiento de alto riesgo detectado",
@@ -242,8 +242,8 @@
     }
   },
   "experts": {
-    "title": "Encontrar un experto en privacidad",
-    "subtitle": "Conecta con profesionales certificados en privacidad que pueden ayudarte con tus necesidades de cumplimiento",
+    "title": "Buscar experto en protección de datos",
+    "subtitle": "Conecta con profesionales certificados en protección de datos que pueden ayudarte con tus necesidades de cumplimiento",
     "searchPlaceholder": "Buscar por nombre, despacho o especialización...",
     "specialization": "Especialización",
     "allSpecializations": "Todas las especialidades",
@@ -261,7 +261,7 @@
     "noResults": "No se han encontrado expertos que coincidan con los criterios. Prueba a ajustar los filtros.",
     "noExperts": "No hay expertos disponibles en este momento.",
     "unnamedExpert": "Experto sin nombre",
-    "privacyExpert": "Experto en privacidad",
+    "privacyExpert": "Experto en protección de datos",
     "typeLegal": "Jurídico",
     "typeTechnical": "Técnico",
     "typeDeployment": "Despliegue",
