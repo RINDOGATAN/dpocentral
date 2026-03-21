@@ -143,9 +143,11 @@ export function ExpertContactDialog({
                 />
               </div>
               {contactMutation.error && (
-                <p className="text-xs text-destructive">
-                  {contactMutation.error.message}
-                </p>
+                <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2">
+                  <p className="text-xs text-destructive">
+                    Something went wrong sending your request. Please try again or contact us directly via email.
+                  </p>
+                </div>
               )}
               <div className="flex justify-end gap-2 pt-1">
                 <Button type="button" variant="ghost" onClick={handleClose}>
