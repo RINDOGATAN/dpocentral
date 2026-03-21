@@ -2,7 +2,7 @@
 
 Next.js 16 + tRPC + Prisma + PostgreSQL + NextAuth
 
-**Production**: https://privacysuite-ten.vercel.app
+**Production**: https://dpocentral.todo.law
 
 ## License
 
