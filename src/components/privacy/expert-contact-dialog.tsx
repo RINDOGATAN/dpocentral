@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,8 @@ export function ExpertContactDialog({
   expertName,
 }: ExpertContactDialogProps) {
   const { data: session } = useSession();
+  const t = useTranslations("experts.contact");
+  const tCommon = useTranslations("common");
   const [name, setName] = useState(session?.user?.name ?? "");
   const [email, setEmail] = useState(session?.user?.email ?? "");
   const [company, setCompany] = useState("");
@@ -56,7 +59,6 @@ export function ExpertContactDialog({
   function handleClose() {
     onOpenChange(false);
     if (submitted) {
-      // Reset form after closing success state
       setTimeout(() => {
         setSubject("");
         setMessage("");
@@ -73,12 +75,12 @@ export function ExpertContactDialog({
         {submitted ? (
           <div className="py-6 text-center space-y-3">
             <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto" />
-            <DialogTitle className="text-lg">Request Sent</DialogTitle>
+            <DialogTitle className="text-lg">{t("requestSent")}</DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Your message has been sent to {expertName}. They&apos;ll respond directly to your email.
+              {t("requestSentBody", { name: expertName })}
             </p>
             <Button variant="outline" onClick={handleClose} className="mt-2">
-              Close
+              {tCommon("close")}
             </Button>
           </div>
         ) : (
@@ -86,16 +88,16 @@ export function ExpertContactDialog({
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                Contact {expertName}
+                {t("title", { name: expertName })}
               </DialogTitle>
               <DialogDescription>
-                Send a message to this expert. They&apos;ll respond to your email directly.
+                {t("description")}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="contact-name" className="text-xs">Name *</Label>
+                  <Label htmlFor="contact-name" className="text-xs">{t("nameLabel")}</Label>
                   <Input
                     id="contact-name"
                     value={name}
@@ -104,7 +106,7 @@ export function ExpertContactDialog({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="contact-email" className="text-xs">Email *</Label>
+                  <Label htmlFor="contact-email" className="text-xs">{t("emailLabel")}</Label>
                   <Input
                     id="contact-email"
                     type="email"
@@ -115,7 +117,7 @@ export function ExpertContactDialog({
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="contact-company" className="text-xs">Company</Label>
+                <Label htmlFor="contact-company" className="text-xs">{t("companyLabel")}</Label>
                 <Input
                   id="contact-company"
                   value={company}
@@ -123,35 +125,35 @@ export function ExpertContactDialog({
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="contact-subject" className="text-xs">Subject *</Label>
+                <Label htmlFor="contact-subject" className="text-xs">{t("subjectLabel")}</Label>
                 <Input
                   id="contact-subject"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="e.g., GDPR compliance consultation"
+                  placeholder={t("subjectPlaceholder")}
                   required
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="contact-message" className="text-xs">Message</Label>
+                <Label htmlFor="contact-message" className="text-xs">{t("messageLabel")}</Label>
                 <Textarea
                   id="contact-message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Briefly describe what you need help with..."
+                  placeholder={t("messagePlaceholder")}
                   rows={3}
                 />
               </div>
               {contactMutation.error && (
                 <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2">
                   <p className="text-xs text-destructive">
-                    Something went wrong sending your request. Please try again or contact us directly via email.
+                    {t("errorMessage")}
                   </p>
                 </div>
               )}
               <div className="flex justify-end gap-2 pt-1">
                 <Button type="button" variant="ghost" onClick={handleClose}>
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                   type="submit"
@@ -160,7 +162,7 @@ export function ExpertContactDialog({
                   {contactMutation.isPending && (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   )}
-                  Send Request
+                  {t("sendRequest")}
                 </Button>
               </div>
             </form>

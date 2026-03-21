@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,7 @@ const PAGE_SIZE = 20;
 export default function ExpertsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("experts");
 
   useEffect(() => {
     if (!features.expertDirectoryEnabled) {
@@ -83,13 +85,20 @@ export default function ExpertsPage() {
     (language && language !== "all") ||
     (expertType && expertType !== "all");
 
+  const expertTypeLabel = (et: string) => {
+    if (et === "legal") return t("typeLegal");
+    if (et === "technical") return t("typeTechnical");
+    if (et === "deployment") return t("typeDeployment");
+    return et;
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-semibold">Find a Privacy Expert</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Connect with certified privacy professionals who can help with your compliance needs
+          {t("subtitle")}
         </p>
       </div>
 
@@ -98,7 +107,7 @@ export default function ExpertsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name, firm, or expertise..."
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -107,10 +116,10 @@ export default function ExpertsPage() {
         <div className="flex gap-2 flex-wrap sm:flex-nowrap">
           <Select value={specialization} onValueChange={setSpecialization}>
             <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Specialization" />
+              <SelectValue placeholder={t("specialization")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Specializations</SelectItem>
+              <SelectItem value="all">{t("allSpecializations")}</SelectItem>
               {filters?.specializations.map((s) => (
                 <SelectItem key={s} value={s}>
                   {s}
@@ -120,23 +129,23 @@ export default function ExpertsPage() {
           </Select>
           <Select value={expertType} onValueChange={setExpertType}>
             <SelectTrigger className="w-full sm:w-[150px]">
-              <SelectValue placeholder="Expert Type" />
+              <SelectValue placeholder={t("expertType")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              {filters?.expertTypes.map((t) => (
-                <SelectItem key={t.value} value={t.value}>
-                  {t.label}
+              <SelectItem value="all">{t("allTypes")}</SelectItem>
+              {filters?.expertTypes.map((ft) => (
+                <SelectItem key={ft.value} value={ft.value}>
+                  {ft.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={country} onValueChange={setCountry}>
             <SelectTrigger className="w-full sm:w-[150px]">
-              <SelectValue placeholder="Country" />
+              <SelectValue placeholder={t("country")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Countries</SelectItem>
+              <SelectItem value="all">{t("allCountries")}</SelectItem>
               {filters?.countries.map((c) => (
                 <SelectItem key={c.code} value={c.code}>
                   {c.name}
@@ -146,10 +155,10 @@ export default function ExpertsPage() {
           </Select>
           <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger className="w-full sm:w-[140px]">
-              <SelectValue placeholder="Language" />
+              <SelectValue placeholder={t("language")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Languages</SelectItem>
+              <SelectItem value="all">{t("allLanguages")}</SelectItem>
               {filters?.languages.map((l) => (
                 <SelectItem key={l.code} value={l.code}>
                   {l.name}
@@ -163,7 +172,7 @@ export default function ExpertsPage() {
       {/* Result count */}
       {!isLoading && total > 0 && (
         <p className="text-xs text-muted-foreground">
-          Showing {Math.min(offset + PAGE_SIZE, total)} of {total} expert{total !== 1 ? "s" : ""}
+          {t("showing", { count: Math.min(offset + PAGE_SIZE, total), total })}
         </p>
       )}
 
@@ -181,10 +190,10 @@ export default function ExpertsPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h3 className="font-semibold text-sm sm:text-base truncate">
-                        {expert.name ?? "Unnamed Expert"}
+                        {expert.name ?? t("unnamedExpert")}
                       </h3>
                       <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                        {expert.title ?? "Privacy Expert"}
+                        {expert.title ?? t("privacyExpert")}
                       </p>
                       {expert.firm && (
                         <p className="text-xs text-primary truncate">{expert.firm}</p>
@@ -193,13 +202,13 @@ export default function ExpertsPage() {
                     <div className="flex flex-col items-end gap-1 shrink-0">
                       {expert.expertTypes.map((et: string) => (
                         <Badge key={et} variant="outline" className="text-[10px]">
-                          {et === "legal" ? "Legal" : et === "technical" ? "Technical" : et === "deployment" ? "Deployment" : et}
+                          {expertTypeLabel(et)}
                         </Badge>
                       ))}
                       {expert.acceptingClients && (
                         <span className="flex items-center gap-1 text-[10px] text-green-600">
                           <CheckCircle2 className="w-3 h-3" />
-                          Available
+                          {t("available")}
                         </span>
                       )}
                     </div>
@@ -249,12 +258,12 @@ export default function ExpertsPage() {
                     onClick={() =>
                       setContactExpert({
                         id: expert.id,
-                        name: expert.name ?? "Expert",
+                        name: expert.name ?? t("unnamedExpert"),
                       })
                     }
                   >
                     <Mail className="w-3.5 h-3.5" />
-                    Contact Expert
+                    {t("contactExpert")}
                   </Button>
                 </CardContent>
               </Card>
@@ -270,7 +279,7 @@ export default function ExpertsPage() {
                   size="sm"
                   onClick={() => setOffset(Math.max(0, offset - PAGE_SIZE))}
                 >
-                  Previous
+                  {t("previous")}
                 </Button>
               )}
               {hasMore && (
@@ -279,7 +288,7 @@ export default function ExpertsPage() {
                   size="sm"
                   onClick={() => setOffset(offset + PAGE_SIZE)}
                 >
-                  Next
+                  {t("next")}
                 </Button>
               )}
             </div>
@@ -289,9 +298,7 @@ export default function ExpertsPage() {
         <div className="text-center py-12">
           <Search className="w-10 h-10 mx-auto mb-3 text-muted-foreground opacity-50" />
           <p className="text-sm text-muted-foreground">
-            {hasFilters
-              ? "No experts found matching your criteria. Try adjusting your filters."
-              : "No experts available at this time."}
+            {hasFilters ? t("noResults") : t("noExperts")}
           </p>
         </div>
       )}
