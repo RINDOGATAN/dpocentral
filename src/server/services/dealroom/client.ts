@@ -8,14 +8,13 @@ import {
 } from "./mock-data";
 import { logger } from "@/lib/logger";
 
-const DEALROOM_API_URL = process.env.DEALROOM_API_URL;
+const RAW_DEALROOM_URL = process.env.DEALROOM_API_URL ?? "";
 const DEALROOM_API_KEY = process.env.DEALROOM_API_KEY;
 
-const useMock = !DEALROOM_API_URL || !DEALROOM_API_KEY;
+// Normalize: env var may include path prefix (e.g. ".../api/v1/experts") — strip to base domain
+const DEALROOM_API_URL = RAW_DEALROOM_URL.replace(/\/api\/v1\/experts\/?$/, "").replace(/\/+$/, "");
 
-if (useMock) {
-  logger.info("Dealroom client using mock data", { hasUrl: !!DEALROOM_API_URL, hasKey: !!DEALROOM_API_KEY });
-}
+const useMock = !DEALROOM_API_URL || !DEALROOM_API_KEY;
 
 export type { ExpertProfile };
 
