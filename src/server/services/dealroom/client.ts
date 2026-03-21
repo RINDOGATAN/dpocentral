@@ -13,6 +13,10 @@ const DEALROOM_API_KEY = process.env.DEALROOM_API_KEY;
 
 const useMock = !DEALROOM_API_URL || !DEALROOM_API_KEY;
 
+if (useMock) {
+  logger.info("Dealroom client using mock data", { hasUrl: !!DEALROOM_API_URL, hasKey: !!DEALROOM_API_KEY });
+}
+
 export type { ExpertProfile };
 
 export interface ExpertSearchParams {
@@ -109,7 +113,12 @@ export async function searchExperts(
   });
 
   if (!res.ok) {
-    logger.error("Dealroom search failed", undefined, { status: res.status });
+    const errorBody = await res.text().catch(() => "");
+    logger.error("Dealroom search failed — falling back to mock", undefined, {
+      status: res.status,
+      url: `${DEALROOM_API_URL}/api/v1/experts/search`,
+      error: errorBody.slice(0, 300),
+    });
     return filterMockExperts(params); // Fallback to mock
   }
 
