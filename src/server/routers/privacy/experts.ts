@@ -91,6 +91,7 @@ export const expertsRouter = createTRPCRouter({
         if (expert?.email) {
           r.emails.send({
             from,
+            replyTo: input.requesterEmail,
             to: expert.email,
             subject: `New inquiry: ${input.subject}`,
             html: `
@@ -108,8 +109,12 @@ export const expertsRouter = createTRPCRouter({
                 <p style="color:#9ca3af;font-size:11px;">${footer}</p>
               </div>
             `.trim(),
+          }).then((res) => {
+            if (res.error) {
+              logger.error("Resend rejected expert email", undefined, { error: JSON.stringify(res.error), to: expert.email });
+            }
           }).catch((err) => {
-            logger.error("Failed to send expert notification email", err, { expertId: input.expertId });
+            logger.error("Failed to send expert notification email", err, { expertId: input.expertId, to: expert.email });
           });
         }
 
@@ -132,6 +137,10 @@ export const expertsRouter = createTRPCRouter({
               <p style="color:#9ca3af;font-size:11px;">${footer}</p>
             </div>
           `.trim(),
+        }).then((res) => {
+          if (res.error) {
+            logger.error("Resend rejected requester email", undefined, { error: JSON.stringify(res.error), to: input.requesterEmail });
+          }
         }).catch((err) => {
           logger.error("Failed to send requester confirmation email", err, { to: input.requesterEmail });
         });
