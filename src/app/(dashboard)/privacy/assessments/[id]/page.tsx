@@ -1,9 +1,10 @@
 "use client";
 
-import { use, useState, useCallback, useRef } from "react";
+import { use, useState, useCallback, useRef, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -79,13 +80,13 @@ const mitigationStatusColors: Record<string, string> = {
   NOT_REQUIRED: "border-muted-foreground/50 text-muted-foreground/50",
 };
 
-const typeLabels: Record<string, string> = {
-  DPIA: "Data Protection Impact Assessment",
-  PIA: "Privacy Impact Assessment",
-  TIA: "Transfer Impact Assessment",
-  LIA: "Legitimate Interest Assessment",
-  VENDOR: "Vendor Risk Assessment",
-  CUSTOM: "Custom Assessment",
+const typeKeys: Record<string, string> = {
+  DPIA: "dpia",
+  PIA: "pia",
+  TIA: "tia",
+  LIA: "lia",
+  VENDOR: "vendor",
+  CUSTOM: "custom",
 };
 
 const MITIGATION_STATUSES = [
@@ -101,6 +102,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const tAssessments = useTranslations("assessments");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -150,13 +152,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id, staleTime: 30_000 }
   );
 
   // Fetch PET-based suggestions when assessment loads
   const { data: suggestions } = trpc.assessment.getSuggestedMitigations.useQuery(
     { organizationId: organization?.id ?? "", assessmentId: id },
-    { enabled: !!organization?.id && !!assessment }
+    { enabled: !!organization?.id && !!assessment, staleTime: 60_000 }
   );
 
   const utils = trpc.useUtils();
@@ -171,6 +173,23 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     },
   });
 
+  // Auto-save mutation (select/boolean/multiselect): optimistic local update, no full refetch
+  const autoSaveResponse = trpc.assessment.saveResponse.useMutation({
+    onSuccess: (_data, variables) => {
+      // Show saved indicator without refetching the entire assessment
+      setSavedIndicators(prev => ({ ...prev, [variables.questionId]: true }));
+      setTimeout(() => {
+        setSavedIndicators(prev => ({ ...prev, [variables.questionId]: false }));
+      }, 2000);
+    },
+    onError: (error) => {
+      // On error, invalidate to restore correct server state
+      utils.assessment.getById.invalidate();
+      toast.error(error.message || "Failed to save response");
+    },
+  });
+
+  // Explicit save mutation (text responses): invalidates to get fresh data
   const saveResponse = trpc.assessment.saveResponse.useMutation({
     onSuccess: (_data, variables) => {
       utils.assessment.getById.invalidate();
@@ -262,10 +281,10 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     });
   }, [organization?.id, id, draftResponses, saveResponse]);
 
-  // Auto-save for select/boolean/multiselect — call directly with a value
+  // Auto-save for select/boolean/multiselect — optimistic update, no full refetch
   const handleAutoSave = useCallback((questionId: string, sectionId: string, question: any, value: string) => {
     if (!organization?.id || !value) return;
-    // Update draft first
+    // Update draft state
     setDraftResponses(prev => ({
       ...prev,
       [questionId]: {
@@ -274,7 +293,35 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         notes: prev[questionId]?.notes || "",
       },
     }));
-    saveResponse.mutate({
+    // Optimistically update the query cache so UI reflects the change instantly
+    const queryKey = { organizationId: organization.id, id };
+    utils.assessment.getById.setData(queryKey, (old: any) => {
+      if (!old) return old;
+      const existingIdx = old.responses?.findIndex((r: any) => r.questionId === questionId) ?? -1;
+      const newResponse = {
+        questionId,
+        sectionId,
+        response: value,
+        notes: draftResponses[questionId]?.notes || "",
+        riskScore: question.riskScore ?? null,
+      };
+      const updatedResponses = [...(old.responses ?? [])];
+      if (existingIdx >= 0) {
+        updatedResponses[existingIdx] = { ...updatedResponses[existingIdx], ...newResponse };
+      } else {
+        updatedResponses.push(newResponse);
+      }
+      // Recalculate completion
+      const totalQ = old.totalQuestions ?? 0;
+      const answeredQ = updatedResponses.length;
+      return {
+        ...old,
+        responses: updatedResponses,
+        completionPercentage: totalQ > 0 ? Math.round((answeredQ / totalQ) * 100) : 0,
+      };
+    });
+    // Fire mutation without invalidation
+    autoSaveResponse.mutate({
       organizationId: organization.id,
       assessmentId: id,
       questionId,
@@ -283,7 +330,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       notes: draftResponses[questionId]?.notes || undefined,
       riskScore: question.riskScore,
     });
-  }, [organization?.id, id, draftResponses, saveResponse]);
+  }, [organization?.id, id, draftResponses, autoSaveResponse, utils.assessment.getById]);
 
   const startEditingQuestion = useCallback((questionId: string, existingResponse?: any) => {
     setEditingQuestion(questionId);
@@ -320,7 +367,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }));
   }, []);
 
-  const handleAddMitigation = () => {
+  const handleAddMitigation = useCallback(() => {
     if (!organization?.id || !mitigationForm.title) return;
     addMitigation.mutate({
       organizationId: organization.id,
@@ -332,14 +379,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       owner: mitigationForm.owner || undefined,
       dueDate: mitigationForm.dueDate ? new Date(mitigationForm.dueDate) : undefined,
     });
-  };
+  }, [organization?.id, id, mitigationForm, addMitigation]);
 
-  const handleAcceptSuggestion = (pet: string, riskLabel: string, gdprRef: string) => {
+  const handleAcceptSuggestion = useCallback((pet: string, riskLabel: string, gdprRef: string) => {
     if (!organization?.id) return;
-    const vendorName = suggestions?.vendorName;
+    const vName = suggestions?.vendorName;
     const isVendorPet = suggestions?.vendorPets.includes(pet);
     const description = isVendorPet
-      ? `Address ${riskLabel} risk (${gdprRef}). ${vendorName} implements this technology.`
+      ? `Address ${riskLabel} risk (${gdprRef}). ${vName} implements this technology.`
       : `Address ${riskLabel} risk (${gdprRef}). Consider implementing ${pet} as a technical safeguard.`;
 
     addMitigation.mutate({
@@ -350,9 +397,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       description,
       priority: 2,
     });
-  };
+  }, [organization?.id, id, suggestions?.vendorName, suggestions?.vendorPets, addMitigation]);
 
-  const openUpdateDialog = (mitigation: any) => {
+  const openUpdateDialog = useCallback((mitigation: any) => {
     setEditingMitigation(mitigation);
     setUpdateForm({
       status: mitigation.status,
@@ -361,9 +408,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       evidence: mitigation.evidence || "",
     });
     setUpdateMitigationOpen(true);
-  };
+  }, []);
 
-  const handleUpdateMitigation = () => {
+  const handleUpdateMitigation = useCallback(() => {
     if (!organization?.id || !editingMitigation) return;
     updateMitigation.mutate({
       organizationId: organization.id,
@@ -373,12 +420,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       dueDate: updateForm.dueDate ? new Date(updateForm.dueDate) : null,
       evidence: updateForm.evidence || null,
     });
-  };
+  }, [organization?.id, editingMitigation, updateForm, updateMitigation]);
 
-  const openAddDialogWithSuggestions = () => {
+  const openAddDialogWithSuggestions = useCallback(() => {
     setAddMitigationTab("suggested");
     setAddMitigationOpen(true);
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -410,8 +457,8 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const canSubmit =
     assessment.status === "IN_PROGRESS" || assessment.status === "DRAFT";
 
-  // Compute section completion data for navigation
-  const sectionCompletionData = sections.map((section) => {
+  // Compute section completion data for navigation (memoized)
+  const sectionCompletionData = useMemo(() => sections.map((section) => {
     const sectionQuestions = section.questions || [];
     const answeredInSection = assessment.responses?.filter(
       (r: any) => r.sectionId === section.id
@@ -423,18 +470,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       total: sectionQuestions.length,
       isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
     };
-  });
+  }), [sections, assessment.responses]);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = useCallback((sectionId: string) => {
     setActiveSectionId(sectionId);
     const el = sectionRefs.current[sectionId];
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  };
+  }, []);
 
   // Helper: parse multiselect values from response
-  const parseMultiselectValue = (val: string | undefined): string[] => {
+  const parseMultiselectValue = useCallback((val: string | undefined): string[] => {
     if (!val) return [];
     try {
       const parsed = JSON.parse(val);
@@ -443,7 +490,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       // not JSON, return as single item if non-empty
     }
     return val ? [val] : [];
-  };
+  }, []);
 
   const vendorPets = suggestions?.vendorPets ?? [];
   const vendorName = suggestions?.vendorName ?? null;
@@ -476,7 +523,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             </div>
             <h1 className="text-2xl font-semibold mt-1">{assessment.name}</h1>
             <p className="text-muted-foreground">
-              {typeLabels[template?.type ?? ""] || template?.name}
+              {typeKeys[template?.type ?? ""] ? tAssessments(`types.${typeKeys[template?.type ?? ""]}`) : template?.name}
             </p>
           </div>
         </div>

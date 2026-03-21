@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { brand } from "@/config/brand";
 
 export default function AuthLayout({
@@ -8,6 +9,8 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const tFooter = useTranslations("footer");
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
@@ -33,7 +36,7 @@ export default function AuthLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Privacy Policy
+            {tFooter("privacyPolicy")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <a
@@ -42,14 +45,14 @@ export default function AuthLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Terms of Service
+            {tFooter("termsOfService")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
-            How It Works
+            {tFooter("howItWorks")}
           </Link>
         </div>
       </footer>

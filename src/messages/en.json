@@ -68,7 +68,11 @@
     "findExpert": "Find Expert",
     "myClients": "My Clients",
     "feedback": "Feedback",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "reports": "Reports",
+    "regulations": "Regulations",
+    "aiSystems": "AI Systems",
+    "more": "More"
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
@@ -76,7 +80,10 @@
     "billing": "Billing",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
-    "dataSecurity": "Data Security"
+    "dataSecurity": "Data Security",
+    "docs": "Docs",
+    "howItWorks": "How It Works",
+    "signIn": "Sign In"
   },
   "organization": {
     "welcome": "Welcome to {brandName}",

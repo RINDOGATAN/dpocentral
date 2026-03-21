@@ -77,13 +77,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
     ...(features.complianceDashboardEnabled
-      ? [{ href: "/privacy/reports", label: "Reports", icon: BarChart3 }]
+      ? [{ href: "/privacy/reports", label: tNav("reports"), icon: BarChart3 }]
       : []),
     ...(features.regulatoryTrackerEnabled
-      ? [{ href: "/privacy/regulations", label: "Regulations", icon: Globe }]
+      ? [{ href: "/privacy/regulations", label: tNav("regulations"), icon: Globe }]
       : []),
     ...(features.aiGovernanceEnabled
-      ? [{ href: "/privacy/ai-systems", label: "AI Systems", icon: Bot }]
+      ? [{ href: "/privacy/ai-systems", label: tNav("aiSystems"), icon: Bot }]
       : []),
     ...(features.expertDirectoryEnabled
       ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
@@ -217,7 +217,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     className={`gap-2 ${isMoreActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""}`}
                   >
                     <MoreHorizontal className="w-4 h-4" />
-                    <span className="hidden lg:inline">More</span>
+                    <span className="hidden lg:inline">{tNav("more")}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">

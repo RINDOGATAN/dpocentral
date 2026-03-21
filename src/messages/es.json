@@ -68,7 +68,11 @@
     "findExpert": "Buscar experto",
     "myClients": "Mis clientes",
     "feedback": "Comentarios",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "reports": "Informes",
+    "regulations": "Regulaciones",
+    "aiSystems": "Sistemas de IA",
+    "more": "Más"
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
@@ -76,7 +80,10 @@
     "billing": "Facturación",
     "termsOfService": "Términos de servicio",
     "privacyPolicy": "Política de privacidad",
-    "dataSecurity": "Seguridad de los datos"
+    "dataSecurity": "Seguridad de los datos",
+    "docs": "Documentación",
+    "howItWorks": "Cómo funciona",
+    "signIn": "Iniciar sesión"
   },
   "organization": {
     "welcome": "Bienvenido a {brandName}",
