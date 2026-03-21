@@ -1,11 +1,14 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const tFooter = await getTranslations("footer");
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
@@ -23,13 +26,13 @@ export default function PublicLayout({
               href="/docs"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Docs
+              {tFooter("docs")}
             </Link>
             <Link
               href="/sign-in"
               className="btn-brutal text-sm px-4 py-2"
             >
-              Sign In
+              {tFooter("signIn")}
             </Link>
           </div>
         </div>
@@ -47,7 +50,7 @@ export default function PublicLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Privacy Policy
+            {tFooter("privacyPolicy")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <a
@@ -56,21 +59,21 @@ export default function PublicLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Terms of Service
+            {tFooter("termsOfService")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/security"
             className="hover:text-foreground transition-colors"
           >
-            Data Security
+            {tFooter("dataSecurity")}
           </Link>
           <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
-            How It Works
+            {tFooter("howItWorks")}
           </Link>
         </div>
       </footer>
