@@ -61,15 +61,18 @@ export default function ExpertsPage() {
 
   const { data: filters } = trpc.experts.listFilters.useQuery();
 
+  const selectedExpertType = expertType && expertType !== "all"
+    ? (expertType as "legal" | "technical" | "deployment")
+    : undefined;
+
   const { data: searchResult, isLoading } = trpc.experts.search.useQuery({
     query: debouncedSearch || undefined,
     specialization: specialization && specialization !== "all" ? specialization : undefined,
     country: country && country !== "all" ? country : undefined,
     language: language && language !== "all" ? language : undefined,
-    expertType:
-      expertType && expertType !== "all"
-        ? (expertType as "legal" | "technical" | "deployment")
-        : undefined,
+    expertType: selectedExpertType,
+    // Hide deployment-only experts unless explicitly filtering for deployment
+    excludeType: selectedExpertType === "deployment" ? undefined : "deployment",
     limit: PAGE_SIZE,
     offset,
   });
