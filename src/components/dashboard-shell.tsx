@@ -313,7 +313,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <span className="text-border">&middot;</span>
             <Link href="/security" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Lock className="w-3.5 h-3.5" />
-              Data Security
+              {tFooter("dataSecurity")}
             </Link>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />

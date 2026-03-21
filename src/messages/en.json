@@ -75,7 +75,8 @@
     "userGuide": "User Guide",
     "billing": "Billing",
     "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "dataSecurity": "Data Security"
   },
   "organization": {
     "welcome": "Welcome to {brandName}",
@@ -238,6 +239,98 @@
     "body": "Deployment experts can help you set up and maintain your own instance.",
     "findExpert": "Find Expert",
     "dismiss": "Dismiss"
+  },
+  "security": {
+    "badge": "Defense in Depth",
+    "title": "Data Security",
+    "subtitle": "DPO Central is built with defense-in-depth across every layer. As a privacy management platform handling assessment results, incident records, vendor contracts, and data subject requests, security is a foundational requirement — not an afterthought.",
+    "stats": {
+      "layers": "Security Layers",
+      "headers": "HTTP Headers",
+      "roles": "Role Tiers",
+      "hsts": "HSTS Max-Age"
+    },
+    "categories": {
+      "identityAccess": "Identity & Access",
+      "identityAccessDesc": "Authentication, authorization, and session management",
+      "appSecurity": "Application Security",
+      "appSecurityDesc": "Input handling, API protection, and abuse prevention",
+      "dataProtection": "Data Protection",
+      "dataProtectionDesc": "Transport security, audit logging, minimization, and payment handling",
+      "infrastructure": "Infrastructure",
+      "infrastructureDesc": "Hosting, encryption, and environment isolation"
+    },
+    "controlsLabel": "Security Controls",
+    "sections": {
+      "authentication": "Authentication",
+      "authorization": "Authorization & Access Control",
+      "inputValidation": "Input Validation & Sanitization",
+      "apiSecurity": "API Security",
+      "rateLimiting": "Rate Limiting & Abuse Prevention",
+      "transport": "Transport & Browser Security",
+      "audit": "Audit Trail",
+      "minimization": "Data Minimization",
+      "payment": "Payment Security",
+      "hosting": "Hosting & Environment"
+    },
+    "badges": {
+      "zeroKnowledge": "Zero-knowledge",
+      "fiveTierRbac": "5-tier RBAC",
+      "perEndpoint": "Per-endpoint",
+      "sixHeaders": "6 headers",
+      "stripeVerified": "Stripe verified",
+      "edgeNetwork": "Edge network"
+    },
+    "items": {
+      "auth1": "Multi-provider sign-in via Google OAuth and email magic links",
+      "auth2": "Stateless JWT sessions — no server-side session state to compromise",
+      "auth3": "OAuth tokens are never persisted to the database",
+      "auth4": "Account isolation — each sign-in method is kept separate",
+      "auth5": "Cross-app SSO via secure, scoped session cookies",
+      "authHighlight": "No passwords are stored. Authentication is delegated to trusted identity providers or cryptographically signed magic links.",
+      "authz1": "Strict multi-tenancy — every query is scoped to your organization",
+      "authz2": "Five-tier role hierarchy: Owner, Admin, Privacy Officer, Member, Viewer",
+      "authz3": "Role-based enforcement on all create, update, and delete operations",
+      "authz4": "Destructive actions restricted to Admins and Owners only",
+      "authz5": "No raw SQL — all access via parameterized ORM queries",
+      "authzHighlight": "All database access uses parameterized ORM queries. SQL injection is structurally prevented, not just mitigated.",
+      "input1": "Schema validation on every API endpoint",
+      "input2": "HTML sanitization on all public-facing inputs",
+      "input3": "Parameterized database queries prevent SQL injection",
+      "input4": "Validation error details hidden in production",
+      "api1": "Timing-safe API key verification on administrative endpoints",
+      "api2": "Payload size validation on batch operations",
+      "api3": "Token expiry enforcement on all vendor questionnaire operations",
+      "api4": "Public DSAR portal validates active configuration before accepting submissions",
+      "apiHighlight": "API key comparisons use constant-time algorithms to prevent timing attacks on administrative endpoints.",
+      "rate1": "Authentication endpoints throttled against credential stuffing",
+      "rate2": "Checkout and billing routes protected against payment fraud",
+      "rate3": "Public submission endpoints throttled to prevent spam",
+      "rate4": "Proper 429 responses with Retry-After headers",
+      "transport1": "HSTS with 2-year duration, subdomains, and preload",
+      "transport2": "Content Security Policy with per-request nonces",
+      "transport3": "Clickjacking protection via X-Frame-Options: DENY",
+      "transport4": "MIME sniffing prevention and strict referrer policy",
+      "transport5": "Camera, microphone, and geolocation disabled by policy",
+      "transportHighlight": "CSP nonces are generated per request, preventing inline script injection even if an attacker finds an XSS vector.",
+      "audit1": "Comprehensive logging for all create, update, and delete operations",
+      "audit2": "Administrative actions logged with full metadata",
+      "audit3": "Structured production logging with no stack traces or sensitive context",
+      "min1": "API responses return only the fields needed by the interface",
+      "min2": "Sensitive keys are masked in administrative views",
+      "min3": "Public email domains blocked from automatic organization membership",
+      "pay1": "Stripe webhook signature verification via HMAC-SHA256",
+      "pay2": "Server-side checkout prevents client-side price manipulation",
+      "pay3": "Entitlements automatically suspended on payment failure",
+      "infra1": "Hosted on Vercel with automatic TLS and global edge network",
+      "infra2": "PostgreSQL database with encrypted connections",
+      "infra3": "Environment secrets excluded from client bundles",
+      "infra4": "Development-only endpoints gated by runtime environment checks"
+    },
+    "disclosure": {
+      "title": "Responsible Disclosure",
+      "body": "If you discover a security vulnerability, please report it responsibly. Do not open a public issue. Contact us directly at the email address listed in the repository."
+    }
   },
   "errors": {
     "generic": "An error occurred. Please try again.",
