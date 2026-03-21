@@ -10,7 +10,7 @@
  */
 
 import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Globe } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,24 +33,11 @@ export function LanguageSwitcher() {
 function LanguageSwitcherInner() {
   const locale = useLocale() as Locale;
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleLocaleChange = (newLocale: Locale) => {
-    // Remove current locale from pathname if present
-    let newPathname = pathname;
-    for (const loc of locales) {
-      if (pathname.startsWith(`/${loc}/`) || pathname === `/${loc}`) {
-        newPathname = pathname.replace(`/${loc}`, "") || "/";
-        break;
-      }
-    }
-
-    // Add new locale prefix if not default
-    if (newLocale !== "en") {
-      newPathname = `/${newLocale}${newPathname}`;
-    }
-
-    router.push(newPathname);
+    // Set locale cookie and reload to apply server-side
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    router.refresh();
   };
 
   return (

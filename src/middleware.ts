@@ -112,10 +112,13 @@ export default function middleware(request: NextRequest) {
     return response;
   }
 
-  // Check if i18n is enabled (default: true, can be disabled via env var)
-  const i18nDisabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "false";
+  // Check if i18n locale routing is enabled
+  // The intl middleware handles /es/* rewrites — only enable when NEXT_PUBLIC_I18N_ENABLED=true
+  // Note: the language switcher (features.i18nEnabled) controls UI visibility separately;
+  // it works without this by swapping messages via cookies, not URL prefixes.
+  const i18nRoutingEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
-  if (i18nDisabled) {
+  if (!i18nRoutingEnabled) {
     const response = currencyResponse || NextResponse.next();
     applyCsp(response);
     return response;
