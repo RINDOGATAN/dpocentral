@@ -768,6 +768,120 @@ export const assessmentRouter = createTRPCRouter({
       return updated;
     }),
 
+  // Submit and auto-approve (for single-user organizations)
+  submitAndApprove: writerProcedure
+    .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.assessmentId, organizationId: ctx.organization.id },
+        include: {
+          template: true,
+          responses: true,
+        },
+      });
+
+      if (!assessment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Assessment not found",
+        });
+      }
+
+      // Check all required questions are answered
+      const sections = (assessment.template.sections as any[]) || [];
+      const requiredQuestionIds = sections.flatMap((s) =>
+        (s.questions || [])
+          .filter((q: any) => q.required)
+          .map((q: any) => q.id)
+      );
+      const answeredIds = assessment.responses.map((r) => r.questionId);
+      const unanswered = requiredQuestionIds.filter(
+        (id) => !answeredIds.includes(id)
+      );
+
+      if (unanswered.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Please answer all required questions. Missing: ${unanswered.length}`,
+        });
+      }
+
+      // Verify this is a single-user org
+      const memberCount = await ctx.prisma.organizationMember.count({
+        where: { organizationId: ctx.organization.id },
+      });
+
+      if (memberCount > 1) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Submit & Approve is only available for single-user organizations. Use the standard submit flow instead.",
+        });
+      }
+
+      // Calculate risk score
+      const { score, level } = calculateRiskScore(
+        assessment.responses,
+        assessment.template
+      );
+
+      // Create version snapshot
+      const latestVersion = await ctx.prisma.assessmentVersion.findFirst({
+        where: { assessmentId: input.assessmentId },
+        orderBy: { version: "desc" },
+      });
+
+      await ctx.prisma.assessmentVersion.create({
+        data: {
+          assessmentId: input.assessmentId,
+          version: (latestVersion?.version ?? 0) + 1,
+          snapshot: {
+            responses: assessment.responses,
+            riskScore: score,
+            riskLevel: level,
+          },
+          changedBy: ctx.session.user.id,
+          changeNotes: "Submitted and auto-approved (single-user organization)",
+        },
+      });
+
+      // Create approval record for the current user, already approved
+      await ctx.prisma.assessmentApproval.create({
+        data: {
+          assessmentId: input.assessmentId,
+          approverId: ctx.session.user.id,
+          level: 1,
+          status: ApprovalStatus.APPROVED,
+          comments: "Auto-approved (single-user organization)",
+          decidedAt: new Date(),
+        },
+      });
+
+      // Update assessment to APPROVED
+      const updated = await ctx.prisma.assessment.update({
+        where: { id: input.assessmentId },
+        data: {
+          status: AssessmentStatus.APPROVED,
+          submittedAt: new Date(),
+          completedAt: new Date(),
+          riskScore: score,
+          riskLevel: level,
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Assessment",
+          entityId: input.assessmentId,
+          action: "SUBMIT_AND_APPROVE",
+          changes: { riskScore: score, riskLevel: level },
+        },
+      });
+
+      return updated;
+    }),
+
   // ============================================================
   // PET-BASED MITIGATION SUGGESTIONS
   // ============================================================

@@ -1,6 +1,7 @@
 "use client";
 
-import { use, useState, useCallback } from "react";
+import { use, useState, useCallback, useRef } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +45,9 @@ import {
   Plus,
   Lightbulb,
   Sparkles,
+  Check,
+  XCircle,
+  UserCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -98,6 +103,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const { organization } = useOrganization();
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+  const [savedIndicators, setSavedIndicators] = useState<Record<string, boolean>>({});
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Mitigation dialog state
   const [addMitigationOpen, setAddMitigationOpen] = useState(false);
@@ -119,6 +127,26 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     dueDate: "",
     evidence: "",
   });
+
+  // Approval dialog state
+  const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
+  const [selectedApproverId, setSelectedApproverId] = useState<string>("");
+  const [approvalComments, setApprovalComments] = useState("");
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [rejectApprovalId, setRejectApprovalId] = useState<string>("");
+  const [rejectComments, setRejectComments] = useState("");
+
+  // Session for current user
+  const { data: sessionData } = useSession();
+  const currentUserId = sessionData?.user?.id;
+
+  // Fetch org members (for approver selection and single-user detection)
+  const { data: orgData } = trpc.organization.getById.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const memberCount = orgData?.members?.length ?? 0;
+  const isSingleUser = memberCount <= 1;
 
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -144,10 +172,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   });
 
   const saveResponse = trpc.assessment.saveResponse.useMutation({
-    onSuccess: () => {
-      toast.success("Response saved");
+    onSuccess: (_data, variables) => {
       utils.assessment.getById.invalidate();
-      setEditingQuestion(null);
+      // Show saved indicator for this question
+      setSavedIndicators(prev => ({ ...prev, [variables.questionId]: true }));
+      setTimeout(() => {
+        setSavedIndicators(prev => ({ ...prev, [variables.questionId]: false }));
+      }, 2000);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to save response");
@@ -179,6 +210,42 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     },
   });
 
+  // Approval mutations
+  const submitAndApprove = trpc.assessment.submitAndApprove.useMutation({
+    onSuccess: () => {
+      toast.success("Assessment submitted and approved");
+      utils.assessment.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit and approve");
+    },
+  });
+
+  const requestApproval = trpc.assessment.requestApproval.useMutation({
+    onSuccess: () => {
+      toast.success("Approval requested");
+      utils.assessment.getById.invalidate();
+      setApprovalDialogOpen(false);
+      setSelectedApproverId("");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to request approval");
+    },
+  });
+
+  const processApproval = trpc.assessment.processApproval.useMutation({
+    onSuccess: () => {
+      toast.success("Approval decision recorded");
+      utils.assessment.getById.invalidate();
+      setRejectDialogOpen(false);
+      setRejectComments("");
+      setRejectApprovalId("");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to process approval");
+    },
+  });
+
   const handleSaveResponse = useCallback((questionId: string, sectionId: string, question: any) => {
     if (!organization?.id) return;
     const draft = draftResponses[questionId];
@@ -191,6 +258,29 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       sectionId,
       response: draft.response,
       notes: draft.notes || undefined,
+      riskScore: question.riskScore,
+    });
+  }, [organization?.id, id, draftResponses, saveResponse]);
+
+  // Auto-save for select/boolean/multiselect — call directly with a value
+  const handleAutoSave = useCallback((questionId: string, sectionId: string, question: any, value: string) => {
+    if (!organization?.id || !value) return;
+    // Update draft first
+    setDraftResponses(prev => ({
+      ...prev,
+      [questionId]: {
+        ...prev[questionId],
+        response: value,
+        notes: prev[questionId]?.notes || "",
+      },
+    }));
+    saveResponse.mutate({
+      organizationId: organization.id,
+      assessmentId: id,
+      questionId,
+      sectionId,
+      response: value,
+      notes: draftResponses[questionId]?.notes || undefined,
       riskScore: question.riskScore,
     });
   }, [organization?.id, id, draftResponses, saveResponse]);
@@ -214,6 +304,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       }));
     }
   }, []);
+
+  const handleSaveTextResponse = useCallback((questionId: string, sectionId: string, question: any) => {
+    handleSaveResponse(questionId, sectionId, question);
+    setEditingQuestion(null);
+  }, [handleSaveResponse]);
 
   const updateDraftResponse = useCallback((questionId: string, field: "response" | "notes", value: string) => {
     setDraftResponses(prev => ({
@@ -315,6 +410,41 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const canSubmit =
     assessment.status === "IN_PROGRESS" || assessment.status === "DRAFT";
 
+  // Compute section completion data for navigation
+  const sectionCompletionData = sections.map((section) => {
+    const sectionQuestions = section.questions || [];
+    const answeredInSection = assessment.responses?.filter(
+      (r: any) => r.sectionId === section.id
+    ).length ?? 0;
+    return {
+      id: section.id,
+      title: section.title,
+      answered: answeredInSection,
+      total: sectionQuestions.length,
+      isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
+    };
+  });
+
+  const scrollToSection = (sectionId: string) => {
+    setActiveSectionId(sectionId);
+    const el = sectionRefs.current[sectionId];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // Helper: parse multiselect values from response
+  const parseMultiselectValue = (val: string | undefined): string[] => {
+    if (!val) return [];
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON, return as single item if non-empty
+    }
+    return val ? [val] : [];
+  };
+
   const vendorPets = suggestions?.vendorPets ?? [];
   const vendorName = suggestions?.vendorName ?? null;
   const hasSuggestions = (suggestions?.riskBasedSuggestions?.length ?? 0) > 0 || vendorPets.length > 0;
@@ -358,7 +488,21 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <Download className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Export PDF</span>
           </Button>
-          {canSubmit && (
+          {canSubmit && isSingleUser && (
+            <Button
+              onClick={() =>
+                submitAndApprove.mutate({
+                  organizationId: organization?.id ?? "",
+                  assessmentId: id,
+                })
+              }
+              disabled={submitAndApprove.isPending || completionPercentage < 100}
+            >
+              {submitAndApprove.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
+              Submit & Approve
+            </Button>
+          )}
+          {canSubmit && !isSingleUser && (
             <Button
               onClick={() =>
                 submitAssessment.mutate({
@@ -444,173 +588,332 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         </TabsList>
 
         <TabsContent value="questions" className="mt-4 space-y-4">
+          {/* Section Navigation - sticky pills */}
+          {sections.length > 1 && (
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b pb-3 pt-1 -mx-1 px-1">
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                {sectionCompletionData.map((sec) => (
+                  <button
+                    key={sec.id}
+                    onClick={() => scrollToSection(sec.id)}
+                    className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-colors min-h-[44px] ${
+                      activeSectionId === sec.id
+                        ? "bg-primary text-primary-foreground"
+                        : sec.isComplete
+                          ? "bg-primary/10 text-primary border border-primary/30"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    }`}
+                  >
+                    {sec.isComplete && <Check className="w-3.5 h-3.5" />}
+                    <span className="whitespace-nowrap">{sec.title}</span>
+                    <span className={`text-xs ${activeSectionId === sec.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                      {sec.answered}/{sec.total}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {sections.length > 0 ? (
             sections.map((section, sectionIndex) => {
               const sectionQuestions = section.questions || [];
               const answeredInSection = assessment.responses?.filter(
-                (r) => r.sectionId === section.id
+                (r: any) => r.sectionId === section.id
               ).length ?? 0;
 
               return (
-                <Card key={section.id || sectionIndex}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-base">{section.title}</CardTitle>
-                        {section.description && (
-                          <CardDescription>{section.description}</CardDescription>
-                        )}
+                <div
+                  key={section.id || sectionIndex}
+                  ref={(el) => { sectionRefs.current[section.id] = el; }}
+                >
+                  <Card>
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-base">{section.title}</CardTitle>
+                          {section.description && (
+                            <CardDescription className="mt-1">{section.description}</CardDescription>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className={answeredInSection === sectionQuestions.length && sectionQuestions.length > 0 ? "border-primary text-primary" : ""}>
+                            {answeredInSection === sectionQuestions.length && sectionQuestions.length > 0 && (
+                              <Check className="w-3 h-3 mr-1" />
+                            )}
+                            {answeredInSection}/{sectionQuestions.length}
+                          </Badge>
+                        </div>
                       </div>
-                      <Badge variant="outline">
-                        {answeredInSection}/{sectionQuestions.length} answered
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {sectionQuestions.map((question: any, qIndex: number) => {
-                        const response = assessment.responses?.find(
-                          (r) => r.questionId === question.id
-                        );
-                        const isAnswered = !!response;
+                      {/* Section progress bar */}
+                      <Progress
+                        value={sectionQuestions.length > 0 ? (answeredInSection / sectionQuestions.length) * 100 : 0}
+                        className="h-1 mt-3"
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-6">
+                        {sectionQuestions.map((question: any, qIndex: number) => {
+                          const response = assessment.responses?.find(
+                            (r: any) => r.questionId === question.id
+                          );
+                          const isAnswered = !!response;
+                          const responseValue = response
+                            ? typeof response.response === "string"
+                              ? response.response
+                              : JSON.stringify(response.response)
+                            : "";
+                          const isTextType = question.type === "textarea" || question.type === "text" || (!question.type && !question.options);
+                          const isEditing = editingQuestion === question.id;
+                          const draftValue = draftResponses[question.id]?.response ?? "";
+                          const hasDraftChanges = isTextType && isEditing && draftValue !== responseValue;
 
-                        return (
-                          <div
-                            key={question.id || qIndex}
-                            className={`p-4 border ${
-                              isAnswered ? "border-primary/50 bg-primary/5" : "border-border"
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div
-                                className={`w-6 h-6 flex items-center justify-center flex-shrink-0 ${
-                                  isAnswered
-                                    ? "bg-primary text-primary-foreground"
-                                    : "border-2 border-muted-foreground"
-                                }`}
-                              >
-                                {isAnswered && <CheckCircle2 className="w-4 h-4" />}
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{question.text}</span>
-                                  {question.required && (
-                                    <Badge variant="outline" className="text-xs">
-                                      Required
-                                    </Badge>
+                          return (
+                            <div
+                              key={question.id || qIndex}
+                              className={`p-4 sm:p-5 rounded-lg border transition-colors ${
+                                isAnswered
+                                  ? "border-primary/30 bg-primary/5"
+                                  : question.required
+                                    ? "border-destructive/30 bg-destructive/5"
+                                    : "border-border"
+                              }`}
+                            >
+                              {/* Question Header */}
+                              <div className="flex items-start gap-3 mb-3">
+                                <div
+                                  className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                    isAnswered
+                                      ? "bg-primary text-primary-foreground"
+                                      : "border-2 border-muted-foreground/40"
+                                  }`}
+                                >
+                                  {isAnswered ? (
+                                    <Check className="w-4 h-4" />
+                                  ) : (
+                                    <span className="text-xs text-muted-foreground font-medium">{qIndex + 1}</span>
                                   )}
                                 </div>
-                                {question.helpText && (
-                                  <p className="text-sm text-muted-foreground mt-1">
-                                    {question.helpText}
-                                  </p>
-                                )}
-                                {/* Answer Section */}
-                                {editingQuestion === question.id ? (
-                                  <div className="mt-3 p-3 bg-muted/50 space-y-3">
-                                    {question.type === "select" && question.options ? (
-                                      <Select
-                                        value={draftResponses[question.id]?.response || ""}
-                                        onValueChange={(value) => updateDraftResponse(question.id, "response", value)}
-                                      >
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Select an option" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          {(question.options as string[]).map((option: string) => (
-                                            <SelectItem key={option} value={option}>
-                                              {option}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
-                                    ) : question.type === "textarea" ? (
-                                      <Textarea
-                                        placeholder="Enter your response..."
-                                        rows={3}
-                                        value={draftResponses[question.id]?.response || ""}
-                                        onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
-                                      />
-                                    ) : (
-                                      <Input
-                                        placeholder="Enter your response..."
-                                        value={draftResponses[question.id]?.response || ""}
-                                        onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
-                                      />
-                                    )}
-                                    <Textarea
-                                      placeholder="Additional notes (optional)..."
-                                      rows={2}
-                                      value={draftResponses[question.id]?.notes || ""}
-                                      onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
-                                    />
-                                    <div className="flex gap-2">
-                                      <Button
-                                        size="sm"
-                                        onClick={() => handleSaveResponse(question.id, section.id, question)}
-                                        disabled={saveResponse.isPending || !draftResponses[question.id]?.response}
-                                      >
-                                        {saveResponse.isPending ? (
-                                          <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                                        ) : (
-                                          <Save className="w-4 h-4 mr-1" />
-                                        )}
-                                        Save
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => setEditingQuestion(null)}
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ) : response ? (
-                                  <div className="mt-3 p-3 bg-muted/50">
-                                    <div className="flex items-start justify-between">
-                                      <div className="flex-1">
-                                        <p className="text-sm">
-                                          <strong>Answer:</strong>{" "}
-                                          {typeof response.response === "string"
-                                            ? response.response
-                                            : JSON.stringify(response.response)}
-                                        </p>
-                                        {response.notes && (
-                                          <p className="text-sm text-muted-foreground mt-1">
-                                            <strong>Notes:</strong> {response.notes}
-                                          </p>
-                                        )}
-                                      </div>
-                                      {canSubmit && (
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() => startEditingQuestion(question.id, response)}
-                                        >
-                                          <Edit className="w-4 h-4" />
-                                        </Button>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start gap-1.5 flex-wrap">
+                                    <span className="font-medium text-sm sm:text-base leading-snug">
+                                      {question.text}
+                                      {question.required && (
+                                        <span className="text-destructive ml-0.5">*</span>
                                       )}
-                                    </div>
+                                    </span>
+                                    {!question.required && (
+                                      <span className="text-xs text-muted-foreground mt-0.5">(Optional)</span>
+                                    )}
                                   </div>
-                                ) : canSubmit ? (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2"
-                                    onClick={() => startEditingQuestion(question.id)}
-                                  >
-                                    Answer Question
-                                  </Button>
-                                ) : null}
+                                  {question.helpText && (
+                                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                                      {question.helpText}
+                                    </p>
+                                  )}
+                                </div>
+                                {/* Saved indicator */}
+                                {savedIndicators[question.id] && (
+                                  <span className="flex items-center gap-1 text-xs text-primary flex-shrink-0 animate-in fade-in">
+                                    <Check className="w-3.5 h-3.5" />
+                                    Saved
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Input Area - always visible for non-text types */}
+                              <div className="ml-10">
+                                {/* Boolean type: Yes/No toggle buttons */}
+                                {question.type === "boolean" && (
+                                  <div className="space-y-2">
+                                    <div className="inline-flex rounded-lg border overflow-hidden">
+                                      <button
+                                        type="button"
+                                        disabled={!canSubmit}
+                                        onClick={() => handleAutoSave(question.id, section.id, question, "Yes")}
+                                        className={`px-5 py-2.5 text-sm font-medium min-h-[44px] transition-colors ${
+                                          responseValue === "Yes"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-background hover:bg-muted text-foreground"
+                                        } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                      >
+                                        Yes
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={!canSubmit}
+                                        onClick={() => handleAutoSave(question.id, section.id, question, "No")}
+                                        className={`px-5 py-2.5 text-sm font-medium min-h-[44px] transition-colors border-l ${
+                                          responseValue === "No"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-background hover:bg-muted text-foreground"
+                                        } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                      >
+                                        No
+                                      </button>
+                                    </div>
+                                    {response?.notes && !isEditing && (
+                                      <p className="text-xs text-muted-foreground">
+                                        <strong>Notes:</strong> {response.notes}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Select type: prominent dropdown */}
+                                {question.type === "select" && question.options && (
+                                  <div className="space-y-2">
+                                    <Label className="text-xs text-muted-foreground">Choose one</Label>
+                                    <Select
+                                      value={responseValue || ""}
+                                      onValueChange={(value) => handleAutoSave(question.id, section.id, question, value)}
+                                      disabled={!canSubmit}
+                                    >
+                                      <SelectTrigger className="w-full sm:w-[400px] min-h-[44px] text-sm">
+                                        <SelectValue placeholder="Select an option..." />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {(question.options as string[]).map((option: string) => (
+                                          <SelectItem key={option} value={option} className="min-h-[40px]">
+                                            {option}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    {response?.notes && !isEditing && (
+                                      <p className="text-xs text-muted-foreground">
+                                        <strong>Notes:</strong> {response.notes}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Multiselect type: checkboxes */}
+                                {question.type === "multiselect" && question.options && (
+                                  <div className="space-y-2">
+                                    <Label className="text-xs text-muted-foreground">Select all that apply</Label>
+                                    <div className="grid gap-2 sm:grid-cols-2">
+                                      {(question.options as string[]).map((option: string) => {
+                                        const currentValues = parseMultiselectValue(responseValue);
+                                        const isChecked = currentValues.includes(option);
+                                        return (
+                                          <label
+                                            key={option}
+                                            className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors min-h-[44px] ${
+                                              isChecked
+                                                ? "border-primary/50 bg-primary/5"
+                                                : "border-border hover:border-muted-foreground/50"
+                                            } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                          >
+                                            <Checkbox
+                                              checked={isChecked}
+                                              disabled={!canSubmit}
+                                              onCheckedChange={(checked) => {
+                                                const newValues = checked
+                                                  ? [...currentValues, option]
+                                                  : currentValues.filter((v: string) => v !== option);
+                                                handleAutoSave(question.id, section.id, question, JSON.stringify(newValues));
+                                              }}
+                                            />
+                                            <span className="text-sm">{option}</span>
+                                          </label>
+                                        );
+                                      })}
+                                    </div>
+                                    {response?.notes && !isEditing && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        <strong>Notes:</strong> {response.notes}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Textarea / Text type: show inline with save button */}
+                                {isTextType && (
+                                  <>
+                                    {isEditing ? (
+                                      <div className="space-y-3">
+                                        <Textarea
+                                          placeholder="Type your response here..."
+                                          rows={3}
+                                          value={draftValue}
+                                          onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
+                                          className="min-h-[44px]"
+                                        />
+                                        <Textarea
+                                          placeholder="Additional notes (optional)..."
+                                          rows={2}
+                                          value={draftResponses[question.id]?.notes || ""}
+                                          onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
+                                          className="text-sm"
+                                        />
+                                        <div className="flex items-center gap-2">
+                                          <Button
+                                            size="sm"
+                                            variant={hasDraftChanges ? "default" : "outline"}
+                                            onClick={() => handleSaveTextResponse(question.id, section.id, question)}
+                                            disabled={saveResponse.isPending || !draftValue}
+                                            className="min-h-[44px]"
+                                          >
+                                            {saveResponse.isPending ? (
+                                              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                                            ) : (
+                                              <Save className="w-4 h-4 mr-1" />
+                                            )}
+                                            Save
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => setEditingQuestion(null)}
+                                            className="min-h-[44px]"
+                                          >
+                                            Cancel
+                                          </Button>
+                                        </div>
+                                      </div>
+                                    ) : isAnswered ? (
+                                      <div className="p-3 bg-muted/50 rounded-lg">
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="flex-1 min-w-0">
+                                            <p className="text-sm whitespace-pre-wrap">{responseValue}</p>
+                                            {response.notes && (
+                                              <p className="text-xs text-muted-foreground mt-2">
+                                                <strong>Notes:</strong> {response.notes}
+                                              </p>
+                                            )}
+                                          </div>
+                                          {canSubmit && (
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => startEditingQuestion(question.id, response)}
+                                              className="flex-shrink-0 min-h-[44px]"
+                                            >
+                                              <Edit className="w-4 h-4" />
+                                            </Button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : canSubmit ? (
+                                      <Textarea
+                                        placeholder="Type your response here..."
+                                        rows={2}
+                                        className="min-h-[44px] cursor-pointer"
+                                        onFocus={() => startEditingQuestion(question.id)}
+                                        readOnly
+                                      />
+                                    ) : null}
+                                  </>
+                                )}
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
+                          );
+                        })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })
           ) : (
@@ -754,15 +1057,61 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           </p>
                         )}
                       </div>
-                      {approval.decidedAt && (
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(approval.decidedAt).toLocaleDateString()}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {approval.decidedAt && (
+                          <span className="text-sm text-muted-foreground">
+                            {new Date(approval.decidedAt).toLocaleDateString()}
+                          </span>
+                        )}
+                        {approval.status === "PENDING" && approval.approver?.id === currentUserId && (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                processApproval.mutate({
+                                  organizationId: organization?.id ?? "",
+                                  approvalId: approval.id,
+                                  decision: "APPROVED",
+                                })
+                              }
+                              disabled={processApproval.isPending}
+                            >
+                              {processApproval.isPending ? (
+                                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                              ) : (
+                                <CheckCircle2 className="w-4 h-4 mr-1" />
+                              )}
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => {
+                                setRejectApprovalId(approval.id);
+                                setRejectComments("");
+                                setRejectDialogOpen(true);
+                              }}
+                              disabled={processApproval.isPending}
+                            >
+                              <XCircle className="w-4 h-4 mr-1" />
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
+              {assessment.status === "PENDING_REVIEW" && (
+                <Button
+                  variant="outline"
+                  onClick={() => setApprovalDialogOpen(true)}
+                >
+                  <UserCheck className="w-4 h-4 mr-1" />
+                  Request Approval
+                </Button>
+              )}
             </div>
           ) : (
             <Card>
@@ -770,7 +1119,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <CheckCircle2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No approvals requested</p>
                 {assessment.status === "PENDING_REVIEW" && (
-                  <Button className="mt-4">Request Approval</Button>
+                  <Button
+                    className="mt-4"
+                    onClick={() => setApprovalDialogOpen(true)}
+                  >
+                    <UserCheck className="w-4 h-4 mr-1" />
+                    Request Approval
+                  </Button>
                 )}
               </CardContent>
             </Card>
@@ -951,6 +1306,103 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               </Button>
             </DialogFooter>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Request Approval Dialog */}
+      <Dialog open={approvalDialogOpen} onOpenChange={setApprovalDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Request Approval</DialogTitle>
+            <DialogDescription>
+              Select an organization member to approve this assessment.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Approver</Label>
+              <Select
+                value={selectedApproverId}
+                onValueChange={setSelectedApproverId}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an approver" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(orgData?.members ?? []).map((member: any) => (
+                    <SelectItem key={member.user.id} value={member.user.id}>
+                      {member.user.name || member.user.email} ({member.role})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setApprovalDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() =>
+                requestApproval.mutate({
+                  organizationId: organization?.id ?? "",
+                  assessmentId: id,
+                  approverId: selectedApproverId,
+                })
+              }
+              disabled={!selectedApproverId || requestApproval.isPending}
+            >
+              {requestApproval.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              Request Approval
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reject Approval Dialog */}
+      <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reject Assessment</DialogTitle>
+            <DialogDescription>
+              Please provide a reason for rejecting this assessment.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Comments</Label>
+              <Textarea
+                placeholder="Reason for rejection..."
+                rows={3}
+                value={rejectComments}
+                onChange={(e) => setRejectComments(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                processApproval.mutate({
+                  organizationId: organization?.id ?? "",
+                  approvalId: rejectApprovalId,
+                  decision: "REJECTED",
+                  comments: rejectComments || undefined,
+                })
+              }
+              disabled={processApproval.isPending}
+            >
+              {processApproval.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+              Reject Assessment
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
