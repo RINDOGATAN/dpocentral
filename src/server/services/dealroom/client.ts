@@ -24,6 +24,7 @@ export interface ExpertSearchParams {
   country?: string; // ISO 3166-1 alpha-2
   language?: string; // ISO 639-1
   expertType?: "legal" | "technical" | "deployment";
+  excludeType?: string; // Exclude experts whose ONLY type matches (e.g. "deployment")
   limit?: number;
   offset?: number;
 }
@@ -75,6 +76,14 @@ function filterMockExperts(params: ExpertSearchParams): ExpertSearchResult {
     results = results.filter((e) => e.expertTypes.includes(params.expertType!));
   }
 
+  // Exclude experts whose only type matches excludeType (e.g. deployment-only)
+  if (params.excludeType) {
+    const exc = params.excludeType.toLowerCase();
+    results = results.filter(
+      (e) => !(e.expertTypes.length === 1 && e.expertTypes[0].toLowerCase() === exc)
+    );
+  }
+
   // Sort by profileCompleteness descending (best profiles first)
   results.sort((a, b) => b.profileCompleteness - a.profileCompleteness);
 
@@ -121,7 +130,18 @@ export async function searchExperts(
     return filterMockExperts(params); // Fallback to mock
   }
 
-  return res.json();
+  const data: ExpertSearchResult = await res.json();
+
+  // Client-side exclude filter (Dealroom API doesn't support excludeType)
+  if (params.excludeType) {
+    const exc = params.excludeType.toLowerCase();
+    data.results = data.results.filter(
+      (e) => !(e.expertTypes.length === 1 && e.expertTypes[0].toLowerCase() === exc)
+    );
+    data.total = data.results.length;
+  }
+
+  return data;
 }
 
 export async function getExpertById(

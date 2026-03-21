@@ -33,6 +33,7 @@ export const expertsRouter = createTRPCRouter({
         country: z.string().optional(),
         language: z.string().optional(),
         expertType: z.enum(["legal", "technical", "deployment"]).optional(),
+        excludeType: z.string().optional(),
         limit: z.number().min(1).max(100).optional(),
         offset: z.number().min(0).optional(),
       })
