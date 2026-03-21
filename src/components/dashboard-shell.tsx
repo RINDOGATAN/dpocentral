@@ -65,14 +65,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   // Primary nav: always visible in the top bar
   const primaryNavItems = [
     { href: "/privacy/data-inventory", label: tNav("dataInventory"), icon: Database },
-    { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
     { href: "/privacy/assessments", label: tNav("assessments"), icon: ClipboardCheck },
-    { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
     { href: "/privacy/vendors", label: tNav("vendors"), icon: Building2 },
   ];
 
   // Secondary nav: shown in "More" dropdown on desktop, flat in mobile sheet
   const moreNavItems = [
+    { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
+    { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
     ...(isProfessional
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
