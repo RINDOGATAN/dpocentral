@@ -5,13 +5,23 @@
  */
 
 import { getRequestConfig } from "next-intl/server";
+import { cookies } from "next/headers";
 import { defaultLocale, isValidLocale, type Locale } from "./config";
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  // This typically comes from the [locale] segment
+  // 1. Try the locale from middleware/[locale] segment
   let locale = await requestLocale;
 
-  // Ensure locale is valid, fallback to default
+  // 2. Fall back to cookie-based locale (set by LanguageSwitcher)
+  if (!locale || !isValidLocale(locale)) {
+    const cookieStore = await cookies();
+    const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+    if (cookieLocale && isValidLocale(cookieLocale)) {
+      locale = cookieLocale;
+    }
+  }
+
+  // 3. Final fallback to default
   if (!locale || !isValidLocale(locale)) {
     locale = defaultLocale;
   }
