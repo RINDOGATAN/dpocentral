@@ -321,46 +321,48 @@ export default function DataInventoryPage() {
             <>
               <div className="space-y-3">
                 {processingActivities.map((activity) => (
-                  <Card key={activity.id} className="hover:border-primary/50 transition-colors">
-                    <CardContent className="p-4">
-                      {/* Mobile Layout */}
-                      <div className="flex flex-col gap-3 sm:hidden">
-                        <div className="flex items-start justify-between gap-2">
-                          <CardTitle className="text-base line-clamp-1">{activity.name}</CardTitle>
-                          <Badge className="shrink-0 text-xs">{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2">{activity.purpose}</p>
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{activity.assets?.length ?? 0} assets</span>
-                          <Button variant="ghost" size="sm" className="h-8 px-2">
-                            Details <ArrowRight className="w-3 h-3 ml-1" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Desktop Layout */}
-                      <div className="hidden sm:block">
-                        <CardHeader className="p-0 pb-3">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <CardTitle className="text-base">{activity.name}</CardTitle>
-                              <CardDescription className="line-clamp-1">{activity.purpose}</CardDescription>
-                            </div>
-                            <Badge>{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
+                  <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
+                    <Card className="hover:border-primary/50 transition-colors">
+                      <CardContent className="p-4">
+                        {/* Mobile Layout */}
+                        <div className="flex flex-col gap-3 sm:hidden">
+                          <div className="flex items-start justify-between gap-2">
+                            <CardTitle className="text-base line-clamp-1">{activity.name}</CardTitle>
+                            <Badge className="shrink-0 text-xs">{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
                           </div>
-                        </CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div className="flex gap-4 text-sm text-muted-foreground">
+                          <p className="text-xs text-muted-foreground line-clamp-2">{activity.purpose}</p>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>{activity.assets?.length ?? 0} assets</span>
-                            <span>{(activity.dataSubjects as string[])?.join(", ") || "No subjects"}</span>
+                            <Button variant="ghost" size="sm" className="h-8 px-2">
+                              Details <ArrowRight className="w-3 h-3 ml-1" />
+                            </Button>
                           </div>
-                          <Button variant="ghost" size="sm">
-                            View Details <ArrowRight className="w-4 h-4 ml-2" />
-                          </Button>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+
+                        {/* Desktop Layout */}
+                        <div className="hidden sm:block">
+                          <CardHeader className="p-0 pb-3">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle className="text-base">{activity.name}</CardTitle>
+                                <CardDescription className="line-clamp-1">{activity.purpose}</CardDescription>
+                              </div>
+                              <Badge>{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
+                            </div>
+                          </CardHeader>
+                          <div className="flex items-center justify-between">
+                            <div className="flex gap-4 text-sm text-muted-foreground">
+                              <span>{activity.assets?.length ?? 0} assets</span>
+                              <span>{(activity.dataSubjects as string[])?.join(", ") || "No subjects"}</span>
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              View Details <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
               {hasMoreActivities && (
