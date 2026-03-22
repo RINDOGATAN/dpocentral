@@ -1259,16 +1259,6 @@ export default function QuickstartPage() {
             </Card>
           )}
 
-          {/* Contextual expert nudges based on risk signals */}
-          {useVendors && vendorPreview && vendorPreview.previews.some(
-            (p) => p.isHighRisk && !vendorPreview.existingVendorNames.includes(p.vendorName)
-          ) && (
-            <ExpertHelpCta context="high-risk" />
-          )}
-          {useVendors && vendorPreview && reviewTotals.transfers > 0 && (
-            <ExpertHelpCta context="transfer" />
-          )}
-
           <div className="flex justify-end">
             <Button
               onClick={handleExecute}
