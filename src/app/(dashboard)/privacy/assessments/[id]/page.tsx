@@ -427,6 +427,54 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     setAddMitigationOpen(true);
   }, []);
 
+  // Derived values — safe to compute even when assessment is null
+  const template = assessment?.template;
+  const sections = (template?.sections as any[]) || [];
+  const completionPercentage = assessment?.completionPercentage ?? 0;
+  const totalQuestions = assessment?.totalQuestions ?? 0;
+  const answeredQuestions = assessment?.responses?.length ?? 0;
+
+  const canSubmit =
+    assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
+
+  // These hooks MUST be called unconditionally (before early returns)
+  const sectionCompletionData = useMemo(() => sections.map((section) => {
+    const sectionQuestions = section.questions || [];
+    const answeredInSection = assessment?.responses?.filter(
+      (r: any) => r.sectionId === section.id
+    ).length ?? 0;
+    return {
+      id: section.id,
+      title: section.title,
+      answered: answeredInSection,
+      total: sectionQuestions.length,
+      isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
+    };
+  }), [sections, assessment?.responses]);
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    setActiveSectionId(sectionId);
+    const el = sectionRefs.current[sectionId];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  const parseMultiselectValue = useCallback((val: string | undefined): string[] => {
+    if (!val) return [];
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON, return as single item if non-empty
+    }
+    return val ? [val] : [];
+  }, []);
+
+  const vendorPets = suggestions?.vendorPets ?? [];
+  const vendorName = suggestions?.vendorName ?? null;
+  const hasSuggestions = (suggestions?.riskBasedSuggestions?.length ?? 0) > 0 || vendorPets.length > 0;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -447,54 +495,6 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       </div>
     );
   }
-
-  const template = assessment.template;
-  const sections = (template?.sections as any[]) || [];
-  const completionPercentage = assessment.completionPercentage ?? 0;
-  const totalQuestions = assessment.totalQuestions ?? 0;
-  const answeredQuestions = assessment.responses?.length ?? 0;
-
-  const canSubmit =
-    assessment.status === "IN_PROGRESS" || assessment.status === "DRAFT";
-
-  // Compute section completion data for navigation (memoized)
-  const sectionCompletionData = useMemo(() => sections.map((section) => {
-    const sectionQuestions = section.questions || [];
-    const answeredInSection = assessment.responses?.filter(
-      (r: any) => r.sectionId === section.id
-    ).length ?? 0;
-    return {
-      id: section.id,
-      title: section.title,
-      answered: answeredInSection,
-      total: sectionQuestions.length,
-      isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
-    };
-  }), [sections, assessment.responses]);
-
-  const scrollToSection = useCallback((sectionId: string) => {
-    setActiveSectionId(sectionId);
-    const el = sectionRefs.current[sectionId];
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, []);
-
-  // Helper: parse multiselect values from response
-  const parseMultiselectValue = useCallback((val: string | undefined): string[] => {
-    if (!val) return [];
-    try {
-      const parsed = JSON.parse(val);
-      if (Array.isArray(parsed)) return parsed;
-    } catch {
-      // not JSON, return as single item if non-empty
-    }
-    return val ? [val] : [];
-  }, []);
-
-  const vendorPets = suggestions?.vendorPets ?? [];
-  const vendorName = suggestions?.vendorName ?? null;
-  const hasSuggestions = (suggestions?.riskBasedSuggestions?.length ?? 0) > 0 || vendorPets.length > 0;
 
   return (
     <div className="space-y-6">
