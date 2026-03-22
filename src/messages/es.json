@@ -85,6 +85,19 @@
     "howItWorks": "Cómo funciona",
     "signIn": "Iniciar sesión"
   },
+  "onboarding": {
+    "welcome": "Bienvenido a {brandName}",
+    "subtitle": "Configura tu cuenta para empezar con la gestión de protección de datos",
+    "howWillYouUse": "¿Cómo vas a utilizar {brandName}?",
+    "businessOwner": "Propietario de empresa",
+    "businessOwnerDesc": "Necesito cumplimiento en protección de datos para mi organización",
+    "privacyProfessional": "Profesional de privacidad",
+    "privacyProfessionalDesc": "Asesoro a varias organizaciones en protección de datos",
+    "orgName": "Nombre de la organización",
+    "orgNamePlaceholder": "ej., Acme Corporation",
+    "getStarted": "Comenzar",
+    "settingUp": "Configurando..."
+  },
   "organization": {
     "welcome": "Bienvenido a {brandName}",
     "createOrg": "Crea tu organización para comenzar con la gestión de privacidad",
@@ -93,6 +106,10 @@
     "createOrganization": "Crear organización",
     "creating": "Creando...",
     "switchOrg": "Cambiar organización"
+  },
+  "quickstart": {
+    "recommended": "Recomendado: Configuración completa",
+    "recommendedDesc": "Importa tus proveedores y añade una plantilla de sector para el programa de protección de datos más completo."
   },
   "dashboard": {
     "title": "Panel de privacidad",
