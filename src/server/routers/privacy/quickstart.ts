@@ -545,6 +545,10 @@ export const quickstartRouter = createTRPCRouter({
             .then((a) => new Set(a.map((x) => x.name))),
         ]);
 
+      // AI systems are created after the main transaction to avoid poisoning
+      // the transaction if the ai_systems table doesn't exist yet.
+      const pendingAiSystems: { data: NonNullable<ReturnType<typeof buildAISystemFromCatalog>>; catalogSlug: string }[] = [];
+
       // Execute everything in a transaction (extended timeout for large imports)
       const result = await ctx.prisma.$transaction(async (tx) => {
         const counts = {
@@ -619,7 +623,7 @@ export const quickstartRouter = createTRPCRouter({
             changes: { source: "quickstart", catalogSlug: catalogVendor.slug },
           });
 
-          // Auto-create AISystem record for AI-capable vendors
+          // Collect AI system data for deferred creation (outside transaction)
           const aiSystemData = buildAISystemFromCatalog(
             {
               slug: catalogVendor.slug,
@@ -639,34 +643,7 @@ export const quickstartRouter = createTRPCRouter({
             catalogVendor.name,
           );
           if (aiSystemData) {
-            const aiSystem = await tx.aISystem.create({
-              data: {
-                organizationId: orgId,
-                name: aiSystemData.name,
-                description: aiSystemData.description,
-                purpose: aiSystemData.purpose,
-                riskLevel: aiSystemData.riskLevel,
-                category: aiSystemData.category,
-                modelType: aiSystemData.modelType,
-                provider: aiSystemData.provider,
-                vendorId: aiSystemData.vendorId,
-                aiCapabilities: aiSystemData.aiCapabilities,
-                aiTechniques: aiSystemData.aiTechniques,
-                euAiActRole: aiSystemData.euAiActRole,
-                euAiActCompliant: aiSystemData.euAiActCompliant,
-                iso42001Certified: aiSystemData.iso42001Certified,
-                aiModels: aiSystemData.aiModels ?? undefined,
-                catalogSlug: aiSystemData.catalogSlug,
-                status: "DRAFT",
-              },
-            });
-            counts.aiSystems++;
-            auditEntries.push({
-              entityType: "AISystem",
-              entityId: aiSystem.id,
-              action: "AUTO_CREATE",
-              changes: { source: "quickstart", catalogSlug: catalogVendor.slug, vendorId: vendor.id },
-            });
+            pendingAiSystems.push({ data: aiSystemData, catalogSlug: catalogVendor.slug });
           }
 
           // Create data asset for this vendor
@@ -950,6 +927,38 @@ export const quickstartRouter = createTRPCRouter({
 
         return counts;
       }, { timeout: 30000 });
+
+      // Create AI systems outside the transaction — gracefully skip if table missing
+      if (pendingAiSystems.length > 0) {
+        try {
+          for (const { data: aiData, catalogSlug } of pendingAiSystems) {
+            await ctx.prisma.aISystem.create({
+              data: {
+                organizationId: orgId,
+                name: aiData.name,
+                description: aiData.description,
+                purpose: aiData.purpose,
+                riskLevel: aiData.riskLevel,
+                category: aiData.category,
+                modelType: aiData.modelType,
+                provider: aiData.provider,
+                vendorId: aiData.vendorId,
+                aiCapabilities: aiData.aiCapabilities,
+                aiTechniques: aiData.aiTechniques,
+                euAiActRole: aiData.euAiActRole,
+                euAiActCompliant: aiData.euAiActCompliant,
+                iso42001Certified: aiData.iso42001Certified,
+                aiModels: aiData.aiModels ?? undefined,
+                catalogSlug: aiData.catalogSlug,
+                status: "DRAFT",
+              },
+            });
+            result.aiSystems++;
+          }
+        } catch (aiErr) {
+          console.warn("[quickstart] Skipping AI system creation (table may not exist):", aiErr);
+        }
+      }
 
       return result;
     }),
