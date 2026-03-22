@@ -259,64 +259,66 @@ export default function ProcessingActivitiesPage() {
       ) : filteredActivities.length > 0 ? (
         <div className="space-y-4">
           {filteredActivities.map((activity) => (
-            <Card key={activity.id} className="hover:border-primary/50 transition-colors">
-              <CardContent className="py-4">
-                <div className="flex items-start gap-6">
-                  {/* Icon */}
-                  <div className="w-10 h-10 border-2 border-primary flex items-center justify-center flex-shrink-0">
-                    <FileSpreadsheet className="w-5 h-5 text-primary" />
-                  </div>
+            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
+              <Card className="hover:border-primary/50 transition-colors">
+                <CardContent className="py-4">
+                  <div className="flex items-start gap-6">
+                    {/* Icon */}
+                    <div className="w-10 h-10 border-2 border-primary flex items-center justify-center flex-shrink-0">
+                      <FileSpreadsheet className="w-5 h-5 text-primary" />
+                    </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="font-medium">{activity.name}</span>
-                      <Badge
-                        variant="outline"
-                        className={legalBasisColors[activity.legalBasis] || ""}
-                      >
-                        <Scale className="w-3 h-3 mr-1" />
-                        {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
-                      </Badge>
-                      {!activity.isActive && (
-                        <Badge variant="secondary">Inactive</Badge>
-                      )}
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="font-medium">{activity.name}</span>
+                        <Badge
+                          variant="outline"
+                          className={legalBasisColors[activity.legalBasis] || ""}
+                        >
+                          <Scale className="w-3 h-3 mr-1" />
+                          {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
+                        </Badge>
+                        {!activity.isActive && (
+                          <Badge variant="secondary">Inactive</Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                        {activity.purpose}
+                      </p>
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                        <span>{activity.assets?.length ?? 0} data assets</span>
+                        <span>{(activity.dataSubjects as string[])?.length ?? 0} subject types</span>
+                        <span>{(activity.categories as string[])?.length ?? 0} data categories</span>
+                        {activity.retentionPeriod && (
+                          <span>
+                            <Clock className="inline w-3 h-3 mr-1" />
+                            {activity.retentionPeriod}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                      {activity.purpose}
-                    </p>
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                      <span>{activity.assets?.length ?? 0} data assets</span>
-                      <span>{(activity.dataSubjects as string[])?.length ?? 0} subject types</span>
-                      <span>{(activity.categories as string[])?.length ?? 0} data categories</span>
-                      {activity.retentionPeriod && (
-                        <span>
-                          <Clock className="inline w-3 h-3 mr-1" />
-                          {activity.retentionPeriod}
-                        </span>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Data Subjects */}
-                  <div className="hidden md:block">
-                    <p className="text-xs text-muted-foreground mb-1">Data Subjects</p>
-                    <div className="flex flex-wrap gap-1">
-                      {(activity.dataSubjects as string[])?.slice(0, 3).map((subject) => (
-                        <Badge key={subject} variant="outline" className="text-xs">
-                          {subject}
-                        </Badge>
-                      ))}
-                      {(activity.dataSubjects as string[])?.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{(activity.dataSubjects as string[]).length - 3}
-                        </Badge>
-                      )}
+                    {/* Data Subjects */}
+                    <div className="hidden md:block">
+                      <p className="text-xs text-muted-foreground mb-1">Data Subjects</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(activity.dataSubjects as string[])?.slice(0, 3).map((subject) => (
+                          <Badge key={subject} variant="outline" className="text-xs">
+                            {subject}
+                          </Badge>
+                        ))}
+                        {(activity.dataSubjects as string[])?.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{(activity.dataSubjects as string[]).length - 3}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       ) : (
