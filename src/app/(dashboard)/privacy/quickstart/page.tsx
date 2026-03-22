@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Card,
   CardContent,
@@ -72,6 +73,7 @@ export default function QuickstartPage() {
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
+  const tQs = useTranslations("quickstart");
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -264,7 +266,7 @@ export default function QuickstartPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/privacy">
+        <Link href="/privacy?from=quickstart">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Dashboard
@@ -430,7 +432,7 @@ export default function QuickstartPage() {
                             <Sparkles className="w-4 h-4 mr-2" />
                             Add an industry template
                           </Button>
-                          <Link href="/privacy">
+                          <Link href="/privacy?from=quickstart">
                             <Button variant="ghost" size="lg">
                               Back to Dashboard
                             </Button>
@@ -532,6 +534,45 @@ export default function QuickstartPage() {
             Choose how you want to bootstrap your privacy program. You can use
             both options together.
           </p>
+
+          {/* Recommended: one-click complete setup */}
+          <Card
+            className="cursor-pointer border-primary/50 bg-primary/5 hover:border-primary transition-all"
+            onClick={() => {
+              setUseVendors(true);
+              setUseIndustry(true);
+              setStep("vendors");
+            }}
+          >
+            <CardContent className="p-4 sm:p-6 flex items-center gap-4">
+              <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-sm sm:text-base">
+                    {tQs("recommended")}
+                  </h3>
+                  <Badge variant="outline" className="text-primary border-primary/50">
+                    Best
+                  </Badge>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                  {tQs("recommendedDesc")}
+                </p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-primary shrink-0" />
+            </CardContent>
+          </Card>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-background px-2 text-muted-foreground">or choose individually</span>
+            </div>
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Vendor Import Card */}
@@ -1333,7 +1374,7 @@ export default function QuickstartPage() {
                 </Card>
               </Link>
             )}
-            <Link href="/privacy">
+            <Link href="/privacy?from=quickstart">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardContent className="p-4 flex items-center gap-3">
                   <ArrowLeft className="w-5 h-5 text-primary shrink-0" />

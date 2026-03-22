@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,8 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 
 export default function PrivacyDashboardPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { organization, organizations, setOrganization } = useOrganization();
 
   const { data: stats, isLoading } = trpc.organization.getDashboardStats.useQuery(
@@ -51,6 +55,19 @@ export default function PrivacyDashboardPage() {
     (stats?.totalAssets ?? 0) <= 5 &&
     (stats?.totalActivities ?? 0) <= 3 &&
     (stats?.activeVendors ?? 0) <= 3;
+
+  // Auto-redirect brand-new orgs (all zeros) straight to quickstart
+  const isEmptyOrg = !isLoading &&
+    (stats?.totalAssets ?? 0) === 0 &&
+    (stats?.totalActivities ?? 0) === 0 &&
+    (stats?.activeVendors ?? 0) === 0;
+  const fromQuickstart = searchParams.get("from") === "quickstart";
+
+  useEffect(() => {
+    if (isEmptyOrg && !fromQuickstart) {
+      router.replace("/privacy/quickstart");
+    }
+  }, [isEmptyOrg, fromQuickstart, router]);
 
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },

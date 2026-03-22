@@ -47,6 +47,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { PersonaSelector } from "@/components/privacy/persona-selector";
+import { OnboardingWelcome } from "@/components/privacy/onboarding-welcome";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
@@ -106,12 +107,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Step 1: Show persona selection if user hasn't chosen yet
+  // Step 1: Combined onboarding — persona + org in one screen
   if (needsOnboarding) {
-    return <PersonaSelector />;
+    return <OnboardingWelcome />;
   }
 
-  // Step 2: Show organization setup if user has no organizations
+  // Step 2: Fallback — user has persona but no org (edge case)
   if (!organization && organizations.length === 0) {
     return <OrganizationSetup />;
   }

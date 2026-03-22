@@ -85,6 +85,19 @@
     "howItWorks": "How It Works",
     "signIn": "Sign In"
   },
+  "onboarding": {
+    "welcome": "Welcome to {brandName}",
+    "subtitle": "Set up your account to get started with privacy management",
+    "howWillYouUse": "How will you use {brandName}?",
+    "businessOwner": "Business Owner",
+    "businessOwnerDesc": "I need privacy compliance for my organisation",
+    "privacyProfessional": "Privacy Professional",
+    "privacyProfessionalDesc": "I advise multiple organisations on privacy",
+    "orgName": "Organisation Name",
+    "orgNamePlaceholder": "e.g., Acme Corporation",
+    "getStarted": "Get Started",
+    "settingUp": "Setting up..."
+  },
   "organization": {
     "welcome": "Welcome to {brandName}",
     "createOrg": "Create your organization to get started with privacy management",
@@ -93,6 +106,10 @@
     "createOrganization": "Create Organization",
     "creating": "Creating...",
     "switchOrg": "Switch Organization"
+  },
+  "quickstart": {
+    "recommended": "Recommended: Complete Setup",
+    "recommendedDesc": "Import your vendors and add an industry template for the most comprehensive privacy program."
   },
   "dashboard": {
     "title": "Privacy Dashboard",
