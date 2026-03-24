@@ -1,6 +1,20 @@
+import type { Metadata } from "next";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
 import { brand } from "@/config/brand";
+
+export const metadata: Metadata = {
+  title: "DSAR Management",
+  description:
+    "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. Supports all GDPR rights (Art. 15–21).",
+  alternates: { canonical: "/docs/dsar" },
+  openGraph: {
+    title: "DSAR Management | DPO CENTRAL",
+    description:
+      "End-to-end DSAR lifecycle — request intake, identity verification, SLA tracking, task management, and public portal.",
+    url: "/docs/dsar",
+  },
+};
 
 export default function DSARPage() {
   return (

@@ -1,0 +1,174 @@
+# DPO Central — Full Product Description
+
+> Privacy management made simple. A single source of truth for your privacy management program.
+
+DPO Central is an open-core GDPR privacy management platform built by TODO.LAW for startups and organizations that handle personal data. It replaces spreadsheets and fragmented workflows with five integrated privacy modules in one unified dashboard.
+
+Website: https://dpocentral.todo.law
+Company: TODO.LAW (https://todo.law)
+License: Open Core — AGPL-3.0 (core) + Commercial (premium features)
+Source: https://github.com/RINDOGATAN/dpocentral
+
+---
+
+## Core Modules
+
+### 1. Data Inventory & ROPA
+
+Map your entire data landscape. Track data assets, data elements, processing activities, and cross-border data transfers.
+
+- **Data Assets**: Register databases, applications, file systems, cloud services, APIs, and physical storage
+- **Data Elements**: Classify data by sensitivity — Public, Internal, Confidential, Restricted, Special Category (Art. 9 GDPR)
+- **Processing Activities**: Document legal bases (Consent, Contract, Legal Obligation, Vital Interests, Public Task, Legitimate Interests), purposes, data categories, retention periods, and recipients
+- **Data Flows**: Visual data flow diagrams showing how personal data moves between assets
+- **Cross-Border Transfers**: Track transfer mechanisms — Adequacy Decisions, Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs)
+- **ROPA Generation**: Automatically generate your Record of Processing Activities (Art. 30 GDPR)
+
+### 2. DSAR Management
+
+Handle data subject access requests end-to-end with full lifecycle tracking.
+
+- **Request Types**: Access (Art. 15), Erasure (Art. 17), Rectification (Art. 16), Portability (Art. 20), Objection (Art. 21), Restriction (Art. 18)
+- **Lifecycle**: Submitted → Identity Check → In Progress → Review → Completed
+- **SLA Tracking**: 30-day standard deadline, 60-day extension, 72-hour breach notification
+- **Task Management**: Break requests into tasks with assignment and tracking
+- **Public Portal**: Shareable intake form at /dsar/{org-slug} for data subjects to submit requests directly
+- **Intake Configuration**: Customize which request types and fields appear on your public portal
+
+### 3. Assessments
+
+Conduct privacy impact assessments using configurable templates with approval workflows.
+
+- **Assessment Types**:
+  - LIA — Legitimate Interests Assessment (Core, free)
+  - Custom — Flexible assessment template (Core, free)
+  - DPIA — Data Protection Impact Assessment, Art. 35 GDPR (Premium)
+  - PIA — Privacy Impact Assessment (Premium)
+  - TIA — Transfer Impact Assessment, Schrems II (Premium)
+  - Vendor Risk Assessment (Premium)
+- **Approval Workflow**: Draft → In Progress → Pending Review → Approved
+- **Risk Scoring**: Low, Medium, High, Critical with risk mitigations (Implemented, In Progress, Planned)
+- **DPIA Auto-Fill**: Rule-based pre-population from processing activities, optional AI narrative generation
+
+### 4. Incident Management
+
+Track privacy incidents from detection through resolution and regulatory notification.
+
+- **Incident Lifecycle**: Reported → Investigating → Containment → Notification → Resolved
+- **Severity Levels**: Low, Medium, High, Critical
+- **DPA Notification**: 72-hour rule tracking for Art. 33 GDPR supervisory authority notifications
+- **Timeline**: Detailed incident timeline with timestamps for all actions
+- **Response Tasks**: Assign and track response tasks across team members
+
+### 5. Vendor Management
+
+Maintain your vendor register with contract tracking, questionnaires, and risk monitoring.
+
+- **Vendor Register**: Track vendors with statuses — Active, Under Review, Suspended, Offboarded
+- **Risk Tiers**: Low, Medium, High, Critical based on data processing scope
+- **Contract Management**: Track DPAs, SCCs, Sub-processor Agreements, Security Addenda
+- **Privacy Questionnaires**: 8-section security questionnaires (SIG/CAIQ/GDPR-based, 38 questions)
+- **Vendor Catalog**: Import from a catalog of 700+ pre-profiled vendors (Premium)
+- **Review Process**: Onboarding → Questionnaire → Contract Review → Approved → Periodic Review
+
+---
+
+## Additional Capabilities
+
+### AI Governance
+EU AI Act register with risk classification and AI system inventory. Auto-creates AI system records for AI-capable vendors imported via quickstart.
+
+### Transfer Compliance
+Schrems II transfer impact checklist, EU adequacy decision tracking, supplementary measures documentation, and compliance status evaluation.
+
+### Regulations
+40-jurisdiction regulatory catalog with applicability wizard and organization-level jurisdiction management.
+
+### Reports & Compliance Score
+Weighted compliance score across modules: ROPA (25%), Assessment (20%), DSAR (25%), Incident (15%), Vendor (15%). Module breakdown, risk indicators, trend snapshots, and board report data.
+
+### Notifications
+Multi-channel notification dispatcher (in-app, email, Slack). Monitors DSAR deadlines, incident notification deadlines, vendor contract expiry, assessment due dates, and SCC expiry.
+
+### Expert Directory
+Searchable directory of privacy experts with filters by specialization, country, language, and type. Contact form with direct email routing.
+
+---
+
+## User Roles
+
+DPO Central uses 5-tier role-based access control (RBAC):
+
+1. **Owner** — Full control including billing, team management, and organization settings
+2. **Admin** — Manage users, configure modules, and access all privacy features
+3. **Privacy Officer** — Full access to all privacy modules, run assessments, manage incidents
+4. **Member** — Create and edit records, submit DSARs, report incidents
+5. **Viewer** — Read-only access to dashboards, reports, and records
+
+---
+
+## Authentication
+
+- Email magic link (passwordless, via Resend)
+- Google OAuth
+- Auto-join organizations by email domain
+
+---
+
+## Licensing
+
+DPO Central follows an open core model:
+
+**Core (AGPL-3.0 — Free)**:
+- Data Inventory & ROPA generation
+- DSAR management & public portal
+- Incident tracking & DPA notification
+- Basic assessments (LIA, Custom)
+- Vendor management (basic)
+- AI governance register
+- Notifications & reports
+
+**Premium (Commercial License — €9/mo per feature)**:
+- DPIA, PIA, TIA assessment templates & scoring
+- Vendor risk assessments & scoring
+- Vendor Catalog (700+ pre-profiled vendors)
+- ROPA export (PDF/DOCX)
+- Advanced audit features
+
+---
+
+## Security
+
+- Zero-knowledge authentication (magic links, no passwords stored)
+- 5-tier RBAC with organization-level multi-tenancy
+- Input validation and sanitization
+- Rate limiting per endpoint
+- TLS-only with HSTS (2-year max-age), CSP, X-Frame-Options, X-Content-Type-Options
+- Full audit logging
+- Data minimization by design
+- Stripe-verified payment processing (no card data touches our servers)
+- Edge network deployment (Vercel)
+
+---
+
+## Technical Stack
+
+- Next.js 16 (React 19)
+- tRPC for type-safe API layer
+- Prisma ORM with PostgreSQL (Neon)
+- NextAuth for authentication
+- Deployed on Vercel edge network
+- Internationalized (English, Spanish)
+
+---
+
+## Links
+
+- Application: https://dpocentral.todo.law
+- Documentation: https://dpocentral.todo.law/docs
+- Data Security: https://dpocentral.todo.law/security
+- Company: https://todo.law
+- Privacy Policy: https://todo.law/privacy
+- Terms of Service: https://todo.law/terms
+- Source Code: https://github.com/RINDOGATAN/dpocentral
+- Contact: hello@todo.law

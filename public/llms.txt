@@ -1,0 +1,21 @@
+# DPO Central
+
+> Privacy management made simple. A single source of truth for your privacy management program.
+
+DPO Central is an open-core GDPR privacy management platform built for startups and organizations handling personal data. It provides five integrated modules — Data Inventory, DSAR Management, Assessments, Incident Tracking, and Vendor Management — in one unified dashboard.
+
+Built by TODO.LAW. Available at https://dpocentral.todo.law
+
+## Documentation
+
+- [Overview](https://dpocentral.todo.law/docs): Platform overview, quick start, user roles, modules, licensing
+- [Data Inventory](https://dpocentral.todo.law/docs/data-inventory): Data assets, elements, processing activities, cross-border transfers, ROPA generation
+- [DSAR Management](https://dpocentral.todo.law/docs/dsar): Data subject access requests, SLA tracking, public intake portal
+- [Assessments](https://dpocentral.todo.law/docs/assessments): DPIA, PIA, TIA, LIA, vendor risk assessments with templates and approval workflows
+- [Incident Management](https://dpocentral.todo.law/docs/incidents): Breach tracking, DPA notification (72h), severity classification, response tasks
+- [Vendor Management](https://dpocentral.todo.law/docs/vendors): Vendor register, contracts, questionnaires, risk tiers
+- [Data Security](https://dpocentral.todo.law/security): Security controls, authentication, RBAC, transport security, infrastructure
+
+## Optional
+
+- [Full product details](https://dpocentral.todo.law/llms-full.txt): Complete feature descriptions, module details, and licensing information

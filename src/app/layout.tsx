@@ -28,8 +28,48 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: `${brand.nameUppercase} - ${brand.tagline}`,
-  description: `${brand.name} is ${brand.description.toLowerCase()}`,
+  title: {
+    default: `${brand.nameUppercase} - ${brand.tagline}`,
+    template: `%s | ${brand.nameUppercase}`,
+  },
+  description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+  metadataBase: new URL(brand.appUrl),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: brand.nameUppercase,
+    title: `${brand.nameUppercase} - ${brand.tagline}`,
+    description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+    url: brand.appUrl,
+    locale: "en",
+  },
+  twitter: {
+    card: "summary",
+    title: `${brand.nameUppercase} - ${brand.tagline}`,
+    description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  keywords: [
+    "GDPR compliance",
+    "privacy management",
+    "DPO tool",
+    "data protection officer",
+    "DSAR management",
+    "data inventory",
+    "ROPA",
+    "DPIA",
+    "privacy impact assessment",
+    "incident management",
+    "vendor management",
+    "data protection",
+    "privacy software",
+    "open source privacy",
+  ],
 };
 
 export default async function RootLayout({

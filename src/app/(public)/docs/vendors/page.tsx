@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+
+export const metadata: Metadata = {
+  title: "Vendor Management",
+  description:
+    "Maintain your vendor register with contract tracking, privacy questionnaires, risk tiers, and periodic review workflows.",
+  alternates: { canonical: "/docs/vendors" },
+  openGraph: {
+    title: "Vendor Management | DPO CENTRAL",
+    description:
+      "Vendor register, contract management, privacy questionnaires, risk tier classification, and review workflows.",
+    url: "/docs/vendors",
+  },
+};
 
 export default function VendorsPage() {
   return (
