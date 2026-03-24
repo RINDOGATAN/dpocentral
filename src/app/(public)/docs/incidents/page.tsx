@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+
+export const metadata: Metadata = {
+  title: "Incident Management",
+  description:
+    "Track privacy incidents from detection to resolution. Manage severity classification, 72-hour DPA notification (Art. 33 GDPR), response tasks, and incident timelines.",
+  alternates: { canonical: "/docs/incidents" },
+  openGraph: {
+    title: "Incident Management | DPO CENTRAL",
+    description:
+      "Breach tracking, DPA notification (Art. 33), severity classification, response tasks, and full incident timeline.",
+    url: "/docs/incidents",
+  },
+};
 
 export default function IncidentsPage() {
   return (

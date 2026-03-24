@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Database,
@@ -8,6 +9,19 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Documentation",
+  description:
+    "DPO Central documentation — quick start guide, user roles, and module overview for data inventory, DSAR, assessments, incidents, and vendor management.",
+  alternates: { canonical: "/docs" },
+  openGraph: {
+    title: "Documentation | DPO CENTRAL",
+    description:
+      "Quick start guide, user roles, and module overview for GDPR privacy management.",
+    url: "/docs",
+  },
+};
 
 const modules = [
   {

@@ -2,6 +2,63 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
 
+function JsonLd() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: brand.companyName,
+        url: brand.companyWebsite,
+        logo: `${brand.appUrl}${brand.logoPath}`,
+        contactPoint: {
+          "@type": "ContactPoint",
+          email: brand.supportEmail,
+          contactType: "customer support",
+        },
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: brand.name,
+        url: brand.appUrl,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        description: brand.description,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "EUR",
+          description: "Open-core platform — core features free under AGPL-3.0, premium add-ons from €9/mo",
+        },
+        creator: {
+          "@type": "Organization",
+          name: brand.companyName,
+          url: brand.companyWebsite,
+        },
+        featureList: [
+          "Data Inventory & ROPA Generation",
+          "DSAR Management & Public Portal",
+          "Privacy Impact Assessments (DPIA, PIA, TIA, LIA)",
+          "Incident Tracking & DPA Notification",
+          "Vendor Management & Questionnaires",
+          "AI Governance Register",
+          "Transfer Compliance (Schrems II)",
+          "40-Jurisdiction Regulation Catalog",
+          "5-Tier Role-Based Access Control",
+          "Multi-Channel Notifications",
+        ],
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 export default async function PublicLayout({
   children,
 }: {
@@ -11,6 +68,7 @@ export default async function PublicLayout({
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <JsonLd />
       {/* Header */}
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">

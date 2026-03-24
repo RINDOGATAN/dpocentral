@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+
+export const metadata: Metadata = {
+  title: "Data Inventory & ROPA",
+  description:
+    "Track data assets, elements, processing activities, and cross-border transfers. Generate your GDPR Record of Processing Activities (ROPA) automatically.",
+  alternates: { canonical: "/docs/data-inventory" },
+  openGraph: {
+    title: "Data Inventory & ROPA | DPO CENTRAL",
+    description:
+      "Map your data landscape — assets, elements, processing activities, data flows, and cross-border transfers with automatic ROPA generation.",
+    url: "/docs/data-inventory",
+  },
+};
 
 export default function DataInventoryPage() {
   return (

@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+
+export const metadata: Metadata = {
+  title: "Assessments",
+  description:
+    "Conduct DPIAs, PIAs, TIAs, LIAs, and vendor risk assessments with configurable templates, approval workflows, and risk scoring.",
+  alternates: { canonical: "/docs/assessments" },
+  openGraph: {
+    title: "Assessments | DPO CENTRAL",
+    description:
+      "Privacy impact assessments — DPIA, PIA, TIA, LIA, and vendor risk with templates, approval workflows, and risk scoring.",
+    url: "/docs/assessments",
+  },
+};
 
 export default function AssessmentsPage() {
   return (
