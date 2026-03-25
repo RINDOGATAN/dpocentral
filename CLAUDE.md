@@ -24,20 +24,15 @@ Open Core model:
 
 ### Premium Skills Package
 Private repo: `RINDOGATAN/dpocentral-premium-skills` (`@dpocentral/premium-skills`)
-- Loaded dynamically via `src/lib/skills/loader.ts` + `src/instrumentation.ts`
-- `optionalDependencies` in package.json — `npm install` succeeds without access
-- `serverExternalPackages` in next.config.ts prevents webpack bundling
-- `scripts/seed-templates.ts` dynamically imports templates from package (falls back gracefully)
-- Templates: DPIA, PIA (new), TIA (new) — seeded only when package is installed
+- Loaded dynamically via `src/lib/skills/loader.ts` + `src/instrumentation.ts` (optionalDependencies + serverExternalPackages)
+- Templates: DPIA, PIA, TIA — seeded via `scripts/seed-templates.ts` only when package is installed
 - Open repo keeps: skill loader/registry/types, entitlement checks, LIA/Custom templates
 
 ### Security Package
 Private repo: `RINDOGATAN/dpocentral-security` (`@dpocentral/security`)
-- Loaded dynamically via `src/lib/security/loader.ts` + `src/instrumentation.ts`
-- `optionalDependencies` in package.json — `npm install` succeeds without access
-- `serverExternalPackages` in next.config.ts prevents webpack bundling
-- Provides: rate limiting, RBAC role enforcement, input sanitization, public domain blocklist, CSP nonce generation
-- Without package: rate limits disabled, RBAC falls back to membership-only, sanitization is no-op, all domains allowed for auto-join, CSP uses static headers
+- Loaded dynamically via `src/lib/security/loader.ts` + `src/instrumentation.ts` (optionalDependencies + serverExternalPackages)
+- Provides: rate limiting, RBAC, input sanitization, domain blocklist, CSP nonce
+- Without package: all features degrade gracefully (no-op / permissive fallbacks)
 
 ## Vendor Catalog — READ-ONLY
 - `vendor_catalog` table is now **owned by Vendor.Watch** (admin CRUD, enrichment, seeding)
@@ -85,7 +80,7 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 - **Top bar (desktop)**: 5 core modules flat — Data Inventory, DSAR, Assessments, Incidents, Vendors
 - **More dropdown**: Reports, Regulations, AI Systems, Find Expert, My Clients (professional)
 - **Mobile**: All items flat in slide-out sheet
-- Feature-flagged via `src/config/features.ts` (19 flags, all enabled by default)
+- Feature-flagged via `src/config/features.ts` (all enabled by default)
 
 ## Expert Directory & Dealroom Integration
 - `/privacy/experts` — searchable directory with filters (specialization, country, language, type)
@@ -104,11 +99,15 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 - Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
 - Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
 
-## Data Security Page
-- Public page at `/security` (under `(public)` layout)
-- Linked from dashboard footer and public site footer
-- 10 security sections grouped into 4 categories with accordion UI
-- Uses shadcn Accordion component (`src/components/ui/accordion.tsx`)
+## Public Pages (`(public)` layout)
+- `/security` — Data Security page (accordion UI, 10 sections)
+- `/docs/*` — Public documentation (assessments, data-inventory, dsar, incidents, vendors)
+- SEO: dynamic `src/app/robots.ts`, `src/app/sitemap.ts`, `public/llms.txt`, OpenGraph + JSON-LD in layout
+
+## Billing (Stripe)
+- EUR price (default): `STRIPE_PRICE_ID` — EUR 9/mo
+- USD price (US visitors via geo-IP `x-vercel-ip-country`): `STRIPE_PRICE_ID_USD`
+- Checkout route picks currency automatically
 
 ## Cron Jobs
 - `vercel.json` defines daily cron at 08:00 UTC: `/api/cron/notifications`
@@ -117,15 +116,14 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 
 ## Structure
 ```
-prisma/schema.prisma              # ~25 models
-src/server/routers/privacy/       # tRPC routers (12 routers)
-src/server/services/              # External API clients (Dealroom, AI Sentinel), notifications dispatcher, AI assessment generator
-src/config/                       # Feature flags, AI Act classifications, vendor mappings, jurisdiction catalog, transfer compliance rules, DPIA auto-fill rules
+prisma/schema.prisma              # ~56 models
+src/server/routers/privacy/       # 14 tRPC routers
+src/server/services/              # External APIs (Dealroom, AI Sentinel), notifications, AI assessment generator
+src/config/                       # Feature flags, AI Act classifications, vendor mappings, jurisdictions, DPIA rules
 src/app/(dashboard)/privacy/      # Dashboard pages
-src/app/(public)/security/        # Public Data Security page
+src/app/(public)/                 # Public pages (security, docs)
 src/app/dsar/                     # Public DSAR portal
 src/app/api/cron/                 # Vercel cron endpoints
-src/components/docs/              # Reusable doc components (DocSection, StepList, FeatureMockup, InfoCallout, DocNavFooter)
 scripts/                          # Verification, seeding & demo scripts
 ```
 
