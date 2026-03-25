@@ -47,6 +47,10 @@ export async function GET(
     return Response.json({ error: "Assessment not found" }, { status: 404 });
   }
 
+  if (!assessment.template) {
+    return Response.json({ error: "Assessment template is missing" }, { status: 500 });
+  }
+
   // Verify org membership
   const membership = await prisma.organizationMember.findFirst({
     where: {

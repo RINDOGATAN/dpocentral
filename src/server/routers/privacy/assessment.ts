@@ -270,6 +270,12 @@ export const assessmentRouter = createTRPCRouter({
 
       // Calculate completion percentage
       const template = assessment.template;
+      if (!template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing — it may have been deleted",
+        });
+      }
       const sections = (template.sections as any[]) || [];
       const totalQuestions = sections.reduce(
         (sum, s) => sum + (s.questions?.length || 0),
@@ -448,6 +454,13 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      if (!assessment.template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing — it may have been deleted",
+        });
+      }
+
       const { score, level } = calculateRiskScore(
         assessment.responses,
         assessment.template
@@ -480,6 +493,13 @@ export const assessmentRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Assessment not found",
+        });
+      }
+
+      if (!assessment.template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing — it may have been deleted",
         });
       }
 
@@ -787,6 +807,13 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      if (!assessment.template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing — it may have been deleted",
+        });
+      }
+
       // Check all required questions are answered
       const sections = (assessment.template.sections as any[]) || [];
       const requiredQuestionIds = sections.flatMap((s) =>
@@ -901,6 +928,13 @@ export const assessmentRouter = createTRPCRouter({
 
       if (!assessment) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+
+      if (!assessment.template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing — it may have been deleted",
+        });
       }
 
       // 1. Detect risks from template questions and responses
