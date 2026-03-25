@@ -35,14 +35,6 @@ export default function ExpertsPage() {
   const searchParams = useSearchParams();
   const t = useTranslations("experts");
 
-  useEffect(() => {
-    if (!features.expertDirectoryEnabled) {
-      router.replace("/privacy");
-    }
-  }, [router]);
-
-  if (!features.expertDirectoryEnabled) return null;
-
   const [searchQuery, setSearchQuery] = useState("");
   const [specialization, setSpecialization] = useState<string>(
     searchParams.get("specialization") ?? ""
@@ -54,10 +46,19 @@ export default function ExpertsPage() {
   const [contactExpert, setContactExpert] = useState<{ id: string; name: string } | null>(null);
   const debouncedSearch = useDebounce(searchQuery);
 
+  // Redirect if feature is disabled
+  useEffect(() => {
+    if (!features.expertDirectoryEnabled) {
+      router.replace("/privacy");
+    }
+  }, [router]);
+
   // Reset pagination when filters change
   useEffect(() => {
     setOffset(0);
   }, [debouncedSearch, specialization, country, language, expertType]);
+
+  if (!features.expertDirectoryEnabled) return null;
 
   const { data: filters } = trpc.experts.listFilters.useQuery();
 

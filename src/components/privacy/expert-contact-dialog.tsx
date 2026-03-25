@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import {
@@ -35,6 +35,12 @@ export function ExpertContactDialog({
   const tCommon = useTranslations("common");
   const [name, setName] = useState(session?.user?.name ?? "");
   const [email, setEmail] = useState(session?.user?.email ?? "");
+
+  // Sync with session when it loads (async)
+  useEffect(() => {
+    if (session?.user?.name && !name) setName(session.user.name);
+    if (session?.user?.email && !email) setEmail(session.user.email);
+  }, [session?.user?.name, session?.user?.email]);
   const [company, setCompany] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -37,6 +38,7 @@ export default function DpiaAutoFillPage() {
   const [selectedActivityId, setSelectedActivityId] = useState<string>("");
   const [selectedVendorId, setSelectedVendorId] = useState<string>("");
   const [editedResponses, setEditedResponses] = useState<Record<string, string>>({});
+  const [isCreating, setIsCreating] = useState(false);
 
   const orgId = organization?.id ?? "";
 
@@ -85,29 +87,48 @@ export default function DpiaAutoFillPage() {
   const handleCreate = async () => {
     if (!autoFill || !templates || templates.length === 0) return;
 
-    const template = templates[0];
-    const assessment = await createAssessment.mutateAsync({
-      organizationId: orgId,
-      templateId: template.id,
-      name: `DPIA — ${autoFill.activityName}${autoFill.vendorName ? ` (${autoFill.vendorName})` : ""}`,
-      description: "Auto-filled from processing activity data",
-      processingActivityId: selectedActivityId,
-      vendorId: selectedVendorId || undefined,
-    });
-
-    // Save all auto-fill responses
-    for (const suggestion of autoFill.suggestions) {
-      const response = editedResponses[suggestion.questionId] ?? suggestion.suggestedResponse;
-      await saveResponse.mutateAsync({
+    setIsCreating(true);
+    try {
+      const template = templates[0];
+      const assessment = await createAssessment.mutateAsync({
         organizationId: orgId,
-        assessmentId: assessment.id,
-        questionId: suggestion.questionId,
-        sectionId: suggestion.sectionId,
-        response: { text: response },
+        templateId: template.id,
+        name: `DPIA — ${autoFill.activityName}${autoFill.vendorName ? ` (${autoFill.vendorName})` : ""}`,
+        description: "Auto-filled from processing activity data",
+        processingActivityId: selectedActivityId,
+        vendorId: selectedVendorId || undefined,
       });
-    }
 
-    router.push(`/privacy/assessments/${assessment.id}`);
+      // Save all auto-fill responses
+      let savedCount = 0;
+      for (const suggestion of autoFill.suggestions) {
+        try {
+          const response = editedResponses[suggestion.questionId] ?? suggestion.suggestedResponse;
+          await saveResponse.mutateAsync({
+            organizationId: orgId,
+            assessmentId: assessment.id,
+            questionId: suggestion.questionId,
+            sectionId: suggestion.sectionId,
+            response: response,
+          });
+          savedCount++;
+        } catch {
+          // Continue saving remaining responses even if one fails
+        }
+      }
+
+      if (savedCount < autoFill.suggestions.length) {
+        toast.warning(`Assessment created but only ${savedCount} of ${autoFill.suggestions.length} responses were saved`);
+      } else {
+        toast.success("Assessment created with all responses pre-filled");
+      }
+
+      router.push(`/privacy/assessments/${assessment.id}`);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create assessment");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const confidenceColor = (c: string) => {
@@ -372,10 +393,10 @@ export default function DpiaAutoFillPage() {
                 </Button>
                 <Button
                   onClick={handleCreate}
-                  disabled={createAssessment.isPending}
+                  disabled={isCreating}
                 >
-                  {createAssessment.isPending ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</>
+                  {isCreating ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating & saving responses...</>
                   ) : (
                     <><Sparkles className="w-4 h-4 mr-2" /> Create & Open Assessment</>
                   )}

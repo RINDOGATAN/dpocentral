@@ -16,6 +16,7 @@ import {
   Copy,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -41,7 +42,11 @@ export default function AssessmentTemplatesPage() {
 
   const cloneTemplate = trpc.assessment.cloneTemplate.useMutation({
     onSuccess: () => {
+      toast.success("Template cloned successfully");
       utils.assessment.listTemplates.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to clone template");
     },
   });
 

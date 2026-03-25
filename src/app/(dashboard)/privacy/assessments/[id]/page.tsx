@@ -147,8 +147,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
-  const memberCount = orgData?.members?.length ?? 0;
-  const isSingleUser = memberCount <= 1;
+  const members = (orgData as any)?.members;
+  const memberCount = Array.isArray(members) ? members.length : -1;
+  const isSingleUser = memberCount === 1;
 
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -437,6 +438,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const canSubmit =
     assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
 
+  // Check if all REQUIRED questions are answered (mirrors server-side validation)
+  const requiredQuestionIds = sections.flatMap((s: any) =>
+    (s.questions || []).filter((q: any) => q.required).map((q: any) => q.id)
+  );
+  const answeredIds = new Set(assessment?.responses?.map((r: any) => r.questionId) ?? []);
+  const allRequiredAnswered = requiredQuestionIds.length === 0 || requiredQuestionIds.every((id: string) => answeredIds.has(id));
+
   // These hooks MUST be called unconditionally (before early returns)
   const sectionCompletionData = useMemo(() => sections.map((section) => {
     const sectionQuestions = section.questions || [];
@@ -543,7 +551,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   assessmentId: id,
                 })
               }
-              disabled={submitAndApprove.isPending || completionPercentage < 100}
+              disabled={submitAndApprove.isPending || !allRequiredAnswered}
             >
               {submitAndApprove.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
               Submit & Approve
@@ -557,7 +565,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   assessmentId: id,
                 })
               }
-              disabled={submitAssessment.isPending || completionPercentage < 100}
+              disabled={submitAssessment.isPending || !allRequiredAnswered}
             >
               {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               Submit for Review
@@ -1377,7 +1385,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   <SelectValue placeholder="Select an approver" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(orgData?.members ?? []).map((member: any) => (
+                  {((orgData as any)?.members ?? []).map((member: any) => (
                     <SelectItem key={member.user.id} value={member.user.id}>
                       {member.user.name || member.user.email} ({member.role})
                     </SelectItem>
