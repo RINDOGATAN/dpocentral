@@ -46,11 +46,18 @@ Private repo: `RINDOGATAN/dpocentral-security` (`@dpocentral/security`)
 
 Premium features require entitlements via `src/server/services/licensing/`
 
+## Onboarding Flow
+- **Combined screen**: `OnboardingWelcome` merges persona selection + org creation into one step
+- **Auto-redirect**: Empty orgs (0 assets/activities/vendors) redirect to `/privacy/quickstart` automatically
+- **`?from=quickstart`** on back-links prevents redirect loops
+- Fallback: `OrganizationSetup` still renders if user has persona but no org (edge case)
+
 ## Quickstart — Free Tier (5 Vendors)
 - Vendor catalog import allows **5 free vendors** without premium license
 - Tracked via `Vendor.metadata.source = "quickstart"` (counted per org)
 - Portfolio imports (from Vendor.Watch) share the same 5-vendor budget (`metadata.fromPortfolio: true`)
-- AI-capable vendors auto-create `AISystem` records (detected from catalog AI fields)
+- AI-capable vendors auto-create `AISystem` records (created **outside** the main transaction; gracefully skipped if `ai_systems` table doesn't exist)
+- "Recommended: Complete Setup" card on choose step pre-selects vendors + industry template
 - Industry templates are always free (no limit)
 - Transaction timeout: 30s
 
@@ -60,7 +67,7 @@ Gated by `ADMIN_EMAILS` env var. 6 sections: Dashboard, Customers, Skill Package
 - `src/app/(admin)/admin/` — all admin pages
 
 ## Modules
-- **Data Inventory** - Assets, elements, processing activities, data flow visualization
+- **Data Inventory** - Assets, elements, processing activities (with detail page at `/privacy/data-inventory/activities/[id]`), data flow visualization
 - **DSAR** - Subject access requests, SLA tracking, public portal
 - **Assessments** - DPIA/PIA/TIA/Vendor with templates & approvals
 - **Incidents** - Breach tracking, DPA notifications, timeline
@@ -90,8 +97,9 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 ## AI Sentinel Integration
 - DPO Central = lightweight AI register; AI Sentinel = deep governance (separate app/DB at `aisentinel.todo.law`)
 - Quickstart auto-creates `AISystem` records for AI-capable vendors (detected via `src/config/vendor-ai-detection.ts`)
-- Export DPC AI Systems → AIS via `POST /api/import/dpc-ai-systems` (x-api-key auth)
-- `src/server/services/ai-sentinel/client.ts` — REST client (follows Dealroom pattern, no-op when not configured)
+- **`ai_systems` table**: defined in schema but may need `prisma db push` on production — quickstart handles gracefully, but `/privacy/ai-systems` CRUD pages will 500 without it
+- Export DPC AI Systems → AIS via `POST /api/import/dpc-ai-systems` (x-api-key auth, one-way manual push)
+- `src/server/services/ai-sentinel/client.ts` — REST client (no-op when not configured)
 - Env vars: `AI_SENTINEL_API_URL`, `AI_SENTINEL_API_KEY`
 - Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
 - Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
