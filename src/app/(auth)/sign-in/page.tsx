@@ -116,7 +116,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display mb-4 text-white uppercase tracking-wide">{brand.nameUppercase}</h1>
+          <h1 className="text-3xl mb-4 text-white uppercase tracking-wide" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</h1>
           <p className="text-muted-foreground text-sm">
             {brand.tagline}
           </p>

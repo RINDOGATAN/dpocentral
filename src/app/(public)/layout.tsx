@@ -74,9 +74,10 @@ export default async function PublicLayout({
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link
             href="/"
-            className="text-lg font-bold tracking-tight text-foreground"
+            className="flex items-center gap-2"
           >
-            {brand.companyTrademark} <span className="text-muted-foreground">{brand.nameUppercase}</span>
+            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+            <span className="text-muted-foreground" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </Link>
 
           <div className="flex items-center gap-6">

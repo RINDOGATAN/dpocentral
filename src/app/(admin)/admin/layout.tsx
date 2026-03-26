@@ -92,8 +92,8 @@ export default function AdminLayout({
         <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/admin" className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-primary" />
-              <span className="font-semibold">DPO Central Admin</span>
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>DPO Central Admin</span>
             </Link>
 
             {/* Navigation */}
