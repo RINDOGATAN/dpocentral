@@ -8,6 +8,9 @@ const LIGHT_BG = "#f5f5f5";
 const BORDER = "#e0e0e0";
 const WHITE = "#ffffff";
 
+/** Exported color constants for use in report files */
+export const PDF_COLORS = { PRIMARY, DARK, MUTED, LIGHT_BG, BORDER, WHITE } as const;
+
 export const s = StyleSheet.create({
   page: {
     padding: 40,
@@ -202,6 +205,107 @@ export const s = StyleSheet.create({
     color: MUTED,
     marginTop: 2,
     textTransform: "uppercase" as const,
+  },
+  // Cover stripe
+  coverStripe: {
+    position: "absolute" as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 6,
+    backgroundColor: PRIMARY,
+  },
+  // Assessment section header with left accent
+  sectionHeader: {
+    borderLeftWidth: 4,
+    borderLeftColor: PRIMARY,
+    paddingLeft: 10,
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  // Question cards
+  questionCard: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 8,
+  },
+  questionCardUnanswered: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderStyle: "dashed" as const,
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 8,
+    backgroundColor: "#fafafa",
+  },
+  questionNumber: {
+    fontSize: 10,
+    fontFamily: "Helvetica-Bold",
+    color: PRIMARY,
+    marginRight: 4,
+  },
+  questionText: {
+    fontSize: 10,
+    fontFamily: "Helvetica-Bold",
+    color: DARK,
+    flex: 1,
+  },
+  answerText: {
+    fontSize: 9,
+    lineHeight: 1.6,
+    color: DARK,
+    marginTop: 4,
+  },
+  notesText: {
+    fontSize: 8,
+    lineHeight: 1.4,
+    color: MUTED,
+    fontStyle: "italic" as const,
+    marginTop: 4,
+  },
+  requiredTag: {
+    fontSize: 6,
+    fontFamily: "Helvetica-Bold",
+    color: "#dc2626",
+    backgroundColor: "#fef2f2",
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 2,
+    marginLeft: 6,
+  },
+  // Callout box (GDPR reference)
+  calloutBox: {
+    backgroundColor: "#f0f9ff",
+    borderWidth: 1,
+    borderColor: "#bae6fd",
+    borderRadius: 4,
+    padding: 12,
+    marginVertical: 12,
+  },
+  calloutTitle: {
+    fontSize: 9,
+    fontFamily: "Helvetica-Bold",
+    color: "#0369a1",
+    marginBottom: 6,
+  },
+  calloutText: {
+    fontSize: 8,
+    lineHeight: 1.5,
+    color: "#0c4a6e",
+  },
+  // Progress bar
+  progressBarOuter: {
+    height: 8,
+    backgroundColor: "#e5e7eb",
+    borderRadius: 4,
+    marginBottom: 16,
+  },
+  progressBarInner: {
+    height: 8,
+    backgroundColor: PRIMARY,
+    borderRadius: 4,
   },
 });
 
@@ -407,6 +511,36 @@ export function StatCard({
     <View style={s.statCard}>
       <Text style={s.statValue}>{value}</Text>
       <Text style={s.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
+export function ProgressBar({ percent }: { percent: number }) {
+  const clamped = Math.min(100, Math.max(0, percent));
+  return (
+    <View style={s.progressBarOuter}>
+      <View style={[s.progressBarInner, { width: `${clamped}%` }]} />
+    </View>
+  );
+}
+
+export function AccentSectionHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
+  return (
+    <View style={s.sectionHeader}>
+      <Text style={{ fontSize: 13, fontFamily: "Helvetica-Bold", color: DARK }}>
+        {title}
+      </Text>
+      {description && (
+        <Text style={{ fontSize: 9, fontStyle: "italic", color: MUTED, marginTop: 3 }}>
+          {description}
+        </Text>
+      )}
     </View>
   );
 }
