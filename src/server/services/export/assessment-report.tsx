@@ -1,17 +1,18 @@
 import React from "react";
-import { Document, View, Text } from "@react-pdf/renderer";
+import { Document, Page, View, Text } from "@react-pdf/renderer";
 import {
-  CoverPage,
   ContentPage,
-  SectionTitle,
-  SectionSubtitle,
+  PageHeader,
+  PageFooter,
   MetadataBlock,
   DataTable,
   RiskBadge,
-  StatusBadge,
+  StatCard,
+  ProgressBar,
+  AccentSectionHeader,
   s,
+  PDF_COLORS,
   fmtDate,
-  fmtDateTime,
 } from "./pdf-styles";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -102,26 +103,67 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
     data.responses.map((r) => [`${r.sectionId}:${r.questionId}`, r])
   );
 
+  const completedMitigations = data.mitigations.filter(
+    (m) => m.status === "IMPLEMENTED" || m.status === "VERIFIED"
+  ).length;
+
   return (
     <Document>
-      <CoverPage
-        orgName={orgName}
-        title={data.name}
-        subtitle={`${TYPE_LABELS[type] || type} — ${ARTICLE_REFS[type] || ""}`}
-        date={date}
-      />
+      {/* ── Cover Page ────────────────────────────────── */}
+      <Page size="A4" style={s.coverPage}>
+        <View style={s.coverStripe} />
+        <Text style={s.coverOrgName}>{orgName}</Text>
+        <Text style={s.coverTitle}>{data.name}</Text>
+        <Text style={s.coverSubtitle}>
+          {TYPE_LABELS[type] || type}
+        </Text>
+        {ARTICLE_REFS[type] && ARTICLE_REFS[type] !== TYPE_LABELS[type] && (
+          <Text style={{ fontSize: 11, color: PDF_COLORS.MUTED, marginBottom: 40 }}>
+            {ARTICLE_REFS[type]}
+          </Text>
+        )}
+        <Text style={s.coverDate}>Generated: {date}</Text>
+        <Text style={s.coverConfidential}>
+          CONFIDENTIAL — This document contains sensitive information about data
+          protection practices. Distribution should be limited to authorized
+          personnel and supervisory authorities upon request.
+        </Text>
+      </Page>
 
-      {/* Executive Summary */}
+      {/* ── Executive Summary ─────────────────────────── */}
       <ContentPage title={data.name} orgName={orgName} date={date}>
-        <SectionTitle>Executive Summary</SectionTitle>
+        <Text style={s.sectionTitle}>Executive Summary</Text>
+
+        {/* Stat cards */}
+        <View style={s.statsGrid}>
+          <StatCard
+            value={data.riskLevel?.replace("_", " ") || "N/A"}
+            label="Risk Level"
+          />
+          <StatCard
+            value={`${data.completionPercentage}%`}
+            label="Completion"
+          />
+          <StatCard
+            value={`${data.responses.length} / ${data.totalQuestions}`}
+            label="Questions Answered"
+          />
+          <StatCard
+            value={data.mitigations.length}
+            label="Mitigations"
+          />
+        </View>
+
+        {/* Progress bar */}
+        <ProgressBar percent={data.completionPercentage} />
+
+        {/* Metadata */}
         <MetadataBlock
           items={[
             { label: "Assessment Type", value: TYPE_LABELS[type] || type },
             { label: "Template", value: `${data.template.name} v${data.template.version}` },
             { label: "Status", value: data.status.replace(/_/g, " ") },
-            { label: "Risk Level", value: data.riskLevel || "Not assessed" },
-            { label: "Risk Score", value: data.riskScore != null ? `${data.riskScore.toFixed(1)}` : "N/A" },
-            { label: "Completion", value: `${data.completionPercentage}% (${data.responses.length}/${data.totalQuestions})` },
+            { label: "Risk Score", value: data.riskScore != null ? `${data.riskScore.toFixed(1)} / 5.0` : null },
             { label: "Started", value: fmtDate(data.startedAt) },
             { label: "Submitted", value: fmtDate(data.submittedAt) },
             { label: "Completed", value: fmtDate(data.completedAt) },
@@ -130,58 +172,131 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
             { label: "Linked Vendor", value: data.vendor?.name },
           ]}
         />
+
+        {/* Description */}
         {data.description && (
-          <>
-            <SectionSubtitle>Description</SectionSubtitle>
+          <View style={{ marginTop: 8 }}>
+            <Text style={s.sectionSubtitle}>Description</Text>
             <Text style={s.paragraph}>{data.description}</Text>
-          </>
+          </View>
         )}
 
-        {/* Responses by Section */}
-        {sections.map((section) => (
-          <View key={section.id} wrap={false}>
-            <SectionTitle>{section.title}</SectionTitle>
-            {section.description && (
-              <Text style={[s.paragraph, { fontStyle: "italic" }]}>
-                {section.description}
+        {/* GDPR Article 35(7) callout for DPIA */}
+        {type === "DPIA" && (
+          <View style={s.calloutBox}>
+            <Text style={s.calloutTitle}>
+              GDPR Article 35(7) — Required DPIA Elements
+            </Text>
+            <Text style={s.calloutText}>
+              {"\u2713"}  Systematic description of processing operations and purposes
+            </Text>
+            <Text style={s.calloutText}>
+              {"\u2713"}  Assessment of necessity and proportionality
+            </Text>
+            <Text style={s.calloutText}>
+              {"\u2713"}  Assessment of risks to rights and freedoms of data subjects
+            </Text>
+            <Text style={s.calloutText}>
+              {"\u2713"}  Measures envisaged to address risks and demonstrate compliance
+            </Text>
+          </View>
+        )}
+      </ContentPage>
+
+      {/* ── Question Sections (one ContentPage per section) ── */}
+      {sections.map((section, sectionIndex) => {
+        const sectionQuestions = section.questions || [];
+        const answeredCount = sectionQuestions.filter(
+          (q) => responseMap.has(`${section.id}:${q.id}`)
+        ).length;
+
+        return (
+          <ContentPage
+            key={section.id}
+            title={data.name}
+            orgName={orgName}
+            date={date}
+          >
+            {/* Section header with accent */}
+            <AccentSectionHeader
+              title={`${sectionIndex + 1}. ${section.title}`}
+              description={section.description}
+            />
+
+            {/* Section progress indicator */}
+            <View style={[s.row, { marginBottom: 12, gap: 8 }]}>
+              <Text style={{ fontSize: 8, color: PDF_COLORS.MUTED }}>
+                {answeredCount} of {sectionQuestions.length} questions answered
               </Text>
-            )}
-            {(section.questions || []).map((q, qi) => {
+              {answeredCount === sectionQuestions.length && (
+                <Text
+                  style={[
+                    s.badge,
+                    { backgroundColor: "#dcfce7", color: "#166534" },
+                  ]}
+                >
+                  Complete
+                </Text>
+              )}
+            </View>
+
+            {/* Questions — cards flow across pages naturally */}
+            {sectionQuestions.map((q, qi) => {
               const resp = responseMap.get(`${section.id}:${q.id}`);
+              const isLongAnswer = (resp?.response?.length ?? 0) > 500;
+
               return (
-                <View key={q.id} style={s.card}>
-                  <View style={[s.row, { marginBottom: 4 }]}>
-                    <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 9 }}>
-                      Q{qi + 1}.{" "}
-                    </Text>
-                    <Text style={{ fontSize: 9, flex: 1 }}>{q.text}</Text>
+                <View
+                  key={q.id}
+                  style={resp ? s.questionCard : s.questionCardUnanswered}
+                  wrap={isLongAnswer}
+                >
+                  {/* Question header */}
+                  <View style={[s.row, { alignItems: "flex-start" }]}>
+                    <Text style={s.questionNumber}>Q{qi + 1}.</Text>
+                    <Text style={s.questionText}>{q.text}</Text>
                     {q.required && (
-                      <Text style={{ fontSize: 7, color: "#ef4444" }}>
-                        {" "}
-                        Required
-                      </Text>
+                      <Text style={s.requiredTag}>REQUIRED</Text>
                     )}
                   </View>
+
+                  {/* Answer */}
                   {resp ? (
-                    <View style={{ marginTop: 4 }}>
-                      <Text style={s.paragraph}>{resp.response}</Text>
+                    <View style={{ marginTop: 6 }}>
+                      <Text style={s.answerText}>{resp.response}</Text>
+
+                      {/* Risk score inline */}
                       {resp.riskScore != null && (
-                        <View style={s.row}>
-                          <Text style={[s.metaLabel, { width: 80 }]}>
+                        <View style={[s.row, { marginTop: 6, gap: 6 }]}>
+                          <Text
+                            style={{
+                              fontSize: 8,
+                              fontFamily: "Helvetica-Bold",
+                              color: PDF_COLORS.MUTED,
+                            }}
+                          >
                             Risk Score:
                           </Text>
-                          <Text style={s.metaValue}>
-                            {resp.riskScore.toFixed(1)}
+                          <RiskBadge
+                            level={
+                              resp.riskScore <= 1
+                                ? "LOW"
+                                : resp.riskScore <= 2.5
+                                  ? "MEDIUM"
+                                  : resp.riskScore <= 3.5
+                                    ? "HIGH"
+                                    : "CRITICAL"
+                            }
+                          />
+                          <Text style={{ fontSize: 8, color: PDF_COLORS.MUTED }}>
+                            ({resp.riskScore.toFixed(1)})
                           </Text>
                         </View>
                       )}
+
+                      {/* Notes */}
                       {resp.notes && (
-                        <View style={s.row}>
-                          <Text style={[s.metaLabel, { width: 80 }]}>
-                            Notes:
-                          </Text>
-                          <Text style={s.metaValue}>{resp.notes}</Text>
-                        </View>
+                        <Text style={s.notesText}>Note: {resp.notes}</Text>
                       )}
                     </View>
                   ) : (
@@ -190,81 +305,157 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
                         fontSize: 8,
                         fontStyle: "italic",
                         color: "#999",
-                        marginTop: 4,
+                        marginTop: 6,
                       }}
                     >
-                      Not answered
+                      Not yet answered
                     </Text>
                   )}
                 </View>
               );
             })}
-          </View>
-        ))}
+          </ContentPage>
+        );
+      })}
 
-        {/* Risk Assessment Summary */}
-        {data.riskLevel && (
-          <View wrap={false}>
-            <SectionTitle>Risk Assessment</SectionTitle>
-            <View style={[s.row, { gap: 12, marginBottom: 8 }]}>
-              <View style={s.row}>
-                <Text style={[s.metaLabel, { width: 80 }]}>Risk Level:</Text>
-                <RiskBadge level={data.riskLevel} />
-              </View>
-              {data.riskScore != null && (
-                <View style={s.row}>
-                  <Text style={[s.metaLabel, { width: 80 }]}>Score:</Text>
-                  <Text style={s.metaValue}>{data.riskScore.toFixed(1)}</Text>
-                </View>
-              )}
+      {/* ── Risk Assessment Summary ───────────────────── */}
+      {data.riskLevel && (
+        <ContentPage title={data.name} orgName={orgName} date={date}>
+          <Text style={s.sectionTitle}>Risk Assessment Summary</Text>
+
+          <View style={s.statsGrid}>
+            <StatCard
+              value={data.riskLevel.replace("_", " ")}
+              label="Overall Risk Level"
+            />
+            <StatCard
+              value={data.riskScore != null ? data.riskScore.toFixed(1) : "N/A"}
+              label="Risk Score"
+            />
+            <StatCard
+              value={data.responses.filter((r) => r.riskScore != null).length}
+              label="Scored Questions"
+            />
+          </View>
+
+          {/* Per-question risk scores table */}
+          {data.responses.some((r) => r.riskScore != null) && (
+            <View style={{ marginTop: 8 }}>
+              <Text style={s.sectionSubtitle}>Question Risk Scores</Text>
+              <DataTable
+                headers={["Section", "Question", "Score", "Level"]}
+                colWidths={[2, 4, 1, 1.5]}
+                rows={data.responses
+                  .filter((r) => r.riskScore != null)
+                  .map((r) => {
+                    const section = sections.find((sec) =>
+                      sec.id === r.sectionId
+                    );
+                    const question = section?.questions.find(
+                      (q) => q.id === r.questionId
+                    );
+                    const level =
+                      r.riskScore! <= 1
+                        ? "LOW"
+                        : r.riskScore! <= 2.5
+                          ? "MEDIUM"
+                          : r.riskScore! <= 3.5
+                            ? "HIGH"
+                            : "CRITICAL";
+                    return [
+                      section?.title ?? "—",
+                      question?.text
+                        ? question.text.length > 60
+                          ? question.text.slice(0, 57) + "..."
+                          : question.text
+                        : "—",
+                      r.riskScore!.toFixed(1),
+                      level,
+                    ];
+                  })}
+              />
             </View>
-          </View>
-        )}
+          )}
+        </ContentPage>
+      )}
 
-        {/* Mitigations */}
-        {data.mitigations.length > 0 && (
-          <View wrap={false}>
-            <SectionTitle>Mitigations</SectionTitle>
-            <DataTable
-              headers={[
-                "Title",
-                "Status",
-                "Priority",
-                "Owner",
-                "Due Date",
-                "Evidence",
-              ]}
-              colWidths={[3, 1.5, 1, 1.5, 1.5, 2]}
-              rows={data.mitigations.map((m) => [
-                m.title,
-                m.status.replace(/_/g, " "),
-                `P${m.priority}`,
-                m.owner,
-                fmtDate(m.dueDate),
-                m.evidence ? "Yes" : "No",
-              ])}
+      {/* ── Mitigations ───────────────────────────────── */}
+      {data.mitigations.length > 0 && (
+        <ContentPage title={data.name} orgName={orgName} date={date}>
+          <Text style={s.sectionTitle}>Risk Mitigations</Text>
+
+          <View style={s.statsGrid}>
+            <StatCard value={data.mitigations.length} label="Total" />
+            <StatCard value={completedMitigations} label="Completed" />
+            <StatCard
+              value={data.mitigations.length - completedMitigations}
+              label="Outstanding"
             />
           </View>
-        )}
 
-        {/* Approval History */}
-        {data.approvals.length > 0 && (
-          <View wrap={false}>
-            <SectionTitle>Approval History</SectionTitle>
-            <DataTable
-              headers={["Level", "Approver", "Status", "Date", "Comment"]}
-              colWidths={[0.8, 2, 1.2, 1.5, 3]}
-              rows={data.approvals.map((a) => [
-                `Level ${a.level}`,
-                a.approver.name || a.approver.email,
-                a.status,
-                fmtDate(a.decidedAt),
-                a.comments,
-              ])}
-            />
-          </View>
-        )}
-      </ContentPage>
+          <DataTable
+            headers={[
+              "Title",
+              "Status",
+              "Priority",
+              "Owner",
+              "Due Date",
+              "Evidence",
+            ]}
+            colWidths={[3, 1.5, 0.8, 1.5, 1.5, 1]}
+            rows={data.mitigations.map((m) => [
+              m.title,
+              m.status.replace(/_/g, " "),
+              `P${m.priority}`,
+              m.owner,
+              fmtDate(m.dueDate),
+              m.evidence ? "Yes" : "No",
+            ])}
+          />
+
+          {/* Mitigation details for items with descriptions */}
+          {data.mitigations.some((m) => m.description) && (
+            <View style={{ marginTop: 12 }}>
+              <Text style={s.sectionSubtitle}>Mitigation Details</Text>
+              {data.mitigations
+                .filter((m) => m.description)
+                .map((m, i) => (
+                  <View key={i} style={s.questionCard} wrap={false}>
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        fontFamily: "Helvetica-Bold",
+                        color: PDF_COLORS.DARK,
+                        marginBottom: 4,
+                      }}
+                    >
+                      {m.title}
+                    </Text>
+                    <Text style={s.answerText}>{m.description}</Text>
+                  </View>
+                ))}
+            </View>
+          )}
+        </ContentPage>
+      )}
+
+      {/* ── Approval History ──────────────────────────── */}
+      {data.approvals.length > 0 && (
+        <ContentPage title={data.name} orgName={orgName} date={date}>
+          <Text style={s.sectionTitle}>Approval History</Text>
+          <DataTable
+            headers={["Level", "Approver", "Status", "Date", "Comments"]}
+            colWidths={[0.8, 2, 1.2, 1.5, 3]}
+            rows={data.approvals.map((a) => [
+              `Level ${a.level}`,
+              a.approver.name || a.approver.email,
+              a.status.replace(/_/g, " "),
+              fmtDate(a.decidedAt),
+              a.comments,
+            ])}
+          />
+        </ContentPage>
+      )}
     </Document>
   );
 }
