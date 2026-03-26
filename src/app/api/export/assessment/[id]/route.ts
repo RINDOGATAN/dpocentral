@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { AssessmentReport } from "@/server/services/export/assessment-report";
 import type { AssessmentExportData } from "@/server/services/export/assessment-report";
-import { isPremiumAssessmentType, checkAssessmentEntitlement } from "@/server/services/licensing/entitlement";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 
 export async function GET(
@@ -62,19 +61,9 @@ export async function GET(
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Check entitlement for premium assessment types
-  if (isPremiumAssessmentType(assessment.template.type)) {
-    const entitlement = await checkAssessmentEntitlement(
-      assessment.organizationId,
-      assessment.template.type
-    );
-    if (!entitlement.entitled) {
-      return Response.json(
-        { error: "Premium assessment export requires an active license" },
-        { status: 403 }
-      );
-    }
-  }
+  // Note: export is allowed for any assessment the user can access.
+  // The premium gate is on *creating* assessments (template access),
+  // not on exporting completed ones.
 
   // Build export data
   const sections = (assessment.template.sections as any[]) || [];
