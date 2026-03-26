@@ -114,7 +114,7 @@ export function DataInventoryReport({
         {data.assets
           .filter((a) => a.dataElements.length > 0)
           .map((asset) => (
-            <View key={asset.id} wrap={false}>
+            <View key={asset.id}>
               <SectionSubtitle>
                 {asset.name} — Data Elements
               </SectionSubtitle>
