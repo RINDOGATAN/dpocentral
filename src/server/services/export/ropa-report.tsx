@@ -62,7 +62,7 @@ export function ROPAReport({
         {entries.map((entry, i) => {
           const validation = validateROPAEntry(entry);
           return (
-            <View key={i} style={s.card} wrap={false}>
+            <View key={i} style={s.card}>
               <View style={[s.row, { justifyContent: "space-between", marginBottom: 6 }]}>
                 <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 11 }}>
                   {i + 1}. {entry.name}

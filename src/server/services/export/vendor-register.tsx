@@ -100,7 +100,7 @@ export function VendorRegisterReport({
 
         {/* Per-vendor detail */}
         {vendors.map((vendor, i) => (
-          <View key={vendor.id} wrap={false}>
+          <View key={vendor.id}>
             <SectionTitle>
               {i + 1}. {vendor.name}
             </SectionTitle>
