@@ -8,8 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { createPortalSession } from "@/lib/stripe";
 import { features } from "@/config/features";
@@ -24,8 +23,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    const token = await getToken({ req: request });
+    const userEmail = token?.email as string | undefined;
+    if (!userEmail) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const membership = await prisma.organizationMember.findFirst({
       where: {
         organizationId,
-        user: { email: session.user.email },
+        user: { email: userEmail },
       },
     });
 
