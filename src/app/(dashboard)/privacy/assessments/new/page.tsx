@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
-import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
+import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES, COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
@@ -178,8 +178,11 @@ export default function NewAssessmentPage() {
 
   const isTypeEntitled = (type: string) => entitledTypes.includes(type as any);
   const isPremiumType = (type: string) => PREMIUM_TYPES.includes(type);
+  const isComingSoon = (type: string) => COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS[type] ?? "");
 
   const handleTypeSelect = (type: string) => {
+    if (isComingSoon(type)) return;
+
     const isPremium = isPremiumType(type);
     const isEntitled = isTypeEntitled(type);
 
@@ -245,15 +248,18 @@ export default function NewAssessmentPage() {
                 const Icon = at.icon;
                 const isPremium = at.premium;
                 const isEntitled = isTypeEntitled(at.type);
-                const isLocked = isPremium && !isEntitled;
+                const comingSoon = isComingSoon(at.type);
+                const isLocked = isPremium && !isEntitled && !comingSoon;
 
                 return (
                   <Card
                     key={at.type}
-                    className={`cursor-pointer transition-all ${
-                      isLocked
-                        ? "border-dashed opacity-75 hover:border-amber-500/50"
-                        : "hover:border-primary/50 hover:shadow-md"
+                    className={`transition-all ${
+                      comingSoon
+                        ? "border-dashed opacity-60 cursor-default"
+                        : isLocked
+                          ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
+                          : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
                     onClick={() => handleTypeSelect(at.type)}
                   >
@@ -261,19 +267,28 @@ export default function NewAssessmentPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div
                           className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center ${
-                            isLocked
-                              ? "border-amber-500 bg-amber-500/10"
-                              : "border-primary bg-primary/10"
+                            comingSoon
+                              ? "border-muted-foreground/30 bg-muted"
+                              : isLocked
+                                ? "border-amber-500 bg-amber-500/10"
+                                : "border-primary bg-primary/10"
                           }`}
                         >
-                          {isLocked ? (
-                            <Lock className="w-5 h-5 text-amber-500" />
+                          {comingSoon || isLocked ? (
+                            <Lock className={`w-5 h-5 ${comingSoon ? "text-muted-foreground/50" : "text-amber-500"}`} />
                           ) : (
                             <Icon className="w-5 h-5 text-primary" />
                           )}
                         </div>
                         <div className="flex gap-1.5">
-                          {isPremium ? (
+                          {comingSoon ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-muted text-muted-foreground text-xs"
+                            >
+                              Coming Soon
+                            </Badge>
+                          ) : isPremium ? (
                             isEntitled ? (
                               <Badge
                                 variant="secondary"
