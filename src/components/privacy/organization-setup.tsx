@@ -50,8 +50,9 @@ export function OrganizationSetup() {
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 text-lg font-bold tracking-tight text-foreground">
-            {brand.companyTrademark} <span className="text-muted-foreground">{brand.nameUppercase}</span>
+          <div className="mx-auto mb-4 flex items-center justify-center gap-2">
+            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+            <span className="text-muted-foreground" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </div>
           <CardTitle>Welcome to {brand.nameUppercase}</CardTitle>
           <CardDescription>

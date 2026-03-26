@@ -134,7 +134,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <SheetContent side="left" className="w-[280px] sm:w-[320px]">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <span className="text-lg font-bold tracking-tight">{brand.nameUppercase}</span>
+                    <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+                    <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-1">
@@ -183,8 +184,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
 
-            <Link href="/privacy" className="flex items-center shrink-0 text-lg font-bold tracking-tight">
-              {brand.nameUppercase}
+            <Link href="/privacy" className="flex items-center gap-2 shrink-0">
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
             </Link>
 
           </div>
