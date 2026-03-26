@@ -120,6 +120,43 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
         </Select>
       </div>
 
+      {/* AI Models */}
+      {system.aiModels && Array.isArray(system.aiModels) && (system.aiModels as any[]).length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Bot className="w-4 h-4" /> Embedded AI Models ({(system.aiModels as any[]).length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {(system.aiModels as { name: string; type?: string; source?: string; euAiActRiskTier?: string }[]).map((model, i) => (
+                <div key={i} className="p-3 rounded-lg border space-y-1">
+                  <p className="font-medium text-sm">{model.name}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {model.type && (
+                      <Badge variant="secondary" className="text-xs">{model.type}</Badge>
+                    )}
+                    {model.source && (
+                      <Badge variant="outline" className="text-xs">{model.source}</Badge>
+                    )}
+                    {model.euAiActRiskTier && (
+                      <Badge className={`text-xs ${
+                        model.euAiActRiskTier === "HIGH_RISK" ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" :
+                        model.euAiActRiskTier === "UNACCEPTABLE" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" :
+                        ""
+                      }`}>
+                        {model.euAiActRiskTier.replace("_", " ")}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-6 md:grid-cols-2">
         {/* Details */}
         <Card>
