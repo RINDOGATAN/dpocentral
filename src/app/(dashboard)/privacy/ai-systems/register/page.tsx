@@ -171,12 +171,12 @@ export default function RegisterAISystemPage() {
             </div>
             <div>
               <Label>Linked Vendor</Label>
-              <Select value={form.vendorId} onValueChange={(v) => setForm((p) => ({ ...p, vendorId: v }))}>
+              <Select value={form.vendorId || "__none__"} onValueChange={(v) => setForm((p) => ({ ...p, vendorId: v === "__none__" ? "" : v }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Link to existing vendor (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="__none__">None</SelectItem>
                   {vendors?.vendors?.map((v: { id: string; name: string }) => (
                     <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
                   ))}

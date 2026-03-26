@@ -5,6 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Bot,
   ArrowLeft,
   Edit3,
@@ -35,10 +42,18 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
 
+  const utils = trpc.useUtils();
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
     { organizationId: orgId, id },
     { enabled: !!orgId && !!id }
   );
+
+  const updateStatus = trpc.aiGovernance.update.useMutation({
+    onSuccess: () => {
+      utils.aiGovernance.getById.invalidate({ organizationId: orgId, id });
+      utils.aiGovernance.list.invalidate();
+    },
+  });
 
   if (isLoading) {
     return (
@@ -78,7 +93,6 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
                 {system.riskLevel.replace("_", " ")}
               </Badge>
-              <Badge variant="outline">{system.status.replace("_", " ")}</Badge>
               {system.aiSentinelSystemId && (
                 <Badge variant="outline" className="text-blue-600 border-blue-600/50">
                   <Shield className="w-3 h-3 mr-1" /> AI Sentinel Linked
@@ -87,6 +101,23 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             </div>
           </div>
         </div>
+        <Select
+          value={system.status}
+          onValueChange={(v) => updateStatus.mutate({ organizationId: orgId, id, status: v as any })}
+          disabled={updateStatus.isPending}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="DRAFT">Draft</SelectItem>
+            <SelectItem value="REGISTERED">Registered</SelectItem>
+            <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
+            <SelectItem value="COMPLIANT">Compliant</SelectItem>
+            <SelectItem value="NON_COMPLIANT">Non-Compliant</SelectItem>
+            <SelectItem value="DECOMMISSIONED">Decommissioned</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
