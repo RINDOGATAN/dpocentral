@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { AssessmentReport } from "@/server/services/export/assessment-report";
@@ -8,13 +7,14 @@ import { isPremiumAssessmentType, checkAssessmentEntitlement } from "@/server/se
 import { fmtDate } from "@/server/services/export/pdf-styles";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
 
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  const token = await getToken({ req: request });
+  const userEmail = token?.email as string | undefined;
+  if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -55,7 +55,7 @@ export async function GET(
   const membership = await prisma.organizationMember.findFirst({
     where: {
       organizationId: assessment.organizationId,
-      user: { email: session.user.email },
+      user: { email: userEmail },
     },
   });
   if (!membership) {

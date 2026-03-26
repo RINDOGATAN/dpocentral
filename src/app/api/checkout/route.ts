@@ -7,8 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, createCustomer } from "@/lib/stripe";
 import { features } from "@/config/features";
@@ -24,9 +23,11 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Get authenticated session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    // Get authenticated user from JWT token
+    const token = await getToken({ req: request });
+    const userEmail = token?.email as string | undefined;
+    const userName = token?.name as string | undefined;
+    if (!userEmail) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
     const membership = await prisma.organizationMember.findFirst({
       where: {
         organizationId,
-        user: { email: session.user.email },
+        user: { email: userEmail },
       },
     });
 
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest) {
     if (!customerId) {
       // Check if customer exists by email but isn't linked to this org
       const existingByEmail = await prisma.customer.findUnique({
-        where: { email: session.user.email },
+        where: { email: userEmail },
       });
 
       if (existingByEmail) {
@@ -136,8 +137,8 @@ export async function POST(request: NextRequest) {
       } else {
         // Create new customer
         const stripeCustomer = await createCustomer({
-          email: session.user.email,
-          name: session.user.name || undefined,
+          email: userEmail,
+          name: userName || undefined,
           metadata: {
             organizationId,
           },
@@ -145,8 +146,8 @@ export async function POST(request: NextRequest) {
 
         const newCustomer = await prisma.customer.create({
           data: {
-            name: session.user.name || session.user.email,
-            email: session.user.email,
+            name: userName || userEmail,
+            email: userEmail,
             type: "SAAS",
             stripeCustomerId: stripeCustomer.id,
             organizations: {
@@ -193,14 +194,14 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL;
     const checkoutSession = await createCheckoutSession({
       customerId: stripeCustomerId || undefined,
-      customerEmail: session.user.email,
+      customerEmail: userEmail,
       organizationId,
       lineItems,
       successUrl: `${origin}/privacy/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${origin}/privacy/billing?checkout=cancelled`,
       metadata: {
         customerId: customerId!,
-        userName: session.user.name || "",
+        userName: userName || "",
       },
     });
 

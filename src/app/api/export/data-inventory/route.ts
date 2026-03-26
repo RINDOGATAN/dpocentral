@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { DataInventoryReport, dataInventoryToCSV } from "@/server/services/export/data-inventory-report";
@@ -15,15 +14,16 @@ export async function GET(request: Request) {
     return Response.json({ error: "organizationId is required" }, { status: 400 });
   }
 
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  const token = await getToken({ req: request });
+  const userEmail = token?.email as string | undefined;
+  if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const membership = await prisma.organizationMember.findFirst({
     where: {
       organizationId,
-      user: { email: session.user.email },
+      user: { email: userEmail },
     },
     include: { organization: true },
   });
