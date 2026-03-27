@@ -25,6 +25,7 @@ import {
   AlertTriangle,
   Plus,
   X,
+  Download,
 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
@@ -82,12 +83,27 @@ export default function RegulationsPage() {
             Track applicable privacy regulations and compliance requirements
           </p>
         </div>
-        <Button asChild>
-          <Link href="/privacy/regulations/wizard">
-            <Globe className="w-4 h-4 mr-2" />
-            Applicability Wizard
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() =>
+              window.open(
+                `/api/export/regulatory-landscape?organizationId=${orgId}`,
+                "_blank"
+              )
+            }
+            disabled={!applied?.jurisdictions.length}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Export Report</span>
+          </Button>
+          <Button asChild>
+            <Link href="/privacy/regulations/wizard">
+              <Globe className="w-4 h-4 mr-2" />
+              Applicability Wizard
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="catalog">
