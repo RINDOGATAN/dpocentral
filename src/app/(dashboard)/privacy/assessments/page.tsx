@@ -17,6 +17,7 @@ import {
   AlertCircle,
   ArrowRight,
   Lock,
+  Download,
 } from "lucide-react";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
@@ -103,6 +104,22 @@ export default function AssessmentsPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            className="shrink-0 sm:size-auto sm:px-4 sm:py-2"
+            onClick={() =>
+              organization?.id &&
+              window.open(
+                `/api/export/assessment-portfolio?organizationId=${organization.id}`,
+                "_blank"
+              )
+            }
+            disabled={!assessments.length}
+          >
+            <Download className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Export Portfolio</span>
+          </Button>
           <Link href="/privacy/assessments/templates" className="sm:flex-none">
             <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
               <FileText className="w-4 h-4 sm:mr-2" />
