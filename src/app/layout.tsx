@@ -33,6 +33,14 @@ export const metadata: Metadata = {
     template: `%s | ${brand.nameUppercase}`,
   },
   description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   metadataBase: new URL(brand.appUrl),
   alternates: {
     canonical: "/",
