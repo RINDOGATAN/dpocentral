@@ -99,6 +99,23 @@ All module list pages share consistent patterns: debounced search, controlled Ta
 - Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
 - Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
 
+## Export Pipeline (PDF Reports)
+- Uses `@react-pdf/renderer` — shared styles/components in `src/server/services/export/pdf-styles.tsx`
+- API routes at `src/app/api/export/` — all use `getToken` from `next-auth/jwt` (NOT `getServerSession`, which breaks on Next.js 16)
+- Reports: assessment (individual), assessment-portfolio, breach-register, data-inventory, ropa, vendor-register, regulatory-landscape
+- New shared components: `ProgressBar`, `AccentSectionHeader`, `PDF_COLORS` export
+- **Critical**: never use `wrap={false}` on Views containing unbounded lists — causes text overlap on page boundaries
+
+## AI Systems & Models
+- AI-capable vendors detected via `src/config/vendor-ai-detection.ts` (`isAiCapableVendor`, `buildAISystemFromCatalog`)
+- Detail page shows embedded AI models from `aiModels` JSON field (model name, type, source, EU AI Act risk tier)
+- Status lifecycle: DRAFT → REGISTERED → UNDER_REVIEW → COMPLIANT/NON_COMPLIANT → DECOMMISSIONED
+- Status changeable via dropdown on detail page
+
+## Coming Soon Features
+- PIA, TIA, Vendor assessments: Stripe prices exist but NO templates in DB — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
+- Must create templates before removing from coming-soon set
+
 ## Public Pages (`(public)` layout)
 - `/security` — Data Security page (accordion UI, 10 sections)
 - `/docs/*` — Public documentation (assessments, data-inventory, dsar, incidents, vendors)
