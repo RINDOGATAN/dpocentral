@@ -191,7 +191,7 @@ export default function AssessmentsPage() {
       {isLoading ? (
         <ListPageSkeleton />
       ) : filteredAssessments.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filteredAssessments.map((assessment) => (
             <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`}>
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
