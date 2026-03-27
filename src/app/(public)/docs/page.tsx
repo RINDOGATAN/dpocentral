@@ -216,6 +216,35 @@ export default function DocsOverviewPage() {
         </div>
       </div>
 
+      {/* Reports & Exports */}
+      <div>
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Reports &amp; PDF Exports
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Export professionally formatted PDF reports across every module.
+          Designed for regulators, auditors, board presentations, and internal
+          governance reviews.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[
+            { name: "Assessment Export", desc: "Individual DPIA/LIA detail with Q&A, risk scores, mitigations" },
+            { name: "Assessment Portfolio", desc: "Cross-assessment program status by type, risk, and completion" },
+            { name: "DSAR Performance", desc: "Request volumes, SLA compliance, resolution trends (no PII)" },
+            { name: "Regulatory Landscape", desc: "Jurisdiction analysis with transfer exposure and penalty summary" },
+            { name: "Data Inventory", desc: "Asset register with data elements, flows, and transfers" },
+            { name: "ROPA", desc: "Record of Processing Activities per GDPR Article 30" },
+            { name: "Vendor Register", desc: "Third-party inventory with risk tiers, contracts, and certifications" },
+            { name: "Breach Register", desc: "Incident history with notifications, timelines, and severity breakdown" },
+          ].map((r) => (
+            <div key={r.name} className="p-3 rounded-lg border border-border bg-card">
+              <p className="text-sm font-semibold text-foreground">{r.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">{r.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Licensing */}
       <div className="p-6 rounded-2xl border border-amber-500/30 bg-amber-500/5">
         <h2 className="text-lg font-semibold text-foreground mb-2">

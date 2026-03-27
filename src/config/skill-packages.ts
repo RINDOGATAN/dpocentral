@@ -27,7 +27,6 @@ export const SKILL_DISPLAY_NAMES: Record<string, string> = {
 
 /** Skills that are announced but not yet purchasable (templates not created yet) */
 export const COMING_SOON_SKILL_IDS = new Set([
-  "com.nel.dpocentral.dsar-portal",
   "com.nel.dpocentral.pia",
   "com.nel.dpocentral.tia",
   "com.nel.dpocentral.vendor",

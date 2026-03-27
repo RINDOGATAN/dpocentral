@@ -250,6 +250,50 @@ export default function AssessmentsPage() {
           actor="Approver"
         />
       </section>
+
+      {/* PDF Exports */}
+      <section id="exports" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          PDF Exports
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Export individual assessments or your entire assessment portfolio as
+          professionally formatted PDF reports. Designed for regulators,
+          auditors, and board presentations.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">Individual Assessment Export</p>
+            <p className="text-xs text-muted-foreground mb-3">
+              Export any single assessment as a detailed PDF with cover page,
+              executive summary, all questions and responses, risk scores,
+              mitigations, and approval history.
+            </p>
+            <div className="space-y-1">
+              {["Cover page with GDPR Art. 35 reference", "Stat cards (risk, completion, mitigations)", "Section-by-section Q&A with inline risk badges", "Mitigation tracking table", "Approval history"].map((f, i) => (
+                <p key={i} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <span className="text-primary">&#10003;</span> {f}
+                </p>
+              ))}
+            </div>
+          </div>
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">Assessment Portfolio Report</p>
+            <p className="text-xs text-muted-foreground mb-3">
+              Export a cross-assessment summary showing your entire impact
+              assessment program status — by type, risk level, and completion.
+            </p>
+            <div className="space-y-1">
+              {["Status & risk distribution across all assessments", "Type breakdown (DPIA, LIA, Custom)", "High risk & overdue detail cards", "Mitigation completion tracking", "Per-type detail pages"].map((f, i) => (
+                <p key={i} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <span className="text-primary">&#10003;</span> {f}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

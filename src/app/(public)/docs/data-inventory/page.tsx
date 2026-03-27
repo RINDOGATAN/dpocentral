@@ -264,6 +264,36 @@ export default function DataInventoryPage() {
           actor="DPO"
         />
       </section>
+
+      {/* PDF Exports */}
+      <section id="exports" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          PDF Exports
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Export your data inventory and ROPA as professionally formatted PDFs
+          for regulators, auditors, or internal governance reviews.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">Data Inventory Report</p>
+            <p className="text-xs text-muted-foreground">
+              Complete asset inventory with data elements per asset (category,
+              sensitivity, retention), data flows between systems, and
+              international transfer details with safeguard mechanisms.
+            </p>
+          </div>
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">ROPA Export</p>
+            <p className="text-xs text-muted-foreground">
+              Record of Processing Activities per GDPR Article 30 — processing
+              purpose, legal basis, data subjects, recipients, retention,
+              linked systems, and international transfers per activity.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

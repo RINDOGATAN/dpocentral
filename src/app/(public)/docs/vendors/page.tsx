@@ -278,6 +278,27 @@ export default function VendorsPage() {
           actor="DPO"
         />
       </section>
+
+      {/* PDF Exports */}
+      <section id="exports" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          PDF Exports
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Export your vendor register as a formatted PDF for audits,
+          due diligence reviews, or regulatory submissions.
+        </p>
+
+        <div className="p-4 rounded-lg border border-border bg-card">
+          <p className="text-sm font-semibold text-foreground mb-2">Vendor Register Report</p>
+          <p className="text-xs text-muted-foreground">
+            Complete vendor inventory with risk tiers, certifications, data
+            categories processed, countries of operation, contract/DPA status,
+            and review schedules. Includes summary statistics and per-vendor
+            detail cards.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -6,12 +6,12 @@ import { brand } from "@/config/brand";
 export const metadata: Metadata = {
   title: "DSAR Management",
   description:
-    "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. Supports all GDPR rights (Art. 15–21).",
+    "Handle data subject access requests end-to-end with SLA tracking, task management, privacy-by-design data handling, and a public intake portal. Supports all GDPR rights (Art. 15-21).",
   alternates: { canonical: "/docs/dsar" },
   openGraph: {
     title: "DSAR Management | DPO CENTRAL",
     description:
-      "End-to-end DSAR lifecycle — request intake, identity verification, SLA tracking, task management, and public portal.",
+      "End-to-end DSAR lifecycle — privacy-by-design intake, identity verification, SLA tracking, auto-redaction, and performance reporting.",
     url: "/docs/dsar",
   },
 };
@@ -27,7 +27,8 @@ export default function DSARPage() {
         <p className="text-lg text-muted-foreground max-w-2xl">
           Handle data subject access requests from submission to completion.
           Track SLA deadlines, assign tasks to your team, and provide a public
-          portal for data subjects to submit requests.
+          portal for data subjects to submit requests — all with privacy-by-design
+          data handling and automatic PII redaction.
         </p>
       </div>
 
@@ -73,6 +74,62 @@ export default function DSARPage() {
         </div>
       </section>
 
+      {/* Privacy by Design */}
+      <section id="privacy" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Privacy by Design
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          DPO Central is designed so that facilitating DSARs does not create new
+          privacy risks. We collect the minimum data needed, redact it
+          automatically after the retention period, and never include individual
+          PII in reports.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          {[
+            {
+              title: "Data Minimization",
+              desc: "The intake form collects only name, email, and request type. Phone and relationship are optional. Address is never collected via the portal.",
+              color: "bg-green-500/10 text-green-400 border-green-500/20",
+            },
+            {
+              title: "Consent at Intake",
+              desc: "Data subjects must explicitly consent to processing before submitting. The privacy notice explains retention periods and redaction.",
+              color: "bg-green-500/10 text-green-400 border-green-500/20",
+            },
+            {
+              title: "Auto-Redaction",
+              desc: "After the retention period (default 90 days post-completion), all PII is automatically replaced with 'REDACTED'. The anonymized audit trail is preserved.",
+              color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+            },
+            {
+              title: "PII-Free Reports",
+              desc: "The DSAR Performance Report contains only aggregated metrics — request volumes, SLA rates, type distributions. Zero individual data.",
+              color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+            },
+            {
+              title: "Manual Redaction & Deletion",
+              desc: "Admins can manually redact PII or hard-delete completed requests at any time, without waiting for the retention period.",
+              color: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+            },
+            {
+              title: "Audit Trail Integrity",
+              desc: "Actions, timestamps, and staff IDs are preserved after redaction. Who did what and when remains traceable — only the data subject's PII is removed.",
+              color: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className={`p-4 rounded-lg border ${item.color}`}
+            >
+              <p className="text-sm font-semibold">{item.title}</p>
+              <p className="text-xs mt-1 opacity-80">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Request Types */}
       <section id="request-types" className="scroll-mt-20">
         <h2 className="text-xl font-semibold text-foreground mb-4">
@@ -84,41 +141,65 @@ export default function DSARPage() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {[
-            {
-              type: "ACCESS",
-              desc: "Right to access personal data held by the organization (Art. 15)",
-            },
-            {
-              type: "ERASURE",
-              desc: "Right to be forgotten - deletion of personal data (Art. 17)",
-            },
-            {
-              type: "RECTIFICATION",
-              desc: "Right to correct inaccurate personal data (Art. 16)",
-            },
-            {
-              type: "PORTABILITY",
-              desc: "Right to receive data in a machine-readable format (Art. 20)",
-            },
-            {
-              type: "OBJECTION",
-              desc: "Right to object to processing of personal data (Art. 21)",
-            },
-            {
-              type: "RESTRICTION",
-              desc: "Right to restrict processing of personal data (Art. 18)",
-            },
+            { type: "ACCESS", desc: "Right to access personal data held by the organization (Art. 15)" },
+            { type: "ERASURE", desc: "Right to be forgotten — deletion of personal data (Art. 17)" },
+            { type: "RECTIFICATION", desc: "Right to correct inaccurate personal data (Art. 16)" },
+            { type: "PORTABILITY", desc: "Right to receive data in a machine-readable format (Art. 20)" },
+            { type: "OBJECTION", desc: "Right to object to processing of personal data (Art. 21)" },
+            { type: "RESTRICTION", desc: "Right to restrict processing of personal data (Art. 18)" },
           ].map((rt) => (
-            <div
-              key={rt.type}
-              className="p-4 rounded-lg border border-border bg-card"
-            >
+            <div key={rt.type} className="p-4 rounded-lg border border-border bg-card">
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
                 {rt.type}
               </span>
               <p className="text-xs text-muted-foreground mt-2">{rt.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Public Portal */}
+      <section id="portal" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          Public Portal
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Give data subjects a dedicated portal to submit requests. The portal
+          is customizable with your organization&apos;s branding and generates a
+          shareable link you can add to your privacy policy.
+        </p>
+
+        <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
+          <p className="text-xs text-primary font-medium mb-2">Portal URL</p>
+          <code className="text-sm text-muted-foreground">
+            {brand.appUrl}/dsar/your-org-slug
+          </code>
+          <p className="text-xs text-muted-foreground mt-2">
+            Share this URL in your privacy policy so data subjects can submit
+            requests directly. The portal includes a consent checkbox and
+            privacy notice explaining how their data will be handled.
+          </p>
+        </div>
+
+        <div className="mt-6 card-brutal">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
+            Portal Configuration
+          </p>
+          <div className="space-y-2">
+            {[
+              { setting: "Form title & description", detail: "Customizable" },
+              { setting: "Enabled request types", detail: "Select which rights to offer" },
+              { setting: "Custom CSS", detail: "Match your brand" },
+              { setting: "Thank-you message", detail: "Post-submission text" },
+              { setting: "Retention period", detail: "Default 90 days" },
+              { setting: "Privacy notice link", detail: "Link to your policy" },
+            ].map((s, i) => (
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+                <span className="text-sm text-foreground">{s.setting}</span>
+                <span className="text-xs text-muted-foreground shrink-0 ml-3">{s.detail}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -146,14 +227,9 @@ export default function DSARPage() {
               { task: "Redact third-party data", assignee: "Legal" },
               { task: "Deliver response to data subject", assignee: "Privacy Officer" },
             ].map((t, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50"
-              >
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
                 <span className="text-sm text-foreground">{t.task}</span>
-                <span className="text-xs text-muted-foreground shrink-0 ml-3">
-                  {t.assignee}
-                </span>
+                <span className="text-xs text-muted-foreground shrink-0 ml-3">{t.assignee}</span>
               </div>
             ))}
           </div>
@@ -166,63 +242,104 @@ export default function DSARPage() {
           SLA Tracking
         </h2>
         <p className="text-sm text-muted-foreground mb-6">
-          The system automatically calculates SLA deadlines based on the request
-          type and your configured response periods. Visual indicators show
-          remaining time and alert you when deadlines approach.
+          The system automatically calculates SLA deadlines based on your
+          applied jurisdictions. Deadlines are per-framework — GDPR (30 days),
+          CPRA (45 days), LGPD (15 days), and 40+ others.
         </p>
 
         <div className="card-brutal">
           <div className="grid sm:grid-cols-3 gap-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-400">30</p>
-              <p className="text-xs text-muted-foreground">days standard</p>
+              <p className="text-2xl font-bold text-green-400">15-45</p>
+              <p className="text-xs text-muted-foreground">days by jurisdiction</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-amber-400">60</p>
-              <p className="text-xs text-muted-foreground">days extended</p>
+              <p className="text-2xl font-bold text-amber-400">Auto</p>
+              <p className="text-xs text-muted-foreground">deadline calculation</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-red-400">72h</p>
-              <p className="text-xs text-muted-foreground">breach notification</p>
+              <p className="text-2xl font-bold text-red-400">Alerts</p>
+              <p className="text-xs text-muted-foreground">approaching & overdue</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Public Portal */}
-      <section id="portal" className="scroll-mt-20">
+      {/* Data Retention & Redaction */}
+      <section id="retention" className="scroll-mt-20">
         <h2 className="text-xl font-semibold text-foreground mb-4">
-          Public Portal
+          Data Retention & Auto-Redaction
         </h2>
         <p className="text-sm text-muted-foreground mb-6">
-          Give data subjects a dedicated portal to submit requests. The portal
-          is customizable with your organization&apos;s branding and generates a
-          shareable link you can add to your privacy policy.
+          DPO Central automatically redacts personal data from completed DSAR
+          records after the configured retention period. This ensures the
+          platform does not become a risk vector for the organizations it serves.
         </p>
 
-        <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
-          <p className="text-xs text-primary font-medium mb-2">Portal URL</p>
-          <code className="text-sm text-muted-foreground">
-            {brand.appUrl}/dsar/your-org-slug
-          </code>
-          <p className="text-xs text-muted-foreground mt-2">
-            Share this URL in your privacy policy so data subjects can submit
-            requests directly. The portal supports all request types and collects
-            identity verification information.
-          </p>
+        <div className="card-brutal">
+          <FlowDiagram
+            steps={[
+              { label: "Request Completed", description: "DSAR fulfilled" },
+              { label: "Retention Period", description: "Default 90 days" },
+              { label: "Auto-Redaction", description: "PII replaced" },
+              { label: "Anonymized Record", description: "Stats preserved" },
+            ]}
+          />
+        </div>
+
+        <div className="mt-6 grid sm:grid-cols-2 gap-3">
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground">What gets redacted</p>
+            <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+              <li>Requester name, email, phone</li>
+              <li>Request description and details</li>
+              <li>Communication content and attachments</li>
+              <li>Task data exports and notes</li>
+            </ul>
+          </div>
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground">What is preserved</p>
+            <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+              <li>Request type (Access, Erasure, etc.)</li>
+              <li>Status and SLA dates</li>
+              <li>Audit trail (actions + timestamps)</li>
+              <li>Aggregate statistics for reporting</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* Intake Configuration */}
-      <section id="intake-config" className="scroll-mt-20">
+      {/* Performance Report */}
+      <section id="reporting" className="scroll-mt-20">
         <h2 className="text-xl font-semibold text-foreground mb-4">
-          Intake Form Configuration
+          Performance Report (PDF Export)
         </h2>
         <p className="text-sm text-muted-foreground mb-6">
-          Customize which fields appear on your public DSAR intake form.
-          Configure required vs. optional fields, add custom questions, and set
-          automatic routing rules based on request type.
+          Export a DSAR Performance Report as a polished PDF for regulators,
+          auditors, or board presentations. The report contains only aggregated
+          metrics — no individual personal data.
         </p>
+
+        <div className="card-brutal">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
+            Report Sections
+          </p>
+          <div className="space-y-2">
+            {[
+              { section: "Executive Summary", detail: "Total requests, on-time rate, avg resolution" },
+              { section: "Volume by Type", detail: "Access, Erasure, Portability breakdown" },
+              { section: "Status Distribution", detail: "Open, completed, overdue counts" },
+              { section: "SLA Compliance", detail: "Per-jurisdiction deadline analysis" },
+              { section: "Monthly Trend", detail: "12-month received vs completed" },
+              { section: "Aging Analysis", detail: "Open requests by age band" },
+            ].map((s, i) => (
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+                <span className="text-sm text-foreground">{s.section}</span>
+                <span className="text-xs text-muted-foreground shrink-0 ml-3">{s.detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Processing Workflow */}
@@ -233,7 +350,7 @@ export default function DSARPage() {
         <WorkflowStep
           number={1}
           title="Receive Request"
-          description="A data subject submits a request through the public portal or you create one manually in the dashboard."
+          description="A data subject submits a request through the public portal (with consent) or you create one manually in the dashboard."
           actor="System"
         />
         <WorkflowStep
@@ -261,7 +378,7 @@ export default function DSARPage() {
         <WorkflowStep
           number={5}
           title="Deliver Response"
-          description="Send the final response to the data subject and mark the request as completed."
+          description="Send the final response to the data subject and mark the request as completed. PII will be auto-redacted after the retention period."
           actor="Privacy Officer"
         />
       </section>

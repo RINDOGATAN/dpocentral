@@ -260,6 +260,28 @@ export default function IncidentsPage() {
           actor="Privacy Officer"
         />
       </section>
+
+      {/* PDF Exports */}
+      <section id="exports" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
+          PDF Exports
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Export your breach register as a formatted PDF for regulatory
+          notifications, internal reviews, or board reporting.
+        </p>
+
+        <div className="p-4 rounded-lg border border-border bg-card">
+          <p className="text-sm font-semibold text-foreground mb-2">Breach Register Report</p>
+          <p className="text-xs text-muted-foreground">
+            Full incident inventory with severity breakdown, notification
+            status per jurisdiction, containment actions, root cause analysis,
+            lessons learned, and per-incident timelines. Includes summary
+            statistics for total incidents, critical count, and pending
+            notifications.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
