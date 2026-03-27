@@ -184,7 +184,7 @@ export const dsarRouter = createTRPCRouter({
           dsarRequestId: request.id,
           action: "REQUEST_CREATED",
           performedBy: ctx.session.user.id,
-          details: { type: input.type, requesterEmail: input.requesterEmail },
+          details: { type: input.type, requestId: request.publicId },
         },
       });
 
@@ -776,5 +776,119 @@ export const dsarRouter = createTRPCRouter({
         completedLast30Days,
         avgCompletionDays: avgDays,
       };
+    }),
+
+  // ============================================================
+  // PRIVACY: DELETE & REDACT
+  // ============================================================
+
+  // Hard-delete a completed/cancelled DSAR and all related records
+  deleteDSAR: adminOrgProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.dSARRequest.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+      });
+
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "DSAR request not found" });
+      }
+
+      if (!["COMPLETED", "CANCELLED"].includes(request.status)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only completed or cancelled requests can be deleted",
+        });
+      }
+
+      // Log deletion before removing (audit survives in org-level log)
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DSARRequest",
+          entityId: request.publicId,
+          action: "DELETE",
+          changes: { type: request.type, status: request.status },
+        },
+      });
+
+      // Cascade delete removes tasks, communications, DSAR audit logs
+      await ctx.prisma.dSARRequest.delete({ where: { id: input.id } });
+
+      return { success: true };
+    }),
+
+  // Redact PII from a completed DSAR (keeps anonymized audit trail)
+  redactDSAR: adminOrgProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.dSARRequest.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+      });
+
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "DSAR request not found" });
+      }
+
+      if (request.redactedAt) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Already redacted" });
+      }
+
+      if (!["COMPLETED", "CANCELLED", "REJECTED"].includes(request.status)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only completed, cancelled, or rejected requests can be redacted",
+        });
+      }
+
+      // Redact requester PII
+      await ctx.prisma.dSARRequest.update({
+        where: { id: input.id },
+        data: {
+          requesterName: "REDACTED",
+          requesterEmail: "redacted@redacted",
+          requesterPhone: null,
+          requesterAddress: null,
+          description: null,
+          requestedData: null,
+          responseNotes: null,
+          redactedAt: new Date(),
+        },
+      });
+
+      // Redact communication content
+      await ctx.prisma.dSARCommunication.updateMany({
+        where: { dsarRequestId: input.id },
+        data: { content: "REDACTED", subject: null, attachments: undefined },
+      });
+
+      // Redact task data exports and notes
+      await ctx.prisma.dSARTask.updateMany({
+        where: { dsarRequestId: input.id },
+        data: { dataExport: undefined, notes: null, description: null },
+      });
+
+      // Audit log (no PII)
+      await ctx.prisma.dSARAuditLog.create({
+        data: {
+          dsarRequestId: input.id,
+          action: "PII_REDACTED",
+          performedBy: ctx.session.user.id,
+          details: { reason: "manual_redaction" },
+        },
+      });
+
+      return { success: true };
     }),
 });

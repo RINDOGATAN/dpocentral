@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Shield, CheckCircle2, Loader2 } from "lucide-react";
 
 const requestTypes = [
@@ -33,6 +34,7 @@ export default function PublicDSARPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
 
+  const [consentGiven, setConsentGiven] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
     name: "",
@@ -202,17 +204,29 @@ export default function PublicDSARPage() {
                 />
               </div>
 
-              {/* Privacy Notice */}
-              <div className="text-xs text-muted-foreground p-4 bg-muted rounded-lg">
-                <p>
-                  By submitting this form, you acknowledge that we will process your personal data
-                  to fulfill your request. We may need to verify your identity before processing.
-                  For more information, please see our Privacy Policy.
+              {/* Privacy Notice & Consent */}
+              <div className="space-y-3 p-4 bg-muted rounded-lg">
+                <p className="text-xs text-muted-foreground">
+                  Your contact details will be processed solely to verify your identity and fulfill
+                  this data subject request. Your personal data will be retained for the duration of
+                  request processing and automatically redacted within 90 days of completion. We may
+                  need to verify your identity before processing.
                 </p>
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="consent"
+                    checked={consentGiven}
+                    onCheckedChange={(checked) => setConsentGiven(checked === true)}
+                  />
+                  <label htmlFor="consent" className="text-xs text-muted-foreground cursor-pointer leading-relaxed">
+                    I understand that my contact details will be processed to fulfill this request
+                    and consent to this processing.
+                  </label>
+                </div>
               </div>
 
               {/* Submit */}
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full" disabled={isSubmitting || !consentGiven}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
