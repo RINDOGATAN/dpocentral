@@ -76,5 +76,5 @@ export function rateLimit(config: RateLimitConfig) {
 }
 
 // Pre-configured limiters
-export const authLimiter = rateLimit({ limit: 5, windowMs: 60 * 1000 });
+export const authLimiter = rateLimit({ limit: 30, windowMs: 60 * 1000 });
 export const checkoutLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 });
