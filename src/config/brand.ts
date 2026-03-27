@@ -75,7 +75,7 @@ const defaultBrand: BrandConfig = {
   privacyPolicyUrl: "https://todo.law/privacy",
   supportEmail: "hello@todo.law",
   emailFrom: "noreply@todo.law",
-  logoPath: "/logo-icon.png",
+  logoPath: "/apple-touch-icon.png",
   faviconPath: "/favicon.png",
   colors: {
     primary: "#53aecc",
