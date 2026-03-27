@@ -472,6 +472,9 @@ model DSARRequest {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Privacy: auto-redaction after retention period
+  redactedAt DateTime? // When PII was redacted (null = still contains PII)
+
   organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   tasks          DSARTask[]
   communications DSARCommunication[]
@@ -564,6 +567,8 @@ model DSARIntakeForm {
   enabledTypes    DSARType[] // Which DSAR types are available
   customCss       String?    @db.Text
   thankYouMessage String?    @db.Text
+  privacyNoticeUrl String?   // Link to org's privacy policy for DSAR intake
+  retentionDays   Int        @default(90) // Days after completion to retain PII before auto-redaction
   isActive        Boolean    @default(true)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt

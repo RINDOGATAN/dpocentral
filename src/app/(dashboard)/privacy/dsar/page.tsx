@@ -17,6 +17,7 @@ import {
   Settings,
   ExternalLink,
   Lock,
+  Download,
 } from "lucide-react";
 import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
@@ -103,6 +104,21 @@ export default function DSARPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            className="shrink-0 sm:size-auto sm:px-4 sm:py-2"
+            onClick={() =>
+              organization?.id &&
+              window.open(
+                `/api/export/dsar-performance?organizationId=${organization.id}`,
+                "_blank"
+              )
+            }
+          >
+            <Download className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Export Report</span>
+          </Button>
           {isPortalComingSoon ? (
             <div className="sm:flex-none">
               <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>

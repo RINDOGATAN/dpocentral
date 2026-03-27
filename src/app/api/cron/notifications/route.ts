@@ -27,6 +27,7 @@ export async function GET(request: Request) {
     vendorContractExpiring: 0,
     assessmentOverdue: 0,
     transferSccExpiring: 0,
+    dsarRedacted: 0,
     errors: 0,
   };
 
@@ -42,6 +43,7 @@ export async function GET(request: Request) {
         await checkVendorContracts(org.id, now, summary);
         await checkAssessmentDueDates(org.id, now, summary);
         await checkTransferSccExpiry(org.id, now, summary);
+        await autoRedactCompletedDsars(org.id, now, summary);
       } catch (err) {
         logger.error("Notification cron failed for org", err, { orgId: org.id });
         summary.errors++;
@@ -292,5 +294,74 @@ async function checkTransferSccExpiry(
       });
       summary.transferSccExpiring++;
     }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// DSAR PII Auto-Redaction
+// ---------------------------------------------------------------------------
+// Redacts personal data from completed DSARs after the retention period.
+// Default: 90 days post-completion. Configurable per-org via intake form settings.
+
+async function autoRedactCompletedDsars(
+  organizationId: string,
+  now: Date,
+  summary: { dsarRedacted: number },
+) {
+  // Get org retention setting (from intake form, default 90 days)
+  const intakeForm = await prisma.dSARIntakeForm.findFirst({
+    where: { organizationId },
+    select: { retentionDays: true },
+  });
+  const retentionDays = intakeForm?.retentionDays ?? 90;
+
+  const cutoff = new Date(now.getTime() - retentionDays * 24 * 60 * 60 * 1000);
+
+  // Find completed DSARs past retention that haven't been redacted
+  const expiredRequests = await prisma.dSARRequest.findMany({
+    where: {
+      organizationId,
+      status: { in: ["COMPLETED", "CANCELLED", "REJECTED"] },
+      completedAt: { lt: cutoff },
+      redactedAt: null,
+    },
+    select: { id: true },
+  });
+
+  for (const req of expiredRequests) {
+    await prisma.dSARRequest.update({
+      where: { id: req.id },
+      data: {
+        requesterName: "REDACTED",
+        requesterEmail: "redacted@redacted",
+        requesterPhone: null,
+        requesterAddress: null,
+        description: null,
+        requestedData: null,
+        responseNotes: null,
+        redactedAt: now,
+      },
+    });
+
+    await prisma.dSARCommunication.updateMany({
+      where: { dsarRequestId: req.id },
+      data: { content: "REDACTED", subject: null },
+    });
+
+    await prisma.dSARTask.updateMany({
+      where: { dsarRequestId: req.id },
+      data: { notes: null, description: null },
+    });
+
+    await prisma.dSARAuditLog.create({
+      data: {
+        dsarRequestId: req.id,
+        action: "PII_AUTO_REDACTED",
+        performedBy: "SYSTEM",
+        details: { retentionDays, completedBefore: cutoff.toISOString() },
+      },
+    });
+
+    summary.dsarRedacted++;
   }
 }
