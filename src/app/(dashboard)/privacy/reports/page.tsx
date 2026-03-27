@@ -16,6 +16,7 @@ import {
   Loader2,
   Download,
   Clock,
+  Scale,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -178,6 +179,20 @@ export default function ReportsPage() {
               <Download className="w-4 h-4 mr-2" />
             )}
             Save Snapshot
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              organization?.id &&
+              window.open(
+                `/api/export/regulatory-landscape?organizationId=${organization.id}`,
+                "_blank"
+              )
+            }
+          >
+            <Scale className="w-4 h-4 mr-2" />
+            Regulatory Report
           </Button>
         </div>
       </div>
