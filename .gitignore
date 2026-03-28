@@ -1,5 +1,8 @@
 # Dependencies
 /node_modules
+
+# Source logo files (working copies — canonical icons are in /public)
+/logos
 /.pnp
 .pnp.js
 .yarn/install-state.gz
