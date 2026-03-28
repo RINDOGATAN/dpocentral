@@ -6,169 +6,85 @@ Next.js 16 + tRPC + Prisma + PostgreSQL + NextAuth
 
 ## License
 
-Open Core model:
-- **Core Platform**: AGPL-3.0 (see `LICENSE`)
-- **Premium Skills**: Proprietary, requires commercial license
+Open Core model: **Core** AGPL-3.0 / **Premium** proprietary.
+- Core: Data Inventory, ROPA, DSAR, Incidents, LIA/Custom assessments, Vendor management
+- Premium: DPIA templates & scoring (`@dpocentral/premium-skills`), security (`@dpocentral/security`)
+- PIA, TIA, Vendor assessments: Coming Soon (no templates yet) — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
 
-### Core (AGPL-3.0 - Open Source)
-- Data Inventory & ROPA
-- DSAR management & public portal
-- Incident tracking
-- Basic assessments (LIA, Custom)
-- Vendor management (basic)
+## Key Architecture
 
-### Premium (Proprietary - Requires License)
-- DPIA, PIA, TIA assessment templates & scoring
-- Vendor risk scoring (`calculateVendorRiskScore`, `calculateAssessmentRiskScore`)
-- Advanced audit features
-
-### Premium Skills Package
-Private repo: `RINDOGATAN/dpocentral-premium-skills` (`@dpocentral/premium-skills`)
-- Loaded dynamically via `src/lib/skills/loader.ts` + `src/instrumentation.ts` (optionalDependencies + serverExternalPackages)
-- Templates: DPIA, PIA, TIA — seeded via `scripts/seed-templates.ts` only when package is installed
-- Open repo keeps: skill loader/registry/types, entitlement checks, LIA/Custom templates
-
-### Security Package
-Private repo: `RINDOGATAN/dpocentral-security` (`@dpocentral/security`)
-- Loaded dynamically via `src/lib/security/loader.ts` + `src/instrumentation.ts` (optionalDependencies + serverExternalPackages)
-- Provides: rate limiting, RBAC, input sanitization, domain blocklist, CSP nonce
-- Without package: all features degrade gracefully (no-op / permissive fallbacks)
-
-## Vendor Catalog — READ-ONLY
-- `vendor_catalog` table is now **owned by Vendor.Watch** (admin CRUD, enrichment, seeding)
-- DPO Central retains **read-only** access via `vendorCatalog.search`, `getBySlug`, `listCategories`
-- Admin catalog pages and AI enrichment have been removed from this project
-
-Premium features require entitlements via `src/server/services/licensing/`
-
-## Onboarding Flow
-- **Combined screen**: `OnboardingWelcome` merges persona selection + org creation into one step
-- **Auto-redirect**: Empty orgs (0 assets/activities/vendors) redirect to `/privacy/quickstart` automatically
-- **`?from=quickstart`** on back-links prevents redirect loops
-- Fallback: `OrganizationSetup` still renders if user has persona but no org (edge case)
-
-## Quickstart — Free Tier (5 Vendors)
-- Vendor catalog import allows **5 free vendors** without premium license
-- Tracked via `Vendor.metadata.source = "quickstart"` (counted per org)
-- Portfolio imports (from Vendor.Watch) share the same 5-vendor budget (`metadata.fromPortfolio: true`)
-- AI-capable vendors auto-create `AISystem` records (created **outside** the main transaction; gracefully skipped if `ai_systems` table doesn't exist)
-- "Recommended: Complete Setup" card on choose step pre-selects vendors + industry template
-- Industry templates are always free (no limit)
-- Transaction timeout: 30s
-
-## Admin Panel (`/admin`)
-Gated by `ADMIN_EMAILS` env var. 6 sections: Dashboard, Customers, Skill Packages, Organizations, Users, Audit Logs.
-- `src/server/routers/platformAdmin.ts` — all admin tRPC endpoints
-- `src/app/(admin)/admin/` — all admin pages
+- **Multi-tenancy**: All models scoped by `organizationId`. Use `organizationProcedure`.
+- **Auth**: Google OAuth + Email Magic Link (Resend). JWT strategy. API routes must use `getToken` from `next-auth/jwt` (NOT `getServerSession` — breaks on Next.js 16).
+- **Rate limiting**: `src/lib/rate-limit.ts` — auth 30/min, checkout 10/min.
+- **Icons**: All in `/public` only. Never put favicons in `src/app/` (Next.js prioritizes them over `/public`). `/logos` folder is gitignored (source files only).
 
 ## Modules
-- **Data Inventory** - Assets, elements, processing activities (with detail page at `/privacy/data-inventory/activities/[id]`), data flow visualization
-- **DSAR** - Subject access requests, SLA tracking, public portal
-- **Assessments** - DPIA/PIA/TIA/Vendor with templates & approvals
-- **Incidents** - Breach tracking, DPA notifications, timeline
-- **Vendors** - Contracts, questionnaires, risk tiers
-- **AI Governance** - EU AI Act register, risk classification, AI system CRUD
-- **Notifications** - Multi-channel dispatcher (in-app, email, Slack), user preferences, daily cron
-- **Reports** - Weighted compliance score (ROPA 25%, Assessment 20%, DSAR 25%, Incident 15%, Vendor 15%), module breakdown, risk indicators, trend snapshots, board report data
-- **Regulations** - 40-jurisdiction catalog, applicability wizard, org-level jurisdiction management
-- **DPIA Auto-Fill** - Rule-based pre-population from processing activities, optional AI narrative (OpenAI/Anthropic)
-- **Transfer Compliance** - Schrems II checklist, EU adequacy decisions, supplementary measures, compliance status evaluator
 
-All module list pages share consistent patterns: debounced search, controlled Tabs, mobile/desktop dual layouts, responsive stats grids, `ExpertHelpCta` per module.
+Data Inventory, DSAR, Assessments, Incidents, Vendors, AI Governance, Reports, Regulations, Transfer Compliance, Expert Directory, Notifications, Admin Panel.
 
-## Dashboard Navigation
-- **Top bar (desktop)**: 5 core modules flat — Data Inventory, DSAR, Assessments, Incidents, Vendors
-- **More dropdown**: Reports, Regulations, AI Systems, Find Expert, My Clients (professional)
-- **Mobile**: All items flat in slide-out sheet
-- Feature-flagged via `src/config/features.ts` (all enabled by default)
+All list pages: debounced search, controlled Tabs, mobile/desktop layouts, responsive stats grids.
 
-## Expert Directory & Dealroom Integration
-- `/privacy/experts` — searchable directory with filters (specialization, country, language, type)
-- `src/server/services/dealroom/client.ts` — Dealroom API client with mock fallback (12 experts)
-- Env vars: `DEALROOM_API_URL`, `DEALROOM_API_KEY` (falls back to mock data if unset)
-- `ExpertHelpCta` component (9 contexts) with `?specialization=` deep links
-- Gated by `features.expertDirectoryEnabled` + `isBusinessOwner` user type
+## DSAR — Privacy by Design
 
-## AI Sentinel Integration
-- DPO Central = lightweight AI register; AI Sentinel = deep governance (separate app/DB at `aisentinel.todo.law`)
-- Quickstart auto-creates `AISystem` records for AI-capable vendors (detected via `src/config/vendor-ai-detection.ts`)
-- **`ai_systems` table**: defined in schema but may need `prisma db push` on production — quickstart handles gracefully, but `/privacy/ai-systems` CRUD pages will 500 without it
-- Export DPC AI Systems → AIS via `POST /api/import/dpc-ai-systems` (x-api-key auth, one-way manual push)
-- `src/server/services/ai-sentinel/client.ts` — REST client (no-op when not configured)
-- Env vars: `AI_SENTINEL_API_URL`, `AI_SENTINEL_API_KEY`
-- Feature flag: `features.aiSentinelIntegrationEnabled` (default true, functional only when env vars set)
-- Synced systems store `aiSentinelSystemId` + `aiSentinelSyncedAt`, show deep link on detail page
+- Public portal: `/dsar/[orgSlug]` — consent checkbox required, privacy notice, configurable per-org
+- Auto-redaction: cron redacts PII from completed DSARs after retention period (default 90 days)
+- Manual redact/delete: `redactDSAR` and `deleteDSAR` mutations (admin only)
+- Audit trail survives redaction (actions + timestamps, no PII)
+- Settings: `DSARIntakeForm.retentionDays`, `privacyNoticeUrl`
 
-## Export Pipeline (PDF Reports)
-- Uses `@react-pdf/renderer` — shared styles/components in `src/server/services/export/pdf-styles.tsx`
-- API routes at `src/app/api/export/` — all use `getToken` from `next-auth/jwt` (NOT `getServerSession`, which breaks on Next.js 16)
-- Reports: assessment (individual), assessment-portfolio, breach-register, data-inventory, ropa, vendor-register, regulatory-landscape
-- New shared components: `ProgressBar`, `AccentSectionHeader`, `PDF_COLORS` export
-- **Critical**: never use `wrap={false}` on Views containing unbounded lists — causes text overlap on page boundaries
+## Export Pipeline (8 PDF Reports)
+
+`@react-pdf/renderer` — shared components in `src/server/services/export/pdf-styles.tsx`
+
+| Report | Route | Trigger |
+|--------|-------|---------|
+| Assessment (individual) | `/api/export/assessment/[id]` | Assessment detail page |
+| Assessment Portfolio | `/api/export/assessment-portfolio` | Assessments list page |
+| DSAR Performance | `/api/export/dsar-performance` | DSAR list page |
+| Regulatory Landscape | `/api/export/regulatory-landscape` | Regulations + Reports pages |
+| Data Inventory | `/api/export/data-inventory` | Data Inventory page |
+| ROPA | `/api/export/ropa` | Data Inventory page |
+| Vendor Register | `/api/export/vendor-register` | Vendors page |
+| Breach Register | `/api/export/breach-register` | Incidents page |
+
+**Critical**: never use `wrap={false}` on Views with unbounded lists — causes text overlap.
 
 ## AI Systems & Models
-- AI-capable vendors detected via `src/config/vendor-ai-detection.ts` (`isAiCapableVendor`, `buildAISystemFromCatalog`)
-- Detail page shows embedded AI models from `aiModels` JSON field (model name, type, source, EU AI Act risk tier)
-- Status lifecycle: DRAFT → REGISTERED → UNDER_REVIEW → COMPLIANT/NON_COMPLIANT → DECOMMISSIONED
-- Status changeable via dropdown on detail page
 
-## Coming Soon Features
-- PIA, TIA, Vendor assessments: Stripe prices exist but NO templates in DB — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
-- Must create templates before removing from coming-soon set
-
-## Public Pages (`(public)` layout)
-- `/security` — Data Security page (accordion UI, 10 sections)
-- `/docs/*` — Public documentation (assessments, data-inventory, dsar, incidents, vendors)
-- SEO: dynamic `src/app/robots.ts`, `src/app/sitemap.ts`, `public/llms.txt`, OpenGraph + JSON-LD in layout
-
-## Billing (Stripe)
-- EUR price (default): `STRIPE_PRICE_ID` — EUR 9/mo
-- USD price (US visitors via geo-IP `x-vercel-ip-country`): `STRIPE_PRICE_ID_USD`
-- Checkout route picks currency automatically
+- Detection: `src/config/vendor-ai-detection.ts` (`isAiCapableVendor`, `buildAISystemFromCatalog`)
+- Detail page shows embedded models from `aiModels` JSON (name, type, source, EU AI Act risk tier)
+- Status dropdown: DRAFT → REGISTERED → UNDER_REVIEW → COMPLIANT/NON_COMPLIANT → DECOMMISSIONED
 
 ## Cron Jobs
-- `vercel.json` defines daily cron at 08:00 UTC: `/api/cron/notifications`
-- Checks: DSAR deadlines, incident notification deadlines, vendor contract expiry, assessment due dates, SCC expiry
-- Protected by `CRON_SECRET` env var (set in Vercel production)
+
+`/api/cron/notifications` (daily 08:00 UTC): DSAR deadlines, incident notifications, vendor contracts, assessment due dates, SCC expiry, **DSAR PII auto-redaction**.
+
+## Public Pages & Docs
+
+- `/docs/*` — 6 documentation pages (overview, data-inventory, dsar, assessments, incidents, vendors) with PDF export sections
+- `/security` — Data Security page
+- SEO: sitemap, robots.txt, llms.txt, OpenGraph, JSON-LD
+
+## Billing (Stripe)
+
+EUR 9/mo default, USD for US visitors (geo-IP). Per-feature add-on model. `EnableFeatureModal` for purchase. Assessment PDF export is NOT premium-gated.
 
 ## Structure
 ```
 prisma/schema.prisma              # ~56 models
 src/server/routers/privacy/       # 14 tRPC routers
-src/server/services/              # External APIs (Dealroom, AI Sentinel), notifications, AI assessment generator
-src/config/                       # Feature flags, AI Act classifications, vendor mappings, jurisdictions, DPIA rules
+src/server/services/export/       # 8 PDF report components + shared styles
+src/config/                       # Feature flags, AI Act, vendor mappings, jurisdictions
 src/app/(dashboard)/privacy/      # Dashboard pages
 src/app/(public)/                 # Public pages (security, docs)
 src/app/dsar/                     # Public DSAR portal
+src/app/api/export/               # 8 PDF export routes
 src/app/api/cron/                 # Vercel cron endpoints
-scripts/                          # Verification, seeding & demo scripts
 ```
-
-## Multi-tenancy
-All models have `organizationId`. Use `organizationProcedure` for org-scoped routes.
-
-Demo org: `demo` slug, user: `demo@privacysuite.example`
-
-## Commands
-```bash
-npm run dev                    # Local dev (port 3001)
-npx prisma db seed             # Seed demo data
-npm run db:studio              # Prisma Studio
-python3 scripts/verify-app.py  # Run verification agent
-```
-
-## Auth
-- Google OAuth + Email Magic Link (Resend)
-- Callback: `/api/auth/callback/google`
-- `signIn` callback auto-joins users to orgs by email domain (wrapped in try/catch so DB failures don't block sign-in)
-
-## Roles
-OWNER > ADMIN > PRIVACY_OFFICER > MEMBER > VIEWER
 
 ## Git Identity
-- **Name**: `sergiomaldo`
-- **Email**: `206754515+sergiomaldo@users.noreply.github.com`
-- ALWAYS use `-c user.name="sergiomaldo" -c user.email="206754515+sergiomaldo@users.noreply.github.com"` for every commit
+- **Name**: `sergiomaldo` / **Email**: `206754515+sergiomaldo@users.noreply.github.com`
+- ALWAYS use `-c user.name="sergiomaldo" -c user.email="206754515+sergiomaldo@users.noreply.github.com"`
 
 ## Authorized Committers
 - `sergiomaldo` — https://github.com/sergiomaldo
