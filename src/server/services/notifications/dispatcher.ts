@@ -255,8 +255,8 @@ export async function dispatchNotification(
       }
     }
 
-    // Email notification (core)
-    if (pref.emailEnabled) {
+    // Email notification — disabled (re-enable by removing the false guard)
+    if (false && pref.emailEnabled) {
       await sendEmail(user.email, user.name, payload);
     }
 
