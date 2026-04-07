@@ -435,6 +435,66 @@ export const platformAdminRouter = createTRPCRouter({
       return { ...organization, recentLogs };
     }),
 
+  updateOrganization: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1).max(200).optional(),
+        slug: z
+          .string()
+          .min(2)
+          .max(50)
+          .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens")
+          .optional(),
+        domain: z.string().optional().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+
+      const existing = await ctx.prisma.organization.findUnique({
+        where: { id },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Organization not found" });
+      }
+
+      // If slug is changing, check uniqueness
+      if (data.slug && data.slug !== existing.slug) {
+        const slugTaken = await ctx.prisma.organization.findUnique({
+          where: { slug: data.slug },
+        });
+        if (slugTaken) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "An organization with this slug already exists",
+          });
+        }
+      }
+
+      const updated = await ctx.prisma.organization.update({
+        where: { id },
+        data: {
+          ...(data.name !== undefined && { name: data.name }),
+          ...(data.slug !== undefined && { slug: data.slug }),
+          ...(data.domain !== undefined && { domain: data.domain }),
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: id,
+          userId: ctx.session.user.id,
+          entityType: "Organization",
+          entityId: id,
+          action: "UPDATE",
+          changes: data,
+        },
+      });
+
+      return updated;
+    }),
+
   // ============================================================
   // USERS (full management)
   // ============================================================

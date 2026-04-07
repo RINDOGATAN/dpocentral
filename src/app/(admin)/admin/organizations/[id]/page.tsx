@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   ArrowLeft,
   Loader2,
@@ -15,16 +18,62 @@ import {
   ShieldAlert,
   Store,
   ScrollText,
+  Pencil,
+  Save,
+  X,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function OrganizationDetailPage() {
   const params = useParams();
   const orgId = params.id as string;
 
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editSlug, setEditSlug] = useState("");
+  const [editDomain, setEditDomain] = useState("");
+
+  const utils = trpc.useUtils();
+
   const { data: org, isLoading } = trpc.platformAdmin.getOrganization.useQuery(
     { id: orgId }
   );
+
+  const updateMutation = trpc.platformAdmin.updateOrganization.useMutation({
+    onSuccess: () => {
+      toast.success("Organization updated");
+      setEditing(false);
+      utils.platformAdmin.getOrganization.invalidate({ id: orgId });
+      utils.platformAdmin.listOrganizations.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
+
+  useEffect(() => {
+    if (org) {
+      setEditName(org.name);
+      setEditSlug(org.slug);
+      setEditDomain(org.domain || "");
+    }
+  }, [org]);
+
+  function handleSave() {
+    if (!org) return;
+    const changes: Record<string, string | null | undefined> = {};
+    if (editName !== org.name) changes.name = editName;
+    if (editSlug !== org.slug) changes.slug = editSlug;
+    if (editDomain !== (org.domain || ""))
+      changes.domain = editDomain || null;
+
+    if (Object.keys(changes).length === 0) {
+      setEditing(false);
+      return;
+    }
+    updateMutation.mutate({ id: orgId, ...changes });
+  }
 
   if (isLoading) {
     return (
@@ -48,19 +97,27 @@ export default function OrganizationDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/admin/organizations">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-semibold">{org.name}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline">{org.slug}</Badge>
-            {org.domain && <Badge variant="secondary">{org.domain}</Badge>}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/admin/organizations">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-semibold">{org.name}</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline">{org.slug}</Badge>
+              {org.domain && <Badge variant="secondary">{org.domain}</Badge>}
+            </div>
           </div>
         </div>
+        {!editing && (
+          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+            <Pencil className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -71,23 +128,89 @@ export default function OrganizationDetailPage() {
             <CardHeader>
               <CardTitle>Organization Info</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">ID</span>
-                <code className="text-xs">{org.id}</code>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Slug</span>
-                <span>{org.slug}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Domain</span>
-                <span>{org.domain || "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Created</span>
-                <span>{new Date(org.createdAt).toLocaleDateString()}</span>
-              </div>
+            <CardContent className="space-y-4 text-sm">
+              {editing ? (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="org-name">Name</Label>
+                    <Input
+                      id="org-name"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="org-slug">Slug</Label>
+                    <Input
+                      id="org-slug"
+                      value={editSlug}
+                      onChange={(e) =>
+                        setEditSlug(
+                          e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "")
+                        )
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Lowercase letters, numbers, and hyphens only
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="org-domain">Domain</Label>
+                    <Input
+                      id="org-domain"
+                      value={editDomain}
+                      onChange={(e) => setEditDomain(e.target.value)}
+                      placeholder="example.com"
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={updateMutation.isPending || !editName || !editSlug}
+                    >
+                      {updateMutation.isPending ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4 mr-2" />
+                      )}
+                      Save
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setEditing(false);
+                        setEditName(org.name);
+                        setEditSlug(org.slug);
+                        setEditDomain(org.domain || "");
+                      }}
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">ID</span>
+                    <code className="text-xs">{org.id}</code>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Slug</span>
+                    <span>{org.slug}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Domain</span>
+                    <span>{org.domain || "—"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Created</span>
+                    <span>{new Date(org.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
