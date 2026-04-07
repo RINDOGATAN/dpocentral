@@ -128,6 +128,37 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
+      // Auto-link to Customer for Privacy Professionals
+      if (ctx.session.user.userType === "PRIVACY_PROFESSIONAL") {
+        try {
+          const userEmail = ctx.session.user.email!;
+          const userName = ctx.session.user.name || userEmail;
+
+          let customer = await ctx.prisma.customer.findUnique({
+            where: { email: userEmail },
+          });
+
+          if (!customer) {
+            customer = await ctx.prisma.customer.create({
+              data: {
+                name: userName,
+                email: userEmail,
+                type: "SAAS",
+              },
+            });
+          }
+
+          await ctx.prisma.customerOrganization.create({
+            data: {
+              customerId: customer.id,
+              organizationId: organization.id,
+            },
+          });
+        } catch (error) {
+          console.error("Failed to auto-link Customer for Privacy Professional:", error);
+        }
+      }
+
       return organization;
     }),
 
