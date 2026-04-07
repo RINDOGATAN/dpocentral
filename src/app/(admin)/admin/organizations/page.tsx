@@ -16,13 +16,24 @@ import {
   Store,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function OrganizationsPage() {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search);
 
-  const { data, isLoading } = trpc.platformAdmin.listOrganizations.useQuery({
-    search: search || undefined,
-  });
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.platformAdmin.listOrganizations.useInfiniteQuery(
+      {
+        search: debouncedSearch || undefined,
+        limit: 50,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
+
+  const allOrgs = data?.pages.flatMap((p) => p.organizations) ?? [];
 
   return (
     <div className="space-y-6">
@@ -43,68 +54,91 @@ export default function OrganizationsPage() {
             className="pl-9"
           />
         </div>
+        {allOrgs.length > 0 && (
+          <p className="text-sm text-muted-foreground self-center">
+            {allOrgs.length} organization{allOrgs.length !== 1 ? "s" : ""}
+            {hasNextPage ? "+" : ""}
+          </p>
+        )}
       </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
-      ) : data?.organizations && data.organizations.length > 0 ? (
-        <div className="grid gap-4">
-          {data.organizations.map((org) => (
-            <Card key={org.id}>
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{org.name}</h3>
-                      <Badge variant="outline">{org.slug}</Badge>
-                      {org.domain && (
-                        <Badge variant="secondary">{org.domain}</Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {org._count.members} members
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Box className="w-4 h-4" />
-                        {org._count.dataAssets} assets
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Store className="w-4 h-4" />
-                        {org._count.vendors} vendors
-                      </span>
-                    </div>
-                    {org.customerLinks.length > 0 && (
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-muted-foreground">Customer:</span>
-                        {org.customerLinks.map((link) => (
-                          <Link
-                            key={link.customer.id}
-                            href={`/admin/customers/${link.customer.id}`}
-                            className="text-xs text-primary hover:underline"
-                          >
-                            {link.customer.name}
-                          </Link>
-                        ))}
+      ) : allOrgs.length > 0 ? (
+        <div className="space-y-4">
+          <div className="grid gap-4">
+            {allOrgs.map((org) => (
+              <Card key={org.id}>
+                <CardContent className="pt-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold">{org.name}</h3>
+                        <Badge variant="outline">{org.slug}</Badge>
+                        {org.domain && (
+                          <Badge variant="secondary">{org.domain}</Badge>
+                        )}
                       </div>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      Created {new Date(org.createdAt).toLocaleDateString()}
-                    </p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
+                        <span className="flex items-center gap-1">
+                          <Users className="w-4 h-4" />
+                          {org._count.members} members
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Box className="w-4 h-4" />
+                          {org._count.dataAssets} assets
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Store className="w-4 h-4" />
+                          {org._count.vendors} vendors
+                        </span>
+                      </div>
+                      {org.customerLinks.length > 0 && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground">Customer:</span>
+                          {org.customerLinks.map((link) => (
+                            <Link
+                              key={link.customer.id}
+                              href={`/admin/customers/${link.customer.id}`}
+                              className="text-xs text-primary hover:underline"
+                            >
+                              {link.customer.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        Created {new Date(org.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Link href={`/admin/organizations/${org.id}`}>
+                      <Button variant="outline" size="sm">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Manage
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href={`/admin/organizations/${org.id}`}>
-                    <Button variant="outline" size="sm">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Manage
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <div className="flex justify-center pt-2">
+              <Button
+                variant="outline"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : null}
+                Load More
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <Card>
