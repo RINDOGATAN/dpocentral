@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,15 +21,18 @@ import {
   Pencil,
   Save,
   X,
+  Trash2,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
 export default function OrganizationDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const orgId = params.id as string;
 
   const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [editName, setEditName] = useState("");
   const [editSlug, setEditSlug] = useState("");
   const [editDomain, setEditDomain] = useState("");
@@ -39,6 +42,17 @@ export default function OrganizationDetailPage() {
   const { data: org, isLoading } = trpc.platformAdmin.getOrganization.useQuery(
     { id: orgId }
   );
+
+  const deleteMutation = trpc.platformAdmin.deleteOrganization.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Deleted "${result.name}"`);
+      utils.platformAdmin.listOrganizations.invalidate();
+      router.push("/admin/organizations");
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   const updateMutation = trpc.platformAdmin.updateOrganization.useMutation({
     onSuccess: () => {
@@ -113,10 +127,44 @@ export default function OrganizationDetailPage() {
           </div>
         </div>
         {!editing && (
-          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
-            <Pencil className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+              <Pencil className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+            {!confirmDelete ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteMutation.mutate({ id: orgId })}
+                  disabled={deleteMutation.isPending}
+                >
+                  {deleteMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : null}
+                  Confirm Delete
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setConfirmDelete(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 

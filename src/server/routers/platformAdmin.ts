@@ -495,6 +495,21 @@ export const platformAdminRouter = createTRPCRouter({
       return updated;
     }),
 
+  deleteOrganization: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: { id: input.id },
+      });
+      if (!org) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Organization not found" });
+      }
+
+      await ctx.prisma.organization.delete({ where: { id: input.id } });
+
+      return { deleted: true, name: org.name };
+    }),
+
   // ============================================================
   // USERS (full management)
   // ============================================================
