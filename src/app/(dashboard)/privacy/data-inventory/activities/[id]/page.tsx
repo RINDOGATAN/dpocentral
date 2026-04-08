@@ -1,10 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   ArrowLeft,
   Database,
@@ -15,6 +24,7 @@ import {
   ArrowRightLeft,
   ClipboardCheck,
   Loader2,
+  Plus,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -32,11 +42,46 @@ export default function ActivityDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { organization } = useOrganization();
+  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+  const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
+
+  const utils = trpc.useUtils();
 
   const { data: activity, isLoading } = trpc.dataInventory.getActivity.useQuery(
     { organizationId: organization?.id ?? "", id },
     { enabled: !!organization?.id && !!id }
   );
+
+  const { data: allAssetsPages } = trpc.dataInventory.listAssets.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 200 },
+    {
+      enabled: !!organization?.id && linkDialogOpen,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  const allAssets = allAssetsPages?.pages.flatMap((p) => p.assets) ?? [];
+
+  const linkAssets = trpc.dataInventory.linkAssets.useMutation({
+    onSuccess: () => {
+      utils.dataInventory.getActivity.invalidate({ organizationId: organization?.id ?? "", id });
+      setLinkDialogOpen(false);
+    },
+  });
+
+  function openLinkDialog() {
+    // Pre-select currently linked assets
+    const currentIds = activity?.assets?.map((a) => a.dataAsset.id) ?? [];
+    setSelectedAssetIds(currentIds);
+    setLinkDialogOpen(true);
+  }
+
+  function toggleAsset(assetId: string) {
+    setSelectedAssetIds((prev) =>
+      prev.includes(assetId)
+        ? prev.filter((id) => id !== assetId)
+        : [...prev, assetId]
+    );
+  }
 
   if (isLoading) {
     return (
@@ -208,10 +253,16 @@ export default function ActivityDetailPage() {
       {/* Linked Data Assets */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Database className="w-4 h-4" />
-            Linked Data Assets ({activity.assets?.length ?? 0})
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Database className="w-4 h-4" />
+              Linked Data Assets ({activity.assets?.length ?? 0})
+            </CardTitle>
+            <Button variant="outline" size="sm" onClick={openLinkDialog}>
+              <Plus className="w-4 h-4 mr-2" />
+              Manage Assets
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {activity.assets && activity.assets.length > 0 ? (
@@ -240,7 +291,13 @@ export default function ActivityDetailPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No data assets linked to this activity</p>
+            <div className="text-center py-4">
+              <p className="text-sm text-muted-foreground mb-3">No data assets linked to this activity</p>
+              <Button variant="outline" size="sm" onClick={openLinkDialog}>
+                <Plus className="w-4 h-4 mr-2" />
+                Link Assets
+              </Button>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -311,6 +368,66 @@ export default function ActivityDetailPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Link Assets Dialog */}
+      <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Link Data Assets</DialogTitle>
+            <DialogDescription>
+              Select which data assets are processed by this activity.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
+            {allAssets.length > 0 ? (
+              allAssets.map((asset) => (
+                <label
+                  key={asset.id}
+                  className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={selectedAssetIds.includes(asset.id)}
+                    onCheckedChange={() => toggleAsset(asset.id)}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{asset.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {asset.type?.replace("_", " ")} — {asset._count?.dataElements ?? 0} elements
+                    </p>
+                  </div>
+                </label>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No data assets in this organization yet
+              </p>
+            )}
+          </div>
+          <div className="flex justify-between items-center pt-4 border-t">
+            <p className="text-xs text-muted-foreground">
+              {selectedAssetIds.length} asset{selectedAssetIds.length !== 1 ? "s" : ""} selected
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setLinkDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() =>
+                  linkAssets.mutate({
+                    organizationId: organization?.id ?? "",
+                    activityId: id,
+                    assetIds: selectedAssetIds,
+                  })
+                }
+                disabled={linkAssets.isPending}
+              >
+                {linkAssets.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
