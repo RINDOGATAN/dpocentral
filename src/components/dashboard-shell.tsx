@@ -28,6 +28,9 @@ import {
   Globe,
   Bot,
   MoreHorizontal,
+  ChevronsUpDown,
+  Check,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,8 +44,19 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
@@ -56,11 +70,38 @@ import { FeedbackDialog } from "@/components/FeedbackDialog";
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const { organization, organizations, isLoading: orgLoading } = useOrganization();
+  const { organization, organizations, isLoading: orgLoading, setOrganization, refetchOrganizations } = useOrganization();
   const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
+  const [newOrgName, setNewOrgName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
   const tNav = useTranslations("nav");
+
+  const createOrg = trpc.organization.create.useMutation({
+    onSuccess: (org) => {
+      setOrganization(org);
+      refetchOrganizations();
+      setCreateOrgOpen(false);
+      setNewOrgName("");
+      toast.success(`Created "${org.name}"`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSettled: () => setIsCreating(false),
+  });
+
+  const generateSlug = (text: string) =>
+    text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+  const handleCreateOrg = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrgName.trim()) return;
+    setIsCreating(true);
+    createOrg.mutate({ name: newOrgName.trim(), slug: generateSlug(newOrgName) });
+  };
   const tFooter = useTranslations("footer");
 
   // Primary nav: always visible in the top bar
@@ -186,8 +227,40 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
             <Link href="/privacy" className="flex items-center gap-2 shrink-0">
               <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-              <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
+              <span className="hidden sm:inline" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
             </Link>
+
+            {/* Org Switcher */}
+            {organization && organizations.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5 max-w-[180px] sm:max-w-[220px]">
+                    <Building2 className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{organization.name}</span>
+                    <ChevronsUpDown className="w-3 h-3 shrink-0 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[240px]">
+                  {organizations.map((org) => (
+                    <DropdownMenuItem
+                      key={org.id}
+                      onClick={() => setOrganization(org)}
+                      className="flex items-center gap-2"
+                    >
+                      <span className="truncate flex-1">{org.name}</span>
+                      {org.id === organization.id && (
+                        <Check className="w-4 h-4 shrink-0 text-primary" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setCreateOrgOpen(true)} className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    {tNav("newOrganization")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
           </div>
 
@@ -325,6 +398,36 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       </footer>
 
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+
+      {/* Create Organization Dialog */}
+      <Dialog open={createOrgOpen} onOpenChange={setCreateOrgOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{tNav("newOrganization")}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateOrg} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-org-name">Organization Name</Label>
+              <Input
+                id="new-org-name"
+                placeholder="e.g., Acme Corporation"
+                value={newOrgName}
+                onChange={(e) => setNewOrgName(e.target.value)}
+                autoFocus
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={() => setCreateOrgOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isCreating || !newOrgName.trim()}>
+                {isCreating ? "Creating..." : "Create"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
