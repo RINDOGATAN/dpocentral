@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Database,
   FileText,
@@ -17,23 +19,60 @@ import {
   ChevronDown,
   Loader2,
   Sparkles,
+  Plus,
+  Check,
 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
+import { toast } from "sonner";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { organization, organizations, setOrganization } = useOrganization();
+  const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
+  const [newOrgName, setNewOrgName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const createOrg = trpc.organization.create.useMutation({
+    onSuccess: (org) => {
+      setOrganization(org);
+      refetchOrganizations();
+      setCreateOrgOpen(false);
+      setNewOrgName("");
+      toast.success(`Created "${org.name}"`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSettled: () => setIsCreating(false),
+  });
+
+  const generateSlug = (text: string) =>
+    text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+  const handleCreateOrg = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newOrgName.trim()) return;
+    setIsCreating(true);
+    createOrg.mutate({ name: newOrgName.trim(), slug: generateSlug(newOrgName) });
+  };
 
   const { data: stats, isLoading } = trpc.organization.getDashboardStats.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -104,28 +143,34 @@ export default function PrivacyDashboardPage() {
             Privacy Dashboard
           </p>
         </div>
-        {organizations.length > 1 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 shrink-0">
-                <Building2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Switch</span>
-                <ChevronDown className="w-3 h-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {organizations.map((org) => (
-                <DropdownMenuItem
-                  key={org.id}
-                  onClick={() => setOrganization(org)}
-                  className={org.id === organization?.id ? "bg-primary/10" : ""}
-                >
-                  {org.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2 shrink-0">
+              <Building2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Switch</span>
+              <ChevronDown className="w-3 h-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[240px]">
+            {organizations.map((org) => (
+              <DropdownMenuItem
+                key={org.id}
+                onClick={() => setOrganization(org)}
+                className="flex items-center gap-2"
+              >
+                <span className="truncate flex-1">{org.name}</span>
+                {org.id === organization?.id && (
+                  <Check className="w-4 h-4 shrink-0 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setCreateOrgOpen(true)} className="gap-2">
+              <Plus className="w-4 h-4" />
+              New Organization
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Quickstart Card — shown when org has few records */}
@@ -437,6 +482,36 @@ export default function PrivacyDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Create Organization Dialog */}
+      <Dialog open={createOrgOpen} onOpenChange={setCreateOrgOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New Organization</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateOrg} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-org-name">Organization Name</Label>
+              <Input
+                id="new-org-name"
+                placeholder="e.g., Acme Corporation"
+                value={newOrgName}
+                onChange={(e) => setNewOrgName(e.target.value)}
+                autoFocus
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={() => setCreateOrgOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isCreating || !newOrgName.trim()}>
+                {isCreating ? "Creating..." : "Create"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
