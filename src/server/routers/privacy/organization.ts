@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import { OrganizationRole } from "@prisma/client";
+import { OrganizationRole, UserType } from "@prisma/client";
 import { getSecurityModule } from "@/lib/security";
 
 export const organizationRouter = createTRPCRouter({
@@ -84,6 +84,7 @@ export const organizationRouter = createTRPCRouter({
         name: z.string().min(1).max(200),
         slug: z.string().min(2).max(50).regex(/^[a-z0-9-]+$/),
         domain: z.string().optional(),
+        creatorType: z.nativeEnum(UserType).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -130,13 +131,15 @@ export const organizationRouter = createTRPCRouter({
 
       // Auto-link to Customer for Privacy Professionals
       try {
-        // Query DB directly — session.user.userType may be stale with JWT strategy
         const dbUser = await ctx.prisma.user.findUnique({
           where: { id: ctx.session.user.id },
           select: { userType: true, email: true, name: true },
         });
 
-        if (dbUser?.userType === "PRIVACY_PROFESSIONAL" && dbUser.email) {
+        // Use explicit creatorType from onboarding, fall back to DB value
+        const userType = input.creatorType || dbUser?.userType;
+
+        if (userType === "PRIVACY_PROFESSIONAL" && dbUser?.email) {
           let customer = await ctx.prisma.customer.findUnique({
             where: { email: dbUser.email },
           });
