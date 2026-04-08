@@ -291,13 +291,7 @@ export default function ActivityDetailPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-4">
-              <p className="text-sm text-muted-foreground mb-3">No data assets linked to this activity</p>
-              <Button variant="outline" size="sm" onClick={openLinkDialog}>
-                <Plus className="w-4 h-4 mr-2" />
-                Link Assets
-              </Button>
-            </div>
+            <p className="text-sm text-muted-foreground text-center py-4">No data assets linked to this activity</p>
           )}
         </CardContent>
       </Card>
