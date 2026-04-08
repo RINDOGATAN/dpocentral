@@ -129,20 +129,23 @@ export const organizationRouter = createTRPCRouter({
       });
 
       // Auto-link to Customer for Privacy Professionals
-      if (ctx.session.user.userType === "PRIVACY_PROFESSIONAL") {
-        try {
-          const userEmail = ctx.session.user.email!;
-          const userName = ctx.session.user.name || userEmail;
+      try {
+        // Query DB directly — session.user.userType may be stale with JWT strategy
+        const dbUser = await ctx.prisma.user.findUnique({
+          where: { id: ctx.session.user.id },
+          select: { userType: true, email: true, name: true },
+        });
 
+        if (dbUser?.userType === "PRIVACY_PROFESSIONAL" && dbUser.email) {
           let customer = await ctx.prisma.customer.findUnique({
-            where: { email: userEmail },
+            where: { email: dbUser.email },
           });
 
           if (!customer) {
             customer = await ctx.prisma.customer.create({
               data: {
-                name: userName,
-                email: userEmail,
+                name: dbUser.name || dbUser.email,
+                email: dbUser.email,
                 type: "SAAS",
               },
             });
@@ -154,9 +157,9 @@ export const organizationRouter = createTRPCRouter({
               organizationId: organization.id,
             },
           });
-        } catch (error) {
-          console.error("Failed to auto-link Customer for Privacy Professional:", error);
         }
+      } catch (error) {
+        console.error("Failed to auto-link Customer for Privacy Professional:", error);
       }
 
       return organization;
