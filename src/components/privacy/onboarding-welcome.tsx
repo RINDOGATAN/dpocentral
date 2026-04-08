@@ -56,7 +56,7 @@ export function OnboardingWelcome() {
     try {
       await setUserType.mutateAsync({ userType: selectedType });
       const slug = generateSlug(orgName);
-      const org = await createOrg.mutateAsync({ name: orgName.trim(), slug });
+      const org = await createOrg.mutateAsync({ name: orgName.trim(), slug, creatorType: selectedType });
       setOrganization(org);
       refetchOrganizations();
       await refreshSession();
