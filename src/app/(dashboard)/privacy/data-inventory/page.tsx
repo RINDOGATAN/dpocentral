@@ -79,6 +79,22 @@ const mechanismLabels: Record<string, string> = {
   OTHER: "Other",
 };
 
+const legalBasisLabels: Record<string, string> = {
+  CONSENT: "Consent",
+  CONTRACT: "Contract",
+  LEGAL_OBLIGATION: "Legal Obligation",
+  VITAL_INTERESTS: "Vital Interests",
+  PUBLIC_TASK: "Public Task",
+  LEGITIMATE_INTERESTS: "Legitimate Interests",
+};
+
+const INITIAL_ACTIVITY_FORM = {
+  name: "",
+  purpose: "",
+  legalBasis: "" as string,
+  dataSubjects: "",
+};
+
 const INITIAL_TRANSFER_FORM = {
   name: "",
   destinationCountry: "",
@@ -94,6 +110,8 @@ export default function DataInventoryPage() {
   const { organization } = useOrganization();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [activityDialogOpen, setActivityDialogOpen] = useState(false);
+  const [activityForm, setActivityForm] = useState(INITIAL_ACTIVITY_FORM);
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
   const [transferForm, setTransferForm] = useState(INITIAL_TRANSFER_FORM);
 
@@ -140,6 +158,14 @@ export default function DataInventoryPage() {
   );
 
   const utils = trpc.useUtils();
+  const createActivity = trpc.dataInventory.createActivity.useMutation({
+    onSuccess: (activity) => {
+      utils.dataInventory.listActivities.invalidate();
+      setActivityDialogOpen(false);
+      setActivityForm(INITIAL_ACTIVITY_FORM);
+      router.push(`/privacy/data-inventory/activities/${activity.id}`);
+    },
+  });
   const createTransfer = trpc.dataInventory.createTransfer.useMutation({
     onSuccess: () => {
       utils.dataInventory.listTransfers.invalidate();
@@ -319,6 +345,12 @@ export default function DataInventoryPage() {
             <ListPageSkeleton />
           ) : processingActivities.length > 0 ? (
             <>
+              <div className="flex justify-end mb-3">
+                <Button onClick={() => setActivityDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Activity
+                </Button>
+              </div>
               <div className="space-y-3">
                 {processingActivities.map((activity) => (
                   <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
@@ -383,7 +415,11 @@ export default function DataInventoryPage() {
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No processing activities yet</p>
-                <p className="text-sm">Document your data processing activities for ROPA compliance</p>
+                <p className="text-sm mb-4">Document your data processing activities for ROPA compliance</p>
+                <Button onClick={() => setActivityDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Activity
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -464,6 +500,95 @@ export default function DataInventoryPage() {
       {dataAssets.length === 0 && processingActivities.length === 0 && (
         <ExpertHelpCta context="empty-state" />
       )}
+
+      {/* Add Activity Dialog */}
+      <Dialog open={activityDialogOpen} onOpenChange={setActivityDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Add Processing Activity</DialogTitle>
+            <DialogDescription>
+              Document a data processing activity for your ROPA (Record of Processing Activities).
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!activityForm.name || !activityForm.purpose || !activityForm.legalBasis) return;
+              createActivity.mutate({
+                organizationId: organization?.id ?? "",
+                name: activityForm.name,
+                purpose: activityForm.purpose,
+                legalBasis: activityForm.legalBasis as any,
+                dataSubjects: activityForm.dataSubjects
+                  ? activityForm.dataSubjects.split(",").map((s) => s.trim()).filter(Boolean)
+                  : [],
+                categories: [],
+              });
+            }}
+          >
+            <div className="space-y-2">
+              <Label htmlFor="activity-name">Activity Name</Label>
+              <Input
+                id="activity-name"
+                placeholder="e.g. Customer Onboarding"
+                value={activityForm.name}
+                onChange={(e) => setActivityForm((f) => ({ ...f, name: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="activity-purpose">Purpose</Label>
+              <Input
+                id="activity-purpose"
+                placeholder="e.g. Collect and verify customer identity for account creation"
+                value={activityForm.purpose}
+                onChange={(e) => setActivityForm((f) => ({ ...f, purpose: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Legal Basis</Label>
+              <Select
+                value={activityForm.legalBasis}
+                onValueChange={(v) => setActivityForm((f) => ({ ...f, legalBasis: v }))}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select legal basis..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(legalBasisLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="activity-subjects">Data Subjects</Label>
+              <Input
+                id="activity-subjects"
+                placeholder="e.g. Customers, Employees, Website visitors"
+                value={activityForm.dataSubjects}
+                onChange={(e) => setActivityForm((f) => ({ ...f, dataSubjects: e.target.value }))}
+              />
+              <p className="text-xs text-muted-foreground">Comma-separated list</p>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setActivityDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={createActivity.isPending || !activityForm.name || !activityForm.purpose || !activityForm.legalBasis}
+              >
+                {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Add Activity
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Add Transfer Dialog */}
       <Dialog open={transferDialogOpen} onOpenChange={setTransferDialogOpen}>
