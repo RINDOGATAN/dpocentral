@@ -72,7 +72,8 @@
     "reports": "Reports",
     "regulations": "Regulations",
     "aiSystems": "AI Systems",
-    "more": "More"
+    "more": "More",
+    "newOrganization": "New Organization"
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",

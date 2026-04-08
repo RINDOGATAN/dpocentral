@@ -64,7 +64,8 @@
     "incidents": "Incidents",
     "vendors": "Fournisseurs",
     "settings": "Parametres",
-    "openMenu": "Ouvrir le menu"
+    "openMenu": "Ouvrir le menu",
+    "newOrganization": "Nouvelle organisation"
   },
   "footer": {
     "serviceBy": "{brandName} est un service de {companyName}."
