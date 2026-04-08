@@ -28,6 +28,14 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
   ArrowLeft,
   Database,
   Edit,
@@ -87,6 +95,8 @@ export default function DataAssetDetailPage() {
   const id = params.id as string;
   const { organization } = useOrganization();
   const [isAddElementOpen, setIsAddElementOpen] = useState(false);
+  const [linkActivitiesOpen, setLinkActivitiesOpen] = useState(false);
+  const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
   const [elementForm, setElementForm] = useState({
     name: "",
     description: "",
@@ -134,6 +144,40 @@ export default function DataAssetDetailPage() {
       toast.error(error.message || "Failed to add element");
     },
   });
+
+  const { data: allActivitiesPages } = trpc.dataInventory.listActivities.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 200 },
+    {
+      enabled: !!organization?.id && linkActivitiesOpen,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  const allActivities = allActivitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+
+  const linkActivities = trpc.dataInventory.linkActivitiesToAsset.useMutation({
+    onSuccess: () => {
+      toast.success("Activities updated");
+      utils.dataInventory.getAsset.invalidate();
+      setLinkActivitiesOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to link activities");
+    },
+  });
+
+  function openLinkActivities() {
+    const currentIds = asset?.processingActivityAssets?.map((a: any) => a.processingActivity.id) ?? [];
+    setSelectedActivityIds(currentIds);
+    setLinkActivitiesOpen(true);
+  }
+
+  function toggleActivity(activityId: string) {
+    setSelectedActivityIds((prev) =>
+      prev.includes(activityId)
+        ? prev.filter((id) => id !== activityId)
+        : [...prev, activityId]
+    );
+  }
 
   const deleteElement = trpc.dataInventory.deleteElement.useMutation({
     onSuccess: () => {
@@ -355,34 +399,44 @@ export default function DataAssetDetailPage() {
         <TabsContent value="activities" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Linked Processing Activities</CardTitle>
-              <CardDescription>Activities that use data from this asset</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Linked Processing Activities</CardTitle>
+                  <CardDescription>Activities that use data from this asset</CardDescription>
+                </div>
+                <Button variant="outline" size="sm" onClick={openLinkActivities}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Manage Activities
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {asset.processingActivityAssets && asset.processingActivityAssets.length > 0 ? (
                 <div className="space-y-2">
-                  {asset.processingActivityAssets.map((link) => (
-                    <div
+                  {asset.processingActivityAssets.map((link: any) => (
+                    <Link
                       key={link.id}
-                      className="flex items-center justify-between p-3 bg-muted/50"
+                      href={`/privacy/data-inventory/activities/${link.processingActivity.id}`}
+                      className="block"
                     >
-                      <div>
-                        <p className="font-medium">{link.processingActivity.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Legal Basis: {link.processingActivity.legalBasis}
-                        </p>
+                      <div className="flex items-center justify-between p-3 rounded hover:bg-muted/50 transition-colors">
+                        <div>
+                          <p className="font-medium">{link.processingActivity.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Legal Basis: {link.processingActivity.legalBasis}
+                          </p>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          View <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        View <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No linked processing activities</p>
-                  <p className="text-sm">Link this asset to processing activities for ROPA</p>
-                </div>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  No linked processing activities
+                </p>
               )}
             </CardContent>
           </Card>
@@ -521,6 +575,66 @@ export default function DataAssetDetailPage() {
           </form>
         </SheetContent>
       </Sheet>
+
+      {/* Link Activities Dialog */}
+      <Dialog open={linkActivitiesOpen} onOpenChange={setLinkActivitiesOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Link Processing Activities</DialogTitle>
+            <DialogDescription>
+              Select which processing activities use data from this asset.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
+            {allActivities.length > 0 ? (
+              allActivities.map((act: any) => (
+                <label
+                  key={act.id}
+                  className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={selectedActivityIds.includes(act.id)}
+                    onCheckedChange={() => toggleActivity(act.id)}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{act.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {act.legalBasis?.replace("_", " ")} — {act.purpose}
+                    </p>
+                  </div>
+                </label>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-4">
+                No processing activities in this organization yet
+              </p>
+            )}
+          </div>
+          <div className="flex justify-between items-center pt-4 border-t">
+            <p className="text-xs text-muted-foreground">
+              {selectedActivityIds.length} activit{selectedActivityIds.length !== 1 ? "ies" : "y"} selected
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setLinkActivitiesOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() =>
+                  linkActivities.mutate({
+                    organizationId: organization?.id ?? "",
+                    assetId: id,
+                    activityIds: selectedActivityIds,
+                  })
+                }
+                disabled={linkActivities.isPending}
+              >
+                {linkActivities.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

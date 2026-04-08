@@ -565,6 +565,44 @@ export const dataInventoryRouter = createTRPCRouter({
       return { success: true };
     }),
 
+  // Link processing activities to a data asset
+  linkActivitiesToAsset: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        assetId: z.string(),
+        activityIds: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const asset = await ctx.prisma.dataAsset.findFirst({
+        where: { id: input.assetId, organizationId: ctx.organization.id },
+      });
+
+      if (!asset) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data asset not found",
+        });
+      }
+
+      // Remove existing links for this asset and create new ones
+      await ctx.prisma.processingActivityAsset.deleteMany({
+        where: { dataAssetId: input.assetId },
+      });
+
+      if (input.activityIds.length > 0) {
+        await ctx.prisma.processingActivityAsset.createMany({
+          data: input.activityIds.map((activityId) => ({
+            processingActivityId: activityId,
+            dataAssetId: input.assetId,
+          })),
+        });
+      }
+
+      return { success: true };
+    }),
+
   // ============================================================
   // DATA FLOWS
   // ============================================================
