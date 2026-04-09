@@ -160,7 +160,7 @@ export default function DataAssetDetailPage() {
   const { data: allActivitiesPages } = trpc.dataInventory.listActivities.useInfiniteQuery(
     { organizationId: organization?.id ?? "", limit: 200 },
     {
-      enabled: !!organization?.id && linkActivitiesOpen,
+      enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
