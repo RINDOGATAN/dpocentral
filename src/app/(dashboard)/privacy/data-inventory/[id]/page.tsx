@@ -106,6 +106,9 @@ export default function DataAssetDetailPage() {
   const [isAddElementOpen, setIsAddElementOpen] = useState(false);
   const [linkActivitiesOpen, setLinkActivitiesOpen] = useState(false);
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
+  // Map of activityId -> elementIds (undefined = all elements of this asset)
+  const [selectedElements, setSelectedElements] = useState<Record<string, string[] | undefined>>({});
+  const [expandedActivities, setExpandedActivities] = useState<Set<string>>(new Set());
   const [elementForm, setElementForm] = useState({
     name: "",
     description: "",
@@ -177,14 +180,57 @@ export default function DataAssetDetailPage() {
   function openLinkActivities() {
     const currentIds = asset?.processingActivityAssets?.map((a: any) => a.processingActivity.id) ?? [];
     setSelectedActivityIds(currentIds);
+
+    const elMap: Record<string, string[] | undefined> = {};
+    for (const link of asset?.processingActivityAssets ?? []) {
+      const le = (link as any).linkedElements ?? [];
+      elMap[(link as any).processingActivity.id] = le.length > 0 ? le.map((l: any) => l.dataElement.id) : undefined;
+    }
+    setSelectedElements(elMap);
+    setExpandedActivities(new Set());
     setLinkActivitiesOpen(true);
   }
 
   function toggleActivity(activityId: string) {
-    setSelectedActivityIds((prev) =>
-      prev.includes(activityId)
-        ? prev.filter((id) => id !== activityId)
-        : [...prev, activityId]
+    setSelectedActivityIds((prev) => {
+      if (prev.includes(activityId)) {
+        setSelectedElements((sel) => {
+          const next = { ...sel };
+          delete next[activityId];
+          return next;
+        });
+        setExpandedActivities((exp) => { const n = new Set(exp); n.delete(activityId); return n; });
+        return prev.filter((id) => id !== activityId);
+      }
+      setSelectedElements((sel) => ({ ...sel, [activityId]: undefined }));
+      return [...prev, activityId];
+    });
+  }
+
+  function toggleElementForActivity(activityId: string, elementId: string) {
+    setSelectedElements((prev) => {
+      const current = prev[activityId];
+      const allElementIds = (asset?.dataElements ?? []).map((e) => e.id);
+      if (current === undefined) {
+        // Was "all" — deselect one
+        return { ...prev, [activityId]: allElementIds.filter((id) => id !== elementId) };
+      }
+      if (current.includes(elementId)) {
+        return { ...prev, [activityId]: current.filter((id) => id !== elementId) };
+      }
+      const added = [...current, elementId];
+      if (added.length >= allElementIds.length) {
+        return { ...prev, [activityId]: undefined };
+      }
+      return { ...prev, [activityId]: added };
+    });
+  }
+
+  function toggleAllElementsForActivity(activityId: string) {
+    setSelectedElements((prev) =>
+      prev[activityId] === undefined
+        ? { ...prev, [activityId]: [] }
+        : { ...prev, [activityId]: undefined }
     );
   }
 
@@ -423,11 +469,12 @@ export default function DataAssetDetailPage() {
               {asset.processingActivityAssets && asset.processingActivityAssets.length > 0 ? (
                 <div className="space-y-3">
                   {asset.processingActivityAssets.map((link: any) => {
-                    // Show which data categories from this asset are relevant
-                    const activityCategories = (link.processingActivity.categories as string[]) ?? [];
-                    const elementCategories = [...new Set((asset.dataElements ?? []).map((el: any) => el.category as string))];
-                    const overlapping = elementCategories.filter((c: string) => activityCategories.includes(c));
-                    const categoriesToShow = overlapping.length > 0 ? overlapping : elementCategories;
+                    const linkedEls = link.linkedElements ?? [];
+                    const allElements = asset.dataElements ?? [];
+                    const effectiveElements = linkedEls.length > 0
+                      ? linkedEls.map((le: any) => le.dataElement)
+                      : allElements;
+                    const isFiltered = linkedEls.length > 0 && linkedEls.length < allElements.length;
 
                     return (
                       <Link
@@ -444,15 +491,29 @@ export default function DataAssetDetailPage() {
                                 {link.processingActivity.purpose && ` — ${link.processingActivity.purpose}`}
                               </p>
                             </div>
-                            <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                            <div className="flex items-center gap-2 shrink-0">
+                              <Badge variant="outline" className="text-xs">
+                                {effectiveElements.length}{isFiltered ? `/${allElements.length}` : ""} element{effectiveElements.length !== 1 ? "s" : ""}
+                              </Badge>
+                              <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                            </div>
                           </div>
-                          {categoriesToShow.length > 0 && (
+                          {effectiveElements.length > 0 && (
                             <div className="flex flex-wrap gap-1.5">
-                              {categoriesToShow.map((cat: string) => (
-                                <Badge key={cat} variant="secondary" className="text-xs font-normal">
-                                  {categoryLabels[cat as DataCategory] || cat.replace("_", " ")}
+                              {effectiveElements.map((el: any) => (
+                                <Badge
+                                  key={el.id}
+                                  variant={el.isSpecialCategory ? "destructive" : "secondary"}
+                                  className="text-xs font-normal"
+                                >
+                                  {el.name}
                                 </Badge>
                               ))}
+                              {isFiltered && (
+                                <span className="text-xs text-muted-foreground self-center">
+                                  +{allElements.length - effectiveElements.length} not linked
+                                </span>
+                              )}
                             </div>
                           )}
                         </div>
@@ -609,28 +670,87 @@ export default function DataAssetDetailPage() {
           <DialogHeader>
             <DialogTitle>Link Processing Activities</DialogTitle>
             <DialogDescription>
-              Select which processing activities use data from this asset.
+              Select which activities use data from this asset, and which elements they process.
             </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
             {allActivities.length > 0 ? (
-              allActivities.map((act: any) => (
-                <label
-                  key={act.id}
-                  className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
-                >
-                  <Checkbox
-                    checked={selectedActivityIds.includes(act.id)}
-                    onCheckedChange={() => toggleActivity(act.id)}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{act.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {act.legalBasis?.replace("_", " ")} — {act.purpose}
-                    </p>
+              allActivities.map((act: any) => {
+                const isSelected = selectedActivityIds.includes(act.id);
+                const isExpanded = expandedActivities.has(act.id);
+                const elements = asset?.dataElements ?? [];
+                const elSelection = selectedElements[act.id];
+                const allSelected = elSelection === undefined;
+                return (
+                  <div key={act.id}>
+                    <div className="flex items-center gap-3 p-2 rounded hover:bg-muted/50">
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggleActivity(act.id)}
+                      />
+                      <label
+                        className="flex-1 min-w-0 cursor-pointer"
+                        onClick={() => toggleActivity(act.id)}
+                      >
+                        <p className="text-sm font-medium truncate">{act.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {act.legalBasis?.replace("_", " ")} — {act.purpose}
+                        </p>
+                      </label>
+                      {isSelected && elements.length > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs"
+                          onClick={() =>
+                            setExpandedActivities((prev) => {
+                              const next = new Set(prev);
+                              next.has(act.id) ? next.delete(act.id) : next.add(act.id);
+                              return next;
+                            })
+                          }
+                        >
+                          {isExpanded ? "Hide" : "Elements"}
+                        </Button>
+                      )}
+                    </div>
+                    {isSelected && isExpanded && elements.length > 0 && (
+                      <div className="ml-9 pl-2 border-l space-y-0.5 pb-1">
+                        <label className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer">
+                          <Checkbox
+                            checked={allSelected}
+                            onCheckedChange={() => toggleAllElementsForActivity(act.id)}
+                          />
+                          <span className="text-xs font-medium text-muted-foreground">
+                            All elements
+                          </span>
+                        </label>
+                        {elements.map((el) => {
+                          const isElSelected = allSelected || (elSelection?.includes(el.id) ?? false);
+                          return (
+                            <label
+                              key={el.id}
+                              className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer"
+                            >
+                              <Checkbox
+                                checked={isElSelected}
+                                onCheckedChange={() => toggleElementForActivity(act.id, el.id)}
+                              />
+                              <span className="text-xs truncate">{el.name}</span>
+                              <Badge
+                                variant={el.isSpecialCategory ? "destructive" : "secondary"}
+                                className="text-[10px] px-1 py-0 shrink-0"
+                              >
+                                {el.category?.replace("_", " ")}
+                              </Badge>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                </label>
-              ))
+                );
+              })
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No processing activities in this organization yet
@@ -650,7 +770,10 @@ export default function DataAssetDetailPage() {
                   linkActivities.mutate({
                     organizationId: organization?.id ?? "",
                     assetId: id,
-                    activityIds: selectedActivityIds,
+                    activities: selectedActivityIds.map((activityId) => ({
+                      activityId,
+                      elementIds: selectedElements[activityId],
+                    })),
                   })
                 }
                 disabled={linkActivities.isPending}
