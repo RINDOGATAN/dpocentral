@@ -266,29 +266,43 @@ export default function ActivityDetailPage() {
         </CardHeader>
         <CardContent>
           {activity.assets && activity.assets.length > 0 ? (
-            <div className="space-y-2">
-              {activity.assets.map((link) => (
-                <Link
-                  key={link.dataAsset.id}
-                  href={`/privacy/data-inventory/${link.dataAsset.id}`}
-                  className="block"
-                >
-                  <div className="flex items-center gap-3 p-2 -mx-2 rounded hover:bg-muted/50 transition-colors">
-                    <Database className="w-4 h-4 text-primary shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{link.dataAsset.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {link.dataAsset.dataElements?.length ?? 0} data elements
-                      </p>
-                    </div>
-                    {link.purpose && (
-                      <span className="text-xs text-muted-foreground hidden sm:inline">
-                        {link.purpose}
-                      </span>
+            <div className="space-y-3">
+              {activity.assets.map((link: any) => {
+                const elements = link.dataAsset.dataElements ?? [];
+                return (
+                  <div key={link.dataAsset.id} className="border rounded-lg p-3 space-y-2">
+                    <Link href={`/privacy/data-inventory/${link.dataAsset.id}`}>
+                      <div className="flex items-center gap-3 hover:text-primary transition-colors">
+                        <Database className="w-4 h-4 text-primary shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{link.dataAsset.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {link.dataAsset.type?.replace("_", " ")}
+                            {link.purpose && ` — ${link.purpose}`}
+                          </p>
+                        </div>
+                        <Badge variant="outline" className="text-xs shrink-0">
+                          {elements.length} element{elements.length !== 1 ? "s" : ""}
+                        </Badge>
+                      </div>
+                    </Link>
+                    {elements.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {elements.map((el: any) => (
+                          <Badge
+                            key={el.id}
+                            variant={el.isSpecialCategory ? "destructive" : "secondary"}
+                            className="text-xs font-normal"
+                          >
+                            {el.name}
+                            <span className="ml-1 opacity-60">{el.sensitivity?.charAt(0)}</span>
+                          </Badge>
+                        ))}
+                      </div>
                     )}
                   </div>
-                </Link>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-4">No data assets linked to this activity</p>

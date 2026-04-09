@@ -81,6 +81,15 @@ const categoryLabels: Record<DataCategory, string> = {
   OTHER: "Other",
 };
 
+const legalBasisLabels: Record<string, string> = {
+  CONSENT: "Consent",
+  CONTRACT: "Contract",
+  LEGAL_OBLIGATION: "Legal Obligation",
+  VITAL_INTERESTS: "Vital Interests",
+  PUBLIC_TASK: "Public Task",
+  LEGITIMATE_INTERESTS: "Legitimate Interests",
+};
+
 const sensitivityLabels: Record<DataSensitivity, string> = {
   PUBLIC: "Public",
   INTERNAL: "Internal",
@@ -412,26 +421,44 @@ export default function DataAssetDetailPage() {
             </CardHeader>
             <CardContent>
               {asset.processingActivityAssets && asset.processingActivityAssets.length > 0 ? (
-                <div className="space-y-2">
-                  {asset.processingActivityAssets.map((link: any) => (
-                    <Link
-                      key={link.id}
-                      href={`/privacy/data-inventory/activities/${link.processingActivity.id}`}
-                      className="block"
-                    >
-                      <div className="flex items-center justify-between p-3 rounded hover:bg-muted/50 transition-colors">
-                        <div>
-                          <p className="font-medium">{link.processingActivity.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            Legal Basis: {link.processingActivity.legalBasis}
-                          </p>
+                <div className="space-y-3">
+                  {asset.processingActivityAssets.map((link: any) => {
+                    // Show which data categories from this asset are relevant
+                    const activityCategories = (link.processingActivity.categories as string[]) ?? [];
+                    const elementCategories = [...new Set((asset.dataElements ?? []).map((el: any) => el.category as string))];
+                    const overlapping = elementCategories.filter((c: string) => activityCategories.includes(c));
+                    const categoriesToShow = overlapping.length > 0 ? overlapping : elementCategories;
+
+                    return (
+                      <Link
+                        key={link.id}
+                        href={`/privacy/data-inventory/activities/${link.processingActivity.id}`}
+                        className="block"
+                      >
+                        <div className="border rounded-lg p-3 hover:border-primary/50 transition-colors space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">{link.processingActivity.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {legalBasisLabels[link.processingActivity.legalBasis] || link.processingActivity.legalBasis}
+                                {link.processingActivity.purpose && ` — ${link.processingActivity.purpose}`}
+                              </p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                          </div>
+                          {categoriesToShow.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {categoriesToShow.map((cat: string) => (
+                                <Badge key={cat} variant="secondary" className="text-xs font-normal">
+                                  {categoryLabels[cat as DataCategory] || cat.replace("_", " ")}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <Button variant="ghost" size="sm">
-                          View <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
