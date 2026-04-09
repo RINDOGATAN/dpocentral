@@ -759,6 +759,71 @@ export const quickstartRouter = createTRPCRouter({
           }
         }
 
+        // ─── AUTO-GENERATE DATA FLOWS (vendor → internal) ───
+        // Collect all vendor asset IDs with their data categories
+        const vendorAssetFlows: { assetId: string; vendorName: string; categories: DataCategory[] }[] = [];
+        for (const catalogVendor of catalogVendors) {
+          if (existingVendorNames.has(catalogVendor.name)) continue;
+          const mapping =
+            findMappingForCategory(catalogVendor.category, catalogVendor.subcategory) ??
+            GENERIC_VENDOR_MAPPING;
+          const assetName = `${catalogVendor.name} (${mapping.label})`;
+          const assetId = assetNameToId.get(assetName);
+          if (assetId) {
+            vendorAssetFlows.push({
+              assetId,
+              vendorName: catalogVendor.name,
+              categories: [...new Set(mapping.elements.map((e) => e.category))] as DataCategory[],
+            });
+          }
+        }
+
+        if (vendorAssetFlows.length > 0) {
+          // Find or create the internal systems asset
+          const internalAssetName = `${ctx.organization.name} Internal Systems`;
+          let internalAsset = await tx.dataAsset.findFirst({
+            where: { organizationId: orgId, name: internalAssetName },
+          });
+
+          if (!internalAsset) {
+            internalAsset = await tx.dataAsset.create({
+              data: {
+                organizationId: orgId,
+                name: internalAssetName,
+                description: "Primary internal systems that process and share data with third-party services",
+                type: "APPLICATION",
+                hostingType: "On-premise / Cloud",
+                isProduction: true,
+              },
+            });
+            counts.assets++;
+            assetNameToId.set(internalAssetName, internalAsset.id);
+            auditEntries.push({
+              entityType: "DataAsset",
+              entityId: internalAsset.id,
+              action: "CREATE",
+              changes: { source: "quickstart", type: "internal-systems" },
+            });
+          }
+
+          // Create a data flow from internal systems to each vendor asset
+          for (const vaf of vendorAssetFlows) {
+            await tx.dataFlow.create({
+              data: {
+                organizationId: orgId,
+                name: `Data flow to ${vaf.vendorName}`,
+                description: `Automated data sharing with ${vaf.vendorName}`,
+                sourceAssetId: internalAsset.id,
+                destinationAssetId: vaf.assetId,
+                dataCategories: vaf.categories,
+                isAutomated: true,
+                frequency: "Continuous",
+              },
+            });
+            counts.flows++;
+          }
+        }
+
         // ─── AUTO-ASSESSMENT FOR HIGH-RISK VENDORS ───
         for (const hrVendor of highRiskVendors) {
           const result = await createAssessmentFromActivity({
