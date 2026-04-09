@@ -44,6 +44,9 @@ export default function ActivityDetailPage() {
   const { organization } = useOrganization();
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
+  // Map of assetId -> elementIds (undefined = all elements)
+  const [selectedElements, setSelectedElements] = useState<Record<string, string[] | undefined>>({});
+  const [expandedAssets, setExpandedAssets] = useState<Set<string>>(new Set());
 
   const utils = trpc.useUtils();
 
@@ -69,18 +72,70 @@ export default function ActivityDetailPage() {
   });
 
   function openLinkDialog() {
-    // Pre-select currently linked assets
-    const currentIds = activity?.assets?.map((a) => a.dataAsset.id) ?? [];
+    // Pre-select currently linked assets and their element selections
+    const currentIds = activity?.assets?.map((a: any) => a.dataAsset.id) ?? [];
     setSelectedAssetIds(currentIds);
+
+    const elMap: Record<string, string[] | undefined> = {};
+    for (const link of activity?.assets ?? []) {
+      const le = (link as any).linkedElements ?? [];
+      // Empty linkedElements = all elements (undefined)
+      elMap[(link as any).dataAsset.id] = le.length > 0 ? le.map((l: any) => l.dataElement.id) : undefined;
+    }
+    setSelectedElements(elMap);
+    setExpandedAssets(new Set());
     setLinkDialogOpen(true);
   }
 
   function toggleAsset(assetId: string) {
-    setSelectedAssetIds((prev) =>
-      prev.includes(assetId)
-        ? prev.filter((id) => id !== assetId)
-        : [...prev, assetId]
-    );
+    setSelectedAssetIds((prev) => {
+      if (prev.includes(assetId)) {
+        // Unchecking — remove element selections too
+        setSelectedElements((sel) => {
+          const next = { ...sel };
+          delete next[assetId];
+          return next;
+        });
+        setExpandedAssets((exp) => { const n = new Set(exp); n.delete(assetId); return n; });
+        return prev.filter((id) => id !== assetId);
+      }
+      // Checking — default to all elements (undefined)
+      setSelectedElements((sel) => ({ ...sel, [assetId]: undefined }));
+      return [...prev, assetId];
+    });
+  }
+
+  function toggleElement(assetId: string, elementId: string, totalElements: number) {
+    setSelectedElements((prev) => {
+      const current = prev[assetId];
+      if (current === undefined) {
+        // Was "all" — switch to all-except-this-one
+        const asset = allAssets.find((a) => a.id === assetId);
+        const allElementIds = ((asset as any)?.dataElements ?? []).map((e: any) => e.id);
+        if (allElementIds.length === 0) return prev;
+        return { ...prev, [assetId]: allElementIds.filter((id: string) => id !== elementId) };
+      }
+      if (current.includes(elementId)) {
+        return { ...prev, [assetId]: current.filter((id) => id !== elementId) };
+      }
+      const added = [...current, elementId];
+      // If all elements selected, switch back to undefined (= all)
+      if (added.length >= totalElements) {
+        return { ...prev, [assetId]: undefined };
+      }
+      return { ...prev, [assetId]: added };
+    });
+  }
+
+  function toggleAllElements(assetId: string) {
+    setSelectedElements((prev) => {
+      if (prev[assetId] === undefined) {
+        // All selected — deselect all
+        return { ...prev, [assetId]: [] };
+      }
+      // Not all — select all
+      return { ...prev, [assetId]: undefined };
+    });
   }
 
   if (isLoading) {
@@ -268,7 +323,12 @@ export default function ActivityDetailPage() {
           {activity.assets && activity.assets.length > 0 ? (
             <div className="space-y-3">
               {activity.assets.map((link: any) => {
-                const elements = link.dataAsset.dataElements ?? [];
+                const allElements = link.dataAsset.dataElements ?? [];
+                const linkedEls = link.linkedElements ?? [];
+                const effectiveElements = linkedEls.length > 0
+                  ? linkedEls.map((le: any) => le.dataElement)
+                  : allElements;
+                const isFiltered = linkedEls.length > 0 && linkedEls.length < allElements.length;
                 return (
                   <div key={link.dataAsset.id} className="border rounded-lg p-3 space-y-2">
                     <Link href={`/privacy/data-inventory/${link.dataAsset.id}`}>
@@ -282,13 +342,14 @@ export default function ActivityDetailPage() {
                           </p>
                         </div>
                         <Badge variant="outline" className="text-xs shrink-0">
-                          {elements.length} element{elements.length !== 1 ? "s" : ""}
+                          {effectiveElements.length}
+                          {isFiltered ? `/${allElements.length}` : ""} element{effectiveElements.length !== 1 ? "s" : ""}
                         </Badge>
                       </div>
                     </Link>
-                    {elements.length > 0 && (
+                    {effectiveElements.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        {elements.map((el: any) => (
+                        {effectiveElements.map((el: any) => (
                           <Badge
                             key={el.id}
                             variant={el.isSpecialCategory ? "destructive" : "secondary"}
@@ -298,6 +359,11 @@ export default function ActivityDetailPage() {
                             <span className="ml-1 opacity-60">{el.sensitivity?.charAt(0)}</span>
                           </Badge>
                         ))}
+                        {isFiltered && (
+                          <span className="text-xs text-muted-foreground self-center">
+                            +{allElements.length - effectiveElements.length} not linked
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
@@ -383,28 +449,87 @@ export default function ActivityDetailPage() {
           <DialogHeader>
             <DialogTitle>Link Data Assets</DialogTitle>
             <DialogDescription>
-              Select which data assets are processed by this activity.
+              Select which data assets and elements are processed by this activity.
             </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
             {allAssets.length > 0 ? (
-              allAssets.map((asset) => (
-                <label
-                  key={asset.id}
-                  className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
-                >
-                  <Checkbox
-                    checked={selectedAssetIds.includes(asset.id)}
-                    onCheckedChange={() => toggleAsset(asset.id)}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{asset.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {asset.type?.replace("_", " ")} — {asset._count?.dataElements ?? 0} elements
-                    </p>
+              allAssets.map((asset) => {
+                const isSelected = selectedAssetIds.includes(asset.id);
+                const isExpanded = expandedAssets.has(asset.id);
+                const elements = (asset as any).dataElements ?? [];
+                const elSelection = selectedElements[asset.id];
+                const allSelected = elSelection === undefined;
+                return (
+                  <div key={asset.id}>
+                    <div className="flex items-center gap-3 p-2 rounded hover:bg-muted/50">
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => toggleAsset(asset.id)}
+                      />
+                      <label
+                        className="flex-1 min-w-0 cursor-pointer"
+                        onClick={() => toggleAsset(asset.id)}
+                      >
+                        <p className="text-sm font-medium truncate">{asset.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {asset.type?.replace("_", " ")} — {asset._count?.dataElements ?? 0} elements
+                        </p>
+                      </label>
+                      {isSelected && elements.length > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs"
+                          onClick={() =>
+                            setExpandedAssets((prev) => {
+                              const next = new Set(prev);
+                              next.has(asset.id) ? next.delete(asset.id) : next.add(asset.id);
+                              return next;
+                            })
+                          }
+                        >
+                          {isExpanded ? "Hide" : "Elements"}
+                        </Button>
+                      )}
+                    </div>
+                    {isSelected && isExpanded && elements.length > 0 && (
+                      <div className="ml-9 pl-2 border-l space-y-0.5 pb-1">
+                        <label className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer">
+                          <Checkbox
+                            checked={allSelected}
+                            onCheckedChange={() => toggleAllElements(asset.id)}
+                          />
+                          <span className="text-xs font-medium text-muted-foreground">
+                            All elements
+                          </span>
+                        </label>
+                        {elements.map((el: any) => {
+                          const isElSelected = allSelected || (elSelection?.includes(el.id) ?? false);
+                          return (
+                            <label
+                              key={el.id}
+                              className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer"
+                            >
+                              <Checkbox
+                                checked={isElSelected}
+                                onCheckedChange={() => toggleElement(asset.id, el.id, elements.length)}
+                              />
+                              <span className="text-xs truncate">{el.name}</span>
+                              <Badge
+                                variant={el.isSpecialCategory ? "destructive" : "secondary"}
+                                className="text-[10px] px-1 py-0 shrink-0"
+                              >
+                                {el.category?.replace("_", " ")}
+                              </Badge>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                </label>
-              ))
+                );
+              })
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
                 No data assets in this organization yet
@@ -424,7 +549,10 @@ export default function ActivityDetailPage() {
                   linkAssets.mutate({
                     organizationId: organization?.id ?? "",
                     activityId: id,
-                    assetIds: selectedAssetIds,
+                    assets: selectedAssetIds.map((assetId) => ({
+                      assetId,
+                      elementIds: selectedElements[assetId],
+                    })),
                   })
                 }
                 disabled={linkAssets.isPending}

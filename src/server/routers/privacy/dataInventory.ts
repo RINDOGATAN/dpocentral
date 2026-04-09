@@ -33,6 +33,9 @@ export const dataInventoryRouter = createTRPCRouter({
           }),
         },
         include: {
+          dataElements: {
+            orderBy: { name: "asc" as const },
+          },
           _count: {
             select: {
               dataElements: true,
@@ -70,6 +73,9 @@ export const dataInventoryRouter = createTRPCRouter({
           processingActivityAssets: {
             include: {
               processingActivity: true,
+              linkedElements: {
+                include: { dataElement: true },
+              },
             },
           },
           sourceFlows: {
@@ -393,6 +399,9 @@ export const dataInventoryRouter = createTRPCRouter({
         include: {
           assets: {
             include: {
+              linkedElements: {
+                include: { dataElement: true },
+              },
               dataAsset: {
                 include: {
                   dataElements: true,
@@ -528,13 +537,18 @@ export const dataInventoryRouter = createTRPCRouter({
       });
     }),
 
-  // Link assets to activity
+  // Link assets to activity (with optional element-level granularity)
   linkAssets: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
         activityId: z.string(),
-        assetIds: z.array(z.string()),
+        assets: z.array(
+          z.object({
+            assetId: z.string(),
+            elementIds: z.array(z.string()).optional(),
+          })
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -550,28 +564,45 @@ export const dataInventoryRouter = createTRPCRouter({
         });
       }
 
-      // Remove existing links and create new ones
+      // Remove existing links (cascade deletes element links)
       await ctx.prisma.processingActivityAsset.deleteMany({
         where: { processingActivityId: input.activityId },
       });
 
-      await ctx.prisma.processingActivityAsset.createMany({
-        data: input.assetIds.map((assetId) => ({
-          processingActivityId: input.activityId,
-          dataAssetId: assetId,
-        })),
-      });
+      // Create asset links with optional element-level specificity
+      for (const { assetId, elementIds } of input.assets) {
+        const paAsset = await ctx.prisma.processingActivityAsset.create({
+          data: {
+            processingActivityId: input.activityId,
+            dataAssetId: assetId,
+          },
+        });
+
+        if (elementIds && elementIds.length > 0) {
+          await ctx.prisma.processingActivityAssetElement.createMany({
+            data: elementIds.map((dataElementId) => ({
+              processingActivityAssetId: paAsset.id,
+              dataElementId,
+            })),
+          });
+        }
+      }
 
       return { success: true };
     }),
 
-  // Link processing activities to a data asset
+  // Link processing activities to a data asset (with optional element-level granularity)
   linkActivitiesToAsset: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
         assetId: z.string(),
-        activityIds: z.array(z.string()),
+        activities: z.array(
+          z.object({
+            activityId: z.string(),
+            elementIds: z.array(z.string()).optional(),
+          })
+        ),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -586,18 +617,28 @@ export const dataInventoryRouter = createTRPCRouter({
         });
       }
 
-      // Remove existing links for this asset and create new ones
+      // Remove existing links for this asset (cascade deletes element links)
       await ctx.prisma.processingActivityAsset.deleteMany({
         where: { dataAssetId: input.assetId },
       });
 
-      if (input.activityIds.length > 0) {
-        await ctx.prisma.processingActivityAsset.createMany({
-          data: input.activityIds.map((activityId) => ({
+      // Create activity links with optional element-level specificity
+      for (const { activityId, elementIds } of input.activities) {
+        const paAsset = await ctx.prisma.processingActivityAsset.create({
+          data: {
             processingActivityId: activityId,
             dataAssetId: input.assetId,
-          })),
+          },
         });
+
+        if (elementIds && elementIds.length > 0) {
+          await ctx.prisma.processingActivityAssetElement.createMany({
+            data: elementIds.map((dataElementId) => ({
+              processingActivityAssetId: paAsset.id,
+              dataElementId,
+            })),
+          });
+        }
       }
 
       return { success: true };

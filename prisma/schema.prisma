@@ -279,8 +279,9 @@ model DataElement {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  dataAsset    DataAsset    @relation(fields: [dataAssetId], references: [id], onDelete: Cascade)
+  organization      Organization                     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  dataAsset         DataAsset                        @relation(fields: [dataAssetId], references: [id], onDelete: Cascade)
+  activityAssetLinks ProcessingActivityAssetElement[]
 
   @@index([organizationId])
   @@index([dataAssetId])
@@ -333,11 +334,25 @@ model ProcessingActivityAsset {
   dataAssetId          String
   purpose              String? // Specific purpose for this asset
 
-  processingActivity ProcessingActivity @relation(fields: [processingActivityId], references: [id], onDelete: Cascade)
-  dataAsset          DataAsset          @relation(fields: [dataAssetId], references: [id], onDelete: Cascade)
+  processingActivity ProcessingActivity              @relation(fields: [processingActivityId], references: [id], onDelete: Cascade)
+  dataAsset          DataAsset                       @relation(fields: [dataAssetId], references: [id], onDelete: Cascade)
+  linkedElements     ProcessingActivityAssetElement[]
 
   @@unique([processingActivityId, dataAssetId])
   @@map("processing_activity_assets")
+}
+
+model ProcessingActivityAssetElement {
+  id                        String @id @default(cuid())
+  processingActivityAssetId String
+  dataElementId             String
+
+  processingActivityAsset ProcessingActivityAsset @relation(fields: [processingActivityAssetId], references: [id], onDelete: Cascade)
+  dataElement             DataElement             @relation(fields: [dataElementId], references: [id], onDelete: Cascade)
+
+  @@unique([processingActivityAssetId, dataElementId])
+  @@index([dataElementId])
+  @@map("processing_activity_asset_elements")
 }
 
 model DataFlow {

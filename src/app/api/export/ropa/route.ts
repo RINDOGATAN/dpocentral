@@ -47,6 +47,7 @@ export async function GET(request: Request) {
     include: {
       assets: {
         include: {
+          linkedElements: { include: { dataElement: true } },
           dataAsset: { include: { dataElements: true } },
         },
       },
@@ -67,16 +68,21 @@ export async function GET(request: Request) {
     retentionPeriod: activity.retentionPeriod,
     automatedDecisionMaking: activity.automatedDecisionMaking,
     automatedDecisionDetail: activity.automatedDecisionDetail,
-    systems: activity.assets.map((a) => ({
-      name: a.dataAsset.name,
-      type: a.dataAsset.type,
-      location: a.dataAsset.location,
-      elements: a.dataAsset.dataElements.map((e) => ({
-        name: e.name,
-        category: e.category,
-        sensitivity: e.sensitivity,
-      })),
-    })),
+    systems: activity.assets.map((a) => {
+      const effectiveElements = a.linkedElements.length > 0
+        ? a.linkedElements.map((le) => le.dataElement)
+        : a.dataAsset.dataElements;
+      return {
+        name: a.dataAsset.name,
+        type: a.dataAsset.type,
+        location: a.dataAsset.location,
+        elements: effectiveElements.map((e) => ({
+          name: e.name,
+          category: e.category,
+          sensitivity: e.sensitivity,
+        })),
+      };
+    }),
     transfers: activity.transfers.map((t) => ({
       destination: t.destinationCountry,
       organization: t.destinationOrg,
