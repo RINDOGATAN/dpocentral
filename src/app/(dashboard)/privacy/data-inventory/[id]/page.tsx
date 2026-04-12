@@ -412,15 +412,18 @@ export default function DataAssetDetailPage() {
                   {asset.dataElements.map((element) => (
                     <div
                       key={element.id}
-                      className="flex items-center justify-between p-3 bg-muted/50"
+                      className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted transition-colors"
                     >
-                      <div className="flex items-center gap-3">
+                      <Link
+                        href={`/privacy/data-inventory/elements/${element.id}`}
+                        className="flex items-center gap-3 flex-1 min-w-0"
+                      >
                         <Database className="w-4 h-4 text-muted-foreground" />
                         <div>
-                          <p className="font-medium font-mono text-sm">{element.name}</p>
+                          <p className="font-medium font-mono text-sm hover:underline">{element.name}</p>
                           <p className="text-xs text-muted-foreground">{element.category}</p>
                         </div>
-                      </div>
+                      </Link>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className={sensitivityColors[element.sensitivity] || ""}>
                           {element.sensitivity}

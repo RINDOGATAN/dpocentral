@@ -350,14 +350,15 @@ export default function ActivityDetailPage() {
                     {effectiveElements.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {effectiveElements.map((el: any) => (
-                          <Badge
-                            key={el.id}
-                            variant={el.isSpecialCategory ? "destructive" : "secondary"}
-                            className="text-xs font-normal"
-                          >
-                            {el.name}
-                            <span className="ml-1 opacity-60">{el.sensitivity?.charAt(0)}</span>
-                          </Badge>
+                          <Link key={el.id} href={`/privacy/data-inventory/elements/${el.id}`}>
+                            <Badge
+                              variant={el.isSpecialCategory ? "destructive" : "secondary"}
+                              className="text-xs font-normal cursor-pointer hover:opacity-80"
+                            >
+                              {el.name}
+                              <span className="ml-1 opacity-60">{el.sensitivity?.charAt(0)}</span>
+                            </Badge>
+                          </Link>
                         ))}
                         {isFiltered && (
                           <span className="text-xs text-muted-foreground self-center">

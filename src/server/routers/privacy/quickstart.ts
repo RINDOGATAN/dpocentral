@@ -759,9 +759,18 @@ export const quickstartRouter = createTRPCRouter({
           }
         }
 
-        // ─── AUTO-GENERATE DATA FLOWS (vendor → internal) ───
-        // Collect all vendor asset IDs with their data categories
-        const vendorAssetFlows: { assetId: string; vendorName: string; categories: DataCategory[] }[] = [];
+        // ─── AUTO-GENERATE DATA FLOWS (internal ↔ vendor) ───
+        // Collect all vendor asset IDs with their data categories and return-flow config
+        const vendorAssetFlows: {
+          assetId: string;
+          vendorName: string;
+          categories: DataCategory[];
+          returnFlow?: {
+            description: string;
+            categories?: DataCategory[];
+            frequency?: string;
+          };
+        }[] = [];
         for (const catalogVendor of catalogVendors) {
           if (existingVendorNames.has(catalogVendor.name)) continue;
           const mapping =
@@ -774,6 +783,7 @@ export const quickstartRouter = createTRPCRouter({
               assetId,
               vendorName: catalogVendor.name,
               categories: [...new Set(mapping.elements.map((e) => e.category))] as DataCategory[],
+              returnFlow: mapping.returnFlow,
             });
           }
         }
@@ -806,7 +816,7 @@ export const quickstartRouter = createTRPCRouter({
             });
           }
 
-          // Create a data flow from internal systems to each vendor asset
+          // Create outbound (internal → vendor) and, where applicable, return (vendor → internal) flows
           for (const vaf of vendorAssetFlows) {
             await tx.dataFlow.create({
               data: {
@@ -821,6 +831,22 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.flows++;
+
+            if (vaf.returnFlow) {
+              await tx.dataFlow.create({
+                data: {
+                  organizationId: orgId,
+                  name: `Data flow from ${vaf.vendorName}`,
+                  description: vaf.returnFlow.description,
+                  sourceAssetId: vaf.assetId,
+                  destinationAssetId: internalAsset.id,
+                  dataCategories: vaf.returnFlow.categories ?? vaf.categories,
+                  isAutomated: true,
+                  frequency: vaf.returnFlow.frequency ?? "On request",
+                },
+              });
+              counts.flows++;
+            }
           }
         }
 
@@ -953,7 +979,7 @@ export const quickstartRouter = createTRPCRouter({
             }
           }
 
-          // Create data flows
+          // Create data flows (and reverse flows where the template marks them bidirectional)
           for (const templateFlow of template.flows) {
             const sourceId = assetNameToId.get(templateFlow.sourceAssetName);
             const destId = assetNameToId.get(templateFlow.destAssetName);
@@ -971,6 +997,23 @@ export const quickstartRouter = createTRPCRouter({
                 },
               });
               counts.flows++;
+
+              if (templateFlow.returnFlow) {
+                await tx.dataFlow.create({
+                  data: {
+                    organizationId: orgId,
+                    name: `${templateFlow.destAssetName} to ${templateFlow.sourceAssetName}`,
+                    description: templateFlow.returnFlow.description,
+                    sourceAssetId: destId,
+                    destinationAssetId: sourceId,
+                    dataCategories:
+                      templateFlow.returnFlow.dataCategories ?? templateFlow.dataCategories,
+                    frequency: templateFlow.returnFlow.frequency ?? "On request",
+                    isAutomated: templateFlow.isAutomated,
+                  },
+                });
+                counts.flows++;
+              }
             }
           }
         }

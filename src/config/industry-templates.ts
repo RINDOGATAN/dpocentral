@@ -51,6 +51,18 @@ export interface IndustryFlow {
   dataCategories: DataCategory[];
   frequency: string;
   isAutomated: boolean;
+  /**
+   * Inbound (destination → source) counterpart. Set when the relationship is
+   * naturally bidirectional (confirmations, lookups, enriched data returning
+   * to the source). Generates a second DataFlow with swapped endpoints.
+   */
+  returnFlow?: {
+    description: string;
+    /** Defaults to the outbound `dataCategories` if omitted */
+    dataCategories?: DataCategory[];
+    /** Defaults to "On request" if omitted */
+    frequency?: string;
+  };
 }
 
 export interface IndustryTemplate {
@@ -205,6 +217,10 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "FINANCIAL"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Order references and lifetime value updates posted back to customer profile",
+          frequency: "Real-time",
+        },
       },
       {
         name: "Orders to Payment",
@@ -214,6 +230,10 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["FINANCIAL", "IDENTIFIERS"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Payment confirmations, settlement reports, refunds, and chargebacks posted back to orders",
+          frequency: "Webhook / Real-time",
+        },
       },
       {
         name: "Customer to Marketing",
@@ -223,6 +243,10 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "BEHAVIORAL"],
         frequency: "Daily",
         isAutomated: true,
+        returnFlow: {
+          description: "Campaign engagement: opens, clicks, unsubscribes, conversions per customer",
+          frequency: "Webhook / Daily",
+        },
       },
     ],
     suggestedVendorCategories: ["Payment Processing", "Email Marketing", "Digital Analytics", "Cloud Hosting"],
@@ -382,6 +406,10 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "FINANCIAL"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Subscription state, invoice status, dunning events, and renewal updates pushed back to user records",
+          frequency: "Webhook / Real-time",
+        },
       },
       {
         name: "User to Analytics",
@@ -508,6 +536,11 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "HEALTH"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Patient-submitted data: appointment requests, secure messages, intake forms, self-reported symptoms",
+          dataCategories: ["IDENTIFIERS", "HEALTH"],
+          frequency: "Real-time",
+        },
       },
       {
         name: "EHR to Billing",
@@ -517,6 +550,11 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "HEALTH", "FINANCIAL"],
         frequency: "Daily",
         isAutomated: true,
+        returnFlow: {
+          description: "Claim status, denials, payment posting, and patient balance updates returned to EHR",
+          dataCategories: ["IDENTIFIERS", "FINANCIAL"],
+          frequency: "Daily",
+        },
       },
     ],
     suggestedVendorCategories: ["Cloud Hosting", "Customer Communications Platform"],
@@ -774,6 +812,10 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS", "BEHAVIORAL"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Newsletter engagement: opens, clicks, bounces, and unsubscribe events per recipient",
+          frequency: "Webhook / Daily",
+        },
       },
     ],
     suggestedVendorCategories: ["Email Marketing", "Digital Analytics", "Retargeting", "Content Management Platform"],
@@ -888,6 +930,11 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         dataCategories: ["IDENTIFIERS"],
         frequency: "Real-time",
         isAutomated: true,
+        returnFlow: {
+          description: "Project status, time spent, engagement notes, and billable hours posted back to client record",
+          dataCategories: ["IDENTIFIERS", "EMPLOYMENT"],
+          frequency: "Daily",
+        },
       },
       {
         name: "Projects to Documents",

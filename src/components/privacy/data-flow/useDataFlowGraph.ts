@@ -43,6 +43,8 @@ export interface AssetNodeData extends Record<string, unknown> {
 export interface FlowEdgeData extends Record<string, unknown> {
   flow: FlowData;
   label: string;
+  isBidirectional: boolean;
+  isReturn: boolean;
 }
 
 export type AssetNode = Node<AssetNodeData>;
@@ -168,18 +170,42 @@ function buildNodesAndEdges(
     });
   }
 
-  // Create edges
-  const edges: FlowEdge[] = relevantFlows.map((flow) => ({
-    id: flow.id,
-    source: flow.sourceAssetId,
-    target: flow.destinationAssetId,
-    type: "flowEdge",
-    animated: flow.isAutomated,
-    data: {
-      flow,
-      label: flow.name,
-    },
-  }));
+  // Detect bidirectional pairs (A→B and B→A both exist)
+  const pairKeys = new Set<string>();
+  const bidirectionalKeys = new Set<string>();
+  for (const flow of relevantFlows) {
+    const fwd = `${flow.sourceAssetId}:${flow.destinationAssetId}`;
+    const rev = `${flow.destinationAssetId}:${flow.sourceAssetId}`;
+    if (pairKeys.has(rev)) {
+      bidirectionalKeys.add(fwd);
+      bidirectionalKeys.add(rev);
+    }
+    pairKeys.add(fwd);
+  }
+
+  // Create edges, marking return edges for bidirectional pairs
+  const seenPairs = new Set<string>();
+  const edges: FlowEdge[] = relevantFlows.map((flow) => {
+    const key = `${flow.sourceAssetId}:${flow.destinationAssetId}`;
+    const revKey = `${flow.destinationAssetId}:${flow.sourceAssetId}`;
+    const isBidirectional = bidirectionalKeys.has(key);
+    const isReturn = isBidirectional && seenPairs.has(revKey);
+    seenPairs.add(key);
+
+    return {
+      id: flow.id,
+      source: flow.sourceAssetId,
+      target: flow.destinationAssetId,
+      type: "flowEdge",
+      animated: flow.isAutomated,
+      data: {
+        flow,
+        label: flow.name,
+        isBidirectional,
+        isReturn,
+      },
+    };
+  });
 
   return { nodes, edges };
 }

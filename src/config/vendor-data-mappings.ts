@@ -46,6 +46,19 @@ export interface VendorDataMapping {
   };
   /** Whether this vendor category warrants a DPIA suggestion */
   isHighRisk: boolean;
+  /**
+   * Inbound data movement (vendor → internal). Set when the vendor returns
+   * personal data to internal systems (e.g., CRM exports, analytics reports,
+   * AI completions, payment confirmations). Omit for fire-and-forget vendors.
+   */
+  returnFlow?: {
+    /** Human-readable description of what data is returned */
+    description: string;
+    /** Categories returned. Defaults to outbound `activity.categories` if omitted. */
+    categories?: DataCategory[];
+    /** Frequency (e.g., "On request", "Daily", "Webhook"). Defaults to "On request". */
+    frequency?: string;
+  };
 }
 
 // ============================================================
@@ -110,6 +123,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 790,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Aggregated reports, user segments, and exported behavioral data",
+      frequency: "On request",
+    },
   },
 
   marketing: {
@@ -150,6 +167,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: undefined,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Campaign metrics, opens, clicks, bounces, unsubscribes per recipient",
+      frequency: "Webhook / Daily",
+    },
   },
 
   crm: {
@@ -188,6 +209,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 1095,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Contact lookups, enriched profiles, deal/pipeline data, exports",
+      frequency: "On request",
+    },
   },
 
   cdp: {
@@ -223,6 +248,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 365,
     },
     isHighRisk: true,
+    returnFlow: {
+      description: "Unified profiles, audience segments, identity resolution back to source systems",
+      frequency: "Continuous",
+    },
   },
 
   cloud: {
@@ -333,6 +362,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 1095,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Inbound customer messages, ticket replies, transcripts, satisfaction scores",
+      frequency: "Continuous",
+    },
   },
 
   ai: {
@@ -368,6 +401,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 365,
     },
     isHighRisk: true,
+    returnFlow: {
+      description: "Model completions and AI-generated outputs that may contain personal data",
+      frequency: "Continuous",
+    },
   },
 
   surveys: {
@@ -402,6 +439,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 730,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Survey responses, NPS scores, and free-text feedback returned for analysis",
+      frequency: "Continuous",
+    },
   },
 
   events: {
@@ -432,6 +473,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 365,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Attendee registrations, check-ins, and engagement data returned to source systems",
+      frequency: "Daily",
+    },
   },
 
   tag_management: {
@@ -494,6 +539,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 365,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Inbound messages, replies, and delivery/read receipts",
+      frequency: "Continuous",
+    },
   },
 
   // ──────────────────────────────────────────────────
@@ -530,6 +579,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 2555,
     },
     isHighRisk: false,
+    returnFlow: {
+      description: "Transaction confirmations, settlement reports, refund/chargeback notifications, fraud alerts",
+      frequency: "Webhook / Continuous",
+    },
   },
 
   hr: {
@@ -562,6 +615,10 @@ export const VENDOR_DATA_MAPPINGS: Record<string, VendorDataMapping> = {
       retentionDays: 2555,
     },
     isHighRisk: true,
+    returnFlow: {
+      description: "Employee records, payroll exports, compliance reports synced back to source systems",
+      frequency: "On request",
+    },
   },
 
   developer: {
