@@ -231,6 +231,65 @@ export const dataInventoryRouter = createTRPCRouter({
   // DATA ELEMENTS
   // ============================================================
 
+  // Get a single data element with parent asset and linked activities
+  getElement: organizationProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const element = await ctx.prisma.dataElement.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        include: {
+          dataAsset: {
+            select: { id: true, name: true, type: true, vendor: true },
+          },
+          activityAssetLinks: {
+            include: {
+              processingActivityAsset: {
+                include: {
+                  processingActivity: {
+                    select: {
+                      id: true,
+                      name: true,
+                      purpose: true,
+                      legalBasis: true,
+                      isActive: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!element) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Data element not found",
+        });
+      }
+
+      const linkedActivities = element.activityAssetLinks.map((link) => ({
+        linkId: link.id,
+        activity: link.processingActivityAsset.processingActivity,
+      }));
+
+      return {
+        id: element.id,
+        name: element.name,
+        description: element.description,
+        category: element.category,
+        sensitivity: element.sensitivity,
+        isPersonalData: element.isPersonalData,
+        isSpecialCategory: element.isSpecialCategory,
+        retentionDays: element.retentionDays,
+        legalBasis: element.legalBasis,
+        createdAt: element.createdAt,
+        updatedAt: element.updatedAt,
+        dataAsset: element.dataAsset,
+        linkedActivities,
+      };
+    }),
+
   // Add data element to asset
   addElement: writerProcedure
     .input(

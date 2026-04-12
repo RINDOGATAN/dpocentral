@@ -24,17 +24,28 @@ function FlowEdgeComponent({
   selected,
   style = {},
 }: FlowEdgeProps) {
+  const isReturn = data?.isReturn ?? false;
+  const isBidirectional = data?.isBidirectional ?? false;
+
+  // Offset return edges vertically so bidirectional pairs don't overlap
+  const offset = isReturn ? 30 : isBidirectional ? -30 : 0;
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
-    sourceY,
+    sourceY: sourceY + offset,
     sourcePosition,
     targetX,
-    targetY,
+    targetY: targetY + offset,
     targetPosition,
   });
 
   const flow = data?.flow;
   const categoryCount = flow?.dataCategories?.length || 0;
+  const label = isBidirectional
+    ? flow?.name || "Flow"
+    : categoryCount > 0
+      ? `${categoryCount} categories`
+      : flow?.name || "Flow";
 
   return (
     <>
@@ -45,10 +56,10 @@ function FlowEdgeComponent({
           ...style,
           stroke: selected ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.5)",
           strokeWidth: selected ? 3 : 2,
+          strokeDasharray: isReturn ? "6 3" : undefined,
         }}
         markerEnd="url(#arrowhead)"
       />
-      {/* Edge label showing data category count */}
       <EdgeLabelRenderer>
         <div
           style={{
@@ -63,7 +74,7 @@ function FlowEdgeComponent({
             ${selected ? "border-primary text-primary" : "text-muted-foreground"}
           `}
         >
-          {categoryCount > 0 ? `${categoryCount} categories` : flow?.name || "Flow"}
+          {label}
         </div>
       </EdgeLabelRenderer>
     </>
