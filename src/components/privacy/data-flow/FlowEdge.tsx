@@ -27,16 +27,17 @@ function FlowEdgeComponent({
   const isReturn = data?.isReturn ?? false;
   const isBidirectional = data?.isBidirectional ?? false;
 
-  // Offset return edges vertically so bidirectional pairs don't overlap
-  const offset = isReturn ? 30 : isBidirectional ? -30 : 0;
+  // Separate bidirectional pairs via curvature: outbound curves up, return curves down
+  const curvature = isReturn ? 0.5 : isBidirectional ? -0.5 : 0.25;
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
-    sourceY: sourceY + offset,
+    sourceY,
     sourcePosition,
     targetX,
-    targetY: targetY + offset,
+    targetY,
     targetPosition,
+    curvature,
   });
 
   const flow = data?.flow;

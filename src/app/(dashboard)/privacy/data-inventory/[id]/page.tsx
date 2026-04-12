@@ -412,29 +412,29 @@ export default function DataAssetDetailPage() {
                   {asset.dataElements.map((element) => (
                     <div
                       key={element.id}
-                      className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted transition-colors"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-muted/50 hover:bg-muted transition-colors"
                     >
                       <Link
                         href={`/privacy/data-inventory/elements/${element.id}`}
-                        className="flex items-center gap-3 flex-1 min-w-0"
+                        className="flex items-center gap-3 flex-1 min-w-0 min-h-[44px]"
                       >
-                        <Database className="w-4 h-4 text-muted-foreground" />
-                        <div>
-                          <p className="font-medium font-mono text-sm hover:underline">{element.name}</p>
+                        <Database className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <div className="min-w-0">
+                          <p className="font-medium font-mono text-sm hover:underline truncate">{element.name}</p>
                           <p className="text-xs text-muted-foreground">{element.category}</p>
                         </div>
                       </Link>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 sm:shrink-0 pl-7 sm:pl-0">
                         <Badge variant="outline" className={sensitivityColors[element.sensitivity] || ""}>
                           {element.sensitivity}
                         </Badge>
                         {element.isPersonalData && (
-                          <Badge variant="outline">Personal Data</Badge>
+                          <Badge variant="outline" className="hidden sm:inline-flex">Personal Data</Badge>
                         )}
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive ml-auto"
                           onClick={() => handleDeleteElement(element.id, element.name)}
                         >
                           <Trash2 className="w-4 h-4" />

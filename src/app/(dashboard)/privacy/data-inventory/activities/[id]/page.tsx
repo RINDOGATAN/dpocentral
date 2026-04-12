@@ -353,7 +353,7 @@ export default function ActivityDetailPage() {
                           <Link key={el.id} href={`/privacy/data-inventory/elements/${el.id}`}>
                             <Badge
                               variant={el.isSpecialCategory ? "destructive" : "secondary"}
-                              className="text-xs font-normal cursor-pointer hover:opacity-80"
+                              className="text-xs font-normal cursor-pointer hover:opacity-80 py-1 px-2 min-h-[28px] inline-flex items-center"
                             >
                               {el.name}
                               <span className="ml-1 opacity-60">{el.sensitivity?.charAt(0)}</span>

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight, Database, Loader2, Server, Workflow } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { DataCategory, DataSensitivity } from "@prisma/client";
+import type { DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
 
 const sensitivityColors: Record<string, string> = {
   PUBLIC: "border-primary text-primary",
@@ -63,7 +63,7 @@ export default function DataElementDetailPage() {
     { enabled: !!organization?.id }
   );
 
-  if (isLoading || !element) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-24">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -71,24 +71,40 @@ export default function DataElementDetailPage() {
     );
   }
 
+  if (!element) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+        <Database className="w-12 h-12 mb-4 opacity-50" />
+        <p className="font-medium">Data element not found</p>
+        <p className="text-sm mb-4">It may have been deleted or you may not have access.</p>
+        <Link href="/privacy/data-inventory">
+          <Button variant="outline" size="sm">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Data Inventory
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-start gap-3 sm:gap-4">
         <Link href={`/privacy/data-inventory/${element.dataAsset.id}`}>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="shrink-0 mt-1">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary/10 flex items-center justify-center">
-            <Database className="w-6 h-6 text-primary" />
+        <div className="flex items-start gap-3 min-w-0">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 flex items-center justify-center shrink-0">
+            <Database className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-2xl font-semibold font-mono">{element.name}</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline">{categoryLabels[element.category]}</Badge>
-              <Badge variant="outline" className={sensitivityColors[element.sensitivity] || ""}>
-                {sensitivityLabels[element.sensitivity]}
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-semibold font-mono truncate">{element.name}</h1>
+            <div className="flex flex-wrap items-center gap-1.5 mt-1">
+              <Badge variant="outline">{categoryLabels[element.category as DataCategory]}</Badge>
+              <Badge variant="outline" className={sensitivityColors[element.sensitivity as string] || ""}>
+                {sensitivityLabels[element.sensitivity as DataSensitivity]}
               </Badge>
               {element.isPersonalData && <Badge variant="outline">Personal Data</Badge>}
               {element.isSpecialCategory && <Badge variant="destructive">Special Category</Badge>}
@@ -158,7 +174,7 @@ export default function DataElementDetailPage() {
         <CardContent>
           {element.linkedActivities.length > 0 ? (
             <div className="space-y-2">
-              {element.linkedActivities.map(({ linkId, activity }) => (
+              {element.linkedActivities.map(({ linkId, activity }: { linkId: string; activity: { id: string; name: string; purpose: string; legalBasis: string; isActive: boolean } }) => (
                 <Link
                   key={linkId}
                   href={`/privacy/data-inventory/activities/${activity.id}`}
