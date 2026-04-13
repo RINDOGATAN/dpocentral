@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,14 +55,26 @@ export default function ActivityDetailPage() {
     { enabled: !!organization?.id && !!id }
   );
 
-  const { data: allAssetsPages } = trpc.dataInventory.listAssets.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", limit: 200 },
+  const {
+    data: allAssetsPages,
+    fetchNextPage: fetchNextAssetsPage,
+    hasNextPage: hasMoreAssets,
+    isFetchingNextPage: isFetchingMoreAssets,
+  } = trpc.dataInventory.listAssets.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 100 },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
   const allAssets = allAssetsPages?.pages.flatMap((p) => p.assets) ?? [];
+
+  // Progressively load all pages so the picker covers large inventories
+  useEffect(() => {
+    if (hasMoreAssets && !isFetchingMoreAssets) {
+      fetchNextAssetsPage();
+    }
+  }, [hasMoreAssets, isFetchingMoreAssets, fetchNextAssetsPage]);
 
   const linkAssets = trpc.dataInventory.linkAssets.useMutation({
     onSuccess: () => {
