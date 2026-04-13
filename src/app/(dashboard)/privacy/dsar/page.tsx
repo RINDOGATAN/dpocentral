@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,10 +56,23 @@ export default function DSARPage() {
   const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
 
-  const { data: dsarData, isLoading } = trpc.dsar.list.useQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
-    { enabled: !!organization?.id }
+  const {
+    data: dsarPages,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = trpc.dsar.list.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    {
+      enabled: !!organization?.id,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const dsarData = { requests: dsarPages?.pages.flatMap((p) => p.requests) ?? [] };
 
   const { data: statsData } = trpc.dsar.getStats.useQuery(
     { organizationId: organization?.id ?? "" },
