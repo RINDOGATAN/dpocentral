@@ -114,6 +114,7 @@ export function DataFlowVisualization({
       volume: f.volume,
       encryptionMethod: f.encryptionMethod,
       isAutomated: f.isAutomated,
+      metadata: (f as { metadata?: unknown }).metadata,
       sourceAsset: {
         id: f.sourceAsset.id,
         name: f.sourceAsset.name,
@@ -282,7 +283,8 @@ export function DataFlowVisualization({
   return (
     <>
       <Card className="overflow-hidden">
-        <div style={{ height }} className="relative">
+        {/* Mobile: 360px fixed (any taller is unusable on a phone). sm+: caller's height. */}
+        <div className="relative h-[360px] sm:h-[var(--df-h)]" style={{ ["--df-h" as string]: height }}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
