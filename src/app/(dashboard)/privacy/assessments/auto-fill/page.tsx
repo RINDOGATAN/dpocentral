@@ -74,15 +74,19 @@ export default function DpiaAutoFillPage() {
   }, [hasMoreVendors, isFetchingMoreVendors, fetchNextVendorsPage]);
 
   // Fetch auto-fill suggestions when activity is selected
-  const { data: autoFill, isLoading: autoFillLoading } =
-    trpc.assessment.generateDpiaFromActivity.useQuery(
-      {
-        organizationId: orgId,
-        processingActivityId: selectedActivityId,
-        vendorId: selectedVendorId || undefined,
-      },
-      { enabled: !!orgId && !!selectedActivityId && step !== "select" }
-    );
+  const {
+    data: autoFill,
+    isLoading: autoFillLoading,
+    error: autoFillError,
+    refetch: refetchAutoFill,
+  } = trpc.assessment.generateDpiaFromActivity.useQuery(
+    {
+      organizationId: orgId,
+      processingActivityId: selectedActivityId,
+      vendorId: selectedVendorId || undefined,
+    },
+    { enabled: !!orgId && !!selectedActivityId && step !== "select", retry: false }
+  );
 
   // Fetch entitled types to check DPIA access
   const { data: entitledTypes } = trpc.assessment.getEntitledTypes.useQuery(
@@ -274,6 +278,22 @@ export default function DpiaAutoFillPage() {
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-primary" />
                 <span className="ml-2">Analyzing processing activity...</span>
+              </div>
+            ) : autoFillError ? (
+              <div className="py-8 text-center space-y-3">
+                <AlertTriangle className="w-10 h-10 mx-auto text-destructive" />
+                <p className="font-medium">Could not generate auto-fill suggestions</p>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  {autoFillError.message || "Something went wrong analyzing this processing activity."}
+                </p>
+                <div className="flex gap-2 justify-center pt-2">
+                  <Button variant="outline" onClick={() => setStep("select")}>
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                  </Button>
+                  <Button variant="outline" onClick={() => refetchAutoFill()}>
+                    Retry
+                  </Button>
+                </div>
               </div>
             ) : autoFill ? (
               <div className="space-y-4">

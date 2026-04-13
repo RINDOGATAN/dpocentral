@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -140,18 +140,39 @@ export default function NewAssessmentPage() {
     { enabled: !!organization?.id && !!selectedType }
   );
 
-  const { data: activitiesData } = trpc.dataInventory.listActivities.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && !!selectedType }
+  const {
+    data: activitiesPages,
+    hasNextPage: hasMoreActivities,
+    fetchNextPage: fetchNextActivitiesPage,
+    isFetchingNextPage: isFetchingMoreActivities,
+  } = trpc.dataInventory.listActivities.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 100 },
+    {
+      enabled: !!organization?.id && !!selectedType,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
+  useEffect(() => {
+    if (hasMoreActivities && !isFetchingMoreActivities) fetchNextActivitiesPage();
+  }, [hasMoreActivities, isFetchingMoreActivities, fetchNextActivitiesPage]);
+  const activities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
 
-  const { data: vendorsData } = trpc.vendor.list.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && !!selectedType && ["VENDOR", "DPIA", "PIA", "TIA"].includes(selectedType) }
+  const {
+    data: vendorsPages,
+    hasNextPage: hasMoreVendors,
+    fetchNextPage: fetchNextVendorsPage,
+    isFetchingNextPage: isFetchingMoreVendors,
+  } = trpc.vendor.list.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 100 },
+    {
+      enabled: !!organization?.id && !!selectedType && ["VENDOR", "DPIA", "PIA", "TIA"].includes(selectedType),
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
-
-  const activities = activitiesData?.activities ?? [];
-  const vendors = vendorsData?.vendors ?? [];
+  useEffect(() => {
+    if (hasMoreVendors && !isFetchingMoreVendors) fetchNextVendorsPage();
+  }, [hasMoreVendors, isFetchingMoreVendors, fetchNextVendorsPage]);
+  const vendors = vendorsPages?.pages.flatMap((p) => p.vendors) ?? [];
 
   // Auto-select template when templates load for selected type
   const effectiveTemplateId = (() => {
