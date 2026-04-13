@@ -179,10 +179,15 @@ export default function DataAssetDetailPage() {
   }, [hasMoreActivities, isFetchingMoreActivities, fetchNextActivitiesPage]);
 
   const linkActivities = trpc.dataInventory.linkActivitiesToAsset.useMutation({
-    onSuccess: () => {
-      toast.success("Activities updated");
+    onSuccess: (result) => {
       utils.dataInventory.getAsset.invalidate();
+      utils.dataInventory.listFlows.invalidate();
       setLinkActivitiesOpen(false);
+      if (result.flowsCreated > 0) {
+        toast.success(`Activities updated — auto-generated ${result.flowsCreated} data flow${result.flowsCreated !== 1 ? "s" : ""}`);
+      } else {
+        toast.success("Activities updated");
+      }
     },
     onError: (error) => {
       toast.error(error.message || "Failed to link activities");

@@ -26,6 +26,7 @@ import {
   Loader2,
   Plus,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -77,10 +78,29 @@ export default function ActivityDetailPage() {
   }, [hasMoreAssets, isFetchingMoreAssets, fetchNextAssetsPage]);
 
   const linkAssets = trpc.dataInventory.linkAssets.useMutation({
-    onSuccess: () => {
+    onSuccess: (result) => {
       utils.dataInventory.getActivity.invalidate({ organizationId: organization?.id ?? "", id });
+      utils.dataInventory.listFlows.invalidate();
       setLinkDialogOpen(false);
+      if (result.flowsCreated > 0) {
+        toast.success(`Linked assets — auto-generated ${result.flowsCreated} data flow${result.flowsCreated !== 1 ? "s" : ""}`);
+      } else {
+        toast.success("Linked assets updated");
+      }
     },
+    onError: (error) => toast.error(error.message || "Failed to link assets"),
+  });
+
+  const regenerateFlows = trpc.dataInventory.regenerateFlows.useMutation({
+    onSuccess: (result) => {
+      utils.dataInventory.listFlows.invalidate();
+      toast.success(
+        result.flowsCreated > 0
+          ? `Generated ${result.flowsCreated} new data flow${result.flowsCreated !== 1 ? "s" : ""}`
+          : "No new flows to generate — the existing graph already covers this activity"
+      );
+    },
+    onError: (error) => toast.error(error.message || "Failed to generate flows"),
   });
 
   function openLinkDialog() {
@@ -320,15 +340,35 @@ export default function ActivityDetailPage() {
       {/* Linked Data Assets */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <CardTitle className="text-base flex items-center gap-2">
               <Database className="w-4 h-4" />
               Linked Data Assets ({activity.assets?.length ?? 0})
             </CardTitle>
-            <Button variant="outline" size="sm" onClick={openLinkDialog}>
-              <Plus className="w-4 h-4 mr-2" />
-              Manage Assets
-            </Button>
+            <div className="flex gap-2">
+              {(activity.assets?.length ?? 0) >= 2 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={regenerateFlows.isPending}
+                  onClick={() =>
+                    regenerateFlows.mutate({
+                      organizationId: organization?.id ?? "",
+                      activityId: id,
+                    })
+                  }
+                >
+                  {regenerateFlows.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : null}
+                  Generate Flows
+                </Button>
+              )}
+              <Button variant="outline" size="sm" onClick={openLinkDialog}>
+                <Plus className="w-4 h-4 mr-2" />
+                Manage Assets
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
