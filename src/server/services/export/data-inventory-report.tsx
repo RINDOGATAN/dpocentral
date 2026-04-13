@@ -143,14 +143,14 @@ export function DataInventoryReport({
         {data.flows.length > 0 && (
           <>
             {flowGraph && (
-              <>
+              <View wrap={false}>
                 <SectionTitle>Data Flow Map</SectionTitle>
                 <Text style={[s.paragraph, { fontSize: 8, color: "#6B7280" }]}>
                   Nodes are colour-coded by asset type. Dashed lines indicate flows
                   auto-generated from processing-activity links; solid lines are explicit.
                 </Text>
                 <FlowGraphImage graph={flowGraph} width={500} />
-              </>
+              </View>
             )}
             <SectionTitle>Data Flow Details</SectionTitle>
             <DataTable

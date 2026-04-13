@@ -61,7 +61,7 @@ export function ROPAReport({
         )}
 
         {flowGraph && (
-          <>
+          <View wrap={false}>
             <SectionTitle>Data Flow Map</SectionTitle>
             <Text style={[s.paragraph, { fontSize: 8, color: "#6B7280" }]}>
               Each processing activity is shown as a bordered cluster containing the
@@ -69,15 +69,16 @@ export function ROPAReport({
               were auto-generated from activity-asset links; solid edges are explicit.
             </Text>
             <FlowGraphImage graph={flowGraph} width={500} />
-          </>
+          </View>
         )}
 
         {/* Per-activity detail */}
-        <SectionTitle>Processing Activities</SectionTitle>
         {entries.map((entry, i) => {
           const validation = validateROPAEntry(entry);
           return (
-            <View key={i} style={s.card}>
+            <View key={i} wrap={false}>
+              {i === 0 && <SectionTitle>Processing Activities</SectionTitle>}
+              <View style={s.card}>
               <View style={[s.row, { justifyContent: "space-between", marginBottom: 6 }]}>
                 <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 11 }}>
                   {i + 1}. {entry.name}
@@ -152,6 +153,7 @@ export function ROPAReport({
                   ))}
                 </View>
               )}
+              </View>
             </View>
           );
         })}
