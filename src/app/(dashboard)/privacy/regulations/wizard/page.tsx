@@ -106,7 +106,15 @@ export default function RegulationsWizardPage() {
                 <Button variant="outline" onClick={() => router.push("/privacy/regulations")}>
                   <ArrowLeft className="w-4 h-4 mr-2" /> Back
                 </Button>
-                <Button onClick={() => setStep("results")}>
+                <Button
+                  onClick={() => setStep("results")}
+                  disabled={Object.keys(answers).length === 0}
+                  title={
+                    Object.keys(answers).length === 0
+                      ? "Answer at least one question to see applicable jurisdictions"
+                      : undefined
+                  }
+                >
                   Check Applicability <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>

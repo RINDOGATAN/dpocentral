@@ -489,12 +489,16 @@ export default function CustomerDetailPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        title="Delete"
-                        onClick={() =>
-                          deleteEntitlement.mutate({
-                            entitlementId: entitlement.id,
-                          })
-                        }
+                        title="Delete entitlement"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              `Delete this entitlement (${entitlement.skillPackage.displayName})? Linked organizations will lose access immediately. This cannot be undone.`
+                            )
+                          ) {
+                            deleteEntitlement.mutate({ entitlementId: entitlement.id });
+                          }
+                        }}
                         disabled={deleteEntitlement.isPending}
                       >
                         <Trash2 className="w-4 h-4 text-destructive" />

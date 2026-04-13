@@ -9,6 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Loader2,
   Users,
@@ -22,6 +30,7 @@ import {
   Save,
   X,
   Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -132,38 +141,15 @@ export default function OrganizationDetailPage() {
               <Pencil className="w-4 h-4 mr-2" />
               Edit
             </Button>
-            {!confirmDelete ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                onClick={() => setConfirmDelete(true)}
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete
-              </Button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => deleteMutation.mutate({ id: orgId })}
-                  disabled={deleteMutation.isPending}
-                >
-                  {deleteMutation.isPending ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : null}
-                  Confirm Delete
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setConfirmDelete(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            )}
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              onClick={() => setConfirmDelete(true)}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete
+            </Button>
           </div>
         )}
       </div>
@@ -427,6 +413,40 @@ export default function OrganizationDetailPage() {
           </Card>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
+              Delete Organization
+            </DialogTitle>
+            <DialogDescription>
+              This permanently deletes <strong>{org.name}</strong> and cascades to every member,
+              data asset, processing activity, DSAR, incident, vendor, and assessment owned by
+              this organization. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="text-sm text-muted-foreground space-y-1 py-2">
+            <div>{org._count?.members ?? 0} member(s) will lose access immediately.</div>
+            <div>{org._count?.dataAssets ?? 0} data asset(s), {org._count?.dsarRequests ?? 0} DSAR(s), {org._count?.incidents ?? 0} incident(s), {org._count?.vendors ?? 0} vendor(s) will be deleted.</div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => deleteMutation.mutate({ id: orgId })}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Delete Permanently
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

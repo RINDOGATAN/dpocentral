@@ -1223,6 +1223,12 @@ export const dataInventoryRouter = createTRPCRouter({
         supplementaryMeasures: transfer.supplementaryMeasures as Record<string, unknown> | undefined,
       });
 
+      // Adequate countries don't need the Schrems II / supplementary measures
+      // checklists — the adequacy decision covers everything. Return empty
+      // arrays in that case so the UI doesn't render irrelevant items.
+      const checklist = isAdequate ? [] : SCHREMS_II_CHECKLIST;
+      const supplementaryMeasuresList = isAdequate ? [] : SUPPLEMENTARY_MEASURES;
+
       return {
         transfer: {
           id: transfer.id,
@@ -1238,8 +1244,8 @@ export const dataInventoryRouter = createTRPCRouter({
         },
         isAdequateCountry: isAdequate,
         adequacyDecision,
-        checklist: SCHREMS_II_CHECKLIST,
-        supplementaryMeasures: SUPPLEMENTARY_MEASURES,
+        checklist,
+        supplementaryMeasures: supplementaryMeasuresList,
       };
     }),
 
