@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft,
   AlertTriangle,
@@ -35,8 +37,9 @@ import {
   Loader2,
   FileText,
   MessageSquare,
+  Plus,
 } from "lucide-react";
-import { IncidentStatus } from "@prisma/client";
+import { IncidentStatus, TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -71,6 +74,17 @@ const typeLabels: Record<string, string> = {
   OTHER: "Other",
 };
 
+const TIMELINE_ENTRY_TYPES = [
+  { value: "OBSERVATION", label: "Observation" },
+  { value: "ACTION", label: "Action Taken" },
+  { value: "EVIDENCE", label: "Evidence" },
+  { value: "COMMUNICATION", label: "Communication" },
+  { value: "DECISION", label: "Decision" },
+  { value: "NOTE", label: "Note" },
+];
+
+const TASK_PRIORITIES: TaskPriority[] = ["LOW", "MEDIUM", "HIGH", "URGENT"];
+
 const STATUS_OPTIONS: IncidentStatus[] = [
   "REPORTED",
   "INVESTIGATING",
@@ -91,6 +105,17 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const [notifDialogOpen, setNotifDialogOpen] = useState(false);
   const [selectedJurisdictionId, setSelectedJurisdictionId] = useState<string>("");
   const [selectedRecipientType, setSelectedRecipientType] = useState<string>("DPA");
+
+  const [timelineDialogOpen, setTimelineDialogOpen] = useState(false);
+  const [timelineTitle, setTimelineTitle] = useState("");
+  const [timelineDescription, setTimelineDescription] = useState("");
+  const [timelineEntryType, setTimelineEntryType] = useState<string>("OBSERVATION");
+
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskPriority, setTaskPriority] = useState<TaskPriority>("MEDIUM");
+  const [taskDueDate, setTaskDueDate] = useState("");
 
   const { data: incident, isLoading } = trpc.incident.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -114,6 +139,31 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
     onError: (error) => {
       toast.error(error.message || "Failed to update status");
     },
+  });
+
+  const addTimelineEntry = trpc.incident.addTimelineEntry.useMutation({
+    onSuccess: () => {
+      toast.success("Timeline entry added");
+      utils.incident.getById.invalidate();
+      setTimelineDialogOpen(false);
+      setTimelineTitle("");
+      setTimelineDescription("");
+      setTimelineEntryType("OBSERVATION");
+    },
+    onError: (error) => toast.error(error.message || "Failed to add entry"),
+  });
+
+  const createTask = trpc.incident.createTask.useMutation({
+    onSuccess: () => {
+      toast.success("Task created");
+      utils.incident.getById.invalidate();
+      setTaskDialogOpen(false);
+      setTaskTitle("");
+      setTaskDescription("");
+      setTaskPriority("MEDIUM");
+      setTaskDueDate("");
+    },
+    onError: (error) => toast.error(error.message || "Failed to create task"),
   });
 
   const createNotification = trpc.incident.createNotification.useMutation({
@@ -381,6 +431,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
         <TabsContent value="timeline" className="mt-4">
           {incident.timeline && incident.timeline.length > 0 ? (
             <div className="space-y-4">
+              <div className="flex justify-end">
+                <Button size="sm" onClick={() => setTimelineDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Entry
+                </Button>
+              </div>
               {incident.timeline.map((entry, index) => (
                 <Card key={entry.id}>
                   <CardContent className="py-4">
@@ -414,7 +470,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No timeline entries yet</p>
-                <Button className="mt-4">Add Entry</Button>
+                <Button className="mt-4" onClick={() => setTimelineDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Entry
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -423,6 +482,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
         <TabsContent value="tasks" className="mt-4">
           {incident.tasks && incident.tasks.length > 0 ? (
             <div className="space-y-4">
+              <div className="flex justify-end">
+                <Button size="sm" onClick={() => setTaskDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Task
+                </Button>
+              </div>
               {incident.tasks.map((task) => (
                 <Card key={task.id}>
                   <CardContent className="py-4">
@@ -454,7 +519,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No tasks assigned</p>
-                <Button className="mt-4">Add Task</Button>
+                <Button className="mt-4" onClick={() => setTaskDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Task
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -554,6 +622,149 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             >
               {updateStatus.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Update
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Timeline Entry Dialog */}
+      <Dialog open={timelineDialogOpen} onOpenChange={setTimelineDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Timeline Entry</DialogTitle>
+            <DialogDescription>
+              Record an observation, action, or decision taken during the incident response.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Entry Type</Label>
+              <Select value={timelineEntryType} onValueChange={setTimelineEntryType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {TIMELINE_ENTRY_TYPES.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Title</Label>
+              <Input
+                value={timelineTitle}
+                onChange={(e) => setTimelineTitle(e.target.value)}
+                placeholder="Short summary of the entry"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea
+                value={timelineDescription}
+                onChange={(e) => setTimelineDescription(e.target.value)}
+                placeholder="Details — what happened, who was involved, what evidence"
+                rows={4}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTimelineDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!timelineTitle.trim() || addTimelineEntry.isPending}
+              onClick={() =>
+                addTimelineEntry.mutate({
+                  organizationId: organization?.id ?? "",
+                  incidentId: id,
+                  title: timelineTitle.trim(),
+                  description: timelineDescription.trim() || undefined,
+                  entryType: timelineEntryType,
+                })
+              }
+            >
+              {addTimelineEntry.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Add Entry
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Task Dialog */}
+      <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Task</DialogTitle>
+            <DialogDescription>
+              Create a response task to track remediation work for this incident.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Title</Label>
+              <Input
+                value={taskTitle}
+                onChange={(e) => setTaskTitle(e.target.value)}
+                placeholder="What needs to be done"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea
+                value={taskDescription}
+                onChange={(e) => setTaskDescription(e.target.value)}
+                placeholder="Optional details"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Priority</Label>
+                <Select value={taskPriority} onValueChange={(v) => setTaskPriority(v as TaskPriority)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TASK_PRIORITIES.map((p) => (
+                      <SelectItem key={p} value={p}>
+                        {p}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Due Date</Label>
+                <Input
+                  type="date"
+                  value={taskDueDate}
+                  onChange={(e) => setTaskDueDate(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTaskDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!taskTitle.trim() || createTask.isPending}
+              onClick={() =>
+                createTask.mutate({
+                  organizationId: organization?.id ?? "",
+                  incidentId: id,
+                  title: taskTitle.trim(),
+                  description: taskDescription.trim() || undefined,
+                  priority: taskPriority,
+                  dueDate: taskDueDate ? new Date(taskDueDate) : undefined,
+                })
+              }
+            >
+              {createTask.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Create Task
             </Button>
           </DialogFooter>
         </DialogContent>
