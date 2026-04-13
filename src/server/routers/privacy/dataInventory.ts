@@ -85,7 +85,7 @@ async function generateFlowsForActivity(
     await tx.dataFlow.create({
       data: {
         organizationId,
-        name: `${activity.name}: ${source.name} → ${dest.name}`,
+        name: `${activity.name}: ${source.name} -> ${dest.name}`,
         description: `Auto-generated from processing activity "${activity.name}"`,
         sourceAssetId: source.id,
         destinationAssetId: dest.id,
