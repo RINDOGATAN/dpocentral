@@ -57,7 +57,7 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 
 ## Cron Jobs
 
-`/api/cron/notifications` (daily 08:00 UTC): DSAR deadlines, incident notifications, vendor contracts, assessment due dates, SCC expiry, **DSAR PII auto-redaction**.
+`/api/cron/dsar-redaction`: DSAR PII auto-redaction. Currently not scheduled in `vercel.json` — endpoint exists for manual / future cron use. The full notifications cron (deadline alerts, email/in-app/Slack) was removed; reinstating it requires restoring `dispatchNotification` in `src/server/services/notifications/dispatcher.ts` and adding a new cron entry.
 
 ## Public Pages & Docs
 

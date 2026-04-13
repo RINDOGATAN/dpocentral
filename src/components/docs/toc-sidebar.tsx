@@ -14,7 +14,6 @@ import {
   Zap,
   ChevronRight,
   Search,
-  Bell,
   BarChart3,
   Wand2,
   ArrowRightLeft,
@@ -128,18 +127,6 @@ const tocSections: TocSection[] = [
       { label: "Expert Directory", hash: "#expert-directory" },
       { label: "Client Dashboard", hash: "#client-dashboard" },
       { label: "Settings", hash: "#settings" },
-    ],
-  },
-  {
-    href: "/privacy/docs/notifications",
-    label: "Notifications & Alerts",
-    icon: Bell,
-    children: [
-      { label: "How It Works", hash: "#overview" },
-      { label: "Event Types", hash: "#event-types" },
-      { label: "Preferences", hash: "#preferences" },
-      { label: "Deadline Monitoring", hash: "#deadline-checker" },
-      { label: "Delivery Channels", hash: "#channels" },
     ],
   },
   {
