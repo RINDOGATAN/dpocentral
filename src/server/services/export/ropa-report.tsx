@@ -11,15 +11,18 @@ import {
   s,
   fmtDate,
 } from "./pdf-styles";
+import { FlowGraphImage, type RenderedFlowGraph } from "./flow-graph-pdf";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import { generateROPASummary, validateROPAEntry } from "@/server/services/privacy/ropaGenerator";
 
 export function ROPAReport({
   entries,
   orgName,
+  flowGraph,
 }: {
   entries: ROPAEntry[];
   orgName: string;
+  flowGraph?: RenderedFlowGraph | null;
 }) {
   const date = fmtDate(new Date());
   const summary = generateROPASummary(entries);
@@ -54,6 +57,18 @@ export function ROPAReport({
                 count,
               ])}
             />
+          </>
+        )}
+
+        {flowGraph && (
+          <>
+            <SectionTitle>Data Flow Map</SectionTitle>
+            <Text style={[s.paragraph, { fontSize: 8, color: "#6B7280" }]}>
+              Each processing activity is shown as a bordered cluster containing the
+              assets it touches. Edges show how data moves between assets. Dashed edges
+              were auto-generated from activity-asset links; solid edges are explicit.
+            </Text>
+            <FlowGraphImage graph={flowGraph} width={500} />
           </>
         )}
 

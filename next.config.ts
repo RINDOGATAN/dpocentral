@@ -33,7 +33,15 @@ const nextConfig: NextConfig = {
     // TODO: add explicit types and remove this override.
     ignoreBuildErrors: true,
   },
-  serverExternalPackages: ["@dpocentral/premium-skills", "@dpocentral/security", "@react-pdf/renderer"],
+  serverExternalPackages: [
+    "@dpocentral/premium-skills",
+    "@dpocentral/security",
+    "@react-pdf/renderer",
+    // PDF flow-graph rendering: native binding (resvg) + WASM (graphviz) must
+    // be loaded at runtime, not bundled into the serverless chunk by Turbopack.
+    "@resvg/resvg-js",
+    "@hpcc-js/wasm-graphviz",
+  ],
   async headers() {
     return [
       {
