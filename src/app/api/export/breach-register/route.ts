@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { BreachRegisterReport, incidentsToCSV } from "@/server/services/export/breach-register";
 import type { IncidentExportData } from "@/server/services/export/breach-register";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -19,6 +20,11 @@ export async function GET(request: Request) {
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   const membership = await prisma.organizationMember.findFirst({
     where: {
@@ -106,14 +112,17 @@ export async function GET(request: Request) {
     });
   }
 
-  const buffer = await renderToBuffer(
-    BreachRegisterReport({ incidents: data, orgName })
-  );
+    const buffer = await renderToBuffer(
+      BreachRegisterReport({ incidents: data, orgName })
+    );
 
-  return new Response(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="Breach-Register-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf"`,
-    },
-  });
+    return new Response(new Uint8Array(buffer), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="Breach-Register-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf"`,
+      },
+    });
+  } catch (err) {
+    return pdfErrorResponse(err, "breach-register");
+  }
 }

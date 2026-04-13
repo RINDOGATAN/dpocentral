@@ -8,6 +8,7 @@ import {
   type PortfolioAssessment,
 } from "@/server/services/export/assessment-portfolio-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(request: NextRequest) {
   const token = await getToken({ req: request });
@@ -20,6 +21,11 @@ export async function GET(request: NextRequest) {
   if (!organizationId) {
     return Response.json({ error: "Missing organizationId" }, { status: 400 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   const membership = await prisma.organizationMember.findFirst({
     where: { organizationId, user: { email: userEmail } },
@@ -165,4 +171,7 @@ export async function GET(request: NextRequest) {
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });
+  } catch (err) {
+    return pdfErrorResponse(err, "assessment-portfolio");
+  }
 }

@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { AssessmentReport } from "@/server/services/export/assessment-report";
 import type { AssessmentExportData } from "@/server/services/export/assessment-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(
   request: Request,
@@ -16,6 +17,11 @@ export async function GET(
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   // Fetch assessment with all relations
   const assessment = await prisma.assessment.findUnique({
@@ -147,4 +153,7 @@ export async function GET(
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });
+  } catch (err) {
+    return pdfErrorResponse(err, "assessment");
+  }
 }

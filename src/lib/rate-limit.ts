@@ -80,3 +80,5 @@ export const authLimiter = rateLimit({ limit: 30, windowMs: 60 * 1000 });
 export const checkoutLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 });
 // Public DSAR intake: 5 submissions per 10 minutes per IP
 export const dsarPublicLimiter = rateLimit({ limit: 5, windowMs: 10 * 60 * 1000 });
+// PDF export endpoints: 10 per minute per user (renderToBuffer is expensive)
+export const exportLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 });

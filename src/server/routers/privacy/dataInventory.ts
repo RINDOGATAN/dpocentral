@@ -1212,7 +1212,7 @@ export const dataInventoryRouter = createTRPCRouter({
 
       const isAdequate = isAdequateCountry(transfer.destinationCountry);
       const adequacyDecision = ADEQUACY_DECISIONS.find(
-        (d) => d.countryCode === transfer.destinationCountry
+        (d) => d.countryCode.toUpperCase() === transfer.destinationCountry.toUpperCase()
       );
 
       const autoStatus = getTransferComplianceStatus({

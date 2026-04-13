@@ -6,6 +6,7 @@ import { ropaToCSV } from "@/server/services/privacy/ropaGenerator";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import { hasRopaExportAccess } from "@/server/services/licensing/entitlement";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -21,6 +22,11 @@ export async function GET(request: Request) {
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   const membership = await prisma.organizationMember.findFirst({
     where: {
@@ -128,4 +134,7 @@ export async function GET(request: Request) {
       "Content-Disposition": `attachment; filename="ROPA-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf"`,
     },
   });
+  } catch (err) {
+    return pdfErrorResponse(err, "ropa");
+  }
 }
