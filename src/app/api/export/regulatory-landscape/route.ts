@@ -12,6 +12,7 @@ import {
 import { JURISDICTION_CATALOG } from "@/config/jurisdiction-catalog";
 import { EU_ADEQUATE_COUNTRIES } from "@/config/vendor-data-mappings";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(request: NextRequest) {
   const token = await getToken({ req: request });
@@ -25,6 +26,11 @@ export async function GET(request: NextRequest) {
   if (!organizationId) {
     return Response.json({ error: "Missing organizationId" }, { status: 400 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   // Verify membership
   const membership = await prisma.organizationMember.findFirst({
@@ -244,4 +250,7 @@ export async function GET(request: NextRequest) {
       "Content-Disposition": `attachment; filename="${filename}"`,
     },
   });
+  } catch (err) {
+    return pdfErrorResponse(err, "regulatory-landscape");
+  }
 }

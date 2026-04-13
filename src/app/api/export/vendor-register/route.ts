@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { VendorRegisterReport, vendorsToCSV } from "@/server/services/export/vendor-register";
 import type { VendorExportData } from "@/server/services/export/vendor-register";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -19,6 +20,11 @@ export async function GET(request: Request) {
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const limited = checkExportRateLimit(request, userEmail);
+  if (limited) return limited;
+
+  try {
 
   const membership = await prisma.organizationMember.findFirst({
     where: {
@@ -99,4 +105,7 @@ export async function GET(request: Request) {
       "Content-Disposition": `attachment; filename="Vendor-Register-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf"`,
     },
   });
+  } catch (err) {
+    return pdfErrorResponse(err, "vendor-register");
+  }
 }
