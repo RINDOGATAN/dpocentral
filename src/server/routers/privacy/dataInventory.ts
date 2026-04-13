@@ -16,7 +16,7 @@ export const dataInventoryRouter = createTRPCRouter({
         organizationId: z.string(),
         type: z.nativeEnum(DataAssetType).optional(),
         search: z.string().optional(),
-        limit: z.number().min(1).max(100).default(50),
+        limit: z.number().min(1).max(500).default(50),
         cursor: z.string().optional(),
       })
     )
@@ -403,7 +403,7 @@ export const dataInventoryRouter = createTRPCRouter({
         organizationId: z.string(),
         isActive: z.boolean().optional(),
         search: z.string().optional(),
-        limit: z.number().min(1).max(100).default(50),
+        limit: z.number().min(1).max(500).default(50),
         cursor: z.string().optional(),
       })
     )
