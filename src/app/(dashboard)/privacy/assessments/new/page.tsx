@@ -113,11 +113,15 @@ export default function NewAssessmentPage() {
   const [upgradeSkillKey, setUpgradeSkillKey] = useState("");
   const [upgradeFeatureName, setUpgradeFeatureName] = useState("");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    processingActivityId: "",
-    vendorId: "",
+  const [formData, setFormData] = useState(() => {
+    const prefillVendorId = searchParams.get("vendorId") ?? "";
+    const prefillVendorName = searchParams.get("vendorName") ?? "";
+    return {
+      name: prefillVendorName ? `Assessment: ${prefillVendorName}` : "",
+      description: "",
+      processingActivityId: "",
+      vendorId: prefillVendorId,
+    };
   });
 
   const utils = trpc.useUtils();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,10 +59,23 @@ export default function VendorsPage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
-  const { data: vendorsData, isLoading } = trpc.vendor.list.useQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
-    { enabled: !!organization?.id }
+  const {
+    data: vendorsPages,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = trpc.vendor.list.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    {
+      enabled: !!organization?.id,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const vendorsData = { vendors: vendorsPages?.pages.flatMap((p) => p.vendors) ?? [] };
 
   const { data: statsData } = trpc.vendor.getStats.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -80,7 +93,7 @@ export default function VendorsPage() {
   const byStatus = statsData?.byStatus as Record<string, number> | undefined;
   const byRiskTier = statsData?.byRiskTier as Record<string, number> | undefined;
   const stats = {
-    total: vendors.length,
+    total: statsData?.total ?? 0,
     active: byStatus?.ACTIVE ?? 0,
     highRisk: (byRiskTier?.HIGH ?? 0) + (byRiskTier?.CRITICAL ?? 0),
     pendingReview: byStatus?.UNDER_REVIEW ?? 0,
