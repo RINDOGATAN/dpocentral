@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,14 +69,31 @@ export default function AISystemsPage() {
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [selectedExportIds, setSelectedExportIds] = useState<string[]>([]);
 
-  const { data, isLoading } = trpc.aiGovernance.list.useQuery(
+  const {
+    data: pages,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = trpc.aiGovernance.list.useInfiniteQuery(
     {
       organizationId: orgId,
       search: debouncedSearch || undefined,
       riskLevel: riskFilter !== "all" ? riskFilter as "UNACCEPTABLE" | "HIGH_RISK" | "LIMITED" | "MINIMAL" : undefined,
       status: statusFilter !== "all" ? statusFilter as "DRAFT" | "REGISTERED" | "UNDER_REVIEW" | "COMPLIANT" | "NON_COMPLIANT" | "DECOMMISSIONED" : undefined,
+      limit: 100,
     },
-    { enabled: !!orgId }
+    {
+      enabled: !!orgId,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const data = useMemo(
+    () => ({ systems: pages?.pages.flatMap((p) => p.systems) ?? [] }),
+    [pages]
   );
 
   const { data: stats } = trpc.aiGovernance.getStats.useQuery(

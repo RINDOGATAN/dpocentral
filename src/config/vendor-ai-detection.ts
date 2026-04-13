@@ -83,7 +83,7 @@ export function isAiCapableVendor(catalog: VendorCatalogAIFields): boolean {
   if (catalog.aiTechniques.length > 0) return true;
   if (AI_RELATED_CATEGORIES.has(catalog.category)) return true;
   if (catalog.subcategory && AI_RELATED_CATEGORIES.has(catalog.subcategory)) return true;
-  if (catalog.tags?.some((t) => AI_RELATED_TAGS.has(t.toLowerCase()))) return true;
+  if (catalog.tags?.some((t) => typeof t === "string" && AI_RELATED_TAGS.has(t.toLowerCase()))) return true;
   return false;
 }
 
@@ -106,7 +106,7 @@ function deriveRiskLevel(catalog: VendorCatalogAIFields): AIRiskLevel {
   // If the catalog has Annex III domain tags, it's HIGH_RISK
   if (catalog.euAiActAnnexIIIDomains && catalog.euAiActAnnexIIIDomains.length > 0) {
     for (const domain of catalog.euAiActAnnexIIIDomains) {
-      if (ANNEX_III_HIGH_RISK_DOMAINS.has(domain.toLowerCase())) {
+      if (typeof domain === "string" && ANNEX_III_HIGH_RISK_DOMAINS.has(domain.toLowerCase())) {
         return "HIGH_RISK";
       }
     }
