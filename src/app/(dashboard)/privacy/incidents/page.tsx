@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -67,10 +67,25 @@ export default function IncidentsPage() {
   const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
 
-  const { data: incidentsData, isLoading } = trpc.incident.list.useQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
-    { enabled: !!organization?.id }
+  const {
+    data: incidentsPages,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = trpc.incident.list.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    {
+      enabled: !!organization?.id,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
   );
+
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const incidentsData = { incidents: incidentsPages?.pages.flatMap((p) => p.incidents) ?? [] };
 
   const { data: statsData } = trpc.incident.getStats.useQuery(
     { organizationId: organization?.id ?? "" },

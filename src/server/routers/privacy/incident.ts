@@ -361,6 +361,61 @@ export const incidentRouter = createTRPCRouter({
   // NOTIFICATIONS
   // ============================================================
 
+  // Create a notification for an existing incident (used when notifications
+  // weren't auto-created at incident report time, or when adding an extra
+  // recipient type like DATA_SUBJECT alongside the DPA)
+  createNotification: officerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        incidentId: z.string(),
+        jurisdictionId: z.string(),
+        recipientType: z.string().default("DPA"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const incident = await ctx.prisma.incident.findFirst({
+        where: { id: input.incidentId, organizationId: ctx.organization.id },
+      });
+      if (!incident) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Incident not found" });
+      }
+
+      const jurisdiction = await ctx.prisma.jurisdiction.findUnique({
+        where: { id: input.jurisdictionId },
+      });
+      if (!jurisdiction) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Jurisdiction not found" });
+      }
+
+      const deadline = calculateNotificationDeadline(
+        incident.discoveredAt,
+        jurisdiction.breachNotificationHours
+      );
+
+      const notification = await ctx.prisma.incidentNotification.create({
+        data: {
+          incidentId: input.incidentId,
+          jurisdictionId: input.jurisdictionId,
+          recipientType: input.recipientType,
+          status: NotificationStatus.PENDING,
+          deadline,
+        },
+        include: { jurisdiction: true },
+      });
+
+      await ctx.prisma.incidentTimelineEntry.create({
+        data: {
+          incidentId: input.incidentId,
+          title: `${input.recipientType} notification created (${jurisdiction.name})`,
+          entryType: "NOTIFICATION",
+          createdById: ctx.session.user.id,
+        },
+      });
+
+      return notification;
+    }),
+
   // Update notification
   updateNotification: officerProcedure
     .input(

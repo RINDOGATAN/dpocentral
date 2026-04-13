@@ -1,12 +1,28 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import {
   ArrowLeft,
   AlertTriangle,
@@ -20,6 +36,7 @@ import {
   FileText,
   MessageSquare,
 } from "lucide-react";
+import { IncidentStatus } from "@prisma/client";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -54,14 +71,35 @@ const typeLabels: Record<string, string> = {
   OTHER: "Other",
 };
 
+const STATUS_OPTIONS: IncidentStatus[] = [
+  "REPORTED",
+  "INVESTIGATING",
+  "CONTAINED",
+  "ERADICATED",
+  "RECOVERING",
+  "CLOSED",
+  "FALSE_POSITIVE",
+];
+
 export default function IncidentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
 
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<IncidentStatus | "">("");
+  const [notifDialogOpen, setNotifDialogOpen] = useState(false);
+  const [selectedJurisdictionId, setSelectedJurisdictionId] = useState<string>("");
+  const [selectedRecipientType, setSelectedRecipientType] = useState<string>("DPA");
+
   const { data: incident, isLoading } = trpc.incident.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
     { enabled: !!organization?.id }
+  );
+
+  const { data: jurisdictionsData } = trpc.regulations.listApplied.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && notifDialogOpen }
   );
 
   const utils = trpc.useUtils();
@@ -70,9 +108,24 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
     onSuccess: () => {
       toast.success("Incident status updated");
       utils.incident.getById.invalidate();
+      setStatusDialogOpen(false);
+      setPendingStatus("");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update status");
+    },
+  });
+
+  const createNotification = trpc.incident.createNotification.useMutation({
+    onSuccess: () => {
+      toast.success("Notification created");
+      utils.incident.getById.invalidate();
+      setNotifDialogOpen(false);
+      setSelectedJurisdictionId("");
+      setSelectedRecipientType("DPA");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to create notification");
     },
   });
 
@@ -151,32 +204,43 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               Close Incident
             </Button>
           )}
-          <Button>Update Status</Button>
+          <Button
+            onClick={() => {
+              setPendingStatus(incident.status as IncidentStatus);
+              setStatusDialogOpen(true);
+            }}
+          >
+            Update Status
+          </Button>
         </div>
       </div>
 
       {/* Notification Banner */}
-      {incident.notificationRequired && !incident.notifications?.length && (
-        <Card className="border-destructive/50 bg-destructive/10">
-          <CardContent className="py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Bell className="w-6 h-6 text-destructive" />
-              <div>
-                <p className="font-medium">Regulatory Notification Required</p>
-                <p className="text-sm text-muted-foreground">
-                  {incident.notificationDeadline && (
-                    <>
-                      Deadline:{" "}
-                      {new Date(incident.notificationDeadline).toLocaleString()}
-                    </>
+      {incident.notificationRequired && !incident.notifications?.length && (() => {
+        const deadline = incident.notificationDeadline ? new Date(incident.notificationDeadline) : null;
+        const pastDue = deadline ? deadline.getTime() < Date.now() : false;
+        return (
+          <Card className="border-destructive/50 bg-destructive/10">
+            <CardContent className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-4 min-w-0">
+                <Bell className="w-6 h-6 text-destructive shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-medium">Regulatory Notification Required</p>
+                  {deadline && (
+                    <p className={`text-sm ${pastDue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                      {pastDue ? "OVERDUE — was due " : "Deadline: "}
+                      {deadline.toLocaleString()}
+                    </p>
                   )}
-                </p>
+                </div>
               </div>
-            </div>
-            <Button variant="destructive">Create Notification</Button>
-          </CardContent>
-        </Card>
-      )}
+              <Button variant="destructive" onClick={() => setNotifDialogOpen(true)}>
+                Create Notification
+              </Button>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -399,25 +463,29 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
         <TabsContent value="notifications" className="mt-4">
           {incident.notifications && incident.notifications.length > 0 ? (
             <div className="space-y-4">
-              {incident.notifications.map((notification) => (
-                <Card key={notification.id}>
-                  <CardContent className="py-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <Bell className="w-4 h-4 text-primary" />
-                          <span className="font-medium">{notification.recipientType}</span>
-                          <Badge variant="outline">{notification.status}</Badge>
+              {incident.notifications.map((notification) => {
+                const deadline = new Date(notification.deadline);
+                const pastDue = deadline.getTime() < Date.now() && notification.status === "PENDING";
+                return (
+                  <Card key={notification.id} className={pastDue ? "border-destructive/50" : ""}>
+                    <CardContent className="py-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Bell className="w-4 h-4 text-primary" />
+                            <span className="font-medium">{notification.recipientType}</span>
+                            <Badge variant="outline">{notification.status}</Badge>
+                            {pastDue && <Badge variant="destructive">OVERDUE</Badge>}
+                          </div>
+                          <p className={`text-sm mt-1 ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>
+                            Due: {deadline.toLocaleString()}
+                          </p>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Due: {new Date(notification.deadline).toLocaleDateString()}
-                        </p>
                       </div>
-                      <Button variant="outline" size="sm">View</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           ) : (
             <Card>
@@ -425,7 +493,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 <Bell className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No notifications created</p>
                 {incident.notificationRequired && (
-                  <Button className="mt-4" variant="destructive">
+                  <Button className="mt-4" variant="destructive" onClick={() => setNotifDialogOpen(true)}>
                     Create DPA Notification
                   </Button>
                 )}
@@ -444,6 +512,119 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Update Status Dialog */}
+      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Incident Status</DialogTitle>
+            <DialogDescription>
+              Transition this incident through the response workflow. A timeline entry will be recorded.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <Label>New Status</Label>
+            <Select value={pendingStatus} onValueChange={(v) => setPendingStatus(v as IncidentStatus)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s.replace("_", " ")}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!pendingStatus || updateStatus.isPending || pendingStatus === incident.status}
+              onClick={() =>
+                pendingStatus &&
+                updateStatus.mutate({
+                  organizationId: organization?.id ?? "",
+                  id,
+                  status: pendingStatus,
+                })
+              }
+            >
+              {updateStatus.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Update
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Notification Dialog */}
+      <Dialog open={notifDialogOpen} onOpenChange={setNotifDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Regulatory Notification</DialogTitle>
+            <DialogDescription>
+              The deadline is computed from the jurisdiction&apos;s breach notification window.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Jurisdiction</Label>
+              <Select value={selectedJurisdictionId} onValueChange={setSelectedJurisdictionId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select jurisdiction" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(jurisdictionsData?.jurisdictions ?? []).map((j) => (
+                    <SelectItem key={j.jurisdictionId} value={j.jurisdictionId}>
+                      {j.name} ({j.breachNotificationHours}h window)
+                    </SelectItem>
+                  ))}
+                  {jurisdictionsData?.jurisdictions.length === 0 && (
+                    <div className="p-2 text-xs text-muted-foreground">
+                      No jurisdictions applied to this organization
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Recipient Type</Label>
+              <Select value={selectedRecipientType} onValueChange={setSelectedRecipientType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="DPA">Data Protection Authority (DPA)</SelectItem>
+                  <SelectItem value="DATA_SUBJECT">Affected Data Subjects</SelectItem>
+                  <SelectItem value="LAW_ENFORCEMENT">Law Enforcement</SelectItem>
+                  <SelectItem value="INTERNAL">Internal Stakeholders</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNotifDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!selectedJurisdictionId || createNotification.isPending}
+              onClick={() =>
+                createNotification.mutate({
+                  organizationId: organization?.id ?? "",
+                  incidentId: id,
+                  jurisdictionId: selectedJurisdictionId,
+                  recipientType: selectedRecipientType,
+                })
+              }
+            >
+              {createNotification.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
