@@ -108,7 +108,7 @@ export default function DocsDataInventoryPage() {
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="data-flows" title="Data Flows" description="Data flows visualize how personal data moves between assets, both internally and externally.">
+      <DocSection id="data-flows" title="Data Flows" description="Data flows visualize how personal data moves between assets — auto-generated from your processing activity links.">
         <FeatureMockup title="Data Flow Diagram">
           <div className="flex items-center justify-center gap-4 py-4">
             <div className="text-center">
@@ -133,8 +133,24 @@ export default function DocsDataInventoryPage() {
             </div>
           </div>
         </FeatureMockup>
-        <InfoCallout type="tip" title="Diagram generation">
-          Data flows are auto-generated from asset relationships. Link assets together and the system will produce the flow visualization.
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>
+            <strong>You don&apos;t have to draw the graph.</strong> Whenever you link a processing activity to two
+            or more assets — via the <em>Manage Assets</em> button on the activity detail page, or <em>Manage
+            Activities</em> on the asset detail page — the system automatically creates DataFlow records connecting
+            them in a sensible order, based on the typical position of each asset type in a data pipeline (input
+            applications first, then ingest services, then databases, then file storage, then third-party sinks).
+          </p>
+          <p>
+            You can re-trigger generation at any time with the <strong>Generate Flows</strong> button on an activity
+            detail page. Existing flows are deduped — anything you&apos;ve manually edited is preserved, and only
+            new connections are added.
+          </p>
+        </div>
+        <InfoCallout type="tip" title="Bidirectional flows">
+          Many real systems are bidirectional (a CRM both receives and returns customer data). The quickstart
+          vendor mappings and industry templates already mark the common bidirectional pairs, and the live graph
+          renders the outbound and return edges as separated curves so they don&apos;t overlap.
         </InfoCallout>
       </DocSection>
 

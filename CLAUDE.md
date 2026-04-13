@@ -15,26 +15,28 @@ Open Core model: **Core** AGPL-3.0 / **Premium** proprietary.
 
 - **Multi-tenancy**: All models scoped by `organizationId`. Use `organizationProcedure`.
 - **Auth**: Google OAuth + Email Magic Link (Resend). JWT strategy. API routes must use `getToken` from `next-auth/jwt` (NOT `getServerSession` — breaks on Next.js 16).
-- **Rate limiting**: `src/lib/rate-limit.ts` — auth 30/min, checkout 10/min.
+- **Rate limiting**: `src/lib/rate-limit.ts` — `authLimiter` 30/min, `checkoutLimiter` 10/min, `dsarPublicLimiter` 5/10min, `exportLimiter` 10/min.
+- **Auto-flow generation**: `generateFlowsForActivity` in `src/server/routers/privacy/dataInventory.ts` runs after `linkAssets` / `linkActivitiesToAsset` mutations. Sorts linked assets by `ASSET_FLOW_RANK` (APPLICATION→CLOUD_SERVICE→DATABASE→FILE_SYSTEM→THIRD_PARTY) and creates a chain of `DataFlow` records, deduped against existing flows in either direction. Manual trigger: `regenerateFlows` procedure + "Generate Flows" button on activity detail.
 - **Icons**: All in `/public` only. Never put favicons in `src/app/` (Next.js prioritizes them over `/public`). `/logos` folder is gitignored (source files only).
 
 ## Modules
 
-Data Inventory, DSAR, Assessments, Incidents, Vendors, AI Governance, Reports, Regulations, Transfer Compliance, Expert Directory, Notifications, Admin Panel.
+Data Inventory, DSAR, Assessments, Incidents, Vendors, AI Governance, Reports, Regulations, Transfer Compliance, Expert Directory, Admin Panel. (Notifications router exists for in-app bell but the cron + dispatcher were removed — see Cron Jobs.)
 
-All list pages: debounced search, controlled Tabs, mobile/desktop layouts, responsive stats grids.
+All list pages: debounced search, controlled Tabs, mobile/desktop layouts, responsive stats grids. **List queries that feed pickers** must use `useInfiniteQuery` with auto-fetch — silent truncation at the server `max()` cap is the most common bug class in this codebase.
 
 ## DSAR — Privacy by Design
 
-- Public portal: `/dsar/[orgSlug]` — consent checkbox required, privacy notice, configurable per-org
-- Auto-redaction: cron redacts PII from completed DSARs after retention period (default 90 days)
+- Public portal: `/dsar/[orgSlug]` — wired to `dsar.submitPublic`, consent checkbox required, returns publicId, rate-limited (5/10min/IP via `dsarPublicLimiter` in middleware). Status page at `/dsar/status/[token]` calls `dsar.checkStatus` with the publicId.
+- Bad slug → 404 card via `dsar.getPublicForm` validation on mount.
+- Auto-redaction: `/api/cron/dsar-redaction` redacts PII from completed DSARs after retention period (default 90 days). Endpoint exists, not currently scheduled.
 - Manual redact/delete: `redactDSAR` and `deleteDSAR` mutations (admin only)
 - Audit trail survives redaction (actions + timestamps, no PII)
 - Settings: `DSARIntakeForm.retentionDays`, `privacyNoticeUrl`
 
 ## Export Pipeline (8 PDF Reports)
 
-`@react-pdf/renderer` — shared components in `src/server/services/export/pdf-styles.tsx`
+`@react-pdf/renderer` — shared components in `src/server/services/export/pdf-styles.tsx`. All 8 routes share `src/lib/api-export.ts` for rate limiting (`exportLimiter`, 10/min/user) + try/catch error responses.
 
 | Report | Route | Trigger |
 |--------|-------|---------|
@@ -46,6 +48,8 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 | ROPA | `/api/export/ropa` | Data Inventory page |
 | Vendor Register | `/api/export/vendor-register` | Vendors page |
 | Breach Register | `/api/export/breach-register` | Incidents page |
+
+**Data Flow Map** (Data Inventory + ROPA): `src/server/services/export/flow-graph-pdf.tsx` renders a colour-coded, cluster-aware diagram via `@hpcc-js/wasm-graphviz` (DOT engine) → `@resvg/resvg-js` → PNG → `@react-pdf <Image>`. The route pre-renders the PNG before invoking `renderToBuffer` and passes it as a prop. Both packages are in `next.config.ts > serverExternalPackages` because Turbopack can't bundle the native binding / WASM blob. Vendored Noto Sans Regular at `src/server/services/export/fonts/NotoSans-Regular.ttf` (OFL).
 
 **Critical**: never use `wrap={false}` on Views with unbounded lists — causes text overlap.
 

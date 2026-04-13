@@ -221,15 +221,38 @@ export default function DocsReportsPage() {
               <li>Vendor overview: risk tier distribution, contract status summary</li>
             </ul>
           </div>
+
+          <div className="rounded-lg border p-4 space-y-3">
+            <p className="text-sm font-medium">All eight PDF reports:</p>
+            <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
+              <li><strong>Data Inventory</strong> — assets, elements, transfers, and a rendered Data Flow Map</li>
+              <li><strong>ROPA</strong> (premium) — GDPR Article 30 record with per-activity flow clusters</li>
+              <li><strong>Vendor Register</strong> — vendor list with risk tiers and contract status</li>
+              <li><strong>Breach Register</strong> — incident summaries, timelines, and DPA notifications</li>
+              <li><strong>DSAR Performance</strong> — request volumes, SLA compliance, monthly trends</li>
+              <li><strong>Assessment Portfolio</strong> — DPIA/PIA/TIA/LIA rollups across the program</li>
+              <li><strong>Assessment (individual)</strong> — full questionnaire with responses and risk scoring</li>
+              <li><strong>Regulatory Landscape</strong> — applied jurisdictions and compliance posture</li>
+            </ul>
+          </div>
         </div>
-        <InfoCallout type="info" title="Premium feature">
-          Board report PDF export is available with the premium add-on. Core users can view
-          all compliance data in the dashboard but cannot export formatted PDF reports.
+
+        <InfoCallout type="tip" title="Data Flow Map in PDFs">
+          The Data Inventory and ROPA PDFs render a beautiful auto-laid-out diagram of how data
+          moves between your assets, with nodes colour-coded by asset type and edges labelled with
+          the data categories and frequency. The ROPA version groups assets into bordered clusters
+          per processing activity. No drawing required — it&apos;s generated from your activity-asset
+          links.
+        </InfoCallout>
+
+        <InfoCallout type="info" title="Premium feature (ROPA only)">
+          The ROPA PDF export is gated on a premium subscription. Every other PDF report is
+          available to all users.
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Notifications", href: "/privacy/docs/notifications" }}
+        previous={{ title: "Expert Help & Personas", href: "/privacy/docs/experts" }}
         next={{ title: "DPIA Auto-Fill", href: "/privacy/docs/dpia-auto-fill" }}
       />
     </div>
