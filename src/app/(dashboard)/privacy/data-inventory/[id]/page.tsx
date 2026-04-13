@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -157,14 +157,26 @@ export default function DataAssetDetailPage() {
     },
   });
 
-  const { data: allActivitiesPages } = trpc.dataInventory.listActivities.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", limit: 200 },
+  const {
+    data: allActivitiesPages,
+    fetchNextPage: fetchNextActivitiesPage,
+    hasNextPage: hasMoreActivities,
+    isFetchingNextPage: isFetchingMoreActivities,
+  } = trpc.dataInventory.listActivities.useInfiniteQuery(
+    { organizationId: organization?.id ?? "", limit: 100 },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
   const allActivities = allActivitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+
+  // Progressively load all pages so the picker covers large inventories
+  useEffect(() => {
+    if (hasMoreActivities && !isFetchingMoreActivities) {
+      fetchNextActivitiesPage();
+    }
+  }, [hasMoreActivities, isFetchingMoreActivities, fetchNextActivitiesPage]);
 
   const linkActivities = trpc.dataInventory.linkActivitiesToAsset.useMutation({
     onSuccess: () => {
