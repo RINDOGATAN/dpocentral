@@ -625,6 +625,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <p className="font-medium text-xl">
               {assessment.riskScore !== null ? `${assessment.riskScore}%` : "-"}
             </p>
+            <p className="text-[11px] text-muted-foreground mt-1 leading-tight">
+              0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical
+            </p>
           </CardContent>
         </Card>
       </div>

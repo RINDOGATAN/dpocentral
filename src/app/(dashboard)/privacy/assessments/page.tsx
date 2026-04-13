@@ -339,9 +339,9 @@ export default function AssessmentsPage() {
                         ? `${(templates.find((t) => t.type === item.type)!.sections as any[])?.length || 0} sections`
                         : "System template"}
                     </p>
-                    <Button variant="ghost" size="sm" className="mt-2 w-full">
-                      Use Template <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                    <div className="mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-medium text-primary hover:underline">
+                      Use Template <ArrowRight className="w-4 h-4" />
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
