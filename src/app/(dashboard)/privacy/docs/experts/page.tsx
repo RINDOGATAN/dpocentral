@@ -106,7 +106,7 @@ export default function DocsExpertsPage() {
 
       <DocNavFooter
         previous={{ href: "/privacy/docs/vendors", title: "Vendor Management" }}
-        next={{ href: "/privacy/docs/notifications", title: "Notifications & Alerts" }}
+        next={{ href: "/privacy/docs/reports", title: "Compliance Reports" }}
       />
     </div>
   );
