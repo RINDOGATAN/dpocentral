@@ -18,6 +18,7 @@ import {
   Clock,
   Scale,
 } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -133,7 +134,10 @@ export default function ReportsPage() {
     { enabled: !!organization?.id }
   );
 
-  const createSnapshot = trpc.reports.createSnapshot.useMutation();
+  const createSnapshot = trpc.reports.createSnapshot.useMutation({
+    onSuccess: () => toast.success("Compliance snapshot saved"),
+    onError: (error) => toast.error(error.message || "Failed to save snapshot"),
+  });
 
   const isLoading = isLoadingScore || isLoadingStats;
 
