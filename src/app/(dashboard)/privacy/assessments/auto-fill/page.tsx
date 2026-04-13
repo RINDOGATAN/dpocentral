@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,18 +42,36 @@ export default function DpiaAutoFillPage() {
 
   const orgId = organization?.id ?? "";
 
-  // Fetch processing activities
-  const { data: activities, isLoading: activitiesLoading } =
-    trpc.dataInventory.listActivities.useQuery(
-      { organizationId: orgId, limit: 100 },
-      { enabled: !!orgId }
-    );
-
-  // Fetch vendors
-  const { data: vendors } = trpc.vendor.list.useQuery(
+  // Fetch processing activities (paginated)
+  const {
+    data: activitiesPages,
+    isLoading: activitiesLoading,
+    hasNextPage: hasMoreActivities,
+    fetchNextPage: fetchNextActivitiesPage,
+    isFetchingNextPage: isFetchingMoreActivities,
+  } = trpc.dataInventory.listActivities.useInfiniteQuery(
     { organizationId: orgId, limit: 100 },
-    { enabled: !!orgId }
+    { enabled: !!orgId, getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
+  const activities = { activities: activitiesPages?.pages.flatMap((p) => p.activities) ?? [] };
+  useEffect(() => {
+    if (hasMoreActivities && !isFetchingMoreActivities) fetchNextActivitiesPage();
+  }, [hasMoreActivities, isFetchingMoreActivities, fetchNextActivitiesPage]);
+
+  // Fetch vendors (paginated)
+  const {
+    data: vendorsPages,
+    hasNextPage: hasMoreVendors,
+    fetchNextPage: fetchNextVendorsPage,
+    isFetchingNextPage: isFetchingMoreVendors,
+  } = trpc.vendor.list.useInfiniteQuery(
+    { organizationId: orgId, limit: 100 },
+    { enabled: !!orgId, getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
+  const vendors = { vendors: vendorsPages?.pages.flatMap((p) => p.vendors) ?? [] };
+  useEffect(() => {
+    if (hasMoreVendors && !isFetchingMoreVendors) fetchNextVendorsPage();
+  }, [hasMoreVendors, isFetchingMoreVendors, fetchNextVendorsPage]);
 
   // Fetch auto-fill suggestions when activity is selected
   const { data: autoFill, isLoading: autoFillLoading } =

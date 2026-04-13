@@ -600,6 +600,34 @@ export const dsarRouter = createTRPCRouter({
       };
     }),
 
+  // Get public intake form config by org slug (for the public portal)
+  getPublicForm: publicProcedure
+    .input(z.object({ orgSlug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: { slug: input.orgSlug },
+        include: {
+          dsarIntakeForms: { where: { isActive: true }, take: 1 },
+        },
+      });
+      if (!org || org.dsarIntakeForms.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Intake form not available for this organization",
+        });
+      }
+      const form = org.dsarIntakeForms[0]!;
+      return {
+        orgName: org.name,
+        title: form.title,
+        description: form.description,
+        thankYouMessage: form.thankYouMessage,
+        privacyNoticeUrl: form.privacyNoticeUrl,
+        retentionDays: form.retentionDays,
+        enabledTypes: form.enabledTypes,
+      };
+    }),
+
   // Submit public DSAR request
   submitPublic: publicProcedure
     .input(

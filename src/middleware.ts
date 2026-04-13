@@ -7,7 +7,7 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale } from "./i18n/config";
-import { authLimiter, checkoutLimiter } from "./lib/rate-limit";
+import { authLimiter, checkoutLimiter, dsarPublicLimiter } from "./lib/rate-limit";
 
 // next-intl middleware for locale routing
 const intlMiddleware = createMiddleware({
@@ -81,6 +81,15 @@ export default function middleware(request: NextRequest) {
   // Rate limit checkout/billing routes
   if (pathname.startsWith("/api/checkout") || pathname.startsWith("/api/billing")) {
     const result = checkoutLimiter.check(`checkout:${ip}`);
+    if (!result.success) {
+      return rateLimitResponse(result);
+    }
+  }
+
+  // Rate limit public DSAR intake (unauthenticated). Matches tRPC paths
+  // like /api/trpc/dsar.submitPublic (including batched variants).
+  if (pathname.startsWith("/api/trpc") && pathname.includes("dsar.submitPublic")) {
+    const result = dsarPublicLimiter.check(`dsar-public:${ip}`);
     if (!result.success) {
       return rateLimitResponse(result);
     }
