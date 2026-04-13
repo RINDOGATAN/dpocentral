@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,11 +54,20 @@ export default function RegisterAISystemPage() {
 
   const [trainingInput, setTrainingInput] = useState("");
 
-  // Fetch vendors for linking
-  const { data: vendors } = trpc.vendor.list.useQuery(
+  // Fetch vendors for linking (paginated — auto-loads all pages)
+  const {
+    data: vendorsPages,
+    hasNextPage: hasMoreVendors,
+    fetchNextPage: fetchNextVendorsPage,
+    isFetchingNextPage: isFetchingMoreVendors,
+  } = trpc.vendor.list.useInfiniteQuery(
     { organizationId: orgId, limit: 100 },
-    { enabled: !!orgId }
+    { enabled: !!orgId, getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
+  const vendors = { vendors: vendorsPages?.pages.flatMap((p) => p.vendors) ?? [] };
+  useEffect(() => {
+    if (hasMoreVendors && !isFetchingMoreVendors) fetchNextVendorsPage();
+  }, [hasMoreVendors, isFetchingMoreVendors, fetchNextVendorsPage]);
 
   // Risk suggestion
   const { data: riskSuggestion } = trpc.aiGovernance.suggestRiskLevel.useQuery(
@@ -67,7 +77,11 @@ export default function RegisterAISystemPage() {
 
   const createMutation = trpc.aiGovernance.create.useMutation({
     onSuccess: (data) => {
+      toast.success("AI system registered");
       router.push(`/privacy/ai-systems/${data.id}`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

@@ -15,28 +15,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shield, CheckCircle2, Loader2 } from "lucide-react";
+import { Shield, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { DSARType } from "@prisma/client";
 
-const requestTypes = [
-  { value: "ACCESS", label: "Access my data", description: "Get a copy of the personal data we hold about you" },
-  { value: "ERASURE", label: "Delete my data", description: "Request deletion of your personal data" },
-  { value: "RECTIFICATION", label: "Correct my data", description: "Request correction of inaccurate personal data" },
-  { value: "PORTABILITY", label: "Export my data", description: "Receive your data in a portable format" },
-  { value: "OBJECTION", label: "Object to processing", description: "Object to how we process your data" },
-  { value: "RESTRICTION", label: "Restrict processing", description: "Limit how we use your data" },
-];
+const REQUEST_TYPE_META: Record<DSARType, { label: string; description: string }> = {
+  ACCESS: { label: "Access my data", description: "Get a copy of the personal data held about you" },
+  ERASURE: { label: "Delete my data", description: "Request deletion of your personal data" },
+  RECTIFICATION: { label: "Correct my data", description: "Request correction of inaccurate personal data" },
+  PORTABILITY: { label: "Export my data", description: "Receive your data in a portable format" },
+  OBJECTION: { label: "Object to processing", description: "Object to how your data is processed" },
+  RESTRICTION: { label: "Restrict processing", description: "Limit how your data is used" },
+  AUTOMATED_DECISION: { label: "Automated decisions", description: "Request human review of automated decisions" },
+  WITHDRAW_CONSENT: { label: "Withdraw consent", description: "Withdraw previously given consent" },
+  OTHER: { label: "Other request", description: "A different data protection request" },
+};
 
 export default function PublicDSARPage() {
   const params = useParams();
   const orgSlug = params.orgSlug as string;
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [requestId, setRequestId] = useState<string | null>(null);
+  const { data: formConfig, isLoading: configLoading, error: configError } =
+    trpc.dsar.getPublicForm.useQuery({ orgSlug }, { retry: false });
+
+  const submitMutation = trpc.dsar.submitPublic.useMutation();
 
   const [consentGiven, setConsentGiven] = useState(false);
   const [formData, setFormData] = useState({
-    type: "",
+    type: "" as DSARType | "",
     name: "",
     email: "",
     phone: "",
@@ -46,40 +52,77 @@ export default function PublicDSARPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setRequestId("DSR-" + Math.random().toString(36).substring(2, 10).toUpperCase());
-    setIsSubmitted(true);
-    setIsSubmitting(false);
+    if (!formData.type) return;
+    submitMutation.mutate({
+      orgSlug,
+      type: formData.type,
+      requesterName: formData.name,
+      requesterEmail: formData.email,
+      requesterPhone: formData.phone || undefined,
+      relationship: formData.relationship || undefined,
+      description: formData.description || undefined,
+    });
   };
 
-  if (isSubmitted && requestId) {
+  // Loading state
+  if (configLoading) {
+    return (
+      <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Bad slug / no active form
+  if (configError || !formConfig) {
     return (
       <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4">
         <Card className="w-full max-w-lg">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            <div className="mx-auto mb-4 w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+              <AlertTriangle className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <CardTitle>Request form not available</CardTitle>
+            <CardDescription>
+              We couldn&apos;t find an active data subject request form for this organization.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Please check the link you used, or contact the organization directly.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Confirmation state — mutation succeeded
+  if (submitMutation.isSuccess && submitMutation.data) {
+    const publicId = submitMutation.data.publicId;
+    return (
+      <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-8 h-8 text-primary" />
             </div>
             <CardTitle>Request Submitted</CardTitle>
             <CardDescription>
-              Your data subject request has been received
+              {formConfig.thankYouMessage || "Your data subject request has been received"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-center">
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">Your reference number</p>
-              <p className="text-2xl font-mono font-bold">{requestId}</p>
+              <p className="text-2xl font-mono font-bold break-all">{publicId}</p>
             </div>
             <p className="text-sm text-muted-foreground">
               We will review your request and respond within the legally required timeframe.
               You will receive updates at {formData.email}.
             </p>
             <Button variant="outline" asChild>
-              <a href={`/dsar/status/${requestId}`}>Check Request Status</a>
+              <a href={`/dsar/status/${publicId}`}>Check Request Status</a>
             </Button>
           </CardContent>
         </Card>
@@ -87,21 +130,23 @@ export default function PublicDSARPage() {
     );
   }
 
+  const enabledTypes = formConfig.enabledTypes.length > 0
+    ? formConfig.enabledTypes
+    : (Object.keys(REQUEST_TYPE_META) as DSARType[]);
+
   return (
     <div className="min-h-screen bg-muted/50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="mx-auto mb-4 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
             <Shield className="w-6 h-6 text-primary" />
           </div>
-          <h1 className="text-2xl font-semibold">Data Subject Request</h1>
+          <h1 className="text-2xl font-semibold">{formConfig.title}</h1>
           <p className="text-muted-foreground mt-1">
-            Submit a request regarding your personal data
+            {formConfig.description || `Submit a request regarding your personal data held by ${formConfig.orgName}`}
           </p>
         </div>
 
-        {/* Form */}
         <Card>
           <CardHeader>
             <CardTitle>Your Request</CardTitle>
@@ -111,32 +156,33 @@ export default function PublicDSARPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Request Type */}
               <div className="space-y-2">
                 <Label>What would you like to do?</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value) => setFormData({ ...formData, type: value })}
+                  onValueChange={(value) => setFormData({ ...formData, type: value as DSARType })}
                   required
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select request type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {requestTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        <div>
-                          <p className="font-medium">{type.label}</p>
-                          <p className="text-xs text-muted-foreground">{type.description}</p>
-                        </div>
-                      </SelectItem>
-                    ))}
+                    {enabledTypes.map((type) => {
+                      const meta = REQUEST_TYPE_META[type];
+                      return (
+                        <SelectItem key={type} value={type}>
+                          <div>
+                            <p className="font-medium">{meta.label}</p>
+                            <p className="text-xs text-muted-foreground">{meta.description}</p>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Contact Information */}
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name *</Label>
                   <Input
@@ -160,7 +206,7 @@ export default function PublicDSARPage() {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
@@ -192,7 +238,6 @@ export default function PublicDSARPage() {
                 </div>
               </div>
 
-              {/* Additional Details */}
               <div className="space-y-2">
                 <Label htmlFor="description">Additional Details</Label>
                 <Textarea
@@ -204,13 +249,26 @@ export default function PublicDSARPage() {
                 />
               </div>
 
-              {/* Privacy Notice & Consent */}
               <div className="space-y-3 p-4 bg-muted rounded-lg">
                 <p className="text-xs text-muted-foreground">
                   Your contact details will be processed solely to verify your identity and fulfill
                   this data subject request. Your personal data will be retained for the duration of
-                  request processing and automatically redacted within 90 days of completion. We may
-                  need to verify your identity before processing.
+                  request processing and automatically redacted within {formConfig.retentionDays} days of completion.
+                  {formConfig.privacyNoticeUrl && (
+                    <>
+                      {" "}
+                      See our{" "}
+                      <a
+                        href={formConfig.privacyNoticeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline"
+                      >
+                        privacy notice
+                      </a>{" "}
+                      for full details.
+                    </>
+                  )}
                 </p>
                 <div className="flex items-start gap-2">
                   <Checkbox
@@ -225,9 +283,18 @@ export default function PublicDSARPage() {
                 </div>
               </div>
 
-              {/* Submit */}
-              <Button type="submit" className="w-full" disabled={isSubmitting || !consentGiven}>
-                {isSubmitting ? (
+              {submitMutation.error && (
+                <div className="text-sm text-destructive p-3 bg-destructive/10 rounded-lg">
+                  {submitMutation.error.message}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={submitMutation.isPending || !consentGiven || !formData.type}
+              >
+                {submitMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Submitting...
