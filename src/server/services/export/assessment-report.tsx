@@ -163,7 +163,7 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
             { label: "Assessment Type", value: TYPE_LABELS[type] || type },
             { label: "Template", value: `${data.template.name} v${data.template.version}` },
             { label: "Status", value: data.status.replace(/_/g, " ") },
-            { label: "Risk Score", value: data.riskScore != null ? `${data.riskScore.toFixed(1)} / 5.0` : null },
+            { label: "Risk Score", value: data.riskScore != null ? `${data.riskScore.toFixed(0)} / 100` : null },
             { label: "Started", value: fmtDate(data.startedAt) },
             { label: "Submitted", value: fmtDate(data.submittedAt) },
             { label: "Completed", value: fmtDate(data.completedAt) },
