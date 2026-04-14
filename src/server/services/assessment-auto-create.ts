@@ -5,7 +5,7 @@
  * or when processing activities warrant it. Reused by Features 3, 5, and 7.
  */
 
-import type { PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { AssessmentStatus, AssessmentType } from "@prisma/client";
 import {
   checkAssessmentEntitlement,
@@ -13,7 +13,7 @@ import {
 } from "../services/licensing/entitlement";
 
 interface AutoCreateParams {
-  tx: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">;
+  tx: Prisma.TransactionClient;
   organizationId: string;
   userId: string;
   processingActivityId?: string;

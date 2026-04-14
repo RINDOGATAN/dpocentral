@@ -1,4 +1,5 @@
 import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ROPAReport } from "@/server/services/export/ropa-report";
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
     return Response.json({ error: "organizationId is required" }, { status: 400 });
   }
 
-  const token = await getToken({ req: request });
+  const token = await getToken({ req: request as unknown as NextRequest });
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

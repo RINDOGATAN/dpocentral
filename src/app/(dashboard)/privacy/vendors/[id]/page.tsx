@@ -402,7 +402,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                   Add Contract
                 </Button>
               </div>
-              {vendor.contracts.map((contract: { id: string; name: string; type: string; status: string; startDate: Date | null; endDate: Date | null; documentUrl: string | null }) => (
+              {vendor.contracts.map((contract) => (
                 <Card key={contract.id}>
                   <CardContent className="py-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

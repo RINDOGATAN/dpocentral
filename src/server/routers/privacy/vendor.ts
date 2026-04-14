@@ -91,7 +91,7 @@ export const vendorRouter = createTRPCRouter({
         },
         include: {
           contracts: {
-            select: { id: true, name: true, type: true, status: true, startDate: true, endDate: true, renewalDate: true, autoRenewal: true, value: true, currency: true },
+            select: { id: true, name: true, type: true, status: true, startDate: true, endDate: true, renewalDate: true, autoRenewal: true, value: true, currency: true, documentUrl: true },
             orderBy: { endDate: "asc" },
           },
           questionnaireResponses: {

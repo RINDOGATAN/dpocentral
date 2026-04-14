@@ -8,6 +8,7 @@ import {
   LegalBasis,
   TransferMechanism,
   VendorStatus,
+  Prisma,
 } from "@prisma/client";
 import {
   findMappingForCategory,
@@ -853,7 +854,7 @@ export const quickstartRouter = createTRPCRouter({
         // ─── AUTO-ASSESSMENT FOR HIGH-RISK VENDORS ───
         for (const hrVendor of highRiskVendors) {
           const result = await createAssessmentFromActivity({
-            tx,
+            tx: tx as unknown as Prisma.TransactionClient,
             organizationId: orgId,
             userId,
             processingActivityId: hrVendor.activityId,

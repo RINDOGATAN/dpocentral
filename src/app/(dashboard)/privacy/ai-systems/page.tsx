@@ -108,7 +108,7 @@ export default function AISystemsPage() {
 
   const exportMutation = trpc.aiGovernance.exportToAiSentinel.useMutation({
     onSuccess: (result) => {
-      toast.success(`Exported ${result.exported} system(s) to AI Sentinel`);
+      toast.success(`Sent ${result.exported} ${result.exported === 1 ? "system" : "systems"} to AI Sentinel`);
       setExportDialogOpen(false);
       setSelectedExportIds([]);
     },
@@ -160,17 +160,17 @@ export default function AISystemsPage() {
               </DialogTrigger>
               <DialogContent className="max-w-lg">
                 <DialogHeader>
-                  <DialogTitle>Export to AI Sentinel</DialogTitle>
+                  <DialogTitle>Send to AI Sentinel</DialogTitle>
                   <DialogDescription>
-                    Select AI systems to export to AI Sentinel for deep governance management.
+                    Forward AI systems to AI Sentinel for deeper governance tracking. Already-synced systems can be re-sent to push updates.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="max-h-[300px] overflow-y-auto space-y-2 py-2">
                   {data?.systems.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-4">No AI systems to export.</p>
+                    <p className="text-sm text-muted-foreground text-center py-4">No AI systems registered yet.</p>
                   )}
                   {data?.systems.every((s) => s.aiSentinelSystemId) && (data?.systems.length ?? 0) > 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-2">All systems are already synced to AI Sentinel. You can re-export to update.</p>
+                    <p className="text-sm text-muted-foreground text-center py-2">All systems are already synced. Re-sending will push the latest state.</p>
                   )}
                   {data?.systems.map((system) => (
                     <label
@@ -212,9 +212,9 @@ export default function AISystemsPage() {
                     disabled={selectedExportIds.length === 0 || exportMutation.isPending}
                   >
                     {exportMutation.isPending ? (
-                      <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Exporting...</>
+                      <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Sending…</>
                     ) : (
-                      <>Export {selectedExportIds.length} system(s)</>
+                      <>Send {selectedExportIds.length} {selectedExportIds.length === 1 ? "system" : "systems"}</>
                     )}
                   </Button>
                 </DialogFooter>
