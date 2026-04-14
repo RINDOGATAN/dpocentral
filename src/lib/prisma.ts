@@ -1,8 +1,23 @@
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma: ReturnType<typeof createPrismaClient> | undefined;
 };
+
+function createPrismaClient() {
+  return new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  }).$extends({
+    query: {
+      $allOperations({ args, query }) {
+        return withRetry(() => query(args));
+      },
+    },
+  });
+}
 
 const MAX_RETRIES = 3;
 const RETRY_BASE_MS = 200;
@@ -44,24 +59,8 @@ async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
   throw lastError;
 }
 
-const basePrisma = new PrismaClient({
-  log:
-    process.env.NODE_ENV === "development"
-      ? ["query", "error", "warn"]
-      : ["error"],
-});
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
-export const prisma =
-  globalForPrisma.prisma ??
-  basePrisma.$extends({
-    query: {
-      $allOperations({ args, query }) {
-        return withRetry(() => query(args));
-      },
-    },
-  });
-
-if (process.env.NODE_ENV !== "production")
-  globalForPrisma.prisma = prisma as unknown as PrismaClient;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export default prisma;

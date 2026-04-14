@@ -573,33 +573,6 @@ export const dsarRouter = createTRPCRouter({
   // PUBLIC PORTAL ENDPOINTS (No auth required)
   // ============================================================
 
-  // Get public intake form by org slug
-  getPublicForm: publicProcedure
-    .input(z.object({ orgSlug: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const org = await ctx.prisma.organization.findUnique({
-        where: { slug: input.orgSlug },
-        include: {
-          dsarIntakeForms: {
-            where: { isActive: true },
-            take: 1,
-          },
-        },
-      });
-
-      if (!org || org.dsarIntakeForms.length === 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Organization or intake form not found",
-        });
-      }
-
-      return {
-        organizationName: org.name,
-        form: org.dsarIntakeForms[0],
-      };
-    }),
-
   // Get public intake form config by org slug (for the public portal)
   getPublicForm: publicProcedure
     .input(z.object({ orgSlug: z.string() }))

@@ -1,4 +1,5 @@
 import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { AssessmentReport } from "@/server/services/export/assessment-report";
@@ -12,7 +13,7 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  const token = await getToken({ req: request });
+  const token = await getToken({ req: request as unknown as NextRequest });
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
