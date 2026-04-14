@@ -131,14 +131,15 @@ export function RegulatoryLandscapeReport({
     byRegion.get(region)!.push(j);
   }
 
-  // Strictest deadlines
+  // Strictest deadlines — null when no frameworks are applied, so the
+  // stat cards render "—" instead of a misleading hardcoded default.
   const strictestDsar = jurisdictions.length > 0
     ? Math.min(...jurisdictions.map((j) => j.dsarDeadlineDays))
-    : 30;
+    : null;
   const strictestBreach = jurisdictions.filter((j) => j.breachNotificationHours > 0);
   const strictestBreachHours = strictestBreach.length > 0
     ? Math.min(...strictestBreach.map((j) => j.breachNotificationHours))
-    : 72;
+    : null;
 
   // Collect all unique requirements
   const allRequirements = new Map<string, string[]>();
@@ -181,11 +182,11 @@ export function RegulatoryLandscapeReport({
             label="Compliance Score"
           />
           <StatCard
-            value={`${strictestDsar}d`}
+            value={strictestDsar != null ? `${strictestDsar}d` : "—"}
             label="Strictest DSAR"
           />
           <StatCard
-            value={formatHours(strictestBreachHours)}
+            value={strictestBreachHours != null ? formatHours(strictestBreachHours) : "—"}
             label="Strictest Breach"
           />
         </View>
