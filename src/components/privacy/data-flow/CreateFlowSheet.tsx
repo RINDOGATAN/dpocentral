@@ -83,6 +83,8 @@ interface CreateFlowSheetProps {
   error?: string | null;
   defaultSourceId?: string;
   defaultDestinationId?: string;
+  mode?: "create" | "edit";
+  initialData?: CreateFlowData;
 }
 
 export interface CreateFlowData {
@@ -97,6 +99,18 @@ export interface CreateFlowData {
   isAutomated: boolean;
 }
 
+const emptyForm = (defaultSourceId?: string, defaultDestinationId?: string): CreateFlowData => ({
+  name: "",
+  description: "",
+  sourceAssetId: defaultSourceId || "",
+  destinationAssetId: defaultDestinationId || "",
+  dataCategories: [],
+  frequency: "",
+  volume: "",
+  encryptionMethod: "",
+  isAutomated: true,
+});
+
 export function CreateFlowSheet({
   isOpen,
   onClose,
@@ -106,34 +120,18 @@ export function CreateFlowSheet({
   error,
   defaultSourceId,
   defaultDestinationId,
+  mode = "create",
+  initialData,
 }: CreateFlowSheetProps) {
-  const [form, setForm] = useState<CreateFlowData>({
-    name: "",
-    description: "",
-    sourceAssetId: defaultSourceId || "",
-    destinationAssetId: defaultDestinationId || "",
-    dataCategories: [],
-    frequency: "",
-    volume: "",
-    encryptionMethod: "",
-    isAutomated: true,
-  });
+  const [form, setForm] = useState<CreateFlowData>(
+    initialData ?? emptyForm(defaultSourceId, defaultDestinationId)
+  );
 
   useEffect(() => {
     if (isOpen) {
-      setForm({
-        name: "",
-        description: "",
-        sourceAssetId: defaultSourceId || "",
-        destinationAssetId: defaultDestinationId || "",
-        dataCategories: [],
-        frequency: "",
-        volume: "",
-        encryptionMethod: "",
-        isAutomated: true,
-      });
+      setForm(initialData ?? emptyForm(defaultSourceId, defaultDestinationId));
     }
-  }, [isOpen, defaultSourceId, defaultDestinationId]);
+  }, [isOpen, initialData, defaultSourceId, defaultDestinationId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,9 +165,11 @@ export function CreateFlowSheet({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Create Data Flow</SheetTitle>
+          <SheetTitle>{mode === "edit" ? "Edit Data Flow" : "Create Data Flow"}</SheetTitle>
           <SheetDescription>
-            Define how data moves between systems
+            {mode === "edit"
+              ? "Update how data moves between systems"
+              : "Define how data moves between systems"}
           </SheetDescription>
         </SheetHeader>
 
@@ -349,8 +349,10 @@ export function CreateFlowSheet({
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
+                  {mode === "edit" ? "Saving…" : "Creating…"}
                 </>
+              ) : mode === "edit" ? (
+                "Save Changes"
               ) : (
                 "Create Flow"
               )}
