@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Europe/Madrid
+    open-pull-requests-limit: 10
+    groups:
+      # Group all runtime patch/minor bumps so they land in one PR
+      runtime-minor:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      # Group all dev-only patch/minor bumps
+      dev-minor:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    # Security updates always get their own PRs (not grouped)
+    # Major bumps always get their own PR so we can review carefully
+    ignore:
+      # next-auth v4 → v5 is a breaking migration, handle manually
+      - dependency-name: next-auth
+        update-types: [version-update:semver-major]
+      - dependency-name: "@auth/prisma-adapter"
+        update-types: [version-update:semver-major]
