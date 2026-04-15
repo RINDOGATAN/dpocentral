@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",
-    "@dagrejs/dagre": "^2.0.3",
+    "@dagrejs/dagre": "^3.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@hpcc-js/wasm-graphviz": "^1.21.2",
     "@prisma/client": "^5.22.0",
