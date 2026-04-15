@@ -15,6 +15,7 @@ import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Plus, Database } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +23,7 @@ import { AssetNode } from "./AssetNode";
 import { FlowEdge } from "./FlowEdge";
 import { FlowDetailsPanel } from "./FlowDetailsPanel";
 import { CreateFlowSheet, type CreateFlowData } from "./CreateFlowSheet";
+import { DataCategory } from "@prisma/client";
 import {
   useDataFlowGraph,
   type FlowData,
@@ -55,6 +57,7 @@ export function DataFlowVisualization({
   const [selectedFlow, setSelectedFlow] = useState<FlowData | null>(null);
   const [isFlowPanelOpen, setIsFlowPanelOpen] = useState(false);
   const [isCreateFlowOpen, setIsCreateFlowOpen] = useState(false);
+  const [editingFlow, setEditingFlow] = useState<FlowData | null>(null);
 
   // Fetch data
   const { data: assetsData, isLoading: assetsLoading } = trpc.dataInventory.listAssets.useQuery(
@@ -71,17 +74,32 @@ export function DataFlowVisualization({
 
   const createFlow = trpc.dataInventory.createFlow.useMutation({
     onSuccess: () => {
+      toast.success("Data flow created");
       utils.dataInventory.listFlows.invalidate();
       setIsCreateFlowOpen(false);
     },
+    onError: (error) => toast.error(error.message || "Failed to create data flow"),
+  });
+
+  const updateFlow = trpc.dataInventory.updateFlow.useMutation({
+    onSuccess: () => {
+      toast.success("Data flow updated");
+      utils.dataInventory.listFlows.invalidate();
+      setEditingFlow(null);
+      setIsFlowPanelOpen(false);
+      setSelectedFlow(null);
+    },
+    onError: (error) => toast.error(error.message || "Failed to update data flow"),
   });
 
   const deleteFlow = trpc.dataInventory.deleteFlow.useMutation({
     onSuccess: () => {
+      toast.success("Data flow deleted");
       utils.dataInventory.listFlows.invalidate();
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
+    onError: (error) => toast.error(error.message || "Failed to delete data flow"),
   });
 
   const dataLoading = assetsLoading || flowsLoading;
@@ -197,6 +215,44 @@ export function DataFlowVisualization({
     if (!confirm(`Delete flow "${flow.name}"?`)) return;
     deleteFlow.mutate({ organizationId, id: flow.id });
   };
+
+  // Handle edit flow
+  const handleEditFlow = (flow: FlowData) => {
+    setEditingFlow(flow);
+    setIsFlowPanelOpen(false);
+  };
+
+  const handleEditSubmit = (data: CreateFlowData) => {
+    if (!editingFlow) return;
+    const toNull = (v: string | undefined) => (v && v.length > 0 ? v : null);
+    updateFlow.mutate({
+      organizationId,
+      id: editingFlow.id,
+      name: data.name,
+      description: toNull(data.description),
+      sourceAssetId: data.sourceAssetId,
+      destinationAssetId: data.destinationAssetId,
+      dataCategories: data.dataCategories,
+      frequency: toNull(data.frequency),
+      volume: toNull(data.volume),
+      encryptionMethod: toNull(data.encryptionMethod),
+      isAutomated: data.isAutomated,
+    });
+  };
+
+  const editInitialData: CreateFlowData | undefined = editingFlow
+    ? {
+        name: editingFlow.name,
+        description: editingFlow.description ?? "",
+        sourceAssetId: editingFlow.sourceAssetId,
+        destinationAssetId: editingFlow.destinationAssetId,
+        dataCategories: editingFlow.dataCategories as DataCategory[],
+        frequency: editingFlow.frequency ?? "",
+        volume: editingFlow.volume ?? "",
+        encryptionMethod: editingFlow.encryptionMethod ?? "",
+        isAutomated: editingFlow.isAutomated,
+      }
+    : undefined;
 
   // Loading state
   if (dataLoading || graphLoading) {
@@ -364,6 +420,7 @@ export function DataFlowVisualization({
           setIsFlowPanelOpen(false);
           setSelectedFlow(null);
         }}
+        onEdit={handleEditFlow}
         onDelete={handleDeleteFlow}
       />
 
@@ -376,6 +433,18 @@ export function DataFlowVisualization({
         isSubmitting={createFlow.isPending}
         error={createFlow.error?.message}
         defaultSourceId={mode === "asset" ? assetId : undefined}
+      />
+
+      {/* Edit Flow Sheet */}
+      <CreateFlowSheet
+        mode="edit"
+        isOpen={!!editingFlow}
+        onClose={() => setEditingFlow(null)}
+        assets={assets}
+        onSubmit={handleEditSubmit}
+        isSubmitting={updateFlow.isPending}
+        error={updateFlow.error?.message}
+        initialData={editInitialData}
       />
     </>
   );
