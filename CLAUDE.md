@@ -63,6 +63,10 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 
 `/api/cron/dsar-redaction`: DSAR PII auto-redaction. Currently not scheduled in `vercel.json` — endpoint exists for manual / future cron use. The full notifications cron (deadline alerts, email/in-app/Slack) was removed; reinstating it requires restoring `dispatchNotification` in `src/server/services/notifications/dispatcher.ts` and adding a new cron entry.
 
+## Deploy
+
+Vercel is gated to **main-only** via `ignoreCommand` in `vercel.json`. Feature branches, Dependabot branches, and any non-`main` push are skipped at the Vercel build-trigger stage — no preview URLs, no build minutes consumed. To re-enable previews, remove the `ignoreCommand` line. Dependabot is configured in `.github/dependabot.yml` with weekly grouped PRs; `next-auth` major bumps are ignored (v4 → v5 is a breaking migration).
+
 ## Public Pages & Docs
 
 - `/docs/*` — 6 documentation pages (overview, data-inventory, dsar, assessments, incidents, vendors) with PDF export sections
