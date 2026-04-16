@@ -215,6 +215,74 @@ export const s = StyleSheet.create({
     height: 6,
     backgroundColor: PRIMARY,
   },
+  // Content-page accent stripe (thinner, for non-cover pages)
+  contentStripe: {
+    position: "absolute" as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: PRIMARY,
+  },
+  // Table of Contents
+  tocEntry: {
+    flexDirection: "row" as const,
+    alignItems: "baseline" as const,
+    paddingVertical: 6,
+    borderBottomWidth: 0.5,
+    borderBottomColor: BORDER,
+  },
+  tocSection: {
+    fontSize: 10,
+    color: DARK,
+  },
+  tocDots: {
+    flex: 1,
+    borderBottomWidth: 0.5,
+    borderBottomColor: BORDER,
+    marginHorizontal: 8,
+    marginBottom: 2,
+  },
+  // Per-asset card
+  assetCard: {
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderRadius: 4,
+    marginBottom: 14,
+  },
+  assetCardHeader: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "flex-start" as const,
+    padding: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: BORDER,
+    backgroundColor: LIGHT_BG,
+  },
+  assetCardBody: {
+    padding: 10,
+  },
+  assetCardTitle: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: DARK,
+  },
+  // Type badge (colour-coded inline pill)
+  typeBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 3,
+    fontSize: 7,
+    fontFamily: "Helvetica-Bold",
+  },
+  // Executive summary
+  executiveSummary: {
+    fontSize: 9,
+    lineHeight: 1.6,
+    color: DARK,
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
   // Assessment section header with left accent
   sectionHeader: {
     borderLeftWidth: 4,
@@ -336,6 +404,27 @@ const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   PROSPECTIVE: { bg: "#e5e7eb", color: "#374151" },
 };
 
+const ASSET_TYPE_COLORS: Record<string, { bg: string; color: string }> = {
+  APPLICATION:   { bg: "#cce8f1", color: "#0c3845" },
+  CLOUD_SERVICE: { bg: "#dbeafe", color: "#1e3a8a" },
+  DATABASE:      { bg: "#e0e7ff", color: "#312e81" },
+  FILE_SYSTEM:   { bg: "#f3f4f6", color: "#1f2937" },
+  THIRD_PARTY:   { bg: "#fef3c7", color: "#78350f" },
+  PHYSICAL:      { bg: "#e7e5e4", color: "#292524" },
+  OTHER:         { bg: "#f1f5f9", color: "#0f172a" },
+};
+
+export { ASSET_TYPE_COLORS };
+
+export function AssetTypeBadge({ type }: { type: string }) {
+  const colors = ASSET_TYPE_COLORS[type] ?? ASSET_TYPE_COLORS.OTHER!;
+  return (
+    <Text style={[s.typeBadge, { backgroundColor: colors.bg, color: colors.color }]}>
+      {type.replace(/_/g, " ")}
+    </Text>
+  );
+}
+
 export function CoverPage({
   orgName,
   title,
@@ -349,6 +438,7 @@ export function CoverPage({
 }) {
   return (
     <Page size="A4" style={s.coverPage}>
+      <View style={s.coverStripe} />
       <Text style={s.coverOrgName}>{orgName}</Text>
       <Text style={s.coverTitle}>{title}</Text>
       {subtitle && <Text style={s.coverSubtitle}>{subtitle}</Text>}
@@ -392,14 +482,17 @@ export function ContentPage({
   orgName,
   date,
   children,
+  accentStripe = false,
 }: {
   title: string;
   orgName: string;
   date: string;
   children: React.ReactNode;
+  accentStripe?: boolean;
 }) {
   return (
     <Page size="A4" style={s.page} wrap>
+      {accentStripe && <View style={s.contentStripe} fixed />}
       <PageHeader title={title} orgName={orgName} />
       {children}
       <PageFooter date={date} />
