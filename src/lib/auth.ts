@@ -194,9 +194,10 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
       }
-      // Fetch userType on sign-in or when session is updated (e.g. after persona selection)
+      // Fetch userType on sign-in, explicit session update, or if the
+      // JWT was minted before userType existed (backfill for old tokens).
       const userId = token.sub ?? (token.id as string | undefined);
-      if ((user || trigger === "update") && userId) {
+      if (userId && (user || trigger === "update" || token.userType === undefined)) {
         const dbUser = await prisma.user.findUnique({
           where: { id: userId },
           select: { userType: true },
