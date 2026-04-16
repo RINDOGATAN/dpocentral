@@ -1,5 +1,22 @@
 import React from "react";
-import { Page, View, Text, StyleSheet } from "@react-pdf/renderer";
+import path from "node:path";
+import { Page, View, Text, StyleSheet, Font } from "@react-pdf/renderer";
+
+// ── Register Inter font family ────────────────────────────────────────
+const fontsDir = path.join(process.cwd(), "src/server/services/export/fonts");
+
+Font.register({
+  family: "Inter",
+  fonts: [
+    { src: path.join(fontsDir, "Inter-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(fontsDir, "Inter-Medium.ttf"), fontWeight: 500 },
+    { src: path.join(fontsDir, "Inter-SemiBold.ttf"), fontWeight: 600 },
+    { src: path.join(fontsDir, "Inter-Bold.ttf"), fontWeight: 700 },
+  ],
+});
+
+// Disable word hyphenation for cleaner text layout
+Font.registerHyphenationCallback((word) => [word]);
 
 const PRIMARY = "#53aecc";
 const DARK = "#1a1a1a";
@@ -16,7 +33,7 @@ export const s = StyleSheet.create({
     padding: 40,
     paddingBottom: 60,
     fontSize: 9,
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     color: DARK,
   },
   // Cover page
@@ -24,7 +41,7 @@ export const s = StyleSheet.create({
     padding: 60,
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     color: DARK,
   },
   coverOrgName: {
@@ -36,7 +53,7 @@ export const s = StyleSheet.create({
   },
   coverTitle: {
     fontSize: 28,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: DARK,
     textAlign: "center",
     marginBottom: 12,
@@ -86,14 +103,14 @@ export const s = StyleSheet.create({
   // Section
   sectionTitle: {
     fontSize: 14,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: DARK,
     marginBottom: 10,
     marginTop: 16,
   },
   sectionSubtitle: {
     fontSize: 11,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: DARK,
     marginBottom: 6,
     marginTop: 12,
@@ -110,7 +127,7 @@ export const s = StyleSheet.create({
   },
   tableHeaderCell: {
     fontSize: 8,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: WHITE,
     paddingHorizontal: 4,
   },
@@ -141,7 +158,7 @@ export const s = StyleSheet.create({
   },
   metaLabel: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: MUTED,
     width: 140,
   },
@@ -156,7 +173,7 @@ export const s = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 3,
     fontSize: 7,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
   },
   // Card
   card: {
@@ -197,7 +214,7 @@ export const s = StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: PRIMARY,
   },
   statLabel: {
@@ -264,7 +281,7 @@ export const s = StyleSheet.create({
   },
   assetCardTitle: {
     fontSize: 11,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: DARK,
   },
   // Type badge (colour-coded inline pill)
@@ -273,7 +290,7 @@ export const s = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 3,
     fontSize: 7,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
   },
   // Executive summary
   executiveSummary: {
@@ -310,13 +327,13 @@ export const s = StyleSheet.create({
   },
   questionNumber: {
     fontSize: 10,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: PRIMARY,
     marginRight: 4,
   },
   questionText: {
     fontSize: 10,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: DARK,
     flex: 1,
   },
@@ -330,12 +347,11 @@ export const s = StyleSheet.create({
     fontSize: 8,
     lineHeight: 1.4,
     color: MUTED,
-    fontStyle: "italic" as const,
     marginTop: 4,
   },
   requiredTag: {
     fontSize: 6,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: "#dc2626",
     backgroundColor: "#fef2f2",
     paddingHorizontal: 4,
@@ -354,7 +370,7 @@ export const s = StyleSheet.create({
   },
   calloutTitle: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Inter", fontWeight: 700,
     color: "#0369a1",
     marginBottom: 6,
   },
@@ -565,7 +581,7 @@ export function DataTable({
       ))}
       {rows.length === 0 && (
         <View style={s.tableRow}>
-          <Text style={[s.tableCell, { flex: 1, color: MUTED, fontStyle: "italic" }]}>
+          <Text style={[s.tableCell, { flex: 1, color: MUTED,  }]}>
             No records
           </Text>
         </View>
@@ -626,11 +642,11 @@ export function AccentSectionHeader({
 }) {
   return (
     <View style={s.sectionHeader}>
-      <Text style={{ fontSize: 13, fontFamily: "Helvetica-Bold", color: DARK }}>
+      <Text style={{ fontSize: 13, fontFamily: "Inter", fontWeight: 700, color: DARK }}>
         {title}
       </Text>
       {description && (
-        <Text style={{ fontSize: 9, fontStyle: "italic", color: MUTED, marginTop: 3 }}>
+        <Text style={{ fontSize: 9, color: MUTED, marginTop: 3 }}>
           {description}
         </Text>
       )}

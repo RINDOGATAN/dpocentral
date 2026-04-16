@@ -271,7 +271,7 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
                           <Text
                             style={{
                               fontSize: 8,
-                              fontFamily: "Helvetica-Bold",
+                              fontFamily: "Inter", fontWeight: 700,
                               color: PDF_COLORS.MUTED,
                             }}
                           >
@@ -303,7 +303,7 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
                     <Text
                       style={{
                         fontSize: 8,
-                        fontStyle: "italic",
+                        ,
                         color: "#999",
                         marginTop: 6,
                       }}
@@ -424,7 +424,7 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
                     <Text
                       style={{
                         fontSize: 9,
-                        fontFamily: "Helvetica-Bold",
+                        fontFamily: "Inter", fontWeight: 700,
                         color: PDF_COLORS.DARK,
                         marginBottom: 4,
                       }}

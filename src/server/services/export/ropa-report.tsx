@@ -80,7 +80,7 @@ export function ROPAReport({
               {i === 0 && <SectionTitle>Processing Activities</SectionTitle>}
               <View style={s.card}>
               <View style={[s.row, { justifyContent: "space-between", marginBottom: 6 }]}>
-                <Text style={{ fontFamily: "Helvetica-Bold", fontSize: 11 }}>
+                <Text style={{ fontFamily: "Inter", fontWeight: 700, fontSize: 11 }}>
                   {i + 1}. {entry.name}
                 </Text>
                 {!validation.isValid && (
