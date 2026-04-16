@@ -191,9 +191,9 @@ export default function AssessmentsPage() {
       {isLoading ? (
         <ListPageSkeleton />
       ) : filteredAssessments.length > 0 ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {filteredAssessments.map((assessment) => (
-            <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`}>
+            <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`} className="block">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">
                   {/* Mobile Layout - Stacked */}

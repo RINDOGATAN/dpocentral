@@ -351,9 +351,9 @@ export default function DataInventoryPage() {
                   Add Activity
                 </Button>
               </div>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {processingActivities.map((activity) => (
-                  <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
+                  <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block">
                     <Card className="hover:border-primary/50 transition-colors">
                       <CardContent className="p-4">
                         {/* Mobile Layout */}
