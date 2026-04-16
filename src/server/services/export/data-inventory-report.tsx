@@ -150,7 +150,7 @@ export function DataInventoryReport({
         <SectionTitle>Data Assets</SectionTitle>
 
         {data.assets.length === 0 && (
-          <Text style={[s.paragraph, { color: "#666666", fontStyle: "italic" }]}>
+          <Text style={[s.paragraph, { color: "#666666",  }]}>
             No data assets have been registered.
           </Text>
         )}
@@ -207,7 +207,7 @@ export function DataInventoryReport({
               </View>
             ) : (
               <View style={s.assetCardBody}>
-                <Text style={[s.paragraph, { color: "#666666", fontStyle: "italic" }]}>
+                <Text style={[s.paragraph, { color: "#666666",  }]}>
                   No data elements registered for this asset.
                 </Text>
               </View>
