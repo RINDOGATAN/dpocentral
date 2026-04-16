@@ -304,9 +304,11 @@ async function exportDataInventory(org: { id: string; name: string }) {
     flows: flows.map((f) => ({
       name: f.name,
       description: f.description,
+      sourceAssetId: f.sourceAssetId,
+      destinationAssetId: f.destinationAssetId,
       sourceAsset: f.sourceAsset,
       destinationAsset: f.destinationAsset,
-      dataCategories: f.dataCategories,
+      dataCategories: f.dataCategories as string[],
       frequency: f.frequency,
       encryptionMethod: f.encryptionMethod,
       isAutomated: f.isAutomated,
