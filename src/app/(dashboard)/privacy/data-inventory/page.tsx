@@ -351,7 +351,7 @@ export default function DataInventoryPage() {
                   Add Activity
                 </Button>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {processingActivities.map((activity) => (
                   <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
                     <Card className="hover:border-primary/50 transition-colors">
