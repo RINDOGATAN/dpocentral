@@ -23,13 +23,15 @@ const cookiePrefix = isProduction ? "__Secure-" : "";
 // DPO Central uses JWT sessions and never reads these tokens,
 // so storing them is unnecessary risk.
 const baseAdapter = PrismaAdapter(prisma) as NextAuthOptions["adapter"];
-const adapter: NextAuthOptions["adapter"] = {
+const adapter = {
   ...baseAdapter!,
-  linkAccount: (account: Record<string, unknown>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  linkAccount: async (account: any) => {
     const { refresh_token, access_token, id_token, ...safeAccount } = account;
-    return baseAdapter!.linkAccount!(safeAccount as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await baseAdapter!.linkAccount!(safeAccount as any);
   },
-};
+} as NextAuthOptions["adapter"];
 
 export const authOptions: NextAuthOptions = {
   adapter,
