@@ -8,6 +8,8 @@ import {
   MetadataBlock,
   DataTable,
   StatCard,
+  AssetTypeBadge,
+  RiskBadge,
   s,
   fmtDate,
 } from "./pdf-styles";
@@ -58,6 +60,30 @@ export interface DataInventoryExportData {
   }>;
 }
 
+// ---------------------------------------------------------------------------
+// Executive summary — auto-generated narrative paragraph
+// ---------------------------------------------------------------------------
+function buildExecutiveSummary(data: DataInventoryExportData): string {
+  const totalElements = data.assets.reduce((n, a) => n + a.dataElements.length, 0);
+  const personalCount = data.assets.reduce(
+    (n, a) => n + a.dataElements.filter((e) => e.isPersonalData).length, 0,
+  );
+  const specialCatCount = data.assets.reduce(
+    (n, a) => n + a.dataElements.filter((e) => e.isSpecialCategory).length, 0,
+  );
+  const prodAssets = data.assets.filter((a) => a.isProduction).length;
+  const types = [...new Set(data.assets.map((a) => a.type.replace(/_/g, " ").toLowerCase()))];
+
+  let text = `This inventory catalogues ${data.assets.length} data asset${data.assets.length !== 1 ? "s" : ""} comprising ${totalElements} data element${totalElements !== 1 ? "s" : ""}`;
+  if (types.length > 0) text += ` across ${types.length} asset type${types.length !== 1 ? "s" : ""} (${types.join(", ")})`;
+  text += `. ${prodAssets} asset${prodAssets !== 1 ? "s are" : " is"} marked as production.`;
+  if (personalCount > 0) text += ` ${personalCount} element${personalCount !== 1 ? "s are" : " is"} classified as personal data under GDPR.`;
+  if (specialCatCount > 0) text += ` Of these, ${specialCatCount} ${specialCatCount !== 1 ? "are" : "is"} special category data requiring additional safeguards under Article 9.`;
+  if (data.flows.length > 0) text += ` ${data.flows.length} data flow${data.flows.length !== 1 ? "s have" : " has"} been documented between assets.`;
+  if (data.transfers.length > 0) text += ` ${data.transfers.length} international transfer${data.transfers.length !== 1 ? "s are" : " is"} recorded.`;
+  return text;
+}
+
 export function DataInventoryReport({
   data,
   orgName,
@@ -68,17 +94,22 @@ export function DataInventoryReport({
   flowGraph?: RenderedFlowGraph | null;
 }) {
   const date = fmtDate(new Date());
-  const totalElements = data.assets.reduce(
-    (sum, a) => sum + a.dataElements.length,
-    0
-  );
+  const totalElements = data.assets.reduce((n, a) => n + a.dataElements.length, 0);
   const specialCatCount = data.assets.reduce(
-    (sum, a) => sum + a.dataElements.filter((e) => e.isSpecialCategory).length,
-    0
+    (n, a) => n + a.dataElements.filter((e) => e.isSpecialCategory).length, 0,
   );
+
+  // Build TOC entries based on which sections have data
+  const tocEntries = [
+    "Summary & Executive Overview",
+    "Data Assets",
+    ...(data.flows.length > 0 ? ["Data Flow Map", "Data Flow Details"] : []),
+    ...(data.transfers.length > 0 ? ["International Transfers"] : []),
+  ];
 
   return (
     <Document>
+      {/* ── Cover Page ────────────────────────────────── */}
       <CoverPage
         orgName={orgName}
         title="Data Inventory"
@@ -86,7 +117,19 @@ export function DataInventoryReport({
         date={date}
       />
 
-      <ContentPage title="Data Inventory" orgName={orgName} date={date}>
+      {/* ── Table of Contents ─────────────────────────── */}
+      <ContentPage title="Data Inventory" orgName={orgName} date={date} accentStripe>
+        <SectionTitle>Table of Contents</SectionTitle>
+        {tocEntries.map((label, i) => (
+          <View key={i} style={s.tocEntry}>
+            <Text style={s.tocSection}>{`${i + 1}. ${label}`}</Text>
+            <View style={s.tocDots} />
+          </View>
+        ))}
+      </ContentPage>
+
+      {/* ── Summary + Executive Overview ──────────────── */}
+      <ContentPage title="Data Inventory" orgName={orgName} date={date} accentStripe>
         <SectionTitle>Summary</SectionTitle>
         <View style={s.statsGrid}>
           <StatCard value={data.assets.length} label="Data Assets" />
@@ -100,46 +143,79 @@ export function DataInventoryReport({
           </Text>
         )}
 
-        {/* Assets Overview */}
+        <SectionSubtitle>Executive Summary</SectionSubtitle>
+        <Text style={s.executiveSummary}>{buildExecutiveSummary(data)}</Text>
+
+        {/* ── Per-Asset Cards ─────────────────────────── */}
         <SectionTitle>Data Assets</SectionTitle>
-        <DataTable
-          headers={["Name", "Type", "Owner", "Location", "Hosting", "Elements", "Prod"]}
-          colWidths={[2.5, 1.2, 1.5, 1.5, 1.2, 1, 0.8]}
-          rows={data.assets.map((a) => [
-            a.name,
-            a.type.replace(/_/g, " "),
-            a.owner,
-            a.location,
-            a.hostingType,
-            a.dataElements.length,
-            a.isProduction ? "Yes" : "No",
-          ])}
-        />
 
-        {/* Per-asset data elements */}
-        {data.assets
-          .filter((a) => a.dataElements.length > 0)
-          .map((asset) => (
-            <View key={asset.id}>
-              <SectionSubtitle>
-                {asset.name} — Data Elements
-              </SectionSubtitle>
-              <DataTable
-                headers={["Element", "Category", "Sensitivity", "Personal", "Special Cat.", "Retention"]}
-                colWidths={[2, 1.5, 1.2, 1, 1.2, 1.2]}
-                rows={asset.dataElements.map((el) => [
-                  el.name,
-                  el.category.replace(/_/g, " "),
-                  el.sensitivity,
-                  el.isPersonalData ? "Yes" : "No",
-                  el.isSpecialCategory ? "Yes" : "No",
-                  el.retentionDays != null ? `${el.retentionDays}d` : "—",
-                ])}
-              />
+        {data.assets.length === 0 && (
+          <Text style={[s.paragraph, { color: "#666666", fontStyle: "italic" }]}>
+            No data assets have been registered.
+          </Text>
+        )}
+
+        {data.assets.map((asset) => (
+          <View key={asset.id} style={s.assetCard}>
+            {/* Card header — bounded content, wrap={false} is safe */}
+            <View style={s.assetCardHeader} wrap={false}>
+              <View style={{ flex: 1 }}>
+                <Text style={s.assetCardTitle}>{asset.name}</Text>
+                <View style={[s.row, { marginTop: 4, gap: 6 }]}>
+                  <AssetTypeBadge type={asset.type} />
+                  {asset.isProduction && (
+                    <Text style={[s.typeBadge, { backgroundColor: "#dcfce7", color: "#166534" }]}>
+                      PRODUCTION
+                    </Text>
+                  )}
+                </View>
+              </View>
+              <View style={{ alignItems: "flex-end" }}>
+                {asset.owner && (
+                  <Text style={{ fontSize: 8, color: "#666666" }}>
+                    Owner: {asset.owner}
+                  </Text>
+                )}
+                {asset.location && (
+                  <Text style={{ fontSize: 8, color: "#666666" }}>
+                    Location: {asset.location}
+                  </Text>
+                )}
+                {asset.hostingType && (
+                  <Text style={{ fontSize: 8, color: "#666666" }}>
+                    Hosting: {asset.hostingType.replace(/_/g, " ")}
+                  </Text>
+                )}
+              </View>
             </View>
-          ))}
 
-        {/* Data Flows */}
+            {/* Card body — data elements table (unbounded, NO wrap={false}) */}
+            {asset.dataElements.length > 0 ? (
+              <View style={s.assetCardBody}>
+                <DataTable
+                  headers={["Element", "Category", "Sensitivity", "Personal", "Special Cat.", "Retention"]}
+                  colWidths={[2, 1.5, 1.2, 1, 1.2, 1.2]}
+                  rows={asset.dataElements.map((el) => [
+                    el.name,
+                    el.category.replace(/_/g, " "),
+                    el.sensitivity,
+                    el.isPersonalData ? "Yes" : "No",
+                    el.isSpecialCategory ? "Yes" : "No",
+                    el.retentionDays != null ? `${el.retentionDays}d` : "—",
+                  ])}
+                />
+              </View>
+            ) : (
+              <View style={s.assetCardBody}>
+                <Text style={[s.paragraph, { color: "#666666", fontStyle: "italic" }]}>
+                  No data elements registered for this asset.
+                </Text>
+              </View>
+            )}
+          </View>
+        ))}
+
+        {/* ── Data Flow Map ───────────────────────────── */}
         {data.flows.length > 0 && (
           <>
             {flowGraph && (
@@ -168,7 +244,7 @@ export function DataInventoryReport({
           </>
         )}
 
-        {/* International Transfers */}
+        {/* ── International Transfers ─────────────────── */}
         {data.transfers.length > 0 && (
           <>
             <SectionTitle>International Transfers</SectionTitle>
@@ -211,33 +287,17 @@ export function dataInventoryToCSV(data: DataInventoryExportData): string {
   for (const asset of data.assets) {
     if (asset.dataElements.length === 0) {
       rows.push([
-        asset.name,
-        asset.type,
-        asset.owner || "",
-        asset.location || "",
-        asset.hostingType || "",
-        asset.isProduction ? "Yes" : "No",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
+        asset.name, asset.type, asset.owner || "", asset.location || "",
+        asset.hostingType || "", asset.isProduction ? "Yes" : "No",
+        "", "", "", "", "", "",
       ]);
     } else {
       for (const el of asset.dataElements) {
         rows.push([
-          asset.name,
-          asset.type,
-          asset.owner || "",
-          asset.location || "",
-          asset.hostingType || "",
-          asset.isProduction ? "Yes" : "No",
-          el.name,
-          el.category,
-          el.sensitivity,
-          el.isPersonalData ? "Yes" : "No",
-          el.isSpecialCategory ? "Yes" : "No",
+          asset.name, asset.type, asset.owner || "", asset.location || "",
+          asset.hostingType || "", asset.isProduction ? "Yes" : "No",
+          el.name, el.category, el.sensitivity,
+          el.isPersonalData ? "Yes" : "No", el.isSpecialCategory ? "Yes" : "No",
           el.retentionDays != null ? String(el.retentionDays) : "",
         ]);
       }
