@@ -213,7 +213,7 @@ export default function DSARPage() {
       {isLoading ? (
         <ListPageSkeleton />
       ) : filteredRequests.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filteredRequests.map((request) => (
             <Link key={request.id} href={`/privacy/dsar/${request.id}`}>
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">

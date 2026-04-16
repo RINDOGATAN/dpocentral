@@ -324,7 +324,7 @@ export default function AISystemsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {data?.systems.map((system) => (
             <Link key={system.id} href={`/privacy/ai-systems/${system.id}`}>
               <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
