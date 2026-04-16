@@ -257,9 +257,9 @@ export default function ProcessingActivitiesPage() {
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       ) : filteredActivities.length > 0 ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {filteredActivities.map((activity) => (
-            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`}>
+            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block">
               <Card className="hover:border-primary/50 transition-colors">
                 <CardContent className="py-4">
                   <div className="flex items-start gap-6">
