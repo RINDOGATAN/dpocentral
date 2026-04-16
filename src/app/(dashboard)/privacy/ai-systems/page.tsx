@@ -324,9 +324,9 @@ export default function AISystemsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {data?.systems.map((system) => (
-            <Link key={system.id} href={`/privacy/ai-systems/${system.id}`}>
+            <Link key={system.id} href={`/privacy/ai-systems/${system.id}`} className="block">
               <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
                 <CardContent className="py-4">
                   <div className="flex items-start justify-between gap-4">

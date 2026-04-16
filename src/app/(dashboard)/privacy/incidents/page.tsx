@@ -207,9 +207,9 @@ export default function IncidentsPage() {
       {isLoading ? (
         <ListPageSkeleton />
       ) : filteredIncidents.length > 0 ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {filteredIncidents.map((incident) => (
-            <Link key={incident.id} href={`/privacy/incidents/${incident.id}`}>
+            <Link key={incident.id} href={`/privacy/incidents/${incident.id}`} className="block">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">
                   {/* Mobile Layout - Stacked */}

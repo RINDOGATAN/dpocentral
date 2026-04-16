@@ -213,9 +213,9 @@ export default function DSARPage() {
       {isLoading ? (
         <ListPageSkeleton />
       ) : filteredRequests.length > 0 ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {filteredRequests.map((request) => (
-            <Link key={request.id} href={`/privacy/dsar/${request.id}`}>
+            <Link key={request.id} href={`/privacy/dsar/${request.id}`} className="block">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">
                   {/* Mobile Layout - Stacked */}
