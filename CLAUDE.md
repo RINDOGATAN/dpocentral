@@ -9,7 +9,8 @@ Next.js 16 + tRPC + Prisma + PostgreSQL + NextAuth
 Open Core model: **Core** AGPL-3.0 / **Premium** proprietary.
 - Core: Data Inventory, ROPA, DSAR, Incidents, LIA/Custom assessments, Vendor management
 - Premium: DPIA templates & scoring (`@dpocentral/premium-skills`), security (`@dpocentral/security`)
-- PIA, TIA, Vendor assessments: Coming Soon (no templates yet) — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
+- TIA (Transfer Impact Assessment): core template shipped, ungated
+- PIA, Vendor assessments: Coming Soon (no templates yet) — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
 
 ## Key Architecture
 
