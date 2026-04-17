@@ -9,8 +9,9 @@ Next.js 16 + tRPC + Prisma + PostgreSQL + NextAuth
 Open Core model: **Core** AGPL-3.0 / **Premium** proprietary.
 - Core: Data Inventory, ROPA, DSAR, Incidents, LIA/Custom assessments, Vendor management
 - Premium: DPIA templates & scoring (`@dpocentral/premium-skills`), security (`@dpocentral/security`)
-- TIA (Transfer Impact Assessment): core template shipped, ungated
+- TIA (Transfer Impact Assessment): core template shipped (`system-tia-template`), ungated
 - PIA, Vendor assessments: Coming Soon (no templates yet) — gated by `COMING_SOON_SKILL_IDS` in `src/config/skill-packages.ts`
+- Public open-core snapshot: `https://github.com/RINDOGATAN/dpo` (AGPL-3.0)
 
 ## Key Architecture
 
@@ -50,7 +51,9 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 | Vendor Register | `/api/export/vendor-register` | Vendors page |
 | Breach Register | `/api/export/breach-register` | Incidents page |
 
-**Data Flow Map** (Data Inventory + ROPA): `src/server/services/export/flow-graph-pdf.tsx` renders a colour-coded, cluster-aware diagram via `@hpcc-js/wasm-graphviz` (DOT engine) → `@resvg/resvg-js` → PNG → `@react-pdf <Image>`. The route pre-renders the PNG before invoking `renderToBuffer` and passes it as a prop. Both packages are in `next.config.ts > serverExternalPackages` because Turbopack can't bundle the native binding / WASM blob. Vendored Noto Sans Regular at `src/server/services/export/fonts/NotoSans-Regular.ttf` (OFL).
+**Fonts**: All PDF body text uses **Inter** (4 weights vendored at `src/server/services/export/fonts/Inter-*.ttf`, SIL OFL). Registered via `Font.register()` in `pdf-styles.tsx`. Never use `fontStyle: "italic"` — Inter Italic is not vendored; use muted color instead. The Graphviz flow-map pipeline uses vendored Noto Sans Regular for node labels.
+
+**Data Flow Map** (Data Inventory + ROPA): `src/server/services/export/flow-graph-pdf.tsx` renders a colour-coded, cluster-aware diagram via `@hpcc-js/wasm-graphviz` (DOT engine) → `@resvg/resvg-js` → PNG → `@react-pdf <Image>`. The route pre-renders the PNG before invoking `renderToBuffer` and passes it as a prop. Both packages are in `next.config.ts > serverExternalPackages` because Turbopack can't bundle the native binding / WASM blob.
 
 **Critical**: never use `wrap={false}` on Views with unbounded lists — causes text overlap.
 
