@@ -773,6 +773,210 @@
         "warningPrefix": "Aviso: "
       }
     },
+    "assessmentReport": {
+      "coverGenerated": "Generado: {date}",
+      "coverConfidential": "CONFIDENCIAL — Este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse a personal autorizado y a las autoridades de control cuando lo requieran.",
+      "executiveSummary": "Resumen ejecutivo",
+      "stats": {
+        "riskLevel": "Nivel de riesgo",
+        "completion": "Completitud",
+        "questionsAnswered": "Preguntas respondidas",
+        "mitigations": "Mitigaciones",
+        "notAvailable": "N/D"
+      },
+      "meta": {
+        "assessmentType": "Tipo de evaluación",
+        "template": "Plantilla",
+        "status": "Estado",
+        "riskScore": "Puntuación de riesgo",
+        "started": "Iniciada",
+        "submitted": "Enviada",
+        "completed": "Completada",
+        "dueDate": "Fecha límite",
+        "linkedActivity": "Actividad vinculada",
+        "linkedVendor": "Proveedor vinculado"
+      },
+      "description": "Descripción",
+      "dpiaCalloutTitle": "RGPD Artículo 35(7) — Elementos requeridos en la DPIA",
+      "dpiaCallout1": "Descripción sistemática de las operaciones de tratamiento y sus finalidades",
+      "dpiaCallout2": "Evaluación de la necesidad y proporcionalidad",
+      "dpiaCallout3": "Evaluación de los riesgos para los derechos y libertades de los interesados",
+      "dpiaCallout4": "Medidas previstas para afrontar los riesgos y demostrar el cumplimiento",
+      "sectionProgress": "{answered} de {total} preguntas respondidas",
+      "sectionComplete": "Completa",
+      "questionRequired": "OBLIGATORIA",
+      "questionNumber": "P{n}.",
+      "notAnswered": "Aún sin responder",
+      "riskScoreLabel": "Puntuación de riesgo:",
+      "noteLabel": "Nota:",
+      "riskAssessmentSummary": "Resumen de evaluación de riesgos",
+      "stats2": {
+        "overallRiskLevel": "Nivel de riesgo general",
+        "riskScore": "Puntuación de riesgo",
+        "scoredQuestions": "Preguntas puntuadas"
+      },
+      "questionRiskScores": "Puntuaciones de riesgo por pregunta",
+      "riskColumns": {
+        "section": "Sección",
+        "question": "Pregunta",
+        "score": "Puntuación",
+        "level": "Nivel"
+      },
+      "mitigationsTitle": "Mitigaciones de riesgo",
+      "mitigationStats": {
+        "total": "Total",
+        "completed": "Completadas",
+        "outstanding": "Pendientes"
+      },
+      "mitigationColumns": {
+        "title": "Título",
+        "status": "Estado",
+        "priority": "Prioridad",
+        "owner": "Responsable",
+        "dueDate": "Fecha límite",
+        "evidence": "Evidencia"
+      },
+      "priorityCode": "P{n}",
+      "yes": "Sí",
+      "no": "No",
+      "mitigationDetails": "Detalle de mitigaciones",
+      "approvalHistory": "Historial de aprobaciones",
+      "approvalColumns": {
+        "level": "Nivel",
+        "approver": "Aprobador",
+        "status": "Estado",
+        "date": "Fecha",
+        "comments": "Comentarios"
+      },
+      "approvalLevel": "Nivel {n}",
+      "assessmentTypes": {
+        "DPIA": "Evaluación de Impacto en la Protección de Datos",
+        "PIA": "Evaluación de Impacto de Privacidad",
+        "TIA": "Evaluación de Impacto de Transferencia",
+        "LIA": "Evaluación de Interés Legítimo",
+        "VENDOR": "Evaluación de Riesgo de Proveedor",
+        "CUSTOM": "Evaluación personalizada"
+      },
+      "articleRefs": {
+        "DPIA": "RGPD Artículo 35(7)"
+      }
+    },
+    "assessmentPortfolio": {
+      "pageTitle": "Cartera de evaluaciones",
+      "coverTitle": "Cartera de Evaluaciones de Impacto",
+      "coverSubtitle": "Informe de estado de DPIA, LIA y evaluaciones de privacidad",
+      "coverGenerated": "Generado: {date}",
+      "coverConfidential": "CONFIDENCIAL — Este documento resume el programa de evaluaciones de impacto de privacidad de la organización. Está destinado a DPOs, responsables de privacidad y a las autoridades de control cuando lo requieran.",
+      "executiveSummary": "Resumen ejecutivo",
+      "stats": {
+        "total": "Evaluaciones totales",
+        "approved": "Aprobadas",
+        "highCriticalRisk": "Riesgo alto / crítico",
+        "avgCompletion": "Completitud media"
+      },
+      "meta": {
+        "organization": "Organización",
+        "reportDate": "Fecha del informe",
+        "typesUsed": "Tipos de evaluación utilizados",
+        "typesUsedNone": "Ninguno",
+        "totalMitigations": "Mitigaciones totales",
+        "mitigationsCompleted": "Mitigaciones completadas",
+        "mitigationsCompletedValue": "{done} de {total}",
+        "overdueAssessments": "Evaluaciones fuera de plazo",
+        "overdueNone": "Ninguna"
+      },
+      "gdprCalloutTitle": "RGPD Artículo 35 — Obligaciones de evaluación de impacto",
+      "gdprCalloutBody": "Los responsables del tratamiento deben realizar una DPIA antes de un tratamiento que pueda suponer un alto riesgo para los derechos y libertades de las personas físicas. La evaluación debe revisarse y actualizarse cuando cambien las operaciones de tratamiento.",
+      "overview": "Visión general de evaluaciones",
+      "byStatus": "Por estado",
+      "byStatusDesc": "Estado actual de todas las evaluaciones de la organización",
+      "statusColumns": {
+        "status": "Estado",
+        "count": "Nº",
+        "percentage": "Porcentaje"
+      },
+      "byType": "Por tipo",
+      "byTypeDesc": "Distribución por tipos de evaluación",
+      "typeColumns": {
+        "type": "Tipo de evaluación",
+        "count": "Nº",
+        "approved": "Aprobadas",
+        "highRisk": "Alto riesgo"
+      },
+      "byRiskLevel": "Por nivel de riesgo",
+      "byRiskLevelDesc": "Clasificación de riesgo de todas las actividades evaluadas",
+      "riskStats": {
+        "low": "Riesgo bajo",
+        "medium": "Riesgo medio",
+        "high": "Riesgo alto",
+        "critical": "Crítico"
+      },
+      "register": "Registro de evaluaciones",
+      "registerDesc": "Inventario completo de {count} evaluaciones con su estado actual, nivel de riesgo, completitud y actividades de tratamiento o proveedores vinculados.",
+      "registerColumns": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "status": "Estado",
+        "risk": "Riesgo",
+        "completion": "Completitud",
+        "due": "Plazo"
+      },
+      "highRiskTitle": "Evaluaciones de riesgo alto y crítico",
+      "highRiskDesc": "Las siguientes evaluaciones se han clasificado como de riesgo alto o crítico y requieren atención prioritaria, medidas de mitigación y revisión periódica.",
+      "highRiskMeta": {
+        "type": "Tipo",
+        "riskScore": "Puntuación de riesgo",
+        "completion": "Completitud",
+        "linkedActivity": "Actividad vinculada",
+        "linkedVendor": "Proveedor vinculado",
+        "mitigations": "Mitigaciones",
+        "mitigationsValue": "{done}/{total} completadas",
+        "dueDate": "Fecha límite"
+      },
+      "overdueTitle": "Evaluaciones fuera de plazo",
+      "overdueColumns": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "status": "Estado",
+        "dueDate": "Fecha límite",
+        "daysOverdue": "Días de retraso"
+      },
+      "mitigationOverview": "Visión general de las medidas de mitigación",
+      "mitigationStats": {
+        "total": "Mitigaciones totales",
+        "completed": "Completadas",
+        "outstanding": "Pendientes",
+        "completionRate": "Tasa de finalización",
+        "notAvailable": "N/D"
+      },
+      "mitigationDesc": "Las medidas de mitigación se controlan en todas las evaluaciones para asegurar que los riesgos identificados se afrontan con salvaguardias adecuadas. Las medidas con estado «Implementada» o «Verificada» se cuentan como completadas.",
+      "mitigationColumns": {
+        "assessment": "Evaluación",
+        "type": "Tipo",
+        "total": "Total",
+        "completed": "Completadas",
+        "rate": "Tasa"
+      },
+      "perTypeCount": "{type} ({count})",
+      "assessmentMeta": {
+        "completion": "Completitud:",
+        "completionValue": "{pct}% ({answered}/{total} preguntas)",
+        "activity": "Actividad:",
+        "vendor": "Proveedor:",
+        "mitigations": "Mitigaciones:",
+        "mitigationsValue": "{done}/{total} completadas",
+        "started": "Iniciada:",
+        "completed": "Completada:"
+      },
+      "assessmentTypes": {
+        "DPIA": "Evaluación de Impacto en la Protección de Datos",
+        "PIA": "Evaluación de Impacto de Privacidad",
+        "TIA": "Evaluación de Impacto de Transferencia",
+        "LIA": "Evaluación de Interés Legítimo",
+        "VENDOR": "Evaluación de Riesgo de Proveedor",
+        "CUSTOM": "Evaluación personalizada"
+      }
+    },
     "regulatoryLandscape": {
       "pageTitle": "Panorama regulatorio",
       "coverTitle": "Informe del Panorama Regulatorio",
