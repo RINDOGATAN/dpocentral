@@ -1,11 +1,14 @@
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { AssessmentReport } from "@/server/services/export/assessment-report";
 import type { AssessmentExportData } from "@/server/services/export/assessment-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { locales, defaultLocale } from "@/i18n/config";
 
 export async function GET(
   request: Request,
@@ -132,7 +135,16 @@ export async function GET(
     totalQuestions,
   };
 
-  const buffer = await renderToBuffer(AssessmentReport({ data }));
+  const url = new URL(request.url);
+  const requestedLocale = url.searchParams.get("locale");
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale;
+  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.assessmentReport" });
+
+  const buffer = await renderToBuffer(AssessmentReport({ data, t, locale: resolvedLocale }));
   const dateStr = fmtDate(new Date());
   const filename = `Assessment-${assessment.template.type}-${assessment.name.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf`;
 

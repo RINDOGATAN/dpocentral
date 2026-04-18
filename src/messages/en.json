@@ -773,6 +773,210 @@
         "warningPrefix": "Warning: "
       }
     },
+    "assessmentReport": {
+      "coverGenerated": "Generated: {date}",
+      "coverConfidential": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
+      "executiveSummary": "Executive Summary",
+      "stats": {
+        "riskLevel": "Risk Level",
+        "completion": "Completion",
+        "questionsAnswered": "Questions Answered",
+        "mitigations": "Mitigations",
+        "notAvailable": "N/A"
+      },
+      "meta": {
+        "assessmentType": "Assessment Type",
+        "template": "Template",
+        "status": "Status",
+        "riskScore": "Risk Score",
+        "started": "Started",
+        "submitted": "Submitted",
+        "completed": "Completed",
+        "dueDate": "Due Date",
+        "linkedActivity": "Linked Activity",
+        "linkedVendor": "Linked Vendor"
+      },
+      "description": "Description",
+      "dpiaCalloutTitle": "GDPR Article 35(7) — Required DPIA Elements",
+      "dpiaCallout1": "Systematic description of processing operations and purposes",
+      "dpiaCallout2": "Assessment of necessity and proportionality",
+      "dpiaCallout3": "Assessment of risks to rights and freedoms of data subjects",
+      "dpiaCallout4": "Measures envisaged to address risks and demonstrate compliance",
+      "sectionProgress": "{answered} of {total} questions answered",
+      "sectionComplete": "Complete",
+      "questionRequired": "REQUIRED",
+      "questionNumber": "Q{n}.",
+      "notAnswered": "Not yet answered",
+      "riskScoreLabel": "Risk Score:",
+      "noteLabel": "Note:",
+      "riskAssessmentSummary": "Risk Assessment Summary",
+      "stats2": {
+        "overallRiskLevel": "Overall Risk Level",
+        "riskScore": "Risk Score",
+        "scoredQuestions": "Scored Questions"
+      },
+      "questionRiskScores": "Question Risk Scores",
+      "riskColumns": {
+        "section": "Section",
+        "question": "Question",
+        "score": "Score",
+        "level": "Level"
+      },
+      "mitigationsTitle": "Risk Mitigations",
+      "mitigationStats": {
+        "total": "Total",
+        "completed": "Completed",
+        "outstanding": "Outstanding"
+      },
+      "mitigationColumns": {
+        "title": "Title",
+        "status": "Status",
+        "priority": "Priority",
+        "owner": "Owner",
+        "dueDate": "Due Date",
+        "evidence": "Evidence"
+      },
+      "priorityCode": "P{n}",
+      "yes": "Yes",
+      "no": "No",
+      "mitigationDetails": "Mitigation Details",
+      "approvalHistory": "Approval History",
+      "approvalColumns": {
+        "level": "Level",
+        "approver": "Approver",
+        "status": "Status",
+        "date": "Date",
+        "comments": "Comments"
+      },
+      "approvalLevel": "Level {n}",
+      "assessmentTypes": {
+        "DPIA": "Data Protection Impact Assessment",
+        "PIA": "Privacy Impact Assessment",
+        "TIA": "Transfer Impact Assessment",
+        "LIA": "Legitimate Interest Assessment",
+        "VENDOR": "Vendor Risk Assessment",
+        "CUSTOM": "Custom Assessment"
+      },
+      "articleRefs": {
+        "DPIA": "GDPR Article 35(7)"
+      }
+    },
+    "assessmentPortfolio": {
+      "pageTitle": "Assessment Portfolio",
+      "coverTitle": "Impact Assessment Portfolio",
+      "coverSubtitle": "DPIA, LIA & Privacy Assessment Status Report",
+      "coverGenerated": "Generated: {date}",
+      "coverConfidential": "CONFIDENTIAL — This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
+      "executiveSummary": "Executive Summary",
+      "stats": {
+        "total": "Total Assessments",
+        "approved": "Approved",
+        "highCriticalRisk": "High / Critical Risk",
+        "avgCompletion": "Avg Completion"
+      },
+      "meta": {
+        "organization": "Organization",
+        "reportDate": "Report Date",
+        "typesUsed": "Assessment Types Used",
+        "typesUsedNone": "None",
+        "totalMitigations": "Total Mitigations",
+        "mitigationsCompleted": "Mitigations Completed",
+        "mitigationsCompletedValue": "{done} of {total}",
+        "overdueAssessments": "Overdue Assessments",
+        "overdueNone": "None"
+      },
+      "gdprCalloutTitle": "GDPR Article 35 — Impact Assessment Obligations",
+      "gdprCalloutBody": "Controllers must carry out a DPIA before processing that is likely to result in a high risk to the rights and freedoms of natural persons. The assessment must be reviewed and updated when processing operations change.",
+      "overview": "Assessment Overview",
+      "byStatus": "By Status",
+      "byStatusDesc": "Current status of all assessments across the organisation",
+      "statusColumns": {
+        "status": "Status",
+        "count": "Count",
+        "percentage": "Percentage"
+      },
+      "byType": "By Type",
+      "byTypeDesc": "Distribution across assessment types",
+      "typeColumns": {
+        "type": "Assessment Type",
+        "count": "Count",
+        "approved": "Approved",
+        "highRisk": "High Risk"
+      },
+      "byRiskLevel": "By Risk Level",
+      "byRiskLevelDesc": "Risk classification across all assessed activities",
+      "riskStats": {
+        "low": "Low Risk",
+        "medium": "Medium Risk",
+        "high": "High Risk",
+        "critical": "Critical"
+      },
+      "register": "Assessment Register",
+      "registerDesc": "Complete inventory of {count} assessments with current status, risk level, completion, and linked processing activities or vendors.",
+      "registerColumns": {
+        "name": "Name",
+        "type": "Type",
+        "status": "Status",
+        "risk": "Risk",
+        "completion": "Completion",
+        "due": "Due"
+      },
+      "highRiskTitle": "High & Critical Risk Assessments",
+      "highRiskDesc": "The following assessments have been classified as high or critical risk and require priority attention, mitigation measures, and regular review.",
+      "highRiskMeta": {
+        "type": "Type",
+        "riskScore": "Risk Score",
+        "completion": "Completion",
+        "linkedActivity": "Linked Activity",
+        "linkedVendor": "Linked Vendor",
+        "mitigations": "Mitigations",
+        "mitigationsValue": "{done}/{total} completed",
+        "dueDate": "Due Date"
+      },
+      "overdueTitle": "Overdue Assessments",
+      "overdueColumns": {
+        "name": "Name",
+        "type": "Type",
+        "status": "Status",
+        "dueDate": "Due Date",
+        "daysOverdue": "Days Overdue"
+      },
+      "mitigationOverview": "Mitigation Measures Overview",
+      "mitigationStats": {
+        "total": "Total Mitigations",
+        "completed": "Completed",
+        "outstanding": "Outstanding",
+        "completionRate": "Completion Rate",
+        "notAvailable": "N/A"
+      },
+      "mitigationDesc": "Mitigation measures are tracked across all assessments to ensure identified risks are addressed with appropriate safeguards. Measures with status \"Implemented\" or \"Verified\" are counted as completed.",
+      "mitigationColumns": {
+        "assessment": "Assessment",
+        "type": "Type",
+        "total": "Total",
+        "completed": "Completed",
+        "rate": "Rate"
+      },
+      "perTypeCount": "{type} ({count})",
+      "assessmentMeta": {
+        "completion": "Completion:",
+        "completionValue": "{pct}% ({answered}/{total} questions)",
+        "activity": "Activity:",
+        "vendor": "Vendor:",
+        "mitigations": "Mitigations:",
+        "mitigationsValue": "{done}/{total} completed",
+        "started": "Started:",
+        "completed": "Completed:"
+      },
+      "assessmentTypes": {
+        "DPIA": "Data Protection Impact Assessment",
+        "PIA": "Privacy Impact Assessment",
+        "TIA": "Transfer Impact Assessment",
+        "LIA": "Legitimate Interest Assessment",
+        "VENDOR": "Vendor Risk Assessment",
+        "CUSTOM": "Custom Assessment"
+      }
+    },
     "regulatoryLandscape": {
       "pageTitle": "Regulatory Landscape",
       "coverTitle": "Regulatory Landscape Report",
