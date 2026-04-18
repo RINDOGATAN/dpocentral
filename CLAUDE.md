@@ -36,26 +36,39 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 - Audit trail survives redaction (actions + timestamps, no PII)
 - Settings: `DSARIntakeForm.retentionDays`, `privacyNoticeUrl`
 
-## Export Pipeline (8 PDF Reports)
+## Export Pipeline (8 PDF Reports, 2 style systems)
 
-`@react-pdf/renderer` — shared components in `src/server/services/export/pdf-styles.tsx`. All 8 routes share `src/lib/api-export.ts` for rate limiting (`exportLimiter`, 10/min/user) + try/catch error responses.
+`@react-pdf/renderer`. All routes share `src/lib/api-export.ts` for rate limiting (`exportLimiter`, 10/min/user) + try/catch error responses.
 
-| Report | Route | Trigger |
-|--------|-------|---------|
-| Assessment (individual) | `/api/export/assessment/[id]` | Assessment detail page |
-| Assessment Portfolio | `/api/export/assessment-portfolio` | Assessments list page |
-| DSAR Performance | `/api/export/dsar-performance` | DSAR list page |
-| Regulatory Landscape | `/api/export/regulatory-landscape` | Regulations + Reports pages |
-| Data Inventory | `/api/export/data-inventory` | Data Inventory page |
-| ROPA | `/api/export/ropa` | Data Inventory page |
-| Vendor Register | `/api/export/vendor-register` | Vendors page |
-| Breach Register | `/api/export/breach-register` | Incidents page |
+Two parallel style systems coexist:
 
-**Fonts**: All PDF body text uses **Inter** (4 weights vendored at `src/server/services/export/fonts/Inter-*.ttf`, SIL OFL). Registered via `Font.register()` in `pdf-styles.tsx`. Never use `fontStyle: "italic"` — Inter Italic is not vendored; use muted color instead. The Graphviz flow-map pipeline uses vendored Noto Sans Regular for node labels.
+1. **Design System v2** — `src/server/services/export/design-system/` (tokens.ts + primitives + charts). Navy-first palette, SVG-native donuts + horizontal bars, airy category tables with uppercase-navy headers and inline PillBadge / CategoryChip cells. Used by the three board-level reports.
+2. **Legacy** — `src/server/services/export/pdf-styles.tsx`. Frozen; kept for the 5 untouched reports. Do NOT add features here; extend the design system instead.
 
-**Data Flow Map** (Data Inventory + ROPA): `src/server/services/export/flow-graph-pdf.tsx` renders a colour-coded, cluster-aware diagram via `@hpcc-js/wasm-graphviz` (DOT engine) → `@resvg/resvg-js` → PNG → `@react-pdf <Image>`. The route pre-renders the PNG before invoking `renderToBuffer` and passes it as a prop. Both packages are in `next.config.ts > serverExternalPackages` because Turbopack can't bundle the native binding / WASM blob.
+| Report | Route | Style | Trigger |
+|--------|-------|-------|---------|
+| Privacy Program Report | `/api/export/privacy-program` | v2 | Main dashboard (primary CTA) + Data Inventory page |
+| ROPA | `/api/export/ropa` | v2 | Data Inventory page (premium) |
+| Vendor Register | `/api/export/vendor-register` | v2 | Vendors page |
+| Assessment (individual) | `/api/export/assessment/[id]` | legacy | Assessment detail page |
+| Assessment Portfolio | `/api/export/assessment-portfolio` | legacy | Assessments list page |
+| DSAR Performance | `/api/export/dsar-performance` | legacy | DSAR list page |
+| Regulatory Landscape | `/api/export/regulatory-landscape` | legacy | Regulations + Reports pages |
+| Breach Register | `/api/export/breach-register` | legacy | Incidents page |
 
-**Critical**: never use `wrap={false}` on Views with unbounded lists — causes text overlap.
+The **Privacy Program Report** is the consolidated board-level export: Cover + KPIs → Data Inventory → ROPA (compact) → Vendors → AI Governance (conditional) → Data Flow Map. It supersedes the standalone Data Inventory PDF (retired). ROPA remains standalone for auditor-grade Article 30 output.
+
+**Design-system layout**: `design-system/` holds `tokens.ts` (single palette + type scale + space scale), `primitives/` (PageFrame, CoverFrame, SectionHeading, StatTile, KeyFinding, MiniCoverageBar, PillBadge, CategoryChip, CategoryTable, ConfidentialPill), `charts/` (DonutChart, HorizontalBarChart, StackedBar — all pure `<Svg>`), and `utils/palette-helpers.ts`. Each v2 report lives in its own folder (`privacy-program/`, `ropa/`, `vendor-register/`) with a `*Document.tsx` top-level composition. The Privacy Program Report splits into one page per section under `privacy-program/pages/`.
+
+**Data-flow rendering**: `privacy-program/flow-input.ts :: buildFlowGraphInputs` applies a production + participation filter, drops orphaned nodes, and batches clusters (default ≤ 60 nodes / batch) into one `DataFlowPage` per batch. It returns shapes ready for the existing `renderFlowGraphPng` pipeline.
+
+**Fonts**: All PDF body text uses **Inter** (4 weights vendored at `src/server/services/export/fonts/Inter-*.ttf`, SIL OFL). Registered from `design-system/fonts.ts` (v2) and `pdf-styles.tsx` (legacy) — `Font.register` is idempotent. Never use `fontStyle: "italic"` — Inter Italic is not vendored; use muted color instead. The Graphviz flow-map pipeline uses vendored Noto Sans Regular for node labels.
+
+**Data Flow Map**: `src/server/services/export/flow-graph-pdf.tsx` renders a colour-coded, cluster-aware diagram via `@hpcc-js/wasm-graphviz` (DOT engine) → `@resvg/resvg-js` → PNG → `@react-pdf <Image>`. Route pre-renders the PNG before invoking `renderToBuffer` and passes it as a prop. Both packages are in `next.config.ts > serverExternalPackages` because Turbopack can't bundle the native binding / WASM blob. `FlowGraphImage` caps display height at 680 pt so oversized graphs never overflow a page.
+
+**Critical**: never use `wrap={false}` on Views with unbounded lists — causes text overlap or "VIEW can't wrap" warnings.
+
+**Preview harness**: `scripts/render-all-rebuilt-previews.ts [orgNameFilter]` renders all three v2 PDFs to `/tmp/dpocentral-exports/` without needing Next/auth. Optional org name filter picks by substring match; otherwise picks the org with the most data (AI systems weighted 5×). `scripts/export-demo-docs.ts` covers the 5 legacy reports against the seeded `demo` org.
 
 ## AI Systems & Models
 

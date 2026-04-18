@@ -21,6 +21,7 @@ import {
   Sparkles,
   Plus,
   Check,
+  Download,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -143,6 +144,22 @@ export default function PrivacyDashboardPage() {
             Privacy Dashboard
           </p>
         </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            size="sm"
+            className="gap-2"
+            onClick={() =>
+              window.open(
+                `/api/export/privacy-program?organizationId=${organization?.id}`,
+                "_blank"
+              )
+            }
+            disabled={!organization?.id}
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Privacy Program Report</span>
+            <span className="sm:hidden">Report</span>
+          </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2 shrink-0">
@@ -171,6 +188,7 @@ export default function PrivacyDashboardPage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
 
       {/* Quickstart Card — shown when org has few records */}

@@ -303,7 +303,6 @@ export function AssessmentReport({ data }: { data: AssessmentExportData }) {
                     <Text
                       style={{
                         fontSize: 8,
-                        ,
                         color: "#999",
                         marginTop: 6,
                       }}

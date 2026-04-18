@@ -264,13 +264,23 @@ interface FlowGraphImageProps {
   graph: RenderedFlowGraph | null;
   /** Display width in PDF points. Defaults to the rendered fitWidth. */
   width?: number;
+  /**
+   * Max display height in PDF points. If the natural aspect-ratio render
+   * would exceed this, the image is scaled down proportionally to fit on a
+   * single page. A4 (842pt) minus page padding/header/footer → safe ~680pt.
+   */
+  maxHeight?: number;
 }
 
-export function FlowGraphImage({ graph, width }: FlowGraphImageProps) {
+export function FlowGraphImage({ graph, width, maxHeight = 680 }: FlowGraphImageProps) {
   if (!graph) return null;
-  const displayWidth = width ?? graph.width / 2; // PNG is 2x DPI
+  let displayWidth = width ?? graph.width / 2; // PNG is 2x DPI
   const aspect = graph.height / graph.width;
-  const displayHeight = displayWidth * aspect;
+  let displayHeight = displayWidth * aspect;
+  if (displayHeight > maxHeight) {
+    displayHeight = maxHeight;
+    displayWidth = displayHeight / aspect;
+  }
 
   return (
     <View wrap={false}>
