@@ -1,11 +1,14 @@
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { BreachRegisterReport, incidentsToCSV } from "@/server/services/export/breach-register";
 import type { IncidentExportData } from "@/server/services/export/breach-register";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { locales, defaultLocale } from "@/i18n/config";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -37,6 +40,15 @@ export async function GET(request: Request) {
   if (!membership) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
+
+  // Locale resolution: ?locale=es → NEXT_LOCALE cookie → default
+  const requestedLocale = searchParams.get("locale");
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale;
+  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.breachRegister" });
 
   const incidents = await prisma.incident.findMany({
     where: { organizationId },
@@ -114,7 +126,7 @@ export async function GET(request: Request) {
   }
 
     const buffer = await renderToBuffer(
-      BreachRegisterReport({ incidents: data, orgName })
+      BreachRegisterReport({ incidents: data, orgName, t, locale: resolvedLocale })
     );
 
     return new Response(new Uint8Array(buffer), {
