@@ -93,7 +93,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
         <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
