@@ -54,7 +54,31 @@
     "and": "y",
     "privacyPolicy": "Política de privacidad",
     "developmentMode": "Modo de desarrollo",
-    "devSignIn": "Inicio rápido (Dev)"
+    "devSignIn": "Inicio rápido (Dev)",
+    "termsOfService": "Términos del servicio",
+    "emailPlaceholder": "tú@empresa.com",
+    "devEmailPlaceholder": "dev@example.com",
+    "failedToSendLink": "No se ha podido enviar el enlace mágico. Inténtalo de nuevo.",
+    "unexpectedError": "Se ha producido un error inesperado.",
+    "devSignInFailed": "Error al iniciar sesión en modo dev.",
+    "error": {
+      "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
+      "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
+      "OAuthSignin": "No se ha podido iniciar sesión con Google. Inténtalo de nuevo.",
+      "Default": "Error al iniciar sesión. Inténtalo de nuevo."
+    },
+    "authErrorPage": {
+      "title": "Error de autenticación",
+      "titleAccountExists": "La cuenta ya existe",
+      "body": "Algo ha ido mal durante el inicio de sesión. El enlace puede haber caducado o ya se ha utilizado.",
+      "bodyAccountExists": "Ya existe una cuenta con este correo electrónico que utiliza otro método de inicio de sesión. Inicia sesión con tu método original (enlace mágico por correo o Google) para acceder a tu cuenta.",
+      "bodyFallback": "Algo ha ido mal durante el inicio de sesión.",
+      "cta": "Intentar de nuevo",
+      "ctaAccountExists": "Iniciar sesión con el método original"
+    },
+    "verifyRequestPage": {
+      "body": "Se ha enviado un enlace de inicio de sesión a tu correo. Haz clic en el enlace para continuar."
+    }
   },
   "nav": {
     "dashboard": "Panel",
