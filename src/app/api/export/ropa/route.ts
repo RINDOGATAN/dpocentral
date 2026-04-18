@@ -2,12 +2,17 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { ROPAReport } from "@/server/services/export/ropa-report";
+import { RopaDocument } from "@/server/services/export/ropa/RopaDocument";
 import { ropaToCSV } from "@/server/services/privacy/ropaGenerator";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import { hasRopaExportAccess } from "@/server/services/licensing/entitlement";
-import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+
+function fmtDate(d: Date | string | null | undefined): string {
+  if (!d) return "—";
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toISOString().split("T")[0]!;
+}
 import {
   renderFlowGraphPng,
   type PdfFlowAsset,
@@ -196,7 +201,7 @@ export async function GET(request: Request) {
   }
 
   const buffer = await renderToBuffer(
-    ROPAReport({ entries, orgName, flowGraph })
+    RopaDocument({ entries, orgName, flowGraph })
   );
 
   return new Response(new Uint8Array(buffer), {

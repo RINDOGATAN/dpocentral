@@ -196,13 +196,9 @@ export default function DataInventoryPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => window.open(`/api/export/data-inventory?organizationId=${organization?.id}`, "_blank")}>
+              <DropdownMenuItem onClick={() => window.open(`/api/export/privacy-program?organizationId=${organization?.id}`, "_blank")}>
                 <FileText className="w-4 h-4 mr-2" />
-                Inventory as PDF
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => window.open(`/api/export/data-inventory?organizationId=${organization?.id}&format=csv`, "_blank")}>
-                <FileSpreadsheet className="w-4 h-4 mr-2" />
-                Inventory as CSV
+                Privacy Program Report
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {

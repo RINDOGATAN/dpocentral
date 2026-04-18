@@ -2,10 +2,15 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { VendorRegisterReport, vendorsToCSV } from "@/server/services/export/vendor-register";
-import type { VendorExportData } from "@/server/services/export/vendor-register";
-import { fmtDate } from "@/server/services/export/pdf-styles";
+import { VendorRegisterDocument } from "@/server/services/export/vendor-register/VendorRegisterDocument";
+import { vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+
+function fmtDate(d: Date | string | null | undefined): string {
+  if (!d) return "—";
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toISOString().split("T")[0]!;
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -46,7 +51,7 @@ export async function GET(request: Request) {
     orderBy: { name: "asc" },
   });
 
-  const data: VendorExportData[] = vendors.map((v) => ({
+  const data: VendorCsvRow[] = vendors.map((v) => ({
     id: v.id,
     name: v.name,
     description: v.description,
@@ -97,7 +102,7 @@ export async function GET(request: Request) {
   }
 
   const buffer = await renderToBuffer(
-    VendorRegisterReport({ vendors: data, orgName })
+    VendorRegisterDocument({ vendors: data, orgName })
   );
 
   return new Response(new Uint8Array(buffer), {

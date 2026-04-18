@@ -15,13 +15,11 @@ import { join } from "path";
 // PDF document components
 import { AssessmentReport } from "../src/server/services/export/assessment-report";
 import type { AssessmentExportData } from "../src/server/services/export/assessment-report";
-import { ROPAReport } from "../src/server/services/export/ropa-report";
+import { RopaDocument } from "../src/server/services/export/ropa/RopaDocument";
 import { BreachRegisterReport, incidentsToCSV } from "../src/server/services/export/breach-register";
 import type { IncidentExportData } from "../src/server/services/export/breach-register";
-import { DataInventoryReport, dataInventoryToCSV } from "../src/server/services/export/data-inventory-report";
-import type { DataInventoryExportData } from "../src/server/services/export/data-inventory-report";
-import { VendorRegisterReport, vendorsToCSV } from "../src/server/services/export/vendor-register";
-import type { VendorExportData } from "../src/server/services/export/vendor-register";
+import { VendorRegisterDocument } from "../src/server/services/export/vendor-register/VendorRegisterDocument";
+import { vendorsToCSV, type VendorCsvRow } from "../src/server/services/export/vendor-register/csv";
 import type { ROPAEntry } from "../src/server/services/privacy/ropaGenerator";
 import { fmtDate } from "../src/server/services/export/pdf-styles";
 
@@ -189,7 +187,7 @@ async function exportROPA(org: { id: string; name: string }) {
     nextReview: activity.nextReviewAt,
   }));
 
-  const buffer = await renderToBuffer(ROPAReport({ entries, orgName: org.name }));
+  const buffer = await renderToBuffer(RopaDocument({ entries, orgName: org.name }));
   await saveBuffer(`ROPA-${org.name.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf`, buffer);
 }
 
@@ -254,84 +252,6 @@ async function exportBreachRegister(org: { id: string; name: string }) {
   await saveText(`Breach-Register-${safeName}-${dateStr}.csv`, incidentsToCSV(data));
 }
 
-async function exportDataInventory(org: { id: string; name: string }) {
-  console.log("\n[4/5] Data Inventory...");
-
-  const [assets, flows, transfers] = await Promise.all([
-    prisma.dataAsset.findMany({
-      where: { organizationId: org.id },
-      include: { dataElements: true },
-      orderBy: { name: "asc" },
-    }),
-    prisma.dataFlow.findMany({
-      where: { organizationId: org.id },
-      include: {
-        sourceAsset: { select: { name: true } },
-        destinationAsset: { select: { name: true } },
-      },
-      orderBy: { name: "asc" },
-    }),
-    prisma.dataTransfer.findMany({
-      where: { organizationId: org.id },
-      include: {
-        processingActivity: { select: { name: true } },
-      },
-      orderBy: { name: "asc" },
-    }),
-  ]);
-
-  console.log(`  Found ${assets.length} assets, ${flows.length} flows, ${transfers.length} transfers`);
-
-  const data: DataInventoryExportData = {
-    assets: assets.map((a) => ({
-      id: a.id,
-      name: a.name,
-      type: a.type,
-      owner: a.owner,
-      location: a.location,
-      hostingType: a.hostingType,
-      description: a.description,
-      isProduction: a.isProduction,
-      dataElements: a.dataElements.map((e) => ({
-        name: e.name,
-        category: e.category,
-        sensitivity: e.sensitivity,
-        isPersonalData: e.isPersonalData,
-        isSpecialCategory: e.isSpecialCategory,
-        retentionDays: e.retentionDays,
-      })),
-    })),
-    flows: flows.map((f) => ({
-      name: f.name,
-      description: f.description,
-      sourceAssetId: f.sourceAssetId,
-      destinationAssetId: f.destinationAssetId,
-      sourceAsset: f.sourceAsset,
-      destinationAsset: f.destinationAsset,
-      dataCategories: f.dataCategories as string[],
-      frequency: f.frequency,
-      encryptionMethod: f.encryptionMethod,
-      isAutomated: f.isAutomated,
-    })),
-    transfers: transfers.map((t) => ({
-      name: t.name,
-      destinationCountry: t.destinationCountry,
-      destinationOrg: t.destinationOrg,
-      mechanism: t.mechanism,
-      safeguards: t.safeguards,
-      tiaCompleted: t.tiaCompleted,
-      tiaDate: t.tiaDate,
-      isActive: t.isActive,
-      processingActivity: t.processingActivity,
-    })),
-  };
-
-  const safeName = org.name.replace(/[^a-zA-Z0-9]/g, "-");
-  const buffer = await renderToBuffer(DataInventoryReport({ data, orgName: org.name }));
-  await saveBuffer(`Data-Inventory-${safeName}-${dateStr}.pdf`, buffer);
-  await saveText(`Data-Inventory-${safeName}-${dateStr}.csv`, dataInventoryToCSV(data));
-}
-
 async function exportVendorRegister(org: { id: string; name: string }) {
   console.log("\n[5/5] Vendor Register...");
 
@@ -345,7 +265,7 @@ async function exportVendorRegister(org: { id: string; name: string }) {
 
   console.log(`  Found ${vendors.length} vendors`);
 
-  const data: VendorExportData[] = vendors.map((v) => ({
+  const data: VendorCsvRow[] = vendors.map((v) => ({
     id: v.id,
     name: v.name,
     description: v.description,
@@ -371,7 +291,7 @@ async function exportVendorRegister(org: { id: string; name: string }) {
   }));
 
   const safeName = org.name.replace(/[^a-zA-Z0-9]/g, "-");
-  const buffer = await renderToBuffer(VendorRegisterReport({ vendors: data, orgName: org.name }));
+  const buffer = await renderToBuffer(VendorRegisterDocument({ vendors: data, orgName: org.name }));
   await saveBuffer(`Vendor-Register-${safeName}-${dateStr}.pdf`, buffer);
   await saveText(`Vendor-Register-${safeName}-${dateStr}.csv`, vendorsToCSV(data));
 }
@@ -398,7 +318,6 @@ async function main() {
   await exportAssessments(org);
   await exportROPA(org);
   await exportBreachRegister(org);
-  await exportDataInventory(org);
   await exportVendorRegister(org);
 
   console.log("\nDone! All documents saved to", OUTPUT_DIR);

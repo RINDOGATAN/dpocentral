@@ -45,35 +45,68 @@ export const s = StyleSheet.create({
     color: DARK,
   },
   coverOrgName: {
-    fontSize: 14,
+    fontSize: 11,
+    fontFamily: "Inter", fontWeight: 500,
     color: MUTED,
-    marginBottom: 40,
+    marginBottom: 36,
     textTransform: "uppercase" as const,
-    letterSpacing: 2,
+    letterSpacing: 3,
   },
   coverTitle: {
-    fontSize: 28,
+    fontSize: 32,
     fontFamily: "Inter", fontWeight: 700,
     color: DARK,
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: 14,
+    letterSpacing: -0.5,
   },
   coverSubtitle: {
-    fontSize: 14,
+    fontSize: 13,
+    fontFamily: "Inter", fontWeight: 500,
     color: PRIMARY,
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: 48,
+    letterSpacing: 0.5,
+  },
+  coverRule: {
+    width: 60,
+    height: 2,
+    backgroundColor: PRIMARY,
+    marginBottom: 24,
   },
   coverDate: {
-    fontSize: 11,
+    fontSize: 10,
+    fontFamily: "Inter", fontWeight: 500,
     color: MUTED,
+    letterSpacing: 0.5,
   },
   coverConfidential: {
-    fontSize: 9,
+    fontSize: 8,
     color: MUTED,
-    marginTop: 60,
+    marginTop: 72,
     textAlign: "center",
-    paddingHorizontal: 40,
+    paddingHorizontal: 60,
+    lineHeight: 1.6,
+  },
+  coverFooterBand: {
+    position: "absolute" as const,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 6,
+    backgroundColor: PRIMARY,
+  },
+  coverFooterText: {
+    position: "absolute" as const,
+    bottom: 18,
+    left: 60,
+    right: 60,
+    fontSize: 7,
+    color: MUTED,
+    textTransform: "uppercase" as const,
+    letterSpacing: 1.5,
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
   },
   // Page header
   pageHeader: {
@@ -167,6 +200,61 @@ export const s = StyleSheet.create({
     color: DARK,
     flex: 1,
   },
+  // Two-column metadata
+  metaGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 12,
+  },
+  metaCell: {
+    width: "50%",
+    paddingRight: 12,
+    marginBottom: 6,
+  },
+  metaCellLabel: {
+    fontSize: 7,
+    fontFamily: "Inter", fontWeight: 600,
+    color: MUTED,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.5,
+    marginBottom: 1,
+  },
+  metaCellValue: {
+    fontSize: 9,
+    fontFamily: "Inter", fontWeight: 500,
+    color: DARK,
+  },
+  // Section divider with accent label
+  sectionDivider: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    marginTop: 24,
+    marginBottom: 14,
+  },
+  sectionDividerNumber: {
+    fontSize: 10,
+    fontFamily: "Inter", fontWeight: 700,
+    color: WHITE,
+    backgroundColor: PRIMARY,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 3,
+    marginRight: 10,
+    letterSpacing: 0.5,
+  },
+  sectionDividerLabel: {
+    fontSize: 9,
+    fontFamily: "Inter", fontWeight: 600,
+    color: DARK,
+    textTransform: "uppercase" as const,
+    letterSpacing: 1.6,
+    marginRight: 10,
+  },
+  sectionDividerRule: {
+    height: 0.5,
+    backgroundColor: BORDER,
+    flex: 1,
+  },
   // Badge
   badge: {
     paddingHorizontal: 6,
@@ -201,27 +289,137 @@ export const s = StyleSheet.create({
   },
   statsGrid: {
     flexDirection: "row",
-    gap: 12,
-    marginBottom: 16,
+    gap: 10,
+    marginBottom: 12,
   },
   statCard: {
     flex: 1,
     borderWidth: 1,
     borderColor: BORDER,
-    borderRadius: 4,
+    borderRadius: 6,
+    overflow: "hidden" as const,
+    backgroundColor: WHITE,
+  },
+  statCardAccent: {
+    height: 3,
+    backgroundColor: PRIMARY,
+  },
+  statCardBody: {
     padding: 10,
-    alignItems: "center",
+    alignItems: "flex-start" as const,
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 22,
     fontFamily: "Inter", fontWeight: 700,
-    color: PRIMARY,
+    color: DARK,
+    letterSpacing: -0.5,
   },
   statLabel: {
     fontSize: 7,
+    fontFamily: "Inter", fontWeight: 600,
     color: MUTED,
-    marginTop: 2,
+    marginTop: 4,
     textTransform: "uppercase" as const,
+    letterSpacing: 0.8,
+  },
+  // Attention callout
+  attentionBox: {
+    borderWidth: 1,
+    borderColor: "#fde68a",
+    backgroundColor: "#fffbeb",
+    borderRadius: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: "#d97706",
+    padding: 12,
+    marginBottom: 16,
+  },
+  attentionBoxDanger: {
+    borderWidth: 1,
+    borderColor: "#fecaca",
+    backgroundColor: "#fef2f2",
+    borderRadius: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: "#dc2626",
+    padding: 12,
+    marginBottom: 16,
+  },
+  attentionTitle: {
+    fontSize: 10,
+    fontFamily: "Inter", fontWeight: 700,
+    color: "#92400e",
+    marginBottom: 6,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.8,
+  },
+  attentionTitleDanger: {
+    fontSize: 10,
+    fontFamily: "Inter", fontWeight: 700,
+    color: "#991b1b",
+    marginBottom: 6,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.8,
+  },
+  attentionItem: {
+    fontSize: 9,
+    color: DARK,
+    marginBottom: 3,
+    lineHeight: 1.5,
+  },
+  // Lead text under section titles
+  leadText: {
+    fontSize: 9,
+    fontFamily: "Inter", fontWeight: 500,
+    color: MUTED,
+    lineHeight: 1.5,
+    marginTop: -6,
+    marginBottom: 10,
+  },
+  // Asset distribution bar
+  distBarTrack: {
+    flexDirection: "row" as const,
+    height: 14,
+    borderRadius: 3,
+    overflow: "hidden" as const,
+    marginBottom: 10,
+  },
+  distLegend: {
+    flexDirection: "row" as const,
+    flexWrap: "wrap" as const,
+    marginBottom: 14,
+  },
+  distLegendItem: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    marginRight: 14,
+    marginBottom: 4,
+  },
+  distLegendSwatch: {
+    width: 9,
+    height: 9,
+    borderRadius: 2,
+    marginRight: 5,
+  },
+  distLegendLabel: {
+    fontSize: 7,
+    fontFamily: "Inter", fontWeight: 500,
+    color: DARK,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.4,
+  },
+  distLegendCount: {
+    fontSize: 7,
+    color: MUTED,
+    marginLeft: 3,
+  },
+  // Inline badge for table cells
+  tableBadge: {
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 2,
+    fontSize: 6.5,
+    fontFamily: "Inter", fontWeight: 700,
+    letterSpacing: 0.4,
+    alignSelf: "flex-start" as const,
   },
   // Cover stripe
   coverStripe: {
@@ -446,24 +644,32 @@ export function CoverPage({
   title,
   subtitle,
   date,
+  reference,
 }: {
   orgName: string;
   title: string;
   subtitle?: string;
   date: string;
+  reference?: string;
 }) {
   return (
     <Page size="A4" style={s.coverPage}>
       <View style={s.coverStripe} />
       <Text style={s.coverOrgName}>{orgName}</Text>
+      <View style={s.coverRule} />
       <Text style={s.coverTitle}>{title}</Text>
       {subtitle && <Text style={s.coverSubtitle}>{subtitle}</Text>}
-      <Text style={s.coverDate}>Generated: {date}</Text>
+      <Text style={s.coverDate}>Generated {date}</Text>
       <Text style={s.coverConfidential}>
         CONFIDENTIAL — This document contains sensitive information about data
         protection practices. Distribution should be limited to authorized
         personnel and supervisory authorities upon request.
       </Text>
+      <View style={s.coverFooterText}>
+        <Text>DPO Central Privacy Suite</Text>
+        {reference && <Text>{reference}</Text>}
+      </View>
+      <View style={s.coverFooterBand} />
     </Page>
   );
 }
@@ -543,6 +749,42 @@ export function MetadataBlock({
   );
 }
 
+export function MetadataBlock2Col({
+  items,
+}: {
+  items: Array<{ label: string; value: string | number | null | undefined }>;
+}) {
+  const filtered = items.filter(
+    (item) => item.value !== null && item.value !== undefined && item.value !== ""
+  );
+  return (
+    <View style={s.metaGrid}>
+      {filtered.map((item, i) => (
+        <View key={i} style={s.metaCell}>
+          <Text style={s.metaCellLabel}>{item.label}</Text>
+          <Text style={s.metaCellValue}>{String(item.value)}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+export function SectionDivider({
+  number,
+  label,
+}: {
+  number: string;
+  label: string;
+}) {
+  return (
+    <View style={s.sectionDivider}>
+      <Text style={s.sectionDividerNumber}>{number}</Text>
+      <Text style={s.sectionDividerLabel}>{label}</Text>
+      <View style={s.sectionDividerRule} />
+    </View>
+  );
+}
+
 export function DataTable({
   headers,
   rows,
@@ -609,17 +851,128 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
+export type StatTone = "default" | "warning" | "danger" | "success" | "muted";
+
+const STAT_TONE_COLORS: Record<StatTone, { accent: string; value: string }> = {
+  default: { accent: PRIMARY, value: DARK },
+  warning: { accent: "#d97706", value: "#92400e" },
+  danger: { accent: "#dc2626", value: "#991b1b" },
+  success: { accent: "#059669", value: "#065f46" },
+  muted: { accent: "#9ca3af", value: MUTED },
+};
+
 export function StatCard({
   value,
   label,
+  tone = "default",
 }: {
   value: string | number;
   label: string;
+  tone?: StatTone;
 }) {
+  const colors = STAT_TONE_COLORS[tone];
   return (
     <View style={s.statCard}>
-      <Text style={s.statValue}>{value}</Text>
-      <Text style={s.statLabel}>{label}</Text>
+      <View style={[s.statCardAccent, { backgroundColor: colors.accent }]} />
+      <View style={s.statCardBody}>
+        <Text style={[s.statValue, { color: colors.value }]}>{value}</Text>
+        <Text style={s.statLabel}>{label}</Text>
+      </View>
+    </View>
+  );
+}
+
+export function AttentionCallout({
+  items,
+  tone = "warning",
+  title,
+}: {
+  items: string[];
+  tone?: "warning" | "danger";
+  title?: string;
+}) {
+  if (items.length === 0) return null;
+  const boxStyle = tone === "danger" ? s.attentionBoxDanger : s.attentionBox;
+  const titleStyle = tone === "danger" ? s.attentionTitleDanger : s.attentionTitle;
+  const defaultTitle = tone === "danger" ? "Action Required" : "Attention Required";
+  return (
+    <View style={boxStyle} wrap={false}>
+      <Text style={titleStyle}>{title ?? defaultTitle}</Text>
+      {items.map((item, i) => (
+        <Text key={i} style={s.attentionItem}>• {item}</Text>
+      ))}
+    </View>
+  );
+}
+
+export function LeadText({ children }: { children: React.ReactNode }) {
+  return <Text style={s.leadText}>{children}</Text>;
+}
+
+export function DistributionBar({
+  segments,
+  totalLabel,
+}: {
+  segments: Array<{ label: string; count: number; color: string }>;
+  totalLabel?: string;
+}) {
+  const total = segments.reduce((n, s) => n + s.count, 0);
+  if (total === 0) return null;
+  return (
+    <View style={{ marginBottom: 6 }}>
+      <View style={s.distBarTrack}>
+        {segments.map((seg, i) => (
+          <View
+            key={i}
+            style={{
+              width: `${(seg.count / total) * 100}%`,
+              backgroundColor: seg.color,
+            }}
+          />
+        ))}
+      </View>
+      <View style={s.distLegend}>
+        {segments.map((seg, i) => (
+          <View key={i} style={s.distLegendItem}>
+            <View style={[s.distLegendSwatch, { backgroundColor: seg.color }]} />
+            <Text style={s.distLegendLabel}>{seg.label}</Text>
+            <Text style={s.distLegendCount}>({seg.count})</Text>
+          </View>
+        ))}
+        {totalLabel && (
+          <Text style={[s.distLegendCount, { marginLeft: "auto" }]}>
+            {totalLabel}
+          </Text>
+        )}
+      </View>
+    </View>
+  );
+}
+
+const RISK_SWATCH: Record<string, string> = {
+  LOW: "#22c55e",
+  MEDIUM: "#eab308",
+  HIGH: "#f97316",
+  CRITICAL: "#dc2626",
+};
+
+export function InlineRiskDot({ level }: { level: string | null | undefined }) {
+  if (!level) return <Text style={{ fontSize: 8, color: MUTED }}>—</Text>;
+  const color = RISK_SWATCH[level] || "#9ca3af";
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View
+        style={{
+          width: 7,
+          height: 7,
+          borderRadius: 3.5,
+          backgroundColor: color,
+          marginRight: 5,
+        }}
+      />
+      <Text style={{ fontSize: 8, fontFamily: "Inter", fontWeight: 600, color: DARK }}>
+        {level}
+      </Text>
     </View>
   );
 }
