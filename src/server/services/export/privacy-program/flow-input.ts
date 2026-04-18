@@ -53,11 +53,22 @@ export interface FlowInputResult {
   orphansDropped: number;
 }
 
+export interface FlowInputLabels {
+  unassigned: string;
+  overview: string;
+  moreSuffix: (count: number) => string;
+}
+
 export function buildFlowGraphInputs(
   assets: FlowAssetRow[],
   edges: FlowEdgeRow[],
   activities: FlowActivityRow[],
-  options: FlowInputOptions = {}
+  options: FlowInputOptions = {},
+  labels: FlowInputLabels = {
+    unassigned: "Unassigned",
+    overview: "Overview",
+    moreSuffix: (count) => ` +${count} more`,
+  }
 ): FlowInputResult {
   const productionOnly = options.productionOnly ?? true;
   const maxNodesPerBatch = options.maxNodesPerBatch ?? 60;
@@ -97,7 +108,7 @@ export function buildFlowGraphInputs(
     }
   }
 
-  // Unowned (no activity) → pseudo-cluster "Unassigned"
+  // Unowned (no activity) → pseudo-cluster, label injected by caller
   const UNASSIGNED_ID = "__unassigned__";
 
   // 5. If all fits in one batch, return it.
@@ -121,7 +132,7 @@ export function buildFlowGraphInputs(
     })),
     {
       id: UNASSIGNED_ID,
-      label: "Unassigned",
+      label: labels.unassigned,
       assetIds: kept.filter((a) => !owner.has(a.id)).map((a) => a.id),
     },
   ].filter((c) => c.assetIds.length > 0);
@@ -130,7 +141,7 @@ export function buildFlowGraphInputs(
     return {
       batches: [
         {
-          label: "Overview",
+          label: labels.overview,
           assets: assetNodes,
           edges: edgeNodes,
           clusters: allClusters.length > 0 ? allClusters : [],
@@ -158,11 +169,11 @@ export function buildFlowGraphInputs(
     );
 
     const batchAssets = assetNodes.filter((a) => batchAssetIds.has(a.id));
-    const labels = currentClusters.map((c) => c.label).slice(0, 3);
-    const suffix = currentClusters.length > 3 ? ` +${currentClusters.length - 3} more` : "";
+    const labelList = currentClusters.map((c) => c.label).slice(0, 3);
+    const suffix = currentClusters.length > 3 ? labels.moreSuffix(currentClusters.length - 3) : "";
 
     batches.push({
-      label: `${labels.join(" · ")}${suffix}`,
+      label: `${labelList.join(" · ")}${suffix}`,
       assets: batchAssets,
       edges: batchEdges,
       clusters: currentClusters,

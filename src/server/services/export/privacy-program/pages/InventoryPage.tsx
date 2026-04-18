@@ -13,6 +13,7 @@ import {
   computeAssetTypeBars,
   computeInventoryStats,
   type ProgramInput,
+  type PdfT,
 } from "../data-mapping";
 
 const s = StyleSheet.create({
@@ -46,24 +47,28 @@ export function InventoryPage({
   orgName,
   date,
   input,
+  t,
+  tEnum,
 }: {
   orgName: string;
   date: string;
   input: ProgramInput;
+  t: PdfT;
+  tEnum: PdfT;
 }) {
   const stats = computeInventoryStats(input);
-  const assetTypeBars = computeAssetTypeBars(input).map((b) => ({
+  const assetTypeBars = computeAssetTypeBars(input, tEnum).map((b) => ({
     label: b.label,
     value: b.value,
     color: colorForAssetType(b.type),
   }));
 
   return (
-    <PageFrame eyebrow="Privacy Program Report" orgName={orgName} date={date}>
+    <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
       <SectionHeading
-        eyebrow="Section 02"
-        title="Data Inventory"
-        lead="Overview of registered data assets, their classification density, and the share of personal and special-category data catalogued across the estate."
+        eyebrow={t("inventory.sectionNumber")}
+        title={t("inventory.title")}
+        lead={t("inventory.lead")}
         first
       />
 
@@ -72,8 +77,8 @@ export function InventoryPage({
           <DonutChart
             value={stats.personal}
             max={stats.totalElements}
-            label="Personal Data"
-            sublabel={`${stats.personal} of ${stats.totalElements} elements`}
+            label={t("inventory.donutPersonal")}
+            sublabel={t("inventory.donutPersonalSub", { count: stats.personal, total: stats.totalElements })}
             color={tokens.color.brand.navy}
           />
         </View>
@@ -81,41 +86,41 @@ export function InventoryPage({
           <DonutChart
             value={stats.specialCat}
             max={stats.totalElements}
-            label="Special Category"
-            sublabel={`${stats.specialCat} of ${stats.totalElements} elements · Art. 9`}
+            label={t("inventory.donutSpecial")}
+            sublabel={t("inventory.donutSpecialSub", { count: stats.specialCat, total: stats.totalElements })}
             color={tokens.color.semantic.danger.solid}
           />
         </View>
       </View>
 
       <View style={s.headingRow}>
-        <Text style={s.subHeading}>Assets by Type</Text>
+        <Text style={s.subHeading}>{t("inventory.assetsByType")}</Text>
       </View>
       <HorizontalBarChart rows={assetTypeBars} />
 
       <View style={s.headingRow}>
-        <Text style={s.subHeading}>Asset Register</Text>
+        <Text style={s.subHeading}>{t("inventory.assetRegister")}</Text>
       </View>
       <CategoryTable
         columns={[
-          { header: "Name", width: 2.6 },
-          { header: "Type", width: 1.4 },
-          { header: "Owner", width: 1.3 },
-          { header: "Location", width: 1.3 },
-          { header: "Elts", width: 0.6, align: "right" },
-          { header: "Personal", width: 0.8, align: "right" },
-          { header: "Art. 9", width: 0.7, align: "right" },
+          { header: t("inventory.columns.name"), width: 2.6 },
+          { header: t("inventory.columns.type"), width: 1.4 },
+          { header: t("inventory.columns.owner"), width: 1.3 },
+          { header: t("inventory.columns.location"), width: 1.3 },
+          { header: t("inventory.columns.elements"), width: 0.6, align: "right" },
+          { header: t("inventory.columns.personal"), width: 0.8, align: "right" },
+          { header: t("inventory.columns.article9"), width: 0.7, align: "right" },
         ]}
         rows={input.assets.map((a) => [
           a.name,
-          a.type.replace(/_/g, " "),
+          tEnum(`assetType.${a.type}`),
           a.owner ?? "—",
           a.location ?? "—",
           a.elementCount,
           a.personalCount,
           a.specialCatCount,
         ])}
-        emptyText="No data assets have been registered."
+        emptyText={t("inventory.empty")}
       />
     </PageFrame>
   );
