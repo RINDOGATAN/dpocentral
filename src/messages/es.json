@@ -773,6 +773,192 @@
         "warningPrefix": "Aviso: "
       }
     },
+    "regulatoryLandscape": {
+      "pageTitle": "Panorama regulatorio",
+      "coverTitle": "Informe del Panorama Regulatorio",
+      "coverSubtitle": "Análisis de cumplimiento y exposición del programa de privacidad",
+      "coverGenerated": "Generado: {date}",
+      "coverConfidential": "CONFIDENCIAL — Este documento ofrece una visión general de cumplimiento regulatorio para uso interno de los equipos de privacidad y legales. No debe distribuirse externamente sin autorización.",
+      "executiveSummary": "Resumen ejecutivo",
+      "stats": {
+        "appliedFrameworks": "Marcos aplicables",
+        "complianceScore": "Puntuación de cumplimiento",
+        "strictestDsar": "DSAR más estricto",
+        "strictestBreach": "Violación más estricta",
+        "totalDsars": "DSAR totales",
+        "onTimeRate": "Tasa a tiempo",
+        "avgResolution": "Resolución media",
+        "overdue": "Fuera de plazo",
+        "totalTransfers": "Transferencias totales",
+        "destinationCountries": "Países de destino",
+        "nonAdequate": "Sin adecuación",
+        "totalVendors": "Proveedores totales",
+        "operatingCountries": "Países de operación",
+        "highRiskVendors": "Proveedores de alto riesgo",
+        "notAvailable": "N/D"
+      },
+      "meta": {
+        "organization": "Organización",
+        "reportDate": "Fecha del informe",
+        "dataAssets": "Activos de datos",
+        "processingActivities": "Actividades de tratamiento",
+        "activeVendors": "Proveedores activos",
+        "internationalTransfers": "Transferencias internacionales",
+        "primaryJurisdiction": "Jurisdicción principal",
+        "primaryJurisdictionNotSet": "Sin definir"
+      },
+      "programHealth": "Indicadores de salud del programa",
+      "healthDsarOnTime": "Cumplimiento de DSAR a tiempo: {rate}%",
+      "healthOpenIncidents": "Incidencias abiertas: {open} ({critical} críticas)",
+      "healthOverdueDsars": "DSAR fuera de plazo: {count}",
+      "healthHighRiskVendors": "Proveedores de alto riesgo: {count}",
+      "healthAssessments": "Evaluaciones aprobadas: {approved} de {total}",
+      "appliedFrameworks": "Marcos regulatorios aplicables",
+      "appliedFrameworksDesc": "Se han identificado los siguientes {count} marcos regulatorios como aplicables a {org}. Los plazos reflejan los requisitos más estrictos; cuando concurren varias jurisdicciones, prevalece el plazo más corto.",
+      "frameworkColumns": {
+        "framework": "Marco",
+        "region": "Región",
+        "category": "Categoría",
+        "dsar": "DSAR",
+        "breach": "Violación",
+        "primary": "Principal"
+      },
+      "penaltyExposure": "Exposición a sanciones",
+      "penaltyDesc": "Resumen de las sanciones máximas por marco regulatorio aplicable. Las sanciones reales dependen de la naturaleza, gravedad y duración de la infracción, así como de la cooperación con las autoridades de control.",
+      "supervisoryAuthority": "Autoridad de control: {name}",
+      "deadlineCompliance": "Cumplimiento de plazos de respuesta",
+      "dsarByJurisdiction": "Plazos de DSAR por jurisdicción",
+      "dsarByJurisdictionDesc": "Los plazos de respuesta a solicitudes de los interesados varían según el marco",
+      "dsarStatusColumns": {
+        "framework": "Marco",
+        "deadline": "Plazo",
+        "status": "Estado"
+      },
+      "slaDays": "{days} días",
+      "statusMeeting": "Cumpliendo el plazo",
+      "statusAtRisk": "En riesgo",
+      "statusNoData": "Sin datos todavía",
+      "breachDeadlines": "Plazos de notificación de violaciones",
+      "breachDeadlinesDesc": "Tiempo máximo para notificar a las autoridades de control tras descubrir una violación",
+      "breachColumns": {
+        "framework": "Marco",
+        "deadline": "Plazo",
+        "authority": "Autoridad"
+      },
+      "transferExposure": "Exposición a transferencias internacionales",
+      "transferDesc": "Las transferencias de datos a países sin decisión de adecuación requieren garantías adicionales como Cláusulas Contractuales Tipo (CCT), Normas Corporativas Vinculantes (NCV) o mecanismos de certificación aprobados.",
+      "transferColumns": {
+        "country": "País",
+        "transfers": "Transferencias",
+        "adequacy": "Adecuación",
+        "mechanisms": "Mecanismos"
+      },
+      "yes": "Sí",
+      "no": "No",
+      "vendorFootprint": "Huella geográfica de proveedores",
+      "vendorFootprintDesc": "Las operaciones de los proveedores en varias jurisdicciones generan obligaciones regulatorias. Los proveedores de alto riesgo que operan en varias jurisdicciones requieren una diligencia debida reforzada y protecciones contractuales.",
+      "vendorColumns": {
+        "country": "País",
+        "vendors": "Proveedores",
+        "highRisk": "Alto riesgo"
+      },
+      "consolidatedRequirements": "Requisitos de cumplimiento consolidados",
+      "consolidatedDesc": "Los siguientes requisitos se agregan a partir de los {count} marcos aplicables. Los requisitos que aparecen en varios marcos indican áreas de convergencia regulatoria y deben priorizarse.",
+      "frameworksList": "Marcos: {codes} ({count, plural, one {# marco} other {# marcos}})",
+      "hours": "{hours} horas",
+      "days": "{days} días",
+      "dayOne": "1 día",
+      "noDeadline": "Sin plazo específico",
+      "category": {
+        "comprehensive": "Integral",
+        "sectoral": "Sectorial",
+        "ai_governance": "Gobernanza de la IA",
+        "emerging": "Emergente"
+      }
+    },
+    "dsarPerformance": {
+      "pageTitle": "Rendimiento de DSAR",
+      "coverTitle": "Informe de Rendimiento de DSAR",
+      "coverSubtitle": "Cumplimiento y métricas de solicitudes de los interesados",
+      "coverGenerated": "Generado: {date}",
+      "coverConfidential": "CONFIDENCIAL — Este informe contiene métricas agregadas de gestión de solicitudes de los interesados. No incluye datos personales individuales.",
+      "executiveSummary": "Resumen ejecutivo",
+      "stats": {
+        "totalRequests": "Solicitudes totales",
+        "onTimeRate": "Tasa a tiempo",
+        "avgResolution": "Resolución media",
+        "overdue": "Fuera de plazo",
+        "notAvailable": "N/D"
+      },
+      "meta": {
+        "organization": "Organización",
+        "reportDate": "Fecha del informe",
+        "primaryJurisdiction": "Jurisdicción principal",
+        "primaryJurisdictionNotSet": "Sin definir",
+        "defaultDeadline": "Plazo por defecto",
+        "defaultDeadlineDays": "{count} días",
+        "totalRequests": "Solicitudes totales",
+        "completed": "Completadas",
+        "currentlyOpen": "Abiertas actualmente",
+        "completedLast30Days": "Completadas (últimos 30 días)",
+        "autoRedacted": "Redactadas automáticamente"
+      },
+      "privacyByDesign": "Privacidad desde el diseño",
+      "privacyByDesignBody": "Este informe no contiene datos personales individuales. Todas las métricas son agregadas. Los registros de DSAR completados se redactan automáticamente tras el periodo de retención configurado para minimizar el riesgo de protección de datos.",
+      "requestAnalysis": "Análisis de solicitudes",
+      "byType": "Por tipo de solicitud",
+      "byTypeDesc": "Distribución de las solicitudes de los interesados por tipo de derecho ejercido",
+      "typeColumns": {
+        "type": "Tipo de solicitud",
+        "count": "Nº",
+        "percentage": "Porcentaje"
+      },
+      "byStatus": "Por estado",
+      "byStatusDesc": "Distribución por estado actual de todas las solicitudes",
+      "statusColumns": {
+        "status": "Estado",
+        "count": "Nº",
+        "percentage": "Porcentaje"
+      },
+      "slaCompliance": "Cumplimiento de SLA por jurisdicción",
+      "slaDesc": "Los plazos de respuesta a DSAR varían según la jurisdicción. Cuando concurren varias jurisdicciones, prevalece el plazo más estricto. El tiempo medio de resolución se compara con el plazo de cada marco.",
+      "slaColumns": {
+        "jurisdiction": "Jurisdicción",
+        "deadline": "Plazo",
+        "avgResolution": "Resolución media",
+        "status": "Estado"
+      },
+      "slaDays": "{days} días",
+      "monthlyTrend": "Tendencia mensual",
+      "monthlyTrendDesc": "Volumen de solicitudes y tasa de finalización en los últimos 12 meses. El seguimiento de tendencias ayuda a anticipar necesidades de recursos e identificar patrones estacionales.",
+      "monthlyColumns": {
+        "month": "Mes",
+        "received": "Recibidas",
+        "completed": "Completadas",
+        "backlog": "Pendientes"
+      },
+      "openRequestAging": "Antigüedad de solicitudes abiertas",
+      "agingDesc": "Las solicitudes que superan el plazo de la jurisdicción requieren atención inmediata. El análisis de antigüedad ayuda a priorizar la carga y a identificar cuellos de botella en la tramitación.",
+      "agingColumns": {
+        "band": "Rango de antigüedad",
+        "open": "Solicitudes abiertas",
+        "risk": "Nivel de riesgo"
+      },
+      "riskCritical": "Crítico — probablemente fuera de plazo",
+      "riskAtRisk": "En riesgo",
+      "riskOnTrack": "En plazo",
+      "dsarTypes": {
+        "ACCESS": "Acceso (Derecho de acceso)",
+        "ERASURE": "Supresión (Derecho al olvido)",
+        "RECTIFICATION": "Rectificación",
+        "PORTABILITY": "Portabilidad de datos",
+        "OBJECTION": "Oposición al tratamiento",
+        "RESTRICTION": "Limitación del tratamiento",
+        "WITHDRAW_CONSENT": "Retirada del consentimiento",
+        "AUTOMATED_DECISION": "Revisión de decisión automatizada",
+        "OTHER": "Otros"
+      }
+    },
     "breachRegister": {
       "pageTitle": "Registro de incidencias",
       "coverTitle": "Registro de Violaciones / Incidencias",

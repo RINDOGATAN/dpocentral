@@ -773,6 +773,192 @@
         "warningPrefix": "Warning: "
       }
     },
+    "regulatoryLandscape": {
+      "pageTitle": "Regulatory Landscape",
+      "coverTitle": "Regulatory Landscape Report",
+      "coverSubtitle": "Privacy Program Compliance & Exposure Analysis",
+      "coverGenerated": "Generated: {date}",
+      "coverConfidential": "CONFIDENTIAL — This document provides a regulatory compliance overview for internal use by the privacy and legal teams. It should not be distributed externally without authorization.",
+      "executiveSummary": "Executive Summary",
+      "stats": {
+        "appliedFrameworks": "Applied Frameworks",
+        "complianceScore": "Compliance Score",
+        "strictestDsar": "Strictest DSAR",
+        "strictestBreach": "Strictest Breach",
+        "totalDsars": "Total DSARs",
+        "onTimeRate": "On-Time Rate",
+        "avgResolution": "Avg Resolution",
+        "overdue": "Overdue",
+        "totalTransfers": "Total Transfers",
+        "destinationCountries": "Destination Countries",
+        "nonAdequate": "Non-Adequate",
+        "totalVendors": "Total Vendors",
+        "operatingCountries": "Operating Countries",
+        "highRiskVendors": "High-Risk Vendors",
+        "notAvailable": "N/A"
+      },
+      "meta": {
+        "organization": "Organization",
+        "reportDate": "Report Date",
+        "dataAssets": "Data Assets",
+        "processingActivities": "Processing Activities",
+        "activeVendors": "Active Vendors",
+        "internationalTransfers": "International Transfers",
+        "primaryJurisdiction": "Primary Jurisdiction",
+        "primaryJurisdictionNotSet": "Not set"
+      },
+      "programHealth": "Program Health Indicators",
+      "healthDsarOnTime": "DSAR on-time completion: {rate}%",
+      "healthOpenIncidents": "Open incidents: {open} ({critical} critical)",
+      "healthOverdueDsars": "Overdue DSARs: {count}",
+      "healthHighRiskVendors": "High-risk vendors: {count}",
+      "healthAssessments": "Assessments approved: {approved} of {total}",
+      "appliedFrameworks": "Applied Regulatory Frameworks",
+      "appliedFrameworksDesc": "The following {count} regulatory frameworks have been identified as applicable to {org}. Deadlines shown represent the strictest requirements; where multiple jurisdictions overlap, the shortest deadline should prevail.",
+      "frameworkColumns": {
+        "framework": "Framework",
+        "region": "Region",
+        "category": "Category",
+        "dsar": "DSAR",
+        "breach": "Breach",
+        "primary": "Primary"
+      },
+      "penaltyExposure": "Penalty Exposure",
+      "penaltyDesc": "Summary of maximum penalties per applied regulatory framework. Actual penalties depend on the nature, gravity, and duration of the infringement, as well as cooperation with supervisory authorities.",
+      "supervisoryAuthority": "Supervisory Authority: {name}",
+      "deadlineCompliance": "Response Deadline Compliance",
+      "dsarByJurisdiction": "DSAR Deadlines by Jurisdiction",
+      "dsarByJurisdictionDesc": "Data subject access request response deadlines vary by framework",
+      "dsarStatusColumns": {
+        "framework": "Framework",
+        "deadline": "Deadline",
+        "status": "Status"
+      },
+      "slaDays": "{days} days",
+      "statusMeeting": "Meeting deadline",
+      "statusAtRisk": "At risk",
+      "statusNoData": "No data yet",
+      "breachDeadlines": "Breach Notification Deadlines",
+      "breachDeadlinesDesc": "Maximum time to notify supervisory authorities after discovering a breach",
+      "breachColumns": {
+        "framework": "Framework",
+        "deadline": "Deadline",
+        "authority": "Authority"
+      },
+      "transferExposure": "International Transfer Exposure",
+      "transferDesc": "Data transfers to countries without an adequacy decision require additional safeguards such as Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs), or approved certification mechanisms.",
+      "transferColumns": {
+        "country": "Country",
+        "transfers": "Transfers",
+        "adequacy": "Adequacy",
+        "mechanisms": "Mechanisms"
+      },
+      "yes": "Yes",
+      "no": "No",
+      "vendorFootprint": "Vendor Geographic Footprint",
+      "vendorFootprintDesc": "Vendor operations across jurisdictions create regulatory obligations. High-risk vendors operating in multiple jurisdictions require enhanced due diligence and contractual protections.",
+      "vendorColumns": {
+        "country": "Country",
+        "vendors": "Vendors",
+        "highRisk": "High Risk"
+      },
+      "consolidatedRequirements": "Consolidated Compliance Requirements",
+      "consolidatedDesc": "The following requirements are aggregated from all {count} applied frameworks. Requirements that appear across multiple frameworks indicate areas of regulatory convergence and should be prioritized.",
+      "frameworksList": "Frameworks: {codes} ({count, plural, one {# framework} other {# frameworks}})",
+      "hours": "{hours} hours",
+      "days": "{days} days",
+      "dayOne": "1 day",
+      "noDeadline": "No specific deadline",
+      "category": {
+        "comprehensive": "Comprehensive",
+        "sectoral": "Sectoral",
+        "ai_governance": "AI Governance",
+        "emerging": "Emerging"
+      }
+    },
+    "dsarPerformance": {
+      "pageTitle": "DSAR Performance",
+      "coverTitle": "DSAR Performance Report",
+      "coverSubtitle": "Data Subject Access Request Compliance & Metrics",
+      "coverGenerated": "Generated: {date}",
+      "coverConfidential": "CONFIDENTIAL — This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
+      "executiveSummary": "Executive Summary",
+      "stats": {
+        "totalRequests": "Total Requests",
+        "onTimeRate": "On-Time Rate",
+        "avgResolution": "Avg Resolution",
+        "overdue": "Overdue",
+        "notAvailable": "N/A"
+      },
+      "meta": {
+        "organization": "Organization",
+        "reportDate": "Report Date",
+        "primaryJurisdiction": "Primary Jurisdiction",
+        "primaryJurisdictionNotSet": "Not set",
+        "defaultDeadline": "Default Deadline",
+        "defaultDeadlineDays": "{count} days",
+        "totalRequests": "Total Requests",
+        "completed": "Completed",
+        "currentlyOpen": "Currently Open",
+        "completedLast30Days": "Completed (Last 30 Days)",
+        "autoRedacted": "Auto-Redacted"
+      },
+      "privacyByDesign": "Privacy by Design",
+      "privacyByDesignBody": "This report contains no individual personal data. All metrics are aggregated. Completed DSAR records are automatically redacted after the configured retention period to minimize data protection risk.",
+      "requestAnalysis": "Request Analysis",
+      "byType": "By Request Type",
+      "byTypeDesc": "Distribution of data subject requests by type of right exercised",
+      "typeColumns": {
+        "type": "Request Type",
+        "count": "Count",
+        "percentage": "Percentage"
+      },
+      "byStatus": "By Status",
+      "byStatusDesc": "Current status distribution of all requests",
+      "statusColumns": {
+        "status": "Status",
+        "count": "Count",
+        "percentage": "Percentage"
+      },
+      "slaCompliance": "SLA Compliance by Jurisdiction",
+      "slaDesc": "DSAR response deadlines vary by jurisdiction. Where multiple jurisdictions apply, the strictest deadline should prevail. Average resolution time is compared against each framework's deadline.",
+      "slaColumns": {
+        "jurisdiction": "Jurisdiction",
+        "deadline": "Deadline",
+        "avgResolution": "Avg Resolution",
+        "status": "Status"
+      },
+      "slaDays": "{days} days",
+      "monthlyTrend": "Monthly Trend",
+      "monthlyTrendDesc": "Request volume and completion rate over the last 12 months. Monitoring trends helps anticipate resource needs and identify seasonal patterns.",
+      "monthlyColumns": {
+        "month": "Month",
+        "received": "Received",
+        "completed": "Completed",
+        "backlog": "Backlog"
+      },
+      "openRequestAging": "Open Request Aging",
+      "agingDesc": "Requests aged beyond the jurisdiction's deadline require immediate attention. Aging analysis helps prioritize workload and identify bottlenecks in the fulfillment process.",
+      "agingColumns": {
+        "band": "Age Band",
+        "open": "Open Requests",
+        "risk": "Risk Level"
+      },
+      "riskCritical": "Critical — likely overdue",
+      "riskAtRisk": "At risk",
+      "riskOnTrack": "On track",
+      "dsarTypes": {
+        "ACCESS": "Access (Right of Access)",
+        "ERASURE": "Erasure (Right to be Forgotten)",
+        "RECTIFICATION": "Rectification",
+        "PORTABILITY": "Data Portability",
+        "OBJECTION": "Objection to Processing",
+        "RESTRICTION": "Restriction of Processing",
+        "WITHDRAW_CONSENT": "Withdraw Consent",
+        "AUTOMATED_DECISION": "Automated Decision Review",
+        "OTHER": "Other"
+      }
+    },
     "breachRegister": {
       "pageTitle": "Breach Register",
       "coverTitle": "Breach / Incident Register",
