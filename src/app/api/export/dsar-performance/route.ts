@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import {
@@ -8,6 +10,7 @@ import {
 } from "@/server/services/export/dsar-performance-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { locales, defaultLocale } from "@/i18n/config";
 
 export async function GET(request: NextRequest) {
   const token = await getToken({ req: request });
@@ -40,6 +43,15 @@ export async function GET(request: NextRequest) {
   if (!org) {
     return Response.json({ error: "Organization not found" }, { status: 404 });
   }
+
+  // Locale resolution: ?locale=es → NEXT_LOCALE cookie → default
+  const requestedLocale = request.nextUrl.searchParams.get("locale");
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale;
+  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.dsarPerformance" });
 
   // ── Primary jurisdiction ───────────────────────────────
   const primaryJurisdiction = await prisma.organizationJurisdiction.findFirst({
@@ -206,7 +218,7 @@ export async function GET(request: NextRequest) {
   };
 
   const buffer = await renderToBuffer(
-    DSARPerformanceReport({ data: reportData })
+    DSARPerformanceReport({ data: reportData, t, locale: resolvedLocale })
   );
 
   const dateStr = fmtDate(new Date());
