@@ -1,5 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { PrivacyProgramDocument } from "@/server/services/export/privacy-program/PrivacyProgramDocument";
@@ -8,6 +10,7 @@ import { buildFlowGraphInputs } from "@/server/services/export/privacy-program/f
 import type { FlowPageBatch } from "@/server/services/export/privacy-program/pages/DataFlowPage";
 import { renderFlowGraphPng } from "@/server/services/export/flow-graph-pdf";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { locales, defaultLocale } from "@/i18n/config";
 
 function fmtDate(d: Date): string {
   return d.toISOString().split("T")[0]!;
@@ -38,6 +41,19 @@ export async function GET(request: Request) {
     if (!membership) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    // Locale resolution: ?locale=es  →  NEXT_LOCALE cookie  →  default.
+    const requestedLocale = searchParams.get("locale");
+    const cookieStore = await cookies();
+    const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+    const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+      (l): l is string => !!l && (locales as readonly string[]).includes(l)
+    ) ?? defaultLocale;
+    const [t, tCommon, tEnum] = await Promise.all([
+      getTranslations({ locale: resolvedLocale, namespace: "pdf.privacyProgram" }),
+      getTranslations({ locale: resolvedLocale, namespace: "pdf.common" }),
+      getTranslations({ locale: resolvedLocale, namespace: "pdf.enum" }),
+    ]);
 
     const now = new Date();
 
@@ -187,7 +203,12 @@ export async function GET(request: Request) {
         name: a.name,
         assetIds: a.assets.map((l) => l.dataAssetId),
       })),
-      { productionOnly: true, maxNodesPerBatch: 60 }
+      { productionOnly: true, maxNodesPerBatch: 60 },
+      {
+        unassigned: t("flowMap.clusterUnassigned"),
+        overview: t("flowMap.clusterOverview"),
+        moreSuffix: (count) => ` ${t("flowMap.clusterMoreSuffix", { count })}`,
+      }
     );
 
     const flowBatches: FlowPageBatch[] = await Promise.all(
@@ -231,6 +252,10 @@ export async function GET(request: Request) {
         orgName,
         date: dateStr,
         input,
+        t,
+        tCommon,
+        tEnum,
+        locale: resolvedLocale,
         flowBatches: nonEmptyBatches,
         flowOriginalCount: flowResult.originalAssetCount,
         flowFilteredCount: flowResult.filteredAssetCount,

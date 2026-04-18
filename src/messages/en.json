@@ -488,5 +488,203 @@
       "selectTemplate": "Select an industry template",
       "createdSummary": "Created {summary}"
     }
+  },
+  "pdf": {
+    "common": {
+      "brand": "DPO Central",
+      "brandUppercase": "DPO CENTRAL",
+      "confidential": "CONFIDENTIAL",
+      "generated": "Generated {date}",
+      "confidentialBody": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request."
+    },
+    "enum": {
+      "assetType": {
+        "APPLICATION": "Application",
+        "CLOUD_SERVICE": "Cloud Service",
+        "DATABASE": "Database",
+        "FILE_SYSTEM": "File System",
+        "THIRD_PARTY": "Third Party",
+        "PHYSICAL": "Physical",
+        "OTHER": "Other"
+      },
+      "legalBasis": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal Obligation",
+        "VITAL_INTERESTS": "Vital Interests",
+        "PUBLIC_TASK": "Public Task",
+        "LEGITIMATE_INTERESTS": "Legitimate Interests"
+      },
+      "riskTier": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "aiRisk": {
+        "UNACCEPTABLE": "Unacceptable",
+        "HIGH_RISK": "High Risk",
+        "LIMITED": "Limited",
+        "MINIMAL": "Minimal"
+      },
+      "vendorStatus": {
+        "PROSPECTIVE": "Prospective",
+        "ACTIVE": "Active",
+        "UNDER_REVIEW": "Under Review",
+        "SUSPENDED": "Suspended",
+        "TERMINATED": "Terminated"
+      },
+      "contractStatus": {
+        "DRAFT": "Draft",
+        "ACTIVE": "Active",
+        "EXPIRED": "Expired",
+        "TERMINATED": "Terminated",
+        "PENDING": "Pending"
+      },
+      "aiSystemStatus": {
+        "DRAFT": "Draft",
+        "REGISTERED": "Registered",
+        "UNDER_REVIEW": "Under Review",
+        "COMPLIANT": "Compliant",
+        "NON_COMPLIANT": "Non-compliant",
+        "DECOMMISSIONED": "Decommissioned"
+      }
+    },
+    "privacyProgram": {
+      "title": "Privacy Program Report",
+      "eyebrow": "Privacy Program Report",
+      "coverSubtitle": "Board-Level Privacy Posture",
+      "coverReference": "GDPR · Article 30 · Article 28 · Privacy Governance",
+      "wordmarkRight": "Privacy Program Documentation",
+      "cover": {
+        "keyFindings": "Key Findings",
+        "dataEnrichmentCoverage": "Data Enrichment Coverage",
+        "vendorCategories": "Vendor Categories",
+        "stats": {
+          "dataAssets": "Data Assets",
+          "processingActivities": "Processing Activities",
+          "vendors": "Vendors",
+          "dsarsOnTime": "DSARs On Time"
+        },
+        "coverage": {
+          "assetsClassified": "Assets classified",
+          "activitiesReviewed": "Activities reviewed",
+          "vendorsWithDpa": "Vendors with DPA"
+        },
+        "noFindings": "No findings."
+      },
+      "inventory": {
+        "sectionNumber": "Section 02",
+        "title": "Data Inventory",
+        "lead": "Overview of registered data assets, their classification density, and the share of personal and special-category data catalogued across the estate.",
+        "donutPersonal": "Personal Data",
+        "donutPersonalSub": "{count} of {total} elements",
+        "donutSpecial": "Special Category",
+        "donutSpecialSub": "{count} of {total} elements · Art. 9",
+        "assetsByType": "Assets by Type",
+        "assetRegister": "Asset Register",
+        "columns": {
+          "name": "Name",
+          "type": "Type",
+          "owner": "Owner",
+          "location": "Location",
+          "elements": "Elts",
+          "personal": "Personal",
+          "article9": "Art. 9"
+        },
+        "empty": "No data assets have been registered."
+      },
+      "ropa": {
+        "sectionNumber": "Section 03",
+        "title": "Record of Processing",
+        "lead": "Article 30 summary. For auditor-grade detail (systems, data elements, transfer safeguards), export the standalone ROPA report.",
+        "byLegalBasis": "By Legal Basis",
+        "signals": "Signals",
+        "autoDecisions": "Auto. Decisions",
+        "intlTransfers": "Intl. Transfers",
+        "overdueReview": "Overdue Review",
+        "allActivities": "All Activities",
+        "columns": {
+          "activity": "Activity",
+          "legalBasis": "Legal Basis",
+          "systems": "Systems",
+          "transfers": "Transfers",
+          "adm": "ADM",
+          "nextReview": "Next Review"
+        },
+        "empty": "No processing activities recorded.",
+        "admYes": "YES"
+      },
+      "vendors": {
+        "sectionNumber": "Section 04",
+        "title": "Vendors & Processors",
+        "lead": "All processors and sub-processors subject to Article 28 obligations. Risk tiering and DPA status are summarised below; the full register follows by category.",
+        "criticalityDistribution": "Criticality Distribution",
+        "coverage": "Coverage",
+        "coverageDpa": "DPA on file",
+        "coverageActive": "Active",
+        "coverageCertified": "Certified",
+        "columns": {
+          "vendor": "Vendor",
+          "risk": "Risk",
+          "countries": "Countries",
+          "certifications": "Certifications",
+          "dpa": "DPA",
+          "nextReview": "Next Review"
+        },
+        "dpaYes": "YES",
+        "dpaMissing": "MISSING"
+      },
+      "ai": {
+        "sectionNumber": "Section 05",
+        "title": "AI Governance",
+        "lead": "EU AI Act posture across the organisation's registered AI systems. Coverage reflects only systems explicitly catalogued — inferred or shadow AI is out of scope.",
+        "donutCompliant": "EU AI Act Compliant",
+        "donutSub": "{count} of {total} systems",
+        "riskDistribution": "Risk Distribution",
+        "stats": {
+          "registered": "AI Systems Registered",
+          "highRisk": "High / Unacceptable Risk",
+          "certified": "ISO 42001 Certified"
+        },
+        "role": "Role Under EU AI Act",
+        "roleUnclassified": "Unclassified",
+        "inventory": "AI Systems Inventory",
+        "columns": {
+          "name": "Name",
+          "category": "Category",
+          "risk": "Risk",
+          "role": "Role",
+          "provider": "Provider",
+          "status": "Status"
+        },
+        "statusCompliant": "COMPLIANT",
+        "statusNonCompliant": "NON-COMPLIANT",
+        "empty": "No AI systems registered."
+      },
+      "flowMap": {
+        "sectionNumber": "Section 06",
+        "title": "Data Flow Map",
+        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are colour-coded by asset type; dashed edges are auto-generated from activity–asset links, solid edges are explicitly recorded.",
+        "leadMulti": "End-to-end data flows are split across {count} cluster groups to stay legible at this scale. Each page shows one group of processing activities.",
+        "showingCount": "Showing {filtered} of {original} assets",
+        "orphansDropped": "{count, plural, one {# orphaned} other {# orphaned}} (no flows, no activity link) filtered out",
+        "assetTypes": "Asset Types",
+        "clusterOverview": "Overview",
+        "clusterUnassigned": "Unassigned",
+        "clusterMoreSuffix": "+{count} more"
+      },
+      "findings": {
+        "overdueDsars": "{count, plural, one {# data-subject request is} other {# data-subject requests are}} past the statutory response deadline.",
+        "vendorsMissingDpa": "{count, plural, one {# active vendor ({pct}%) has} other {# active vendors ({pct}%) have}} no Data Processing Agreement on file.",
+        "highRiskVendors": "{count, plural, one {# vendor is} other {# vendors are}} classified as high or critical risk — governance review recommended.",
+        "overdueReview": "{count, plural, one {# processing activity is} other {# processing activities are}} overdue for periodic review.",
+        "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} catalogued — Article 9 safeguards apply.",
+        "intlTransfers": "{count, plural, one {# international transfer is} other {# international transfers are}} documented across processing activities.",
+        "adm": "{count, plural, one {# activity involves} other {# activities involve}} automated decision-making subject to Article 22.",
+        "openIncidents": "{count, plural, one {# incident is} other {# incidents are}} open and under investigation.",
+        "healthyProgram": "No material findings detected. The privacy program is in a steady state across inventory, processing, vendors, and incident response."
+      }
+    }
   }
 }

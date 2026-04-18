@@ -137,9 +137,13 @@ export function DonutChart({
             <Text style={s.value}>{displayMode === "custom" ? (subValue ?? "") : centerText}</Text>
             {centerSuffix && <Text style={s.valueSuffix}>{centerSuffix}</Text>}
           </View>
+          {/*
+            The center subvalue (small "X / Y" under the big number) is locale-
+            insensitive: a slash beats a translated "of" / "de" / "sur" / "von".
+          */}
           {displayMode !== "custom" && max > 0 && (
             <Text style={s.subValue}>
-              {displayMode === "percent" ? `${value} of ${max}` : `of ${max}`}
+              {displayMode === "percent" ? `${value} / ${max}` : `/ ${max}`}
             </Text>
           )}
         </View>

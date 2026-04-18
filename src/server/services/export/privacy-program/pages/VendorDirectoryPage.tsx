@@ -16,6 +16,7 @@ import {
   computeVendorStats,
   groupVendorsByCategory,
   type ProgramInput,
+  type PdfT,
 } from "../data-mapping";
 
 const s = StyleSheet.create({
@@ -49,43 +50,47 @@ export function VendorDirectoryPage({
   orgName,
   date,
   input,
+  t,
+  tEnum,
 }: {
   orgName: string;
   date: string;
   input: ProgramInput;
+  t: PdfT;
+  tEnum: PdfT;
 }) {
   const stats = computeVendorStats(input);
-  const critBars = computeCriticalityBars(input);
+  const critBars = computeCriticalityBars(input, tEnum);
   const groups = groupVendorsByCategory(input);
 
   return (
-    <PageFrame eyebrow="Privacy Program Report" orgName={orgName} date={date}>
+    <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
       <SectionHeading
-        eyebrow="Section 04"
-        title="Vendors & Processors"
-        lead="All processors and sub-processors subject to Article 28 obligations. Risk tiering and DPA status are summarised below; the full register follows by category."
+        eyebrow={t("vendors.sectionNumber")}
+        title={t("vendors.title")}
+        lead={t("vendors.lead")}
         first
       />
 
       <View style={s.twoCol}>
         <View style={s.colLeft}>
-          <Text style={s.subHeading}>Criticality Distribution</Text>
+          <Text style={s.subHeading}>{t("vendors.criticalityDistribution")}</Text>
           <HorizontalBarChart rows={critBars} />
         </View>
         <View style={s.colRight}>
-          <Text style={s.subHeading}>Coverage</Text>
+          <Text style={s.subHeading}>{t("vendors.coverage")}</Text>
           <MiniCoverageBar
-            label="DPA on file"
+            label={t("vendors.coverageDpa")}
             value={stats.withDpa}
             total={stats.active}
           />
           <MiniCoverageBar
-            label="Active"
+            label={t("vendors.coverageActive")}
             value={stats.active}
             total={stats.total}
           />
           <MiniCoverageBar
-            label="Certified"
+            label={t("vendors.coverageCertified")}
             value={stats.withCert}
             total={stats.total}
           />
@@ -98,18 +103,18 @@ export function VendorDirectoryPage({
           category={g.category}
           count={g.vendors.length}
           columns={[
-            { header: "Vendor", width: 2.4 },
-            { header: "Risk", width: 1 },
-            { header: "Countries", width: 1.5 },
-            { header: "Certifications", width: 2 },
-            { header: "DPA", width: 0.9 },
-            { header: "Next Review", width: 1.2 },
+            { header: t("vendors.columns.vendor"), width: 2.4 },
+            { header: t("vendors.columns.risk"), width: 1 },
+            { header: t("vendors.columns.countries"), width: 1.5 },
+            { header: t("vendors.columns.certifications"), width: 2 },
+            { header: t("vendors.columns.dpa"), width: 0.9 },
+            { header: t("vendors.columns.nextReview"), width: 1.2 },
           ]}
           rows={g.vendors.map((v) => [
             v.name,
             v.riskTier ? (
               <PillBadge key="r" tone={toneForRiskTier(v.riskTier)} uppercase>
-                {v.riskTier}
+                {tEnum(`riskTier.${v.riskTier}`).toUpperCase()}
               </PillBadge>
             ) : "—",
             v.countries.join(", ") || "—",
@@ -122,11 +127,13 @@ export function VendorDirectoryPage({
             ) : "—",
             v.hasDpa ? (
               <PillBadge key="d" tone="success" uppercase>
-                {v.dpaStatus ?? "YES"}
+                {v.dpaStatus
+                  ? tEnum(`contractStatus.${v.dpaStatus.replace(/ /g, "_").toUpperCase()}`)
+                  : t("vendors.dpaYes")}
               </PillBadge>
             ) : v.status === "ACTIVE" ? (
               <PillBadge key="d" tone="danger" uppercase>
-                MISSING
+                {t("vendors.dpaMissing")}
               </PillBadge>
             ) : "—",
             v.nextReview

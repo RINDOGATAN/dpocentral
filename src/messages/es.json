@@ -488,5 +488,203 @@
       "selectTemplate": "Selecciona una plantilla de sector",
       "createdSummary": "Creado: {summary}"
     }
+  },
+  "pdf": {
+    "common": {
+      "brand": "DPO Central",
+      "brandUppercase": "DPO CENTRAL",
+      "confidential": "CONFIDENCIAL",
+      "generated": "Generado el {date}",
+      "confidentialBody": "CONFIDENCIAL — Este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse a personal autorizado y a las autoridades de control cuando lo requieran."
+    },
+    "enum": {
+      "assetType": {
+        "APPLICATION": "Aplicación",
+        "CLOUD_SERVICE": "Servicio cloud",
+        "DATABASE": "Base de datos",
+        "FILE_SYSTEM": "Sistema de archivos",
+        "THIRD_PARTY": "Tercero",
+        "PHYSICAL": "Físico",
+        "OTHER": "Otro"
+      },
+      "legalBasis": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión pública",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      },
+      "riskTier": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "aiRisk": {
+        "UNACCEPTABLE": "Inaceptable",
+        "HIGH_RISK": "Alto riesgo",
+        "LIMITED": "Limitado",
+        "MINIMAL": "Mínimo"
+      },
+      "vendorStatus": {
+        "PROSPECTIVE": "Potencial",
+        "ACTIVE": "Activo",
+        "UNDER_REVIEW": "En revisión",
+        "SUSPENDED": "Suspendido",
+        "TERMINATED": "Terminado"
+      },
+      "contractStatus": {
+        "DRAFT": "Borrador",
+        "ACTIVE": "En vigor",
+        "EXPIRED": "Vencido",
+        "TERMINATED": "Rescindido",
+        "PENDING": "Pendiente"
+      },
+      "aiSystemStatus": {
+        "DRAFT": "Borrador",
+        "REGISTERED": "Registrado",
+        "UNDER_REVIEW": "En revisión",
+        "COMPLIANT": "Conforme",
+        "NON_COMPLIANT": "No conforme",
+        "DECOMMISSIONED": "Retirado"
+      }
+    },
+    "privacyProgram": {
+      "title": "Informe del Programa de Privacidad",
+      "eyebrow": "Informe del Programa de Privacidad",
+      "coverSubtitle": "Postura de privacidad a nivel directivo",
+      "coverReference": "RGPD · Artículo 30 · Artículo 28 · Gobernanza de privacidad",
+      "wordmarkRight": "Documentación del programa de privacidad",
+      "cover": {
+        "keyFindings": "Conclusiones clave",
+        "dataEnrichmentCoverage": "Cobertura de enriquecimiento de datos",
+        "vendorCategories": "Categorías de proveedores",
+        "stats": {
+          "dataAssets": "Activos de datos",
+          "processingActivities": "Actividades de tratamiento",
+          "vendors": "Proveedores",
+          "dsarsOnTime": "DSARs a tiempo"
+        },
+        "coverage": {
+          "assetsClassified": "Activos clasificados",
+          "activitiesReviewed": "Actividades revisadas",
+          "vendorsWithDpa": "Proveedores con DPA"
+        },
+        "noFindings": "Sin hallazgos."
+      },
+      "inventory": {
+        "sectionNumber": "Sección 02",
+        "title": "Inventario de datos",
+        "lead": "Visión general de los activos de datos registrados, su densidad de clasificación y la proporción de datos personales y de categoría especial catalogados en el conjunto.",
+        "donutPersonal": "Datos personales",
+        "donutPersonalSub": "{count} de {total} elementos",
+        "donutSpecial": "Categoría especial",
+        "donutSpecialSub": "{count} de {total} elementos · Art. 9",
+        "assetsByType": "Activos por tipo",
+        "assetRegister": "Registro de activos",
+        "columns": {
+          "name": "Nombre",
+          "type": "Tipo",
+          "owner": "Responsable",
+          "location": "Ubicación",
+          "elements": "Elts",
+          "personal": "Personal",
+          "article9": "Art. 9"
+        },
+        "empty": "No se han registrado activos de datos."
+      },
+      "ropa": {
+        "sectionNumber": "Sección 03",
+        "title": "Registro de actividades de tratamiento",
+        "lead": "Resumen del artículo 30. Para el detalle con calidad de auditoría (sistemas, elementos de datos, garantías de transferencia), exporta el informe ROPA independiente.",
+        "byLegalBasis": "Por base jurídica",
+        "signals": "Señales",
+        "autoDecisions": "Decisiones aut.",
+        "intlTransfers": "Transferencias int.",
+        "overdueReview": "Revisión vencida",
+        "allActivities": "Todas las actividades",
+        "columns": {
+          "activity": "Actividad",
+          "legalBasis": "Base jurídica",
+          "systems": "Sistemas",
+          "transfers": "Transf.",
+          "adm": "ADM",
+          "nextReview": "Próx. revisión"
+        },
+        "empty": "No hay actividades de tratamiento registradas.",
+        "admYes": "SÍ"
+      },
+      "vendors": {
+        "sectionNumber": "Sección 04",
+        "title": "Proveedores y Encargados",
+        "lead": "Todos los encargados y subencargados sujetos a las obligaciones del artículo 28. Se resume la categorización de riesgo y el estado del DPA; el registro completo figura a continuación por categoría.",
+        "criticalityDistribution": "Distribución por criticidad",
+        "coverage": "Cobertura",
+        "coverageDpa": "DPA en vigor",
+        "coverageActive": "Activos",
+        "coverageCertified": "Certificados",
+        "columns": {
+          "vendor": "Proveedor",
+          "risk": "Riesgo",
+          "countries": "Países",
+          "certifications": "Certificaciones",
+          "dpa": "DPA",
+          "nextReview": "Próx. revisión"
+        },
+        "dpaYes": "SÍ",
+        "dpaMissing": "FALTA"
+      },
+      "ai": {
+        "sectionNumber": "Sección 05",
+        "title": "Gobernanza de la IA",
+        "lead": "Postura frente a la Ley de IA de la UE en los sistemas de IA registrados por la organización. La cobertura refleja solo los sistemas explícitamente catalogados; la IA inferida o en la sombra queda fuera del alcance.",
+        "donutCompliant": "Conforme con la Ley IA de la UE",
+        "donutSub": "{count} de {total} sistemas",
+        "riskDistribution": "Distribución de riesgo",
+        "stats": {
+          "registered": "Sistemas de IA registrados",
+          "highRisk": "Riesgo alto / inaceptable",
+          "certified": "Certificación ISO 42001"
+        },
+        "role": "Rol en la Ley IA de la UE",
+        "roleUnclassified": "Sin clasificar",
+        "inventory": "Inventario de sistemas de IA",
+        "columns": {
+          "name": "Nombre",
+          "category": "Categoría",
+          "risk": "Riesgo",
+          "role": "Rol",
+          "provider": "Proveedor",
+          "status": "Estado"
+        },
+        "statusCompliant": "CONFORME",
+        "statusNonCompliant": "NO CONFORME",
+        "empty": "No hay sistemas de IA registrados."
+      },
+      "flowMap": {
+        "sectionNumber": "Sección 06",
+        "title": "Mapa de flujos de datos",
+        "leadSingle": "Activos de producción que participan en al menos un flujo de datos o actividad de tratamiento. Los nodos están codificados por color según el tipo de activo; las aristas discontinuas se generan automáticamente a partir de enlaces actividad–activo, las aristas sólidas son flujos registrados explícitamente.",
+        "leadMulti": "Los flujos de datos integrales se dividen en {count} grupos de clústeres para mantener la legibilidad a esta escala. Cada página muestra un grupo de actividades de tratamiento.",
+        "showingCount": "Mostrando {filtered} de {original} activos",
+        "orphansDropped": "{count, plural, one {# huérfano filtrado} other {# huérfanos filtrados}} (sin flujos ni enlace a actividades)",
+        "assetTypes": "Tipos de activo",
+        "clusterOverview": "Visión general",
+        "clusterUnassigned": "Sin asignar",
+        "clusterMoreSuffix": "+{count} más"
+      },
+      "findings": {
+        "overdueDsars": "{count, plural, one {# solicitud de datos del interesado está} other {# solicitudes de datos del interesado están}} fuera del plazo legal de respuesta.",
+        "vendorsMissingDpa": "{count, plural, one {# proveedor activo ({pct}%) no tiene} other {# proveedores activos ({pct}%) no tienen}} un Acuerdo de Encargo de Tratamiento registrado.",
+        "highRiskVendors": "{count, plural, one {# proveedor está clasificado} other {# proveedores están clasificados}} como de riesgo alto o crítico — se recomienda revisión de gobernanza.",
+        "overdueReview": "{count, plural, one {# actividad de tratamiento está} other {# actividades de tratamiento están}} pendientes de revisión periódica.",
+        "specialCat": "{count, plural, one {# elemento de datos de categoría especial está} other {# elementos de datos de categoría especial están}} catalogados — se aplican las garantías del artículo 9.",
+        "intlTransfers": "{count, plural, one {# transferencia internacional está} other {# transferencias internacionales están}} documentadas en las actividades de tratamiento.",
+        "adm": "{count, plural, one {# actividad implica} other {# actividades implican}} decisiones automatizadas sujetas al artículo 22.",
+        "openIncidents": "{count, plural, one {# incidencia está} other {# incidencias están}} abiertas y en investigación.",
+        "healthyProgram": "No se han detectado hallazgos relevantes. El programa de privacidad se encuentra en estado estable en los pilares de inventario, tratamiento, proveedores y respuesta a incidencias."
+      }
+    }
   }
 }

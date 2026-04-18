@@ -16,6 +16,7 @@ import {
   computeAIRoleBars,
   computeAIStats,
   type ProgramInput,
+  type PdfT,
 } from "../data-mapping";
 
 const s = StyleSheet.create({
@@ -47,22 +48,25 @@ export function AIGovernancePage({
   orgName,
   date,
   input,
+  t,
+  tEnum,
 }: {
   orgName: string;
   date: string;
   input: ProgramInput;
+  t: PdfT;
+  tEnum: PdfT;
 }) {
   const stats = computeAIStats(input);
-  const riskBars = computeAIRiskBars(input);
-  const roleBars = computeAIRoleBars(input);
-  const compliantPct = stats.total > 0 ? Math.round((stats.compliant / stats.total) * 100) : 0;
+  const riskBars = computeAIRiskBars(input, tEnum);
+  const roleBars = computeAIRoleBars(input, t("ai.roleUnclassified"));
 
   return (
-    <PageFrame eyebrow="Privacy Program Report" orgName={orgName} date={date}>
+    <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
       <SectionHeading
-        eyebrow="Section 05"
-        title="AI Governance"
-        lead="EU AI Act posture across the organisation's registered AI systems. Coverage reflects only systems explicitly catalogued — inferred or shadow AI is out of scope."
+        eyebrow={t("ai.sectionNumber")}
+        title={t("ai.title")}
+        lead={t("ai.lead")}
         first
       />
 
@@ -71,27 +75,27 @@ export function AIGovernancePage({
           <DonutChart
             value={stats.compliant}
             max={stats.total}
-            label="EU AI Act Compliant"
-            sublabel={`${stats.compliant} of ${stats.total} systems`}
+            label={t("ai.donutCompliant")}
+            sublabel={t("ai.donutSub", { count: stats.compliant, total: stats.total })}
             color={tokens.color.semantic.success.solid}
           />
         </View>
         <View style={s.colRight}>
-          <Text style={s.subHeading}>Risk Distribution</Text>
+          <Text style={s.subHeading}>{t("ai.riskDistribution")}</Text>
           <HorizontalBarChart rows={riskBars} labelWidth={100} />
         </View>
       </View>
 
       <StatTileRow>
-        <StatTile value={stats.total} label="AI Systems Registered" />
+        <StatTile value={stats.total} label={t("ai.stats.registered")} />
         <StatTile
           value={stats.highRisk}
-          label="High / Unacceptable Risk"
+          label={t("ai.stats.highRisk")}
           tone={stats.highRisk > 0 ? "warning" : "success"}
         />
         <StatTile
           value={stats.certified}
-          label="ISO 42001 Certified"
+          label={t("ai.stats.certified")}
           tone={stats.certified > 0 ? "success" : "neutral"}
         />
       </StatTileRow>
@@ -99,50 +103,51 @@ export function AIGovernancePage({
       {roleBars.length > 0 && (
         <>
           <Text style={[s.subHeading, { marginTop: tokens.space[6] }]}>
-            Role Under EU AI Act
+            {t("ai.role")}
           </Text>
           <HorizontalBarChart rows={roleBars} labelWidth={110} />
         </>
       )}
 
-      <Text style={[s.subHeading, { marginTop: tokens.space[5] }]}>AI Systems Inventory</Text>
+      <Text style={[s.subHeading, { marginTop: tokens.space[5] }]}>{t("ai.inventory")}</Text>
       <CategoryTable
         columns={[
-          { header: "Name", width: 2.2 },
-          { header: "Category", width: 1.6 },
-          { header: "Risk", width: 1.2 },
-          { header: "Role", width: 1.1 },
-          { header: "Provider", width: 1.5 },
-          { header: "Status", width: 1.2 },
+          { header: t("ai.columns.name"), width: 2.2 },
+          { header: t("ai.columns.category"), width: 1.6 },
+          { header: t("ai.columns.risk"), width: 1.2 },
+          { header: t("ai.columns.role"), width: 1.1 },
+          { header: t("ai.columns.provider"), width: 1.5 },
+          { header: t("ai.columns.status"), width: 1.2 },
         ]}
-        rows={input.aiSystems.map((s) => [
-          s.name,
-          s.category ?? "—",
+        rows={input.aiSystems.map((sys) => [
+          sys.name,
+          sys.category ?? "—",
           (() => {
-            switch (s.riskLevel) {
+            const label = tEnum(`aiRisk.${sys.riskLevel}`).toUpperCase();
+            switch (sys.riskLevel) {
               case "UNACCEPTABLE":
-                return <PillBadge key="r" tone="danger" uppercase>UNACCEPTABLE</PillBadge>;
+                return <PillBadge key="r" tone="danger" uppercase>{label}</PillBadge>;
               case "HIGH_RISK":
-                return <PillBadge key="r" tone="warning" uppercase>HIGH</PillBadge>;
+                return <PillBadge key="r" tone="warning" uppercase>{label}</PillBadge>;
               case "LIMITED":
-                return <PillBadge key="r" tone="info" uppercase>LIMITED</PillBadge>;
+                return <PillBadge key="r" tone="info" uppercase>{label}</PillBadge>;
               case "MINIMAL":
-                return <PillBadge key="r" tone="success" uppercase>MINIMAL</PillBadge>;
+                return <PillBadge key="r" tone="success" uppercase>{label}</PillBadge>;
               default:
-                return s.riskLevel;
+                return label;
             }
           })(),
-          s.euAiActRole ?? "—",
-          s.provider ?? "—",
-          s.euAiActCompliant === true ? (
-            <PillBadge key="c" tone="success" uppercase>COMPLIANT</PillBadge>
-          ) : s.euAiActCompliant === false ? (
-            <PillBadge key="c" tone="danger" uppercase>NON-COMPLIANT</PillBadge>
+          sys.euAiActRole ?? "—",
+          sys.provider ?? "—",
+          sys.euAiActCompliant === true ? (
+            <PillBadge key="c" tone="success" uppercase>{t("ai.statusCompliant")}</PillBadge>
+          ) : sys.euAiActCompliant === false ? (
+            <PillBadge key="c" tone="danger" uppercase>{t("ai.statusNonCompliant")}</PillBadge>
           ) : (
-            s.status.replace(/_/g, " ")
+            tEnum(`aiSystemStatus.${sys.status}`)
           ),
         ])}
-        emptyText="No AI systems registered."
+        emptyText={t("ai.empty")}
       />
     </PageFrame>
   );

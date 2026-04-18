@@ -3,8 +3,6 @@ import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import {
   PageFrame,
   SectionHeading,
-  CategoryChip,
-  CategoryChipRow,
   tokens,
   colorForAssetType,
 } from "../../design-system";
@@ -12,6 +10,7 @@ import {
   FlowGraphImage,
   type RenderedFlowGraph,
 } from "../../flow-graph-pdf";
+import type { PdfT } from "../data-mapping";
 
 const s = StyleSheet.create({
   notice: {
@@ -79,7 +78,9 @@ export function DataFlowPage({
   filteredCount,
   originalCount,
   orphansDropped,
-  sectionNumber = "06",
+  sectionNumber,
+  t,
+  tEnum,
 }: {
   orgName: string;
   date: string;
@@ -88,41 +89,46 @@ export function DataFlowPage({
   originalCount: number;
   orphansDropped: number;
   sectionNumber?: string;
+  t: PdfT;
+  tEnum: PdfT;
 }) {
   if (batches.length === 0 || batches.every((b) => !b.graph)) return null;
 
   const isMultiBatch = batches.length > 1;
+  const orphanPart =
+    orphansDropped > 0
+      ? ` · ${t("flowMap.orphansDropped", { count: orphansDropped })}`
+      : "";
 
   return (
-    <PageFrame eyebrow="Privacy Program Report" orgName={orgName} date={date}>
+    <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
       <SectionHeading
-        eyebrow={`Section ${sectionNumber}`}
-        title="Data Flow Map"
+        eyebrow={sectionNumber ?? t("flowMap.sectionNumber")}
+        title={t("flowMap.title")}
         lead={
           isMultiBatch
-            ? `End-to-end data flows are split across ${batches.length} cluster groups to stay legible at this scale. Each page shows one group of processing activities.`
-            : "Production assets that participate in at least one data flow or processing activity. Nodes are colour-coded by asset type; dashed edges are auto-generated from activity–asset links, solid edges are explicitly recorded."
+            ? t("flowMap.leadMulti", { count: batches.length })
+            : t("flowMap.leadSingle")
         }
         first
       />
 
       <Text style={s.notice}>
-        Showing {filteredCount} of {originalCount} assets
-        {orphansDropped > 0 && ` · ${orphansDropped} orphaned (no flows, no activity link) filtered out`}
-        .
+        {t("flowMap.showingCount", { filtered: filteredCount, original: originalCount })}
+        {orphanPart}.
       </Text>
 
       {/* Asset type legend (rendered once on the first page) */}
       {batches[0]?.assetTypes && batches[0].assetTypes.length > 0 && (
         <>
-          <Text style={s.legendTitle}>Asset Types</Text>
+          <Text style={s.legendTitle}>{t("flowMap.assetTypes")}</Text>
           <View style={s.legendRow}>
-            {batches[0].assetTypes.map((t) => (
-              <View key={t} style={s.legendItem}>
+            {batches[0].assetTypes.map((type) => (
+              <View key={type} style={s.legendItem}>
                 <View
-                  style={[s.legendSwatch, { backgroundColor: colorForAssetType(t) }]}
+                  style={[s.legendSwatch, { backgroundColor: colorForAssetType(type) }]}
                 />
-                <Text style={s.legendLabel}>{t.replace(/_/g, " ")}</Text>
+                <Text style={s.legendLabel}>{tEnum(`assetType.${type}`)}</Text>
               </View>
             ))}
           </View>

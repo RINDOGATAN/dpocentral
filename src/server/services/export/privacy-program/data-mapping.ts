@@ -4,6 +4,16 @@
  */
 import type { SemanticTone } from "../design-system/tokens";
 
+/**
+ * Minimal translate function signature — structurally compatible with the
+ * `Translator` type returned by `next-intl`'s `getTranslations` /
+ * `createTranslator`, without pulling next-intl types into the pure data layer.
+ */
+export type PdfT = (
+  key: string,
+  values?: Record<string, string | number | Date>
+) => string;
+
 // ─── Raw input shapes ─────────────────────────────────────────────────────────
 
 export interface RawAsset {
@@ -86,7 +96,10 @@ export function computeHeroStats(input: ProgramInput) {
   };
 }
 
-export function computeCoverageBars(input: ProgramInput): Array<{
+export function computeCoverageBars(
+  input: ProgramInput,
+  t: PdfT
+): Array<{
   label: string;
   value: number;
   total: number;
@@ -100,9 +113,9 @@ export function computeCoverageBars(input: ProgramInput): Array<{
   const vendorsWithDpa = vendors.filter((v) => v.status === "ACTIVE" && v.hasDpa).length;
   const activeVendors = vendors.filter((v) => v.status === "ACTIVE").length;
   return [
-    { label: "Assets classified", value: assetsWithElements, total: assets.length },
-    { label: "Activities reviewed", value: activitiesReviewedOnTime, total: activities.length },
-    { label: "Vendors with DPA", value: vendorsWithDpa, total: activeVendors },
+    { label: t("cover.coverage.assetsClassified"), value: assetsWithElements, total: assets.length },
+    { label: t("cover.coverage.activitiesReviewed"), value: activitiesReviewedOnTime, total: activities.length },
+    { label: t("cover.coverage.vendorsWithDpa"), value: vendorsWithDpa, total: activeVendors },
   ];
 }
 
@@ -111,7 +124,7 @@ export interface KeyFindingItem {
   text: string;
 }
 
-export function computeKeyFindings(input: ProgramInput): KeyFindingItem[] {
+export function computeKeyFindings(input: ProgramInput, t: PdfT): KeyFindingItem[] {
   const { assets, activities, vendors, counts } = input;
   const items: KeyFindingItem[] = [];
   const now = Date.now();
@@ -131,7 +144,7 @@ export function computeKeyFindings(input: ProgramInput): KeyFindingItem[] {
   if (counts.overdueDsars > 0) {
     items.push({
       tone: "danger",
-      text: `${counts.overdueDsars} data-subject request${counts.overdueDsars !== 1 ? "s are" : " is"} past the statutory response deadline.`,
+      text: t("findings.overdueDsars", { count: counts.overdueDsars }),
     });
   }
 
@@ -139,49 +152,49 @@ export function computeKeyFindings(input: ProgramInput): KeyFindingItem[] {
     const pct = activeVendors > 0 ? Math.round((vendorsMissingDpa / activeVendors) * 100) : 0;
     items.push({
       tone: "warning",
-      text: `${vendorsMissingDpa} active vendor${vendorsMissingDpa !== 1 ? "s" : ""} (${pct}%) have no Data Processing Agreement on file.`,
+      text: t("findings.vendorsMissingDpa", { count: vendorsMissingDpa, pct }),
     });
   }
 
   if (highRiskVendors > 0) {
     items.push({
       tone: "warning",
-      text: `${highRiskVendors} vendor${highRiskVendors !== 1 ? "s are" : " is"} classified as high or critical risk — governance review recommended.`,
+      text: t("findings.highRiskVendors", { count: highRiskVendors }),
     });
   }
 
   if (overdueReview > 0) {
     items.push({
       tone: "warning",
-      text: `${overdueReview} processing activit${overdueReview !== 1 ? "ies are" : "y is"} overdue for periodic review.`,
+      text: t("findings.overdueReview", { count: overdueReview }),
     });
   }
 
   if (specialCat > 0) {
     items.push({
       tone: "info",
-      text: `${specialCat} special category data element${specialCat !== 1 ? "s are" : " is"} catalogued — Article 9 safeguards apply.`,
+      text: t("findings.specialCat", { count: specialCat }),
     });
   }
 
   if (internationalTransfers > 0) {
     items.push({
       tone: "info",
-      text: `${internationalTransfers} international transfer${internationalTransfers !== 1 ? "s are" : " is"} documented across processing activities.`,
+      text: t("findings.intlTransfers", { count: internationalTransfers }),
     });
   }
 
   if (activitiesWithAdm > 0) {
     items.push({
       tone: "info",
-      text: `${activitiesWithAdm} activit${activitiesWithAdm !== 1 ? "ies involve" : "y involves"} automated decision-making subject to Article 22.`,
+      text: t("findings.adm", { count: activitiesWithAdm }),
     });
   }
 
   if (counts.openIncidents > 0) {
     items.push({
       tone: "warning",
-      text: `${counts.openIncidents} incident${counts.openIncidents !== 1 ? "s are" : " is"} open and under investigation.`,
+      text: t("findings.openIncidents", { count: counts.openIncidents }),
     });
   }
 
@@ -189,7 +202,7 @@ export function computeKeyFindings(input: ProgramInput): KeyFindingItem[] {
   if (items.length === 0 && (assets.length > 0 || activities.length > 0 || vendors.length > 0)) {
     items.push({
       tone: "success",
-      text: "No material findings detected. The privacy program is in a steady state across inventory, processing, vendors, and incident response.",
+      text: t("findings.healthyProgram"),
     });
   }
 
@@ -221,7 +234,8 @@ export function computeInventoryStats(input: ProgramInput) {
 }
 
 export function computeAssetTypeBars(
-  input: ProgramInput
+  input: ProgramInput,
+  tEnum: PdfT
 ): Array<{ label: string; value: number; type: string }> {
   const counts = new Map<string, number>();
   for (const a of input.assets) {
@@ -230,7 +244,7 @@ export function computeAssetTypeBars(
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .map(([type, count]) => ({
-      label: type.replace(/_/g, " "),
+      label: tEnum(`assetType.${type}`),
       value: count,
       type,
     }));
@@ -250,7 +264,8 @@ export function computeRopaStats(input: ProgramInput) {
 }
 
 export function computeLegalBasisBars(
-  input: ProgramInput
+  input: ProgramInput,
+  tEnum: PdfT
 ): Array<{ label: string; value: number }> {
   const counts = new Map<string, number>();
   for (const a of input.activities) {
@@ -259,7 +274,7 @@ export function computeLegalBasisBars(
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .map(([basis, count]) => ({
-      label: basis.replace(/_/g, " "),
+      label: tEnum(`legalBasis.${basis}`),
       value: count,
     }));
 }
@@ -275,7 +290,8 @@ export function computeVendorStats(input: ProgramInput) {
 }
 
 export function computeCriticalityBars(
-  input: ProgramInput
+  input: ProgramInput,
+  tEnum: PdfT
 ): Array<{ label: string; value: number; color: string; labelColor: string }> {
   const counts = new Map<string, number>();
   for (const v of input.vendors) {
@@ -284,7 +300,7 @@ export function computeCriticalityBars(
   }
   const order = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
   return order.map((tier) => ({
-    label: tier,
+    label: tEnum(`riskTier.${tier}`).toUpperCase(),
     value: counts.get(tier) ?? 0,
     color: colorForCrit(tier),
     labelColor: colorForCrit(tier),
@@ -336,20 +352,21 @@ export function computeAIStats(input: ProgramInput) {
 }
 
 export function computeAIRiskBars(
-  input: ProgramInput
+  input: ProgramInput,
+  tEnum: PdfT
 ): Array<{ label: string; value: number; color: string; labelColor: string }> {
   const counts = new Map<string, number>();
   for (const s of input.aiSystems) {
     counts.set(s.riskLevel, (counts.get(s.riskLevel) ?? 0) + 1);
   }
-  const order: Array<{ key: string; label: string; color: string }> = [
-    { key: "UNACCEPTABLE", label: "Unacceptable", color: "#dc2626" },
-    { key: "HIGH_RISK",    label: "High Risk",     color: "#d97706" },
-    { key: "LIMITED",      label: "Limited",       color: "#2563eb" },
-    { key: "MINIMAL",      label: "Minimal",       color: "#059669" },
+  const order: Array<{ key: string; color: string }> = [
+    { key: "UNACCEPTABLE", color: "#dc2626" },
+    { key: "HIGH_RISK",    color: "#d97706" },
+    { key: "LIMITED",      color: "#2563eb" },
+    { key: "MINIMAL",      color: "#059669" },
   ];
   return order.map((o) => ({
-    label: o.label,
+    label: tEnum(`aiRisk.${o.key}`),
     value: counts.get(o.key) ?? 0,
     color: o.color,
     labelColor: o.color,
@@ -357,11 +374,12 @@ export function computeAIRiskBars(
 }
 
 export function computeAIRoleBars(
-  input: ProgramInput
+  input: ProgramInput,
+  unclassifiedLabel: string
 ): Array<{ label: string; value: number }> {
   const counts = new Map<string, number>();
   for (const s of input.aiSystems) {
-    const role = s.euAiActRole ?? "Unclassified";
+    const role = s.euAiActRole ?? unclassifiedLabel;
     counts.set(role, (counts.get(role) ?? 0) + 1);
   }
   return [...counts.entries()]

@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import {
   CoverFrame,
-  SectionHeading,
   StatTile,
   StatTileRow,
   KeyFinding,
@@ -18,6 +17,7 @@ import {
   computeKeyFindings,
   computeVendorCategoryChips,
   type ProgramInput,
+  type PdfT,
 } from "../data-mapping";
 
 const s = StyleSheet.create({
@@ -81,39 +81,43 @@ export function CoverSummaryPage({
   orgName,
   date,
   input,
+  t,
+  tCommon,
 }: {
   orgName: string;
   date: string;
   input: ProgramInput;
+  t: PdfT;
+  tCommon: PdfT;
 }) {
   const hero = computeHeroStats(input);
-  const coverage = computeCoverageBars(input);
-  const findings = computeKeyFindings(input);
+  const coverage = computeCoverageBars(input, t);
+  const findings = computeKeyFindings(input, t);
   const categoryChips = computeVendorCategoryChips(input);
 
   return (
-    <CoverFrame rightEyebrow="Privacy Program Documentation">
+    <CoverFrame rightEyebrow={t("wordmarkRight")}>
       <View style={s.titleBlock}>
         <View style={s.titleRow}>
           <View style={{ flex: 1 }}>
-            <Text style={s.title}>Privacy Program Report</Text>
+            <Text style={s.title}>{t("title")}</Text>
             <Text style={s.clientName}>{orgName}</Text>
             <View style={s.dateRow}>
               <Text style={s.dateText}>{date}</Text>
-              <ConfidentialPill />
+              <ConfidentialPill label={tCommon("confidential")} />
             </View>
           </View>
         </View>
       </View>
 
       <StatTileRow>
-        <StatTile value={hero.assetCount} label="Data Assets" />
-        <StatTile value={hero.activityCount} label="Processing Activities" />
-        <StatTile value={hero.vendorCount} label="Vendors" />
+        <StatTile value={hero.assetCount} label={t("cover.stats.dataAssets")} />
+        <StatTile value={hero.activityCount} label={t("cover.stats.processingActivities")} />
+        <StatTile value={hero.vendorCount} label={t("cover.stats.vendors")} />
         <StatTile
           value={hero.dsarOnTimePct ?? "—"}
           suffix={hero.dsarOnTimePct !== null ? "%" : undefined}
-          label="DSARs On Time"
+          label={t("cover.stats.dsarsOnTime")}
           tone={
             hero.dsarOnTimePct === null
               ? "neutral"
@@ -128,10 +132,10 @@ export function CoverSummaryPage({
 
       <View style={s.twoCol}>
         <View style={s.colLeft}>
-          <Text style={s.sectionLabel}>Key Findings</Text>
+          <Text style={s.sectionLabel}>{t("cover.keyFindings")}</Text>
           {findings.length === 0 ? (
             <Text style={{ fontSize: tokens.typography.size.body, color: tokens.color.text.muted }}>
-              No findings.
+              {t("cover.noFindings")}
             </Text>
           ) : (
             findings.slice(0, 5).map((f, i) => (
@@ -141,7 +145,7 @@ export function CoverSummaryPage({
         </View>
 
         <View style={s.colRight}>
-          <Text style={s.sectionLabel}>Data Enrichment Coverage</Text>
+          <Text style={s.sectionLabel}>{t("cover.dataEnrichmentCoverage")}</Text>
           {coverage.map((c, i) => (
             <MiniCoverageBar
               key={i}
@@ -153,7 +157,7 @@ export function CoverSummaryPage({
 
           {categoryChips.length > 0 && (
             <>
-              <Text style={s.sectionLabel}>Vendor Categories</Text>
+              <Text style={s.sectionLabel}>{t("cover.vendorCategories")}</Text>
               <CategoryChipRow>
                 {categoryChips.slice(0, 10).map((c, i) => (
                   <CategoryChip key={i} label={c.label} count={c.count} />
