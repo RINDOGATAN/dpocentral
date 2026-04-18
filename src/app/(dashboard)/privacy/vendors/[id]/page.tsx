@@ -41,6 +41,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
@@ -64,6 +65,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
 
   const { data: vendor, isLoading } = trpc.vendor.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -127,41 +129,41 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
 
   const updateVendor = trpc.vendor.update.useMutation({
     onSuccess: () => {
-      toast.success("Vendor updated");
+      toast.success(t("vendor.updated"));
       utils.vendor.getById.invalidate();
       setEditOpen(false);
     },
-    onError: (error) => toast.error(error.message || "Failed to update vendor"),
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
   const addContract = trpc.vendor.addContract.useMutation({
     onSuccess: () => {
-      toast.success("Contract added");
+      toast.success(t("vendor.contractAdded"));
       utils.vendor.getById.invalidate();
       setContractOpen(false);
       setContractForm({ name: "", type: "DPA", description: "", documentUrl: "", startDate: "", endDate: "" });
     },
-    onError: (error) => toast.error(error.message || "Failed to add contract"),
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
   const scheduleReview = trpc.vendor.scheduleReview.useMutation({
     onSuccess: () => {
-      toast.success("Review scheduled");
+      toast.success(t("vendor.reviewScheduled"));
       utils.vendor.getById.invalidate();
       setReviewOpen(false);
       setReviewForm({ reviewerId: "", type: "PERIODIC", scheduledAt: "" });
     },
-    onError: (error) => toast.error(error.message || "Failed to schedule review"),
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
   const deleteVendor = trpc.vendor.delete.useMutation({
     onSuccess: () => {
-      toast.success("Vendor deleted");
+      toast.success(t("vendor.deleted"));
       utils.vendor.list.invalidate();
       router.push("/privacy/vendors");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete vendor");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

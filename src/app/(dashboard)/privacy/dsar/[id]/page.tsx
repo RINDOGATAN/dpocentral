@@ -42,6 +42,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
@@ -81,6 +82,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
@@ -95,56 +97,56 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
   const updateStatus = trpc.dsar.updateStatus.useMutation({
     onSuccess: () => {
-      toast.success("Request status updated");
+      toast.success(t("dsar.statusUpdated"));
       utils.dsar.getById.invalidate();
       utils.dsar.list.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update status");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const createTask = trpc.dsar.createTask.useMutation({
     onSuccess: () => {
-      toast.success("Task added");
+      toast.success(t("dsar.taskAdded"));
       utils.dsar.getById.invalidate();
       setIsAddTaskOpen(false);
       setTaskForm({ title: "", description: "" });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create task");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const updateTask = trpc.dsar.updateTask.useMutation({
     onSuccess: () => {
-      toast.success("Task updated");
+      toast.success(t("dsar.taskUpdated"));
       utils.dsar.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update task");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const generateTasks = trpc.dsar.generateTasks.useMutation({
     onSuccess: () => {
-      toast.success("Tasks generated from data assets");
+      toast.success(t("dsar.tasksGenerated"));
       utils.dsar.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to generate tasks");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const addCommunication = trpc.dsar.addCommunication.useMutation({
     onSuccess: () => {
-      toast.success("Message sent");
+      toast.success(t("dsar.messageSent"));
       utils.dsar.getById.invalidate();
       setIsSendMessageOpen(false);
       setMessageForm({ subject: "", content: "" });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to send message");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

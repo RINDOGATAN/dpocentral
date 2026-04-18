@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { IncidentStatus, TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -99,6 +100,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
 
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<IncidentStatus | "">("");
@@ -131,31 +133,31 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
 
   const updateStatus = trpc.incident.updateStatus.useMutation({
     onSuccess: () => {
-      toast.success("Incident status updated");
+      toast.success(t("incident.statusUpdated"));
       utils.incident.getById.invalidate();
       setStatusDialogOpen(false);
       setPendingStatus("");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update status");
+      toast.error(error.message || t("incident.statusUpdateFailed"));
     },
   });
 
   const addTimelineEntry = trpc.incident.addTimelineEntry.useMutation({
     onSuccess: () => {
-      toast.success("Timeline entry added");
+      toast.success(t("incident.timelineAdded"));
       utils.incident.getById.invalidate();
       setTimelineDialogOpen(false);
       setTimelineTitle("");
       setTimelineDescription("");
       setTimelineEntryType("OBSERVATION");
     },
-    onError: (error) => toast.error(error.message || "Failed to add entry"),
+    onError: (error) => toast.error(error.message || t("incident.timelineAddFailed")),
   });
 
   const createTask = trpc.incident.createTask.useMutation({
     onSuccess: () => {
-      toast.success("Task created");
+      toast.success(t("incident.taskCreated"));
       utils.incident.getById.invalidate();
       setTaskDialogOpen(false);
       setTaskTitle("");
@@ -163,19 +165,19 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       setTaskPriority("MEDIUM");
       setTaskDueDate("");
     },
-    onError: (error) => toast.error(error.message || "Failed to create task"),
+    onError: (error) => toast.error(error.message || t("incident.taskCreateFailed")),
   });
 
   const createNotification = trpc.incident.createNotification.useMutation({
     onSuccess: () => {
-      toast.success("Notification created");
+      toast.success(t("incident.notificationCreated"));
       utils.incident.getById.invalidate();
       setNotifDialogOpen(false);
       setSelectedJurisdictionId("");
       setSelectedRecipientType("DPA");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create notification");
+      toast.error(error.message || t("incident.notificationCreateFailed"));
     },
   });
 

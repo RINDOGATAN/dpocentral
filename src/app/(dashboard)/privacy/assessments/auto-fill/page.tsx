@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -34,6 +35,7 @@ type WizardStep = "select" | "preview" | "review" | "create";
 export default function DpiaAutoFillPage() {
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [step, setStep] = useState<WizardStep>("select");
   const [selectedActivityId, setSelectedActivityId] = useState<string>("");
   const [selectedVendorId, setSelectedVendorId] = useState<string>("");
@@ -140,14 +142,16 @@ export default function DpiaAutoFillPage() {
       }
 
       if (savedCount < autoFill.suggestions.length) {
-        toast.warning(`Assessment created but only ${savedCount} of ${autoFill.suggestions.length} responses were saved`);
+        toast.warning(
+          t("assessment.autoFillPartialSaved", { saved: savedCount, total: autoFill.suggestions.length })
+        );
       } else {
-        toast.success("Assessment created with all responses pre-filled");
+        toast.success(t("assessment.autoFillAllSaved"));
       }
 
       router.push(`/privacy/assessments/${assessment.id}`);
     } catch (error: any) {
-      toast.error(error.message || "Failed to create assessment");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     } finally {
       setIsCreating(false);
     }

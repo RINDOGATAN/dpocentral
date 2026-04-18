@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Plus, Database } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";
 
@@ -60,6 +61,7 @@ export function DataFlowVisualization({
   height = "500px",
 }: DataFlowVisualizationProps) {
   const router = useRouter();
+  const t = useTranslations("toasts");
   const [selectedFlow, setSelectedFlow] = useState<FlowData | null>(null);
   const [isFlowPanelOpen, setIsFlowPanelOpen] = useState(false);
   const [isCreateFlowOpen, setIsCreateFlowOpen] = useState(false);
@@ -80,32 +82,32 @@ export function DataFlowVisualization({
 
   const createFlow = trpc.dataInventory.createFlow.useMutation({
     onSuccess: () => {
-      toast.success("Data flow created");
+      toast.success(t("dataFlow.created"));
       utils.dataInventory.listFlows.invalidate();
       setIsCreateFlowOpen(false);
     },
-    onError: (error) => toast.error(error.message || "Failed to create data flow"),
+    onError: (error) => toast.error(error.message || t("dataFlow.createFailed")),
   });
 
   const updateFlow = trpc.dataInventory.updateFlow.useMutation({
     onSuccess: () => {
-      toast.success("Data flow updated");
+      toast.success(t("dataFlow.updated"));
       utils.dataInventory.listFlows.invalidate();
       setEditingFlow(null);
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
-    onError: (error) => toast.error(error.message || "Failed to update data flow"),
+    onError: (error) => toast.error(error.message || t("dataFlow.updateFailed")),
   });
 
   const deleteFlow = trpc.dataInventory.deleteFlow.useMutation({
     onSuccess: () => {
-      toast.success("Data flow deleted");
+      toast.success(t("dataFlow.deleted"));
       utils.dataInventory.listFlows.invalidate();
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
-    onError: (error) => toast.error(error.message || "Failed to delete data flow"),
+    onError: (error) => toast.error(error.message || t("dataFlow.deleteFailed")),
   });
 
   const dataLoading = assetsLoading || flowsLoading;

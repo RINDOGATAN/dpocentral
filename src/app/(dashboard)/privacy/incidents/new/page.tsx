@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -67,6 +68,7 @@ const discoveryMethods = [
 export default function NewIncidentPage() {
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -88,12 +90,12 @@ export default function NewIncidentPage() {
 
   const createIncident = trpc.incident.create.useMutation({
     onSuccess: (data) => {
-      toast.success("Incident reported");
+      toast.success(t("incident.created"));
       utils.incident.list.invalidate();
       router.push(`/privacy/incidents/${data.id}`);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create incident");
+      toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
     },
   });

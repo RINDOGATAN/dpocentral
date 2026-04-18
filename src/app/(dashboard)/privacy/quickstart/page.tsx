@@ -74,6 +74,7 @@ export default function QuickstartPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const tQs = useTranslations("quickstart");
+  const t = useTranslations("toasts");
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -173,18 +174,18 @@ export default function QuickstartPage() {
       setExecutionResult(data);
       const total = data.assets + data.activities + data.vendors;
       if (total === 0) {
-        toast.info("All records already exist — nothing new to create");
+        toast.info(t("quickstart.noNewRecords"));
       } else {
         const parts = [];
         if (data.vendors > 0) parts.push(`${data.vendors} vendor${data.vendors !== 1 ? "s" : ""}`);
         if (data.assets > 0) parts.push(`${data.assets} asset${data.assets !== 1 ? "s" : ""}`);
         if (data.activities > 0) parts.push(`${data.activities} activit${data.activities !== 1 ? "ies" : "y"}`);
-        toast.success(`Created ${parts.join(", ")}`);
+        toast.success(t("quickstart.createdSummary", { summary: parts.join(", ") }));
       }
       setStep("success");
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message || t("generic.somethingWentWrong"));
     },
   });
 
@@ -204,12 +205,12 @@ export default function QuickstartPage() {
     if (useVendors && !useIndustry) setStep("vendors");
     else if (useIndustry && !useVendors) setStep("industry");
     else if (useVendors) setStep("vendors");
-    else toast.error("Select at least one option");
+    else toast.error(t("quickstart.selectAtLeastOne"));
   };
 
   const handleProceedFromVendors = () => {
     if (selectedSlugs.length === 0) {
-      toast.error("Select at least one vendor");
+      toast.error(t("quickstart.selectAtLeastOneVendor"));
       return;
     }
     if (useIndustry) setStep("industry");
@@ -218,7 +219,7 @@ export default function QuickstartPage() {
 
   const handleProceedFromIndustry = () => {
     if (!selectedIndustryId) {
-      toast.error("Select an industry template");
+      toast.error(t("quickstart.selectTemplate"));
       return;
     }
     setStep("review");

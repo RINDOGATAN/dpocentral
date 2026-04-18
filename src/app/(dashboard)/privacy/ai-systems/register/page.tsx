@@ -25,6 +25,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -34,6 +35,7 @@ export default function RegisterAISystemPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
+  const t = useTranslations("toasts");
   const [step, setStep] = useState<Step>("basics");
 
   const [form, setForm] = useState({
@@ -77,11 +79,11 @@ export default function RegisterAISystemPage() {
 
   const createMutation = trpc.aiGovernance.create.useMutation({
     onSuccess: (data) => {
-      toast.success("AI system registered");
+      toast.success(t("aiSystem.registered"));
       router.push(`/privacy/ai-systems/${data.id}`);
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

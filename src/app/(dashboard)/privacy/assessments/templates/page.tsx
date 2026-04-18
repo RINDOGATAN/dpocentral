@@ -17,6 +17,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -32,6 +33,7 @@ const typeLabels: Record<string, string> = {
 export default function AssessmentTemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
 
   const { data: templates, isLoading } = trpc.assessment.listTemplates.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -42,11 +44,11 @@ export default function AssessmentTemplatesPage() {
 
   const cloneTemplate = trpc.assessment.cloneTemplate.useMutation({
     onSuccess: () => {
-      toast.success("Template cloned successfully");
+      toast.success(t("assessment.templateCloned"));
       utils.assessment.listTemplates.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to clone template");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

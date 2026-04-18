@@ -31,6 +31,7 @@ const personas = [
 
 export function OnboardingWelcome() {
   const t = useTranslations("onboarding");
+  const tToasts = useTranslations("toasts");
   const [selectedType, setSelectedType] = useState<UserType | null>(null);
   const [orgName, setOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +63,7 @@ export function OnboardingWelcome() {
       await refreshSession();
     } catch (error) {
       console.error("Onboarding failed:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(tToasts("generic.somethingWentWrong"));
     } finally {
       setIsSubmitting(false);
     }

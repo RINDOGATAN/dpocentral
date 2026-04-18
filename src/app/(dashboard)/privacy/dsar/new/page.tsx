@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARType } from "@prisma/client";
@@ -43,6 +44,7 @@ const relationshipOptions = [
 export default function NewDSARRequestPage() {
   const router = useRouter();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
 
   const [form, setForm] = useState({
     type: "" as string,
@@ -57,11 +59,11 @@ export default function NewDSARRequestPage() {
 
   const createRequest = trpc.dsar.create.useMutation({
     onSuccess: (data) => {
-      toast.success("DSAR request created");
+      toast.success(t("dsar.created"));
       router.push(`/privacy/dsar/${data.id}`);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create request");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
