@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ import { brand } from "@/config/brand";
 const isDev = process.env.NODE_ENV === "development";
 
 export default function SignInPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [devEmail, setDevEmail] = useState("demo@privacysuite.example");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,16 +26,14 @@ export default function SignInPage() {
   useEffect(() => {
     const authError = searchParams.get("error");
     if (authError) {
-      const messages: Record<string, string> = {
-        OAuthAccountNotLinked: "This email is already associated with a different sign-in method. Try using your magic link instead.",
-        OAuthCallback: "Google sign-in failed. Please try again.",
-        OAuthSignin: "Could not start Google sign-in. Please try again.",
-        Default: "Sign-in failed. Please try again.",
-      };
-      setError(messages[authError] || messages.Default);
+      const knownCodes = ["OAuthAccountNotLinked", "OAuthCallback", "OAuthSignin"] as const;
+      const code = (knownCodes as readonly string[]).includes(authError)
+        ? (authError as (typeof knownCodes)[number])
+        : "Default";
+      setError(t(`error.${code}`));
       setIsGoogleLoading(false);
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,12 +48,12 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Failed to send magic link. Please try again.");
+        setError(t("failedToSendLink"));
       } else {
         setIsEmailSent(true);
       }
-    } catch (err) {
-      setError("An unexpected error occurred.");
+    } catch {
+      setError(t("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -80,8 +80,8 @@ export default function SignInPage() {
         email: devEmail,
         callbackUrl: "/privacy",
       });
-    } catch (err) {
-      setError("Dev sign-in failed.");
+    } catch {
+      setError(t("devSignInFailed"));
       setIsDevLoading(false);
     }
   };
@@ -93,18 +93,17 @@ export default function SignInPage() {
           <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
             <Mail className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Check Your Email</h1>
+          <h1 className="text-2xl font-bold mb-2">{t("checkEmail")}</h1>
           <p className="text-muted-foreground mb-6">
-            We've sent a magic link to <span className="text-foreground font-medium">{email}</span>.
-            Click the link in the email to sign in.
+            {t("magicLinkSent", { email })}
           </p>
           <p className="text-sm text-muted-foreground">
-            Didn't receive it?{" "}
+            {t("didntReceive")}{" "}
             <button
               onClick={() => setIsEmailSent(false)}
               className="text-primary hover:underline"
             >
-              Try again
+              {t("tryAgain")}
             </button>
           </p>
         </div>
@@ -125,13 +124,13 @@ export default function SignInPage() {
         {/* Dev Login - Only in development */}
         {isDev && (
           <div className="mb-6 p-4 border-2 border-primary bg-primary/5">
-            <p className="text-xs text-primary font-semibold mb-3">Development Mode</p>
+            <p className="text-xs text-primary font-semibold mb-3">{t("developmentMode")}</p>
             <form onSubmit={handleDevSignIn} className="space-y-3">
               <Input
                 type="email"
                 value={devEmail}
                 onChange={(e) => setDevEmail(e.target.value)}
-                placeholder="dev@example.com"
+                placeholder={t("devEmailPlaceholder")}
                 className="input-brutal"
                 required
               />
@@ -143,10 +142,10 @@ export default function SignInPage() {
                 {isDevLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Signing in...
+                    {t("signingIn")}
                   </>
                 ) : (
-                  "Dev Sign In (Instant)"
+                  t("devSignIn")
                 )}
               </button>
             </form>
@@ -155,13 +154,13 @@ export default function SignInPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
+              placeholder={t("emailPlaceholder")}
               className="input-brutal"
               required
               autoFocus={!isDev}
@@ -182,11 +181,11 @@ export default function SignInPage() {
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Sending...
+                {t("sendingLink")}
               </>
             ) : (
               <>
-                Continue with Email
+                {t("continueWithEmail")}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -194,12 +193,12 @@ export default function SignInPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          No password needed. We'll send you a secure link.
+          {t("noPasswordNeeded")}
         </p>
 
         <div className="mt-6 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
-            Or continue with
+            {t("orContinueWith")}
           </p>
 
           <button
@@ -231,30 +230,30 @@ export default function SignInPage() {
               </svg>
             )}
             <span className="font-medium">
-              {isGoogleLoading ? "Signing in..." : "Continue with Google"}
+              {isGoogleLoading ? t("signingIn") : t("continueWithGoogle")}
             </span>
           </button>
         </div>
 
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
-            By signing in, you agree to our{" "}
+            {t("bySigningIn")}{" "}
             <a
               href={brand.termsOfUseUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              Terms of Service
+              {t("termsOfService")}
             </a>{" "}
-            and{" "}
+            {t("and")}{" "}
             <a
               href={brand.privacyPolicyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              Privacy Policy
+              {t("privacyPolicy")}
             </a>
           </p>
         </div>

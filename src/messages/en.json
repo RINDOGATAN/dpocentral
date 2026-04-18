@@ -54,7 +54,31 @@
     "and": "and",
     "privacyPolicy": "Privacy Policy",
     "developmentMode": "Development Mode",
-    "devSignIn": "Dev Sign In (Instant)"
+    "devSignIn": "Dev Sign In (Instant)",
+    "termsOfService": "Terms of Service",
+    "emailPlaceholder": "you@company.com",
+    "devEmailPlaceholder": "dev@example.com",
+    "failedToSendLink": "Failed to send magic link. Please try again.",
+    "unexpectedError": "An unexpected error occurred.",
+    "devSignInFailed": "Dev sign-in failed.",
+    "error": {
+      "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
+      "OAuthCallback": "Google sign-in failed. Please try again.",
+      "OAuthSignin": "Could not start Google sign-in. Please try again.",
+      "Default": "Sign-in failed. Please try again."
+    },
+    "authErrorPage": {
+      "title": "Authentication Error",
+      "titleAccountExists": "Account Already Exists",
+      "body": "Something went wrong during sign-in. The link may have expired or already been used.",
+      "bodyAccountExists": "An account with this email already exists using a different sign-in method. Please sign in using your original method (email magic link or Google) to access your account.",
+      "bodyFallback": "Something went wrong during sign-in.",
+      "cta": "Try Again",
+      "ctaAccountExists": "Sign In with Original Method"
+    },
+    "verifyRequestPage": {
+      "body": "A sign-in link has been sent to your email address. Click the link to sign in."
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
