@@ -1,5 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { RopaDocument } from "@/server/services/export/ropa/RopaDocument";
@@ -7,18 +9,19 @@ import { ropaToCSV } from "@/server/services/privacy/ropaGenerator";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import { hasRopaExportAccess } from "@/server/services/licensing/entitlement";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-
-function fmtDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toISOString().split("T")[0]!;
-}
+import { locales, defaultLocale } from "@/i18n/config";
 import {
   renderFlowGraphPng,
   type PdfFlowAsset,
   type PdfFlowEdge,
   type PdfFlowCluster,
 } from "@/server/services/export/flow-graph-pdf";
+
+function fmtDate(d: Date | string | null | undefined): string {
+  if (!d) return "—";
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toISOString().split("T")[0]!;
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -59,6 +62,19 @@ export async function GET(request: Request) {
       { status: 403 }
     );
   }
+
+  // Locale resolution: ?locale=es → NEXT_LOCALE cookie → default
+  const requestedLocale = searchParams.get("locale");
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale;
+  const [t, tCommon, tEnum] = await Promise.all([
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.ropaReport" }),
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.common" }),
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.enum" }),
+  ]);
 
   const activities = await prisma.processingActivity.findMany({
     where: { organizationId, isActive: true },
@@ -201,7 +217,7 @@ export async function GET(request: Request) {
   }
 
   const buffer = await renderToBuffer(
-    RopaDocument({ entries, orgName, flowGraph })
+    RopaDocument({ entries, orgName, flowGraph, t, tCommon, tEnum, locale: resolvedLocale })
   );
 
   return new Response(new Uint8Array(buffer), {

@@ -1,10 +1,13 @@
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { VendorRegisterDocument } from "@/server/services/export/vendor-register/VendorRegisterDocument";
 import { vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { locales, defaultLocale } from "@/i18n/config";
 
 function fmtDate(d: Date | string | null | undefined): string {
   if (!d) return "—";
@@ -42,6 +45,19 @@ export async function GET(request: Request) {
   if (!membership) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
+
+  // Locale resolution: ?locale=es → NEXT_LOCALE cookie → default
+  const requestedLocale = searchParams.get("locale");
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale;
+  const [t, tCommon, tEnum] = await Promise.all([
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.vendorRegister" }),
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.common" }),
+    getTranslations({ locale: resolvedLocale, namespace: "pdf.enum" }),
+  ]);
 
   const vendors = await prisma.vendor.findMany({
     where: { organizationId },
@@ -102,7 +118,7 @@ export async function GET(request: Request) {
   }
 
   const buffer = await renderToBuffer(
-    VendorRegisterDocument({ vendors: data, orgName })
+    VendorRegisterDocument({ vendors: data, orgName, t, tCommon, tEnum, locale: resolvedLocale })
   );
 
   return new Response(new Uint8Array(buffer), {

@@ -11,6 +11,18 @@ import { PrismaClient } from "@prisma/client";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import { createTranslator } from "next-intl";
+import enMessages from "../src/messages/en.json";
+import type { PdfT } from "../src/server/services/export/privacy-program/data-mapping";
+
+// Demo script always renders in English.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const demoMessages = enMessages as any;
+const demoLocale = "en";
+const tRopa = createTranslator({ locale: demoLocale, messages: demoMessages, namespace: "pdf.ropaReport" }) as unknown as PdfT;
+const tVendor = createTranslator({ locale: demoLocale, messages: demoMessages, namespace: "pdf.vendorRegister" }) as unknown as PdfT;
+const tCommon = createTranslator({ locale: demoLocale, messages: demoMessages, namespace: "pdf.common" }) as unknown as PdfT;
+const tEnum = createTranslator({ locale: demoLocale, messages: demoMessages, namespace: "pdf.enum" }) as unknown as PdfT;
 
 // PDF document components
 import { AssessmentReport } from "../src/server/services/export/assessment-report";
@@ -187,7 +199,9 @@ async function exportROPA(org: { id: string; name: string }) {
     nextReview: activity.nextReviewAt,
   }));
 
-  const buffer = await renderToBuffer(RopaDocument({ entries, orgName: org.name }));
+  const buffer = await renderToBuffer(
+    RopaDocument({ entries, orgName: org.name, t: tRopa, tCommon, tEnum, locale: demoLocale })
+  );
   await saveBuffer(`ROPA-${org.name.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf`, buffer);
 }
 
@@ -291,7 +305,9 @@ async function exportVendorRegister(org: { id: string; name: string }) {
   }));
 
   const safeName = org.name.replace(/[^a-zA-Z0-9]/g, "-");
-  const buffer = await renderToBuffer(VendorRegisterDocument({ vendors: data, orgName: org.name }));
+  const buffer = await renderToBuffer(
+    VendorRegisterDocument({ vendors: data, orgName: org.name, t: tVendor, tCommon, tEnum, locale: demoLocale })
+  );
   await saveBuffer(`Vendor-Register-${safeName}-${dateStr}.pdf`, buffer);
   await saveText(`Vendor-Register-${safeName}-${dateStr}.csv`, vendorsToCSV(data));
 }
