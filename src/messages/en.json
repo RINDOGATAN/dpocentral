@@ -773,6 +773,69 @@
         "warningPrefix": "Warning: "
       }
     },
+    "breachRegister": {
+      "pageTitle": "Breach Register",
+      "coverTitle": "Breach / Incident Register",
+      "coverSubtitle": "GDPR Article 33(5)",
+      "summary": "Summary",
+      "stats": {
+        "totalIncidents": "Total Incidents",
+        "critical": "Critical",
+        "high": "High",
+        "pendingNotifications": "Pending DPA Notifications"
+      },
+      "byStatus": "By Status",
+      "allIncidents": "All Incidents",
+      "unknown": "Unknown",
+      "overviewColumns": {
+        "id": "ID",
+        "title": "Title",
+        "type": "Type",
+        "severity": "Severity",
+        "status": "Status",
+        "discovered": "Discovered",
+        "affectedRecords": "Affected Records"
+      },
+      "statusColumns": {
+        "status": "Status",
+        "count": "Count"
+      },
+      "meta": {
+        "incidentId": "Incident ID",
+        "type": "Type",
+        "discovered": "Discovered",
+        "discoveredBy": "Discovered By",
+        "discoveryMethod": "Discovery Method",
+        "affectedRecords": "Affected Records",
+        "affectedSubjects": "Affected Subjects",
+        "dataCategories": "Data Categories",
+        "containedAt": "Contained At",
+        "resolvedAt": "Resolved At",
+        "notificationRequired": "DPA Notification Required",
+        "notificationDeadline": "Notification Deadline",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "subsections": {
+        "description": "Description",
+        "containmentActions": "Containment Actions",
+        "rootCause": "Root Cause",
+        "lessonsLearned": "Lessons Learned",
+        "dpaNotifications": "DPA Notifications",
+        "timeline": "Timeline"
+      },
+      "notificationColumns": {
+        "jurisdiction": "Jurisdiction",
+        "status": "Status",
+        "date": "Date"
+      },
+      "timelineColumns": {
+        "timestamp": "Timestamp",
+        "event": "Event",
+        "by": "By"
+      },
+      "timelineSystem": "System"
+    },
     "vendorRegister": {
       "eyebrow": "Vendor Register",
       "coverTitle": "Vendor Register",

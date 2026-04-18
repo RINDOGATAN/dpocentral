@@ -773,6 +773,69 @@
         "warningPrefix": "Aviso: "
       }
     },
+    "breachRegister": {
+      "pageTitle": "Registro de incidencias",
+      "coverTitle": "Registro de Violaciones / Incidencias",
+      "coverSubtitle": "RGPD Artículo 33(5)",
+      "summary": "Resumen",
+      "stats": {
+        "totalIncidents": "Incidencias totales",
+        "critical": "Críticas",
+        "high": "Altas",
+        "pendingNotifications": "Notificaciones a la AEPD pendientes"
+      },
+      "byStatus": "Por estado",
+      "allIncidents": "Todas las incidencias",
+      "unknown": "Desconocido",
+      "overviewColumns": {
+        "id": "ID",
+        "title": "Título",
+        "type": "Tipo",
+        "severity": "Severidad",
+        "status": "Estado",
+        "discovered": "Descubierta",
+        "affectedRecords": "Registros afectados"
+      },
+      "statusColumns": {
+        "status": "Estado",
+        "count": "Nº"
+      },
+      "meta": {
+        "incidentId": "ID de la incidencia",
+        "type": "Tipo",
+        "discovered": "Descubierta",
+        "discoveredBy": "Descubierta por",
+        "discoveryMethod": "Método de descubrimiento",
+        "affectedRecords": "Registros afectados",
+        "affectedSubjects": "Interesados afectados",
+        "dataCategories": "Categorías de datos",
+        "containedAt": "Contenida el",
+        "resolvedAt": "Resuelta el",
+        "notificationRequired": "¿Requiere notificación a la AC?",
+        "notificationDeadline": "Plazo de notificación",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "subsections": {
+        "description": "Descripción",
+        "containmentActions": "Acciones de contención",
+        "rootCause": "Causa raíz",
+        "lessonsLearned": "Lecciones aprendidas",
+        "dpaNotifications": "Notificaciones a la AC",
+        "timeline": "Cronología"
+      },
+      "notificationColumns": {
+        "jurisdiction": "Jurisdicción",
+        "status": "Estado",
+        "date": "Fecha"
+      },
+      "timelineColumns": {
+        "timestamp": "Fecha y hora",
+        "event": "Evento",
+        "by": "Por"
+      },
+      "timelineSystem": "Sistema"
+    },
     "vendorRegister": {
       "eyebrow": "Registro de proveedores",
       "coverTitle": "Registro de Proveedores",

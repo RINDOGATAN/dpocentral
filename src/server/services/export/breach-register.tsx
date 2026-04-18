@@ -14,6 +14,7 @@ import {
   fmtDate,
   fmtDateTime,
 } from "./pdf-styles";
+import type { PdfT } from "./privacy-program/data-mapping";
 
 export interface IncidentExportData {
   id: string;
@@ -54,11 +55,73 @@ export interface IncidentExportData {
 export function BreachRegisterReport({
   incidents,
   orgName,
+  t,
+  locale,
 }: {
   incidents: IncidentExportData[];
   orgName: string;
+  /** Scoped to `pdf.breachRegister`. Optional — falls back to English via the default bundle. */
+  t?: PdfT;
+  /** BCP-47 locale code applied as PDF metadata. */
+  locale?: string;
 }) {
   const date = fmtDate(new Date());
+
+  // English fallback so routes that haven't been migrated still render cleanly.
+  const tr: PdfT =
+    t ??
+    ((key: string) => {
+      const fallbacks: Record<string, string> = {
+        "pageTitle": "Breach Register",
+        "coverTitle": "Breach / Incident Register",
+        "coverSubtitle": "GDPR Article 33(5)",
+        "summary": "Summary",
+        "stats.totalIncidents": "Total Incidents",
+        "stats.critical": "Critical",
+        "stats.high": "High",
+        "stats.pendingNotifications": "Pending DPA Notifications",
+        "byStatus": "By Status",
+        "allIncidents": "All Incidents",
+        "unknown": "Unknown",
+        "overviewColumns.id": "ID",
+        "overviewColumns.title": "Title",
+        "overviewColumns.type": "Type",
+        "overviewColumns.severity": "Severity",
+        "overviewColumns.status": "Status",
+        "overviewColumns.discovered": "Discovered",
+        "overviewColumns.affectedRecords": "Affected Records",
+        "statusColumns.status": "Status",
+        "statusColumns.count": "Count",
+        "meta.incidentId": "Incident ID",
+        "meta.type": "Type",
+        "meta.discovered": "Discovered",
+        "meta.discoveredBy": "Discovered By",
+        "meta.discoveryMethod": "Discovery Method",
+        "meta.affectedRecords": "Affected Records",
+        "meta.affectedSubjects": "Affected Subjects",
+        "meta.dataCategories": "Data Categories",
+        "meta.containedAt": "Contained At",
+        "meta.resolvedAt": "Resolved At",
+        "meta.notificationRequired": "DPA Notification Required",
+        "meta.notificationDeadline": "Notification Deadline",
+        "meta.yes": "Yes",
+        "meta.no": "No",
+        "subsections.description": "Description",
+        "subsections.containmentActions": "Containment Actions",
+        "subsections.rootCause": "Root Cause",
+        "subsections.lessonsLearned": "Lessons Learned",
+        "subsections.dpaNotifications": "DPA Notifications",
+        "subsections.timeline": "Timeline",
+        "notificationColumns.jurisdiction": "Jurisdiction",
+        "notificationColumns.status": "Status",
+        "notificationColumns.date": "Date",
+        "timelineColumns.timestamp": "Timestamp",
+        "timelineColumns.event": "Event",
+        "timelineColumns.by": "By",
+        "timelineSystem": "System",
+      };
+      return fallbacks[key] ?? key;
+    });
 
   const bySeverity: Record<string, number> = {};
   const byStatus: Record<string, number> = {};
@@ -76,28 +139,28 @@ export function BreachRegisterReport({
   }
 
   return (
-    <Document>
+    <Document language={locale}>
       <CoverPage
         orgName={orgName}
-        title="Breach / Incident Register"
-        subtitle="GDPR Article 33(5)"
+        title={tr("coverTitle")}
+        subtitle={tr("coverSubtitle")}
         date={date}
       />
 
-      <ContentPage title="Breach Register" orgName={orgName} date={date}>
-        <SectionTitle>Summary</SectionTitle>
+      <ContentPage title={tr("pageTitle")} orgName={orgName} date={date}>
+        <SectionTitle>{tr("summary")}</SectionTitle>
         <View style={s.statsGrid}>
-          <StatCard value={incidents.length} label="Total Incidents" />
-          <StatCard value={bySeverity["CRITICAL"] || 0} label="Critical" />
-          <StatCard value={bySeverity["HIGH"] || 0} label="High" />
-          <StatCard value={pendingNotifications} label="Pending DPA Notifications" />
+          <StatCard value={incidents.length} label={tr("stats.totalIncidents")} />
+          <StatCard value={bySeverity["CRITICAL"] || 0} label={tr("stats.critical")} />
+          <StatCard value={bySeverity["HIGH"] || 0} label={tr("stats.high")} />
+          <StatCard value={pendingNotifications} label={tr("stats.pendingNotifications")} />
         </View>
 
         {Object.keys(byStatus).length > 0 && (
           <>
-            <SectionSubtitle>By Status</SectionSubtitle>
+            <SectionSubtitle>{tr("byStatus")}</SectionSubtitle>
             <DataTable
-              headers={["Status", "Count"]}
+              headers={[tr("statusColumns.status"), tr("statusColumns.count")]}
               colWidths={[3, 1]}
               rows={Object.entries(byStatus).map(([status, count]) => [
                 status.replace(/_/g, " "),
@@ -108,9 +171,17 @@ export function BreachRegisterReport({
         )}
 
         {/* Incident Overview Table */}
-        <SectionTitle>All Incidents</SectionTitle>
+        <SectionTitle>{tr("allIncidents")}</SectionTitle>
         <DataTable
-          headers={["ID", "Title", "Type", "Severity", "Status", "Discovered", "Affected Records"]}
+          headers={[
+            tr("overviewColumns.id"),
+            tr("overviewColumns.title"),
+            tr("overviewColumns.type"),
+            tr("overviewColumns.severity"),
+            tr("overviewColumns.status"),
+            tr("overviewColumns.discovered"),
+            tr("overviewColumns.affectedRecords"),
+          ]}
           colWidths={[1.5, 3, 1.5, 1, 1.2, 1.5, 1.2]}
           rows={incidents.map((inc) => [
             inc.publicId.slice(0, 8),
@@ -119,7 +190,7 @@ export function BreachRegisterReport({
             inc.severity,
             inc.status.replace(/_/g, " "),
             fmtDate(inc.discoveredAt),
-            inc.affectedRecords != null ? String(inc.affectedRecords) : "Unknown",
+            inc.affectedRecords != null ? String(inc.affectedRecords) : tr("unknown"),
           ])}
         />
 
@@ -136,54 +207,64 @@ export function BreachRegisterReport({
 
             <MetadataBlock
               items={[
-                { label: "Incident ID", value: inc.publicId },
-                { label: "Type", value: inc.type.replace(/_/g, " ") },
-                { label: "Discovered", value: fmtDateTime(inc.discoveredAt) },
-                { label: "Discovered By", value: inc.discoveredBy },
-                { label: "Discovery Method", value: inc.discoveryMethod },
-                { label: "Affected Records", value: inc.affectedRecords != null ? String(inc.affectedRecords) : "Unknown" },
-                { label: "Affected Subjects", value: inc.affectedSubjects.join(", ") || undefined },
-                { label: "Data Categories", value: inc.dataCategories.join(", ") || undefined },
-                { label: "Contained At", value: fmtDateTime(inc.containedAt) },
-                { label: "Resolved At", value: fmtDateTime(inc.resolvedAt) },
-                { label: "DPA Notification Required", value: inc.notificationRequired ? "Yes" : "No" },
-                { label: "Notification Deadline", value: fmtDateTime(inc.notificationDeadline) },
+                { label: tr("meta.incidentId"), value: inc.publicId },
+                { label: tr("meta.type"), value: inc.type.replace(/_/g, " ") },
+                { label: tr("meta.discovered"), value: fmtDateTime(inc.discoveredAt) },
+                { label: tr("meta.discoveredBy"), value: inc.discoveredBy },
+                { label: tr("meta.discoveryMethod"), value: inc.discoveryMethod },
+                {
+                  label: tr("meta.affectedRecords"),
+                  value: inc.affectedRecords != null ? String(inc.affectedRecords) : tr("unknown"),
+                },
+                { label: tr("meta.affectedSubjects"), value: inc.affectedSubjects.join(", ") || undefined },
+                { label: tr("meta.dataCategories"), value: inc.dataCategories.join(", ") || undefined },
+                { label: tr("meta.containedAt"), value: fmtDateTime(inc.containedAt) },
+                { label: tr("meta.resolvedAt"), value: fmtDateTime(inc.resolvedAt) },
+                {
+                  label: tr("meta.notificationRequired"),
+                  value: inc.notificationRequired ? tr("meta.yes") : tr("meta.no"),
+                },
+                { label: tr("meta.notificationDeadline"), value: fmtDateTime(inc.notificationDeadline) },
               ]}
             />
 
             {inc.description && (
               <>
-                <SectionSubtitle>Description</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.description")}</SectionSubtitle>
                 <Text style={s.paragraph}>{inc.description}</Text>
               </>
             )}
 
             {inc.containmentActions && (
               <>
-                <SectionSubtitle>Containment Actions</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.containmentActions")}</SectionSubtitle>
                 <Text style={s.paragraph}>{inc.containmentActions}</Text>
               </>
             )}
 
             {inc.rootCause && (
               <>
-                <SectionSubtitle>Root Cause</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.rootCause")}</SectionSubtitle>
                 <Text style={s.paragraph}>{inc.rootCause}</Text>
               </>
             )}
 
             {inc.lessonsLearned && (
               <>
-                <SectionSubtitle>Lessons Learned</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.lessonsLearned")}</SectionSubtitle>
                 <Text style={s.paragraph}>{inc.lessonsLearned}</Text>
               </>
             )}
 
             {inc.notifications.length > 0 && (
               <>
-                <SectionSubtitle>DPA Notifications</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.dpaNotifications")}</SectionSubtitle>
                 <DataTable
-                  headers={["Jurisdiction", "Status", "Date"]}
+                  headers={[
+                    tr("notificationColumns.jurisdiction"),
+                    tr("notificationColumns.status"),
+                    tr("notificationColumns.date"),
+                  ]}
                   colWidths={[2, 1.5, 1.5]}
                   rows={inc.notifications.map((n) => [
                     `${n.jurisdiction.name} (${n.jurisdiction.code})`,
@@ -196,14 +277,18 @@ export function BreachRegisterReport({
 
             {inc.timeline.length > 0 && (
               <>
-                <SectionSubtitle>Timeline</SectionSubtitle>
+                <SectionSubtitle>{tr("subsections.timeline")}</SectionSubtitle>
                 <DataTable
-                  headers={["Timestamp", "Event", "By"]}
+                  headers={[
+                    tr("timelineColumns.timestamp"),
+                    tr("timelineColumns.event"),
+                    tr("timelineColumns.by"),
+                  ]}
                   colWidths={[1.5, 3, 1.5]}
-                  rows={inc.timeline.map((t) => [
-                    fmtDateTime(t.timestamp),
-                    `${t.title}${t.description ? ` — ${t.description}` : ""}`,
-                    t.user?.name || "System",
+                  rows={inc.timeline.map((ev) => [
+                    fmtDateTime(ev.timestamp),
+                    `${ev.title}${ev.description ? ` — ${ev.description}` : ""}`,
+                    ev.user?.name || tr("timelineSystem"),
                   ])}
                 />
               </>
