@@ -548,6 +548,23 @@
         "COMPLIANT": "Compliant",
         "NON_COMPLIANT": "Non-compliant",
         "DECOMMISSIONED": "Decommissioned"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioural",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
       }
     },
     "privacyProgram": {
@@ -685,6 +702,81 @@
         "openIncidents": "{count, plural, one {# incident is} other {# incidents are}} open and under investigation.",
         "healthyProgram": "No material findings detected. The privacy program is in a steady state across inventory, processing, vendors, and incident response."
       }
+    },
+    "ropaReport": {
+      "eyebrow": "Record of Processing",
+      "coverTitle": "Record of Processing",
+      "coverSubtitle": "Article 30 Register",
+      "coverReference": "GDPR · Article 30",
+      "stats": {
+        "processingActivities": "Processing Activities",
+        "intlTransfers": "Int'l Transfers",
+        "automatedDecisions": "Automated Decisions",
+        "needingReview": "Needing Review"
+      },
+      "byLegalBasis": "By Legal Basis",
+      "dataFlowMap": "Data Flow Map",
+      "dataFlowMapLead": "Each processing activity is shown as a bordered cluster containing the assets it touches. Dashed edges were auto-generated from activity-asset links; solid edges are explicit.",
+      "processingActivities": "Processing Activities",
+      "incomplete": "INCOMPLETE",
+      "activity": {
+        "purpose": "Purpose",
+        "legalBasis": "Legal Basis",
+        "dataSubjects": "Data Subjects",
+        "dataCategories": "Data Categories",
+        "recipients": "Recipients",
+        "retentionPeriod": "Retention Period",
+        "automatedDecisions": "Automated Decisions",
+        "automatedYes": "Yes — {detail}",
+        "automatedNoDetails": "No details",
+        "automatedNo": "No",
+        "lastReviewed": "Last Reviewed",
+        "nextReview": "Next Review",
+        "systems": "Systems / Assets",
+        "systemsColumns": {
+          "system": "System",
+          "type": "Type",
+          "location": "Location",
+          "elements": "Elements"
+        },
+        "transfers": "International Transfers",
+        "transfersColumns": {
+          "destination": "Destination",
+          "organization": "Organization",
+          "mechanism": "Mechanism",
+          "safeguards": "Safeguards"
+        },
+        "warningPrefix": "Warning: "
+      }
+    },
+    "vendorRegister": {
+      "eyebrow": "Vendor Register",
+      "coverTitle": "Vendor Register",
+      "coverSubtitle": "Processor & Sub-processor Inventory",
+      "coverReference": "GDPR · Article 28",
+      "stats": {
+        "totalVendors": "Total Vendors",
+        "active": "Active",
+        "highCritical": "High / Critical",
+        "contractsExpiring": "Contracts Expiring 30d"
+      },
+      "criticality": "Criticality",
+      "coverage": "Coverage",
+      "coverageDpa": "DPA on file",
+      "coverageCertified": "Certified",
+      "certificationsTop": "Certifications — Top",
+      "directory": "Directory",
+      "directoryLead": "All vendors grouped by primary category. Risk tier and DPA status are shown inline; certifications appear as chips.",
+      "columns": {
+        "vendor": "Vendor",
+        "status": "Status",
+        "risk": "Risk",
+        "countries": "Countries",
+        "certifications": "Certifications",
+        "dpa": "DPA",
+        "nextReview": "Next Review"
+      },
+      "dpaMissing": "MISSING"
     }
   }
 }

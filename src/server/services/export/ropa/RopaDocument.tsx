@@ -1,5 +1,5 @@
 import React from "react";
-import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
+import { Document, View, Text, StyleSheet } from "@react-pdf/renderer";
 import "../design-system/fonts";
 import {
   CoverFrame,
@@ -14,6 +14,7 @@ import {
   tokens,
 } from "../design-system";
 import { FlowGraphImage, type RenderedFlowGraph } from "../flow-graph-pdf";
+import type { PdfT } from "../privacy-program/data-mapping";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import {
   generateROPASummary,
@@ -137,29 +138,42 @@ function fmtDate(d: Date | null | undefined): string {
 function ActivityBlock({
   index,
   entry,
+  t,
+  tEnum,
 }: {
   index: number;
   entry: ROPAEntry;
+  t: PdfT;
+  tEnum: PdfT;
 }) {
   const validation = validateROPAEntry(entry);
+  const admDetail = entry.automatedDecisionMaking
+    ? t("activity.automatedYes", {
+        detail: entry.automatedDecisionDetail ?? t("activity.automatedNoDetails"),
+      })
+    : t("activity.automatedNo");
+
+  const legalBasisLabel = (() => {
+    const translated = tEnum(`legalBasis.${entry.legalBasis}`);
+    return entry.legalBasisDetail
+      ? `${translated} — ${entry.legalBasisDetail}`
+      : translated;
+  })();
+
   const metaItems: Array<{ label: string; value: string | null | undefined }> = [
-    { label: "Purpose", value: entry.purpose },
+    { label: t("activity.purpose"), value: entry.purpose },
+    { label: t("activity.legalBasis"), value: legalBasisLabel },
+    { label: t("activity.dataSubjects"), value: entry.dataSubjects.join(", ") || undefined },
     {
-      label: "Legal Basis",
-      value: `${entry.legalBasis.replace(/_/g, " ")}${entry.legalBasisDetail ? ` — ${entry.legalBasisDetail}` : ""}`,
+      label: t("activity.dataCategories"),
+      value:
+        entry.dataCategories.map((c) => tEnum(`dataCategory.${c}`)).join(", ") || undefined,
     },
-    { label: "Data Subjects", value: entry.dataSubjects.join(", ") || undefined },
-    { label: "Data Categories", value: entry.dataCategories.join(", ") || undefined },
-    { label: "Recipients", value: entry.recipients.join(", ") || undefined },
-    { label: "Retention Period", value: entry.retentionPeriod },
-    {
-      label: "Automated Decisions",
-      value: entry.automatedDecisionMaking
-        ? `Yes — ${entry.automatedDecisionDetail || "No details"}`
-        : "No",
-    },
-    { label: "Last Reviewed", value: fmtDate(entry.lastReviewed) },
-    { label: "Next Review", value: fmtDate(entry.nextReview) },
+    { label: t("activity.recipients"), value: entry.recipients.join(", ") || undefined },
+    { label: t("activity.retentionPeriod"), value: entry.retentionPeriod },
+    { label: t("activity.automatedDecisions"), value: admDetail },
+    { label: t("activity.lastReviewed"), value: fmtDate(entry.lastReviewed) },
+    { label: t("activity.nextReview"), value: fmtDate(entry.nextReview) },
   ].filter((i) => i.value);
 
   return (
@@ -168,7 +182,7 @@ function ActivityBlock({
         <Text style={s.activityNumber}>#{String(index).padStart(2, "0")}</Text>
         <Text style={s.activityName}>{entry.name}</Text>
         {!validation.isValid && (
-          <PillBadge tone="warning" uppercase>INCOMPLETE</PillBadge>
+          <PillBadge tone="warning" uppercase>{t("incomplete")}</PillBadge>
         )}
       </View>
 
@@ -183,16 +197,16 @@ function ActivityBlock({
 
       {entry.systems.length > 0 && (
         <CategoryTable
-          category="Systems / Assets"
+          category={t("activity.systems")}
           columns={[
-            { header: "System", width: 2 },
-            { header: "Type", width: 1 },
-            { header: "Location", width: 1.2 },
-            { header: "Elements", width: 3 },
+            { header: t("activity.systemsColumns.system"), width: 2 },
+            { header: t("activity.systemsColumns.type"), width: 1 },
+            { header: t("activity.systemsColumns.location"), width: 1.2 },
+            { header: t("activity.systemsColumns.elements"), width: 3 },
           ]}
           rows={entry.systems.map((sys) => [
             sys.name,
-            sys.type.replace(/_/g, " "),
+            tEnum(`assetType.${sys.type}`),
             sys.location ?? "—",
             sys.elements.map((e) => e.name).join(", ") || "—",
           ])}
@@ -201,18 +215,18 @@ function ActivityBlock({
 
       {entry.transfers.length > 0 && (
         <CategoryTable
-          category="International Transfers"
+          category={t("activity.transfers")}
           columns={[
-            { header: "Destination", width: 1.3 },
-            { header: "Organization", width: 2 },
-            { header: "Mechanism", width: 2 },
-            { header: "Safeguards", width: 2 },
+            { header: t("activity.transfersColumns.destination"), width: 1.3 },
+            { header: t("activity.transfersColumns.organization"), width: 2 },
+            { header: t("activity.transfersColumns.mechanism"), width: 2 },
+            { header: t("activity.transfersColumns.safeguards"), width: 2 },
           ]}
-          rows={entry.transfers.map((t) => [
-            t.destination,
-            t.organization ?? "—",
-            t.mechanism ?? "—",
-            t.safeguards ?? "—",
+          rows={entry.transfers.map((tr) => [
+            tr.destination,
+            tr.organization ?? "—",
+            tr.mechanism ?? "—",
+            tr.safeguards ?? "—",
           ])}
         />
       )}
@@ -220,7 +234,8 @@ function ActivityBlock({
       {validation.warnings.length > 0 &&
         validation.warnings.map((w, wi) => (
           <Text key={wi} style={s.warningText}>
-            Warning: {w}
+            {t("activity.warningPrefix")}
+            {w}
           </Text>
         ))}
     </View>
@@ -231,10 +246,22 @@ export function RopaDocument({
   entries,
   orgName,
   flowGraph,
+  t,
+  tCommon,
+  tEnum,
+  locale,
 }: {
   entries: ROPAEntry[];
   orgName: string;
   flowGraph?: RenderedFlowGraph | null;
+  /** Scoped to `pdf.ropaReport` */
+  t: PdfT;
+  /** Scoped to `pdf.common` */
+  tCommon: PdfT;
+  /** Scoped to `pdf.enum` */
+  tEnum: PdfT;
+  /** BCP-47 locale for PDF metadata. */
+  locale?: string;
 }) {
   const date = new Date().toISOString().split("T")[0]!;
   const summary = generateROPASummary(entries);
@@ -242,45 +269,45 @@ export function RopaDocument({
   const legalBasisBars = Object.entries(summary.byLegalBasis)
     .sort((a, b) => b[1] - a[1])
     .map(([basis, count]) => ({
-      label: basis.replace(/_/g, " "),
+      label: tEnum(`legalBasis.${basis}`),
       value: count,
     }));
 
   return (
-    <Document>
-      <CoverFrame rightEyebrow="GDPR · Article 30">
+    <Document language={locale}>
+      <CoverFrame rightEyebrow={t("coverReference")}>
         <View style={s.coverTitleBlock}>
-          <Text style={s.coverTitle}>Record of Processing</Text>
-          <Text style={s.coverSub}>Article 30 Register</Text>
+          <Text style={s.coverTitle}>{t("coverTitle")}</Text>
+          <Text style={s.coverSub}>{t("coverSubtitle")}</Text>
           <Text style={s.coverOrg}>{orgName}</Text>
           <View style={s.dateRow}>
             <Text style={s.dateText}>{date}</Text>
-            <ConfidentialPill />
+            <ConfidentialPill label={tCommon("confidential")} />
           </View>
         </View>
 
         <StatTileRow>
-          <StatTile value={summary.totalActivities} label="Processing Activities" />
+          <StatTile value={summary.totalActivities} label={t("stats.processingActivities")} />
           <StatTile
             value={summary.withInternationalTransfers}
-            label="Int'l Transfers"
+            label={t("stats.intlTransfers")}
             tone={summary.withInternationalTransfers > 0 ? "info" : "neutral"}
           />
           <StatTile
             value={summary.withAutomatedDecisions}
-            label="Automated Decisions"
+            label={t("stats.automatedDecisions")}
             tone={summary.withAutomatedDecisions > 0 ? "warning" : "neutral"}
           />
           <StatTile
             value={summary.needingReview}
-            label="Needing Review"
+            label={t("stats.needingReview")}
             tone={summary.needingReview > 0 ? "danger" : "success"}
           />
         </StatTileRow>
 
         {legalBasisBars.length > 0 && (
           <>
-            <Text style={s.subHeading}>By Legal Basis</Text>
+            <Text style={s.subHeading}>{t("byLegalBasis")}</Text>
             <HorizontalBarChart rows={legalBasisBars} labelWidth={110} />
           </>
         )}
@@ -288,10 +315,10 @@ export function RopaDocument({
 
       {/* Optional flow map */}
       {flowGraph && (
-        <PageFrame eyebrow="Record of Processing" orgName={orgName} date={date}>
+        <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
           <SectionHeading
-            title="Data Flow Map"
-            lead="Each processing activity is shown as a bordered cluster containing the assets it touches. Dashed edges were auto-generated from activity-asset links; solid edges are explicit."
+            title={t("dataFlowMap")}
+            lead={t("dataFlowMapLead")}
             first
           />
           <FlowGraphImage graph={flowGraph} width={500} />
@@ -299,10 +326,10 @@ export function RopaDocument({
       )}
 
       {/* Per-activity detail */}
-      <PageFrame eyebrow="Record of Processing" orgName={orgName} date={date}>
-        <SectionHeading title="Processing Activities" first />
+      <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
+        <SectionHeading title={t("processingActivities")} first />
         {entries.map((entry, i) => (
-          <ActivityBlock key={i} index={i + 1} entry={entry} />
+          <ActivityBlock key={i} index={i + 1} entry={entry} t={t} tEnum={tEnum} />
         ))}
       </PageFrame>
     </Document>

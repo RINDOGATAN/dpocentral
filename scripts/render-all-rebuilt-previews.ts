@@ -38,6 +38,8 @@ async function main() {
   const t = createTranslator({ locale: localeArg, messages, namespace: "pdf.privacyProgram" }) as unknown as PdfT;
   const tCommon = createTranslator({ locale: localeArg, messages, namespace: "pdf.common" }) as unknown as PdfT;
   const tEnum = createTranslator({ locale: localeArg, messages, namespace: "pdf.enum" }) as unknown as PdfT;
+  const tRopa = createTranslator({ locale: localeArg, messages, namespace: "pdf.ropaReport" }) as unknown as PdfT;
+  const tVendor = createTranslator({ locale: localeArg, messages, namespace: "pdf.vendorRegister" }) as unknown as PdfT;
 
   const orgs = await prisma.organization.findMany({
     include: { _count: { select: { dataAssets: true, processingActivities: true, vendors: true, aiSystems: true } } },
@@ -194,8 +196,16 @@ async function main() {
     : null;
 
   {
-    const buffer = await renderToBuffer(RopaDocument({ entries: ropaEntries, orgName: org.name, flowGraph: ropaFlowGraph }));
-    const path = join(OUTPUT_DIR, `ROPA-${safeName}-${fmtDate(now)}.pdf`);
+    const buffer = await renderToBuffer(RopaDocument({
+      entries: ropaEntries,
+      orgName: org.name,
+      flowGraph: ropaFlowGraph,
+      t: tRopa,
+      tCommon,
+      tEnum,
+      locale: localeArg,
+    }));
+    const path = join(OUTPUT_DIR, `ROPA-${safeName}-${localeArg}-${fmtDate(now)}.pdf`);
     writeFileSync(path, buffer);
     console.log(`  ROPA            → ${path} (${Math.round(buffer.length / 1024)}KB)`);
   }
@@ -210,8 +220,15 @@ async function main() {
   }));
 
   {
-    const buffer = await renderToBuffer(VendorRegisterDocument({ vendors: vendorRows, orgName: org.name }));
-    const path = join(OUTPUT_DIR, `Vendor-Register-${safeName}-${fmtDate(now)}.pdf`);
+    const buffer = await renderToBuffer(VendorRegisterDocument({
+      vendors: vendorRows,
+      orgName: org.name,
+      t: tVendor,
+      tCommon,
+      tEnum,
+      locale: localeArg,
+    }));
+    const path = join(OUTPUT_DIR, `Vendor-Register-${safeName}-${localeArg}-${fmtDate(now)}.pdf`);
     writeFileSync(path, buffer);
     console.log(`  Vendor Register → ${path} (${Math.round(buffer.length / 1024)}KB)`);
   }

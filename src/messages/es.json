@@ -548,6 +548,23 @@
         "COMPLIANT": "Conforme",
         "NON_COMPLIANT": "No conforme",
         "DECOMMISSIONED": "Retirado"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Opiniones políticas",
+        "RELIGIOUS": "Convicciones religiosas",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Condenas e infracciones",
+        "OTHER": "Otros"
       }
     },
     "privacyProgram": {
@@ -685,6 +702,81 @@
         "openIncidents": "{count, plural, one {# incidencia está} other {# incidencias están}} abiertas y en investigación.",
         "healthyProgram": "No se han detectado hallazgos relevantes. El programa de privacidad se encuentra en estado estable en los pilares de inventario, tratamiento, proveedores y respuesta a incidencias."
       }
+    },
+    "ropaReport": {
+      "eyebrow": "Registro de actividades",
+      "coverTitle": "Registro de Actividades de Tratamiento",
+      "coverSubtitle": "Registro del artículo 30",
+      "coverReference": "RGPD · Artículo 30",
+      "stats": {
+        "processingActivities": "Actividades de tratamiento",
+        "intlTransfers": "Transferencias int.",
+        "automatedDecisions": "Decisiones automatizadas",
+        "needingReview": "Pendientes de revisión"
+      },
+      "byLegalBasis": "Por base jurídica",
+      "dataFlowMap": "Mapa de flujos de datos",
+      "dataFlowMapLead": "Cada actividad de tratamiento se muestra como un clúster con borde que contiene los activos a los que accede. Las aristas discontinuas se generaron automáticamente a partir de los enlaces actividad-activo; las aristas sólidas son explícitas.",
+      "processingActivities": "Actividades de tratamiento",
+      "incomplete": "INCOMPLETA",
+      "activity": {
+        "purpose": "Finalidad",
+        "legalBasis": "Base jurídica",
+        "dataSubjects": "Interesados",
+        "dataCategories": "Categorías de datos",
+        "recipients": "Destinatarios",
+        "retentionPeriod": "Plazo de conservación",
+        "automatedDecisions": "Decisiones automatizadas",
+        "automatedYes": "Sí — {detail}",
+        "automatedNoDetails": "Sin detalles",
+        "automatedNo": "No",
+        "lastReviewed": "Última revisión",
+        "nextReview": "Próxima revisión",
+        "systems": "Sistemas / Activos",
+        "systemsColumns": {
+          "system": "Sistema",
+          "type": "Tipo",
+          "location": "Ubicación",
+          "elements": "Elementos"
+        },
+        "transfers": "Transferencias internacionales",
+        "transfersColumns": {
+          "destination": "Destino",
+          "organization": "Organización",
+          "mechanism": "Mecanismo",
+          "safeguards": "Garantías"
+        },
+        "warningPrefix": "Aviso: "
+      }
+    },
+    "vendorRegister": {
+      "eyebrow": "Registro de proveedores",
+      "coverTitle": "Registro de Proveedores",
+      "coverSubtitle": "Inventario de encargados y subencargados",
+      "coverReference": "RGPD · Artículo 28",
+      "stats": {
+        "totalVendors": "Proveedores totales",
+        "active": "Activos",
+        "highCritical": "Alto / Crítico",
+        "contractsExpiring": "Contratos que vencen en 30d"
+      },
+      "criticality": "Criticidad",
+      "coverage": "Cobertura",
+      "coverageDpa": "DPA en vigor",
+      "coverageCertified": "Certificados",
+      "certificationsTop": "Certificaciones — Más frecuentes",
+      "directory": "Directorio",
+      "directoryLead": "Todos los proveedores agrupados por categoría principal. El nivel de riesgo y el estado del DPA se muestran en línea; las certificaciones aparecen como chips.",
+      "columns": {
+        "vendor": "Proveedor",
+        "status": "Estado",
+        "risk": "Riesgo",
+        "countries": "Países",
+        "certifications": "Certificaciones",
+        "dpa": "DPA",
+        "nextReview": "Próx. revisión"
+      },
+      "dpaMissing": "FALTA"
     }
   }
 }

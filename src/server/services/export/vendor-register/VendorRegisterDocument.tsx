@@ -18,6 +18,7 @@ import {
   toneForVendorStatus,
 } from "../design-system";
 import type { VendorCsvRow } from "./csv";
+import type { PdfT } from "../privacy-program/data-mapping";
 
 const s = StyleSheet.create({
   coverTitle: {
@@ -94,9 +95,21 @@ function toneForCrit(tier: string): string {
 export function VendorRegisterDocument({
   vendors,
   orgName,
+  t,
+  tCommon,
+  tEnum,
+  locale,
 }: {
   vendors: VendorCsvRow[];
   orgName: string;
+  /** Scoped to `pdf.vendorRegister` */
+  t: PdfT;
+  /** Scoped to `pdf.common` */
+  tCommon: PdfT;
+  /** Scoped to `pdf.enum` */
+  tEnum: PdfT;
+  /** BCP-47 locale for PDF metadata. */
+  locale?: string;
 }) {
   const date = new Date().toISOString().split("T")[0]!;
 
@@ -114,14 +127,14 @@ export function VendorRegisterDocument({
   const critOrder = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
   const critCounts = new Map<string, number>();
   for (const v of vendors) {
-    const t = v.riskTier ?? "—";
-    critCounts.set(t, (critCounts.get(t) ?? 0) + 1);
+    const tier = v.riskTier ?? "—";
+    critCounts.set(tier, (critCounts.get(tier) ?? 0) + 1);
   }
-  const critBars = critOrder.map((t) => ({
-    label: t,
-    value: critCounts.get(t) ?? 0,
-    color: toneForCrit(t),
-    labelColor: toneForCrit(t),
+  const critBars = critOrder.map((tier) => ({
+    label: tEnum(`riskTier.${tier}`).toUpperCase(),
+    value: critCounts.get(tier) ?? 0,
+    color: toneForCrit(tier),
+    labelColor: toneForCrit(tier),
   }));
 
   const certBreakdown = (() => {
@@ -145,68 +158,68 @@ export function VendorRegisterDocument({
     .map(([category, list]) => ({ category, vendors: list }));
 
   return (
-    <Document>
-      <CoverFrame rightEyebrow="GDPR · Article 28">
+    <Document language={locale}>
+      <CoverFrame rightEyebrow={t("coverReference")}>
         <View style={{ marginBottom: tokens.space[7] }}>
-          <Text style={s.coverTitle}>Vendor Register</Text>
-          <Text style={s.coverSub}>Processor & Sub-processor Inventory</Text>
+          <Text style={s.coverTitle}>{t("coverTitle")}</Text>
+          <Text style={s.coverSub}>{t("coverSubtitle")}</Text>
           <Text style={s.coverOrg}>{orgName}</Text>
           <View style={s.dateRow}>
             <Text style={s.dateText}>{date}</Text>
-            <ConfidentialPill />
+            <ConfidentialPill label={tCommon("confidential")} />
           </View>
         </View>
 
         <StatTileRow>
-          <StatTile value={vendors.length} label="Total Vendors" />
-          <StatTile value={active} label="Active" tone="success" />
+          <StatTile value={vendors.length} label={t("stats.totalVendors")} />
+          <StatTile value={active} label={t("stats.active")} tone="success" />
           <StatTile
             value={(critCounts.get("HIGH") ?? 0) + (critCounts.get("CRITICAL") ?? 0)}
-            label="High / Critical"
+            label={t("stats.highCritical")}
             tone={(critCounts.get("HIGH") ?? 0) + (critCounts.get("CRITICAL") ?? 0) > 0 ? "warning" : "success"}
           />
           <StatTile
             value={expiringContracts}
-            label="Contracts Expiring 30d"
+            label={t("stats.contractsExpiring")}
             tone={expiringContracts > 0 ? "warning" : "neutral"}
           />
         </StatTileRow>
 
         <View style={s.twoCol}>
           <View style={s.colHalf}>
-            <Text style={s.subHeading}>Criticality</Text>
+            <Text style={s.subHeading}>{t("criticality")}</Text>
             <HorizontalBarChart rows={critBars} />
           </View>
           <View style={s.colHalf}>
-            <Text style={s.subHeading}>Coverage</Text>
-            <MiniCoverageBar label="DPA on file" value={withDpa} total={active} />
-            <MiniCoverageBar label="Certified" value={withCert} total={vendors.length} />
+            <Text style={s.subHeading}>{t("coverage")}</Text>
+            <MiniCoverageBar label={t("coverageDpa")} value={withDpa} total={active} />
+            <MiniCoverageBar label={t("coverageCertified")} value={withCert} total={vendors.length} />
           </View>
         </View>
 
         {certBreakdown.length > 0 && (
           <>
-            <Text style={s.subHeading}>Certifications — Top</Text>
+            <Text style={s.subHeading}>{t("certificationsTop")}</Text>
             <HorizontalBarChart rows={certBreakdown} labelWidth={110} />
           </>
         )}
       </CoverFrame>
 
-      <PageFrame eyebrow="Vendor Register" orgName={orgName} date={date}>
-        <SectionHeading title="Directory" lead="All vendors grouped by primary category. Risk tier and DPA status are shown inline; certifications appear as chips." first />
+      <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
+        <SectionHeading title={t("directory")} lead={t("directoryLead")} first />
         {groupEntries.map((g, gi) => (
           <CategoryTable
             key={gi}
             category={g.category}
             count={g.vendors.length}
             columns={[
-              { header: "Vendor", width: 2.3 },
-              { header: "Status", width: 1.1 },
-              { header: "Risk", width: 1 },
-              { header: "Countries", width: 1.4 },
-              { header: "Certifications", width: 2 },
-              { header: "DPA", width: 1 },
-              { header: "Next Review", width: 1.1 },
+              { header: t("columns.vendor"), width: 2.3 },
+              { header: t("columns.status"), width: 1.1 },
+              { header: t("columns.risk"), width: 1 },
+              { header: t("columns.countries"), width: 1.4 },
+              { header: t("columns.certifications"), width: 2 },
+              { header: t("columns.dpa"), width: 1 },
+              { header: t("columns.nextReview"), width: 1.1 },
             ]}
             rows={g.vendors.map((v) => {
               const dpa = v.contracts.find((c) => c.type === "DPA");
@@ -214,12 +227,12 @@ export function VendorRegisterDocument({
                 v.name,
                 (
                   <PillBadge key="s" tone={toneForVendorStatus(v.status)} uppercase>
-                    {v.status.replace(/_/g, " ")}
+                    {tEnum(`vendorStatus.${v.status}`).toUpperCase()}
                   </PillBadge>
                 ),
                 v.riskTier ? (
                   <PillBadge key="r" tone={toneForRiskTier(v.riskTier)} uppercase>
-                    {v.riskTier}
+                    {tEnum(`riskTier.${v.riskTier}`).toUpperCase()}
                   </PillBadge>
                 ) : "—",
                 v.countries.join(", ") || "—",
@@ -232,10 +245,10 @@ export function VendorRegisterDocument({
                 ) : "—",
                 dpa ? (
                   <PillBadge key="d" tone="success" uppercase>
-                    {dpa.status.replace(/_/g, " ")}
+                    {tEnum(`contractStatus.${dpa.status}`).toUpperCase()}
                   </PillBadge>
                 ) : v.status === "ACTIVE" ? (
-                  <PillBadge key="d" tone="danger" uppercase>MISSING</PillBadge>
+                  <PillBadge key="d" tone="danger" uppercase>{t("dpaMissing")}</PillBadge>
                 ) : "—",
                 fmtDate(v.nextReviewAt),
               ];
