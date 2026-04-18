@@ -28,6 +28,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -90,6 +91,7 @@ function NewVendorPageContent() {
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("toasts");
 
   // Catalog mode state
   const isCatalogMode = searchParams.get("catalog") === "true";
@@ -144,12 +146,12 @@ function NewVendorPageContent() {
 
   const createVendor = trpc.vendor.create.useMutation({
     onSuccess: () => {
-      toast.success("Vendor created");
+      toast.success(t("vendor.created"));
       utils.vendor.list.invalidate();
       router.push("/privacy/vendors");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create vendor");
+      toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
     },
   });

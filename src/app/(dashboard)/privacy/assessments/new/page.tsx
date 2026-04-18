@@ -29,6 +29,7 @@ import {
   Settings2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -104,6 +105,7 @@ export default function NewAssessmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedType, setSelectedType] = useState<string | null>(
     searchParams.get("type")
@@ -185,12 +187,12 @@ export default function NewAssessmentPage() {
 
   const createAssessment = trpc.assessment.create.useMutation({
     onSuccess: (data) => {
-      toast.success("Assessment created");
+      toast.success(t("assessment.created"));
       utils.assessment.list.invalidate();
       router.push(`/privacy/assessments/${data.id}`);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create assessment");
+      toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
 
       if (error.data?.code === "FORBIDDEN") {

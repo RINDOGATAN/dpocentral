@@ -19,6 +19,7 @@ import {
   Scale,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -116,6 +117,7 @@ function ModuleBreakdownCard({
 
 export default function ReportsPage() {
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
 
   const { data: complianceData, isLoading: isLoadingScore } =
     trpc.reports.getComplianceScore.useQuery(
@@ -135,8 +137,8 @@ export default function ReportsPage() {
   );
 
   const createSnapshot = trpc.reports.createSnapshot.useMutation({
-    onSuccess: () => toast.success("Compliance snapshot saved"),
-    onError: (error) => toast.error(error.message || "Failed to save snapshot"),
+    onSuccess: () => toast.success(t("reports.snapshotSaved")),
+    onError: (error) => toast.error(error.message || t("reports.snapshotSaveFailed")),
   });
 
   const isLoading = isLoadingScore || isLoadingStats;

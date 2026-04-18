@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { useUserType } from "@/lib/use-user-type";
 import { brand } from "@/config/brand";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import type { UserType } from "@prisma/client";
 
 const personas = [
@@ -26,6 +27,7 @@ const personas = [
 ] as const;
 
 export function PersonaSelector() {
+  const t = useTranslations("toasts");
   const [selected, setSelected] = useState<UserType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshSession } = useUserType();
@@ -43,7 +45,7 @@ export function PersonaSelector() {
       await setUserType.mutateAsync({ userType: selected });
     } catch (error) {
       console.error("Failed to set user type:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("generic.somethingWentWrong"));
     } finally {
       setIsSubmitting(false);
     }

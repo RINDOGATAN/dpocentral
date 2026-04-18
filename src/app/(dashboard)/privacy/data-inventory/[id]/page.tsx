@@ -46,6 +46,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
@@ -103,6 +104,7 @@ export default function DataAssetDetailPage() {
   const router = useRouter();
   const id = params.id as string;
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [isAddElementOpen, setIsAddElementOpen] = useState(false);
   const [linkActivitiesOpen, setLinkActivitiesOpen] = useState(false);
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
@@ -128,18 +130,18 @@ export default function DataAssetDetailPage() {
 
   const deleteAsset = trpc.dataInventory.deleteAsset.useMutation({
     onSuccess: () => {
-      toast.success("Asset deleted");
+      toast.success(t("asset.deleted"));
       utils.dataInventory.listAssets.invalidate();
       router.push("/privacy/data-inventory");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete asset");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const addElement = trpc.dataInventory.addElement.useMutation({
     onSuccess: () => {
-      toast.success("Data element added");
+      toast.success(t("asset.elementAdded"));
       utils.dataInventory.getAsset.invalidate();
       setIsAddElementOpen(false);
       setElementForm({
@@ -153,7 +155,7 @@ export default function DataAssetDetailPage() {
       });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to add element");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
@@ -184,13 +186,13 @@ export default function DataAssetDetailPage() {
       utils.dataInventory.listFlows.invalidate();
       setLinkActivitiesOpen(false);
       if (result.flowsCreated > 0) {
-        toast.success(`Activities updated — auto-generated ${result.flowsCreated} data flow${result.flowsCreated !== 1 ? "s" : ""}`);
+        toast.success(t("asset.activitiesUpdatedWithFlows", { count: result.flowsCreated }));
       } else {
-        toast.success("Activities updated");
+        toast.success(t("asset.activitiesUpdated"));
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to link activities");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
@@ -253,11 +255,11 @@ export default function DataAssetDetailPage() {
 
   const deleteElement = trpc.dataInventory.deleteElement.useMutation({
     onSuccess: () => {
-      toast.success("Element deleted");
+      toast.success(t("asset.elementDeleted"));
       utils.dataInventory.getAsset.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete element");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

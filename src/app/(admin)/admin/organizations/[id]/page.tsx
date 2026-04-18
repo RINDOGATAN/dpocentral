@@ -34,11 +34,13 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function OrganizationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const orgId = params.id as string;
+  const t = useTranslations("toasts");
 
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -54,24 +56,24 @@ export default function OrganizationDetailPage() {
 
   const deleteMutation = trpc.platformAdmin.deleteOrganization.useMutation({
     onSuccess: (result) => {
-      toast.success(`Deleted "${result.name}"`);
+      toast.success(t("organization.deleted", { name: result.name }));
       utils.platformAdmin.listOrganizations.invalidate();
       router.push("/admin/organizations");
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message || t("generic.somethingWentWrong"));
     },
   });
 
   const updateMutation = trpc.platformAdmin.updateOrganization.useMutation({
     onSuccess: () => {
-      toast.success("Organization updated");
+      toast.success(t("organization.updated"));
       setEditing(false);
       utils.platformAdmin.getOrganization.invalidate({ id: orgId });
       utils.platformAdmin.listOrganizations.invalidate();
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message || t("generic.somethingWentWrong"));
     },
   });
 

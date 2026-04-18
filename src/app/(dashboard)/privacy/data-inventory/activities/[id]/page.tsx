@@ -27,6 +27,7 @@ import {
   Plus,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -43,6 +44,7 @@ export default function ActivityDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { organization } = useOrganization();
+  const t = useTranslations("toasts");
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
   // Map of assetId -> elementIds (undefined = all elements)
@@ -83,12 +85,12 @@ export default function ActivityDetailPage() {
       utils.dataInventory.listFlows.invalidate();
       setLinkDialogOpen(false);
       if (result.flowsCreated > 0) {
-        toast.success(`Linked assets — auto-generated ${result.flowsCreated} data flow${result.flowsCreated !== 1 ? "s" : ""}`);
+        toast.success(t("activity.assetsLinkedWithFlows", { count: result.flowsCreated }));
       } else {
-        toast.success("Linked assets updated");
+        toast.success(t("activity.assetsLinked"));
       }
     },
-    onError: (error) => toast.error(error.message || "Failed to link assets"),
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
   const regenerateFlows = trpc.dataInventory.regenerateFlows.useMutation({
@@ -96,11 +98,11 @@ export default function ActivityDetailPage() {
       utils.dataInventory.listFlows.invalidate();
       toast.success(
         result.flowsCreated > 0
-          ? `Generated ${result.flowsCreated} new data flow${result.flowsCreated !== 1 ? "s" : ""}`
-          : "No new flows to generate — the existing graph already covers this activity"
+          ? t("activity.flowsGenerated", { count: result.flowsCreated })
+          : t("activity.noNewFlows")
       );
     },
-    onError: (error) => toast.error(error.message || "Failed to generate flows"),
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
   function openLinkDialog() {

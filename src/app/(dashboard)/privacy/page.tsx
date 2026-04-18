@@ -42,10 +42,12 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("toasts");
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
@@ -57,10 +59,10 @@ export default function PrivacyDashboardPage() {
       refetchOrganizations();
       setCreateOrgOpen(false);
       setNewOrgName("");
-      toast.success(`Created "${org.name}"`);
+      toast.success(t("organization.created", { name: org.name }));
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message || t("generic.somethingWentWrong"));
     },
     onSettled: () => setIsCreating(false),
   });

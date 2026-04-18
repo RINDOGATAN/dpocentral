@@ -103,6 +103,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const router = useRouter();
   const { organization } = useOrganization();
   const tAssessments = useTranslations("assessments");
+  const t = useTranslations("toasts");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -166,11 +167,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const submitAssessment = trpc.assessment.submit.useMutation({
     onSuccess: () => {
-      toast.success("Assessment submitted for review");
+      toast.success(t("assessment.submittedForReview"));
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to submit assessment");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
@@ -186,7 +187,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     onError: (error) => {
       // On error, invalidate to restore correct server state
       utils.assessment.getById.invalidate();
-      toast.error(error.message || "Failed to save response");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
@@ -201,68 +202,68 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       }, 2000);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to save response");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const addMitigation = trpc.assessment.addMitigation.useMutation({
     onSuccess: () => {
-      toast.success("Mitigation added");
+      toast.success(t("assessment.mitigationAdded"));
       utils.assessment.getById.invalidate();
       utils.assessment.getSuggestedMitigations.invalidate();
       setAddMitigationOpen(false);
       setMitigationForm({ title: "", description: "", priority: 3, owner: "", dueDate: "" });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to add mitigation");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const updateMitigation = trpc.assessment.updateMitigation.useMutation({
     onSuccess: () => {
-      toast.success("Mitigation updated");
+      toast.success(t("assessment.mitigationUpdated"));
       utils.assessment.getById.invalidate();
       setUpdateMitigationOpen(false);
       setEditingMitigation(null);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update mitigation");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   // Approval mutations
   const submitAndApprove = trpc.assessment.submitAndApprove.useMutation({
     onSuccess: () => {
-      toast.success("Assessment submitted and approved");
+      toast.success(t("assessment.submittedApproved"));
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to submit and approve");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const requestApproval = trpc.assessment.requestApproval.useMutation({
     onSuccess: () => {
-      toast.success("Approval requested");
+      toast.success(t("assessment.approvalRequested"));
       utils.assessment.getById.invalidate();
       setApprovalDialogOpen(false);
       setSelectedApproverId("");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to request approval");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 
   const processApproval = trpc.assessment.processApproval.useMutation({
     onSuccess: () => {
-      toast.success("Approval decision recorded");
+      toast.success(t("assessment.approvalRecorded"));
       utils.assessment.getById.invalidate();
       setRejectDialogOpen(false);
       setRejectComments("");
       setRejectApprovalId("");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to process approval");
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

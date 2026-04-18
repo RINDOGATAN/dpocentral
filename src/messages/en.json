@@ -403,5 +403,90 @@
     "unauthorized": "You are not authorized to perform this action.",
     "sessionExpired": "Your session has expired. Please sign in again.",
     "networkError": "Network error. Please check your connection."
+  },
+  "toasts": {
+    "generic": {
+      "somethingWentWrong": "Something went wrong. Please try again."
+    },
+    "organization": {
+      "created": "Created \"{name}\"",
+      "updated": "Organization updated",
+      "deleted": "Deleted \"{name}\""
+    },
+    "dataFlow": {
+      "created": "Data flow created",
+      "updated": "Data flow updated",
+      "deleted": "Data flow deleted",
+      "createFailed": "Failed to create data flow",
+      "updateFailed": "Failed to update data flow",
+      "deleteFailed": "Failed to delete data flow"
+    },
+    "asset": {
+      "created": "Data asset created",
+      "deleted": "Asset deleted",
+      "elementAdded": "Data element added",
+      "elementDeleted": "Element deleted",
+      "activitiesUpdated": "Activities updated",
+      "activitiesUpdatedWithFlows": "Activities updated — auto-generated {count, plural, one {# data flow} other {# data flows}}"
+    },
+    "activity": {
+      "assetsLinked": "Linked assets updated",
+      "assetsLinkedWithFlows": "Linked assets — auto-generated {count, plural, one {# data flow} other {# data flows}}",
+      "flowsGenerated": "{count, plural, one {Generated # new data flow} other {Generated # new data flows}}",
+      "noNewFlows": "No new flows to generate — the existing graph already covers this activity"
+    },
+    "vendor": {
+      "created": "Vendor created",
+      "updated": "Vendor updated",
+      "deleted": "Vendor deleted",
+      "contractAdded": "Contract added",
+      "reviewScheduled": "Review scheduled"
+    },
+    "incident": {
+      "created": "Incident reported",
+      "statusUpdated": "Incident status updated",
+      "timelineAdded": "Timeline entry added",
+      "taskCreated": "Task created",
+      "notificationCreated": "Notification created",
+      "statusUpdateFailed": "Failed to update status",
+      "timelineAddFailed": "Failed to add entry",
+      "taskCreateFailed": "Failed to create task",
+      "notificationCreateFailed": "Failed to create notification"
+    },
+    "dsar": {
+      "created": "DSAR request created",
+      "statusUpdated": "Request status updated",
+      "taskAdded": "Task added",
+      "taskUpdated": "Task updated",
+      "tasksGenerated": "Tasks generated from data assets",
+      "messageSent": "Message sent"
+    },
+    "assessment": {
+      "created": "Assessment created",
+      "submittedForReview": "Assessment submitted for review",
+      "submittedApproved": "Assessment submitted and approved",
+      "approvalRequested": "Approval requested",
+      "approvalRecorded": "Approval decision recorded",
+      "mitigationAdded": "Mitigation added",
+      "mitigationUpdated": "Mitigation updated",
+      "templateCloned": "Template cloned successfully",
+      "autoFillAllSaved": "Assessment created with all responses pre-filled",
+      "autoFillPartialSaved": "Assessment created but only {saved} of {total} responses were saved"
+    },
+    "aiSystem": {
+      "registered": "AI system registered",
+      "sentToSentinel": "{count, plural, one {Sent # system to AI Sentinel} other {Sent # systems to AI Sentinel}}"
+    },
+    "reports": {
+      "snapshotSaved": "Compliance snapshot saved",
+      "snapshotSaveFailed": "Failed to save snapshot"
+    },
+    "quickstart": {
+      "noNewRecords": "All records already exist — nothing new to create",
+      "selectAtLeastOne": "Select at least one option",
+      "selectAtLeastOneVendor": "Select at least one vendor",
+      "selectTemplate": "Select an industry template",
+      "createdSummary": "Created {summary}"
+    }
   }
 }

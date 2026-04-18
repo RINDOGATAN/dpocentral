@@ -403,5 +403,90 @@
     "unauthorized": "No tienes autorización para realizar esta acción.",
     "sessionExpired": "Tu sesión ha caducado. Por favor, inicia sesión de nuevo.",
     "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
+  },
+  "toasts": {
+    "generic": {
+      "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."
+    },
+    "organization": {
+      "created": "Creada «{name}»",
+      "updated": "Organización actualizada",
+      "deleted": "Eliminada «{name}»"
+    },
+    "dataFlow": {
+      "created": "Flujo de datos creado",
+      "updated": "Flujo de datos actualizado",
+      "deleted": "Flujo de datos eliminado",
+      "createFailed": "No se ha podido crear el flujo de datos",
+      "updateFailed": "No se ha podido actualizar el flujo de datos",
+      "deleteFailed": "No se ha podido eliminar el flujo de datos"
+    },
+    "asset": {
+      "created": "Activo de datos creado",
+      "deleted": "Activo eliminado",
+      "elementAdded": "Elemento de datos añadido",
+      "elementDeleted": "Elemento eliminado",
+      "activitiesUpdated": "Actividades actualizadas",
+      "activitiesUpdatedWithFlows": "Actividades actualizadas — se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}"
+    },
+    "activity": {
+      "assetsLinked": "Activos enlazados actualizados",
+      "assetsLinkedWithFlows": "Activos enlazados — se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}",
+      "flowsGenerated": "Se {count, plural, one {ha generado # nuevo flujo de datos} other {han generado # nuevos flujos de datos}}",
+      "noNewFlows": "No hay nuevos flujos que generar: el grafo existente ya cubre esta actividad"
+    },
+    "vendor": {
+      "created": "Proveedor creado",
+      "updated": "Proveedor actualizado",
+      "deleted": "Proveedor eliminado",
+      "contractAdded": "Contrato añadido",
+      "reviewScheduled": "Revisión programada"
+    },
+    "incident": {
+      "created": "Incidencia registrada",
+      "statusUpdated": "Estado de la incidencia actualizado",
+      "timelineAdded": "Entrada de cronología añadida",
+      "taskCreated": "Tarea creada",
+      "notificationCreated": "Notificación creada",
+      "statusUpdateFailed": "No se ha podido actualizar el estado",
+      "timelineAddFailed": "No se ha podido añadir la entrada",
+      "taskCreateFailed": "No se ha podido crear la tarea",
+      "notificationCreateFailed": "No se ha podido crear la notificación"
+    },
+    "dsar": {
+      "created": "Solicitud DSAR creada",
+      "statusUpdated": "Estado de la solicitud actualizado",
+      "taskAdded": "Tarea añadida",
+      "taskUpdated": "Tarea actualizada",
+      "tasksGenerated": "Tareas generadas a partir de los activos de datos",
+      "messageSent": "Mensaje enviado"
+    },
+    "assessment": {
+      "created": "Evaluación creada",
+      "submittedForReview": "Evaluación enviada para revisión",
+      "submittedApproved": "Evaluación enviada y aprobada",
+      "approvalRequested": "Aprobación solicitada",
+      "approvalRecorded": "Decisión de aprobación registrada",
+      "mitigationAdded": "Mitigación añadida",
+      "mitigationUpdated": "Mitigación actualizada",
+      "templateCloned": "Plantilla clonada correctamente",
+      "autoFillAllSaved": "Evaluación creada con todas las respuestas rellenadas",
+      "autoFillPartialSaved": "Evaluación creada, pero solo se han guardado {saved} de {total} respuestas"
+    },
+    "aiSystem": {
+      "registered": "Sistema de IA registrado",
+      "sentToSentinel": "{count, plural, one {Enviado # sistema a AI Sentinel} other {Enviados # sistemas a AI Sentinel}}"
+    },
+    "reports": {
+      "snapshotSaved": "Instantánea de cumplimiento guardada",
+      "snapshotSaveFailed": "No se ha podido guardar la instantánea"
+    },
+    "quickstart": {
+      "noNewRecords": "Todos los registros ya existen: no hay nada nuevo que crear",
+      "selectAtLeastOne": "Selecciona al menos una opción",
+      "selectAtLeastOneVendor": "Selecciona al menos un proveedor",
+      "selectTemplate": "Selecciona una plantilla de sector",
+      "createdSummary": "Creado: {summary}"
+    }
   }
 }

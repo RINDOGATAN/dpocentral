@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -62,6 +63,7 @@ const STATUS_ICONS: Record<string, React.ReactNode> = {
 export default function AISystemsPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
+  const t = useTranslations("toasts");
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -108,12 +110,12 @@ export default function AISystemsPage() {
 
   const exportMutation = trpc.aiGovernance.exportToAiSentinel.useMutation({
     onSuccess: (result) => {
-      toast.success(`Sent ${result.exported} ${result.exported === 1 ? "system" : "systems"} to AI Sentinel`);
+      toast.success(t("aiSystem.sentToSentinel", { count: result.exported }));
       setExportDialogOpen(false);
       setSelectedExportIds([]);
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
 

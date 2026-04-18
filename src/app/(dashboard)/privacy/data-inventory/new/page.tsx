@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -42,6 +43,7 @@ export default function NewDataAssetPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("toasts");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -58,12 +60,12 @@ export default function NewDataAssetPage() {
 
   const createAsset = trpc.dataInventory.createAsset.useMutation({
     onSuccess: () => {
-      toast.success("Data asset created");
+      toast.success(t("asset.created"));
       utils.dataInventory.listAssets.invalidate();
       router.push("/privacy/data-inventory");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create asset");
+      toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
     },
   });
