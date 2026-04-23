@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, ArrowLeft, RotateCcw } from "lucide-react";
 import Link from "next/link";
+import { formatUserError } from "@/lib/format-error";
 
 export default function QuickstartError({
   error,
@@ -12,6 +13,10 @@ export default function QuickstartError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const message = formatUserError(
+    error,
+    "An unexpected error occurred while loading the quickstart wizard."
+  );
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-4">
@@ -32,9 +37,7 @@ export default function QuickstartError({
         <CardContent className="p-8 text-center">
           <AlertTriangle className="w-12 h-12 mx-auto text-destructive mb-4" />
           <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
-          <p className="text-muted-foreground max-w-md mx-auto mb-6">
-            {error.message || "An unexpected error occurred while loading the quickstart wizard."}
-          </p>
+          <p className="text-muted-foreground max-w-md mx-auto mb-6">{message}</p>
           <div className="flex justify-center gap-3">
             <Button onClick={reset} variant="outline">
               <RotateCcw className="w-4 h-4 mr-2" />
