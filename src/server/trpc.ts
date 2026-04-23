@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
+import { formatUserError } from "@/lib/format-error";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -33,8 +34,13 @@ export const createTRPCContext = async (opts: { req: Request }) => {
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
+    const sanitizedMessage =
+      error.code === "INTERNAL_SERVER_ERROR"
+        ? formatUserError(error.cause ?? error, "An unexpected error occurred. Please try again.")
+        : shape.message;
     return {
       ...shape,
+      message: sanitizedMessage,
       data: {
         ...shape.data,
         zodError:
