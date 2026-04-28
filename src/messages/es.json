@@ -33,6 +33,134 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "assessmentDetail": {
+      "notFound": "Evaluación no encontrada",
+      "back": "Volver a evaluaciones",
+      "riskBadge": "Riesgo {level}",
+      "exportPdf": "Exportar PDF",
+      "submitApprove": "Enviar y aprobar",
+      "submitReview": "Enviar a revisión",
+      "progress": {
+        "answered": "{answered} de {total} preguntas respondidas"
+      },
+      "stats": {
+        "sections": "Secciones",
+        "questions": "Preguntas",
+        "mitigations": "Mitigaciones",
+        "riskScore": "Puntuación de riesgo",
+        "riskScoreScale": "0–25 Bajo · 26–50 Medio · 51–75 Alto · 76–100 Crítico",
+        "noScore": "-"
+      },
+      "tabs": {
+        "questions": "Preguntas",
+        "mitigationsWithCount": "Mitigaciones ({count})",
+        "approvalsWithCount": "Aprobaciones ({count})",
+        "history": "Histórico"
+      },
+      "question": {
+        "optional": "(Opcional)",
+        "saved": "Guardado",
+        "yes": "Sí",
+        "no": "No",
+        "chooseOne": "Elige una",
+        "selectOption": "Selecciona una opción...",
+        "selectAllApply": "Selecciona todas las que apliquen",
+        "responsePlaceholder": "Escribe tu respuesta aquí...",
+        "notesPlaceholder": "Notas adicionales (opcional)...",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "notes": "Notas:",
+        "emptyTitle": "No hay preguntas en esta evaluación"
+      },
+      "vendorPets": {
+        "title": "Tecnologías de privacidad del proveedor",
+        "intro": "{name} implementa estas PETs:",
+        "footer": "Pueden referenciarse como medidas mitigadoras en tu evaluación.",
+        "suggest": "Sugerir como mitigaciones",
+        "vendorTitle": "Tecnologías de privacidad de {name}",
+        "implements": "Implementadas por el proveedor",
+        "addresses": "Aborda: {risks}",
+        "accept": "Aceptar"
+      },
+      "mitigations": {
+        "priorityBadge": "Prioridad {value}",
+        "owner": "Responsable: {name}",
+        "evidence": "Evidencia:",
+        "update": "Actualizar",
+        "add": "Añadir mitigación",
+        "empty": "No se han identificado mitigaciones"
+      },
+      "approvals": {
+        "level": "Aprobación de nivel {n}",
+        "approver": "Aprobador: {name}",
+        "comments": "Comentarios: {value}",
+        "approve": "Aprobar",
+        "reject": "Rechazar",
+        "request": "Solicitar aprobación",
+        "empty": "No se han solicitado aprobaciones"
+      },
+      "history": {
+        "version": "Versión {n}",
+        "empty": "Sin historial de versiones"
+      },
+      "addDialog": {
+        "title": "Añadir mitigación",
+        "subtitle": "Añade una medida mitigadora para abordar los riesgos identificados.",
+        "tabs": {
+          "manual": "Manual",
+          "suggested": "Sugeridas"
+        },
+        "noSuggestions": "Aún no hay sugerencias. Responde a las preguntas de la evaluación para obtener recomendaciones basadas en PETs.",
+        "submit": "Añadir mitigación"
+      },
+      "requestApproval": {
+        "title": "Solicitar aprobación",
+        "subtitle": "Selecciona a un miembro de la organización para aprobar esta evaluación.",
+        "approver": "Aprobador",
+        "selectApprover": "Selecciona un aprobador",
+        "submit": "Solicitar aprobación"
+      },
+      "rejectDialog": {
+        "title": "Rechazar evaluación",
+        "subtitle": "Indica el motivo del rechazo de esta evaluación.",
+        "commentsLabel": "Comentarios",
+        "commentsPlaceholder": "Motivo del rechazo...",
+        "submit": "Rechazar evaluación"
+      },
+      "updateMitigation": {
+        "title": "Actualizar mitigación",
+        "statusLabel": "Estado",
+        "ownerLabel": "Responsable",
+        "ownerPlaceholder": "Persona responsable",
+        "dueDateLabel": "Fecha límite",
+        "evidenceLabel": "Evidencia",
+        "evidencePlaceholder": "Evidencia de implementación (documentos, enlaces, capturas...)",
+        "submit": "Guardar cambios"
+      },
+      "mitigationStatus": {
+        "IDENTIFIED": "Identificada",
+        "PLANNED": "Planificada",
+        "IN_PROGRESS": "En curso",
+        "IMPLEMENTED": "Implementada",
+        "VERIFIED": "Verificada",
+        "NOT_REQUIRED": "No requerida"
+      },
+      "mitigationForm": {
+        "titleLabel": "Título *",
+        "titlePlaceholder": "p. ej., Implementar pseudonimización en los registros de clientes",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Describe la medida mitigadora y cómo aborda el riesgo...",
+        "priorityLabel": "Prioridad",
+        "priority1": "1 - Crítica",
+        "priority2": "2 - Alta",
+        "priority3": "3 - Media",
+        "priority4": "4 - Baja",
+        "priority5": "5 - Mínima",
+        "ownerLabel": "Responsable",
+        "ownerPlaceholder": "Persona responsable",
+        "dueDateLabel": "Fecha límite"
+      }
+    },
     "assetDetail": {
       "notFound": "Activo no encontrado",
       "back": "Volver al inventario",

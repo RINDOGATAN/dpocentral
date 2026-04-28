@@ -33,6 +33,134 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "assessmentDetail": {
+      "notFound": "Assessment not found",
+      "back": "Back to Assessments",
+      "riskBadge": "{level} Risk",
+      "exportPdf": "Export PDF",
+      "submitApprove": "Submit & Approve",
+      "submitReview": "Submit for Review",
+      "progress": {
+        "answered": "{answered} of {total} questions answered"
+      },
+      "stats": {
+        "sections": "Sections",
+        "questions": "Questions",
+        "mitigations": "Mitigations",
+        "riskScore": "Risk Score",
+        "riskScoreScale": "0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical",
+        "noScore": "-"
+      },
+      "tabs": {
+        "questions": "Questions",
+        "mitigationsWithCount": "Mitigations ({count})",
+        "approvalsWithCount": "Approvals ({count})",
+        "history": "History"
+      },
+      "question": {
+        "optional": "(Optional)",
+        "saved": "Saved",
+        "yes": "Yes",
+        "no": "No",
+        "chooseOne": "Choose one",
+        "selectOption": "Select an option...",
+        "selectAllApply": "Select all that apply",
+        "responsePlaceholder": "Type your response here...",
+        "notesPlaceholder": "Additional notes (optional)...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "notes": "Notes:",
+        "emptyTitle": "No questions in this assessment"
+      },
+      "vendorPets": {
+        "title": "Vendor Privacy Technologies",
+        "intro": "{name} implements these PETs:",
+        "footer": "These can be referenced as mitigating measures in your assessment.",
+        "suggest": "Suggest as Mitigations",
+        "vendorTitle": "{name} Privacy Technologies",
+        "implements": "Vendor implements",
+        "addresses": "Addresses: {risks}",
+        "accept": "Accept"
+      },
+      "mitigations": {
+        "priorityBadge": "Priority {value}",
+        "owner": "Owner: {name}",
+        "evidence": "Evidence:",
+        "update": "Update",
+        "add": "Add Mitigation",
+        "empty": "No mitigations identified"
+      },
+      "approvals": {
+        "level": "Level {n} Approval",
+        "approver": "Approver: {name}",
+        "comments": "Comments: {value}",
+        "approve": "Approve",
+        "reject": "Reject",
+        "request": "Request Approval",
+        "empty": "No approvals requested"
+      },
+      "history": {
+        "version": "Version {n}",
+        "empty": "No version history"
+      },
+      "addDialog": {
+        "title": "Add Mitigation",
+        "subtitle": "Add a mitigating measure to address identified risks.",
+        "tabs": {
+          "manual": "Manual",
+          "suggested": "Suggested"
+        },
+        "noSuggestions": "No suggestions yet. Answer assessment questions to get PET-based recommendations.",
+        "submit": "Add Mitigation"
+      },
+      "requestApproval": {
+        "title": "Request Approval",
+        "subtitle": "Select an organization member to approve this assessment.",
+        "approver": "Approver",
+        "selectApprover": "Select an approver",
+        "submit": "Request Approval"
+      },
+      "rejectDialog": {
+        "title": "Reject Assessment",
+        "subtitle": "Please provide a reason for rejecting this assessment.",
+        "commentsLabel": "Comments",
+        "commentsPlaceholder": "Reason for rejection...",
+        "submit": "Reject Assessment"
+      },
+      "updateMitigation": {
+        "title": "Update Mitigation",
+        "statusLabel": "Status",
+        "ownerLabel": "Owner",
+        "ownerPlaceholder": "Person responsible",
+        "dueDateLabel": "Due Date",
+        "evidenceLabel": "Evidence",
+        "evidencePlaceholder": "Evidence of implementation (documents, links, screenshots...)",
+        "submit": "Save Changes"
+      },
+      "mitigationStatus": {
+        "IDENTIFIED": "Identified",
+        "PLANNED": "Planned",
+        "IN_PROGRESS": "In Progress",
+        "IMPLEMENTED": "Implemented",
+        "VERIFIED": "Verified",
+        "NOT_REQUIRED": "Not Required"
+      },
+      "mitigationForm": {
+        "titleLabel": "Title *",
+        "titlePlaceholder": "e.g., Implement pseudonymization for customer records",
+        "descLabel": "Description",
+        "descPlaceholder": "Describe the mitigation measure and how it addresses the risk...",
+        "priorityLabel": "Priority",
+        "priority1": "1 - Critical",
+        "priority2": "2 - High",
+        "priority3": "3 - Medium",
+        "priority4": "4 - Low",
+        "priority5": "5 - Minimal",
+        "ownerLabel": "Owner",
+        "ownerPlaceholder": "Person responsible",
+        "dueDateLabel": "Due Date"
+      }
+    },
     "assetDetail": {
       "notFound": "Asset not found",
       "back": "Back to Inventory",
