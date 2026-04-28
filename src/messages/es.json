@@ -33,6 +33,123 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "incidentDetail": {
+      "notFound": "Incidente no encontrado",
+      "back": "Volver a incidentes",
+      "close": "Cerrar incidente",
+      "updateStatus": "Actualizar estado",
+      "notifBanner": {
+        "title": "Notificación reglamentaria obligatoria",
+        "deadline": "Fecha límite: {date}",
+        "overdue": "VENCIDA — debía notificarse el {date}",
+        "create": "Crear notificación"
+      },
+      "stats": {
+        "discovered": "Descubierto",
+        "affectedRecords": "Registros afectados",
+        "unknown": "Desconocido",
+        "affectedSubjects": "Interesados afectados",
+        "subjectTypesCount": "{count, plural, one {# tipo} other {# tipos}}",
+        "notifications": "Notificaciones"
+      },
+      "tabs": {
+        "details": "Detalles",
+        "timelineWithCount": "Cronología ({count})",
+        "tasksWithCount": "Tareas ({count})",
+        "notificationsWithCount": "Notificaciones ({count})",
+        "documents": "Documentos"
+      },
+      "details": {
+        "description": "Descripción",
+        "noDescription": "No se ha proporcionado descripción",
+        "discovery": "Descubrimiento",
+        "discoveredBy": "Descubierto por:",
+        "discoveryMethod": "Método de descubrimiento:",
+        "notSpecified": "No especificado",
+        "dataCategories": "Categorías de datos afectadas",
+        "dataCategoriesEmpty": "No se han especificado categorías",
+        "rootCause": "Causa raíz",
+        "lessonsLearned": "Lecciones aprendidas"
+      },
+      "timeline": {
+        "addEntry": "Añadir entrada",
+        "empty": "Aún no hay entradas en la cronología",
+        "createdBy": " por {name}"
+      },
+      "tasks": {
+        "addTask": "Añadir tarea",
+        "empty": "No hay tareas asignadas",
+        "priority": "Prioridad {value}"
+      },
+      "notifications": {
+        "due": "Vence: {date}",
+        "overdue": "VENCIDA",
+        "empty": "No se han creado notificaciones",
+        "createDpa": "Crear notificación a la AEPD"
+      },
+      "documents": {
+        "title": "Próximamente: subida de documentos",
+        "subtitle": "Adjunta pruebas, informes y comunicaciones al incidente."
+      },
+      "statusDialog": {
+        "title": "Actualizar estado del incidente",
+        "subtitle": "Avanza el incidente por el flujo de respuesta. Se registrará una entrada en la cronología.",
+        "newStatus": "Nuevo estado",
+        "selectStatus": "Selecciona un estado",
+        "submit": "Actualizar"
+      },
+      "timelineDialog": {
+        "title": "Añadir entrada a la cronología",
+        "subtitle": "Registra una observación, acción o decisión tomada durante la respuesta al incidente.",
+        "entryType": "Tipo de entrada",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Resumen breve de la entrada",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles: qué ocurrió, quién intervino, qué evidencia",
+        "submit": "Añadir entrada",
+        "type": {
+          "OBSERVATION": "Observación",
+          "ACTION": "Acción realizada",
+          "EVIDENCE": "Evidencia",
+          "COMMUNICATION": "Comunicación",
+          "DECISION": "Decisión",
+          "NOTE": "Nota"
+        }
+      },
+      "taskDialog": {
+        "title": "Añadir tarea",
+        "subtitle": "Crea una tarea de respuesta para hacer seguimiento del trabajo de remediación.",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Qué hay que hacer",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles opcionales",
+        "priority": "Prioridad",
+        "dueDate": "Fecha límite",
+        "submit": "Crear tarea",
+        "priorities": {
+          "LOW": "Baja",
+          "MEDIUM": "Media",
+          "HIGH": "Alta",
+          "URGENT": "Urgente"
+        }
+      },
+      "notifDialog": {
+        "title": "Crear notificación reglamentaria",
+        "subtitle": "La fecha límite se calcula a partir del plazo de notificación de la jurisdicción.",
+        "jurisdiction": "Jurisdicción",
+        "selectJurisdiction": "Selecciona una jurisdicción",
+        "jurisdictionWindow": "{name} (plazo de {hours}h)",
+        "noJurisdictions": "No hay jurisdicciones aplicadas a esta organización",
+        "recipient": "Tipo de destinatario",
+        "recipientType": {
+          "DPA": "Autoridad de Protección de Datos (AEPD)",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        },
+        "submit": "Crear"
+      }
+    },
     "vendorDetail": {
       "notFound": "Proveedor no encontrado",
       "back": "Volver a proveedores",

@@ -62,26 +62,13 @@ const statusColors: Record<string, string> = {
   FALSE_POSITIVE: "border-muted-foreground text-muted-foreground",
 };
 
-const typeLabels: Record<string, string> = {
-  DATA_BREACH: "Data Breach",
-  UNAUTHORIZED_ACCESS: "Unauthorized Access",
-  DATA_LOSS: "Data Loss",
-  SYSTEM_COMPROMISE: "System Compromise",
-  PHISHING: "Phishing",
-  RANSOMWARE: "Ransomware",
-  INSIDER_THREAT: "Insider Threat",
-  PHYSICAL_SECURITY: "Physical Security",
-  VENDOR_INCIDENT: "Vendor Incident",
-  OTHER: "Other",
-};
-
-const TIMELINE_ENTRY_TYPES = [
-  { value: "OBSERVATION", label: "Observation" },
-  { value: "ACTION", label: "Action Taken" },
-  { value: "EVIDENCE", label: "Evidence" },
-  { value: "COMMUNICATION", label: "Communication" },
-  { value: "DECISION", label: "Decision" },
-  { value: "NOTE", label: "Note" },
+const TIMELINE_ENTRY_TYPES: ReadonlyArray<"OBSERVATION" | "ACTION" | "EVIDENCE" | "COMMUNICATION" | "DECISION" | "NOTE"> = [
+  "OBSERVATION",
+  "ACTION",
+  "EVIDENCE",
+  "COMMUNICATION",
+  "DECISION",
+  "NOTE",
 ];
 
 const TASK_PRIORITIES: TaskPriority[] = ["LOW", "MEDIUM", "HIGH", "URGENT"];
@@ -101,6 +88,9 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.incidentDetail");
+  const tList = useTranslations("pages.incidents");
+  const tCommon = useTranslations("common");
 
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<IncidentStatus | "">("");
@@ -192,11 +182,9 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   if (!incident) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Incident not found</p>
+        <p className="text-muted-foreground">{tp("notFound")}</p>
         <Link href="/privacy/incidents">
-          <Button variant="outline" className="mt-4">
-            Back to Incidents
-          </Button>
+          <Button variant="outline" className="mt-4">{tp("back")}</Button>
         </Link>
       </div>
     );
@@ -228,12 +216,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-mono text-primary">{incident.publicId}</span>
-              <Badge variant="outline">{typeLabels[incident.type] || incident.type}</Badge>
+              <Badge variant="outline">{tList(`type.${incident.type}` as `type.DATA_BREACH` | `type.UNAUTHORIZED_ACCESS` | `type.DATA_LOSS` | `type.SYSTEM_COMPROMISE` | `type.PHISHING` | `type.RANSOMWARE` | `type.INSIDER_THREAT` | `type.PHYSICAL_SECURITY` | `type.VENDOR_INCIDENT` | `type.OTHER`)}</Badge>
               <Badge variant="outline" className={severityColors[incident.severity] || ""}>
-                {incident.severity}
+                {tList(`severity.${incident.severity}` as `severity.LOW` | `severity.MEDIUM` | `severity.HIGH` | `severity.CRITICAL`)}
               </Badge>
               <Badge variant="outline" className={statusColors[incident.status] || ""}>
-                {incident.status.replace("_", " ")}
+                {tList(`status.${incident.status}` as `status.REPORTED` | `status.INVESTIGATING` | `status.CONTAINED` | `status.ERADICATED` | `status.RECOVERING` | `status.CLOSED` | `status.FALSE_POSITIVE`)}
               </Badge>
             </div>
             <h1 className="text-2xl font-semibold mt-1">{incident.title}</h1>
@@ -253,7 +241,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               }
             >
               {updateStatus.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
-              Close Incident
+              {tp("close")}
             </Button>
           )}
           <Button
@@ -262,7 +250,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               setStatusDialogOpen(true);
             }}
           >
-            Update Status
+            {tp("updateStatus")}
           </Button>
         </div>
       </div>
@@ -277,17 +265,18 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex items-center gap-4 min-w-0">
                 <Bell className="w-6 h-6 text-destructive shrink-0" />
                 <div className="min-w-0">
-                  <p className="font-medium">Regulatory Notification Required</p>
+                  <p className="font-medium">{tp("notifBanner.title")}</p>
                   {deadline && (
                     <p className={`text-sm ${pastDue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
-                      {pastDue ? "OVERDUE — was due " : "Deadline: "}
-                      {deadline.toLocaleString()}
+                      {pastDue
+                        ? tp("notifBanner.overdue", { date: deadline.toLocaleString() })
+                        : tp("notifBanner.deadline", { date: deadline.toLocaleString() })}
                     </p>
                   )}
                 </div>
               </div>
               <Button variant="destructive" onClick={() => setNotifDialogOpen(true)}>
-                Create Notification
+                {tp("notifBanner.create")}
               </Button>
             </CardContent>
           </Card>
@@ -300,7 +289,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Clock className="w-4 h-4" />
-              <span className="text-sm">Discovered</span>
+              <span className="text-sm">{tp("stats.discovered")}</span>
             </div>
             <p className="font-medium">
               {new Date(incident.discoveredAt).toLocaleDateString()}
@@ -311,10 +300,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Database className="w-4 h-4" />
-              <span className="text-sm">Affected Records</span>
+              <span className="text-sm">{tp("stats.affectedRecords")}</span>
             </div>
             <p className="font-medium text-xl">
-              {incident.affectedRecords?.toLocaleString() ?? "Unknown"}
+              {incident.affectedRecords?.toLocaleString() ?? tp("stats.unknown")}
             </p>
           </CardContent>
         </Card>
@@ -322,10 +311,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Users className="w-4 h-4" />
-              <span className="text-sm">Affected Subjects</span>
+              <span className="text-sm">{tp("stats.affectedSubjects")}</span>
             </div>
             <p className="font-medium text-xl">
-              {(incident.affectedSubjects as string[])?.length ?? 0} types
+              {tp("stats.subjectTypesCount", { count: (incident.affectedSubjects as string[])?.length ?? 0 })}
             </p>
           </CardContent>
         </Card>
@@ -333,7 +322,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Bell className="w-4 h-4" />
-              <span className="text-sm">Notifications</span>
+              <span className="text-sm">{tp("stats.notifications")}</span>
             </div>
             <p className="font-medium text-xl">{incident.notifications?.length ?? 0}</p>
           </CardContent>
@@ -343,23 +332,23 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       {/* Tabs */}
       <Tabs defaultValue="details">
         <TabsList>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline ({incident.timeline?.length ?? 0})</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks ({incident.tasks?.length ?? 0})</TabsTrigger>
+          <TabsTrigger value="details">{tp("tabs.details")}</TabsTrigger>
+          <TabsTrigger value="timeline">{tp("tabs.timelineWithCount", { count: incident.timeline?.length ?? 0 })}</TabsTrigger>
+          <TabsTrigger value="tasks">{tp("tabs.tasksWithCount", { count: incident.tasks?.length ?? 0 })}</TabsTrigger>
           <TabsTrigger value="notifications">
-            Notifications ({incident.notifications?.length ?? 0})
+            {tp("tabs.notificationsWithCount", { count: incident.notifications?.length ?? 0 })}
           </TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="documents">{tp("tabs.documents")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="mt-4 space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Description</CardTitle>
+              <CardTitle className="text-base">{tp("details.description")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground whitespace-pre-wrap">
-                {incident.description || "No description provided"}
+                {incident.description || tp("details.noDescription")}
               </p>
             </CardContent>
           </Card>
@@ -367,17 +356,17 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Discovery</CardTitle>
+                <CardTitle className="text-base">{tp("details.discovery")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div>
-                  <span className="text-sm text-muted-foreground">Discovered By:</span>
-                  <p className="font-medium">{incident.discoveredBy || "Not specified"}</p>
+                  <span className="text-sm text-muted-foreground">{tp("details.discoveredBy")}</span>
+                  <p className="font-medium">{incident.discoveredBy || tp("details.notSpecified")}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Discovery Method:</span>
+                  <span className="text-sm text-muted-foreground">{tp("details.discoveryMethod")}</span>
                   <p className="font-medium">
-                    {incident.discoveryMethod?.replace("_", " ") || "Not specified"}
+                    {incident.discoveryMethod?.replace("_", " ") || tp("details.notSpecified")}
                   </p>
                 </div>
               </CardContent>
@@ -385,7 +374,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Data Categories Affected</CardTitle>
+                <CardTitle className="text-base">{tp("details.dataCategories")}</CardTitle>
               </CardHeader>
               <CardContent>
                 {(incident.dataCategories as string[])?.length > 0 ? (
@@ -397,7 +386,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">No categories specified</p>
+                  <p className="text-muted-foreground text-sm">{tp("details.dataCategoriesEmpty")}</p>
                 )}
               </CardContent>
             </Card>
@@ -406,7 +395,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           {incident.rootCause && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Root Cause</CardTitle>
+                <CardTitle className="text-base">{tp("details.rootCause")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground whitespace-pre-wrap">
@@ -419,7 +408,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           {incident.lessonsLearned && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Lessons Learned</CardTitle>
+                <CardTitle className="text-base">{tp("details.lessonsLearned")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground whitespace-pre-wrap">
@@ -436,7 +425,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex justify-end">
                 <Button size="sm" onClick={() => setTimelineDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Entry
+                  {tp("timeline.addEntry")}
                 </Button>
               </div>
               {incident.timeline.map((entry, index) => (
@@ -450,7 +439,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{entry.title}</span>
                           <Badge variant="outline" className="text-xs">
-                            {entry.entryType.replace("_", " ")}
+                            {tp(`timelineDialog.type.${entry.entryType}` as `timelineDialog.type.OBSERVATION` | `timelineDialog.type.ACTION` | `timelineDialog.type.EVIDENCE` | `timelineDialog.type.COMMUNICATION` | `timelineDialog.type.DECISION` | `timelineDialog.type.NOTE`)}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
@@ -459,7 +448,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         <p className="text-xs text-muted-foreground mt-2">
                           <Clock className="inline w-3 h-3 mr-1" />
                           {new Date(entry.timestamp).toLocaleString()}
-                          {entry.createdBy && ` by ${entry.createdBy.name}`}
+                          {entry.createdBy && tp("timeline.createdBy", { name: entry.createdBy.name ?? "" })}
                         </p>
                       </div>
                     </div>
@@ -471,10 +460,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No timeline entries yet</p>
+                <p>{tp("timeline.empty")}</p>
                 <Button className="mt-4" onClick={() => setTimelineDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Entry
+                  {tp("timeline.addEntry")}
                 </Button>
               </CardContent>
             </Card>
@@ -487,7 +476,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex justify-end">
                 <Button size="sm" onClick={() => setTaskDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Task
+                  {tp("tasks.addTask")}
                 </Button>
               </div>
               {incident.tasks.map((task) => (
@@ -509,7 +498,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline">{task.status}</Badge>
-                        <Badge variant="outline">Priority {task.priority}</Badge>
+                        <Badge variant="outline">{tp("tasks.priority", { value: task.priority })}</Badge>
                       </div>
                     </div>
                   </CardContent>
@@ -520,10 +509,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No tasks assigned</p>
+                <p>{tp("tasks.empty")}</p>
                 <Button className="mt-4" onClick={() => setTaskDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Task
+                  {tp("tasks.addTask")}
                 </Button>
               </CardContent>
             </Card>
@@ -545,10 +534,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                             <Bell className="w-4 h-4 text-primary" />
                             <span className="font-medium">{notification.recipientType}</span>
                             <Badge variant="outline">{notification.status}</Badge>
-                            {pastDue && <Badge variant="destructive">OVERDUE</Badge>}
+                            {pastDue && <Badge variant="destructive">{tp("notifications.overdue")}</Badge>}
                           </div>
                           <p className={`text-sm mt-1 ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>
-                            Due: {deadline.toLocaleString()}
+                            {tp("notifications.due", { date: deadline.toLocaleString() })}
                           </p>
                         </div>
                       </div>
@@ -561,10 +550,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Bell className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No notifications created</p>
+                <p>{tp("notifications.empty")}</p>
                 {incident.notificationRequired && (
                   <Button className="mt-4" variant="destructive" onClick={() => setNotifDialogOpen(true)}>
-                    Create DPA Notification
+                    {tp("notifications.createDpa")}
                   </Button>
                 )}
               </CardContent>
@@ -576,8 +565,8 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
               <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Document uploads coming soon</p>
-              <p className="text-sm mt-1">Attach evidence, reports, and communications to incidents.</p>
+              <p>{tp("documents.title")}</p>
+              <p className="text-sm mt-1">{tp("documents.subtitle")}</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -587,21 +576,19 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Incident Status</DialogTitle>
-            <DialogDescription>
-              Transition this incident through the response workflow. A timeline entry will be recorded.
-            </DialogDescription>
+            <DialogTitle>{tp("statusDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("statusDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <Label>New Status</Label>
+            <Label>{tp("statusDialog.newStatus")}</Label>
             <Select value={pendingStatus} onValueChange={(v) => setPendingStatus(v as IncidentStatus)}>
               <SelectTrigger>
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={tp("statusDialog.selectStatus")} />
               </SelectTrigger>
               <SelectContent>
                 {STATUS_OPTIONS.map((s) => (
                   <SelectItem key={s} value={s}>
-                    {s.replace("_", " ")}
+                    {tList(`status.${s}` as `status.REPORTED` | `status.INVESTIGATING` | `status.CONTAINED` | `status.ERADICATED` | `status.RECOVERING` | `status.CLOSED` | `status.FALSE_POSITIVE`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -609,7 +596,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               disabled={!pendingStatus || updateStatus.isPending || pendingStatus === incident.status}
@@ -623,7 +610,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               }
             >
               {updateStatus.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Update
+              {tp("statusDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -633,48 +620,46 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       <Dialog open={timelineDialogOpen} onOpenChange={setTimelineDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Timeline Entry</DialogTitle>
-            <DialogDescription>
-              Record an observation, action, or decision taken during the incident response.
-            </DialogDescription>
+            <DialogTitle>{tp("timelineDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("timelineDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Entry Type</Label>
+              <Label>{tp("timelineDialog.entryType")}</Label>
               <Select value={timelineEntryType} onValueChange={setTimelineEntryType}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {TIMELINE_ENTRY_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      {t.label}
+                  {TIMELINE_ENTRY_TYPES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {tp(`timelineDialog.type.${value}` as `timelineDialog.type.OBSERVATION` | `timelineDialog.type.ACTION` | `timelineDialog.type.EVIDENCE` | `timelineDialog.type.COMMUNICATION` | `timelineDialog.type.DECISION` | `timelineDialog.type.NOTE`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Title</Label>
+              <Label>{tp("timelineDialog.titleLabel")}</Label>
               <Input
                 value={timelineTitle}
                 onChange={(e) => setTimelineTitle(e.target.value)}
-                placeholder="Short summary of the entry"
+                placeholder={tp("timelineDialog.titlePlaceholder")}
               />
             </div>
             <div className="space-y-2">
-              <Label>Description</Label>
+              <Label>{tp("timelineDialog.descLabel")}</Label>
               <Textarea
                 value={timelineDescription}
                 onChange={(e) => setTimelineDescription(e.target.value)}
-                placeholder="Details — what happened, who was involved, what evidence"
+                placeholder={tp("timelineDialog.descPlaceholder")}
                 rows={4}
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setTimelineDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               disabled={!timelineTitle.trim() || addTimelineEntry.isPending}
@@ -689,7 +674,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               }
             >
               {addTimelineEntry.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Add Entry
+              {tp("timelineDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -699,32 +684,30 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Task</DialogTitle>
-            <DialogDescription>
-              Create a response task to track remediation work for this incident.
-            </DialogDescription>
+            <DialogTitle>{tp("taskDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("taskDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Title</Label>
+              <Label>{tp("taskDialog.titleLabel")}</Label>
               <Input
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}
-                placeholder="What needs to be done"
+                placeholder={tp("taskDialog.titlePlaceholder")}
               />
             </div>
             <div className="space-y-2">
-              <Label>Description</Label>
+              <Label>{tp("taskDialog.descLabel")}</Label>
               <Textarea
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
-                placeholder="Optional details"
+                placeholder={tp("taskDialog.descPlaceholder")}
                 rows={3}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Priority</Label>
+                <Label>{tp("taskDialog.priority")}</Label>
                 <Select value={taskPriority} onValueChange={(v) => setTaskPriority(v as TaskPriority)}>
                   <SelectTrigger>
                     <SelectValue />
@@ -732,14 +715,14 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                   <SelectContent>
                     {TASK_PRIORITIES.map((p) => (
                       <SelectItem key={p} value={p}>
-                        {p}
+                        {tp(`taskDialog.priorities.${p}` as `taskDialog.priorities.LOW` | `taskDialog.priorities.MEDIUM` | `taskDialog.priorities.HIGH` | `taskDialog.priorities.URGENT`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Due Date</Label>
+                <Label>{tp("taskDialog.dueDate")}</Label>
                 <Input
                   type="date"
                   value={taskDueDate}
@@ -750,7 +733,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setTaskDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               disabled={!taskTitle.trim() || createTask.isPending}
@@ -766,7 +749,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               }
             >
               {createTask.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Create Task
+              {tp("taskDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -776,50 +759,48 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       <Dialog open={notifDialogOpen} onOpenChange={setNotifDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Regulatory Notification</DialogTitle>
-            <DialogDescription>
-              The deadline is computed from the jurisdiction&apos;s breach notification window.
-            </DialogDescription>
+            <DialogTitle>{tp("notifDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("notifDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Jurisdiction</Label>
+              <Label>{tp("notifDialog.jurisdiction")}</Label>
               <Select value={selectedJurisdictionId} onValueChange={setSelectedJurisdictionId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select jurisdiction" />
+                  <SelectValue placeholder={tp("notifDialog.selectJurisdiction")} />
                 </SelectTrigger>
                 <SelectContent>
                   {(jurisdictionsData?.jurisdictions ?? []).map((j) => (
                     <SelectItem key={j.jurisdictionId} value={j.jurisdictionId}>
-                      {j.name} ({j.breachNotificationHours}h window)
+                      {tp("notifDialog.jurisdictionWindow", { name: j.name, hours: j.breachNotificationHours })}
                     </SelectItem>
                   ))}
                   {jurisdictionsData?.jurisdictions.length === 0 && (
                     <div className="p-2 text-xs text-muted-foreground">
-                      No jurisdictions applied to this organization
+                      {tp("notifDialog.noJurisdictions")}
                     </div>
                   )}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Recipient Type</Label>
+              <Label>{tp("notifDialog.recipient")}</Label>
               <Select value={selectedRecipientType} onValueChange={setSelectedRecipientType}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DPA">Data Protection Authority (DPA)</SelectItem>
-                  <SelectItem value="DATA_SUBJECT">Affected Data Subjects</SelectItem>
-                  <SelectItem value="LAW_ENFORCEMENT">Law Enforcement</SelectItem>
-                  <SelectItem value="INTERNAL">Internal Stakeholders</SelectItem>
+                  <SelectItem value="DPA">{tp("notifDialog.recipientType.DPA")}</SelectItem>
+                  <SelectItem value="DATA_SUBJECT">{tp("notifDialog.recipientType.DATA_SUBJECT")}</SelectItem>
+                  <SelectItem value="LAW_ENFORCEMENT">{tp("notifDialog.recipientType.LAW_ENFORCEMENT")}</SelectItem>
+                  <SelectItem value="INTERNAL">{tp("notifDialog.recipientType.INTERNAL")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setNotifDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               disabled={!selectedJurisdictionId || createNotification.isPending}
@@ -833,7 +814,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               }
             >
               {createNotification.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Create
+              {tp("notifDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>

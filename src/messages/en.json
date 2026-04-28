@@ -33,6 +33,123 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "incidentDetail": {
+      "notFound": "Incident not found",
+      "back": "Back to Incidents",
+      "close": "Close Incident",
+      "updateStatus": "Update Status",
+      "notifBanner": {
+        "title": "Regulatory Notification Required",
+        "deadline": "Deadline: {date}",
+        "overdue": "OVERDUE — was due {date}",
+        "create": "Create Notification"
+      },
+      "stats": {
+        "discovered": "Discovered",
+        "affectedRecords": "Affected Records",
+        "unknown": "Unknown",
+        "affectedSubjects": "Affected Subjects",
+        "subjectTypesCount": "{count, plural, one {# type} other {# types}}",
+        "notifications": "Notifications"
+      },
+      "tabs": {
+        "details": "Details",
+        "timelineWithCount": "Timeline ({count})",
+        "tasksWithCount": "Tasks ({count})",
+        "notificationsWithCount": "Notifications ({count})",
+        "documents": "Documents"
+      },
+      "details": {
+        "description": "Description",
+        "noDescription": "No description provided",
+        "discovery": "Discovery",
+        "discoveredBy": "Discovered By:",
+        "discoveryMethod": "Discovery Method:",
+        "notSpecified": "Not specified",
+        "dataCategories": "Data Categories Affected",
+        "dataCategoriesEmpty": "No categories specified",
+        "rootCause": "Root Cause",
+        "lessonsLearned": "Lessons Learned"
+      },
+      "timeline": {
+        "addEntry": "Add Entry",
+        "empty": "No timeline entries yet",
+        "createdBy": " by {name}"
+      },
+      "tasks": {
+        "addTask": "Add Task",
+        "empty": "No tasks assigned",
+        "priority": "Priority {value}"
+      },
+      "notifications": {
+        "due": "Due: {date}",
+        "overdue": "OVERDUE",
+        "empty": "No notifications created",
+        "createDpa": "Create DPA Notification"
+      },
+      "documents": {
+        "title": "Document uploads coming soon",
+        "subtitle": "Attach evidence, reports, and communications to incidents."
+      },
+      "statusDialog": {
+        "title": "Update Incident Status",
+        "subtitle": "Transition this incident through the response workflow. A timeline entry will be recorded.",
+        "newStatus": "New Status",
+        "selectStatus": "Select status",
+        "submit": "Update"
+      },
+      "timelineDialog": {
+        "title": "Add Timeline Entry",
+        "subtitle": "Record an observation, action, or decision taken during the incident response.",
+        "entryType": "Entry Type",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Short summary of the entry",
+        "descLabel": "Description",
+        "descPlaceholder": "Details — what happened, who was involved, what evidence",
+        "submit": "Add Entry",
+        "type": {
+          "OBSERVATION": "Observation",
+          "ACTION": "Action Taken",
+          "EVIDENCE": "Evidence",
+          "COMMUNICATION": "Communication",
+          "DECISION": "Decision",
+          "NOTE": "Note"
+        }
+      },
+      "taskDialog": {
+        "title": "Add Task",
+        "subtitle": "Create a response task to track remediation work for this incident.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "What needs to be done",
+        "descLabel": "Description",
+        "descPlaceholder": "Optional details",
+        "priority": "Priority",
+        "dueDate": "Due Date",
+        "submit": "Create Task",
+        "priorities": {
+          "LOW": "Low",
+          "MEDIUM": "Medium",
+          "HIGH": "High",
+          "URGENT": "Urgent"
+        }
+      },
+      "notifDialog": {
+        "title": "Create Regulatory Notification",
+        "subtitle": "The deadline is computed from the jurisdiction's breach notification window.",
+        "jurisdiction": "Jurisdiction",
+        "selectJurisdiction": "Select jurisdiction",
+        "jurisdictionWindow": "{name} ({hours}h window)",
+        "noJurisdictions": "No jurisdictions applied to this organization",
+        "recipient": "Recipient Type",
+        "recipientType": {
+          "DPA": "Data Protection Authority (DPA)",
+          "DATA_SUBJECT": "Affected Data Subjects",
+          "LAW_ENFORCEMENT": "Law Enforcement",
+          "INTERNAL": "Internal Stakeholders"
+        },
+        "submit": "Create"
+      }
+    },
     "vendorDetail": {
       "notFound": "Vendor not found",
       "back": "Back to Vendors",
