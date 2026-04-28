@@ -22,53 +22,30 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
-const incidentTypes = [
-  { value: "DATA_BREACH", label: "Data Breach" },
-  { value: "UNAUTHORIZED_ACCESS", label: "Unauthorized Access" },
-  { value: "DATA_LOSS", label: "Data Loss" },
-  { value: "SYSTEM_COMPROMISE", label: "System Compromise" },
-  { value: "PHISHING", label: "Phishing" },
-  { value: "RANSOMWARE", label: "Ransomware" },
-  { value: "INSIDER_THREAT", label: "Insider Threat" },
-  { value: "PHYSICAL_SECURITY", label: "Physical Security" },
-  { value: "VENDOR_INCIDENT", label: "Vendor Incident" },
-  { value: "OTHER", label: "Other" },
-];
+const INCIDENT_TYPE_KEYS = [
+  "DATA_BREACH", "UNAUTHORIZED_ACCESS", "DATA_LOSS", "SYSTEM_COMPROMISE",
+  "PHISHING", "RANSOMWARE", "INSIDER_THREAT", "PHYSICAL_SECURITY",
+  "VENDOR_INCIDENT", "OTHER",
+] as const;
 
-const severities = [
-  { value: "LOW", label: "Low", description: "Minimal impact, no data exposed" },
-  { value: "MEDIUM", label: "Medium", description: "Limited impact, some data at risk" },
-  { value: "HIGH", label: "High", description: "Significant impact, sensitive data exposed" },
-  { value: "CRITICAL", label: "Critical", description: "Severe impact, major breach" },
-];
+const SEVERITY_KEYS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 
-const dataCategories = [
-  { value: "IDENTIFIERS", label: "Identifiers (Name, Email, ID)" },
-  { value: "DEMOGRAPHICS", label: "Demographics" },
-  { value: "FINANCIAL", label: "Financial Data" },
-  { value: "HEALTH", label: "Health Information" },
-  { value: "BIOMETRIC", label: "Biometric Data" },
-  { value: "LOCATION", label: "Location Data" },
-  { value: "BEHAVIORAL", label: "Behavioral Data" },
-  { value: "EMPLOYMENT", label: "Employment Data" },
-  { value: "CRIMINAL", label: "Criminal Records" },
-  { value: "OTHER", label: "Other" },
-];
+const DATA_CATEGORY_KEYS = [
+  "IDENTIFIERS", "DEMOGRAPHICS", "FINANCIAL", "HEALTH", "BIOMETRIC",
+  "LOCATION", "BEHAVIORAL", "EMPLOYMENT", "CRIMINAL", "OTHER",
+] as const;
 
-const discoveryMethods = [
-  { value: "INTERNAL_MONITORING", label: "Internal Monitoring" },
-  { value: "EMPLOYEE_REPORT", label: "Employee Report" },
-  { value: "CUSTOMER_REPORT", label: "Customer Report" },
-  { value: "THIRD_PARTY", label: "Third Party Notification" },
-  { value: "SECURITY_AUDIT", label: "Security Audit" },
-  { value: "LAW_ENFORCEMENT", label: "Law Enforcement" },
-  { value: "OTHER", label: "Other" },
-];
+const DISCOVERY_METHOD_KEYS = [
+  "INTERNAL_MONITORING", "EMPLOYEE_REPORT", "CUSTOMER_REPORT",
+  "THIRD_PARTY", "SECURITY_AUDIT", "LAW_ENFORCEMENT", "OTHER",
+] as const;
 
 export default function NewIncidentPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.newIncident");
+  const tCommon = useTranslations("common");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -143,10 +120,8 @@ export default function NewIncidentPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">Report Incident</h1>
-          <p className="text-muted-foreground">
-            Document a security incident or data breach
-          </p>
+          <h1 className="text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-muted-foreground">{tp("subtitle")}</p>
         </div>
       </div>
 
@@ -155,10 +130,8 @@ export default function NewIncidentPage() {
           <CardContent className="py-4 flex items-center gap-4">
             <AlertTriangle className="w-6 h-6 text-destructive" />
             <div>
-              <p className="font-medium">High/Critical Severity Selected</p>
-              <p className="text-sm text-muted-foreground">
-                This incident may require regulatory notification within 72 hours (GDPR) or other timeframes.
-              </p>
+              <p className="font-medium">{tp("highSeverityTitle")}</p>
+              <p className="text-sm text-muted-foreground">{tp("highSeverityBody")}</p>
             </div>
           </CardContent>
         </Card>
@@ -168,17 +141,15 @@ export default function NewIncidentPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Incident Details</CardTitle>
-            <CardDescription>
-              Describe the incident and its discovery
-            </CardDescription>
+            <CardTitle>{tp("details")}</CardTitle>
+            <CardDescription>{tp("detailsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Incident Title *</Label>
+              <Label htmlFor="title">{tp("incidentTitle")}</Label>
               <Input
                 id="title"
-                placeholder="Brief description of the incident"
+                placeholder={tp("titlePlaceholder")}
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
@@ -187,40 +158,40 @@ export default function NewIncidentPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="type">Incident Type *</Label>
+                <Label htmlFor="type">{tp("type")}</Label>
                 <Select
                   value={formData.type}
                   onValueChange={(value) => setFormData({ ...formData, type: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={tp("typePlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {incidentTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                    {INCIDENT_TYPE_KEYS.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {tp(`incidentType.${value}` as `incidentType.DATA_BREACH` | `incidentType.UNAUTHORIZED_ACCESS` | `incidentType.DATA_LOSS` | `incidentType.SYSTEM_COMPROMISE` | `incidentType.PHISHING` | `incidentType.RANSOMWARE` | `incidentType.INSIDER_THREAT` | `incidentType.PHYSICAL_SECURITY` | `incidentType.VENDOR_INCIDENT` | `incidentType.OTHER`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="severity">Severity *</Label>
+                <Label htmlFor="severity">{tp("severity")}</Label>
                 <Select
                   value={formData.severity}
                   onValueChange={(value) => setFormData({ ...formData, severity: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select severity" />
+                    <SelectValue placeholder={tp("severityPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {severities.map((sev) => (
-                      <SelectItem key={sev.value} value={sev.value}>
+                    {SEVERITY_KEYS.map((value) => (
+                      <SelectItem key={value} value={value}>
                         <div>
-                          <span className="font-medium">{sev.label}</span>
-                          <span className="text-muted-foreground ml-2 text-xs">{sev.description}</span>
+                          <span className="font-medium">{tp(`severityOption.${value}` as `severityOption.LOW` | `severityOption.MEDIUM` | `severityOption.HIGH` | `severityOption.CRITICAL`)}</span>
+                          <span className="text-muted-foreground ml-2 text-xs">{tp(`severityOption.${value}_desc` as `severityOption.LOW_desc` | `severityOption.MEDIUM_desc` | `severityOption.HIGH_desc` | `severityOption.CRITICAL_desc`)}</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -230,10 +201,10 @@ export default function NewIncidentPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Full Description</Label>
+              <Label htmlFor="description">{tp("description")}</Label>
               <Textarea
                 id="description"
-                placeholder="Provide detailed information about what happened..."
+                placeholder={tp("descriptionPlaceholder")}
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -244,15 +215,13 @@ export default function NewIncidentPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Discovery Information</CardTitle>
-            <CardDescription>
-              When and how was the incident discovered?
-            </CardDescription>
+            <CardTitle>{tp("discovery")}</CardTitle>
+            <CardDescription>{tp("discoverySubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="discoveredAt">Discovery Date *</Label>
+                <Label htmlFor="discoveredAt">{tp("discoveredAt")}</Label>
                 <Input
                   id="discoveredAt"
                   type="date"
@@ -262,18 +231,18 @@ export default function NewIncidentPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="discoveryMethod">Discovery Method</Label>
+                <Label htmlFor="discoveryMethod">{tp("discoveryMethod")}</Label>
                 <Select
                   value={formData.discoveryMethod}
                   onValueChange={(value) => setFormData({ ...formData, discoveryMethod: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="How was it discovered?" />
+                    <SelectValue placeholder={tp("discoveryMethodPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {discoveryMethods.map((method) => (
-                      <SelectItem key={method.value} value={method.value}>
-                        {method.label}
+                    {DISCOVERY_METHOD_KEYS.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {tp(`discoveryMethodOption.${value}` as `discoveryMethodOption.INTERNAL_MONITORING` | `discoveryMethodOption.EMPLOYEE_REPORT` | `discoveryMethodOption.CUSTOMER_REPORT` | `discoveryMethodOption.THIRD_PARTY` | `discoveryMethodOption.SECURITY_AUDIT` | `discoveryMethodOption.LAW_ENFORCEMENT` | `discoveryMethodOption.OTHER`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -282,10 +251,10 @@ export default function NewIncidentPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="discoveredBy">Discovered By</Label>
+              <Label htmlFor="discoveredBy">{tp("discoveredBy")}</Label>
               <Input
                 id="discoveredBy"
-                placeholder="Name or role of person/system that discovered the incident"
+                placeholder={tp("discoveredByPlaceholder")}
                 value={formData.discoveredBy}
                 onChange={(e) => setFormData({ ...formData, discoveredBy: e.target.value })}
               />
@@ -295,34 +264,32 @@ export default function NewIncidentPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Impact Assessment</CardTitle>
-            <CardDescription>
-              Estimate the scope and nature of affected data
-            </CardDescription>
+            <CardTitle>{tp("impact")}</CardTitle>
+            <CardDescription>{tp("impactSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="affectedRecords">Estimated Affected Records</Label>
+              <Label htmlFor="affectedRecords">{tp("affectedRecords")}</Label>
               <Input
                 id="affectedRecords"
                 type="number"
-                placeholder="e.g., 1000"
+                placeholder={tp("affectedRecordsPlaceholder")}
                 value={formData.affectedRecords}
                 onChange={(e) => setFormData({ ...formData, affectedRecords: e.target.value })}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Data Categories Affected</Label>
+              <Label>{tp("dataCategoriesLabel")}</Label>
               <div className="flex flex-wrap gap-2">
-                {dataCategories.map((cat) => (
+                {DATA_CATEGORY_KEYS.map((value) => (
                   <Badge
-                    key={cat.value}
-                    variant={formData.dataCategories.includes(cat.value) ? "default" : "outline"}
+                    key={value}
+                    variant={formData.dataCategories.includes(value) ? "default" : "outline"}
                     className="cursor-pointer"
-                    onClick={() => toggleDataCategory(cat.value)}
+                    onClick={() => toggleDataCategory(value)}
                   >
-                    {cat.label}
+                    {tp(`dataCategory.${value}` as `dataCategory.IDENTIFIERS` | `dataCategory.DEMOGRAPHICS` | `dataCategory.FINANCIAL` | `dataCategory.HEALTH` | `dataCategory.BIOMETRIC` | `dataCategory.LOCATION` | `dataCategory.BEHAVIORAL` | `dataCategory.EMPLOYMENT` | `dataCategory.CRIMINAL` | `dataCategory.OTHER`)}
                   </Badge>
                 ))}
               </div>
@@ -332,13 +299,13 @@ export default function NewIncidentPage() {
 
         {createIncident.error && (
           <div className="text-sm text-destructive">
-            Error: {createIncident.error.message}
+            {tp("errorPrefix", { message: createIncident.error.message })}
           </div>
         )}
 
         <div className="flex justify-end gap-4">
           <Link href="/privacy/incidents">
-            <Button variant="outline" type="button">Cancel</Button>
+            <Button variant="outline" type="button">{tCommon("cancel")}</Button>
           </Link>
           <Button
             type="submit"
@@ -347,10 +314,10 @@ export default function NewIncidentPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Reporting...
+                {tp("reporting")}
               </>
             ) : (
-              "Report Incident"
+              tp("submit")
             )}
           </Button>
         </div>
