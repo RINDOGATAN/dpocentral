@@ -33,6 +33,140 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "assessments": {
+      "title": "Evaluaciones",
+      "subtitle": "Evaluaciones de impacto de privacidad y evaluaciones de proveedores",
+      "exportPortfolio": "Exportar cartera",
+      "templates": "Plantillas",
+      "newAssessment": "Nueva evaluación",
+      "newAssessmentShort": "Nueva",
+      "stats": {
+        "total": "Evaluaciones totales",
+        "inProgress": "En curso",
+        "pendingReview": "Revisión pendiente",
+        "highRisk": "Riesgo alto"
+      },
+      "search": "Buscar evaluaciones...",
+      "tabs": {
+        "all": "Todas",
+        "dpia": "DPIA",
+        "vendor": "Proveedor",
+        "tia": "TIA"
+      },
+      "card": {
+        "responses": "Respuestas",
+        "responsesShort": "{count, plural, one {# respuesta} other {# respuestas}}",
+        "templateUnknown": "Desconocida",
+        "templatePrefix": "Plantilla: {name}",
+        "riskBadge": "Riesgo {level}"
+      },
+      "type": {
+        "DPIA": "DPIA",
+        "PIA": "PIA",
+        "TIA": "TIA",
+        "LIA": "LIA",
+        "VENDOR": "Proveedor",
+        "CUSTOM": "Personalizada"
+      },
+      "status": {
+        "DRAFT": "Borrador",
+        "IN_PROGRESS": "En curso",
+        "PENDING_REVIEW": "Revisión pendiente",
+        "PENDING_APPROVAL": "Aprobación pendiente",
+        "APPROVED": "Aprobada",
+        "REJECTED": "Rechazada"
+      },
+      "riskLevel": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "emptyAll": {
+        "title": "Aún no hay evaluaciones",
+        "subtitle": "Comienza tu primera evaluación de impacto"
+      },
+      "emptyDpia": "No hay evaluaciones DPIA",
+      "emptyVendor": "No hay evaluaciones de proveedores",
+      "emptyTia": "No hay evaluaciones TIA",
+      "quickStart": {
+        "title": "Plantillas de inicio rápido",
+        "subtitle": "Inicia una nueva evaluación desde una plantilla",
+        "premium": "Premium",
+        "sectionsCount": "{count, plural, one {# sección} other {# secciones}}",
+        "systemTemplate": "Plantilla del sistema",
+        "useTemplate": "Usar plantilla",
+        "lia": "Evaluación de interés legítimo",
+        "custom": "Evaluación personalizada",
+        "dpia": "Evaluación de impacto de protección de datos"
+      }
+    },
+    "dsar": {
+      "title": "Solicitudes del interesado",
+      "subtitle": "Gestiona y supervisa las DSAR",
+      "exportReport": "Exportar informe",
+      "settings": "Ajustes",
+      "comingSoon": "Próximamente",
+      "newRequest": "Nueva solicitud",
+      "newRequestShort": "Nueva",
+      "stats": {
+        "total": "Solicitudes totales",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "atRisk": "En riesgo"
+      },
+      "search": "Buscar solicitudes...",
+      "tabs": {
+        "all": "Todas",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "completed": "Completadas"
+      },
+      "card": {
+        "tasks": "Tareas",
+        "tasksShort": "{count, plural, one {# tarea} other {# tareas}}",
+        "completed": "Completada",
+        "rejected": "Rechazada",
+        "due": "Vence: {date}",
+        "naDate": "N/D",
+        "dueToday": "Vence hoy",
+        "daysLeft": "{count, plural, one {# día restante} other {# días restantes}}",
+        "daysLeftShort": "{count}d restantes",
+        "daysOverdue": "{count, plural, one {# día de retraso} other {# días de retraso}}",
+        "daysOverdueShort": "{count}d de retraso"
+      },
+      "type": {
+        "ACCESS": "Acceso",
+        "RECTIFICATION": "Rectificación",
+        "ERASURE": "Supresión",
+        "PORTABILITY": "Portabilidad",
+        "OBJECTION": "Oposición",
+        "RESTRICTION": "Limitación"
+      },
+      "status": {
+        "SUBMITTED": "Recibida",
+        "IDENTITY_PENDING": "Identidad pendiente",
+        "IDENTITY_VERIFIED": "Identidad verificada",
+        "IN_PROGRESS": "En curso",
+        "DATA_COLLECTED": "Datos recopilados",
+        "REVIEW_PENDING": "Revisión pendiente",
+        "COMPLETED": "Completada",
+        "REJECTED": "Rechazada"
+      },
+      "emptyAll": {
+        "title": "Aún no hay solicitudes del interesado",
+        "subtitle": "Crea una solicitud o configura un formulario de recepción público"
+      },
+      "emptyOpen": "No hay solicitudes abiertas",
+      "emptyOverdue": "No hay solicitudes vencidas",
+      "emptyCompleted": "No hay solicitudes completadas",
+      "publicPortal": {
+        "title": "Portal público de recepción",
+        "subtitle": "Comparte este enlace con los interesados",
+        "comingSoonSubtitle": "Un portal público para que los interesados presenten solicitudes RGPD. Actualmente en desarrollo.",
+        "open": "Abrir portal"
+      }
+    },
     "dataInventory": {
       "title": "Inventario de datos",
       "subtitle": "Gestiona activos de datos y actividades de tratamiento",

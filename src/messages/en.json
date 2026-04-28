@@ -33,6 +33,140 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "assessments": {
+      "title": "Assessments",
+      "subtitle": "Privacy impact assessments and vendor evaluations",
+      "exportPortfolio": "Export Portfolio",
+      "templates": "Templates",
+      "newAssessment": "New Assessment",
+      "newAssessmentShort": "New",
+      "stats": {
+        "total": "Total Assessments",
+        "inProgress": "In Progress",
+        "pendingReview": "Pending Review",
+        "highRisk": "High Risk"
+      },
+      "search": "Search assessments...",
+      "tabs": {
+        "all": "All",
+        "dpia": "DPIA",
+        "vendor": "Vendor",
+        "tia": "TIA"
+      },
+      "card": {
+        "responses": "Responses",
+        "responsesShort": "{count, plural, one {# response} other {# responses}}",
+        "templateUnknown": "Unknown",
+        "templatePrefix": "Template: {name}",
+        "riskBadge": "{level} Risk"
+      },
+      "type": {
+        "DPIA": "DPIA",
+        "PIA": "PIA",
+        "TIA": "TIA",
+        "LIA": "LIA",
+        "VENDOR": "Vendor",
+        "CUSTOM": "Custom"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "IN_PROGRESS": "In Progress",
+        "PENDING_REVIEW": "Pending Review",
+        "PENDING_APPROVAL": "Pending Approval",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected"
+      },
+      "riskLevel": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "emptyAll": {
+        "title": "No assessments yet",
+        "subtitle": "Start your first privacy impact assessment"
+      },
+      "emptyDpia": "No DPIA assessments",
+      "emptyVendor": "No vendor assessments",
+      "emptyTia": "No TIA assessments",
+      "quickStart": {
+        "title": "Quick Start Templates",
+        "subtitle": "Start a new assessment from a template",
+        "premium": "Premium",
+        "sectionsCount": "{count, plural, one {# section} other {# sections}}",
+        "systemTemplate": "System template",
+        "useTemplate": "Use Template",
+        "lia": "Legitimate Interest Assessment",
+        "custom": "Custom Assessment",
+        "dpia": "Data Protection Impact Assessment"
+      }
+    },
+    "dsar": {
+      "title": "Data Subject Requests",
+      "subtitle": "Manage and track DSARs",
+      "exportReport": "Export Report",
+      "settings": "Settings",
+      "comingSoon": "Coming Soon",
+      "newRequest": "New Request",
+      "newRequestShort": "New",
+      "stats": {
+        "total": "Total Requests",
+        "open": "Open",
+        "overdue": "Overdue",
+        "atRisk": "At Risk"
+      },
+      "search": "Search requests...",
+      "tabs": {
+        "all": "All",
+        "open": "Open",
+        "overdue": "Overdue",
+        "completed": "Completed"
+      },
+      "card": {
+        "tasks": "Tasks",
+        "tasksShort": "{count, plural, one {# task} other {# tasks}}",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "due": "Due: {date}",
+        "naDate": "N/A",
+        "dueToday": "Due today",
+        "daysLeft": "{count, plural, one {# day left} other {# days left}}",
+        "daysLeftShort": "{count}d left",
+        "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+        "daysOverdueShort": "{count}d overdue"
+      },
+      "type": {
+        "ACCESS": "Access",
+        "RECTIFICATION": "Rectification",
+        "ERASURE": "Erasure",
+        "PORTABILITY": "Portability",
+        "OBJECTION": "Objection",
+        "RESTRICTION": "Restriction"
+      },
+      "status": {
+        "SUBMITTED": "Submitted",
+        "IDENTITY_PENDING": "Identity Pending",
+        "IDENTITY_VERIFIED": "Identity Verified",
+        "IN_PROGRESS": "In Progress",
+        "DATA_COLLECTED": "Data Collected",
+        "REVIEW_PENDING": "Review Pending",
+        "COMPLETED": "Completed",
+        "REJECTED": "Rejected"
+      },
+      "emptyAll": {
+        "title": "No data subject requests yet",
+        "subtitle": "Create a request or set up a public intake form"
+      },
+      "emptyOpen": "No open requests",
+      "emptyOverdue": "No overdue requests",
+      "emptyCompleted": "No completed requests",
+      "publicPortal": {
+        "title": "Public Intake Portal",
+        "subtitle": "Share this link with data subjects",
+        "comingSoonSubtitle": "A public-facing portal for data subjects to submit GDPR requests. Currently under development.",
+        "open": "Open Portal"
+      }
+    },
     "dataInventory": {
       "title": "Data Inventory",
       "subtitle": "Manage data assets and processing activities",

@@ -24,6 +24,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { useTranslations } from "next-intl";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -41,16 +42,8 @@ const riskColors: Record<string, string> = {
   CRITICAL: "border-muted-foreground bg-muted-foreground text-foreground",
 };
 
-const typeLabels: Record<string, string> = {
-  DPIA: "DPIA",
-  PIA: "PIA",
-  TIA: "TIA",
-  LIA: "LIA",
-  VENDOR: "Vendor",
-  CUSTOM: "Custom",
-};
-
 export default function AssessmentsPage() {
+  const t = useTranslations("pages.assessments");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
@@ -98,15 +91,14 @@ export default function AssessmentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Assessments</h1>
-          <p className="text-sm text-muted-foreground">
-            Privacy impact assessments and vendor evaluations
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="icon"
+            aria-label={t("exportPortfolio")}
             className="shrink-0 sm:size-auto sm:px-4 sm:py-2"
             onClick={() =>
               organization?.id &&
@@ -118,19 +110,19 @@ export default function AssessmentsPage() {
             disabled={!assessments.length}
           >
             <Download className="w-4 h-4 sm:mr-2" />
-            <span className="hidden sm:inline">Export Portfolio</span>
+            <span className="hidden sm:inline">{t("exportPortfolio")}</span>
           </Button>
           <Link href="/privacy/assessments/templates" className="sm:flex-none">
-            <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+            <Button variant="outline" size="icon" aria-label={t("templates")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
               <FileText className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Templates</span>
+              <span className="hidden sm:inline">{t("templates")}</span>
             </Button>
           </Link>
           <Link href="/privacy/assessments/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">New Assessment</span>
-              <span className="sm:hidden">New</span>
+              <span className="hidden sm:inline">{t("newAssessment")}</span>
+              <span className="sm:hidden">{t("newAssessmentShort")}</span>
             </Button>
           </Link>
         </div>
@@ -141,19 +133,19 @@ export default function AssessmentsPage() {
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{assessments.length}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Total Assessments</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.total")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{inProgressCount}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">In Progress</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.inProgress")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{pendingReviewCount}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Pending Review</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.pendingReview")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -161,7 +153,7 @@ export default function AssessmentsPage() {
             <div className={`text-xl sm:text-2xl font-bold ${highRiskCount > 0 ? "text-amber-400" : "text-foreground"}`}>
               {highRiskCount}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">High Risk</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.highRisk")}</p>
           </CardContent>
         </Card>
       </div>
@@ -170,7 +162,7 @@ export default function AssessmentsPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search assessments..."
+          placeholder={t("search")}
           className="pl-9"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -180,10 +172,10 @@ export default function AssessmentsPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="dpia">DPIA</TabsTrigger>
-          <TabsTrigger value="vendor">Vendor</TabsTrigger>
-          <TabsTrigger value="tia">TIA</TabsTrigger>
+          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
+          <TabsTrigger value="dpia">{t("tabs.dpia")}</TabsTrigger>
+          <TabsTrigger value="vendor">{t("tabs.vendor")}</TabsTrigger>
+          <TabsTrigger value="tia">{t("tabs.tia")}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -201,24 +193,24 @@ export default function AssessmentsPage() {
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-medium text-sm">{assessment.name}</span>
                       <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[assessment.status] || ""}`}>
-                        {assessment.status.replace("_", " ")}
+                        {t(`status.${assessment.status}`)}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="outline" className="text-xs">
-                        {typeLabels[assessment.template?.type ?? ""] || assessment.template?.type}
+                        {assessment.template?.type ? t(`type.${assessment.template.type}`) : assessment.template?.type}
                       </Badge>
                       {assessment.riskLevel && (
                         <Badge variant="outline" className={`text-xs ${riskColors[assessment.riskLevel] || ""}`}>
-                          {assessment.riskLevel} Risk
+                          {t("card.riskBadge", { level: t(`riskLevel.${assessment.riskLevel}`) })}
                         </Badge>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {assessment.template?.name || "Unknown"}
+                      {assessment.template?.name || t("card.templateUnknown")}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{assessment._count?.responses ?? 0} responses</span>
+                      <span>{t("card.responsesShort", { count: assessment._count?.responses ?? 0 })}</span>
                       <span>
                         <Clock className="inline h-3 w-3 mr-1" />
                         {new Date(assessment.createdAt).toLocaleDateString()}
@@ -245,18 +237,18 @@ export default function AssessmentsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">{assessment.name}</span>
-                        <Badge variant="outline">{typeLabels[assessment.template?.type ?? ""] || assessment.template?.type}</Badge>
+                        <Badge variant="outline">{assessment.template?.type ? t(`type.${assessment.template.type}`) : assessment.template?.type}</Badge>
                         <Badge variant="outline" className={statusColors[assessment.status] || ""}>
-                          {assessment.status.replace("_", " ")}
+                          {t(`status.${assessment.status}`)}
                         </Badge>
                         {assessment.riskLevel && (
                           <Badge variant="outline" className={riskColors[assessment.riskLevel] || ""}>
-                            {assessment.riskLevel} Risk
+                            {t("card.riskBadge", { level: t(`riskLevel.${assessment.riskLevel}`) })}
                           </Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Template: {assessment.template?.name || "Unknown"}
+                        {t("card.templatePrefix", { name: assessment.template?.name || t("card.templateUnknown") })}
                       </p>
                     </div>
 
@@ -264,7 +256,7 @@ export default function AssessmentsPage() {
                       <p className="text-lg font-semibold text-primary">
                         {assessment._count?.responses ?? 0}
                       </p>
-                      <p className="text-xs text-muted-foreground">Responses</p>
+                      <p className="text-xs text-muted-foreground">{t("card.responses")}</p>
                     </div>
 
                     <div className="text-right shrink-0">
@@ -283,12 +275,12 @@ export default function AssessmentsPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No assessments yet</p>
-            <p className="text-sm mb-4">Start your first privacy impact assessment</p>
+            <p>{t("emptyAll.title")}</p>
+            <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
             <Link href="/privacy/assessments/new">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                New Assessment
+                {t("newAssessment")}
               </Button>
             </Link>
           </CardContent>
@@ -298,9 +290,9 @@ export default function AssessmentsPage() {
           <CardContent className="py-8 text-center text-muted-foreground">
             <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>
-              {activeTab === "dpia" && "No DPIA assessments"}
-              {activeTab === "vendor" && "No vendor assessments"}
-              {activeTab === "tia" && "No TIA assessments"}
+              {activeTab === "dpia" && t("emptyDpia")}
+              {activeTab === "vendor" && t("emptyVendor")}
+              {activeTab === "tia" && t("emptyTia")}
             </p>
           </CardContent>
         </Card>
@@ -311,15 +303,15 @@ export default function AssessmentsPage() {
       {/* Quick Start Templates */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Quick Start Templates</CardTitle>
-          <CardDescription>Start a new assessment from a template</CardDescription>
+          <CardTitle className="text-base">{t("quickStart.title")}</CardTitle>
+          <CardDescription>{t("quickStart.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             {[
-              { type: "LIA", name: "Legitimate Interest Assessment", premium: false },
-              { type: "CUSTOM", name: "Custom Assessment", premium: false },
-              { type: "DPIA", name: "Data Protection Impact Assessment", premium: true },
+              { type: "LIA", nameKey: "lia", premium: false },
+              { type: "CUSTOM", nameKey: "custom", premium: false },
+              { type: "DPIA", nameKey: "dpia", premium: true },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
                 <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
@@ -329,18 +321,18 @@ export default function AssessmentsPage() {
                       {item.premium && (
                         <Badge variant="secondary" className="gap-1">
                           <Lock className="w-3 h-3" />
-                          Premium
+                          {t("quickStart.premium")}
                         </Badge>
                       )}
                     </div>
-                    <h4 className="font-medium">{item.name}</h4>
+                    <h4 className="font-medium">{t(`quickStart.${item.nameKey}` as `quickStart.lia` | `quickStart.custom` | `quickStart.dpia`)}</h4>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {templates.find((t) => t.type === item.type)
-                        ? `${(templates.find((t) => t.type === item.type)!.sections as any[])?.length || 0} sections`
-                        : "System template"}
+                      {templates.find((tpl) => tpl.type === item.type)
+                        ? t("quickStart.sectionsCount", { count: (templates.find((tpl) => tpl.type === item.type)!.sections as any[])?.length || 0 })
+                        : t("quickStart.systemTemplate")}
                     </p>
                     <div className="mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-medium text-primary hover:underline">
-                      Use Template <ArrowRight className="w-4 h-4" />
+                      {t("quickStart.useTemplate")} <ArrowRight className="w-4 h-4" />
                     </div>
                   </CardContent>
                 </Card>
