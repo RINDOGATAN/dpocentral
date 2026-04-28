@@ -33,6 +33,179 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "aiSystems": {
+      "title": "Registro de gobernanza de IA",
+      "subtitle": "Registra y clasifica los sistemas de IA conforme al Reglamento de IA de la UE",
+      "register": "Registrar sistema de IA",
+      "search": "Buscar sistemas de IA...",
+      "filter": {
+        "riskLevel": "Nivel de riesgo",
+        "status": "Estado",
+        "allRisks": "Todos los riesgos",
+        "allStatus": "Todos los estados"
+      },
+      "stats": {
+        "total": "Sistemas totales",
+        "unacceptable": "Inaceptable",
+        "highRisk": "Riesgo alto",
+        "limited": "Riesgo limitado",
+        "minimal": "Riesgo mínimo"
+      },
+      "riskLevel": {
+        "UNACCEPTABLE": "Inaceptable",
+        "HIGH_RISK": "Riesgo alto",
+        "LIMITED": "Riesgo limitado",
+        "MINIMAL": "Riesgo mínimo"
+      },
+      "status": {
+        "DRAFT": "Borrador",
+        "REGISTERED": "Registrado",
+        "UNDER_REVIEW": "En revisión",
+        "COMPLIANT": "Conforme",
+        "NON_COMPLIANT": "No conforme",
+        "DECOMMISSIONED": "Retirado"
+      },
+      "card": {
+        "provider": "Proveedor: {value}",
+        "type": "Tipo: {value}",
+        "vendor": "Proveedor: {value}",
+        "category": "Categoría: {value}"
+      },
+      "empty": {
+        "title": "No hay sistemas de IA registrados",
+        "subtitle": "Comienza registrando los sistemas de IA que tu organización usa o despliega"
+      },
+      "sentinel": {
+        "send": "Enviar a AI Sentinel",
+        "title": "Enviar a AI Sentinel",
+        "description": "Envía los sistemas de IA a AI Sentinel para una gobernanza más detallada. Los sistemas ya sincronizados pueden reenviarse para actualizar su estado.",
+        "noSystems": "Aún no hay sistemas de IA registrados.",
+        "allSynced": "Todos los sistemas ya están sincronizados. Reenviarlos actualizará su estado más reciente.",
+        "alreadySynced": "Ya sincronizado",
+        "sending": "Enviando…",
+        "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}"
+      }
+    },
+    "incidents": {
+      "title": "Gestión de incidentes",
+      "subtitle": "Supervisa incidentes de seguridad y brechas",
+      "exportRegister": "Exportar registro",
+      "exportPdf": "Descargar como PDF",
+      "exportCsv": "Descargar como CSV",
+      "reportIncident": "Notificar incidente",
+      "search": "Buscar incidentes...",
+      "stats": {
+        "total": "Total",
+        "open": "Abiertos",
+        "critical": "Críticos",
+        "pendingDpa": "Pendientes AEPD"
+      },
+      "tabs": {
+        "all": "Todos",
+        "open": "Abiertos",
+        "critical": "Críticos",
+        "closed": "Cerrados"
+      },
+      "card": {
+        "records": "Registros",
+        "recordsShort": "{count, plural, one {# registro} other {# registros}}"
+      },
+      "type": {
+        "DATA_BREACH": "Brecha de datos",
+        "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
+        "DATA_LOSS": "Pérdida de datos",
+        "SYSTEM_COMPROMISE": "Sistema comprometido",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Amenaza interna",
+        "PHYSICAL_SECURITY": "Seguridad física",
+        "VENDOR_INCIDENT": "Incidente de proveedor",
+        "OTHER": "Otro"
+      },
+      "status": {
+        "REPORTED": "Notificado",
+        "INVESTIGATING": "En investigación",
+        "CONTAINED": "Contenido",
+        "ERADICATED": "Erradicado",
+        "RECOVERING": "En recuperación",
+        "CLOSED": "Cerrado",
+        "FALSE_POSITIVE": "Falso positivo"
+      },
+      "severity": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "emptyAll": {
+        "title": "No hay incidentes notificados",
+        "subtitle": "Notifica aquí los incidentes de seguridad y brechas de datos"
+      },
+      "emptyOpen": "No hay incidentes abiertos",
+      "emptyCritical": "No hay incidentes críticos",
+      "emptyClosed": "No hay incidentes cerrados"
+    },
+    "vendors": {
+      "title": "Gestión de proveedores",
+      "subtitle": "Gestiona proveedores externos y encargados del tratamiento",
+      "exportRegister": "Exportar registro",
+      "exportPdf": "Descargar como PDF",
+      "exportCsv": "Descargar como CSV",
+      "questionnaires": "Cuestionarios",
+      "addVendor": "Añadir proveedor",
+      "addVendorShort": "Añadir",
+      "search": "Buscar proveedores...",
+      "stats": {
+        "total": "Proveedores totales",
+        "active": "Proveedores activos",
+        "highRisk": "Riesgo alto",
+        "pendingReview": "Revisión pendiente"
+      },
+      "tabs": {
+        "all": "Todos",
+        "active": "Activos",
+        "review": "En revisión",
+        "highRisk": "Riesgo alto"
+      },
+      "catalog": {
+        "title": "Catálogo de proveedores",
+        "subtitle": "Busca entre más de 700 proveedores MarTech, IA y SaaS preauditados",
+        "lockedSubtitle": "Accede a más de 700 proveedores preauditados con datos de cumplimiento, certificaciones y enlaces a DPA",
+        "active": "Activo",
+        "addFromCatalog": "Añadir desde el catálogo",
+        "perMonth": "/mes",
+        "enable": "Activar",
+        "contactUs": "Contáctanos",
+        "modalDescription": "Accede a más de 700 proveedores preauditados con datos de cumplimiento, certificaciones y enlaces a DPA."
+      },
+      "card": {
+        "noCategories": "Sin categorías",
+        "dataProcessed": "Datos tratados",
+        "moreItems": "+{count} más",
+        "added": "Añadido: {date}",
+        "riskBadge": "Riesgo {level}"
+      },
+      "status": {
+        "PROSPECTIVE": "Prospectivo",
+        "ACTIVE": "Activo",
+        "UNDER_REVIEW": "En revisión",
+        "SUSPENDED": "Suspendido",
+        "TERMINATED": "Finalizado"
+      },
+      "riskTier": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "emptyAll": {
+        "title": "Aún no hay proveedores",
+        "subtitle": "Añade tu primer proveedor para gestionar el riesgo de terceros"
+      },
+      "emptyActive": "No hay proveedores activos",
+      "emptyReview": "No hay proveedores en revisión",
+      "emptyHighRisk": "No hay proveedores de riesgo alto"
+    },
     "assessments": {
       "title": "Evaluaciones",
       "subtitle": "Evaluaciones de impacto de privacidad y evaluaciones de proveedores",

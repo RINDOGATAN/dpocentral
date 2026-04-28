@@ -28,6 +28,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { useTranslations } from "next-intl";
 
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
@@ -46,22 +47,10 @@ const statusColors: Record<string, string> = {
   FALSE_POSITIVE: "border-muted-foreground text-muted-foreground",
 };
 
-const typeLabels: Record<string, string> = {
-  DATA_BREACH: "Data Breach",
-  UNAUTHORIZED_ACCESS: "Unauth Access",
-  DATA_LOSS: "Data Loss",
-  SYSTEM_COMPROMISE: "System Compromise",
-  PHISHING: "Phishing",
-  RANSOMWARE: "Ransomware",
-  INSIDER_THREAT: "Insider Threat",
-  PHYSICAL_SECURITY: "Physical Security",
-  VENDOR_INCIDENT: "Vendor Incident",
-  OTHER: "Other",
-};
-
 const OPEN_STATUSES = ["REPORTED", "INVESTIGATING", "CONTAINED", "ERADICATED", "RECOVERING"];
 
 export default function IncidentsPage() {
+  const t = useTranslations("pages.incidents");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
@@ -119,34 +108,32 @@ export default function IncidentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Incident Management</h1>
-          <p className="text-sm text-muted-foreground">
-            Track security incidents and breaches
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+              <Button variant="outline" size="icon" aria-label={t("exportRegister")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Export Register</span>
+                <span className="hidden sm:inline">{t("exportRegister")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => window.open(`/api/export/breach-register?organizationId=${organization?.id}`, "_blank")}>
                 <FileText className="w-4 h-4 mr-2" />
-                Download as PDF
+                {t("exportPdf")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => window.open(`/api/export/breach-register?organizationId=${organization?.id}&format=csv`, "_blank")}>
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
-                Download as CSV
+                {t("exportCsv")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Link href="/privacy/incidents/new">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
-              Report Incident
+              {t("reportIncident")}
             </Button>
           </Link>
         </div>
@@ -157,13 +144,13 @@ export default function IncidentsPage() {
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.total")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.open}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Open</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.open")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -171,13 +158,13 @@ export default function IncidentsPage() {
             <div className={`text-xl sm:text-2xl font-bold ${stats.critical > 0 ? "text-amber-400" : "text-foreground"}`}>
               {stats.critical}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Critical</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.critical")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.pendingNotification}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Pending DPA</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.pendingDpa")}</p>
           </CardContent>
         </Card>
       </div>
@@ -186,7 +173,7 @@ export default function IncidentsPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search incidents..."
+          placeholder={t("search")}
           className="pl-9"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -196,10 +183,10 @@ export default function IncidentsPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="open">Open</TabsTrigger>
-          <TabsTrigger value="critical">Critical</TabsTrigger>
-          <TabsTrigger value="closed">Closed</TabsTrigger>
+          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
+          <TabsTrigger value="open">{t("tabs.open")}</TabsTrigger>
+          <TabsTrigger value="critical">{t("tabs.critical")}</TabsTrigger>
+          <TabsTrigger value="closed">{t("tabs.closed")}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -217,20 +204,20 @@ export default function IncidentsPage() {
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-medium font-mono text-primary text-sm">{incident.publicId}</span>
                       <Badge variant="outline" className={`text-xs shrink-0 ${severityColors[incident.severity] || ""}`}>
-                        {incident.severity}
+                        {t(`severity.${incident.severity}`)}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2">
                       {incident.title}
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <Badge variant="outline" className="text-xs">{typeLabels[incident.type] || incident.type}</Badge>
+                      <Badge variant="outline" className="text-xs">{t(`type.${incident.type}`)}</Badge>
                       <Badge variant="outline" className={`text-xs ${statusColors[incident.status] || ""}`}>
-                        {incident.status.replace("_", " ")}
+                        {t(`status.${incident.status}`)}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{incident.affectedRecords?.toLocaleString() ?? 0} records</span>
+                      <span>{t("card.recordsShort", { count: incident.affectedRecords ?? 0 })}</span>
                       <span>
                         <Clock className="inline h-3 w-3 mr-1" />
                         {new Date(incident.discoveredAt).toLocaleDateString()}
@@ -258,12 +245,12 @@ export default function IncidentsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary">{incident.publicId}</span>
-                        <Badge variant="outline">{typeLabels[incident.type] || incident.type}</Badge>
+                        <Badge variant="outline">{t(`type.${incident.type}`)}</Badge>
                         <Badge variant="outline" className={severityColors[incident.severity] || ""}>
-                          {incident.severity}
+                          {t(`severity.${incident.severity}`)}
                         </Badge>
                         <Badge variant="outline" className={statusColors[incident.status] || ""}>
-                          {incident.status.replace("_", " ")}
+                          {t(`status.${incident.status}`)}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground truncate mt-1">
@@ -275,7 +262,7 @@ export default function IncidentsPage() {
                       <p className="text-lg font-semibold text-primary">
                         {incident.affectedRecords?.toLocaleString() ?? 0}
                       </p>
-                      <p className="text-xs text-muted-foreground">Records</p>
+                      <p className="text-xs text-muted-foreground">{t("card.records")}</p>
                     </div>
 
                     <div className="text-right shrink-0">
@@ -294,12 +281,12 @@ export default function IncidentsPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No incidents reported</p>
-            <p className="text-sm mb-4">Report security incidents and data breaches here</p>
+            <p>{t("emptyAll.title")}</p>
+            <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
             <Link href="/privacy/incidents/new">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                Report Incident
+                {t("reportIncident")}
               </Button>
             </Link>
           </CardContent>
@@ -309,9 +296,9 @@ export default function IncidentsPage() {
           <CardContent className="py-8 text-center text-muted-foreground">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>
-              {activeTab === "open" && "No open incidents"}
-              {activeTab === "critical" && "No critical incidents"}
-              {activeTab === "closed" && "No closed incidents"}
+              {activeTab === "open" && t("emptyOpen")}
+              {activeTab === "critical" && t("emptyCritical")}
+              {activeTab === "closed" && t("emptyClosed")}
             </p>
           </CardContent>
         </Card>

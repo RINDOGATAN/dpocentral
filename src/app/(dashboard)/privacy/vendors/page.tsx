@@ -36,6 +36,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { useTranslations } from "next-intl";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -53,6 +54,7 @@ const riskColors: Record<string, string> = {
 };
 
 export default function VendorsPage() {
+  const t = useTranslations("pages.vendors");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
@@ -117,41 +119,39 @@ export default function VendorsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Vendor Management</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage third-party vendors and data processors
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+              <Button variant="outline" size="icon" aria-label={t("exportRegister")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Export Register</span>
+                <span className="hidden sm:inline">{t("exportRegister")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => window.open(`/api/export/vendor-register?organizationId=${organization?.id}`, "_blank")}>
                 <FileText className="w-4 h-4 mr-2" />
-                Download as PDF
+                {t("exportPdf")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => window.open(`/api/export/vendor-register?organizationId=${organization?.id}&format=csv`, "_blank")}>
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
-                Download as CSV
+                {t("exportCsv")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Link href="/privacy/vendors/questionnaires" className="sm:flex-none">
-            <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+            <Button variant="outline" size="icon" aria-label={t("questionnaires")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
               <FileText className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Questionnaires</span>
+              <span className="hidden sm:inline">{t("questionnaires")}</span>
             </Button>
           </Link>
           <Link href="/privacy/vendors/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Add Vendor</span>
-              <span className="sm:hidden">Add</span>
+              <span className="hidden sm:inline">{t("addVendor")}</span>
+              <span className="sm:hidden">{t("addVendorShort")}</span>
             </Button>
           </Link>
         </div>
@@ -162,13 +162,13 @@ export default function VendorsPage() {
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Total Vendors</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.total")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.active}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Active Vendors</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.active")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -176,13 +176,13 @@ export default function VendorsPage() {
             <div className={`text-xl sm:text-2xl font-bold ${stats.highRisk > 0 ? "text-amber-400" : "text-foreground"}`}>
               {stats.highRisk}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">High Risk</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.highRisk")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.pendingReview}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Pending Review</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.pendingReview")}</p>
           </CardContent>
         </Card>
       </div>
@@ -198,18 +198,18 @@ export default function VendorsPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-sm sm:text-base">Vendor Catalog</h3>
-                    <Badge className="bg-primary">Active</Badge>
+                    <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
+                    <Badge className="bg-primary">{t("catalog.active")}</Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    Search 700+ pre-audited MarTech, AI, and SaaS vendors
+                    {t("catalog.subtitle")}
                   </p>
                 </div>
               </div>
               <Link href="/privacy/vendors/new?catalog=true">
                 <Button className="w-full sm:w-auto">
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Add from Catalog
+                  {t("catalog.addFromCatalog")}
                 </Button>
               </Link>
             </div>
@@ -225,26 +225,26 @@ export default function VendorsPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-sm sm:text-base">Vendor Catalog</h3>
+                    <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
                     <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-                      {formatPrice(9)}/mo
+                      {formatPrice(9)}{t("catalog.perMonth")}
                     </Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links
+                    {t("catalog.lockedSubtitle")}
                   </p>
                 </div>
               </div>
               {features.selfServiceUpgrade ? (
                 <Button variant="outline" className="w-full sm:w-auto" onClick={() => setUpgradeModalOpen(true)}>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Enable
+                  {t("catalog.enable")}
                 </Button>
               ) : (
                 <Button variant="outline" className="w-full sm:w-auto" asChild>
                   <a href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(brand.name + " Vendor Catalog")}`}>
                     <Mail className="w-4 h-4 mr-2" />
-                    Contact Us
+                    {t("catalog.contactUs")}
                   </a>
                 </Button>
               )}
@@ -257,7 +257,7 @@ export default function VendorsPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search vendors..."
+          placeholder={t("search")}
           className="pl-9"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -267,10 +267,10 @@ export default function VendorsPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="review">Under Review</TabsTrigger>
-          <TabsTrigger value="high-risk">High Risk</TabsTrigger>
+          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
+          <TabsTrigger value="active">{t("tabs.active")}</TabsTrigger>
+          <TabsTrigger value="review">{t("tabs.review")}</TabsTrigger>
+          <TabsTrigger value="high-risk">{t("tabs.highRisk")}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -289,24 +289,24 @@ export default function VendorsPage() {
                     </div>
                     <div className="flex gap-2">
                       <Badge variant="outline" className={statusColors[vendor.status] || ""}>
-                        {vendor.status.replace("_", " ")}
+                        {t(`status.${vendor.status}`)}
                       </Badge>
                       {vendor.riskTier && (
                         <Badge variant="outline" className={riskColors[vendor.riskTier] || ""}>
-                          {vendor.riskTier} Risk
+                          {t("card.riskBadge", { level: t(`riskTier.${vendor.riskTier}`) })}
                         </Badge>
                       )}
                     </div>
                   </div>
                   <CardTitle className="mt-3">{vendor.name}</CardTitle>
                   <CardDescription>
-                    {(vendor.categories as string[])?.join(" - ") || "No categories"}
+                    {(vendor.categories as string[])?.join(" - ") || t("card.noCategories")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {vendor.dataProcessed && (vendor.dataProcessed as string[]).length > 0 && (
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Data Processed</p>
+                      <p className="text-xs text-muted-foreground mb-1">{t("card.dataProcessed")}</p>
                       <div className="flex flex-wrap gap-1">
                         {(vendor.dataProcessed as string[]).slice(0, 3).map((data) => (
                           <Badge key={data} variant="outline" className="text-xs">
@@ -315,7 +315,7 @@ export default function VendorsPage() {
                         ))}
                         {(vendor.dataProcessed as string[]).length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{(vendor.dataProcessed as string[]).length - 3} more
+                            {t("card.moreItems", { count: (vendor.dataProcessed as string[]).length - 3 })}
                           </Badge>
                         )}
                       </div>
@@ -325,7 +325,7 @@ export default function VendorsPage() {
                   <div className="flex justify-between text-xs text-muted-foreground pt-2 border-t border-border">
                     <span>
                       <Clock className="inline w-3 h-3 mr-1" />
-                      Added: {new Date(vendor.createdAt).toLocaleDateString()}
+                      {t("card.added", { date: new Date(vendor.createdAt).toLocaleDateString() })}
                     </span>
                   </div>
                 </CardContent>
@@ -337,12 +337,12 @@ export default function VendorsPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No vendors yet</p>
-            <p className="text-sm mb-4">Add your first vendor to track third-party risk</p>
+            <p>{t("emptyAll.title")}</p>
+            <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
             <Link href="/privacy/vendors/new">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                Add Vendor
+                {t("addVendor")}
               </Button>
             </Link>
           </CardContent>
@@ -352,9 +352,9 @@ export default function VendorsPage() {
           <CardContent className="py-8 text-center text-muted-foreground">
             <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>
-              {activeTab === "active" && "No active vendors"}
-              {activeTab === "review" && "No vendors under review"}
-              {activeTab === "high-risk" && "No high risk vendors"}
+              {activeTab === "active" && t("emptyActive")}
+              {activeTab === "review" && t("emptyReview")}
+              {activeTab === "high-risk" && t("emptyHighRisk")}
             </p>
           </CardContent>
         </Card>
@@ -369,7 +369,7 @@ export default function VendorsPage() {
         organizationId={organization?.id ?? ""}
         skillPackageId={SKILL_PACKAGE_IDS.VENDOR_CATALOG}
         skillName={SKILL_DISPLAY_NAMES.VENDOR_CATALOG}
-        skillDescription="Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links."
+        skillDescription={t("catalog.modalDescription")}
       />
     </div>
   );
