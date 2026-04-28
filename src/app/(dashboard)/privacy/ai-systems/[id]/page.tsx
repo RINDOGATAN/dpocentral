@@ -29,6 +29,7 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
+import { useTranslations } from "next-intl";
 
 const RISK_COLORS: Record<string, string> = {
   UNACCEPTABLE: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
@@ -41,6 +42,8 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   const { id } = use(params);
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
+  const t = useTranslations("pages.aiSystemDetail");
+  const tList = useTranslations("pages.aiSystems");
 
   const utils = trpc.useUtils();
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
@@ -66,9 +69,9 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   if (!system) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">AI system not found</p>
+        <p className="text-muted-foreground">{t("notFound")}</p>
         <Button asChild className="mt-4" variant="outline">
-          <Link href="/privacy/ai-systems"><ArrowLeft className="w-4 h-4 mr-2" /> Back</Link>
+          <Link href="/privacy/ai-systems"><ArrowLeft className="w-4 h-4 mr-2" /> {t("back")}</Link>
         </Button>
       </div>
     );
@@ -91,11 +94,11 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
-                {system.riskLevel.replace("_", " ")}
+                {tList(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
               </Badge>
               {system.aiSentinelSystemId && (
                 <Badge variant="outline" className="text-blue-600 border-blue-600/50">
-                  <Shield className="w-3 h-3 mr-1" /> AI Sentinel Linked
+                  <Shield className="w-3 h-3 mr-1" /> {t("linked")}
                 </Badge>
               )}
             </div>
@@ -110,12 +113,12 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="DRAFT">Draft</SelectItem>
-            <SelectItem value="REGISTERED">Registered</SelectItem>
-            <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
-            <SelectItem value="COMPLIANT">Compliant</SelectItem>
-            <SelectItem value="NON_COMPLIANT">Non-Compliant</SelectItem>
-            <SelectItem value="DECOMMISSIONED">Decommissioned</SelectItem>
+            <SelectItem value="DRAFT">{tList("status.DRAFT")}</SelectItem>
+            <SelectItem value="REGISTERED">{tList("status.REGISTERED")}</SelectItem>
+            <SelectItem value="UNDER_REVIEW">{tList("status.UNDER_REVIEW")}</SelectItem>
+            <SelectItem value="COMPLIANT">{tList("status.COMPLIANT")}</SelectItem>
+            <SelectItem value="NON_COMPLIANT">{tList("status.NON_COMPLIANT")}</SelectItem>
+            <SelectItem value="DECOMMISSIONED">{tList("status.DECOMMISSIONED")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -132,7 +135,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                <Bot className="w-4 h-4" /> Embedded AI Models ({models.length})
+                <Bot className="w-4 h-4" /> {t("embeddedModels", { count: models.length })}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -155,7 +158,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                           model.euAiActRiskTier === "MINIMAL" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
                           ""
                         }`}>
-                          {model.euAiActRiskTier.replace("_", " ")}
+                          {tList(`riskLevel.${model.euAiActRiskTier}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
                         </Badge>
                       )}
                     </div>
@@ -171,48 +174,48 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
         {/* Details */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">System Details</CardTitle>
+            <CardTitle className="text-base">{t("details.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             {system.description && (
               <div>
-                <span className="text-muted-foreground">Description</span>
+                <span className="text-muted-foreground">{t("details.description")}</span>
                 <p className="mt-1">{system.description}</p>
               </div>
             )}
             {system.purpose && (
               <div>
-                <span className="text-muted-foreground">Purpose</span>
+                <span className="text-muted-foreground">{t("details.purpose")}</span>
                 <p className="mt-1">{system.purpose}</p>
               </div>
             )}
             {system.category && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Category</span>
+                <span className="text-muted-foreground">{t("details.category")}</span>
                 <span>{system.category}</span>
               </div>
             )}
             {system.modelType && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Model Type</span>
+                <span className="text-muted-foreground">{t("details.modelType")}</span>
                 <span>{system.modelType}</span>
               </div>
             )}
             {system.provider && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Provider</span>
+                <span className="text-muted-foreground">{t("details.provider")}</span>
                 <span>{system.provider}</span>
               </div>
             )}
             {system.deployer && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Deployer</span>
+                <span className="text-muted-foreground">{t("details.deployer")}</span>
                 <span>{system.deployer}</span>
               </div>
             )}
             {system.vendor && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Vendor</span>
+                <span className="text-muted-foreground">{t("details.vendor")}</span>
                 <Link href={`/privacy/vendors/${system.vendor.id}`} className="text-primary hover:underline">
                   {system.vendor.name}
                 </Link>
@@ -220,23 +223,23 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             )}
             {system.euAiActRole && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">EU AI Act Role</span>
+                <span className="text-muted-foreground">{t("details.euAiActRole")}</span>
                 <span>{system.euAiActRole}</span>
               </div>
             )}
             {system.euAiActCompliant != null && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">EU AI Act Compliant</span>
+                <span className="text-muted-foreground">{t("details.euAiActCompliant")}</span>
                 <Badge variant={system.euAiActCompliant ? "outline" : "secondary"} className={system.euAiActCompliant ? "text-green-600 border-green-600/50" : ""}>
-                  {system.euAiActCompliant ? "Yes" : "No"}
+                  {system.euAiActCompliant ? t("details.yes") : t("details.no")}
                 </Badge>
               </div>
             )}
             {system.iso42001Certified != null && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">ISO 42001 Certified</span>
+                <span className="text-muted-foreground">{t("details.iso42001")}</span>
                 <Badge variant={system.iso42001Certified ? "outline" : "secondary"} className={system.iso42001Certified ? "text-green-600 border-green-600/50" : ""}>
-                  {system.iso42001Certified ? "Yes" : "No"}
+                  {system.iso42001Certified ? t("details.yes") : t("details.no")}
                 </Badge>
               </div>
             )}
@@ -246,13 +249,13 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
         {/* Compliance */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Compliance & Oversight</CardTitle>
+            <CardTitle className="text-base">{t("compliance.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             {system.humanOversight && (
               <div>
                 <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                  <Users className="w-3 h-3" /> Human Oversight
+                  <Users className="w-3 h-3" /> {t("compliance.humanOversight")}
                 </div>
                 <p>{system.humanOversight}</p>
               </div>
@@ -260,14 +263,14 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             {system.transparencyMeasures && (
               <div>
                 <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                  <Eye className="w-3 h-3" /> Transparency Measures
+                  <Eye className="w-3 h-3" /> {t("compliance.transparency")}
                 </div>
                 <p>{system.transparencyMeasures}</p>
               </div>
             )}
             {system.trainingDataSources.length > 0 && (
               <div>
-                <span className="text-muted-foreground">Training Data Sources</span>
+                <span className="text-muted-foreground">{t("compliance.trainingData")}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {system.trainingDataSources.map((s, i) => (
                     <Badge key={i} variant="secondary" className="text-xs">{s}</Badge>
@@ -277,7 +280,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             )}
             {system.aiCapabilities.length > 0 && (
               <div>
-                <span className="text-muted-foreground">AI Capabilities</span>
+                <span className="text-muted-foreground">{t("compliance.capabilities")}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {system.aiCapabilities.map((c, i) => (
                     <Badge key={i} variant="secondary" className="text-xs">{c}</Badge>
@@ -287,10 +290,10 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             )}
             {system.aiTechniques.length > 0 && (
               <div>
-                <span className="text-muted-foreground">AI Techniques</span>
+                <span className="text-muted-foreground">{t("compliance.techniques")}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {system.aiTechniques.map((t, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">{t}</Badge>
+                  {system.aiTechniques.map((tech, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs">{tech}</Badge>
                   ))}
                 </div>
               </div>
@@ -299,7 +302,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex items-center gap-1">
                 <FileText className="w-3 h-3 text-muted-foreground" />
                 <a href={system.technicalDocUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs">
-                  Technical Documentation
+                  {t("compliance.technicalDoc")}
                 </a>
               </div>
             )}
@@ -315,13 +318,11 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               <div className="flex items-start gap-3">
                 <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-blue-700 dark:text-blue-300">Linked to AI Sentinel</p>
-                  <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
-                    This system is synced with AI Sentinel for deep AI governance management.
-                  </p>
+                  <p className="font-medium text-blue-700 dark:text-blue-300">{t("sentinel.linkedTitle")}</p>
+                  <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{t("sentinel.linkedBody")}</p>
                   {system.aiSentinelSyncedAt && (
                     <p className="text-xs text-blue-500 dark:text-blue-500 mt-1">
-                      Last synced: {new Date(system.aiSentinelSyncedAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      {t("sentinel.lastSynced", { date: new Date(system.aiSentinelSyncedAt).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })}
                     </p>
                   )}
                 </div>
@@ -332,7 +333,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Open in AI Sentinel
+                  {t("sentinel.openInSentinel")}
                   <ExternalLink className="w-3 h-3 ml-1" />
                 </a>
               </Button>
@@ -347,11 +348,8 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
               <div>
-                <p className="font-medium text-red-700 dark:text-red-300">Prohibited AI System</p>
-                <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                  This AI system has been classified as unacceptable risk under the EU AI Act.
-                  It must be decommissioned before August 2026.
-                </p>
+                <p className="font-medium text-red-700 dark:text-red-300">{t("unacceptableTitle")}</p>
+                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t("unacceptableBody")}</p>
               </div>
             </div>
           </CardContent>
@@ -364,14 +362,14 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             <div className="flex items-start gap-3">
               <Shield className="w-5 h-5 text-orange-600 mt-0.5" />
               <div>
-                <p className="font-medium text-orange-700 dark:text-orange-300">High-Risk AI Obligations</p>
+                <p className="font-medium text-orange-700 dark:text-orange-300">{t("highRiskTitle")}</p>
                 <ul className="text-sm text-orange-600 dark:text-orange-400 mt-2 space-y-1 list-disc list-inside">
-                  <li>Risk management system required</li>
-                  <li>Data governance measures must be documented</li>
-                  <li>Technical documentation must be maintained</li>
-                  <li>Record-keeping and logging required</li>
-                  <li>Human oversight mechanisms must be in place</li>
-                  <li>Accuracy, robustness and cybersecurity standards</li>
+                  <li>{t("highRiskItems.riskMgmt")}</li>
+                  <li>{t("highRiskItems.dataGovernance")}</li>
+                  <li>{t("highRiskItems.technicalDoc")}</li>
+                  <li>{t("highRiskItems.recordKeeping")}</li>
+                  <li>{t("highRiskItems.oversight")}</li>
+                  <li>{t("highRiskItems.accuracy")}</li>
                 </ul>
               </div>
             </div>

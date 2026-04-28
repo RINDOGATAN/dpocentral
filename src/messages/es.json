@@ -33,6 +33,53 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "aiSystemDetail": {
+      "notFound": "Sistema de IA no encontrado",
+      "back": "Atrás",
+      "linked": "Vinculado a AI Sentinel",
+      "embeddedModels": "Modelos de IA integrados ({count})",
+      "details": {
+        "title": "Detalles del sistema",
+        "description": "Descripción",
+        "purpose": "Finalidad",
+        "category": "Categoría",
+        "modelType": "Tipo de modelo",
+        "provider": "Proveedor",
+        "deployer": "Implementador",
+        "vendor": "Proveedor",
+        "euAiActRole": "Rol según el Reglamento de IA",
+        "euAiActCompliant": "Cumple el Reglamento de IA",
+        "iso42001": "Certificación ISO 42001",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "compliance": {
+        "title": "Cumplimiento y supervisión",
+        "humanOversight": "Supervisión humana",
+        "transparency": "Medidas de transparencia",
+        "trainingData": "Fuentes de datos de entrenamiento",
+        "capabilities": "Capacidades de IA",
+        "techniques": "Técnicas de IA",
+        "technicalDoc": "Documentación técnica"
+      },
+      "sentinel": {
+        "linkedTitle": "Vinculado con AI Sentinel",
+        "linkedBody": "Este sistema está sincronizado con AI Sentinel para una gobernanza de IA en profundidad.",
+        "lastSynced": "Última sincronización: {date}",
+        "openInSentinel": "Abrir en AI Sentinel"
+      },
+      "unacceptableTitle": "Sistema de IA prohibido",
+      "unacceptableBody": "Este sistema de IA se ha clasificado como de riesgo inaceptable según el Reglamento de IA de la UE. Debe ser retirado antes de agosto de 2026.",
+      "highRiskTitle": "Obligaciones de IA de alto riesgo",
+      "highRiskItems": {
+        "riskMgmt": "Se requiere un sistema de gestión de riesgos",
+        "dataGovernance": "Las medidas de gobernanza de datos deben documentarse",
+        "technicalDoc": "La documentación técnica debe mantenerse",
+        "recordKeeping": "Se requiere registro y trazabilidad",
+        "oversight": "Deben existir mecanismos de supervisión humana",
+        "accuracy": "Estándares de precisión, robustez y ciberseguridad"
+      }
+    },
     "quickstart": {
       "back": "Panel",
       "title": "Asistente del programa de privacidad",

@@ -33,6 +33,53 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "aiSystemDetail": {
+      "notFound": "AI system not found",
+      "back": "Back",
+      "linked": "AI Sentinel Linked",
+      "embeddedModels": "Embedded AI Models ({count})",
+      "details": {
+        "title": "System Details",
+        "description": "Description",
+        "purpose": "Purpose",
+        "category": "Category",
+        "modelType": "Model Type",
+        "provider": "Provider",
+        "deployer": "Deployer",
+        "vendor": "Vendor",
+        "euAiActRole": "EU AI Act Role",
+        "euAiActCompliant": "EU AI Act Compliant",
+        "iso42001": "ISO 42001 Certified",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "compliance": {
+        "title": "Compliance & Oversight",
+        "humanOversight": "Human Oversight",
+        "transparency": "Transparency Measures",
+        "trainingData": "Training Data Sources",
+        "capabilities": "AI Capabilities",
+        "techniques": "AI Techniques",
+        "technicalDoc": "Technical Documentation"
+      },
+      "sentinel": {
+        "linkedTitle": "Linked to AI Sentinel",
+        "linkedBody": "This system is synced with AI Sentinel for deep AI governance management.",
+        "lastSynced": "Last synced: {date}",
+        "openInSentinel": "Open in AI Sentinel"
+      },
+      "unacceptableTitle": "Prohibited AI System",
+      "unacceptableBody": "This AI system has been classified as unacceptable risk under the EU AI Act. It must be decommissioned before August 2026.",
+      "highRiskTitle": "High-Risk AI Obligations",
+      "highRiskItems": {
+        "riskMgmt": "Risk management system required",
+        "dataGovernance": "Data governance measures must be documented",
+        "technicalDoc": "Technical documentation must be maintained",
+        "recordKeeping": "Record-keeping and logging required",
+        "oversight": "Human oversight mechanisms must be in place",
+        "accuracy": "Accuracy, robustness and cybersecurity standards"
+      }
+    },
     "quickstart": {
       "back": "Dashboard",
       "title": "Privacy Program Quickstart",
