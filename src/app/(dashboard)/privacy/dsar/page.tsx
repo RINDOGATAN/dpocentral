@@ -25,6 +25,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { useTranslations } from "next-intl";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-primary text-primary",
@@ -37,20 +38,12 @@ const statusColors: Record<string, string> = {
   REJECTED: "border-muted-foreground text-muted-foreground",
 };
 
-const typeLabels: Record<string, string> = {
-  ACCESS: "Access",
-  RECTIFICATION: "Rectification",
-  ERASURE: "Erasure",
-  PORTABILITY: "Portability",
-  OBJECTION: "Objection",
-  RESTRICTION: "Restriction",
-};
-
 const OPEN_STATUSES = ["SUBMITTED", "IDENTITY_PENDING", "IDENTITY_VERIFIED", "IN_PROGRESS", "DATA_COLLECTED", "REVIEW_PENDING"];
 
 const isPortalComingSoon = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.DSAR_PORTAL);
 
 export default function DSARPage() {
+  const t = useTranslations("pages.dsar");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
@@ -111,15 +104,14 @@ export default function DSARPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Data Subject Requests</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage and track DSARs
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="icon"
+            aria-label={t("exportReport")}
             className="shrink-0 sm:size-auto sm:px-4 sm:py-2"
             onClick={() =>
               organization?.id &&
@@ -130,29 +122,29 @@ export default function DSARPage() {
             }
           >
             <Download className="w-4 h-4 sm:mr-2" />
-            <span className="hidden sm:inline">Export Report</span>
+            <span className="hidden sm:inline">{t("exportReport")}</span>
           </Button>
           {isPortalComingSoon ? (
             <div className="sm:flex-none">
-              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>
+              <Button variant="outline" size="icon" aria-label={t("settings")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>
                 <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
-                <span className="hidden sm:inline">Settings</span>
-                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500 hidden sm:inline-flex">Coming Soon</Badge>
+                <span className="hidden sm:inline">{t("settings")}</span>
+                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500 hidden sm:inline-flex">{t("comingSoon")}</Badge>
               </Button>
             </div>
           ) : (
             <Link href="/privacy/dsar/settings" className="sm:flex-none">
-              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+              <Button variant="outline" size="icon" aria-label={t("settings")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Settings className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Settings</span>
+                <span className="hidden sm:inline">{t("settings")}</span>
               </Button>
             </Link>
           )}
           <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">New Request</span>
-              <span className="sm:hidden">New</span>
+              <span className="hidden sm:inline">{t("newRequest")}</span>
+              <span className="sm:hidden">{t("newRequestShort")}</span>
             </Button>
           </Link>
         </div>
@@ -163,13 +155,13 @@ export default function DSARPage() {
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.total}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Total Requests</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.total")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.open}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Open</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.open")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -177,13 +169,13 @@ export default function DSARPage() {
             <div className={`text-xl sm:text-2xl font-bold ${stats.overdue > 0 ? "text-amber-400" : "text-foreground"}`}>
               {stats.overdue}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">Overdue</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.overdue")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.atRisk}</div>
-            <p className="text-xs sm:text-sm text-muted-foreground">At Risk</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{t("stats.atRisk")}</p>
           </CardContent>
         </Card>
       </div>
@@ -192,7 +184,7 @@ export default function DSARPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search requests..."
+          placeholder={t("search")}
           className="pl-9"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,10 +194,10 @@ export default function DSARPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="open">Open</TabsTrigger>
-          <TabsTrigger value="overdue">Overdue</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
+          <TabsTrigger value="open">{t("tabs.open")}</TabsTrigger>
+          <TabsTrigger value="overdue">{t("tabs.overdue")}</TabsTrigger>
+          <TabsTrigger value="completed">{t("tabs.completed")}</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -223,17 +215,17 @@ export default function DSARPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary text-sm">{request.publicId}</span>
-                        <Badge variant="outline" className="text-xs">{typeLabels[request.type] || request.type}</Badge>
+                        <Badge variant="outline" className="text-xs">{t(`type.${request.type}`)}</Badge>
                       </div>
                       <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[request.status] || ""}`}>
-                        {request.status.replace("_", " ")}
+                        {t(`status.${request.status}`)}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
                       {request.requesterName} - {request.requesterEmail}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{request._count?.tasks ?? 0} tasks</span>
+                      <span>{t("card.tasksShort", { count: request._count?.tasks ?? 0 })}</span>
                       {request.status === "COMPLETED" || request.status === "REJECTED" ? (
                         <span>
                           <Clock className="inline h-3 w-3 mr-1" />
@@ -243,10 +235,10 @@ export default function DSARPage() {
                         <span className={request.slaStatus === "overdue" ? "text-amber-400 font-medium" : ""}>
                           <Clock className="inline h-3 w-3 mr-1" />
                           {request.slaStatus === "overdue"
-                            ? `${Math.abs(request.daysUntilDue ?? 0)}d overdue`
+                            ? t("card.daysOverdueShort", { count: Math.abs(request.daysUntilDue ?? 0) })
                             : request.daysUntilDue === 0
-                              ? "Due today"
-                              : `${request.daysUntilDue ?? 0}d left`
+                              ? t("card.dueToday")
+                              : t("card.daysLeftShort", { count: request.daysUntilDue ?? 0 })
                           }
                         </span>
                       )}
@@ -278,9 +270,9 @@ export default function DSARPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary">{request.publicId}</span>
-                        <Badge variant="outline">{typeLabels[request.type] || request.type}</Badge>
+                        <Badge variant="outline">{t(`type.${request.type}`)}</Badge>
                         <Badge variant="outline" className={statusColors[request.status] || ""}>
-                          {request.status.replace("_", " ")}
+                          {t(`status.${request.status}`)}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground truncate">
@@ -292,31 +284,31 @@ export default function DSARPage() {
                       <p className="text-lg font-semibold text-primary">
                         {request._count?.tasks ?? 0}
                       </p>
-                      <p className="text-xs text-muted-foreground">Tasks</p>
+                      <p className="text-xs text-muted-foreground">{t("card.tasks")}</p>
                     </div>
 
                     <div className="text-right shrink-0">
                       {request.status === "COMPLETED" || request.status === "REJECTED" ? (
                         <>
                           <p className="text-sm font-medium text-muted-foreground">
-                            {request.status === "COMPLETED" ? "Completed" : "Rejected"}
+                            {request.status === "COMPLETED" ? t("card.completed") : t("card.rejected")}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : "N/A"}
+                            {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : t("card.naDate")}
                           </p>
                         </>
                       ) : (
                         <>
                           <p className="text-sm font-medium text-muted-foreground">
                             {request.slaStatus === "overdue"
-                              ? <span className="text-amber-400 font-medium">{Math.abs(request.daysUntilDue ?? 0)} days overdue</span>
+                              ? <span className="text-amber-400 font-medium">{t("card.daysOverdue", { count: Math.abs(request.daysUntilDue ?? 0) })}</span>
                               : request.daysUntilDue === 0
-                                ? "Due today"
-                                : `${request.daysUntilDue ?? 0} days left`
+                                ? t("card.dueToday")
+                                : t("card.daysLeft", { count: request.daysUntilDue ?? 0 })
                             }
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            Due: {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : "N/A"}
+                            {t("card.due", { date: request.dueDate ? new Date(request.dueDate).toLocaleDateString() : t("card.naDate") })}
                           </p>
                         </>
                       )}
@@ -331,12 +323,12 @@ export default function DSARPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No data subject requests yet</p>
-            <p className="text-sm mb-4">Create a request or set up a public intake form</p>
+            <p>{t("emptyAll.title")}</p>
+            <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
             <Link href="/privacy/dsar/new">
               <Button>
                 <Plus className="w-4 h-4 mr-2" />
-                New Request
+                {t("newRequest")}
               </Button>
             </Link>
           </CardContent>
@@ -346,9 +338,9 @@ export default function DSARPage() {
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>
-              {activeTab === "open" && "No open requests"}
-              {activeTab === "overdue" && "No overdue requests"}
-              {activeTab === "completed" && "No completed requests"}
+              {activeTab === "open" && t("emptyOpen")}
+              {activeTab === "overdue" && t("emptyOverdue")}
+              {activeTab === "completed" && t("emptyCompleted")}
             </p>
           </CardContent>
         </Card>
@@ -361,30 +353,30 @@ export default function DSARPage() {
             <>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-sm sm:text-base">Public Intake Portal</p>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">Coming Soon</Badge>
+                  <p className="font-medium text-sm sm:text-base">{t("publicPortal.title")}</p>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">{t("comingSoon")}</Badge>
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  A public-facing portal for data subjects to submit GDPR requests. Currently under development.
+                  {t("publicPortal.comingSoonSubtitle")}
                 </p>
               </div>
               <Button variant="outline" className="w-full sm:w-auto" disabled>
                 <Lock className="w-4 h-4 mr-2 text-amber-500" />
-                Open Portal
+                {t("publicPortal.open")}
               </Button>
             </>
           ) : (
             <>
               <div>
-                <p className="font-medium text-sm sm:text-base">Public Intake Portal</p>
+                <p className="font-medium text-sm sm:text-base">{t("publicPortal.title")}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Share this link with data subjects
+                  {t("publicPortal.subtitle")}
                 </p>
               </div>
               <a href={`/dsar/${organization?.slug || ""}`} target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" className="w-full sm:w-auto">
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Open Portal
+                  {t("publicPortal.open")}
                 </Button>
               </a>
             </>
