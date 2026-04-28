@@ -33,6 +33,97 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "newVendor": {
+      "title": "Add Vendor",
+      "titleCatalog": "Add from Vendor Catalog",
+      "subtitle": "Register a new third-party vendor",
+      "subtitleCatalog": "Search pre-audited vendors and auto-fill compliance data",
+      "catalog": {
+        "title": "Vendor Catalog Search",
+        "subtitle": "Search 700+ pre-audited MarTech, AI, and SaaS vendors with compliance data",
+        "verified": "Verified",
+        "website": "Website",
+        "privacyPolicy": "Privacy Policy",
+        "dpa": "DPA",
+        "trustCenter": "Trust Center",
+        "autoFilled": "Form fields have been auto-filled from catalog data. Review and edit as needed.",
+        "searchPlaceholder": "Search vendors (e.g., Google Analytics, Mailchimp, HubSpot)...",
+        "searching": "Searching catalog...",
+        "noResults": "No vendors found for \"{query}\"",
+        "noResultsHint": "Try a different search term or add manually below",
+        "petsCount": "{count} PETs",
+        "cantFind": "Can't find the vendor? Fill in the form below manually.",
+        "skipCatalog": "Skip catalog search"
+      },
+      "info": {
+        "title": "Vendor Information",
+        "subtitle": "Basic details about the vendor",
+        "name": "Vendor Name *",
+        "namePlaceholder": "e.g., Acme Cloud Services",
+        "website": "Website",
+        "websitePlaceholder": "https://example.com",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the vendor and services provided...",
+        "contactName": "Contact Name",
+        "contactNamePlaceholder": "John Smith",
+        "contactEmail": "Contact Email",
+        "contactEmailPlaceholder": "contact@vendor.com"
+      },
+      "categoriesRisk": {
+        "title": "Categories & Risk",
+        "subtitle": "Classify the vendor and assess risk level",
+        "serviceCategories": "Service Categories",
+        "riskTier": "Risk Tier",
+        "selectRisk": "Select risk tier"
+      },
+      "dataProcessing": {
+        "title": "Data Processing",
+        "subtitle": "What data does this vendor process?",
+        "dataCategories": "Data Categories Processed",
+        "countries": "Countries (Data Transfer)",
+        "countriesPlaceholder": "e.g., United States",
+        "addCountry": "Add"
+      },
+      "compliance": {
+        "title": "Compliance Information",
+        "fromCatalog": "From Catalog",
+        "subtitle": "Pre-audited compliance data from the vendor catalog",
+        "certifications": "Certifications",
+        "privacyPolicyUrl": "Privacy Policy URL",
+        "dpaUrl": "DPA URL",
+        "trustCenterUrl": "Trust Center URL"
+      },
+      "errorPrefix": "Error: {message}",
+      "creating": "Creating...",
+      "submit": "Create Vendor",
+      "category": {
+        "CLOUD_SERVICES": "Cloud Services",
+        "DATA_PROCESSING": "Data Processing",
+        "ANALYTICS": "Analytics",
+        "MARKETING": "Marketing",
+        "HR_SERVICES": "HR Services",
+        "PAYMENT_PROCESSING": "Payment Processing",
+        "CUSTOMER_SUPPORT": "Customer Support",
+        "IT_SECURITY": "IT Security",
+        "LEGAL": "Legal",
+        "OTHER": "Other"
+      },
+      "riskTierOption": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment"
+      }
+    },
     "newAssessment": {
       "title": "New Assessment",
       "subtitleChoose": "Choose an assessment type to get started",

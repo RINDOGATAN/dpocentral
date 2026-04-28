@@ -33,6 +33,97 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "newVendor": {
+      "title": "Añadir proveedor",
+      "titleCatalog": "Añadir desde el catálogo",
+      "subtitle": "Registra un nuevo proveedor externo",
+      "subtitleCatalog": "Busca proveedores preauditados y autocompleta los datos de cumplimiento",
+      "catalog": {
+        "title": "Búsqueda en el catálogo de proveedores",
+        "subtitle": "Busca entre más de 700 proveedores MarTech, IA y SaaS preauditados con datos de cumplimiento",
+        "verified": "Verificado",
+        "website": "Sitio web",
+        "privacyPolicy": "Política de privacidad",
+        "dpa": "DPA",
+        "trustCenter": "Centro de confianza",
+        "autoFilled": "Los campos del formulario se han rellenado a partir del catálogo. Revisa y edita lo que necesites.",
+        "searchPlaceholder": "Busca proveedores (p. ej., Google Analytics, Mailchimp, HubSpot)...",
+        "searching": "Buscando en el catálogo...",
+        "noResults": "No se han encontrado proveedores para \"{query}\"",
+        "noResultsHint": "Prueba otro término o añádelo manualmente más abajo",
+        "petsCount": "{count} PETs",
+        "cantFind": "¿No encuentras el proveedor? Rellena el formulario manualmente.",
+        "skipCatalog": "Saltar búsqueda en el catálogo"
+      },
+      "info": {
+        "title": "Información del proveedor",
+        "subtitle": "Datos básicos del proveedor",
+        "name": "Nombre del proveedor *",
+        "namePlaceholder": "p. ej., Acme Cloud Services",
+        "website": "Sitio web",
+        "websitePlaceholder": "https://example.com",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe el proveedor y los servicios ofrecidos...",
+        "contactName": "Nombre del contacto",
+        "contactNamePlaceholder": "Juan Pérez",
+        "contactEmail": "Correo del contacto",
+        "contactEmailPlaceholder": "contacto@proveedor.com"
+      },
+      "categoriesRisk": {
+        "title": "Categorías y riesgo",
+        "subtitle": "Clasifica al proveedor y evalúa su nivel de riesgo",
+        "serviceCategories": "Categorías de servicio",
+        "riskTier": "Nivel de riesgo",
+        "selectRisk": "Selecciona el nivel de riesgo"
+      },
+      "dataProcessing": {
+        "title": "Tratamiento de datos",
+        "subtitle": "¿Qué datos trata este proveedor?",
+        "dataCategories": "Categorías de datos tratados",
+        "countries": "Países (transferencia de datos)",
+        "countriesPlaceholder": "p. ej., Estados Unidos",
+        "addCountry": "Añadir"
+      },
+      "compliance": {
+        "title": "Información de cumplimiento",
+        "fromCatalog": "Del catálogo",
+        "subtitle": "Datos de cumplimiento preauditados del catálogo de proveedores",
+        "certifications": "Certificaciones",
+        "privacyPolicyUrl": "URL de la política de privacidad",
+        "dpaUrl": "URL del DPA",
+        "trustCenterUrl": "URL del centro de confianza"
+      },
+      "errorPrefix": "Error: {message}",
+      "creating": "Creando...",
+      "submit": "Crear proveedor",
+      "category": {
+        "CLOUD_SERVICES": "Servicios en la nube",
+        "DATA_PROCESSING": "Tratamiento de datos",
+        "ANALYTICS": "Analítica",
+        "MARKETING": "Marketing",
+        "HR_SERVICES": "Servicios de RR. HH.",
+        "PAYMENT_PROCESSING": "Procesamiento de pagos",
+        "CUSTOMER_SUPPORT": "Atención al cliente",
+        "IT_SECURITY": "Seguridad informática",
+        "LEGAL": "Jurídico",
+        "OTHER": "Otros"
+      },
+      "riskTierOption": {
+        "LOW": "Bajo",
+        "MEDIUM": "Medio",
+        "HIGH": "Alto",
+        "CRITICAL": "Crítico"
+      },
+      "dataCategory": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo"
+      }
+    },
     "newAssessment": {
       "title": "Nueva evaluación",
       "subtitleChoose": "Elige un tipo de evaluación para comenzar",

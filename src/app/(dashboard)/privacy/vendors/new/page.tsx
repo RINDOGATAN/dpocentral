@@ -32,35 +32,17 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
-const vendorCategories = [
-  { value: "CLOUD_SERVICES", label: "Cloud Services" },
-  { value: "DATA_PROCESSING", label: "Data Processing" },
-  { value: "ANALYTICS", label: "Analytics" },
-  { value: "MARKETING", label: "Marketing" },
-  { value: "HR_SERVICES", label: "HR Services" },
-  { value: "PAYMENT_PROCESSING", label: "Payment Processing" },
-  { value: "CUSTOMER_SUPPORT", label: "Customer Support" },
-  { value: "IT_SECURITY", label: "IT Security" },
-  { value: "LEGAL", label: "Legal" },
-  { value: "OTHER", label: "Other" },
-];
+const VENDOR_CATEGORY_KEYS = [
+  "CLOUD_SERVICES", "DATA_PROCESSING", "ANALYTICS", "MARKETING", "HR_SERVICES",
+  "PAYMENT_PROCESSING", "CUSTOMER_SUPPORT", "IT_SECURITY", "LEGAL", "OTHER",
+] as const;
 
-const riskTiers = [
-  { value: "LOW", label: "Low" },
-  { value: "MEDIUM", label: "Medium" },
-  { value: "HIGH", label: "High" },
-  { value: "CRITICAL", label: "Critical" },
-];
+const RISK_TIER_KEYS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 
-const dataCategories = [
-  { value: "IDENTIFIERS", label: "Identifiers" },
-  { value: "DEMOGRAPHICS", label: "Demographics" },
-  { value: "FINANCIAL", label: "Financial" },
-  { value: "HEALTH", label: "Health" },
-  { value: "LOCATION", label: "Location" },
-  { value: "BEHAVIORAL", label: "Behavioral" },
-  { value: "EMPLOYMENT", label: "Employment" },
-];
+const DATA_CATEGORY_KEYS = [
+  "IDENTIFIERS", "DEMOGRAPHICS", "FINANCIAL", "HEALTH",
+  "LOCATION", "BEHAVIORAL", "EMPLOYMENT",
+] as const;
 
 // Type for catalog vendor
 interface CatalogVendor {
@@ -92,6 +74,8 @@ function NewVendorPageContent() {
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.newVendor");
+  const tCommon = useTranslations("common");
 
   // Catalog mode state
   const isCatalogMode = searchParams.get("catalog") === "true";
@@ -287,12 +271,10 @@ function NewVendorPageContent() {
         </Link>
         <div>
           <h1 className="text-2xl font-semibold">
-            {isCatalogMode ? "Add from Vendor Catalog" : "Add Vendor"}
+            {isCatalogMode ? tp("titleCatalog") : tp("title")}
           </h1>
           <p className="text-muted-foreground">
-            {isCatalogMode
-              ? "Search pre-audited vendors and auto-fill compliance data"
-              : "Register a new third-party vendor"}
+            {isCatalogMode ? tp("subtitleCatalog") : tp("subtitle")}
           </p>
         </div>
       </div>
@@ -303,11 +285,9 @@ function NewVendorPageContent() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              <CardTitle>Vendor Catalog Search</CardTitle>
+              <CardTitle>{tp("catalog.title")}</CardTitle>
             </div>
-            <CardDescription>
-              Search 700+ pre-audited MarTech, AI, and SaaS vendors with compliance data
-            </CardDescription>
+            <CardDescription>{tp("catalog.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {selectedCatalogVendor ? (
@@ -324,7 +304,7 @@ function NewVendorPageContent() {
                         {selectedCatalogVendor.isVerified && (
                           <Badge variant="outline" className="border-primary text-primary">
                             <CheckCircle2 className="w-3 h-3 mr-1" />
-                            Verified
+                            {tp("catalog.verified")}
                           </Badge>
                         )}
                       </div>
@@ -368,7 +348,7 @@ function NewVendorPageContent() {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline flex items-center gap-1"
                     >
-                      Website <ExternalLink className="w-3 h-3" />
+                      {tp("catalog.website")} <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                   {selectedCatalogVendor.privacyPolicyUrl && (
@@ -378,7 +358,7 @@ function NewVendorPageContent() {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline flex items-center gap-1"
                     >
-                      Privacy Policy <ExternalLink className="w-3 h-3" />
+                      {tp("catalog.privacyPolicy")} <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                   {selectedCatalogVendor.dpaUrl && (
@@ -388,7 +368,7 @@ function NewVendorPageContent() {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline flex items-center gap-1"
                     >
-                      DPA <ExternalLink className="w-3 h-3" />
+                      {tp("catalog.dpa")} <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                   {selectedCatalogVendor.trustCenterUrl && (
@@ -398,13 +378,13 @@ function NewVendorPageContent() {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline flex items-center gap-1"
                     >
-                      Trust Center <ExternalLink className="w-3 h-3" />
+                      {tp("catalog.trustCenter")} <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                  Form fields have been auto-filled from catalog data. Review and edit as needed.
+                  {tp("catalog.autoFilled")}
                 </p>
               </div>
             ) : (
@@ -412,7 +392,7 @@ function NewVendorPageContent() {
               <div className="relative" ref={searchRef}>
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search vendors (e.g., Google Analytics, Mailchimp, HubSpot)..."
+                  placeholder={tp("catalog.searchPlaceholder")}
                   className="pl-9"
                   value={catalogSearch}
                   onChange={(e) => {
@@ -428,7 +408,7 @@ function NewVendorPageContent() {
                     {isSearching ? (
                       <div className="p-4 text-center">
                         <Loader2 className="w-5 h-5 animate-spin mx-auto text-primary" />
-                        <p className="text-sm text-muted-foreground mt-2">Searching catalog...</p>
+                        <p className="text-sm text-muted-foreground mt-2">{tp("catalog.searching")}</p>
                       </div>
                     ) : catalogResults && catalogResults.length > 0 ? (
                       catalogResults.map((vendor) => (
@@ -456,7 +436,7 @@ function NewVendorPageContent() {
                           <div className="flex gap-1 shrink-0">
                             {vendor.privacyTechnologies?.length > 0 && (
                               <Badge variant="secondary" className="text-xs">
-                                {vendor.privacyTechnologies.length} PETs
+                                {tp("catalog.petsCount", { count: vendor.privacyTechnologies.length })}
                               </Badge>
                             )}
                             {vendor.gdprCompliant && (
@@ -467,8 +447,8 @@ function NewVendorPageContent() {
                       ))
                     ) : (
                       <div className="p-4 text-center text-muted-foreground">
-                        <p className="text-sm">No vendors found for &quot;{catalogSearch}&quot;</p>
-                        <p className="text-xs mt-1">Try a different search term or add manually below</p>
+                        <p className="text-sm">{tp("catalog.noResults", { query: catalogSearch })}</p>
+                        <p className="text-xs mt-1">{tp("catalog.noResultsHint")}</p>
                       </div>
                     )}
                   </div>
@@ -479,11 +459,11 @@ function NewVendorPageContent() {
             {!selectedCatalogVendor && (
               <div className="flex items-center justify-between text-sm">
                 <p className="text-muted-foreground">
-                  Can&apos;t find the vendor? Fill in the form below manually.
+                  {tp("catalog.cantFind")}
                 </p>
                 <Link href="/privacy/vendors/new">
                   <Button variant="link" size="sm" className="text-primary">
-                    Skip catalog search
+                    {tp("catalog.skipCatalog")}
                   </Button>
                 </Link>
               </div>
@@ -496,29 +476,27 @@ function NewVendorPageContent() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Vendor Information</CardTitle>
-            <CardDescription>
-              Basic details about the vendor
-            </CardDescription>
+            <CardTitle>{tp("info.title")}</CardTitle>
+            <CardDescription>{tp("info.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Vendor Name *</Label>
+                <Label htmlFor="name">{tp("info.name")}</Label>
                 <Input
                   id="name"
-                  placeholder="e.g., Acme Cloud Services"
+                  placeholder={tp("info.namePlaceholder")}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="website">Website</Label>
+                <Label htmlFor="website">{tp("info.website")}</Label>
                 <Input
                   id="website"
                   type="url"
-                  placeholder="https://example.com"
+                  placeholder={tp("info.websitePlaceholder")}
                   value={formData.website}
                   onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                 />
@@ -526,10 +504,10 @@ function NewVendorPageContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tp("info.description")}</Label>
               <Textarea
                 id="description"
-                placeholder="Describe the vendor and services provided..."
+                placeholder={tp("info.descriptionPlaceholder")}
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -538,20 +516,20 @@ function NewVendorPageContent() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="contactName">Contact Name</Label>
+                <Label htmlFor="contactName">{tp("info.contactName")}</Label>
                 <Input
                   id="contactName"
-                  placeholder="John Smith"
+                  placeholder={tp("info.contactNamePlaceholder")}
                   value={formData.contactName}
                   onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contactEmail">Contact Email</Label>
+                <Label htmlFor="contactEmail">{tp("info.contactEmail")}</Label>
                 <Input
                   id="contactEmail"
                   type="email"
-                  placeholder="contact@vendor.com"
+                  placeholder={tp("info.contactEmailPlaceholder")}
                   value={formData.contactEmail}
                   onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                 />
@@ -562,41 +540,39 @@ function NewVendorPageContent() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Categories & Risk</CardTitle>
-            <CardDescription>
-              Classify the vendor and assess risk level
-            </CardDescription>
+            <CardTitle>{tp("categoriesRisk.title")}</CardTitle>
+            <CardDescription>{tp("categoriesRisk.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Service Categories</Label>
+              <Label>{tp("categoriesRisk.serviceCategories")}</Label>
               <div className="flex flex-wrap gap-2">
-                {vendorCategories.map((cat) => (
+                {VENDOR_CATEGORY_KEYS.map((value) => (
                   <Badge
-                    key={cat.value}
-                    variant={formData.categories.includes(cat.value) ? "default" : "outline"}
+                    key={value}
+                    variant={formData.categories.includes(value) ? "default" : "outline"}
                     className="cursor-pointer"
-                    onClick={() => toggleCategory(cat.value)}
+                    onClick={() => toggleCategory(value)}
                   >
-                    {cat.label}
+                    {tp(`category.${value}` as `category.CLOUD_SERVICES` | `category.DATA_PROCESSING` | `category.ANALYTICS` | `category.MARKETING` | `category.HR_SERVICES` | `category.PAYMENT_PROCESSING` | `category.CUSTOMER_SUPPORT` | `category.IT_SECURITY` | `category.LEGAL` | `category.OTHER`)}
                   </Badge>
                 ))}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="riskTier">Risk Tier</Label>
+              <Label htmlFor="riskTier">{tp("categoriesRisk.riskTier")}</Label>
               <Select
                 value={formData.riskTier}
                 onValueChange={(value) => setFormData({ ...formData, riskTier: value })}
               >
                 <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Select risk tier" />
+                  <SelectValue placeholder={tp("categoriesRisk.selectRisk")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {riskTiers.map((tier) => (
-                    <SelectItem key={tier.value} value={tier.value}>
-                      {tier.label}
+                  {RISK_TIER_KEYS.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {tp(`riskTierOption.${value}` as `riskTierOption.LOW` | `riskTierOption.MEDIUM` | `riskTierOption.HIGH` | `riskTierOption.CRITICAL`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -607,39 +583,37 @@ function NewVendorPageContent() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Data Processing</CardTitle>
-            <CardDescription>
-              What data does this vendor process?
-            </CardDescription>
+            <CardTitle>{tp("dataProcessing.title")}</CardTitle>
+            <CardDescription>{tp("dataProcessing.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Data Categories Processed</Label>
+              <Label>{tp("dataProcessing.dataCategories")}</Label>
               <div className="flex flex-wrap gap-2">
-                {dataCategories.map((cat) => (
+                {DATA_CATEGORY_KEYS.map((value) => (
                   <Badge
-                    key={cat.value}
-                    variant={formData.dataProcessed.includes(cat.value) ? "default" : "outline"}
+                    key={value}
+                    variant={formData.dataProcessed.includes(value) ? "default" : "outline"}
                     className="cursor-pointer"
-                    onClick={() => toggleDataProcessed(cat.value)}
+                    onClick={() => toggleDataProcessed(value)}
                   >
-                    {cat.label}
+                    {tp(`dataCategory.${value}` as `dataCategory.IDENTIFIERS` | `dataCategory.DEMOGRAPHICS` | `dataCategory.FINANCIAL` | `dataCategory.HEALTH` | `dataCategory.LOCATION` | `dataCategory.BEHAVIORAL` | `dataCategory.EMPLOYMENT`)}
                   </Badge>
                 ))}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Countries (Data Transfer)</Label>
+              <Label>{tp("dataProcessing.countries")}</Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="e.g., United States"
+                  placeholder={tp("dataProcessing.countriesPlaceholder")}
                   value={newCountry}
                   onChange={(e) => setNewCountry(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCountry())}
                 />
                 <Button type="button" variant="outline" onClick={addCountry}>
-                  Add
+                  {tp("dataProcessing.addCountry")}
                 </Button>
               </div>
               {formData.countries.length > 0 && (
@@ -665,17 +639,15 @@ function NewVendorPageContent() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary" />
-                Compliance Information
-                <Badge variant="outline" className="text-xs">From Catalog</Badge>
+                {tp("compliance.title")}
+                <Badge variant="outline" className="text-xs">{tp("compliance.fromCatalog")}</Badge>
               </CardTitle>
-              <CardDescription>
-                Pre-audited compliance data from the vendor catalog
-              </CardDescription>
+              <CardDescription>{tp("compliance.subtitle")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {formData.certifications.length > 0 && (
                 <div className="space-y-2">
-                  <Label>Certifications</Label>
+                  <Label>{tp("compliance.certifications")}</Label>
                   <div className="flex flex-wrap gap-2">
                     {formData.certifications.map((cert) => (
                       <Badge key={cert} variant="outline">
@@ -689,7 +661,7 @@ function NewVendorPageContent() {
               <div className="grid gap-4 md:grid-cols-2">
                 {formData.privacyPolicyUrl && (
                   <div className="space-y-2">
-                    <Label>Privacy Policy URL</Label>
+                    <Label>{tp("compliance.privacyPolicyUrl")}</Label>
                     <div className="flex gap-2">
                       <Input value={formData.privacyPolicyUrl} readOnly className="bg-muted" />
                       <a href={formData.privacyPolicyUrl} target="_blank" rel="noopener noreferrer">
@@ -702,7 +674,7 @@ function NewVendorPageContent() {
                 )}
                 {formData.dpaUrl && (
                   <div className="space-y-2">
-                    <Label>DPA URL</Label>
+                    <Label>{tp("compliance.dpaUrl")}</Label>
                     <div className="flex gap-2">
                       <Input value={formData.dpaUrl} readOnly className="bg-muted" />
                       <a href={formData.dpaUrl} target="_blank" rel="noopener noreferrer">
@@ -717,7 +689,7 @@ function NewVendorPageContent() {
 
               {formData.trustCenterUrl && (
                 <div className="space-y-2">
-                  <Label>Trust Center URL</Label>
+                  <Label>{tp("compliance.trustCenterUrl")}</Label>
                   <div className="flex gap-2">
                     <Input value={formData.trustCenterUrl} readOnly className="bg-muted" />
                     <a href={formData.trustCenterUrl} target="_blank" rel="noopener noreferrer">
@@ -734,22 +706,22 @@ function NewVendorPageContent() {
 
         {createVendor.error && (
           <div className="text-sm text-destructive">
-            Error: {createVendor.error.message}
+            {tp("errorPrefix", { message: createVendor.error.message })}
           </div>
         )}
 
         <div className="flex justify-end gap-4">
           <Link href="/privacy/vendors">
-            <Button variant="outline" type="button">Cancel</Button>
+            <Button variant="outline" type="button">{tCommon("cancel")}</Button>
           </Link>
           <Button type="submit" disabled={isSubmitting || !formData.name}>
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Creating...
+                {tp("creating")}
               </>
             ) : (
-              "Create Vendor"
+              tp("submit")
             )}
           </Button>
         </div>
