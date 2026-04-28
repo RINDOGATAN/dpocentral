@@ -51,19 +51,21 @@ const RISK_COLORS: Record<string, string> = {
   MINIMAL: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
 };
 
-const STATUS_ICONS: Record<string, React.ReactNode> = {
-  DRAFT: <Badge variant="secondary">Draft</Badge>,
-  REGISTERED: <Badge className="bg-blue-100 text-blue-800">Registered</Badge>,
-  UNDER_REVIEW: <Badge className="bg-yellow-100 text-yellow-800">Under Review</Badge>,
-  COMPLIANT: <Badge className="bg-green-100 text-green-800">Compliant</Badge>,
-  NON_COMPLIANT: <Badge className="bg-red-100 text-red-800">Non-Compliant</Badge>,
-  DECOMMISSIONED: <Badge variant="outline">Decommissioned</Badge>,
+const STATUS_VARIANTS: Record<string, { className: string; variant?: "secondary" | "outline" }> = {
+  DRAFT: { className: "", variant: "secondary" },
+  REGISTERED: { className: "bg-blue-100 text-blue-800" },
+  UNDER_REVIEW: { className: "bg-yellow-100 text-yellow-800" },
+  COMPLIANT: { className: "bg-green-100 text-green-800" },
+  NON_COMPLIANT: { className: "bg-red-100 text-red-800" },
+  DECOMMISSIONED: { className: "", variant: "outline" },
 };
 
 export default function AISystemsPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.aiSystems");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -134,11 +136,9 @@ export default function AISystemsPage() {
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-2">
             <Bot className="w-6 h-6" />
-            AI Governance Register
+            {tp("title")}
           </h1>
-          <p className="text-muted-foreground">
-            Register and classify AI systems per the EU AI Act
-          </p>
+          <p className="text-muted-foreground">{tp("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           {showAisExport && (
@@ -157,22 +157,22 @@ export default function AISystemsPage() {
                   }}
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  Send to AI Sentinel
+                  {tp("sentinel.send")}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg">
+              <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Send to AI Sentinel</DialogTitle>
+                  <DialogTitle>{tp("sentinel.title")}</DialogTitle>
                   <DialogDescription>
-                    Forward AI systems to AI Sentinel for deeper governance tracking. Already-synced systems can be re-sent to push updates.
+                    {tp("sentinel.description")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="max-h-[300px] overflow-y-auto space-y-2 py-2">
                   {data?.systems.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-4">No AI systems registered yet.</p>
+                    <p className="text-sm text-muted-foreground text-center py-4">{tp("sentinel.noSystems")}</p>
                   )}
                   {data?.systems.every((s) => s.aiSentinelSystemId) && (data?.systems.length ?? 0) > 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-2">All systems are already synced. Re-sending will push the latest state.</p>
+                    <p className="text-sm text-muted-foreground text-center py-2">{tp("sentinel.allSynced")}</p>
                   )}
                   {data?.systems.map((system) => (
                     <label
@@ -187,11 +187,11 @@ export default function AISystemsPage() {
                         <span className="text-sm font-medium">{system.name}</span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge className={`text-[10px] ${RISK_COLORS[system.riskLevel] ?? ""}`}>
-                            {system.riskLevel.replace("_", " ")}
+                            {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
                           </Badge>
                           {system.aiSentinelSystemId && (
                             <span className="text-[10px] text-green-600 flex items-center gap-1">
-                              <Shield className="w-3 h-3" /> Already synced
+                              <Shield className="w-3 h-3" /> {tp("sentinel.alreadySynced")}
                             </span>
                           )}
                         </div>
@@ -204,7 +204,7 @@ export default function AISystemsPage() {
                     variant="outline"
                     onClick={() => setExportDialogOpen(false)}
                   >
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button
                     onClick={() => exportMutation.mutate({
@@ -214,9 +214,9 @@ export default function AISystemsPage() {
                     disabled={selectedExportIds.length === 0 || exportMutation.isPending}
                   >
                     {exportMutation.isPending ? (
-                      <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Sending…</>
+                      <><Loader2 className="w-4 h-4 animate-spin mr-2" /> {tp("sentinel.sending")}</>
                     ) : (
-                      <>Send {selectedExportIds.length} {selectedExportIds.length === 1 ? "system" : "systems"}</>
+                      tp("sentinel.sendCount", { count: selectedExportIds.length })
                     )}
                   </Button>
                 </DialogFooter>
@@ -226,7 +226,7 @@ export default function AISystemsPage() {
           <Button asChild>
             <Link href="/privacy/ai-systems/register">
               <Plus className="w-4 h-4 mr-2" />
-              Register AI System
+              {tp("register")}
             </Link>
           </Button>
         </div>
@@ -238,31 +238,31 @@ export default function AISystemsPage() {
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
               <div className="text-2xl font-bold">{stats.total}</div>
-              <div className="text-xs text-muted-foreground">Total Systems</div>
+              <div className="text-xs text-muted-foreground">{tp("stats.total")}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
               <div className="text-2xl font-bold text-red-600">{stats.byRiskLevel.UNACCEPTABLE ?? 0}</div>
-              <div className="text-xs text-muted-foreground">Unacceptable</div>
+              <div className="text-xs text-muted-foreground">{tp("stats.unacceptable")}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
               <div className="text-2xl font-bold text-orange-600">{stats.byRiskLevel.HIGH_RISK ?? 0}</div>
-              <div className="text-xs text-muted-foreground">High Risk</div>
+              <div className="text-xs text-muted-foreground">{tp("stats.highRisk")}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
               <div className="text-2xl font-bold text-yellow-600">{stats.byRiskLevel.LIMITED ?? 0}</div>
-              <div className="text-xs text-muted-foreground">Limited</div>
+              <div className="text-xs text-muted-foreground">{tp("stats.limited")}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
               <div className="text-2xl font-bold text-green-600">{stats.byRiskLevel.MINIMAL ?? 0}</div>
-              <div className="text-xs text-muted-foreground">Minimal</div>
+              <div className="text-xs text-muted-foreground">{tp("stats.minimal")}</div>
             </CardContent>
           </Card>
         </div>
@@ -273,7 +273,7 @@ export default function AISystemsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search AI systems..."
+            placeholder={tp("search")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -281,26 +281,26 @@ export default function AISystemsPage() {
         </div>
         <Select value={riskFilter} onValueChange={setRiskFilter}>
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Risk Level" />
+            <SelectValue placeholder={tp("filter.riskLevel")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Risks</SelectItem>
-            <SelectItem value="UNACCEPTABLE">Unacceptable</SelectItem>
-            <SelectItem value="HIGH_RISK">High Risk</SelectItem>
-            <SelectItem value="LIMITED">Limited</SelectItem>
-            <SelectItem value="MINIMAL">Minimal</SelectItem>
+            <SelectItem value="all">{tp("filter.allRisks")}</SelectItem>
+            <SelectItem value="UNACCEPTABLE">{tp("riskLevel.UNACCEPTABLE")}</SelectItem>
+            <SelectItem value="HIGH_RISK">{tp("riskLevel.HIGH_RISK")}</SelectItem>
+            <SelectItem value="LIMITED">{tp("riskLevel.LIMITED")}</SelectItem>
+            <SelectItem value="MINIMAL">{tp("riskLevel.MINIMAL")}</SelectItem>
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder={tp("filter.status")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="DRAFT">Draft</SelectItem>
-            <SelectItem value="REGISTERED">Registered</SelectItem>
-            <SelectItem value="COMPLIANT">Compliant</SelectItem>
-            <SelectItem value="NON_COMPLIANT">Non-Compliant</SelectItem>
+            <SelectItem value="all">{tp("filter.allStatus")}</SelectItem>
+            <SelectItem value="DRAFT">{tp("status.DRAFT")}</SelectItem>
+            <SelectItem value="REGISTERED">{tp("status.REGISTERED")}</SelectItem>
+            <SelectItem value="COMPLIANT">{tp("status.COMPLIANT")}</SelectItem>
+            <SelectItem value="NON_COMPLIANT">{tp("status.NON_COMPLIANT")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -314,13 +314,13 @@ export default function AISystemsPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <Bot className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-medium mb-2">No AI systems registered</h3>
+            <h3 className="font-medium mb-2">{tp("empty.title")}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Start by registering AI systems your organization uses or deploys
+              {tp("empty.subtitle")}
             </p>
             <Button asChild>
               <Link href="/privacy/ai-systems/register">
-                <Plus className="w-4 h-4 mr-2" /> Register AI System
+                <Plus className="w-4 h-4 mr-2" /> {tp("register")}
               </Link>
             </Button>
           </CardContent>
@@ -336,9 +336,16 @@ export default function AISystemsPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">{system.name}</span>
                         <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
-                          {system.riskLevel.replace("_", " ")}
+                          {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
                         </Badge>
-                        {STATUS_ICONS[system.status]}
+                        {(() => {
+                          const v = STATUS_VARIANTS[system.status];
+                          return v ? (
+                            <Badge variant={v.variant} className={v.className}>
+                              {tp(`status.${system.status}` as `status.DRAFT` | `status.REGISTERED` | `status.UNDER_REVIEW` | `status.COMPLIANT` | `status.NON_COMPLIANT` | `status.DECOMMISSIONED`)}
+                            </Badge>
+                          ) : null;
+                        })()}
                         {system.aiSentinelSystemId && (
                           <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-400" title="Synced with AI Sentinel">
                             <Shield className="w-3 h-3" />
@@ -352,10 +359,10 @@ export default function AISystemsPage() {
                         </p>
                       )}
                       <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                        {system.provider && <span>Provider: {system.provider}</span>}
-                        {system.modelType && <span>Type: {system.modelType}</span>}
-                        {system.vendor && <span>Vendor: {system.vendor.name}</span>}
-                        {system.category && <span>Category: {system.category}</span>}
+                        {system.provider && <span>{tp("card.provider", { value: system.provider })}</span>}
+                        {system.modelType && <span>{tp("card.type", { value: system.modelType })}</span>}
+                        {system.vendor && <span>{tp("card.vendor", { value: system.vendor.name })}</span>}
+                        {system.category && <span>{tp("card.category", { value: system.category })}</span>}
                       </div>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />

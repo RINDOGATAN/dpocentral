@@ -33,6 +33,179 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "aiSystems": {
+      "title": "AI Governance Register",
+      "subtitle": "Register and classify AI systems per the EU AI Act",
+      "register": "Register AI System",
+      "search": "Search AI systems...",
+      "filter": {
+        "riskLevel": "Risk Level",
+        "status": "Status",
+        "allRisks": "All Risks",
+        "allStatus": "All Status"
+      },
+      "stats": {
+        "total": "Total Systems",
+        "unacceptable": "Unacceptable",
+        "highRisk": "High Risk",
+        "limited": "Limited",
+        "minimal": "Minimal"
+      },
+      "riskLevel": {
+        "UNACCEPTABLE": "Unacceptable",
+        "HIGH_RISK": "High Risk",
+        "LIMITED": "Limited",
+        "MINIMAL": "Minimal"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "REGISTERED": "Registered",
+        "UNDER_REVIEW": "Under Review",
+        "COMPLIANT": "Compliant",
+        "NON_COMPLIANT": "Non-Compliant",
+        "DECOMMISSIONED": "Decommissioned"
+      },
+      "card": {
+        "provider": "Provider: {value}",
+        "type": "Type: {value}",
+        "vendor": "Vendor: {value}",
+        "category": "Category: {value}"
+      },
+      "empty": {
+        "title": "No AI systems registered",
+        "subtitle": "Start by registering AI systems your organization uses or deploys"
+      },
+      "sentinel": {
+        "send": "Send to AI Sentinel",
+        "title": "Send to AI Sentinel",
+        "description": "Forward AI systems to AI Sentinel for deeper governance tracking. Already-synced systems can be re-sent to push updates.",
+        "noSystems": "No AI systems registered yet.",
+        "allSynced": "All systems are already synced. Re-sending will push the latest state.",
+        "alreadySynced": "Already synced",
+        "sending": "Sending…",
+        "sendCount": "Send {count, plural, one {# system} other {# systems}}"
+      }
+    },
+    "incidents": {
+      "title": "Incident Management",
+      "subtitle": "Track security incidents and breaches",
+      "exportRegister": "Export Register",
+      "exportPdf": "Download as PDF",
+      "exportCsv": "Download as CSV",
+      "reportIncident": "Report Incident",
+      "search": "Search incidents...",
+      "stats": {
+        "total": "Total",
+        "open": "Open",
+        "critical": "Critical",
+        "pendingDpa": "Pending DPA"
+      },
+      "tabs": {
+        "all": "All",
+        "open": "Open",
+        "critical": "Critical",
+        "closed": "Closed"
+      },
+      "card": {
+        "records": "Records",
+        "recordsShort": "{count, plural, one {# record} other {# records}}"
+      },
+      "type": {
+        "DATA_BREACH": "Data Breach",
+        "UNAUTHORIZED_ACCESS": "Unauthorized Access",
+        "DATA_LOSS": "Data Loss",
+        "SYSTEM_COMPROMISE": "System Compromise",
+        "PHISHING": "Phishing",
+        "RANSOMWARE": "Ransomware",
+        "INSIDER_THREAT": "Insider Threat",
+        "PHYSICAL_SECURITY": "Physical Security",
+        "VENDOR_INCIDENT": "Vendor Incident",
+        "OTHER": "Other"
+      },
+      "status": {
+        "REPORTED": "Reported",
+        "INVESTIGATING": "Investigating",
+        "CONTAINED": "Contained",
+        "ERADICATED": "Eradicated",
+        "RECOVERING": "Recovering",
+        "CLOSED": "Closed",
+        "FALSE_POSITIVE": "False Positive"
+      },
+      "severity": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "emptyAll": {
+        "title": "No incidents reported",
+        "subtitle": "Report security incidents and data breaches here"
+      },
+      "emptyOpen": "No open incidents",
+      "emptyCritical": "No critical incidents",
+      "emptyClosed": "No closed incidents"
+    },
+    "vendors": {
+      "title": "Vendor Management",
+      "subtitle": "Manage third-party vendors and data processors",
+      "exportRegister": "Export Register",
+      "exportPdf": "Download as PDF",
+      "exportCsv": "Download as CSV",
+      "questionnaires": "Questionnaires",
+      "addVendor": "Add Vendor",
+      "addVendorShort": "Add",
+      "search": "Search vendors...",
+      "stats": {
+        "total": "Total Vendors",
+        "active": "Active Vendors",
+        "highRisk": "High Risk",
+        "pendingReview": "Pending Review"
+      },
+      "tabs": {
+        "all": "All",
+        "active": "Active",
+        "review": "Under Review",
+        "highRisk": "High Risk"
+      },
+      "catalog": {
+        "title": "Vendor Catalog",
+        "subtitle": "Search 700+ pre-audited MarTech, AI, and SaaS vendors",
+        "lockedSubtitle": "Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links",
+        "active": "Active",
+        "addFromCatalog": "Add from Catalog",
+        "perMonth": "/mo",
+        "enable": "Enable",
+        "contactUs": "Contact Us",
+        "modalDescription": "Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links."
+      },
+      "card": {
+        "noCategories": "No categories",
+        "dataProcessed": "Data Processed",
+        "moreItems": "+{count} more",
+        "added": "Added: {date}",
+        "riskBadge": "{level} Risk"
+      },
+      "status": {
+        "PROSPECTIVE": "Prospective",
+        "ACTIVE": "Active",
+        "UNDER_REVIEW": "Under Review",
+        "SUSPENDED": "Suspended",
+        "TERMINATED": "Terminated"
+      },
+      "riskTier": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "CRITICAL": "Critical"
+      },
+      "emptyAll": {
+        "title": "No vendors yet",
+        "subtitle": "Add your first vendor to track third-party risk"
+      },
+      "emptyActive": "No active vendors",
+      "emptyReview": "No vendors under review",
+      "emptyHighRisk": "No high risk vendors"
+    },
     "assessments": {
       "title": "Assessments",
       "subtitle": "Privacy impact assessments and vendor evaluations",
