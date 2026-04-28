@@ -22,16 +22,9 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARType } from "@prisma/client";
 
-const typeOptions: { value: DSARType; label: string; description: string }[] = [
-  { value: "ACCESS", label: "Access", description: "Right to obtain a copy of personal data" },
-  { value: "RECTIFICATION", label: "Rectification", description: "Right to correct inaccurate data" },
-  { value: "ERASURE", label: "Erasure", description: "Right to deletion (right to be forgotten)" },
-  { value: "PORTABILITY", label: "Portability", description: "Right to receive data in a portable format" },
-  { value: "OBJECTION", label: "Objection", description: "Right to object to data processing" },
-  { value: "RESTRICTION", label: "Restriction", description: "Right to restrict processing" },
-];
+const TYPE_KEYS: DSARType[] = ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY", "OBJECTION", "RESTRICTION"];
 
-const relationshipOptions = [
+const RELATIONSHIP_OPTIONS = [
   "Customer",
   "Employee",
   "Former Employee",
@@ -39,12 +32,14 @@ const relationshipOptions = [
   "Contractor",
   "Website Visitor",
   "Other",
-];
+] as const;
 
 export default function NewDSARRequestPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.newDsar");
+  const tCommon = useTranslations("common");
 
   const [form, setForm] = useState({
     type: "" as string,
@@ -96,10 +91,8 @@ export default function NewDSARRequestPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">New DSAR Request</h1>
-          <p className="text-sm text-muted-foreground">
-            Log a data subject access request
-          </p>
+          <h1 className="text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-sm text-muted-foreground">{tp("subtitle")}</p>
         </div>
       </div>
 
@@ -107,24 +100,24 @@ export default function NewDSARRequestPage() {
         {/* Request Type */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Request Type</CardTitle>
-            <CardDescription>Select the type of data subject request</CardDescription>
+            <CardTitle className="text-base">{tp("type.title")}</CardTitle>
+            <CardDescription>{tp("type.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {typeOptions.map((opt) => (
+              {TYPE_KEYS.map((value) => (
                 <button
-                  key={opt.value}
+                  key={value}
                   type="button"
-                  onClick={() => setForm({ ...form, type: opt.value })}
+                  onClick={() => setForm({ ...form, type: value })}
                   className={`text-left p-4 border transition-colors ${
-                    form.type === opt.value
+                    form.type === value
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/50"
                   }`}
                 >
-                  <p className="font-medium text-sm">{opt.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{opt.description}</p>
+                  <p className="font-medium text-sm">{tp(`type.${value}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{tp(`type.${value}_desc` as `type.ACCESS_desc` | `type.RECTIFICATION_desc` | `type.ERASURE_desc` | `type.PORTABILITY_desc` | `type.OBJECTION_desc` | `type.RESTRICTION_desc`)}</p>
                 </button>
               ))}
             </div>
@@ -134,27 +127,27 @@ export default function NewDSARRequestPage() {
         {/* Requester Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Requester Information</CardTitle>
-            <CardDescription>Details of the data subject making the request</CardDescription>
+            <CardTitle className="text-base">{tp("requester.title")}</CardTitle>
+            <CardDescription>{tp("requester.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="requesterName">Full Name *</Label>
+                <Label htmlFor="requesterName">{tp("requester.name")}</Label>
                 <Input
                   id="requesterName"
-                  placeholder="e.g., John Doe"
+                  placeholder={tp("requester.namePlaceholder")}
                   value={form.requesterName}
                   onChange={(e) => setForm({ ...form, requesterName: e.target.value })}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="requesterEmail">Email Address *</Label>
+                <Label htmlFor="requesterEmail">{tp("requester.email")}</Label>
                 <Input
                   id="requesterEmail"
                   type="email"
-                  placeholder="e.g., john@example.com"
+                  placeholder={tp("requester.emailPlaceholder")}
                   value={form.requesterEmail}
                   onChange={(e) => setForm({ ...form, requesterEmail: e.target.value })}
                   required
@@ -163,36 +156,36 @@ export default function NewDSARRequestPage() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="requesterPhone">Phone Number</Label>
+                <Label htmlFor="requesterPhone">{tp("requester.phone")}</Label>
                 <Input
                   id="requesterPhone"
-                  placeholder="e.g., +34 600 000 000"
+                  placeholder={tp("requester.phonePlaceholder")}
                   value={form.requesterPhone}
                   onChange={(e) => setForm({ ...form, requesterPhone: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="relationship">Relationship</Label>
+                <Label htmlFor="relationship">{tp("requester.relationship")}</Label>
                 <Select
                   value={form.relationship}
                   onValueChange={(value) => setForm({ ...form, relationship: value })}
                 >
                   <SelectTrigger id="relationship">
-                    <SelectValue placeholder="Select relationship" />
+                    <SelectValue placeholder={tp("requester.relationshipPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {relationshipOptions.map((rel) => (
-                      <SelectItem key={rel} value={rel}>{rel}</SelectItem>
+                    {RELATIONSHIP_OPTIONS.map((rel) => (
+                      <SelectItem key={rel} value={rel}>{tp(`requester.relationshipOptions.${rel}` as `requester.relationshipOptions.Customer` | `requester.relationshipOptions.Employee` | `requester.relationshipOptions.Former Employee` | `requester.relationshipOptions.Job Applicant` | `requester.relationshipOptions.Contractor` | `requester.relationshipOptions.Website Visitor` | `requester.relationshipOptions.Other`)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="requesterAddress">Address</Label>
+              <Label htmlFor="requesterAddress">{tp("requester.address")}</Label>
               <Input
                 id="requesterAddress"
-                placeholder="e.g., 123 Main St, City, Country"
+                placeholder={tp("requester.addressPlaceholder")}
                 value={form.requesterAddress}
                 onChange={(e) => setForm({ ...form, requesterAddress: e.target.value })}
               />
@@ -203,25 +196,25 @@ export default function NewDSARRequestPage() {
         {/* Request Details */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Request Details</CardTitle>
-            <CardDescription>Additional information about the request</CardDescription>
+            <CardTitle className="text-base">{tp("details.title")}</CardTitle>
+            <CardDescription>{tp("details.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tp("details.description")}</Label>
               <Textarea
                 id="description"
-                placeholder="Describe the request in detail..."
+                placeholder={tp("details.descriptionPlaceholder")}
                 rows={3}
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="requestedData">Specific Data Requested</Label>
+              <Label htmlFor="requestedData">{tp("details.requestedData")}</Label>
               <Textarea
                 id="requestedData"
-                placeholder="e.g., All marketing communications, CRM records, billing history..."
+                placeholder={tp("details.requestedDataPlaceholder")}
                 rows={2}
                 value={form.requestedData}
                 onChange={(e) => setForm({ ...form, requestedData: e.target.value })}
@@ -233,11 +226,11 @@ export default function NewDSARRequestPage() {
         {/* Submit */}
         <div className="flex justify-end gap-3">
           <Link href="/privacy/dsar">
-            <Button type="button" variant="outline">Cancel</Button>
+            <Button type="button" variant="outline">{tCommon("cancel")}</Button>
           </Link>
           <Button type="submit" disabled={!isValid || createRequest.isPending}>
             {createRequest.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Create Request
+            {tp("submit")}
           </Button>
         </div>
       </form>
