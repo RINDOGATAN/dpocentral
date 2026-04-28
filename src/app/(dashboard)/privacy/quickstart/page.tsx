@@ -75,6 +75,7 @@ export default function QuickstartPage() {
   const orgId = organization?.id ?? "";
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.quickstart");
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -176,10 +177,10 @@ export default function QuickstartPage() {
       if (total === 0) {
         toast.info(t("quickstart.noNewRecords"));
       } else {
-        const parts = [];
-        if (data.vendors > 0) parts.push(`${data.vendors} vendor${data.vendors !== 1 ? "s" : ""}`);
-        if (data.assets > 0) parts.push(`${data.assets} asset${data.assets !== 1 ? "s" : ""}`);
-        if (data.activities > 0) parts.push(`${data.activities} activit${data.activities !== 1 ? "ies" : "y"}`);
+        const parts: string[] = [];
+        if (data.vendors > 0) parts.push(t("quickstart.createdVendors", { count: data.vendors }));
+        if (data.assets > 0) parts.push(t("quickstart.createdAssets", { count: data.assets }));
+        if (data.activities > 0) parts.push(t("quickstart.createdActivities", { count: data.activities }));
         toast.success(t("quickstart.createdSummary", { summary: parts.join(", ") }));
       }
       setStep("success");
@@ -270,16 +271,12 @@ export default function QuickstartPage() {
         <Link href="/privacy?from=quickstart">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Dashboard
+            {tp("back")}
           </Button>
         </Link>
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">
-            Privacy Program Quickstart
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Get a head start on your privacy program
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-sm text-muted-foreground">{tp("subtitle")}</p>
         </div>
       </div>
 
@@ -288,15 +285,15 @@ export default function QuickstartPage() {
         <div className="flex items-center gap-2 text-sm flex-wrap">
           {[
             ...(!fromVendorWatch
-              ? [{ key: "choose", label: "Choose Path" }]
+              ? [{ key: "choose", label: tp("steps.choose") }]
               : []),
             ...(useVendors
-              ? [{ key: "vendors", label: fromVendorWatch ? "Your Vendors" : "Select Vendors" }]
+              ? [{ key: "vendors", label: fromVendorWatch ? tp("steps.yourVendors") : tp("steps.vendors") }]
               : []),
             ...(useIndustry
-              ? [{ key: "industry", label: "Industry Template" }]
+              ? [{ key: "industry", label: tp("steps.industry") }]
               : []),
-            { key: "review", label: "Review & Confirm" },
+            { key: "review", label: tp("steps.review") },
           ].map((s, i, arr) => (
             <span key={s.key} className="flex items-center gap-2">
               <span
@@ -351,29 +348,26 @@ export default function QuickstartPage() {
                       </div>
                       <div className="flex-1">
                         <h2 className="text-lg sm:text-xl font-semibold">
-                          {allImported
-                            ? "Your vendors are already imported!"
-                            : "Welcome from Vendor.Watch!"}
+                          {allImported ? tp("welcome.allImportedTitle") : tp("welcome.vwTitle")}
                         </h2>
                         {allImported ? (
                           <p className="text-muted-foreground mt-2">
-                            All <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> from
-                            your Vendor.Watch portfolio have already been imported. You can
-                            still add an industry template to fill in processing activities
-                            and data flows.
+                            {tp.rich("welcome.allImportedBody", {
+                              count: portfolio.vendors.length,
+                              b: (chunks) => <strong>{chunks}</strong>,
+                            })}
                           </p>
                         ) : (
                           <>
                             <p className="text-muted-foreground mt-2">
-                              We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
-                              your portfolio{portfolio.slugs.length < portfolio.vendors.length
-                                ? ` (${portfolio.slugs.length} new)`
-                                : ""}. Can we help you build your privacy program
-                              around your initial vendor portfolio?
+                              {tp.rich("welcome.vwBody", {
+                                count: portfolio.vendors.length,
+                                newCount: portfolio.slugs.length < portfolio.vendors.length ? portfolio.slugs.length : "none",
+                                b: (chunks) => <strong>{chunks}</strong>,
+                              })}
                             </p>
                             <p className="text-sm text-muted-foreground mt-2">
-                              You will be able to add more vendors and processing activities
-                              later on.
+                              {tp("welcome.vwAddMore")}
                             </p>
                           </>
                         )}
@@ -396,23 +390,23 @@ export default function QuickstartPage() {
                                 <span className="font-medium text-sm">{v!.name}</span>
                                 {v!.isVerified && (
                                   <Badge variant="outline" className="text-xs border-primary/50 text-primary">
-                                    Verified
+                                    {tp("welcome.verified")}
                                   </Badge>
                                 )}
                                 {v!.criticality === "high" && (
                                   <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500">
-                                    High criticality
+                                    {tp("welcome.highCriticality")}
                                   </Badge>
                                 )}
                               </div>
                               <span className="text-xs text-muted-foreground">
-                                {v!.category} — {v!.mappingLabel} — {v!.elementCount} data elements
+                                {tp("welcome.vendorMeta", { category: v!.category, label: v!.mappingLabel, count: v!.elementCount })}
                               </span>
                             </div>
                           </div>
                           {v!.alreadyImported && (
                             <Badge variant="secondary" className="text-xs shrink-0">
-                              Already imported
+                              {tp("welcome.alreadyImported")}
                             </Badge>
                           )}
                         </div>
@@ -431,45 +425,13 @@ export default function QuickstartPage() {
                             }}
                           >
                             <Sparkles className="w-4 h-4 mr-2" />
-                            Add an industry template
+                            {tp("welcome.addIndustry")}
                           </Button>
                           <Link href="/privacy?from=quickstart">
                             <Button variant="ghost" size="lg">
-                              Back to Dashboard
+                              {tp("welcome.backToDashboard")}
                             </Button>
                           </Link>
-                        </>
-                      ) : !hasEntitlement ? (
-                        <>
-                          <Button
-                            size="lg"
-                            onClick={() => {
-                              setUseVendors(true);
-                              setStep("vendors");
-                            }}
-                          >
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            Yes, build my privacy program
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="lg"
-                            onClick={() => {
-                              setUseVendors(true);
-                              setUseIndustry(true);
-                              setStep("vendors");
-                            }}
-                          >
-                            <Package className="w-4 h-4 mr-2" />
-                            Yes, and also add an industry template
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="lg"
-                            onClick={() => setStep("choose")}
-                          >
-                            Let me choose manually
-                          </Button>
                         </>
                       ) : (
                         <>
@@ -481,7 +443,7 @@ export default function QuickstartPage() {
                             }}
                           >
                             <Sparkles className="w-4 h-4 mr-2" />
-                            Yes, build my privacy program
+                            {tp("welcome.yesBuild")}
                           </Button>
                           <Button
                             variant="outline"
@@ -493,14 +455,14 @@ export default function QuickstartPage() {
                             }}
                           >
                             <Package className="w-4 h-4 mr-2" />
-                            Yes, and also add an industry template
+                            {tp("welcome.yesAndIndustry")}
                           </Button>
                           <Button
                             variant="ghost"
                             size="lg"
                             onClick={() => setStep("choose")}
                           >
-                            Let me choose manually
+                            {tp("welcome.manual")}
                           </Button>
                         </>
                       )}
@@ -509,7 +471,7 @@ export default function QuickstartPage() {
                 </Card>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  Portfolio imported from{" "}
+                  {tp("welcome.portfolioFrom")}{" "}
                   <a
                     href="https://vendorwatch.todo.law"
                     target="_blank"
@@ -531,10 +493,7 @@ export default function QuickstartPage() {
           ════════════════════════════════════════════════ */}
       {step === "choose" && (
         <div className="space-y-4">
-          <p className="text-muted-foreground">
-            Choose how you want to bootstrap your privacy program. You can use
-            both options together.
-          </p>
+          <p className="text-muted-foreground">{tp("choose.intro")}</p>
 
           {/* Recommended: one-click complete setup */}
           <Card
@@ -555,7 +514,7 @@ export default function QuickstartPage() {
                     {tQs("recommended")}
                   </h3>
                   <Badge variant="outline" className="text-primary border-primary/50">
-                    Best
+                    {tp("choose.best")}
                   </Badge>
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -571,7 +530,7 @@ export default function QuickstartPage() {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-background px-2 text-muted-foreground">or choose individually</span>
+              <span className="bg-background px-2 text-muted-foreground">{tp("choose.or")}</span>
             </div>
           </div>
 
@@ -590,25 +549,22 @@ export default function QuickstartPage() {
                   <Building2 className="w-8 h-8 text-primary" />
                   {!catalogAccess?.hasAccess && (
                     <Badge variant="outline" className="text-green-600 border-green-600/50">
-                      5 Free
+                      {tp("choose.fiveFree")}
                     </Badge>
                   )}
                   {useVendors && (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                   )}
                 </div>
-                <CardTitle className="text-lg">Import from Vendor Catalog</CardTitle>
-                <CardDescription>
-                  Select vendors you use and auto-generate data assets, elements,
-                  and processing activities from their known data profiles.
-                </CardDescription>
+                <CardTitle className="text-lg">{tp("choose.vendorCardTitle")}</CardTitle>
+                <CardDescription>{tp("choose.vendorCardDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">Data Assets</Badge>
-                  <Badge variant="secondary">Data Elements</Badge>
-                  <Badge variant="secondary">Processing Activities</Badge>
-                  <Badge variant="secondary">Data Transfers</Badge>
+                  <Badge variant="secondary">{tp("choose.tagAssets")}</Badge>
+                  <Badge variant="secondary">{tp("choose.tagElements")}</Badge>
+                  <Badge variant="secondary">{tp("choose.tagActivities")}</Badge>
+                  <Badge variant="secondary">{tp("choose.tagTransfers")}</Badge>
                 </div>
               </CardContent>
             </Card>
@@ -626,23 +582,20 @@ export default function QuickstartPage() {
                 <div className="flex items-center justify-between">
                   <Sparkles className="w-8 h-8 text-primary" />
                   <Badge variant="outline" className="text-green-600 border-green-600/50">
-                    Free
+                    {tp("choose.free")}
                   </Badge>
                   {useIndustry && (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                   )}
                 </div>
-                <CardTitle className="text-lg">Start from Industry Template</CardTitle>
-                <CardDescription>
-                  Pick your industry and get a pre-built privacy program with
-                  common data assets, processing activities, and data flows.
-                </CardDescription>
+                <CardTitle className="text-lg">{tp("choose.industryCardTitle")}</CardTitle>
+                <CardDescription>{tp("choose.industryCardDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">Data Assets</Badge>
-                  <Badge variant="secondary">Processing Activities</Badge>
-                  <Badge variant="secondary">Data Flows</Badge>
+                  <Badge variant="secondary">{tp("choose.tagAssets")}</Badge>
+                  <Badge variant="secondary">{tp("choose.tagActivities")}</Badge>
+                  <Badge variant="secondary">{tp("choose.tagFlows")}</Badge>
                 </div>
               </CardContent>
             </Card>
@@ -653,7 +606,7 @@ export default function QuickstartPage() {
               onClick={handleProceedFromChoose}
               disabled={!useVendors && !useIndustry}
             >
-              Continue
+              {tp("choose.continue")}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -667,15 +620,12 @@ export default function QuickstartPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Select Vendors</h2>
-              <p className="text-sm text-muted-foreground">
-                Search the vendor catalog and select the tools your organization
-                uses.
-              </p>
+              <h2 className="text-lg font-semibold">{tp("vendors.title")}</h2>
+              <p className="text-sm text-muted-foreground">{tp("vendors.subtitle")}</p>
             </div>
             <Button variant="ghost" size="sm" onClick={() => setStep(fromVendorWatch && portfolio?.hasPortfolio ? "welcome" : "choose")}>
               <ArrowLeft className="w-4 h-4 mr-1" />
-              Back
+              {tp("vendors.back")}
             </Button>
           </div>
 
@@ -703,7 +653,7 @@ export default function QuickstartPage() {
                 );
               })}
               <span className="text-xs text-muted-foreground self-center">
-                {selectedSlugs.length} selected
+                {tp("vendors.selectedSuffix", { count: selectedSlugs.length })}
               </span>
             </div>
           )}
@@ -716,7 +666,7 @@ export default function QuickstartPage() {
               onChange={(e) => handleSearchChange(e.target.value)}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-              placeholder="Search vendors (e.g., Google Analytics, Salesforce, Stripe...)"
+              placeholder={tp("vendors.searchPlaceholder")}
               className="pl-10"
             />
 
@@ -726,7 +676,7 @@ export default function QuickstartPage() {
                 {catalogLoading ? (
                   <div className="p-4 text-center text-sm text-muted-foreground">
                     <Loader2 className="w-4 h-4 animate-spin inline mr-2" />
-                    Searching...
+                    {tp("vendors.searching")}
                   </div>
                 ) : catalogResults && catalogResults.length > 0 ? (
                   catalogResults.map((vendor) => {
@@ -753,7 +703,7 @@ export default function QuickstartPage() {
                                 variant="outline"
                                 className="text-xs border-primary/50 text-primary shrink-0"
                               >
-                                Verified
+                                {tp("vendors.verified")}
                               </Badge>
                             )}
                           </div>
@@ -763,7 +713,7 @@ export default function QuickstartPage() {
                             </span>
                             {vendor.gdprCompliant && (
                               <Badge variant="outline" className="text-xs">
-                                GDPR
+                                {tp("vendors.gdpr")}
                               </Badge>
                             )}
                           </div>
@@ -778,7 +728,7 @@ export default function QuickstartPage() {
                   })
                 ) : (
                   <div className="p-4 text-center text-sm text-muted-foreground">
-                    No vendors found for &quot;{debouncedSearch}&quot;
+                    {tp("vendors.noResults", { query: debouncedSearch })}
                   </div>
                 )}
               </div>
@@ -789,14 +739,22 @@ export default function QuickstartPage() {
           {vendorPreview && vendorPreview.previews.length > 0 && (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Import Preview</CardTitle>
+                <CardTitle className="text-base">{tp("vendors.previewTitle")}</CardTitle>
                 <CardDescription>
-                  {vendorPreview.totals.vendors} vendors,{" "}
-                  {vendorPreview.totals.assets} assets,{" "}
-                  {vendorPreview.totals.elements} elements,{" "}
-                  {vendorPreview.totals.activities} activities
-                  {vendorPreview.totals.transfers > 0 &&
-                    `, ${vendorPreview.totals.transfers} data transfers`}
+                  {vendorPreview.totals.transfers > 0
+                    ? tp("vendors.previewSummaryWithTransfers", {
+                        vendors: vendorPreview.totals.vendors,
+                        assets: vendorPreview.totals.assets,
+                        elements: vendorPreview.totals.elements,
+                        activities: vendorPreview.totals.activities,
+                        transfers: vendorPreview.totals.transfers,
+                      })
+                    : tp("vendors.previewSummary", {
+                        vendors: vendorPreview.totals.vendors,
+                        assets: vendorPreview.totals.assets,
+                        elements: vendorPreview.totals.elements,
+                        activities: vendorPreview.totals.activities,
+                      })}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -822,7 +780,7 @@ export default function QuickstartPage() {
                         </div>
                         {isExisting && (
                           <Badge variant="secondary" className="text-xs">
-                            Already exists
+                            {tp("vendors.alreadyExists")}
                           </Badge>
                         )}
                         {p.isHighRisk && !isExisting && (
@@ -830,28 +788,27 @@ export default function QuickstartPage() {
                             variant="outline"
                             className="text-xs border-amber-500/50 text-amber-500"
                           >
-                            High Risk
+                            {tp("vendors.highRisk")}
                           </Badge>
                         )}
                       </div>
                       {!isExisting && (
                         <div className="mt-2 flex flex-wrap gap-1">
                           <span className="text-xs text-muted-foreground">
-                            Will create:
+                            {tp("vendors.willCreate")}
                           </span>
                           <Badge variant="secondary" className="text-xs">
-                            1 Asset
+                            {tp("vendors.assetCount", { count: 1 })}
                           </Badge>
                           <Badge variant="secondary" className="text-xs">
-                            {p.elementCount} Elements
+                            {tp("vendors.elementCount", { count: p.elementCount })}
                           </Badge>
                           <Badge variant="secondary" className="text-xs">
-                            1 Activity
+                            {tp("vendors.activityCount", { count: 1 })}
                           </Badge>
                           {p.transfers.length > 0 && (
                             <Badge variant="secondary" className="text-xs">
-                              {p.transfers.length} Transfer
-                              {p.transfers.length !== 1 ? "s" : ""}
+                              {tp("vendors.transferCount", { count: p.transfers.length })}
                             </Badge>
                           )}
                         </div>
@@ -859,7 +816,7 @@ export default function QuickstartPage() {
                       {p.privacyTechnologies.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
                           <span className="text-xs text-muted-foreground">
-                            Privacy technologies:
+                            {tp("vendors.privacyTech")}
                           </span>
                           {p.privacyTechnologies.map((pet) => (
                             <Badge key={pet} variant="outline" className="text-xs">
@@ -881,7 +838,7 @@ export default function QuickstartPage() {
               onClick={handleProceedFromVendors}
               disabled={selectedSlugs.length === 0}
             >
-              {useIndustry ? "Continue to Industry" : "Review"}
+              {useIndustry ? tp("vendors.continueToIndustry") : tp("vendors.reviewBtn")}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -895,10 +852,8 @@ export default function QuickstartPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Select Industry</h2>
-              <p className="text-sm text-muted-foreground">
-                Choose the template that best matches your organization.
-              </p>
+              <h2 className="text-lg font-semibold">{tp("industry.title")}</h2>
+              <p className="text-sm text-muted-foreground">{tp("industry.subtitle")}</p>
             </div>
             <Button
               variant="ghost"
@@ -906,7 +861,7 @@ export default function QuickstartPage() {
               onClick={() => setStep(useVendors ? "vendors" : "choose")}
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
-              Back
+              {tp("industry.back")}
             </Button>
           </div>
 
@@ -939,9 +894,9 @@ export default function QuickstartPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex gap-3 text-xs text-muted-foreground">
-                      <span>{t.assetCount} assets</span>
-                      <span>{t.activityCount} activities</span>
-                      <span>{t.flowCount} flows</span>
+                      <span>{tp("industry.templateAssets", { count: t.assetCount })}</span>
+                      <span>{tp("industry.templateActivities", { count: t.activityCount })}</span>
+                      <span>{tp("industry.templateFlows", { count: t.flowCount })}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -956,13 +911,15 @@ export default function QuickstartPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-base">
-                      {industryPreview.template.name} Template Preview
+                      {tp("industry.previewTitle", { name: industryPreview.template.name })}
                     </CardTitle>
                     <CardDescription>
-                      {industryPreview.totals.assets} assets,{" "}
-                      {industryPreview.totals.elements} elements,{" "}
-                      {industryPreview.totals.activities} activities,{" "}
-                      {industryPreview.totals.flows} flows
+                      {tp("industry.previewSummary", {
+                        assets: industryPreview.totals.assets,
+                        elements: industryPreview.totals.elements,
+                        activities: industryPreview.totals.activities,
+                        flows: industryPreview.totals.flows,
+                      })}
                     </CardDescription>
                   </div>
                   <Button
@@ -976,7 +933,7 @@ export default function QuickstartPage() {
                       <ChevronDown className="w-4 h-4" />
                     )}
                     <span className="ml-1 text-xs">
-                      {expandedAssets ? "Collapse" : "Expand"}
+                      {expandedAssets ? tp("industry.collapse") : tp("industry.expand")}
                     </span>
                   </Button>
                 </div>
@@ -987,7 +944,7 @@ export default function QuickstartPage() {
                   <div>
                     <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
                       <Database className="w-4 h-4" />
-                      Data Assets
+                      {tp("industry.dataAssets")}
                     </h4>
                     <div className="space-y-2">
                       {industryPreview.assets.map((a) => (
@@ -1005,13 +962,13 @@ export default function QuickstartPage() {
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
-                                  Exists
+                                  {tp("industry.exists")}
                                 </Badge>
                               )}
                             </div>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {a.elementCount} elements: {a.elements.join(", ")}
+                            {tp("industry.elementsList", { count: a.elementCount, list: a.elements.join(", ") })}
                           </p>
                         </div>
                       ))}
@@ -1022,7 +979,7 @@ export default function QuickstartPage() {
                   <div>
                     <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
                       <FileText className="w-4 h-4" />
-                      Processing Activities
+                      {tp("industry.processingActivities")}
                     </h4>
                     <div className="space-y-2">
                       {industryPreview.activities.map((a) => (
@@ -1040,7 +997,7 @@ export default function QuickstartPage() {
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
-                                  Exists
+                                  {tp("industry.exists")}
                                 </Badge>
                               )}
                             </div>
@@ -1057,7 +1014,7 @@ export default function QuickstartPage() {
                   <div>
                     <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
                       <ArrowRightLeft className="w-4 h-4" />
-                      Data Flows
+                      {tp("industry.dataFlows")}
                     </h4>
                     <div className="space-y-2">
                       {industryPreview.flows.map((f) => (
@@ -1085,7 +1042,7 @@ export default function QuickstartPage() {
               onClick={handleProceedFromIndustry}
               disabled={!selectedIndustryId}
             >
-              Review
+              {tp("industry.review")}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -1099,10 +1056,8 @@ export default function QuickstartPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Review & Confirm</h2>
-              <p className="text-sm text-muted-foreground">
-                Review what will be created, then build your privacy program.
-              </p>
+              <h2 className="text-lg font-semibold">{tp("review.title")}</h2>
+              <p className="text-sm text-muted-foreground">{tp("review.subtitle")}</p>
             </div>
             <Button
               variant="ghost"
@@ -1112,7 +1067,7 @@ export default function QuickstartPage() {
               }
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
-              Back
+              {tp("review.back")}
             </Button>
           </div>
 
@@ -1120,38 +1075,38 @@ export default function QuickstartPage() {
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
             {[
               {
-                label: "Vendors",
+                label: tp("review.stats.vendors"),
                 count: reviewTotals.vendors,
                 icon: Building2,
                 show: useVendors,
               },
-              { label: "Data Assets", count: reviewTotals.assets, icon: Database, show: true },
+              { label: tp("review.stats.assets"), count: reviewTotals.assets, icon: Database, show: true },
               {
-                label: "Data Elements",
+                label: tp("review.stats.elements"),
                 count: reviewTotals.elements,
                 icon: Package,
                 show: true,
               },
               {
-                label: "Activities",
+                label: tp("review.stats.activities"),
                 count: reviewTotals.activities,
                 icon: FileText,
                 show: true,
               },
               {
-                label: "Data Flows",
+                label: tp("review.stats.flows"),
                 count: reviewTotals.flows,
                 icon: ArrowRightLeft,
                 show: useIndustry,
               },
               {
-                label: "Transfers",
+                label: tp("review.stats.transfers"),
                 count: reviewTotals.transfers,
                 icon: ArrowRightLeft,
                 show: useVendors && reviewTotals.transfers > 0,
               },
               {
-                label: "AI Systems",
+                label: tp("review.stats.aiSystems"),
                 count: reviewTotals.aiSystems,
                 icon: Bot,
                 show: useVendors && reviewTotals.aiSystems > 0,
@@ -1177,12 +1132,8 @@ export default function QuickstartPage() {
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div className="text-sm">
-                  <p className="font-medium">Non-destructive operation</p>
-                  <p className="text-muted-foreground mt-1">
-                    This will only create new records. Existing data assets,
-                    vendors, and processing activities will not be modified.
-                    Duplicates are automatically skipped.
-                  </p>
+                  <p className="font-medium">{tp("review.nondestructiveTitle")}</p>
+                  <p className="text-muted-foreground mt-1">{tp("review.nondestructiveBody")}</p>
                 </div>
               </div>
             </CardContent>
@@ -1194,7 +1145,7 @@ export default function QuickstartPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
-                  Vendor Import
+                  {tp("review.vendorImport")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -1214,16 +1165,19 @@ export default function QuickstartPage() {
                         <span className="flex items-center gap-1.5">
                           {p.vendorName}
                           {p.isAiCapable && (
-                            <span title="AI-capable vendor — AI System record will be created">
+                            <span title={tp("review.aiTooltip")}>
                               <Bot className="w-3.5 h-3.5 text-blue-500" />
                             </span>
                           )}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {p.elementCount} elements, 1 activity
-                          {p.transfers.length > 0 &&
-                            `, ${p.transfers.length} transfer${p.transfers.length !== 1 ? "s" : ""}`}
-                          {p.isAiCapable && ", 1 AI system"}
+                          {p.transfers.length > 0 && p.isAiCapable
+                            ? tp("review.vendorMetaFull", { count: p.elementCount, transfers: p.transfers.length })
+                            : p.transfers.length > 0
+                              ? tp("review.vendorMetaWithTransfers", { count: p.elementCount, transfers: p.transfers.length })
+                              : p.isAiCapable
+                                ? tp("review.vendorMetaWithAi", { count: p.elementCount })
+                                : tp("review.vendorMeta", { count: p.elementCount })}
                         </span>
                       </div>
                     ))}
@@ -1237,7 +1191,7 @@ export default function QuickstartPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  {industryPreview.template.name} Template
+                  {tp("review.templateSuffix", { name: industryPreview.template.name })}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -1251,7 +1205,7 @@ export default function QuickstartPage() {
                       >
                         <span>{a.name}</span>
                         <span className="text-xs text-muted-foreground">
-                          {a.elementCount} elements
+                          {tp("review.templateAssetMeta", { count: a.elementCount })}
                         </span>
                       </div>
                     ))}
@@ -1269,12 +1223,12 @@ export default function QuickstartPage() {
               {executeMutation.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Building...
+                  {tp("review.building")}
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Build My Privacy Program
+                  {tp("review.build")}
                 </>
               )}
             </Button>
@@ -1296,14 +1250,10 @@ export default function QuickstartPage() {
             <CardContent className="p-8 text-center">
               <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${nothingCreated ? "text-primary" : "text-green-500"}`} />
               <h2 className="text-xl font-semibold mb-2">
-                {nothingCreated
-                  ? "Everything is already set up!"
-                  : "Privacy Program Created!"}
+                {nothingCreated ? tp("success.alreadySetTitle") : tp("success.createdTitle")}
               </h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                {nothingCreated
-                  ? "All the selected records already exist in your privacy program. You're good to go!"
-                  : "Your privacy program has been bootstrapped. Explore your new records and customize them as needed."}
+                {nothingCreated ? tp("success.alreadySetBody") : tp("success.createdBody")}
               </p>
             </CardContent>
           </Card>
@@ -1316,10 +1266,8 @@ export default function QuickstartPage() {
                 <CardContent className="p-4 flex items-center gap-3">
                   <Database className="w-5 h-5 text-primary shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Data Inventory</p>
-                    <p className="text-xs text-muted-foreground">
-                      View assets & elements
-                    </p>
+                    <p className="font-medium text-sm">{tp("success.cardDataInventory")}</p>
+                    <p className="text-xs text-muted-foreground">{tp("success.cardDataInventoryDesc")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -1329,10 +1277,8 @@ export default function QuickstartPage() {
                 <CardContent className="p-4 flex items-center gap-3">
                   <FileText className="w-5 h-5 text-primary shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Processing Activities</p>
-                    <p className="text-xs text-muted-foreground">
-                      View activities & ROPA
-                    </p>
+                    <p className="font-medium text-sm">{tp("success.cardActivities")}</p>
+                    <p className="text-xs text-muted-foreground">{tp("success.cardActivitiesDesc")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -1342,10 +1288,8 @@ export default function QuickstartPage() {
                 <CardContent className="p-4 flex items-center gap-3">
                   <Building2 className="w-5 h-5 text-primary shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Vendors</p>
-                    <p className="text-xs text-muted-foreground">
-                      Manage vendor list
-                    </p>
+                    <p className="font-medium text-sm">{tp("success.cardVendors")}</p>
+                    <p className="text-xs text-muted-foreground">{tp("success.cardVendorsDesc")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -1356,9 +1300,9 @@ export default function QuickstartPage() {
                   <CardContent className="p-4 flex items-center gap-3">
                     <Bot className="w-5 h-5 text-primary shrink-0" />
                     <div>
-                      <p className="font-medium text-sm">AI Systems</p>
+                      <p className="font-medium text-sm">{tp("success.cardAiSystems")}</p>
                       <p className="text-xs text-muted-foreground">
-                        {executionResult.aiSystems} AI system(s) created
+                        {tp("success.cardAiSystemsDesc", { count: executionResult.aiSystems ?? 0 })}
                       </p>
                     </div>
                   </CardContent>
@@ -1370,10 +1314,8 @@ export default function QuickstartPage() {
                 <CardContent className="p-4 flex items-center gap-3">
                   <ArrowLeft className="w-5 h-5 text-primary shrink-0" />
                   <div>
-                    <p className="font-medium text-sm">Dashboard</p>
-                    <p className="text-xs text-muted-foreground">
-                      Return to overview
-                    </p>
+                    <p className="font-medium text-sm">{tp("success.cardDashboard")}</p>
+                    <p className="text-xs text-muted-foreground">{tp("success.cardDashboardDesc")}</p>
                   </div>
                 </CardContent>
               </Card>
