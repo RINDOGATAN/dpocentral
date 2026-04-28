@@ -48,6 +48,8 @@ export default function PrivacyDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.dashboard");
+  const tCommon = useTranslations("common");
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
@@ -141,9 +143,9 @@ export default function PrivacyDashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || "Privacy Dashboard"}</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || tp("subtitle")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Privacy Dashboard
+            {tp("subtitle")}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -159,14 +161,14 @@ export default function PrivacyDashboardPage() {
             disabled={!organization?.id}
           >
             <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Privacy Program Report</span>
-            <span className="sm:hidden">Report</span>
+            <span className="hidden sm:inline">{tp("exportReport")}</span>
+            <span className="sm:hidden">{tp("exportReportShort")}</span>
           </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2 shrink-0">
               <Building2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Switch</span>
+              <span className="hidden sm:inline">{tp("switchOrg")}</span>
               <ChevronDown className="w-3 h-3" />
             </Button>
           </DropdownMenuTrigger>
@@ -186,7 +188,7 @@ export default function PrivacyDashboardPage() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setCreateOrgOpen(true)} className="gap-2">
               <Plus className="w-4 h-4" />
-              New Organization
+              {tp("newOrgDialog.title")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -205,19 +207,19 @@ export default function PrivacyDashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm sm:text-base">
-                    Build your privacy program from your vendor portfolio
+                    {tp("vwQuickstartTitle")}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                    We found <strong>{portfolio.vendors.length} vendor{portfolio.vendors.length !== 1 ? "s" : ""}</strong> in
-                    your Vendor.Watch portfolio. We can auto-generate data assets,
-                    processing activities, and data flows — you&apos;ll be able to add
-                    more later.
+                    {tp.rich("vwQuickstartDesc", {
+                      count: portfolio.vendors.length,
+                      b: (chunks) => <strong>{chunks}</strong>,
+                    })}
                   </p>
                 </div>
                 <Link href="/privacy/quickstart?from=vendorwatch">
                   <Button size="sm" className="shrink-0 gap-2">
                     <Sparkles className="w-4 h-4" />
-                    <span>Build Now</span>
+                    <span>{tp("vwQuickstartCta")}</span>
                   </Button>
                 </Link>
               </div>
@@ -229,7 +231,7 @@ export default function PrivacyDashboardPage() {
                 ))}
                 {portfolio.vendors.length > 5 && (
                   <Badge variant="outline" className="text-xs">
-                    +{portfolio.vendors.length - 5} more
+                    {tp("moreVendors", { count: portfolio.vendors.length - 5 })}
                   </Badge>
                 )}
               </div>
@@ -244,18 +246,16 @@ export default function PrivacyDashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm sm:text-base">
-                  Get Started with Quickstart
+                  {tp("quickstartTitle")}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                  Bootstrap your privacy program in minutes. Import vendors from
-                  the catalog or start from an industry template to auto-generate
-                  data assets, processing activities, and data flows.
+                  {tp("quickstartDesc")}
                 </p>
               </div>
               <Link href="/privacy/quickstart">
                 <Button size="sm" className="shrink-0 gap-2">
                   <Sparkles className="w-4 h-4" />
-                  <span>Get Started</span>
+                  <span>{tp("quickstartCta")}</span>
                 </Button>
               </Link>
             </CardContent>
@@ -269,29 +269,29 @@ export default function PrivacyDashboardPage() {
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Data Inventory</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.dataInventory")}</CardTitle>
             <Database className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.dataAssets}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {dashboardStats.processingActivities} activities
+              {tp("stats.activitiesCount", { count: dashboardStats.processingActivities })}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Open DSARs</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.openDsars")}</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.openDSARs}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {dashboardStats.overdueDSARs > 0 ? (
-                <span className="text-amber-400/90 font-medium">{dashboardStats.overdueDSARs} overdue</span>
+                <span className="text-amber-400/90 font-medium">{tp("stats.overdueCount", { count: dashboardStats.overdueDSARs })}</span>
               ) : (
-                "All on track"
+                tp("stats.allOnTrack")
               )}
             </p>
           </CardContent>
@@ -299,26 +299,26 @@ export default function PrivacyDashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Assessments</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.assessments")}</CardTitle>
             <ClipboardCheck className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.activeAssessments}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              In progress
+              {tp("stats.inProgress")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Incidents</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.incidents")}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
             <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.openIncidents}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Open cases
+              {tp("stats.openCases")}
             </p>
           </CardContent>
         </Card>
@@ -331,12 +331,12 @@ export default function PrivacyDashboardPage() {
           <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <CardTitle className="text-base sm:text-lg">DSAR Queue</CardTitle>
-                <CardDescription className="text-xs sm:text-sm">Data subject access requests</CardDescription>
+                <CardTitle className="text-base sm:text-lg">{tp("dsarQueue.title")}</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">{tp("dsarQueue.subtitle")}</CardDescription>
               </div>
               <Link href="/privacy/dsar">
                 <Button variant="ghost" size="sm" className="shrink-0">
-                  <span className="hidden sm:inline">View all</span>
+                  <span className="hidden sm:inline">{tp("dsarQueue.viewAll")}</span>
                   <ArrowRight className="sm:ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -358,17 +358,17 @@ export default function PrivacyDashboardPage() {
                       {dsar.status === "COMPLETED" ? (
                         <Badge variant="outline" className="text-xs border-primary bg-primary text-primary-foreground">
                           <CheckCircle2 className="inline h-3 w-3 mr-1" />
-                          Done
+                          {tp("dsarQueue.done")}
                         </Badge>
                       ) : dsar.slaStatus === "overdue" ? (
                         <p className="text-xs sm:text-sm font-medium">
                           <Clock className="inline h-3 w-3 mr-1" />
-                          <span className="text-foreground">Overdue</span>
+                          <span className="text-foreground">{tp("dsarQueue.overdue")}</span>
                         </p>
                       ) : (
                         <p className="text-xs sm:text-sm font-medium text-muted-foreground">
                           <Clock className="inline h-3 w-3 mr-1" />
-                          {dsar.daysUntilDue ?? 0}d
+                          {tp("dsarQueue.daysShort", { count: dsar.daysUntilDue ?? 0 })}
                         </p>
                       )}
                     </div>
@@ -376,7 +376,7 @@ export default function PrivacyDashboardPage() {
                 </Link>
               ))
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No open DSARs</p>
+              <p className="text-sm text-muted-foreground text-center py-4">{tp("dsarQueue.empty")}</p>
             )}
           </CardContent>
         </Card>
@@ -384,8 +384,8 @@ export default function PrivacyDashboardPage() {
         {/* Recent Activity */}
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-base sm:text-lg">Recent Activity</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Latest updates across your privacy program</CardDescription>
+            <CardTitle className="text-base sm:text-lg">{tp("recentActivity.title")}</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">{tp("recentActivity.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 sm:space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
             {recentActivity.length > 0 ? (
@@ -403,7 +403,7 @@ export default function PrivacyDashboardPage() {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No recent activity</p>
+              <p className="text-sm text-muted-foreground text-center py-4">{tp("recentActivity.empty")}</p>
             )}
           </CardContent>
         </Card>
@@ -411,38 +411,38 @@ export default function PrivacyDashboardPage() {
         {/* Quick Actions */}
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-base sm:text-lg">Quick Actions</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Common tasks</CardDescription>
+            <CardTitle className="text-base sm:text-lg">{tp("quickActions.title")}</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">{tp("quickActions.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2 grid-cols-1 sm:grid-cols-2 p-4 pt-0 sm:p-6 sm:pt-0">
             <Link href="/privacy/data-inventory/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Database className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">Add Data Asset</span>
+                <span className="truncate">{tp("quickActions.addAsset")}</span>
               </Button>
             </Link>
             <Link href="/privacy/dsar">
               <Button variant="outline" className="w-full justify-start h-11">
                 <FileText className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">New DSAR</span>
+                <span className="truncate">{tp("quickActions.newDsar")}</span>
               </Button>
             </Link>
             <Link href="/privacy/incidents/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">Report Incident</span>
+                <span className="truncate">{tp("quickActions.reportIncident")}</span>
               </Button>
             </Link>
             <Link href="/privacy/vendors/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Building2 className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">Add Vendor</span>
+                <span className="truncate">{tp("quickActions.addVendor")}</span>
               </Button>
             </Link>
             <Link href="/privacy/quickstart">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Sparkles className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">Quickstart Wizard</span>
+                <span className="truncate">{tp("quickActions.quickstart")}</span>
               </Button>
             </Link>
           </CardContent>
@@ -453,12 +453,12 @@ export default function PrivacyDashboardPage() {
           <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <CardTitle className="text-base sm:text-lg">Vendors</CardTitle>
-                <CardDescription className="text-xs sm:text-sm">{dashboardStats.activeVendors} active vendors</CardDescription>
+                <CardTitle className="text-base sm:text-lg">{tp("vendors.title")}</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">{tp("vendors.activeCount", { count: dashboardStats.activeVendors })}</CardDescription>
               </div>
               <Link href="/privacy/vendors">
                 <Button variant="ghost" size="sm" className="shrink-0">
-                  <span className="hidden sm:inline">View all</span>
+                  <span className="hidden sm:inline">{tp("dsarQueue.viewAll")}</span>
                   <ArrowRight className="sm:ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -474,7 +474,7 @@ export default function PrivacyDashboardPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{vendor.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{vendor.categories?.[0] || "Vendor"}</p>
+                      <p className="text-xs text-muted-foreground truncate">{vendor.categories?.[0] || tp("vendors.categoryFallback")}</p>
                     </div>
                     {vendor.riskTier && (
                       <Badge
@@ -496,7 +496,7 @@ export default function PrivacyDashboardPage() {
             ) : (
               <div className="text-center py-4 text-muted-foreground">
                 <Building2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-xs sm:text-sm">Add vendors to track third-party risk</p>
+                <p className="text-xs sm:text-sm">{tp("vendors.empty")}</p>
               </div>
             )}
           </CardContent>
@@ -505,16 +505,16 @@ export default function PrivacyDashboardPage() {
 
       {/* Create Organization Dialog */}
       <Dialog open={createOrgOpen} onOpenChange={setCreateOrgOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>New Organization</DialogTitle>
+            <DialogTitle>{tp("newOrgDialog.title")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateOrg} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="new-org-name">Organization Name</Label>
+              <Label htmlFor="new-org-name">{tp("newOrgDialog.nameLabel")}</Label>
               <Input
                 id="new-org-name"
-                placeholder="e.g., Acme Corporation"
+                placeholder={tp("newOrgDialog.namePlaceholder")}
                 value={newOrgName}
                 onChange={(e) => setNewOrgName(e.target.value)}
                 autoFocus
@@ -523,10 +523,10 @@ export default function PrivacyDashboardPage() {
             </div>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="ghost" onClick={() => setCreateOrgOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" disabled={isCreating || !newOrgName.trim()}>
-                {isCreating ? "Creating..." : "Create"}
+                {isCreating ? tp("newOrgDialog.creating") : tp("newOrgDialog.create")}
               </Button>
             </div>
           </form>
