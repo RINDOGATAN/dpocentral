@@ -33,6 +33,102 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "assetDetail": {
+      "notFound": "Activo no encontrado",
+      "back": "Volver al inventario",
+      "production": "Producción",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "overview": {
+        "title": "Resumen",
+        "noDescription": "No se ha proporcionado descripción",
+        "owner": "Responsable",
+        "location": "Ubicación",
+        "hosting": "Alojamiento",
+        "vendor": "Proveedor",
+        "notSpecified": "No especificado",
+        "na": "N/D"
+      },
+      "stats": {
+        "title": "Estadísticas",
+        "elements": "Elementos de datos",
+        "activities": "Actividades de tratamiento",
+        "lastUpdated": "Última actualización"
+      },
+      "tabs": {
+        "elements": "Elementos de datos",
+        "activities": "Actividades de tratamiento",
+        "flows": "Flujos de datos"
+      },
+      "elements": {
+        "title": "Elementos de datos",
+        "subtitle": "Campos y puntos de datos almacenados en este activo",
+        "addElement": "Añadir elemento",
+        "personalData": "Datos personales",
+        "emptyTitle": "Aún no hay elementos de datos definidos",
+        "emptySub": "Añade elementos para documentar qué datos se almacenan"
+      },
+      "activities": {
+        "title": "Actividades de tratamiento vinculadas",
+        "subtitle": "Actividades que utilizan datos de este activo",
+        "manage": "Gestionar actividades",
+        "elementCount": "{used, plural, one {# elemento} other {# elementos}}",
+        "elementCountFiltered": "{used}/{total} {used, plural, one {elemento} other {elementos}}",
+        "notLinked": "+{count} sin vincular",
+        "empty": "No hay actividades de tratamiento vinculadas"
+      },
+      "addElement": {
+        "title": "Añadir elemento de datos",
+        "subtitle": "Añade un nuevo campo o elemento de datos a este activo",
+        "nameLabel": "Nombre del elemento *",
+        "namePlaceholder": "p. ej., email_address, phone_number",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Breve descripción de este elemento de datos",
+        "categoryLabel": "Categoría *",
+        "sensitivityLabel": "Sensibilidad *",
+        "retentionLabel": "Periodo de conservación (días)",
+        "retentionPlaceholder": "p. ej., 365",
+        "isPersonal": "Es dato personal",
+        "isSpecial": "Es categoría especial",
+        "errorPrefix": "Error: {message}",
+        "adding": "Añadiendo...",
+        "submit": "Añadir elemento"
+      },
+      "linkActivities": {
+        "title": "Vincular actividades de tratamiento",
+        "subtitle": "Selecciona qué actividades usan datos de este activo y qué elementos tratan.",
+        "elements": "Elementos",
+        "hide": "Ocultar",
+        "allElements": "Todos los elementos",
+        "empty": "Aún no hay actividades de tratamiento en esta organización",
+        "selectedCount": "{count, plural, one {# actividad seleccionada} other {# actividades seleccionadas}}",
+        "save": "Guardar"
+      },
+      "category": {
+        "IDENTIFIERS": "Identificadores",
+        "DEMOGRAPHICS": "Demográficos",
+        "FINANCIAL": "Financieros",
+        "HEALTH": "Salud",
+        "BIOMETRIC": "Biométricos",
+        "LOCATION": "Ubicación",
+        "BEHAVIORAL": "Comportamiento",
+        "EMPLOYMENT": "Empleo",
+        "EDUCATION": "Educación",
+        "POLITICAL": "Políticos",
+        "RELIGIOUS": "Religiosos",
+        "GENETIC": "Genéticos",
+        "SEXUAL_ORIENTATION": "Orientación sexual",
+        "CRIMINAL": "Antecedentes penales",
+        "OTHER": "Otros"
+      },
+      "sensitivity": {
+        "PUBLIC": "Público",
+        "INTERNAL": "Interno",
+        "CONFIDENTIAL": "Confidencial",
+        "RESTRICTED": "Restringido",
+        "SPECIAL_CATEGORY": "Categoría especial"
+      }
+    },
     "incidentDetail": {
       "notFound": "Incidente no encontrado",
       "back": "Volver a incidentes",

@@ -33,6 +33,102 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "assetDetail": {
+      "notFound": "Asset not found",
+      "back": "Back to Inventory",
+      "production": "Production",
+      "edit": "Edit",
+      "delete": "Delete",
+      "overview": {
+        "title": "Overview",
+        "noDescription": "No description provided",
+        "owner": "Owner",
+        "location": "Location",
+        "hosting": "Hosting",
+        "vendor": "Vendor",
+        "notSpecified": "Not specified",
+        "na": "N/A"
+      },
+      "stats": {
+        "title": "Statistics",
+        "elements": "Data Elements",
+        "activities": "Processing Activities",
+        "lastUpdated": "Last Updated"
+      },
+      "tabs": {
+        "elements": "Data Elements",
+        "activities": "Processing Activities",
+        "flows": "Data Flows"
+      },
+      "elements": {
+        "title": "Data Elements",
+        "subtitle": "Fields and data points stored in this asset",
+        "addElement": "Add Element",
+        "personalData": "Personal Data",
+        "emptyTitle": "No data elements defined yet",
+        "emptySub": "Add data elements to document what data is stored"
+      },
+      "activities": {
+        "title": "Linked Processing Activities",
+        "subtitle": "Activities that use data from this asset",
+        "manage": "Manage Activities",
+        "elementCount": "{used, plural, one {# element} other {# elements}}",
+        "elementCountFiltered": "{used}/{total} {used, plural, one {element} other {elements}}",
+        "notLinked": "+{count} not linked",
+        "empty": "No linked processing activities"
+      },
+      "addElement": {
+        "title": "Add Data Element",
+        "subtitle": "Add a new data field or element to this asset",
+        "nameLabel": "Element Name *",
+        "namePlaceholder": "e.g., email_address, phone_number",
+        "descLabel": "Description",
+        "descPlaceholder": "Brief description of this data element",
+        "categoryLabel": "Category *",
+        "sensitivityLabel": "Sensitivity *",
+        "retentionLabel": "Retention Period (days)",
+        "retentionPlaceholder": "e.g., 365",
+        "isPersonal": "Is Personal Data",
+        "isSpecial": "Is Special Category",
+        "errorPrefix": "Error: {message}",
+        "adding": "Adding...",
+        "submit": "Add Element"
+      },
+      "linkActivities": {
+        "title": "Link Processing Activities",
+        "subtitle": "Select which activities use data from this asset, and which elements they process.",
+        "elements": "Elements",
+        "hide": "Hide",
+        "allElements": "All elements",
+        "empty": "No processing activities in this organization yet",
+        "selectedCount": "{count, plural, one {# activity selected} other {# activities selected}}",
+        "save": "Save"
+      },
+      "category": {
+        "IDENTIFIERS": "Identifiers",
+        "DEMOGRAPHICS": "Demographics",
+        "FINANCIAL": "Financial",
+        "HEALTH": "Health",
+        "BIOMETRIC": "Biometric",
+        "LOCATION": "Location",
+        "BEHAVIORAL": "Behavioral",
+        "EMPLOYMENT": "Employment",
+        "EDUCATION": "Education",
+        "POLITICAL": "Political",
+        "RELIGIOUS": "Religious",
+        "GENETIC": "Genetic",
+        "SEXUAL_ORIENTATION": "Sexual Orientation",
+        "CRIMINAL": "Criminal",
+        "OTHER": "Other"
+      },
+      "sensitivity": {
+        "PUBLIC": "Public",
+        "INTERNAL": "Internal",
+        "CONFIDENTIAL": "Confidential",
+        "RESTRICTED": "Restricted",
+        "SPECIAL_CATEGORY": "Special Category"
+      }
+    },
     "incidentDetail": {
       "notFound": "Incident not found",
       "back": "Back to Incidents",

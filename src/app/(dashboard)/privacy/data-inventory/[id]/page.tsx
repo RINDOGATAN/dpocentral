@@ -65,40 +65,31 @@ const sensitivityColors: Record<string, string> = {
   SPECIAL_CATEGORY: "border-muted-foreground bg-muted-foreground text-foreground",
 };
 
-const categoryLabels: Record<DataCategory, string> = {
-  IDENTIFIERS: "Identifiers",
-  DEMOGRAPHICS: "Demographics",
-  FINANCIAL: "Financial",
-  HEALTH: "Health",
-  BIOMETRIC: "Biometric",
-  LOCATION: "Location",
-  BEHAVIORAL: "Behavioral",
-  EMPLOYMENT: "Employment",
-  EDUCATION: "Education",
-  POLITICAL: "Political",
-  RELIGIOUS: "Religious",
-  GENETIC: "Genetic",
-  SEXUAL_ORIENTATION: "Sexual Orientation",
-  CRIMINAL: "Criminal",
-  OTHER: "Other",
-};
+const CATEGORY_KEYS: DataCategory[] = [
+  "IDENTIFIERS",
+  "DEMOGRAPHICS",
+  "FINANCIAL",
+  "HEALTH",
+  "BIOMETRIC",
+  "LOCATION",
+  "BEHAVIORAL",
+  "EMPLOYMENT",
+  "EDUCATION",
+  "POLITICAL",
+  "RELIGIOUS",
+  "GENETIC",
+  "SEXUAL_ORIENTATION",
+  "CRIMINAL",
+  "OTHER",
+];
 
-const legalBasisLabels: Record<string, string> = {
-  CONSENT: "Consent",
-  CONTRACT: "Contract",
-  LEGAL_OBLIGATION: "Legal Obligation",
-  VITAL_INTERESTS: "Vital Interests",
-  PUBLIC_TASK: "Public Task",
-  LEGITIMATE_INTERESTS: "Legitimate Interests",
-};
-
-const sensitivityLabels: Record<DataSensitivity, string> = {
-  PUBLIC: "Public",
-  INTERNAL: "Internal",
-  CONFIDENTIAL: "Confidential",
-  RESTRICTED: "Restricted",
-  SPECIAL_CATEGORY: "Special Category",
-};
+const SENSITIVITY_KEYS: DataSensitivity[] = [
+  "PUBLIC",
+  "INTERNAL",
+  "CONFIDENTIAL",
+  "RESTRICTED",
+  "SPECIAL_CATEGORY",
+];
 
 export default function DataAssetDetailPage() {
   const params = useParams();
@@ -108,6 +99,8 @@ export default function DataAssetDetailPage() {
   const t = useTranslations("toasts");
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
+  const tp = useTranslations("pages.assetDetail");
+  const tList = useTranslations("pages.dataInventory");
 
   const [confirmAssetOpen, setConfirmAssetOpen] = useState(false);
   const [pendingElement, setPendingElement] = useState<{ id: string; name: string } | null>(null);
@@ -318,11 +311,11 @@ export default function DataAssetDetailPage() {
   if (!asset) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Asset not found</p>
+        <p className="text-muted-foreground">{tp("notFound")}</p>
         <Link href="/privacy/data-inventory">
           <Button variant="outline" className="mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Inventory
+            {tp("back")}
           </Button>
         </Link>
       </div>
@@ -348,7 +341,7 @@ export default function DataAssetDetailPage() {
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline">{asset.type}</Badge>
                 {asset.isProduction && (
-                  <Badge variant="outline" className="border-primary text-primary">Production</Badge>
+                  <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
                 )}
               </div>
             </div>
@@ -357,7 +350,7 @@ export default function DataAssetDetailPage() {
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Edit className="w-4 h-4 mr-2" />
-            Edit
+            {tp("edit")}
           </Button>
           <Button
             variant="outline"
@@ -367,7 +360,7 @@ export default function DataAssetDetailPage() {
             disabled={deleteAsset.isPending}
           >
             {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-            Delete
+            {tp("delete")}
           </Button>
         </div>
       </div>
@@ -376,26 +369,26 @@ export default function DataAssetDetailPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle>{tp("overview.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-muted-foreground">{asset.description || "No description provided"}</p>
+            <p className="text-muted-foreground">{asset.description || tp("overview.noDescription")}</p>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <p className="text-sm text-muted-foreground">Owner</p>
-                <p className="font-medium">{asset.owner || "Not specified"}</p>
+                <p className="text-sm text-muted-foreground">{tp("overview.owner")}</p>
+                <p className="font-medium">{asset.owner || tp("overview.notSpecified")}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Location</p>
-                <p className="font-medium">{asset.location || "Not specified"}</p>
+                <p className="text-sm text-muted-foreground">{tp("overview.location")}</p>
+                <p className="font-medium">{asset.location || tp("overview.notSpecified")}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Hosting</p>
-                <p className="font-medium">{asset.hostingType || "Not specified"}</p>
+                <p className="text-sm text-muted-foreground">{tp("overview.hosting")}</p>
+                <p className="font-medium">{asset.hostingType || tp("overview.notSpecified")}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Vendor</p>
-                <p className="font-medium">{asset.vendor || "N/A"}</p>
+                <p className="text-sm text-muted-foreground">{tp("overview.vendor")}</p>
+                <p className="font-medium">{asset.vendor || tp("overview.na")}</p>
               </div>
             </div>
           </CardContent>
@@ -403,19 +396,19 @@ export default function DataAssetDetailPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Statistics</CardTitle>
+            <CardTitle>{tp("stats.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <p className="text-3xl font-bold">{asset.dataElements?.length ?? 0}</p>
-              <p className="text-sm text-muted-foreground">Data Elements</p>
+              <p className="text-sm text-muted-foreground">{tp("stats.elements")}</p>
             </div>
             <div>
               <p className="text-3xl font-bold">{asset.processingActivityAssets?.length ?? 0}</p>
-              <p className="text-sm text-muted-foreground">Processing Activities</p>
+              <p className="text-sm text-muted-foreground">{tp("stats.activities")}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Last Updated</p>
+              <p className="text-sm text-muted-foreground">{tp("stats.lastUpdated")}</p>
               <p className="font-medium">{new Date(asset.updatedAt).toLocaleDateString()}</p>
             </div>
           </CardContent>
@@ -425,21 +418,21 @@ export default function DataAssetDetailPage() {
       {/* Tabs */}
       <Tabs defaultValue="elements">
         <TabsList>
-          <TabsTrigger value="elements">Data Elements</TabsTrigger>
-          <TabsTrigger value="activities">Processing Activities</TabsTrigger>
-          <TabsTrigger value="flows">Data Flows</TabsTrigger>
+          <TabsTrigger value="elements">{tp("tabs.elements")}</TabsTrigger>
+          <TabsTrigger value="activities">{tp("tabs.activities")}</TabsTrigger>
+          <TabsTrigger value="flows">{tp("tabs.flows")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="elements" className="mt-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Data Elements</CardTitle>
-                <CardDescription>Fields and data points stored in this asset</CardDescription>
+                <CardTitle>{tp("elements.title")}</CardTitle>
+                <CardDescription>{tp("elements.subtitle")}</CardDescription>
               </div>
               <Button size="sm" onClick={() => setIsAddElementOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add Element
+                {tp("elements.addElement")}
               </Button>
             </CardHeader>
             <CardContent>
@@ -457,15 +450,15 @@ export default function DataAssetDetailPage() {
                         <Database className="w-4 h-4 text-muted-foreground shrink-0" />
                         <div className="min-w-0">
                           <p className="font-medium font-mono text-sm hover:underline truncate">{element.name}</p>
-                          <p className="text-xs text-muted-foreground">{element.category}</p>
+                          <p className="text-xs text-muted-foreground">{tp(`category.${element.category}` as `category.IDENTIFIERS` | `category.DEMOGRAPHICS` | `category.FINANCIAL` | `category.HEALTH` | `category.BIOMETRIC` | `category.LOCATION` | `category.BEHAVIORAL` | `category.EMPLOYMENT` | `category.EDUCATION` | `category.POLITICAL` | `category.RELIGIOUS` | `category.GENETIC` | `category.SEXUAL_ORIENTATION` | `category.CRIMINAL` | `category.OTHER`)}</p>
                         </div>
                       </Link>
                       <div className="flex items-center gap-2 sm:shrink-0 pl-7 sm:pl-0">
                         <Badge variant="outline" className={sensitivityColors[element.sensitivity] || ""}>
-                          {element.sensitivity}
+                          {tp(`sensitivity.${element.sensitivity}` as `sensitivity.PUBLIC` | `sensitivity.INTERNAL` | `sensitivity.CONFIDENTIAL` | `sensitivity.RESTRICTED` | `sensitivity.SPECIAL_CATEGORY`)}
                         </Badge>
                         {element.isPersonalData && (
-                          <Badge variant="outline" className="hidden sm:inline-flex">Personal Data</Badge>
+                          <Badge variant="outline" className="hidden sm:inline-flex">{tp("elements.personalData")}</Badge>
                         )}
                         <Button
                           variant="ghost"
@@ -482,8 +475,8 @@ export default function DataAssetDetailPage() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No data elements defined yet</p>
-                  <p className="text-sm">Add data elements to document what data is stored</p>
+                  <p>{tp("elements.emptyTitle")}</p>
+                  <p className="text-sm">{tp("elements.emptySub")}</p>
                 </div>
               )}
             </CardContent>
@@ -495,12 +488,12 @@ export default function DataAssetDetailPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Linked Processing Activities</CardTitle>
-                  <CardDescription>Activities that use data from this asset</CardDescription>
+                  <CardTitle>{tp("activities.title")}</CardTitle>
+                  <CardDescription>{tp("activities.subtitle")}</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={openLinkActivities}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Manage Activities
+                  {tp("activities.manage")}
                 </Button>
               </div>
             </CardHeader>
@@ -526,13 +519,15 @@ export default function DataAssetDetailPage() {
                             <div>
                               <p className="font-medium">{link.processingActivity.name}</p>
                               <p className="text-xs text-muted-foreground">
-                                {legalBasisLabels[link.processingActivity.legalBasis] || link.processingActivity.legalBasis}
+                                {link.processingActivity.legalBasis ? tList(`legalBasis.${link.processingActivity.legalBasis}` as `legalBasis.CONSENT` | `legalBasis.CONTRACT` | `legalBasis.LEGAL_OBLIGATION` | `legalBasis.VITAL_INTERESTS` | `legalBasis.PUBLIC_TASK` | `legalBasis.LEGITIMATE_INTERESTS`) : link.processingActivity.legalBasis}
                                 {link.processingActivity.purpose && ` — ${link.processingActivity.purpose}`}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <Badge variant="outline" className="text-xs">
-                                {effectiveElements.length}{isFiltered ? `/${allElements.length}` : ""} element{effectiveElements.length !== 1 ? "s" : ""}
+                                {isFiltered
+                                  ? tp("activities.elementCountFiltered", { used: effectiveElements.length, total: allElements.length })
+                                  : tp("activities.elementCount", { used: effectiveElements.length })}
                               </Badge>
                               <ArrowRight className="w-4 h-4 text-muted-foreground" />
                             </div>
@@ -550,7 +545,7 @@ export default function DataAssetDetailPage() {
                               ))}
                               {isFiltered && (
                                 <span className="text-xs text-muted-foreground self-center">
-                                  +{allElements.length - effectiveElements.length} not linked
+                                  {tp("activities.notLinked", { count: allElements.length - effectiveElements.length })}
                                 </span>
                               )}
                             </div>
@@ -562,7 +557,7 @@ export default function DataAssetDetailPage() {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
-                  No linked processing activities
+                  {tp("activities.empty")}
                 </p>
               )}
             </CardContent>
@@ -583,17 +578,15 @@ export default function DataAssetDetailPage() {
       <Sheet open={isAddElementOpen} onOpenChange={setIsAddElementOpen}>
         <SheetContent className="sm:max-w-md overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Add Data Element</SheetTitle>
-            <SheetDescription>
-              Add a new data field or element to this asset
-            </SheetDescription>
+            <SheetTitle>{tp("addElement.title")}</SheetTitle>
+            <SheetDescription>{tp("addElement.subtitle")}</SheetDescription>
           </SheetHeader>
           <form onSubmit={handleAddElement} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="element-name">Element Name *</Label>
+              <Label htmlFor="element-name">{tp("addElement.nameLabel")}</Label>
               <Input
                 id="element-name"
-                placeholder="e.g., email_address, phone_number"
+                placeholder={tp("addElement.namePlaceholder")}
                 value={elementForm.name}
                 onChange={(e) => setElementForm({ ...elementForm, name: e.target.value })}
                 required
@@ -601,10 +594,10 @@ export default function DataAssetDetailPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="element-description">Description</Label>
+              <Label htmlFor="element-description">{tp("addElement.descLabel")}</Label>
               <Textarea
                 id="element-description"
-                placeholder="Brief description of this data element"
+                placeholder={tp("addElement.descPlaceholder")}
                 rows={2}
                 value={elementForm.description}
                 onChange={(e) => setElementForm({ ...elementForm, description: e.target.value })}
@@ -612,7 +605,7 @@ export default function DataAssetDetailPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="element-category">Category *</Label>
+              <Label htmlFor="element-category">{tp("addElement.categoryLabel")}</Label>
               <Select
                 value={elementForm.category}
                 onValueChange={(value) => setElementForm({ ...elementForm, category: value as DataCategory })}
@@ -621,9 +614,9 @@ export default function DataAssetDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(categoryLabels).map(([value, label]) => (
+                  {CATEGORY_KEYS.map((value) => (
                     <SelectItem key={value} value={value}>
-                      {label}
+                      {tp(`category.${value}` as `category.IDENTIFIERS` | `category.DEMOGRAPHICS` | `category.FINANCIAL` | `category.HEALTH` | `category.BIOMETRIC` | `category.LOCATION` | `category.BEHAVIORAL` | `category.EMPLOYMENT` | `category.EDUCATION` | `category.POLITICAL` | `category.RELIGIOUS` | `category.GENETIC` | `category.SEXUAL_ORIENTATION` | `category.CRIMINAL` | `category.OTHER`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -631,7 +624,7 @@ export default function DataAssetDetailPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="element-sensitivity">Sensitivity *</Label>
+              <Label htmlFor="element-sensitivity">{tp("addElement.sensitivityLabel")}</Label>
               <Select
                 value={elementForm.sensitivity}
                 onValueChange={(value) => setElementForm({ ...elementForm, sensitivity: value as DataSensitivity })}
@@ -640,9 +633,9 @@ export default function DataAssetDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(sensitivityLabels).map(([value, label]) => (
+                  {SENSITIVITY_KEYS.map((value) => (
                     <SelectItem key={value} value={value}>
-                      {label}
+                      {tp(`sensitivity.${value}` as `sensitivity.PUBLIC` | `sensitivity.INTERNAL` | `sensitivity.CONFIDENTIAL` | `sensitivity.RESTRICTED` | `sensitivity.SPECIAL_CATEGORY`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -650,18 +643,18 @@ export default function DataAssetDetailPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="element-retention">Retention Period (days)</Label>
+              <Label htmlFor="element-retention">{tp("addElement.retentionLabel")}</Label>
               <Input
                 id="element-retention"
                 type="number"
-                placeholder="e.g., 365"
+                placeholder={tp("addElement.retentionPlaceholder")}
                 value={elementForm.retentionDays}
                 onChange={(e) => setElementForm({ ...elementForm, retentionDays: e.target.value })}
               />
             </div>
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="is-personal-data" className="text-sm">Is Personal Data</Label>
+              <Label htmlFor="is-personal-data" className="text-sm">{tp("addElement.isPersonal")}</Label>
               <Switch
                 id="is-personal-data"
                 checked={elementForm.isPersonalData}
@@ -670,7 +663,7 @@ export default function DataAssetDetailPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="is-special-category" className="text-sm">Is Special Category</Label>
+              <Label htmlFor="is-special-category" className="text-sm">{tp("addElement.isSpecial")}</Label>
               <Switch
                 id="is-special-category"
                 checked={elementForm.isSpecialCategory}
@@ -680,22 +673,22 @@ export default function DataAssetDetailPage() {
 
             {addElement.error && (
               <div className="text-sm text-destructive">
-                Error: {addElement.error.message}
+                {tp("addElement.errorPrefix", { message: addElement.error.message })}
               </div>
             )}
 
             <SheetFooter className="pt-4">
               <Button type="button" variant="outline" onClick={() => setIsAddElementOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" disabled={addElement.isPending || !elementForm.name}>
                 {addElement.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Adding...
+                    {tp("addElement.adding")}
                   </>
                 ) : (
-                  "Add Element"
+                  tp("addElement.submit")
                 )}
               </Button>
             </SheetFooter>
@@ -707,10 +700,8 @@ export default function DataAssetDetailPage() {
       <Dialog open={linkActivitiesOpen} onOpenChange={setLinkActivitiesOpen}>
         <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle>Link Processing Activities</DialogTitle>
-            <DialogDescription>
-              Select which activities use data from this asset, and which elements they process.
-            </DialogDescription>
+            <DialogTitle>{tp("linkActivities.title")}</DialogTitle>
+            <DialogDescription>{tp("linkActivities.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
             {allActivities.length > 0 ? (
@@ -733,7 +724,7 @@ export default function DataAssetDetailPage() {
                       >
                         <p className="text-sm font-medium truncate">{act.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {act.legalBasis?.replace("_", " ")} — {act.purpose}
+                          {act.legalBasis ? tList(`legalBasis.${act.legalBasis}` as `legalBasis.CONSENT` | `legalBasis.CONTRACT` | `legalBasis.LEGAL_OBLIGATION` | `legalBasis.VITAL_INTERESTS` | `legalBasis.PUBLIC_TASK` | `legalBasis.LEGITIMATE_INTERESTS`) : ""} — {act.purpose}
                         </p>
                       </label>
                       {isSelected && elements.length > 0 && (
@@ -749,7 +740,7 @@ export default function DataAssetDetailPage() {
                             })
                           }
                         >
-                          {isExpanded ? "Hide" : "Elements"}
+                          {isExpanded ? tp("linkActivities.hide") : tp("linkActivities.elements")}
                         </Button>
                       )}
                     </div>
@@ -761,7 +752,7 @@ export default function DataAssetDetailPage() {
                             onCheckedChange={() => toggleAllElementsForActivity(act.id)}
                           />
                           <span className="text-xs font-medium text-muted-foreground">
-                            All elements
+                            {tp("linkActivities.allElements")}
                           </span>
                         </label>
                         {elements.map((el) => {
@@ -780,7 +771,7 @@ export default function DataAssetDetailPage() {
                                 variant={el.isSpecialCategory ? "destructive" : "secondary"}
                                 className="text-[10px] px-1 py-0 shrink-0"
                               >
-                                {el.category?.replace("_", " ")}
+                                {el.category ? tp(`category.${el.category}` as `category.IDENTIFIERS` | `category.DEMOGRAPHICS` | `category.FINANCIAL` | `category.HEALTH` | `category.BIOMETRIC` | `category.LOCATION` | `category.BEHAVIORAL` | `category.EMPLOYMENT` | `category.EDUCATION` | `category.POLITICAL` | `category.RELIGIOUS` | `category.GENETIC` | `category.SEXUAL_ORIENTATION` | `category.CRIMINAL` | `category.OTHER`) : ""}
                               </Badge>
                             </label>
                           );
@@ -792,17 +783,17 @@ export default function DataAssetDetailPage() {
               })
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No processing activities in this organization yet
+                {tp("linkActivities.empty")}
               </p>
             )}
           </div>
           <div className="flex justify-between items-center pt-4 border-t">
             <p className="text-xs text-muted-foreground">
-              {selectedActivityIds.length} activit{selectedActivityIds.length !== 1 ? "ies" : "y"} selected
+              {tp("linkActivities.selectedCount", { count: selectedActivityIds.length })}
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setLinkActivitiesOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button
                 onClick={() =>
@@ -818,7 +809,7 @@ export default function DataAssetDetailPage() {
                 disabled={linkActivities.isPending}
               >
                 {linkActivities.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Save
+                {tp("linkActivities.save")}
               </Button>
             </div>
           </div>
