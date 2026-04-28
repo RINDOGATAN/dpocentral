@@ -32,6 +32,68 @@
     "showAll": "Mostrar todo",
     "viewDetails": "Ver detalles"
   },
+  "pages": {
+    "dashboard": {
+      "subtitle": "Panel de privacidad",
+      "exportReport": "Informe del programa de privacidad",
+      "exportReportShort": "Informe",
+      "switchOrg": "Cambiar",
+      "vwQuickstartTitle": "Crea tu programa de privacidad a partir de tu cartera de proveedores",
+      "vwQuickstartDesc": "Hemos encontrado {count, plural, one {<b>1 proveedor</b>} other {<b>{count} proveedores</b>}} en tu cartera de Vendor.Watch. Podemos generar automáticamente activos de datos, actividades de tratamiento y flujos de datos; podrás añadir más después.",
+      "vwQuickstartCta": "Construir ahora",
+      "moreVendors": "+{count} más",
+      "quickstartTitle": "Comienza con el asistente Quickstart",
+      "quickstartDesc": "Pon en marcha tu programa de privacidad en cuestión de minutos. Importa proveedores del catálogo o parte de una plantilla sectorial para generar automáticamente activos, actividades y flujos de datos.",
+      "quickstartCta": "Comenzar",
+      "stats": {
+        "dataInventory": "Inventario de datos",
+        "activitiesCount": "{count, plural, one {# actividad} other {# actividades}}",
+        "openDsars": "DSAR abiertas",
+        "overdueCount": "{count} vencidas",
+        "allOnTrack": "Todo al día",
+        "assessments": "Evaluaciones",
+        "inProgress": "En curso",
+        "incidents": "Incidentes",
+        "openCases": "Casos abiertos"
+      },
+      "dsarQueue": {
+        "title": "Cola de DSAR",
+        "subtitle": "Solicitudes de acceso del interesado",
+        "viewAll": "Ver todas",
+        "done": "Completada",
+        "overdue": "Vencida",
+        "daysShort": "{count}d",
+        "empty": "No hay DSAR abiertas"
+      },
+      "recentActivity": {
+        "title": "Actividad reciente",
+        "subtitle": "Últimas actualizaciones del programa de privacidad",
+        "empty": "Sin actividad reciente"
+      },
+      "quickActions": {
+        "title": "Acciones rápidas",
+        "subtitle": "Tareas habituales",
+        "addAsset": "Añadir activo de datos",
+        "newDsar": "Nueva DSAR",
+        "reportIncident": "Notificar incidente",
+        "addVendor": "Añadir proveedor",
+        "quickstart": "Asistente Quickstart"
+      },
+      "vendors": {
+        "title": "Proveedores",
+        "activeCount": "{count, plural, one {# proveedor activo} other {# proveedores activos}}",
+        "categoryFallback": "Proveedor",
+        "empty": "Añade proveedores para gestionar el riesgo de terceros"
+      },
+      "newOrgDialog": {
+        "title": "Nueva organización",
+        "nameLabel": "Nombre de la organización",
+        "namePlaceholder": "p. ej., Acme Corporation",
+        "creating": "Creando...",
+        "create": "Crear"
+      }
+    }
+  },
   "confirms": {
     "deleteAssetTitle": "¿Eliminar activo?",
     "deleteAssetDesc": "Se eliminará el activo y todos sus elementos vinculados de forma permanente. Esta acción no se puede deshacer.",
