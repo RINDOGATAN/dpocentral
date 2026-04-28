@@ -104,6 +104,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const { organization } = useOrganization();
   const tAssessments = useTranslations("assessments");
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.assessmentDetail");
+  const tList = useTranslations("pages.assessments");
+  const tCommon = useTranslations("common");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -495,11 +498,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   if (!assessment) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Assessment not found</p>
+        <p className="text-muted-foreground">{tp("notFound")}</p>
         <Link href="/privacy/assessments">
-          <Button variant="outline" className="mt-4">
-            Back to Assessments
-          </Button>
+          <Button variant="outline" className="mt-4">{tp("back")}</Button>
         </Link>
       </div>
     );
@@ -520,13 +521,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="outline">{template?.type}</Badge>
+              <Badge variant="outline">{template?.type ? tList(`type.${template.type}` as `type.DPIA` | `type.PIA` | `type.TIA` | `type.LIA` | `type.VENDOR` | `type.CUSTOM`) : ""}</Badge>
               <Badge variant="outline" className={statusColors[assessment.status] || ""}>
-                {assessment.status.replace("_", " ")}
+                {tList(`status.${assessment.status}` as `status.DRAFT` | `status.IN_PROGRESS` | `status.PENDING_REVIEW` | `status.PENDING_APPROVAL` | `status.APPROVED` | `status.REJECTED`)}
               </Badge>
               {assessment.riskLevel && (
                 <Badge variant="outline" className={riskColors[assessment.riskLevel] || ""}>
-                  {assessment.riskLevel} Risk
+                  {tp("riskBadge", { level: tList(`riskLevel.${assessment.riskLevel}` as `riskLevel.LOW` | `riskLevel.MEDIUM` | `riskLevel.HIGH` | `riskLevel.CRITICAL`) })}
                 </Badge>
               )}
             </div>
@@ -542,7 +543,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             onClick={() => window.open(`/api/export/assessment/${id}`, "_blank")}
           >
             <Download className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Export PDF</span>
+            <span className="hidden sm:inline">{tp("exportPdf")}</span>
           </Button>
           {canSubmit && isSingleUser && (
             <Button
@@ -555,7 +556,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               disabled={submitAndApprove.isPending || !allRequiredAnswered}
             >
               {submitAndApprove.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
-              Submit & Approve
+              {tp("submitApprove")}
             </Button>
           )}
           {canSubmit && !isSingleUser && (
@@ -569,7 +570,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               disabled={submitAssessment.isPending || !allRequiredAnswered}
             >
               {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-              Submit for Review
+              {tp("submitReview")}
             </Button>
           )}
         </div>
@@ -580,7 +581,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         <CardContent className="py-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted-foreground">
-              {answeredQuestions} of {totalQuestions} questions answered
+              {tp("progress.answered", { answered: answeredQuestions, total: totalQuestions })}
             </span>
             <span className="font-medium">{completionPercentage}%</span>
           </div>
@@ -594,7 +595,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <FileText className="w-4 h-4" />
-              <span className="text-sm">Sections</span>
+              <span className="text-sm">{tp("stats.sections")}</span>
             </div>
             <p className="font-medium text-xl">{sections.length}</p>
           </CardContent>
@@ -603,7 +604,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <ClipboardCheck className="w-4 h-4" />
-              <span className="text-sm">Questions</span>
+              <span className="text-sm">{tp("stats.questions")}</span>
             </div>
             <p className="font-medium text-xl">{totalQuestions}</p>
           </CardContent>
@@ -612,7 +613,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <AlertTriangle className="w-4 h-4" />
-              <span className="text-sm">Mitigations</span>
+              <span className="text-sm">{tp("stats.mitigations")}</span>
             </div>
             <p className="font-medium text-xl">{assessment.mitigations?.length ?? 0}</p>
           </CardContent>
@@ -621,13 +622,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Shield className="w-4 h-4" />
-              <span className="text-sm">Risk Score</span>
+              <span className="text-sm">{tp("stats.riskScore")}</span>
             </div>
             <p className="font-medium text-xl">
-              {assessment.riskScore !== null ? `${assessment.riskScore}%` : "-"}
+              {assessment.riskScore !== null ? `${assessment.riskScore}%` : tp("stats.noScore")}
             </p>
             <p className="text-[11px] text-muted-foreground mt-1 leading-tight">
-              0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical
+              {tp("stats.riskScoreScale")}
             </p>
           </CardContent>
         </Card>
@@ -636,14 +637,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       {/* Tabs */}
       <Tabs defaultValue="questions">
         <TabsList>
-          <TabsTrigger value="questions">Questions</TabsTrigger>
+          <TabsTrigger value="questions">{tp("tabs.questions")}</TabsTrigger>
           <TabsTrigger value="mitigations">
-            Mitigations ({assessment.mitigations?.length ?? 0})
+            {tp("tabs.mitigationsWithCount", { count: assessment.mitigations?.length ?? 0 })}
           </TabsTrigger>
           <TabsTrigger value="approvals">
-            Approvals ({assessment.approvals?.length ?? 0})
+            {tp("tabs.approvalsWithCount", { count: assessment.approvals?.length ?? 0 })}
           </TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="history">{tp("tabs.history")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="questions" className="mt-4 space-y-4">
@@ -762,7 +763,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                       )}
                                     </span>
                                     {!question.required && (
-                                      <span className="text-xs text-muted-foreground mt-0.5">(Optional)</span>
+                                      <span className="text-xs text-muted-foreground mt-0.5">{tp("question.optional")}</span>
                                     )}
                                   </div>
                                   {question.helpText && (
@@ -775,7 +776,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                 {savedIndicators[question.id] && (
                                   <span className="flex items-center gap-1 text-xs text-primary flex-shrink-0 animate-in fade-in">
                                     <Check className="w-3.5 h-3.5" />
-                                    Saved
+                                    {tp("question.saved")}
                                   </span>
                                 )}
                               </div>
@@ -796,7 +797,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                             : "bg-background hover:bg-muted text-foreground"
                                         } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
                                       >
-                                        Yes
+                                        {tp("question.yes")}
                                       </button>
                                       <button
                                         type="button"
@@ -808,12 +809,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                             : "bg-background hover:bg-muted text-foreground"
                                         } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
                                       >
-                                        No
+                                        {tp("question.no")}
                                       </button>
                                     </div>
                                     {response?.notes && !isEditing && (
                                       <p className="text-xs text-muted-foreground">
-                                        <strong>Notes:</strong> {response.notes}
+                                        <strong>{tp("question.notes")}</strong> {response.notes}
                                       </p>
                                     )}
                                   </div>
@@ -822,14 +823,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                 {/* Select type: prominent dropdown */}
                                 {question.type === "select" && question.options && (
                                   <div className="space-y-2">
-                                    <Label className="text-xs text-muted-foreground">Choose one</Label>
+                                    <Label className="text-xs text-muted-foreground">{tp("question.chooseOne")}</Label>
                                     <Select
                                       value={responseValue || ""}
                                       onValueChange={(value) => handleAutoSave(question.id, section.id, question, value)}
                                       disabled={!canSubmit}
                                     >
                                       <SelectTrigger className="w-full sm:w-[400px] min-h-[44px] text-sm">
-                                        <SelectValue placeholder="Select an option..." />
+                                        <SelectValue placeholder={tp("question.selectOption")} />
                                       </SelectTrigger>
                                       <SelectContent>
                                         {(question.options as string[]).map((option: string) => (
@@ -841,7 +842,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     </Select>
                                     {response?.notes && !isEditing && (
                                       <p className="text-xs text-muted-foreground">
-                                        <strong>Notes:</strong> {response.notes}
+                                        <strong>{tp("question.notes")}</strong> {response.notes}
                                       </p>
                                     )}
                                   </div>
@@ -850,7 +851,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                 {/* Multiselect type: checkboxes */}
                                 {question.type === "multiselect" && question.options && (
                                   <div className="space-y-2">
-                                    <Label className="text-xs text-muted-foreground">Select all that apply</Label>
+                                    <Label className="text-xs text-muted-foreground">{tp("question.selectAllApply")}</Label>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                       {(question.options as string[]).map((option: string) => {
                                         const currentValues = parseMultiselectValue(responseValue);
@@ -893,14 +894,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     {isEditing ? (
                                       <div className="space-y-3">
                                         <Textarea
-                                          placeholder="Type your response here..."
+                                          placeholder={tp("question.responsePlaceholder")}
                                           rows={3}
                                           value={draftValue}
                                           onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
                                           className="min-h-[44px]"
                                         />
                                         <Textarea
-                                          placeholder="Additional notes (optional)..."
+                                          placeholder={tp("question.notesPlaceholder")}
                                           rows={2}
                                           value={draftResponses[question.id]?.notes || ""}
                                           onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
@@ -919,7 +920,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                             ) : (
                                               <Save className="w-4 h-4 mr-1" />
                                             )}
-                                            Save
+                                            {tp("question.save")}
                                           </Button>
                                           <Button
                                             size="sm"
@@ -927,7 +928,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                             onClick={() => setEditingQuestion(null)}
                                             className="min-h-[44px]"
                                           >
-                                            Cancel
+                                            {tp("question.cancel")}
                                           </Button>
                                         </div>
                                       </div>
@@ -956,7 +957,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                       </div>
                                     ) : canSubmit ? (
                                       <Textarea
-                                        placeholder="Type your response here..."
+                                        placeholder={tp("question.responsePlaceholder")}
                                         rows={2}
                                         className="min-h-[44px] cursor-pointer"
                                         onFocus={() => startEditingQuestion(question.id)}
@@ -979,7 +980,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No questions in this assessment</p>
+                <p>{tp("question.emptyTitle")}</p>
               </CardContent>
             </Card>
           )}
@@ -994,10 +995,10 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <ShieldCheck className="w-5 h-5 text-primary" />
-                      <span className="font-medium">Vendor Privacy Technologies</span>
+                      <span className="font-medium">{tp("vendorPets.title")}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
-                      {vendorName} implements these PETs:
+                      {tp("vendorPets.intro", { name: vendorName })}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {vendorPets.map((pet) => (
@@ -1008,7 +1009,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       ))}
                     </div>
                     <p className="text-xs text-muted-foreground mt-3">
-                      These can be referenced as mitigating measures in your assessment.
+                      {tp("vendorPets.footer")}
                     </p>
                   </div>
                   <Button
@@ -1017,7 +1018,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                     onClick={openAddDialogWithSuggestions}
                   >
                     <Sparkles className="w-4 h-4 mr-1" />
-                    Suggest as Mitigations
+                    {tp("vendorPets.suggest")}
                   </Button>
                 </div>
               </CardContent>
@@ -1036,12 +1037,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           <AlertTriangle className="w-4 h-4 text-primary" />
                           <span className="font-medium">{mitigation.title}</span>
                           <Badge variant="outline" className={mitigationStatusColors[mitigation.status] || ""}>
-                            {mitigation.status.replace("_", " ")}
+                            {tp(`mitigationStatus.${mitigation.status}` as `mitigationStatus.IDENTIFIED` | `mitigationStatus.PLANNED` | `mitigationStatus.IN_PROGRESS` | `mitigationStatus.IMPLEMENTED` | `mitigationStatus.VERIFIED` | `mitigationStatus.NOT_REQUIRED`)}
                           </Badge>
-                          <Badge variant="outline">Priority {mitigation.priority}</Badge>
+                          <Badge variant="outline">{tp("mitigations.priorityBadge", { value: mitigation.priority })}</Badge>
                           {mitigation.owner && (
                             <span className="text-xs text-muted-foreground">
-                              Owner: {mitigation.owner}
+                              {tp("mitigations.owner", { name: mitigation.owner })}
                             </span>
                           )}
                         </div>
@@ -1052,7 +1053,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                         )}
                         {mitigation.evidence && (
                           <p className="text-sm text-muted-foreground mt-1">
-                            <strong>Evidence:</strong> {mitigation.evidence}
+                            <strong>{tp("mitigations.evidence")}</strong> {mitigation.evidence}
                           </p>
                         )}
                       </div>
@@ -1061,7 +1062,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                         size="sm"
                         onClick={() => openUpdateDialog(mitigation)}
                       >
-                        Update
+                        {tp("mitigations.update")}
                       </Button>
                     </div>
                   </CardContent>
@@ -1072,14 +1073,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 onClick={() => { setAddMitigationTab("manual"); setAddMitigationOpen(true); }}
               >
                 <Plus className="w-4 h-4 mr-1" />
-                Add Mitigation
+                {tp("mitigations.add")}
               </Button>
             </div>
           ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No mitigations identified</p>
+                <p>{tp("mitigations.empty")}</p>
                 <Button
                   className="mt-4"
                   onClick={() => { setAddMitigationTab(hasSuggestions ? "suggested" : "manual"); setAddMitigationOpen(true); }}
@@ -1103,16 +1104,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-primary" />
                           <span className="font-medium">
-                            Level {approval.level} Approval
+                            {tp("approvals.level", { n: approval.level })}
                           </span>
                           <Badge variant="outline">{approval.status}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                          Approver: {approval.approver?.name || approval.approver?.email}
+                          {tp("approvals.approver", { name: approval.approver?.name || approval.approver?.email || "" })}
                         </p>
                         {approval.comments && (
                           <p className="text-sm text-muted-foreground mt-1">
-                            Comments: {approval.comments}
+                            {tp("approvals.comments", { value: approval.comments })}
                           </p>
                         )}
                       </div>
@@ -1140,7 +1141,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               ) : (
                                 <CheckCircle2 className="w-4 h-4 mr-1" />
                               )}
-                              Approve
+                              {tp("approvals.approve")}
                             </Button>
                             <Button
                               size="sm"
@@ -1153,7 +1154,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               disabled={processApproval.isPending}
                             >
                               <XCircle className="w-4 h-4 mr-1" />
-                              Reject
+                              {tp("approvals.reject")}
                             </Button>
                           </>
                         )}
@@ -1168,7 +1169,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   onClick={() => setApprovalDialogOpen(true)}
                 >
                   <UserCheck className="w-4 h-4 mr-1" />
-                  Request Approval
+                  {tp("approvals.request")}
                 </Button>
               )}
             </div>
@@ -1176,7 +1177,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <CheckCircle2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No approvals requested</p>
+                <p>{tp("approvals.empty")}</p>
                 {assessment.status === "PENDING_REVIEW" && (
                   <Button
                     className="mt-4"
@@ -1199,7 +1200,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="font-medium">Version {version.version}</span>
+                        <span className="font-medium">{tp("history.version", { n: version.version })}</span>
                         <p className="text-sm text-muted-foreground">
                           {version.changeNotes}
                         </p>
@@ -1216,7 +1217,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No version history</p>
+                <p>{tp("history.empty")}</p>
               </CardContent>
             </Card>
           )}
@@ -1227,19 +1228,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <Dialog open={addMitigationOpen} onOpenChange={setAddMitigationOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add Mitigation</DialogTitle>
-            <DialogDescription>
-              Add a mitigating measure to address identified risks.
-            </DialogDescription>
+            <DialogTitle>{tp("addDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("addDialog.subtitle")}</DialogDescription>
           </DialogHeader>
 
           {hasSuggestions && (
             <Tabs value={addMitigationTab} onValueChange={(v) => setAddMitigationTab(v as "manual" | "suggested")}>
               <TabsList className="w-full">
-                <TabsTrigger value="manual" className="flex-1">Manual</TabsTrigger>
+                <TabsTrigger value="manual" className="flex-1">{tp("addDialog.tabs.manual")}</TabsTrigger>
                 <TabsTrigger value="suggested" className="flex-1">
                   <Lightbulb className="w-4 h-4 mr-1" />
-                  Suggested
+                  {tp("addDialog.tabs.suggested")}
                 </TabsTrigger>
               </TabsList>
 
@@ -1247,6 +1246,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <MitigationFormFields
                   form={mitigationForm}
                   onChange={setMitigationForm}
+                  tp={tp}
                 />
               </TabsContent>
 
@@ -1256,7 +1256,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   <div>
                     <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
                       <ShieldCheck className="w-4 h-4 text-primary" />
-                      {vendorName} Privacy Technologies
+                      {tp("vendorPets.vendorTitle", { name: vendorName })}
                     </h4>
                     <div className="space-y-2">
                       {vendorPets.map((pet) => {
@@ -1267,12 +1267,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               <div className="flex items-center gap-2">
                                 <span className="font-medium text-sm">{pet}</span>
                                 <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                                  Vendor implements
+                                  {tp("vendorPets.implements")}
                                 </Badge>
                               </div>
                               {risks.length > 0 && (
                                 <p className="text-xs text-muted-foreground mt-1">
-                                  Addresses: {risks.map((r) => r.label).join(", ")}
+                                  {tp("vendorPets.addresses", { risks: risks.map((r) => r.label).join(", ") })}
                                 </p>
                               )}
                             </div>
@@ -1287,7 +1287,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               disabled={addMitigation.isPending}
                             >
                               <Plus className="w-3 h-3 mr-1" />
-                              Accept
+                              {tp("vendorPets.accept")}
                             </Button>
                           </div>
                         );
@@ -1315,7 +1315,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               <span className="text-sm">{pet}</span>
                               {isVendorPet && (
                                 <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                                  Vendor implements
+                                  {tp("vendorPets.implements")}
                                 </Badge>
                               )}
                             </div>
@@ -1326,7 +1326,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                               disabled={addMitigation.isPending}
                             >
                               <Plus className="w-3 h-3 mr-1" />
-                              Accept
+                              {tp("vendorPets.accept")}
                             </Button>
                           </div>
                         );
@@ -1337,7 +1337,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
                 {!hasSuggestions && (
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    No suggestions yet. Answer assessment questions to get PET-based recommendations.
+                    {tp("addDialog.noSuggestions")}
                   </p>
                 )}
               </TabsContent>
@@ -1348,20 +1348,21 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <MitigationFormFields
               form={mitigationForm}
               onChange={setMitigationForm}
+              tp={tp}
             />
           )}
 
           {(addMitigationTab === "manual" || !hasSuggestions) && (
             <DialogFooter>
               <Button variant="outline" onClick={() => setAddMitigationOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button
                 onClick={handleAddMitigation}
                 disabled={!mitigationForm.title || addMitigation.isPending}
               >
                 {addMitigation.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-                Add Mitigation
+                {tp("addDialog.submit")}
               </Button>
             </DialogFooter>
           )}
@@ -1372,21 +1373,19 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <Dialog open={approvalDialogOpen} onOpenChange={setApprovalDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Request Approval</DialogTitle>
-            <DialogDescription>
-              Select an organization member to approve this assessment.
-            </DialogDescription>
+            <DialogTitle>{tp("requestApproval.title")}</DialogTitle>
+            <DialogDescription>{tp("requestApproval.subtitle")}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Approver</Label>
+              <Label>{tp("requestApproval.approver")}</Label>
               <Select
                 value={selectedApproverId}
                 onValueChange={setSelectedApproverId}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select an approver" />
+                  <SelectValue placeholder={tp("requestApproval.selectApprover")} />
                 </SelectTrigger>
                 <SelectContent>
                   {((orgData as any)?.members ?? []).map((member: any) => (
@@ -1401,7 +1400,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setApprovalDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={() =>
@@ -1414,7 +1413,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               disabled={!selectedApproverId || requestApproval.isPending}
             >
               {requestApproval.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-              Request Approval
+              {tp("requestApproval.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1424,17 +1423,15 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject Assessment</DialogTitle>
-            <DialogDescription>
-              Please provide a reason for rejecting this assessment.
-            </DialogDescription>
+            <DialogTitle>{tp("rejectDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("rejectDialog.subtitle")}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Comments</Label>
+              <Label>{tp("rejectDialog.commentsLabel")}</Label>
               <Textarea
-                placeholder="Reason for rejection..."
+                placeholder={tp("rejectDialog.commentsPlaceholder")}
                 rows={3}
                 value={rejectComments}
                 onChange={(e) => setRejectComments(e.target.value)}
@@ -1444,7 +1441,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -1459,7 +1456,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               disabled={processApproval.isPending}
             >
               {processApproval.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-              Reject Assessment
+              {tp("rejectDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1469,7 +1466,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <Dialog open={updateMitigationOpen} onOpenChange={setUpdateMitigationOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Mitigation</DialogTitle>
+            <DialogTitle>{tp("updateMitigation.title")}</DialogTitle>
             <DialogDescription>
               {editingMitigation?.title}
             </DialogDescription>
@@ -1477,7 +1474,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Status</Label>
+              <Label>{tp("updateMitigation.statusLabel")}</Label>
               <Select
                 value={updateForm.status}
                 onValueChange={(v) => setUpdateForm({ ...updateForm, status: v })}
@@ -1488,7 +1485,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <SelectContent>
                   {MITIGATION_STATUSES.map((s) => (
                     <SelectItem key={s} value={s}>
-                      {s.replace("_", " ")}
+                      {tp(`mitigationStatus.${s}` as `mitigationStatus.IDENTIFIED` | `mitigationStatus.PLANNED` | `mitigationStatus.IN_PROGRESS` | `mitigationStatus.IMPLEMENTED` | `mitigationStatus.VERIFIED` | `mitigationStatus.NOT_REQUIRED`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -1496,16 +1493,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             <div className="space-y-2">
-              <Label>Owner</Label>
+              <Label>{tp("updateMitigation.ownerLabel")}</Label>
               <Input
-                placeholder="Person responsible"
+                placeholder={tp("updateMitigation.ownerPlaceholder")}
                 value={updateForm.owner}
                 onChange={(e) => setUpdateForm({ ...updateForm, owner: e.target.value })}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Due Date</Label>
+              <Label>{tp("updateMitigation.dueDateLabel")}</Label>
               <Input
                 type="date"
                 value={updateForm.dueDate}
@@ -1514,9 +1511,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             <div className="space-y-2">
-              <Label>Evidence</Label>
+              <Label>{tp("updateMitigation.evidenceLabel")}</Label>
               <Textarea
-                placeholder="Evidence of implementation (documents, links, screenshots...)"
+                placeholder={tp("updateMitigation.evidencePlaceholder")}
                 rows={3}
                 value={updateForm.evidence}
                 onChange={(e) => setUpdateForm({ ...updateForm, evidence: e.target.value })}
@@ -1526,14 +1523,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setUpdateMitigationOpen(false)}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={handleUpdateMitigation}
               disabled={updateMitigation.isPending}
             >
               {updateMitigation.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-              Save Changes
+              {tp("updateMitigation.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1546,24 +1543,26 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 function MitigationFormFields({
   form,
   onChange,
+  tp,
 }: {
   form: { title: string; description: string; priority: number; owner: string; dueDate: string };
   onChange: (f: typeof form) => void;
+  tp: (key: string, values?: Record<string, string | number>) => string;
 }) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Title *</Label>
+        <Label>{tp("mitigationForm.titleLabel")}</Label>
         <Input
-          placeholder="e.g., Implement pseudonymization for customer records"
+          placeholder={tp("mitigationForm.titlePlaceholder")}
           value={form.title}
           onChange={(e) => onChange({ ...form, title: e.target.value })}
         />
       </div>
       <div className="space-y-2">
-        <Label>Description</Label>
+        <Label>{tp("mitigationForm.descLabel")}</Label>
         <Textarea
-          placeholder="Describe the mitigation measure and how it addresses the risk..."
+          placeholder={tp("mitigationForm.descPlaceholder")}
           rows={3}
           value={form.description}
           onChange={(e) => onChange({ ...form, description: e.target.value })}
@@ -1571,7 +1570,7 @@ function MitigationFormFields({
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-2">
-          <Label>Priority</Label>
+          <Label>{tp("mitigationForm.priorityLabel")}</Label>
           <Select
             value={String(form.priority)}
             onValueChange={(v) => onChange({ ...form, priority: parseInt(v) })}
@@ -1580,24 +1579,24 @@ function MitigationFormFields({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">1 - Critical</SelectItem>
-              <SelectItem value="2">2 - High</SelectItem>
-              <SelectItem value="3">3 - Medium</SelectItem>
-              <SelectItem value="4">4 - Low</SelectItem>
-              <SelectItem value="5">5 - Minimal</SelectItem>
+              <SelectItem value="1">{tp("mitigationForm.priority1")}</SelectItem>
+              <SelectItem value="2">{tp("mitigationForm.priority2")}</SelectItem>
+              <SelectItem value="3">{tp("mitigationForm.priority3")}</SelectItem>
+              <SelectItem value="4">{tp("mitigationForm.priority4")}</SelectItem>
+              <SelectItem value="5">{tp("mitigationForm.priority5")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Owner</Label>
+          <Label>{tp("mitigationForm.ownerLabel")}</Label>
           <Input
-            placeholder="Person responsible"
+            placeholder={tp("mitigationForm.ownerPlaceholder")}
             value={form.owner}
             onChange={(e) => onChange({ ...form, owner: e.target.value })}
           />
         </div>
         <div className="space-y-2">
-          <Label>Due Date</Label>
+          <Label>{tp("mitigationForm.dueDateLabel")}</Label>
           <Input
             type="date"
             value={form.dueDate}
