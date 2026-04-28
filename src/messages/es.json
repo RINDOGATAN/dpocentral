@@ -33,6 +33,106 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "vendorDetail": {
+      "notFound": "Proveedor no encontrado",
+      "back": "Volver a proveedores",
+      "delete": "Eliminar",
+      "edit": "Editar proveedor",
+      "riskBadge": "Riesgo {level}",
+      "noCategories": "Sin categorías",
+      "info": {
+        "website": "Sitio web",
+        "contact": "Contacto",
+        "email": "Correo",
+        "added": "Añadido",
+        "empty": "-"
+      },
+      "tabs": {
+        "overview": "Resumen",
+        "contractsWithCount": "Contratos ({count})",
+        "assessments": "Evaluaciones",
+        "reviews": "Revisiones"
+      },
+      "overview": {
+        "description": "Descripción",
+        "dataProcessing": "Tratamiento de datos",
+        "dataProcessingDesc": "Categorías de datos que trata este proveedor",
+        "dataEmpty": "No se han especificado categorías de datos",
+        "countries": "Países",
+        "countriesDesc": "Ubicaciones de transferencia de datos",
+        "countriesEmpty": "No se han especificado países",
+        "certifications": "Certificaciones",
+        "certificationsDesc": "Certificaciones de seguridad y cumplimiento",
+        "certificationsEmpty": "No hay certificaciones registradas",
+        "privacyTech": "Tecnologías de privacidad",
+        "privacyTechDesc": "Tecnologías de privacidad que utiliza este proveedor"
+      },
+      "contracts": {
+        "add": "Añadir contrato",
+        "start": "Inicio: {date}",
+        "endSuffix": " — Fin: {date}",
+        "open": "Abrir",
+        "noDocument": "Sin documento",
+        "empty": "No hay contratos registrados"
+      },
+      "assessments": {
+        "empty": "No hay evaluaciones del proveedor completadas",
+        "start": "Iniciar evaluación"
+      },
+      "reviews": {
+        "empty": "No hay revisiones programadas",
+        "schedule": "Programar revisión"
+      },
+      "editDialog": {
+        "title": "Editar proveedor",
+        "subtitle": "Actualiza los datos principales del proveedor.",
+        "nameLabel": "Nombre *",
+        "descLabel": "Descripción",
+        "websiteLabel": "Sitio web",
+        "websitePlaceholder": "https://…",
+        "statusLabel": "Estado",
+        "riskLabel": "Nivel de riesgo",
+        "riskNotSet": "Sin definir",
+        "contactLabel": "Contacto principal",
+        "emailLabel": "Correo de contacto",
+        "save": "Guardar"
+      },
+      "contractDialog": {
+        "title": "Añadir contrato",
+        "subtitle": "Registra un contrato, DPA o CCT para este proveedor.",
+        "nameLabel": "Nombre *",
+        "namePlaceholder": "p. ej., Contrato marco de servicios 2026",
+        "typeLabel": "Tipo *",
+        "type": {
+          "DPA": "DPA (Acuerdo de tratamiento de datos)",
+          "SCC": "CCT (Cláusulas contractuales tipo)",
+          "MSA": "MSA (Contrato marco de servicios)",
+          "NDA": "NDA",
+          "OTHER": "Otro"
+        },
+        "descLabel": "Descripción",
+        "urlLabel": "URL del documento",
+        "urlPlaceholder": "https://…",
+        "startLabel": "Fecha de inicio",
+        "endLabel": "Fecha de fin",
+        "submit": "Añadir"
+      },
+      "reviewDialog": {
+        "title": "Programar revisión",
+        "subtitle": "Asigna un revisor y una fecha para la próxima revisión del proveedor.",
+        "reviewerLabel": "Revisor *",
+        "reviewerPlaceholder": "Selecciona un revisor",
+        "typeLabel": "Tipo de revisión",
+        "type": {
+          "PERIODIC": "Periódica",
+          "INITIAL": "Inicial",
+          "INCIDENT_TRIGGERED": "Por incidente",
+          "CONTRACT_RENEWAL": "Renovación de contrato"
+        },
+        "dateLabel": "Fecha programada *",
+        "submit": "Programar"
+      }
+    },
     "dsarDetail": {
       "notFound": "Solicitud no encontrada",
       "back": "Volver a DSAR",

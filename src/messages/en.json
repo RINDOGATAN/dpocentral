@@ -33,6 +33,106 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "vendorDetail": {
+      "notFound": "Vendor not found",
+      "back": "Back to Vendors",
+      "delete": "Delete",
+      "edit": "Edit Vendor",
+      "riskBadge": "{level} Risk",
+      "noCategories": "No categories",
+      "info": {
+        "website": "Website",
+        "contact": "Contact",
+        "email": "Email",
+        "added": "Added",
+        "empty": "-"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "contractsWithCount": "Contracts ({count})",
+        "assessments": "Assessments",
+        "reviews": "Reviews"
+      },
+      "overview": {
+        "description": "Description",
+        "dataProcessing": "Data Processing",
+        "dataProcessingDesc": "Categories of data this vendor processes",
+        "dataEmpty": "No data categories specified",
+        "countries": "Countries",
+        "countriesDesc": "Data transfer locations",
+        "countriesEmpty": "No countries specified",
+        "certifications": "Certifications",
+        "certificationsDesc": "Security and compliance certifications",
+        "certificationsEmpty": "No certifications recorded",
+        "privacyTech": "Privacy Technologies",
+        "privacyTechDesc": "Privacy enhancing technologies used by this vendor"
+      },
+      "contracts": {
+        "add": "Add Contract",
+        "start": "Start: {date}",
+        "endSuffix": " — End: {date}",
+        "open": "Open",
+        "noDocument": "No document",
+        "empty": "No contracts recorded"
+      },
+      "assessments": {
+        "empty": "No vendor assessments completed",
+        "start": "Start Assessment"
+      },
+      "reviews": {
+        "empty": "No reviews scheduled",
+        "schedule": "Schedule Review"
+      },
+      "editDialog": {
+        "title": "Edit Vendor",
+        "subtitle": "Update core vendor details.",
+        "nameLabel": "Name *",
+        "descLabel": "Description",
+        "websiteLabel": "Website",
+        "websitePlaceholder": "https://…",
+        "statusLabel": "Status",
+        "riskLabel": "Risk Tier",
+        "riskNotSet": "Not set",
+        "contactLabel": "Primary Contact",
+        "emailLabel": "Contact Email",
+        "save": "Save"
+      },
+      "contractDialog": {
+        "title": "Add Contract",
+        "subtitle": "Record a contract, DPA, or SCC for this vendor.",
+        "nameLabel": "Name *",
+        "namePlaceholder": "e.g., Master Services Agreement 2026",
+        "typeLabel": "Type *",
+        "type": {
+          "DPA": "DPA (Data Processing Agreement)",
+          "SCC": "SCC (Standard Contractual Clauses)",
+          "MSA": "MSA (Master Services Agreement)",
+          "NDA": "NDA",
+          "OTHER": "Other"
+        },
+        "descLabel": "Description",
+        "urlLabel": "Document URL",
+        "urlPlaceholder": "https://…",
+        "startLabel": "Start Date",
+        "endLabel": "End Date",
+        "submit": "Add"
+      },
+      "reviewDialog": {
+        "title": "Schedule Review",
+        "subtitle": "Assign a reviewer and date for this vendor's next review.",
+        "reviewerLabel": "Reviewer *",
+        "reviewerPlaceholder": "Select reviewer",
+        "typeLabel": "Review Type",
+        "type": {
+          "PERIODIC": "Periodic",
+          "INITIAL": "Initial",
+          "INCIDENT_TRIGGERED": "Incident-triggered",
+          "CONTRACT_RENEWAL": "Contract renewal"
+        },
+        "dateLabel": "Scheduled Date *",
+        "submit": "Schedule"
+      }
+    },
     "dsarDetail": {
       "notFound": "Request not found",
       "back": "Back to DSAR",
