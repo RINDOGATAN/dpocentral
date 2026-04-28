@@ -62,7 +62,7 @@ function ScoreRing({ score }: { score: number }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className={`text-4xl font-bold ${color}`}>{score}</span>
-        <span className="text-xs text-muted-foreground">/ 100</span>
+        <span className="text-xs text-muted-foreground">/&nbsp;100</span>
       </div>
     </div>
   );
@@ -74,6 +74,8 @@ function ModuleBreakdownCard({
   total,
   compliant,
   weight,
+  weightLabel,
+  compliantLabel,
   icon: Icon,
 }: {
   label: string;
@@ -81,6 +83,8 @@ function ModuleBreakdownCard({
   total: number;
   compliant: number;
   weight: string;
+  weightLabel: string;
+  compliantLabel: string;
   icon: React.ElementType;
 }) {
   const color =
@@ -95,7 +99,7 @@ function ModuleBreakdownCard({
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">{label}</p>
-            <p className="text-xs text-muted-foreground">{weight} weight</p>
+            <p className="text-xs text-muted-foreground">{weightLabel}</p>
           </div>
           <span className={`text-lg font-bold ${color}`}>{score}%</span>
         </div>
@@ -107,9 +111,7 @@ function ModuleBreakdownCard({
             style={{ width: `${Math.min(score, 100)}%` }}
           />
         </div>
-        <p className="text-xs text-muted-foreground mt-2">
-          {compliant} of {total} compliant
-        </p>
+        <p className="text-xs text-muted-foreground mt-2">{compliantLabel}</p>
       </CardContent>
     </Card>
   );
@@ -118,6 +120,7 @@ function ModuleBreakdownCard({
 export default function ReportsPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.reports");
 
   const { data: complianceData, isLoading: isLoadingScore } =
     trpc.reports.getComplianceScore.useQuery(
@@ -156,7 +159,7 @@ export default function ReportsPage() {
   const riskIndicators = complianceData?.riskIndicators ?? [];
 
   const scoreLabel =
-    score >= 80 ? "Strong" : score >= 60 ? "Moderate" : "Needs Attention";
+    score >= 80 ? tp("score.strong") : score >= 60 ? tp("score.moderate") : tp("score.needsAttention");
   const scoreBadgeVariant =
     score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive";
 
@@ -165,10 +168,8 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Compliance Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Privacy program compliance posture
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-sm text-muted-foreground">{tp("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -184,7 +185,7 @@ export default function ReportsPage() {
             ) : (
               <Download className="w-4 h-4 mr-2" />
             )}
-            Save Snapshot
+            {tp("saveSnapshot")}
           </Button>
           <Button
             variant="outline"
@@ -198,7 +199,7 @@ export default function ReportsPage() {
             }
           >
             <Scale className="w-4 h-4 mr-2" />
-            Regulatory Report
+            {tp("regulatoryReport")}
           </Button>
         </div>
       </div>
@@ -210,29 +211,27 @@ export default function ReportsPage() {
             <ScoreRing score={score} />
             <div className="flex-1 text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-                <h2 className="text-lg font-semibold">Overall Compliance Score</h2>
+                <h2 className="text-lg font-semibold">{tp("score.title")}</h2>
                 <Badge variant={scoreBadgeVariant as any}>{scoreLabel}</Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
-                Aggregated score across all privacy modules, weighted by importance.
-              </p>
+              <p className="text-sm text-muted-foreground mb-4">{tp("score.subtitle")}</p>
               {trendData && trendData.length > 1 && (
                 <div className="flex items-center gap-2 text-sm">
                   {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
                     <>
                       <TrendingUp className="w-4 h-4 text-green-500" />
                       <span className="text-green-500">
-                        +{Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score)} pts
+                        {tp("score.trendUp", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
                       </span>
-                      <span className="text-muted-foreground">vs last month</span>
+                      <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
                     </>
                   ) : (
                     <>
                       <TrendingDown className="w-4 h-4 text-red-500" />
                       <span className="text-red-500">
-                        {Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score)} pts
+                        {tp("score.trendDown", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
                       </span>
-                      <span className="text-muted-foreground">vs last month</span>
+                      <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
                     </>
                   )}
                 </div>
@@ -245,46 +244,56 @@ export default function ReportsPage() {
       {/* Module Breakdown Grid */}
       {breakdown && (
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Module Compliance Breakdown</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">{tp("breakdown.heading")}</h3>
           <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
             <ModuleBreakdownCard
-              label="ROPA Completeness"
+              label={tp("breakdown.ropa")}
               score={breakdown.ropa.score}
               total={breakdown.ropa.total}
               compliant={breakdown.ropa.compliant}
               weight="25%"
+              weightLabel={tp("breakdown.weight", { value: "25%" })}
+              compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.ropa.compliant, total: breakdown.ropa.total })}
               icon={Database}
             />
             <ModuleBreakdownCard
-              label="Assessments"
+              label={tp("breakdown.assessments")}
               score={breakdown.assessment.score}
               total={breakdown.assessment.total}
               compliant={breakdown.assessment.compliant}
               weight="20%"
+              weightLabel={tp("breakdown.weight", { value: "20%" })}
+              compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.assessment.compliant, total: breakdown.assessment.total })}
               icon={FileText}
             />
             <ModuleBreakdownCard
-              label="DSAR SLA"
+              label={tp("breakdown.dsarSla")}
               score={breakdown.dsar.score}
               total={breakdown.dsar.total}
               compliant={breakdown.dsar.compliant}
               weight="25%"
+              weightLabel={tp("breakdown.weight", { value: "25%" })}
+              compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.dsar.compliant, total: breakdown.dsar.total })}
               icon={Clock}
             />
             <ModuleBreakdownCard
-              label="Incident Response"
+              label={tp("breakdown.incidentResponse")}
               score={breakdown.incident.score}
               total={breakdown.incident.total}
               compliant={breakdown.incident.compliant}
               weight="15%"
+              weightLabel={tp("breakdown.weight", { value: "15%" })}
+              compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.incident.compliant, total: breakdown.incident.total })}
               icon={Shield}
             />
             <ModuleBreakdownCard
-              label="Vendor Reviews"
+              label={tp("breakdown.vendorReviews")}
               score={breakdown.vendor.score}
               total={breakdown.vendor.total}
               compliant={breakdown.vendor.compliant}
               weight="15%"
+              weightLabel={tp("breakdown.weight", { value: "15%" })}
+              compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.vendor.compliant, total: breakdown.vendor.total })}
               icon={Building2}
             />
           </div>
@@ -297,9 +306,9 @@ export default function ReportsPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-yellow-500" />
-              Risk Indicators
+              {tp("risk.title")}
             </CardTitle>
-            <CardDescription>Actionable items requiring attention</CardDescription>
+            <CardDescription>{tp("risk.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -321,7 +330,7 @@ export default function ReportsPage() {
         <Card>
           <CardContent className="py-6 text-center">
             <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
-            <p className="text-sm text-muted-foreground">No risk indicators detected. Great job!</p>
+            <p className="text-sm text-muted-foreground">{tp("risk.noneTitle")}</p>
           </CardContent>
         </Card>
       )}
@@ -329,33 +338,33 @@ export default function ReportsPage() {
       {/* Module Stats Grid */}
       {moduleStats && (
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Module Details</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">{tp("modules.heading")}</h3>
           <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {/* Data Inventory */}
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Database className="w-4 h-4" />
-                  Data Inventory
+                  {tp("modules.dataInventory")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dataInventory.assets}</p>
-                    <p className="text-xs text-muted-foreground">Assets</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.assets")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dataInventory.elements}</p>
-                    <p className="text-xs text-muted-foreground">Elements</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.elements")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dataInventory.activities}</p>
-                    <p className="text-xs text-muted-foreground">Activities</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.activities")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dataInventory.flows}</p>
-                    <p className="text-xs text-muted-foreground">Flows</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.flows")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -366,28 +375,28 @@ export default function ReportsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <FileText className="w-4 h-4" />
-                  DSAR Requests
+                  {tp("modules.dsarTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dsar.total}</p>
-                    <p className="text-xs text-muted-foreground">Total</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.dsarTotal")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.dsar.open}</p>
-                    <p className="text-xs text-muted-foreground">Open</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.dsarOpen")}</p>
                   </div>
                   <div>
                     <p className={`text-2xl font-bold ${moduleStats.dsar.overdue > 0 ? "text-red-500" : ""}`}>
                       {moduleStats.dsar.overdue}
                     </p>
-                    <p className="text-xs text-muted-foreground">Overdue</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.dsarOverdue")}</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">{moduleStats.dsar.avgResolutionDays}d</p>
-                    <p className="text-xs text-muted-foreground">Avg Resolution</p>
+                    <p className="text-2xl font-bold">{tp("modules.daysShort", { days: moduleStats.dsar.avgResolutionDays })}</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.dsarAvgResolution")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -398,28 +407,28 @@ export default function ReportsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <BarChart3 className="w-4 h-4" />
-                  Assessments
+                  {tp("modules.assessmentsTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.assessment.total}</p>
-                    <p className="text-xs text-muted-foreground">Total</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentTotal")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-green-500">{moduleStats.assessment.approved}</p>
-                    <p className="text-xs text-muted-foreground">Approved</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentApproved")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.assessment.inProgress}</p>
-                    <p className="text-xs text-muted-foreground">In Progress</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentInProgress")}</p>
                   </div>
                   <div>
                     <p className={`text-2xl font-bold ${moduleStats.assessment.highRisk > 0 ? "text-yellow-500" : ""}`}>
                       {moduleStats.assessment.highRisk}
                     </p>
-                    <p className="text-xs text-muted-foreground">High Risk</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentHighRisk")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -430,28 +439,28 @@ export default function ReportsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  Incidents
+                  {tp("modules.incidentsTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.incident.total}</p>
-                    <p className="text-xs text-muted-foreground">Total</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.incidentTotal")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.incident.open}</p>
-                    <p className="text-xs text-muted-foreground">Open</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.incidentOpen")}</p>
                   </div>
                   <div>
                     <p className={`text-2xl font-bold ${moduleStats.incident.critical > 0 ? "text-red-500" : ""}`}>
                       {moduleStats.incident.critical}
                     </p>
-                    <p className="text-xs text-muted-foreground">Critical</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.incidentCritical")}</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">{moduleStats.incident.avgResolutionDays}d</p>
-                    <p className="text-xs text-muted-foreground">Avg Resolution</p>
+                    <p className="text-2xl font-bold">{tp("modules.daysShort", { days: moduleStats.incident.avgResolutionDays })}</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.incidentAvgResolution")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -462,30 +471,30 @@ export default function ReportsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
-                  Vendors
+                  {tp("modules.vendorsTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.vendor.total}</p>
-                    <p className="text-xs text-muted-foreground">Total</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.vendorTotal")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.vendor.active}</p>
-                    <p className="text-xs text-muted-foreground">Active</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.vendorActive")}</p>
                   </div>
                   <div>
                     <p className={`text-2xl font-bold ${moduleStats.vendor.highRisk > 0 ? "text-yellow-500" : ""}`}>
                       {moduleStats.vendor.highRisk}
                     </p>
-                    <p className="text-xs text-muted-foreground">High Risk</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.vendorHighRisk")}</p>
                   </div>
                   <div>
                     <p className={`text-2xl font-bold ${moduleStats.vendor.withoutReview > 0 ? "text-red-500" : ""}`}>
                       {moduleStats.vendor.withoutReview}
                     </p>
-                    <p className="text-xs text-muted-foreground">No Review</p>
+                    <p className="text-xs text-muted-foreground">{tp("modules.vendorNoReview")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -497,7 +506,7 @@ export default function ReportsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <TrendingUp className="w-4 h-4" />
-                    Score History
+                    {tp("modules.scoreHistory")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -505,7 +514,7 @@ export default function ReportsPage() {
                     {trendData.map((snapshot) => (
                       <div key={snapshot.id} className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {new Date(snapshot.month).toLocaleDateString("en-US", {
+                          {new Date(snapshot.month).toLocaleDateString(undefined, {
                             month: "short",
                             year: "numeric",
                           })}
@@ -530,7 +539,7 @@ export default function ReportsPage() {
                   </div>
                   {trendData.length === 0 && (
                     <p className="text-xs text-muted-foreground text-center py-4">
-                      No snapshots yet. Save a snapshot to start tracking trends.
+                      {tp("modules.noSnapshots")}
                     </p>
                   )}
                 </CardContent>

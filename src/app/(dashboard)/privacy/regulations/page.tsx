@@ -32,8 +32,10 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useTranslations } from "next-intl";
 
 export default function RegulationsPage() {
+  const t = useTranslations("pages.regulations");
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const [search, setSearch] = useState("");
@@ -77,11 +79,9 @@ export default function RegulationsPage() {
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-2">
             <Scale className="w-6 h-6" />
-            Regulation Hub
+            {t("title")}
           </h1>
-          <p className="text-muted-foreground">
-            Track applicable privacy regulations and compliance requirements
-          </p>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -95,12 +95,12 @@ export default function RegulationsPage() {
             disabled={!applied?.jurisdictions.length}
           >
             <Download className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Export Report</span>
+            <span className="hidden sm:inline">{t("exportReport")}</span>
           </Button>
           <Button asChild>
             <Link href="/privacy/regulations/wizard">
               <Globe className="w-4 h-4 mr-2" />
-              Applicability Wizard
+              {t("wizard")}
             </Link>
           </Button>
         </div>
@@ -108,9 +108,9 @@ export default function RegulationsPage() {
 
       <Tabs defaultValue="catalog">
         <TabsList>
-          <TabsTrigger value="catalog">Jurisdiction Catalog</TabsTrigger>
+          <TabsTrigger value="catalog">{t("tabs.catalog")}</TabsTrigger>
           <TabsTrigger value="applied">
-            Applied ({applied?.jurisdictions.length ?? 0})
+            {t("tabs.appliedWithCount", { count: applied?.jurisdictions.length ?? 0 })}
           </TabsTrigger>
         </TabsList>
 
@@ -120,7 +120,7 @@ export default function RegulationsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Search regulations..."
+                placeholder={t("search")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
@@ -128,14 +128,14 @@ export default function RegulationsPage() {
             </div>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder={t("category.label")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="comprehensive">Comprehensive</SelectItem>
-                <SelectItem value="sectoral">Sectoral</SelectItem>
-                <SelectItem value="ai_governance">AI Governance</SelectItem>
-                <SelectItem value="emerging">Emerging</SelectItem>
+                <SelectItem value="all">{t("category.all")}</SelectItem>
+                <SelectItem value="comprehensive">{t("category.comprehensive")}</SelectItem>
+                <SelectItem value="sectoral">{t("category.sectoral")}</SelectItem>
+                <SelectItem value="ai_governance">{t("category.ai_governance")}</SelectItem>
+                <SelectItem value="emerging">{t("category.emerging")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -157,7 +157,7 @@ export default function RegulationsPage() {
                       <div className="flex gap-1">
                         <Badge variant="outline" className="text-xs">{j.region}</Badge>
                         {j.isApplied && (
-                          <Badge className="text-xs bg-primary">Applied</Badge>
+                          <Badge className="text-xs bg-primary">{t("card.applied")}</Badge>
                         )}
                       </div>
                     </div>
@@ -168,11 +168,11 @@ export default function RegulationsPage() {
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        DSAR: {j.dsarDeadlineDays}d
+                        {t("card.dsarShort", { days: j.dsarDeadlineDays })}
                       </span>
                       <span className="flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
-                        Breach: {j.breachNotificationHours}h
+                        {t("card.breachShort", { hours: j.breachNotificationHours })}
                       </span>
                     </div>
 
@@ -184,7 +184,7 @@ export default function RegulationsPage() {
                       ))}
                       {j.keyRequirements.length > 2 && (
                         <Badge variant="secondary" className="text-[10px]">
-                          +{j.keyRequirements.length - 2} more
+                          {t("card.moreItems", { count: j.keyRequirements.length - 2 })}
                         </Badge>
                       )}
                     </div>
@@ -202,11 +202,11 @@ export default function RegulationsPage() {
                         }
                         disabled={applyMutation.isPending}
                       >
-                        <Plus className="w-3 h-3 mr-1" /> Apply
+                        <Plus className="w-3 h-3 mr-1" /> {t("card.apply")}
                       </Button>
                     ) : (
                       <Button size="sm" variant="ghost" className="w-full text-muted-foreground" disabled>
-                        <CheckCircle2 className="w-3 h-3 mr-1" /> Applied
+                        <CheckCircle2 className="w-3 h-3 mr-1" /> {t("card.applied")}
                       </Button>
                     )}
                   </CardContent>
@@ -221,13 +221,13 @@ export default function RegulationsPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <Globe className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-medium mb-2">No jurisdictions applied</h3>
+                <h3 className="font-medium mb-2">{t("applied.emptyTitle")}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Use the Applicability Wizard to determine which regulations apply to your organization
+                  {t("applied.emptySubtitle")}
                 </p>
                 <Button asChild>
                   <Link href="/privacy/regulations/wizard">
-                    Start Wizard <ArrowRight className="w-4 h-4 ml-2" />
+                    {t("applied.startWizard")} <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
               </CardContent>
@@ -243,10 +243,10 @@ export default function RegulationsPage() {
                         <div>
                           <div className="font-medium flex items-center gap-2">
                             {j.name}
-                            {j.isPrimary && <Badge className="text-[10px]">Primary</Badge>}
+                            {j.isPrimary && <Badge className="text-[10px]">{t("card.primary")}</Badge>}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {j.region} | DSAR: {j.dsarDeadlineDays} days | Breach: {j.breachNotificationHours}h
+                            {t("card.appliedSummary", { region: j.region, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
                           </div>
                         </div>
                       </div>
