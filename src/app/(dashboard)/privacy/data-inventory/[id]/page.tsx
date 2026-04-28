@@ -35,6 +35,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   ArrowLeft,
   Database,
@@ -105,6 +106,11 @@ export default function DataAssetDetailPage() {
   const id = params.id as string;
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tConfirm = useTranslations("confirms");
+  const tCommon = useTranslations("common");
+
+  const [confirmAssetOpen, setConfirmAssetOpen] = useState(false);
+  const [pendingElement, setPendingElement] = useState<{ id: string; name: string } | null>(null);
   const [isAddElementOpen, setIsAddElementOpen] = useState(false);
   const [linkActivitiesOpen, setLinkActivitiesOpen] = useState(false);
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
@@ -264,7 +270,12 @@ export default function DataAssetDetailPage() {
   });
 
   const handleDelete = () => {
-    if (!organization?.id || !confirm("Are you sure you want to delete this asset?")) return;
+    if (!organization?.id) return;
+    setConfirmAssetOpen(true);
+  };
+  const confirmAssetDelete = () => {
+    if (!organization?.id) return;
+    setConfirmAssetOpen(false);
     deleteAsset.mutate({ organizationId: organization.id, id });
   };
 
@@ -286,7 +297,13 @@ export default function DataAssetDetailPage() {
   };
 
   const handleDeleteElement = (elementId: string, elementName: string) => {
-    if (!organization?.id || !confirm(`Delete "${elementName}"?`)) return;
+    if (!organization?.id) return;
+    setPendingElement({ id: elementId, name: elementName });
+  };
+  const confirmElementDelete = () => {
+    if (!organization?.id || !pendingElement) return;
+    const { id: elementId } = pendingElement;
+    setPendingElement(null);
     deleteElement.mutate({ organizationId: organization.id, id: elementId });
   };
 
@@ -807,6 +824,30 @@ export default function DataAssetDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={confirmAssetOpen}
+        onOpenChange={setConfirmAssetOpen}
+        title={tConfirm("deleteAssetTitle")}
+        description={tConfirm("deleteAssetDesc")}
+        confirmText={tCommon("delete")}
+        cancelText={tCommon("cancel")}
+        danger
+        pending={deleteAsset.isPending}
+        onConfirm={confirmAssetDelete}
+      />
+
+      <ConfirmDialog
+        open={!!pendingElement}
+        onOpenChange={(open) => !open && setPendingElement(null)}
+        title={tConfirm("deleteElementTitle")}
+        description={tConfirm("deleteElementDesc", { name: pendingElement?.name ?? "" })}
+        confirmText={tCommon("delete")}
+        cancelText={tCommon("cancel")}
+        danger
+        pending={deleteElement.isPending}
+        onConfirm={confirmElementDelete}
+      />
     </div>
   );
 }

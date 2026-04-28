@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   Select,
   SelectContent,
@@ -53,6 +54,7 @@ export default function CustomerDetailPage() {
     skillPackageId: "",
     licenseType: "SUBSCRIPTION" as LicenseType,
   });
+  const [pendingEntitlement, setPendingEntitlement] = useState<{ id: string; name: string } | null>(null);
 
   const utils = trpc.useUtils();
 
@@ -490,15 +492,12 @@ export default function CustomerDetailPage() {
                         variant="ghost"
                         size="icon"
                         title="Delete entitlement"
-                        onClick={() => {
-                          if (
-                            confirm(
-                              `Delete this entitlement (${entitlement.skillPackage.displayName})? Linked organizations will lose access immediately. This cannot be undone.`
-                            )
-                          ) {
-                            deleteEntitlement.mutate({ entitlementId: entitlement.id });
-                          }
-                        }}
+                        onClick={() =>
+                          setPendingEntitlement({
+                            id: entitlement.id,
+                            name: entitlement.skillPackage.displayName,
+                          })
+                        }
                         disabled={deleteEntitlement.isPending}
                       >
                         <Trash2 className="w-4 h-4 text-destructive" />
@@ -551,6 +550,23 @@ export default function CustomerDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={!!pendingEntitlement}
+        onOpenChange={(open) => !open && setPendingEntitlement(null)}
+        title="Delete entitlement?"
+        description={`Delete this entitlement (${pendingEntitlement?.name ?? ""})? Linked organizations will lose access immediately. This cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        danger
+        pending={deleteEntitlement.isPending}
+        onConfirm={() => {
+          if (!pendingEntitlement) return;
+          const id = pendingEntitlement.id;
+          setPendingEntitlement(null);
+          deleteEntitlement.mutate({ entitlementId: id });
+        }}
+      />
     </div>
   );
 }

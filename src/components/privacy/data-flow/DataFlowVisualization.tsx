@@ -14,6 +14,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Loader2, Plus, Database } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -62,6 +63,9 @@ export function DataFlowVisualization({
 }: DataFlowVisualizationProps) {
   const router = useRouter();
   const t = useTranslations("toasts");
+  const tConfirm = useTranslations("confirms");
+  const tCommon = useTranslations("common");
+  const [pendingDeleteFlow, setPendingDeleteFlow] = useState<FlowData | null>(null);
   const [selectedFlow, setSelectedFlow] = useState<FlowData | null>(null);
   const [isFlowPanelOpen, setIsFlowPanelOpen] = useState(false);
   const [isCreateFlowOpen, setIsCreateFlowOpen] = useState(false);
@@ -314,8 +318,13 @@ export function DataFlowVisualization({
 
   // Handle delete flow
   const handleDeleteFlow = (flow: FlowData) => {
-    if (!confirm(`Delete flow "${flow.name}"?`)) return;
-    deleteFlow.mutate({ organizationId, id: flow.id });
+    setPendingDeleteFlow(flow);
+  };
+  const confirmDeleteFlow = () => {
+    if (!pendingDeleteFlow) return;
+    const id = pendingDeleteFlow.id;
+    setPendingDeleteFlow(null);
+    deleteFlow.mutate({ organizationId, id });
   };
 
   // Handle edit flow
@@ -565,6 +574,18 @@ export function DataFlowVisualization({
         isSubmitting={updateFlow.isPending}
         error={updateFlow.error?.message}
         initialData={editInitialData}
+      />
+
+      <ConfirmDialog
+        open={!!pendingDeleteFlow}
+        onOpenChange={(open) => !open && setPendingDeleteFlow(null)}
+        title={tConfirm("deleteFlowTitle")}
+        description={tConfirm("deleteFlowDesc", { name: pendingDeleteFlow?.name ?? "" })}
+        confirmText={tCommon("delete")}
+        cancelText={tCommon("cancel")}
+        danger
+        pending={deleteFlow.isPending}
+        onConfirm={confirmDeleteFlow}
       />
     </>
   );
