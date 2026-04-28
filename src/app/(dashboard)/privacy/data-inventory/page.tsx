@@ -51,6 +51,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useTranslations } from "next-intl";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -69,24 +70,24 @@ const assetTypeIcons: Record<string, any> = {
   FILE_SYSTEM: FileSpreadsheet,
 };
 
-const mechanismLabels: Record<string, string> = {
-  ADEQUACY_DECISION: "Adequacy Decision",
-  STANDARD_CONTRACTUAL_CLAUSES: "SCCs",
-  BINDING_CORPORATE_RULES: "BCRs",
-  DEROGATION: "Derogation",
-  CERTIFICATION: "Certification",
-  CODE_OF_CONDUCT: "Code of Conduct",
-  OTHER: "Other",
-};
+const MECHANISM_KEYS = [
+  "ADEQUACY_DECISION",
+  "STANDARD_CONTRACTUAL_CLAUSES",
+  "BINDING_CORPORATE_RULES",
+  "DEROGATION",
+  "CERTIFICATION",
+  "CODE_OF_CONDUCT",
+  "OTHER",
+] as const;
 
-const legalBasisLabels: Record<string, string> = {
-  CONSENT: "Consent",
-  CONTRACT: "Contract",
-  LEGAL_OBLIGATION: "Legal Obligation",
-  VITAL_INTERESTS: "Vital Interests",
-  PUBLIC_TASK: "Public Task",
-  LEGITIMATE_INTERESTS: "Legitimate Interests",
-};
+const LEGAL_BASIS_KEYS = [
+  "CONSENT",
+  "CONTRACT",
+  "LEGAL_OBLIGATION",
+  "VITAL_INTERESTS",
+  "PUBLIC_TASK",
+  "LEGITIMATE_INTERESTS",
+] as const;
 
 const INITIAL_ACTIVITY_FORM = {
   name: "",
@@ -105,6 +106,8 @@ const INITIAL_TRANSFER_FORM = {
 };
 
 export default function DataInventoryPage() {
+  const t = useTranslations("pages.dataInventory");
+  const tCommon = useTranslations("common");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
@@ -182,23 +185,21 @@ export default function DataInventoryPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">Data Inventory</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage data assets and processing activities
-          </p>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
+              <Button variant="outline" size="icon" aria-label={t("export")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
                 <Download className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Export</span>
+                <span className="hidden sm:inline">{t("export")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => window.open(`/api/export/privacy-program?organizationId=${organization?.id}`, "_blank")}>
                 <FileText className="w-4 h-4 mr-2" />
-                Privacy Program Report
+                {t("exportPrivacyProgram")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
@@ -214,15 +215,15 @@ export default function DataInventoryPage() {
                 ) : (
                   <Lock className="w-4 h-4 mr-2 text-amber-500" />
                 )}
-                ROPA Export
+                {t("exportRopa")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Link href="/privacy/data-inventory/new" className="flex-1 sm:flex-none">
             <Button className="w-full sm:w-auto">
               <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Add Asset</span>
-              <span className="sm:hidden">Add</span>
+              <span className="hidden sm:inline">{t("addAsset")}</span>
+              <span className="sm:hidden">{t("addAssetShort")}</span>
             </Button>
           </Link>
         </div>
@@ -233,18 +234,18 @@ export default function DataInventoryPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search assets..."
+            placeholder={t("search")}
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button variant="outline" size="icon" className="shrink-0 sm:hidden">
+        <Button variant="outline" size="icon" aria-label={t("filters")} className="shrink-0 sm:hidden">
           <Filter className="w-4 h-4" />
         </Button>
         <Button variant="outline" className="shrink-0 hidden sm:flex">
           <Filter className="w-4 h-4 mr-2" />
-          Filters
+          {t("filters")}
         </Button>
       </div>
 
@@ -252,16 +253,18 @@ export default function DataInventoryPage() {
       <Tabs defaultValue="assets">
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="assets" className="text-xs sm:text-sm">
-            Assets ({dataAssets.length})
+            {t("tabs.assets", { count: dataAssets.length })}
           </TabsTrigger>
           <TabsTrigger value="activities" className="text-xs sm:text-sm">
-            Activities ({processingActivities.length})
+            {t("tabs.activities", { count: processingActivities.length })}
           </TabsTrigger>
           <TabsTrigger value="flows" className="text-xs sm:text-sm hidden sm:inline-flex">
-            Data Flows
+            {t("tabs.flows")}
           </TabsTrigger>
           <TabsTrigger value="transfers" className="text-xs sm:text-sm hidden sm:inline-flex">
-            Transfers{transfers?.length ? ` (${transfers.length})` : ""}
+            {transfers?.length
+              ? t("tabs.transfersWithCount", { count: transfers.length })
+              : t("tabs.transfers")}
           </TabsTrigger>
         </TabsList>
 
@@ -286,19 +289,19 @@ export default function DataInventoryPage() {
                             </Badge>
                           </div>
                           <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{asset.name}</CardTitle>
-                          <CardDescription className="text-xs sm:text-sm">{asset.owner || "No owner"}</CardDescription>
+                          <CardDescription className="text-xs sm:text-sm">{asset.owner || t("asset.ownerEmpty")}</CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
                           <div className="flex justify-between text-xs sm:text-sm">
                             <span className="text-muted-foreground">
-                              {asset._count?.dataElements ?? 0} elements
+                              {t("asset.elements", { count: asset._count?.dataElements ?? 0 })}
                             </span>
                             <span className="text-muted-foreground">
-                              {asset._count?.processingActivityAssets ?? 0} activities
+                              {t("asset.activities", { count: asset._count?.processingActivityAssets ?? 0 })}
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground mt-2 truncate">
-                            {asset.location || "No location specified"}
+                            {asset.location || t("asset.locationEmpty")}
                           </p>
                         </CardContent>
                       </Card>
@@ -314,7 +317,7 @@ export default function DataInventoryPage() {
                     disabled={fetchingMoreAssets}
                   >
                     {fetchingMoreAssets && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Load More
+                    {t("loadMore")}
                   </Button>
                 </div>
               )}
@@ -323,12 +326,12 @@ export default function DataInventoryPage() {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No data assets yet</p>
-                <p className="text-sm mb-4">Start by adding your first data asset</p>
+                <p>{t("emptyAssets.title")}</p>
+                <p className="text-sm mb-4">{t("emptyAssets.subtitle")}</p>
                 <Link href="/privacy/data-inventory/new">
                   <Button>
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Asset
+                    {t("addAsset")}
                   </Button>
                 </Link>
               </CardContent>
@@ -344,7 +347,7 @@ export default function DataInventoryPage() {
               <div className="flex justify-end mb-3">
                 <Button onClick={() => setActivityDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Activity
+                  {t("addActivity")}
                 </Button>
               </div>
               <div className="flex flex-col gap-4">
@@ -356,13 +359,13 @@ export default function DataInventoryPage() {
                         <div className="flex flex-col gap-3 sm:hidden">
                           <div className="flex items-start justify-between gap-2">
                             <CardTitle className="text-base line-clamp-1">{activity.name}</CardTitle>
-                            <Badge className="shrink-0 text-xs">{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
+                            <Badge className="shrink-0 text-xs">{activity.legalBasis ? t(`legalBasis.${activity.legalBasis}`) : t("activity.noBasis")}</Badge>
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2">{activity.purpose}</p>
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span>{activity.assets?.length ?? 0} assets</span>
+                            <span>{t("activity.assetsCount", { count: activity.assets?.length ?? 0 })}</span>
                             <Button variant="ghost" size="sm" className="h-8 px-2">
-                              Details <ArrowRight className="w-3 h-3 ml-1" />
+                              {t("activity.details")} <ArrowRight className="w-3 h-3 ml-1" />
                             </Button>
                           </div>
                         </div>
@@ -375,16 +378,16 @@ export default function DataInventoryPage() {
                                 <CardTitle className="text-base">{activity.name}</CardTitle>
                                 <CardDescription className="line-clamp-1">{activity.purpose}</CardDescription>
                               </div>
-                              <Badge>{activity.legalBasis?.replace("_", " ") || "No basis"}</Badge>
+                              <Badge>{activity.legalBasis ? t(`legalBasis.${activity.legalBasis}`) : t("activity.noBasis")}</Badge>
                             </div>
                           </CardHeader>
                           <div className="flex items-center justify-between">
                             <div className="flex gap-4 text-sm text-muted-foreground">
-                              <span>{activity.assets?.length ?? 0} assets</span>
-                              <span>{(activity.dataSubjects as string[])?.join(", ") || "No subjects"}</span>
+                              <span>{t("activity.assetsCount", { count: activity.assets?.length ?? 0 })}</span>
+                              <span>{(activity.dataSubjects as string[])?.join(", ") || t("activity.noSubjects")}</span>
                             </div>
                             <Button variant="ghost" size="sm">
-                              View Details <ArrowRight className="w-4 h-4 ml-2" />
+                              {t("activity.viewDetails")} <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                           </div>
                         </div>
@@ -410,11 +413,11 @@ export default function DataInventoryPage() {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No processing activities yet</p>
-                <p className="text-sm mb-4">Document your data processing activities for ROPA compliance</p>
+                <p>{t("emptyActivities.title")}</p>
+                <p className="text-sm mb-4">{t("emptyActivities.subtitle")}</p>
                 <Button onClick={() => setActivityDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Activity
+                  {t("addActivity")}
                 </Button>
               </CardContent>
             </Card>
@@ -436,7 +439,7 @@ export default function DataInventoryPage() {
               <div className="flex justify-end">
                 <Button onClick={() => setTransferDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Transfer
+                  {t("addTransfer")}
                 </Button>
               </div>
               <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -448,7 +451,7 @@ export default function DataInventoryPage() {
                           <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                         </div>
                         <Badge variant="outline" className="text-xs shrink-0">
-                          {mechanismLabels[transfer.mechanism] || transfer.mechanism}
+                          {t(`mechanism.${transfer.mechanism}`)}
                         </Badge>
                       </div>
                       <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{transfer.name}</CardTitle>
@@ -460,9 +463,9 @@ export default function DataInventoryPage() {
                       <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           {transfer.tiaCompleted ? (
-                            <><CheckCircle2 className="w-3 h-3 text-green-500" /> TIA completed</>
+                            <><CheckCircle2 className="w-3 h-3 text-green-500" /> {t("transfer.tiaCompleted")}</>
                           ) : (
-                            <><Shield className="w-3 h-3 text-amber-500" /> TIA pending</>
+                            <><Shield className="w-3 h-3 text-amber-500" /> {t("transfer.tiaPending")}</>
                           )}
                         </span>
                         {transfer.processingActivity && (
@@ -481,11 +484,11 @@ export default function DataInventoryPage() {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No international transfers recorded</p>
-                <p className="text-sm mb-4">Document cross-border data transfers and safeguards (Art. 44–49 GDPR)</p>
+                <p>{t("emptyTransfers.title")}</p>
+                <p className="text-sm mb-4">{t("emptyTransfers.subtitle")}</p>
                 <Button onClick={() => setTransferDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Transfer
+                  {t("addTransfer")}
                 </Button>
               </CardContent>
             </Card>
@@ -499,12 +502,10 @@ export default function DataInventoryPage() {
 
       {/* Add Activity Dialog */}
       <Dialog open={activityDialogOpen} onOpenChange={setActivityDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add Processing Activity</DialogTitle>
-            <DialogDescription>
-              Document a data processing activity for your ROPA (Record of Processing Activities).
-            </DialogDescription>
+            <DialogTitle>{t("activityDialog.title")}</DialogTitle>
+            <DialogDescription>{t("activityDialog.description")}</DialogDescription>
           </DialogHeader>
           <form
             className="space-y-4"
@@ -524,62 +525,62 @@ export default function DataInventoryPage() {
             }}
           >
             <div className="space-y-2">
-              <Label htmlFor="activity-name">Activity Name</Label>
+              <Label htmlFor="activity-name">{t("activityDialog.nameLabel")}</Label>
               <Input
                 id="activity-name"
-                placeholder="e.g. Customer Onboarding"
+                placeholder={t("activityDialog.namePlaceholder")}
                 value={activityForm.name}
                 onChange={(e) => setActivityForm((f) => ({ ...f, name: e.target.value }))}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="activity-purpose">Purpose</Label>
+              <Label htmlFor="activity-purpose">{t("activityDialog.purposeLabel")}</Label>
               <Input
                 id="activity-purpose"
-                placeholder="e.g. Collect and verify customer identity for account creation"
+                placeholder={t("activityDialog.purposePlaceholder")}
                 value={activityForm.purpose}
                 onChange={(e) => setActivityForm((f) => ({ ...f, purpose: e.target.value }))}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Legal Basis</Label>
+              <Label>{t("activityDialog.legalBasisLabel")}</Label>
               <Select
                 value={activityForm.legalBasis}
                 onValueChange={(v) => setActivityForm((f) => ({ ...f, legalBasis: v }))}
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select legal basis..." />
+                  <SelectValue placeholder={t("activityDialog.legalBasisPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(legalBasisLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  {LEGAL_BASIS_KEYS.map((value) => (
+                    <SelectItem key={value} value={value}>{t(`legalBasis.${value}`)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="activity-subjects">Data Subjects</Label>
+              <Label htmlFor="activity-subjects">{t("activityDialog.subjectsLabel")}</Label>
               <Input
                 id="activity-subjects"
-                placeholder="e.g. Customers, Employees, Website visitors"
+                placeholder={t("activityDialog.subjectsPlaceholder")}
                 value={activityForm.dataSubjects}
                 onChange={(e) => setActivityForm((f) => ({ ...f, dataSubjects: e.target.value }))}
               />
-              <p className="text-xs text-muted-foreground">Comma-separated list</p>
+              <p className="text-xs text-muted-foreground">{t("activityDialog.subjectsHelp")}</p>
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setActivityDialogOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={createActivity.isPending || !activityForm.name || !activityForm.purpose || !activityForm.legalBasis}
               >
                 {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Add Activity
+                {t("addActivity")}
               </Button>
             </div>
           </form>
@@ -588,12 +589,10 @@ export default function DataInventoryPage() {
 
       {/* Add Transfer Dialog */}
       <Dialog open={transferDialogOpen} onOpenChange={setTransferDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add International Transfer</DialogTitle>
-            <DialogDescription>
-              Record a cross-border data transfer under GDPR Art. 44–49.
-            </DialogDescription>
+            <DialogTitle>{t("transferDialog.title")}</DialogTitle>
+            <DialogDescription>{t("transferDialog.description")}</DialogDescription>
           </DialogHeader>
           <form
             className="space-y-4"
@@ -612,10 +611,10 @@ export default function DataInventoryPage() {
             }}
           >
             <div className="space-y-2">
-              <Label htmlFor="transfer-name">Transfer Name</Label>
+              <Label htmlFor="transfer-name">{t("transferDialog.nameLabel")}</Label>
               <Input
                 id="transfer-name"
-                placeholder="e.g. Customer data to US analytics provider"
+                placeholder={t("transferDialog.namePlaceholder")}
                 value={transferForm.name}
                 onChange={(e) => setTransferForm((f) => ({ ...f, name: e.target.value }))}
                 required
@@ -623,61 +622,61 @@ export default function DataInventoryPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label htmlFor="transfer-country">Destination Country</Label>
+                <Label htmlFor="transfer-country">{t("transferDialog.countryLabel")}</Label>
                 <Input
                   id="transfer-country"
-                  placeholder="e.g. US, IN, GB"
+                  placeholder={t("transferDialog.countryPlaceholder")}
                   value={transferForm.destinationCountry}
                   onChange={(e) => setTransferForm((f) => ({ ...f, destinationCountry: e.target.value }))}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="transfer-org">Receiving Organization</Label>
+                <Label htmlFor="transfer-org">{t("transferDialog.orgLabel")}</Label>
                 <Input
                   id="transfer-org"
-                  placeholder="e.g. Stripe Inc."
+                  placeholder={t("transferDialog.orgPlaceholder")}
                   value={transferForm.destinationOrg}
                   onChange={(e) => setTransferForm((f) => ({ ...f, destinationOrg: e.target.value }))}
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Transfer Mechanism</Label>
+              <Label>{t("transferDialog.mechanismLabel")}</Label>
               <Select
                 value={transferForm.mechanism}
                 onValueChange={(v) => setTransferForm((f) => ({ ...f, mechanism: v }))}
                 required
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select mechanism..." />
+                  <SelectValue placeholder={t("transferDialog.mechanismPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(mechanismLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  {MECHANISM_KEYS.map((value) => (
+                    <SelectItem key={value} value={value}>{t(`mechanism.${value}`)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="transfer-safeguards">Safeguards</Label>
+              <Label htmlFor="transfer-safeguards">{t("transferDialog.safeguardsLabel")}</Label>
               <Input
                 id="transfer-safeguards"
-                placeholder="e.g. EU SCCs (2021) + supplementary measures"
+                placeholder={t("transferDialog.safeguardsPlaceholder")}
                 value={transferForm.safeguards}
                 onChange={(e) => setTransferForm((f) => ({ ...f, safeguards: e.target.value }))}
               />
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setTransferDialogOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={createTransfer.isPending || !transferForm.name || !transferForm.destinationCountry || !transferForm.mechanism}
               >
                 {createTransfer.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Add Transfer
+                {t("addTransfer")}
               </Button>
             </div>
           </form>
