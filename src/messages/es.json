@@ -33,6 +33,102 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "reports": {
+      "title": "Panel de cumplimiento",
+      "subtitle": "Postura de cumplimiento del programa de privacidad",
+      "saveSnapshot": "Guardar instantánea",
+      "regulatoryReport": "Informe regulatorio",
+      "score": {
+        "title": "Puntuación global de cumplimiento",
+        "subtitle": "Puntuación agregada de todos los módulos de privacidad, ponderada por importancia.",
+        "strong": "Sólida",
+        "moderate": "Moderada",
+        "needsAttention": "Requiere atención",
+        "trendUp": "+{points} pts",
+        "trendDown": "{points} pts",
+        "vsLastMonth": "vs el mes pasado",
+        "outOf": "/ 100"
+      },
+      "breakdown": {
+        "heading": "Desglose de cumplimiento por módulo",
+        "weight": "Peso: {value}",
+        "compliantOf": "{compliant} de {total} cumplen",
+        "ropa": "Completitud del RAT",
+        "assessments": "Evaluaciones",
+        "dsarSla": "SLA de DSAR",
+        "incidentResponse": "Respuesta a incidentes",
+        "vendorReviews": "Revisiones de proveedores"
+      },
+      "risk": {
+        "title": "Indicadores de riesgo",
+        "subtitle": "Aspectos que requieren atención",
+        "noneTitle": "No se han detectado indicadores de riesgo. ¡Buen trabajo!"
+      },
+      "modules": {
+        "heading": "Detalles de los módulos",
+        "dataInventory": "Inventario de datos",
+        "assets": "Activos",
+        "elements": "Elementos",
+        "activities": "Actividades",
+        "flows": "Flujos",
+        "dsarTitle": "Solicitudes DSAR",
+        "dsarTotal": "Total",
+        "dsarOpen": "Abiertas",
+        "dsarOverdue": "Vencidas",
+        "dsarAvgResolution": "Resolución media",
+        "daysShort": "{days}d",
+        "assessmentsTitle": "Evaluaciones",
+        "assessmentTotal": "Total",
+        "assessmentApproved": "Aprobadas",
+        "assessmentInProgress": "En curso",
+        "assessmentHighRisk": "Riesgo alto",
+        "incidentsTitle": "Incidentes",
+        "incidentTotal": "Total",
+        "incidentOpen": "Abiertos",
+        "incidentCritical": "Críticos",
+        "incidentAvgResolution": "Resolución media",
+        "vendorsTitle": "Proveedores",
+        "vendorTotal": "Total",
+        "vendorActive": "Activos",
+        "vendorHighRisk": "Riesgo alto",
+        "vendorNoReview": "Sin revisión",
+        "scoreHistory": "Histórico de puntuación",
+        "noSnapshots": "Aún no hay instantáneas. Guarda una para comenzar a hacer seguimiento."
+      }
+    },
+    "regulations": {
+      "title": "Centro de regulaciones",
+      "subtitle": "Sigue las regulaciones de privacidad aplicables y los requisitos de cumplimiento",
+      "exportReport": "Exportar informe",
+      "wizard": "Asistente de aplicabilidad",
+      "tabs": {
+        "catalog": "Catálogo de jurisdicciones",
+        "appliedWithCount": "Aplicadas ({count})"
+      },
+      "search": "Buscar regulaciones...",
+      "category": {
+        "label": "Categoría",
+        "all": "Todas las categorías",
+        "comprehensive": "Integral",
+        "sectoral": "Sectorial",
+        "ai_governance": "Gobernanza de IA",
+        "emerging": "Emergente"
+      },
+      "card": {
+        "applied": "Aplicada",
+        "primary": "Principal",
+        "dsarShort": "DSAR: {days}d",
+        "breachShort": "Brecha: {hours}h",
+        "appliedSummary": "{region} | DSAR: {days, plural, one {# día} other {# días}} | Brecha: {hours}h",
+        "moreItems": "+{count} más",
+        "apply": "Aplicar"
+      },
+      "applied": {
+        "emptyTitle": "No hay jurisdicciones aplicadas",
+        "emptySubtitle": "Utiliza el Asistente de aplicabilidad para determinar qué regulaciones aplican a tu organización",
+        "startWizard": "Iniciar asistente"
+      }
+    },
     "aiSystems": {
       "title": "Registro de gobernanza de IA",
       "subtitle": "Registra y clasifica los sistemas de IA conforme al Reglamento de IA de la UE",

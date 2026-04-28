@@ -33,6 +33,102 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "reports": {
+      "title": "Compliance Dashboard",
+      "subtitle": "Privacy program compliance posture",
+      "saveSnapshot": "Save Snapshot",
+      "regulatoryReport": "Regulatory Report",
+      "score": {
+        "title": "Overall Compliance Score",
+        "subtitle": "Aggregated score across all privacy modules, weighted by importance.",
+        "strong": "Strong",
+        "moderate": "Moderate",
+        "needsAttention": "Needs Attention",
+        "trendUp": "+{points} pts",
+        "trendDown": "{points} pts",
+        "vsLastMonth": "vs last month",
+        "outOf": "/ 100"
+      },
+      "breakdown": {
+        "heading": "Module Compliance Breakdown",
+        "weight": "{value} weight",
+        "compliantOf": "{compliant} of {total} compliant",
+        "ropa": "ROPA Completeness",
+        "assessments": "Assessments",
+        "dsarSla": "DSAR SLA",
+        "incidentResponse": "Incident Response",
+        "vendorReviews": "Vendor Reviews"
+      },
+      "risk": {
+        "title": "Risk Indicators",
+        "subtitle": "Actionable items requiring attention",
+        "noneTitle": "No risk indicators detected. Great job!"
+      },
+      "modules": {
+        "heading": "Module Details",
+        "dataInventory": "Data Inventory",
+        "assets": "Assets",
+        "elements": "Elements",
+        "activities": "Activities",
+        "flows": "Flows",
+        "dsarTitle": "DSAR Requests",
+        "dsarTotal": "Total",
+        "dsarOpen": "Open",
+        "dsarOverdue": "Overdue",
+        "dsarAvgResolution": "Avg Resolution",
+        "daysShort": "{days}d",
+        "assessmentsTitle": "Assessments",
+        "assessmentTotal": "Total",
+        "assessmentApproved": "Approved",
+        "assessmentInProgress": "In Progress",
+        "assessmentHighRisk": "High Risk",
+        "incidentsTitle": "Incidents",
+        "incidentTotal": "Total",
+        "incidentOpen": "Open",
+        "incidentCritical": "Critical",
+        "incidentAvgResolution": "Avg Resolution",
+        "vendorsTitle": "Vendors",
+        "vendorTotal": "Total",
+        "vendorActive": "Active",
+        "vendorHighRisk": "High Risk",
+        "vendorNoReview": "No Review",
+        "scoreHistory": "Score History",
+        "noSnapshots": "No snapshots yet. Save a snapshot to start tracking trends."
+      }
+    },
+    "regulations": {
+      "title": "Regulation Hub",
+      "subtitle": "Track applicable privacy regulations and compliance requirements",
+      "exportReport": "Export Report",
+      "wizard": "Applicability Wizard",
+      "tabs": {
+        "catalog": "Jurisdiction Catalog",
+        "appliedWithCount": "Applied ({count})"
+      },
+      "search": "Search regulations...",
+      "category": {
+        "label": "Category",
+        "all": "All Categories",
+        "comprehensive": "Comprehensive",
+        "sectoral": "Sectoral",
+        "ai_governance": "AI Governance",
+        "emerging": "Emerging"
+      },
+      "card": {
+        "applied": "Applied",
+        "primary": "Primary",
+        "dsarShort": "DSAR: {days}d",
+        "breachShort": "Breach: {hours}h",
+        "appliedSummary": "{region} | DSAR: {days, plural, one {# day} other {# days}} | Breach: {hours}h",
+        "moreItems": "+{count} more",
+        "apply": "Apply"
+      },
+      "applied": {
+        "emptyTitle": "No jurisdictions applied",
+        "emptySubtitle": "Use the Applicability Wizard to determine which regulations apply to your organization",
+        "startWizard": "Start Wizard"
+      }
+    },
     "aiSystems": {
       "title": "AI Governance Register",
       "subtitle": "Register and classify AI systems per the EU AI Act",
