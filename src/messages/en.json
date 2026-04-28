@@ -33,6 +33,86 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "dsarDetail": {
+      "notFound": "Request not found",
+      "back": "Back to DSAR",
+      "complete": "Complete",
+      "progress": {
+        "title": "Progress",
+        "tasksCompleted": "{completed} of {total} tasks completed"
+      },
+      "sla": {
+        "title": "SLA Status",
+        "overdue": "OVERDUE",
+        "completed": "COMPLETED",
+        "daysShort": "{count, plural, one {# day} other {# days}}",
+        "closed": "Closed",
+        "due": "Due"
+      },
+      "requester": {
+        "title": "Requester Information",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "relationship": "Relationship",
+        "details": "Request Details",
+        "empty": "-"
+      },
+      "tabs": {
+        "tasks": "Tasks ({count})",
+        "communications": "Communications ({count})",
+        "audit": "Audit Log"
+      },
+      "tasks": {
+        "title": "Data Collection Tasks",
+        "subtitle": "Tasks for each data source",
+        "autoGenerate": "Auto-Generate",
+        "addTask": "Add Task",
+        "assignedTo": "Assigned to: {name}",
+        "unassigned": "Unassigned",
+        "empty": "No tasks yet",
+        "emptySub": "Add tasks or auto-generate from data assets",
+        "status": {
+          "PENDING": "Pending",
+          "IN_PROGRESS": "In Progress",
+          "COMPLETED": "Completed",
+          "BLOCKED": "Blocked",
+          "NOT_APPLICABLE": "N/A"
+        }
+      },
+      "comms": {
+        "title": "Communications",
+        "subtitle": "Message history with the requester",
+        "send": "Send Message",
+        "team": "Privacy Team",
+        "sent": "Sent",
+        "received": "Received",
+        "empty": "No communications yet"
+      },
+      "audit": {
+        "title": "Audit Log",
+        "subtitle": "Complete history of actions taken",
+        "empty": "No audit entries"
+      },
+      "addTask": {
+        "title": "Add Task",
+        "subtitle": "Create a new data collection task",
+        "titleLabel": "Task Title *",
+        "titlePlaceholder": "e.g., Search Marketing CRM",
+        "descLabel": "Description",
+        "descPlaceholder": "Task details...",
+        "submit": "Add Task"
+      },
+      "sendMessage": {
+        "title": "Send Message",
+        "subtitle": "Send a message to {name}",
+        "subjectLabel": "Subject",
+        "subjectPlaceholder": "Message subject",
+        "messageLabel": "Message *",
+        "messagePlaceholder": "Write your message...",
+        "submit": "Send"
+      }
+    },
     "aiSystemDetail": {
       "notFound": "AI system not found",
       "back": "Back",

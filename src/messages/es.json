@@ -33,6 +33,86 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "dsarDetail": {
+      "notFound": "Solicitud no encontrada",
+      "back": "Volver a DSAR",
+      "complete": "Completar",
+      "progress": {
+        "title": "Progreso",
+        "tasksCompleted": "{completed} de {total} tareas completadas"
+      },
+      "sla": {
+        "title": "Estado del SLA",
+        "overdue": "VENCIDA",
+        "completed": "COMPLETADA",
+        "daysShort": "{count, plural, one {# día} other {# días}}",
+        "closed": "Cerrada el",
+        "due": "Vence"
+      },
+      "requester": {
+        "title": "Datos del solicitante",
+        "name": "Nombre",
+        "email": "Correo",
+        "phone": "Teléfono",
+        "relationship": "Relación",
+        "details": "Detalles de la solicitud",
+        "empty": "-"
+      },
+      "tabs": {
+        "tasks": "Tareas ({count})",
+        "communications": "Comunicaciones ({count})",
+        "audit": "Registro de auditoría"
+      },
+      "tasks": {
+        "title": "Tareas de recopilación",
+        "subtitle": "Tareas para cada fuente de datos",
+        "autoGenerate": "Generar automáticamente",
+        "addTask": "Añadir tarea",
+        "assignedTo": "Asignada a: {name}",
+        "unassigned": "Sin asignar",
+        "empty": "Aún no hay tareas",
+        "emptySub": "Añade tareas o genéralas automáticamente a partir de los activos de datos",
+        "status": {
+          "PENDING": "Pendiente",
+          "IN_PROGRESS": "En curso",
+          "COMPLETED": "Completada",
+          "BLOCKED": "Bloqueada",
+          "NOT_APPLICABLE": "N/A"
+        }
+      },
+      "comms": {
+        "title": "Comunicaciones",
+        "subtitle": "Historial de mensajes con el solicitante",
+        "send": "Enviar mensaje",
+        "team": "Equipo de privacidad",
+        "sent": "Enviado",
+        "received": "Recibido",
+        "empty": "Aún no hay comunicaciones"
+      },
+      "audit": {
+        "title": "Registro de auditoría",
+        "subtitle": "Historial completo de las acciones realizadas",
+        "empty": "No hay entradas de auditoría"
+      },
+      "addTask": {
+        "title": "Añadir tarea",
+        "subtitle": "Crear una nueva tarea de recopilación de datos",
+        "titleLabel": "Título de la tarea *",
+        "titlePlaceholder": "p. ej., Buscar en el CRM de marketing",
+        "descLabel": "Descripción",
+        "descPlaceholder": "Detalles de la tarea...",
+        "submit": "Añadir tarea"
+      },
+      "sendMessage": {
+        "title": "Enviar mensaje",
+        "subtitle": "Envía un mensaje a {name}",
+        "subjectLabel": "Asunto",
+        "subjectPlaceholder": "Asunto del mensaje",
+        "messageLabel": "Mensaje *",
+        "messagePlaceholder": "Escribe tu mensaje...",
+        "submit": "Enviar"
+      }
+    },
     "aiSystemDetail": {
       "notFound": "Sistema de IA no encontrado",
       "back": "Atrás",

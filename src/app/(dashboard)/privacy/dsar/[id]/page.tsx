@@ -83,6 +83,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.dsarDetail");
+  const tList = useTranslations("pages.dsar");
+  const tCommon = useTranslations("common");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
@@ -203,11 +206,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   if (!request) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Request not found</p>
+        <p className="text-muted-foreground">{tp("notFound")}</p>
         <Link href="/privacy/dsar">
-          <Button variant="outline" className="mt-4">
-            Back to DSAR
-          </Button>
+          <Button variant="outline" className="mt-4">{tp("back")}</Button>
         </Link>
       </div>
     );
@@ -234,9 +235,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           <div>
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-semibold font-mono">{request.publicId}</h1>
-              <Badge variant="outline">{request.type}</Badge>
+              <Badge variant="outline">{tList(`type.${request.type}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</Badge>
               <Badge variant="outline" className={statusColors[request.status] || ""}>
-                {request.status.replace("_", " ")}
+                {tList(`status.${request.status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED` | `status.REJECTED`)}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -257,7 +258,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                 <SelectContent>
                   {statusOrder.map((status) => (
                     <SelectItem key={status} value={status}>
-                      {status.replace("_", " ")}
+                      {tList(`status.${status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -267,7 +268,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                 disabled={updateStatus.isPending}
               >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                Complete
+                {tp("complete")}
               </Button>
             </>
           )}
@@ -278,11 +279,11 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Progress</CardTitle>
+            <CardTitle>{tp("progress.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between text-sm">
-              <span>{completedTasks} of {totalTasks} tasks completed</span>
+              <span>{tp("progress.tasksCompleted", { completed: completedTasks, total: totalTasks })}</span>
               <span className="font-medium">{progress}%</span>
             </div>
             <Progress value={progress} className="h-3" />
@@ -291,25 +292,25 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
         <Card className={isCompleted ? "border-primary" : isOverdue ? "border-destructive" : isAtRisk ? "border-muted-foreground" : ""}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">SLA Status</CardTitle>
+            <CardTitle className="text-base">{tp("sla.title")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
               {isCompleted ? (
                 <span className="text-primary flex items-center gap-2">
                   <CheckCircle2 className="w-8 h-8" />
-                  {request.status === "COMPLETED" ? "COMPLETED" : request.status}
+                  {tp("sla.completed")}
                 </span>
               ) : isOverdue ? (
-                <span className="text-amber-400 font-semibold">OVERDUE</span>
+                <span className="text-amber-400 font-semibold">{tp("sla.overdue")}</span>
               ) : isAtRisk ? (
-                <span className="bg-muted-foreground/20 text-foreground px-2 py-1">{daysRemaining} days</span>
+                <span className="bg-muted-foreground/20 text-foreground px-2 py-1">{tp("sla.daysShort", { count: daysRemaining })}</span>
               ) : (
-                `${daysRemaining} days`
+                tp("sla.daysShort", { count: daysRemaining })
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              {isCompleted ? "Closed" : "Due"}: {new Date(request.dueDate).toLocaleDateString()}
+              {isCompleted ? tp("sla.closed") : tp("sla.due")}: {new Date(request.dueDate).toLocaleDateString()}
             </p>
           </CardContent>
         </Card>
@@ -318,41 +319,41 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       {/* Requester Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Requester Information</CardTitle>
+          <CardTitle>{tp("requester.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
             <div className="flex items-center gap-3">
               <User className="w-4 h-4 text-muted-foreground shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm text-muted-foreground">Name</p>
+                <p className="text-sm text-muted-foreground">{tp("requester.name")}</p>
                 <p className="font-medium truncate">{request.requesterName}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="text-sm text-muted-foreground">{tp("requester.email")}</p>
                 <p className="font-medium truncate">{request.requesterEmail}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm text-muted-foreground">Phone</p>
-                <p className="font-medium truncate">{request.requesterPhone || "-"}</p>
+                <p className="text-sm text-muted-foreground">{tp("requester.phone")}</p>
+                <p className="font-medium truncate">{request.requesterPhone || tp("requester.empty")}</p>
               </div>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Relationship</p>
-              <p className="font-medium">{request.relationship || "-"}</p>
+              <p className="text-sm text-muted-foreground">{tp("requester.relationship")}</p>
+              <p className="font-medium">{request.relationship || tp("requester.empty")}</p>
             </div>
           </div>
           {request.description && (
             <>
               <Separator className="my-4" />
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Request Details</p>
+                <p className="text-sm text-muted-foreground mb-2">{tp("requester.details")}</p>
                 <p>{request.description}</p>
               </div>
             </>
@@ -364,13 +365,13 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       <Tabs defaultValue="tasks">
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="tasks" className="text-xs sm:text-sm">
-            Tasks ({totalTasks})
+            {tp("tabs.tasks", { count: totalTasks })}
           </TabsTrigger>
           <TabsTrigger value="communications" className="text-xs sm:text-sm">
-            Communications ({request.communications?.length ?? 0})
+            {tp("tabs.communications", { count: request.communications?.length ?? 0 })}
           </TabsTrigger>
           <TabsTrigger value="audit" className="text-xs sm:text-sm">
-            Audit Log
+            {tp("tabs.audit")}
           </TabsTrigger>
         </TabsList>
 
@@ -378,8 +379,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           <Card>
             <CardHeader className="flex flex-row items-center justify-between gap-2">
               <div>
-                <CardTitle>Data Collection Tasks</CardTitle>
-                <CardDescription>Tasks for each data source</CardDescription>
+                <CardTitle>{tp("tasks.title")}</CardTitle>
+                <CardDescription>{tp("tasks.subtitle")}</CardDescription>
               </div>
               <div className="flex gap-2">
                 {totalTasks === 0 && (
@@ -395,12 +396,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                     {generateTasks.isPending ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     ) : null}
-                    Auto-Generate
+                    {tp("tasks.autoGenerate")}
                   </Button>
                 )}
                 <Button size="sm" onClick={() => setIsAddTaskOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Task
+                  {tp("tasks.addTask")}
                 </Button>
               </div>
             </CardHeader>
@@ -425,7 +426,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                         <div className="min-w-0">
                           <p className="font-medium truncate">{task.title}</p>
                           <p className="text-sm text-muted-foreground truncate">
-                            {task.assignee ? `Assigned to: ${task.assignee.name || task.assignee.email}` : "Unassigned"}
+                            {task.assignee ? tp("tasks.assignedTo", { name: task.assignee.name || task.assignee.email }) : tp("tasks.unassigned")}
                             {task.dataAsset && ` • ${task.dataAsset.name}`}
                           </p>
                         </div>
@@ -439,11 +440,11 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="PENDING">Pending</SelectItem>
-                            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                            <SelectItem value="COMPLETED">Completed</SelectItem>
-                            <SelectItem value="BLOCKED">Blocked</SelectItem>
-                            <SelectItem value="NOT_APPLICABLE">N/A</SelectItem>
+                            <SelectItem value="PENDING">{tp("tasks.status.PENDING")}</SelectItem>
+                            <SelectItem value="IN_PROGRESS">{tp("tasks.status.IN_PROGRESS")}</SelectItem>
+                            <SelectItem value="COMPLETED">{tp("tasks.status.COMPLETED")}</SelectItem>
+                            <SelectItem value="BLOCKED">{tp("tasks.status.BLOCKED")}</SelectItem>
+                            <SelectItem value="NOT_APPLICABLE">{tp("tasks.status.NOT_APPLICABLE")}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -453,8 +454,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No tasks yet</p>
-                  <p className="text-sm">Add tasks or auto-generate from data assets</p>
+                  <p>{tp("tasks.empty")}</p>
+                  <p className="text-sm">{tp("tasks.emptySub")}</p>
                 </div>
               )}
             </CardContent>
@@ -465,12 +466,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           <Card>
             <CardHeader className="flex flex-row items-center justify-between gap-2">
               <div>
-                <CardTitle>Communications</CardTitle>
-                <CardDescription>Message history with the requester</CardDescription>
+                <CardTitle>{tp("comms.title")}</CardTitle>
+                <CardDescription>{tp("comms.subtitle")}</CardDescription>
               </div>
               <Button size="sm" onClick={() => setIsSendMessageOpen(true)}>
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                {tp("comms.send")}
               </Button>
             </CardHeader>
             <CardContent>
@@ -488,11 +489,11 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                           <MessageSquare className="w-4 h-4 text-muted-foreground" />
                           <span className="font-medium text-sm">
                             {comm.direction === "OUTBOUND"
-                              ? (comm.sentBy?.name || comm.sentBy?.email || "Privacy Team")
+                              ? (comm.sentBy?.name || comm.sentBy?.email || tp("comms.team"))
                               : request.requesterName}
                           </span>
                           <Badge variant="outline" className="text-xs">
-                            {comm.direction === "OUTBOUND" ? "Sent" : "Received"}
+                            {comm.direction === "OUTBOUND" ? tp("comms.sent") : tp("comms.received")}
                           </Badge>
                         </div>
                         <span className="text-xs text-muted-foreground">
@@ -509,7 +510,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No communications yet</p>
+                  <p>{tp("comms.empty")}</p>
                 </div>
               )}
             </CardContent>
@@ -519,8 +520,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
         <TabsContent value="audit" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Audit Log</CardTitle>
-              <CardDescription>Complete history of actions taken</CardDescription>
+              <CardTitle>{tp("audit.title")}</CardTitle>
+              <CardDescription>{tp("audit.subtitle")}</CardDescription>
             </CardHeader>
             <CardContent>
               {request.auditLog && request.auditLog.length > 0 ? (
@@ -540,7 +541,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No audit entries</p>
+                  <p>{tp("audit.empty")}</p>
                 </div>
               )}
             </CardContent>
@@ -552,25 +553,25 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       <Sheet open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Add Task</SheetTitle>
-            <SheetDescription>Create a new data collection task</SheetDescription>
+            <SheetTitle>{tp("addTask.title")}</SheetTitle>
+            <SheetDescription>{tp("addTask.subtitle")}</SheetDescription>
           </SheetHeader>
           <form onSubmit={handleAddTask} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="task-title">Task Title *</Label>
+              <Label htmlFor="task-title">{tp("addTask.titleLabel")}</Label>
               <Input
                 id="task-title"
-                placeholder="e.g., Search Marketing CRM"
+                placeholder={tp("addTask.titlePlaceholder")}
                 value={taskForm.title}
                 onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="task-description">Description</Label>
+              <Label htmlFor="task-description">{tp("addTask.descLabel")}</Label>
               <Textarea
                 id="task-description"
-                placeholder="Task details..."
+                placeholder={tp("addTask.descPlaceholder")}
                 rows={3}
                 value={taskForm.description}
                 onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
@@ -578,11 +579,11 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             </div>
             <SheetFooter>
               <Button type="button" variant="outline" onClick={() => setIsAddTaskOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" disabled={createTask.isPending || !taskForm.title}>
                 {createTask.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                Add Task
+                {tp("addTask.submit")}
               </Button>
             </SheetFooter>
           </form>
@@ -593,24 +594,24 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       <Sheet open={isSendMessageOpen} onOpenChange={setIsSendMessageOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Send Message</SheetTitle>
-            <SheetDescription>Send a message to {request.requesterName}</SheetDescription>
+            <SheetTitle>{tp("sendMessage.title")}</SheetTitle>
+            <SheetDescription>{tp("sendMessage.subtitle", { name: request.requesterName })}</SheetDescription>
           </SheetHeader>
           <form onSubmit={handleSendMessage} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="message-subject">Subject</Label>
+              <Label htmlFor="message-subject">{tp("sendMessage.subjectLabel")}</Label>
               <Input
                 id="message-subject"
-                placeholder="Message subject"
+                placeholder={tp("sendMessage.subjectPlaceholder")}
                 value={messageForm.subject}
                 onChange={(e) => setMessageForm({ ...messageForm, subject: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="message-content">Message *</Label>
+              <Label htmlFor="message-content">{tp("sendMessage.messageLabel")}</Label>
               <Textarea
                 id="message-content"
-                placeholder="Write your message..."
+                placeholder={tp("sendMessage.messagePlaceholder")}
                 rows={5}
                 value={messageForm.content}
                 onChange={(e) => setMessageForm({ ...messageForm, content: e.target.value })}
@@ -619,11 +620,11 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             </div>
             <SheetFooter>
               <Button type="button" variant="outline" onClick={() => setIsSendMessageOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" disabled={addCommunication.isPending || !messageForm.content}>
                 {addCommunication.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                Send
+                {tp("sendMessage.submit")}
               </Button>
             </SheetFooter>
           </form>
