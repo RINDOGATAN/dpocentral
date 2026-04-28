@@ -32,6 +32,18 @@
     "showAll": "Mostrar todo",
     "viewDetails": "Ver detalles"
   },
+  "confirms": {
+    "deleteAssetTitle": "¿Eliminar activo?",
+    "deleteAssetDesc": "Se eliminará el activo y todos sus elementos vinculados de forma permanente. Esta acción no se puede deshacer.",
+    "deleteElementTitle": "¿Eliminar elemento?",
+    "deleteElementDesc": "¿Eliminar \"{name}\"? Esta acción no se puede deshacer.",
+    "deleteVendorTitle": "¿Eliminar proveedor?",
+    "deleteVendorDesc": "Se eliminará el proveedor y se desvinculará de los activos o actividades asociados. Esta acción no se puede deshacer.",
+    "deleteFlowTitle": "¿Eliminar flujo de datos?",
+    "deleteFlowDesc": "¿Eliminar el flujo \"{name}\"? Esta acción no se puede deshacer.",
+    "deleteEntitlementTitle": "¿Eliminar habilitación?",
+    "deleteEntitlementDesc": "¿Eliminar esta habilitación ({name})? Las organizaciones vinculadas perderán el acceso de inmediato. Esta acción no se puede deshacer."
+  },
   "auth": {
     "signIn": "Iniciar sesión",
     "signOut": "Cerrar sesión",

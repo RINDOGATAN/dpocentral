@@ -18,6 +18,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
   Select,
   SelectContent,
@@ -107,6 +108,10 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
     scheduledAt: "",
   });
 
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const tConfirm = useTranslations("confirms");
+  const tCommon = useTranslations("common");
+
   // Members for reviewer picker (lazy-loaded when dialog opens)
   const { data: orgData } = trpc.organization.getById.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -167,10 +172,10 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
     },
   });
 
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this vendor?")) {
-      deleteVendor.mutate({ organizationId: organization?.id ?? "", id });
-    }
+  const handleDelete = () => setConfirmDeleteOpen(true);
+  const confirmDelete = () => {
+    setConfirmDeleteOpen(false);
+    deleteVendor.mutate({ organizationId: organization?.id ?? "", id });
   };
 
   if (isLoading) {
@@ -761,6 +766,18 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        title={tConfirm("deleteVendorTitle")}
+        description={tConfirm("deleteVendorDesc")}
+        confirmText={tCommon("delete")}
+        cancelText={tCommon("cancel")}
+        danger
+        pending={deleteVendor.isPending}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }

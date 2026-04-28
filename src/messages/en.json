@@ -32,6 +32,18 @@
     "showAll": "Show All",
     "viewDetails": "View Details"
   },
+  "confirms": {
+    "deleteAssetTitle": "Delete asset?",
+    "deleteAssetDesc": "This will permanently delete the asset and all linked elements. This cannot be undone.",
+    "deleteElementTitle": "Delete element?",
+    "deleteElementDesc": "Delete \"{name}\"? This cannot be undone.",
+    "deleteVendorTitle": "Delete vendor?",
+    "deleteVendorDesc": "This will remove the vendor and unlink it from any assets or activities. This cannot be undone.",
+    "deleteFlowTitle": "Delete data flow?",
+    "deleteFlowDesc": "Delete flow \"{name}\"? This cannot be undone.",
+    "deleteEntitlementTitle": "Delete entitlement?",
+    "deleteEntitlementDesc": "Delete this entitlement ({name})? Linked organizations will lose access immediately. This cannot be undone."
+  },
   "auth": {
     "signIn": "Sign In",
     "signOut": "Sign Out",
