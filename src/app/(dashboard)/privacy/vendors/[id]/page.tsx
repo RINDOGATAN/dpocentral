@@ -67,6 +67,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.vendorDetail");
+  const tList = useTranslations("pages.vendors");
 
   const { data: vendor, isLoading } = trpc.vendor.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -189,11 +191,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   if (!vendor) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Vendor not found</p>
+        <p className="text-muted-foreground">{tp("notFound")}</p>
         <Link href="/privacy/vendors">
-          <Button variant="outline" className="mt-4">
-            Back to Vendors
-          </Button>
+          <Button variant="outline" className="mt-4">{tp("back")}</Button>
         </Link>
       </div>
     );
@@ -216,25 +216,25 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-semibold">{vendor.name}</h1>
               <Badge variant="outline" className={statusColors[vendor.status] || ""}>
-                {vendor.status.replace("_", " ")}
+                {tList(`status.${vendor.status}` as `status.PROSPECTIVE` | `status.ACTIVE` | `status.UNDER_REVIEW` | `status.SUSPENDED` | `status.TERMINATED`)}
               </Badge>
               {vendor.riskTier && (
                 <Badge variant="outline" className={riskColors[vendor.riskTier] || ""}>
-                  {vendor.riskTier} Risk
+                  {tp("riskBadge", { level: tList(`riskTier.${vendor.riskTier}` as `riskTier.LOW` | `riskTier.MEDIUM` | `riskTier.HIGH` | `riskTier.CRITICAL`) })}
                 </Badge>
               )}
             </div>
             <p className="text-muted-foreground">
-              {(vendor.categories as string[])?.join(" - ") || "No categories"}
+              {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}
             </p>
           </div>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
             {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-            Delete
+            {tp("delete")}
           </Button>
-          <Button onClick={openEditDialog}>Edit Vendor</Button>
+          <Button onClick={openEditDialog}>{tp("edit")}</Button>
         </div>
       </div>
 
@@ -244,7 +244,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Globe className="w-4 h-4" />
-              <span className="text-sm">Website</span>
+              <span className="text-sm">{tp("info.website")}</span>
             </div>
             {vendor.website ? (
               <a
@@ -257,7 +257,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 <ExternalLink className="w-3 h-3" />
               </a>
             ) : (
-              <span className="text-muted-foreground">-</span>
+              <span className="text-muted-foreground">{tp("info.empty")}</span>
             )}
           </CardContent>
         </Card>
@@ -265,23 +265,23 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <User className="w-4 h-4" />
-              <span className="text-sm">Contact</span>
+              <span className="text-sm">{tp("info.contact")}</span>
             </div>
-            <p className="font-medium">{vendor.primaryContact || "-"}</p>
+            <p className="font-medium">{vendor.primaryContact || tp("info.empty")}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Mail className="w-4 h-4" />
-              <span className="text-sm">Email</span>
+              <span className="text-sm">{tp("info.email")}</span>
             </div>
             {vendor.contactEmail ? (
               <a href={`mailto:${vendor.contactEmail}`} className="text-primary hover:underline">
                 {vendor.contactEmail}
               </a>
             ) : (
-              <span className="text-muted-foreground">-</span>
+              <span className="text-muted-foreground">{tp("info.empty")}</span>
             )}
           </CardContent>
         </Card>
@@ -289,7 +289,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Clock className="w-4 h-4" />
-              <span className="text-sm">Added</span>
+              <span className="text-sm">{tp("info.added")}</span>
             </div>
             <p className="font-medium">{new Date(vendor.createdAt).toLocaleDateString()}</p>
           </CardContent>
@@ -299,17 +299,17 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       {/* Tabs */}
       <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="contracts">Contracts ({vendor.contracts?.length ?? 0})</TabsTrigger>
-          <TabsTrigger value="assessments">Assessments</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          <TabsTrigger value="overview">{tp("tabs.overview")}</TabsTrigger>
+          <TabsTrigger value="contracts">{tp("tabs.contractsWithCount", { count: vendor.contracts?.length ?? 0 })}</TabsTrigger>
+          <TabsTrigger value="assessments">{tp("tabs.assessments")}</TabsTrigger>
+          <TabsTrigger value="reviews">{tp("tabs.reviews")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4 space-y-4">
           {vendor.description && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Description</CardTitle>
+                <CardTitle className="text-base">{tp("overview.description")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">{vendor.description}</p>
@@ -320,8 +320,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Data Processing</CardTitle>
-                <CardDescription>Categories of data this vendor processes</CardDescription>
+                <CardTitle className="text-base">{tp("overview.dataProcessing")}</CardTitle>
+                <CardDescription>{tp("overview.dataProcessingDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(vendor.dataProcessed as string[])?.length > 0 ? (
@@ -333,15 +333,15 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">No data categories specified</p>
+                  <p className="text-muted-foreground text-sm">{tp("overview.dataEmpty")}</p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Countries</CardTitle>
-                <CardDescription>Data transfer locations</CardDescription>
+                <CardTitle className="text-base">{tp("overview.countries")}</CardTitle>
+                <CardDescription>{tp("overview.countriesDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {(vendor.countries as string[])?.length > 0 ? (
@@ -353,7 +353,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">No countries specified</p>
+                  <p className="text-muted-foreground text-sm">{tp("overview.countriesEmpty")}</p>
                 )}
               </CardContent>
             </Card>
@@ -361,8 +361,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Certifications</CardTitle>
-              <CardDescription>Security and compliance certifications</CardDescription>
+              <CardTitle className="text-base">{tp("overview.certifications")}</CardTitle>
+              <CardDescription>{tp("overview.certificationsDesc")}</CardDescription>
             </CardHeader>
             <CardContent>
               {(vendor.certifications as string[])?.length > 0 ? (
@@ -375,7 +375,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">No certifications recorded</p>
+                <p className="text-muted-foreground text-sm">{tp("overview.certificationsEmpty")}</p>
               )}
             </CardContent>
           </Card>
@@ -384,8 +384,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           {(vendor.metadata as any)?.privacyTechnologies?.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Privacy Technologies</CardTitle>
-                <CardDescription>Privacy enhancing technologies used by this vendor</CardDescription>
+                <CardTitle className="text-base">{tp("overview.privacyTech")}</CardTitle>
+                <CardDescription>{tp("overview.privacyTechDesc")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
@@ -406,7 +406,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             <div className="space-y-4">
               <div className="flex justify-end">
                 <Button size="sm" onClick={() => setContractOpen(true)}>
-                  Add Contract
+                  {tp("contracts.add")}
                 </Button>
               </div>
               {vendor.contracts.map((contract) => (
@@ -423,10 +423,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                         <p className="text-sm text-muted-foreground mt-1">
                           {contract.startDate && (
                             <>
-                              Start: {new Date(contract.startDate).toLocaleDateString()}
-                              {contract.endDate && (
-                                <> — End: {new Date(contract.endDate).toLocaleDateString()}</>
-                              )}
+                              {tp("contracts.start", { date: new Date(contract.startDate).toLocaleDateString() })}
+                              {contract.endDate && tp("contracts.endSuffix", { date: new Date(contract.endDate).toLocaleDateString() })}
                             </>
                           )}
                         </p>
@@ -435,12 +433,12 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                         <Button variant="outline" size="sm" asChild>
                           <a href={contract.documentUrl} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="w-4 h-4 mr-2" />
-                            Open
+                            {tp("contracts.open")}
                           </a>
                         </Button>
                       ) : (
-                        <Button variant="outline" size="sm" disabled title="No document URL on this contract">
-                          No document
+                        <Button variant="outline" size="sm" disabled title={tp("contracts.noDocument")}>
+                          {tp("contracts.noDocument")}
                         </Button>
                       )}
                     </div>
@@ -452,9 +450,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No contracts recorded</p>
+                <p>{tp("contracts.empty")}</p>
                 <Button className="mt-4" onClick={() => setContractOpen(true)}>
-                  Add Contract
+                  {tp("contracts.add")}
                 </Button>
               </CardContent>
             </Card>
@@ -465,9 +463,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
               <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No vendor assessments completed</p>
+              <p>{tp("assessments.empty")}</p>
               <Link href={`/privacy/assessments/new?vendorId=${id}&vendorName=${encodeURIComponent(vendor.name)}`}>
-                <Button className="mt-4">Start Assessment</Button>
+                <Button className="mt-4">{tp("assessments.start")}</Button>
               </Link>
             </CardContent>
           </Card>
@@ -477,9 +475,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
               <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No reviews scheduled</p>
+              <p>{tp("reviews.empty")}</p>
               <Button className="mt-4" onClick={() => setReviewOpen(true)}>
-                Schedule Review
+                {tp("reviews.schedule")}
               </Button>
             </CardContent>
           </Card>
@@ -490,12 +488,12 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Vendor</DialogTitle>
-            <DialogDescription>Update core vendor details.</DialogDescription>
+            <DialogTitle>{tp("editDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("editDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="edit-name">Name *</Label>
+              <Label htmlFor="edit-name">{tp("editDialog.nameLabel")}</Label>
               <Input
                 id="edit-name"
                 value={editForm.name}
@@ -503,7 +501,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description">Description</Label>
+              <Label htmlFor="edit-description">{tp("editDialog.descLabel")}</Label>
               <Textarea
                 id="edit-description"
                 rows={3}
@@ -512,51 +510,51 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-website">Website</Label>
+              <Label htmlFor="edit-website">{tp("editDialog.websiteLabel")}</Label>
               <Input
                 id="edit-website"
-                placeholder="https://…"
+                placeholder={tp("editDialog.websitePlaceholder")}
                 value={editForm.website}
                 onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label>{tp("editDialog.statusLabel")}</Label>
                 <Select
                   value={editForm.status}
                   onValueChange={(v) => setEditForm({ ...editForm, status: v as VendorStatus })}
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="PROSPECTIVE">Prospective</SelectItem>
-                    <SelectItem value="ACTIVE">Active</SelectItem>
-                    <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
-                    <SelectItem value="SUSPENDED">Suspended</SelectItem>
-                    <SelectItem value="TERMINATED">Terminated</SelectItem>
+                    <SelectItem value="PROSPECTIVE">{tList("status.PROSPECTIVE")}</SelectItem>
+                    <SelectItem value="ACTIVE">{tList("status.ACTIVE")}</SelectItem>
+                    <SelectItem value="UNDER_REVIEW">{tList("status.UNDER_REVIEW")}</SelectItem>
+                    <SelectItem value="SUSPENDED">{tList("status.SUSPENDED")}</SelectItem>
+                    <SelectItem value="TERMINATED">{tList("status.TERMINATED")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Risk Tier</Label>
+                <Label>{tp("editDialog.riskLabel")}</Label>
                 <Select
                   value={editForm.riskTier ?? "__none"}
                   onValueChange={(v) => setEditForm({ ...editForm, riskTier: v === "__none" ? null : (v as VendorRiskTier) })}
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none">Not set</SelectItem>
-                    <SelectItem value="LOW">Low</SelectItem>
-                    <SelectItem value="MEDIUM">Medium</SelectItem>
-                    <SelectItem value="HIGH">High</SelectItem>
-                    <SelectItem value="CRITICAL">Critical</SelectItem>
+                    <SelectItem value="__none">{tp("editDialog.riskNotSet")}</SelectItem>
+                    <SelectItem value="LOW">{tList("riskTier.LOW")}</SelectItem>
+                    <SelectItem value="MEDIUM">{tList("riskTier.MEDIUM")}</SelectItem>
+                    <SelectItem value="HIGH">{tList("riskTier.HIGH")}</SelectItem>
+                    <SelectItem value="CRITICAL">{tList("riskTier.CRITICAL")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="edit-contact">Primary Contact</Label>
+                <Label htmlFor="edit-contact">{tp("editDialog.contactLabel")}</Label>
                 <Input
                   id="edit-contact"
                   value={editForm.primaryContact}
@@ -564,7 +562,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-email">Contact Email</Label>
+                <Label htmlFor="edit-email">{tp("editDialog.emailLabel")}</Label>
                 <Input
                   id="edit-email"
                   type="email"
@@ -575,7 +573,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
             <Button
               disabled={!editForm.name || updateVendor.isPending}
               onClick={() =>
@@ -593,7 +591,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               }
             >
               {updateVendor.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Save
+              {tp("editDialog.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -603,37 +601,37 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       <Dialog open={contractOpen} onOpenChange={setContractOpen}>
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add Contract</DialogTitle>
-            <DialogDescription>Record a contract, DPA, or SCC for this vendor.</DialogDescription>
+            <DialogTitle>{tp("contractDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("contractDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="c-name">Name *</Label>
+              <Label htmlFor="c-name">{tp("contractDialog.nameLabel")}</Label>
               <Input
                 id="c-name"
-                placeholder="e.g., Master Services Agreement 2026"
+                placeholder={tp("contractDialog.namePlaceholder")}
                 value={contractForm.name}
                 onChange={(e) => setContractForm({ ...contractForm, name: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>Type *</Label>
+              <Label>{tp("contractDialog.typeLabel")}</Label>
               <Select
                 value={contractForm.type}
                 onValueChange={(v) => setContractForm({ ...contractForm, type: v as ContractType })}
               >
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DPA">DPA (Data Processing Agreement)</SelectItem>
-                  <SelectItem value="SCC">SCC (Standard Contractual Clauses)</SelectItem>
-                  <SelectItem value="MSA">MSA (Master Services Agreement)</SelectItem>
-                  <SelectItem value="NDA">NDA</SelectItem>
-                  <SelectItem value="OTHER">Other</SelectItem>
+                  <SelectItem value="DPA">{tp("contractDialog.type.DPA")}</SelectItem>
+                  <SelectItem value="SCC">{tp("contractDialog.type.SCC")}</SelectItem>
+                  <SelectItem value="MSA">{tp("contractDialog.type.MSA")}</SelectItem>
+                  <SelectItem value="NDA">{tp("contractDialog.type.NDA")}</SelectItem>
+                  <SelectItem value="OTHER">{tp("contractDialog.type.OTHER")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="c-desc">Description</Label>
+              <Label htmlFor="c-desc">{tp("contractDialog.descLabel")}</Label>
               <Textarea
                 id="c-desc"
                 rows={2}
@@ -642,17 +640,17 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="c-url">Document URL</Label>
+              <Label htmlFor="c-url">{tp("contractDialog.urlLabel")}</Label>
               <Input
                 id="c-url"
-                placeholder="https://…"
+                placeholder={tp("contractDialog.urlPlaceholder")}
                 value={contractForm.documentUrl}
                 onChange={(e) => setContractForm({ ...contractForm, documentUrl: e.target.value })}
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="c-start">Start Date</Label>
+                <Label htmlFor="c-start">{tp("contractDialog.startLabel")}</Label>
                 <Input
                   id="c-start"
                   type="date"
@@ -661,7 +659,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="c-end">End Date</Label>
+                <Label htmlFor="c-end">{tp("contractDialog.endLabel")}</Label>
                 <Input
                   id="c-end"
                   type="date"
@@ -672,7 +670,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setContractOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setContractOpen(false)}>{tCommon("cancel")}</Button>
             <Button
               disabled={!contractForm.name || addContract.isPending}
               onClick={() =>
@@ -689,7 +687,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               }
             >
               {addContract.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Add
+              {tp("contractDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -699,18 +697,18 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       <Dialog open={reviewOpen} onOpenChange={setReviewOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Schedule Review</DialogTitle>
-            <DialogDescription>Assign a reviewer and date for this vendor&apos;s next review.</DialogDescription>
+            <DialogTitle>{tp("reviewDialog.title")}</DialogTitle>
+            <DialogDescription>{tp("reviewDialog.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Reviewer *</Label>
+              <Label>{tp("reviewDialog.reviewerLabel")}</Label>
               <Select
                 value={reviewForm.reviewerId}
                 onValueChange={(v) => setReviewForm({ ...reviewForm, reviewerId: v })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select reviewer" />
+                  <SelectValue placeholder={tp("reviewDialog.reviewerPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {(orgData?.members ?? []).map((m: { user: { id: string; name: string | null; email: string } }) => (
@@ -722,22 +720,22 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Review Type</Label>
+              <Label>{tp("reviewDialog.typeLabel")}</Label>
               <Select
                 value={reviewForm.type}
                 onValueChange={(v) => setReviewForm({ ...reviewForm, type: v as ReviewType })}
               >
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PERIODIC">Periodic</SelectItem>
-                  <SelectItem value="INITIAL">Initial</SelectItem>
-                  <SelectItem value="INCIDENT_TRIGGERED">Incident-triggered</SelectItem>
-                  <SelectItem value="CONTRACT_RENEWAL">Contract renewal</SelectItem>
+                  <SelectItem value="PERIODIC">{tp("reviewDialog.type.PERIODIC")}</SelectItem>
+                  <SelectItem value="INITIAL">{tp("reviewDialog.type.INITIAL")}</SelectItem>
+                  <SelectItem value="INCIDENT_TRIGGERED">{tp("reviewDialog.type.INCIDENT_TRIGGERED")}</SelectItem>
+                  <SelectItem value="CONTRACT_RENEWAL">{tp("reviewDialog.type.CONTRACT_RENEWAL")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="r-date">Scheduled Date *</Label>
+              <Label htmlFor="r-date">{tp("reviewDialog.dateLabel")}</Label>
               <Input
                 id="r-date"
                 type="date"
@@ -747,7 +745,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setReviewOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setReviewOpen(false)}>{tCommon("cancel")}</Button>
             <Button
               disabled={!reviewForm.reviewerId || !reviewForm.scheduledAt || scheduleReview.isPending}
               onClick={() =>
@@ -761,7 +759,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               }
             >
               {scheduleReview.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Schedule
+              {tp("reviewDialog.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>
