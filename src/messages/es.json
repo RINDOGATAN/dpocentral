@@ -33,6 +33,100 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "dataInventory": {
+      "title": "Inventario de datos",
+      "subtitle": "Gestiona activos de datos y actividades de tratamiento",
+      "export": "Exportar",
+      "exportPrivacyProgram": "Informe del programa de privacidad",
+      "exportRopa": "Exportar RAT",
+      "addAsset": "Añadir activo",
+      "addAssetShort": "Añadir",
+      "addActivity": "Añadir actividad",
+      "addTransfer": "Añadir transferencia",
+      "search": "Buscar activos...",
+      "filters": "Filtros",
+      "tabs": {
+        "assets": "Activos ({count})",
+        "activities": "Actividades ({count})",
+        "flows": "Flujos de datos",
+        "transfers": "Transferencias",
+        "transfersWithCount": "Transferencias ({count})"
+      },
+      "asset": {
+        "ownerEmpty": "Sin responsable",
+        "elements": "{count, plural, one {# elemento} other {# elementos}}",
+        "activities": "{count, plural, one {# actividad} other {# actividades}}",
+        "locationEmpty": "Ubicación no especificada"
+      },
+      "activity": {
+        "noBasis": "Sin base",
+        "noSubjects": "Sin interesados",
+        "assetsCount": "{count, plural, one {# activo} other {# activos}}",
+        "details": "Detalles",
+        "viewDetails": "Ver detalles"
+      },
+      "loadMore": "Cargar más",
+      "emptyAssets": {
+        "title": "Aún no hay activos de datos",
+        "subtitle": "Comienza añadiendo tu primer activo de datos"
+      },
+      "emptyActivities": {
+        "title": "Aún no hay actividades de tratamiento",
+        "subtitle": "Documenta tus actividades de tratamiento para cumplir con el RAT"
+      },
+      "emptyTransfers": {
+        "title": "No hay transferencias internacionales registradas",
+        "subtitle": "Documenta las transferencias transfronterizas y sus salvaguardas (arts. 44–49 RGPD)"
+      },
+      "transfer": {
+        "tiaCompleted": "TIA completada",
+        "tiaPending": "TIA pendiente"
+      },
+      "activityDialog": {
+        "title": "Añadir actividad de tratamiento",
+        "description": "Documenta una actividad de tratamiento para tu RAT (Registro de Actividades de Tratamiento).",
+        "nameLabel": "Nombre de la actividad",
+        "namePlaceholder": "p. ej., Alta de clientes",
+        "purposeLabel": "Finalidad",
+        "purposePlaceholder": "p. ej., Recopilar y verificar la identidad del cliente para crear su cuenta",
+        "legalBasisLabel": "Base jurídica",
+        "legalBasisPlaceholder": "Selecciona una base jurídica...",
+        "subjectsLabel": "Interesados",
+        "subjectsPlaceholder": "p. ej., Clientes, Empleados, Visitantes del sitio web",
+        "subjectsHelp": "Lista separada por comas"
+      },
+      "transferDialog": {
+        "title": "Añadir transferencia internacional",
+        "description": "Registra una transferencia transfronteriza de datos según los arts. 44–49 RGPD.",
+        "nameLabel": "Nombre de la transferencia",
+        "namePlaceholder": "p. ej., Datos de clientes al proveedor de analítica de EE. UU.",
+        "countryLabel": "País de destino",
+        "countryPlaceholder": "p. ej., US, IN, GB",
+        "orgLabel": "Organización receptora",
+        "orgPlaceholder": "p. ej., Stripe Inc.",
+        "mechanismLabel": "Mecanismo de transferencia",
+        "mechanismPlaceholder": "Selecciona un mecanismo...",
+        "safeguardsLabel": "Salvaguardas",
+        "safeguardsPlaceholder": "p. ej., CCT UE (2021) + medidas complementarias"
+      },
+      "legalBasis": {
+        "CONSENT": "Consentimiento",
+        "CONTRACT": "Contrato",
+        "LEGAL_OBLIGATION": "Obligación legal",
+        "VITAL_INTERESTS": "Intereses vitales",
+        "PUBLIC_TASK": "Misión pública",
+        "LEGITIMATE_INTERESTS": "Interés legítimo"
+      },
+      "mechanism": {
+        "ADEQUACY_DECISION": "Decisión de adecuación",
+        "STANDARD_CONTRACTUAL_CLAUSES": "CCT",
+        "BINDING_CORPORATE_RULES": "BCR",
+        "DEROGATION": "Derogación",
+        "CERTIFICATION": "Certificación",
+        "CODE_OF_CONDUCT": "Código de conducta",
+        "OTHER": "Otro"
+      }
+    },
     "dashboard": {
       "subtitle": "Panel de privacidad",
       "exportReport": "Informe del programa de privacidad",

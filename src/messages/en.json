@@ -33,6 +33,100 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "dataInventory": {
+      "title": "Data Inventory",
+      "subtitle": "Manage data assets and processing activities",
+      "export": "Export",
+      "exportPrivacyProgram": "Privacy Program Report",
+      "exportRopa": "ROPA Export",
+      "addAsset": "Add Asset",
+      "addAssetShort": "Add",
+      "addActivity": "Add Activity",
+      "addTransfer": "Add Transfer",
+      "search": "Search assets...",
+      "filters": "Filters",
+      "tabs": {
+        "assets": "Assets ({count})",
+        "activities": "Activities ({count})",
+        "flows": "Data Flows",
+        "transfers": "Transfers",
+        "transfersWithCount": "Transfers ({count})"
+      },
+      "asset": {
+        "ownerEmpty": "No owner",
+        "elements": "{count, plural, one {# element} other {# elements}}",
+        "activities": "{count, plural, one {# activity} other {# activities}}",
+        "locationEmpty": "No location specified"
+      },
+      "activity": {
+        "noBasis": "No basis",
+        "noSubjects": "No subjects",
+        "assetsCount": "{count, plural, one {# asset} other {# assets}}",
+        "details": "Details",
+        "viewDetails": "View Details"
+      },
+      "loadMore": "Load More",
+      "emptyAssets": {
+        "title": "No data assets yet",
+        "subtitle": "Start by adding your first data asset"
+      },
+      "emptyActivities": {
+        "title": "No processing activities yet",
+        "subtitle": "Document your data processing activities for ROPA compliance"
+      },
+      "emptyTransfers": {
+        "title": "No international transfers recorded",
+        "subtitle": "Document cross-border data transfers and safeguards (Art. 44–49 GDPR)"
+      },
+      "transfer": {
+        "tiaCompleted": "TIA completed",
+        "tiaPending": "TIA pending"
+      },
+      "activityDialog": {
+        "title": "Add Processing Activity",
+        "description": "Document a data processing activity for your ROPA (Record of Processing Activities).",
+        "nameLabel": "Activity Name",
+        "namePlaceholder": "e.g. Customer Onboarding",
+        "purposeLabel": "Purpose",
+        "purposePlaceholder": "e.g. Collect and verify customer identity for account creation",
+        "legalBasisLabel": "Legal Basis",
+        "legalBasisPlaceholder": "Select legal basis...",
+        "subjectsLabel": "Data Subjects",
+        "subjectsPlaceholder": "e.g. Customers, Employees, Website visitors",
+        "subjectsHelp": "Comma-separated list"
+      },
+      "transferDialog": {
+        "title": "Add International Transfer",
+        "description": "Record a cross-border data transfer under GDPR Art. 44–49.",
+        "nameLabel": "Transfer Name",
+        "namePlaceholder": "e.g. Customer data to US analytics provider",
+        "countryLabel": "Destination Country",
+        "countryPlaceholder": "e.g. US, IN, GB",
+        "orgLabel": "Receiving Organization",
+        "orgPlaceholder": "e.g. Stripe Inc.",
+        "mechanismLabel": "Transfer Mechanism",
+        "mechanismPlaceholder": "Select mechanism...",
+        "safeguardsLabel": "Safeguards",
+        "safeguardsPlaceholder": "e.g. EU SCCs (2021) + supplementary measures"
+      },
+      "legalBasis": {
+        "CONSENT": "Consent",
+        "CONTRACT": "Contract",
+        "LEGAL_OBLIGATION": "Legal Obligation",
+        "VITAL_INTERESTS": "Vital Interests",
+        "PUBLIC_TASK": "Public Task",
+        "LEGITIMATE_INTERESTS": "Legitimate Interests"
+      },
+      "mechanism": {
+        "ADEQUACY_DECISION": "Adequacy Decision",
+        "STANDARD_CONTRACTUAL_CLAUSES": "SCCs",
+        "BINDING_CORPORATE_RULES": "BCRs",
+        "DEROGATION": "Derogation",
+        "CERTIFICATION": "Certification",
+        "CODE_OF_CONDUCT": "Code of Conduct",
+        "OTHER": "Other"
+      }
+    },
     "dashboard": {
       "subtitle": "Privacy Dashboard",
       "exportReport": "Privacy Program Report",
