@@ -33,6 +33,97 @@
     "viewDetails": "View Details"
   },
   "pages": {
+    "newAsset": {
+      "title": "Add Data Asset",
+      "subtitle": "Register a new system or data store",
+      "details": "Asset Details",
+      "detailsSubtitle": "Provide information about the data asset",
+      "name": "Asset Name *",
+      "namePlaceholder": "e.g., Customer Database",
+      "type": "Asset Type *",
+      "typePlaceholder": "Select type",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the asset and its purpose...",
+      "owner": "Owner/Department",
+      "ownerPlaceholder": "e.g., Engineering",
+      "location": "Location",
+      "locationPlaceholder": "e.g., AWS US-East-1",
+      "hosting": "Hosting Type",
+      "hostingPlaceholder": "Select hosting type",
+      "vendor": "Vendor (if applicable)",
+      "vendorPlaceholder": "e.g., AWS, Salesforce",
+      "production": "Production environment",
+      "errorPrefix": "Error: {message}",
+      "creating": "Creating...",
+      "submit": "Create Asset",
+      "assetType": {
+        "DATABASE": "Database",
+        "APPLICATION": "Application",
+        "CLOUD_SERVICE": "Cloud Service",
+        "FILE_SYSTEM": "File System",
+        "THIRD_PARTY": "Third Party",
+        "PHYSICAL": "Physical",
+        "OTHER": "Other"
+      },
+      "hostingType": {
+        "ON_PREMISE": "On-Premise",
+        "CLOUD": "Cloud",
+        "HYBRID": "Hybrid",
+        "SAAS": "SaaS"
+      }
+    },
+    "newDsar": {
+      "title": "New DSAR Request",
+      "subtitle": "Log a data subject access request",
+      "type": {
+        "title": "Request Type",
+        "subtitle": "Select the type of data subject request",
+        "ACCESS": "Access",
+        "ACCESS_desc": "Right to obtain a copy of personal data",
+        "RECTIFICATION": "Rectification",
+        "RECTIFICATION_desc": "Right to correct inaccurate data",
+        "ERASURE": "Erasure",
+        "ERASURE_desc": "Right to deletion (right to be forgotten)",
+        "PORTABILITY": "Portability",
+        "PORTABILITY_desc": "Right to receive data in a portable format",
+        "OBJECTION": "Objection",
+        "OBJECTION_desc": "Right to object to data processing",
+        "RESTRICTION": "Restriction",
+        "RESTRICTION_desc": "Right to restrict processing"
+      },
+      "requester": {
+        "title": "Requester Information",
+        "subtitle": "Details of the data subject making the request",
+        "name": "Full Name *",
+        "namePlaceholder": "e.g., John Doe",
+        "email": "Email Address *",
+        "emailPlaceholder": "e.g., john@example.com",
+        "phone": "Phone Number",
+        "phonePlaceholder": "e.g., +34 600 000 000",
+        "relationship": "Relationship",
+        "relationshipPlaceholder": "Select relationship",
+        "relationshipOptions": {
+          "Customer": "Customer",
+          "Employee": "Employee",
+          "Former Employee": "Former Employee",
+          "Job Applicant": "Job Applicant",
+          "Contractor": "Contractor",
+          "Website Visitor": "Website Visitor",
+          "Other": "Other"
+        },
+        "address": "Address",
+        "addressPlaceholder": "e.g., 123 Main St, City, Country"
+      },
+      "details": {
+        "title": "Request Details",
+        "subtitle": "Additional information about the request",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the request in detail...",
+        "requestedData": "Specific Data Requested",
+        "requestedDataPlaceholder": "e.g., All marketing communications, CRM records, billing history..."
+      },
+      "submit": "Create Request"
+    },
     "assessmentDetail": {
       "notFound": "Assessment not found",
       "back": "Back to Assessments",

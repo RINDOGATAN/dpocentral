@@ -33,6 +33,97 @@
     "viewDetails": "Ver detalles"
   },
   "pages": {
+    "newAsset": {
+      "title": "Añadir activo de datos",
+      "subtitle": "Registra un nuevo sistema o almacén de datos",
+      "details": "Datos del activo",
+      "detailsSubtitle": "Proporciona información sobre el activo de datos",
+      "name": "Nombre del activo *",
+      "namePlaceholder": "p. ej., Base de datos de clientes",
+      "type": "Tipo de activo *",
+      "typePlaceholder": "Selecciona el tipo",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe el activo y su finalidad...",
+      "owner": "Responsable / Departamento",
+      "ownerPlaceholder": "p. ej., Ingeniería",
+      "location": "Ubicación",
+      "locationPlaceholder": "p. ej., AWS eu-west-1",
+      "hosting": "Tipo de alojamiento",
+      "hostingPlaceholder": "Selecciona el tipo de alojamiento",
+      "vendor": "Proveedor (si aplica)",
+      "vendorPlaceholder": "p. ej., AWS, Salesforce",
+      "production": "Entorno de producción",
+      "errorPrefix": "Error: {message}",
+      "creating": "Creando...",
+      "submit": "Crear activo",
+      "assetType": {
+        "DATABASE": "Base de datos",
+        "APPLICATION": "Aplicación",
+        "CLOUD_SERVICE": "Servicio en la nube",
+        "FILE_SYSTEM": "Sistema de archivos",
+        "THIRD_PARTY": "Tercero",
+        "PHYSICAL": "Físico",
+        "OTHER": "Otro"
+      },
+      "hostingType": {
+        "ON_PREMISE": "On-premise",
+        "CLOUD": "Nube",
+        "HYBRID": "Híbrido",
+        "SAAS": "SaaS"
+      }
+    },
+    "newDsar": {
+      "title": "Nueva solicitud DSAR",
+      "subtitle": "Registra una solicitud del interesado",
+      "type": {
+        "title": "Tipo de solicitud",
+        "subtitle": "Selecciona el tipo de solicitud del interesado",
+        "ACCESS": "Acceso",
+        "ACCESS_desc": "Derecho a obtener una copia de los datos personales",
+        "RECTIFICATION": "Rectificación",
+        "RECTIFICATION_desc": "Derecho a corregir datos inexactos",
+        "ERASURE": "Supresión",
+        "ERASURE_desc": "Derecho de supresión (derecho al olvido)",
+        "PORTABILITY": "Portabilidad",
+        "PORTABILITY_desc": "Derecho a recibir los datos en un formato portable",
+        "OBJECTION": "Oposición",
+        "OBJECTION_desc": "Derecho a oponerse al tratamiento",
+        "RESTRICTION": "Limitación",
+        "RESTRICTION_desc": "Derecho a la limitación del tratamiento"
+      },
+      "requester": {
+        "title": "Datos del solicitante",
+        "subtitle": "Datos del interesado que realiza la solicitud",
+        "name": "Nombre completo *",
+        "namePlaceholder": "p. ej., Juan Pérez",
+        "email": "Correo electrónico *",
+        "emailPlaceholder": "p. ej., juan@example.com",
+        "phone": "Teléfono",
+        "phonePlaceholder": "p. ej., +34 600 000 000",
+        "relationship": "Relación",
+        "relationshipPlaceholder": "Selecciona la relación",
+        "relationshipOptions": {
+          "Customer": "Cliente",
+          "Employee": "Empleado",
+          "Former Employee": "Ex empleado",
+          "Job Applicant": "Candidato",
+          "Contractor": "Contratista",
+          "Website Visitor": "Visitante del sitio web",
+          "Other": "Otro"
+        },
+        "address": "Dirección",
+        "addressPlaceholder": "p. ej., Calle Mayor 123, Madrid, España"
+      },
+      "details": {
+        "title": "Detalles de la solicitud",
+        "subtitle": "Información adicional sobre la solicitud",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe la solicitud en detalle...",
+        "requestedData": "Datos solicitados",
+        "requestedDataPlaceholder": "p. ej., Todas las comunicaciones de marketing, registros del CRM, historial de facturación..."
+      },
+      "submit": "Crear solicitud"
+    },
     "assessmentDetail": {
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",

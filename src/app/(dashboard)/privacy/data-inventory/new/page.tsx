@@ -22,28 +22,16 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
-const assetTypes = [
-  { value: "DATABASE", label: "Database" },
-  { value: "APPLICATION", label: "Application" },
-  { value: "CLOUD_SERVICE", label: "Cloud Service" },
-  { value: "FILE_SYSTEM", label: "File System" },
-  { value: "THIRD_PARTY", label: "Third Party" },
-  { value: "PHYSICAL", label: "Physical" },
-  { value: "OTHER", label: "Other" },
-];
-
-const hostingTypes = [
-  { value: "ON_PREMISE", label: "On-Premise" },
-  { value: "CLOUD", label: "Cloud" },
-  { value: "HYBRID", label: "Hybrid" },
-  { value: "SAAS", label: "SaaS" },
-];
+const ASSET_TYPE_KEYS = ["DATABASE", "APPLICATION", "CLOUD_SERVICE", "FILE_SYSTEM", "THIRD_PARTY", "PHYSICAL", "OTHER"] as const;
+const HOSTING_TYPE_KEYS = ["ON_PREMISE", "CLOUD", "HYBRID", "SAAS"] as const;
 
 export default function NewDataAssetPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.newAsset");
+  const tCommon = useTranslations("common");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -99,48 +87,44 @@ export default function NewDataAssetPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">Add Data Asset</h1>
-          <p className="text-muted-foreground">
-            Register a new system or data store
-          </p>
+          <h1 className="text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-muted-foreground">{tp("subtitle")}</p>
         </div>
       </div>
 
       {/* Form */}
       <Card>
         <CardHeader>
-          <CardTitle>Asset Details</CardTitle>
-          <CardDescription>
-            Provide information about the data asset
-          </CardDescription>
+          <CardTitle>{tp("details")}</CardTitle>
+          <CardDescription>{tp("detailsSubtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Asset Name *</Label>
+                <Label htmlFor="name">{tp("name")}</Label>
                 <Input
                   id="name"
-                  placeholder="e.g., Customer Database"
+                  placeholder={tp("namePlaceholder")}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="type">Asset Type *</Label>
+                <Label htmlFor="type">{tp("type")}</Label>
                 <Select
                   value={formData.type}
                   onValueChange={(value) => setFormData({ ...formData, type: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={tp("typePlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {assetTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                    {ASSET_TYPE_KEYS.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {tp(`assetType.${value}` as `assetType.DATABASE` | `assetType.APPLICATION` | `assetType.CLOUD_SERVICE` | `assetType.FILE_SYSTEM` | `assetType.THIRD_PARTY` | `assetType.PHYSICAL` | `assetType.OTHER`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -149,10 +133,10 @@ export default function NewDataAssetPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tp("description")}</Label>
               <Textarea
                 id="description"
-                placeholder="Describe the asset and its purpose..."
+                placeholder={tp("descriptionPlaceholder")}
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -161,19 +145,19 @@ export default function NewDataAssetPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="owner">Owner/Department</Label>
+                <Label htmlFor="owner">{tp("owner")}</Label>
                 <Input
                   id="owner"
-                  placeholder="e.g., Engineering"
+                  placeholder={tp("ownerPlaceholder")}
                   value={formData.owner}
                   onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{tp("location")}</Label>
                 <Input
                   id="location"
-                  placeholder="e.g., AWS US-East-1"
+                  placeholder={tp("locationPlaceholder")}
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 />
@@ -182,28 +166,28 @@ export default function NewDataAssetPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="hostingType">Hosting Type</Label>
+                <Label htmlFor="hostingType">{tp("hosting")}</Label>
                 <Select
                   value={formData.hostingType}
                   onValueChange={(value) => setFormData({ ...formData, hostingType: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select hosting type" />
+                    <SelectValue placeholder={tp("hostingPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {hostingTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                    {HOSTING_TYPE_KEYS.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {tp(`hostingType.${value}` as `hostingType.ON_PREMISE` | `hostingType.CLOUD` | `hostingType.HYBRID` | `hostingType.SAAS`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="vendor">Vendor (if applicable)</Label>
+                <Label htmlFor="vendor">{tp("vendor")}</Label>
                 <Input
                   id="vendor"
-                  placeholder="e.g., AWS, Salesforce"
+                  placeholder={tp("vendorPlaceholder")}
                   value={formData.vendor}
                   onChange={(e) => setFormData({ ...formData, vendor: e.target.value })}
                 />
@@ -216,27 +200,27 @@ export default function NewDataAssetPage() {
                 checked={formData.isProduction}
                 onCheckedChange={(checked) => setFormData({ ...formData, isProduction: checked })}
               />
-              <Label htmlFor="isProduction">Production environment</Label>
+              <Label htmlFor="isProduction">{tp("production")}</Label>
             </div>
 
             {createAsset.error && (
               <div className="text-sm text-destructive">
-                Error: {createAsset.error.message}
+                {tp("errorPrefix", { message: createAsset.error.message })}
               </div>
             )}
 
             <div className="flex justify-end gap-4">
               <Link href="/privacy/data-inventory">
-                <Button variant="outline" type="button">Cancel</Button>
+                <Button variant="outline" type="button">{tCommon("cancel")}</Button>
               </Link>
               <Button type="submit" disabled={isSubmitting || !formData.name || !formData.type}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
+                    {tp("creating")}
                   </>
                 ) : (
-                  "Create Asset"
+                  tp("submit")
                 )}
               </Button>
             </div>
