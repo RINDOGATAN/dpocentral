@@ -41,71 +41,30 @@ import { formatPrice } from "@/lib/currency";
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
 
-const ASSESSMENT_TYPES = [
-  {
-    type: "LIA",
-    name: "Legitimate Interest Assessment",
-    shortName: "LIA",
-    description: "Balance legitimate interests against data subject rights under GDPR Article 6(1)(f).",
-    icon: Scale,
-    premium: false,
-  },
-  {
-    type: "CUSTOM",
-    name: "Custom Assessment",
-    shortName: "Custom",
-    description: "Flexible assessment template for custom privacy reviews and evaluations.",
-    icon: Settings2,
-    premium: false,
-  },
-  {
-    type: "DPIA",
-    name: "Data Protection Impact Assessment",
-    shortName: "DPIA",
-    description: "Comprehensive assessment for high-risk processing activities under GDPR Article 35.",
-    icon: ShieldCheck,
-    premium: true,
-  },
-  {
-    type: "PIA",
-    name: "Privacy Impact Assessment",
-    shortName: "PIA",
-    description: "Evaluate privacy risks and impacts of projects, systems, or processes.",
-    icon: ClipboardCheck,
-    premium: true,
-  },
-  {
-    type: "TIA",
-    name: "Transfer Impact Assessment",
-    shortName: "TIA",
-    description: "Assess risks of international data transfers and supplementary measures needed.",
-    icon: ArrowRightLeft,
-    premium: true,
-  },
-  {
-    type: "VENDOR",
-    name: "Vendor Risk Assessment",
-    shortName: "Vendor",
-    description: "Evaluate privacy and security risks associated with third-party vendors.",
-    icon: Building2,
-    premium: true,
-  },
+const ASSESSMENT_TYPES: Array<{
+  type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
+  icon: typeof Scale;
+  premium: boolean;
+}> = [
+  { type: "LIA", icon: Scale, premium: false },
+  { type: "CUSTOM", icon: Settings2, premium: false },
+  { type: "DPIA", icon: ShieldCheck, premium: true },
+  { type: "PIA", icon: ClipboardCheck, premium: true },
+  { type: "TIA", icon: ArrowRightLeft, premium: true },
+  { type: "VENDOR", icon: Building2, premium: true },
 ];
-
-const typeLabels: Record<string, string> = {
-  DPIA: "Data Protection Impact Assessment",
-  PIA: "Privacy Impact Assessment",
-  TIA: "Transfer Impact Assessment",
-  LIA: "Legitimate Interest Assessment",
-  VENDOR: "Vendor Risk Assessment",
-  CUSTOM: "Custom Assessment",
-};
 
 export default function NewAssessmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.newAssessment");
+  const tCommon = useTranslations("common");
+  const typeName = (type: string | null | undefined) =>
+    type
+      ? tp(`type.${type}` as `type.LIA` | `type.CUSTOM` | `type.DPIA` | `type.PIA` | `type.TIA` | `type.VENDOR`)
+      : tp("fallbackName");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedType, setSelectedType] = useState<string | null>(
     searchParams.get("type")
@@ -196,7 +155,7 @@ export default function NewAssessmentPage() {
       setIsSubmitting(false);
 
       if (error.data?.code === "FORBIDDEN") {
-        setUpgradeFeatureName(typeLabels[selectedType ?? ""] || "Assessment");
+        setUpgradeFeatureName(typeName(selectedType));
         setUpgradeSkillKey(selectedType ?? "");
         setUpgradeModalOpen(true);
       }
@@ -214,7 +173,7 @@ export default function NewAssessmentPage() {
     const isEntitled = isTypeEntitled(type);
 
     if (isPremium && !isEntitled) {
-      setUpgradeFeatureName(typeLabels[type] || type);
+      setUpgradeFeatureName(typeName(type));
       setUpgradeSkillKey(type);
       setUpgradeModalOpen(true);
       return;
@@ -251,11 +210,11 @@ export default function NewAssessmentPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">New Assessment</h1>
+          <h1 className="text-2xl font-semibold">{tp("title")}</h1>
           <p className="text-muted-foreground">
             {selectedType
-              ? `Creating ${typeLabels[selectedType] || selectedType}`
-              : "Choose an assessment type to get started"}
+              ? tp("subtitleCreating", { name: typeName(selectedType) })
+              : tp("subtitleChoose")}
           </p>
         </div>
       </div>
@@ -264,10 +223,8 @@ export default function NewAssessmentPage() {
       {!selectedType && (
         <Card>
           <CardHeader>
-            <CardTitle>Select Assessment Type</CardTitle>
-            <CardDescription>
-              Choose the type of assessment you need to perform
-            </CardDescription>
+            <CardTitle>{tp("selectType")}</CardTitle>
+            <CardDescription>{tp("selectTypeSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -313,7 +270,7 @@ export default function NewAssessmentPage() {
                               variant="secondary"
                               className="bg-muted text-muted-foreground text-xs"
                             >
-                              Coming Soon
+                              {tp("comingSoon")}
                             </Badge>
                           ) : isPremium ? (
                             isEntitled ? (
@@ -321,14 +278,14 @@ export default function NewAssessmentPage() {
                                 variant="secondary"
                                 className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
                               >
-                                Active
+                                {tp("active")}
                               </Badge>
                             ) : (
                               <Badge
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                {formatPrice(9)}/mo
+                                {formatPrice(9)}{tp("perMonth")}
                               </Badge>
                             )
                           ) : (
@@ -336,18 +293,18 @@ export default function NewAssessmentPage() {
                               variant="secondary"
                               className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
                             >
-                              Included
+                              {tp("included")}
                             </Badge>
                           )}
                         </div>
                       </div>
-                      <h4 className="font-medium">{at.name}</h4>
+                      <h4 className="font-medium">{tp(`type.${at.type}` as `type.LIA` | `type.CUSTOM` | `type.DPIA` | `type.PIA` | `type.TIA` | `type.VENDOR`)}</h4>
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {at.description}
+                        {tp(`type.${at.type}_desc` as `type.LIA_desc` | `type.CUSTOM_desc` | `type.DPIA_desc` | `type.PIA_desc` | `type.TIA_desc` | `type.VENDOR_desc`)}
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          {features.selfServiceUpgrade ? "Click to enable" : `Contact ${brand.companyName} to enable`}
+                          {features.selfServiceUpgrade ? tp("clickToEnable") : tp("contactToEnable", { name: brand.companyName })}
                         </p>
                       )}
                     </CardContent>
@@ -365,13 +322,13 @@ export default function NewAssessmentPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Select Template</CardTitle>
+                <CardTitle>{tp("selectTemplate")}</CardTitle>
                 <CardDescription>
-                  Multiple templates available for {typeLabels[selectedType]}
+                  {tp("selectTemplateSubtitle", { name: typeName(selectedType) })}
                 </CardDescription>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
-                Change type
+                {tp("changeType")}
               </Button>
             </div>
           </CardHeader>
@@ -391,7 +348,7 @@ export default function NewAssessmentPage() {
                     <div className="flex items-start justify-between mb-2">
                       <ClipboardCheck className="w-5 h-5 text-primary" />
                       {template.isSystem && (
-                        <Badge variant="secondary" className="text-xs">System</Badge>
+                        <Badge variant="secondary" className="text-xs">{tp("system")}</Badge>
                       )}
                     </div>
                     <h4 className="font-medium mt-2">{template.name}</h4>
@@ -401,7 +358,7 @@ export default function NewAssessmentPage() {
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground mt-2">
-                      {(template.sections as any[])?.length || 0} sections
+                      {tp("sectionsCount", { count: (template.sections as any[])?.length || 0 })}
                     </p>
                   </CardContent>
                 </Card>
@@ -423,12 +380,12 @@ export default function NewAssessmentPage() {
         <Card>
           <CardContent className="py-8 text-center">
             <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
-            <p className="font-medium">No templates available</p>
+            <p className="font-medium">{tp("noTemplatesTitle")}</p>
             <p className="text-sm text-muted-foreground mt-1">
-              No template found for {typeLabels[selectedType]}. Run the template seed script or create a template first.
+              {tp("noTemplatesBody", { name: typeName(selectedType) })}
             </p>
             <Button variant="outline" className="mt-4" onClick={() => setSelectedType(null)}>
-              Choose a different type
+              {tp("chooseDifferent")}
             </Button>
           </CardContent>
         </Card>
@@ -440,25 +397,25 @@ export default function NewAssessmentPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Assessment Details</CardTitle>
+<div>
+                  <CardTitle>{tp("details")}</CardTitle>
                   <CardDescription>
                     {selectedTemplate
-                      ? `Using template: ${selectedTemplate.name}`
-                      : `Creating ${typeLabels[selectedType]}`}
+                      ? tp("usingTemplate", { name: selectedTemplate.name })
+                      : tp("subtitleCreating", { name: typeName(selectedType) })}
                   </CardDescription>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
-                  Change type
+                  {tp("changeType")}
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Assessment Name *</Label>
+                <Label htmlFor="name">{tp("name")}</Label>
                 <Input
                   id="name"
-                  placeholder={`e.g., ${typeLabels[selectedType]} - Q1 2026`}
+                  placeholder={tp("namePlaceholder", { type: typeName(selectedType) })}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
@@ -466,10 +423,10 @@ export default function NewAssessmentPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{tp("description")}</Label>
                 <Textarea
                   id="description"
-                  placeholder="Brief description of what this assessment covers..."
+                  placeholder={tp("descriptionPlaceholder")}
                   rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -478,13 +435,13 @@ export default function NewAssessmentPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="processingActivity">Link to Processing Activity</Label>
+                  <Label htmlFor="processingActivity">{tp("linkActivity")}</Label>
                   <Select
                     value={formData.processingActivityId}
                     onValueChange={(value) => setFormData({ ...formData, processingActivityId: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select activity (optional)" />
+                      <SelectValue placeholder={tp("selectActivity")} />
                     </SelectTrigger>
                     <SelectContent>
                       {activities.map((activity) => (
@@ -499,14 +456,14 @@ export default function NewAssessmentPage() {
                 {selectedType && ["VENDOR", "DPIA", "PIA", "TIA"].includes(selectedType) && (
                   <div className="space-y-2">
                     <Label htmlFor="vendor">
-                      {selectedType === "VENDOR" ? "Link to Vendor" : "Link to Vendor (optional)"}
+                      {selectedType === "VENDOR" ? tp("linkVendor") : tp("linkVendorOptional")}
                     </Label>
                     <Select
                       value={formData.vendorId}
                       onValueChange={(value) => setFormData({ ...formData, vendorId: value })}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select vendor (optional)" />
+                        <SelectValue placeholder={tp("selectVendor")} />
                       </SelectTrigger>
                       <SelectContent>
                         {vendors.map((vendor) => (
@@ -524,22 +481,22 @@ export default function NewAssessmentPage() {
 
           {createAssessment.error && (
             <div className="text-sm text-destructive">
-              Error: {createAssessment.error.message}
+              {tp("errorPrefix", { message: createAssessment.error.message })}
             </div>
           )}
 
           <div className="flex justify-end gap-4">
             <Link href="/privacy/assessments">
-              <Button variant="outline" type="button">Cancel</Button>
+              <Button variant="outline" type="button">{tCommon("cancel")}</Button>
             </Link>
             <Button type="submit" disabled={isSubmitting || !formData.name || !effectiveTemplateId}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
+                  {tp("creating")}
                 </>
               ) : (
-                "Start Assessment"
+                tp("submit")
               )}
             </Button>
           </div>
