@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -21,12 +23,16 @@ import {
   Loader2,
   CheckCircle2,
   Globe,
+  Clock,
+  MessageSquare,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ExpertContactDialog } from "@/components/privacy/expert-contact-dialog";
+import { useOrganization } from "@/lib/organization-context";
+import { ExpertEngagementStatus } from "@prisma/client";
 
 const PAGE_SIZE = 20;
 
@@ -34,6 +40,8 @@ export default function ExpertsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations("experts");
+  const tEng = useTranslations("experts.engagements");
+  const { organization } = useOrganization();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [specialization, setSpecialization] = useState<string>(
@@ -103,6 +111,13 @@ export default function ExpertsPage() {
           {t("subtitle")}
         </p>
       </div>
+
+      <Tabs defaultValue="directory" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="directory">{tEng("tabDirectory")}</TabsTrigger>
+          <TabsTrigger value="history">{tEng("tabHistory")}</TabsTrigger>
+        </TabsList>
+        <TabsContent value="directory" className="space-y-4">
 
       {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -305,6 +320,13 @@ export default function ExpertsPage() {
         </div>
       )}
 
+        </TabsContent>
+
+        <TabsContent value="history" className="space-y-4">
+          <EngagementHistory orgId={organization?.id ?? ""} />
+        </TabsContent>
+      </Tabs>
+
       {contactExpert && (
         <ExpertContactDialog
           open={!!contactExpert}
@@ -313,6 +335,161 @@ export default function ExpertsPage() {
           expertName={contactExpert.name}
         />
       )}
+    </div>
+  );
+}
+
+const STATUS_TONE: Record<ExpertEngagementStatus, string> = {
+  CONTACTED: "border-muted-foreground text-muted-foreground",
+  RESPONDED: "border-primary text-primary",
+  ENGAGED: "border-primary bg-primary text-primary-foreground",
+  COMPLETED: "border-green-500 text-green-600",
+  DECLINED: "border-muted-foreground text-muted-foreground",
+};
+
+function EngagementHistory({ orgId }: { orgId: string }) {
+  const tEng = useTranslations("experts.engagements");
+  const utils = trpc.useUtils();
+  const { data: engagements, isLoading } = trpc.experts.listEngagements.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId }
+  );
+
+  const updateEngagement = trpc.experts.updateEngagement.useMutation({
+    onSuccess: () => utils.experts.listEngagements.invalidate(),
+  });
+
+  const [editingNotesFor, setEditingNotesFor] = useState<string | null>(null);
+  const [draftNotes, setDraftNotes] = useState("");
+
+  if (!orgId) return null;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!engagements || engagements.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-10 text-center text-muted-foreground">
+          <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-50" />
+          <p className="text-sm">{tEng("empty")}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {engagements.map((eng) => {
+        const isEditing = editingNotesFor === eng.id;
+        return (
+          <Card key={eng.id}>
+            <CardContent className="py-4 space-y-3">
+              <div className="flex items-start justify-between gap-3 flex-wrap">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium">{eng.expertName}</span>
+                    {eng.expertFirm && (
+                      <span className="text-xs text-muted-foreground">— {eng.expertFirm}</span>
+                    )}
+                    <Badge variant="outline" className={`text-[10px] ${STATUS_TONE[eng.status]}`}>
+                      {tEng(`status.${eng.status}`)}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">{eng.subject}</p>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {tEng("contactedBy", {
+                      name: eng.contactedBy.name || eng.contactedBy.email,
+                      date: new Date(eng.contactedAt).toLocaleDateString(),
+                    })}
+                  </p>
+                </div>
+                <Select
+                  value={eng.status}
+                  onValueChange={(value) =>
+                    updateEngagement.mutate({
+                      organizationId: orgId,
+                      engagementId: eng.id,
+                      status: value as ExpertEngagementStatus,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-[160px] shrink-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(Object.keys(STATUS_TONE) as ExpertEngagementStatus[]).map((s) => (
+                      <SelectItem key={s} value={s}>{tEng(`status.${s}`)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {eng.message && (
+                <div className="text-xs text-muted-foreground border-l-2 border-muted pl-3 line-clamp-3">
+                  {eng.message}
+                </div>
+              )}
+
+              {isEditing ? (
+                <div className="space-y-2">
+                  <Textarea
+                    rows={3}
+                    placeholder={tEng("notesPlaceholder")}
+                    value={draftNotes}
+                    onChange={(e) => setDraftNotes(e.target.value)}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        updateEngagement.mutate({
+                          organizationId: orgId,
+                          engagementId: eng.id,
+                          notes: draftNotes,
+                        });
+                        setEditingNotesFor(null);
+                      }}
+                    >
+                      {tEng("saveNotes")}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setEditingNotesFor(null)}>
+                      {tEng("cancelNotes")}
+                    </Button>
+                  </div>
+                </div>
+              ) : eng.notes ? (
+                <button
+                  type="button"
+                  className="text-left w-full text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => {
+                    setEditingNotesFor(eng.id);
+                    setDraftNotes(eng.notes ?? "");
+                  }}
+                >
+                  <span className="font-medium">{tEng("notes")}:</span> {eng.notes}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-xs text-primary hover:underline"
+                  onClick={() => {
+                    setEditingNotesFor(eng.id);
+                    setDraftNotes("");
+                  }}
+                >
+                  + {tEng("addNotes")}
+                </button>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

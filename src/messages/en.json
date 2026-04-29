@@ -1914,6 +1914,24 @@
     "typeLegal": "Legal",
     "typeTechnical": "Technical",
     "typeDeployment": "Deployment",
+    "engagements": {
+      "tabDirectory": "Directory",
+      "tabHistory": "Engagement History",
+      "empty": "No expert engagements yet. Contact an expert to start tracking.",
+      "contactedBy": "{name} · {date}",
+      "notes": "Notes",
+      "notesPlaceholder": "Track outcomes, fees, deliverables, follow-ups…",
+      "addNotes": "Add notes",
+      "saveNotes": "Save",
+      "cancelNotes": "Cancel",
+      "status": {
+        "CONTACTED": "Contacted",
+        "RESPONDED": "Responded",
+        "ENGAGED": "Engaged",
+        "COMPLETED": "Completed",
+        "DECLINED": "Declined"
+      }
+    },
     "contact": {
       "title": "Contact {name}",
       "description": "Send a message to this expert. They'll respond to your email directly.",

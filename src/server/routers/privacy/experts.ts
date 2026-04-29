@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { Resend } from "resend";
+import { ExpertEngagementStatus } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import prisma from "@/lib/prisma";
 import {
   searchExperts,
   getExpertById,
@@ -70,6 +73,8 @@ export const expertsRouter = createTRPCRouter({
     .input(
       z.object({
         expertId: z.string(),
+        expertName: z.string().optional(),
+        organizationId: z.string().optional(),
         requesterName: z.string().min(1).max(200),
         requesterEmail: z.string().email(),
         requesterCompany: z.string().max(200).optional(),
@@ -78,12 +83,41 @@ export const expertsRouter = createTRPCRouter({
         governingLaw: z.string().max(200).optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       // 1. Submit to Dealroom (or mock)
       const result = await contactExpert(input);
 
       // 2. Look up expert profile for their email
       const expert = await getExpertById(input.expertId);
+
+      // Log an engagement record so the org has a CRM-style history.
+      // Verifies org membership before writing — silently skips if not a member.
+      if (input.organizationId && ctx.session.user.id) {
+        const membership = await prisma.organizationMember.findUnique({
+          where: {
+            organizationId_userId: {
+              organizationId: input.organizationId,
+              userId: ctx.session.user.id,
+            },
+          },
+        });
+        if (membership) {
+          await prisma.expertEngagement.create({
+            data: {
+              organizationId: input.organizationId,
+              expertId: input.expertId,
+              expertName: expert?.name ?? input.expertName ?? "Expert",
+              expertFirm: expert?.firm ?? null,
+              expertEmail: expert?.email ?? null,
+              contactedById: ctx.session.user.id,
+              subject: input.subject,
+              message: input.message,
+              status: ExpertEngagementStatus.CONTACTED,
+              externalRequestId: typeof result === "object" && result && "id" in result ? String((result as { id?: unknown }).id ?? "") || null : null,
+            },
+          });
+        }
+      }
 
       // 3. Send emails (must await — serverless kills the runtime after response)
       const r = getResend();
@@ -181,5 +215,67 @@ export const expertsRouter = createTRPCRouter({
     .input(z.object({ requestId: z.string() }))
     .query(async ({ input }) => {
       return getContactRequest(input.requestId);
+    }),
+
+  // List engagements for the current user's org. Each row is a CRM-style
+  // record of an expert outreach: who, what, when, status. Used by the
+  // Engagement History panel on /privacy/experts.
+  listEngagements: protectedProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const membership = await prisma.organizationMember.findUnique({
+        where: {
+          organizationId_userId: {
+            organizationId: input.organizationId,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+      if (!membership) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      return prisma.expertEngagement.findMany({
+        where: { organizationId: input.organizationId },
+        include: {
+          contactedBy: { select: { id: true, name: true, email: true } },
+        },
+        orderBy: { contactedAt: "desc" },
+      });
+    }),
+
+  // Update engagement status + notes. Closing an engagement (COMPLETED /
+  // DECLINED) stamps closedAt. Verifies org membership.
+  updateEngagement: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        engagementId: z.string(),
+        status: z.nativeEnum(ExpertEngagementStatus).optional(),
+        notes: z.string().max(5000).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const membership = await prisma.organizationMember.findUnique({
+        where: {
+          organizationId_userId: {
+            organizationId: input.organizationId,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+      if (!membership) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      const isClosing = input.status === "COMPLETED" || input.status === "DECLINED";
+      return prisma.expertEngagement.update({
+        where: { id: input.engagementId, organizationId: input.organizationId },
+        data: {
+          status: input.status,
+          notes: input.notes,
+          closedAt: isClosing ? new Date() : undefined,
+        },
+      });
     }),
 });

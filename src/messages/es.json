@@ -1914,6 +1914,24 @@
     "typeLegal": "Jurídico",
     "typeTechnical": "Técnico",
     "typeDeployment": "Despliegue",
+    "engagements": {
+      "tabDirectory": "Directorio",
+      "tabHistory": "Historial de contactos",
+      "empty": "Aún no hay contactos con expertos. Contacta a alguno para comenzar el seguimiento.",
+      "contactedBy": "{name} · {date}",
+      "notes": "Notas",
+      "notesPlaceholder": "Anota resultados, honorarios, entregables, seguimiento…",
+      "addNotes": "Añadir notas",
+      "saveNotes": "Guardar",
+      "cancelNotes": "Cancelar",
+      "status": {
+        "CONTACTED": "Contactado",
+        "RESPONDED": "Respondió",
+        "ENGAGED": "Contratado",
+        "COMPLETED": "Completado",
+        "DECLINED": "Declinado"
+      }
+    },
     "contact": {
       "title": "Contactar con {name}",
       "description": "Envía un mensaje a este experto. Responderá directamente a tu correo electrónico.",
