@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useOrganization } from "@/lib/organization-context";
 
 interface ExpertContactDialogProps {
   open: boolean;
@@ -31,8 +32,10 @@ export function ExpertContactDialog({
   expertName,
 }: ExpertContactDialogProps) {
   const { data: session } = useSession();
+  const { organization } = useOrganization();
   const t = useTranslations("experts.contact");
   const tCommon = useTranslations("common");
+  const utils = trpc.useUtils();
   const [name, setName] = useState(session?.user?.name ?? "");
   const [email, setEmail] = useState(session?.user?.email ?? "");
 
@@ -47,13 +50,18 @@ export function ExpertContactDialog({
   const [submitted, setSubmitted] = useState(false);
 
   const contactMutation = trpc.experts.contact.useMutation({
-    onSuccess: () => setSubmitted(true),
+    onSuccess: () => {
+      setSubmitted(true);
+      utils.experts.listEngagements.invalidate();
+    },
   });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     contactMutation.mutate({
       expertId,
+      expertName,
+      organizationId: organization?.id,
       requesterName: name,
       requesterEmail: email,
       requesterCompany: company || undefined,

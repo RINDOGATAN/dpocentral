@@ -49,6 +49,9 @@ model User {
   notifications           Notification[]
   notificationPreferences NotificationPreference[]
 
+  // Expert engagement
+  expertEngagements ExpertEngagement[]
+
   @@map("users")
 }
 
@@ -128,8 +131,42 @@ model Organization {
   notificationPreferences NotificationPreference[]
   complianceSnapshots     ComplianceSnapshot[]
   aiSystems               AISystem[]
+  expertEngagements       ExpertEngagement[]
 
   @@map("organizations")
+}
+
+enum ExpertEngagementStatus {
+  CONTACTED
+  RESPONDED
+  ENGAGED
+  COMPLETED
+  DECLINED
+}
+
+model ExpertEngagement {
+  id                String                 @id @default(cuid())
+  organizationId    String
+  expertId          String                 // External (Dealroom) expert ID
+  expertName        String                 // Snapshot at contact time
+  expertFirm        String?
+  expertEmail       String?
+  contactedById     String                 // user that initiated contact
+  subject           String
+  message           String?                @db.Text
+  status            ExpertEngagementStatus @default(CONTACTED)
+  externalRequestId String?                // Dealroom contact request id
+  notes             String?                @db.Text
+  contactedAt       DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  closedAt          DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  contactedBy  User         @relation(fields: [contactedById], references: [id])
+
+  @@index([organizationId])
+  @@index([expertId])
+  @@map("expert_engagements")
 }
 
 enum OrganizationRole {
