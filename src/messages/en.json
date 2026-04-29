@@ -1137,6 +1137,28 @@
         "emptyTitle": "No jurisdictions applied",
         "emptySubtitle": "Use the Applicability Wizard to determine which regulations apply to your organization",
         "startWizard": "Start Wizard"
+      },
+      "checklist": {
+        "headingPrefix": "Action checklist",
+        "summary": "{satisfied}/{total} complete",
+        "satisfied": "Done",
+        "partial": "In progress",
+        "missing": "Not started",
+        "takeAction": "Take action",
+        "reqRopa": "Maintain a Record of Processing Activities (ROPA)",
+        "reqRopaDesc": "Document all processing activities your organisation performs, including purpose, legal basis, and data categories.",
+        "reqDpia": "Conduct DPIAs for high-risk processing",
+        "reqDpiaDesc": "Document a Data Protection Impact Assessment for any processing likely to result in a high risk to data subjects.",
+        "reqDsarPortal": "Provide a public data subject request channel",
+        "reqDsarPortalDesc": "Configure an intake form so data subjects can submit access, rectification, erasure, and other requests.",
+        "reqIncidentResponse": "Establish a breach response process",
+        "reqIncidentResponseDesc": "Have a documented incident-response workflow so breaches can be triaged, contained, and notified within statutory deadlines.",
+        "reqVendorDpas": "Sign DPAs with all data processors",
+        "reqVendorDpasDesc": "Maintain a Data Processing Agreement with every active vendor that processes personal data on your behalf.",
+        "reqTransferTia": "Complete a TIA for each international data transfer",
+        "reqTransferTiaDesc": "When personal data leaves the regulated territory, a Transfer Impact Assessment (Schrems II) is required for non-adequate destinations.",
+        "reqAiSystemRegister": "Maintain an AI system register",
+        "reqAiSystemRegisterDesc": "Document each AI system in use, classify its risk tier, and track provider/deployer obligations."
       }
     },
     "aiSystems": {

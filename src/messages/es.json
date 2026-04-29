@@ -1137,6 +1137,28 @@
         "emptyTitle": "No hay jurisdicciones aplicadas",
         "emptySubtitle": "Utiliza el Asistente de aplicabilidad para determinar qué regulaciones aplican a tu organización",
         "startWizard": "Iniciar asistente"
+      },
+      "checklist": {
+        "headingPrefix": "Lista de acciones",
+        "summary": "{satisfied}/{total} completadas",
+        "satisfied": "Hecho",
+        "partial": "En curso",
+        "missing": "Pendiente",
+        "takeAction": "Acción",
+        "reqRopa": "Mantén un Registro de Actividades de Tratamiento (RAT)",
+        "reqRopaDesc": "Documenta todas las actividades de tratamiento de tu organización, incluyendo finalidad, base jurídica y categorías de datos.",
+        "reqDpia": "Realiza DPIAs para tratamientos de alto riesgo",
+        "reqDpiaDesc": "Documenta una Evaluación de Impacto para todo tratamiento que pueda suponer un alto riesgo para los interesados.",
+        "reqDsarPortal": "Ofrece un canal público para solicitudes del interesado",
+        "reqDsarPortalDesc": "Configura un formulario de recepción para que los interesados puedan presentar solicitudes de acceso, rectificación, supresión, etc.",
+        "reqIncidentResponse": "Establece un proceso de respuesta a brechas",
+        "reqIncidentResponseDesc": "Documenta un flujo de respuesta a incidentes para poder triarlos, contenerlos y notificarlos dentro de los plazos legales.",
+        "reqVendorDpas": "Firma DPAs con todos los encargados del tratamiento",
+        "reqVendorDpasDesc": "Mantén un Acuerdo de Tratamiento de Datos con cada proveedor activo que trate datos personales por cuenta de tu organización.",
+        "reqTransferTia": "Completa una TIA para cada transferencia internacional",
+        "reqTransferTiaDesc": "Cuando los datos personales salen del territorio regulado, se requiere una Evaluación de Impacto de Transferencia (Schrems II) para destinos sin decisión de adecuación.",
+        "reqAiSystemRegister": "Mantén un registro de sistemas de IA",
+        "reqAiSystemRegisterDesc": "Documenta cada sistema de IA en uso, clasifica su nivel de riesgo y haz seguimiento de las obligaciones del proveedor/implementador."
       }
     },
     "aiSystems": {
