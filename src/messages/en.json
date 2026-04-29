@@ -1493,7 +1493,11 @@
       },
       "transfer": {
         "tiaCompleted": "TIA completed",
-        "tiaPending": "TIA pending"
+        "tiaPending": "TIA pending",
+        "tiaInProgress": "TIA in progress",
+        "startTia": "Start TIA",
+        "continueTia": "Continue TIA",
+        "viewTia": "View TIA"
       },
       "activityDialog": {
         "title": "Add Processing Activity",

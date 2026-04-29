@@ -1037,6 +1037,11 @@ export const dataInventoryRouter = createTRPCRouter({
         include: {
           processingActivity: true,
           jurisdiction: true,
+          assessments: {
+            select: { id: true, status: true, riskLevel: true, completedAt: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
         orderBy: { name: "asc" },
       });

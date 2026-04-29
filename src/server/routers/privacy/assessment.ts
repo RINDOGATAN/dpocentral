@@ -366,6 +366,80 @@ export const assessmentRouter = createTRPCRouter({
       return assessment;
     }),
 
+  // Create a TIA assessment linked to an existing data transfer.
+  // Looks up the system TIA template (seeded as `system-tia-template`),
+  // creates a new Assessment with type=TIA, links it to the transfer,
+  // and returns it for navigation. If a TIA already exists for this
+  // transfer that is not COMPLETED/REJECTED, it is returned as-is.
+  createForTransfer: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        dataTransferId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const transfer = await ctx.prisma.dataTransfer.findFirst({
+        where: { id: input.dataTransferId, organizationId: ctx.organization.id },
+      });
+      if (!transfer) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Transfer not found" });
+      }
+
+      // Reuse an existing in-progress TIA if one exists for this transfer
+      const existing = await ctx.prisma.assessment.findFirst({
+        where: {
+          dataTransferId: transfer.id,
+          status: { notIn: [AssessmentStatus.APPROVED, AssessmentStatus.REJECTED, AssessmentStatus.ARCHIVED] },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      if (existing) return existing;
+
+      // Find a TIA template — prefer org-owned, fall back to system
+      const template = await ctx.prisma.assessmentTemplate.findFirst({
+        where: {
+          type: AssessmentType.TIA,
+          OR: [
+            { organizationId: ctx.organization.id },
+            { isSystem: true },
+          ],
+        },
+        orderBy: [{ isSystem: "asc" }, { createdAt: "desc" }],
+      });
+      if (!template) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "TIA template not available. Run the template seed script first.",
+        });
+      }
+
+      const assessment = await ctx.prisma.assessment.create({
+        data: {
+          organizationId: ctx.organization.id,
+          templateId: template.id,
+          dataTransferId: transfer.id,
+          processingActivityId: transfer.processingActivityId ?? undefined,
+          name: `TIA — ${transfer.name}`,
+          description: `Transfer Impact Assessment for transfer to ${transfer.destinationCountry}.`,
+          status: AssessmentStatus.DRAFT,
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Assessment",
+          entityId: assessment.id,
+          action: "CREATE",
+          changes: { source: "transfer", dataTransferId: transfer.id },
+        },
+      });
+
+      return assessment;
+    }),
+
   // Save response
   saveResponse: writerProcedure
     .input(
@@ -766,13 +840,21 @@ export const assessmentRouter = createTRPCRouter({
         ? AssessmentStatus.APPROVED
         : AssessmentStatus.REJECTED;
 
-      await ctx.prisma.assessment.update({
+      const updatedAssessment = await ctx.prisma.assessment.update({
         where: { id: approval.assessmentId },
         data: {
           status: newStatus,
           completedAt: input.decision === "APPROVED" ? new Date() : null,
         },
       });
+
+      // If this is a TIA linked to a transfer, sync the transfer's tiaCompleted/tiaDate
+      if (input.decision === "APPROVED" && updatedAssessment.dataTransferId) {
+        await ctx.prisma.dataTransfer.update({
+          where: { id: updatedAssessment.dataTransferId },
+          data: { tiaCompleted: true, tiaDate: new Date() },
+        });
+      }
 
       await ctx.prisma.auditLog.create({
         data: {
@@ -894,6 +976,14 @@ export const assessmentRouter = createTRPCRouter({
           riskLevel: level,
         },
       });
+
+      // If this is a TIA linked to a transfer, sync the transfer's tiaCompleted/tiaDate
+      if (updated.dataTransferId) {
+        await ctx.prisma.dataTransfer.update({
+          where: { id: updated.dataTransferId },
+          data: { tiaCompleted: true, tiaDate: new Date() },
+        });
+      }
 
       await ctx.prisma.auditLog.create({
         data: {

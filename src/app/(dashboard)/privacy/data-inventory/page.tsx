@@ -176,6 +176,11 @@ export default function DataInventoryPage() {
       setTransferForm(INITIAL_TRANSFER_FORM);
     },
   });
+  const createTransferTia = trpc.assessment.createForTransfer.useMutation({
+    onSuccess: (assessment) => {
+      router.push(`/privacy/assessments/${assessment.id}`);
+    },
+  });
 
   const dataAssets = assetsPages?.pages.flatMap((p) => p.assets) ?? [];
   const processingActivities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
@@ -462,11 +467,17 @@ export default function DataInventoryPage() {
                     <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
                       <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          {transfer.tiaCompleted ? (
-                            <><CheckCircle2 className="w-3 h-3 text-green-500" /> {t("transfer.tiaCompleted")}</>
-                          ) : (
-                            <><Shield className="w-3 h-3 text-amber-500" /> {t("transfer.tiaPending")}</>
-                          )}
+                          {(() => {
+                            const tia = transfer.assessments?.[0];
+                            const inProgress = tia && tia.status !== "APPROVED" && tia.status !== "REJECTED";
+                            if (transfer.tiaCompleted || tia?.status === "APPROVED") {
+                              return <><CheckCircle2 className="w-3 h-3 text-green-500" /> {t("transfer.tiaCompleted")}</>;
+                            }
+                            if (inProgress) {
+                              return <><Shield className="w-3 h-3 text-amber-500" /> {t("transfer.tiaInProgress")}</>;
+                            }
+                            return <><Shield className="w-3 h-3 text-amber-500" /> {t("transfer.tiaPending")}</>;
+                          })()}
                         </span>
                         {transfer.processingActivity && (
                           <span className="truncate ml-2">{transfer.processingActivity.name}</span>
@@ -475,6 +486,43 @@ export default function DataInventoryPage() {
                       {transfer.safeguards && (
                         <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{transfer.safeguards}</p>
                       )}
+                      <div className="mt-3">
+                        {(() => {
+                          const tia = transfer.assessments?.[0];
+                          if (tia) {
+                            const isDone = tia.status === "APPROVED";
+                            return (
+                              <Link href={`/privacy/assessments/${tia.id}`}>
+                                <Button variant="outline" size="sm" className="w-full">
+                                  {isDone ? t("transfer.viewTia") : t("transfer.continueTia")}
+                                  <ArrowRight className="w-3 h-3 ml-1" />
+                                </Button>
+                              </Link>
+                            );
+                          }
+                          return (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-full"
+                              onClick={() =>
+                                createTransferTia.mutate({
+                                  organizationId: organization?.id ?? "",
+                                  dataTransferId: transfer.id,
+                                })
+                              }
+                              disabled={createTransferTia.isPending}
+                            >
+                              {createTransferTia.isPending && createTransferTia.variables?.dataTransferId === transfer.id ? (
+                                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                              ) : (
+                                <Shield className="w-3 h-3 mr-1" />
+                              )}
+                              {t("transfer.startTia")}
+                            </Button>
+                          );
+                        })()}
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
