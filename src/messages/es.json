@@ -1493,7 +1493,11 @@
       },
       "transfer": {
         "tiaCompleted": "TIA completada",
-        "tiaPending": "TIA pendiente"
+        "tiaPending": "TIA pendiente",
+        "tiaInProgress": "TIA en curso",
+        "startTia": "Iniciar TIA",
+        "continueTia": "Continuar TIA",
+        "viewTia": "Ver TIA"
       },
       "activityDialog": {
         "title": "Añadir actividad de tratamiento",

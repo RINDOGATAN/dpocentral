@@ -417,6 +417,7 @@ model DataTransfer {
   organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   processingActivity ProcessingActivity? @relation(fields: [processingActivityId], references: [id], onDelete: SetNull)
   jurisdiction       Jurisdiction?       @relation(fields: [jurisdictionId], references: [id], onDelete: SetNull)
+  assessments        Assessment[]
 
   @@index([organizationId])
   @@map("data_transfers")
@@ -652,6 +653,7 @@ model Assessment {
   templateId           String
   processingActivityId String? // Link to processing activity
   vendorId             String? // Link to vendor (for vendor assessments)
+  dataTransferId       String? // Link to data transfer (for TIA assessments)
   name                 String
   description          String?          @db.Text
   status               AssessmentStatus @default(DRAFT)
@@ -669,6 +671,7 @@ model Assessment {
   template           AssessmentTemplate     @relation(fields: [templateId], references: [id])
   processingActivity ProcessingActivity?    @relation(fields: [processingActivityId], references: [id], onDelete: SetNull)
   vendor             Vendor?                @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+  dataTransfer       DataTransfer?          @relation(fields: [dataTransferId], references: [id], onDelete: SetNull)
   responses          AssessmentResponse[]
   mitigations        AssessmentMitigation[]
   approvals          AssessmentApproval[]
@@ -676,6 +679,7 @@ model Assessment {
 
   @@index([organizationId])
   @@index([status])
+  @@index([dataTransferId])
   @@map("assessments")
 }
 
