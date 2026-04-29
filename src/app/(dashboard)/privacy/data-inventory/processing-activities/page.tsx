@@ -151,7 +151,7 @@ export default function ProcessingActivitiesPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/privacy/data-inventory">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label="Back">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
@@ -259,7 +259,7 @@ export default function ProcessingActivitiesPage() {
       ) : filteredActivities.length > 0 ? (
         <div className="flex flex-col gap-4">
           {filteredActivities.map((activity) => (
-            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block">
+            <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <Card className="hover:border-primary/50 transition-colors">
                 <CardContent className="py-4">
                   <div className="flex items-start gap-6">

@@ -205,7 +205,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/privacy/vendors">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>

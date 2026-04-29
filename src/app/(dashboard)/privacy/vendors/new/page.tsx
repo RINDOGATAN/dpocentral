@@ -265,7 +265,7 @@ function NewVendorPageContent() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/privacy/vendors">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
@@ -665,7 +665,7 @@ function NewVendorPageContent() {
                     <div className="flex gap-2">
                       <Input value={formData.privacyPolicyUrl} readOnly className="bg-muted" />
                       <a href={formData.privacyPolicyUrl} target="_blank" rel="noopener noreferrer">
-                        <Button type="button" variant="outline" size="icon">
+                        <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
                           <ExternalLink className="w-4 h-4" />
                         </Button>
                       </a>
@@ -678,7 +678,7 @@ function NewVendorPageContent() {
                     <div className="flex gap-2">
                       <Input value={formData.dpaUrl} readOnly className="bg-muted" />
                       <a href={formData.dpaUrl} target="_blank" rel="noopener noreferrer">
-                        <Button type="button" variant="outline" size="icon">
+                        <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
                           <ExternalLink className="w-4 h-4" />
                         </Button>
                       </a>
@@ -693,7 +693,7 @@ function NewVendorPageContent() {
                   <div className="flex gap-2">
                     <Input value={formData.trustCenterUrl} readOnly className="bg-muted" />
                     <a href={formData.trustCenterUrl} target="_blank" rel="noopener noreferrer">
-                      <Button type="button" variant="outline" size="icon">
+                      <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
                         <ExternalLink className="w-4 h-4" />
                       </Button>
                     </a>

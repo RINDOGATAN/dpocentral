@@ -282,7 +282,7 @@ export default function DataInventoryPage() {
                 {dataAssets.map((asset) => {
                   const Icon = assetTypeIcons[asset.type] || Database;
                   return (
-                    <Link key={asset.id} href={`/privacy/data-inventory/${asset.id}`}>
+                    <Link key={asset.id} href={`/privacy/data-inventory/${asset.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full">
                       <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                         <CardHeader className="pb-3 p-4 sm:p-6 sm:pb-3">
                           <div className="flex items-start justify-between gap-2">
@@ -357,7 +357,7 @@ export default function DataInventoryPage() {
               </div>
               <div className="flex flex-col gap-4">
                 {processingActivities.map((activity) => (
-                  <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block">
+                  <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     <Card className="hover:border-primary/50 transition-colors">
                       <CardContent className="p-4">
                         {/* Mobile Layout */}
