@@ -478,7 +478,7 @@ export default function ActivityDetailPage() {
                 <Link
                   key={assessment.id}
                   href={`/privacy/assessments/${assessment.id}`}
-                  className="block"
+                  className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <div className="flex items-center justify-between p-2 -mx-2 rounded hover:bg-muted/50 transition-colors">
                     <div>

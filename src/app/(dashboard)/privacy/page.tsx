@@ -345,7 +345,7 @@ export default function PrivacyDashboardPage() {
           <CardContent className="space-y-3 sm:space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
             {dsarList?.requests && dsarList.requests.length > 0 ? (
               dsarList.requests.map((dsar) => (
-                <Link key={dsar.id} href={`/privacy/dsar/${dsar.id}`} className="block">
+                <Link key={dsar.id} href={`/privacy/dsar/${dsar.id}`} className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <div className="flex items-start sm:items-center gap-3 sm:gap-4 p-2 -mx-2 hover:bg-muted/50 transition-colors">
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -467,7 +467,7 @@ export default function PrivacyDashboardPage() {
           <CardContent className="space-y-3 sm:space-y-4 p-4 pt-0 sm:p-6 sm:pt-0">
             {vendorList?.vendors && vendorList.vendors.length > 0 ? (
               vendorList.vendors.map((vendor) => (
-                <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block">
+                <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                   <div className="flex items-center gap-3 p-2 -mx-2 hover:bg-muted/50 transition-colors">
                     <div className="p-1.5 border border-primary/50 text-primary shrink-0">
                       <Building2 className="h-3 w-3" />

@@ -328,7 +328,7 @@ export default function DataAssetDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/privacy/data-inventory">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
@@ -512,7 +512,7 @@ export default function DataAssetDetailPage() {
                       <Link
                         key={link.id}
                         href={`/privacy/data-inventory/activities/${link.processingActivity.id}`}
-                        className="block"
+                        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
                         <div className="border rounded-lg p-3 hover:border-primary/50 transition-colors space-y-2">
                           <div className="flex items-center justify-between">
@@ -713,14 +713,15 @@ export default function DataAssetDetailPage() {
                 const allSelected = elSelection === undefined;
                 return (
                   <div key={act.id}>
-                    <div className="flex items-center gap-3 p-2 rounded hover:bg-muted/50">
+                    <div className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1">
                       <Checkbox
+                        id={`act-${act.id}`}
                         checked={isSelected}
                         onCheckedChange={() => toggleActivity(act.id)}
                       />
                       <label
+                        htmlFor={`act-${act.id}`}
                         className="flex-1 min-w-0 cursor-pointer"
-                        onClick={() => toggleActivity(act.id)}
                       >
                         <p className="text-sm font-medium truncate">{act.name}</p>
                         <p className="text-xs text-muted-foreground">
@@ -746,7 +747,7 @@ export default function DataAssetDetailPage() {
                     </div>
                     {isSelected && isExpanded && elements.length > 0 && (
                       <div className="ml-9 pl-2 border-l space-y-0.5 pb-1">
-                        <label className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer">
+                        <label className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1">
                           <Checkbox
                             checked={allSelected}
                             onCheckedChange={() => toggleAllElementsForActivity(act.id)}
@@ -760,7 +761,7 @@ export default function DataAssetDetailPage() {
                           return (
                             <label
                               key={el.id}
-                              className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer"
+                              className="flex items-center gap-2 p-1 rounded hover:bg-muted/50 cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-1"
                             >
                               <Checkbox
                                 checked={isElSelected}

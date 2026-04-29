@@ -115,7 +115,7 @@ export default function DSARSettingsPage() {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/privacy/dsar">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label="Back">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
@@ -161,7 +161,7 @@ export default function DSARSettingsPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/privacy/dsar">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label="Back">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
@@ -184,11 +184,11 @@ export default function DSARSettingsPage() {
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
             <Input value={portalUrl} readOnly className="font-mono text-sm" />
-            <Button variant="outline" size="icon" onClick={copyUrl}>
+            <Button variant="outline" size="icon" onClick={copyUrl} aria-label="Copy URL">
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </Button>
             <Link href={portalUrl} target="_blank">
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" aria-label="Open in new tab">
                 <ExternalLink className="w-4 h-4" />
               </Button>
             </Link>

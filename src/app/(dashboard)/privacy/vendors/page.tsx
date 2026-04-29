@@ -280,7 +280,7 @@ export default function VendorsPage() {
       ) : filteredVendors.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {filteredVendors.map((vendor) => (
-            <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`}>
+            <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">

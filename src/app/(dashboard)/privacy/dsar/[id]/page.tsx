@@ -228,7 +228,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link href="/privacy/dsar">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>

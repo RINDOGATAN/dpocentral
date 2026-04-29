@@ -91,7 +91,7 @@ export default function DataElementDetailPage() {
     <div className="space-y-6">
       <div className="flex items-start gap-3 sm:gap-4">
         <Link href={`/privacy/data-inventory/${element.dataAsset.id}`}>
-          <Button variant="ghost" size="icon" className="shrink-0 mt-1">
+          <Button variant="ghost" size="icon" aria-label="Back" className="shrink-0 mt-1">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
