@@ -26,6 +26,8 @@ import {
   Plus,
   X,
   Download,
+  Circle,
+  CircleDashed,
 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
@@ -54,6 +56,14 @@ export default function RegulationsPage() {
   const { data: applied } = trpc.regulations.listApplied.useQuery(
     { organizationId: orgId },
     { enabled: !!orgId }
+  );
+
+  const { data: status } = trpc.regulations.getRequirementsStatus.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId && (applied?.jurisdictions.length ?? 0) > 0 }
+  );
+  const statusByJurisdiction = new Map(
+    (status?.jurisdictions ?? []).map((j) => [j.jurisdictionId, j])
   );
 
   const utils = trpc.useUtils();
@@ -234,39 +244,86 @@ export default function RegulationsPage() {
             </Card>
           ) : (
             <div className="space-y-3">
-              {applied?.jurisdictions.map((j) => (
-                <Card key={j.id}>
-                  <CardContent className="py-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <MapPin className="w-5 h-5 text-muted-foreground" />
-                        <div>
-                          <div className="font-medium flex items-center gap-2">
-                            {j.name}
-                            {j.isPrimary && <Badge className="text-[10px]">{t("card.primary")}</Badge>}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {t("card.appliedSummary", { region: j.region, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
+              {applied?.jurisdictions.map((j) => {
+                const reqStatus = statusByJurisdiction.get(j.jurisdictionId);
+                return (
+                  <Card key={j.id}>
+                    <CardContent className="py-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <div className="font-medium flex items-center gap-2">
+                              {j.name}
+                              {j.isPrimary && <Badge className="text-[10px]">{t("card.primary")}</Badge>}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {t("card.appliedSummary", { region: j.region, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
+                            </div>
                           </div>
                         </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() =>
+                            removeMutation.mutate({
+                              organizationId: orgId,
+                              jurisdictionId: j.jurisdictionId,
+                            })
+                          }
+                          disabled={removeMutation.isPending}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          removeMutation.mutate({
-                            organizationId: orgId,
-                            jurisdictionId: j.jurisdictionId,
-                          })
-                        }
-                        disabled={removeMutation.isPending}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+
+                      {reqStatus && reqStatus.requirements.length > 0 && (
+                        <div className="border-t pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">{t("checklist.headingPrefix")}</span>
+                            <Badge variant="outline" className="text-[10px]">
+                              {t("checklist.summary", { satisfied: reqStatus.satisfiedCount, total: reqStatus.totalCount })}
+                            </Badge>
+                          </div>
+                          <ul className="space-y-2">
+                            {reqStatus.requirements.map((req) => {
+                              const Icon =
+                                req.status === "satisfied"
+                                  ? CheckCircle2
+                                  : req.status === "partial"
+                                    ? Circle
+                                    : CircleDashed;
+                              const iconClass =
+                                req.status === "satisfied"
+                                  ? "text-green-500"
+                                  : req.status === "partial"
+                                    ? "text-amber-500"
+                                    : "text-muted-foreground";
+                              return (
+                                <li key={req.id} className="flex items-start gap-3 text-sm">
+                                  <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${iconClass}`} />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium leading-tight">{t(`checklist.req${req.id.split("-").map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join("")}` as any)}</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">{req.detail}</p>
+                                  </div>
+                                  {req.status !== "satisfied" && (
+                                    <Link href={req.actionHref} className="shrink-0">
+                                      <Button variant="outline" size="sm" className="h-7 text-xs">
+                                        {t("checklist.takeAction")}
+                                        <ArrowRight className="w-3 h-3 ml-1" />
+                                      </Button>
+                                    </Link>
+                                  )}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </TabsContent>

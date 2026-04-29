@@ -204,4 +204,142 @@ export const regulationsRouter = createTRPCRouter({
         })),
       };
     }),
+
+  // Per-applied-jurisdiction action checklist with computed status.
+  // Replaces the "applying jurisdiction does nothing downstream" gap.
+  getRequirementsStatus: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const { getRequirementsForJurisdiction } = await import("@/config/jurisdiction-requirements");
+      const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
+      const categoryByCode = new Map(JURISDICTION_CATALOG.map((j) => [j.code, j.category]));
+
+      const orgJurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId: ctx.organization.id },
+        include: { jurisdiction: true },
+      });
+
+      if (orgJurisdictions.length === 0) {
+        return { jurisdictions: [] };
+      }
+
+      // Run all status counts in parallel — single round-trip per dashboard load
+      const orgId = ctx.organization.id;
+      const [
+        activitiesCount,
+        approvedDpiaCount,
+        inProgressDpiaCount,
+        intakeFormCount,
+        incidentCount,
+        activeVendorCount,
+        vendorsWithDpaCount,
+        aiSystemCount,
+        transferCount,
+        transferTiaDoneCount,
+      ] = await Promise.all([
+        ctx.prisma.processingActivity.count({ where: { organizationId: orgId } }),
+        ctx.prisma.assessment.count({
+          where: {
+            organizationId: orgId,
+            template: { type: "DPIA" },
+            status: "APPROVED",
+          },
+        }),
+        ctx.prisma.assessment.count({
+          where: {
+            organizationId: orgId,
+            template: { type: "DPIA" },
+            status: { in: ["DRAFT", "IN_PROGRESS", "PENDING_REVIEW", "PENDING_APPROVAL"] },
+          },
+        }),
+        ctx.prisma.dSARIntakeForm.count({ where: { organizationId: orgId, isActive: true } }),
+        ctx.prisma.incident.count({ where: { organizationId: orgId } }),
+        ctx.prisma.vendor.count({
+          where: { organizationId: orgId, status: { in: ["ACTIVE", "UNDER_REVIEW"] } },
+        }),
+        ctx.prisma.vendor.count({
+          where: {
+            organizationId: orgId,
+            status: { in: ["ACTIVE", "UNDER_REVIEW"] },
+            contracts: { some: { type: "DPA" } },
+          },
+        }),
+        ctx.prisma.aISystem.count({ where: { organizationId: orgId } }),
+        ctx.prisma.dataTransfer.count({ where: { organizationId: orgId, isActive: true } }),
+        ctx.prisma.dataTransfer.count({
+          where: { organizationId: orgId, isActive: true, tiaCompleted: true },
+        }),
+      ]);
+
+      type Status = "satisfied" | "partial" | "missing";
+      const computeStatus = (id: string): { status: Status; detail: string } => {
+        switch (id) {
+          case "ropa":
+            return activitiesCount === 0
+              ? { status: "missing", detail: "No processing activities recorded" }
+              : { status: "satisfied", detail: `${activitiesCount} activities` };
+          case "dpia":
+            if (approvedDpiaCount > 0) return { status: "satisfied", detail: `${approvedDpiaCount} approved` };
+            if (inProgressDpiaCount > 0) return { status: "partial", detail: `${inProgressDpiaCount} in progress` };
+            return { status: "missing", detail: "No DPIA on file" };
+          case "dsar-portal":
+            return intakeFormCount === 0
+              ? { status: "missing", detail: "Public intake form not configured" }
+              : { status: "satisfied", detail: "Public portal active" };
+          case "incident-response":
+            return incidentCount === 0
+              ? { status: "missing", detail: "No incident workflow yet" }
+              : { status: "satisfied", detail: `${incidentCount} incident records` };
+          case "vendor-dpas":
+            if (activeVendorCount === 0) return { status: "missing", detail: "No active vendors recorded" };
+            if (vendorsWithDpaCount === activeVendorCount) {
+              return { status: "satisfied", detail: `${vendorsWithDpaCount}/${activeVendorCount} vendors with DPA` };
+            }
+            return {
+              status: "partial",
+              detail: `${vendorsWithDpaCount}/${activeVendorCount} vendors with DPA`,
+            };
+          case "transfer-tia":
+            if (transferCount === 0) return { status: "satisfied", detail: "No cross-border transfers" };
+            if (transferTiaDoneCount === transferCount) {
+              return { status: "satisfied", detail: `${transferTiaDoneCount}/${transferCount} TIAs complete` };
+            }
+            return {
+              status: "partial",
+              detail: `${transferTiaDoneCount}/${transferCount} TIAs complete`,
+            };
+          case "ai-system-register":
+            return aiSystemCount === 0
+              ? { status: "missing", detail: "No AI systems registered" }
+              : { status: "satisfied", detail: `${aiSystemCount} systems registered` };
+          default:
+            return { status: "missing", detail: "" };
+        }
+      };
+
+      return {
+        jurisdictions: orgJurisdictions.map((oj) => {
+          const reqs = getRequirementsForJurisdiction({
+            code: oj.jurisdiction.code,
+            category: categoryByCode.get(oj.jurisdiction.code) ?? "comprehensive",
+          });
+          const items = reqs.map((req) => ({
+            ...req,
+            ...computeStatus(req.id),
+          }));
+          const satisfied = items.filter((i) => i.status === "satisfied").length;
+          return {
+            id: oj.id,
+            jurisdictionId: oj.jurisdictionId,
+            code: oj.jurisdiction.code,
+            name: oj.jurisdiction.name,
+            region: oj.jurisdiction.region,
+            isPrimary: oj.isPrimary,
+            requirements: items,
+            satisfiedCount: satisfied,
+            totalCount: items.length,
+          };
+        }),
+      };
+    }),
 });
