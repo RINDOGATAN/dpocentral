@@ -86,9 +86,12 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  // Rate limit public DSAR intake (unauthenticated). Matches tRPC paths
-  // like /api/trpc/dsar.submitPublic (including batched variants).
-  if (pathname.startsWith("/api/trpc") && pathname.includes("dsar.submitPublic")) {
+  // Rate limit public DSAR intake + withdraw (unauthenticated). Matches tRPC
+  // paths like /api/trpc/dsar.submitPublic and dsar.withdrawPublic.
+  if (
+    pathname.startsWith("/api/trpc") &&
+    (pathname.includes("dsar.submitPublic") || pathname.includes("dsar.withdrawPublic"))
+  ) {
     const result = dsarPublicLimiter.check(`dsar-public:${ip}`);
     if (!result.success) {
       return rateLimitResponse(result);

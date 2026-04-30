@@ -811,6 +811,17 @@
         "details": "Request Details",
         "empty": "-"
       },
+      "responseLink": {
+        "title": "Response Download Link",
+        "description": "Paste a secure URL where the requester can download their response. Visible to them on the public status page.",
+        "urlLabel": "Download URL",
+        "urlPlaceholder": "https://...",
+        "expiresLabel": "Expires (optional)",
+        "save": "Save link",
+        "clear": "Remove link",
+        "saved": "Response link saved",
+        "cleared": "Response link removed"
+      },
       "tabs": {
         "tasks": "Tasks ({count})",
         "communications": "Communications ({count})",
@@ -1790,6 +1801,130 @@
       "portability": "Right to Portability",
       "objection": "Right to Object",
       "restriction": "Right to Restriction"
+    }
+  },
+  "dsarPublic": {
+    "form": {
+      "loadingError": {
+        "title": "Request form not available",
+        "description": "We couldn't find an active data subject request form for this organization.",
+        "hint": "Please check the link you used, or contact the organization directly."
+      },
+      "header": {
+        "fallbackDescription": "Submit a request regarding your personal data held by {orgName}"
+      },
+      "card": {
+        "title": "Your Request",
+        "description": "Please provide the information below so we can process your request"
+      },
+      "fields": {
+        "requestTypeLabel": "What would you like to do?",
+        "requestTypePlaceholder": "Select request type",
+        "name": "Full Name",
+        "namePlaceholder": "John Smith",
+        "email": "Email Address",
+        "emailPlaceholder": "you@example.com",
+        "phone": "Phone Number",
+        "phonePlaceholder": "+1 (555) 123-4567",
+        "relationshipLabel": "Relationship",
+        "relationshipPlaceholder": "Select relationship",
+        "details": "Additional Details",
+        "detailsPlaceholder": "Please provide any additional information that may help us process your request..."
+      },
+      "relationship": {
+        "customer": "Customer",
+        "employee": "Employee",
+        "jobApplicant": "Job Applicant",
+        "websiteVisitor": "Website Visitor",
+        "other": "Other"
+      },
+      "consent": {
+        "retention": "Your contact details will be processed solely to verify your identity and fulfill this data subject request. Your personal data will be retained for the duration of request processing and automatically redacted within {days} days of completion.",
+        "privacyNoticeLink": "See our privacy notice for full details.",
+        "checkbox": "I understand that my contact details will be processed to fulfill this request and consent to this processing."
+      },
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "requiredMark": "*",
+      "types": {
+        "ACCESS": { "label": "Access my data", "description": "Get a copy of the personal data held about you" },
+        "ERASURE": { "label": "Delete my data", "description": "Request deletion of your personal data" },
+        "RECTIFICATION": { "label": "Correct my data", "description": "Request correction of inaccurate personal data" },
+        "PORTABILITY": { "label": "Export my data", "description": "Receive your data in a portable format" },
+        "OBJECTION": { "label": "Object to processing", "description": "Object to how your data is processed" },
+        "RESTRICTION": { "label": "Restrict processing", "description": "Limit how your data is used" },
+        "AUTOMATED_DECISION": { "label": "Automated decisions", "description": "Request human review of automated decisions" },
+        "WITHDRAW_CONSENT": { "label": "Withdraw consent", "description": "Withdraw previously given consent" },
+        "OTHER": { "label": "Other request", "description": "A different data protection request" }
+      },
+      "success": {
+        "title": "Request Submitted",
+        "fallbackDescription": "Your data subject request has been received",
+        "referenceLabel": "Reference number",
+        "copyAriaLabel": "Copy reference number",
+        "copiedAriaLabel": "Copied",
+        "emailSentLead": "We sent a confirmation to ",
+        "emailSentTrail": " with this reference and a link to track progress. Save it — you'll need it to check status.",
+        "checkStatus": "Check Request Status"
+      },
+      "languageSwitcher": "Language"
+    },
+    "status": {
+      "loadingError": {
+        "title": "Request not found",
+        "description": "We couldn't find a request matching this reference number.",
+        "hint": "Please check the reference number from your confirmation email."
+      },
+      "header": {
+        "title": "Request Status",
+        "fallbackDescription": "Track the progress of your data subject request",
+        "trackingDescription": "Tracking your {requestType} with {orgName}"
+      },
+      "overallProgress": "Overall Progress",
+      "currentlyProcessing": "We are currently processing your request",
+      "rejectedNotice": "This request was rejected. Please contact the organization for details.",
+      "cancelledNotice": "This request was cancelled. Please contact the organization for details.",
+      "expectedCompletion": "Expected completion",
+      "completedLabel": "Completed",
+      "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+      "daysRemaining": "{count, plural, one {# day remaining} other {# days remaining}}",
+      "keyDates": "Key Dates",
+      "requestReceived": "Request Received",
+      "acknowledged": "Acknowledged",
+      "completedDate": "Completed",
+      "timeline": {
+        "submitted": "Submitted",
+        "identityVerified": "Identity Verified",
+        "inProgress": "In Progress",
+        "dataCollected": "Data Collected",
+        "completed": "Completed"
+      },
+      "typeLabels": {
+        "ACCESS": "Data Access Request",
+        "ERASURE": "Data Erasure Request",
+        "RECTIFICATION": "Data Rectification Request",
+        "PORTABILITY": "Data Portability Request",
+        "OBJECTION": "Data Processing Objection",
+        "RESTRICTION": "Processing Restriction Request",
+        "AUTOMATED_DECISION": "Automated Decision Review",
+        "WITHDRAW_CONSENT": "Consent Withdrawal",
+        "OTHER": "Data Subject Request"
+      },
+      "withdraw": {
+        "button": "Withdraw this request",
+        "dialogTitle": "Withdraw your request?",
+        "dialogDescription": "If you no longer need this request, we'll cancel it. This action cannot be undone, but you can submit a new request anytime.",
+        "confirm": "Yes, withdraw",
+        "cancel": "Keep request open",
+        "successTitle": "Request withdrawn",
+        "successDescription": "Your request has been cancelled."
+      },
+      "download": {
+        "title": "Your data is ready",
+        "description": "The organization has uploaded your response. You can download it from the link below.",
+        "download": "Download response",
+        "expiresOn": "Available until {date}"
+      }
     }
   },
   "assessments": {

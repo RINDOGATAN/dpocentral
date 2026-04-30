@@ -3,6 +3,19 @@ import { createTRPCRouter, publicProcedure, organizationProcedure, officerProced
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
+import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
+
+const DSAR_TYPE_LABELS: Record<DSARType, string> = {
+  ACCESS: "Data Access Request",
+  ERASURE: "Data Erasure Request",
+  RECTIFICATION: "Data Rectification Request",
+  PORTABILITY: "Data Portability Request",
+  OBJECTION: "Data Processing Objection",
+  RESTRICTION: "Processing Restriction Request",
+  AUTOMATED_DECISION: "Automated Decision Review",
+  WITHDRAW_CONSENT: "Consent Withdrawal",
+  OTHER: "Data Subject Request",
+};
 
 // SLA Calculator service
 function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
@@ -668,6 +681,15 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
+      await sendDSARConfirmationEmail({
+        to: input.requesterEmail,
+        requesterName: input.requesterName,
+        organizationName: org.name,
+        publicId: request.publicId,
+        requestTypeLabel: DSAR_TYPE_LABELS[input.type],
+        dueDate,
+      });
+
       return { publicId: request.publicId };
     }),
 
@@ -685,6 +707,8 @@ export const dsarRouter = createTRPCRouter({
           acknowledgedAt: true,
           dueDate: true,
           completedAt: true,
+          metadata: true,
+          organization: { select: { name: true, slug: true } },
         },
       });
 
@@ -695,7 +719,111 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      return request;
+      let responseUrl: string | null = null;
+      let responseExpiresAt: string | null = null;
+      if (request.status === DSARStatus.COMPLETED && request.metadata && typeof request.metadata === "object") {
+        const meta = request.metadata as Record<string, unknown>;
+        if (typeof meta.responseUrl === "string") {
+          responseUrl = meta.responseUrl;
+        }
+        if (typeof meta.responseExpiresAt === "string") {
+          responseExpiresAt = meta.responseExpiresAt;
+        }
+      }
+
+      const { metadata: _metadata, ...rest } = request;
+      return { ...rest, responseUrl, responseExpiresAt };
+    }),
+
+  // Set the public response download link (officer/dashboard side)
+  setResponseLink: officerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        responseUrl: z.string().url().nullable(),
+        responseExpiresAt: z.string().datetime().nullable().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.dSARRequest.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { id: true, metadata: true },
+      });
+
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "DSAR request not found" });
+      }
+
+      const existingMetadata = (request.metadata && typeof request.metadata === "object")
+        ? (request.metadata as Record<string, unknown>)
+        : {};
+
+      const nextMetadata: Record<string, unknown> = { ...existingMetadata };
+      if (input.responseUrl) {
+        nextMetadata.responseUrl = input.responseUrl;
+        nextMetadata.responseExpiresAt = input.responseExpiresAt ?? null;
+      } else {
+        delete nextMetadata.responseUrl;
+        delete nextMetadata.responseExpiresAt;
+      }
+
+      const updated = await ctx.prisma.dSARRequest.update({
+        where: { id: input.id },
+        data: { metadata: nextMetadata },
+      });
+
+      await ctx.prisma.dSARAuditLog.create({
+        data: {
+          dsarRequestId: input.id,
+          action: input.responseUrl ? "RESPONSE_LINK_SET" : "RESPONSE_LINK_CLEARED",
+          performedBy: ctx.session.user.id,
+          details: { hasExpiry: Boolean(input.responseExpiresAt) },
+        },
+      });
+
+      return updated;
+    }),
+
+  // Withdraw a public request (data subject self-cancel)
+  withdrawPublic: publicProcedure
+    .input(z.object({ publicId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.dSARRequest.findUnique({
+        where: { publicId: input.publicId },
+        select: { id: true, status: true },
+      });
+
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Request not found" });
+      }
+
+      const finalStates: DSARStatus[] = [
+        DSARStatus.COMPLETED,
+        DSARStatus.REJECTED,
+        DSARStatus.CANCELLED,
+      ];
+      if (finalStates.includes(request.status)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This request is already finalised and cannot be withdrawn.",
+        });
+      }
+
+      await ctx.prisma.dSARRequest.update({
+        where: { id: request.id },
+        data: { status: DSARStatus.CANCELLED, completedAt: new Date() },
+      });
+
+      await ctx.prisma.dSARAuditLog.create({
+        data: {
+          dsarRequestId: request.id,
+          action: "REQUEST_WITHDRAWN_PUBLIC",
+          details: { previousStatus: request.status },
+        },
+      });
+
+      return { success: true };
     }),
 
   // ============================================================
