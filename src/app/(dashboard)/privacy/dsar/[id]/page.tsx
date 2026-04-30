@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,6 +90,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
   const [messageForm, setMessageForm] = useState({ subject: "", content: "" });
+  const [responseLinkDraft, setResponseLinkDraft] = useState({ url: "", expiresAt: "" });
 
   const { data: request, isLoading } = trpc.dsar.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -152,6 +153,30 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
+
+  const setResponseLink = trpc.dsar.setResponseLink.useMutation({
+    onSuccess: (_data, variables) => {
+      toast.success(
+        variables.responseUrl
+          ? tp("responseLink.saved")
+          : tp("responseLink.cleared")
+      );
+      utils.dsar.getById.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  useEffect(() => {
+    const meta = (request?.metadata && typeof request.metadata === "object")
+      ? (request.metadata as Record<string, unknown>)
+      : null;
+    setResponseLinkDraft({
+      url: typeof meta?.responseUrl === "string" ? meta.responseUrl : "",
+      expiresAt: typeof meta?.responseExpiresAt === "string" ? meta.responseExpiresAt.slice(0, 10) : "",
+    });
+  }, [request?.metadata]);
 
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,6 +241,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
   const completedTasks = request.tasks?.filter(t => t.status === "COMPLETED").length ?? 0;
   const totalTasks = request.tasks?.length ?? 0;
+
+  const responseMeta = (request.metadata && typeof request.metadata === "object")
+    ? (request.metadata as Record<string, unknown>)
+    : null;
+  const existingResponseUrl = typeof responseMeta?.responseUrl === "string" ? responseMeta.responseUrl : "";
+  const existingResponseExpiresAt = typeof responseMeta?.responseExpiresAt === "string" ? responseMeta.responseExpiresAt : "";
   const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   const daysRemaining = request.daysUntilDue ?? 0;
   const isCompleted = request.status === "COMPLETED" || request.status === "CANCELLED" || request.status === "REJECTED";
@@ -360,6 +391,85 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           )}
         </CardContent>
       </Card>
+
+      {/* Response Download Link (visible to requester on public status page) */}
+      {request.status === "COMPLETED" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{tp("responseLink.title")}</CardTitle>
+            <CardDescription>{tp("responseLink.description")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              className="grid gap-4 sm:grid-cols-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!organization?.id) return;
+                setResponseLink.mutate({
+                  organizationId: organization.id,
+                  id,
+                  responseUrl: responseLinkDraft.url || null,
+                  responseExpiresAt: responseLinkDraft.expiresAt
+                    ? new Date(responseLinkDraft.expiresAt).toISOString()
+                    : null,
+                });
+              }}
+            >
+              <div className="sm:col-span-2 space-y-2">
+                <Label htmlFor="response-url">{tp("responseLink.urlLabel")}</Label>
+                <Input
+                  id="response-url"
+                  type="url"
+                  placeholder={tp("responseLink.urlPlaceholder")}
+                  value={responseLinkDraft.url}
+                  onChange={(e) => setResponseLinkDraft((d) => ({ ...d, url: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="response-expires">{tp("responseLink.expiresLabel")}</Label>
+                <Input
+                  id="response-expires"
+                  type="date"
+                  value={responseLinkDraft.expiresAt}
+                  onChange={(e) => setResponseLinkDraft((d) => ({ ...d, expiresAt: e.target.value }))}
+                />
+              </div>
+              <div className="sm:col-span-3 flex flex-wrap gap-2 justify-end">
+                {existingResponseUrl && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      if (!organization?.id) return;
+                      setResponseLink.mutate({
+                        organizationId: organization.id,
+                        id,
+                        responseUrl: null,
+                        responseExpiresAt: null,
+                      });
+                    }}
+                    disabled={setResponseLink.isPending}
+                  >
+                    {tp("responseLink.clear")}
+                  </Button>
+                )}
+                <Button
+                  type="submit"
+                  disabled={
+                    setResponseLink.isPending ||
+                    !responseLinkDraft.url ||
+                    (responseLinkDraft.url === existingResponseUrl &&
+                      responseLinkDraft.expiresAt === (existingResponseExpiresAt ? existingResponseExpiresAt.slice(0, 10) : ""))
+                  }
+                >
+                  {setResponseLink.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {tp("responseLink.save")}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Tabs */}
       <Tabs defaultValue="tasks">

@@ -811,6 +811,17 @@
         "details": "Detalles de la solicitud",
         "empty": "-"
       },
+      "responseLink": {
+        "title": "Enlace de descarga de respuesta",
+        "description": "Pega una URL segura donde el solicitante pueda descargar su respuesta. Será visible en la página pública de estado.",
+        "urlLabel": "URL de descarga",
+        "urlPlaceholder": "https://...",
+        "expiresLabel": "Caduca (opcional)",
+        "save": "Guardar enlace",
+        "clear": "Eliminar enlace",
+        "saved": "Enlace de respuesta guardado",
+        "cleared": "Enlace de respuesta eliminado"
+      },
       "tabs": {
         "tasks": "Tareas ({count})",
         "communications": "Comunicaciones ({count})",
@@ -1790,6 +1801,130 @@
       "portability": "Derecho a la portabilidad",
       "objection": "Derecho de oposición",
       "restriction": "Derecho a la limitación del tratamiento"
+    }
+  },
+  "dsarPublic": {
+    "form": {
+      "loadingError": {
+        "title": "Formulario no disponible",
+        "description": "No encontramos un formulario activo de solicitud de acceso para esta organización.",
+        "hint": "Verifica el enlace que utilizaste o contacta directamente con la organización."
+      },
+      "header": {
+        "fallbackDescription": "Envía una solicitud sobre tus datos personales en poder de {orgName}"
+      },
+      "card": {
+        "title": "Tu solicitud",
+        "description": "Completa la información a continuación para que podamos procesar tu solicitud"
+      },
+      "fields": {
+        "requestTypeLabel": "¿Qué deseas hacer?",
+        "requestTypePlaceholder": "Selecciona el tipo de solicitud",
+        "name": "Nombre completo",
+        "namePlaceholder": "Ana García",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "tu@ejemplo.com",
+        "phone": "Teléfono",
+        "phonePlaceholder": "+34 612 345 678",
+        "relationshipLabel": "Relación",
+        "relationshipPlaceholder": "Selecciona tu relación",
+        "details": "Detalles adicionales",
+        "detailsPlaceholder": "Indica cualquier información adicional que pueda ayudarnos a procesar tu solicitud..."
+      },
+      "relationship": {
+        "customer": "Cliente",
+        "employee": "Empleado/a",
+        "jobApplicant": "Candidato/a",
+        "websiteVisitor": "Visitante del sitio web",
+        "other": "Otro"
+      },
+      "consent": {
+        "retention": "Tus datos de contacto se tratarán únicamente para verificar tu identidad y atender esta solicitud. Se conservarán durante el procesamiento y se eliminarán automáticamente {days} días después de la finalización.",
+        "privacyNoticeLink": "Consulta nuestra política de privacidad para más detalles.",
+        "checkbox": "Entiendo que mis datos de contacto se tratarán para atender esta solicitud y consiento dicho tratamiento."
+      },
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando...",
+      "requiredMark": "*",
+      "types": {
+        "ACCESS": { "label": "Acceder a mis datos", "description": "Obtener una copia de los datos personales que se tienen sobre ti" },
+        "ERASURE": { "label": "Eliminar mis datos", "description": "Solicitar la supresión de tus datos personales" },
+        "RECTIFICATION": { "label": "Corregir mis datos", "description": "Solicitar la corrección de datos personales inexactos" },
+        "PORTABILITY": { "label": "Exportar mis datos", "description": "Recibir tus datos en un formato portable" },
+        "OBJECTION": { "label": "Oponerme al tratamiento", "description": "Oponerte a cómo se tratan tus datos" },
+        "RESTRICTION": { "label": "Limitar el tratamiento", "description": "Limitar cómo se utilizan tus datos" },
+        "AUTOMATED_DECISION": { "label": "Decisiones automatizadas", "description": "Solicitar revisión humana de decisiones automatizadas" },
+        "WITHDRAW_CONSENT": { "label": "Retirar consentimiento", "description": "Retirar el consentimiento prestado anteriormente" },
+        "OTHER": { "label": "Otra solicitud", "description": "Otro tipo de solicitud relacionada con la protección de datos" }
+      },
+      "success": {
+        "title": "Solicitud enviada",
+        "fallbackDescription": "Hemos recibido tu solicitud",
+        "referenceLabel": "Número de referencia",
+        "copyAriaLabel": "Copiar número de referencia",
+        "copiedAriaLabel": "Copiado",
+        "emailSentLead": "Hemos enviado una confirmación a ",
+        "emailSentTrail": " con esta referencia y un enlace para seguir el progreso. Guárdalo — lo necesitarás para consultar el estado.",
+        "checkStatus": "Consultar estado de la solicitud"
+      },
+      "languageSwitcher": "Idioma"
+    },
+    "status": {
+      "loadingError": {
+        "title": "Solicitud no encontrada",
+        "description": "No encontramos ninguna solicitud con este número de referencia.",
+        "hint": "Verifica el número de referencia en tu correo de confirmación."
+      },
+      "header": {
+        "title": "Estado de la solicitud",
+        "fallbackDescription": "Sigue el progreso de tu solicitud",
+        "trackingDescription": "Siguiendo tu {requestType} con {orgName}"
+      },
+      "overallProgress": "Progreso general",
+      "currentlyProcessing": "Estamos procesando tu solicitud",
+      "rejectedNotice": "Esta solicitud fue rechazada. Contacta con la organización para más detalles.",
+      "cancelledNotice": "Esta solicitud fue cancelada. Contacta con la organización para más detalles.",
+      "expectedCompletion": "Finalización prevista",
+      "completedLabel": "Completada",
+      "daysOverdue": "{count, plural, one {# día de retraso} other {# días de retraso}}",
+      "daysRemaining": "{count, plural, one {# día restante} other {# días restantes}}",
+      "keyDates": "Fechas clave",
+      "requestReceived": "Solicitud recibida",
+      "acknowledged": "Acusada de recibo",
+      "completedDate": "Completada",
+      "timeline": {
+        "submitted": "Enviada",
+        "identityVerified": "Identidad verificada",
+        "inProgress": "En proceso",
+        "dataCollected": "Datos recopilados",
+        "completed": "Completada"
+      },
+      "typeLabels": {
+        "ACCESS": "Solicitud de acceso a datos",
+        "ERASURE": "Solicitud de supresión de datos",
+        "RECTIFICATION": "Solicitud de rectificación de datos",
+        "PORTABILITY": "Solicitud de portabilidad de datos",
+        "OBJECTION": "Oposición al tratamiento de datos",
+        "RESTRICTION": "Solicitud de limitación del tratamiento",
+        "AUTOMATED_DECISION": "Revisión de decisión automatizada",
+        "WITHDRAW_CONSENT": "Retirada de consentimiento",
+        "OTHER": "Solicitud del interesado"
+      },
+      "withdraw": {
+        "button": "Retirar esta solicitud",
+        "dialogTitle": "¿Retirar tu solicitud?",
+        "dialogDescription": "Si ya no necesitas esta solicitud, la cancelaremos. Esta acción no se puede deshacer, pero puedes enviar una nueva solicitud cuando quieras.",
+        "confirm": "Sí, retirar",
+        "cancel": "Mantener solicitud abierta",
+        "successTitle": "Solicitud retirada",
+        "successDescription": "Tu solicitud ha sido cancelada."
+      },
+      "download": {
+        "title": "Tus datos están listos",
+        "description": "La organización ha publicado tu respuesta. Puedes descargarla desde el siguiente enlace.",
+        "download": "Descargar respuesta",
+        "expiresOn": "Disponible hasta el {date}"
+      }
     }
   },
   "assessments": {
