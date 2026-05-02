@@ -3,6 +3,8 @@ import { createTRPCRouter, protectedProcedure, organizationProcedure } from "../
 import { TRPCError } from "@trpc/server";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { getSecurityModule } from "@/lib/security";
+import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
+import { logger } from "@/lib/logger";
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
@@ -128,6 +130,15 @@ export const organizationRouter = createTRPCRouter({
           changes: { name: input.name, slug: input.slug },
         },
       });
+
+      // Seed a default DSAR intake form so the public portal works out of the box
+      try {
+        await ensureDefaultIntakeForm(ctx.prisma, organization.id);
+      } catch (error) {
+        logger.error("Failed to seed default DSAR intake form", error, {
+          organizationId: organization.id,
+        });
+      }
 
       // Auto-link to Customer for Privacy Professionals
       try {
