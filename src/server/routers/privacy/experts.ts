@@ -188,7 +188,7 @@ export const expertsRouter = createTRPCRouter({
                   <p style="margin:0;color:#6b7280;font-size:13px;">Sent to: ${escapeHtml(expert?.name ?? "Expert")}${expert?.firm ? ` — ${escapeHtml(expert.firm)}` : ""}</p>
                 </div>
                 ${messageLine}
-                <p style="margin-top:16px;color:#6b7280;font-size:13px;">If you don't hear back within 2 business days, please contact <a href="mailto:${brand.supportEmail}" style="color:#2563eb;">${brand.supportEmail}</a>.</p>
+                <p style="margin-top:16px;color:#6b7280;font-size:13px;">If you don't hear back within 2 business days, please contact <a href="mailto:support@rindogatan.com" style="color:#2563eb;">support@rindogatan.com</a>.</p>
                 <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
                 <p style="color:#9ca3af;font-size:11px;">${footer}</p>
               </div>
