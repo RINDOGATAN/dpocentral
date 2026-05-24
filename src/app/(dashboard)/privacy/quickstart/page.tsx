@@ -44,6 +44,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 
 // ============================================================
 // ICON MAP
@@ -600,6 +601,8 @@ export default function QuickstartPage() {
               </CardContent>
             </Card>
           </div>
+
+          <DeploymentExpertCta />
 
           <div className="flex justify-end">
             <Button
