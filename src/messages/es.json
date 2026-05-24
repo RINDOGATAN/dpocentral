@@ -2084,8 +2084,8 @@
     }
   },
   "deploymentCta": {
-    "heading": "¿Quieres alojar DPO Central en tu infraestructura?",
-    "body": "Expertos en despliegue pueden ayudarte a configurar y mantener tu propia instancia.",
+    "heading": "Ayuda técnica para empezar",
+    "body": "Y formación puntual específica por módulo (gratis).",
     "findExpert": "Buscar experto",
     "dismiss": "Cerrar"
   },

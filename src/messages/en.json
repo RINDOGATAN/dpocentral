@@ -2084,8 +2084,8 @@
     }
   },
   "deploymentCta": {
-    "heading": "Want to self-host DPO Central?",
-    "body": "Deployment experts can help you set up and maintain your own instance.",
+    "heading": "Technical help getting started",
+    "body": "And ad hoc, module-specific training (free).",
     "findExpert": "Find Expert",
     "dismiss": "Dismiss"
   },
