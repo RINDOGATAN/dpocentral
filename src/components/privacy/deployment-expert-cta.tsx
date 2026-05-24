@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Server, X } from "lucide-react";
 import { features } from "@/config/features";
 
-const DISMISS_KEY = "dpc-deployment-cta-dismissed";
+const DISMISS_KEY = "dpc-deployment-cta-dismissed-v2";
 
 export function DeploymentExpertCta() {
   const [visible, setVisible] = useState(false);
