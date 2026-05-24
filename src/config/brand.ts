@@ -73,7 +73,7 @@ const defaultBrand: BrandConfig = {
   appUrl: "https://dpocentral.todo.law",
   termsOfUseUrl: "https://todo.law/terms",
   privacyPolicyUrl: "https://todo.law/privacy",
-  supportEmail: "hello@todo.law",
+  supportEmail: "support@rindogatan.com",
   emailFrom: "noreply@todo.law",
   logoPath: "/apple-touch-icon.png",
   faviconPath: "/favicon.png",
