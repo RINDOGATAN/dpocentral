@@ -266,7 +266,7 @@ export default function VendorsPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
           <TabsTrigger value="active">{t("tabs.active")}</TabsTrigger>
           <TabsTrigger value="review">{t("tabs.review")}</TabsTrigger>
