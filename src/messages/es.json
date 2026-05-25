@@ -1925,6 +1925,14 @@
         "download": "Descargar respuesta",
         "expiresOn": "Disponible hasta el {date}"
       }
+    },
+    "email": {
+      "subject": "{orgName}: Hemos recibido tu solicitud",
+      "greeting": "Hola {name},",
+      "body": "{orgName} ha recibido tu {requestType}. Te responderemos antes del {dueDate}.",
+      "referenceLabel": "Número de referencia",
+      "ctaText": "Comprobar estado de la solicitud",
+      "footer": "Guarda este correo o marca el enlace anterior para seguir el progreso. Podemos contactarte en esta dirección si necesitamos verificar tu identidad. Tus datos de contacto se utilizarán únicamente para tramitar esta solicitud — nunca para marketing."
     }
   },
   "assessments": {

@@ -5,18 +5,6 @@ import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@p
 import { addDays } from "date-fns";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 
-const DSAR_TYPE_LABELS: Record<DSARType, string> = {
-  ACCESS: "Data Access Request",
-  ERASURE: "Data Erasure Request",
-  RECTIFICATION: "Data Rectification Request",
-  PORTABILITY: "Data Portability Request",
-  OBJECTION: "Data Processing Objection",
-  RESTRICTION: "Processing Restriction Request",
-  AUTOMATED_DECISION: "Automated Decision Review",
-  WITHDRAW_CONSENT: "Consent Withdrawal",
-  OTHER: "Data Subject Request",
-};
-
 // SLA Calculator service
 function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
   return addDays(receivedAt, jurisdictionDeadlineDays);
@@ -627,6 +615,7 @@ export const dsarRouter = createTRPCRouter({
         relationship: z.string().optional(),
         description: z.string().optional(),
         requestedData: z.string().optional(),
+        locale: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input: rawInput }) => {
@@ -686,8 +675,9 @@ export const dsarRouter = createTRPCRouter({
         requesterName: input.requesterName,
         organizationName: org.name,
         publicId: request.publicId,
-        requestTypeLabel: DSAR_TYPE_LABELS[input.type],
+        type: input.type,
         dueDate,
+        locale: input.locale,
       });
 
       return { publicId: request.publicId };
