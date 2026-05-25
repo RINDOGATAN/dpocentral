@@ -1925,6 +1925,14 @@
         "download": "Download response",
         "expiresOn": "Available until {date}"
       }
+    },
+    "email": {
+      "subject": "{orgName}: We received your data request",
+      "greeting": "Hello {name},",
+      "body": "{orgName} has received your {requestType}. We will respond by {dueDate}.",
+      "referenceLabel": "Reference number",
+      "ctaText": "Check Request Status",
+      "footer": "Save this email or bookmark the link above to track progress. We may contact you at this address if we need to verify your identity. Your contact details will be used solely to fulfill this request — never for marketing."
     }
   },
   "assessments": {

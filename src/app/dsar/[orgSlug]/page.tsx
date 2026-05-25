@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,7 @@ const ALL_TYPES: DSARType[] = [
 export default function PublicDSARPage() {
   const params = useParams();
   const orgSlug = params.orgSlug as string;
+  const locale = useLocale();
   const t = useTranslations("dsarPublic.form");
 
   const { data: formConfig, isLoading: configLoading, error: configError } =
@@ -65,6 +66,7 @@ export default function PublicDSARPage() {
       requesterPhone: formData.phone || undefined,
       relationship: formData.relationship || undefined,
       description: formData.description || undefined,
+      locale,
     });
   };
 
