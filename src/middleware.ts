@@ -120,6 +120,19 @@ export default function middleware(request: NextRequest) {
     pathname.includes(".")
   ) {
     const response = currencyResponse || NextResponse.next();
+    // Allow shareable locale-forced links into the public DSAR portal:
+    // `/dsar/<slug>?lang=es` sets the NEXT_LOCALE cookie so SSR picks
+    // the right language on first render (no JS-side flash).
+    if (pathname.startsWith("/dsar")) {
+      const langParam = request.nextUrl.searchParams.get("lang");
+      if (langParam && (locales as readonly string[]).includes(langParam)) {
+        response.cookies.set("NEXT_LOCALE", langParam, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365,
+          sameSite: "lax",
+        });
+      }
+    }
     applyCsp(response);
     return response;
   }
