@@ -31,7 +31,7 @@ All list pages: debounced search, controlled Tabs, mobile/desktop layouts, respo
 
 - Public portal: `/dsar/[orgSlug]` — wired to `dsar.submitPublic`, consent checkbox required, returns publicId, rate-limited (5/10min/IP via `dsarPublicLimiter` in middleware). Status page at `/dsar/status/[token]` calls `dsar.checkStatus` with the publicId.
 - Bad slug → 404 card via `dsar.getPublicForm` validation on mount.
-- Auto-redaction: `/api/cron/dsar-redaction` redacts PII from completed DSARs after retention period (default 90 days). Endpoint exists, not currently scheduled.
+- Auto-redaction: `/api/cron/dsar-redaction` redacts PII from completed DSARs after retention period (default 90 days). Scheduled daily at 03:00 UTC via `vercel.json` (`CRON_SECRET` env required).
 - Manual redact/delete: `redactDSAR` and `deleteDSAR` mutations (admin only)
 - Audit trail survives redaction (actions + timestamps, no PII)
 - Settings: `DSARIntakeForm.retentionDays`, `privacyNoticeUrl`
@@ -78,7 +78,7 @@ The **Privacy Program Report** is the consolidated board-level export: Cover + K
 
 ## Cron Jobs
 
-`/api/cron/dsar-redaction`: DSAR PII auto-redaction. Currently not scheduled in `vercel.json` — endpoint exists for manual / future cron use. The full notifications cron (deadline alerts, email/in-app/Slack) was removed; reinstating it requires restoring `dispatchNotification` in `src/server/services/notifications/dispatcher.ts` and adding a new cron entry.
+`/api/cron/dsar-redaction`: DSAR PII auto-redaction. Scheduled daily at 03:00 UTC in `vercel.json`; requires `CRON_SECRET` env to authenticate. The full notifications cron (deadline alerts, email/in-app/Slack) was removed; reinstating it requires restoring `dispatchNotification` in `src/server/services/notifications/dispatcher.ts` and adding a new cron entry.
 
 ## Deploy
 

@@ -11,9 +11,9 @@ export const dynamic = "force-dynamic";
 // Redacts personal data from completed DSARs after their retention period.
 // Default 90 days post-completion; configurable per-org via DSARIntakeForm.
 //
-// Not currently scheduled in vercel.json — this endpoint exists so it can be
-// re-enabled when needed. The full notifications cron (email/in-app/slack)
-// was removed; only DSAR redaction lives here now.
+// Scheduled in vercel.json at "0 3 * * *" (daily 03:00 UTC). The full
+// notifications cron (email/in-app/slack) was removed; only DSAR redaction
+// runs from here now.
 // ---------------------------------------------------------------------------
 
 export async function GET(request: Request) {
