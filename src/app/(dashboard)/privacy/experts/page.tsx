@@ -113,7 +113,7 @@ export default function ExpertsPage() {
       </div>
 
       <Tabs defaultValue="directory" className="space-y-4">
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="directory">{tEng("tabDirectory")}</TabsTrigger>
           <TabsTrigger value="history">{tEng("tabHistory")}</TabsTrigger>
         </TabsList>

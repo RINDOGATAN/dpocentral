@@ -171,7 +171,7 @@ export default function AssessmentsPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
           <TabsTrigger value="dpia">{t("tabs.dpia")}</TabsTrigger>
           <TabsTrigger value="vendor">{t("tabs.vendor")}</TabsTrigger>

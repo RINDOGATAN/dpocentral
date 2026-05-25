@@ -117,7 +117,7 @@ export default function RegulationsPage() {
       </div>
 
       <Tabs defaultValue="catalog">
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="catalog">{t("tabs.catalog")}</TabsTrigger>
           <TabsTrigger value="applied">
             {t("tabs.appliedWithCount", { count: applied?.jurisdictions.length ?? 0 })}

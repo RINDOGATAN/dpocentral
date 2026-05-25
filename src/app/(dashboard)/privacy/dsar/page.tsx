@@ -193,7 +193,7 @@ export default function DSARPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
           <TabsTrigger value="open">{t("tabs.open")}</TabsTrigger>
           <TabsTrigger value="overdue">{t("tabs.overdue")}</TabsTrigger>
