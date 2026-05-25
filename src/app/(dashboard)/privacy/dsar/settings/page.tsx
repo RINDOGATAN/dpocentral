@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,17 +13,20 @@ import { ArrowLeft, Loader2, ExternalLink, Copy, Check } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
-const dsarTypes = [
-  { value: "ACCESS", label: "Access Request", description: "Request to access personal data" },
-  { value: "RECTIFICATION", label: "Rectification", description: "Request to correct data" },
-  { value: "ERASURE", label: "Erasure (Right to be Forgotten)", description: "Request to delete data" },
-  { value: "PORTABILITY", label: "Data Portability", description: "Request to export data" },
-  { value: "OBJECTION", label: "Objection", description: "Object to data processing" },
-  { value: "RESTRICTION", label: "Restriction", description: "Restrict data processing" },
-];
+const dsarTypeValues = [
+  "ACCESS",
+  "RECTIFICATION",
+  "ERASURE",
+  "PORTABILITY",
+  "OBJECTION",
+  "RESTRICTION",
+] as const;
 
 export default function DSARSettingsPage() {
   const { organization } = useOrganization();
+  const t = useTranslations("dsarSettings");
+  const tTypes = useTranslations("dsarPublic.status.typeLabels");
+  const tDesc = useTranslations("dsarSettings.typeDescriptions");
   const [isSaving, setIsSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -122,34 +126,30 @@ export default function DSARSettingsPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/privacy/dsar">
-          <Button variant="ghost" size="icon" aria-label="Back">
+          <Button variant="ghost" size="icon" aria-label={t("back")}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">DSAR Intake Settings</h1>
-          <p className="text-muted-foreground">
-            Configure your public data subject request portal
-          </p>
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
       {/* Portal URL */}
       <Card>
         <CardHeader>
-          <CardTitle>Public Portal</CardTitle>
-          <CardDescription>
-            Share this link with data subjects to submit requests
-          </CardDescription>
+          <CardTitle>{t("portalCard.title")}</CardTitle>
+          <CardDescription>{t("portalCard.description")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
             <Input value={portalUrl} readOnly className="font-mono text-sm" />
-            <Button variant="outline" size="icon" onClick={copyUrl} aria-label="Copy URL">
+            <Button variant="outline" size="icon" onClick={copyUrl} aria-label={t("portalCard.copyUrl")}>
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </Button>
             <Link href={portalUrl} target="_blank">
-              <Button variant="outline" size="icon" aria-label="Open in new tab">
+              <Button variant="outline" size="icon" aria-label={t("portalCard.openInNewTab")}>
                 <ExternalLink className="w-4 h-4" />
               </Button>
             </Link>
@@ -161,7 +161,7 @@ export default function DSARSettingsPage() {
               checked={formData.isActive}
               onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
             />
-            <Label htmlFor="isActive">Portal is active and accepting requests</Label>
+            <Label htmlFor="isActive">{t("portalCard.activeLabel")}</Label>
           </div>
         </CardContent>
       </Card>
@@ -170,15 +170,13 @@ export default function DSARSettingsPage() {
         {/* Form Configuration */}
         <Card>
           <CardHeader>
-            <CardTitle>Form Configuration</CardTitle>
-            <CardDescription>
-              Customize the intake form appearance
-            </CardDescription>
+            <CardTitle>{t("formCard.title")}</CardTitle>
+            <CardDescription>{t("formCard.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Form Name (Internal)</Label>
+                <Label htmlFor="name">{t("formCard.name")}</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -186,7 +184,7 @@ export default function DSARSettingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="slug">URL Slug</Label>
+                <Label htmlFor="slug">{t("formCard.slug")}</Label>
                 <Input
                   id="slug"
                   value={formData.slug}
@@ -196,7 +194,7 @@ export default function DSARSettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="title">Form Title (Public)</Label>
+              <Label htmlFor="title">{t("formCard.publicTitle")}</Label>
               <Input
                 id="title"
                 value={formData.title}
@@ -205,7 +203,7 @@ export default function DSARSettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Form Description</Label>
+              <Label htmlFor="description">{t("formCard.formDescription")}</Label>
               <Textarea
                 id="description"
                 rows={2}
@@ -215,7 +213,7 @@ export default function DSARSettingsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="thankYouMessage">Thank You Message</Label>
+              <Label htmlFor="thankYouMessage">{t("formCard.thankYou")}</Label>
               <Textarea
                 id="thankYouMessage"
                 rows={2}
@@ -229,32 +227,30 @@ export default function DSARSettingsPage() {
         {/* Request Types */}
         <Card>
           <CardHeader>
-            <CardTitle>Enabled Request Types</CardTitle>
-            <CardDescription>
-              Select which types of requests can be submitted
-            </CardDescription>
+            <CardTitle>{t("typesCard.title")}</CardTitle>
+            <CardDescription>{t("typesCard.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              {dsarTypes.map((type) => (
+              {dsarTypeValues.map((type) => (
                 <div
-                  key={type.value}
+                  key={type}
                   className={`p-4 border cursor-pointer transition-colors ${
-                    formData.enabledTypes.includes(type.value)
+                    formData.enabledTypes.includes(type)
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/50"
                   }`}
-                  onClick={() => toggleType(type.value)}
+                  onClick={() => toggleType(type)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{type.label}</span>
+                    <span className="font-medium">{tTypes(type)}</span>
                     <Switch
-                      checked={formData.enabledTypes.includes(type.value)}
-                      onCheckedChange={() => toggleType(type.value)}
+                      checked={formData.enabledTypes.includes(type)}
+                      onCheckedChange={() => toggleType(type)}
                       onClick={(e) => e.stopPropagation()}
                     />
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">{type.description}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{tDesc(type)}</p>
                 </div>
               ))}
             </div>
@@ -264,10 +260,8 @@ export default function DSARSettingsPage() {
         {/* Custom CSS */}
         <Card>
           <CardHeader>
-            <CardTitle>Custom Styling</CardTitle>
-            <CardDescription>
-              Add custom CSS to match your brand (optional)
-            </CardDescription>
+            <CardTitle>{t("cssCard.title")}</CardTitle>
+            <CardDescription>{t("cssCard.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Textarea
@@ -283,22 +277,22 @@ export default function DSARSettingsPage() {
 
         {saveSettings.error && (
           <div className="text-sm text-destructive">
-            Error: {saveSettings.error.message}
+            {t("actions.errorPrefix", { message: saveSettings.error.message })}
           </div>
         )}
 
         <div className="flex justify-end gap-4">
           <Link href="/privacy/dsar">
-            <Button variant="outline" type="button">Cancel</Button>
+            <Button variant="outline" type="button">{t("actions.cancel")}</Button>
           </Link>
           <Button type="submit" disabled={isSaving}>
             {isSaving ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                {t("actions.saving")}
               </>
             ) : (
-              "Save Settings"
+              t("actions.save")
             )}
           </Button>
         </div>

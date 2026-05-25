@@ -1803,6 +1803,49 @@
       "restriction": "Right to Restriction"
     }
   },
+  "dsarSettings": {
+    "title": "DSAR Intake Settings",
+    "subtitle": "Configure your public data subject request portal",
+    "back": "Back",
+    "portalCard": {
+      "title": "Public Portal",
+      "description": "Share this link with data subjects to submit requests",
+      "copyUrl": "Copy URL",
+      "openInNewTab": "Open in new tab",
+      "activeLabel": "Portal is active and accepting requests"
+    },
+    "formCard": {
+      "title": "Form Configuration",
+      "description": "Customize the intake form appearance",
+      "name": "Form Name (Internal)",
+      "slug": "URL Slug",
+      "publicTitle": "Form Title (Public)",
+      "formDescription": "Form Description",
+      "thankYou": "Thank You Message"
+    },
+    "typesCard": {
+      "title": "Enabled Request Types",
+      "description": "Select which types of requests can be submitted"
+    },
+    "typeDescriptions": {
+      "ACCESS": "Request to access personal data",
+      "RECTIFICATION": "Request to correct data",
+      "ERASURE": "Request to delete data",
+      "PORTABILITY": "Request to export data",
+      "OBJECTION": "Object to data processing",
+      "RESTRICTION": "Restrict data processing"
+    },
+    "cssCard": {
+      "title": "Custom Styling",
+      "description": "Add custom CSS to match your brand (optional)"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save Settings",
+      "errorPrefix": "Error: {message}"
+    }
+  },
   "dsarPublic": {
     "form": {
       "loadingError": {

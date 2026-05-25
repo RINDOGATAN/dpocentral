@@ -1803,6 +1803,49 @@
       "restriction": "Derecho a la limitación del tratamiento"
     }
   },
+  "dsarSettings": {
+    "title": "Configuración del formulario DSAR",
+    "subtitle": "Configura tu portal público de solicitudes",
+    "back": "Volver",
+    "portalCard": {
+      "title": "Portal público",
+      "description": "Comparte este enlace con los interesados para que envíen solicitudes",
+      "copyUrl": "Copiar URL",
+      "openInNewTab": "Abrir en una nueva pestaña",
+      "activeLabel": "El portal está activo y acepta solicitudes"
+    },
+    "formCard": {
+      "title": "Configuración del formulario",
+      "description": "Personaliza la apariencia del formulario",
+      "name": "Nombre del formulario (interno)",
+      "slug": "Slug de URL",
+      "publicTitle": "Título del formulario (público)",
+      "formDescription": "Descripción del formulario",
+      "thankYou": "Mensaje de agradecimiento"
+    },
+    "typesCard": {
+      "title": "Tipos de solicitud habilitados",
+      "description": "Selecciona qué tipos de solicitudes pueden enviarse"
+    },
+    "typeDescriptions": {
+      "ACCESS": "Solicitar acceso a los datos personales",
+      "RECTIFICATION": "Solicitar la corrección de los datos",
+      "ERASURE": "Solicitar la eliminación de los datos",
+      "PORTABILITY": "Solicitar la exportación de los datos",
+      "OBJECTION": "Oponerse al tratamiento de datos",
+      "RESTRICTION": "Restringir el tratamiento de datos"
+    },
+    "cssCard": {
+      "title": "Estilo personalizado",
+      "description": "Añade CSS personalizado para combinar con tu marca (opcional)"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "saving": "Guardando...",
+      "save": "Guardar cambios",
+      "errorPrefix": "Error: {message}"
+    }
+  },
   "dsarPublic": {
     "form": {
       "loadingError": {
