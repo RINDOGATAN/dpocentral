@@ -1,4 +1,5 @@
-import { Bot, AlertTriangle, CheckCircle2, Clock, ShieldCheck, Eye, BookOpen, Users, Database, Building2, ClipboardCheck, Shield, ArrowRightLeft, ExternalLink } from "lucide-react";
+import { Bot, AlertTriangle, CheckCircle2, Clock, ShieldCheck, Eye, BookOpen, Users, Database, Building2, ClipboardCheck, Shield, ArrowRightLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -7,45 +8,64 @@ import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
-const riskLevelConfig: Record<string, { color: string; label: string; description: string }> = {
-  UNACCEPTABLE: { color: "bg-red-100 text-red-800 border-transparent", label: "Unacceptable", description: "Prohibited — must be decommissioned" },
-  HIGH: { color: "bg-orange-100 text-orange-800 border-transparent", label: "High Risk", description: "Strict compliance obligations" },
-  LIMITED: { color: "bg-yellow-100 text-yellow-800 border-transparent", label: "Limited", description: "Transparency requirements" },
-  MINIMAL: { color: "bg-green-100 text-green-800 border-transparent", label: "Minimal", description: "No specific obligations" },
+const riskColors: Record<string, string> = {
+  UNACCEPTABLE: "bg-red-100 text-red-800 border-transparent",
+  HIGH: "bg-orange-100 text-orange-800 border-transparent",
+  LIMITED: "bg-yellow-100 text-yellow-800 border-transparent",
+  MINIMAL: "bg-green-100 text-green-800 border-transparent",
 };
 
-const riskExamples = [
-  { level: "UNACCEPTABLE", examples: "Social scoring by governments, real-time mass biometric surveillance in public spaces" },
-  { level: "HIGH", examples: "Recruitment and HR screening AI, credit scoring, student assessment and exam proctoring" },
-  { level: "LIMITED", examples: "Customer-facing chatbots, deepfake generation tools, emotion recognition systems" },
-  { level: "MINIMAL", examples: "Spam filters, AI-powered video games, inventory management systems" },
-];
+const riskLevels = ["UNACCEPTABLE", "HIGH", "LIMITED", "MINIMAL"] as const;
 
-export default function DocsAiGovernancePage() {
+export default async function DocsAiGovernancePage() {
+  const t = await getTranslations("docs.aiGovernance");
+
+  const statCards: { key: string; value: string; icon: typeof Bot; color: string }[] = [
+    { key: "total", value: "12", icon: Bot, color: "" },
+    { key: "highRisk", value: "3", icon: AlertTriangle, color: "text-orange-600" },
+    { key: "compliant", value: "9", icon: CheckCircle2, color: "text-green-600" },
+    { key: "review", value: "2", icon: Clock, color: "text-yellow-600" },
+  ];
+
+  const stepKeys = ["details", "classify", "document", "review"] as const;
+
+  const suggestionExamples: { key: string; suggested: string }[] = [
+    { key: "recruitment", suggested: "HIGH" },
+    { key: "chatbot", suggested: "LIMITED" },
+    { key: "spam", suggested: "MINIMAL" },
+  ];
+
+  const obligationItems: { key: string; icon: typeof ShieldCheck }[] = [
+    { key: "risk", icon: ShieldCheck },
+    { key: "data", icon: Database },
+    { key: "doc", icon: BookOpen },
+    { key: "records", icon: ClipboardCheck },
+    { key: "human", icon: Users },
+    { key: "accuracy", icon: Eye },
+  ];
+
+  const linkItems: { key: string; icon: typeof Building2 }[] = [
+    { key: "vendors", icon: Building2 },
+    { key: "assessments", icon: ClipboardCheck },
+    { key: "inventory", icon: Database },
+  ];
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">AI Governance Register</h1>
-        <p className="text-muted-foreground mt-1">
-          Classify, document, and monitor all AI systems in your organization. Stay ahead of the EU AI Act
-          and other emerging AI regulations with a centralized governance register.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="overview" title="Why AI Governance?" description="The EU AI Act introduces mandatory obligations for AI systems by August 2026. The AI Governance Register helps you classify, document, and monitor all AI systems in your organization.">
-        <FeatureMockup title="AI Governance Dashboard">
+      <DocSection id="overview" title={t("overview.title")} description={t("overview.description")}>
+        <FeatureMockup title={t("overview.mockupTitle")}>
           <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Total Systems", value: "12", icon: Bot, color: "" },
-              { label: "High Risk", value: "3", icon: AlertTriangle, color: "text-orange-600" },
-              { label: "Compliant", value: "9", icon: CheckCircle2, color: "text-green-600" },
-              { label: "Under Review", value: "2", icon: Clock, color: "text-yellow-600" },
-            ].map((stat) => {
+            {statCards.map((stat) => {
               const Icon = stat.icon;
               return (
-                <Card key={stat.label} className="hover:translate-y-0">
+                <Card key={stat.key} className="hover:translate-y-0">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                    <CardTitle className="text-xs font-medium">{stat.label}</CardTitle>
+                    <CardTitle className="text-xs font-medium">{t(`overview.stats.${stat.key}`)}</CardTitle>
                     <Icon className={`h-4 w-4 ${stat.color || "text-muted-foreground"}`} />
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
@@ -58,38 +78,38 @@ export default function DocsAiGovernancePage() {
         </FeatureMockup>
       </DocSection>
 
-      <DocSection id="risk-levels" title="EU AI Act Risk Classification">
-        <FeatureMockup title="Risk Level Badges">
+      <DocSection id="risk-levels" title={t("riskLevels.title")}>
+        <FeatureMockup title={t("riskLevels.badgesMockupTitle")}>
           <div className="space-y-4">
             <div className="flex flex-wrap gap-3">
-              {Object.entries(riskLevelConfig).map(([key, config]) => (
+              {riskLevels.map((key) => (
                 <div key={key} className="flex items-center gap-2">
-                  <Badge variant="outline" className={config.color}>{config.label}</Badge>
-                  <span className="text-xs text-muted-foreground">{config.description}</span>
+                  <Badge variant="outline" className={riskColors[key]}>{t(`riskLevels.labels.${key}`)}</Badge>
+                  <span className="text-xs text-muted-foreground">{t(`riskLevels.descriptions.${key}`)}</span>
                 </div>
               ))}
             </div>
           </div>
         </FeatureMockup>
 
-        <FeatureMockup title="Risk Classification Examples">
+        <FeatureMockup title={t("riskLevels.examplesMockupTitle")}>
           <div className="rounded-lg border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-muted/50">
-                  <th className="text-left font-medium px-4 py-2">Risk Level</th>
-                  <th className="text-left font-medium px-4 py-2">Example Use Cases</th>
+                  <th className="text-left font-medium px-4 py-2">{t("riskLevels.columnLevel")}</th>
+                  <th className="text-left font-medium px-4 py-2">{t("riskLevels.columnExamples")}</th>
                 </tr>
               </thead>
               <tbody>
-                {riskExamples.map((row, i) => (
-                  <tr key={row.level} className={i % 2 === 1 ? "bg-muted/20" : ""}>
+                {riskLevels.map((key, i) => (
+                  <tr key={key} className={i % 2 === 1 ? "bg-muted/20" : ""}>
                     <td className="px-4 py-2">
-                      <Badge variant="outline" className={`text-[10px] ${riskLevelConfig[row.level].color}`}>
-                        {riskLevelConfig[row.level].label}
+                      <Badge variant="outline" className={`text-[10px] ${riskColors[key]}`}>
+                        {t(`riskLevels.labels.${key}`)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-2 text-muted-foreground">{row.examples}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{t(`riskLevels.examples.${key}`)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -98,135 +118,98 @@ export default function DocsAiGovernancePage() {
         </FeatureMockup>
       </DocSection>
 
-      <DocSection id="registration" title="Registering AI Systems" description="Add AI systems to the governance register with structured metadata and risk classification.">
+      <DocSection id="registration" title={t("registration.title")} description={t("registration.description")}>
         <StepList
-          steps={[
-            { title: "Enter system details", description: "Provide the AI system name, purpose, provider, model type, and deployment context. Include details about the data it processes and the decisions it influences." },
-            { title: "Classify risk level", description: "Select the risk level based on the EU AI Act classification. The system suggests a risk level based on the stated purpose and category, but you make the final determination." },
-            { title: "Document compliance measures", description: "Record the compliance measures in place: human oversight mechanisms, transparency disclosures, training data documentation, and accuracy monitoring." },
-            { title: "Review and register", description: "Review all details and register the AI system. It enters the governance register and becomes subject to ongoing compliance monitoring." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`registration.steps.${k}.title`),
+            description: t(`registration.steps.${k}.description`),
+          }))}
         />
-        <InfoCallout type="tip" title="Link to existing vendors">
-          When registering an AI system, you can link it to an existing vendor in your vendor management module.
-          This connects the AI governance record to the vendor&apos;s risk profile, contract information, and DPA status.
+        <InfoCallout type="tip" title={t("registration.tipTitle")}>
+          {t("registration.tipBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="risk-suggestion" title="Automatic Risk Suggestion" description="The system analyzes the AI system's stated purpose and category to suggest an appropriate risk level.">
-        <FeatureMockup title="Risk Suggestion Example">
+      <DocSection id="risk-suggestion" title={t("suggestion.title")} description={t("suggestion.description")}>
+        <FeatureMockup title={t("suggestion.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { name: "Recruitment Screening Tool", purpose: "Automated CV filtering and candidate ranking", suggested: "HIGH" },
-              { name: "Customer Support Chatbot", purpose: "Answer FAQs and route support tickets", suggested: "LIMITED" },
-              { name: "Email Spam Filter", purpose: "Classify and filter unwanted emails", suggested: "MINIMAL" },
-            ].map((system) => (
-              <div key={system.name} className="flex items-center justify-between rounded-md border px-3 py-2.5">
+            {suggestionExamples.map((system) => (
+              <div key={system.key} className="flex items-center justify-between rounded-md border px-3 py-2.5">
                 <div>
                   <div className="flex items-center gap-2">
                     <Bot className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">{system.name}</span>
+                    <span className="text-sm font-medium">{t(`suggestion.examples.${system.key}.name`)}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 ml-6">{system.purpose}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 ml-6">{t(`suggestion.examples.${system.key}.purpose`)}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Suggested:</span>
-                  <Badge variant="outline" className={`text-[10px] ${riskLevelConfig[system.suggested].color}`}>
-                    {riskLevelConfig[system.suggested].label}
+                  <span className="text-xs text-muted-foreground">{t("suggestion.suggestedLabel")}</span>
+                  <Badge variant="outline" className={`text-[10px] ${riskColors[system.suggested]}`}>
+                    {t(`riskLevels.labels.${system.suggested}`)}
                   </Badge>
                 </div>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="info" title="Suggestion is a starting point">
-          The automatic risk suggestion uses keyword matching against the AI system&apos;s purpose and category fields.
-          It is intended as a helpful starting point, not a definitive classification. Human review is always required
-          to confirm the risk level, as context and nuance matter significantly in EU AI Act classification.
+        <InfoCallout type="info" title={t("suggestion.infoTitle")}>
+          {t("suggestion.infoBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="obligations" title="Compliance Obligations" description="Each risk level carries specific compliance obligations under the EU AI Act. The register tracks which obligations apply and their fulfillment status.">
-        <FeatureMockup title="High Risk Obligations">
+      <DocSection id="obligations" title={t("obligations.title")} description={t("obligations.description")}>
+        <FeatureMockup title={t("obligations.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { obligation: "Risk Management System", description: "Establish and maintain a continuous risk management process", icon: ShieldCheck },
-              { obligation: "Data Governance", description: "Ensure training, validation, and testing datasets meet quality criteria", icon: Database },
-              { obligation: "Technical Documentation", description: "Maintain detailed documentation of the system design and development", icon: BookOpen },
-              { obligation: "Record-Keeping", description: "Automatically log system events for traceability and auditability", icon: ClipboardCheck },
-              { obligation: "Human Oversight", description: "Design the system to allow effective human oversight during operation", icon: Users },
-              { obligation: "Accuracy & Robustness", description: "Achieve and maintain appropriate levels of accuracy, robustness, and cybersecurity", icon: Eye },
-            ].map((item) => {
+            {obligationItems.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.obligation} className="flex items-center gap-3 rounded-md border px-3 py-2.5">
+                <div key={item.key} className="flex items-center gap-3 rounded-md border px-3 py-2.5">
                   <Icon className="h-4 w-4 text-primary shrink-0" />
                   <div>
-                    <p className="text-sm font-medium">{item.obligation}</p>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                    <p className="text-sm font-medium">{t(`obligations.items.${item.key}.title`)}</p>
+                    <p className="text-xs text-muted-foreground">{t(`obligations.items.${item.key}.description`)}</p>
                   </div>
                 </div>
               );
             })}
           </div>
         </FeatureMockup>
-        <InfoCallout type="note" title="Limited risk transparency">
-          AI systems classified as LIMITED risk must clearly disclose to users that they are interacting with an AI system.
-          This applies to chatbots, emotion recognition, and deepfake generation tools. The register tracks whether
-          this transparency disclosure has been implemented.
+        <InfoCallout type="note" title={t("obligations.transparencyTitle")}>
+          {t("obligations.transparencyBody")}
         </InfoCallout>
-        <InfoCallout type="warning" title="August 2026 deadline">
-          The EU AI Act&apos;s obligations for high-risk AI systems become enforceable in August 2026. Organizations
-          should begin classifying and documenting their AI systems now to ensure compliance by the deadline.
-          Non-compliance can result in fines up to 35 million EUR or 7% of global annual turnover.
+        <InfoCallout type="warning" title={t("obligations.deadlineTitle")}>
+          {t("obligations.deadlineBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="linking" title="Integration with Other Modules" description="AI governance records connect to other DPO Central modules for a comprehensive compliance view.">
+      <DocSection id="linking" title={t("linking.title")} description={t("linking.description")}>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Building2 className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Vendors</p>
-              <p className="text-xs text-muted-foreground">Link AI systems to their providers for contract tracking, DPA status, and vendor risk monitoring.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <ClipboardCheck className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Assessments</p>
-              <p className="text-xs text-muted-foreground">Trigger AI impact assessments directly from the register. Assessment results link back to the AI system record.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Database className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Data Inventory</p>
-              <p className="text-xs text-muted-foreground">Map training data sources to your data inventory. Track which data assets feed into each AI system.</p>
-            </div>
-          </div>
+          {linkItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.key} className="flex items-start gap-3 rounded-lg border p-3">
+                <div className="rounded-md bg-primary/10 p-2">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium text-sm">{t(`linking.items.${item.key}.label`)}</p>
+                  <p className="text-xs text-muted-foreground">{t(`linking.items.${item.key}.desc`)}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </DocSection>
 
-      <DocSection id="ai-sentinel" title="AI Sentinel Integration" description="DPO Central serves as the lightweight privacy-compliance register for AI systems. For deep AI governance — risk classification history, compliance frameworks, oversight gates, AI incidents, policies — use AI Sentinel.">
+      <DocSection id="ai-sentinel" title={t("sentinel.title")} description={t("sentinel.description")}>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-start gap-3 rounded-lg border p-3">
             <div className="rounded-md bg-primary/10 p-2">
               <Building2 className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Vendor Import Creates AI Records</p>
-              <p className="text-xs text-muted-foreground">
-                When you import AI-capable vendors from the Vendor Catalog during quickstart,
-                DPO Central automatically creates AI System records with capabilities,
-                techniques, EU AI Act role, and risk classification from the catalog data.
-              </p>
+              <p className="font-medium text-sm">{t("sentinel.importTitle")}</p>
+              <p className="text-xs text-muted-foreground">{t("sentinel.importDesc")}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-lg border p-3">
@@ -234,51 +217,44 @@ export default function DocsAiGovernancePage() {
               <ArrowRightLeft className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Export to AI Sentinel</p>
-              <p className="text-xs text-muted-foreground">
-                Send your AI System records to AI Sentinel for deep governance management.
-                Exported systems are linked with a deep link back to AI Sentinel for
-                seamless navigation between apps.
-              </p>
+              <p className="font-medium text-sm">{t("sentinel.exportTitle")}</p>
+              <p className="text-xs text-muted-foreground">{t("sentinel.exportDesc")}</p>
             </div>
           </div>
         </div>
 
-        <FeatureMockup title="Integration Flow">
+        <FeatureMockup title={t("sentinel.mockupTitle")}>
           <div className="flex flex-col sm:flex-row items-center gap-4 text-sm">
             <div className="rounded-lg border p-3 text-center flex-1">
               <Database className="h-5 w-5 mx-auto text-muted-foreground mb-1" />
-              <p className="font-medium">Vendor.Watch</p>
-              <p className="text-xs text-muted-foreground">AI fields in catalog</p>
+              <p className="font-medium">{t("sentinel.stage1.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("sentinel.stage1.subtitle")}</p>
             </div>
             <span className="text-muted-foreground hidden sm:block">&rarr;</span>
             <span className="text-muted-foreground sm:hidden">&darr;</span>
             <div className="rounded-lg border border-primary/50 bg-primary/5 p-3 text-center flex-1">
               <Bot className="h-5 w-5 mx-auto text-primary mb-1" />
-              <p className="font-medium">DPO Central</p>
-              <p className="text-xs text-muted-foreground">Lightweight AI register</p>
+              <p className="font-medium">{t("sentinel.stage2.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("sentinel.stage2.subtitle")}</p>
             </div>
             <span className="text-muted-foreground hidden sm:block">&rarr;</span>
             <span className="text-muted-foreground sm:hidden">&darr;</span>
             <div className="rounded-lg border p-3 text-center flex-1">
               <Shield className="h-5 w-5 mx-auto text-blue-600 mb-1" />
-              <p className="font-medium">AI Sentinel</p>
-              <p className="text-xs text-muted-foreground">Deep AI governance</p>
+              <p className="font-medium">{t("sentinel.stage3.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("sentinel.stage3.subtitle")}</p>
             </div>
           </div>
         </FeatureMockup>
 
-        <InfoCallout type="info" title="Configuration required">
-          The AI Sentinel integration requires the AI_SENTINEL_API_URL and AI_SENTINEL_API_KEY
-          environment variables. When configured, you&apos;ll see the &quot;Send to AI Sentinel&quot;
-          button on the AI Systems list page. Systems that have been exported show a linked
-          badge and deep link on their detail page.
+        <InfoCallout type="info" title={t("sentinel.configTitle")}>
+          {t("sentinel.configBody")}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Regulations", href: "/privacy/docs/regulations" }}
-        next={{ title: "Premium Features", href: "/privacy/docs/premium" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/regulations" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/premium" }}
       />
     </div>
   );

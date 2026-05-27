@@ -1,112 +1,98 @@
 import { Building2, Briefcase } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { DocSection } from "@/components/docs/doc-section";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
-export default function DocsExpertsPage() {
+export default async function DocsExpertsPage() {
+  const t = await getTranslations("docs.experts");
+
+  const directoryItems = ["search", "specialization", "countryLang", "certifications", "contact"] as const;
+  const clientItems = ["dsars", "assessments", "incidents", "vendors", "lastActivity", "attention"] as const;
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Expert Help & Personas</h1>
-        <p className="text-muted-foreground mt-1">
-          DPO Central supports two types of users with tailored experiences for each.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
       <DocSection
         id="personas"
-        title="User Personas"
-        description="When you first sign in, you choose how you use the platform."
+        title={t("personas.title")}
+        description={t("personas.description")}
       >
         <div className="space-y-3 text-sm text-muted-foreground">
           <div className="flex items-start gap-3">
             <Building2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-foreground">Business Owner</p>
-              <p>
-                For users who need privacy compliance for their own organization. You get access
-                to the Expert Directory to connect with certified privacy professionals.
-              </p>
+              <p className="font-medium text-foreground">{t("personas.businessOwner.label")}</p>
+              <p>{t("personas.businessOwner.desc")}</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <Briefcase className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-foreground">Privacy Professional</p>
-              <p>
-                For lawyers and consultants who advise multiple organizations. You get a
-                &ldquo;My Clients&rdquo; dashboard showing all your client organizations with
-                summary statistics.
-              </p>
+              <p className="font-medium text-foreground">{t("personas.privacyProfessional.label")}</p>
+              <p>{t("personas.privacyProfessional.desc")}</p>
             </div>
           </div>
         </div>
         <InfoCallout type="tip">
-          You can change your account type at any time from the{" "}
-          <strong>Settings</strong> page.
+          {t("personas.tipPrefix")}
+          <strong>{t("personas.tipSettings")}</strong>
+          {t("personas.tipSuffix")}
         </InfoCallout>
       </DocSection>
 
       <DocSection
         id="expert-directory"
-        title="Expert Directory"
-        description="Find and connect with certified privacy experts."
+        title={t("directory.title")}
+        description={t("directory.description")}
       >
         <div className="space-y-3 text-sm text-muted-foreground">
-          <p>
-            The Expert Directory (available to Business Owners) lets you search for
-            privacy professionals by specialization, country, and language.
-          </p>
+          <p>{t("directory.intro")}</p>
           <ul className="list-disc ml-5 space-y-1">
-            <li>Search by name, firm, or area of expertise</li>
-            <li>Filter by specialization (GDPR, DPIA, DSAR, etc.)</li>
-            <li>Filter by country and language</li>
-            <li>View certifications (CIPP/E, CIPM, etc.)</li>
-            <li>Contact experts directly via their profile</li>
+            {directoryItems.map((item) => (
+              <li key={item}>{t(`directory.items.${item}`)}</li>
+            ))}
           </ul>
         </div>
       </DocSection>
 
       <DocSection
         id="client-dashboard"
-        title="Client Dashboard"
-        description="Manage all your client organizations from one view."
+        title={t("clientDashboard.title")}
+        description={t("clientDashboard.description")}
       >
         <div className="space-y-3 text-sm text-muted-foreground">
-          <p>
-            The Client Dashboard (available to Privacy Professionals) shows all
-            organizations you&apos;re a member of with real-time statistics:
-          </p>
+          <p>{t("clientDashboard.intro")}</p>
           <ul className="list-disc ml-5 space-y-1">
-            <li>Open DSARs and overdue count per client</li>
-            <li>Pending assessments count</li>
-            <li>Open incidents count</li>
-            <li>Active vendor count</li>
-            <li>Last activity timestamp</li>
-            <li>Attention indicators for overdue items</li>
+            {clientItems.map((item) => (
+              <li key={item}>{t(`clientDashboard.items.${item}`)}</li>
+            ))}
           </ul>
-          <p>
-            Click any client card to switch to that organization&apos;s dashboard.
-          </p>
+          <p>{t("clientDashboard.outro")}</p>
         </div>
       </DocSection>
 
       <DocSection
         id="settings"
-        title="Changing Your Account Type"
-        description="Switch between Business Owner and Privacy Professional at any time."
+        title={t("settings.title")}
+        description={t("settings.description")}
       >
         <div className="space-y-3 text-sm text-muted-foreground">
           <p>
-            Navigate to <strong>/privacy/settings</strong> to view your profile and change
-            your account type. Your navigation and available features will update immediately.
+            {t("settings.bodyPrefix")}
+            <strong>{t("settings.bodyPath")}</strong>
+            {t("settings.bodySuffix")}
           </p>
         </div>
       </DocSection>
 
       <DocNavFooter
-        previous={{ href: "/privacy/docs/vendors", title: "Vendor Management" }}
-        next={{ href: "/privacy/docs/reports", title: "Compliance Reports" }}
+        previous={{ href: "/privacy/docs/vendors", title: t("nav.previous") }}
+        next={{ href: "/privacy/docs/reports", title: t("nav.next") }}
       />
     </div>
   );

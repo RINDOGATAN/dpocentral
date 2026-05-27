@@ -1,4 +1,5 @@
 import { Building2, FileCheck, MessageSquare, ShieldAlert, Clock } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -20,31 +21,53 @@ const riskTierColors: Record<string, string> = {
   CRITICAL: "bg-red-100 text-red-800 border-transparent",
 };
 
-export default function DocsVendorsPage() {
+export default async function DocsVendorsPage() {
+  const t = await getTranslations("docs.vendors");
+
+  const stats: { key: string; value: string; icon: typeof Building2 }[] = [
+    { key: "total", value: "18", icon: Building2 },
+    { key: "active", value: "14", icon: Building2 },
+    { key: "highRisk", value: "3", icon: ShieldAlert },
+    { key: "pendingReview", value: "2", icon: Clock },
+  ];
+
+  const vendorCards: { name: string; status: string; risk: string; categoryKey: string }[] = [
+    { name: "Acme Cloud Services", status: "ACTIVE", risk: "LOW", categoryKey: "cloudInfra" },
+    { name: "DataTech Analytics", status: "ACTIVE", risk: "HIGH", categoryKey: "analytics" },
+    { name: "SecureMail Pro", status: "UNDER_REVIEW", risk: "MEDIUM", categoryKey: "email" },
+    { name: "Legacy CRM Inc.", status: "SUSPENDED", risk: "CRITICAL", categoryKey: "crm" },
+  ];
+
+  const stepKeys = ["navigate", "click", "details", "risk", "contract", "questionnaire"] as const;
+
+  const contracts: { vendor: string; type: string; start: string; end: string; statusKey: "Active" | "ExpiringSoon" | "Expired"; badgeVariant: "success" | "warning" | "destructive" }[] = [
+    { vendor: "Acme Cloud Services", type: "DPA", start: "2024-01-01", end: "2025-12-31", statusKey: "Active", badgeVariant: "success" },
+    { vendor: "DataTech Analytics", type: "DPA + SCC", start: "2024-06-15", end: "2025-06-14", statusKey: "ExpiringSoon", badgeVariant: "warning" },
+    { vendor: "SecureMail Pro", type: "DPA", start: "2023-03-01", end: "2024-02-28", statusKey: "Expired", badgeVariant: "destructive" },
+  ];
+
+  const questionnaires: { vendor: string; sent: string; statusKey: "Completed" | "InProgress" | "Sent"; score: string; badgeVariant: "success" | "info" | "secondary" }[] = [
+    { vendor: "Acme Cloud Services", sent: "2024-12-01", statusKey: "Completed", score: "92%", badgeVariant: "success" },
+    { vendor: "DataTech Analytics", sent: "2025-01-05", statusKey: "InProgress", score: "—", badgeVariant: "info" },
+    { vendor: "SecureMail Pro", sent: "2025-01-10", statusKey: "Sent", score: "—", badgeVariant: "secondary" },
+  ];
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Vendor Management</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage third-party vendors that process personal data on your behalf. Track contracts,
-          conduct due diligence questionnaires, and monitor risk levels across your vendor portfolio.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="adding" title="Adding Vendors" description="Register vendors and capture key details about their data processing relationship with your organization.">
-        <FeatureMockup title="Vendor Stats">
+      <DocSection id="adding" title={t("adding.title")} description={t("adding.description")}>
+        <FeatureMockup title={t("adding.statsMockupTitle")}>
           <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Total Vendors", value: "18", icon: Building2 },
-              { label: "Active", value: "14", icon: Building2 },
-              { label: "High Risk", value: "3", icon: ShieldAlert },
-              { label: "Pending Review", value: "2", icon: Clock },
-            ].map((stat) => {
+            {stats.map((stat) => {
               const Icon = stat.icon;
               return (
-                <Card key={stat.label} className="hover:translate-y-0">
+                <Card key={stat.key} className="hover:translate-y-0">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                    <CardTitle className="text-xs font-medium">{stat.label}</CardTitle>
+                    <CardTitle className="text-xs font-medium">{t(`adding.stats.${stat.key}`)}</CardTitle>
                     <Icon className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
@@ -56,28 +79,23 @@ export default function DocsVendorsPage() {
           </div>
         </FeatureMockup>
 
-        <FeatureMockup title="Vendor Cards">
+        <FeatureMockup title={t("adding.cardsMockupTitle")}>
           <div className="space-y-2">
-            {[
-              { name: "Acme Cloud Services", status: "ACTIVE", risk: "LOW", category: "Cloud Infrastructure" },
-              { name: "DataTech Analytics", status: "ACTIVE", risk: "HIGH", category: "Analytics" },
-              { name: "SecureMail Pro", status: "UNDER_REVIEW", risk: "MEDIUM", category: "Email Service" },
-              { name: "Legacy CRM Inc.", status: "SUSPENDED", risk: "CRITICAL", category: "CRM" },
-            ].map((vendor) => (
+            {vendorCards.map((vendor) => (
               <div key={vendor.name} className="flex items-center justify-between rounded-md border px-3 py-2.5">
                 <div>
                   <div className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">{vendor.name}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 ml-6">{vendor.category}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 ml-6">{t(`adding.categories.${vendor.categoryKey}`)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className={`text-[10px] ${riskTierColors[vendor.risk]}`}>
-                    {vendor.risk} Risk
+                    {vendor.risk} {t("adding.riskSuffix")}
                   </Badge>
                   <Badge variant="outline" className={`text-[10px] ${vendorStatusColors[vendor.status]}`}>
-                    {vendor.status.replace("_", " ")}
+                    {t(`adding.statusLabels.${vendor.status}`)}
                   </Badge>
                 </div>
               </div>
@@ -86,98 +104,80 @@ export default function DocsVendorsPage() {
         </FeatureMockup>
 
         <StepList
-          steps={[
-            { title: "Navigate to Vendors", description: "Click 'Vendors' in the main navigation bar." },
-            { title: "Click 'Add Vendor'", description: "Open the vendor creation form." },
-            { title: "Enter vendor details", description: "Provide the vendor name, category, description, contact information, and data processing details." },
-            { title: "Set risk tier", description: "Assign an initial risk tier (LOW, MEDIUM, HIGH, CRITICAL) based on the type and volume of data they process." },
-            { title: "Upload contract", description: "Attach the Data Processing Agreement (DPA) or other relevant contracts." },
-            { title: "Send questionnaire", description: "Optionally send a due diligence questionnaire for the vendor to complete." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`adding.steps.${k}.title`),
+            description: t(`adding.steps.${k}.description`),
+          }))}
         />
       </DocSection>
 
-      <DocSection id="contracts" title="Contracts" description="Track Data Processing Agreements (DPAs) and other contracts with each vendor.">
-        <FeatureMockup title="Contract Tracking">
+      <DocSection id="contracts" title={t("contracts.title")} description={t("contracts.description")}>
+        <FeatureMockup title={t("contracts.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { vendor: "Acme Cloud Services", type: "DPA", start: "2024-01-01", end: "2025-12-31", status: "Active" },
-              { vendor: "DataTech Analytics", type: "DPA + SCC", start: "2024-06-15", end: "2025-06-14", status: "Expiring Soon" },
-              { vendor: "SecureMail Pro", type: "DPA", start: "2023-03-01", end: "2024-02-28", status: "Expired" },
-            ].map((contract) => (
+            {contracts.map((contract) => (
               <div key={contract.vendor} className="flex items-center justify-between rounded-md border px-3 py-2">
                 <div className="flex items-center gap-3">
                   <FileCheck className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-medium">{contract.vendor}</p>
-                    <p className="text-xs text-muted-foreground">{contract.type} — {contract.start} to {contract.end}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {contract.type} — {contract.start} {t("contracts.dateRangeSeparator")} {contract.end}
+                    </p>
                   </div>
                 </div>
-                <Badge
-                  variant={contract.status === "Active" ? "success" : contract.status === "Expiring Soon" ? "warning" : "destructive"}
-                  className="text-[10px]"
-                >
-                  {contract.status}
+                <Badge variant={contract.badgeVariant} className="text-[10px]">
+                  {t(`contracts.statuses.${contract.statusKey}`)}
                 </Badge>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="warning" title="Contract expiry alerts">
-          The system sends email notifications 90, 60, and 30 days before a contract expires, giving you time to renew or renegotiate terms.
+        <InfoCallout type="warning" title={t("contracts.calloutTitle")}>
+          {t("contracts.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="questionnaires" title="Questionnaires" description="Send standardized due diligence questionnaires to vendors to assess their privacy and security practices.">
-        <FeatureMockup title="Questionnaire Status">
+      <DocSection id="questionnaires" title={t("questionnaires.title")} description={t("questionnaires.description")}>
+        <FeatureMockup title={t("questionnaires.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { vendor: "Acme Cloud Services", sent: "2024-12-01", status: "Completed", score: "92%" },
-              { vendor: "DataTech Analytics", sent: "2025-01-05", status: "In Progress", score: "—" },
-              { vendor: "SecureMail Pro", sent: "2025-01-10", status: "Sent", score: "—" },
-            ].map((q) => (
+            {questionnaires.map((q) => (
               <div key={q.vendor} className="flex items-center justify-between rounded-md border px-3 py-2">
                 <div className="flex items-center gap-3">
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-medium">{q.vendor}</p>
-                    <p className="text-xs text-muted-foreground">Sent {q.sent}</p>
+                    <p className="text-xs text-muted-foreground">{t("questionnaires.sentLabel", { date: q.sent })}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {q.score !== "—" && <span className="text-xs font-medium text-primary">{q.score}</span>}
-                  <Badge
-                    variant={q.status === "Completed" ? "success" : q.status === "In Progress" ? "info" : "secondary"}
-                    className="text-[10px]"
-                  >
-                    {q.status}
+                  <Badge variant={q.badgeVariant} className="text-[10px]">
+                    {t(`questionnaires.statuses.${q.statusKey}`)}
                   </Badge>
                 </div>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="tip" title="Questionnaire templates">
-          You can create reusable questionnaire templates covering topics like data security, breach notification processes,
-          subprocessor management, and data retention. Templates can be customized per vendor category.
+        <InfoCallout type="tip" title={t("questionnaires.calloutTitle")}>
+          {t("questionnaires.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="risk-reviews" title="Risk Reviews" description="Periodically review vendor risk levels based on questionnaire results, incident history, and contract compliance.">
-        <InfoCallout type="info" title="Review frequency">
-          The recommended review frequency depends on the vendor&apos;s risk tier: CRITICAL vendors quarterly,
-          HIGH vendors semi-annually, MEDIUM vendors annually, and LOW vendors every two years.
+      <DocSection id="risk-reviews" title={t("riskReviews.title")} description={t("riskReviews.description")}>
+        <InfoCallout type="info" title={t("riskReviews.infoTitle")}>
+          {t("riskReviews.infoBody")}
         </InfoCallout>
-        <InfoCallout type="note" title="Vendor Risk Assessments">
-          For a formal, template-driven vendor risk assessment process, see the
-          {" "}<a href="/privacy/docs/premium#vendor-risk" className="text-primary underline">Vendor Risk Assessment</a>{" "}
-          premium feature.
+        <InfoCallout type="note" title={t("riskReviews.noteTitle")}>
+          {t("riskReviews.notePrefix")}
+          <a href="/privacy/docs/premium#vendor-risk" className="text-primary underline">{t("riskReviews.noteLink")}</a>
+          {t("riskReviews.noteSuffix")}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Incidents", href: "/privacy/docs/incidents" }}
-        next={{ title: "Premium Features", href: "/privacy/docs/premium" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/incidents" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/premium" }}
       />
     </div>
   );

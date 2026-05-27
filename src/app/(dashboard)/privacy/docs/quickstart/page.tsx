@@ -14,6 +14,7 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,12 +33,12 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Briefcase,
 };
 
+// Asset, activity, and flow names are kept in English because they match
+// the actual records created by the quickstart wizard.
 const TEMPLATES = [
   {
     id: "ecommerce",
-    name: "E-commerce",
     icon: "ShoppingCart",
-    description: "Online retail with customer accounts, orders, payments, and marketing",
     assets: [
       { name: "Customer Database", type: "Database", elements: 7 },
       { name: "Order Management System", type: "Application", elements: 4 },
@@ -51,17 +52,11 @@ const TEMPLATES = [
       { name: "Marketing & Promotions", basis: "Consent" },
       { name: "Website Analytics & Optimization", basis: "Legitimate Interests" },
     ],
-    flows: [
-      "Customer to Orders",
-      "Orders to Payment",
-      "Customer to Marketing",
-    ],
+    flows: ["Customer to Orders", "Orders to Payment", "Customer to Marketing"],
   },
   {
     id: "saas",
-    name: "SaaS / Technology",
     icon: "Cloud",
-    description: "Software-as-a-service platform with user accounts, usage tracking, and support",
     assets: [
       { name: "User Database", type: "Database", elements: 5 },
       { name: "Application Logs", type: "Cloud Service", elements: 4 },
@@ -76,17 +71,11 @@ const TEMPLATES = [
       { name: "Customer Support", basis: "Contract" },
       { name: "Product Analytics & Improvement", basis: "Legitimate Interests" },
     ],
-    flows: [
-      "User Actions to Logs",
-      "User to Billing",
-      "User to Analytics",
-    ],
+    flows: ["User Actions to Logs", "User to Billing", "User to Analytics"],
   },
   {
     id: "healthcare",
-    name: "Healthcare",
     icon: "Heart",
-    description: "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance",
     assets: [
       { name: "Electronic Health Records (EHR)", type: "Application", elements: 7 },
       { name: "Patient Portal", type: "Application", elements: 4 },
@@ -98,16 +87,11 @@ const TEMPLATES = [
       { name: "Medical Billing & Insurance", basis: "Legal Obligation" },
       { name: "Staff Employment Management", basis: "Contract" },
     ],
-    flows: [
-      "EHR to Patient Portal",
-      "EHR to Billing",
-    ],
+    flows: ["EHR to Patient Portal", "EHR to Billing"],
   },
   {
     id: "fintech",
-    name: "Fintech",
     icon: "Landmark",
-    description: "Financial technology with KYC, transaction processing, and regulatory reporting",
     assets: [
       { name: "KYC/Identity Verification System", type: "Application", elements: 5 },
       { name: "Transaction Ledger", type: "Database", elements: 5 },
@@ -119,16 +103,11 @@ const TEMPLATES = [
       { name: "Transaction Processing", basis: "Contract" },
       { name: "AML Monitoring & Regulatory Reporting", basis: "Legal Obligation" },
     ],
-    flows: [
-      "KYC to Account",
-      "Transactions to Monitoring",
-    ],
+    flows: ["KYC to Account", "Transactions to Monitoring"],
   },
   {
     id: "media",
-    name: "Media / Publishing",
     icon: "Newspaper",
-    description: "Digital media, news, or content platform with subscriptions and advertising",
     assets: [
       { name: "Subscriber Database", type: "Database", elements: 5 },
       { name: "Content Management System", type: "Application", elements: 3 },
@@ -141,16 +120,11 @@ const TEMPLATES = [
       { name: "Newsletter Distribution", basis: "Consent" },
       { name: "Content Personalization", basis: "Legitimate Interests" },
     ],
-    flows: [
-      "Subscribers to Ad Platform",
-      "Subscribers to Newsletter",
-    ],
+    flows: ["Subscribers to Ad Platform", "Subscribers to Newsletter"],
   },
   {
     id: "professional_services",
-    name: "Professional Services",
     icon: "Briefcase",
-    description: "Consulting, legal, accounting, or agency with client data and project management",
     assets: [
       { name: "Client Database", type: "Database", elements: 4 },
       { name: "Project Management System", type: "Cloud Service", elements: 4 },
@@ -162,40 +136,40 @@ const TEMPLATES = [
       { name: "Service Delivery & Project Work", basis: "Contract" },
       { name: "Employee HR & Payroll", basis: "Contract" },
     ],
-    flows: [
-      "Client to Projects",
-      "Projects to Documents",
-    ],
+    flows: ["Client to Projects", "Projects to Documents"],
   },
 ];
 
-export default function DocsQuickstartPage() {
+export default async function DocsQuickstartPage() {
+  const t = await getTranslations("docs.quickstart");
+
+  const vendorWatchItems = ["asset", "elements", "activity", "transfers"] as const;
+  const afterItems = ["review", "legal", "vendors", "assessments"] as const;
+
+  const vendorWatchIcons: Record<typeof vendorWatchItems[number], typeof Database> = {
+    asset: Database,
+    elements: FileText,
+    activity: Shield,
+    transfers: ArrowRightLeft,
+  };
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Quickstart Wizard</h1>
-        <p className="text-muted-foreground mt-1">
-          Bootstrap your entire privacy program in minutes. The quickstart wizard creates
-          data assets, data elements, processing activities, data flows, and vendor records
-          based on your industry and the tools you use.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
       {/* HOW IT WORKS */}
-      <DocSection id="how-it-works" title="How It Works" description="The wizard offers two complementary paths that can be used together.">
+      <DocSection id="how-it-works" title={t("howItWorks.title")} description={t("howItWorks.description")}>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-start gap-3 rounded-lg border p-4">
             <div className="rounded-md bg-primary/10 p-2 shrink-0">
               <Building2 className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Import from Vendors</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Select vendors from the catalog (or import from your Vendor.Watch portfolio).
-                For each vendor, the wizard auto-generates a data asset, data elements,
-                a processing activity, and cross-border transfer records based on the
-                vendor&apos;s known data profile.
-              </p>
+              <p className="font-medium text-sm">{t("howItWorks.importVendors.title")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("howItWorks.importVendors.desc")}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-lg border p-4">
@@ -203,65 +177,45 @@ export default function DocsQuickstartPage() {
               <Sparkles className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Industry Template</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Pick your industry and get a pre-built scaffold of data assets, processing
-                activities, and data flows. Each template is designed by privacy professionals
-                to reflect common data processing patterns for that sector.
-              </p>
+              <p className="font-medium text-sm">{t("howItWorks.industryTemplate.title")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("howItWorks.industryTemplate.desc")}</p>
             </div>
           </div>
         </div>
-        <InfoCallout type="info" title="Non-destructive">
-          The quickstart only creates new records. It never modifies or deletes existing
-          data and automatically skips duplicates. You can run it multiple times safely.
+        <InfoCallout type="info" title={t("howItWorks.nonDestructiveTitle")}>
+          {t("howItWorks.nonDestructiveBody")}
         </InfoCallout>
       </DocSection>
 
       {/* VENDOR.WATCH PORTFOLIO */}
-      <DocSection id="vendor-watch" title="Vendor.Watch Portfolio Import" description="If you have a Vendor.Watch account, the quickstart detects your portfolio automatically.">
+      <DocSection id="vendor-watch" title={t("vendorWatch.title")} description={t("vendorWatch.description")}>
         <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            When you navigate to the quickstart wizard, it checks if your account has a
-            Vendor.Watch portfolio. If found, your vendors are pre-selected and ready
-            to import — no manual searching needed.
-          </p>
-          <FeatureMockup title="What gets created per vendor">
+          <p className="text-sm text-muted-foreground">{t("vendorWatch.intro")}</p>
+          <FeatureMockup title={t("vendorWatch.mockupTitle")}>
             <div className="grid gap-2 sm:grid-cols-2">
-              {[
-                { icon: Database, label: "Data Asset", desc: "One asset per vendor, typed by category (e.g. Cloud Service, Application)" },
-                { icon: FileText, label: "Data Elements", desc: "3\u201310 elements per asset — identifiers, behavioral data, financial data, etc." },
-                { icon: Shield, label: "Processing Activity", desc: "One activity per vendor with purpose, legal basis, and data subjects" },
-                { icon: ArrowRightLeft, label: "Cross-Border Transfers", desc: "Transfer records for each non-EU data location with SCCs as safeguard" },
-              ].map((item) => {
-                const Icon = item.icon;
+              {vendorWatchItems.map((key) => {
+                const Icon = vendorWatchIcons[key];
                 return (
-                  <div key={item.label} className="flex items-start gap-2 p-3 rounded-lg border">
+                  <div key={key} className="flex items-start gap-2 p-3 rounded-lg border">
                     <Icon className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-medium">{item.label}</p>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+                      <p className="text-xs font-medium">{t(`vendorWatch.items.${key}.label`)}</p>
+                      <p className="text-xs text-muted-foreground">{t(`vendorWatch.items.${key}.desc`)}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
           </FeatureMockup>
-          <InfoCallout type="tip" title="Free tier: 5 vendors from your portfolio">
-            You can import up to 5 vendors from your Vendor.Watch portfolio for free during
-            quickstart — no Vendor Catalog subscription needed. This matches Vendor.Watch&apos;s
-            own free tier. To import more than 5, subscribe to the Vendor Catalog add-on.
+          <InfoCallout type="tip" title={t("vendorWatch.tipTitle")}>
+            {t("vendorWatch.tipBody")}
           </InfoCallout>
         </div>
       </DocSection>
 
       {/* INDUSTRY TEMPLATES */}
-      <DocSection id="industry-templates" title="Industry Templates" description="Each template provides a complete privacy program scaffold tailored to your sector.">
-        <p className="text-sm text-muted-foreground">
-          Select your industry to auto-generate data assets (with data elements), processing
-          activities (with legal bases), and data flows between systems. All records can be
-          customized after creation.
-        </p>
+      <DocSection id="industry-templates" title={t("industryTemplates.title")} description={t("industryTemplates.description")}>
+        <p className="text-sm text-muted-foreground">{t("industryTemplates.intro")}</p>
 
         <div className="space-y-6 mt-2">
           {TEMPLATES.map((template) => {
@@ -276,31 +230,31 @@ export default function DocsQuickstartPage() {
                         <Icon className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <CardTitle className="text-base">{template.name}</CardTitle>
-                        <CardDescription className="text-xs">{template.description}</CardDescription>
+                        <CardTitle className="text-base">{t(`industryTemplates.templates.${template.id}.name`)}</CardTitle>
+                        <CardDescription className="text-xs">{t(`industryTemplates.templates.${template.id}.description`)}</CardDescription>
                       </div>
                       <div className="hidden sm:flex gap-2">
-                        <Badge variant="secondary" className="text-xs">{template.assets.length} assets</Badge>
-                        <Badge variant="secondary" className="text-xs">{totalElements} elements</Badge>
-                        <Badge variant="secondary" className="text-xs">{template.activities.length} activities</Badge>
-                        <Badge variant="secondary" className="text-xs">{template.flows.length} flows</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.assets", { count: template.assets.length })}</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.elements", { count: totalElements })}</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.activities", { count: template.activities.length })}</Badge>
+                        <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.flows", { count: template.flows.length })}</Badge>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Summary badges on mobile */}
                     <div className="flex flex-wrap gap-2 sm:hidden">
-                      <Badge variant="secondary" className="text-xs">{template.assets.length} assets</Badge>
-                      <Badge variant="secondary" className="text-xs">{totalElements} elements</Badge>
-                      <Badge variant="secondary" className="text-xs">{template.activities.length} activities</Badge>
-                      <Badge variant="secondary" className="text-xs">{template.flows.length} flows</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.assets", { count: template.assets.length })}</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.elements", { count: totalElements })}</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.activities", { count: template.activities.length })}</Badge>
+                      <Badge variant="secondary" className="text-xs">{t("industryTemplates.badges.flows", { count: template.flows.length })}</Badge>
                     </div>
 
                     {/* Assets */}
                     <div>
                       <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
                         <Database className="h-3.5 w-3.5" />
-                        Data Assets
+                        {t("industryTemplates.assetsSection")}
                       </p>
                       <div className="grid gap-1.5">
                         {template.assets.map((asset) => (
@@ -308,7 +262,7 @@ export default function DocsQuickstartPage() {
                             <span className="font-medium">{asset.name}</span>
                             <div className="flex items-center gap-2">
                               <Badge variant="outline" className="text-[10px] font-normal">{asset.type}</Badge>
-                              <span className="text-muted-foreground">{asset.elements} elements</span>
+                              <span className="text-muted-foreground">{t("industryTemplates.badges.elementsCount", { count: asset.elements })}</span>
                             </div>
                           </div>
                         ))}
@@ -319,7 +273,7 @@ export default function DocsQuickstartPage() {
                     <div>
                       <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
                         <FileText className="h-3.5 w-3.5" />
-                        Processing Activities
+                        {t("industryTemplates.activitiesSection")}
                       </p>
                       <div className="grid gap-1.5">
                         {template.activities.map((activity) => (
@@ -335,7 +289,7 @@ export default function DocsQuickstartPage() {
                     <div>
                       <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
                         <ArrowRightLeft className="h-3.5 w-3.5" />
-                        Data Flows
+                        {t("industryTemplates.flowsSection")}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {template.flows.map((flow) => (
@@ -352,23 +306,16 @@ export default function DocsQuickstartPage() {
       </DocSection>
 
       {/* AFTER QUICKSTART */}
-      <DocSection id="after-quickstart" title="After Quickstart" description="What to do once your privacy program is bootstrapped.">
+      <DocSection id="after-quickstart" title={t("afterQuickstart.title")} description={t("afterQuickstart.description")}>
         <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            The quickstart gives you a solid foundation. After running it, you should:
-          </p>
+          <p className="text-sm text-muted-foreground">{t("afterQuickstart.intro")}</p>
           <div className="grid gap-2 sm:grid-cols-2">
-            {[
-              { label: "Review data elements", desc: "Verify the auto-generated elements match your actual data processing and adjust retention periods" },
-              { label: "Update legal bases", desc: "Confirm that the suggested legal basis for each processing activity is correct for your jurisdiction" },
-              { label: "Add missing vendors", desc: "Register any vendors not covered by the catalog or your portfolio" },
-              { label: "Run assessments", desc: "Use the assessments module to conduct DPIAs for high-risk processing activities" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-start gap-2 p-3 rounded-lg border">
+            {afterItems.map((key) => (
+              <div key={key} className="flex items-start gap-2 p-3 rounded-lg border">
                 <ArrowRight className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-medium">{item.label}</p>
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  <p className="text-xs font-medium">{t(`afterQuickstart.items.${key}.label`)}</p>
+                  <p className="text-xs text-muted-foreground">{t(`afterQuickstart.items.${key}.desc`)}</p>
                 </div>
               </div>
             ))}
@@ -380,15 +327,15 @@ export default function DocsQuickstartPage() {
         <Link href="/privacy/quickstart">
           <Button className="gap-2">
             <Zap className="w-4 h-4" />
-            Open Quickstart Wizard
+            {t("openWizard")}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
       </div>
 
       <DocNavFooter
-        previous={{ title: "Getting Started", href: "/privacy/docs" }}
-        next={{ title: "Data Inventory", href: "/privacy/docs/data-inventory" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/data-inventory" }}
       />
     </div>
   );

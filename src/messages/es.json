@@ -3143,5 +3143,1711 @@
       },
       "dpaMissing": "FALTA"
     }
+  },
+  "docs": {
+    "common": {
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "gettingStarted": {
+      "title": "Primeros pasos",
+      "subtitle": "Te damos la bienvenida a DPO Central, tu plataforma integral de gestión de privacidad. Esta guía cubre todas las funciones para ayudarte a gestionar el cumplimiento en protección de datos.",
+      "dashboard": {
+        "title": "Visión general del panel",
+        "description": "El panel ofrece una instantánea en tiempo real de tu programa de privacidad.",
+        "mockupTitle": "Estadísticas del panel",
+        "cards": {
+          "dataInventory": { "label": "Inventario de datos", "value": "24", "sub": "8 actividades" },
+          "openDsars": { "label": "DSAR abiertas", "value": "3", "sub": "Todas en plazo" },
+          "assessments": { "label": "Evaluaciones", "value": "12", "sub": "2 pendientes de revisión" },
+          "incidents": { "label": "Incidentes", "value": "1", "sub": "0 críticos" }
+        },
+        "calloutTitle": "Las tarjetas de estadísticas son interactivas",
+        "calloutBody": "Haz clic en cualquier tarjeta para ir directamente a la vista de listado de ese módulo."
+      },
+      "quickstart": {
+        "title": "Asistente de inicio rápido",
+        "description": "Pon en marcha todo tu programa de privacidad en minutos en lugar de construirlo desde cero.",
+        "importVendors": {
+          "title": "Importar desde proveedores",
+          "desc": "Selecciona proveedores que ya utilices desde el catálogo, o importa hasta 5 gratis desde tu portafolio de Vendor.Watch. El asistente genera automáticamente los activos de datos, elementos de datos, actividades de tratamiento y transferencias internacionales para cada proveedor."
+        },
+        "industryTemplate": {
+          "title": "Plantilla por sector",
+          "desc": "Elige tu sector (E-commerce, SaaS, Salud, Fintech, Medios o Servicios profesionales) y obtén una estructura predefinida de activos, actividades y flujos de datos."
+        },
+        "vendorWatchTitle": "Integración con Vendor.Watch",
+        "vendorWatchBody": "Si tienes un portafolio en Vendor.Watch, el asistente detecta automáticamente tus proveedores y los preselecciona, sin búsquedas manuales. Puedes importar hasta 5 proveedores gratis.",
+        "nonDestructiveTitle": "No destructivo",
+        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes ejecutarlo varias veces sin problema.",
+        "openWizard": "Abrir asistente de inicio rápido",
+        "fullGuide": "Guía completa de inicio rápido"
+      },
+      "navigation": {
+        "title": "Navegación",
+        "description": "La barra de navegación principal da acceso a todos los módulos.",
+        "items": {
+          "dashboard": { "label": "Panel", "desc": "Estadísticas generales, actividad reciente, acciones rápidas" },
+          "dataInventory": { "label": "Inventario de datos", "desc": "Activos, elementos de datos, actividades de tratamiento, flujos" },
+          "dsar": { "label": "DSAR", "desc": "Solicitudes de los interesados, seguimiento de plazos, portal público" },
+          "assessments": { "label": "Evaluaciones", "desc": "DPIA, PIA, TIA, LIA con plantillas y aprobaciones" },
+          "incidents": { "label": "Incidentes", "desc": "Seguimiento de brechas, notificaciones a la AEPD, cronologías" },
+          "vendors": { "label": "Proveedores", "desc": "Contratos, cuestionarios, niveles de riesgo" },
+          "reports": { "label": "Informes", "desc": "Puntuación de cumplimiento, evolución, informes para la dirección" },
+          "regulations": { "label": "Regulaciones", "desc": "Más de 40 jurisdicciones, asistente de aplicabilidad, configuración de plazos" },
+          "aiSystems": { "label": "Sistemas de IA", "desc": "Registro del Reglamento de IA de la UE, clasificación de riesgo, gobernanza" }
+        }
+      },
+      "roles": {
+        "title": "Roles de usuario",
+        "description": "DPO Central usa un sistema de roles jerárquico. Los roles superiores heredan todos los permisos de los inferiores.",
+        "columnRole": "Rol",
+        "columnPermissions": "Permisos",
+        "rows": {
+          "OWNER": "Acceso total incluyendo configuración de la organización, facturación y gestión de miembros",
+          "ADMIN": "Gestiona todos los módulos, usuarios y ajustes. No puede eliminar la organización",
+          "PRIVACY_OFFICER": "CRUD completo en todos los módulos de privacidad. No puede gestionar la configuración de la organización",
+          "MEMBER": "Crea y edita registros, envía evaluaciones para revisión",
+          "VIEWER": "Acceso de solo lectura a todos los datos de privacidad"
+        },
+        "inheritanceTitle": "Herencia de roles",
+        "inheritanceBody": "Cada rol hereda todos los permisos de los roles inferiores. Por ejemplo, un ADMIN tiene todos los permisos de PRIVACY_OFFICER, MEMBER y VIEWER."
+      },
+      "quickActions": {
+        "title": "Acciones rápidas",
+        "description": "El panel ofrece atajos para las tareas más comunes.",
+        "mockupTitle": "Panel de acciones rápidas",
+        "panelTitle": "Acciones rápidas",
+        "panelSubtitle": "Tareas comunes",
+        "actions": {
+          "addAsset": "Añadir activo de datos",
+          "newDsar": "Nueva DSAR",
+          "startAssessment": "Iniciar evaluación",
+          "reportIncident": "Reportar incidente",
+          "addVendor": "Añadir proveedor",
+          "runAudit": "Ejecutar auditoría"
+        }
+      },
+      "nav": {
+        "next": "Inicio rápido"
+      }
+    },
+    "experts": {
+      "title": "Ayuda experta y perfiles",
+      "subtitle": "DPO Central admite dos tipos de usuarios con experiencias adaptadas para cada uno.",
+      "personas": {
+        "title": "Perfiles de usuario",
+        "description": "Cuando inicias sesión por primera vez, eliges cómo usas la plataforma.",
+        "businessOwner": {
+          "label": "Propietario de negocio",
+          "desc": "Para usuarios que necesitan cumplimiento de privacidad para su propia organización. Obtienes acceso al Directorio de Expertos para contactar con profesionales certificados en privacidad."
+        },
+        "privacyProfessional": {
+          "label": "Profesional de privacidad",
+          "desc": "Para abogados y consultores que asesoran a varias organizaciones. Obtienes un panel \"Mis clientes\" que muestra todas tus organizaciones cliente con estadísticas resumidas."
+        },
+        "tipPrefix": "Puedes cambiar tu tipo de cuenta en cualquier momento desde la página de ",
+        "tipSettings": "Configuración",
+        "tipSuffix": "."
+      },
+      "directory": {
+        "title": "Directorio de expertos",
+        "description": "Encuentra y contacta con expertos certificados en privacidad.",
+        "intro": "El Directorio de Expertos (disponible para Propietarios de negocio) te permite buscar profesionales de privacidad por especialización, país e idioma.",
+        "items": {
+          "search": "Búsqueda por nombre, despacho o área de experiencia",
+          "specialization": "Filtra por especialización (RGPD, DPIA, DSAR, etc.)",
+          "countryLang": "Filtra por país e idioma",
+          "certifications": "Consulta certificaciones (CIPP/E, CIPM, etc.)",
+          "contact": "Contacta con los expertos directamente desde su perfil"
+        }
+      },
+      "clientDashboard": {
+        "title": "Panel de clientes",
+        "description": "Gestiona todas tus organizaciones cliente desde una única vista.",
+        "intro": "El Panel de clientes (disponible para Profesionales de privacidad) muestra todas las organizaciones a las que perteneces con estadísticas en tiempo real:",
+        "items": {
+          "dsars": "DSAR abiertas y vencidas por cliente",
+          "assessments": "Número de evaluaciones pendientes",
+          "incidents": "Número de incidentes abiertos",
+          "vendors": "Número de proveedores activos",
+          "lastActivity": "Marca de tiempo de la última actividad",
+          "attention": "Indicadores de atención para elementos vencidos"
+        },
+        "outro": "Haz clic en cualquier tarjeta de cliente para cambiar al panel de esa organización."
+      },
+      "settings": {
+        "title": "Cambiar el tipo de cuenta",
+        "description": "Cambia entre Propietario de negocio y Profesional de privacidad en cualquier momento.",
+        "bodyPrefix": "Ve a ",
+        "bodyPath": "/privacy/settings",
+        "bodySuffix": " para ver tu perfil y cambiar el tipo de cuenta. La navegación y las funciones disponibles se actualizan al instante."
+      },
+      "nav": {
+        "previous": "Gestión de proveedores",
+        "next": "Informes de cumplimiento"
+      }
+    },
+    "assessments": {
+      "title": "Evaluaciones",
+      "subtitle": "Las evaluaciones te ayudan a valorar los riesgos de privacidad antes de lanzar nuevos proyectos, actividades de tratamiento o relaciones con proveedores. DPO Central admite varios tipos de evaluación con flujos basados en plantillas.",
+      "templates": {
+        "title": "Plantillas de evaluación",
+        "description": "Elige entre plantillas integradas o crea las tuyas. Las plantillas definen las preguntas, los criterios de puntuación y el flujo de aprobación.",
+        "mockupTitle": "Tarjetas de tipo de evaluación",
+        "labels": {
+          "LIA": "Interés legítimo",
+          "CUSTOM": "Personalizada",
+          "DPIA": "Impacto en protección de datos",
+          "PIA": "Impacto en privacidad",
+          "TIA": "Impacto en transferencias",
+          "VENDOR": "Riesgo de proveedor"
+        },
+        "labelSuffix": "Evaluación",
+        "descs": {
+          "LIA": "Evalúa pruebas de ponderación de interés legítimo",
+          "CUSTOM": "Crea tu propia evaluación desde cero",
+          "DPIA": "Impacto en protección de datos del Artículo 35 del RGPD",
+          "PIA": "Análisis más amplio de impacto en privacidad",
+          "TIA": "Análisis de impacto en transferencias Schrems II",
+          "VENDOR": "Evaluación de riesgo de proveedores externos"
+        },
+        "calloutTitle": "Tipos de evaluación gratuitos vs. Premium",
+        "calloutFreeLabel": "Gratuitos (Core):",
+        "calloutFreeBody": " Las evaluaciones LIA y Personalizadas están disponibles para todos los usuarios. ",
+        "calloutPremiumLabel": "Premium:",
+        "calloutPremiumBody": " Las evaluaciones DPIA, PIA, TIA y de Riesgo de proveedor requieren una licencia Premium.",
+        "calloutSeeMorePrefix": " Consulta la página de ",
+        "calloutSeeMoreLink": "Funciones Premium",
+        "calloutSeeMoreSuffix": " para más detalles."
+      },
+      "creating": {
+        "title": "Crear evaluaciones",
+        "description": "Recorre el flujo de creación de evaluaciones.",
+        "steps": {
+          "select": { "title": "Selecciona una plantilla", "description": "Elige el tipo de evaluación que se ajuste a tu necesidad (LIA, DPIA, PIA, TIA, Vendor o Personalizada)." },
+          "fill": { "title": "Rellena los detalles del proyecto", "description": "Indica el nombre, la descripción, las actividades de tratamiento relacionadas y los activos de datos." },
+          "answer": { "title": "Responde las preguntas de la evaluación", "description": "Recorre las preguntas de la plantilla. Cada sección cubre un dominio de riesgo distinto." },
+          "score": { "title": "Puntúa los riesgos", "description": "Califica la probabilidad e impacto de los riesgos identificados. El sistema calcula el nivel de riesgo general." },
+          "mitigate": { "title": "Añade medidas de mitigación", "description": "Para cada riesgo identificado, documenta medidas de mitigación y el riesgo residual." },
+          "submit": { "title": "Envía para revisión", "description": "Pasa la evaluación al estado PENDING_REVIEW para su aprobación por un Privacy Officer o Admin." }
+        }
+      },
+      "riskScoring": {
+        "title": "Puntuación de riesgo",
+        "description": "Cada evaluación genera una puntuación de riesgo a partir de las respuestas. Los niveles de riesgo se calculan automáticamente.",
+        "mockupTitle": "Etiquetas de nivel de riesgo",
+        "levels": {
+          "LOW": "Riesgo aceptable, puedes proceder",
+          "MEDIUM": "Se recomiendan medidas de mitigación",
+          "HIGH": "Se requieren medidas de mitigación",
+          "CRITICAL": "No se puede proceder sin resolverlo"
+        }
+      },
+      "mitigations": {
+        "title": "Medidas de mitigación",
+        "description": "Documenta medidas de mitigación para cada riesgo identificado.",
+        "calloutTitle": "Buenas prácticas de mitigación",
+        "calloutBody": "Vincula las medidas a riesgos concretos y haz seguimiento de su estado de implementación. Cada medida debería incluir: la acción que se va a tomar, el responsable, la fecha objetivo de finalización y el nivel de riesgo residual esperado tras la implementación."
+      },
+      "approvals": {
+        "title": "Flujo de aprobación",
+        "description": "Las evaluaciones siguen un flujo de aprobación estructurado antes de finalizarse.",
+        "mockupTitle": "Flujo de estado de evaluación",
+        "rejectionTitle": "Rechazo",
+        "rejectionBody": "Si una evaluación es rechazada, vuelve al estado DRAFT con comentarios del revisor. El evaluador puede atender las observaciones y reenviar para revisión."
+      },
+      "nav": {
+        "previous": "Gestión de DSAR",
+        "next": "Incidentes"
+      }
+    },
+    "incidents": {
+      "title": "Gestión de incidentes",
+      "subtitle": "Registra y gestiona brechas de datos e incidentes de seguridad desde la detección hasta la resolución. El módulo de incidentes te ayuda a cumplir con los requisitos de notificación regulatoria y mantener una pista de auditoría completa.",
+      "reporting": {
+        "title": "Reportar incidentes",
+        "description": "Registra los incidentes en cuanto se detecten. El sistema captura los detalles clave y empieza a hacer seguimiento de los plazos automáticamente.",
+        "statsMockupTitle": "Estadísticas de incidentes",
+        "cardsMockupTitle": "Tarjetas de incidentes",
+        "stats": {
+          "total": "Total de incidentes",
+          "open": "Abiertos",
+          "critical": "Críticos",
+          "pendingDpa": "Pendientes AEPD"
+        },
+        "cards": {
+          "email": "Acceso no autorizado al correo",
+          "export": "Error en exportación de datos de clientes",
+          "api": "Fuga de datos de API de terceros",
+          "usb": "Pendrive USB extraviado"
+        },
+        "reportedLabel": "Reportado {date}",
+        "steps": {
+          "report": { "title": "Reporta el incidente", "description": "Ve a Incidentes y haz clic en 'Reportar incidente'. Indica un título, descripción, severidad y categoría." },
+          "assess": { "title": "Evalúa la severidad", "description": "Clasifica la severidad (LOW, MEDIUM, HIGH, CRITICAL) según los tipos de datos afectados, número de interesados y el daño potencial." },
+          "assign": { "title": "Asigna el equipo de respuesta", "description": "Añade miembros del equipo al incidente y asigna tareas de respuesta." },
+          "investigate": { "title": "Investiga y contiene", "description": "Documenta los hallazgos en la cronología. Actualiza el estado a medida que el incidente avanza por INVESTIGATING → CONTAINED." },
+          "notify": { "title": "Notifica si es necesario", "description": "Determina si se requiere notificación a la AEPD. Si es así, usa el flujo de notificación (ver abajo)." },
+          "resolve": { "title": "Resuelve y cierra", "description": "Documenta la causa raíz, las acciones correctivas y las lecciones aprendidas. Pasa a RESOLVED → CLOSED." }
+        }
+      },
+      "timeline": {
+        "title": "Cronología del incidente",
+        "description": "Cada incidente tiene una cronología que captura todas las acciones, cambios de estado y comunicaciones.",
+        "mockupTitle": "Vista de cronología",
+        "entries": {
+          "reported": "Incidente reportado",
+          "severity": "Severidad establecida como CRITICAL",
+          "investigation": "Investigación iniciada",
+          "rootCause": "Causa raíz identificada: configuración incorrecta de la API",
+          "notification": "Notificación a la AEPD iniciada"
+        }
+      },
+      "notifications": {
+        "title": "Notificaciones a la AEPD",
+        "description": "Cuando un incidente implica una brecha de datos personales, puede que necesites notificar a la Autoridad de Protección de Datos.",
+        "warningTitle": "Plazo de notificación de 72 horas",
+        "warningBody": "Según el Artículo 33 del RGPD, debes notificar a tu autoridad de control en un plazo de 72 horas desde que tengas conocimiento de la brecha de datos personales (salvo que sea improbable que entrañe un riesgo para los derechos y libertades de las personas). El sistema controla este plazo desde el momento en que se reporta el incidente.",
+        "tipTitle": "Flujo de notificación",
+        "tipBody": "Cuando marcas un incidente como que requiere notificación a la AEPD, el sistema crea una tarea de notificación con el plazo de 72 horas, prellena el formulario con los detalles del incidente y hace seguimiento del estado de envío."
+      },
+      "tasks": {
+        "title": "Tareas de respuesta",
+        "description": "Desglosa la respuesta al incidente en tareas asignables con plazos.",
+        "mockupTitle": "Lista de tareas",
+        "items": {
+          "identify": "Identificar a los interesados afectados",
+          "contain": "Contener la fuga de datos",
+          "prepare": "Preparar notificación a la AEPD",
+          "notifyIndividuals": "Notificar a las personas afectadas",
+          "document": "Documentar lecciones aprendidas"
+        },
+        "assignees": {
+          "dpo": "DPO",
+          "itSecurity": "Seguridad IT",
+          "communications": "Comunicación"
+        }
+      },
+      "nav": {
+        "previous": "Evaluaciones",
+        "next": "Gestión de proveedores"
+      }
+    },
+    "vendors": {
+      "title": "Gestión de proveedores",
+      "subtitle": "Gestiona los proveedores externos que tratan datos personales en tu nombre. Haz seguimiento de contratos, ejecuta cuestionarios de diligencia debida y monitoriza los niveles de riesgo de toda tu cartera de proveedores.",
+      "adding": {
+        "title": "Añadir proveedores",
+        "description": "Registra proveedores y captura los detalles clave de su relación de tratamiento de datos con tu organización.",
+        "statsMockupTitle": "Estadísticas de proveedores",
+        "stats": {
+          "total": "Total de proveedores",
+          "active": "Activos",
+          "highRisk": "Riesgo alto",
+          "pendingReview": "Pendientes de revisión"
+        },
+        "cardsMockupTitle": "Tarjetas de proveedor",
+        "categories": {
+          "cloudInfra": "Infraestructura cloud",
+          "analytics": "Analítica",
+          "email": "Servicio de correo",
+          "crm": "CRM"
+        },
+        "riskSuffix": "Riesgo",
+        "statusLabels": {
+          "ACTIVE": "ACTIVO",
+          "UNDER_REVIEW": "EN REVISIÓN",
+          "SUSPENDED": "SUSPENDIDO"
+        },
+        "steps": {
+          "navigate": { "title": "Ve a Proveedores", "description": "Haz clic en 'Proveedores' en la barra de navegación principal." },
+          "click": { "title": "Haz clic en 'Añadir proveedor'", "description": "Abre el formulario de creación de proveedor." },
+          "details": { "title": "Introduce los detalles del proveedor", "description": "Indica el nombre, categoría, descripción, datos de contacto y detalles del tratamiento de datos." },
+          "risk": { "title": "Establece el nivel de riesgo", "description": "Asigna un nivel de riesgo inicial (LOW, MEDIUM, HIGH, CRITICAL) según el tipo y volumen de datos que tratan." },
+          "contract": { "title": "Sube el contrato", "description": "Adjunta el Contrato de Encargo de Tratamiento (DPA) u otros contratos relevantes." },
+          "questionnaire": { "title": "Envía un cuestionario", "description": "Opcionalmente, envía un cuestionario de diligencia debida para que el proveedor lo complete." }
+        }
+      },
+      "contracts": {
+        "title": "Contratos",
+        "description": "Haz seguimiento de los Contratos de Encargo de Tratamiento (DPA) y otros contratos con cada proveedor.",
+        "mockupTitle": "Seguimiento de contratos",
+        "dateRangeSeparator": "a",
+        "statuses": {
+          "Active": "Activo",
+          "ExpiringSoon": "Próximo a vencer",
+          "Expired": "Vencido"
+        },
+        "calloutTitle": "Alertas de vencimiento de contrato",
+        "calloutBody": "El sistema envía notificaciones por correo 90, 60 y 30 días antes del vencimiento de un contrato, dándote tiempo para renovar o renegociar las condiciones."
+      },
+      "questionnaires": {
+        "title": "Cuestionarios",
+        "description": "Envía cuestionarios estandarizados de diligencia debida para evaluar las prácticas de privacidad y seguridad de tus proveedores.",
+        "mockupTitle": "Estado de cuestionarios",
+        "sentLabel": "Enviado {date}",
+        "statuses": {
+          "Completed": "Completado",
+          "InProgress": "En curso",
+          "Sent": "Enviado"
+        },
+        "calloutTitle": "Plantillas de cuestionario",
+        "calloutBody": "Puedes crear plantillas reutilizables de cuestionario que cubran temas como seguridad de datos, procesos de notificación de brechas, gestión de subencargados y retención de datos. Las plantillas se pueden personalizar por categoría de proveedor."
+      },
+      "riskReviews": {
+        "title": "Revisiones de riesgo",
+        "description": "Revisa periódicamente los niveles de riesgo de los proveedores según los resultados del cuestionario, el historial de incidentes y el cumplimiento contractual.",
+        "infoTitle": "Frecuencia de revisión",
+        "infoBody": "La frecuencia recomendada depende del nivel de riesgo del proveedor: proveedores CRITICAL trimestralmente, HIGH semestralmente, MEDIUM anualmente y LOW cada dos años.",
+        "noteTitle": "Evaluaciones de riesgo de proveedor",
+        "notePrefix": "Para un proceso formal de evaluación de riesgo de proveedor basado en plantillas, consulta la función premium ",
+        "noteLink": "Evaluación de riesgo de proveedor",
+        "noteSuffix": "."
+      },
+      "nav": {
+        "previous": "Incidentes",
+        "next": "Funciones Premium"
+      }
+    },
+    "dataInventory": {
+      "title": "Inventario de datos",
+      "subtitle": "El módulo de Inventario de datos es la base de tu programa de privacidad. Hace seguimiento de qué datos personales tienes, por dónde fluyen y cómo se tratan, formando la base de tu Registro de Actividades de Tratamiento (ROPA).",
+      "assets": {
+        "title": "Activos de datos",
+        "description": "Los activos de datos representan sistemas, bases de datos o aplicaciones que almacenan datos personales.",
+        "mockupTitle": "Tarjetas de activo",
+        "elementsLabel": "{count} elementos de datos",
+        "activitiesLabel": "{count} actividades",
+        "steps": {
+          "navigate": { "title": "Ve a Inventario de datos", "description": "Haz clic en 'Inventario de datos' en la barra de navegación principal." },
+          "add": { "title": "Haz clic en 'Añadir activo'", "description": "Usa el botón de la esquina superior derecha para abrir el formulario de creación de activo." },
+          "details": { "title": "Rellena los detalles", "description": "Introduce el nombre del activo, tipo (Base de datos, Aplicación, Servicio cloud, etc.), descripción y responsable de los datos." },
+          "link": { "title": "Vincula elementos de datos", "description": "Añade los elementos de datos personales que este activo almacena (ver sección Elementos de datos)." },
+          "save": { "title": "Guarda el activo", "description": "El activo aparecerá en tu inventario y podrá vincularse a actividades de tratamiento." }
+        }
+      },
+      "elements": {
+        "title": "Elementos de datos",
+        "description": "Los elementos de datos son los tipos específicos de datos personales que tratas (p. ej., direcciones de correo, IPs, historiales médicos).",
+        "mockupTitle": "Escala de sensibilidad de elementos de datos",
+        "items": {
+          "company": "Nombre de empresa",
+          "email": "Dirección de correo",
+          "address": "Dirección postal",
+          "nationalId": "DNI",
+          "health": "Historial médico"
+        },
+        "calloutTitle": "Datos de categorías especiales del RGPD",
+        "calloutBody": "Los datos clasificados como SPECIAL_CATEGORY (datos del Artículo 9) requieren consentimiento explícito u otra base jurídica específica. El sistema marca estos elementos para revisión adicional en las evaluaciones."
+      },
+      "activities": {
+        "title": "Actividades de tratamiento",
+        "description": "Las actividades de tratamiento describen cómo y por qué se usan los datos personales. Cada actividad se vincula a activos, elementos y una base jurídica.",
+        "mockupTitle": "Tarjeta de actividad de tratamiento",
+        "sampleTitle": "Correspondencia de atención al cliente",
+        "sampleDesc": "Tratamiento de tickets de soporte y seguimientos",
+        "sampleElements": {
+          "email": "Dirección de correo",
+          "name": "Nombre completo",
+          "history": "Historial de soporte"
+        },
+        "assetsLabel": "2 activos",
+        "elementsLabel": "3 elementos de datos",
+        "retentionLabel": "Retención: 3 años",
+        "calloutTitle": "Base jurídica",
+        "calloutBody": "Cada actividad de tratamiento debe tener una base jurídica documentada: Consentimiento, Contrato, Obligación legal, Interés vital, Misión pública o Interés legítimo."
+      },
+      "flows": {
+        "title": "Flujos de datos",
+        "description": "Los flujos de datos visualizan cómo los datos personales se mueven entre activos, generados automáticamente a partir de los vínculos de tus actividades de tratamiento.",
+        "mockupTitle": "Diagrama de flujo de datos",
+        "nodes": {
+          "crm": "CRM",
+          "marketing": "Marketing",
+          "analytics": "Analítica (UE)"
+        },
+        "body1Bold": "No necesitas dibujar el grafo.",
+        "body1Rest": " Cada vez que vinculas una actividad de tratamiento a dos o más activos —desde el botón ",
+        "body1ManageAssets": "Gestionar activos",
+        "body1Mid": " en la página de detalle de la actividad, o desde ",
+        "body1ManageActivities": "Gestionar actividades",
+        "body1End": " en la página de detalle del activo— el sistema crea automáticamente registros DataFlow que los conectan en un orden lógico, según la posición típica de cada tipo de activo en una canalización de datos (primero aplicaciones de entrada, luego servicios de ingesta, después bases de datos, después almacenamiento de archivos y, por último, sumideros de terceros).",
+        "body2Start": "Puedes volver a ejecutar la generación en cualquier momento con el botón ",
+        "body2GenerateFlows": "Generar flujos",
+        "body2End": " en la página de detalle de una actividad. Los flujos existentes se deduplican: cualquier cosa que hayas editado manualmente se conserva, y solo se añaden las conexiones nuevas.",
+        "tipTitle": "Flujos bidireccionales",
+        "tipBody": "Muchos sistemas reales son bidireccionales (un CRM recibe y devuelve datos de cliente). Las correspondencias de proveedores del inicio rápido y las plantillas por sector ya marcan los pares bidireccionales comunes, y el grafo en vivo dibuja las aristas de salida y retorno como curvas separadas para que no se solapen."
+      },
+      "transfers": {
+        "title": "Transferencias internacionales",
+        "description": "Haz seguimiento de las transferencias internacionales de datos y las salvaguardas en vigor para cada una.",
+        "mockupTitle": "Registros de transferencia",
+        "statuses": {
+          "Active": "Activo",
+          "UnderReview": "En revisión"
+        },
+        "warningTitle": "Cumplimiento Schrems II",
+        "warningBody": "Las transferencias internacionales requieren un mecanismo válido de transferencia. Si tu Evaluación de Impacto en Transferencias (TIA) identifica riesgos, pueden ser necesarias salvaguardas adicionales. Consulta la sección de Funciones Premium para las TIA.",
+        "tipTitle": "Exportar ROPA",
+        "tipBody": "Puedes exportar tu Registro completo de Actividades de Tratamiento (ROPA) desde la vista de listado del Inventario de datos. La exportación incluye todos los activos, elementos, actividades, bases jurídicas y registros de transferencia."
+      },
+      "nav": {
+        "previous": "Inicio rápido",
+        "next": "Gestión de DSAR"
+      }
+    },
+    "dsar": {
+      "title": "Gestión de DSAR",
+      "subtitle": "Gestiona las Solicitudes de Acceso del Interesado (DSAR) de principio a fin: desde la recepción a través de un portal público hasta la asignación de tareas, seguimiento de plazos y cumplimiento.",
+      "creating": {
+        "title": "Crear solicitudes",
+        "description": "Las DSAR se pueden crear manualmente por el personal o las pueden enviar los interesados a través del portal público.",
+        "mockupTitle": "Vista de listado de DSAR",
+        "daysLeftSuffix": "d restantes",
+        "typesLabel": "Tipos de solicitud",
+        "typesCaption": "Corresponden a los derechos de los interesados de los Artículos 15-22 del RGPD."
+      },
+      "tasks": {
+        "title": "Gestión de tareas",
+        "description": "Cada DSAR puede tener varias tareas asignadas a distintos miembros del equipo.",
+        "steps": {
+          "verify": { "title": "Verifica la identidad", "description": "Confirma la identidad del interesado antes de procesar. El sistema lleva el estado de verificación de identidad." },
+          "scope": { "title": "Evalúa el alcance", "description": "Determina qué activos de datos y actividades de tratamiento son relevantes para la solicitud." },
+          "assign": { "title": "Asigna tareas", "description": "Crea subtareas para cada departamento o sistema que tenga datos relevantes. Asigna miembros del equipo con plazos." },
+          "collect": { "title": "Recopila los datos", "description": "Cada responsable de tarea reúne y prepara su parte de la respuesta." },
+          "review": { "title": "Revisa y responde", "description": "Revisa todos los datos recopilados, recopila la respuesta y envíala al interesado." },
+          "close": { "title": "Cierra la solicitud", "description": "Marca la DSAR como completada. El sistema registra la fecha de finalización para los registros de cumplimiento." }
+        }
+      },
+      "sla": {
+        "title": "Seguimiento de plazos",
+        "description": "DPO Central hace seguimiento automático de los plazos de respuesta y te alerta antes de que venzan.",
+        "mockupTitle": "Indicadores de progreso de plazo",
+        "overdueLabel": "Vencida",
+        "daysRemaining": "{count} días restantes",
+        "warningTitle": "Plazos de respuesta",
+        "warningBody": "Según el RGPD, debes responder a las DSAR en un plazo de 30 días naturales (ampliable a 90 días para solicitudes complejas). El sistema envía notificaciones por correo a los 7, 3 y 1 día antes del vencimiento."
+      },
+      "portal": {
+        "title": "Portal público",
+        "description": "El portal público de DSAR permite a los interesados enviar solicitudes sin contactarte directamente.",
+        "mockupTitle": "Recepción del portal público",
+        "cardTitle": "Enviar una solicitud de datos",
+        "cardSubtitle": "Ejerce tus derechos en protección de datos",
+        "sampleType": "Acceder a mis datos",
+        "samplePlaceholder": "Me gustaría obtener una copia de todos los datos personales...",
+        "submitButton": "Enviar solicitud",
+        "tipTitle": "Enlace para compartir",
+        "tipPrefix": "Cada organización obtiene una URL única para su portal público (p. ej., ",
+        "tipSuffix": "). Comparte este enlace en tu política de privacidad o en el pie de tu sitio web."
+      },
+      "intakeConfig": {
+        "title": "Configuración del formulario de recepción",
+        "description": "Personaliza qué campos aparecen en tu portal DSAR público y configura los correos de acuse de recibo automáticos.",
+        "settingsLabel": "Ajustes del portal",
+        "settingsDesc": "Configúralo desde Privacidad > DSAR > pestaña Configuración",
+        "items": {
+          "autoAck": { "label": "Acuse de recibo automático", "desc": "Envía un correo de confirmación al recibir la solicitud" },
+          "identity": { "label": "Verificación de identidad", "desc": "Requiere subir un documento de identidad antes de procesar" },
+          "types": { "label": "Tipos de solicitud", "desc": "Elige qué derechos ofrecer" },
+          "custom": { "label": "Campos personalizados", "desc": "Añade campos de recepción específicos de la organización" }
+        }
+      },
+      "nav": {
+        "previous": "Inventario de datos",
+        "next": "Evaluaciones"
+      }
+    },
+    "quickstart": {
+      "title": "Asistente de inicio rápido",
+      "subtitle": "Pon en marcha todo tu programa de privacidad en minutos. El asistente de inicio rápido crea activos de datos, elementos de datos, actividades de tratamiento, flujos de datos y registros de proveedores según tu sector y las herramientas que usas.",
+      "openWizard": "Abrir asistente de inicio rápido",
+      "howItWorks": {
+        "title": "Cómo funciona",
+        "description": "El asistente ofrece dos rutas complementarias que pueden usarse juntas.",
+        "importVendors": {
+          "title": "Importar desde proveedores",
+          "desc": "Selecciona proveedores del catálogo (o impórtalos desde tu portafolio de Vendor.Watch). Para cada proveedor, el asistente genera automáticamente un activo de datos, elementos de datos, una actividad de tratamiento y registros de transferencias internacionales según el perfil de datos conocido del proveedor."
+        },
+        "industryTemplate": {
+          "title": "Plantilla por sector",
+          "desc": "Elige tu sector y obtén una estructura predefinida de activos de datos, actividades de tratamiento y flujos de datos. Cada plantilla está diseñada por profesionales de privacidad para reflejar los patrones comunes de tratamiento de datos de ese sector."
+        },
+        "nonDestructiveTitle": "No destructivo",
+        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes ejecutarlo varias veces sin problema."
+      },
+      "vendorWatch": {
+        "title": "Importar el portafolio de Vendor.Watch",
+        "description": "Si tienes una cuenta de Vendor.Watch, el asistente detecta tu portafolio automáticamente.",
+        "intro": "Cuando entras en el asistente de inicio rápido, comprueba si tu cuenta tiene un portafolio en Vendor.Watch. Si lo encuentra, tus proveedores quedan preseleccionados y listos para importar, sin búsquedas manuales.",
+        "mockupTitle": "Qué se crea por proveedor",
+        "items": {
+          "asset": { "label": "Activo de datos", "desc": "Un activo por proveedor, tipado por categoría (p. ej. Servicio cloud, Aplicación)" },
+          "elements": { "label": "Elementos de datos", "desc": "3–10 elementos por activo: identificadores, datos de comportamiento, datos financieros, etc." },
+          "activity": { "label": "Actividad de tratamiento", "desc": "Una actividad por proveedor con finalidad, base jurídica e interesados" },
+          "transfers": { "label": "Transferencias internacionales", "desc": "Registros de transferencia para cada ubicación de datos fuera de la UE con SCCs como salvaguarda" }
+        },
+        "tipTitle": "Plan gratuito: 5 proveedores de tu portafolio",
+        "tipBody": "Puedes importar hasta 5 proveedores de tu portafolio de Vendor.Watch gratis durante el inicio rápido, sin necesidad de suscripción al Catálogo de Proveedores. Coincide con el plan gratuito de Vendor.Watch. Para importar más de 5, suscríbete al complemento Catálogo de Proveedores."
+      },
+      "industryTemplates": {
+        "title": "Plantillas por sector",
+        "description": "Cada plantilla proporciona una estructura completa de programa de privacidad adaptada a tu sector.",
+        "intro": "Selecciona tu sector para generar automáticamente activos de datos (con elementos de datos), actividades de tratamiento (con bases jurídicas) y flujos de datos entre sistemas. Todos los registros se pueden personalizar tras la creación.",
+        "assetsSection": "Activos de datos",
+        "activitiesSection": "Actividades de tratamiento",
+        "flowsSection": "Flujos de datos",
+        "badges": {
+          "assets": "{count} activos",
+          "elements": "{count} elementos",
+          "activities": "{count} actividades",
+          "flows": "{count} flujos",
+          "elementsCount": "{count} elementos"
+        },
+        "templates": {
+          "ecommerce": {
+            "name": "E-commerce",
+            "description": "Comercio online con cuentas de cliente, pedidos, pagos y marketing"
+          },
+          "saas": {
+            "name": "SaaS / Tecnología",
+            "description": "Plataforma SaaS con cuentas de usuario, seguimiento de uso y soporte"
+          },
+          "healthcare": {
+            "name": "Salud",
+            "description": "Proveedor sanitario o health-tech con datos de pacientes, HCE y cumplimiento regulatorio"
+          },
+          "fintech": {
+            "name": "Fintech",
+            "description": "Tecnología financiera con KYC, procesamiento de transacciones e informes regulatorios"
+          },
+          "media": {
+            "name": "Medios / Edición",
+            "description": "Medios digitales, noticias o plataforma de contenido con suscripciones y publicidad"
+          },
+          "professional_services": {
+            "name": "Servicios profesionales",
+            "description": "Consultoría, legal, contabilidad o agencia con datos de cliente y gestión de proyectos"
+          }
+        }
+      },
+      "afterQuickstart": {
+        "title": "Después del inicio rápido",
+        "description": "Qué hacer cuando tu programa de privacidad ya está en marcha.",
+        "intro": "El inicio rápido te da una base sólida. Después de ejecutarlo, deberías:",
+        "items": {
+          "review": { "label": "Revisar los elementos de datos", "desc": "Verifica que los elementos generados automáticamente coinciden con tu tratamiento real y ajusta los plazos de retención" },
+          "legal": { "label": "Actualizar las bases jurídicas", "desc": "Confirma que la base jurídica sugerida para cada actividad de tratamiento es correcta para tu jurisdicción" },
+          "vendors": { "label": "Añadir proveedores que falten", "desc": "Registra cualquier proveedor que no esté en el catálogo ni en tu portafolio" },
+          "assessments": { "label": "Ejecutar evaluaciones", "desc": "Usa el módulo de evaluaciones para realizar DPIA en actividades de tratamiento de alto riesgo" }
+        }
+      },
+      "nav": {
+        "previous": "Primeros pasos",
+        "next": "Inventario de datos"
+      }
+    },
+    "aiGovernance": {
+      "title": "Registro de gobernanza de IA",
+      "subtitle": "Clasifica, documenta y monitoriza todos los sistemas de IA de tu organización. Anticípate al Reglamento de IA de la UE y a otras normativas emergentes con un registro de gobernanza centralizado.",
+      "overview": {
+        "title": "¿Por qué la gobernanza de IA?",
+        "description": "El Reglamento de IA de la UE introduce obligaciones para los sistemas de IA a partir de agosto de 2026. El Registro de gobernanza de IA te ayuda a clasificar, documentar y monitorizar todos los sistemas de IA de tu organización.",
+        "mockupTitle": "Panel de gobernanza de IA",
+        "stats": {
+          "total": "Total de sistemas",
+          "highRisk": "Riesgo alto",
+          "compliant": "Conformes",
+          "review": "En revisión"
+        }
+      },
+      "riskLevels": {
+        "title": "Clasificación de riesgo del Reglamento de IA de la UE",
+        "badgesMockupTitle": "Etiquetas de nivel de riesgo",
+        "examplesMockupTitle": "Ejemplos de clasificación de riesgo",
+        "columnLevel": "Nivel de riesgo",
+        "columnExamples": "Casos de uso de ejemplo",
+        "labels": {
+          "UNACCEPTABLE": "Inaceptable",
+          "HIGH": "Riesgo alto",
+          "LIMITED": "Limitado",
+          "MINIMAL": "Mínimo"
+        },
+        "descriptions": {
+          "UNACCEPTABLE": "Prohibido — debe ser desmantelado",
+          "HIGH": "Obligaciones estrictas de cumplimiento",
+          "LIMITED": "Requisitos de transparencia",
+          "MINIMAL": "Sin obligaciones específicas"
+        },
+        "examples": {
+          "UNACCEPTABLE": "Puntuación social por parte de gobiernos, vigilancia biométrica masiva en tiempo real en espacios públicos",
+          "HIGH": "IA de selección de personal y RR. HH., scoring crediticio, evaluación de estudiantes y vigilancia de exámenes",
+          "LIMITED": "Chatbots de atención al cliente, herramientas de generación de deepfakes, sistemas de reconocimiento de emociones",
+          "MINIMAL": "Filtros antispam, videojuegos con IA, sistemas de gestión de inventario"
+        }
+      },
+      "registration": {
+        "title": "Registrar sistemas de IA",
+        "description": "Añade sistemas de IA al registro de gobernanza con metadatos estructurados y clasificación de riesgo.",
+        "steps": {
+          "details": { "title": "Introduce los detalles del sistema", "description": "Indica el nombre, finalidad, proveedor, tipo de modelo y contexto de despliegue del sistema de IA. Incluye detalles sobre los datos que trata y las decisiones que influye." },
+          "classify": { "title": "Clasifica el nivel de riesgo", "description": "Selecciona el nivel de riesgo según la clasificación del Reglamento de IA de la UE. El sistema sugiere un nivel a partir de la finalidad y categoría declaradas, pero la decisión final es tuya." },
+          "document": { "title": "Documenta las medidas de cumplimiento", "description": "Registra las medidas en vigor: mecanismos de supervisión humana, declaraciones de transparencia, documentación de datos de entrenamiento y monitorización de la precisión." },
+          "review": { "title": "Revisa y registra", "description": "Revisa todos los detalles y registra el sistema de IA. Pasa al registro de gobernanza y queda sujeto a monitorización continua del cumplimiento." }
+        },
+        "tipTitle": "Vincula a proveedores existentes",
+        "tipBody": "Al registrar un sistema de IA, puedes vincularlo a un proveedor existente en tu módulo de gestión de proveedores. Esto conecta el registro de gobernanza de IA con el perfil de riesgo del proveedor, la información contractual y el estado del DPA."
+      },
+      "suggestion": {
+        "title": "Sugerencia automática de riesgo",
+        "description": "El sistema analiza la finalidad y categoría declaradas del sistema de IA para sugerir un nivel de riesgo apropiado.",
+        "mockupTitle": "Ejemplo de sugerencia de riesgo",
+        "examples": {
+          "recruitment": { "name": "Herramienta de selección de CV", "purpose": "Filtrado automatizado de CVs y ranking de candidatos" },
+          "chatbot": { "name": "Chatbot de atención al cliente", "purpose": "Responder preguntas frecuentes y enrutar tickets de soporte" },
+          "spam": { "name": "Filtro de correo no deseado", "purpose": "Clasificar y filtrar correos no deseados" }
+        },
+        "suggestedLabel": "Sugerido:",
+        "infoTitle": "La sugerencia es un punto de partida",
+        "infoBody": "La sugerencia automática de riesgo usa coincidencia por palabras clave contra los campos de finalidad y categoría del sistema de IA. Está pensada como un punto de partida útil, no como una clasificación definitiva. Siempre se requiere revisión humana para confirmar el nivel de riesgo, ya que el contexto y los matices son importantes en la clasificación del Reglamento de IA de la UE."
+      },
+      "obligations": {
+        "title": "Obligaciones de cumplimiento",
+        "description": "Cada nivel de riesgo conlleva obligaciones específicas de cumplimiento bajo el Reglamento de IA de la UE. El registro lleva qué obligaciones aplican y su estado de cumplimiento.",
+        "mockupTitle": "Obligaciones de riesgo alto",
+        "items": {
+          "risk": { "title": "Sistema de gestión de riesgos", "description": "Establece y mantén un proceso continuo de gestión de riesgos" },
+          "data": { "title": "Gobernanza de datos", "description": "Asegura que los conjuntos de datos de entrenamiento, validación y prueba cumplen criterios de calidad" },
+          "doc": { "title": "Documentación técnica", "description": "Mantén documentación detallada del diseño y desarrollo del sistema" },
+          "records": { "title": "Registro de eventos", "description": "Registra automáticamente eventos del sistema para trazabilidad y auditoría" },
+          "human": { "title": "Supervisión humana", "description": "Diseña el sistema para permitir una supervisión humana efectiva durante la operación" },
+          "accuracy": { "title": "Precisión y robustez", "description": "Alcanza y mantén niveles apropiados de precisión, robustez y ciberseguridad" }
+        },
+        "transparencyTitle": "Transparencia en riesgo limitado",
+        "transparencyBody": "Los sistemas de IA clasificados como riesgo LIMITED deben comunicar claramente a los usuarios que están interactuando con un sistema de IA. Aplica a chatbots, reconocimiento de emociones y herramientas de generación de deepfakes. El registro lleva si esta declaración de transparencia se ha implementado.",
+        "deadlineTitle": "Plazo de agosto de 2026",
+        "deadlineBody": "Las obligaciones del Reglamento de IA de la UE para sistemas de alto riesgo entran en vigor en agosto de 2026. Las organizaciones deberían comenzar a clasificar y documentar sus sistemas de IA ahora para asegurar el cumplimiento en plazo. El incumplimiento puede acarrear multas de hasta 35 millones de EUR o el 7 % de la facturación anual global."
+      },
+      "linking": {
+        "title": "Integración con otros módulos",
+        "description": "Los registros de gobernanza de IA conectan con otros módulos de DPO Central para una visión integral de cumplimiento.",
+        "items": {
+          "vendors": { "label": "Proveedores", "desc": "Vincula los sistemas de IA con sus proveedores para el seguimiento de contratos, estado del DPA y monitorización de riesgo de proveedor." },
+          "assessments": { "label": "Evaluaciones", "desc": "Lanza evaluaciones de impacto de IA directamente desde el registro. Los resultados se vinculan de vuelta al registro del sistema de IA." },
+          "inventory": { "label": "Inventario de datos", "desc": "Mapea las fuentes de datos de entrenamiento en tu inventario. Lleva el control de qué activos alimentan cada sistema de IA." }
+        }
+      },
+      "sentinel": {
+        "title": "Integración con AI Sentinel",
+        "description": "DPO Central actúa como registro ligero de cumplimiento en privacidad para sistemas de IA. Para gobernanza profunda de IA —historial de clasificación de riesgo, marcos de cumplimiento, controles de supervisión, incidentes de IA, políticas— usa AI Sentinel.",
+        "importTitle": "Importar proveedores crea registros de IA",
+        "importDesc": "Cuando importas proveedores con capacidades de IA desde el Catálogo de Proveedores durante el inicio rápido, DPO Central crea automáticamente registros de sistemas de IA con capacidades, técnicas, rol del Reglamento de IA de la UE y clasificación de riesgo a partir del catálogo.",
+        "exportTitle": "Exportar a AI Sentinel",
+        "exportDesc": "Envía tus registros de sistemas de IA a AI Sentinel para una gestión profunda de la gobernanza. Los sistemas exportados quedan vinculados con un deep link de vuelta a AI Sentinel para una navegación fluida entre apps.",
+        "mockupTitle": "Flujo de integración",
+        "stage1": { "title": "Vendor.Watch", "subtitle": "Campos de IA en el catálogo" },
+        "stage2": { "title": "DPO Central", "subtitle": "Registro ligero de IA" },
+        "stage3": { "title": "AI Sentinel", "subtitle": "Gobernanza profunda de IA" },
+        "configTitle": "Requiere configuración",
+        "configBody": "La integración con AI Sentinel requiere las variables de entorno AI_SENTINEL_API_URL y AI_SENTINEL_API_KEY. Cuando estén configuradas, verás el botón \"Enviar a AI Sentinel\" en la página de listado de sistemas de IA. Los sistemas que se han exportado muestran una etiqueta vinculada y un deep link en su página de detalle."
+      },
+      "nav": {
+        "previous": "Regulaciones",
+        "next": "Funciones Premium"
+      }
+    },
+    "transferCompliance": {
+      "title": "Gestor de cumplimiento de transferencias",
+      "subtitle": "Monitoriza y gestiona las transferencias internacionales de datos con un panel de cumplimiento centralizado. Lleva el seguimiento de decisiones de adecuación, SCCs y estado de TIA en todos tus flujos de datos internacionales.",
+      "overview": {
+        "title": "Visión general del cumplimiento de transferencias",
+        "description": "Tras Schrems II, las transferencias internacionales requieren una gestión cuidadosa del cumplimiento. El Gestor de cumplimiento de transferencias ofrece una vista centralizada de todos los flujos de datos internacionales.",
+        "stats": {
+          "adequacy": { "label": "Estado de adecuación", "value": "11 países", "subtitle": "Decisiones de adecuación activas" },
+          "scc": { "label": "Seguimiento de SCCs", "value": "Activo", "subtitle": "Contratos monitorizados" },
+          "tia": { "label": "Estado TIA", "value": "Al día", "subtitle": "Evaluaciones de impacto de transferencia" }
+        }
+      },
+      "complianceStatus": {
+        "title": "Estado de cumplimiento",
+        "description": "A cada transferencia se le asigna un estado de cumplimiento según las salvaguardas en vigor.",
+        "mockupTitle": "Estados de cumplimiento de transferencias",
+        "labels": {
+          "COMPLIANT": "CONFORME",
+          "NEEDS_REVIEW": "REVISIÓN REQUERIDA",
+          "NON_COMPLIANT": "NO CONFORME",
+          "PENDING": "PENDIENTE"
+        },
+        "descriptions": {
+          "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o SCCs válidas con una Evaluación de Impacto de Transferencia completada. No se requiere acción.",
+          "NEEDS_REVIEW": "Las SCCs están en vigor pero no se ha completado una TIA, o las medidas complementarias pueden estar desactualizadas. Se recomienda revisión.",
+          "NON_COMPLIANT": "Las SCCs han caducado o no hay mecanismo de transferencia válido en vigor. Se requiere acción inmediata para evitar riesgo regulatorio.",
+          "PENDING": "La transferencia se ha registrado pero aún no se ha evaluado. Completa la revisión de cumplimiento para asignarle un estado."
+        }
+      },
+      "schremsIi": {
+        "title": "Lista de verificación Schrems II",
+        "description": "Sigue el marco de seis pasos recomendado por el CEPD para evaluar transferencias internacionales de datos.",
+        "steps": {
+          "know": { "title": "Conoce tus transferencias", "description": "Mapea todas las transferencias internacionales en tu inventario de datos. Identifica origen, país de destino, categorías de datos y destinatarios." },
+          "tool": { "title": "Identifica el mecanismo de transferencia", "description": "Determina el mecanismo apropiado: decisión de adecuación, Cláusulas Contractuales Tipo (SCCs), Normas Corporativas Vinculantes (BCRs) o una excepción del Artículo 49." },
+          "assess": { "title": "Evalúa el derecho del tercer país", "description": "Evalúa si las leyes y prácticas del país de destino proporcionan un nivel de protección esencialmente equivalente. Céntrate en poderes de vigilancia y acceso a datos por autoridades públicas." },
+          "supplementary": { "title": "Aplica medidas complementarias", "description": "Si la evaluación del tercer país revela carencias, identifica e implementa medidas complementarias técnicas, contractuales u organizativas para cubrir la brecha de protección." },
+          "procedural": { "title": "Completa los pasos procedimentales", "description": "Finaliza los formalismos requeridos: ejecuta las SCCs, obtén autorización donde sea necesario y documenta tu evaluación de impacto de transferencia (TIA)." },
+          "monitor": { "title": "Monitoriza desarrollos", "description": "Monitoriza continuamente los desarrollos legales y políticos en los países de destino. Reevalúa las transferencias cuando cambien las circunstancias." }
+        },
+        "warningTitle": "Las SCCs solas pueden no ser suficientes",
+        "warningBody": "El TJUE dictaminó en Schrems II que las Cláusulas Contractuales Tipo deben complementarse con salvaguardas adicionales cuando las leyes del país de destino no proporcionen una protección esencialmente equivalente. Completa siempre una Evaluación de Impacto de Transferencia junto con tus SCCs."
+      },
+      "adequacy": {
+        "title": "Decisiones de adecuación",
+        "description": "La Comisión Europea ha reconocido que ciertos países ofrecen un nivel adecuado de protección de datos. Las transferencias a estos países no requieren salvaguardas adicionales.",
+        "mockupTitle": "Países con decisiones de adecuación",
+        "sinceLabel": "Desde {year}",
+        "countries": {
+          "Andorra": "Andorra",
+          "Argentina": "Argentina",
+          "Canada": "Canadá (sector comercial)",
+          "Israel": "Israel",
+          "Japan": "Japón",
+          "NewZealand": "Nueva Zelanda",
+          "SouthKorea": "Corea del Sur",
+          "Switzerland": "Suiza",
+          "UK": "Reino Unido",
+          "Uruguay": "Uruguay",
+          "USA": "EE. UU. (Marco de Privacidad de Datos)"
+        }
+      },
+      "supplementaryMeasures": {
+        "title": "Medidas complementarias",
+        "description": "Cuando un mecanismo de transferencia por sí solo no proporciona protección suficiente, las medidas complementarias ayudan a cubrir la brecha.",
+        "items": {
+          "technical": { "title": "Medidas técnicas", "desc": "Cifrado de extremo a extremo, seudonimización, gestión de claves bajo control europeo y controles de acceso estrictos que impiden a autoridades de terceros países acceder a los datos en claro." },
+          "contractual": { "title": "Medidas contractuales", "desc": "Cláusulas contractuales adicionales que obligan al importador a notificar solicitudes de acceso, derechos de auditoría para el exportador y compromisos para impugnar solicitudes desproporcionadas." },
+          "organizational": { "title": "Medidas organizativas", "desc": "Políticas internas de protección de datos, formación regular del personal, estructuras de gobernanza con clara rendición de cuentas y procedimientos documentados para gestionar solicitudes de acceso gubernamentales." }
+        }
+      },
+      "sccTracking": {
+        "title": "Seguimiento de vencimiento de SCCs",
+        "description": "El Gestor de cumplimiento de transferencias monitoriza automáticamente las fechas de vencimiento de las SCCs y envía alertas para que nunca se te pase un plazo de renovación.",
+        "mockupTitle": "Cronología de vencimientos de SCCs",
+        "expiresLabel": "Vence el {date}",
+        "remaining": "{count}d restantes",
+        "expiredLabel": "Vencido",
+        "tipTitle": "Indica fechas de vencimiento al crear transferencias",
+        "tipBody": "Introduce siempre la fecha de vencimiento de la SCC al registrar una transferencia internacional. El sistema envía notificaciones automáticas por correo a los 30 días y 7 días antes del vencimiento, dándote tiempo para renovar o renegociar con el importador de datos."
+      },
+      "nav": {
+        "previous": "DPIA Auto-Fill",
+        "next": "Regulaciones"
+      }
+    },
+    "regulations": {
+      "title": "Rastreador regulatorio",
+      "subtitle": "Lleva el control de qué regulaciones de privacidad aplican a tu organización, entiende sus requisitos y deja que el sistema configure automáticamente los plazos y ventanas de notificación según tus jurisdicciones aplicables.",
+      "catalog": {
+        "title": "Catálogo de jurisdicciones",
+        "description": "Explora más de 40 regulaciones de privacidad de todo el mundo, organizadas por región y categoría.",
+        "mockupTitle": "Tarjetas de jurisdicción",
+        "dsarLabel": "Plazo DSAR:",
+        "breachLabel": "Notificación de brecha:"
+      },
+      "applicability": {
+        "title": "Asistente de aplicabilidad",
+        "description": "Responde preguntas sencillas sobre tu organización para determinar qué regulaciones aplican.",
+        "steps": {
+          "location": { "title": "Responde preguntas de ubicación", "description": "Indica dónde están tus clientes, empleados y servidores. El asistente cubre los factores geográficos y operativos clave." },
+          "identify": { "title": "Identifica jurisdicciones aplicables", "description": "El asistente analiza tus respuestas e identifica qué regulaciones de privacidad aplican a tu organización según su alcance jurisdiccional." },
+          "review": { "title": "Revisa las recomendaciones", "description": "Revisa la lista de regulaciones recomendadas y elige cuáles aplicar a tu organización. Puedes añadir u omitir cualquier recomendación." },
+          "configure": { "title": "Configuración automática de plazos", "description": "Una vez aplicadas, el sistema configura automáticamente los plazos de respuesta a DSAR y las ventanas de notificación de brechas según los requisitos de cada regulación." }
+        },
+        "tipTitle": "Vuelve a ejecutarlo al expandirte",
+        "tipBody": "Ejecuta el asistente de aplicabilidad de nuevo cada vez que entres en nuevos mercados, contrates empleados en nuevos países o despliegues infraestructura en nuevas regiones. Pueden aplicar nuevas jurisdicciones a medida que crezca tu huella."
+      },
+      "categories": {
+        "title": "Categorías de regulación",
+        "items": {
+          "comprehensive": { "title": "Integrales", "desc": "Marcos completos de privacidad que cubren todos los aspectos de la protección de datos, como RGPD, CPRA, LGPD y POPIA." },
+          "sectoral": { "title": "Sectoriales", "desc": "Regulaciones específicas de sector dirigidas a industrias concretas, como HIPAA para salud y PCI DSS para datos de pago." },
+          "ai": { "title": "Gobernanza de IA", "desc": "Regulaciones y marcos específicos de IA, como el Reglamento de IA de la UE, que abordan la transparencia algorítmica y la toma de decisiones automatizada." },
+          "emerging": { "title": "Emergentes", "desc": "Leyes recién aprobadas o propuestas que aún no están plenamente vigentes, ayudándote a prepararte para los próximos requisitos de cumplimiento." }
+        }
+      },
+      "managing": {
+        "title": "Gestionar jurisdicciones",
+        "intro": "Una vez que hayas identificado las regulaciones aplicables a través del asistente o de la selección manual, puedes gestionarlas desde el panel de Regulaciones. Aplicar una jurisdicción la crea en la base de datos de tu organización y la vincula a tu perfil de cumplimiento.",
+        "mockupTitle": "Gestión de jurisdicciones",
+        "primaryBadge": "Principal",
+        "statuses": {
+          "Applied": "Aplicada",
+          "NotApplied": "No aplicada"
+        },
+        "infoTitle": "Jurisdicción principal",
+        "infoBody": "Establecer una jurisdicción principal determina el plazo predeterminado de respuesta a DSAR y la ventana de notificación de brechas usada en toda tu organización. Las demás jurisdicciones aplicadas se llevan en paralelo, y el plazo más estricto siempre prevalece cuando se solapan varias jurisdicciones."
+      },
+      "impact": {
+        "title": "Impacto en el sistema",
+        "description": "Las jurisdicciones aplicadas influyen directamente en cómo DPO Central calcula plazos y monitoriza el cumplimiento en tu organización.",
+        "mockupTitle": "Resumen de impacto",
+        "stats": {
+          "dsar": { "label": "Plazos DSAR", "value": "Auto", "subtitle": "Según la jurisdicción más estricta" },
+          "breach": { "label": "Notificaciones de brecha", "value": "Auto", "subtitle": "72h, sin demora indebida o personalizado" },
+          "monitoring": { "label": "Monitorización de cumplimiento", "value": "Activa", "subtitle": "Seguimiento continuo de requisitos" }
+        },
+        "noteTitle": "Las jurisdicciones son acumulativas",
+        "noteBody": "Cuando varias jurisdicciones aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD requiere una respuesta DSAR en 30 días y la LGPD en 15, el sistema hará cumplir el plazo de 15 días. Así te mantienes conforme con todas las regulaciones aplicables a la vez."
+      },
+      "nav": {
+        "previous": "Cumplimiento de transferencias",
+        "next": "Gobernanza de IA"
+      }
+    },
+    "reports": {
+      "title": "Informes de cumplimiento",
+      "subtitle": "Monitoriza el estado de cumplimiento en privacidad de tu organización con una única puntuación, desglose por módulo e indicadores de riesgo accionables. Exporta informes listos para la dirección y demuestra responsabilidad.",
+      "score": {
+        "title": "Puntuación de cumplimiento",
+        "description": "Una puntuación ponderada de 0 a 100 que refleja la salud general de tu programa de privacidad en todos los módulos.",
+        "mockupTitle": "Pesos por módulo",
+        "weightSubtitle": "peso",
+        "modules": {
+          "ROPA": "ROPA",
+          "DSAR": "Plazos DSAR",
+          "Assessments": "Evaluaciones",
+          "Incidents": "Incidentes",
+          "Vendors": "Proveedores"
+        },
+        "intro": "Cada módulo contribuye un porcentaje ponderado a la puntuación de cumplimiento general. La puntuación final se calcula en una escala de 0 a 100 con el siguiente código de colores:",
+        "bands": {
+          "strong": "80–100: Fuerte",
+          "attention": "60–79: Requiere atención",
+          "risk": "0–59: En riesgo"
+        }
+      },
+      "modules": {
+        "title": "Desglose por módulo",
+        "description": "Cada módulo se puntúa de forma independiente según la completitud y puntualidad de tus registros.",
+        "mockupTitle": "Puntuaciones por módulo",
+        "exampleLabel": "p. ej. {text}",
+        "items": {
+          "inventory": { "module": "Inventario de datos", "metric": "Activos con actividades de tratamiento vinculadas", "example": "El 85 % de los activos tiene al menos una actividad" },
+          "dsar": { "module": "DSAR", "metric": "Tasa de finalización a tiempo", "example": "El 92 % de las solicitudes se completan en plazo" },
+          "assessments": { "module": "Evaluaciones", "metric": "Tasa de evaluaciones aprobadas", "example": "El 78 % de las evaluaciones se aprueban" },
+          "incidents": { "module": "Incidentes", "metric": "Tasa de notificación oportuna a la AEPD", "example": "El 100 % notificado en menos de 72 horas" },
+          "vendors": { "module": "Proveedores", "metric": "Cobertura de revisión", "example": "El 70 % de los proveedores revisados en plazo" }
+        }
+      },
+      "risk": {
+        "title": "Indicadores de riesgo",
+        "description": "Alertas accionables que destacan brechas concretas de cumplimiento que requieren atención inmediata.",
+        "intro": "Los indicadores de riesgo destacan problemas concretos, no puntuaciones abstractas. Te dicen exactamente qué hay que arreglar y enlazan directamente con los registros afectados:",
+        "items": {
+          "dsar": { "label": "DSAR vencidas", "example": "p. ej. «3 DSAR pasadas de su plazo legal»" },
+          "vendors": { "label": "Proveedores de alto riesgo no evaluados", "example": "p. ej. «2 proveedores de riesgo HIGH sin evaluación completada»" },
+          "contracts": { "label": "Contratos vencidos", "example": "p. ej. «1 DPA de proveedor vencido sin renovación»" },
+          "ropa": { "label": "Entradas ROPA obsoletas", "example": "p. ej. «5 actividades de tratamiento sin actualizar en más de 12 meses»" },
+          "incidents": { "label": "Incidentes críticos abiertos", "example": "p. ej. «1 incidente CRITICAL abierto durante más de 48 horas»" }
+        },
+        "warningTitle": "Indicadores críticos",
+        "warningBody": "Los indicadores marcados como críticos (DSAR vencidas, incidentes críticos abiertos, contratos vencidos) aparecen al inicio del panel de cumplimiento con una etiqueta roja. Atiende estos primero para evitar exposición regulatoria."
+      },
+      "snapshots": {
+        "title": "Seguimiento de tendencias",
+        "description": "Guarda instantáneas mensuales de tu puntuación de cumplimiento para llevar el progreso a lo largo del tiempo.",
+        "mockupTitle": "Histórico de tendencia",
+        "scoreLabel": "Puntuación: {score}/100",
+        "months": {
+          "march": "Marzo 2026",
+          "february": "Febrero 2026",
+          "january": "Enero 2026",
+          "december": "Diciembre 2025",
+          "november": "Noviembre 2025"
+        },
+        "tipTitle": "Guarda instantáneas con regularidad",
+        "tipBody": "Toma una instantánea mensual de tu puntuación de cumplimiento para construir un histórico de tendencia para reportes a la dirección. Las instantáneas capturan la puntuación, el desglose por módulo y los indicadores de riesgo activos en ese momento, facilitando demostrar el progreso a la dirección y a los auditores."
+      },
+      "board": {
+        "title": "Exportar informe para la dirección",
+        "description": "Genera informes PDF profesionales para la dirección y presentaciones de comité.",
+        "pdfLabel": "Exportar PDF",
+        "boardIncludes": "El informe para la dirección incluye:",
+        "boardItems": {
+          "executive": "Resumen ejecutivo con la puntuación general de cumplimiento",
+          "breakdown": "Desglose módulo por módulo con puntuaciones individuales",
+          "trend": "Gráfico de tendencia mostrando el histórico durante el periodo seleccionado",
+          "indicators": "Indicadores de riesgo activos y acciones recomendadas",
+          "dsar": "Estadísticas de DSAR: total recibidas, completadas a tiempo, tiempo medio de resolución",
+          "incident": "Resumen de incidentes: número por severidad, tasa de cumplimiento de notificaciones",
+          "vendor": "Visión general de proveedores: distribución por nivel de riesgo, resumen de estado de contratos"
+        },
+        "allPdfsTitle": "Los ocho informes PDF:",
+        "allPdfs": {
+          "inventoryLabel": "Inventario de datos",
+          "inventoryDesc": " — activos, elementos, transferencias y un Mapa de Flujos de Datos renderizado",
+          "ropaLabel": "ROPA",
+          "ropaDesc": " (premium) — registro del Artículo 30 del RGPD con clústeres de flujo por actividad",
+          "vendorLabel": "Registro de proveedores",
+          "vendorDesc": " — lista de proveedores con niveles de riesgo y estado de contratos",
+          "breachLabel": "Registro de brechas",
+          "breachDesc": " — resúmenes de incidentes, cronologías y notificaciones a la AEPD",
+          "dsarLabel": "Rendimiento DSAR",
+          "dsarDesc": " — volúmenes de solicitudes, cumplimiento de plazos, tendencias mensuales",
+          "portfolioLabel": "Portafolio de evaluaciones",
+          "portfolioDesc": " — resumen de DPIA/PIA/TIA/LIA a nivel de programa",
+          "assessmentLabel": "Evaluación (individual)",
+          "assessmentDesc": " — cuestionario completo con respuestas y puntuación de riesgo",
+          "regulatoryLabel": "Panorama regulatorio",
+          "regulatoryDesc": " — jurisdicciones aplicadas y estado de cumplimiento"
+        },
+        "flowTipTitle": "Mapa de flujos de datos en PDFs",
+        "flowTipBody": "Los PDFs de Inventario de datos y ROPA renderizan un diagrama auto-organizado de cómo se mueven los datos entre tus activos, con nodos coloreados por tipo de activo y aristas etiquetadas con las categorías de datos y la frecuencia. La versión ROPA agrupa los activos en clústeres con borde por actividad de tratamiento. No hay que dibujar nada: se genera a partir de tus vínculos actividad-activo.",
+        "premiumTitle": "Función premium (solo ROPA)",
+        "premiumBody": "La exportación PDF de ROPA está limitada a una suscripción premium. El resto de los informes PDF están disponibles para todos los usuarios."
+      },
+      "nav": {
+        "previous": "Ayuda experta y perfiles",
+        "next": "DPIA Auto-Fill"
+      }
+    },
+    "dpiaAutoFill": {
+      "title": "Asistente DPIA Auto-Fill",
+      "subtitle": "Acelera tus Evaluaciones de Impacto en la Protección de Datos aprovechando tu inventario de datos existente. El Asistente Auto-Fill prellena las respuestas del DPIA para que te centres en el análisis, no en la introducción de datos.",
+      "overview": {
+        "title": "Cómo funciona",
+        "description": "El Asistente DPIA Auto-Fill cruza tu inventario de datos para prellenar las respuestas de la evaluación, convirtiendo horas de trabajo manual en minutos.",
+        "items": {
+          "rule": { "label": "Auto-Fill basado en reglas", "desc": "Mapea tus actividades de tratamiento, elementos de datos y registros de transferencia directamente a las preguntas del DPIA. Cada respuesta es trazable hasta tu inventario." },
+          "ai": { "label": "Narrativa con IA opcional", "desc": "Cuando hay configurada una clave de API de LLM, el asistente puede generar narrativas de riesgo en lenguaje natural y sugerencias de mitigación basadas en tu contexto de datos." }
+        }
+      },
+      "steps": {
+        "title": "Pasos del asistente",
+        "items": {
+          "select": { "title": "Selecciona una actividad de tratamiento", "description": "Elige la actividad de tratamiento que quieres evaluar. Opcionalmente vincula un proveedor para incluir su contexto de tratamiento de datos." },
+          "preview": { "title": "Previsualiza el contexto de datos", "description": "Revisa el contexto agregado: activos vinculados, número de elementos de datos, transferencias activas y proveedores asociados. Estos son los datos que usará el asistente." },
+          "review": { "title": "Revisa y edita las respuestas", "description": "Recorre las respuestas prellenadas sección por sección. Cada respuesta muestra una etiqueta de confianza para que sepas qué revisar. Edita cualquier respuesta antes de continuar." },
+          "create": { "title": "Crea la evaluación", "description": "Finaliza y crea un DPIA o LIA en borrador con todas las respuestas prellenadas. La evaluación pasa al estado DRAFT, lista para editar o enviar a revisión." }
+        }
+      },
+      "sources": {
+        "title": "Qué se prellena",
+        "description": "El asistente mapea tu inventario de datos a secciones concretas del DPIA. Esto es lo que se rellena y de dónde sale.",
+        "mockupTitle": "Tabla de mapeo de Auto-Fill",
+        "columnSection": "Sección",
+        "columnQuestion": "Pregunta",
+        "columnSource": "Datos de origen",
+        "columnConfidence": "Confianza",
+        "rows": {
+          "processing": { "section": "Descripción del tratamiento", "question": "Describe la operación de tratamiento", "source": "Finalidad y descripción de la actividad" },
+          "basis": { "section": "Base jurídica", "question": "¿Cuál es la base jurídica?", "source": "activity.legalBasis" },
+          "categories": { "section": "Categorías de datos", "question": "¿Qué categorías de datos se tratan?", "source": "Elementos de datos vinculados" },
+          "special": { "section": "Categorías especiales", "question": "¿El tratamiento incluye categorías especiales?", "source": "Elementos con isSpecialCategory" },
+          "subjects": { "section": "Interesados", "question": "¿Quiénes son los interesados?", "source": "activity.dataSubjects" },
+          "retention": { "section": "Periodo de retención", "question": "¿Cuánto tiempo se retienen los datos?", "source": "Política de retención de la actividad" },
+          "security": { "section": "Medidas de seguridad", "question": "¿Qué medidas de seguridad hay en vigor?", "source": "Certificaciones de proveedores" },
+          "transfers": { "section": "Transferencias internacionales", "question": "¿Hay transferencias internacionales?", "source": "Registros DataTransfer" },
+          "risk": { "section": "Evaluación de riesgo", "question": "¿Cuáles son los riesgos identificados?", "source": "Análisis multifactor" }
+        }
+      },
+      "confidence": {
+        "title": "Niveles de confianza",
+        "description": "Cada respuesta prellenada incluye un indicador de confianza para que sepas cuánta revisión necesita.",
+        "items": {
+          "HIGH": "Origen directo en tu inventario de datos. Estos valores se toman tal cual de tus actividades de tratamiento, elementos de datos o registros de transferencia.",
+          "MEDIUM": "Inferidos a partir de contexto relacionado. Por ejemplo, medidas de seguridad derivadas de certificaciones de proveedores o riesgos de transferencia basados en el país de destino.",
+          "LOW": "Sugerencias basadas en plantilla que ofrecen un punto de partida. Son recomendaciones genéricas que deberías personalizar a tu contexto específico."
+        },
+        "tipTitle": "Revisa las respuestas de confianza media y baja",
+        "tipBody": "Revisa siempre las respuestas de confianza MEDIUM y LOW antes de enviar la evaluación. Estas respuestas pueden necesitar ajuste para reflejar con precisión tu contexto de tratamiento y las medidas organizativas concretas."
+      },
+      "ai": {
+        "title": "Mejora opcional con IA",
+        "description": "Mejora las respuestas prellenadas con narrativas y análisis de riesgo generados por IA.",
+        "providersTitle": "Proveedores soportados",
+        "providersPrefix": "Define ",
+        "providersOr": " o ",
+        "providersSuffix": " en tus variables de entorno para habilitar narrativas de riesgo, sugerencias de mitigación y resúmenes en lenguaje natural generados por IA.",
+        "fallbackTitle": "Degradación elegante",
+        "fallbackBody": "Cuando no hay una clave de API configurada, el asistente funciona enteramente con Auto-Fill basado en reglas. Toda la funcionalidad principal opera sin IA: la capa de IA es puramente aditiva para generar texto narrativo.",
+        "privacyTitle": "Tus datos permanecen bajo tu control",
+        "privacyBody": "Ningún dato sale de tu entorno salvo que configures explícitamente una clave de API. Cuando la IA está habilitada, solo se envía al proveedor el contexto mínimo necesario para la pregunta concreta. No se comparte el inventario de datos en bloque."
+      },
+      "nav": {
+        "previous": "Informes de cumplimiento",
+        "next": "Cumplimiento de transferencias"
+      }
+    },
+    "premium": {
+      "title": "Funciones complementarias",
+      "subtitle": "Las funciones complementarias amplían DPO Central con tipos avanzados de evaluación, inteligencia de proveedores y herramientas especializadas de cumplimiento. Cada una está disponible por {price}/mes.",
+      "cardTitle": "Funciones complementarias",
+      "cardBodyPrefix": "Estas funciones están disponibles como complementos por ",
+      "cardBodyMid": "/mes cada una. No están incluidas en el núcleo open source.",
+      "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
+      "cardContact": " Contacta con nuestro equipo para habilitar funciones en tu organización.",
+      "viewAddons": "Ver complementos",
+      "contactUs": "Contactar",
+      "dpia": {
+        "title": "DPIA — Evaluación de Impacto en la Protección de Datos",
+        "description": "Requerida por el Artículo 35 del RGPD cuando un tratamiento es probable que entrañe un riesgo alto para las personas.",
+        "badge": "Cumplimiento del Artículo 35 del RGPD",
+        "whenTitle": "¿Cuándo se requiere una DPIA?",
+        "whenItems": {
+          "profiling": "Perfilado sistemático y extenso con efectos significativos",
+          "special": "Tratamiento a gran escala de datos de categorías especiales (Artículo 9)",
+          "monitoring": "Vigilancia sistemática de zonas de acceso público",
+          "tech": "Uso de nuevas tecnologías que entrañan riesgo alto",
+          "rights": "Tratamiento que impide a los interesados ejercer sus derechos"
+        },
+        "workflowTitle": "Flujo de DPIA",
+        "workflowItems": {
+          "describe": "Describir las operaciones y finalidades del tratamiento",
+          "assess": "Evaluar la necesidad y la proporcionalidad",
+          "identify": "Identificar y evaluar los riesgos para las personas",
+          "measures": "Determinar las medidas para mitigar los riesgos",
+          "document": "Documentar la evaluación y solicitar consulta al DPO",
+          "consult": "Si el riesgo residual es alto, consultar con la autoridad de control"
+        },
+        "infoTitle": "Habilitar DPIA",
+        "infoSelfPrefix": "Disponible como complemento. Visita la ",
+        "infoSelfLink": "página de facturación",
+        "infoSelfSuffix": " para habilitar las evaluaciones DPIA.",
+        "infoContactPrefix": "Disponible como complemento. Contacta con ",
+        "infoContactSuffix": " para habilitar las evaluaciones DPIA en tu organización."
+      },
+      "pia": {
+        "title": "PIA — Evaluación de Impacto en Privacidad",
+        "description": "Un marco más amplio de evaluación de privacidad para valorar implicaciones más allá de los requisitos específicos del RGPD.",
+        "badge": "Análisis de Impacto en Privacidad",
+        "diffTitle": "¿En qué se diferencia una PIA de un DPIA?",
+        "diffItems": {
+          "scopeLabel": "Alcance más amplio:",
+          "scopeBody": " Las PIA cubren preocupaciones de privacidad más allá del RGPD, incluidos CCPA, LGPD y otros marcos",
+          "orgLabel": "Enfoque organizativo:",
+          "orgBody": " Evalúa el riesgo de privacidad tanto para personas como para la organización",
+          "flexLabel": "Plantillas flexibles:",
+          "flexBody": " Adaptables a distintas jurisdicciones y requisitos regulatorios",
+          "casesLabel": "Casos de uso:",
+          "casesBody": " Lanzamientos de producto, campañas de marketing, sistemas de IA/ML, due diligence en M&A"
+        },
+        "infoTitle": "Habilitar PIA",
+        "infoSelfPrefix": "Disponible como complemento. Visita la ",
+        "infoSelfLink": "página de facturación",
+        "infoSelfSuffix": " para habilitar las evaluaciones PIA.",
+        "infoContactPrefix": "Disponible como complemento. Contacta con ",
+        "infoContactSuffix": " para habilitar las evaluaciones PIA en tu organización."
+      },
+      "tia": {
+        "title": "TIA — Evaluación de Impacto de Transferencia",
+        "description": "Evalúa los riesgos de las transferencias internacionales de datos tras la sentencia Schrems II.",
+        "badge": "Cumplimiento Schrems II",
+        "evalTitle": "La TIA evalúa:",
+        "evalItems": {
+          "legal": "El marco legal del país receptor",
+          "surveillance": "Leyes de vigilancia y acceso por autoridades",
+          "supplementary": "Si se necesitan medidas complementarias además de SCCs/BCRs",
+          "technical": "Medidas técnicas en vigor (cifrado, seudonimización)",
+          "org": "Medidas organizativas (controles de acceso, derechos de auditoría)",
+          "contractual": "Medidas contractuales (cláusulas mejoradas, garantías)"
+        },
+        "safeguardsTitle": "Salvaguardas comunes de transferencia",
+        "safeguards": {
+          "sccs": "Cláusulas Contractuales Tipo (SCCs)",
+          "bcrs": "Normas Corporativas Vinculantes (BCRs)",
+          "adequacy": "Decisiones de adecuación",
+          "consent": "Consentimiento (específico)",
+          "encryption": "Cifrado en tránsito y en reposo"
+        },
+        "infoTitle": "Habilitar TIA",
+        "infoSelfPrefix": "Disponible como complemento. Visita la ",
+        "infoSelfLink": "página de facturación",
+        "infoSelfSuffix": " para habilitar las evaluaciones TIA.",
+        "infoContactPrefix": "Disponible como complemento. Contacta con ",
+        "infoContactSuffix": " para habilitar las evaluaciones TIA en tu organización."
+      },
+      "vendorRisk": {
+        "title": "Evaluación de riesgo de proveedor",
+        "description": "Una plantilla de evaluación especializada para valorar riesgos de privacidad y seguridad específicos de proveedores.",
+        "badge": "Evaluación específica de proveedor",
+        "coversTitle": "La evaluación cubre:",
+        "coversItems": {
+          "scope": "Alcance y categorías de tratamiento de datos",
+          "security": "Controles de seguridad y certificaciones (ISO 27001, SOC 2)",
+          "sub": "Gestión de subencargados",
+          "incident": "Respuesta a incidentes y capacidades de notificación de brechas",
+          "retention": "Prácticas de retención y eliminación de datos",
+          "transfer": "Mecanismos de transferencia internacional"
+        },
+        "tipTitle": "Combina con cuestionarios",
+        "tipBody": "Usa las evaluaciones de riesgo de proveedor junto con los cuestionarios para tener una imagen completa. La evaluación aporta la valoración formal del riesgo, mientras que los cuestionarios recogen evidencia detallada del proveedor.",
+        "infoTitle": "Habilitar evaluación de riesgo de proveedor",
+        "infoSelfPrefix": "Disponible como complemento. Visita la ",
+        "infoSelfLink": "página de facturación",
+        "infoSelfSuffix": " para habilitar las evaluaciones de riesgo de proveedor.",
+        "infoContactPrefix": "Disponible como complemento. Contacta con ",
+        "infoContactSuffix": " para habilitar las evaluaciones de riesgo de proveedor."
+      },
+      "vendorCatalog": {
+        "title": "Catálogo de proveedores",
+        "description": "Busca e importa desde una base de datos de más de 700 proveedores preauditados de MarTech, IA y SaaS.",
+        "badge": "Base de datos de proveedores preauditados",
+        "cardTitle": "Catálogo de proveedores",
+        "cardSubtitle": "Busca entre más de 700 proveedores preauditados con datos de cumplimiento",
+        "features": {
+          "profiles": "Perfiles de proveedor prellenados",
+          "certs": "Certificaciones de cumplimiento",
+          "details": "Detalles del tratamiento de datos",
+          "sub": "Listas de subencargados",
+          "dpa": "Plantillas de DPA",
+          "import": "Importación con un clic a tu inventario"
+        },
+        "infoTitle": "Habilitar Catálogo de proveedores",
+        "infoSelfPrefix": "Disponible como complemento. Visita la ",
+        "infoSelfLink": "página de facturación",
+        "infoSelfSuffix": " para habilitar el Catálogo de proveedores.",
+        "infoContactPrefix": "Disponible como complemento. Contacta con ",
+        "infoContactSuffix": " para habilitar el Catálogo de proveedores en tu organización."
+      },
+      "nav": {
+        "previous": "Gobernanza de IA"
+      }
+    },
+    "publicOverview": {
+      "metaTitle": "Documentación",
+      "metaDescription": "Documentación de DPO Central — guía rápida, roles de usuario y resumen de módulos para inventario de datos, DSAR, evaluaciones, incidentes y gestión de proveedores.",
+      "ogTitle": "Documentación | DPO CENTRAL",
+      "ogDescription": "Guía rápida, roles de usuario y resumen de módulos para la gestión de privacidad RGPD.",
+      "heroTitle": "DPO Central",
+      "heroSubtitle": "Una única fuente de verdad para tu programa de gestión de privacidad. DPO Central ayuda a las organizaciones a gestionar el inventario de datos, las DSAR, evaluaciones, incidentes y relaciones con proveedores desde una plataforma unificada.",
+      "quickstart": {
+        "title": "Inicio rápido",
+        "step1": { "label": "Inicia sesión", "desc": "Usa tu enlace mágico por correo o cuenta de Google" },
+        "step2": { "label": "Configura tu organización", "desc": "Crea o únete a una organización e invita a tu equipo" },
+        "step3": { "label": "Construye tu inventario de datos", "desc": "Registra activos de datos, elementos y actividades de tratamiento" },
+        "step4": { "label": "Empieza a gestionar la privacidad", "desc": "Gestiona DSAR, ejecuta evaluaciones y haz seguimiento de incidentes" }
+      },
+      "roles": {
+        "title": "Roles de usuario",
+        "intro": "DPO Central usa control de acceso basado en roles. Cada rol hereda los permisos de los roles inferiores.",
+        "items": {
+          "Owner": { "role": "Propietario", "desc": "Control total incluyendo facturación, gestión del equipo y ajustes de la organización" },
+          "Admin": { "role": "Administrador", "desc": "Gestionar usuarios, configurar módulos y acceder a todas las funciones de privacidad" },
+          "PrivacyOfficer": { "role": "Privacy Officer", "desc": "Acceso completo a todos los módulos de privacidad, ejecutar evaluaciones, gestionar incidentes" },
+          "Member": { "role": "Miembro", "desc": "Crear y editar registros, enviar DSAR, reportar incidentes" },
+          "Viewer": { "role": "Visor", "desc": "Acceso de solo lectura a paneles, informes y registros" }
+        }
+      },
+      "modulesTitle": "Módulos",
+      "modules": {
+        "inventory": { "title": "Inventario de datos", "description": "Lleva el control de activos de datos, elementos, actividades de tratamiento y transferencias internacionales. Genera tu Registro de Actividades de Tratamiento (ROPA) automáticamente." },
+        "dsar": { "title": "Gestión de DSAR", "description": "Gestiona las solicitudes de los interesados de extremo a extremo con seguimiento de plazos, gestión de tareas y un portal público de recepción." },
+        "assessments": { "title": "Evaluaciones", "description": "Realiza DPIAs, PIAs, LIAs, TIAs y evaluaciones de riesgo de proveedor con plantillas configurables y flujos de aprobación." },
+        "incidents": { "title": "Gestión de incidentes", "description": "Lleva el seguimiento de incidentes de privacidad, gestiona cronologías de respuesta, coordina notificaciones a la AEPD y asigna tareas de respuesta." },
+        "vendors": { "title": "Gestión de proveedores", "description": "Mantén tu registro de proveedores, lleva el seguimiento de contratos, envía cuestionarios y monitoriza el riesgo de terceros." }
+      },
+      "reports": {
+        "title": "Informes y exportaciones PDF",
+        "intro": "Exporta informes PDF formateados profesionalmente en todos los módulos. Diseñados para reguladores, auditores, presentaciones de comité y revisiones internas de gobernanza.",
+        "items": {
+          "assessmentExport": { "name": "Exportación de evaluación", "desc": "Detalle de DPIA/LIA individual con preguntas y respuestas, puntuaciones de riesgo y mitigaciones" },
+          "portfolio": { "name": "Portafolio de evaluaciones", "desc": "Estado del programa de evaluaciones por tipo, riesgo y finalización" },
+          "dsar": { "name": "Rendimiento DSAR", "desc": "Volúmenes de solicitudes, cumplimiento de plazos, tendencias de resolución (sin PII)" },
+          "regulatory": { "name": "Panorama regulatorio", "desc": "Análisis de jurisdicciones con exposición a transferencias y resumen de sanciones" },
+          "inventory": { "name": "Inventario de datos", "desc": "Registro de activos con elementos de datos, flujos y transferencias" },
+          "ropa": { "name": "ROPA", "desc": "Registro de Actividades de Tratamiento conforme al Artículo 30 del RGPD" },
+          "vendor": { "name": "Registro de proveedores", "desc": "Inventario de terceros con niveles de riesgo, contratos y certificaciones" },
+          "breach": { "name": "Registro de brechas", "desc": "Histórico de incidentes con notificaciones, cronologías y desglose por severidad" }
+        }
+      },
+      "licensing": {
+        "title": "Licencia Open Core",
+        "intro": "DPO Central sigue un modelo open core. La plataforma principal está disponible bajo AGPL-3.0, mientras que las funciones avanzadas requieren una licencia comercial.",
+        "coreTitle": "Core (Open Source)",
+        "coreItems": {
+          "inventory": "Inventario de datos y ROPA",
+          "dsar": "Gestión DSAR y portal público",
+          "incidents": "Seguimiento de incidentes",
+          "assessments": "Evaluaciones básicas (LIA, Personalizadas)",
+          "vendors": "Gestión de proveedores (básica)"
+        },
+        "premiumTitle": "Premium (licencia comercial)",
+        "premiumItems": {
+          "assessments": "Evaluaciones DPIA, PIA, TIA",
+          "vendor": "Evaluaciones de riesgo de proveedor",
+          "catalog": "Catálogo de proveedores (700+ proveedores)",
+          "audit": "Funciones avanzadas de auditoría"
+        }
+      }
+    },
+    "publicDataInventory": {
+      "metaTitle": "Inventario de datos y ROPA",
+      "metaDescription": "Lleva el control de activos de datos, elementos, actividades de tratamiento y transferencias internacionales. Genera tu Registro de Actividades de Tratamiento (ROPA) automáticamente.",
+      "ogTitle": "Inventario de datos y ROPA | DPO CENTRAL",
+      "ogDescription": "Mapea tu panorama de datos: activos, elementos, actividades de tratamiento, flujos de datos y transferencias internacionales con generación automática de ROPA.",
+      "title": "Inventario de datos",
+      "subtitle": "Mapea el panorama de datos de tu organización. Lleva el control de cada activo, elemento de datos, actividad de tratamiento y transferencia internacional para mantener un Registro de Actividades de Tratamiento (ROPA) completo.",
+      "assets": {
+        "title": "Activos de datos",
+        "intro": "Los activos de datos representan los sistemas, aplicaciones y bases de datos que almacenan o tratan datos personales. Cada activo registra su tipo, responsable, elementos de datos asociados y actividades de tratamiento.",
+        "items": {
+          "DATABASE": { "example": "Base de datos de clientes", "desc": "Bases de datos relacionales o NoSQL que almacenan datos personales" },
+          "APPLICATION": { "example": "Sistema CRM", "desc": "Aplicaciones de software que tratan datos de usuario" },
+          "FILE_SYSTEM": { "example": "Recurso compartido de RR. HH.", "desc": "Sistemas de almacenamiento de archivos con registros personales" },
+          "CLOUD_SERVICE": { "example": "Plataforma de analítica", "desc": "Herramientas SaaS de terceros que tratan datos personales" },
+          "API": { "example": "Pasarela de pago", "desc": "Integraciones API que transfieren datos personales" },
+          "PHYSICAL": { "example": "Archivo en papel", "desc": "Almacenamiento físico de documentos con datos personales" }
+        }
+      },
+      "elements": {
+        "title": "Elementos de datos",
+        "intro": "Los elementos de datos describen las categorías concretas de datos personales que trata tu organización. Cada elemento tiene una clasificación de sensibilidad que va de Público a Categoría especial.",
+        "examples": "Algunos ejemplos son nombre completo, dirección de correo, dirección IP, historial médico, datos biométricos e información financiera. Vincula elementos a activos para entender exactamente dónde reside cada tipo de dato personal."
+      },
+      "activities": {
+        "title": "Actividades de tratamiento",
+        "intro": "Documenta cada actividad de tratamiento con su base jurídica, finalidad, categorías de datos y periodo de retención. Esto constituye el núcleo de tu ROPA.",
+        "legalBasesLabel": "Bases jurídicas",
+        "outro": "Cada actividad registra al responsable, encargado, categorías de interesados y si hay decisiones automatizadas. Las actividades se vinculan a activos y elementos de datos para una trazabilidad completa."
+      },
+      "flows": {
+        "title": "Flujos de datos",
+        "intro": "Visualiza cómo se mueven los datos personales por tu organización usando el diagrama interactivo de flujos. Mapea las transferencias origen-destino entre activos, departamentos y terceros.",
+        "steps": {
+          "collection": { "label": "Recogida", "description": "El usuario envía datos por formulario web" },
+          "processing": { "label": "Tratamiento", "description": "El CRM almacena e indexa" },
+          "analytics": { "label": "Analítica", "description": "Almacén de datos para reporting" },
+          "archival": { "label": "Archivado", "description": "Almacenamiento cifrado a largo plazo" }
+        }
+      },
+      "transfers": {
+        "title": "Transferencias internacionales",
+        "intro": "Lleva el seguimiento de las transferencias internacionales de datos con sus mecanismos legales. Documenta Cláusulas Contractuales Tipo (SCCs), decisiones de adecuación, Normas Corporativas Vinculantes (BCRs) y otras salvaguardas.",
+        "items": {
+          "adequacy": { "mechanism": "Decisión de adecuación", "desc": "Adecuación a nivel de país aprobada por la UE" },
+          "sccs": { "mechanism": "Cláusulas Contractuales Tipo", "desc": "Salvaguardas contractuales aprobadas por la UE" },
+          "bcrs": { "mechanism": "Normas Corporativas Vinculantes", "desc": "Marco de transferencia intragrupo" }
+        }
+      },
+      "howTo": {
+        "title": "Cómo añadir un activo de datos",
+        "actorDpo": "DPO",
+        "steps": {
+          "navigate": { "title": "Ve a Inventario de datos", "description": "Abre el módulo Inventario de datos desde la navegación principal." },
+          "click": { "title": "Haz clic en Añadir activo", "description": "Haz clic en el botón 'Añadir activo' en la esquina superior derecha del listado de activos." },
+          "fill": { "title": "Rellena los detalles del activo", "description": "Introduce el nombre, tipo, responsable, descripción y elementos de datos asociados.", "detail1": "Selecciona el tipo de activo (Base de datos, Aplicación, Servicio cloud, etc.)", "detail2": "Asigna un responsable de datos entre los miembros de tu organización", "detail3": "Vincula los elementos de datos relevantes a este activo" },
+          "link": { "title": "Vincula actividades de tratamiento", "description": "Asocia el activo con sus actividades de tratamiento y bases jurídicas." },
+          "save": { "title": "Revisa y guarda", "description": "Revisa todos los detalles y guarda. El activo aparecerá en tu inventario y en el diagrama de flujos." }
+        }
+      },
+      "exports": {
+        "title": "Exportaciones PDF",
+        "intro": "Exporta tu inventario de datos y ROPA como PDFs formateados profesionalmente para reguladores, auditores o revisiones internas de gobernanza.",
+        "inventoryTitle": "Informe de inventario de datos",
+        "inventoryDesc": "Inventario completo de activos con elementos de datos por activo (categoría, sensibilidad, retención), flujos de datos entre sistemas y detalles de transferencias internacionales con sus mecanismos de salvaguarda.",
+        "ropaTitle": "Exportación de ROPA",
+        "ropaDesc": "Registro de Actividades de Tratamiento conforme al Artículo 30 del RGPD: finalidad del tratamiento, base jurídica, interesados, destinatarios, retención, sistemas vinculados y transferencias internacionales por actividad."
+      }
+    },
+    "publicDsar": {
+      "metaTitle": "Gestión de DSAR",
+      "metaDescription": "Gestiona las solicitudes de los interesados de extremo a extremo con seguimiento de plazos, gestión de tareas, tratamiento de datos por diseño y un portal público de recepción. Compatible con todos los derechos del RGPD (Art. 15-21).",
+      "ogTitle": "Gestión de DSAR | DPO CENTRAL",
+      "ogDescription": "Ciclo de vida DSAR de extremo a extremo: recepción por diseño, verificación de identidad, seguimiento de plazos, redacción automática e informes de rendimiento.",
+      "title": "Gestión de DSAR",
+      "subtitle": "Gestiona las solicitudes de los interesados desde el envío hasta su finalización. Lleva el seguimiento de plazos, asigna tareas a tu equipo y ofrece un portal público para que los interesados envíen solicitudes, todo con tratamiento de datos por diseño y redacción automática de PII.",
+      "lifecycle": {
+        "title": "Ciclo de vida de la solicitud",
+        "intro": "Cada DSAR recorre un ciclo de vida definido con seguimiento automático de plazos. El sistema monitoriza los plazos y alerta a tu equipo cuando se requiere acción.",
+        "steps": {
+          "submitted": { "label": "Enviada", "description": "Solicitud recibida" },
+          "identity": { "label": "Verificación de identidad", "description": "Verificar al interesado" },
+          "progress": { "label": "En curso", "description": "Procesando la solicitud" },
+          "review": { "label": "Revisión", "description": "QA antes de entregar" },
+          "completed": { "label": "Completada", "description": "Respuesta entregada" }
+        }
+      },
+      "privacy": {
+        "title": "Privacidad por diseño",
+        "intro": "DPO Central está diseñado para que facilitar DSAR no cree nuevos riesgos de privacidad. Recogemos los datos mínimos necesarios, los redactamos automáticamente tras el periodo de retención y nunca incluimos PII individual en los informes.",
+        "items": {
+          "min": { "title": "Minimización de datos", "desc": "El formulario de recepción recoge solo nombre, correo y tipo de solicitud. Teléfono y relación son opcionales. La dirección nunca se recoge a través del portal." },
+          "consent": { "title": "Consentimiento en la recepción", "desc": "Los interesados deben consentir explícitamente el tratamiento antes de enviar. La nota de privacidad explica los periodos de retención y la redacción." },
+          "auto": { "title": "Redacción automática", "desc": "Tras el periodo de retención (por defecto 90 días tras finalizar), toda la PII se sustituye automáticamente por 'REDACTED'. Se conserva la pista de auditoría anonimizada." },
+          "pii": { "title": "Informes sin PII", "desc": "El Informe de rendimiento DSAR contiene solo métricas agregadas: volúmenes, cumplimiento de plazos y distribuciones por tipo. Cero datos individuales." },
+          "manual": { "title": "Redacción y borrado manual", "desc": "Los administradores pueden redactar PII manualmente o eliminar definitivamente solicitudes completadas en cualquier momento, sin esperar al periodo de retención." },
+          "audit": { "title": "Integridad de la pista de auditoría", "desc": "Acciones, marcas de tiempo e IDs del personal se conservan tras la redacción. Quién hizo qué y cuándo sigue siendo trazable: solo se elimina la PII del interesado." }
+        }
+      },
+      "types": {
+        "title": "Tipos de solicitud",
+        "intro": "DPO Central admite todos los derechos del interesado del RGPD como tipos de solicitud.",
+        "items": {
+          "ACCESS": "Derecho de acceso a los datos personales en poder de la organización (Art. 15)",
+          "ERASURE": "Derecho al olvido: supresión de los datos personales (Art. 17)",
+          "RECTIFICATION": "Derecho a rectificar datos personales inexactos (Art. 16)",
+          "PORTABILITY": "Derecho a recibir los datos en un formato legible por máquina (Art. 20)",
+          "OBJECTION": "Derecho a oponerse al tratamiento de los datos personales (Art. 21)",
+          "RESTRICTION": "Derecho a limitar el tratamiento de los datos personales (Art. 18)"
+        }
+      },
+      "portal": {
+        "title": "Portal público",
+        "intro": "Ofrece a los interesados un portal dedicado para enviar solicitudes. El portal se puede personalizar con la marca de tu organización y genera un enlace compartible que puedes añadir a tu política de privacidad.",
+        "urlLabel": "URL del portal",
+        "urlExplain": "Comparte esta URL en tu política de privacidad para que los interesados puedan enviar solicitudes directamente. El portal incluye una casilla de consentimiento y una nota de privacidad explicando cómo se tratarán sus datos.",
+        "configLabel": "Configuración del portal",
+        "settings": {
+          "title": { "setting": "Título y descripción del formulario", "detail": "Personalizable" },
+          "types": { "setting": "Tipos de solicitud habilitados", "detail": "Elige qué derechos ofrecer" },
+          "css": { "setting": "CSS personalizado", "detail": "Adapta a tu marca" },
+          "thanks": { "setting": "Mensaje de agradecimiento", "detail": "Texto tras envío" },
+          "retention": { "setting": "Periodo de retención", "detail": "Por defecto 90 días" },
+          "notice": { "setting": "Enlace a nota de privacidad", "detail": "Enlace a tu política" }
+        }
+      },
+      "tasks": {
+        "title": "Gestión de tareas",
+        "intro": "Desglosa cada DSAR en tareas accionables y asígnalas a miembros del equipo. Haz seguimiento del progreso, añade notas y asegúrate de que nada se pase por alto.",
+        "exampleLabel": "Tareas de ejemplo para una solicitud de acceso",
+        "items": {
+          "verify": { "task": "Verificar identidad del interesado", "assignee": "Privacy Officer" },
+          "crm": { "task": "Buscar en el CRM registros del interesado", "assignee": "Equipo IT" },
+          "email": { "task": "Buscar en archivos de correo", "assignee": "Equipo IT" },
+          "compile": { "task": "Recopilar y revisar el paquete de datos", "assignee": "Privacy Officer" },
+          "redact": { "task": "Redactar datos de terceros", "assignee": "Legal" },
+          "deliver": { "task": "Entregar la respuesta al interesado", "assignee": "Privacy Officer" }
+        }
+      },
+      "sla": {
+        "title": "Seguimiento de plazos",
+        "intro": "El sistema calcula automáticamente los plazos según las jurisdicciones aplicadas. Los plazos son por marco: RGPD (30 días), CPRA (45 días), LGPD (15 días) y más de 40 otros.",
+        "stats": {
+          "days": { "value": "15-45", "label": "días según jurisdicción" },
+          "auto": { "value": "Auto", "label": "cálculo del plazo" },
+          "alerts": { "value": "Alertas", "label": "próximos y vencidos" }
+        }
+      },
+      "retention": {
+        "title": "Retención de datos y redacción automática",
+        "intro": "DPO Central redacta automáticamente los datos personales de los registros DSAR completados tras el periodo de retención configurado. Así la plataforma no se convierte en un vector de riesgo para las organizaciones que sirve.",
+        "steps": {
+          "completed": { "label": "Solicitud completada", "description": "DSAR cumplida" },
+          "period": { "label": "Periodo de retención", "description": "Por defecto 90 días" },
+          "auto": { "label": "Redacción automática", "description": "PII sustituida" },
+          "anon": { "label": "Registro anonimizado", "description": "Estadísticas preservadas" }
+        },
+        "redactedTitle": "Qué se redacta",
+        "redactedItems": {
+          "contact": "Nombre, correo y teléfono del solicitante",
+          "description": "Descripción y detalles de la solicitud",
+          "comms": "Contenido y adjuntos de las comunicaciones",
+          "data": "Exportaciones y notas de tareas"
+        },
+        "preservedTitle": "Qué se conserva",
+        "preservedItems": {
+          "type": "Tipo de solicitud (Acceso, Supresión, etc.)",
+          "status": "Estado y fechas de plazo",
+          "audit": "Pista de auditoría (acciones + marcas de tiempo)",
+          "stats": "Estadísticas agregadas para reporting"
+        }
+      },
+      "reporting": {
+        "title": "Informe de rendimiento (exportación PDF)",
+        "intro": "Exporta un Informe de rendimiento DSAR como un PDF cuidado para reguladores, auditores o presentaciones de comité. El informe contiene solo métricas agregadas: cero datos personales individuales.",
+        "sectionsLabel": "Secciones del informe",
+        "sections": {
+          "exec": { "section": "Resumen ejecutivo", "detail": "Total de solicitudes, tasa a tiempo, resolución media" },
+          "volume": { "section": "Volumen por tipo", "detail": "Desglose Acceso, Supresión, Portabilidad" },
+          "status": { "section": "Distribución por estado", "detail": "Abiertas, completadas, vencidas" },
+          "sla": { "section": "Cumplimiento de plazos", "detail": "Análisis de plazos por jurisdicción" },
+          "trend": { "section": "Tendencia mensual", "detail": "Recibidas vs. completadas en 12 meses" },
+          "aging": { "section": "Análisis de antigüedad", "detail": "Solicitudes abiertas por franja de edad" }
+        }
+      },
+      "workflow": {
+        "title": "Procesar una solicitud DSAR",
+        "actors": {
+          "system": "Sistema",
+          "officer": "Privacy Officer",
+          "team": "Equipo"
+        },
+        "steps": {
+          "receive": { "title": "Recibir solicitud", "description": "Un interesado envía una solicitud a través del portal público (con consentimiento) o tú la creas manualmente en el panel." },
+          "verify": { "title": "Verificar identidad", "description": "Confirma la identidad del interesado. Actualiza el estado para reflejar el resultado de la verificación.", "detail1": "Solicita documentos de identidad adicionales si es necesario", "detail2": "Marca la identidad como verificada o rechazada" },
+          "assign": { "title": "Crear y asignar tareas", "description": "Desglosa la solicitud en tareas y asígnalas a los miembros del equipo correspondientes." },
+          "collect": { "title": "Recopilar y revisar datos", "description": "Los miembros del equipo buscan en los sistemas, recopilan datos y suben hallazgos. El Privacy Officer revisa que esté completo." },
+          "deliver": { "title": "Entregar respuesta", "description": "Envía la respuesta final al interesado y marca la solicitud como completada. La PII se redactará automáticamente tras el periodo de retención." }
+        }
+      }
+    },
+    "publicAssessments": {
+      "metaTitle": "Evaluaciones",
+      "metaDescription": "Realiza DPIAs, PIAs, TIAs, LIAs y evaluaciones de riesgo de proveedor con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
+      "ogTitle": "Evaluaciones | DPO CENTRAL",
+      "ogDescription": "Evaluaciones de impacto en privacidad: DPIA, PIA, TIA, LIA y riesgo de proveedor con plantillas, flujos de aprobación y puntuación de riesgo.",
+      "title": "Evaluaciones",
+      "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, PIAs, LIAs, TIAs y evaluaciones de riesgo de proveedor.",
+      "templates": {
+        "title": "Plantillas de evaluación",
+        "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
+        "premiumBadge": "Premium",
+        "tiers": {
+          "Core": "Core",
+          "Premium": "Premium"
+        },
+        "items": {
+          "LIA": { "name": "Evaluación de interés legítimo", "desc": "Valora si el interés legítimo puede invocarse como base jurídica" },
+          "CUSTOM": { "name": "Evaluación personalizada", "desc": "Crea tu propia plantilla de evaluación con preguntas y criterios personalizados" },
+          "DPIA": { "name": "Evaluación de impacto en protección de datos", "desc": "Requerida por el Artículo 35 del RGPD para tratamientos de alto riesgo" },
+          "PIA": { "name": "Evaluación de impacto en privacidad", "desc": "Análisis más amplio de privacidad para nuevos proyectos y sistemas" },
+          "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" },
+          "VENDOR": { "name": "Evaluación de riesgo de proveedor", "desc": "Valora los riesgos de privacidad de proveedores y encargados externos" }
+        }
+      },
+      "approvals": {
+        "title": "Flujo de aprobación",
+        "intro": "Las evaluaciones recorren un flujo de aprobación estructurado. Cada etapa tiene un responsable claro y el sistema lleva el seguimiento de quién aprobó qué y cuándo.",
+        "steps": {
+          "draft": { "label": "Borrador", "description": "El autor crea la evaluación" },
+          "progress": { "label": "En curso", "description": "Completando preguntas" },
+          "review": { "label": "Pendiente de revisión", "description": "Enviada para aprobación" },
+          "approved": { "label": "Aprobada", "description": "Evaluación firmada" }
+        }
+      },
+      "riskScoring": {
+        "title": "Puntuación de riesgo",
+        "intro": "Cada evaluación calcula un nivel de riesgo general basado en la probabilidad e impacto de los riesgos identificados. El sistema admite cuatro niveles de riesgo.",
+        "outro": "Las puntuaciones de riesgo se calculan a partir de las respuestas individuales y pueden ser anuladas por el evaluador con justificación. El nivel de riesgo general determina los requisitos de revisión y las prioridades de mitigación."
+      },
+      "mitigations": {
+        "title": "Mitigaciones de riesgo",
+        "intro": "Documenta medidas de mitigación para cada riesgo identificado. Lleva el seguimiento del estado de implementación y asigna la responsabilidad de las acciones de seguimiento.",
+        "exampleLabel": "Mitigaciones de ejemplo",
+        "statuses": {
+          "Implemented": "Implementada",
+          "Planned": "Planificada",
+          "InProgress": "En curso"
+        },
+        "items": {
+          "encryption": "Implementar cifrado de datos en reposo y en tránsito",
+          "access": "Añadir controles de acceso y registros de auditoría",
+          "vendor": "Realizar revisión anual de seguridad de proveedores",
+          "dlp": "Desplegar herramientas de prevención de pérdida de datos (DLP)"
+        }
+      },
+      "creating": {
+        "title": "Crear una evaluación",
+        "actors": {
+          "dpo": "DPO",
+          "approver": "Aprobador"
+        },
+        "steps": {
+          "select": { "title": "Selecciona una plantilla", "description": "Elige una plantilla de evaluación (LIA, DPIA, PIA, TIA, Vendor o Personalizada) desde el módulo de Evaluaciones." },
+          "scope": { "title": "Define el alcance y contexto", "description": "Define el alcance de la evaluación, la actividad de tratamiento que se evalúa y los activos de datos relevantes.", "detail1": "Vincula a actividades de tratamiento concretas de tu inventario de datos", "detail2": "Identifica los elementos de datos e interesados implicados" },
+          "complete": { "title": "Completa las preguntas", "description": "Responde cada pregunta de la plantilla. El sistema calcula las puntuaciones de riesgo a medida que avanzas." },
+          "mitigations": { "title": "Documenta las mitigaciones", "description": "Para cada riesgo identificado, documenta medidas de mitigación, asigna responsables y establece plazos." },
+          "submit": { "title": "Envía a revisión", "description": "Envía la evaluación completada para aprobación. Los revisores pueden aprobar, rechazar o solicitar cambios." },
+          "approve": { "title": "Aprobación final", "description": "Una vez aprobada, la evaluación queda bloqueada y se almacena como registro de cumplimiento." }
+        }
+      },
+      "exports": {
+        "title": "Exportaciones PDF",
+        "intro": "Exporta evaluaciones individuales o todo tu portafolio como informes PDF formateados profesionalmente. Diseñados para reguladores, auditores y presentaciones de comité.",
+        "individualTitle": "Exportación de evaluación individual",
+        "individualDesc": "Exporta cualquier evaluación individual como un PDF detallado con portada, resumen ejecutivo, todas las preguntas y respuestas, puntuaciones de riesgo, mitigaciones e historial de aprobaciones.",
+        "individualFeatures": {
+          "cover": "Portada con referencia al Art. 35 del RGPD",
+          "stats": "Tarjetas de estadísticas (riesgo, finalización, mitigaciones)",
+          "qa": "Preguntas y respuestas por sección con etiquetas de riesgo en línea",
+          "mitigation": "Tabla de seguimiento de mitigaciones",
+          "history": "Historial de aprobaciones"
+        },
+        "portfolioTitle": "Informe de portafolio de evaluaciones",
+        "portfolioDesc": "Exporta un resumen multievaluación mostrando el estado de todo tu programa de evaluaciones de impacto, por tipo, nivel de riesgo y finalización.",
+        "portfolioFeatures": {
+          "status": "Distribución de estado y riesgo entre todas las evaluaciones",
+          "type": "Desglose por tipo (DPIA, LIA, Personalizada)",
+          "highRisk": "Tarjetas de detalle de alto riesgo y vencidas",
+          "mitigation": "Seguimiento de finalización de mitigaciones",
+          "perType": "Páginas de detalle por tipo"
+        }
+      }
+    },
+    "publicIncidents": {
+      "metaTitle": "Gestión de incidentes",
+      "metaDescription": "Lleva el seguimiento de incidentes de privacidad desde la detección hasta la resolución. Gestiona la clasificación de severidad, la notificación de 72 horas a la AEPD (Art. 33 RGPD), las tareas de respuesta y las cronologías.",
+      "ogTitle": "Gestión de incidentes | DPO CENTRAL",
+      "ogDescription": "Seguimiento de brechas, notificación a la AEPD (Art. 33), clasificación de severidad, tareas de respuesta y cronología completa del incidente.",
+      "title": "Gestión de incidentes",
+      "subtitle": "Lleva el seguimiento de incidentes de privacidad desde el informe inicial hasta la resolución. Gestiona cronologías de respuesta, coordina notificaciones a la AEPD y mantén una pista de auditoría completa de cada acción.",
+      "lifecycle": {
+        "title": "Ciclo de vida del incidente",
+        "intro": "Cada incidente sigue un ciclo de vida definido. El sistema lleva las transiciones de estado y marca de tiempo cada cambio como evidencia de cumplimiento.",
+        "steps": {
+          "reported": { "label": "Reportado", "description": "Incidente identificado" },
+          "investigating": { "label": "Investigando", "description": "Recopilando hechos" },
+          "containment": { "label": "Contención", "description": "Frenando el impacto" },
+          "notification": { "label": "Notificación", "description": "Alertando a las autoridades" },
+          "resolved": { "label": "Resuelto", "description": "Incidente cerrado" }
+        }
+      },
+      "severity": {
+        "title": "Niveles de severidad",
+        "intro": "Clasifica los incidentes por severidad para priorizar los esfuerzos de respuesta y determinar las obligaciones de notificación.",
+        "items": {
+          "LOW": "Incidente menor, sin datos personales en riesgo",
+          "MEDIUM": "Exposición limitada, contenida rápidamente",
+          "HIGH": "Exposición significativa de datos, notificación a la AEPD probable",
+          "CRITICAL": "Brecha a gran escala, notificación inmediata a la AEPD obligatoria"
+        }
+      },
+      "notifications": {
+        "title": "Notificación a la AEPD",
+        "intro": "Según el Artículo 33 del RGPD, las brechas de datos personales deben reportarse a la autoridad de control en un plazo de 72 horas desde que se tenga conocimiento de la brecha. DPO Central lleva este plazo automáticamente.",
+        "ruleLabel": "Regla de 72 horas",
+        "ruleBody": "Cuando una brecha sea probable que entrañe un riesgo para los derechos y libertades de las personas, notifica a la autoridad de control sin demora indebida y, cuando sea factible, no más tarde de 72 horas desde el conocimiento. El sistema lleva este plazo desde el momento del reporte y muestra contadores en tu panel."
+      },
+      "dashboard": {
+        "title": "Panel de incidentes",
+        "intro": "El panel de incidentes te da una visión rápida del estado de incidentes de tu organización.",
+        "stats": {
+          "total": "Total de incidentes",
+          "open": "Abiertos",
+          "critical": "Críticos",
+          "pendingDpa": "Pendientes AEPD"
+        }
+      },
+      "timeline": {
+        "title": "Cronología del incidente",
+        "intro": "Cada incidente mantiene una cronología detallada que registra todos los eventos, cambios de estado, comunicaciones y acciones. Esto proporciona la pista de auditoría necesaria para el cumplimiento regulatorio.",
+        "exampleLabel": "Cronología de ejemplo",
+        "entries": {
+          "reported": "Incidente reportado por el equipo IT",
+          "elevated": "Severidad elevada a HIGH",
+          "investigation": "Investigación iniciada, medidas de contención desplegadas",
+          "rootCause": "Causa raíz identificada: control de acceso mal configurado",
+          "notification": "Notificación a la AEPD enviada",
+          "resolved": "Incidente resuelto, post-mortem programado"
+        }
+      },
+      "tasks": {
+        "title": "Tareas de respuesta",
+        "intro": "Asigna tareas de respuesta a miembros del equipo para coordinar la respuesta al incidente. Lleva el seguimiento de la finalización y asegúrate de que se ejecuten todos los pasos de remediación."
+      },
+      "workflow": {
+        "title": "Reportar un incidente",
+        "actors": {
+          "reporter": "Reportante",
+          "officer": "Privacy Officer",
+          "it": "Equipo IT",
+          "dpo": "DPO"
+        },
+        "steps": {
+          "report": { "title": "Reporta el incidente", "description": "Ve al módulo de Incidentes y haz clic en 'Reportar incidente'. Indica los detalles iniciales: título, descripción, severidad y sistemas afectados." },
+          "triage": { "title": "Triaje e investigación", "description": "El Privacy Officer revisa el reporte, asigna un nivel de severidad e inicia la investigación.", "detail1": "Determinar el alcance: qué datos se vieron afectados y cuántos interesados", "detail2": "Identificar la causa raíz y el vector de ataque si aplica", "detail3": "Evaluar si se requiere notificación a la AEPD" },
+          "contain": { "title": "Contener y mitigar", "description": "Toma acción inmediata para contener el incidente y evitar mayor pérdida de datos." },
+          "notify": { "title": "Notificar a las autoridades", "description": "Si es necesario, envía la notificación a la AEPD en menos de 72 horas. Notifica a los interesados afectados si la brecha entraña un riesgo alto para sus derechos." },
+          "resolve": { "title": "Resolver y documentar", "description": "Una vez resuelto el incidente, documenta las lecciones aprendidas, actualiza las políticas y cierra el registro." }
+        }
+      },
+      "exports": {
+        "title": "Exportaciones PDF",
+        "intro": "Exporta tu registro de brechas como un PDF formateado para notificaciones regulatorias, revisiones internas o reportes a la dirección.",
+        "registerTitle": "Informe de registro de brechas",
+        "registerDesc": "Inventario completo de incidentes con desglose por severidad, estado de notificación por jurisdicción, acciones de contención, análisis de causa raíz, lecciones aprendidas y cronologías por incidente. Incluye estadísticas resumen del total de incidentes, número de críticos y notificaciones pendientes."
+      }
+    },
+    "publicVendors": {
+      "metaTitle": "Gestión de proveedores",
+      "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, cuestionarios de privacidad, niveles de riesgo y flujos de revisión periódica.",
+      "ogTitle": "Gestión de proveedores | DPO CENTRAL",
+      "ogDescription": "Registro de proveedores, gestión de contratos, cuestionarios de privacidad, clasificación por nivel de riesgo y flujos de revisión.",
+      "title": "Gestión de proveedores",
+      "subtitle": "Mantén un registro completo de proveedores y encargados externos. Lleva el seguimiento de contratos, envía cuestionarios de privacidad, monitoriza niveles de riesgo y asegúrate de que tu cadena de suministro cumple con tus estándares de privacidad.",
+      "register": {
+        "title": "Registro de proveedores",
+        "intro": "Tu registro de proveedores es el registro central de todos los terceros que tratan datos personales en tu nombre. Cada entrada de proveedor captura datos de contacto, finalidades de tratamiento, estado de contrato y nivel de riesgo.",
+        "statuses": {
+          "ACTIVE": { "label": "ACTIVO", "desc": "El proveedor está aprobado y trata datos activamente" },
+          "UNDER_REVIEW": { "label": "EN REVISIÓN", "desc": "El proveedor se está evaluando o re-evaluando" },
+          "SUSPENDED": { "label": "SUSPENDIDO", "desc": "Tratamiento suspendido pendiente de resolución de una incidencia" },
+          "OFFBOARDED": { "label": "DADO DE BAJA", "desc": "Relación con el proveedor finalizada, devolución/eliminación de datos confirmada" }
+        }
+      },
+      "riskTiers": {
+        "title": "Niveles de riesgo",
+        "intro": "Los proveedores se clasifican en niveles de riesgo según el volumen y sensibilidad de los datos que tratan, su postura de seguridad y consideraciones geográficas.",
+        "outro": "Los proveedores de mayor riesgo requieren revisiones más frecuentes, salvaguardas contractuales más fuertes y pueden activar una evaluación de riesgo de proveedor."
+      },
+      "dashboard": {
+        "title": "Panel de proveedores",
+        "intro": "Obtén una visión rápida del panorama de proveedores.",
+        "stats": {
+          "total": "Total de proveedores",
+          "active": "Activos",
+          "highRisk": "Riesgo alto",
+          "pendingReview": "Pendientes de revisión"
+        }
+      },
+      "contracts": {
+        "title": "Gestión de contratos",
+        "intro": "Lleva el seguimiento de Contratos de Encargo de Tratamiento (DPA), Cláusulas Contractuales Tipo (SCCs) y otros documentos contractuales para cada proveedor. Configura recordatorios de renovación y monitoriza fechas de vencimiento.",
+        "label": "Documentos contractuales clave",
+        "items": {
+          "dpa": { "doc": "Contrato de Encargo de Tratamiento (DPA)", "purpose": "Define los términos del tratamiento según el Artículo 28 del RGPD" },
+          "sccs": { "doc": "Cláusulas Contractuales Tipo (SCCs)", "purpose": "Salvaguardas para transferencias internacionales de datos" },
+          "sub": { "doc": "Acuerdo de subencargado", "purpose": "Términos para los subencargados del proveedor" },
+          "security": { "doc": "Anexo de seguridad", "purpose": "Medidas técnicas y organizativas" }
+        }
+      },
+      "questionnaires": {
+        "title": "Cuestionarios de privacidad",
+        "intro": "Envía cuestionarios de privacidad y seguridad a los proveedores para evaluar sus prácticas de protección de datos. Lleva el seguimiento de las respuestas y marca áreas de preocupación para seguimiento.",
+        "label": "Temas del cuestionario",
+        "topics": {
+          "scope": "Alcance del tratamiento",
+          "security": "Medidas de seguridad",
+          "incident": "Respuesta a incidentes",
+          "sub": "Gestión de subencargados",
+          "retention": "Políticas de retención de datos",
+          "transfers": "Transferencias internacionales",
+          "training": "Formación del personal",
+          "certs": "Certificaciones y auditorías"
+        }
+      },
+      "review": {
+        "title": "Proceso de revisión de proveedor",
+        "intro": "El ciclo de vida de revisión de proveedor desde el alta hasta la monitorización continua.",
+        "steps": {
+          "onboarding": { "label": "Alta", "description": "Evaluación inicial" },
+          "questionnaire": { "label": "Cuestionario", "description": "Revisión de privacidad" },
+          "contract": { "label": "Contrato", "description": "Firma del DPA" },
+          "approved": { "label": "Aprobado", "description": "Proveedor activo" },
+          "periodic": { "label": "Revisión periódica", "description": "Reevaluación anual" }
+        }
+      },
+      "howTo": {
+        "title": "Añadir y revisar un proveedor",
+        "actors": {
+          "dpo": "DPO",
+          "officer": "Privacy Officer",
+          "legal": "Legal"
+        },
+        "steps": {
+          "add": { "title": "Añade el proveedor al registro", "description": "Ve al módulo de Gestión de proveedores y haz clic en 'Añadir proveedor'. Introduce el nombre, datos de contacto y finalidad del tratamiento." },
+          "send": { "title": "Envía el cuestionario", "description": "Selecciona una plantilla de cuestionario de privacidad y envíala al contacto del proveedor. El sistema lleva el seguimiento del estado y plazos de respuesta." },
+          "review": { "title": "Revisa las respuestas", "description": "Evalúa las respuestas del proveedor al cuestionario. Marca áreas de preocupación y asigna un nivel de riesgo preliminar.", "detail1": "Comprueba las certificaciones de seguridad (ISO 27001, SOC 2, etc.)", "detail2": "Revisa los acuerdos de subencargados", "detail3": "Evalúa los mecanismos de transferencia de datos" },
+          "execute": { "title": "Firma los contratos", "description": "Sube y lleva el seguimiento del Contrato de Encargo de Tratamiento (DPA) y cualquier documento contractual adicional." },
+          "approve": { "title": "Aprueba y monitoriza", "description": "Aprueba el proveedor para uso activo. Configura recordatorios de revisión periódica según el nivel de riesgo del proveedor." }
+        }
+      },
+      "exports": {
+        "title": "Exportaciones PDF",
+        "intro": "Exporta tu registro de proveedores como un PDF formateado para auditorías, revisiones de due diligence o presentaciones regulatorias.",
+        "registerTitle": "Informe de registro de proveedores",
+        "registerDesc": "Inventario completo de proveedores con niveles de riesgo, certificaciones, categorías de datos tratados, países de operación, estado de contrato/DPA y calendario de revisiones. Incluye estadísticas resumen y tarjetas de detalle por proveedor."
+      }
+    }
   }
 }

@@ -9,178 +9,100 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Documentation",
-  description:
-    "DPO Central documentation — quick start guide, user roles, and module overview for data inventory, DSAR, assessments, incidents, and vendor management.",
-  alternates: { canonical: "/docs" },
-  openGraph: {
-    title: "Documentation | DPO CENTRAL",
-    description:
-      "Quick start guide, user roles, and module overview for GDPR privacy management.",
-    url: "/docs",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("docs.publicOverview");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: "/docs" },
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "/docs",
+    },
+  };
+}
 
-const modules = [
-  {
-    title: "Data Inventory",
-    description:
-      "Track data assets, elements, processing activities, and cross-border transfers. Generate your Record of Processing Activities (ROPA) automatically.",
-    href: "/docs/data-inventory",
-    icon: Database,
-  },
-  {
-    title: "DSAR Management",
-    description:
-      "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal.",
-    href: "/docs/dsar",
-    icon: FileText,
-  },
-  {
-    title: "Assessments",
-    description:
-      "Conduct DPIAs, PIAs, LIAs, TIAs, and vendor risk assessments using configurable templates with approval workflows.",
-    href: "/docs/assessments",
-    icon: ClipboardCheck,
-  },
-  {
-    title: "Incident Management",
-    description:
-      "Track privacy incidents, manage response timelines, coordinate DPA notifications, and assign response tasks.",
-    href: "/docs/incidents",
-    icon: AlertTriangle,
-  },
-  {
-    title: "Vendor Management",
-    description:
-      "Maintain your vendor register, track contracts, send questionnaires, and monitor third-party risk.",
-    href: "/docs/vendors",
-    icon: Building2,
-  },
-];
+export default async function DocsOverviewPage() {
+  const t = await getTranslations("docs.publicOverview");
 
-export default function DocsOverviewPage() {
+  const modules: { key: string; href: string; icon: typeof Database }[] = [
+    { key: "inventory", href: "/docs/data-inventory", icon: Database },
+    { key: "dsar", href: "/docs/dsar", icon: FileText },
+    { key: "assessments", href: "/docs/assessments", icon: ClipboardCheck },
+    { key: "incidents", href: "/docs/incidents", icon: AlertTriangle },
+    { key: "vendors", href: "/docs/vendors", icon: Building2 },
+  ];
+
+  const roleKeys = ["Owner", "Admin", "PrivacyOfficer", "Member", "Viewer"] as const;
+  const reportKeys = [
+    "assessmentExport",
+    "portfolio",
+    "dsar",
+    "regulatory",
+    "inventory",
+    "ropa",
+    "vendor",
+    "breach",
+  ] as const;
+  const coreItems = ["inventory", "dsar", "incidents", "assessments", "vendors"] as const;
+  const premiumItems = ["assessments", "vendor", "catalog", "audit"] as const;
+
   return (
     <div className="space-y-12">
       {/* Hero */}
       <div>
-        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">
-          DPO Central
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl">
-          A single source of truth for your privacy management program.
-          DPO Central helps organizations manage data inventory, DSARs,
-          assessments, incidents, and vendor relationships from one unified
-          platform.
-        </p>
+        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">{t("heroTitle")}</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">{t("heroSubtitle")}</p>
       </div>
 
       {/* Quick Start */}
       <div className="card-brutal">
         <div className="flex items-center gap-3 mb-4">
           <Shield className="w-5 h-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">
-            Quick Start
-          </h2>
+          <h2 className="text-lg font-semibold text-foreground">{t("quickstart.title")}</h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div className="space-y-3">
-            <div className="flex gap-3">
-              <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                1
-              </span>
-              <div>
-                <p className="font-medium text-foreground">Sign in</p>
-                <p className="text-muted-foreground">
-                  Use your email magic link or Google account
-                </p>
+            {(["step1", "step2"] as const).map((step, i) => (
+              <div key={step} className="flex gap-3">
+                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                  {i + 1}
+                </span>
+                <div>
+                  <p className="font-medium text-foreground">{t(`quickstart.${step}.label`)}</p>
+                  <p className="text-muted-foreground">{t(`quickstart.${step}.desc`)}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                2
-              </span>
-              <div>
-                <p className="font-medium text-foreground">
-                  Set up your organization
-                </p>
-                <p className="text-muted-foreground">
-                  Create or join an organization and invite your team
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
           <div className="space-y-3">
-            <div className="flex gap-3">
-              <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                3
-              </span>
-              <div>
-                <p className="font-medium text-foreground">
-                  Build your data inventory
-                </p>
-                <p className="text-muted-foreground">
-                  Register data assets, elements, and processing activities
-                </p>
+            {(["step3", "step4"] as const).map((step, i) => (
+              <div key={step} className="flex gap-3">
+                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                  {i + 3}
+                </span>
+                <div>
+                  <p className="font-medium text-foreground">{t(`quickstart.${step}.label`)}</p>
+                  <p className="text-muted-foreground">{t(`quickstart.${step}.desc`)}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                4
-              </span>
-              <div>
-                <p className="font-medium text-foreground">
-                  Start managing privacy
-                </p>
-                <p className="text-muted-foreground">
-                  Handle DSARs, run assessments, and track incidents
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* User Roles */}
       <div>
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          User Roles
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          DPO Central uses role-based access control. Each role inherits
-          permissions from the roles below it.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("roles.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-4">{t("roles.intro")}</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {[
-            {
-              role: "Owner",
-              desc: "Full control including billing, team management, and organization settings",
-            },
-            {
-              role: "Admin",
-              desc: "Manage users, configure modules, and access all privacy features",
-            },
-            {
-              role: "Privacy Officer",
-              desc: "Full access to all privacy modules, run assessments, manage incidents",
-            },
-            {
-              role: "Member",
-              desc: "Create and edit records, submit DSARs, report incidents",
-            },
-            {
-              role: "Viewer",
-              desc: "Read-only access to dashboards, reports, and records",
-            },
-          ].map((item) => (
-            <div
-              key={item.role}
-              className="p-3 rounded-lg border border-border bg-card"
-            >
-              <p className="text-sm font-semibold text-primary">{item.role}</p>
-              <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+          {roleKeys.map((key) => (
+            <div key={key} className="p-3 rounded-lg border border-border bg-card">
+              <p className="text-sm font-semibold text-primary">{t(`roles.items.${key}.role`)}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t(`roles.items.${key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -188,28 +110,18 @@ export default function DocsOverviewPage() {
 
       {/* Modules */}
       <div>
-        <h2 className="text-xl font-semibold text-foreground mb-6">
-          Modules
-        </h2>
+        <h2 className="text-xl font-semibold text-foreground mb-6">{t("modulesTitle")}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {modules.map((mod) => {
             const Icon = mod.icon;
             return (
-              <Link
-                key={mod.href}
-                href={mod.href}
-                className="group card-brutal flex flex-col"
-              >
+              <Link key={mod.href} href={mod.href} className="group card-brutal flex flex-col">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold text-foreground">
-                    {mod.title}
-                  </h3>
+                  <h3 className="font-semibold text-foreground">{t(`modules.${mod.key}.title`)}</h3>
                   <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto group-hover:text-primary transition-colors" />
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {mod.description}
-                </p>
+                <p className="text-sm text-muted-foreground">{t(`modules.${mod.key}.description`)}</p>
               </Link>
             );
           })}
@@ -218,28 +130,13 @@ export default function DocsOverviewPage() {
 
       {/* Reports & Exports */}
       <div>
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Reports &amp; PDF Exports
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          Export professionally formatted PDF reports across every module.
-          Designed for regulators, auditors, board presentations, and internal
-          governance reviews.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("reports.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-4">{t("reports.intro")}</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {[
-            { name: "Assessment Export", desc: "Individual DPIA/LIA detail with Q&A, risk scores, mitigations" },
-            { name: "Assessment Portfolio", desc: "Cross-assessment program status by type, risk, and completion" },
-            { name: "DSAR Performance", desc: "Request volumes, SLA compliance, resolution trends (no PII)" },
-            { name: "Regulatory Landscape", desc: "Jurisdiction analysis with transfer exposure and penalty summary" },
-            { name: "Data Inventory", desc: "Asset register with data elements, flows, and transfers" },
-            { name: "ROPA", desc: "Record of Processing Activities per GDPR Article 30" },
-            { name: "Vendor Register", desc: "Third-party inventory with risk tiers, contracts, and certifications" },
-            { name: "Breach Register", desc: "Incident history with notifications, timelines, and severity breakdown" },
-          ].map((r) => (
-            <div key={r.name} className="p-3 rounded-lg border border-border bg-card">
-              <p className="text-sm font-semibold text-foreground">{r.name}</p>
-              <p className="text-xs text-muted-foreground mt-1">{r.desc}</p>
+          {reportKeys.map((key) => (
+            <div key={key} className="p-3 rounded-lg border border-border bg-card">
+              <p className="text-sm font-semibold text-foreground">{t(`reports.items.${key}.name`)}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t(`reports.items.${key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -247,35 +144,23 @@ export default function DocsOverviewPage() {
 
       {/* Licensing */}
       <div className="p-6 rounded-2xl border border-amber-500/30 bg-amber-500/5">
-        <h2 className="text-lg font-semibold text-foreground mb-2">
-          Open Core Licensing
-        </h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          DPO Central follows an open core model. The core platform is available
-          under AGPL-3.0, while advanced features require a commercial license.
-        </p>
+        <h2 className="text-lg font-semibold text-foreground mb-2">{t("licensing.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-4">{t("licensing.intro")}</p>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="font-medium text-foreground mb-2">
-              Core (Open Source)
-            </p>
+            <p className="font-medium text-foreground mb-2">{t("licensing.coreTitle")}</p>
             <ul className="space-y-1 text-muted-foreground">
-              <li>&#8226; Data Inventory &amp; ROPA</li>
-              <li>&#8226; DSAR management &amp; public portal</li>
-              <li>&#8226; Incident tracking</li>
-              <li>&#8226; Basic assessments (LIA, Custom)</li>
-              <li>&#8226; Vendor management (basic)</li>
+              {coreItems.map((k) => (
+                <li key={k}>&#8226; {t(`licensing.coreItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
           <div>
-            <p className="font-medium text-foreground mb-2">
-              Premium (Commercial License)
-            </p>
+            <p className="font-medium text-foreground mb-2">{t("licensing.premiumTitle")}</p>
             <ul className="space-y-1 text-muted-foreground">
-              <li>&#8226; DPIA, PIA, TIA assessments</li>
-              <li>&#8226; Vendor risk assessments</li>
-              <li>&#8226; Vendor Catalog (700+ vendors)</li>
-              <li>&#8226; Advanced audit features</li>
+              {premiumItems.map((k) => (
+                <li key={k}>&#8226; {t(`licensing.premiumItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
         </div>

@@ -1,105 +1,88 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
 
-export const metadata: Metadata = {
-  title: "Assessments",
-  description:
-    "Conduct DPIAs, PIAs, TIAs, LIAs, and vendor risk assessments with configurable templates, approval workflows, and risk scoring.",
-  alternates: { canonical: "/docs/assessments" },
-  openGraph: {
-    title: "Assessments | DPO CENTRAL",
-    description:
-      "Privacy impact assessments — DPIA, PIA, TIA, LIA, and vendor risk with templates, approval workflows, and risk scoring.",
-    url: "/docs/assessments",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("docs.publicAssessments");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: "/docs/assessments" },
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "/docs/assessments",
+    },
+  };
+}
 
-export default function AssessmentsPage() {
+const templateData: { type: string; tier: "Core" | "Premium" }[] = [
+  { type: "LIA", tier: "Core" },
+  { type: "CUSTOM", tier: "Core" },
+  { type: "DPIA", tier: "Premium" },
+  { type: "PIA", tier: "Premium" },
+  { type: "TIA", tier: "Premium" },
+  { type: "VENDOR", tier: "Premium" },
+];
+
+const riskLevels = [
+  { level: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
+  { level: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+  { level: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
+  { level: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
+];
+
+const mitigationItems: { key: string; statusKey: "Implemented" | "Planned" | "InProgress" }[] = [
+  { key: "encryption", statusKey: "Implemented" },
+  { key: "access", statusKey: "Implemented" },
+  { key: "vendor", statusKey: "Planned" },
+  { key: "dlp", statusKey: "InProgress" },
+];
+
+export default async function AssessmentsPage() {
+  const t = await getTranslations("docs.publicAssessments");
+
+  const approvalSteps = ["draft", "progress", "review", "approved"] as const;
+  const individualFeatures = ["cover", "stats", "qa", "mitigation", "history"] as const;
+  const portfolioFeatures = ["status", "type", "highRisk", "mitigation", "perType"] as const;
+  const creatingSteps = [
+    { key: "select", actor: "dpo" },
+    { key: "scope", actor: "dpo", hasDetails: true },
+    { key: "complete", actor: "dpo" },
+    { key: "mitigations", actor: "dpo" },
+    { key: "submit", actor: "dpo" },
+    { key: "approve", actor: "approver" },
+  ] as const;
+
   return (
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">
-          Assessments
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl">
-          Conduct privacy impact assessments using configurable templates.
-          Score risks, document mitigations, and manage approval workflows
-          for DPIAs, PIAs, LIAs, TIAs, and vendor risk assessments.
-        </p>
+        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">{t("title")}</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">{t("subtitle")}</p>
       </div>
 
       {/* Assessment Types */}
       <section id="templates" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Assessment Templates
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Choose from built-in templates or create custom assessments. Each
-          template includes pre-configured questions, risk criteria, and
-          approval workflows.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("templates.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("templates.intro")}</p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {[
-            {
-              type: "LIA",
-              name: "Legitimate Interests Assessment",
-              desc: "Evaluate whether legitimate interests can be relied upon as a legal basis",
-              tier: "Core",
-            },
-            {
-              type: "CUSTOM",
-              name: "Custom Assessment",
-              desc: "Create your own assessment template with custom questions and criteria",
-              tier: "Core",
-            },
-            {
-              type: "DPIA",
-              name: "Data Protection Impact Assessment",
-              desc: "Required under GDPR Article 35 for high-risk processing activities",
-              tier: "Premium",
-            },
-            {
-              type: "PIA",
-              name: "Privacy Impact Assessment",
-              desc: "Broader privacy analysis for new projects and systems",
-              tier: "Premium",
-            },
-            {
-              type: "TIA",
-              name: "Transfer Impact Assessment",
-              desc: "Evaluate safeguards for international data transfers (Schrems II)",
-              tier: "Premium",
-            },
-            {
-              type: "VENDOR",
-              name: "Vendor Risk Assessment",
-              desc: "Assess privacy risks of third-party vendors and processors",
-              tier: "Premium",
-            },
-          ].map((tmpl) => (
-            <div
-              key={tmpl.type}
-              className="p-4 rounded-lg border border-border bg-card"
-            >
+          {templateData.map((tmpl) => (
+            <div key={tmpl.type} className="p-4 rounded-lg border border-border bg-card">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
                   {tmpl.type}
                 </span>
                 {tmpl.tier === "Premium" && (
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    Premium
+                    {t("templates.premiumBadge")}
                   </span>
                 )}
               </div>
-              <p className="text-sm font-medium text-foreground">
-                {tmpl.name}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {tmpl.desc}
-              </p>
+              <p className="text-sm font-medium text-foreground">{t(`templates.items.${tmpl.type}.name`)}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t(`templates.items.${tmpl.type}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -107,96 +90,56 @@ export default function AssessmentsPage() {
 
       {/* Approval Workflow */}
       <section id="approvals" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Approval Workflow
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Assessments move through a structured approval workflow. Each stage
-          has clear ownership and the system tracks who approved what and when.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("approvals.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("approvals.intro")}</p>
 
         <div className="card-brutal">
           <FlowDiagram
-            steps={[
-              { label: "Draft", description: "Author creates assessment" },
-              { label: "In Progress", description: "Completing questions" },
-              { label: "Pending Review", description: "Submitted for approval" },
-              { label: "Approved", description: "Assessment signed off" },
-            ]}
+            steps={approvalSteps.map((k) => ({
+              label: t(`approvals.steps.${k}.label`),
+              description: t(`approvals.steps.${k}.description`),
+            }))}
           />
         </div>
       </section>
 
       {/* Risk Scoring */}
       <section id="risk-scoring" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Risk Scoring
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Each assessment calculates an overall risk level based on the
-          likelihood and impact of identified risks. The system supports four
-          risk levels.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("riskScoring.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("riskScoring.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            { level: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-            { level: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-            { level: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-            { level: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-          ].map((r) => (
-            <div
-              key={r.level}
-              className={`p-3 rounded-lg border text-center ${r.color}`}
-            >
+          {riskLevels.map((r) => (
+            <div key={r.level} className={`p-3 rounded-lg border text-center ${r.color}`}>
               <p className="text-sm font-semibold">{r.level}</p>
             </div>
           ))}
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          Risk scores are calculated from individual question responses and can
-          be overridden by the assessor with justification. The overall risk
-          level drives review requirements and mitigation priorities.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("riskScoring.outro")}</p>
       </section>
 
       {/* Mitigations */}
       <section id="mitigations" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Risk Mitigations
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Document mitigation measures for each identified risk. Track
-          implementation status and assign ownership for follow-up actions.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("mitigations.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("mitigations.intro")}</p>
 
         <div className="card-brutal">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
-            Example Mitigations
-          </p>
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("mitigations.exampleLabel")}</p>
           <div className="space-y-2">
-            {[
-              { mitigation: "Implement data encryption at rest and in transit", status: "Implemented" },
-              { mitigation: "Add access controls and audit logging", status: "Implemented" },
-              { mitigation: "Conduct annual vendor security review", status: "Planned" },
-              { mitigation: "Deploy data loss prevention (DLP) tools", status: "In Progress" },
-            ].map((m, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50"
-              >
-                <span className="text-sm text-foreground">{m.mitigation}</span>
+            {mitigationItems.map((m) => (
+              <div key={m.key} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+                <span className="text-sm text-foreground">{t(`mitigations.items.${m.key}`)}</span>
                 <span
                   className={`text-xs shrink-0 ml-3 px-2 py-0.5 rounded-full ${
-                    m.status === "Implemented"
+                    m.statusKey === "Implemented"
                       ? "bg-green-500/10 text-green-400"
-                      : m.status === "In Progress"
+                      : m.statusKey === "InProgress"
                       ? "bg-amber-500/10 text-amber-400"
                       : "bg-blue-500/10 text-blue-400"
                   }`}
                 >
-                  {m.status}
+                  {t(`mitigations.statuses.${m.statusKey}`)}
                 </span>
               </div>
             ))}
@@ -206,88 +149,50 @@ export default function AssessmentsPage() {
 
       {/* Creating an Assessment */}
       <section id="creating" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-6">
-          Creating an Assessment
-        </h2>
-        <WorkflowStep
-          number={1}
-          title="Select Template"
-          description="Choose an assessment template (LIA, DPIA, PIA, TIA, Vendor, or Custom) from the Assessments module."
-          actor="DPO"
-        />
-        <WorkflowStep
-          number={2}
-          title="Set Scope and Context"
-          description="Define the assessment scope, processing activity being evaluated, and relevant data assets."
-          actor="DPO"
-          details={[
-            "Link to specific processing activities from your data inventory",
-            "Identify the data elements and data subjects involved",
-          ]}
-        />
-        <WorkflowStep
-          number={3}
-          title="Complete Questions"
-          description="Answer each question in the template. The system calculates risk scores as you progress."
-          actor="DPO"
-        />
-        <WorkflowStep
-          number={4}
-          title="Document Mitigations"
-          description="For each identified risk, document mitigation measures, assign owners, and set deadlines."
-          actor="DPO"
-        />
-        <WorkflowStep
-          number={5}
-          title="Submit for Review"
-          description="Submit the completed assessment for approval. Reviewers can approve, reject, or request changes."
-          actor="DPO"
-        />
-        <WorkflowStep
-          number={6}
-          title="Final Approval"
-          description="Once approved, the assessment is locked and stored as a compliance record."
-          actor="Approver"
-        />
+        <h2 className="text-xl font-semibold text-foreground mb-6">{t("creating.title")}</h2>
+        {creatingSteps.map((step, i) => (
+          <WorkflowStep
+            key={step.key}
+            number={i + 1}
+            title={t(`creating.steps.${step.key}.title`)}
+            description={t(`creating.steps.${step.key}.description`)}
+            actor={t(`creating.actors.${step.actor}`)}
+            details={
+              step.key === "scope"
+                ? [
+                    t("creating.steps.scope.detail1"),
+                    t("creating.steps.scope.detail2"),
+                  ]
+                : undefined
+            }
+          />
+        ))}
       </section>
 
       {/* PDF Exports */}
       <section id="exports" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          PDF Exports
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Export individual assessments or your entire assessment portfolio as
-          professionally formatted PDF reports. Designed for regulators,
-          auditors, and board presentations.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("exports.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("exports.intro")}</p>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="p-4 rounded-lg border border-border bg-card">
-            <p className="text-sm font-semibold text-foreground mb-2">Individual Assessment Export</p>
-            <p className="text-xs text-muted-foreground mb-3">
-              Export any single assessment as a detailed PDF with cover page,
-              executive summary, all questions and responses, risk scores,
-              mitigations, and approval history.
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t("exports.individualTitle")}</p>
+            <p className="text-xs text-muted-foreground mb-3">{t("exports.individualDesc")}</p>
             <div className="space-y-1">
-              {["Cover page with GDPR Art. 35 reference", "Stat cards (risk, completion, mitigations)", "Section-by-section Q&A with inline risk badges", "Mitigation tracking table", "Approval history"].map((f, i) => (
-                <p key={i} className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  <span className="text-primary">&#10003;</span> {f}
+              {individualFeatures.map((f) => (
+                <p key={f} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <span className="text-primary">&#10003;</span> {t(`exports.individualFeatures.${f}`)}
                 </p>
               ))}
             </div>
           </div>
           <div className="p-4 rounded-lg border border-border bg-card">
-            <p className="text-sm font-semibold text-foreground mb-2">Assessment Portfolio Report</p>
-            <p className="text-xs text-muted-foreground mb-3">
-              Export a cross-assessment summary showing your entire impact
-              assessment program status — by type, risk level, and completion.
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t("exports.portfolioTitle")}</p>
+            <p className="text-xs text-muted-foreground mb-3">{t("exports.portfolioDesc")}</p>
             <div className="space-y-1">
-              {["Status & risk distribution across all assessments", "Type breakdown (DPIA, LIA, Custom)", "High risk & overdue detail cards", "Mitigation completion tracking", "Per-type detail pages"].map((f, i) => (
-                <p key={i} className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  <span className="text-primary">&#10003;</span> {f}
+              {portfolioFeatures.map((f) => (
+                <p key={f} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <span className="text-primary">&#10003;</span> {t(`exports.portfolioFeatures.${f}`)}
                 </p>
               ))}
             </div>

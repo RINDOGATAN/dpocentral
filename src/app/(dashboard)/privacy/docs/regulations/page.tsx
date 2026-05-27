@@ -1,4 +1,5 @@
-import { Scale, Shield, Bot, Globe, Clock, AlertTriangle, Settings, CheckCircle2 } from "lucide-react";
+import { Scale, Shield, Bot, Globe, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -16,19 +17,38 @@ const jurisdictions = [
   { name: "EU AI Act", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "N/A", breach: "72 hours" },
 ];
 
-export default function DocsRegulationsPage() {
+export default async function DocsRegulationsPage() {
+  const t = await getTranslations("docs.regulations");
+
+  const stepKeys = ["location", "identify", "review", "configure"] as const;
+  const categoryKeys = ["comprehensive", "sectoral", "ai", "emerging"] as const;
+  const categoryIcons: Record<typeof categoryKeys[number], typeof Scale> = {
+    comprehensive: Scale,
+    sectoral: Shield,
+    ai: Bot,
+    emerging: Globe,
+  };
+  const impactStats: { key: string; icon: typeof Clock }[] = [
+    { key: "dsar", icon: Clock },
+    { key: "breach", icon: AlertTriangle },
+    { key: "monitoring", icon: CheckCircle2 },
+  ];
+
+  const managementRows: { name: string; statusKey: "Applied" | "NotApplied"; primary: boolean }[] = [
+    { name: "GDPR", statusKey: "Applied", primary: true },
+    { name: "CPRA", statusKey: "Applied", primary: false },
+    { name: "LGPD", statusKey: "NotApplied", primary: false },
+  ];
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Regulatory Tracker</h1>
-        <p className="text-muted-foreground mt-1">
-          Track which privacy regulations apply to your organization, understand their requirements,
-          and let the system automatically configure deadlines and notification windows based on your applicable jurisdictions.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="catalog" title="Jurisdiction Catalog" description="Browse 40+ privacy regulations from around the world, organized by region and category.">
-        <FeatureMockup title="Jurisdiction Cards">
+      <DocSection id="catalog" title={t("catalog.title")} description={t("catalog.description")}>
+        <FeatureMockup title={t("catalog.mockupTitle")}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {jurisdictions.map((j) => (
               <div key={j.name} className="flex items-start gap-3 rounded-lg border p-3">
@@ -38,16 +58,14 @@ export default function DocsRegulationsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-sm">{j.name}</p>
-                    <Badge variant="outline" className={`text-[10px] ${j.regionColor}`}>
-                      {j.region}
-                    </Badge>
+                    <Badge variant="outline" className={`text-[10px] ${j.regionColor}`}>{j.region}</Badge>
                   </div>
                   <div className="mt-1.5 space-y-0.5">
                     <p className="text-xs text-muted-foreground">
-                      DSAR deadline: <span className="font-medium text-foreground">{j.dsar}</span>
+                      {t("catalog.dsarLabel")} <span className="font-medium text-foreground">{j.dsar}</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Breach notification: <span className="font-medium text-foreground">{j.breach}</span>
+                      {t("catalog.breachLabel")} <span className="font-medium text-foreground">{j.breach}</span>
                     </p>
                   </div>
                 </div>
@@ -57,139 +75,99 @@ export default function DocsRegulationsPage() {
         </FeatureMockup>
       </DocSection>
 
-      <DocSection id="applicability" title="Applicability Wizard" description="Answer simple questions about your organization to determine which regulations apply.">
+      <DocSection id="applicability" title={t("applicability.title")} description={t("applicability.description")}>
         <StepList
-          steps={[
-            { title: "Answer location questions", description: "Provide details about where your customers, employees, and servers are located. The wizard covers key geographic and operational factors." },
-            { title: "Identify applicable jurisdictions", description: "The wizard analyzes your answers and identifies which privacy regulations apply to your organization based on jurisdictional reach." },
-            { title: "Review recommendations", description: "Review the list of recommended regulations and choose which ones to apply to your organization. You can add or skip any recommendation." },
-            { title: "Auto-configure deadlines", description: "Once applied, the system automatically configures DSAR response deadlines and breach notification windows based on each regulation's requirements." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`applicability.steps.${k}.title`),
+            description: t(`applicability.steps.${k}.description`),
+          }))}
         />
-        <InfoCallout type="tip" title="Re-run when expanding">
-          Run the applicability wizard again whenever you expand into new markets, hire employees in new countries,
-          or deploy infrastructure in new regions. New jurisdictions may become applicable as your footprint grows.
+        <InfoCallout type="tip" title={t("applicability.tipTitle")}>
+          {t("applicability.tipBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="categories" title="Regulation Categories">
+      <DocSection id="categories" title={t("categories.title")}>
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Scale className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Comprehensive</p>
-              <p className="text-xs text-muted-foreground">Full privacy frameworks covering all aspects of data protection, such as GDPR, CPRA, LGPD, and POPIA.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Shield className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Sectoral</p>
-              <p className="text-xs text-muted-foreground">Industry-specific regulations targeting particular sectors, such as HIPAA for healthcare and PCI DSS for payment data.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Bot className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">AI Governance</p>
-              <p className="text-xs text-muted-foreground">AI-specific regulations and frameworks, such as the EU AI Act, addressing algorithmic transparency and automated decision-making.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3 rounded-lg border p-3">
-            <div className="rounded-md bg-primary/10 p-2">
-              <Globe className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-sm">Emerging</p>
-              <p className="text-xs text-muted-foreground">Newly enacted or proposed laws that are not yet fully enforced, helping you prepare for upcoming compliance requirements.</p>
-            </div>
-          </div>
+          {categoryKeys.map((key) => {
+            const Icon = categoryIcons[key];
+            return (
+              <div key={key} className="flex items-start gap-3 rounded-lg border p-3">
+                <div className="rounded-md bg-primary/10 p-2">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium text-sm">{t(`categories.items.${key}.title`)}</p>
+                  <p className="text-xs text-muted-foreground">{t(`categories.items.${key}.desc`)}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </DocSection>
 
-      <DocSection id="managing" title="Managing Jurisdictions">
-        <p className="text-sm text-muted-foreground">
-          Once you have identified applicable regulations through the wizard or manual selection, you can manage them from the Regulations dashboard.
-          Applying a jurisdiction creates it in your organization&apos;s database and links it to your compliance profile.
-        </p>
-        <FeatureMockup title="Jurisdiction Management">
+      <DocSection id="managing" title={t("managing.title")}>
+        <p className="text-sm text-muted-foreground">{t("managing.intro")}</p>
+        <FeatureMockup title={t("managing.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { name: "GDPR", status: "Applied", primary: true },
-              { name: "CPRA", status: "Applied", primary: false },
-              { name: "LGPD", status: "Not Applied", primary: false },
-            ].map((j) => (
+            {managementRows.map((j) => (
               <div key={j.name} className="flex items-center justify-between rounded-md border px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <Scale className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">{j.name}</span>
                   {j.primary && (
                     <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-transparent">
-                      Primary
+                      {t("managing.primaryBadge")}
                     </Badge>
                   )}
                 </div>
                 <Badge
                   variant="outline"
                   className={`text-[10px] ${
-                    j.status === "Applied"
+                    j.statusKey === "Applied"
                       ? "bg-green-100 text-green-800 border-transparent"
                       : "bg-gray-100 text-gray-800 border-transparent"
                   }`}
                 >
-                  {j.status}
+                  {t(`managing.statuses.${j.statusKey}`)}
                 </Badge>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="info" title="Primary jurisdiction">
-          Setting a primary jurisdiction determines the default DSAR response deadline and breach notification window
-          used across your organization. Other applied jurisdictions are tracked alongside, and the strictest deadline
-          always takes precedence when multiple jurisdictions overlap.
+        <InfoCallout type="info" title={t("managing.infoTitle")}>
+          {t("managing.infoBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="impact" title="System Impact" description="Applied jurisdictions directly influence how DPO Central calculates deadlines and monitors compliance across your organization.">
-        <FeatureMockup title="Impact Overview">
+      <DocSection id="impact" title={t("impact.title")} description={t("impact.description")}>
+        <FeatureMockup title={t("impact.mockupTitle")}>
           <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
-            {[
-              { label: "DSAR Deadlines", value: "Auto-set", icon: Clock, subtitle: "Based on strictest jurisdiction" },
-              { label: "Breach Notifications", value: "Auto-set", icon: AlertTriangle, subtitle: "72h, expedient, or custom" },
-              { label: "Compliance Monitoring", value: "Active", icon: CheckCircle2, subtitle: "Continuous requirement tracking" },
-            ].map((stat) => {
+            {impactStats.map((stat) => {
               const Icon = stat.icon;
               return (
-                <Card key={stat.label} className="hover:translate-y-0">
+                <Card key={stat.key} className="hover:translate-y-0">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                    <CardTitle className="text-xs font-medium">{stat.label}</CardTitle>
+                    <CardTitle className="text-xs font-medium">{t(`impact.stats.${stat.key}.label`)}</CardTitle>
                     <Icon className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="text-xl font-bold text-primary">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
+                    <div className="text-xl font-bold text-primary">{t(`impact.stats.${stat.key}.value`)}</div>
+                    <p className="text-xs text-muted-foreground">{t(`impact.stats.${stat.key}.subtitle`)}</p>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
         </FeatureMockup>
-        <InfoCallout type="note" title="Jurisdictions are additive">
-          When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule.
-          For example, if GDPR requires a 30-day DSAR response and LGPD requires 15 days, the system will enforce
-          the 15-day deadline. This ensures you remain compliant with all applicable regulations simultaneously.
+        <InfoCallout type="note" title={t("impact.noteTitle")}>
+          {t("impact.noteBody")}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Transfer Compliance", href: "/privacy/docs/transfer-compliance" }}
-        next={{ title: "AI Governance", href: "/privacy/docs/ai-governance" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/transfer-compliance" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/ai-governance" }}
       />
     </div>
   );
