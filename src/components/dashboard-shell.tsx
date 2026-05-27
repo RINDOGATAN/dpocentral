@@ -74,6 +74,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const moreNavItems = [
     { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
     { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
+    { href: "/privacy/transfers", label: tNav("transfers"), icon: Globe },
     ...(isProfessional
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
