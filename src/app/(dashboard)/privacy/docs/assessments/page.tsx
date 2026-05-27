@@ -1,4 +1,5 @@
 import { ClipboardCheck, ArrowRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -8,13 +9,13 @@ import { InfoCallout } from "@/components/docs/info-callout";
 import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
-const typeConfig: Record<string, { label: string; premium: boolean; color: string }> = {
-  LIA: { label: "Legitimate Interest", premium: false, color: "bg-green-100 text-green-800 border-transparent" },
-  CUSTOM: { label: "Custom", premium: false, color: "bg-gray-100 text-gray-800 border-transparent" },
-  DPIA: { label: "Data Protection Impact", premium: true, color: "bg-purple-100 text-purple-800 border-transparent" },
-  PIA: { label: "Privacy Impact", premium: true, color: "bg-indigo-100 text-indigo-800 border-transparent" },
-  TIA: { label: "Transfer Impact", premium: true, color: "bg-blue-100 text-blue-800 border-transparent" },
-  VENDOR: { label: "Vendor Risk", premium: true, color: "bg-orange-100 text-orange-800 border-transparent" },
+const typeConfig: Record<string, { premium: boolean; color: string }> = {
+  LIA: { premium: false, color: "bg-green-100 text-green-800 border-transparent" },
+  CUSTOM: { premium: false, color: "bg-gray-100 text-gray-800 border-transparent" },
+  DPIA: { premium: true, color: "bg-purple-100 text-purple-800 border-transparent" },
+  PIA: { premium: true, color: "bg-indigo-100 text-indigo-800 border-transparent" },
+  TIA: { premium: true, color: "bg-blue-100 text-blue-800 border-transparent" },
+  VENDOR: { premium: true, color: "bg-orange-100 text-orange-800 border-transparent" },
 };
 
 const riskConfig: Record<string, string> = {
@@ -24,19 +25,20 @@ const riskConfig: Record<string, string> = {
   CRITICAL: "bg-red-100 text-red-800 border-transparent",
 };
 
-export default function DocsAssessmentsPage() {
+export default async function DocsAssessmentsPage() {
+  const t = await getTranslations("docs.assessments");
+
+  const stepKeys = ["select", "fill", "answer", "score", "mitigate", "submit"] as const;
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Assessments</h1>
-        <p className="text-muted-foreground mt-1">
-          Assessments help you evaluate privacy risks before launching new projects, processing activities,
-          or vendor relationships. DPO Central supports multiple assessment types with template-driven workflows.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="templates" title="Assessment Templates" description="Choose from built-in templates or create custom ones. Templates define the questions, scoring criteria, and approval workflow.">
-        <FeatureMockup title="Assessment Type Cards">
+      <DocSection id="templates" title={t("templates.title")} description={t("templates.description")}>
+        <FeatureMockup title={t("templates.mockupTitle")}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(typeConfig).map(([key, config]) => (
               <Card key={key} className="hover:translate-y-0">
@@ -46,51 +48,43 @@ export default function DocsAssessmentsPage() {
                     <Badge variant="outline" className={`text-[10px] ${config.color}`}>{key}</Badge>
                     {config.premium && <PremiumBadge />}
                   </div>
-                  <p className="text-sm font-medium">{config.label} Assessment</p>
+                  <p className="text-sm font-medium">
+                    {t(`templates.labels.${key}`)} {t("templates.labelSuffix")}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {key === "LIA" && "Evaluate legitimate interest balancing tests"}
-                    {key === "CUSTOM" && "Build your own assessment from scratch"}
-                    {key === "DPIA" && "GDPR Article 35 data protection impact"}
-                    {key === "PIA" && "Broader privacy impact analysis"}
-                    {key === "TIA" && "Schrems II transfer impact analysis"}
-                    {key === "VENDOR" && "Third-party vendor risk evaluation"}
+                    {t(`templates.descs.${key}`)}
                   </p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="info" title="Free vs. Premium Assessment Types">
-          <strong>Free (Core):</strong> LIA and Custom assessments are available to all users.{" "}
-          <strong>Premium:</strong> DPIA, PIA, TIA, and Vendor Risk assessments require a premium license.
-          See the <a href="/privacy/docs/premium" className="text-primary underline">Premium Features</a> page for details.
+        <InfoCallout type="info" title={t("templates.calloutTitle")}>
+          <strong>{t("templates.calloutFreeLabel")}</strong>{t("templates.calloutFreeBody")}
+          <strong>{t("templates.calloutPremiumLabel")}</strong>{t("templates.calloutPremiumBody")}
+          {t("templates.calloutSeeMorePrefix")}
+          <a href="/privacy/docs/premium" className="text-primary underline">{t("templates.calloutSeeMoreLink")}</a>
+          {t("templates.calloutSeeMoreSuffix")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="creating" title="Creating Assessments" description="Walk through the assessment creation workflow.">
+      <DocSection id="creating" title={t("creating.title")} description={t("creating.description")}>
         <StepList
-          steps={[
-            { title: "Select a template", description: "Choose the assessment type that matches your need (LIA, DPIA, PIA, TIA, Vendor, or Custom)." },
-            { title: "Fill in project details", description: "Provide the assessment name, description, related processing activities, and data assets." },
-            { title: "Answer assessment questions", description: "Work through the template questions. Each section covers a different risk domain." },
-            { title: "Score risks", description: "Rate the likelihood and impact of identified risks. The system calculates the overall risk level." },
-            { title: "Add mitigations", description: "For each identified risk, document mitigation measures and residual risk." },
-            { title: "Submit for review", description: "Move the assessment to PENDING_REVIEW status for approval by a Privacy Officer or Admin." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`creating.steps.${k}.title`),
+            description: t(`creating.steps.${k}.description`),
+          }))}
         />
       </DocSection>
 
-      <DocSection id="risk-scoring" title="Risk Scoring" description="Each assessment generates a risk score based on the answers provided. Risk levels are calculated automatically.">
-        <FeatureMockup title="Risk Level Badges">
+      <DocSection id="risk-scoring" title={t("riskScoring.title")} description={t("riskScoring.description")}>
+        <FeatureMockup title={t("riskScoring.mockupTitle")}>
           <div className="flex flex-wrap gap-3">
             {Object.entries(riskConfig).map(([level, color]) => (
               <div key={level} className="flex items-center gap-2">
                 <Badge variant="outline" className={`${color}`}>{level}</Badge>
                 <span className="text-xs text-muted-foreground">
-                  {level === "LOW" && "Acceptable risk, proceed"}
-                  {level === "MEDIUM" && "Mitigations recommended"}
-                  {level === "HIGH" && "Mitigations required"}
-                  {level === "CRITICAL" && "Cannot proceed without resolution"}
+                  {t(`riskScoring.levels.${level}`)}
                 </span>
               </div>
             ))}
@@ -98,15 +92,14 @@ export default function DocsAssessmentsPage() {
         </FeatureMockup>
       </DocSection>
 
-      <DocSection id="mitigations" title="Mitigations" description="Document risk mitigation measures for each identified risk.">
-        <InfoCallout type="tip" title="Mitigation best practices">
-          Link mitigations to specific risks and track their implementation status. Each mitigation should include:
-          the measure being taken, the responsible person, the target completion date, and the expected residual risk level after implementation.
+      <DocSection id="mitigations" title={t("mitigations.title")} description={t("mitigations.description")}>
+        <InfoCallout type="tip" title={t("mitigations.calloutTitle")}>
+          {t("mitigations.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="approvals" title="Approval Workflow" description="Assessments follow a structured approval workflow before they are finalized.">
-        <FeatureMockup title="Assessment Status Flow">
+      <DocSection id="approvals" title={t("approvals.title")} description={t("approvals.description")}>
+        <FeatureMockup title={t("approvals.mockupTitle")}>
           <div className="flex items-center justify-center gap-2 flex-wrap py-2">
             {["DRAFT", "IN_PROGRESS", "PENDING_REVIEW", "APPROVED"].map((status, i) => (
               <div key={status} className="flex items-center gap-2">
@@ -127,15 +120,14 @@ export default function DocsAssessmentsPage() {
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="note" title="Rejection">
-          If an assessment is rejected, it returns to DRAFT status with reviewer comments.
-          The assessor can address the feedback and resubmit for review.
+        <InfoCallout type="note" title={t("approvals.rejectionTitle")}>
+          {t("approvals.rejectionBody")}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "DSAR Management", href: "/privacy/docs/dsar" }}
-        next={{ title: "Incidents", href: "/privacy/docs/incidents" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/dsar" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/incidents" }}
       />
     </div>
   );

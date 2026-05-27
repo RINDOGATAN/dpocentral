@@ -1,97 +1,90 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
 
-export const metadata: Metadata = {
-  title: "Incident Management",
-  description:
-    "Track privacy incidents from detection to resolution. Manage severity classification, 72-hour DPA notification (Art. 33 GDPR), response tasks, and incident timelines.",
-  alternates: { canonical: "/docs/incidents" },
-  openGraph: {
-    title: "Incident Management | DPO CENTRAL",
-    description:
-      "Breach tracking, DPA notification (Art. 33), severity classification, response tasks, and full incident timeline.",
-    url: "/docs/incidents",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("docs.publicIncidents");
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: "/docs/incidents" },
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "/docs/incidents",
+    },
+  };
+}
 
-export default function IncidentsPage() {
+const severityLevels = [
+  { level: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
+  { level: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+  { level: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
+  { level: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
+] as const;
+
+const dashboardStats: { key: string; value: string; color: string }[] = [
+  { key: "total", value: "12", color: "text-foreground" },
+  { key: "open", value: "3", color: "text-amber-400" },
+  { key: "critical", value: "1", color: "text-red-400" },
+  { key: "pendingDpa", value: "1", color: "text-orange-400" },
+];
+
+const timelineEntries: { key: string; time: string; type: string }[] = [
+  { key: "reported", time: "09:15", type: "CREATED" },
+  { key: "elevated", time: "09:30", type: "UPDATE" },
+  { key: "investigation", time: "10:00", type: "ACTION" },
+  { key: "rootCause", time: "11:45", type: "UPDATE" },
+  { key: "notification", time: "14:00", type: "NOTIFICATION" },
+  { key: "resolved", time: "16:30", type: "RESOLVED" },
+];
+
+export default async function IncidentsPage() {
+  const t = await getTranslations("docs.publicIncidents");
+
+  const lifecycleSteps = ["reported", "investigating", "containment", "notification", "resolved"] as const;
+  const workflowSteps = [
+    { key: "report", actor: "reporter" },
+    { key: "triage", actor: "officer", hasDetails: true },
+    { key: "contain", actor: "it" },
+    { key: "notify", actor: "dpo" },
+    { key: "resolve", actor: "officer" },
+  ] as const;
+
   return (
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">
-          Incident Management
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl">
-          Track privacy incidents from initial report through resolution.
-          Manage response timelines, coordinate DPA notifications, and maintain
-          a complete audit trail of every action taken.
-        </p>
+        <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">{t("title")}</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">{t("subtitle")}</p>
       </div>
 
       {/* Incident Lifecycle */}
       <section id="lifecycle" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Incident Lifecycle
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Every incident follows a defined lifecycle. The system tracks status
-          transitions and timestamps every change for compliance evidence.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("lifecycle.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("lifecycle.intro")}</p>
 
         <div className="card-brutal">
           <FlowDiagram
-            steps={[
-              { label: "Reported", description: "Incident identified" },
-              { label: "Investigating", description: "Gathering facts" },
-              { label: "Containment", description: "Stopping the impact" },
-              { label: "Notification", description: "Alerting authorities" },
-              { label: "Resolved", description: "Incident closed" },
-            ]}
+            steps={lifecycleSteps.map((k) => ({
+              label: t(`lifecycle.steps.${k}.label`),
+              description: t(`lifecycle.steps.${k}.description`),
+            }))}
           />
         </div>
       </section>
 
       {/* Severity Levels */}
       <section id="severity" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Severity Levels
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Classify incidents by severity to prioritize response efforts and
-          determine notification obligations.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("severity.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("severity.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            {
-              level: "LOW",
-              color: "bg-green-500/10 text-green-400 border-green-500/20",
-              desc: "Minor incident, no personal data at risk",
-            },
-            {
-              level: "MEDIUM",
-              color: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-              desc: "Limited exposure, contained quickly",
-            },
-            {
-              level: "HIGH",
-              color: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-              desc: "Significant data exposure, DPA notification likely",
-            },
-            {
-              level: "CRITICAL",
-              color: "bg-red-500/10 text-red-400 border-red-500/20",
-              desc: "Large-scale breach, immediate DPA notification required",
-            },
-          ].map((s) => (
-            <div
-              key={s.level}
-              className={`p-3 rounded-lg border ${s.color}`}
-            >
+          {severityLevels.map((s) => (
+            <div key={s.level} className={`p-3 rounded-lg border ${s.color}`}>
               <p className="text-sm font-semibold">{s.level}</p>
-              <p className="text-[10px] mt-1 opacity-80">{s.desc}</p>
+              <p className="text-[10px] mt-1 opacity-80">{t(`severity.items.${s.level}`)}</p>
             </div>
           ))}
         </div>
@@ -99,59 +92,27 @@ export default function IncidentsPage() {
 
       {/* DPA Notification */}
       <section id="notifications" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          DPA Notification
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Under GDPR Article 33, personal data breaches must be reported to the
-          supervisory authority within 72 hours of becoming aware of the breach.
-          DPO Central tracks this deadline automatically.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("notifications.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("notifications.intro")}</p>
 
         <div className="p-4 rounded-lg border border-red-500/30 bg-red-500/5">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-red-400 font-semibold text-sm">
-              72-Hour Rule
-            </span>
+            <span className="text-red-400 font-semibold text-sm">{t("notifications.ruleLabel")}</span>
           </div>
-          <p className="text-xs text-muted-foreground">
-            When a breach is likely to result in a risk to the rights and
-            freedoms of individuals, notify the supervisory authority without
-            undue delay and, where feasible, not later than 72 hours after
-            becoming aware of it. The system tracks this deadline from the
-            moment the incident is reported and displays countdown timers on
-            your dashboard.
-          </p>
+          <p className="text-xs text-muted-foreground">{t("notifications.ruleBody")}</p>
         </div>
       </section>
 
       {/* Incident Stats */}
       <section id="dashboard" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Incident Dashboard
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          The incidents dashboard gives you an at-a-glance view of your
-          organization&apos;s incident status.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("dashboard.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("dashboard.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { label: "Total Incidents", value: "12", color: "text-foreground" },
-            { label: "Open", value: "3", color: "text-amber-400" },
-            { label: "Critical", value: "1", color: "text-red-400" },
-            { label: "Pending DPA", value: "1", color: "text-orange-400" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="p-4 rounded-lg border border-border bg-card text-center"
-            >
-              <p className={`text-2xl font-bold ${stat.color}`}>
-                {stat.value}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stat.label}
-              </p>
+          {dashboardStats.map((stat) => (
+            <div key={stat.key} className="p-4 rounded-lg border border-border bg-card text-center">
+              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t(`dashboard.stats.${stat.key}`)}</p>
             </div>
           ))}
         </div>
@@ -159,32 +120,15 @@ export default function IncidentsPage() {
 
       {/* Timeline */}
       <section id="timeline" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Incident Timeline
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Every incident maintains a detailed timeline recording all events,
-          status changes, communications, and actions. This provides the audit
-          trail needed for regulatory compliance.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("timeline.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("timeline.intro")}</p>
 
         <div className="card-brutal">
-          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">
-            Example Timeline
-          </p>
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("timeline.exampleLabel")}</p>
           <div className="space-y-3">
-            {[
-              { time: "09:15", event: "Incident reported by IT team", type: "CREATED" },
-              { time: "09:30", event: "Severity elevated to HIGH", type: "UPDATE" },
-              { time: "10:00", event: "Investigation started, containment measures deployed", type: "ACTION" },
-              { time: "11:45", event: "Root cause identified: misconfigured access control", type: "UPDATE" },
-              { time: "14:00", event: "DPA notification submitted", type: "NOTIFICATION" },
-              { time: "16:30", event: "Incident resolved, post-mortem scheduled", type: "RESOLVED" },
-            ].map((entry, i) => (
-              <div key={i} className="flex gap-3">
-                <span className="text-xs text-muted-foreground shrink-0 w-12 pt-0.5">
-                  {entry.time}
-                </span>
+            {timelineEntries.map((entry) => (
+              <div key={entry.key} className="flex gap-3">
+                <span className="text-xs text-muted-foreground shrink-0 w-12 pt-0.5">{entry.time}</span>
                 <div className="flex items-start gap-2">
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full shrink-0 ${
@@ -199,7 +143,7 @@ export default function IncidentsPage() {
                   >
                     {entry.type}
                   </span>
-                  <span className="text-sm text-foreground">{entry.event}</span>
+                  <span className="text-sm text-foreground">{t(`timeline.entries.${entry.key}`)}</span>
                 </div>
               </div>
             ))}
@@ -209,77 +153,41 @@ export default function IncidentsPage() {
 
       {/* Response Tasks */}
       <section id="tasks" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Response Tasks
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Assign response tasks to team members to coordinate the incident
-          response. Track completion and ensure all remediation steps are
-          carried out.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("tasks.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("tasks.intro")}</p>
       </section>
 
       {/* Reporting Workflow */}
       <section id="reporting" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-6">
-          Reporting an Incident
-        </h2>
-        <WorkflowStep
-          number={1}
-          title="Report the Incident"
-          description="Navigate to the Incidents module and click 'Report Incident'. Provide initial details: title, description, severity, and affected systems."
-          actor="Reporter"
-        />
-        <WorkflowStep
-          number={2}
-          title="Triage and Investigate"
-          description="The privacy officer reviews the report, assigns a severity level, and begins the investigation."
-          actor="Privacy Officer"
-          details={[
-            "Determine scope: what data was affected and how many subjects",
-            "Identify root cause and attack vector if applicable",
-            "Assess whether DPA notification is required",
-          ]}
-        />
-        <WorkflowStep
-          number={3}
-          title="Contain and Mitigate"
-          description="Take immediate action to contain the incident and prevent further data loss."
-          actor="IT Team"
-        />
-        <WorkflowStep
-          number={4}
-          title="Notify Authorities"
-          description="If required, submit DPA notification within 72 hours. Notify affected data subjects if the breach poses a high risk to their rights."
-          actor="DPO"
-        />
-        <WorkflowStep
-          number={5}
-          title="Resolve and Document"
-          description="Once the incident is fully resolved, document lessons learned, update policies, and close the incident record."
-          actor="Privacy Officer"
-        />
+        <h2 className="text-xl font-semibold text-foreground mb-6">{t("workflow.title")}</h2>
+        {workflowSteps.map((step, i) => (
+          <WorkflowStep
+            key={step.key}
+            number={i + 1}
+            title={t(`workflow.steps.${step.key}.title`)}
+            description={t(`workflow.steps.${step.key}.description`)}
+            actor={t(`workflow.actors.${step.actor}`)}
+            details={
+              step.key === "triage"
+                ? [
+                    t("workflow.steps.triage.detail1"),
+                    t("workflow.steps.triage.detail2"),
+                    t("workflow.steps.triage.detail3"),
+                  ]
+                : undefined
+            }
+          />
+        ))}
       </section>
 
       {/* PDF Exports */}
       <section id="exports" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          PDF Exports
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          Export your breach register as a formatted PDF for regulatory
-          notifications, internal reviews, or board reporting.
-        </p>
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("exports.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("exports.intro")}</p>
 
         <div className="p-4 rounded-lg border border-border bg-card">
-          <p className="text-sm font-semibold text-foreground mb-2">Breach Register Report</p>
-          <p className="text-xs text-muted-foreground">
-            Full incident inventory with severity breakdown, notification
-            status per jurisdiction, containment actions, root cause analysis,
-            lessons learned, and per-incident timelines. Includes summary
-            statistics for total incidents, critical count, and pending
-            notifications.
-          </p>
+          <p className="text-sm font-semibold text-foreground mb-2">{t("exports.registerTitle")}</p>
+          <p className="text-xs text-muted-foreground">{t("exports.registerDesc")}</p>
         </div>
       </section>
     </div>

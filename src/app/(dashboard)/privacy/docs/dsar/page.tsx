@@ -1,4 +1,5 @@
-import { FileText, Clock, ExternalLink, Settings, CheckCircle2 } from "lucide-react";
+import { Settings, CheckCircle2 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,26 +17,39 @@ const statusColors: Record<string, string> = {
   COMPLETED: "bg-green-100 text-green-800 border-transparent",
 };
 
-export default function DocsDsarPage() {
+export default async function DocsDsarPage() {
+  const t = await getTranslations("docs.dsar");
+
+  const requests = [
+    { id: "DSAR-2025-0042", type: "ACCESS", status: "IN_PROGRESS", subject: "john.doe@example.com", daysLeft: 12 },
+    { id: "DSAR-2025-0041", type: "ERASURE", status: "IDENTITY_PENDING", subject: "jane.smith@example.com", daysLeft: 25 },
+    { id: "DSAR-2025-0040", type: "PORTABILITY", status: "SUBMITTED", subject: "bob.wilson@example.com", daysLeft: 28 },
+    { id: "DSAR-2025-0039", type: "RECTIFICATION", status: "COMPLETED", subject: "alice.jones@example.com", daysLeft: 0 },
+  ];
+
+  const requestTypes = ["ACCESS", "ERASURE", "RECTIFICATION", "PORTABILITY", "OBJECTION", "RESTRICTION"];
+
+  const stepKeys = ["verify", "scope", "assign", "collect", "review", "close"] as const;
+
+  const slas = [
+    { id: "DSAR-2025-0042", days: 18, total: 30 },
+    { id: "DSAR-2025-0041", days: 24, total: 30 },
+    { id: "DSAR-2025-0038", days: 30, total: 30 },
+  ];
+
+  const intakeItems = ["autoAck", "identity", "types", "custom"] as const;
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">DSAR Management</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage Data Subject Access Requests (DSARs) end-to-end — from intake through a public portal
-          to task assignment, SLA tracking, and fulfillment.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="creating" title="Creating Requests" description="DSARs can be created manually by staff or submitted by data subjects through the public portal.">
-        <FeatureMockup title="DSAR List View">
+      <DocSection id="creating" title={t("creating.title")} description={t("creating.description")}>
+        <FeatureMockup title={t("creating.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { id: "DSAR-2025-0042", type: "ACCESS", status: "IN_PROGRESS", subject: "john.doe@example.com", daysLeft: 12 },
-              { id: "DSAR-2025-0041", type: "ERASURE", status: "IDENTITY_PENDING", subject: "jane.smith@example.com", daysLeft: 25 },
-              { id: "DSAR-2025-0040", type: "PORTABILITY", status: "SUBMITTED", subject: "bob.wilson@example.com", daysLeft: 28 },
-              { id: "DSAR-2025-0039", type: "RECTIFICATION", status: "COMPLETED", subject: "alice.jones@example.com", daysLeft: 0 },
-            ].map((req) => (
+            {requests.map((req) => (
               <div key={req.id} className="flex items-center justify-between rounded-md border px-3 py-2.5">
                 <div className="flex items-center gap-3">
                   <div>
@@ -48,7 +62,7 @@ export default function DocsDsarPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   {req.status !== "COMPLETED" && (
-                    <span className="text-xs text-muted-foreground">{req.daysLeft}d left</span>
+                    <span className="text-xs text-muted-foreground">{req.daysLeft}{t("creating.daysLeftSuffix")}</span>
                   )}
                   <Badge variant="outline" className={`text-[10px] ${statusColors[req.status]}`}>
                     {req.status.replace("_", " ")}
@@ -60,100 +74,87 @@ export default function DocsDsarPage() {
         </FeatureMockup>
 
         <div className="space-y-2">
-          <p className="text-sm font-medium">Request Types</p>
+          <p className="text-sm font-medium">{t("creating.typesLabel")}</p>
           <div className="flex flex-wrap gap-2">
-            {["ACCESS", "ERASURE", "RECTIFICATION", "PORTABILITY", "OBJECTION", "RESTRICTION"].map((type) => (
+            {requestTypes.map((type) => (
               <Badge key={type} variant="outline" className="text-xs">{type}</Badge>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">
-            These correspond to GDPR Articles 15-22 data subject rights.
-          </p>
+          <p className="text-xs text-muted-foreground">{t("creating.typesCaption")}</p>
         </div>
       </DocSection>
 
-      <DocSection id="tasks" title="Task Management" description="Each DSAR can have multiple tasks assigned to different team members.">
+      <DocSection id="tasks" title={t("tasks.title")} description={t("tasks.description")}>
         <StepList
-          steps={[
-            { title: "Verify identity", description: "Confirm the data subject's identity before processing. The system tracks identity verification status." },
-            { title: "Assess scope", description: "Determine which data assets and processing activities are relevant to the request." },
-            { title: "Assign tasks", description: "Create subtasks for each department or system that holds relevant data. Assign team members with deadlines." },
-            { title: "Collect data", description: "Each task assignee gathers and prepares their portion of the response." },
-            { title: "Review and respond", description: "Review all collected data, compile the response, and send it to the data subject." },
-            { title: "Close the request", description: "Mark the DSAR as completed. The system logs the completion date for compliance records." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`tasks.steps.${k}.title`),
+            description: t(`tasks.steps.${k}.description`),
+          }))}
         />
       </DocSection>
 
-      <DocSection id="sla" title="SLA Tracking" description="DPO Central automatically tracks SLA deadlines and alerts you before they expire.">
-        <FeatureMockup title="SLA Progress Indicators">
+      <DocSection id="sla" title={t("sla.title")} description={t("sla.description")}>
+        <FeatureMockup title={t("sla.mockupTitle")}>
           <div className="space-y-4">
-            {[
-              { id: "DSAR-2025-0042", days: 18, total: 30, status: "On track" },
-              { id: "DSAR-2025-0041", days: 24, total: 30, status: "Warning" },
-              { id: "DSAR-2025-0038", days: 30, total: 30, status: "Overdue" },
-            ].map((sla) => (
-              <div key={sla.id} className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{sla.id}</span>
-                  <span className={`text-xs ${sla.days >= sla.total ? "text-destructive font-medium" : sla.days > 20 ? "text-yellow-600" : "text-muted-foreground"}`}>
-                    {sla.days >= sla.total ? "Overdue" : `${sla.total - sla.days} days remaining`}
-                  </span>
+            {slas.map((sla) => {
+              const overdue = sla.days >= sla.total;
+              return (
+                <div key={sla.id} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{sla.id}</span>
+                    <span className={`text-xs ${overdue ? "text-destructive font-medium" : sla.days > 20 ? "text-yellow-600" : "text-muted-foreground"}`}>
+                      {overdue ? t("sla.overdueLabel") : t("sla.daysRemaining", { count: sla.total - sla.days })}
+                    </span>
+                  </div>
+                  <Progress value={(sla.days / sla.total) * 100} className="h-2" />
                 </div>
-                <Progress value={(sla.days / sla.total) * 100} className="h-2" />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </FeatureMockup>
-        <InfoCallout type="warning" title="SLA Deadlines">
-          Under GDPR, you must respond to DSARs within 30 calendar days (extendable to 90 days for complex requests).
-          The system sends email notifications at 7 days, 3 days, and 1 day before the deadline.
+        <InfoCallout type="warning" title={t("sla.warningTitle")}>
+          {t("sla.warningBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="portal" title="Public Portal" description="The DSAR public portal allows data subjects to submit requests without contacting you directly.">
-        <FeatureMockup title="Public Portal Intake">
+      <DocSection id="portal" title={t("portal.title")} description={t("portal.description")}>
+        <FeatureMockup title={t("portal.mockupTitle")}>
           <Card className="hover:translate-y-0 max-w-md mx-auto">
             <CardHeader className="p-4">
-              <CardTitle className="text-base">Submit a Data Request</CardTitle>
-              <CardDescription className="text-xs">
-                Exercise your data protection rights
-              </CardDescription>
+              <CardTitle className="text-base">{t("portal.cardTitle")}</CardTitle>
+              <CardDescription className="text-xs">{t("portal.cardSubtitle")}</CardDescription>
             </CardHeader>
             <CardContent className="p-4 pt-0 space-y-3">
               <div className="rounded-md border px-3 py-2 text-sm text-muted-foreground">john.doe@example.com</div>
-              <div className="rounded-md border px-3 py-2 text-sm text-muted-foreground">Access My Data</div>
-              <div className="rounded-md border px-3 py-2 h-16 text-sm text-muted-foreground">I would like a copy of all personal data...</div>
-              <Button className="w-full" size="sm">Submit Request</Button>
+              <div className="rounded-md border px-3 py-2 text-sm text-muted-foreground">{t("portal.sampleType")}</div>
+              <div className="rounded-md border px-3 py-2 h-16 text-sm text-muted-foreground">{t("portal.samplePlaceholder")}</div>
+              <Button className="w-full" size="sm">{t("portal.submitButton")}</Button>
             </CardContent>
           </Card>
         </FeatureMockup>
-        <InfoCallout type="tip" title="Shareable link">
-          Each organization gets a unique public portal URL (e.g., <code className="text-xs bg-muted px-1 rounded">/dsar/your-org-slug</code>). Share this link on your privacy policy page or website footer.
+        <InfoCallout type="tip" title={t("portal.tipTitle")}>
+          {t("portal.tipPrefix")}
+          <code className="text-xs bg-muted px-1 rounded">/dsar/your-org-slug</code>
+          {t("portal.tipSuffix")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="intake-config" title="Intake Form Configuration" description="Customize which fields appear on your public DSAR portal and configure auto-acknowledgment emails.">
+      <DocSection id="intake-config" title={t("intakeConfig.title")} description={t("intakeConfig.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2 rounded-md border px-3 py-2">
             <Settings className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium">Portal Settings</p>
-              <p className="text-xs text-muted-foreground">Configure from Privacy &gt; DSAR &gt; Settings tab</p>
+              <p className="text-sm font-medium">{t("intakeConfig.settingsLabel")}</p>
+              <p className="text-xs text-muted-foreground">{t("intakeConfig.settingsDesc")}</p>
             </div>
           </div>
           <div className="grid gap-2 sm:grid-cols-2 text-sm">
-            {[
-              { label: "Auto-acknowledgment", desc: "Send confirmation email on submission" },
-              { label: "Identity verification", desc: "Require ID upload before processing" },
-              { label: "Request types", desc: "Choose which rights to offer" },
-              { label: "Custom fields", desc: "Add organization-specific intake fields" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-start gap-2 rounded-md border p-2.5">
+            {intakeItems.map((key) => (
+              <div key={key} className="flex items-start gap-2 rounded-md border p-2.5">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium text-xs">{item.label}</p>
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  <p className="font-medium text-xs">{t(`intakeConfig.items.${key}.label`)}</p>
+                  <p className="text-xs text-muted-foreground">{t(`intakeConfig.items.${key}.desc`)}</p>
                 </div>
               </div>
             ))}
@@ -162,8 +163,8 @@ export default function DocsDsarPage() {
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Data Inventory", href: "/privacy/docs/data-inventory" }}
-        next={{ title: "Assessments", href: "/privacy/docs/assessments" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/data-inventory" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/assessments" }}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import { Database, Globe, ArrowRightLeft } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
 import { StepList } from "@/components/docs/step-list";
@@ -7,26 +8,43 @@ import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
-export default function DocsDataInventoryPage() {
+export default async function DocsDataInventoryPage() {
+  const t = await getTranslations("docs.dataInventory");
+
+  const assets = [
+    { name: "Customer CRM", type: "DATABASE", elements: 12, activities: 3 },
+    { name: "HR Portal", type: "APPLICATION", elements: 8, activities: 2 },
+    { name: "Marketing Cloud", type: "CLOUD_SERVICE", elements: 15, activities: 4 },
+    { name: "Backup Server", type: "PHYSICAL_STORAGE", elements: 6, activities: 1 },
+  ];
+
+  const stepKeys = ["navigate", "add", "details", "link", "save"] as const;
+
+  const elements: { key: string; sensitivity: string; color: string }[] = [
+    { key: "company", sensitivity: "PUBLIC", color: "bg-green-100 text-green-800" },
+    { key: "email", sensitivity: "INTERNAL", color: "bg-blue-100 text-blue-800" },
+    { key: "address", sensitivity: "CONFIDENTIAL", color: "bg-yellow-100 text-yellow-800" },
+    { key: "nationalId", sensitivity: "RESTRICTED", color: "bg-orange-100 text-orange-800" },
+    { key: "health", sensitivity: "SPECIAL_CATEGORY", color: "bg-red-100 text-red-800" },
+  ];
+
+  const transfers: { from: string; to: string; mechanism: string; statusKey: "Active" | "UnderReview"; badgeVariant: "success" | "warning" }[] = [
+    { from: "EU (Ireland)", to: "US (Virginia)", mechanism: "SCCs", statusKey: "Active", badgeVariant: "success" },
+    { from: "EU (Germany)", to: "UK", mechanism: "Adequacy Decision", statusKey: "Active", badgeVariant: "success" },
+    { from: "EU (France)", to: "India", mechanism: "BCRs", statusKey: "UnderReview", badgeVariant: "warning" },
+  ];
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Data Inventory</h1>
-        <p className="text-muted-foreground mt-1">
-          The Data Inventory module is the foundation of your privacy program. It tracks what personal data you hold,
-          where it flows, and how it&apos;s processed — forming the basis for your Record of Processing Activities (ROPA).
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="assets" title="Data Assets" description="Data assets represent systems, databases, or applications that store personal data.">
-        <FeatureMockup title="Asset Cards">
+      <DocSection id="assets" title={t("assets.title")} description={t("assets.description")}>
+        <FeatureMockup title={t("assets.mockupTitle")}>
           <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { name: "Customer CRM", type: "DATABASE", elements: 12, activities: 3 },
-              { name: "HR Portal", type: "APPLICATION", elements: 8, activities: 2 },
-              { name: "Marketing Cloud", type: "CLOUD_SERVICE", elements: 15, activities: 4 },
-              { name: "Backup Server", type: "PHYSICAL_STORAGE", elements: 6, activities: 1 },
-            ].map((asset) => (
+            {assets.map((asset) => (
               <Card key={asset.name} className="hover:translate-y-0">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
@@ -37,8 +55,8 @@ export default function DocsDataInventoryPage() {
                     <Badge variant="outline" className="text-[10px]">{asset.type.replace("_", " ")}</Badge>
                   </div>
                   <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
-                    <span>{asset.elements} data elements</span>
-                    <span>{asset.activities} activities</span>
+                    <span>{t("assets.elementsLabel", { count: asset.elements })}</span>
+                    <span>{t("assets.activitiesLabel", { count: asset.activities })}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -47,146 +65,136 @@ export default function DocsDataInventoryPage() {
         </FeatureMockup>
 
         <StepList
-          steps={[
-            { title: "Navigate to Data Inventory", description: "Click 'Data Inventory' in the main navigation bar." },
-            { title: "Click 'Add Asset'", description: "Use the button in the top-right to open the asset creation form." },
-            { title: "Fill in details", description: "Enter the asset name, type (Database, Application, Cloud Service, etc.), description, and data owner." },
-            { title: "Link data elements", description: "Add the personal data elements this asset stores (see Data Elements section)." },
-            { title: "Save the asset", description: "The asset will appear in your inventory and can be linked to processing activities." },
-          ]}
+          steps={stepKeys.map((k) => ({
+            title: t(`assets.steps.${k}.title`),
+            description: t(`assets.steps.${k}.description`),
+          }))}
         />
       </DocSection>
 
-      <DocSection id="data-elements" title="Data Elements" description="Data elements are the specific types of personal data you process (e.g., email addresses, IP addresses, health records).">
-        <FeatureMockup title="Data Element Sensitivity Scale">
+      <DocSection id="data-elements" title={t("elements.title")} description={t("elements.description")}>
+        <FeatureMockup title={t("elements.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { name: "Company Name", sensitivity: "PUBLIC", color: "bg-green-100 text-green-800" },
-              { name: "Email Address", sensitivity: "INTERNAL", color: "bg-blue-100 text-blue-800" },
-              { name: "Home Address", sensitivity: "CONFIDENTIAL", color: "bg-yellow-100 text-yellow-800" },
-              { name: "National ID Number", sensitivity: "RESTRICTED", color: "bg-orange-100 text-orange-800" },
-              { name: "Health Records", sensitivity: "SPECIAL_CATEGORY", color: "bg-red-100 text-red-800" },
-            ].map((el) => (
-              <div key={el.name} className="flex items-center justify-between rounded-md border px-3 py-2">
-                <span className="text-sm">{el.name}</span>
-                <Badge variant="outline" className={`text-[10px] ${el.color} border-transparent`}>{el.sensitivity.replace("_", " ")}</Badge>
+            {elements.map((el) => (
+              <div key={el.key} className="flex items-center justify-between rounded-md border px-3 py-2">
+                <span className="text-sm">{t(`elements.items.${el.key}`)}</span>
+                <Badge variant="outline" className={`text-[10px] ${el.color} border-transparent`}>
+                  {el.sensitivity.replace("_", " ")}
+                </Badge>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="info" title="GDPR Special Category Data">
-          Data classified as SPECIAL_CATEGORY (Article 9 data) requires explicit consent or another specific legal basis. The system flags these elements for additional review in assessments.
+        <InfoCallout type="info" title={t("elements.calloutTitle")}>
+          {t("elements.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="processing-activities" title="Processing Activities" description="Processing activities describe how and why personal data is used. Each activity links to assets, elements, and a legal basis.">
-        <FeatureMockup title="Processing Activity Card">
+      <DocSection id="processing-activities" title={t("activities.title")} description={t("activities.description")}>
+        <FeatureMockup title={t("activities.mockupTitle")}>
           <Card className="hover:translate-y-0">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-medium">Customer Support Correspondence</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Processing support tickets and follow-ups</p>
+                  <p className="font-medium">{t("activities.sampleTitle")}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("activities.sampleDesc")}</p>
                 </div>
                 <Badge variant="outline" className="text-[10px]">LEGITIMATE_INTEREST</Badge>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {["Email Address", "Full Name", "Support History"].map((el) => (
-                  <Badge key={el} variant="secondary" className="text-[10px]">{el}</Badge>
+                {(["email", "name", "history"] as const).map((el) => (
+                  <Badge key={el} variant="secondary" className="text-[10px]">{t(`activities.sampleElements.${el}`)}</Badge>
                 ))}
               </div>
               <div className="flex gap-4 text-xs text-muted-foreground">
-                <span>2 assets</span>
-                <span>3 data elements</span>
-                <span>Retention: 3 years</span>
+                <span>{t("activities.assetsLabel")}</span>
+                <span>{t("activities.elementsLabel")}</span>
+                <span>{t("activities.retentionLabel")}</span>
               </div>
             </CardContent>
           </Card>
         </FeatureMockup>
-        <InfoCallout type="note" title="Legal Basis">
-          Each processing activity must have a documented legal basis: Consent, Contract, Legal Obligation, Vital Interest, Public Task, or Legitimate Interest.
+        <InfoCallout type="note" title={t("activities.calloutTitle")}>
+          {t("activities.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="data-flows" title="Data Flows" description="Data flows visualize how personal data moves between assets — auto-generated from your processing activity links.">
-        <FeatureMockup title="Data Flow Diagram">
+      <DocSection id="data-flows" title={t("flows.title")} description={t("flows.description")}>
+        <FeatureMockup title={t("flows.mockupTitle")}>
           <div className="flex items-center justify-center gap-4 py-4">
             <div className="text-center">
               <div className="rounded-lg border-2 border-primary/50 bg-primary/5 p-3 mb-1">
                 <Database className="h-5 w-5 text-primary mx-auto" />
               </div>
-              <p className="text-xs font-medium">CRM</p>
+              <p className="text-xs font-medium">{t("flows.nodes.crm")}</p>
             </div>
             <ArrowRightLeft className="h-5 w-5 text-muted-foreground" />
             <div className="text-center">
               <div className="rounded-lg border-2 border-primary/50 bg-primary/5 p-3 mb-1">
                 <Database className="h-5 w-5 text-primary mx-auto" />
               </div>
-              <p className="text-xs font-medium">Marketing</p>
+              <p className="text-xs font-medium">{t("flows.nodes.marketing")}</p>
             </div>
             <ArrowRightLeft className="h-5 w-5 text-muted-foreground" />
             <div className="text-center">
               <div className="rounded-lg border-2 border-blue-500/50 bg-blue-500/5 p-3 mb-1">
                 <Globe className="h-5 w-5 text-blue-500 mx-auto" />
               </div>
-              <p className="text-xs font-medium">Analytics (EU)</p>
+              <p className="text-xs font-medium">{t("flows.nodes.analytics")}</p>
             </div>
           </div>
         </FeatureMockup>
         <div className="space-y-3 text-sm text-muted-foreground">
           <p>
-            <strong>You don&apos;t have to draw the graph.</strong> Whenever you link a processing activity to two
-            or more assets — via the <em>Manage Assets</em> button on the activity detail page, or <em>Manage
-            Activities</em> on the asset detail page — the system automatically creates DataFlow records connecting
-            them in a sensible order, based on the typical position of each asset type in a data pipeline (input
-            applications first, then ingest services, then databases, then file storage, then third-party sinks).
+            <strong>{t("flows.body1Bold")}</strong>
+            {t("flows.body1Rest")}
+            <em>{t("flows.body1ManageAssets")}</em>
+            {t("flows.body1Mid")}
+            <em>{t("flows.body1ManageActivities")}</em>
+            {t("flows.body1End")}
           </p>
           <p>
-            You can re-trigger generation at any time with the <strong>Generate Flows</strong> button on an activity
-            detail page. Existing flows are deduped — anything you&apos;ve manually edited is preserved, and only
-            new connections are added.
+            {t("flows.body2Start")}
+            <strong>{t("flows.body2GenerateFlows")}</strong>
+            {t("flows.body2End")}
           </p>
         </div>
-        <InfoCallout type="tip" title="Bidirectional flows">
-          Many real systems are bidirectional (a CRM both receives and returns customer data). The quickstart
-          vendor mappings and industry templates already mark the common bidirectional pairs, and the live graph
-          renders the outbound and return edges as separated curves so they don&apos;t overlap.
+        <InfoCallout type="tip" title={t("flows.tipTitle")}>
+          {t("flows.tipBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="transfers" title="Cross-Border Transfers" description="Track international data transfers and the safeguards in place for each.">
-        <FeatureMockup title="Transfer Records">
+      <DocSection id="transfers" title={t("transfers.title")} description={t("transfers.description")}>
+        <FeatureMockup title={t("transfers.mockupTitle")}>
           <div className="space-y-2">
-            {[
-              { from: "EU (Ireland)", to: "US (Virginia)", mechanism: "SCCs", status: "Active" },
-              { from: "EU (Germany)", to: "UK", mechanism: "Adequacy Decision", status: "Active" },
-              { from: "EU (France)", to: "India", mechanism: "BCRs", status: "Under Review" },
-            ].map((t) => (
-              <div key={`${t.from}-${t.to}`} className="flex items-center justify-between rounded-md border px-3 py-2">
+            {transfers.map((tr) => (
+              <div key={`${tr.from}-${tr.to}`} className="flex items-center justify-between rounded-md border px-3 py-2">
                 <div className="flex items-center gap-2 text-sm">
-                  <span>{t.from}</span>
+                  <span>{tr.from}</span>
                   <ArrowRightLeft className="h-3 w-3 text-muted-foreground" />
-                  <span>{t.to}</span>
+                  <span>{tr.to}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-[10px]">{t.mechanism}</Badge>
-                  <Badge variant={t.status === "Active" ? "success" : "warning"} className="text-[10px]">{t.status}</Badge>
+                  <Badge variant="secondary" className="text-[10px]">{tr.mechanism}</Badge>
+                  <Badge variant={tr.badgeVariant} className="text-[10px]">
+                    {t(`transfers.statuses.${tr.statusKey}`)}
+                  </Badge>
                 </div>
               </div>
             ))}
           </div>
         </FeatureMockup>
-        <InfoCallout type="warning" title="Schrems II compliance">
-          International transfers require a valid transfer mechanism. If your Transfer Impact Assessment (TIA) identifies risks, additional safeguards may be needed. See the Premium Features section for TIA assessments.
+        <InfoCallout type="warning" title={t("transfers.warningTitle")}>
+          {t("transfers.warningBody")}
         </InfoCallout>
-        <InfoCallout type="tip" title="ROPA Export">
-          You can export your complete Record of Processing Activities (ROPA) from the Data Inventory list view. The export includes all assets, elements, activities, legal bases, and transfer records.
+        <InfoCallout type="tip" title={t("transfers.tipTitle")}>
+          {t("transfers.tipBody")}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "Quickstart", href: "/privacy/docs/quickstart" }}
-        next={{ title: "DSAR Management", href: "/privacy/docs/dsar" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/quickstart" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/dsar" }}
       />
     </div>
   );

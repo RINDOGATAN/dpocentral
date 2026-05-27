@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Scale,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,80 +22,98 @@ import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import Link from "next/link";
 
-export default function DocsGettingStartedPage() {
+export default async function DocsGettingStartedPage() {
+  const t = await getTranslations("docs.gettingStarted");
+
+  const navItems: { icon: typeof LayoutDashboard; key: string }[] = [
+    { icon: LayoutDashboard, key: "dashboard" },
+    { icon: Database, key: "dataInventory" },
+    { icon: FileText, key: "dsar" },
+    { icon: ClipboardCheck, key: "assessments" },
+    { icon: AlertTriangle, key: "incidents" },
+    { icon: Building2, key: "vendors" },
+    { icon: Shield, key: "reports" },
+    { icon: Scale, key: "regulations" },
+    { icon: Shield, key: "aiSystems" },
+  ];
+
+  const roleRows = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
+
+  const quickActions: { icon: typeof Database; key: string }[] = [
+    { icon: Database, key: "addAsset" },
+    { icon: FileText, key: "newDsar" },
+    { icon: ClipboardCheck, key: "startAssessment" },
+    { icon: AlertTriangle, key: "reportIncident" },
+    { icon: Building2, key: "addVendor" },
+    { icon: Shield, key: "runAudit" },
+  ];
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Getting Started</h1>
-        <p className="text-muted-foreground mt-1">
-          Welcome to DPO Central — your comprehensive privacy management platform.
-          This guide covers every feature to help you manage data protection compliance.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
-      <DocSection id="dashboard" title="Dashboard Overview" description="The dashboard provides a real-time snapshot of your privacy program.">
-        <FeatureMockup title="Dashboard Stats">
+      <DocSection id="dashboard" title={t("dashboard.title")} description={t("dashboard.description")}>
+        <FeatureMockup title={t("dashboard.mockupTitle")}>
           <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                <CardTitle className="text-xs font-medium">Data Inventory</CardTitle>
+                <CardTitle className="text-xs font-medium">{t("dashboard.cards.dataInventory.label")}</CardTitle>
                 <Database className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <div className="text-xl font-bold text-primary">24</div>
-                <p className="text-xs text-muted-foreground">8 activities</p>
+                <div className="text-xl font-bold text-primary">{t("dashboard.cards.dataInventory.value")}</div>
+                <p className="text-xs text-muted-foreground">{t("dashboard.cards.dataInventory.sub")}</p>
               </CardContent>
             </Card>
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                <CardTitle className="text-xs font-medium">Open DSARs</CardTitle>
+                <CardTitle className="text-xs font-medium">{t("dashboard.cards.openDsars.label")}</CardTitle>
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <div className="text-xl font-bold text-primary">3</div>
-                <p className="text-xs text-muted-foreground">All on track</p>
+                <div className="text-xl font-bold text-primary">{t("dashboard.cards.openDsars.value")}</div>
+                <p className="text-xs text-muted-foreground">{t("dashboard.cards.openDsars.sub")}</p>
               </CardContent>
             </Card>
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                <CardTitle className="text-xs font-medium">Assessments</CardTitle>
+                <CardTitle className="text-xs font-medium">{t("dashboard.cards.assessments.label")}</CardTitle>
                 <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <div className="text-xl font-bold text-primary">12</div>
-                <p className="text-xs text-muted-foreground">2 pending review</p>
+                <div className="text-xl font-bold text-primary">{t("dashboard.cards.assessments.value")}</div>
+                <p className="text-xs text-muted-foreground">{t("dashboard.cards.assessments.sub")}</p>
               </CardContent>
             </Card>
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
-                <CardTitle className="text-xs font-medium">Incidents</CardTitle>
+                <CardTitle className="text-xs font-medium">{t("dashboard.cards.incidents.label")}</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <div className="text-xl font-bold text-primary">1</div>
-                <p className="text-xs text-muted-foreground">0 critical</p>
+                <div className="text-xl font-bold text-primary">{t("dashboard.cards.incidents.value")}</div>
+                <p className="text-xs text-muted-foreground">{t("dashboard.cards.incidents.sub")}</p>
               </CardContent>
             </Card>
           </div>
         </FeatureMockup>
-        <InfoCallout type="tip" title="Stat cards are interactive">
-          Click on any stat card to navigate directly to that module&apos;s list view.
+        <InfoCallout type="tip" title={t("dashboard.calloutTitle")}>
+          {t("dashboard.calloutBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="quickstart" title="Quickstart Wizard" description="Bootstrap your entire privacy program in minutes instead of building everything from scratch.">
+      <DocSection id="quickstart" title={t("quickstart.title")} description={t("quickstart.description")}>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-start gap-3 rounded-lg border p-3">
             <div className="rounded-md bg-primary/10 p-2">
               <Building2 className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Import from Vendors</p>
-              <p className="text-xs text-muted-foreground">
-                Select vendors you already use from the catalog, or import up to 5 for free
-                from your Vendor.Watch portfolio. The wizard auto-generates data assets,
-                data elements, processing activities, and cross-border transfers for each vendor.
-              </p>
+              <p className="font-medium text-sm">{t("quickstart.importVendors.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("quickstart.importVendors.desc")}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-lg border p-3">
@@ -102,63 +121,46 @@ export default function DocsGettingStartedPage() {
               <Sparkles className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Industry Template</p>
-              <p className="text-xs text-muted-foreground">
-                Pick your industry (E-commerce, SaaS, Healthcare, Fintech, Media, or
-                Professional Services) and get a pre-built scaffold of assets, activities,
-                and data flows.
-              </p>
+              <p className="font-medium text-sm">{t("quickstart.industryTemplate.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("quickstart.industryTemplate.desc")}</p>
             </div>
           </div>
         </div>
-        <InfoCallout type="tip" title="Vendor.Watch integration">
-          If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects
-          your vendors and pre-selects them — no manual searching needed. Up to 5 vendors
-          can be imported for free.
+        <InfoCallout type="tip" title={t("quickstart.vendorWatchTitle")}>
+          {t("quickstart.vendorWatchBody")}
         </InfoCallout>
-        <InfoCallout type="info" title="Non-destructive">
-          The quickstart only creates new records. It never modifies or deletes existing
-          data and automatically skips duplicates. You can run it multiple times safely.
+        <InfoCallout type="info" title={t("quickstart.nonDestructiveTitle")}>
+          {t("quickstart.nonDestructiveBody")}
         </InfoCallout>
         <div className="mt-2 flex gap-3">
           <Link href="/privacy/quickstart">
             <Button className="gap-2">
               <Zap className="w-4 h-4" />
-              Open Quickstart Wizard
+              {t("quickstart.openWizard")}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
           <Link href="/privacy/docs/quickstart">
             <Button variant="outline" className="gap-2">
-              Full Quickstart Guide
+              {t("quickstart.fullGuide")}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
         </div>
       </DocSection>
 
-      <DocSection id="navigation" title="Navigation" description="The main navigation bar provides access to all modules.">
+      <DocSection id="navigation" title={t("navigation.title")} description={t("navigation.description")}>
         <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            { icon: LayoutDashboard, label: "Dashboard", desc: "Overview stats, recent activity, quick actions" },
-            { icon: Database, label: "Data Inventory", desc: "Assets, data elements, processing activities, flows" },
-            { icon: FileText, label: "DSAR", desc: "Subject access requests, SLA tracking, public portal" },
-            { icon: ClipboardCheck, label: "Assessments", desc: "DPIA, PIA, TIA, LIA with templates & approvals" },
-            { icon: AlertTriangle, label: "Incidents", desc: "Breach tracking, DPA notifications, timelines" },
-            { icon: Building2, label: "Vendors", desc: "Contracts, questionnaires, risk tiers" },
-            { icon: Shield, label: "Reports", desc: "Compliance posture score, trend tracking, board reports" },
-            { icon: Scale, label: "Regulations", desc: "40+ jurisdictions, applicability wizard, deadline config" },
-            { icon: Shield, label: "AI Systems", desc: "EU AI Act register, risk classification, governance" },
-          ].map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className="flex items-start gap-3 rounded-lg border p-3">
+              <div key={item.key} className="flex items-start gap-3 rounded-lg border p-3">
                 <div className="rounded-md bg-primary/10 p-2">
                   <Icon className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm">{item.label}</p>
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  <p className="font-medium text-sm">{t(`navigation.items.${item.key}.label`)}</p>
+                  <p className="text-xs text-muted-foreground">{t(`navigation.items.${item.key}.desc`)}</p>
                 </div>
               </div>
             );
@@ -166,59 +168,46 @@ export default function DocsGettingStartedPage() {
         </div>
       </DocSection>
 
-      <DocSection id="roles" title="User Roles" description="DPO Central uses a hierarchical role system. Higher roles inherit all permissions of lower roles.">
+      <DocSection id="roles" title={t("roles.title")} description={t("roles.description")}>
         <div className="rounded-lg border overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-muted/50">
-                <th className="text-left font-medium px-4 py-2">Role</th>
-                <th className="text-left font-medium px-4 py-2">Permissions</th>
+                <th className="text-left font-medium px-4 py-2">{t("roles.columnRole")}</th>
+                <th className="text-left font-medium px-4 py-2">{t("roles.columnPermissions")}</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                { role: "OWNER", desc: "Full access including organization settings, billing, and member management" },
-                { role: "ADMIN", desc: "Manage all modules, users, and settings. Cannot delete the organization" },
-                { role: "PRIVACY_OFFICER", desc: "Full CRUD on all privacy modules. Cannot manage organization settings" },
-                { role: "MEMBER", desc: "Create and edit records, submit assessments for review" },
-                { role: "VIEWER", desc: "Read-only access to all privacy data" },
-              ].map((item, i) => (
-                <tr key={item.role} className={i % 2 ? "bg-muted/20" : ""}>
+              {roleRows.map((role, i) => (
+                <tr key={role} className={i % 2 ? "bg-muted/20" : ""}>
                   <td className="px-4 py-2">
-                    <Badge variant="outline" className="font-mono text-xs">{item.role}</Badge>
+                    <Badge variant="outline" className="font-mono text-xs">{role}</Badge>
                   </td>
-                  <td className="px-4 py-2 text-muted-foreground">{item.desc}</td>
+                  <td className="px-4 py-2 text-muted-foreground">{t(`roles.rows.${role}`)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <InfoCallout type="info" title="Role inheritance">
-          Each role inherits all permissions from the roles below it. For example, an ADMIN has all PRIVACY_OFFICER, MEMBER, and VIEWER permissions.
+        <InfoCallout type="info" title={t("roles.inheritanceTitle")}>
+          {t("roles.inheritanceBody")}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="quick-actions" title="Quick Actions" description="The dashboard provides shortcuts to common tasks.">
-        <FeatureMockup title="Quick Actions Panel">
+      <DocSection id="quick-actions" title={t("quickActions.title")} description={t("quickActions.description")}>
+        <FeatureMockup title={t("quickActions.mockupTitle")}>
           <Card className="hover:translate-y-0">
             <CardHeader className="p-4">
-              <CardTitle className="text-base">Quick Actions</CardTitle>
-              <CardDescription className="text-xs">Common tasks</CardDescription>
+              <CardTitle className="text-base">{t("quickActions.panelTitle")}</CardTitle>
+              <CardDescription className="text-xs">{t("quickActions.panelSubtitle")}</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-2 grid-cols-1 sm:grid-cols-2 p-4 pt-0">
-              {[
-                { icon: Database, label: "Add Data Asset" },
-                { icon: FileText, label: "New DSAR" },
-                { icon: ClipboardCheck, label: "Start Assessment" },
-                { icon: AlertTriangle, label: "Report Incident" },
-                { icon: Building2, label: "Add Vendor" },
-                { icon: Shield, label: "Run Audit" },
-              ].map((item) => {
+              {quickActions.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <Button key={item.label} variant="outline" className="w-full justify-start h-11">
+                  <Button key={item.key} variant="outline" className="w-full justify-start h-11">
                     <Icon className="w-4 h-4 mr-2 shrink-0" />
-                    <span className="truncate">{item.label}</span>
+                    <span className="truncate">{t(`quickActions.actions.${item.key}`)}</span>
                     <Plus className="w-3 h-3 ml-auto text-muted-foreground" />
                   </Button>
                 );
@@ -229,7 +218,7 @@ export default function DocsGettingStartedPage() {
       </DocSection>
 
       <DocNavFooter
-        next={{ title: "Quickstart", href: "/privacy/docs/quickstart" }}
+        next={{ title: t("nav.next"), href: "/privacy/docs/quickstart" }}
       />
     </div>
   );

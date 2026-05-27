@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Lock, Shield, Globe, Building2, Search, Sparkles, Mail, CreditCard } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,14 +15,22 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 
 export default function DocsPremiumPage() {
+  const t = useTranslations("docs.premium");
+  const price = formatPrice(9);
+
+  const dpiaWhenKeys = ["profiling", "special", "monitoring", "tech", "rights"] as const;
+  const dpiaWorkflowKeys = ["describe", "assess", "identify", "measures", "document", "consult"] as const;
+  const piaDiffKeys = ["scope", "org", "flex", "cases"] as const;
+  const tiaEvalKeys = ["legal", "surveillance", "supplementary", "technical", "org", "contractual"] as const;
+  const tiaSafeguardKeys = ["sccs", "bcrs", "adequacy", "consent", "encryption"] as const;
+  const vendorCoversKeys = ["scope", "security", "sub", "incident", "retention", "transfer"] as const;
+  const vendorCatalogFeatureKeys = ["profiles", "certs", "details", "sub", "dpa", "import"] as const;
+
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Add-on Features</h1>
-        <p className="text-muted-foreground mt-1">
-          Add-on features extend DPO Central with advanced assessment types, vendor intelligence,
-          and specialized compliance tools. Each is available for {formatPrice(9)}/month.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("subtitle", { price })}</p>
       </div>
 
       <Card className="border-dashed border-amber-500/50 bg-amber-500/5 hover:translate-y-0">
@@ -32,27 +41,25 @@ export default function DocsPremiumPage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold">Add-on Features</h3>
+                <h3 className="font-semibold">{t("cardTitle")}</h3>
                 <PremiumBadge />
               </div>
               <p className="text-sm text-muted-foreground">
-                These features are available as add-ons for {formatPrice(9)}/month each. They are not included in the open-source core.
-                {features.selfServiceUpgrade
-                  ? " Enable any feature instantly from the billing page."
-                  : " Contact our team to enable features for your organization."}
+                {t("cardBodyPrefix")}{price}{t("cardBodyMid")}
+                {features.selfServiceUpgrade ? t("cardSelfService") : t("cardContact")}
               </p>
               {features.selfServiceUpgrade ? (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
                   <Link href="/privacy/billing">
                     <CreditCard className="h-4 w-4 mr-2" />
-                    View Add-ons
+                    {t("viewAddons")}
                   </Link>
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
                   <a href={`mailto:${brand.supportEmail}`}>
                     <Mail className="h-4 w-4 mr-2" />
-                    Contact Us
+                    {t("contactUs")}
                   </a>
                 </Button>
               )}
@@ -61,141 +68,162 @@ export default function DocsPremiumPage() {
         </CardContent>
       </Card>
 
-      <DocSection id="dpia" title="DPIA — Data Protection Impact Assessment" description="Required by GDPR Article 35 when processing is likely to result in high risk to individuals.">
+      <DocSection id="dpia" title={t("dpia.title")} description={t("dpia.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            <span className="font-medium">GDPR Article 35 Compliance</span>
+            <span className="font-medium">{t("dpia.badge")}</span>
             <PremiumBadge />
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">When is a DPIA required?</p>
+            <p className="text-sm font-medium">{t("dpia.whenTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
-              <li>Systematic and extensive profiling with significant effects</li>
-              <li>Large-scale processing of special category data (Article 9)</li>
-              <li>Systematic monitoring of publicly accessible areas</li>
-              <li>Using new technologies that pose high risk</li>
-              <li>Processing that prevents data subjects from exercising rights</li>
+              {dpiaWhenKeys.map((k) => (
+                <li key={k}>{t(`dpia.whenItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">DPIA Workflow</p>
+            <p className="text-sm font-medium">{t("dpia.workflowTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
-              <li>Describe the processing operations and purposes</li>
-              <li>Assess necessity and proportionality</li>
-              <li>Identify and assess risks to individuals</li>
-              <li>Determine measures to mitigate risks</li>
-              <li>Document the assessment and seek DPO consultation</li>
-              <li>If residual risk is high, consult with the supervisory authority</li>
+              {dpiaWorkflowKeys.map((k) => (
+                <li key={k}>{t(`dpia.workflowItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
         </div>
-        <InfoCallout type="info" title="Enable DPIA">
-          {features.selfServiceUpgrade
-            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable DPIA assessments.</>
-            : <>Available as an add-on. Contact {brand.supportEmail} to enable DPIA assessments for your organization.</>}
+        <InfoCallout type="info" title={t("dpia.infoTitle")}>
+          {features.selfServiceUpgrade ? (
+            <>
+              {t("dpia.infoSelfPrefix")}
+              <Link href="/privacy/billing" className="text-primary underline">{t("dpia.infoSelfLink")}</Link>
+              {t("dpia.infoSelfSuffix")}
+            </>
+          ) : (
+            <>
+              {t("dpia.infoContactPrefix")}{brand.supportEmail}{t("dpia.infoContactSuffix")}
+            </>
+          )}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="pia" title="PIA — Privacy Impact Assessment" description="A broader privacy assessment framework for evaluating privacy implications beyond GDPR-specific requirements.">
+      <DocSection id="pia" title={t("pia.title")} description={t("pia.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            <span className="font-medium">Privacy Impact Analysis</span>
+            <span className="font-medium">{t("pia.badge")}</span>
             <PremiumBadge />
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">How does PIA differ from DPIA?</p>
+            <p className="text-sm font-medium">{t("pia.diffTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
-              <li><strong>Broader scope:</strong> PIAs cover privacy concerns beyond GDPR, including CCPA, LGPD, and other frameworks</li>
-              <li><strong>Organizational focus:</strong> Evaluates privacy risk to both individuals and the organization</li>
-              <li><strong>Flexible templates:</strong> Adaptable to different jurisdictions and regulatory requirements</li>
-              <li><strong>Use cases:</strong> New product launches, marketing campaigns, AI/ML systems, M&A due diligence</li>
+              {piaDiffKeys.map((k) => (
+                <li key={k}>
+                  <strong>{t(`pia.diffItems.${k}Label`)}</strong>{t(`pia.diffItems.${k}Body`)}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <InfoCallout type="info" title="Enable PIA">
-          {features.selfServiceUpgrade
-            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable PIA assessments.</>
-            : <>Available as an add-on. Contact {brand.supportEmail} to enable PIA assessments for your organization.</>}
+        <InfoCallout type="info" title={t("pia.infoTitle")}>
+          {features.selfServiceUpgrade ? (
+            <>
+              {t("pia.infoSelfPrefix")}
+              <Link href="/privacy/billing" className="text-primary underline">{t("pia.infoSelfLink")}</Link>
+              {t("pia.infoSelfSuffix")}
+            </>
+          ) : (
+            <>
+              {t("pia.infoContactPrefix")}{brand.supportEmail}{t("pia.infoContactSuffix")}
+            </>
+          )}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="tia" title="TIA — Transfer Impact Assessment" description="Evaluate the risks of international data transfers following the Schrems II ruling.">
+      <DocSection id="tia" title={t("tia.title")} description={t("tia.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-primary" />
-            <span className="font-medium">Schrems II Compliance</span>
+            <span className="font-medium">{t("tia.badge")}</span>
             <PremiumBadge />
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">TIA evaluates:</p>
+            <p className="text-sm font-medium">{t("tia.evalTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
-              <li>The legal framework of the recipient country</li>
-              <li>Government surveillance and access laws</li>
-              <li>Whether supplementary measures are needed beyond SCCs/BCRs</li>
-              <li>Technical measures (encryption, pseudonymization) in place</li>
-              <li>Organizational measures (access controls, audit rights)</li>
-              <li>Contractual measures (enhanced clauses, warranties)</li>
+              {tiaEvalKeys.map((k) => (
+                <li key={k}>{t(`tia.evalItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">Common transfer safeguards</p>
+            <p className="text-sm font-medium">{t("tia.safeguardsTitle")}</p>
             <div className="flex flex-wrap gap-2">
-              {["Standard Contractual Clauses (SCCs)", "Binding Corporate Rules (BCRs)", "Adequacy Decisions", "Consent (specific)", "Encryption in transit & at rest"].map((s) => (
-                <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+              {tiaSafeguardKeys.map((k) => (
+                <Badge key={k} variant="outline" className="text-xs">{t(`tia.safeguards.${k}`)}</Badge>
               ))}
             </div>
           </div>
         </div>
-        <InfoCallout type="info" title="Enable TIA">
-          {features.selfServiceUpgrade
-            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable TIA assessments.</>
-            : <>Available as an add-on. Contact {brand.supportEmail} to enable TIA assessments for your organization.</>}
+        <InfoCallout type="info" title={t("tia.infoTitle")}>
+          {features.selfServiceUpgrade ? (
+            <>
+              {t("tia.infoSelfPrefix")}
+              <Link href="/privacy/billing" className="text-primary underline">{t("tia.infoSelfLink")}</Link>
+              {t("tia.infoSelfSuffix")}
+            </>
+          ) : (
+            <>
+              {t("tia.infoContactPrefix")}{brand.supportEmail}{t("tia.infoContactSuffix")}
+            </>
+          )}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="vendor-risk" title="Vendor Risk Assessment" description="A specialized assessment template designed for evaluating vendor-specific privacy and security risks.">
+      <DocSection id="vendor-risk" title={t("vendorRisk.title")} description={t("vendorRisk.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-primary" />
-            <span className="font-medium">Vendor-Specific Assessment</span>
+            <span className="font-medium">{t("vendorRisk.badge")}</span>
             <PremiumBadge />
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">Assessment covers:</p>
+            <p className="text-sm font-medium">{t("vendorRisk.coversTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
-              <li>Data processing scope and categories</li>
-              <li>Security controls and certifications (ISO 27001, SOC 2)</li>
-              <li>Sub-processor management</li>
-              <li>Incident response and breach notification capabilities</li>
-              <li>Data retention and deletion practices</li>
-              <li>Cross-border transfer mechanisms</li>
+              {vendorCoversKeys.map((k) => (
+                <li key={k}>{t(`vendorRisk.coversItems.${k}`)}</li>
+              ))}
             </ul>
           </div>
         </div>
-        <InfoCallout type="tip" title="Combine with questionnaires">
-          Use Vendor Risk Assessments alongside vendor questionnaires for a complete picture.
-          The assessment provides the formal risk evaluation, while questionnaires gather detailed evidence from the vendor.
+        <InfoCallout type="tip" title={t("vendorRisk.tipTitle")}>
+          {t("vendorRisk.tipBody")}
         </InfoCallout>
-        <InfoCallout type="info" title="Enable Vendor Risk Assessment">
-          {features.selfServiceUpgrade
-            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable vendor risk assessments.</>
-            : <>Available as an add-on. Contact {brand.supportEmail} to enable vendor risk assessments.</>}
+        <InfoCallout type="info" title={t("vendorRisk.infoTitle")}>
+          {features.selfServiceUpgrade ? (
+            <>
+              {t("vendorRisk.infoSelfPrefix")}
+              <Link href="/privacy/billing" className="text-primary underline">{t("vendorRisk.infoSelfLink")}</Link>
+              {t("vendorRisk.infoSelfSuffix")}
+            </>
+          ) : (
+            <>
+              {t("vendorRisk.infoContactPrefix")}{brand.supportEmail}{t("vendorRisk.infoContactSuffix")}
+            </>
+          )}
         </InfoCallout>
       </DocSection>
 
-      <DocSection id="vendor-catalog" title="Vendor Catalog" description="Search and import from a database of 700+ pre-audited MarTech, AI, and SaaS vendors.">
+      <DocSection id="vendor-catalog" title={t("vendorCatalog.title")} description={t("vendorCatalog.description")}>
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Search className="h-5 w-5 text-primary" />
-            <span className="font-medium">Pre-Audited Vendor Database</span>
+            <span className="font-medium">{t("vendorCatalog.badge")}</span>
             <PremiumBadge />
           </div>
 
@@ -204,37 +232,38 @@ export default function DocsPremiumPage() {
               <div className="flex items-center gap-3 mb-3">
                 <Sparkles className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="font-medium text-sm">Vendor Catalog</p>
-                  <p className="text-xs text-muted-foreground">Search 700+ pre-audited vendors with compliance data</p>
+                  <p className="font-medium text-sm">{t("vendorCatalog.cardTitle")}</p>
+                  <p className="text-xs text-muted-foreground">{t("vendorCatalog.cardSubtitle")}</p>
                 </div>
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
-                {[
-                  "Pre-populated vendor profiles",
-                  "Compliance certifications",
-                  "Data processing details",
-                  "Sub-processor lists",
-                  "DPA templates",
-                  "One-click import to your inventory",
-                ].map((feature) => (
-                  <div key={feature} className="flex items-center gap-2 text-xs text-muted-foreground">
+                {vendorCatalogFeatureKeys.map((k) => (
+                  <div key={k} className="flex items-center gap-2 text-xs text-muted-foreground">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                    {feature}
+                    {t(`vendorCatalog.features.${k}`)}
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
         </div>
-        <InfoCallout type="info" title="Enable Vendor Catalog">
-          {features.selfServiceUpgrade
-            ? <>Available as an add-on. Visit the <Link href="/privacy/billing" className="text-primary underline">billing page</Link> to enable the Vendor Catalog.</>
-            : <>Available as an add-on. Contact {brand.supportEmail} to enable the Vendor Catalog for your organization.</>}
+        <InfoCallout type="info" title={t("vendorCatalog.infoTitle")}>
+          {features.selfServiceUpgrade ? (
+            <>
+              {t("vendorCatalog.infoSelfPrefix")}
+              <Link href="/privacy/billing" className="text-primary underline">{t("vendorCatalog.infoSelfLink")}</Link>
+              {t("vendorCatalog.infoSelfSuffix")}
+            </>
+          ) : (
+            <>
+              {t("vendorCatalog.infoContactPrefix")}{brand.supportEmail}{t("vendorCatalog.infoContactSuffix")}
+            </>
+          )}
         </InfoCallout>
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: "AI Governance", href: "/privacy/docs/ai-governance" }}
+        previous={{ title: t("nav.previous"), href: "/privacy/docs/ai-governance" }}
       />
     </div>
   );
