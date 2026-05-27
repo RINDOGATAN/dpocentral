@@ -1,17 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, organizationProcedure, writerProcedure, adminOrgProcedure, sanitizeInput } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   VendorStatus,
   VendorRiskTier,
   ContractType,
   ContractStatus,
-  QuestionnaireStatus,
   TaskStatus,
   ReviewType,
   DataCategory,
 } from "@prisma/client";
-import { v4 as uuidv4 } from "uuid";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
 
 export const vendorRouter = createTRPCRouter({
@@ -405,206 +403,12 @@ export const vendorRouter = createTRPCRouter({
       });
     }),
 
-  // Send questionnaire to vendor
-  sendQuestionnaire: writerProcedure
-    .input(
-      z.object({
-        organizationId: z.string(),
-        vendorId: z.string(),
-        questionnaireId: z.string(),
-        expiresInDays: z.number().min(1).max(90).default(14),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      // Verify vendor belongs to org
-      const vendor = await ctx.prisma.vendor.findFirst({
-        where: { id: input.vendorId, organizationId: ctx.organization.id },
-      });
-
-      if (!vendor) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Vendor not found",
-        });
-      }
-
-      const token = uuidv4();
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + input.expiresInDays);
-
-      const response = await ctx.prisma.vendorQuestionnaireResponse.create({
-        data: {
-          vendorId: input.vendorId,
-          questionnaireId: input.questionnaireId,
-          status: QuestionnaireStatus.NOT_STARTED,
-          token,
-          expiresAt,
-        },
-        include: {
-          questionnaire: true,
-          vendor: true,
-        },
-      });
-
-      // TODO: Send email to vendor with link
-
-      return {
-        ...response,
-        portalUrl: `/vendor-portal/${token}`,
-      };
-    }),
-
-  // Review questionnaire response
-  reviewQuestionnaireResponse: writerProcedure
-    .input(
-      z.object({
-        organizationId: z.string(),
-        id: z.string(),
-        status: z.enum(["APPROVED", "REJECTED"]),
-        reviewNotes: z.string().optional(),
-        score: z.number().optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const response = await ctx.prisma.vendorQuestionnaireResponse.findFirst({
-        where: { id: input.id },
-        include: { vendor: true },
-      });
-
-      if (!response || response.vendor.organizationId !== ctx.organization.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Response not found",
-        });
-      }
-
-      return ctx.prisma.vendorQuestionnaireResponse.update({
-        where: { id: input.id },
-        data: {
-          status: input.status as QuestionnaireStatus,
-          reviewNotes: input.reviewNotes,
-          score: input.score,
-          reviewedAt: new Date(),
-        },
-      });
-    }),
-
-  // ============================================================
-  // VENDOR PORTAL (Public endpoints)
-  // ============================================================
-
-  // Get questionnaire by token (public)
-  getQuestionnaireByToken: publicProcedure
-    .input(z.object({ token: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const response = await ctx.prisma.vendorQuestionnaireResponse.findUnique({
-        where: { token: input.token },
-        include: {
-          questionnaire: true,
-          vendor: {
-            select: { name: true },
-          },
-        },
-      });
-
-      if (!response) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Questionnaire not found",
-        });
-      }
-
-      if (response.expiresAt && response.expiresAt < new Date()) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This questionnaire has expired",
-        });
-      }
-
-      if (response.status === QuestionnaireStatus.SUBMITTED) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This questionnaire has already been submitted",
-        });
-      }
-
-      return response;
-    }),
-
-  // Submit questionnaire response (public)
-  submitQuestionnaireResponse: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-        responses: z.record(z.string(), z.any()),
-      })
-    )
-    .mutation(async ({ ctx, input: rawInput }) => {
-      const input = sanitizeInput(rawInput);
-      const response = await ctx.prisma.vendorQuestionnaireResponse.findUnique({
-        where: { token: input.token },
-      });
-
-      if (!response) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Questionnaire not found",
-        });
-      }
-
-      if (response.expiresAt && response.expiresAt < new Date()) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This questionnaire has expired",
-        });
-      }
-
-      return ctx.prisma.vendorQuestionnaireResponse.update({
-        where: { token: input.token },
-        data: {
-          responses: input.responses,
-          status: QuestionnaireStatus.SUBMITTED,
-          submittedAt: new Date(),
-        },
-      });
-    }),
-
-  // Save questionnaire progress (public)
-  saveQuestionnaireProgress: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-        responses: z.record(z.string(), z.any()),
-      })
-    )
-    .mutation(async ({ ctx, input: rawInput }) => {
-      const input = sanitizeInput(rawInput);
-      const response = await ctx.prisma.vendorQuestionnaireResponse.findUnique({
-        where: { token: input.token },
-      });
-
-      if (!response) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Questionnaire not found",
-        });
-      }
-
-      if (response.expiresAt && response.expiresAt < new Date()) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "This questionnaire has expired",
-        });
-      }
-
-      return ctx.prisma.vendorQuestionnaireResponse.update({
-        where: { token: input.token },
-        data: {
-          responses: input.responses,
-          status: QuestionnaireStatus.IN_PROGRESS,
-        },
-      });
-    }),
+  // Note: vendor self-reported compliance questionnaires (the public "vendor
+  // fills in their profile" workflow) are owned by Vendor.Watch, not DPC.
+  // The DPC procedures that previously implemented a parallel "DPO sends a
+  // private questionnaire to a vendor" flow were removed because they had no
+  // UI, no email transport, and no public portal route. To gather vendor
+  // compliance data, link the vendor to its Vendor.Watch profile.
 
   // ============================================================
   // REVIEWS
