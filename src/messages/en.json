@@ -1460,6 +1460,61 @@
         "dpia": "Data Protection Impact Assessment"
       }
     },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your account, organization, and team.",
+      "profile": {
+        "title": "Profile",
+        "description": "Your account information",
+        "name": "Name",
+        "email": "Email",
+        "emailHint": "Your email is set by your identity provider and cannot be changed here.",
+        "save": "Save name",
+        "cancel": "Cancel",
+        "updated": "Profile updated"
+      },
+      "accountType": {
+        "title": "Account Type",
+        "description": "Switch how DPO Central is configured for you.",
+        "current": "Current",
+        "updated": "Account type updated",
+        "businessOwner": "Business Owner",
+        "businessOwnerDesc": "Privacy compliance for your organization",
+        "privacyProfessional": "Privacy Professional",
+        "privacyProfessionalDesc": "Advising multiple organizations on privacy"
+      },
+      "language": {
+        "title": "Language",
+        "description": "Change the interface language. Affects all pages."
+      },
+      "organization": {
+        "title": "Organization",
+        "descriptionAdmin": "Rename your organization or set its domain. Only owners and admins can edit these.",
+        "descriptionViewer": "Read-only — only owners and admins can change these values.",
+        "name": "Name",
+        "domain": "Domain",
+        "domainHint": "Public email domains (gmail.com etc.) are not allowed.",
+        "save": "Save organization",
+        "cancel": "Cancel",
+        "updated": "Organization updated"
+      },
+      "members": {
+        "title": "Team Members",
+        "descriptionAdmin": "Invite teammates to collaborate on your privacy program.",
+        "descriptionViewer": "Only owners and admins can manage members.",
+        "inviteEmailPlaceholder": "teammate@example.com",
+        "add": "Add",
+        "added": "Member added",
+        "roleUpdated": "Role updated",
+        "removed": "Member removed",
+        "you": "(you)",
+        "removeAria": "Remove member",
+        "removeConfirmTitle": "Remove {name}?",
+        "removeConfirmDescription": "They will lose access to this organization immediately. You can re-invite them later.",
+        "removeConfirm": "Remove",
+        "rolesLegend": "Roles: OWNER (full control) · ADMIN (manage modules and members) · PRIVACY_OFFICER (manage records) · MEMBER (create and edit) · VIEWER (read only)"
+      }
+    },
     "dsar": {
       "title": "Data Subject Requests",
       "subtitle": "Manage and track DSARs",

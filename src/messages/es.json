@@ -1460,6 +1460,61 @@
         "dpia": "Evaluación de impacto de protección de datos"
       }
     },
+    "settings": {
+      "title": "Configuración",
+      "subtitle": "Gestiona tu cuenta, organización y equipo.",
+      "profile": {
+        "title": "Perfil",
+        "description": "Tu información de cuenta",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "emailHint": "Tu correo lo establece tu proveedor de identidad y no puede cambiarse aquí.",
+        "save": "Guardar nombre",
+        "cancel": "Cancelar",
+        "updated": "Perfil actualizado"
+      },
+      "accountType": {
+        "title": "Tipo de cuenta",
+        "description": "Cambia cómo se configura DPO Central para ti.",
+        "current": "Actual",
+        "updated": "Tipo de cuenta actualizado",
+        "businessOwner": "Empresario",
+        "businessOwnerDesc": "Cumplimiento de privacidad para tu organización",
+        "privacyProfessional": "Profesional de privacidad",
+        "privacyProfessionalDesc": "Asesorando a varias organizaciones en privacidad"
+      },
+      "language": {
+        "title": "Idioma",
+        "description": "Cambia el idioma de la interfaz. Afecta a todas las páginas."
+      },
+      "organization": {
+        "title": "Organización",
+        "descriptionAdmin": "Renombra tu organización o configura su dominio. Solo los propietarios y administradores pueden editar estos campos.",
+        "descriptionViewer": "Solo lectura — solo los propietarios y administradores pueden cambiar estos valores.",
+        "name": "Nombre",
+        "domain": "Dominio",
+        "domainHint": "No se permiten dominios de correo público (gmail.com, etc.).",
+        "save": "Guardar organización",
+        "cancel": "Cancelar",
+        "updated": "Organización actualizada"
+      },
+      "members": {
+        "title": "Miembros del equipo",
+        "descriptionAdmin": "Invita a compañeros para colaborar en tu programa de privacidad.",
+        "descriptionViewer": "Solo los propietarios y administradores pueden gestionar los miembros.",
+        "inviteEmailPlaceholder": "companero@ejemplo.com",
+        "add": "Añadir",
+        "added": "Miembro añadido",
+        "roleUpdated": "Rol actualizado",
+        "removed": "Miembro eliminado",
+        "you": "(tú)",
+        "removeAria": "Eliminar miembro",
+        "removeConfirmTitle": "¿Eliminar a {name}?",
+        "removeConfirmDescription": "Perderá el acceso a esta organización inmediatamente. Puedes volver a invitarle más tarde.",
+        "removeConfirm": "Eliminar",
+        "rolesLegend": "Roles: OWNER (control total) · ADMIN (gestiona módulos y miembros) · PRIVACY_OFFICER (gestiona registros) · MEMBER (crear y editar) · VIEWER (solo lectura)"
+      }
+    },
     "dsar": {
       "title": "Solicitudes del interesado",
       "subtitle": "Gestiona y supervisa las DSAR",
