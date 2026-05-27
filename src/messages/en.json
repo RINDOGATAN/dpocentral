@@ -5168,5 +5168,544 @@
         "registerDesc": "Complete vendor inventory with risk tiers, certifications, data categories processed, countries of operation, contract/DPA status, and review schedules. Includes summary statistics and per-vendor detail cards."
       }
     }
+  },
+  "templates": {
+    "lia": {
+      "section": {
+        "lia1": {
+          "title": "Purpose Test",
+          "description": "Identify the legitimate interest"
+        },
+        "lia2": {
+          "title": "Necessity Test",
+          "description": "Assess whether processing is necessary"
+        },
+        "lia3": {
+          "title": "Balancing Test",
+          "description": "Balance interests against data subject rights"
+        },
+        "lia4": {
+          "title": "Safeguards",
+          "description": "Document safeguards to protect data subjects"
+        }
+      },
+      "question": {
+        "lia1_1": {
+          "text": "What is the legitimate interest being pursued?",
+          "helpText": "Describe the specific interest, not just 'business purposes'"
+        },
+        "lia1_2": {
+          "text": "Is this interest recognized as legitimate under law?",
+          "options": [
+            "Yes, explicitly recognized",
+            "Yes, generally accepted",
+            "Possibly",
+            "Uncertain"
+          ]
+        },
+        "lia1_3": {
+          "text": "What benefit does pursuing this interest provide?"
+        },
+        "lia2_1": {
+          "text": "Is the processing necessary to achieve the interest?",
+          "options": [
+            "Essential",
+            "Highly beneficial",
+            "Somewhat beneficial",
+            "Not clearly necessary"
+          ]
+        },
+        "lia2_2": {
+          "text": "Are there less intrusive ways to achieve the same goal?",
+          "options": [
+            "No alternatives exist",
+            "Alternatives less effective",
+            "Alternatives available",
+            "Better alternatives exist"
+          ]
+        },
+        "lia3_1": {
+          "text": "What is the nature of the data being processed?",
+          "options": [
+            "Non-sensitive only",
+            "Mix of sensitivity levels",
+            "Includes sensitive data"
+          ]
+        },
+        "lia3_2": {
+          "text": "Would data subjects reasonably expect this processing?",
+          "options": [
+            "Definitely expected",
+            "Probably expected",
+            "Possibly unexpected",
+            "Likely unexpected"
+          ]
+        },
+        "lia3_3": {
+          "text": "What is the potential impact on data subjects?",
+          "options": [
+            "Positive/Neutral",
+            "Minor negative",
+            "Moderate negative",
+            "Significant negative"
+          ]
+        },
+        "lia3_4": {
+          "text": "Are there vulnerable individuals affected?"
+        },
+        "lia4_1": {
+          "text": "What safeguards are in place to protect data subjects?",
+          "options": [
+            "Opt-out mechanism",
+            "Data minimization",
+            "Retention limits",
+            "Access controls",
+            "Transparency measures",
+            "Other"
+          ]
+        },
+        "lia4_2": {
+          "text": "Have you provided clear privacy information about this processing?"
+        }
+      }
+    },
+    "custom": {
+      "section": {
+        "custom1": {
+          "title": "Overview",
+          "description": "Describe the scope and purpose of this assessment"
+        },
+        "custom2": {
+          "title": "Risk Evaluation",
+          "description": "Identify and evaluate potential risks"
+        },
+        "custom3": {
+          "title": "Mitigations",
+          "description": "Document mitigations and recommendations"
+        }
+      },
+      "question": {
+        "custom1_1": {
+          "text": "What is the purpose of this assessment?",
+          "helpText": "Describe what you are evaluating and why"
+        },
+        "custom1_2": {
+          "text": "What is the scope of this assessment?",
+          "helpText": "Define the systems, processes, or data flows being assessed"
+        },
+        "custom2_1": {
+          "text": "What are the key risks identified?"
+        },
+        "custom2_2": {
+          "text": "What is the overall risk level?",
+          "options": ["Low", "Medium", "High", "Critical"]
+        },
+        "custom2_3": {
+          "text": "Are there any legal or regulatory concerns?"
+        },
+        "custom3_1": {
+          "text": "What mitigations are in place or recommended?"
+        },
+        "custom3_2": {
+          "text": "Is the residual risk acceptable?",
+          "options": [
+            "Yes, fully acceptable",
+            "Acceptable with conditions",
+            "Needs further review",
+            "Not acceptable"
+          ]
+        }
+      }
+    },
+    "tia": {
+      "section": {
+        "tia1": {
+          "title": "Transfer Description",
+          "description": "Describe the data transfer, including the parties involved, the data categories, and the transfer mechanism"
+        },
+        "tia2": {
+          "title": "Destination Country Legal Framework",
+          "description": "Assess whether the laws and practices of the destination country provide an essentially equivalent level of protection to the EU/EEA"
+        },
+        "tia3": {
+          "title": "Supplementary Measures",
+          "description": "Identify technical, contractual, and organisational measures that supplement the transfer mechanism to ensure an equivalent level of protection"
+        },
+        "tia4": {
+          "title": "Risk Assessment & Conclusion",
+          "description": "Weigh the residual risk after supplementary measures and determine whether the transfer can proceed"
+        },
+        "tia5": {
+          "title": "Ongoing Monitoring",
+          "description": "Define how the transfer will be monitored and when this assessment should be reviewed"
+        }
+      },
+      "question": {
+        "tia1_1": {
+          "text": "What personal data is being transferred?",
+          "helpText": "Describe the categories of personal data (e.g., contact details, behavioural data, special categories) and estimated volume"
+        },
+        "tia1_2": {
+          "text": "Who is the data exporter and who is the data importer?",
+          "helpText": "Name the organisations, their roles (controller/processor), and the countries they are established in"
+        },
+        "tia1_3": {
+          "text": "What is the transfer mechanism (Article 46 GDPR)?",
+          "options": [
+            "Standard Contractual Clauses (SCCs)",
+            "Binding Corporate Rules (BCRs)",
+            "Approved Code of Conduct",
+            "Approved Certification Mechanism",
+            "Derogation (Art. 49)",
+            "Other"
+          ]
+        },
+        "tia1_4": {
+          "text": "What is the purpose of the transfer?"
+        },
+        "tia1_5": {
+          "text": "Is the transfer onward-transferred to a further third country?"
+        },
+        "tia2_1": {
+          "text": "Does the destination country have an EU adequacy decision?",
+          "options": [
+            "Yes — full adequacy decision",
+            "Yes — partial adequacy decision",
+            "No adequacy decision",
+            "Adequacy decision under review / challenged"
+          ]
+        },
+        "tia2_2": {
+          "text": "Does the destination country have legislation permitting government access to personal data (e.g., surveillance, national security)?",
+          "options": [
+            "No known legislation",
+            "Legislation exists but with effective oversight and safeguards",
+            "Broad surveillance powers with limited oversight",
+            "Mass surveillance or no independent judicial oversight"
+          ]
+        },
+        "tia2_3": {
+          "text": "Describe the relevant laws and government access practices in the destination country",
+          "helpText": "Reference specific legislation (e.g., FISA Section 702, UK IPA 2016, CLOUD Act). Include publicly available government access reports and transparency data where possible."
+        },
+        "tia2_4": {
+          "text": "Is the data importer subject to government access requests in practice?",
+          "options": [
+            "No — data importer has never received a government access request",
+            "Possible — data importer operates in a sector that may be targeted",
+            "Yes — data importer publishes transparency reports confirming access requests",
+            "Unknown"
+          ]
+        },
+        "tia2_5": {
+          "text": "Are effective legal remedies available to EU data subjects in the destination country?",
+          "options": [
+            "Yes — independent judicial review available",
+            "Partial — administrative remedies but no judicial review",
+            "No effective remedies available",
+            "Unknown"
+          ]
+        },
+        "tia3_1": {
+          "text": "What technical measures are in place?",
+          "helpText": "Select all technical measures that apply. Effective encryption with EU-held keys is the strongest technical safeguard.",
+          "options": [
+            "Encryption at rest (importer cannot access keys)",
+            "Encryption at rest (importer holds keys)",
+            "Encryption in transit (TLS 1.2+)",
+            "End-to-end encryption (exporter-held keys only)",
+            "Pseudonymisation before transfer",
+            "Anonymisation / aggregation before transfer",
+            "Split processing (no single party sees full dataset)",
+            "None"
+          ]
+        },
+        "tia3_2": {
+          "text": "What contractual measures supplement the SCCs or transfer agreement?",
+          "options": [
+            "Obligation to challenge government access requests",
+            "Obligation to notify exporter of government access (where legally permitted)",
+            "Transparency reporting obligation",
+            "Prohibition on onward transfers without prior authorisation",
+            "Audit rights for the data exporter",
+            "Data localisation obligation (processing only in specified countries)",
+            "Suspension / termination clause if legal framework changes",
+            "None"
+          ]
+        },
+        "tia3_3": {
+          "text": "What organisational measures are in place?",
+          "options": [
+            "Internal policies restricting government access response procedures",
+            "Staff training on data protection obligations",
+            "Designated privacy / compliance team at the importer",
+            "Regular compliance audits or certifications (e.g., ISO 27001, SOC 2)",
+            "Incident response plan covering government access scenarios",
+            "None"
+          ]
+        },
+        "tia3_4": {
+          "text": "Are the supplementary measures effective at preventing or mitigating the identified risks?",
+          "helpText": "Explain why the combination of measures above is sufficient — or insufficient — to ensure essentially equivalent protection. If the data must be available in the clear to the importer (e.g., for processing), encryption alone may not be effective against government access orders."
+        },
+        "tia4_1": {
+          "text": "What is the likelihood that public authorities in the destination country will access the transferred data?",
+          "options": [
+            "Negligible — sector/data type not targeted, strong safeguards",
+            "Low — possible but unlikely given safeguards and data type",
+            "Medium — sector is known to be targeted; safeguards may not fully prevent access",
+            "High — evidence of routine access to this type of data/sector"
+          ]
+        },
+        "tia4_2": {
+          "text": "What would be the severity of impact on data subjects if their data were accessed?",
+          "options": [
+            "Negligible — pseudonymised or non-sensitive data, minimal harm",
+            "Low — limited personal data, low sensitivity",
+            "Medium — identifiable personal data, moderate sensitivity",
+            "High — special category data, vulnerable individuals, or potential for significant harm"
+          ]
+        },
+        "tia4_3": {
+          "text": "Overall conclusion: can the transfer proceed?",
+          "options": [
+            "Yes — supplementary measures provide essentially equivalent protection",
+            "Yes, with conditions — additional measures required before transfer can proceed",
+            "No — residual risk is too high; transfer should be suspended or alternative mechanism sought"
+          ]
+        },
+        "tia4_4": {
+          "text": "If additional conditions are required, describe them",
+          "helpText": "List specific actions that must be completed before the transfer can proceed (e.g., implement EU-held encryption keys, switch to a different processor)."
+        },
+        "tia5_1": {
+          "text": "How will changes in the destination country's legal framework be monitored?",
+          "helpText": "Describe how you will track legislative changes, court rulings, and enforcement actions (e.g., subscribe to EDPB/SA updates, legal counsel monitoring, vendor transparency reports)."
+        },
+        "tia5_2": {
+          "text": "What events should trigger a reassessment?",
+          "options": [
+            "New legislation or executive order in the destination country",
+            "Adequacy decision revoked or challenged",
+            "Data importer receives a government access request",
+            "Change in data categories or volume transferred",
+            "Change of sub-processor or onward transfer",
+            "12-month periodic review cycle",
+            "Supervisory authority guidance or enforcement action"
+          ]
+        },
+        "tia5_3": {
+          "text": "When is the next scheduled review?",
+          "helpText": "Provide a specific date or timeframe (e.g., 'within 12 months' or '2027-04-01')."
+        }
+      }
+    },
+    "dpia": {
+      "section": {
+        "s1": {
+          "title": "Processing Description",
+          "description": "Describe the nature, scope, and purpose of the processing"
+        },
+        "s2": {
+          "title": "Scope & Context",
+          "description": "Assess the scope of processing and the context in which data subjects interact with you"
+        },
+        "s3": {
+          "title": "Necessity & Proportionality",
+          "description": "Demonstrate that the processing is necessary and proportionate to the purpose"
+        },
+        "s4": {
+          "title": "Consultation",
+          "description": "Document consultation with stakeholders, the DPO, and (where appropriate) data subjects"
+        },
+        "s5": {
+          "title": "Risk Identification",
+          "description": "Identify risks to the rights and freedoms of data subjects"
+        },
+        "s6": {
+          "title": "Mitigation Measures",
+          "description": "Document technical and organizational measures to mitigate identified risks"
+        },
+        "s7": {
+          "title": "Residual Risk & Conclusion",
+          "description": "Assess residual risk after mitigations and determine whether supervisory authority consultation is required"
+        }
+      },
+      "question": {
+        "q1_1": {
+          "text": "What categories of personal data will be processed?",
+          "helpText": "List all data categories (e.g. identifiers, financial, behavioral, special category). Be specific about each category."
+        },
+        "q1_2": {
+          "text": "What is the purpose of the processing?",
+          "helpText": "Describe the primary and any secondary purposes. Reference specific business objectives."
+        },
+        "q1_3": {
+          "text": "What is the legal basis for processing?",
+          "options": [
+            "Consent (Art. 6(1)(a))",
+            "Contract (Art. 6(1)(b))",
+            "Legal obligation (Art. 6(1)(c))",
+            "Vital interests (Art. 6(1)(d))",
+            "Public task (Art. 6(1)(e))",
+            "Legitimate interests (Art. 6(1)(f))"
+          ]
+        },
+        "q1_4": {
+          "text": "Who are the data subjects?",
+          "options": [
+            "Customers",
+            "Employees",
+            "Job applicants",
+            "Website visitors",
+            "Minors / children",
+            "Patients",
+            "Students",
+            "Members of the public",
+            "Business contacts",
+            "Other"
+          ]
+        },
+        "q1_5": {
+          "text": "Estimated number of data subjects affected",
+          "options": [
+            "< 1,000",
+            "1,000 – 10,000",
+            "10,000 – 100,000",
+            "100,000 – 1,000,000",
+            "> 1,000,000"
+          ]
+        },
+        "q1_6": {
+          "text": "Describe the data flows and recipients",
+          "helpText": "Map how data moves through your systems — from collection to storage, processing, sharing, and deletion. Identify all recipients and processors."
+        },
+        "q2_1": {
+          "text": "What is the sensitivity level of the data?",
+          "options": [
+            "Non-sensitive personal data only",
+            "Mix of non-sensitive and sensitive indicators",
+            "Includes special category data (Art. 9) or criminal offence data (Art. 10)"
+          ]
+        },
+        "q2_2": {
+          "text": "Retention period and justification",
+          "helpText": "State retention periods for each data category and justify why that duration is necessary."
+        },
+        "q2_3": {
+          "text": "Geographic scope and international transfers",
+          "helpText": "Identify all countries where data is processed or stored, and the transfer mechanisms used (e.g. adequacy decision, SCCs, BCRs)."
+        },
+        "q2_4": {
+          "text": "Would data subjects reasonably expect this processing?",
+          "options": [
+            "Fully expected — directly related to the service they signed up for",
+            "Probably expected — a reasonable extension of the service",
+            "Possibly unexpected — not directly related to the primary service",
+            "Unexpected — data subjects would likely be surprised"
+          ]
+        },
+        "q3_1": {
+          "text": "Is the processing necessary to achieve the stated purpose?",
+          "options": [
+            "Essential — cannot achieve the purpose without it",
+            "Highly beneficial — significantly more effective than alternatives",
+            "Somewhat beneficial — marginal improvement over alternatives",
+            "Not clearly necessary — alternatives could achieve the same result"
+          ]
+        },
+        "q3_2": {
+          "text": "What alternatives were considered and why were they rejected?",
+          "helpText": "Describe less intrusive alternatives you evaluated and explain why the chosen approach is necessary."
+        },
+        "q3_3": {
+          "text": "What data minimization measures are in place?",
+          "helpText": "Describe measures to ensure only necessary data is collected and processed (e.g. pseudonymization, aggregation, field-level restrictions)."
+        },
+        "q4_1": {
+          "text": "Who was consulted during this assessment?",
+          "options": [
+            "Data Protection Officer",
+            "Data subjects or their representatives",
+            "IT / Information Security",
+            "Legal counsel",
+            "Works council / staff representatives",
+            "External privacy experts",
+            "Processor / vendor"
+          ]
+        },
+        "q4_2": {
+          "text": "Summary of consultation outcomes and actions taken",
+          "helpText": "Summarize feedback received, objections raised, and any changes made to the processing as a result."
+        },
+        "q5_1": {
+          "text": "Does the processing involve automated decision-making or profiling?"
+        },
+        "q5_2": {
+          "text": "Does the processing involve special category data or criminal offence data?"
+        },
+        "q5_3": {
+          "text": "Does the processing involve systematic monitoring of a publicly accessible area?"
+        },
+        "q5_4": {
+          "text": "Is the processing carried out on a large scale?"
+        },
+        "q5_5": {
+          "text": "Does the processing involve innovative use of technology (e.g. AI, biometrics, IoT)?"
+        },
+        "q5_6": {
+          "text": "Describe the identified risks to data subjects, including likelihood and severity for each",
+          "helpText": "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N — Title: Description. Likelihood: X. Severity: Y."
+        },
+        "q6_1": {
+          "text": "Technical measures in place or planned",
+          "options": [
+            "Encryption at rest",
+            "Encryption in transit",
+            "Pseudonymization",
+            "Access controls / RBAC",
+            "Data loss prevention (DLP)",
+            "Audit logging",
+            "Backup & recovery",
+            "Network segmentation",
+            "Automated retention enforcement",
+            "Anonymization / aggregation"
+          ]
+        },
+        "q6_2": {
+          "text": "Organizational measures in place or planned",
+          "options": [
+            "Staff training / awareness",
+            "Data processing agreements (DPAs)",
+            "Privacy policies & procedures",
+            "Regular audits / reviews",
+            "Breach response plan",
+            "Vendor management program",
+            "Data classification scheme",
+            "Privacy by design process"
+          ]
+        },
+        "q6_3": {
+          "text": "Safeguards for individual rights (transparency, consent mechanisms, portability, opt-out)",
+          "helpText": "Describe how data subject rights are facilitated — e.g. privacy notices, consent preference centers, data portability tools, opt-out mechanisms."
+        },
+        "q7_1": {
+          "text": "Overall residual risk level after mitigations",
+          "options": ["Low", "Medium", "High", "Critical"]
+        },
+        "q7_2": {
+          "text": "Is prior consultation with the supervisory authority required? (Art. 36)",
+          "options": [
+            "No — residual risk has been sufficiently mitigated",
+            "Under consideration — further analysis needed",
+            "Yes — high residual risk that cannot be sufficiently mitigated"
+          ]
+        },
+        "q7_3": {
+          "text": "DPO advice and recommendation",
+          "helpText": "Record the DPO's formal advice: whether the processing may proceed, any conditions, and the recommended review date."
+        }
+      }
+    }
   }
 }

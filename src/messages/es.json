@@ -5168,5 +5168,544 @@
         "registerDesc": "Inventario completo de proveedores con niveles de riesgo, certificaciones, categorías de datos tratados, países de operación, estado de contrato/DPA y calendario de revisiones. Incluye estadísticas resumen y tarjetas de detalle por proveedor."
       }
     }
+  },
+  "templates": {
+    "lia": {
+      "section": {
+        "lia1": {
+          "title": "Test de finalidad",
+          "description": "Identifica el interés legítimo"
+        },
+        "lia2": {
+          "title": "Test de necesidad",
+          "description": "Evalúa si el tratamiento es necesario"
+        },
+        "lia3": {
+          "title": "Test de ponderación",
+          "description": "Pondera los intereses frente a los derechos de los interesados"
+        },
+        "lia4": {
+          "title": "Garantías",
+          "description": "Documenta las garantías para proteger a los interesados"
+        }
+      },
+      "question": {
+        "lia1_1": {
+          "text": "¿Cuál es el interés legítimo que persigues?",
+          "helpText": "Describe el interés concreto, no te limites a 'fines empresariales'"
+        },
+        "lia1_2": {
+          "text": "¿Está este interés reconocido como legítimo por la normativa?",
+          "options": [
+            "Sí, reconocido expresamente",
+            "Sí, generalmente aceptado",
+            "Posiblemente",
+            "Incierto"
+          ]
+        },
+        "lia1_3": {
+          "text": "¿Qué beneficio aporta perseguir este interés?"
+        },
+        "lia2_1": {
+          "text": "¿Es necesario el tratamiento para alcanzar el interés?",
+          "options": [
+            "Imprescindible",
+            "Muy beneficioso",
+            "Algo beneficioso",
+            "No claramente necesario"
+          ]
+        },
+        "lia2_2": {
+          "text": "¿Existen formas menos intrusivas de alcanzar el mismo objetivo?",
+          "options": [
+            "No existen alternativas",
+            "Las alternativas son menos eficaces",
+            "Hay alternativas disponibles",
+            "Existen alternativas mejores"
+          ]
+        },
+        "lia3_1": {
+          "text": "¿Cuál es la naturaleza de los datos que se tratan?",
+          "options": [
+            "Solo datos no sensibles",
+            "Mezcla de niveles de sensibilidad",
+            "Incluye datos sensibles"
+          ]
+        },
+        "lia3_2": {
+          "text": "¿Esperarían razonablemente los interesados este tratamiento?",
+          "options": [
+            "Claramente esperado",
+            "Probablemente esperado",
+            "Posiblemente inesperado",
+            "Probablemente inesperado"
+          ]
+        },
+        "lia3_3": {
+          "text": "¿Cuál es el impacto potencial sobre los interesados?",
+          "options": [
+            "Positivo/Neutro",
+            "Negativo leve",
+            "Negativo moderado",
+            "Negativo significativo"
+          ]
+        },
+        "lia3_4": {
+          "text": "¿Hay personas vulnerables afectadas?"
+        },
+        "lia4_1": {
+          "text": "¿Qué garantías existen para proteger a los interesados?",
+          "options": [
+            "Mecanismo de oposición",
+            "Minimización de datos",
+            "Plazos de conservación",
+            "Controles de acceso",
+            "Medidas de transparencia",
+            "Otro"
+          ]
+        },
+        "lia4_2": {
+          "text": "¿Has proporcionado información clara sobre privacidad acerca de este tratamiento?"
+        }
+      }
+    },
+    "custom": {
+      "section": {
+        "custom1": {
+          "title": "Visión general",
+          "description": "Describe el alcance y la finalidad de esta evaluación"
+        },
+        "custom2": {
+          "title": "Evaluación del riesgo",
+          "description": "Identifica y evalúa los riesgos potenciales"
+        },
+        "custom3": {
+          "title": "Mitigaciones",
+          "description": "Documenta las mitigaciones y recomendaciones"
+        }
+      },
+      "question": {
+        "custom1_1": {
+          "text": "¿Cuál es la finalidad de esta evaluación?",
+          "helpText": "Describe qué estás evaluando y por qué"
+        },
+        "custom1_2": {
+          "text": "¿Cuál es el alcance de esta evaluación?",
+          "helpText": "Define los sistemas, procesos o flujos de datos que se evalúan"
+        },
+        "custom2_1": {
+          "text": "¿Cuáles son los principales riesgos identificados?"
+        },
+        "custom2_2": {
+          "text": "¿Cuál es el nivel de riesgo general?",
+          "options": ["Bajo", "Medio", "Alto", "Crítico"]
+        },
+        "custom2_3": {
+          "text": "¿Existen consideraciones legales o regulatorias?"
+        },
+        "custom3_1": {
+          "text": "¿Qué mitigaciones existen o se recomiendan?"
+        },
+        "custom3_2": {
+          "text": "¿Es aceptable el riesgo residual?",
+          "options": [
+            "Sí, plenamente aceptable",
+            "Aceptable con condiciones",
+            "Requiere revisión adicional",
+            "No aceptable"
+          ]
+        }
+      }
+    },
+    "tia": {
+      "section": {
+        "tia1": {
+          "title": "Descripción de la transferencia",
+          "description": "Describe la transferencia de datos, incluyendo las partes implicadas, las categorías de datos y el mecanismo de transferencia"
+        },
+        "tia2": {
+          "title": "Marco legal del país de destino",
+          "description": "Evalúa si las leyes y prácticas del país de destino ofrecen un nivel de protección esencialmente equivalente al de la UE/EEE"
+        },
+        "tia3": {
+          "title": "Medidas complementarias",
+          "description": "Identifica las medidas técnicas, contractuales y organizativas que complementan el mecanismo de transferencia para garantizar un nivel de protección equivalente"
+        },
+        "tia4": {
+          "title": "Evaluación del riesgo y conclusión",
+          "description": "Pondera el riesgo residual tras las medidas complementarias y determina si la transferencia puede llevarse a cabo"
+        },
+        "tia5": {
+          "title": "Seguimiento continuo",
+          "description": "Define cómo se supervisará la transferencia y cuándo deberá revisarse esta evaluación"
+        }
+      },
+      "question": {
+        "tia1_1": {
+          "text": "¿Qué datos personales se transfieren?",
+          "helpText": "Describe las categorías de datos personales (p. ej., datos de contacto, datos de comportamiento, categorías especiales) y el volumen estimado"
+        },
+        "tia1_2": {
+          "text": "¿Quién es el exportador y quién el importador de los datos?",
+          "helpText": "Nombra las organizaciones, sus roles (responsable/encargado) y los países en los que están establecidas"
+        },
+        "tia1_3": {
+          "text": "¿Cuál es el mecanismo de transferencia (Art. 46 RGPD)?",
+          "options": [
+            "Cláusulas Contractuales Tipo (SCCs)",
+            "Normas Corporativas Vinculantes (BCRs)",
+            "Código de conducta aprobado",
+            "Mecanismo de certificación aprobado",
+            "Excepción (Art. 49)",
+            "Otro"
+          ]
+        },
+        "tia1_4": {
+          "text": "¿Cuál es la finalidad de la transferencia?"
+        },
+        "tia1_5": {
+          "text": "¿La transferencia se retransmite posteriormente a otro tercer país?"
+        },
+        "tia2_1": {
+          "text": "¿Cuenta el país de destino con una decisión de adecuación de la UE?",
+          "options": [
+            "Sí — decisión de adecuación plena",
+            "Sí — decisión de adecuación parcial",
+            "Sin decisión de adecuación",
+            "Decisión de adecuación en revisión / impugnada"
+          ]
+        },
+        "tia2_2": {
+          "text": "¿Existe en el país de destino legislación que permita el acceso gubernamental a datos personales (p. ej., vigilancia, seguridad nacional)?",
+          "options": [
+            "No se conoce legislación",
+            "Existe legislación pero con supervisión y garantías eficaces",
+            "Amplios poderes de vigilancia con supervisión limitada",
+            "Vigilancia masiva o sin supervisión judicial independiente"
+          ]
+        },
+        "tia2_3": {
+          "text": "Describe las leyes pertinentes y las prácticas de acceso gubernamental en el país de destino",
+          "helpText": "Cita la legislación concreta (p. ej., FISA Sección 702, UK IPA 2016, CLOUD Act). Incluye informes públicos de acceso gubernamental y datos de transparencia cuando sea posible."
+        },
+        "tia2_4": {
+          "text": "¿Está el importador de datos sujeto en la práctica a solicitudes de acceso gubernamental?",
+          "options": [
+            "No — el importador nunca ha recibido una solicitud de acceso gubernamental",
+            "Posible — el importador opera en un sector que puede ser objetivo",
+            "Sí — el importador publica informes de transparencia que confirman solicitudes de acceso",
+            "Desconocido"
+          ]
+        },
+        "tia2_5": {
+          "text": "¿Disponen los interesados de la UE de recursos legales eficaces en el país de destino?",
+          "options": [
+            "Sí — revisión judicial independiente disponible",
+            "Parcial — recursos administrativos pero sin revisión judicial",
+            "No hay recursos eficaces disponibles",
+            "Desconocido"
+          ]
+        },
+        "tia3_1": {
+          "text": "¿Qué medidas técnicas están implantadas?",
+          "helpText": "Selecciona todas las medidas técnicas aplicables. El cifrado efectivo con claves custodiadas en la UE es la garantía técnica más sólida.",
+          "options": [
+            "Cifrado en reposo (el importador no puede acceder a las claves)",
+            "Cifrado en reposo (el importador custodia las claves)",
+            "Cifrado en tránsito (TLS 1.2+)",
+            "Cifrado de extremo a extremo (claves solo en poder del exportador)",
+            "Seudonimización antes de la transferencia",
+            "Anonimización / agregación antes de la transferencia",
+            "Tratamiento dividido (ninguna parte ve el conjunto completo de datos)",
+            "Ninguna"
+          ]
+        },
+        "tia3_2": {
+          "text": "¿Qué medidas contractuales complementan las SCCs o el acuerdo de transferencia?",
+          "options": [
+            "Obligación de impugnar las solicitudes de acceso gubernamental",
+            "Obligación de notificar al exportador el acceso gubernamental (cuando esté legalmente permitido)",
+            "Obligación de informes de transparencia",
+            "Prohibición de transferencias ulteriores sin autorización previa",
+            "Derechos de auditoría para el exportador",
+            "Obligación de localización de datos (tratamiento únicamente en países determinados)",
+            "Cláusula de suspensión / resolución si cambia el marco legal",
+            "Ninguna"
+          ]
+        },
+        "tia3_3": {
+          "text": "¿Qué medidas organizativas están implantadas?",
+          "options": [
+            "Políticas internas que restringen los procedimientos de respuesta al acceso gubernamental",
+            "Formación del personal en obligaciones de protección de datos",
+            "Equipo dedicado de privacidad / cumplimiento en el importador",
+            "Auditorías o certificaciones periódicas de cumplimiento (p. ej., ISO 27001, SOC 2)",
+            "Plan de respuesta a incidentes que cubra escenarios de acceso gubernamental",
+            "Ninguna"
+          ]
+        },
+        "tia3_4": {
+          "text": "¿Son eficaces las medidas complementarias para prevenir o mitigar los riesgos identificados?",
+          "helpText": "Explica por qué la combinación de medidas anteriores es suficiente — o insuficiente — para garantizar una protección esencialmente equivalente. Si los datos deben estar disponibles en claro para el importador (p. ej., para su tratamiento), el cifrado por sí solo puede no ser eficaz frente a órdenes de acceso gubernamental."
+        },
+        "tia4_1": {
+          "text": "¿Cuál es la probabilidad de que las autoridades públicas del país de destino accedan a los datos transferidos?",
+          "options": [
+            "Insignificante — sector/tipo de dato no es objetivo, garantías sólidas",
+            "Baja — posible pero improbable dadas las garantías y el tipo de dato",
+            "Media — se sabe que el sector es objetivo; las garantías pueden no impedir totalmente el acceso",
+            "Alta — evidencia de acceso rutinario a este tipo de dato/sector"
+          ]
+        },
+        "tia4_2": {
+          "text": "¿Cuál sería la gravedad del impacto sobre los interesados si se accediera a sus datos?",
+          "options": [
+            "Insignificante — datos seudonimizados o no sensibles, daño mínimo",
+            "Baja — datos personales limitados, baja sensibilidad",
+            "Media — datos personales identificables, sensibilidad moderada",
+            "Alta — categorías especiales de datos, personas vulnerables o potencial de daño significativo"
+          ]
+        },
+        "tia4_3": {
+          "text": "Conclusión general: ¿puede llevarse a cabo la transferencia?",
+          "options": [
+            "Sí — las medidas complementarias proporcionan una protección esencialmente equivalente",
+            "Sí, con condiciones — se requieren medidas adicionales antes de proceder con la transferencia",
+            "No — el riesgo residual es demasiado alto; la transferencia debe suspenderse o buscarse un mecanismo alternativo"
+          ]
+        },
+        "tia4_4": {
+          "text": "Si se requieren condiciones adicionales, descríbelas",
+          "helpText": "Enumera acciones concretas que deben completarse antes de proceder con la transferencia (p. ej., implantar claves de cifrado custodiadas en la UE, cambiar de encargado)."
+        },
+        "tia5_1": {
+          "text": "¿Cómo se monitorizarán los cambios en el marco legal del país de destino?",
+          "helpText": "Describe cómo harás seguimiento de cambios legislativos, sentencias judiciales y acciones de aplicación (p. ej., suscripción a actualizaciones del EDPB/AC, supervisión de asesoría legal, informes de transparencia de proveedores)."
+        },
+        "tia5_2": {
+          "text": "¿Qué eventos deben desencadenar una reevaluación?",
+          "options": [
+            "Nueva legislación o decreto ejecutivo en el país de destino",
+            "Decisión de adecuación revocada o impugnada",
+            "El importador recibe una solicitud de acceso gubernamental",
+            "Cambio en las categorías o el volumen de datos transferidos",
+            "Cambio de subencargado o transferencia ulterior",
+            "Ciclo de revisión periódico de 12 meses",
+            "Directrices o acción de aplicación de la autoridad de control"
+          ]
+        },
+        "tia5_3": {
+          "text": "¿Cuándo es la próxima revisión programada?",
+          "helpText": "Proporciona una fecha o plazo concreto (p. ej., 'en los próximos 12 meses' o '2027-04-01')."
+        }
+      }
+    },
+    "dpia": {
+      "section": {
+        "s1": {
+          "title": "Descripción del tratamiento",
+          "description": "Describe la naturaleza, el alcance y la finalidad del tratamiento"
+        },
+        "s2": {
+          "title": "Alcance y contexto",
+          "description": "Evalúa el alcance del tratamiento y el contexto en el que los interesados interactúan contigo"
+        },
+        "s3": {
+          "title": "Necesidad y proporcionalidad",
+          "description": "Demuestra que el tratamiento es necesario y proporcionado a la finalidad"
+        },
+        "s4": {
+          "title": "Consulta",
+          "description": "Documenta la consulta con las partes interesadas, el DPO y (cuando proceda) los interesados"
+        },
+        "s5": {
+          "title": "Identificación de riesgos",
+          "description": "Identifica los riesgos para los derechos y libertades de los interesados"
+        },
+        "s6": {
+          "title": "Medidas de mitigación",
+          "description": "Documenta las medidas técnicas y organizativas para mitigar los riesgos identificados"
+        },
+        "s7": {
+          "title": "Riesgo residual y conclusión",
+          "description": "Evalúa el riesgo residual tras las mitigaciones y determina si es necesaria la consulta previa a la autoridad de control"
+        }
+      },
+      "question": {
+        "q1_1": {
+          "text": "¿Qué categorías de datos personales se tratarán?",
+          "helpText": "Enumera todas las categorías de datos (p. ej., identificadores, financieros, conductuales, categorías especiales). Sé específico con cada categoría."
+        },
+        "q1_2": {
+          "text": "¿Cuál es la finalidad del tratamiento?",
+          "helpText": "Describe la finalidad principal y las posibles finalidades secundarias. Haz referencia a objetivos de negocio concretos."
+        },
+        "q1_3": {
+          "text": "¿Cuál es la base jurídica del tratamiento?",
+          "options": [
+            "Consentimiento (Art. 6(1)(a))",
+            "Contrato (Art. 6(1)(b))",
+            "Obligación legal (Art. 6(1)(c))",
+            "Intereses vitales (Art. 6(1)(d))",
+            "Misión de interés público (Art. 6(1)(e))",
+            "Interés legítimo (Art. 6(1)(f))"
+          ]
+        },
+        "q1_4": {
+          "text": "¿Quiénes son los interesados?",
+          "options": [
+            "Clientes",
+            "Empleados",
+            "Candidatos a empleo",
+            "Visitantes del sitio web",
+            "Menores / niños",
+            "Pacientes",
+            "Estudiantes",
+            "Miembros del público",
+            "Contactos comerciales",
+            "Otro"
+          ]
+        },
+        "q1_5": {
+          "text": "Número estimado de interesados afectados",
+          "options": [
+            "< 1.000",
+            "1.000 – 10.000",
+            "10.000 – 100.000",
+            "100.000 – 1.000.000",
+            "> 1.000.000"
+          ]
+        },
+        "q1_6": {
+          "text": "Describe los flujos de datos y los destinatarios",
+          "helpText": "Mapea cómo se mueven los datos a través de tus sistemas — desde la recogida hasta el almacenamiento, tratamiento, comunicación y supresión. Identifica todos los destinatarios y encargados."
+        },
+        "q2_1": {
+          "text": "¿Cuál es el nivel de sensibilidad de los datos?",
+          "options": [
+            "Solo datos personales no sensibles",
+            "Mezcla de indicadores no sensibles y sensibles",
+            "Incluye categorías especiales de datos (Art. 9) o datos de condenas e infracciones (Art. 10)"
+          ]
+        },
+        "q2_2": {
+          "text": "Plazo de conservación y justificación",
+          "helpText": "Indica los plazos de conservación para cada categoría de datos y justifica por qué es necesaria esa duración."
+        },
+        "q2_3": {
+          "text": "Alcance geográfico y transferencias internacionales",
+          "helpText": "Identifica todos los países donde se tratan o almacenan los datos, y los mecanismos de transferencia utilizados (p. ej., decisión de adecuación, SCCs, BCRs)."
+        },
+        "q2_4": {
+          "text": "¿Esperarían razonablemente los interesados este tratamiento?",
+          "options": [
+            "Totalmente esperado — directamente relacionado con el servicio contratado",
+            "Probablemente esperado — una extensión razonable del servicio",
+            "Posiblemente inesperado — no directamente relacionado con el servicio principal",
+            "Inesperado — los interesados probablemente se sorprenderían"
+          ]
+        },
+        "q3_1": {
+          "text": "¿Es necesario el tratamiento para alcanzar la finalidad declarada?",
+          "options": [
+            "Imprescindible — la finalidad no puede alcanzarse sin él",
+            "Muy beneficioso — significativamente más eficaz que las alternativas",
+            "Algo beneficioso — mejora marginal sobre las alternativas",
+            "No claramente necesario — las alternativas podrían lograr el mismo resultado"
+          ]
+        },
+        "q3_2": {
+          "text": "¿Qué alternativas se han considerado y por qué se descartaron?",
+          "helpText": "Describe las alternativas menos intrusivas evaluadas y explica por qué el enfoque elegido es necesario."
+        },
+        "q3_3": {
+          "text": "¿Qué medidas de minimización de datos están implantadas?",
+          "helpText": "Describe las medidas para asegurar que solo se recogen y tratan los datos necesarios (p. ej., seudonimización, agregación, restricciones a nivel de campo)."
+        },
+        "q4_1": {
+          "text": "¿A quién se ha consultado durante esta evaluación?",
+          "options": [
+            "Delegado de Protección de Datos",
+            "Interesados o sus representantes",
+            "TI / Seguridad de la Información",
+            "Asesoría jurídica",
+            "Comité de empresa / representantes del personal",
+            "Expertos externos en privacidad",
+            "Encargado / proveedor"
+          ]
+        },
+        "q4_2": {
+          "text": "Resumen de los resultados de la consulta y las acciones adoptadas",
+          "helpText": "Resume las observaciones recibidas, las objeciones planteadas y los cambios realizados en el tratamiento como consecuencia."
+        },
+        "q5_1": {
+          "text": "¿Implica el tratamiento decisiones automatizadas o elaboración de perfiles?"
+        },
+        "q5_2": {
+          "text": "¿Implica el tratamiento categorías especiales de datos o datos sobre condenas e infracciones?"
+        },
+        "q5_3": {
+          "text": "¿Implica el tratamiento la observación sistemática a gran escala de una zona de acceso público?"
+        },
+        "q5_4": {
+          "text": "¿Se realiza el tratamiento a gran escala?"
+        },
+        "q5_5": {
+          "text": "¿Implica el tratamiento un uso innovador de tecnología (p. ej., IA, biometría, IoT)?"
+        },
+        "q5_6": {
+          "text": "Describe los riesgos identificados para los interesados, incluyendo probabilidad y gravedad para cada uno",
+          "helpText": "Para cada riesgo: describe el origen, los derechos afectados, la probabilidad (Remota / Posible / Probable) y la gravedad (Mínima / Significativa / Grave / Crítica). Usa el formato: Riesgo N — Título: Descripción. Probabilidad: X. Gravedad: Y."
+        },
+        "q6_1": {
+          "text": "Medidas técnicas implantadas o previstas",
+          "options": [
+            "Cifrado en reposo",
+            "Cifrado en tránsito",
+            "Seudonimización",
+            "Controles de acceso / RBAC",
+            "Prevención de pérdida de datos (DLP)",
+            "Registro de auditoría",
+            "Copias de seguridad y recuperación",
+            "Segmentación de red",
+            "Aplicación automatizada de la conservación",
+            "Anonimización / agregación"
+          ]
+        },
+        "q6_2": {
+          "text": "Medidas organizativas implantadas o previstas",
+          "options": [
+            "Formación y concienciación del personal",
+            "Contratos de encargo de tratamiento (DPAs)",
+            "Políticas y procedimientos de privacidad",
+            "Auditorías y revisiones periódicas",
+            "Plan de respuesta a brechas",
+            "Programa de gestión de proveedores",
+            "Esquema de clasificación de datos",
+            "Proceso de privacidad desde el diseño"
+          ]
+        },
+        "q6_3": {
+          "text": "Garantías para los derechos individuales (transparencia, mecanismos de consentimiento, portabilidad, oposición)",
+          "helpText": "Describe cómo se facilitan los derechos de los interesados — p. ej., cláusulas informativas, centros de preferencias de consentimiento, herramientas de portabilidad, mecanismos de oposición."
+        },
+        "q7_1": {
+          "text": "Nivel general de riesgo residual tras las mitigaciones",
+          "options": ["Bajo", "Medio", "Alto", "Crítico"]
+        },
+        "q7_2": {
+          "text": "¿Es necesaria la consulta previa a la autoridad de control? (Art. 36)",
+          "options": [
+            "No — el riesgo residual se ha mitigado suficientemente",
+            "En estudio — se necesita un análisis adicional",
+            "Sí — riesgo residual alto que no puede mitigarse suficientemente"
+          ]
+        },
+        "q7_3": {
+          "text": "Dictamen y recomendación del DPO",
+          "helpText": "Registra el dictamen formal del DPO: si el tratamiento puede proseguir, cualquier condición y la fecha recomendada de revisión."
+        }
+      }
+    }
   }
 }
