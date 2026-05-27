@@ -163,6 +163,14 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
     onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
   });
 
+  const completeReview = trpc.vendor.completeReview.useMutation({
+    onSuccess: () => {
+      toast.success("Review marked complete");
+      utils.vendor.getById.invalidate();
+    },
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
+  });
+
   const deleteVendor = trpc.vendor.delete.useMutation({
     onSuccess: () => {
       toast.success(t("vendor.deleted"));
@@ -460,27 +468,134 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
         </TabsContent>
 
         <TabsContent value="assessments" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{tp("assessments.empty")}</p>
-              <Link href={`/privacy/assessments/new?vendorId=${id}&vendorName=${encodeURIComponent(vendor.name)}`}>
-                <Button className="mt-4">{tp("assessments.start")}</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          {vendor.assessments && vendor.assessments.length > 0 ? (
+            <div className="space-y-2">
+              <div className="flex justify-end">
+                <Link href={`/privacy/assessments/new?vendorId=${id}&vendorName=${encodeURIComponent(vendor.name)}`}>
+                  <Button size="sm">{tp("assessments.start")}</Button>
+                </Link>
+              </div>
+              {vendor.assessments.map((a) => (
+                <Link
+                  key={a.id}
+                  href={`/privacy/assessments/${a.id}`}
+                  className="block border rounded-lg p-3 hover:border-primary/50 transition-colors"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium truncate">{a.template?.name ?? "Custom assessment"}</p>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        {a.template?.type && <Badge variant="outline" className="text-[10px]">{a.template.type}</Badge>}
+                        <Badge variant="outline" className="text-[10px]">{a.status}</Badge>
+                        {a.riskLevel && (
+                          <Badge variant="outline" className="text-[10px]">
+                            Risk: {a.riskLevel}
+                          </Badge>
+                        )}
+                        <span>Created {new Date(a.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="py-8 text-center text-muted-foreground">
+                <Shield className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{tp("assessments.empty")}</p>
+                <Link href={`/privacy/assessments/new?vendorId=${id}&vendorName=${encodeURIComponent(vendor.name)}`}>
+                  <Button className="mt-4">{tp("assessments.start")}</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="reviews" className="mt-4">
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>{tp("reviews.empty")}</p>
-              <Button className="mt-4" onClick={() => setReviewOpen(true)}>
-                {tp("reviews.schedule")}
-              </Button>
-            </CardContent>
-          </Card>
+          {vendor.reviews && vendor.reviews.length > 0 ? (
+            <div className="space-y-2">
+              <div className="flex justify-end">
+                <Button size="sm" onClick={() => setReviewOpen(true)}>
+                  {tp("reviews.schedule")}
+                </Button>
+              </div>
+              {vendor.reviews.map((review) => {
+                const isComplete = !!review.completedAt;
+                const isOverdue =
+                  !isComplete && review.scheduledAt && new Date(review.scheduledAt) < new Date();
+                return (
+                  <div key={review.id} className="border rounded-lg p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{review.type} review</p>
+                          {isComplete ? (
+                            <Badge variant="outline" className="text-[10px] border-primary text-primary">
+                              Completed
+                            </Badge>
+                          ) : isOverdue ? (
+                            <Badge variant="outline" className="text-[10px] border-destructive text-destructive">
+                              Overdue
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[10px]">
+                              Scheduled
+                            </Badge>
+                          )}
+                          {review.riskLevel && (
+                            <Badge variant="outline" className="text-[10px]">
+                              Risk: {review.riskLevel}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {review.reviewer?.name ?? review.reviewer?.email ?? "Unassigned"}
+                          {" · "}
+                          {isComplete
+                            ? `Completed ${new Date(review.completedAt!).toLocaleDateString()}`
+                            : `Scheduled for ${new Date(review.scheduledAt).toLocaleDateString()}`}
+                        </p>
+                        {review.findings && (
+                          <p className="text-sm mt-2 text-muted-foreground">{review.findings}</p>
+                        )}
+                      </div>
+                      {!isComplete && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            completeReview.mutate({
+                              organizationId: organization?.id ?? "",
+                              id: review.id,
+                            });
+                          }}
+                          disabled={completeReview.isPending}
+                        >
+                          {completeReview.isPending && completeReview.variables?.id === review.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Mark complete"
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="py-8 text-center text-muted-foreground">
+                <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{tp("reviews.empty")}</p>
+                <Button className="mt-4" onClick={() => setReviewOpen(true)}>
+                  {tp("reviews.schedule")}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
 
