@@ -348,10 +348,12 @@ export default function DataAssetDetailPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Edit className="w-4 h-4 mr-2" />
-            {tp("edit")}
-          </Button>
+          <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Edit className="w-4 h-4 mr-2" />
+              {tp("edit")}
+            </Button>
+          </Link>
           <Button
             variant="outline"
             size="sm"

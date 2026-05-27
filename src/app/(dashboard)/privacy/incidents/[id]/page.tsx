@@ -34,6 +34,7 @@ import {
   Bell,
   CheckCircle2,
   XCircle,
+  Edit,
   Loader2,
   FileText,
   MessageSquare,
@@ -228,6 +229,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div className="flex gap-2">
+          <Link href={`/privacy/incidents/${id}/edit`}>
+            <Button variant="outline">
+              <Edit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          </Link>
           {incident.status !== "CLOSED" && incident.status !== "FALSE_POSITIVE" && (
             <Button
               variant="outline"

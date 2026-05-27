@@ -271,6 +271,36 @@
         "STUDENTS": "Estudiantes"
       }
     },
+    "editAsset": {
+      "title": "Editar activo de datos",
+      "subtitle": "Actualiza los datos de este activo",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editElement": {
+      "title": "Editar elemento de datos",
+      "subtitle": "Actualiza los metadatos de este elemento",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editActivity": {
+      "title": "Editar actividad de tratamiento",
+      "subtitle": "Actualiza los datos de esta actividad",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editAiSystem": {
+      "title": "Editar sistema de IA",
+      "subtitle": "Actualiza el registro de este sistema de IA",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
+    "editIncident": {
+      "title": "Editar incidente",
+      "subtitle": "Actualiza los datos de este incidente",
+      "saving": "Guardando...",
+      "save": "Guardar cambios"
+    },
     "newAsset": {
       "title": "Añadir activo de datos",
       "subtitle": "Registra un nuevo sistema o almacén de datos",
@@ -2292,13 +2322,18 @@
     },
     "asset": {
       "created": "Activo de datos creado",
+      "updated": "Activo de datos actualizado",
       "deleted": "Activo eliminado",
       "elementAdded": "Elemento de datos añadido",
+      "elementUpdated": "Elemento de datos actualizado",
       "elementDeleted": "Elemento eliminado",
       "activitiesUpdated": "Actividades actualizadas",
       "activitiesUpdatedWithFlows": "Actividades actualizadas — se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}"
     },
     "activity": {
+      "created": "Actividad de tratamiento creada",
+      "updated": "Actividad de tratamiento actualizada",
+      "deleted": "Actividad de tratamiento eliminada",
       "assetsLinked": "Activos enlazados actualizados",
       "assetsLinkedWithFlows": "Activos enlazados — se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}",
       "flowsGenerated": "Se {count, plural, one {ha generado # nuevo flujo de datos} other {han generado # nuevos flujos de datos}}",
@@ -2313,6 +2348,8 @@
     },
     "incident": {
       "created": "Incidencia registrada",
+      "updated": "Incidencia actualizada",
+      "deleted": "Incidencia eliminada",
       "statusUpdated": "Estado de la incidencia actualizado",
       "timelineAdded": "Entrada de cronología añadida",
       "taskCreated": "Tarea creada",
@@ -2344,6 +2381,8 @@
     },
     "aiSystem": {
       "registered": "Sistema de IA registrado",
+      "updated": "Sistema de IA actualizado",
+      "deleted": "Sistema de IA eliminado",
       "sentToSentinel": "{count, plural, one {Enviado # sistema a AI Sentinel} other {Enviados # sistemas a AI Sentinel}}"
     },
     "reports": {
