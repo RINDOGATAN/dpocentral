@@ -50,12 +50,7 @@ const statusColors: Record<string, string> = {
   PENDING: "border-muted-foreground text-muted-foreground",
 };
 
-const statusLabel: Record<string, string> = {
-  COMPLIANT: "Compliant",
-  NEEDS_REVIEW: "Needs Review",
-  NON_COMPLIANT: "Non-Compliant",
-  PENDING: "Pending",
-};
+const STATUS_KEYS = ["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT", "PENDING"] as const;
 
 export default function TransfersListPage() {
   const { organization } = useOrganization();
@@ -63,6 +58,9 @@ export default function TransfersListPage() {
   const t = useTranslations("pages.dataInventory.transferDialog");
   const tMech = useTranslations("pages.dataInventory.mechanism");
   const tCommon = useTranslations("common");
+  const tList = useTranslations("pages.transfers.list");
+  const tStatus = useTranslations("pages.transfers.status_option");
+  const tToasts = useTranslations("toasts");
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({
@@ -87,7 +85,7 @@ export default function TransfersListPage() {
 
   const createTransfer = trpc.dataInventory.createTransfer.useMutation({
     onSuccess: () => {
-      toast.success("Transfer created");
+      toast.success(tToasts("transfer.created"));
       utils.dataInventory.listTransfers.invalidate();
       utils.dataInventory.getTransferStats.invalidate();
       setDialogOpen(false);
@@ -117,15 +115,13 @@ export default function TransfersListPage() {
         <div>
           <h1 className="text-2xl font-semibold flex items-center gap-2">
             <Globe className="w-6 h-6 text-primary" />
-            International Transfers
+            {tList("title")}
           </h1>
-          <p className="text-muted-foreground">
-            Manage cross-border data transfers under GDPR Chapter V (Art. 44–49).
-          </p>
+          <p className="text-muted-foreground">{tList("subtitle")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Transfer
+          {tList("add")}
         </Button>
       </div>
 
@@ -133,14 +129,14 @@ export default function TransfersListPage() {
       <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Total</p>
+            <p className="text-sm text-muted-foreground">{tList("total")}</p>
             <p className="text-3xl font-semibold">{stats?.total ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-primary" /> Compliant
+              <CheckCircle2 className="w-3.5 h-3.5 text-primary" /> {tList("compliant")}
             </p>
             <p className="text-3xl font-semibold">{stats?.compliant ?? 0}</p>
           </CardContent>
@@ -148,7 +144,7 @@ export default function TransfersListPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-yellow-600" /> Needs Review
+              <Clock className="w-3.5 h-3.5 text-yellow-600" /> {tList("needsReview")}
             </p>
             <p className="text-3xl font-semibold">{stats?.needsReview ?? 0}</p>
           </CardContent>
@@ -156,7 +152,7 @@ export default function TransfersListPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5 text-destructive" /> Non-Compliant
+              <ShieldAlert className="w-3.5 h-3.5 text-destructive" /> {tList("nonCompliant")}
             </p>
             <p className="text-3xl font-semibold">{stats?.nonCompliant ?? 0}</p>
           </CardContent>
@@ -164,7 +160,7 @@ export default function TransfersListPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <CalendarClock className="w-3.5 h-3.5 text-yellow-600" /> Expiring 30d
+              <CalendarClock className="w-3.5 h-3.5 text-yellow-600" /> {tList("expiring30d")}
             </p>
             <p className="text-3xl font-semibold">{stats?.expiringSoon ?? 0}</p>
           </CardContent>
@@ -176,8 +172,10 @@ export default function TransfersListPage() {
           <CardContent className="py-4 flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-yellow-600" />
             <div className="text-sm">
-              <span className="font-medium">{stats.withoutTia}</span> SCC-based transfer
-              {stats.withoutTia > 1 ? "s have" : " has"} no Transfer Impact Assessment yet. After Schrems II, SCCs require a TIA.
+              {tList.rich("tiaWarning", {
+                count: stats.withoutTia,
+                b: (chunks) => <span className="font-medium">{chunks}</span>,
+              })}
             </div>
           </CardContent>
         </Card>
@@ -186,22 +184,18 @@ export default function TransfersListPage() {
       {/* Transfer list */}
       <Card>
         <CardHeader>
-          <CardTitle>All Transfers</CardTitle>
-          <CardDescription>
-            Click a transfer to review compliance details and the Schrems II checklist.
-          </CardDescription>
+          <CardTitle>{tList("all")}</CardTitle>
+          <CardDescription>{tList("allSubtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {!transfers || transfers.length === 0 ? (
             <div className="py-12 text-center text-muted-foreground">
               <Globe className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p className="font-medium">No transfers recorded yet</p>
-              <p className="text-sm">
-                Add a cross-border data transfer to start tracking GDPR Chapter V compliance.
-              </p>
+              <p className="font-medium">{tList("empty")}</p>
+              <p className="text-sm">{tList("emptySubtitle")}</p>
               <Button className="mt-4" onClick={() => setDialogOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add your first transfer
+                {tList("addFirst")}
               </Button>
             </div>
           ) : (
@@ -221,7 +215,7 @@ export default function TransfersListPage() {
                           → {transfer.destinationCountry}
                           {transfer.destinationOrg ? ` · ${transfer.destinationOrg}` : ""}
                           {transfer.processingActivity
-                            ? ` · linked to ${transfer.processingActivity.name}`
+                            ? ` · ${tList("linkedTo", { name: transfer.processingActivity.name })}`
                             : ""}
                         </p>
                         <div className="flex flex-wrap items-center gap-1.5 mt-2">
@@ -229,21 +223,25 @@ export default function TransfersListPage() {
                             {tMech(transfer.mechanism as any)}
                           </Badge>
                           <Badge variant="outline" className={statusColors[status] || ""}>
-                            {statusLabel[status] || status}
+                            {STATUS_KEYS.includes(status as typeof STATUS_KEYS[number])
+                              ? tStatus(status as typeof STATUS_KEYS[number])
+                              : status}
                           </Badge>
                           {transfer.tiaCompleted ? (
                             <Badge variant="outline" className="text-xs">
                               <CheckCircle2 className="w-3 h-3 mr-1" />
-                              TIA done
+                              {tList("tiaDone")}
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="text-xs text-muted-foreground">
-                              TIA pending
+                              {tList("tiaPending")}
                             </Badge>
                           )}
                           {transfer.sccExpiryDate && (
                             <Badge variant="outline" className="text-xs">
-                              SCC expires {new Date(transfer.sccExpiryDate).toLocaleDateString()}
+                              {tList("sccExpires", {
+                                date: new Date(transfer.sccExpiryDate).toLocaleDateString(),
+                              })}
                             </Badge>
                           )}
                         </div>
@@ -341,7 +339,7 @@ export default function TransfersListPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t("descriptionLabel")}</Label>
               <Textarea
                 id="description"
                 rows={2}
@@ -367,7 +365,7 @@ export default function TransfersListPage() {
                 }
               >
                 {createTransfer.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Create
+                {t("create")}
               </Button>
             </div>
           </form>

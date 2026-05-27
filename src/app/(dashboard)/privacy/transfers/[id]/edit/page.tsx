@@ -37,6 +37,9 @@ export default function EditTransferPage() {
   const orgId = organization?.id ?? "";
   const tMech = useTranslations("pages.dataInventory.mechanism");
   const tCommon = useTranslations("common");
+  const t = useTranslations("pages.transfers.edit");
+  const tStatus = useTranslations("pages.transfers.status_option");
+  const tToasts = useTranslations("toasts");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const initializedRef = useRef(false);
@@ -78,7 +81,7 @@ export default function EditTransferPage() {
   const utils = trpc.useUtils();
   const updateCompliance = trpc.dataInventory.updateTransferCompliance.useMutation({
     onSuccess: () => {
-      toast.success("Transfer updated");
+      toast.success(tToasts("transfer.updated"));
       utils.dataInventory.listTransfers.invalidate();
       utils.dataInventory.getTransferStats.invalidate();
       utils.dataInventory.getTransferComplianceChecklist.invalidate({
@@ -127,7 +130,7 @@ export default function EditTransferPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold">Edit Transfer Compliance</h1>
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="text-muted-foreground">
             {transfer.name} → {transfer.destinationCountry}
             {" · "}
@@ -139,12 +142,12 @@ export default function EditTransferPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Compliance status</CardTitle>
-            <CardDescription>Manual override for the transfer's compliance status</CardDescription>
+            <CardTitle>{t("complianceStatus")}</CardTitle>
+            <CardDescription>{t("complianceStatusSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Status</Label>
+              <Label>{t("status")}</Label>
               <Select
                 value={formData.complianceStatus}
                 onValueChange={(v) => setFormData({ ...formData, complianceStatus: v })}
@@ -155,7 +158,7 @@ export default function EditTransferPage() {
                 <SelectContent>
                   {STATUS_KEYS.map((value) => (
                     <SelectItem key={value} value={value}>
-                      {value.replace(/_/g, " ")}
+                      {tStatus(value)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -166,10 +169,8 @@ export default function EditTransferPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Transfer Impact Assessment</CardTitle>
-            <CardDescription>
-              Required for SCC-based transfers to non-adequate jurisdictions (Schrems II).
-            </CardDescription>
+            <CardTitle>{t("tia")}</CardTitle>
+            <CardDescription>{t("tiaSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-2">
@@ -180,11 +181,11 @@ export default function EditTransferPage() {
                   setFormData({ ...formData, tiaCompleted: checked })
                 }
               />
-              <Label htmlFor="tiaCompleted">TIA completed</Label>
+              <Label htmlFor="tiaCompleted">{t("tiaCompleted")}</Label>
             </div>
             {formData.tiaCompleted && (
               <div className="space-y-2">
-                <Label htmlFor="tiaDate">TIA completion date</Label>
+                <Label htmlFor="tiaDate">{t("tiaDate")}</Label>
                 <Input
                   id="tiaDate"
                   type="date"
@@ -198,29 +199,26 @@ export default function EditTransferPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>SCC & Safeguards</CardTitle>
-            <CardDescription>SCC validity and any additional safeguards</CardDescription>
+            <CardTitle>{t("sccAndSafeguards")}</CardTitle>
+            <CardDescription>{t("sccAndSafeguardsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="sccExpiryDate">SCC expiry date</Label>
+              <Label htmlFor="sccExpiryDate">{t("sccExpiry")}</Label>
               <Input
                 id="sccExpiryDate"
                 type="date"
                 value={formData.sccExpiryDate}
                 onChange={(e) => setFormData({ ...formData, sccExpiryDate: e.target.value })}
               />
-              <p className="text-xs text-muted-foreground">
-                Date the contractual clauses expire. Transfers expiring within 30 days show on the
-                compliance dashboard.
-              </p>
+              <p className="text-xs text-muted-foreground">{t("sccExpiryHelp")}</p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="safeguards">Safeguards (description)</Label>
+              <Label htmlFor="safeguards">{t("safeguards")}</Label>
               <Textarea
                 id="safeguards"
                 rows={3}
-                placeholder="e.g., EU SCCs 2021 module 2 + encryption at rest + DPIA"
+                placeholder={t("safeguardsPlaceholder")}
                 value={formData.safeguards}
                 onChange={(e) => setFormData({ ...formData, safeguards: e.target.value })}
               />
@@ -229,7 +227,7 @@ export default function EditTransferPage() {
         </Card>
 
         {updateCompliance.error && (
-          <div className="text-sm text-destructive">Error: {updateCompliance.error.message}</div>
+          <div className="text-sm text-destructive">{t("errorPrefix", { message: updateCompliance.error.message })}</div>
         )}
 
         <div className="flex justify-end gap-4">
@@ -240,10 +238,10 @@ export default function EditTransferPage() {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Saving...
+                {t("saving")}
               </>
             ) : (
-              "Save Changes"
+              t("save")
             )}
           </Button>
         </div>

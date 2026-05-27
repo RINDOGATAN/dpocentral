@@ -415,57 +415,57 @@ export default function EditIncidentPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Investigation & Resolution</CardTitle>
-            <CardDescription>Root cause analysis, containment, and lessons learned</CardDescription>
+            <CardTitle>{tEdit("investigation")}</CardTitle>
+            <CardDescription>{tEdit("investigationSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="rootCauseCategory">Root cause category</Label>
+                <Label htmlFor="rootCauseCategory">{tEdit("rootCauseCategory")}</Label>
                 <Input
                   id="rootCauseCategory"
-                  placeholder="e.g., Human error, Misconfiguration"
+                  placeholder={tEdit("rootCauseCategoryPlaceholder")}
                   value={formData.rootCauseCategory}
                   onChange={(e) => setFormData({ ...formData, rootCauseCategory: e.target.value })}
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="rootCause">Root cause</Label>
+              <Label htmlFor="rootCause">{tEdit("rootCause")}</Label>
               <Textarea
                 id="rootCause"
                 rows={3}
-                placeholder="Detailed analysis of what caused this incident"
+                placeholder={tEdit("rootCausePlaceholder")}
                 value={formData.rootCause}
                 onChange={(e) => setFormData({ ...formData, rootCause: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="containmentActions">Containment actions</Label>
+              <Label htmlFor="containmentActions">{tEdit("containmentActions")}</Label>
               <Textarea
                 id="containmentActions"
                 rows={3}
-                placeholder="Actions taken to contain the incident"
+                placeholder={tEdit("containmentActionsPlaceholder")}
                 value={formData.containmentActions}
                 onChange={(e) => setFormData({ ...formData, containmentActions: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="resolutionNotes">Resolution notes</Label>
+              <Label htmlFor="resolutionNotes">{tEdit("resolutionNotes")}</Label>
               <Textarea
                 id="resolutionNotes"
                 rows={3}
-                placeholder="How the incident was resolved"
+                placeholder={tEdit("resolutionNotesPlaceholder")}
                 value={formData.resolutionNotes}
                 onChange={(e) => setFormData({ ...formData, resolutionNotes: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lessonsLearned">Lessons learned</Label>
+              <Label htmlFor="lessonsLearned">{tEdit("lessonsLearned")}</Label>
               <Textarea
                 id="lessonsLearned"
                 rows={3}
-                placeholder="What we'll do differently going forward"
+                placeholder={tEdit("lessonsLearnedPlaceholder")}
                 value={formData.lessonsLearned}
                 onChange={(e) => setFormData({ ...formData, lessonsLearned: e.target.value })}
               />
@@ -474,7 +474,7 @@ export default function EditIncidentPage() {
         </Card>
 
         {updateIncident.error && (
-          <div className="text-sm text-destructive">Error: {updateIncident.error.message}</div>
+          <div className="text-sm text-destructive">{tEdit("errorPrefix", { message: updateIncident.error.message })}</div>
         )}
 
         <div className="flex justify-end gap-4">

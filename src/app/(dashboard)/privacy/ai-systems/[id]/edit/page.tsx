@@ -33,6 +33,8 @@ export default function EditAISystemPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
   const tEdit = useTranslations("pages.editAiSystem");
+  const tExt = useTranslations("pages.editAiSystemExt");
+  const tRisk = useTranslations("pages.editAiSystemExt.risk_option");
   const tCommon = useTranslations("common");
 
   const initializedRef = useRef(false);
@@ -168,13 +170,13 @@ export default function EditAISystemPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Basics</CardTitle>
-            <CardDescription>Identification and purpose</CardDescription>
+            <CardTitle>{tExt("basics")}</CardTitle>
+            <CardDescription>{tExt("basicsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name">{tExt("name")}</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -183,17 +185,17 @@ export default function EditAISystemPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="modelType">Model type</Label>
+                <Label htmlFor="modelType">{tExt("modelType")}</Label>
                 <Input
                   id="modelType"
-                  placeholder="e.g., LLM, Computer Vision"
+                  placeholder={tExt("modelTypePlaceholder")}
                   value={formData.modelType}
                   onChange={(e) => setFormData({ ...formData, modelType: e.target.value })}
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tExt("description")}</Label>
               <Textarea
                 id="description"
                 rows={2}
@@ -202,27 +204,27 @@ export default function EditAISystemPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="purpose">Purpose</Label>
+              <Label htmlFor="purpose">{tExt("purpose")}</Label>
               <Textarea
                 id="purpose"
                 rows={3}
-                placeholder="What this AI system is used for"
+                placeholder={tExt("purposePlaceholder")}
                 value={formData.purpose}
                 onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
               />
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">{tExt("category")}</Label>
                 <Input
                   id="category"
-                  placeholder="e.g., Recruitment, Credit scoring"
+                  placeholder={tExt("categoryPlaceholder")}
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="vendorId">Linked vendor</Label>
+                <Label htmlFor="vendorId">{tExt("linkedVendor")}</Label>
                 <Select
                   value={formData.vendorId || "__none__"}
                   onValueChange={(value) =>
@@ -230,10 +232,10 @@ export default function EditAISystemPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="None" />
+                    <SelectValue placeholder={tExt("none")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">None</SelectItem>
+                    <SelectItem value="__none__">{tExt("none")}</SelectItem>
                     {vendors.map((v) => (
                       <SelectItem key={v.id} value={v.id}>
                         {v.name}
@@ -248,13 +250,13 @@ export default function EditAISystemPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>EU AI Act Classification</CardTitle>
-            <CardDescription>Risk tier and roles</CardDescription>
+            <CardTitle>{tExt("euAct")}</CardTitle>
+            <CardDescription>{tExt("euActSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="riskLevel">Risk level</Label>
+                <Label htmlFor="riskLevel">{tExt("riskLevel")}</Label>
                 <Select
                   value={formData.riskLevel}
                   onValueChange={(value) => setFormData({ ...formData, riskLevel: value })}
@@ -265,26 +267,26 @@ export default function EditAISystemPage() {
                   <SelectContent>
                     {RISK_LEVELS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {value.replace(/_/g, " ")}
+                        {tRisk(value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="provider">Provider</Label>
+                <Label htmlFor="provider">{tExt("provider")}</Label>
                 <Input
                   id="provider"
-                  placeholder="e.g., OpenAI"
+                  placeholder={tExt("providerPlaceholder")}
                   value={formData.provider}
                   onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="deployer">Deployer</Label>
+                <Label htmlFor="deployer">{tExt("deployer")}</Label>
                 <Input
                   id="deployer"
-                  placeholder="Who operates it"
+                  placeholder={tExt("deployerPlaceholder")}
                   value={formData.deployer}
                   onChange={(e) => setFormData({ ...formData, deployer: e.target.value })}
                 />
@@ -295,20 +297,20 @@ export default function EditAISystemPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Compliance & Documentation</CardTitle>
-            <CardDescription>Oversight, transparency, and supporting documents</CardDescription>
+            <CardTitle>{tExt("complianceAndDocs")}</CardTitle>
+            <CardDescription>{tExt("complianceAndDocsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Training data sources</Label>
+              <Label>{tExt("trainingDataSources")}</Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="e.g., Internal customer transcripts"
+                  placeholder={tExt("trainingDataPlaceholder")}
                   value={trainingInput}
                   onChange={(e) => setTrainingInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTrainingSource())}
                 />
-                <Button type="button" variant="outline" onClick={addTrainingSource}>Add</Button>
+                <Button type="button" variant="outline" onClick={addTrainingSource}>{tExt("add")}</Button>
               </div>
               {formData.trainingDataSources.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -322,21 +324,21 @@ export default function EditAISystemPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="humanOversight">Human oversight</Label>
+              <Label htmlFor="humanOversight">{tExt("humanOversight")}</Label>
               <Textarea
                 id="humanOversight"
                 rows={3}
-                placeholder="How humans review and intervene in the system's output"
+                placeholder={tExt("humanOversightPlaceholder")}
                 value={formData.humanOversight}
                 onChange={(e) => setFormData({ ...formData, humanOversight: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="transparencyMeasures">Transparency measures</Label>
+              <Label htmlFor="transparencyMeasures">{tExt("transparencyMeasures")}</Label>
               <Textarea
                 id="transparencyMeasures"
                 rows={3}
-                placeholder="How users are informed they are interacting with an AI system"
+                placeholder={tExt("transparencyMeasuresPlaceholder")}
                 value={formData.transparencyMeasures}
                 onChange={(e) =>
                   setFormData({ ...formData, transparencyMeasures: e.target.value })
@@ -344,7 +346,7 @@ export default function EditAISystemPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="technicalDocUrl">Technical documentation URL</Label>
+              <Label htmlFor="technicalDocUrl">{tExt("technicalDocUrl")}</Label>
               <Input
                 id="technicalDocUrl"
                 type="url"
@@ -357,7 +359,7 @@ export default function EditAISystemPage() {
         </Card>
 
         {updateAiSystem.error && (
-          <div className="text-sm text-destructive">Error: {updateAiSystem.error.message}</div>
+          <div className="text-sm text-destructive">{tExt("errorPrefix", { message: updateAiSystem.error.message })}</div>
         )}
 
         <div className="flex justify-end gap-4">

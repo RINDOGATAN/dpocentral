@@ -45,6 +45,10 @@ export default function EditDataElementPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
   const tEdit = useTranslations("pages.editElement");
+  const tExt = useTranslations("pages.editElementExt");
+  const tCat = useTranslations("pages.editElementExt.category_option");
+  const tSens = useTranslations("pages.editElementExt.sensitivity_option");
+  const tLegal = useTranslations("pages.editElementExt.legalBasis_option");
   const tCommon = useTranslations("common");
 
   const initializedRef = useRef(false);
@@ -145,7 +149,7 @@ export default function EditDataElementPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">{tExt("name")}</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -154,7 +158,7 @@ export default function EditDataElementPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">{tExt("category")}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -166,7 +170,7 @@ export default function EditDataElementPage() {
                   <SelectContent>
                     {CATEGORY_KEYS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {value.replace(/_/g, " ").toLowerCase().replace(/^./, (c) => c.toUpperCase())}
+                        {tCat(value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -175,7 +179,7 @@ export default function EditDataElementPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tExt("description")}</Label>
               <Textarea
                 id="description"
                 rows={3}
@@ -186,7 +190,7 @@ export default function EditDataElementPage() {
 
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="sensitivity">Sensitivity</Label>
+                <Label htmlFor="sensitivity">{tExt("sensitivity")}</Label>
                 <Select
                   value={formData.sensitivity}
                   onValueChange={(value) => setFormData({ ...formData, sensitivity: value })}
@@ -197,14 +201,14 @@ export default function EditDataElementPage() {
                   <SelectContent>
                     {SENSITIVITY_KEYS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {value.replace(/_/g, " ").toLowerCase().replace(/^./, (c) => c.toUpperCase())}
+                        {tSens(value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="retentionDays">Retention (days)</Label>
+                <Label htmlFor="retentionDays">{tExt("retentionDays")}</Label>
                 <Input
                   id="retentionDays"
                   type="number"
@@ -214,7 +218,7 @@ export default function EditDataElementPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="legalBasis">Legal Basis</Label>
+                <Label htmlFor="legalBasis">{tExt("legalBasis")}</Label>
                 <Select
                   value={formData.legalBasis || "__none__"}
                   onValueChange={(value) =>
@@ -222,13 +226,13 @@ export default function EditDataElementPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Not specified" />
+                    <SelectValue placeholder={tExt("notSpecified")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">Not specified</SelectItem>
+                    <SelectItem value="__none__">{tExt("notSpecified")}</SelectItem>
                     {LEGAL_BASIS_KEYS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {value.replace(/_/g, " ").toLowerCase().replace(/^./, (c) => c.toUpperCase())}
+                        {tLegal(value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -245,7 +249,7 @@ export default function EditDataElementPage() {
                     setFormData({ ...formData, isPersonalData: checked })
                   }
                 />
-                <Label htmlFor="isPersonalData">This element contains personal data</Label>
+                <Label htmlFor="isPersonalData">{tExt("personalDataToggle")}</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch
@@ -255,13 +259,13 @@ export default function EditDataElementPage() {
                     setFormData({ ...formData, isSpecialCategory: checked })
                   }
                 />
-                <Label htmlFor="isSpecialCategory">Special category data (GDPR Art. 9)</Label>
+                <Label htmlFor="isSpecialCategory">{tExt("specialCategoryToggle")}</Label>
               </div>
             </div>
 
             {updateElement.error && (
               <div className="text-sm text-destructive">
-                Error: {updateElement.error.message}
+                {tExt("errorPrefix", { message: updateElement.error.message })}
               </div>
             )}
 
@@ -286,7 +290,7 @@ export default function EditDataElementPage() {
       {parentAssetId && (
         <p className="text-xs text-muted-foreground text-right">
           <Link href={`/privacy/data-inventory/${parentAssetId}`} className="hover:underline">
-            ← Back to parent asset
+            {tExt("backToAsset")}
           </Link>
         </p>
       )}

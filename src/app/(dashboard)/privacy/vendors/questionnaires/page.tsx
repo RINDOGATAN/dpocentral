@@ -16,12 +16,14 @@ import {
   ChevronUp,
   Globe,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
 export default function VendorQuestionnairesPage() {
   const { organization } = useOrganization();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const t = useTranslations("pages.vendorQuestionnaires");
 
   const { data: questionnaires, isLoading } = trpc.vendor.listQuestionnaires.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -40,15 +42,13 @@ export default function VendorQuestionnairesPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/privacy/vendors">
-            <Button variant="ghost" size="icon" aria-label="Back">
+            <Button variant="ghost" size="icon" aria-label={t("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold">Vendor Due-Diligence Templates</h1>
-            <p className="text-muted-foreground">
-              Reference templates for vendor risk assessments.
-            </p>
+            <h1 className="text-2xl font-semibold">{t("title")}</h1>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
       </div>
@@ -58,18 +58,14 @@ export default function VendorQuestionnairesPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Globe className="w-4 h-4 text-primary" />
-            Vendor compliance gathering happens on Vendor.Watch
+            {t("vwTitle")}
           </CardTitle>
-          <CardDescription>
-            Vendors self-report certifications, sub-processors, data locations, AI capabilities,
-            and breach history on their Vendor.Watch profile. DPO Central reads this data directly
-            from the shared catalog — no need to send questionnaires from here.
-          </CardDescription>
+          <CardDescription>{t("vwBody")}</CardDescription>
         </CardHeader>
         <CardContent>
           <a href="https://vendor.watch" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm">
-              Open Vendor.Watch
+              {t("vwOpen")}
               <ExternalLink className="w-4 h-4 ml-2" />
             </Button>
           </a>
@@ -79,11 +75,8 @@ export default function VendorQuestionnairesPage() {
       {/* Templates */}
       <Card>
         <CardHeader>
-          <CardTitle>Template Library</CardTitle>
-          <CardDescription>
-            Reference question sets for vendor due diligence. Useful as a checklist while reviewing
-            a vendor's Vendor.Watch profile.
-          </CardDescription>
+          <CardTitle>{t("libraryTitle")}</CardTitle>
+          <CardDescription>{t("librarySubtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -118,16 +111,16 @@ export default function VendorQuestionnairesPage() {
                           </div>
                         </div>
                         <div className="flex gap-2 shrink-0">
-                          {questionnaire.isSystem && <Badge variant="secondary">System</Badge>}
-                          <Badge variant="outline">v{questionnaire.version}</Badge>
+                          {questionnaire.isSystem && <Badge variant="secondary">{t("system")}</Badge>}
+                          <Badge variant="outline">{t("version", { version: questionnaire.version })}</Badge>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span>{sections.length} sections</span>
-                          <span>{questionCount} questions</span>
+                          <span>{t("sectionsCount", { count: sections.length })}</span>
+                          <span>{t("questionsCount", { count: questionCount })}</span>
                         </div>
                         <Button
                           variant="ghost"
@@ -135,7 +128,7 @@ export default function VendorQuestionnairesPage() {
                           onClick={() => setExpandedId(isExpanded ? null : questionnaire.id)}
                         >
                           <Eye className="w-4 h-4 mr-1" />
-                          Preview
+                          {t("preview")}
                           {isExpanded ? (
                             <ChevronUp className="w-4 h-4 ml-1" />
                           ) : (
@@ -180,7 +173,7 @@ export default function VendorQuestionnairesPage() {
           ) : (
             <div className="py-8 text-center text-muted-foreground">
               <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No questionnaire templates configured yet.</p>
+              <p>{t("empty")}</p>
             </div>
           )}
         </CardContent>
