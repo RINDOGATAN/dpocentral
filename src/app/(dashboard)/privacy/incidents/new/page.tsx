@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Loader2, AlertTriangle, X } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
@@ -40,6 +40,11 @@ const DISCOVERY_METHOD_KEYS = [
   "THIRD_PARTY", "SECURITY_AUDIT", "LAW_ENFORCEMENT", "OTHER",
 ] as const;
 
+const AFFECTED_SUBJECT_PRESETS = [
+  "CUSTOMERS", "EMPLOYEES", "JOB_APPLICANTS", "SUPPLIERS",
+  "WEBSITE_VISITORS", "CHILDREN", "PATIENTS", "STUDENTS",
+] as const;
+
 export default function NewIncidentPage() {
   const router = useRouter();
   const { organization } = useOrganization();
@@ -59,7 +64,9 @@ export default function NewIncidentPage() {
     affectedRecords: "",
     affectedSubjects: [] as string[],
     dataCategories: [] as string[],
+    jurisdictionId: "",
   });
+  const [customSubject, setCustomSubject] = useState("");
 
   const utils = trpc.useUtils();
 
@@ -95,7 +102,7 @@ export default function NewIncidentPage() {
       affectedRecords: formData.affectedRecords ? parseInt(formData.affectedRecords) : undefined,
       affectedSubjects: formData.affectedSubjects,
       dataCategories: formData.dataCategories as any[],
-      jurisdictionId: jurisdictions?.[0]?.id,
+      jurisdictionId: formData.jurisdictionId || undefined,
     });
   };
 
@@ -105,6 +112,29 @@ export default function NewIncidentPage() {
       dataCategories: formData.dataCategories.includes(value)
         ? formData.dataCategories.filter((c) => c !== value)
         : [...formData.dataCategories, value],
+    });
+  };
+
+  const toggleSubject = (value: string) => {
+    setFormData({
+      ...formData,
+      affectedSubjects: formData.affectedSubjects.includes(value)
+        ? formData.affectedSubjects.filter((s) => s !== value)
+        : [...formData.affectedSubjects, value],
+    });
+  };
+
+  const addCustomSubject = () => {
+    const value = customSubject.trim();
+    if (!value || formData.affectedSubjects.includes(value)) return;
+    setFormData({ ...formData, affectedSubjects: [...formData.affectedSubjects, value] });
+    setCustomSubject("");
+  };
+
+  const removeSubject = (value: string) => {
+    setFormData({
+      ...formData,
+      affectedSubjects: formData.affectedSubjects.filter((s) => s !== value),
     });
   };
 
@@ -294,6 +324,71 @@ export default function NewIncidentPage() {
                 ))}
               </div>
             </div>
+
+            <div className="space-y-2">
+              <Label>{tp("affectedSubjectsLabel")}</Label>
+              <p className="text-sm text-muted-foreground">{tp("affectedSubjectsHint")}</p>
+              <div className="flex flex-wrap gap-2">
+                {AFFECTED_SUBJECT_PRESETS.map((value) => (
+                  <Badge
+                    key={value}
+                    variant={formData.affectedSubjects.includes(value) ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => toggleSubject(value)}
+                  >
+                    {tp(`affectedSubject.${value}` as `affectedSubject.CUSTOMERS` | `affectedSubject.EMPLOYEES` | `affectedSubject.JOB_APPLICANTS` | `affectedSubject.SUPPLIERS` | `affectedSubject.WEBSITE_VISITORS` | `affectedSubject.CHILDREN` | `affectedSubject.PATIENTS` | `affectedSubject.STUDENTS`)}
+                  </Badge>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder={tp("affectedSubjectsCustomPlaceholder")}
+                  value={customSubject}
+                  onChange={(e) => setCustomSubject(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCustomSubject())}
+                />
+                <Button type="button" variant="outline" onClick={addCustomSubject}>
+                  {tp("affectedSubjectsAdd")}
+                </Button>
+              </div>
+              {formData.affectedSubjects.some((s) => !AFFECTED_SUBJECT_PRESETS.includes(s as typeof AFFECTED_SUBJECT_PRESETS[number])) && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.affectedSubjects
+                    .filter((s) => !AFFECTED_SUBJECT_PRESETS.includes(s as typeof AFFECTED_SUBJECT_PRESETS[number]))
+                    .map((subject) => (
+                      <Badge key={subject} variant="secondary">
+                        {subject}
+                        <X
+                          className="w-3 h-3 ml-1 cursor-pointer"
+                          onClick={() => removeSubject(subject)}
+                        />
+                      </Badge>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            {jurisdictions && jurisdictions.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="jurisdictionId">{tp("jurisdiction")}</Label>
+                <p className="text-sm text-muted-foreground">{tp("jurisdictionHint")}</p>
+                <Select
+                  value={formData.jurisdictionId}
+                  onValueChange={(value) => setFormData({ ...formData, jurisdictionId: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={tp("jurisdictionPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jurisdictions.map((j) => (
+                      <SelectItem key={j.id} value={j.id}>
+                        {j.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </CardContent>
         </Card>
 

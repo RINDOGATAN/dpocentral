@@ -207,6 +207,13 @@
       "affectedRecords": "Estimated Affected Records",
       "affectedRecordsPlaceholder": "e.g., 1000",
       "dataCategoriesLabel": "Data Categories Affected",
+      "affectedSubjectsLabel": "Affected Data Subjects",
+      "affectedSubjectsHint": "Select categories of people affected, and/or add your own.",
+      "affectedSubjectsAdd": "Add",
+      "affectedSubjectsCustomPlaceholder": "Add another category (e.g. Donors)",
+      "jurisdiction": "Primary Jurisdiction",
+      "jurisdictionHint": "Determines the regulatory notification deadline (e.g. 72 hours for GDPR).",
+      "jurisdictionPlaceholder": "Select jurisdiction",
       "errorPrefix": "Error: {message}",
       "reporting": "Reporting...",
       "submit": "Report Incident",
@@ -252,6 +259,16 @@
         "SECURITY_AUDIT": "Security Audit",
         "LAW_ENFORCEMENT": "Law Enforcement",
         "OTHER": "Other"
+      },
+      "affectedSubject": {
+        "CUSTOMERS": "Customers",
+        "EMPLOYEES": "Employees",
+        "JOB_APPLICANTS": "Job applicants",
+        "SUPPLIERS": "Suppliers",
+        "WEBSITE_VISITORS": "Website visitors",
+        "CHILDREN": "Children",
+        "PATIENTS": "Patients",
+        "STUDENTS": "Students"
       }
     },
     "newAsset": {
@@ -1835,6 +1852,14 @@
       "OBJECTION": "Object to data processing",
       "RESTRICTION": "Restrict data processing"
     },
+    "complianceCard": {
+      "title": "Compliance & Retention",
+      "description": "Link to your privacy notice and configure how long personal data is kept",
+      "privacyNoticeUrl": "Privacy Notice URL",
+      "privacyNoticeUrlHint": "Public URL of your organization's privacy notice. Shown to requesters on the intake form.",
+      "retentionDays": "Retention period (days)",
+      "retentionDaysHint": "Days after a request is completed before personal data is automatically redacted. Default 90."
+    },
     "cssCard": {
       "title": "Custom Styling",
       "description": "Add custom CSS to match your brand (optional)"
@@ -1976,6 +2001,15 @@
       "referenceLabel": "Reference number",
       "ctaText": "Check Request Status",
       "footer": "Save this email or bookmark the link above to track progress. We may contact you at this address if we need to verify your identity. Your contact details will be used solely to fulfill this request — never for marketing."
+    },
+    "communicationEmail": {
+      "subject": "{orgName}: Update on your data request",
+      "subjectWithCustom": "{orgName}: {subject}",
+      "greeting": "Hello {name},",
+      "intro": "{orgName} has sent you a message regarding your data request:",
+      "referenceLabel": "Reference number",
+      "ctaText": "View Request Status",
+      "footer": "If you have questions, reply to this email or use the link above to check your request status."
     }
   },
   "assessments": {

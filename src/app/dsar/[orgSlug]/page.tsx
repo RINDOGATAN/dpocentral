@@ -159,7 +159,10 @@ export default function PublicDSARPage() {
   const required = t("requiredMark");
 
   return (
-    <div className="min-h-screen bg-muted/50 py-8 px-4">
+    <div className="intake-form min-h-screen bg-muted/50 py-8 px-4">
+      {formConfig.customCss && (
+        <style dangerouslySetInnerHTML={{ __html: formConfig.customCss }} />
+      )}
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-end mb-2 text-xs text-muted-foreground">
           <LanguageSwitcher />

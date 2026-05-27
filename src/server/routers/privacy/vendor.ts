@@ -147,6 +147,7 @@ export const vendorRouter = createTRPCRouter({
         dataProcessed: z.array(z.nativeEnum(DataCategory)).default([]),
         countries: z.array(z.string()).default([]),
         certifications: z.array(z.string()).default([]),
+        riskTier: z.nativeEnum(VendorRiskTier).optional(),
         metadata: z.record(z.string(), z.any()).optional(),
       })
     )
@@ -158,6 +159,7 @@ export const vendorRouter = createTRPCRouter({
           description: input.description,
           website: input.website,
           status: VendorStatus.PROSPECTIVE,
+          riskTier: input.riskTier,
           primaryContact: input.primaryContact,
           contactEmail: input.contactEmail,
           contactPhone: input.contactPhone,
