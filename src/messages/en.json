@@ -271,6 +271,36 @@
         "STUDENTS": "Students"
       }
     },
+    "editAsset": {
+      "title": "Edit Data Asset",
+      "subtitle": "Update this data asset's details",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
+    "editElement": {
+      "title": "Edit Data Element",
+      "subtitle": "Update this data element's metadata",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
+    "editActivity": {
+      "title": "Edit Processing Activity",
+      "subtitle": "Update this processing activity's details",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
+    "editAiSystem": {
+      "title": "Edit AI System",
+      "subtitle": "Update this AI system's registration",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
+    "editIncident": {
+      "title": "Edit Incident",
+      "subtitle": "Update this incident's details",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
     "newAsset": {
       "title": "Add Data Asset",
       "subtitle": "Register a new system or data store",
@@ -2292,13 +2322,18 @@
     },
     "asset": {
       "created": "Data asset created",
+      "updated": "Data asset updated",
       "deleted": "Asset deleted",
       "elementAdded": "Data element added",
+      "elementUpdated": "Data element updated",
       "elementDeleted": "Element deleted",
       "activitiesUpdated": "Activities updated",
       "activitiesUpdatedWithFlows": "Activities updated — auto-generated {count, plural, one {# data flow} other {# data flows}}"
     },
     "activity": {
+      "created": "Processing activity created",
+      "updated": "Processing activity updated",
+      "deleted": "Processing activity deleted",
       "assetsLinked": "Linked assets updated",
       "assetsLinkedWithFlows": "Linked assets — auto-generated {count, plural, one {# data flow} other {# data flows}}",
       "flowsGenerated": "{count, plural, one {Generated # new data flow} other {Generated # new data flows}}",
@@ -2313,6 +2348,8 @@
     },
     "incident": {
       "created": "Incident reported",
+      "updated": "Incident updated",
+      "deleted": "Incident deleted",
       "statusUpdated": "Incident status updated",
       "timelineAdded": "Timeline entry added",
       "taskCreated": "Task created",
@@ -2344,6 +2381,8 @@
     },
     "aiSystem": {
       "registered": "AI system registered",
+      "updated": "AI system updated",
+      "deleted": "AI system deleted",
       "sentToSentinel": "{count, plural, one {Sent # system to AI Sentinel} other {Sent # systems to AI Sentinel}}"
     },
     "reports": {

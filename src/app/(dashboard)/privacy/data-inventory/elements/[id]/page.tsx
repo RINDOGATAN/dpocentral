@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, Database, Loader2, Server, Workflow } from "lucide-react";
+import { ArrowLeft, ArrowRight, Database, Edit, Loader2, Server, Workflow } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import type { DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
@@ -95,11 +95,11 @@ export default function DataElementDetailPage() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div className="flex items-start gap-3 min-w-0">
+        <div className="flex items-start gap-3 min-w-0 flex-1">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 flex items-center justify-center shrink-0">
             <Database className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-semibold font-mono truncate">{element.name}</h1>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
               <Badge variant="outline">{categoryLabels[element.category as DataCategory]}</Badge>
@@ -111,6 +111,12 @@ export default function DataElementDetailPage() {
             </div>
           </div>
         </div>
+        <Link href={`/privacy/data-inventory/elements/${element.id}/edit`} className="shrink-0">
+          <Button variant="outline" size="sm">
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

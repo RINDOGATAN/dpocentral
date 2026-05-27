@@ -104,23 +104,31 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             </div>
           </div>
         </div>
-        <Select
-          value={system.status}
-          onValueChange={(v) => updateStatus.mutate({ organizationId: orgId, id, status: v as any })}
-          disabled={updateStatus.isPending}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="DRAFT">{tList("status.DRAFT")}</SelectItem>
-            <SelectItem value="REGISTERED">{tList("status.REGISTERED")}</SelectItem>
-            <SelectItem value="UNDER_REVIEW">{tList("status.UNDER_REVIEW")}</SelectItem>
-            <SelectItem value="COMPLIANT">{tList("status.COMPLIANT")}</SelectItem>
-            <SelectItem value="NON_COMPLIANT">{tList("status.NON_COMPLIANT")}</SelectItem>
-            <SelectItem value="DECOMMISSIONED">{tList("status.DECOMMISSIONED")}</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Link href={`/privacy/ai-systems/${id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Edit3 className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+          </Link>
+          <Select
+            value={system.status}
+            onValueChange={(v) => updateStatus.mutate({ organizationId: orgId, id, status: v as any })}
+            disabled={updateStatus.isPending}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="DRAFT">{tList("status.DRAFT")}</SelectItem>
+              <SelectItem value="REGISTERED">{tList("status.REGISTERED")}</SelectItem>
+              <SelectItem value="UNDER_REVIEW">{tList("status.UNDER_REVIEW")}</SelectItem>
+              <SelectItem value="COMPLIANT">{tList("status.COMPLIANT")}</SelectItem>
+              <SelectItem value="NON_COMPLIANT">{tList("status.NON_COMPLIANT")}</SelectItem>
+              <SelectItem value="DECOMMISSIONED">{tList("status.DECOMMISSIONED")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* AI Models */}

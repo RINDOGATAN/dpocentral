@@ -17,6 +17,7 @@ import {
 import {
   ArrowLeft,
   Database,
+  Edit,
   FileText,
   Scale,
   Users,
@@ -222,6 +223,12 @@ export default function ActivityDetailPage() {
             {!activity.isActive && <Badge variant="secondary">Inactive</Badge>}
           </div>
         </div>
+        <Link href={`/privacy/data-inventory/activities/${activity.id}/edit`} className="shrink-0">
+          <Button variant="outline" size="sm">
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        </Link>
       </div>
 
       {/* Purpose & Description */}
