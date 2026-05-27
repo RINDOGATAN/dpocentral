@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useTranslatedSections } from "@/lib/template-i18n";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -434,7 +435,8 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   // Derived values — safe to compute even when assessment is null
   const template = assessment?.template;
-  const sections = (template?.sections as any[]) || [];
+  const rawSections = (template?.sections as any[]) || [];
+  const sections = useTranslatedSections(template?.type, rawSections);
   const completionPercentage = assessment?.completionPercentage ?? 0;
   const totalQuestions = assessment?.totalQuestions ?? 0;
   const answeredQuestions = assessment?.responses?.length ?? 0;
