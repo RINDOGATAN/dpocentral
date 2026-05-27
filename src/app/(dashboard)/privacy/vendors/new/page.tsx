@@ -194,6 +194,14 @@ function NewVendorPageContent() {
 
     setIsSubmitting(true);
 
+    const metadata: Record<string, unknown> = {};
+    if (selectedCatalogVendor?.privacyTechnologies?.length) {
+      metadata.privacyTechnologies = selectedCatalogVendor.privacyTechnologies;
+    }
+    if (formData.privacyPolicyUrl) metadata.privacyPolicyUrl = formData.privacyPolicyUrl;
+    if (formData.dpaUrl) metadata.dpaUrl = formData.dpaUrl;
+    if (formData.trustCenterUrl) metadata.trustCenterUrl = formData.trustCenterUrl;
+
     createVendor.mutate({
       organizationId: organization.id,
       name: formData.name,
@@ -205,9 +213,8 @@ function NewVendorPageContent() {
       dataProcessed: formData.dataProcessed as any[],
       countries: formData.countries,
       certifications: formData.certifications,
-      ...(selectedCatalogVendor?.privacyTechnologies?.length
-        ? { metadata: { privacyTechnologies: selectedCatalogVendor.privacyTechnologies } }
-        : {}),
+      riskTier: (formData.riskTier || undefined) as any,
+      ...(Object.keys(metadata).length ? { metadata } : {}),
     });
   };
 

@@ -207,6 +207,13 @@
       "affectedRecords": "Registros afectados estimados",
       "affectedRecordsPlaceholder": "p. ej., 1000",
       "dataCategoriesLabel": "Categorías de datos afectadas",
+      "affectedSubjectsLabel": "Interesados afectados",
+      "affectedSubjectsHint": "Selecciona las categorías de personas afectadas y/o añade las tuyas.",
+      "affectedSubjectsAdd": "Añadir",
+      "affectedSubjectsCustomPlaceholder": "Añadir otra categoría (p. ej., donantes)",
+      "jurisdiction": "Jurisdicción principal",
+      "jurisdictionHint": "Determina el plazo de notificación regulatoria (p. ej. 72 horas para el RGPD).",
+      "jurisdictionPlaceholder": "Selecciona la jurisdicción",
       "errorPrefix": "Error: {message}",
       "reporting": "Notificando...",
       "submit": "Notificar incidente",
@@ -252,6 +259,16 @@
         "SECURITY_AUDIT": "Auditoría de seguridad",
         "LAW_ENFORCEMENT": "Cuerpos de seguridad",
         "OTHER": "Otro"
+      },
+      "affectedSubject": {
+        "CUSTOMERS": "Clientes",
+        "EMPLOYEES": "Empleados",
+        "JOB_APPLICANTS": "Candidatos",
+        "SUPPLIERS": "Proveedores",
+        "WEBSITE_VISITORS": "Visitantes web",
+        "CHILDREN": "Menores",
+        "PATIENTS": "Pacientes",
+        "STUDENTS": "Estudiantes"
       }
     },
     "newAsset": {
@@ -1835,6 +1852,14 @@
       "OBJECTION": "Oponerse al tratamiento de datos",
       "RESTRICTION": "Restringir el tratamiento de datos"
     },
+    "complianceCard": {
+      "title": "Cumplimiento y retención",
+      "description": "Enlaza tu aviso de privacidad y configura cuánto tiempo se conservan los datos personales",
+      "privacyNoticeUrl": "URL del aviso de privacidad",
+      "privacyNoticeUrlHint": "URL pública del aviso de privacidad de tu organización. Se muestra al solicitante en el formulario.",
+      "retentionDays": "Periodo de retención (días)",
+      "retentionDaysHint": "Días tras la finalización de una solicitud antes de que los datos personales se redacten automáticamente. Predeterminado: 90."
+    },
     "cssCard": {
       "title": "Estilo personalizado",
       "description": "Añade CSS personalizado para combinar con tu marca (opcional)"
@@ -1976,6 +2001,15 @@
       "referenceLabel": "Número de referencia",
       "ctaText": "Comprobar estado de la solicitud",
       "footer": "Guarda este correo o marca el enlace anterior para seguir el progreso. Podemos contactarte en esta dirección si necesitamos verificar tu identidad. Tus datos de contacto se utilizarán únicamente para tramitar esta solicitud — nunca para marketing."
+    },
+    "communicationEmail": {
+      "subject": "{orgName}: Actualización sobre tu solicitud de datos",
+      "subjectWithCustom": "{orgName}: {subject}",
+      "greeting": "Hola {name},",
+      "intro": "{orgName} te ha enviado un mensaje sobre tu solicitud de datos:",
+      "referenceLabel": "Número de referencia",
+      "ctaText": "Ver estado de la solicitud",
+      "footer": "Si tienes preguntas, responde a este correo o utiliza el enlace anterior para consultar el estado de tu solicitud."
     }
   },
   "assessments": {

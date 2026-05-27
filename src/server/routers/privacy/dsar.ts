@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
+import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
 
 // SLA Calculator service
 function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
@@ -479,6 +480,7 @@ export const dsarRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const request = await ctx.prisma.dSARRequest.findFirst({
         where: { id: input.dsarRequestId, organizationId: ctx.organization.id },
+        include: { organization: { select: { name: true } } },
       });
 
       if (!request) {
@@ -510,6 +512,26 @@ export const dsarRouter = createTRPCRouter({
         await ctx.prisma.dSARRequest.update({
           where: { id: input.dsarRequestId },
           data: { acknowledgedAt: new Date() },
+        });
+      }
+
+      // Send transactional email to requester for OUTBOUND messages on the Email channel.
+      // Skip if the request has been redacted (PII no longer available).
+      if (
+        input.direction === "OUTBOUND" &&
+        input.channel.toLowerCase() === "email" &&
+        request.requesterEmail &&
+        !request.redactedAt
+      ) {
+        const locale = (request.metadata as { locale?: string } | null)?.locale;
+        await sendDSARCommunicationEmail({
+          to: request.requesterEmail,
+          requesterName: request.requesterName,
+          organizationName: request.organization.name,
+          publicId: request.publicId,
+          subject: input.subject,
+          content: input.content,
+          locale,
         });
       }
 
@@ -545,6 +567,8 @@ export const dsarRouter = createTRPCRouter({
         enabledTypes: z.array(z.nativeEnum(DSARType)),
         customCss: z.string().optional(),
         thankYouMessage: z.string().optional(),
+        privacyNoticeUrl: z.string().url().optional().or(z.literal("")),
+        retentionDays: z.number().int().min(1).max(3650).optional(),
         isActive: z.boolean().default(true),
       })
     )
@@ -599,6 +623,7 @@ export const dsarRouter = createTRPCRouter({
         privacyNoticeUrl: form.privacyNoticeUrl,
         retentionDays: form.retentionDays,
         enabledTypes: form.enabledTypes,
+        customCss: form.customCss,
       };
     }),
 

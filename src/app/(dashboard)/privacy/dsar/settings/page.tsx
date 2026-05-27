@@ -40,8 +40,11 @@ export default function DSARSettingsPage() {
     enabledTypes: ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"] as string[],
     customCss: "",
     thankYouMessage: "Thank you for your request. We will process it within the legally required timeframe.",
+    privacyNoticeUrl: "",
+    retentionDays: 90,
     isActive: true,
   });
+  const [preservedFields, setPreservedFields] = useState<unknown[]>([]);
 
   const { data: existingForm, isLoading } = trpc.dsar.getIntakeForm.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -69,8 +72,13 @@ export default function DSARSettingsPage() {
         enabledTypes: (existingForm.enabledTypes as string[]) || ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"],
         customCss: existingForm.customCss || "",
         thankYouMessage: existingForm.thankYouMessage || "Thank you for your request. We will process it within the legally required timeframe.",
+        privacyNoticeUrl: existingForm.privacyNoticeUrl || "",
+        retentionDays: existingForm.retentionDays ?? 90,
         isActive: existingForm.isActive ?? true,
       });
+      if (Array.isArray(existingForm.fields)) {
+        setPreservedFields(existingForm.fields as unknown[]);
+      }
     }
   }, [existingForm]);
 
@@ -86,10 +94,12 @@ export default function DSARSettingsPage() {
       slug: formData.slug,
       title: formData.title,
       description: formData.description,
-      fields: [], // Default empty fields array
+      fields: preservedFields,
       enabledTypes: formData.enabledTypes as any[],
       customCss: formData.customCss || undefined,
       thankYouMessage: formData.thankYouMessage || undefined,
+      privacyNoticeUrl: formData.privacyNoticeUrl || undefined,
+      retentionDays: Number.isFinite(formData.retentionDays) ? formData.retentionDays : 90,
       isActive: formData.isActive,
     });
   };
@@ -253,6 +263,45 @@ export default function DSARSettingsPage() {
                   <p className="text-sm text-muted-foreground mt-1">{tDesc(type)}</p>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Compliance & Retention */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("complianceCard.title")}</CardTitle>
+            <CardDescription>{t("complianceCard.description")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="privacyNoticeUrl">{t("complianceCard.privacyNoticeUrl")}</Label>
+              <Input
+                id="privacyNoticeUrl"
+                type="url"
+                placeholder="https://example.com/privacy"
+                value={formData.privacyNoticeUrl}
+                onChange={(e) => setFormData({ ...formData, privacyNoticeUrl: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">{t("complianceCard.privacyNoticeUrlHint")}</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="retentionDays">{t("complianceCard.retentionDays")}</Label>
+              <Input
+                id="retentionDays"
+                type="number"
+                min={1}
+                max={3650}
+                value={formData.retentionDays}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    retentionDays: parseInt(e.target.value, 10) || 0,
+                  })
+                }
+                className="w-32"
+              />
+              <p className="text-xs text-muted-foreground">{t("complianceCard.retentionDaysHint")}</p>
             </div>
           </CardContent>
         </Card>
