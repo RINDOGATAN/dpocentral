@@ -34,9 +34,6 @@ const DATA_CATEGORY_KEYS = [
   "RELIGIOUS", "GENETIC", "SEXUAL_ORIENTATION", "CRIMINAL", "OTHER",
 ] as const;
 
-const formatEnum = (value: string) =>
-  value.replace(/_/g, " ").toLowerCase().replace(/^./, (c) => c.toUpperCase());
-
 export default function EditActivityPage() {
   const router = useRouter();
   const params = useParams();
@@ -45,7 +42,10 @@ export default function EditActivityPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
   const tEdit = useTranslations("pages.editActivity");
+  const tExt = useTranslations("pages.editActivityExt");
   const tCommon = useTranslations("common");
+  const tLegal = useTranslations("pages.editActivityExt.legalBasis_option");
+  const tCat = useTranslations("pages.editActivityExt.category_option");
 
   const initializedRef = useRef(false);
   const [formData, setFormData] = useState({
@@ -183,13 +183,13 @@ export default function EditActivityPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Basics</CardTitle>
-            <CardDescription>Name, purpose and legal basis</CardDescription>
+            <CardTitle>{tExt("basics")}</CardTitle>
+            <CardDescription>{tExt("basicsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name">{tExt("name")}</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -198,19 +198,19 @@ export default function EditActivityPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="legalBasis">Legal Basis *</Label>
+                <Label htmlFor="legalBasis">{tExt("legalBasis")}</Label>
                 <Select
                   value={formData.legalBasis}
                   onValueChange={(value) => setFormData({ ...formData, legalBasis: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select..." />
+                    <SelectValue placeholder={tExt("legalBasisPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
                     {LEGAL_BASIS_KEYS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {formatEnum(value)}
+                        {tLegal(value)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -218,7 +218,7 @@ export default function EditActivityPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="purpose">Purpose *</Label>
+              <Label htmlFor="purpose">{tExt("purpose")}</Label>
               <Textarea
                 id="purpose"
                 rows={3}
@@ -228,17 +228,17 @@ export default function EditActivityPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="legalBasisDetail">Legal Basis Detail</Label>
+              <Label htmlFor="legalBasisDetail">{tExt("legalBasisDetail")}</Label>
               <Textarea
                 id="legalBasisDetail"
                 rows={2}
-                placeholder="Additional notes on the legal basis"
+                placeholder={tExt("legalBasisDetailPlaceholder")}
                 value={formData.legalBasisDetail}
                 onChange={(e) => setFormData({ ...formData, legalBasisDetail: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tExt("description")}</Label>
               <Textarea
                 id="description"
                 rows={2}
@@ -251,20 +251,20 @@ export default function EditActivityPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Data Subjects & Categories</CardTitle>
-            <CardDescription>Who is affected and what data is processed</CardDescription>
+            <CardTitle>{tExt("subjectsAndCategories")}</CardTitle>
+            <CardDescription>{tExt("subjectsAndCategoriesSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Data Subjects</Label>
+              <Label>{tExt("dataSubjects")}</Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="e.g., Customers, Employees, Patients"
+                  placeholder={tExt("dataSubjectsPlaceholder")}
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addSubject())}
                 />
-                <Button type="button" variant="outline" onClick={addSubject}>Add</Button>
+                <Button type="button" variant="outline" onClick={addSubject}>{tExt("add")}</Button>
               </div>
               {formData.dataSubjects.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -278,7 +278,7 @@ export default function EditActivityPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label>Data Categories</Label>
+              <Label>{tExt("dataCategories")}</Label>
               <div className="flex flex-wrap gap-2">
                 {DATA_CATEGORY_KEYS.map((value) => (
                   <Badge
@@ -287,22 +287,22 @@ export default function EditActivityPage() {
                     className="cursor-pointer"
                     onClick={() => toggleCategory(value)}
                   >
-                    {formatEnum(value)}
+                    {tCat(value)}
                   </Badge>
                 ))}
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Recipients</Label>
-              <p className="text-xs text-muted-foreground">Categories of internal/external recipients with whom data is shared.</p>
+              <Label>{tExt("recipients")}</Label>
+              <p className="text-xs text-muted-foreground">{tExt("recipientsHelp")}</p>
               <div className="flex gap-2">
                 <Input
-                  placeholder="e.g., Marketing team, Auditors, Payment processor"
+                  placeholder={tExt("recipientsPlaceholder")}
                   value={newRecipient}
                   onChange={(e) => setNewRecipient(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addRecipient())}
                 />
-                <Button type="button" variant="outline" onClick={addRecipient}>Add</Button>
+                <Button type="button" variant="outline" onClick={addRecipient}>{tExt("add")}</Button>
               </div>
               {formData.recipients.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -320,22 +320,22 @@ export default function EditActivityPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Retention & Automation</CardTitle>
-            <CardDescription>How long data is kept and whether decisions are automated</CardDescription>
+            <CardTitle>{tExt("retentionAndAutomation")}</CardTitle>
+            <CardDescription>{tExt("retentionAndAutomationSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="retentionPeriod">Retention period (description)</Label>
+                <Label htmlFor="retentionPeriod">{tExt("retentionPeriod")}</Label>
                 <Input
                   id="retentionPeriod"
-                  placeholder="e.g., 7 years after contract end"
+                  placeholder={tExt("retentionPeriodPlaceholder")}
                   value={formData.retentionPeriod}
                   onChange={(e) => setFormData({ ...formData, retentionPeriod: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="retentionDays">Retention (days)</Label>
+                <Label htmlFor="retentionDays">{tExt("retentionDays")}</Label>
                 <Input
                   id="retentionDays"
                   type="number"
@@ -353,15 +353,15 @@ export default function EditActivityPage() {
                   setFormData({ ...formData, automatedDecisionMaking: checked })
                 }
               />
-              <Label htmlFor="automatedDecisionMaking">Involves automated decision-making (GDPR Art. 22)</Label>
+              <Label htmlFor="automatedDecisionMaking">{tExt("automatedDecisionMaking")}</Label>
             </div>
             {formData.automatedDecisionMaking && (
               <div className="space-y-2">
-                <Label htmlFor="automatedDecisionDetail">Automated decision-making details</Label>
+                <Label htmlFor="automatedDecisionDetail">{tExt("automatedDecisionDetail")}</Label>
                 <Textarea
                   id="automatedDecisionDetail"
                   rows={3}
-                  placeholder="Logic involved, significance, consequences for data subjects..."
+                  placeholder={tExt("automatedDecisionDetailPlaceholder")}
                   value={formData.automatedDecisionDetail}
                   onChange={(e) =>
                     setFormData({ ...formData, automatedDecisionDetail: e.target.value })
@@ -375,13 +375,13 @@ export default function EditActivityPage() {
                 checked={formData.isActive}
                 onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
               />
-              <Label htmlFor="isActive">Activity is active (included in ROPA exports)</Label>
+              <Label htmlFor="isActive">{tExt("isActive")}</Label>
             </div>
           </CardContent>
         </Card>
 
         {updateActivity.error && (
-          <div className="text-sm text-destructive">Error: {updateActivity.error.message}</div>
+          <div className="text-sm text-destructive">{tExt("errorPrefix", { message: updateActivity.error.message })}</div>
         )}
 
         <div className="flex justify-end gap-4">

@@ -39,12 +39,7 @@ const statusIcons: Record<string, typeof CheckCircle2> = {
   PENDING: Clock,
 };
 
-const statusLabel: Record<string, string> = {
-  COMPLIANT: "Compliant",
-  NEEDS_REVIEW: "Needs Review",
-  NON_COMPLIANT: "Non-Compliant",
-  PENDING: "Pending",
-};
+const STATUS_KEYS = ["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT", "PENDING"] as const;
 
 export default function TransferDetailPage() {
   const params = useParams();
@@ -52,6 +47,9 @@ export default function TransferDetailPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const tMech = useTranslations("pages.dataInventory.mechanism");
+  const t = useTranslations("pages.transfers.detail");
+  const tStatus = useTranslations("pages.transfers.status_option");
+  const tToasts = useTranslations("toasts");
 
   const utils = trpc.useUtils();
 
@@ -69,7 +67,7 @@ export default function TransferDetailPage() {
       });
       utils.dataInventory.listTransfers.invalidate();
       utils.dataInventory.getTransferStats.invalidate();
-      toast.success("Compliance updated");
+      toast.success(tToasts("transfer.complianceUpdated"));
     },
     onError: (e) => toast.error(e.message),
   });
@@ -116,7 +114,7 @@ export default function TransferDetailPage() {
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3 min-w-0">
           <Link href="/privacy/transfers">
-            <Button variant="ghost" size="icon" aria-label="Back" className="shrink-0">
+            <Button variant="ghost" size="icon" aria-label={t("back")} className="shrink-0">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
@@ -133,21 +131,23 @@ export default function TransferDetailPage() {
               <Badge variant="outline">{tMech(transfer.mechanism as any)}</Badge>
               <Badge variant="outline" className={statusColors[status] || ""}>
                 <StatusIcon className="w-3 h-3 mr-1" />
-                {statusLabel[status]}
+                {STATUS_KEYS.includes(status as typeof STATUS_KEYS[number])
+                  ? tStatus(status as typeof STATUS_KEYS[number])
+                  : status}
               </Badge>
               {isAdequateCountry && (
                 <Badge variant="outline" className="border-primary text-primary">
-                  Adequate country
+                  {t("adequateCountry")}
                 </Badge>
               )}
               {transfer.tiaCompleted ? (
                 <Badge variant="outline" className="border-primary text-primary">
                   <ClipboardCheck className="w-3 h-3 mr-1" />
-                  TIA done
+                  {t("tiaDone")}
                 </Badge>
               ) : (
                 <Badge variant="outline" className="text-muted-foreground">
-                  TIA pending
+                  {t("tiaPending")}
                 </Badge>
               )}
             </div>
@@ -156,7 +156,7 @@ export default function TransferDetailPage() {
         <Link href={`/privacy/transfers/${id}/edit`}>
           <Button variant="outline" size="sm">
             <Edit className="w-4 h-4 mr-2" />
-            Edit
+            {t("edit")}
           </Button>
         </Link>
       </div>
@@ -167,10 +167,13 @@ export default function TransferDetailPage() {
           <CardContent className="py-4 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium">Adequacy decision in force</p>
+              <p className="font-medium">{t("adequacyTitle")}</p>
               <p className="text-sm text-muted-foreground">
-                {adequacyDecision.country} has an EU adequacy decision (adopted {adequacyDecision.decisionDate}).
-                {adequacyDecision.isPartial && " ⚠ Partial — see notes."}
+                {t("adequacyBody", {
+                  country: adequacyDecision.country,
+                  date: adequacyDecision.decisionDate,
+                })}
+                {adequacyDecision.isPartial && t("adequacyPartial")}
                 {adequacyDecision.notes && (
                   <span className="block mt-1 italic">{adequacyDecision.notes}</span>
                 )}
@@ -183,18 +186,21 @@ export default function TransferDetailPage() {
       {/* Compliance status controls */}
       <Card>
         <CardHeader>
-          <CardTitle>Compliance Status</CardTitle>
+          <CardTitle>{t("complianceStatus")}</CardTitle>
           <CardDescription>
             {status !== checklistData.transfer.suggestedStatus &&
               checklistData.transfer.suggestedStatus && (
                 <span className="text-yellow-700 dark:text-yellow-400">
-                  Suggested from current data: <strong>{statusLabel[checklistData.transfer.suggestedStatus]}</strong>
+                  {t.rich("suggestedFromData", {
+                    status: tStatus(checklistData.transfer.suggestedStatus as typeof STATUS_KEYS[number]),
+                    b: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          {(["COMPLIANT", "NEEDS_REVIEW", "NON_COMPLIANT", "PENDING"] as const).map((s) => (
+          {STATUS_KEYS.map((s) => (
             <Button
               key={s}
               variant={status === s ? "default" : "outline"}
@@ -202,7 +208,7 @@ export default function TransferDetailPage() {
               disabled={updateCompliance.isPending}
               onClick={() => setStatus(s)}
             >
-              {statusLabel[s]}
+              {tStatus(s)}
             </Button>
           ))}
         </CardContent>
@@ -212,10 +218,8 @@ export default function TransferDetailPage() {
       {!isAdequateCountry && checklist.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Schrems II Checklist</CardTitle>
-            <CardDescription>
-              Required diligence for transfers under SCCs to non-adequate jurisdictions (CJEU C-311/18).
-            </CardDescription>
+            <CardTitle>{t("schremsTitle")}</CardTitle>
+            <CardDescription>{t("schremsSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {checklist.map((item) => {
@@ -237,7 +241,7 @@ export default function TransferDetailPage() {
                       <p className="font-medium text-sm">{item.question}</p>
                     </div>
                     {item.required && (
-                      <Badge variant="outline" className="text-xs shrink-0">Required</Badge>
+                      <Badge variant="outline" className="text-xs shrink-0">{t("required")}</Badge>
                     )}
                   </button>
                   {isOpen && (
@@ -256,18 +260,22 @@ export default function TransferDetailPage() {
       {!isAdequateCountry && supplementaryMeasures.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Supplementary Measures</CardTitle>
-            <CardDescription>
-              Toggle the additional technical, contractual, and organizational measures you have in place.
-            </CardDescription>
+            <CardTitle>{t("supplementaryTitle")}</CardTitle>
+            <CardDescription>{t("supplementarySubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {(["technical", "contractual", "organizational"] as const).map((category) => {
               const items = supplementaryMeasures.filter((m) => m.category === category);
               if (items.length === 0) return null;
+              const categoryLabel =
+                category === "technical"
+                  ? t("category_technical")
+                  : category === "contractual"
+                    ? t("category_contractual")
+                    : t("category_organizational");
               return (
                 <div key={category}>
-                  <p className="text-sm font-medium capitalize mb-2">{category}</p>
+                  <p className="text-sm font-medium mb-2">{categoryLabel}</p>
                   <div className="space-y-2">
                     {items.map((m) => (
                       <label
@@ -291,7 +299,7 @@ export default function TransferDetailPage() {
             })}
             {enabledMeasures.length > 0 && (
               <p className="text-xs text-muted-foreground pt-2 border-t">
-                {enabledMeasures.length} measure{enabledMeasures.length !== 1 ? "s" : ""} active
+                {t("measuresActive", { count: enabledMeasures.length })}
               </p>
             )}
           </CardContent>
@@ -304,14 +312,18 @@ export default function TransferDetailPage() {
           <CardContent className="py-4 flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0" />
             <div className="text-sm">
-              <span className="font-medium">SCC expires {new Date(transfer.sccExpiryDate).toLocaleDateString()}.</span>{" "}
+              <span className="font-medium">
+                {t("sccExpires", {
+                  date: new Date(transfer.sccExpiryDate).toLocaleDateString(),
+                })}
+              </span>{" "}
               {(() => {
                 const days = Math.ceil(
                   (new Date(transfer.sccExpiryDate).getTime() - Date.now()) / (24 * 60 * 60 * 1000)
                 );
-                if (days <= 0) return "This SCC has already expired — renew immediately.";
-                if (days <= 30) return `Only ${days} day${days !== 1 ? "s" : ""} left — schedule a renewal.`;
-                return `${days} days remaining.`;
+                if (days <= 0) return t("sccExpired");
+                if (days <= 30) return t("sccExpiringSoon", { count: days });
+                return t("sccRemaining", { count: days });
               })()}
             </div>
           </CardContent>
@@ -325,16 +337,13 @@ export default function TransferDetailPage() {
             <div className="flex items-center gap-3 min-w-0">
               <ClipboardCheck className="w-5 h-5 text-yellow-600 shrink-0" />
               <div className="text-sm">
-                <p className="font-medium">Transfer Impact Assessment pending</p>
-                <p className="text-muted-foreground">
-                  Schrems II requires an assessment of the destination country's surveillance laws and the
-                  effectiveness of your safeguards.
-                </p>
+                <p className="font-medium">{t("tiaPendingTitle")}</p>
+                <p className="text-muted-foreground">{t("tiaPendingBody")}</p>
               </div>
             </div>
             <Link href={`/privacy/assessments/new?type=TIA&transferId=${id}`} className="shrink-0">
               <Button size="sm">
-                Start TIA <ArrowRight className="w-4 h-4 ml-2" />
+                {t("startTia")} <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
           </CardContent>

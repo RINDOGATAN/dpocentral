@@ -483,16 +483,16 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium truncate">{a.template?.name ?? "Custom assessment"}</p>
+                      <p className="font-medium truncate">{a.template?.name ?? tp("assessments.customAssessment")}</p>
                       <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                         {a.template?.type && <Badge variant="outline" className="text-[10px]">{a.template.type}</Badge>}
                         <Badge variant="outline" className="text-[10px]">{a.status}</Badge>
                         {a.riskLevel && (
                           <Badge variant="outline" className="text-[10px]">
-                            Risk: {a.riskLevel}
+                            {tp("assessments.risk", { level: a.riskLevel })}
                           </Badge>
                         )}
-                        <span>Created {new Date(a.createdAt).toLocaleDateString()}</span>
+                        <span>{tp("assessments.created", { date: new Date(a.createdAt).toLocaleDateString() })}</span>
                       </div>
                     </div>
                     <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -530,32 +530,32 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium">{review.type} review</p>
+                          <p className="font-medium">{tp("reviews.reviewLabel", { type: review.type })}</p>
                           {isComplete ? (
                             <Badge variant="outline" className="text-[10px] border-primary text-primary">
-                              Completed
+                              {tp("reviews.completed")}
                             </Badge>
                           ) : isOverdue ? (
                             <Badge variant="outline" className="text-[10px] border-destructive text-destructive">
-                              Overdue
+                              {tp("reviews.overdue")}
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="text-[10px]">
-                              Scheduled
+                              {tp("reviews.scheduled")}
                             </Badge>
                           )}
                           {review.riskLevel && (
                             <Badge variant="outline" className="text-[10px]">
-                              Risk: {review.riskLevel}
+                              {tp("reviews.risk", { level: review.riskLevel })}
                             </Badge>
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {review.reviewer?.name ?? review.reviewer?.email ?? "Unassigned"}
+                          {review.reviewer?.name ?? review.reviewer?.email ?? tp("reviews.unassigned")}
                           {" · "}
                           {isComplete
-                            ? `Completed ${new Date(review.completedAt!).toLocaleDateString()}`
-                            : `Scheduled for ${new Date(review.scheduledAt).toLocaleDateString()}`}
+                            ? tp("reviews.completedOn", { date: new Date(review.completedAt!).toLocaleDateString() })
+                            : tp("reviews.scheduledFor", { date: new Date(review.scheduledAt).toLocaleDateString() })}
                         </p>
                         {review.findings && (
                           <p className="text-sm mt-2 text-muted-foreground">{review.findings}</p>
@@ -576,7 +576,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                           {completeReview.isPending && completeReview.variables?.id === review.id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
                           ) : (
-                            "Mark complete"
+                            tp("reviews.markComplete")
                           )}
                         </Button>
                       )}
