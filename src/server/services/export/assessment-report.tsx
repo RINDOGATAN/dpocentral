@@ -184,8 +184,10 @@ export function AssessmentReport({
   const typeLabel = tr(`assessmentTypes.${type}`);
   const articleRef = (() => {
     const ref = tr(`articleRefs.${type}`);
-    // articleRefs only has DPIA; other types fall through to the key itself — skip then.
-    return ref.startsWith("articleRefs.") ? null : ref;
+    // articleRefs only defines DPIA. For other types the translator returns the
+    // unresolved key — "articleRefs.LIA" via the local fallback, or the full path
+    // "pdf.assessmentReport.articleRefs.LIA" via next-intl — so match either and skip.
+    return ref.includes("articleRefs.") ? null : ref;
   })();
 
   return (
