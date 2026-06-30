@@ -81,6 +81,7 @@ const EN_FALLBACK: Record<string, string> = {
   "meta.primaryJurisdiction": "Primary Jurisdiction",
   "meta.primaryJurisdictionNotSet": "Not set",
   "meta.defaultDeadline": "Default Deadline",
+  "meta.defaultDeadlineDays": "{count} days",
   "meta.totalRequests": "Total Requests",
   "meta.completed": "Completed",
   "meta.currentlyOpen": "Currently Open",
@@ -208,7 +209,7 @@ export function DSARPerformanceReport({
             },
             {
               label: tr("meta.defaultDeadline"),
-              value: tr("defaultDeadlineDays", { count: data.primaryDeadlineDays }),
+              value: tr("meta.defaultDeadlineDays", { count: data.primaryDeadlineDays }),
             },
             { label: tr("meta.totalRequests"), value: String(stats.total) },
             { label: tr("meta.completed"), value: String(stats.completed) },
