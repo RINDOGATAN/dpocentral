@@ -2419,44 +2419,44 @@
     "findExpert": "Buscar experto",
     "quickstart": {
       "heading": "¿Necesitas ayuda para configurar tu programa de privacidad?",
-      "body": "Contacta con un experto certificado en protección de datos que te guíe en el cumplimiento del RGPD y te ayude a personalizar tu programa."
+      "body": "Contacta con un experto técnico o de despliegue que te ayude a configurar la plataforma y poner en marcha tu programa de privacidad."
     },
     "assessment": {
-      "heading": "¿Necesitas ayuda con tu evaluación?",
-      "body": "Los expertos en protección de datos pueden ayudarte a realizar EIPD, EIP y otras evaluaciones para garantizar un cumplimiento exhaustivo."
+      "heading": "¿Necesitas ayuda con tu flujo de evaluaciones?",
+      "body": "Los expertos en operaciones de cumplimiento pueden ayudarte a estructurar EIPD, EIP y otros flujos de evaluación en la plataforma."
     },
     "incident": {
-      "heading": "¿Necesitas orientación experta sobre respuesta a incidentes?",
-      "body": "Un profesional de protección de datos puede ayudarte a gestionar notificaciones de brechas, comunicaciones con la AEPD y la remediación."
+      "heading": "¿Necesitas ayuda con tu flujo de respuesta a incidentes?",
+      "body": "Un experto en operaciones de cumplimiento puede ayudarte a configurar el registro de brechas, los flujos de respuesta y la documentación. Para asesoramiento jurídico sobre obligaciones de notificación, consulta a un abogado cualificado."
     },
     "emptyState": {
       "heading": "¿No sabes por dónde empezar?",
-      "body": "Un experto en protección de datos puede ayudarte a construir tu inventario de datos y establecer procesos conformes desde el primer día."
+      "body": "Un experto en despliegue puede ayudarte a construir tu inventario de datos y establecer procesos sólidos desde el primer día."
     },
     "general": {
-      "heading": "Solicita ayuda profesional con tu programa de protección de datos",
-      "body": "Contacta con profesionales certificados en protección de datos que pueden ayudarte con el cumplimiento del RGPD, evaluaciones y más."
+      "heading": "Consigue ayuda práctica con tu programa de privacidad",
+      "body": "Contacta con expertos técnicos y de despliegue que pueden ayudarte con la configuración, el inventario de datos y las operaciones de cumplimiento."
     },
     "vendor": {
       "heading": "¿Necesitas ayuda con la diligencia debida de proveedores?",
-      "body": "Un experto en protección de datos puede revisar tus contratos con proveedores, los acuerdos de tratamiento de datos y ayudar a evaluar los riesgos de terceros."
+      "body": "Un experto en operaciones de cumplimiento puede ayudarte a organizar los registros de proveedores, los flujos de diligencia debida y el seguimiento de riesgos de terceros."
     },
     "dsar": {
       "heading": "¿Necesitas ayuda gestionando solicitudes de acceso?",
-      "body": "Los profesionales de protección de datos pueden ayudarte a establecer flujos de trabajo eficientes para las solicitudes de los interesados y garantizar respuestas oportunas y conformes."
+      "body": "Los expertos en operaciones de cumplimiento pueden ayudarte a establecer flujos de trabajo eficientes para las solicitudes de los interesados y mantener los plazos de respuesta bajo control."
     },
     "highRisk": {
       "heading": "Tratamiento de alto riesgo detectado",
-      "body": "Tu selección incluye proveedores que tratan datos sensibles. Un especialista en EIPD puede ayudarte a evaluar y mitigar estos riesgos."
+      "body": "Tu selección incluye proveedores que tratan datos sensibles. Un experto en operaciones de cumplimiento puede ayudarte a estructurar el flujo de evaluación y mitigación."
     },
     "transfer": {
       "heading": "Transferencias internacionales detectadas",
-      "body": "Los datos que salen del EEE requieren garantías adecuadas. Un especialista en transferencias puede ayudarte con las ETI y las cláusulas contractuales tipo."
+      "body": "Los datos que salen del EEE requieren garantías adecuadas. Un experto en operaciones de cumplimiento puede ayudarte a documentar las transferencias y estructurar tu flujo de ETI."
     }
   },
   "experts": {
-    "title": "Buscar experto en protección de datos",
-    "subtitle": "Conecta con profesionales certificados en protección de datos que pueden ayudarte con tus necesidades de cumplimiento",
+    "title": "Buscar experto",
+    "subtitle": "Conecta con expertos técnicos y de despliegue que pueden ayudarte a implementar y operar tu programa de privacidad",
     "searchPlaceholder": "Buscar por nombre, despacho o especialización...",
     "specialization": "Especialización",
     "allSpecializations": "Todas las especialidades",
@@ -2474,8 +2474,7 @@
     "noResults": "No se han encontrado expertos que coincidan con los criterios. Prueba a ajustar los filtros.",
     "noExperts": "No hay expertos disponibles en este momento.",
     "unnamedExpert": "Experto sin nombre",
-    "privacyExpert": "Experto en protección de datos",
-    "typeLegal": "Jurídico",
+    "privacyExpert": "Experto",
     "typeTechnical": "Técnico",
     "typeDeployment": "Despliegue",
     "engagements": {
@@ -3559,11 +3558,11 @@
         "description": "Cuando inicias sesión por primera vez, eliges cómo usas la plataforma.",
         "businessOwner": {
           "label": "Propietario de negocio",
-          "desc": "Para usuarios que necesitan cumplimiento de privacidad para su propia organización. Obtienes acceso al Directorio de Expertos para contactar con profesionales certificados en privacidad."
+          "desc": "Para usuarios que necesitan cumplimiento de privacidad para su propia organización. Obtienes acceso al Directorio de Expertos para contactar con expertos técnicos y de despliegue."
         },
         "privacyProfessional": {
           "label": "Profesional de privacidad",
-          "desc": "Para abogados y consultores que asesoran a varias organizaciones. Obtienes un panel \"Mis clientes\" que muestra todas tus organizaciones cliente con estadísticas resumidas."
+          "desc": "Para consultores de privacidad y DPO que asesoran a varias organizaciones. Obtienes un panel \"Mis clientes\" que muestra todas tus organizaciones cliente con estadísticas resumidas."
         },
         "tipPrefix": "Puedes cambiar tu tipo de cuenta en cualquier momento desde la página de ",
         "tipSettings": "Configuración",
@@ -3571,8 +3570,8 @@
       },
       "directory": {
         "title": "Directorio de expertos",
-        "description": "Encuentra y contacta con expertos certificados en privacidad.",
-        "intro": "El Directorio de Expertos (disponible para Propietarios de negocio) te permite buscar profesionales de privacidad por especialización, país e idioma.",
+        "description": "Encuentra y contacta con expertos técnicos y de despliegue.",
+        "intro": "El Directorio de Expertos (disponible para Propietarios de negocio) te permite buscar expertos técnicos, de despliegue y de operaciones de cumplimiento por especialización, país e idioma.",
         "items": {
           "search": "Búsqueda por nombre, despacho o área de experiencia",
           "specialization": "Filtra por especialización (RGPD, DPIA, DSAR, etc.)",

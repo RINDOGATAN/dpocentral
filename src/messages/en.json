@@ -2419,44 +2419,44 @@
     "findExpert": "Find Expert",
     "quickstart": {
       "heading": "Need help setting up your privacy program?",
-      "body": "Connect with a certified privacy expert who can guide you through GDPR compliance and help tailor your program."
+      "body": "Connect with a technical or deployment expert who can help you configure the platform and get your privacy program up and running."
     },
     "assessment": {
-      "heading": "Need help with your assessment?",
-      "body": "Privacy experts can help you conduct DPIAs, PIAs, and other assessments to ensure thorough compliance."
+      "heading": "Need help with your assessment workflow?",
+      "body": "Compliance-operations experts can help you structure DPIAs, PIAs, and other assessment workflows in the platform."
     },
     "incident": {
-      "heading": "Need expert guidance on incident response?",
-      "body": "A privacy professional can help you manage breach notifications, DPA communications, and remediation."
+      "heading": "Need help with your incident response workflow?",
+      "body": "A compliance-operations expert can help you set up breach registers, response workflows, and documentation. For advice on legal notification obligations, consult a qualified lawyer."
     },
     "emptyState": {
       "heading": "Not sure where to start?",
-      "body": "A privacy expert can help you build your data inventory and establish compliant processes from day one."
+      "body": "A deployment expert can help you build your data inventory and establish solid processes from day one."
     },
     "general": {
-      "heading": "Get professional help with your privacy program",
-      "body": "Connect with certified privacy professionals who can help with GDPR compliance, assessments, and more."
+      "heading": "Get hands-on help with your privacy program",
+      "body": "Connect with technical and deployment experts who can help with setup, data inventory, and compliance operations."
     },
     "vendor": {
       "heading": "Need help with vendor due diligence?",
-      "body": "A privacy expert can review your vendor contracts, DPAs, and help assess third-party data processing risks."
+      "body": "A compliance-operations expert can help you organize vendor records, due-diligence workflows, and third-party risk tracking."
     },
     "dsar": {
       "heading": "Need help managing subject access requests?",
-      "body": "Privacy professionals can help you establish efficient DSAR workflows and ensure timely, compliant responses."
+      "body": "Compliance-operations experts can help you set up efficient DSAR workflows and keep response deadlines on track."
     },
     "highRisk": {
       "heading": "High-risk processing detected",
-      "body": "Your selection includes vendors that process sensitive data. A DPIA specialist can help you assess and mitigate these risks."
+      "body": "Your selection includes vendors that process sensitive data. A compliance-operations expert can help you structure the assessment and mitigation workflow."
     },
     "transfer": {
       "heading": "International transfers detected",
-      "body": "Data leaving the EEA requires appropriate safeguards. A transfer specialist can help with TIAs and SCCs."
+      "body": "Data leaving the EEA requires appropriate safeguards. A compliance-operations expert can help you document your transfers and structure your TIA workflow."
     }
   },
   "experts": {
-    "title": "Find a Privacy Expert",
-    "subtitle": "Connect with certified privacy professionals who can help with your compliance needs",
+    "title": "Find an Expert",
+    "subtitle": "Connect with technical and deployment experts who can help you implement and operate your privacy program",
     "searchPlaceholder": "Search by name, firm, or expertise...",
     "specialization": "Specialization",
     "allSpecializations": "All Specializations",
@@ -2474,8 +2474,7 @@
     "noResults": "No experts found matching your criteria. Try adjusting your filters.",
     "noExperts": "No experts available at this time.",
     "unnamedExpert": "Unnamed Expert",
-    "privacyExpert": "Privacy Expert",
-    "typeLegal": "Legal",
+    "privacyExpert": "Expert",
     "typeTechnical": "Technical",
     "typeDeployment": "Deployment",
     "engagements": {
@@ -3559,11 +3558,11 @@
         "description": "When you first sign in, you choose how you use the platform.",
         "businessOwner": {
           "label": "Business Owner",
-          "desc": "For users who need privacy compliance for their own organization. You get access to the Expert Directory to connect with certified privacy professionals."
+          "desc": "For users who need privacy compliance for their own organization. You get access to the Expert Directory to connect with technical and deployment experts."
         },
         "privacyProfessional": {
           "label": "Privacy Professional",
-          "desc": "For lawyers and consultants who advise multiple organizations. You get a \"My Clients\" dashboard showing all your client organizations with summary statistics."
+          "desc": "For privacy consultants and DPOs who advise multiple organizations. You get a \"My Clients\" dashboard showing all your client organizations with summary statistics."
         },
         "tipPrefix": "You can change your account type at any time from the ",
         "tipSettings": "Settings",
@@ -3571,8 +3570,8 @@
       },
       "directory": {
         "title": "Expert Directory",
-        "description": "Find and connect with certified privacy experts.",
-        "intro": "The Expert Directory (available to Business Owners) lets you search for privacy professionals by specialization, country, and language.",
+        "description": "Find and connect with technical and deployment experts.",
+        "intro": "The Expert Directory (available to Business Owners) lets you search for technical, deployment, and compliance-operations experts by specialization, country, and language.",
         "items": {
           "search": "Search by name, firm, or area of expertise",
           "specialization": "Filter by specialization (GDPR, DPIA, DSAR, etc.)",

@@ -71,7 +71,7 @@ export default function ExpertsPage() {
   const { data: filters } = trpc.experts.listFilters.useQuery();
 
   const selectedExpertType = expertType && expertType !== "all"
-    ? (expertType as "legal" | "technical" | "deployment")
+    ? (expertType as "technical" | "deployment")
     : undefined;
 
   const { data: searchResult, isLoading } = trpc.experts.search.useQuery({
@@ -96,7 +96,6 @@ export default function ExpertsPage() {
     (expertType && expertType !== "all");
 
   const expertTypeLabel = (et: string) => {
-    if (et === "legal") return t("typeLegal");
     if (et === "technical") return t("typeTechnical");
     if (et === "deployment") return t("typeDeployment");
     return et;
