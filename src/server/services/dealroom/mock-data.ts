@@ -62,69 +62,9 @@ export const languageNames: Record<string, string> = {
 
 // Mirrors the live Dealroom directory. Update via `vercel env pull` + curl against
 // /api/v1/experts/search when adding or removing experts in Dealroom.
+// Legal (lawyer) experts were removed from the platform (2026-07 decision) —
+// only technical/deployment experts are listed here.
 export const mockExperts: ExpertProfile[] = [
-  {
-    id: "cmlegve2l004gwteo94a30tvc",
-    name: "Sergio Maldonado",
-    email: "smaldonado@privacycloud.com",
-    title: "Attorney — Privacy / Data Protection, AI Governance & Copyright / IP",
-    firm: null,
-    bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, AI governance, and intellectual property across US and EU jurisdictions.",
-    expertTypes: ["legal"],
-    specializations: [
-      "GDPR",
-      "CCPA / US State Privacy",
-      "Cross-Border Transfers / SCCs / TIA",
-      "DPA / Vendor Contracts",
-      "AI Governance / EU AI Act",
-      "Copyright / IP",
-    ],
-    certifications: ["CIPP/E", "CIPP/US", "FIP", "CIPT"],
-    languages: ["en", "es"],
-    location: { city: "San Francisco", country: "US" },
-    jurisdictions: ["US", "EU", "ES"],
-    contactUrl: null,
-    imageUrl:
-      "https://lh3.googleusercontent.com/a/ACg8ocKzb0RvHTV-VhSBkg_sFuGQ6sPSsTXrLdNOZoAlN09TfAxsrmmE=s96-c",
-    acceptingClients: true,
-    profileCompleteness: 95,
-  },
-  {
-    id: "cmmxono06023h12pmzn7m5isr",
-    name: "Sergio De Juan-Creix Cuatrecasas",
-    email: "sergio.dejuandreix@croma.legal",
-    title: "Abogado — Croma Legal",
-    firm: "Croma Legal",
-    bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
-    expertTypes: ["legal"],
-    specializations: ["GDPR", "DPA / Vendor Contracts", "Privacy by Design"],
-    certifications: [],
-    languages: ["es", "en"],
-    location: { city: "Barcelona", country: "ES" },
-    jurisdictions: ["EU", "ES"],
-    contactUrl: null,
-    imageUrl: null,
-    acceptingClients: true,
-    profileCompleteness: 75,
-  },
-  {
-    id: "cmmxonoee023k12pmyj04acna",
-    name: "Carlos García Berned",
-    email: "carlos.garcia@croma.legal",
-    title: "Abogado — Croma Legal",
-    firm: "Croma Legal",
-    bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
-    expertTypes: ["legal"],
-    specializations: ["GDPR", "DPA / Vendor Contracts", "Privacy by Design"],
-    certifications: [],
-    languages: ["es", "en"],
-    location: { city: "Barcelona", country: "ES" },
-    jurisdictions: ["EU", "ES"],
-    contactUrl: null,
-    imageUrl: null,
-    acceptingClients: true,
-    profileCompleteness: 75,
-  },
   {
     id: "cmmxonolh023n12pm68y7qlls",
     name: "Wences Spiegel Marquez",
@@ -195,7 +135,6 @@ export const specializations = [
 ];
 
 export const expertTypes = [
-  { value: "legal", label: "Legal" },
   { value: "technical", label: "Technical" },
   { value: "deployment", label: "Deployment" },
 ] as const;

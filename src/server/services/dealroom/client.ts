@@ -23,7 +23,7 @@ export interface ExpertSearchParams {
   specialization?: string;
   country?: string; // ISO 3166-1 alpha-2
   language?: string; // ISO 639-1
-  expertType?: "legal" | "technical" | "deployment";
+  expertType?: "technical" | "deployment";
   excludeType?: string; // Exclude experts whose ONLY type matches (e.g. "deployment")
   limit?: number;
   offset?: number;
@@ -35,8 +35,29 @@ export interface ExpertSearchResult {
   offset: number;
 }
 
+// Lawyer experts are no longer offered through this platform (2026-07 decision).
+// Hard client-side exclusion: strip the "legal" type from every profile and drop
+// experts who have no other type, regardless of what mock data or the Dealroom
+// API returns. Technical/deployment experts are unaffected.
+const EXCLUDED_EXPERT_TYPE = "legal";
+
+function stripLegalType(expert: ExpertProfile): ExpertProfile | null {
+  const types = expert.expertTypes.filter(
+    (t) => t.toLowerCase() !== EXCLUDED_EXPERT_TYPE
+  );
+  if (types.length === 0) return null; // legal-only expert — never expose
+  if (types.length === expert.expertTypes.length) return expert;
+  return { ...expert, expertTypes: types };
+}
+
+function stripLegalExperts(experts: ExpertProfile[]): ExpertProfile[] {
+  return experts
+    .map(stripLegalType)
+    .filter((e): e is ExpertProfile => e !== null);
+}
+
 function filterMockExperts(params: ExpertSearchParams): ExpertSearchResult {
-  let results = [...mockExperts];
+  let results = stripLegalExperts(mockExperts);
 
   if (params.query) {
     const q = params.query.toLowerCase();
@@ -132,6 +153,13 @@ export async function searchExperts(
 
   const data: ExpertSearchResult = await res.json();
 
+  // Hard exclusion of legal experts (see stripLegalExperts above)
+  const beforeStrip = data.results.length;
+  data.results = stripLegalExperts(data.results);
+  if (data.results.length !== beforeStrip) {
+    data.total = Math.max(0, data.total - (beforeStrip - data.results.length));
+  }
+
   // Client-side exclude filter (Dealroom API doesn't support excludeType)
   if (params.excludeType) {
     const exc = params.excludeType.toLowerCase();
@@ -147,8 +175,13 @@ export async function searchExperts(
 export async function getExpertById(
   id: string
 ): Promise<ExpertProfile | null> {
+  const findMock = () => {
+    const expert = mockExperts.find((e) => e.id === id);
+    return expert ? stripLegalType(expert) : null;
+  };
+
   if (useMock) {
-    return mockExperts.find((e) => e.id === id) ?? null;
+    return findMock();
   }
 
   const res = await fetch(`${DEALROOM_API_URL}/api/v1/experts/${id}`, {
@@ -159,10 +192,11 @@ export async function getExpertById(
   });
 
   if (!res.ok) {
-    return mockExperts.find((e) => e.id === id) ?? null;
+    return findMock();
   }
 
-  return res.json();
+  const expert: ExpertProfile = await res.json();
+  return stripLegalType(expert);
 }
 
 export function getSpecializations(): string[] {
