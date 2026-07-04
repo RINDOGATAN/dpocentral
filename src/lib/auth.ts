@@ -6,6 +6,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Resend } from "resend";
 import prisma from "@/lib/prisma";
 import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
+import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 import { getSecurityModule } from "@/lib/security";
 
@@ -14,9 +15,17 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 const isDev = process.env.NODE_ENV === "development";
 
-// Cross-app SSO: share session cookie across *.todo.law subdomains
+// Cross-app SSO: share session cookie across *.todo.law subdomains.
+// Self-hosted/sovereign deployments set AUTH_COOKIE_DOMAIN="" to fall back to
+// NextAuth's defaults (host-only cookie, `secure` derived from NEXTAUTH_URL) —
+// the todo.law domain only applies to the cloud deployment.
 const isProduction = process.env.NODE_ENV === "production";
-const cookieDomain = isProduction ? ".todo.law" : undefined;
+const cookieDomain =
+  process.env.AUTH_COOKIE_DOMAIN !== undefined
+    ? process.env.AUTH_COOKIE_DOMAIN || undefined
+    : isProduction
+      ? ".todo.law"
+      : undefined;
 const cookiePrefix = isProduction ? "__Secure-" : "";
 
 // Wrap PrismaAdapter to strip OAuth tokens before storage.
@@ -36,8 +45,10 @@ const adapter = {
 export const authOptions: NextAuthOptions = {
   adapter,
   providers: [
-    // Development-only credentials provider for easy local testing
-    ...(isDev
+    // Local credentials provider: dev mode, and sovereign/self-hosted
+    // deployments (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true — no external
+    // OAuth/mailer required behind the firm's own network).
+    ...(features.devAuthEnabled
       ? [
           CredentialsProvider({
             id: "dev-credentials",

@@ -8,8 +8,11 @@ import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 
-const isDev = process.env.NODE_ENV === "development";
+// Local (passwordless credentials) login: dev mode, or sovereign/self-hosted
+// builds with NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true.
+const isDev = features.devAuthEnabled;
 
 export default function SignInPage() {
   const t = useTranslations("auth");
@@ -152,6 +155,7 @@ export default function SignInPage() {
           </div>
         )}
 
+        {features.emailAuthEnabled && (
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
@@ -191,11 +195,15 @@ export default function SignInPage() {
             )}
           </button>
         </form>
+        )}
 
+        {features.emailAuthEnabled && (
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {t("noPasswordNeeded")}
         </p>
+        )}
 
+        {features.googleAuthEnabled && (
         <div className="mt-6 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
             {t("orContinueWith")}
@@ -234,6 +242,7 @@ export default function SignInPage() {
             </span>
           </button>
         </div>
+        )}
 
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
