@@ -125,10 +125,18 @@ const defaultBrand: BrandConfig = {
  * - NEXT_PUBLIC_COLOR_ACCENT_FG
  */
 export function getBrandConfig(): BrandConfig {
+  // Convenience aliases for white-label deployments (deploy/sovereign):
+  // NEXT_PUBLIC_BRAND_ACCENT sets primary + accent in one variable and
+  // NEXT_PUBLIC_BRAND_LOGO_URL overrides the logo. The fine-grained
+  // NEXT_PUBLIC_COLOR_* / NEXT_PUBLIC_LOGO_PATH vars still win if set.
+  const brandName = process.env.NEXT_PUBLIC_BRAND_NAME;
+  const brandAccent = process.env.NEXT_PUBLIC_BRAND_ACCENT;
+
   return {
-    name: process.env.NEXT_PUBLIC_BRAND_NAME || defaultBrand.name,
+    name: brandName || defaultBrand.name,
     nameUppercase:
-      process.env.NEXT_PUBLIC_BRAND_NAME_UPPER || defaultBrand.nameUppercase,
+      process.env.NEXT_PUBLIC_BRAND_NAME_UPPER ||
+      (brandName ? brandName.toUpperCase() : defaultBrand.nameUppercase),
     tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || defaultBrand.tagline,
     description:
       process.env.NEXT_PUBLIC_BRAND_DESCRIPTION || defaultBrand.description,
@@ -147,12 +155,17 @@ export function getBrandConfig(): BrandConfig {
       process.env.NEXT_PUBLIC_SUPPORT_EMAIL || defaultBrand.supportEmail,
     emailFrom:
       process.env.NEXT_PUBLIC_EMAIL_FROM || defaultBrand.emailFrom,
-    logoPath: process.env.NEXT_PUBLIC_LOGO_PATH || defaultBrand.logoPath,
+    logoPath:
+      process.env.NEXT_PUBLIC_LOGO_PATH ||
+      process.env.NEXT_PUBLIC_BRAND_LOGO_URL ||
+      defaultBrand.logoPath,
     faviconPath:
       process.env.NEXT_PUBLIC_FAVICON_PATH || defaultBrand.faviconPath,
     colors: {
       primary:
-        process.env.NEXT_PUBLIC_COLOR_PRIMARY || defaultBrand.colors.primary,
+        process.env.NEXT_PUBLIC_COLOR_PRIMARY ||
+        brandAccent ||
+        defaultBrand.colors.primary,
       primaryForeground:
         process.env.NEXT_PUBLIC_COLOR_PRIMARY_FG ||
         defaultBrand.colors.primaryForeground,
@@ -174,7 +187,9 @@ export function getBrandConfig(): BrandConfig {
         process.env.NEXT_PUBLIC_COLOR_MUTED_FG ||
         defaultBrand.colors.mutedForeground,
       accent:
-        process.env.NEXT_PUBLIC_COLOR_ACCENT || defaultBrand.colors.accent,
+        process.env.NEXT_PUBLIC_COLOR_ACCENT ||
+        brandAccent ||
+        defaultBrand.colors.accent,
       accentForeground:
         process.env.NEXT_PUBLIC_COLOR_ACCENT_FG ||
         defaultBrand.colors.accentForeground,

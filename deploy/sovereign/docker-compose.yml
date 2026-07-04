@@ -1,0 +1,140 @@
+# ============================================================================
+# DPO Central — Sovereign bundle (portability doctrine: "self-hostable in an
+# instant"). One command brings up the FULL app on firm hardware:
+#
+#   Postgres 16  ← the firm's privacy program data, on the firm's disk
+#   migrator     ← one-shot: prisma db push + first-boot seed
+#   app          ← the SAME Next.js app the cloud runs, standalone build
+#                  → http://localhost:8485
+#
+# Posture switches (env only, never code): local credentials login instead of
+# Google/Resend, Stripe off (the $9 modules are the cloud tier), LLM through
+# the one gateway door, brand via NEXT_PUBLIC_BRAND_*.
+#
+# Runbook: deploy/sovereign/README.md
+# ============================================================================
+
+name: dpocentral-sovereign
+
+# One build definition, two targets (builder = migrator, runner = app).
+# NEXT_PUBLIC_* are baked into the bundles at BUILD time — changing them in
+# .env requires: docker compose up -d --build app
+x-build: &app-build
+  context: ../..
+  dockerfile: deploy/sovereign/Dockerfile
+  args:
+    NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
+    NEXT_PUBLIC_EMAIL_AUTH_ENABLED: ${NEXT_PUBLIC_EMAIL_AUTH_ENABLED:-false}
+    NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: ${NEXT_PUBLIC_GOOGLE_AUTH_ENABLED:-false}
+    NEXT_PUBLIC_STRIPE_ENABLED: ${NEXT_PUBLIC_STRIPE_ENABLED:-false}
+    NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-DPO Central}
+    NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
+    NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+    NEXT_PUBLIC_APP_URL: ${PUBLIC_URL:-http://localhost:8485}
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dpocentral
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: dpocentral
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dpocentral -d dpocentral"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    # Uncomment to reach the DB from the host (psql/backups):
+    # ports:
+    #   - "127.0.0.1:55433:5432"
+
+  # One-shot: pushes the Prisma schema (the repo has no migrations dir), then
+  # seeds baseline data (skill catalog, jurisdictions, templates, demo org)
+  # on FIRST boot only — an instance with users is never re-seeded.
+  # Safe to re-run any time: docker compose run --rm migrator
+  migrator:
+    build:
+      <<: *app-build
+      target: builder
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://dpocentral:${POSTGRES_PASSWORD}@db:5432/dpocentral
+    volumes:
+      - ./migrate.sh:/migrate.sh:ro
+    entrypoint: ["/bin/sh", "/migrate.sh"]
+    restart: "no"
+
+  app:
+    build:
+      <<: *app-build
+      target: runner
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://dpocentral:${POSTGRES_PASSWORD}@db:5432/dpocentral
+      NEXTAUTH_URL: ${PUBLIC_URL:?e.g. http://localhost:8485}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?openssl rand -base64 32}
+      # Empty = host-only session cookie (NextAuth defaults). The .todo.law
+      # cross-app SSO domain is a cloud-deployment concern only.
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
+      # The one LLM door — point at LQ.AI's gateway or any OpenAI-compatible
+      # URL. Leave empty to disable AI narrative generation (graceful no-op).
+      LLM_GATEWAY_URL: ${LLM_GATEWAY_URL:-}
+      LLM_GATEWAY_KEY: ${LLM_GATEWAY_KEY:-}
+      LLM_MODEL_ALIAS: ${LLM_MODEL_ALIAS:-}
+      # Stripe is the CLOUD tier ($9 modules). The sovereign posture runs with
+      # these empty — the app boots and functions fully without them.
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      # Optional cloud mailer (magic-link login). Off by default — local
+      # credentials login needs no mailer.
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      # Platform-admin access (comma-separated emails), if you want /admin.
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      # Runtime copies of the build-time brand/posture vars so server-rendered
+      # output matches the client bundles.
+      NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
+      NEXT_PUBLIC_EMAIL_AUTH_ENABLED: ${NEXT_PUBLIC_EMAIL_AUTH_ENABLED:-false}
+      NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: ${NEXT_PUBLIC_GOOGLE_AUTH_ENABLED:-false}
+      NEXT_PUBLIC_STRIPE_ENABLED: ${NEXT_PUBLIC_STRIPE_ENABLED:-false}
+      NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-DPO Central}
+      NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
+      NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+      NEXT_PUBLIC_APP_URL: ${PUBLIC_URL:-http://localhost:8485}
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${PORT:-8485}:3001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Optional TLS front (profile "tls"): automatic HTTPS via Caddy for
+  # LAN/VPS deployments. Set TLS_DOMAIN (public DNS → Let's Encrypt; LAN
+  # hostname → Caddy internal CA) and PUBLIC_URL=https://<TLS_DOMAIN>,
+  # then: docker compose --profile tls up -d
+  # Plain-HTTP localhost use needs none of this.
+  tls:
+    profiles: ["tls"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: caddy reverse-proxy --from ${TLS_DOMAIN:-localhost} --to app:3001
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:

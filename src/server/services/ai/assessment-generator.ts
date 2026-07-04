@@ -1,9 +1,11 @@
 /**
  * AI Assessment Generator Service (Feature 3 - Optional AI Enhancement)
  *
- * Generates risk assessment narratives for DPIAs using an LLM (OpenAI or
- * Anthropic). This is entirely optional — if neither API key is configured,
- * all exports are safe no-ops that return null.
+ * Generates risk assessment narratives for DPIAs using an LLM — preferably a
+ * local OpenAI-compatible gateway (LLM_GATEWAY_URL/LLM_GATEWAY_KEY/
+ * LLM_MODEL_ALIAS, the sovereign "one door"), else OpenAI or Anthropic
+ * directly. This is entirely optional — if nothing is configured, all
+ * exports are safe no-ops that return null.
  *
  * No additional packages are required; this uses native fetch.
  *
@@ -17,12 +19,21 @@ import { logger } from "@/lib/logger";
 // Configuration
 // ---------------------------------------------------------------------------
 
+// The one LLM door (sovereign posture): an OpenAI-compatible gateway —
+// LiteLLM, LQ.AI, Ollama behind a proxy, or any /v1/chat/completions
+// endpoint. When LLM_GATEWAY_URL + LLM_MODEL_ALIAS are set they take
+// precedence over the direct-to-provider keys below.
+const LLM_GATEWAY_URL = process.env.LLM_GATEWAY_URL;
+const LLM_GATEWAY_KEY = process.env.LLM_GATEWAY_KEY;
+const LLM_MODEL_ALIAS = process.env.LLM_MODEL_ALIAS;
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
-type Provider = "openai" | "anthropic" | null;
+type Provider = "gateway" | "openai" | "anthropic" | null;
 
 function getProvider(): Provider {
+  if (LLM_GATEWAY_URL && LLM_MODEL_ALIAS) return "gateway";
   if (OPENAI_API_KEY) return "openai";
   if (ANTHROPIC_API_KEY) return "anthropic";
   return null;
@@ -119,6 +130,53 @@ function buildUserPrompt(context: AutoFillContext): string {
 // ---------------------------------------------------------------------------
 // API Calls
 // ---------------------------------------------------------------------------
+
+async function callGateway(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string | null> {
+  try {
+    const base = LLM_GATEWAY_URL!.replace(/\/+$/, "");
+    const response = await fetch(`${base}/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(LLM_GATEWAY_KEY
+          ? { Authorization: `Bearer ${LLM_GATEWAY_KEY}` }
+          : {}),
+      },
+      body: JSON.stringify({
+        model: LLM_MODEL_ALIAS,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        max_tokens: 1500,
+        temperature: 0.3,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      logger.error("LLM gateway call failed", undefined, {
+        status: response.status,
+        error: errorText,
+      });
+      return null;
+    }
+
+    const data = (await response.json()) as {
+      choices?: { message?: { content?: string } }[];
+    };
+
+    return data.choices?.[0]?.message?.content ?? null;
+  } catch (error) {
+    logger.error("LLM gateway call threw", undefined, {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
+}
 
 async function callOpenAI(
   systemPrompt: string,
@@ -237,6 +295,8 @@ export async function generateRiskNarrative(
   const userPrompt = buildUserPrompt(context);
 
   switch (provider) {
+    case "gateway":
+      return callGateway(systemPrompt, userPrompt);
     case "openai":
       return callOpenAI(systemPrompt, userPrompt);
     case "anthropic":
@@ -258,6 +318,7 @@ export function isAIAvailable(): boolean {
  */
 export function getAIProviderName(): string | null {
   const provider = getProvider();
+  if (provider === "gateway") return `LLM gateway (${LLM_MODEL_ALIAS})`;
   if (provider === "openai") return "OpenAI";
   if (provider === "anthropic") return "Anthropic";
   return null;

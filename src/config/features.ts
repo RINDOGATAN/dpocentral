@@ -54,7 +54,12 @@ const defaultFeatures: FeatureFlags = {
   // Auth methods
   googleAuthEnabled: true,
   emailAuthEnabled: true,
-  devAuthEnabled: process.env.NODE_ENV === "development",
+  // Local credentials login (email only, no password). Always on in dev;
+  // sovereign/self-hosted deployments enable it in production builds via
+  // NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true (behind the firm's own network).
+  devAuthEnabled:
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true",
 
   // Premium features (require entitlements when enabled)
   vendorCatalogEnabled: true,
