@@ -15,17 +15,15 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 const isDev = process.env.NODE_ENV === "development";
 
-// Cross-app SSO: share session cookie across *.todo.law subdomains.
-// Self-hosted/sovereign deployments set AUTH_COOKIE_DOMAIN="" to fall back to
-// NextAuth's defaults (host-only cookie, `secure` derived from NEXTAUTH_URL) —
-// the todo.law domain only applies to the cloud deployment.
+// Session-cookie scope. Default: host-only (NextAuth's default — the cookie
+// is valid only for the exact host in NEXTAUTH_URL), which is correct for
+// every self-hosted install. Deployments that need cross-subdomain SSO
+// (e.g. the hosted *.todo.law cloud) opt IN by setting AUTH_COOKIE_DOMAIN
+// to the parent domain (".todo.law"). The old behavior — defaulting to
+// .todo.law in production — silently broke login on every self-host that
+// wasn't the Docker bundle; the default is now the safe one.
 const isProduction = process.env.NODE_ENV === "production";
-const cookieDomain =
-  process.env.AUTH_COOKIE_DOMAIN !== undefined
-    ? process.env.AUTH_COOKIE_DOMAIN || undefined
-    : isProduction
-      ? ".todo.law"
-      : undefined;
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN || undefined;
 const cookiePrefix = isProduction ? "__Secure-" : "";
 
 // Wrap PrismaAdapter to strip OAuth tokens before storage.
