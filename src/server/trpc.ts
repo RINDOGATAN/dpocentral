@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
+import { sanitizeStrings } from "@/lib/sanitize";
 import { formatUserError } from "@/lib/format-error";
 
 interface CreateContextOptions {
@@ -56,11 +57,12 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 // Sanitize string inputs — delegates to @dpocentral/security if installed,
-// otherwise passes through unchanged.
+// otherwise applies the baseline HTML-stripping sanitizer from the
+// open-source core (src/lib/sanitize.ts). Never a no-op.
 export function sanitizeInput<T>(input: T): T {
   const security = getSecurityModule();
   if (security?.sanitizeInput) return security.sanitizeInput(input);
-  return input;
+  return sanitizeStrings(input);
 }
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {

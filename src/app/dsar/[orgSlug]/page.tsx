@@ -19,6 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Shield, CheckCircle2, Loader2, AlertTriangle, Copy, Check } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { sanitizeCss } from "@/lib/sanitize";
 import { DSARType } from "@prisma/client";
 
 const ALL_TYPES: DSARType[] = [
@@ -161,7 +162,9 @@ export default function PublicDSARPage() {
   return (
     <div className="intake-form min-h-screen bg-muted/50 py-8 px-4">
       {formConfig.customCss && (
-        <style dangerouslySetInnerHTML={{ __html: formConfig.customCss }} />
+        // sanitizeCss escapes every "<" so the CSS text can never close the
+        // <style> element and inject markup; also applied at write time.
+        <style dangerouslySetInnerHTML={{ __html: sanitizeCss(formConfig.customCss) }} />
       )}
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-end mb-2 text-xs text-muted-foreground">

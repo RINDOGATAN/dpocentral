@@ -43,10 +43,15 @@ in this build", assume it is not present in your install.
 
 - Zod schema validation on every tRPC endpoint.
 - Parameterized queries via Prisma — no SQL injection surface.
-- **HTML sanitization is a pass-through in this build.** `sanitizeInput`
-  delegates to `@dpocentral/security` when installed; without it, submitted
-  strings are stored unchanged. Treat free-text fields (public DSAR
-  submissions, questionnaire responses) as untrusted on output.
+- **Baseline HTML sanitization is enforced in this build** (`src/lib/sanitize.ts`):
+  `sanitizeInput` strips HTML tags and escapes stray angle brackets in string
+  inputs on sanitized endpoints (e.g. public DSAR submissions). The optional
+  `@dpocentral/security` package layers a stricter allowlist sanitizer on top.
+  The baseline is tag-stripping, not a full HTML parser — continue to treat
+  free-text fields as untrusted on output.
+- **Operator-supplied custom CSS for the public DSAR portal is sanitized**
+  (angle brackets CSS-escaped, `@import`/`expression()` removed) both at write
+  time and again at render, so it cannot break out of its `<style>` block.
 
 ### Transport & browser security
 
@@ -54,10 +59,13 @@ in this build", assume it is not present in your install.
   `X-Content-Type-Options: nosniff`, strict Referrer-Policy, and a
   Permissions-Policy disabling camera/microphone/geolocation — set on every
   response.
-- **The Content Security Policy currently ships in Report-Only mode**
-  (`Content-Security-Policy-Report-Only`, with per-request nonces). It reports
-  violations; it does not block anything yet. Do not rely on CSP as an XSS
-  mitigation in this build.
+- **An enforcing Content Security Policy is set on every response.** It locks
+  scripts to same-origin plus Stripe, disallows plugins, `<base>` hijacking,
+  cross-origin form posts, and framing. It deliberately still allows inline
+  scripts (`'unsafe-inline'`) because Next.js inline bootstrap scripts are not
+  nonce-wired yet; a stricter nonce + `strict-dynamic` policy ships in
+  parallel as Report-Only and is the migration target. Treat CSP as a
+  second layer, not the primary XSS defense.
 
 ### Rate limiting
 
@@ -82,7 +90,8 @@ in this build", assume it is not present in your install.
 These protections are **not active** in a plain checkout or the sovereign
 bundle. They apply to the hosted service and commercial arrangements:
 
-- HTML sanitization of user-submitted content (see above).
+- Allowlist-based HTML sanitization of user-submitted content (the baseline
+  tag-stripping sanitizer above is always active).
 - The public-email-domain blocklist for domain-based auto-join. Without it,
   an organization whose `domain` is set to a public email domain (e.g.
   `gmail.com`) would auto-join every user signing in from that domain —
@@ -91,13 +100,16 @@ bundle. They apply to the hosted service and commercial arrangements:
 
 ## Known limitations of this build
 
-- CSP is report-only (see above).
+- The enforced CSP allows inline scripts; the strict nonce policy is
+  report-only (see above).
 - Rate limits are per-instance, in-memory.
 - The passwordless local provider must never face the public internet.
 - Domain-based auto-join performs no domain-ownership verification.
 - The DSAR auto-redaction job (`/api/cron/dsar-redaction`) needs an external
-  scheduler and a configured `CRON_SECRET` on self-hosted installs; without
-  both, retention-based redaction does not run.
+  scheduler and a configured `CRON_SECRET`. The endpoint **fails closed**: if
+  `CRON_SECRET` is unset it refuses to run (HTTP 503) rather than accepting
+  unauthenticated triggers — but that also means retention-based redaction
+  does not run until you configure it.
 - There is no automated test suite yet.
 
 ## Responsible disclosure

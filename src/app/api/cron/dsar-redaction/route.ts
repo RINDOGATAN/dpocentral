@@ -17,11 +17,22 @@ export const dynamic = "force-dynamic";
 // ---------------------------------------------------------------------------
 
 export async function GET(request: Request) {
-  // Verify cron secret to prevent unauthorized invocations
+  // Verify cron secret to prevent unauthorized invocations.
+  // Fails CLOSED: if CRON_SECRET is not configured, the endpoint refuses to
+  // run rather than becoming an unauthenticated trigger. Set CRON_SECRET in
+  // the environment and send it as `Authorization: Bearer <secret>`.
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret) {
+    logger.warn("DSAR redaction cron called but CRON_SECRET is not set — refusing to run");
+    return NextResponse.json(
+      { error: "Cron disabled: CRON_SECRET is not configured" },
+      { status: 503 }
+    );
+  }
+
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

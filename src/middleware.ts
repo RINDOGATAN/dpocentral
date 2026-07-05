@@ -50,19 +50,48 @@ function generateNonce(): string {
 
 function applyCsp(response: NextResponse) {
   const nonce = generateNonce();
-  const csp = [
+
+  // ENFORCED policy. Deliberately conservative on script-src ('unsafe-inline'
+  // instead of nonces) because Next.js only attaches nonces to its inline
+  // bootstrap scripts when the CSP travels on the *request* headers and every
+  // route renders dynamically — enforcing the nonce policy today would blank
+  // the app. What this still buys, enforced: no scripts from any third-party
+  // origin except Stripe (kills the analytics-beacon class of regression),
+  // no plugins, no <base> hijack, no form exfiltration, no framing.
+  const isDev = process.env.NODE_ENV === "development";
+  const enforced = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com https://va.vercel-scripts.com`,
-    `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
+    // Next dev mode needs eval for react-refresh; production does not get it.
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://js.stripe.com`,
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    "connect-src 'self' https://api.stripe.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
-    "frame-src https://js.stripe.com",
+    "connect-src 'self' https://api.stripe.com",
+    "frame-src https://js.stripe.com https://hooks.stripe.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join("; ");
+  response.headers.set("Content-Security-Policy", enforced);
+
+  // MIGRATION TARGET, still report-only: the strict nonce + strict-dynamic
+  // policy. Violations show up in DevTools without breaking anything; when
+  // nonce propagation to Next's inline scripts is wired (request-header CSP
+  // + dynamic rendering), promote this to the enforced header above.
+  const strict = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self' https://api.stripe.com",
+    "frame-src https://js.stripe.com https://hooks.stripe.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
   ].join("; ");
-  response.headers.set("Content-Security-Policy-Report-Only", csp);
+  response.headers.set("Content-Security-Policy-Report-Only", strict);
   response.headers.set("x-nonce", nonce);
 }
 
