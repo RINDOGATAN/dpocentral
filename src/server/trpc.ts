@@ -126,8 +126,11 @@ export const organizationProcedure = t.procedure
   .use(enforceUserIsAuthed)
   .use(withOrganization);
 
-// Role-based access control — uses @dpocentral/security for role enforcement
-// if installed, otherwise falls back to membership-only check (any member can access).
+// Role-based access control — enforced in the open-source core.
+// The baseline role gate below always applies, with or without the optional
+// @dpocentral/security package (which layers additional policy on top, not
+// the role check itself). A VIEWER must never be able to mutate or destroy
+// organization data on any build.
 type OrgRole = "OWNER" | "ADMIN" | "PRIVACY_OFFICER" | "MEMBER" | "VIEWER";
 
 const withOrganizationAndRole = (...roles: OrgRole[]) =>
@@ -166,9 +169,8 @@ const withOrganizationAndRole = (...roles: OrgRole[]) =>
       });
     }
 
-    // Role check — only enforced when @dpocentral/security is installed
-    const security = getSecurityModule();
-    if (security && !roles.includes(membership.role as OrgRole)) {
+    // Baseline role check — always enforced
+    if (!roles.includes(membership.role as OrgRole)) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "You do not have permission to perform this action",
