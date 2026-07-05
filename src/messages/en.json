@@ -37,10 +37,10 @@
       "title": "Add Vendor",
       "titleCatalog": "Add from Vendor Catalog",
       "subtitle": "Register a new third-party vendor",
-      "subtitleCatalog": "Search pre-audited vendors and auto-fill compliance data",
+      "subtitleCatalog": "Search the starter catalog and pre-fill vendor details",
       "catalog": {
         "title": "Vendor Catalog Search",
-        "subtitle": "Search 700+ pre-audited MarTech, AI, and SaaS vendors with compliance data",
+        "subtitle": "Search a starter catalog of common MarTech, AI, and SaaS processors",
         "verified": "Verified",
         "website": "Website",
         "privacyPolicy": "Privacy Policy",
@@ -87,7 +87,7 @@
       "compliance": {
         "title": "Compliance Information",
         "fromCatalog": "From Catalog",
-        "subtitle": "Pre-audited compliance data from the vendor catalog",
+        "subtitle": "Reference data from the vendor catalog — not assessed; verify with the vendor",
         "certifications": "Certifications",
         "privacyPolicyUrl": "Privacy Policy URL",
         "dpaUrl": "DPA URL",
@@ -1611,14 +1611,14 @@
       },
       "catalog": {
         "title": "Vendor Catalog",
-        "subtitle": "Search 700+ pre-audited MarTech, AI, and SaaS vendors",
-        "lockedSubtitle": "Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links",
+        "subtitle": "Search a starter catalog of common MarTech, AI, and SaaS processors",
+        "lockedSubtitle": "Get access to a starter catalog of common processors to speed up vendor intake — entries are not audited; assess each vendor before relying on catalog data",
         "active": "Active",
         "addFromCatalog": "Add from Catalog",
         "perMonth": "/mo",
         "enable": "Enable",
         "contactUs": "Contact Us",
-        "modalDescription": "Get access to 700+ pre-audited vendors with compliance data, certifications, and DPA links."
+        "modalDescription": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited — assess each vendor before relying on catalog data."
       },
       "card": {
         "noCategories": "No categories",
@@ -4608,16 +4608,16 @@
       },
       "vendorCatalog": {
         "title": "Vendor Catalog",
-        "description": "Search and import from a database of 700+ pre-audited MarTech, AI, and SaaS vendors.",
-        "badge": "Pre-Audited Vendor Database",
+        "description": "Search and import from a starter catalog of common MarTech, AI, and SaaS processors. Entries are a starting point for your own assessment, not an audit.",
+        "badge": "Starter Vendor Catalog",
         "cardTitle": "Vendor Catalog",
-        "cardSubtitle": "Search 700+ pre-audited vendors with compliance data",
+        "cardSubtitle": "Search a starter catalog of common processors",
         "features": {
           "profiles": "Pre-populated vendor profiles",
-          "certs": "Compliance certifications",
+          "certs": "Certifications where published",
           "details": "Data processing details",
-          "sub": "Sub-processor lists",
-          "dpa": "DPA templates",
+          "sub": "Links to vendor privacy policies",
+          "dpa": "DPA links where published",
           "import": "One-click import to your inventory"
         },
         "infoTitle": "Enable Vendor Catalog",
@@ -4693,7 +4693,7 @@
         "premiumItems": {
           "assessments": "DPIA, PIA, TIA assessments",
           "vendor": "Vendor risk assessments",
-          "catalog": "Vendor Catalog (700+ vendors)",
+          "catalog": "Vendor Catalog (starter catalog of common processors)",
           "audit": "Advanced audit features"
         }
       }

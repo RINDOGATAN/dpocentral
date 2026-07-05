@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
-  "lastUpdated": "2026-01-18T23:08:48.766Z",
-  "description": "Processor list extracted from consolidated vendors (for backward compatibility)",
+  "version": "3.0.0",
+  "lastUpdated": "2026-07-05T21:35:53.251860+00:00",
+  "description": "Starter catalog of common processors/vendors for convenience during vendor intake. Entries are NOT audited and compliance status is NOT assessed (gdpr/ccpa 'compliant' is null = not assessed). Verify all data directly with each vendor before relying on it.",
   "processors": [
     {
       "id": "6sense",
@@ -12,10 +12,10 @@
       "vendor": "6sense",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -31,48 +31,10 @@
       "vendor": "AB",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.abtasty.com/privacy-policy/",
-      "website": "https://www.abtasty.com"
-    },
-    {
-      "id": "ablyft",
-      "name": "ABlyft",
-      "category": "AB Testing",
-      "purpose": "AB Testing",
-      "description": "Save on brand-name ABILIFY. Get a Savings Card and pay as little as $5. Conditions apply.",
-      "website": "https://www.abilify.com",
-      "privacyPolicy": "https://ablyft.com/en/features/data-protection-privacy",
-      "vendor": "ABlyft",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
-    },
-    {
-      "id": "abtesty",
-      "name": "ABTesty",
-      "category": "AB Testing",
-      "purpose": "AB Testing",
-      "description": "We're the experience optimization partners pushing brave ideas from the inside out. The only digital experience platform you need.",
-      "vendor": "ABTesty",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -88,10 +50,10 @@
       "vendor": "accessiBe",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -107,10 +69,10 @@
       "vendor": "AccessiWay",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -126,10 +88,10 @@
       "vendor": "Acoustic",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -145,10 +107,10 @@
       "vendor": "Act-On",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -164,10 +126,10 @@
       "vendor": "ActionIQ",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -183,10 +145,10 @@
       "vendor": "Active",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -202,10 +164,10 @@
       "vendor": "Active Prospect",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -217,16 +179,16 @@
       "name": "Ada",
       "category": "AI Chatbot",
       "purpose": "Customer Experience",
-      "description": "See highly-rated professional for free. Read real local reviews and grades from neighbors so you can pick the right pro for the job the first time.",
-      "website": "https://angi.com",
-      "privacyPolicy": "https://www.justice.gov/doj/privacy-policy",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "Ada",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -240,10 +202,10 @@
       "vendor": "Add",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -259,12 +221,12 @@
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -285,12 +247,12 @@
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -310,12 +272,12 @@
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -336,12 +298,12 @@
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -355,18 +317,18 @@
       "name": "Adobe Marketing Cloud",
       "category": "Marketing Automation",
       "purpose": "Marketing Automation",
-      "description": "The information technology products, expertise and service you need to make your business successful.Fast shipping, fast answers, the industry's largest in-stock inventories, custom configurations and more.",
-      "website": "https://cdw.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://www.adobe.com/privacy/policy.html",
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -386,37 +348,12 @@
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
-          "optOutMechanism": "Available via Adobe Experience Cloud"
-        },
-        "certifications": [
-          "ISO 27001",
-          "SOC 2"
-        ]
-      }
-    },
-    {
-      "id": "demdex",
-      "name": "Demdex",
-      "category": "Data Management Platform",
-      "purpose": "Data Management Platform",
-      "description": "DIMDEX is a dynamic platform attended by key decision makers and industry leaders in the maritime defence and security industry.",
-      "website": "https://dimdex.com",
-      "privacyPolicy": "https://www.adobe.com/privacy/policy.html",
-      "vendor": "Adobe Inc.",
-      "compliance": {
-        "gdpr": {
-          "compliant": true,
-          "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
-          "dataRetention": "Configurable, up to 25 months"
-        },
-        "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -430,18 +367,18 @@
       "name": "Magento",
       "category": "eCommerce Platform",
       "purpose": "eCommerce platform",
-      "description": "Get everything you need to create your website, your way. With a free easy-to-use website builder, integrated hosting, and essential business solutions.",
-      "website": "https://wix.com",
-      "privacyPolicy": "https://www.adobe.com/privacy/policy.html",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "Adobe Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.adobe.com/legal/terms/data-processing.html",
           "dataRetention": "Configurable, up to 25 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Adobe Experience Cloud"
         },
         "certifications": [
@@ -459,10 +396,10 @@
       "vendor": "AdRoll",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -480,10 +417,10 @@
       "vendor": "AdTriba",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -497,10 +434,10 @@
       "vendor": "Affiliatly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -516,10 +453,10 @@
       "vendor": "Albacross",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -535,10 +472,10 @@
       "vendor": "Algonomy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -554,10 +491,10 @@
       "vendor": "Amazon",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -575,12 +512,12 @@
       "vendor": "Amplitude, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://amplitude.com/dpa",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Data deletion available"
         },
         "certifications": [
@@ -598,10 +535,10 @@
       "vendor": "Apollo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -613,16 +550,16 @@
       "name": "AppDynamics",
       "category": "Application Performance",
       "purpose": "Application Performance",
-      "description": "Atlassian's team collaboration software like Jira, Confluence and Trello help teams organize, discuss, and complete shared work.",
-      "website": "https://atlassian.com",
-      "privacyPolicy": "https://www.splunk.com/en_us/legal/privacy-policy.html",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "AppDynamics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -636,53 +573,15 @@
       "vendor": "AppsFlyer",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.appsflyer.com/legal/privacy-policy/",
       "website": "https://www.appsflyer.com"
-    },
-    {
-      "id": "arengu",
-      "name": "Arengu",
-      "category": "Customer Sign-up",
-      "purpose": "Customer Sign-up",
-      "description": "Y Combinator created a new model for funding early stage startups. Four times a year we invest in a large number of startups.",
-      "vendor": "Arengu",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.ycombinator.com/legal#privacy",
-      "website": "https://www.ycombinator.com"
-    },
-    {
-      "id": "at-internet",
-      "name": "AT Internet",
-      "category": "Conversion Optimization",
-      "purpose": "Conversion Optimization",
-      "description": "Get our best deals on phones and internet, backed by the AT&T Guarantee. Explore the new iPhone 17, get 24/7 support, pay bills, and manage your account online.",
-      "vendor": "AT",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://about.att.com/privacy/privacy-notice.html#choice",
-      "website": "https://www.att.com"
     },
     {
       "id": "audioeye",
@@ -693,34 +592,15 @@
       "vendor": "AudioEye",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "",
       "website": ""
-    },
-    {
-      "id": "aweber",
-      "name": "aWeber",
-      "category": "Marketing Automation",
-      "purpose": "Marketing Automation",
-      "description": "Unlock your revenue potential with GetResponse's marketing software. Automate sales, track revenue, and convert leads into loyal customers with ease.",
-      "website": "https://getresponse.com",
-      "privacyPolicy": "https://policies.google.com/privacy?hl=en&gl=us",
-      "vendor": "aWeber",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "azure-monitor",
@@ -731,10 +611,10 @@
       "vendor": "Azure",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -750,10 +630,10 @@
       "vendor": "Baidu",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -769,10 +649,10 @@
       "vendor": "Bannerflow",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -788,10 +668,10 @@
       "vendor": "Barilliance",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -807,10 +687,10 @@
       "vendor": "Bazaarvoice",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -826,10 +706,10 @@
       "vendor": "Beehiiv",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -847,32 +727,13 @@
       "vendor": "Benchmark",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
-    },
-    {
-      "id": "better-lead-generation-services",
-      "name": "Better Lead Generation Services",
-      "category": "Lead Generation",
-      "purpose": "Lead Generation",
-      "description": "Hire the best virtual assistants in the world, at less than $8/hr. Free CSM, training, WorkSpace app, quality supervision, on a simple month-to-month subscription.",
-      "vendor": "Better",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://wingassistant.com/privacy/",
-      "website": "https://wingassistant.com"
     },
     {
       "id": "bing-universal-event-tracking",
@@ -883,34 +744,15 @@
       "vendor": "Bing",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.bing.com/privacy",
       "website": "https://www.bing.com"
-    },
-    {
-      "id": "bitrix24",
-      "name": "Bitrix24",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "An all-in-one workplace platform that allows highly collaborative teams to build, share, and automate custom workflows and processes for data-driven results",
-      "vendor": "Bitrix24",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.kintone.com/en-us/privacy-policy/?__hstc=251652889.827d19a3af1797781113fe1291650fd7.1718228314782.1720223082123.1720466926278.3&__hssc=251652889.1.1720466926278&__hsfp=253062604",
-      "website": "https://kintone.com"
     },
     {
       "id": "bizible",
@@ -922,10 +764,10 @@
       "vendor": "Bizible",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -940,10 +782,10 @@
       "vendor": "Black",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -959,10 +801,10 @@
       "vendor": "Blog2Social",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -978,10 +820,10 @@
       "vendor": "Blotout",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -997,10 +839,10 @@
       "vendor": "Blue",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1016,10 +858,10 @@
       "vendor": "Blueconic",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1035,10 +877,10 @@
       "vendor": "Bluecore",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1054,10 +896,10 @@
       "vendor": "Blueshift",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1073,10 +915,10 @@
       "vendor": "Bold",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1092,10 +934,10 @@
       "vendor": "Botpress",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1111,10 +953,10 @@
       "vendor": "Braze",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1130,10 +972,10 @@
       "vendor": "Brightcove",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1145,16 +987,16 @@
       "name": "BrightEdge",
       "category": "Site Optimization",
       "purpose": "Site Optimization",
-      "description": "Drive growth in SEO, PPC, content, social media, and traffic with AI-powered marketing tools for every task.",
-      "website": "https://semrush.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://www.brightedge.com/privacy",
       "vendor": "BrightEdge",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -1168,34 +1010,15 @@
       "vendor": "Brightflow",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "",
       "website": ""
-    },
-    {
-      "id": "byside",
-      "name": "BySide",
-      "category": "Marketing Automation",
-      "purpose": "Marketing Automation",
-      "description": "“Devotion And Desire” (2025) available now in celebration of our 25th \nanniversary",
-      "vendor": "BySide",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.baysidebayside.com/privacy",
-      "website": "https://www.baysidebayside.com"
     },
     {
       "id": "care-cart",
@@ -1206,10 +1029,10 @@
       "vendor": "Care",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1225,10 +1048,10 @@
       "vendor": "CartStack",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1244,10 +1067,10 @@
       "vendor": "Cedexis",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1263,10 +1086,10 @@
       "vendor": "Chartbeat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1284,10 +1107,10 @@
       "vendor": "Chatbase",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -1301,10 +1124,10 @@
       "vendor": "Chatbot.com",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1320,10 +1143,10 @@
       "vendor": "Chili",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1339,10 +1162,10 @@
       "vendor": "Churnkey",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1358,15 +1181,15 @@
       "vendor": "Clare.AI",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://about.crunchbase.com/terms-of-service/privacy-policy/",
-      "website": "https://www.crunchbase.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "clearbit",
@@ -1377,10 +1200,10 @@
       "vendor": "Clearbit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1398,10 +1221,10 @@
       "vendor": "CleverTap",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -1417,10 +1240,10 @@
       "vendor": "ClickDimensions",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -1434,10 +1257,10 @@
       "vendor": "Clicky",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1453,10 +1276,10 @@
       "vendor": "Cloudflare",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1473,10 +1296,10 @@
       "vendor": "Cloudflare",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1491,10 +1314,10 @@
       "vendor": "Cococart",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1510,10 +1333,10 @@
       "vendor": "Cognigy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1529,10 +1352,10 @@
       "vendor": "Commanders",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1548,10 +1371,10 @@
       "vendor": "commercetools",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1567,10 +1390,10 @@
       "vendor": "comScore",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1586,10 +1409,10 @@
       "vendor": "Conductor",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1605,10 +1428,10 @@
       "vendor": "Conductrics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1624,34 +1447,15 @@
       "vendor": "Confection",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://landmarkconfections.com/privacy",
       "website": "https://landmarkconfections.com"
-    },
-    {
-      "id": "content-square",
-      "name": "Content Square",
-      "category": "AB Testing",
-      "purpose": "AB Testing",
-      "description": "The AI-powered Contentsquare platform unlocks insights to engage, convert, and retain with Experience and Product Analytics and Voice of Customer tools.",
-      "vendor": "Content",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://contentsquare.com/privacy-center/",
-      "website": "https://contentsquare.com"
     },
     {
       "id": "contentful",
@@ -1662,34 +1466,15 @@
       "vendor": "Contentful",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.contentful.com/legal/privacy-at-contentful/cookie-notice/",
       "website": "https://www.contentful.com"
-    },
-    {
-      "id": "clicktale",
-      "name": "Clicktale",
-      "category": "Session Replay",
-      "purpose": "Digital Experience Analytics (DXP)",
-      "description": "The AI-powered Contentsquare platform unlocks insights to engage, convert, and retain with Experience and Product Analytics and Voice of Customer tools.",
-      "website": "https://contentsquare.com",
-      "privacyPolicy": "https://www.contentsquare.com/privacy-center/",
-      "vendor": "ContentSquare",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "contentsquare",
@@ -1702,10 +1487,10 @@
       "vendor": "ContentSquare",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -1719,10 +1504,10 @@
       "vendor": "Convert",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1738,10 +1523,10 @@
       "vendor": "ConvertFlow",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1757,10 +1542,10 @@
       "vendor": "Convertize",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1778,32 +1563,13 @@
       "vendor": "ConvertKit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
-    },
-    {
-      "id": "core-audience",
-      "name": "Core Audience",
-      "category": "DMP",
-      "purpose": "DMP",
-      "description": "",
-      "vendor": "Core",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.zoominfo.com/privacy",
-      "website": "https://www.zoominfo.com"
     },
     {
       "id": "coremetrics",
@@ -1814,34 +1580,15 @@
       "vendor": "Coremetrics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://coremetricslabs.com/./privacy.html",
       "website": "https://coremetricslabs.com"
-    },
-    {
-      "id": "cquotient",
-      "name": "CQuotient",
-      "category": "Personalization",
-      "purpose": "Personalization",
-      "description": "",
-      "vendor": "CQuotient",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://tracxn.com/privacypolicy",
-      "website": "https://tracxn.com"
     },
     {
       "id": "crazy-egg",
@@ -1852,10 +1599,10 @@
       "vendor": "Crazy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1871,10 +1618,10 @@
       "vendor": "CrazyEgg",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1890,10 +1637,10 @@
       "vendor": "Crisp",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1910,12 +1657,12 @@
       "vendor": "Criteo S.A.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "Available",
           "dataRetention": "13 months"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "https://www.criteo.com/privacy/"
         },
         "certifications": []
@@ -1931,10 +1678,10 @@
       "vendor": "Crowdriff",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -1951,33 +1698,14 @@
       "vendor": "Curalate",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.bazaarvoice.com/legal/privacy-policy/"
-    },
-    {
-      "id": "curator",
-      "name": "Curator",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "Sign up for boxes filled with the season's must-haves — delivered straight to your door.",
-      "vendor": "Curator",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.curateur.com/pages/privacy-policy",
-      "website": "https://www.curateur.com"
     },
     {
       "id": "customerio",
@@ -1988,10 +1716,10 @@
       "vendor": "Customer.io",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2007,10 +1735,10 @@
       "vendor": "Datadog",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2026,10 +1754,10 @@
       "vendor": "Decagon",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2045,10 +1773,10 @@
       "vendor": "Decentriq",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2064,10 +1792,10 @@
       "vendor": "Demandbase",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2083,10 +1811,10 @@
       "vendor": "Dengage",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2102,10 +1830,10 @@
       "vendor": "Digioh",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2121,10 +1849,10 @@
       "vendor": "Doppler",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2140,10 +1868,10 @@
       "vendor": "dotdigital",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2159,10 +1887,10 @@
       "vendor": "DoubleClick",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2178,10 +1906,10 @@
       "vendor": "Drift",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2197,34 +1925,15 @@
       "vendor": "Drip",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://business.safety.google/privacy",
       "website": "https://www.drip.com"
-    },
-    {
-      "id": "duoban",
-      "name": "Duoban",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "提供图书、电影、音乐唱片的推荐、评论和价格比较，以及城市独特的文化生活。",
-      "vendor": "Duoban",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.douban.com/privacy",
-      "website": "https://www.douban.com"
     },
     {
       "id": "dynamic-yield",
@@ -2235,10 +1944,10 @@
       "vendor": "Dynamic",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2254,10 +1963,10 @@
       "vendor": "Dynatrace",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2273,10 +1982,10 @@
       "vendor": "ElevenLabs",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2292,10 +2001,10 @@
       "vendor": "Eloqua",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2311,10 +2020,10 @@
       "vendor": "EmbedSocial",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2330,10 +2039,10 @@
       "vendor": "emBlue",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2351,10 +2060,10 @@
       "vendor": "Ensighten",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2368,10 +2077,10 @@
       "vendor": "Equally",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2389,10 +2098,10 @@
       "vendor": "Esfera Marketing SL",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2408,32 +2117,13 @@
       "vendor": "eSputnik",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
-    },
-    {
-      "id": "evergage",
-      "name": "Evergage",
-      "category": "Marketing Automation",
-      "purpose": "Marketing Automation",
-      "description": "",
-      "vendor": "Evergage",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://foundation.wikimedia.org/wiki/Special:LandingCheck?basic=true&landing_page=Donor_privacy_policy&language=en",
-      "website": "https://en.wikipedia.org"
     },
     {
       "id": "exponea",
@@ -2444,10 +2134,10 @@
       "vendor": "Exponea",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2463,10 +2153,10 @@
       "vendor": "Facebook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2484,10 +2174,10 @@
       "vendor": "Facebook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2503,10 +2193,10 @@
       "vendor": "Facebook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2520,10 +2210,10 @@
       "vendor": "Facebook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2539,10 +2229,10 @@
       "vendor": "Fastly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2560,10 +2250,10 @@
       "vendor": "Feathr",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2577,10 +2267,10 @@
       "vendor": "Findify",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2598,10 +2288,10 @@
       "vendor": "Flowbox",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -2615,10 +2305,10 @@
       "vendor": "Forethought",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2634,10 +2324,10 @@
       "vendor": "Freshchat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2653,10 +2343,10 @@
       "vendor": "Freshworks",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2672,10 +2362,10 @@
       "vendor": "Frontify",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2692,12 +2382,12 @@
       "vendor": "FullStory, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.fullstory.com/legal/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -2715,10 +2405,10 @@
       "vendor": "Funnel io",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2734,10 +2424,10 @@
       "vendor": "Genesys",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2753,10 +2443,10 @@
       "vendor": "Get",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2772,10 +2462,10 @@
       "vendor": "GetResponse",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2791,10 +2481,10 @@
       "vendor": "GitHub",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2810,10 +2500,10 @@
       "vendor": "Gladly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2829,10 +2519,10 @@
       "vendor": "Glassbox",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2848,10 +2538,10 @@
       "vendor": "Gobot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2867,10 +2557,10 @@
       "vendor": "GoKwik",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2886,10 +2576,10 @@
       "vendor": "Goodkind",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -2906,12 +2596,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -2932,12 +2622,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -2952,17 +2642,17 @@
       "category": "Digital Analytics",
       "purpose": "Web Analytics",
       "description": "Google Analytics lets you measure your advertising ROI as well as track your Flash, video, and social networking sites and applications.",
-      "website": "https://360suite.google.com",
+      "website": "https://marketingplatform.google.com/about/analytics/",
       "privacyPolicy": "https://policies.google.com/privacy",
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -2982,12 +2672,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3007,12 +2697,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3030,12 +2720,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3057,12 +2747,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3082,12 +2772,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3107,12 +2797,12 @@
       "vendor": "Google LLC",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://privacy.google.com/businesses/processorterms/",
           "dataRetention": "Configurable, up to 26 months default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available via Google Analytics opt-out"
         },
         "certifications": [
@@ -3130,10 +2820,10 @@
       "vendor": "Grafana",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3149,10 +2839,10 @@
       "vendor": "GRIN",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3168,34 +2858,15 @@
       "vendor": "GrowthBook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.growthbook.io/legal/privacy-policy/06-19-2025",
       "website": "https://www.growthbook.io"
-    },
-    {
-      "id": "habu",
-      "name": "Habu",
-      "category": "Data Clean Room",
-      "purpose": "Data Clean Room",
-      "description": "",
-      "vendor": "Habu",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://amazon.com/gp/help/customer/display.html?nodeId=468496&ref_=footer_privacy",
-      "website": "https://amazon.com"
     },
     {
       "id": "hcl-commerce",
@@ -3206,10 +2877,10 @@
       "vendor": "HCL",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3225,10 +2896,10 @@
       "vendor": "Heap Analytics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3240,18 +2911,18 @@
       "name": "Heap",
       "category": "Application Performance",
       "purpose": "Application Performance",
-      "description": "Programs that Help Low-income New Yorkers Make Ends Meet. The New York State Office of Temporary and Disability Assistance supervises support programs for families and individuals.",
-      "website": "https://otda.ny.gov",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://heap.io/privacy",
       "vendor": "Heap Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://heap.io/dpa",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Data deletion available"
         },
         "certifications": [
@@ -3268,10 +2939,10 @@
       "vendor": "Hello",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3287,10 +2958,10 @@
       "vendor": "HetrixTools",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3308,10 +2979,10 @@
       "vendor": "HighLevel",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -3325,10 +2996,10 @@
       "vendor": "Highspot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3344,10 +3015,10 @@
       "vendor": "Hightouch",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3363,10 +3034,10 @@
       "vendor": "Honeybadger",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3382,12 +3053,12 @@
       "vendor": "Hotjar Ltd",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.hotjar.com/legal/support/dpa/",
           "dataRetention": "365 days default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Do Not Track header respected"
         },
         "certifications": [
@@ -3406,34 +3077,15 @@
       "vendor": "Howuku",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://howuku.freshdesk.com/support/solutions/articles/150000073148-privacy-policy",
       "website": "https://howuku.com"
-    },
-    {
-      "id": "hubspot-chatbot",
-      "name": "Hubspot Chatbot",
-      "category": "AI Chatbot",
-      "purpose": "Customer Experience",
-      "description": "Top10.com is a comparison platform that brings you useful top 10 lists covering a wide variety of products and services that can help you save time and money",
-      "vendor": "Hubspot",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://top10.com/privacy-policy",
-      "website": "https://top10.com"
     },
     {
       "id": "hubspot",
@@ -3445,12 +3097,12 @@
       "vendor": "HubSpot, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://legal.hubspot.com/dpa",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -3465,43 +3117,18 @@
       "name": "HubSpot Chat",
       "category": "AI Chatbot",
       "purpose": "AI Chatbot solution",
-      "description": "HubSpot Chat - AI Chatbot technology",
-      "website": "https://www.hubspot-chat.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://legal.hubspot.com/privacy-policy",
       "vendor": "HubSpot, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://legal.hubspot.com/dpa",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
-          "optOutMechanism": "Available"
-        },
-        "certifications": [
-          "ISO 27001",
-          "SOC 2 Type II"
-        ]
-      }
-    },
-    {
-      "id": "hubspot-marketing-hub",
-      "name": "HubSpot Marketing Hub",
-      "category": "Lead Capturing",
-      "purpose": "Lead Capturing",
-      "description": "Top10.com is a comparison platform that brings you useful top 10 lists covering a wide variety of products and services that can help you save time and money",
-      "website": "https://top10.com",
-      "privacyPolicy": "https://legal.hubspot.com/privacy-policy",
-      "vendor": "HubSpot, Inc.",
-      "compliance": {
-        "gdpr": {
-          "compliant": true,
-          "dataProcessingAgreement": "https://legal.hubspot.com/dpa",
-          "dataRetention": "Configurable"
-        },
-        "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -3519,10 +3146,10 @@
       "vendor": "Humblytics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3538,34 +3165,15 @@
       "vendor": "iAdvize",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.iadvize.com/en/iadvize-privacy-policy",
       "website": "https://www.iadvize.com"
-    },
-    {
-      "id": "igodigital",
-      "name": "iGoDigital",
-      "category": "Conversion Optimization",
-      "purpose": "Conversion Optimization",
-      "description": "",
-      "vendor": "iGoDigital",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://about.crunchbase.com/terms-of-service/privacy-policy/",
-      "website": "https://www.crunchbase.com"
     },
     {
       "id": "improvely",
@@ -3576,10 +3184,10 @@
       "vendor": "Improvely",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3587,42 +3195,23 @@
       "website": "https://www.improvely.com"
     },
     {
-      "id": "infinity",
-      "name": "Infinity",
-      "category": "Call tracking",
-      "purpose": "Call tracking",
-      "description": "Explore the full lineup of INFINITI SUVs, crossovers, sedans, and coupes. Customize and price your vehicle, search inventory, explore local offers, and more.",
-      "website": "https://www.infinitiusa.com",
-      "privacyPolicy": "https://www.infinity.co/us/privacy-policy",
-      "vendor": "Infinity",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
-    },
-    {
       "id": "infusionsoft",
       "name": "Infusionsoft",
       "category": "Marketing Automation",
       "purpose": "Marketing Automation",
-      "description": "Nextech offers EHR, Practice Management, Patient Engagement and Revenue Management that enables productivity and profitability for specialty practices.",
+      "description": "",
       "vendor": "Infusionsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://www.nextech.com/privacy-policy",
-      "website": "https://nextech.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "instagram-api",
@@ -3633,10 +3222,10 @@
       "vendor": "Instagram",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3652,10 +3241,10 @@
       "vendor": "Instantly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3671,10 +3260,10 @@
       "vendor": "Intelligems",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3690,10 +3279,10 @@
       "vendor": "Intellimize",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3709,10 +3298,10 @@
       "vendor": "interakt.ai",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3728,41 +3317,21 @@
       "vendor": "Intercom, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.intercom.com/legal/dpa",
           "dataRetention": "Customizable retention periods"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Data subject rights available"
         },
         "certifications": [
           "ISO 27001",
-          "SOC 2 Type II",
-          "Privacy Shield"
+          "SOC 2 Type II"
         ]
       },
       "privacyPolicy": "https://www.intercom.com/legal/privacy",
       "website": "https://www.intercom.com"
-    },
-    {
-      "id": "iperceptions",
-      "name": "iPerceptions",
-      "category": "Lead Generation",
-      "purpose": "Lead Generation",
-      "description": "Insight Platforms is the leading directory, online training and virtual events site for market & user research, customer insights and CX.",
-      "vendor": "iPerceptions",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.insightplatforms.com/privacy-policy/",
-      "website": "https://www.insightplatforms.com"
     },
     {
       "id": "iterable",
@@ -3774,33 +3343,14 @@
       "vendor": "Iterable",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://iterable.com/trust/privacy-policy/"
-    },
-    {
-      "id": "juicer",
-      "name": "Juicer",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "Get Chicago and Illinois news from The Chicago Tribune",
-      "website": "https://chicagotribune.com",
-      "privacyPolicy": "https://namawell.com/pages/privacy-policy",
-      "vendor": "Juicer",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "kaizen-platform",
@@ -3811,10 +3361,10 @@
       "vendor": "Kaizen",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3830,10 +3380,10 @@
       "vendor": "Kameleoon",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3849,10 +3399,10 @@
       "vendor": "Kapost",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3864,16 +3414,16 @@
       "name": "Karte",
       "category": "Marketing Automation",
       "purpose": "Marketing Automation",
-      "description": "Find your perfect home away from home on Karta. We list thousands of homes, cabins, condos, houses, and other vacation rental properties around the globe.",
-      "website": "https://karta.com",
-      "privacyPolicy": "https://plaid.co.jp/privacy-policy.html",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "Karte",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -3887,10 +3437,10 @@
       "vendor": "Kenshoo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3906,10 +3456,10 @@
       "vendor": "Kilkaya",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3925,10 +3475,10 @@
       "vendor": "Kimonix",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3944,10 +3494,10 @@
       "vendor": "KISSmetrics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3963,10 +3513,10 @@
       "vendor": "Klaviyo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3982,10 +3532,10 @@
       "vendor": "Lead",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -3997,16 +3547,16 @@
       "name": "Leadfeeder",
       "category": "Lead Generation",
       "purpose": "Lead Generation",
-      "description": "Grow the business of your practice.    With Martindale-Avvo, you can gain new clients, improve your online presence, and hit business goals.     Get Connect",
-      "website": "https://martindale-avvo.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://leadfeeder.com/privacy/",
       "vendor": "Leadfeeder",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4020,10 +3570,10 @@
       "vendor": "Lightwidget",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4039,10 +3589,10 @@
       "vendor": "Limechat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4058,10 +3608,10 @@
       "vendor": "LimeSpot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4077,10 +3627,10 @@
       "vendor": "LinkedIn",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4092,16 +3642,16 @@
       "name": "LinkedIn Insights",
       "category": "Conversion Optimization",
       "purpose": "Conversion Optimization",
-      "description": "1 billion members | Manage your professional identity. Build and engage with your professional network. Access knowledge, insights and opportunities.",
-      "website": "https://www.linkedin.com",
-      "privacyPolicy": "https://www.linkedin-insight-tag.com/privacy",
+      "description": "",
+      "website": "https://business.linkedin.com",
+      "privacyPolicy": "",
       "vendor": "LinkedIn",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4115,10 +3665,10 @@
       "vendor": "Listrak",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4134,10 +3684,10 @@
       "vendor": "LiveChat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4153,10 +3703,10 @@
       "vendor": "LivePerson",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4172,10 +3722,10 @@
       "vendor": "LiveRamp",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4191,10 +3741,10 @@
       "vendor": "Loggly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4212,12 +3762,12 @@
       "vendor": "LogRocket, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://logrocket.com/dpa/",
           "dataRetention": "30 days default"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -4234,10 +3784,10 @@
       "vendor": "Loop",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4253,10 +3803,10 @@
       "vendor": "Loyalty",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4272,10 +3822,10 @@
       "vendor": "Lucky",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4291,10 +3841,10 @@
       "vendor": "Lyris",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4310,10 +3860,10 @@
       "vendor": "Lytics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4331,10 +3881,10 @@
       "vendor": "Mailchimp",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4350,10 +3900,10 @@
       "vendor": "MailerLite",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4367,10 +3917,10 @@
       "vendor": "Mailkit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4386,15 +3936,15 @@
       "vendor": "MailMunch",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://constantcontact.com/legal/privacy-center",
-      "website": "https://constantcontact.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "mailoptin",
@@ -4405,10 +3955,10 @@
       "vendor": "MailOptin",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4424,34 +3974,15 @@
       "vendor": "Marin",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.marinsoftware.com/privacy/privacy-central",
       "website": "https://www.marinsoftware.com"
-    },
-    {
-      "id": "marketizator",
-      "name": "Marketizator",
-      "category": "AB Testing",
-      "purpose": "AB Testing",
-      "description": "Discover the best SaaS solutions and B2B services on the DiscoverCloud. Our B2B marketplace features an ever-growing number of SaaS solutions and outsourced services. Check us out online!",
-      "vendor": "Marketizator",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.discovercloud.com/privacy-policy",
-      "website": "https://www.discovercloud.com"
     },
     {
       "id": "marketo",
@@ -4463,10 +3994,10 @@
       "vendor": "Marketo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4481,10 +4012,10 @@
       "vendor": "Matomo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4502,10 +4033,10 @@
       "vendor": "Matomo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4520,10 +4051,10 @@
       "vendor": "Mautic",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4540,29 +4071,10 @@
       "vendor": "Maxymiser",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
-    },
-    {
-      "id": "kampyle",
-      "name": "Kampyle",
-      "category": "Online Surveys",
-      "purpose": "Online Surveys",
-      "description": "Discover the best SaaS solutions and B2B services on the DiscoverCloud. Our B2B marketplace features an ever-growing number of SaaS solutions and outsourced services. Check us out online!",
-      "website": "https://www.discovercloud.com",
-      "privacyPolicy": "https://www.medallia.com/privacy-policy",
-      "vendor": "Medallia",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4576,10 +4088,10 @@
       "vendor": "Medallia",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4595,10 +4107,10 @@
       "vendor": "Medallia",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4614,10 +4126,10 @@
       "vendor": "Mediafly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4633,10 +4145,10 @@
       "vendor": "Meet",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4652,10 +4164,10 @@
       "vendor": "Metricool",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4671,10 +4183,10 @@
       "vendor": "MGID",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4692,10 +4204,10 @@
       "vendor": "Microsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4711,10 +4223,10 @@
       "vendor": "Microsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4730,10 +4242,10 @@
       "vendor": "Microsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4747,10 +4259,10 @@
       "vendor": "Microsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4767,10 +4279,10 @@
       "vendor": "Microsoft",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4787,10 +4299,10 @@
       "vendor": "Mindbox",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -4804,10 +4316,10 @@
       "vendor": "Mirakl",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4823,10 +4335,10 @@
       "vendor": "Miva",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4843,17 +4355,16 @@
       "vendor": "Mixpanel, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://mixpanel.com/legal/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Data deletion API available"
         },
         "certifications": [
-          "SOC 2 Type II",
-          "Privacy Shield"
+          "SOC 2 Type II"
         ]
       },
       "website": "https://mixpanel.com"
@@ -4867,10 +4378,10 @@
       "vendor": "MoEngage",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4886,10 +4397,10 @@
       "vendor": "Molin",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4906,10 +4417,10 @@
       "vendor": "Monetate, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4924,10 +4435,10 @@
       "vendor": "Mouseflow",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4943,10 +4454,10 @@
       "vendor": "Movable",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -4963,12 +4474,12 @@
       "vendor": "mParticle, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.mparticle.com/dpa",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Data deletion available"
         },
         "certifications": [
@@ -4986,10 +4497,10 @@
       "vendor": "Mutiny",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5005,10 +4516,10 @@
       "vendor": "Mux",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5024,10 +4535,10 @@
       "vendor": "Netcore",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5045,10 +4556,10 @@
       "vendor": "Netcore",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5062,10 +4573,10 @@
       "vendor": "New",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5083,10 +4594,10 @@
       "vendor": "NinjaOne",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5102,10 +4613,10 @@
       "vendor": "Northbeam",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5119,10 +4630,10 @@
       "vendor": "Nosto",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5138,10 +4649,10 @@
       "vendor": "O2MC",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5157,10 +4668,10 @@
       "vendor": "Observable",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5176,10 +4687,10 @@
       "vendor": "Ocean",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5195,10 +4706,10 @@
       "vendor": "Oktopost",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5214,10 +4725,10 @@
       "vendor": "Olark",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5233,10 +4744,10 @@
       "vendor": "OmniConvert",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5252,10 +4763,10 @@
       "vendor": "Omnisend",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5271,34 +4782,15 @@
       "vendor": "Omniture",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "",
       "website": "https://business.adobe.com"
-    },
-    {
-      "id": "oneall",
-      "name": "OneAll",
-      "category": "Social Management",
-      "purpose": "Social Management",
-      "description": "O’Neill, First Name In The Water. ✓ Best prices ✓ Quick delivery ✓ Free returns within 30 days",
-      "website": "https://oneill.com",
-      "privacyPolicy": "https://www.oneall.com/company/privacy-policy/",
-      "vendor": "OneAll",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "onthe-io",
@@ -5309,10 +4801,10 @@
       "vendor": "OnThe",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5328,10 +4820,10 @@
       "vendor": "OpenReplay",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5343,19 +4835,19 @@
       "name": "OpenTelemetry",
       "category": "Application Performance",
       "purpose": "Application Performance",
-      "description": "AI-native platform for on-call and incident response with effortless monitoring, status pages, tracing, infrastructure monitoring and log management.",
+      "description": "",
       "vendor": "OpenTelemetry",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://betterstack.com/privacy",
-      "website": "https://betterstack.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "optibase",
@@ -5366,10 +4858,10 @@
       "vendor": "Optibase",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5386,12 +4878,12 @@
       "vendor": "Optimizely, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.optimizely.com/legal/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Opt-out available"
         },
         "certifications": [
@@ -5411,12 +4903,12 @@
       "vendor": "Optimizely, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.optimizely.com/legal/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Opt-out available"
         },
         "certifications": [
@@ -5435,10 +4927,10 @@
       "vendor": "Outbrain",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5454,10 +4946,10 @@
       "vendor": "Outplay",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5475,10 +4967,10 @@
       "vendor": "PageFly",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5492,10 +4984,10 @@
       "vendor": "Pardot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5511,10 +5003,10 @@
       "vendor": "PayPal",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5530,10 +5022,10 @@
       "vendor": "Pendo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5549,10 +5041,10 @@
       "vendor": "Permutive",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5568,10 +5060,10 @@
       "vendor": "Personyze",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5589,10 +5081,10 @@
       "vendor": "Pertento",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5606,10 +5098,10 @@
       "vendor": "Pingdom",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5625,10 +5117,10 @@
       "vendor": "Pinterest",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5644,10 +5136,10 @@
       "vendor": "Pipedrive",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5663,10 +5155,10 @@
       "vendor": "Piwik",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5682,34 +5174,15 @@
       "vendor": "Plausible",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://plausible.io/privacy-focused-web-analytics",
       "website": "https://plausible.io"
-    },
-    {
-      "id": "pluso",
-      "name": "Pluso",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "Quietum Plus is a 100% natural supplement designed to address ear ringing and other hearing issues. This formula uses only the best in class and natural ingredients to achieve desired results.",
-      "website": "https://quietum-plus.supplements.best",
-      "privacyPolicy": "https://privacy.paramount.com/childrens",
-      "vendor": "Pluso",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "poder",
@@ -5722,10 +5195,10 @@
       "vendor": "Poder",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -5739,10 +5212,10 @@
       "vendor": "Podium",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5758,10 +5231,10 @@
       "vendor": "Polar",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5777,10 +5250,10 @@
       "vendor": "Popconvert",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5796,10 +5269,10 @@
       "vendor": "Poptin",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5815,10 +5288,10 @@
       "vendor": "Postscript",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5834,10 +5307,10 @@
       "vendor": "PowerReviews",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5853,10 +5326,10 @@
       "vendor": "POWr",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5872,10 +5345,10 @@
       "vendor": "Privy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5891,10 +5364,10 @@
       "vendor": "Probely",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5910,10 +5383,10 @@
       "vendor": "ProLayers",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5929,10 +5402,10 @@
       "vendor": "Proof",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5948,10 +5421,10 @@
       "vendor": "Qualified",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5967,10 +5440,10 @@
       "vendor": "Qualtrics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -5986,10 +5459,10 @@
       "vendor": "Qualtrics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6005,34 +5478,15 @@
       "vendor": "Quantum",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.quantummetric.com/platform/data-privacy-security",
       "website": "https://www.quantummetric.com"
-    },
-    {
-      "id": "qubit",
-      "name": "Qubit",
-      "category": "Personalization",
-      "purpose": "Personalization",
-      "description": "Qubit powers real quantum entropy, secure wallets and quantum compute APIs for Web3, Web2 and AI. Build next-generation apps with true randomness and post-quantum security.",
-      "vendor": "Qubit",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://qbit.technology/privacy",
-      "website": "https://qbit.technology"
     },
     {
       "id": "qubit-opentag",
@@ -6045,10 +5499,10 @@
       "vendor": "Qubit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6062,10 +5516,10 @@
       "vendor": "Quora",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6081,10 +5535,10 @@
       "vendor": "Rapleaf",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6100,10 +5554,10 @@
       "vendor": "RD",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6119,10 +5573,10 @@
       "vendor": "Rebuy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6138,10 +5592,10 @@
       "vendor": "Reddit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6159,10 +5613,10 @@
       "vendor": "Reddit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6176,34 +5630,15 @@
       "vendor": "Reflektion",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.reflektion.com/privacy",
       "website": "https://www.reflektion.com"
-    },
-    {
-      "id": "repai",
-      "name": "RepAI",
-      "category": "AI Widget",
-      "purpose": "AI Widget",
-      "description": "Home repair and install made easy. Our skilled local technicians will help with all your in-home needs, including: TV mounting, garage door repair, appliance repair, iPhone repair and much more.",
-      "website": "https://puls.com",
-      "privacyPolicy": "https://legal.angi.com/#privacy-policy",
-      "vendor": "RepAI",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
     },
     {
       "id": "report-uri",
@@ -6214,34 +5649,15 @@
       "vendor": "Report",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.report.com/digimedia_privacy_policy.html",
       "website": "https://www.report.com"
-    },
-    {
-      "id": "retargeted",
-      "name": "Retargeted",
-      "category": "Retargeting",
-      "purpose": "Retargeting",
-      "description": "Drive measurable conversions, revenue, site visits and more with Performance TV — the only Connected TV advertising platform optimized for outcome-based marketing goals.",
-      "vendor": "Retargeted",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://mountain.com/privacy-policy/",
-      "website": "https://mountain.com"
     },
     {
       "id": "revenuehunt",
@@ -6252,10 +5668,10 @@
       "vendor": "RevenueHunt",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6271,10 +5687,10 @@
       "vendor": "Rivo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6290,10 +5706,10 @@
       "vendor": "Roistat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6309,10 +5725,10 @@
       "vendor": "Rokt",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6328,10 +5744,10 @@
       "vendor": "RTBiQ",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6339,42 +5755,23 @@
       "website": "https://www.rtbiq.com"
     },
     {
-      "id": "ruddestack",
-      "name": "Ruddestack",
+      "id": "rudderstack",
+      "name": "RudderStack",
       "category": "Reverse ETL",
       "purpose": "Reverse ETL",
       "description": "Buy and sell pre-IPO shares with confidence on a leading secondary marketplace. Access competitive pricing, real-time valuations, and data-driven investment insights.",
-      "vendor": "Ruddestack",
+      "vendor": "RudderStack",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://forgeglobal.com/privacy-policy/",
-      "website": "https://forgeglobal.com"
-    },
-    {
-      "id": "ruxit",
-      "name": "Ruxit",
-      "category": "Application Performance",
-      "purpose": "Application Performance",
-      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
-      "vendor": "Ruxit",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.youtube.com/t/privacy",
-      "website": "https://www.youtube.com"
+      "privacyPolicy": "https://www.rudderstack.com/privacy-policy/",
+      "website": "https://www.rudderstack.com"
     },
     {
       "id": "datorama",
@@ -6385,15 +5782,15 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://calendly.com/pages/privacy#cookies-and-other-tracking-mechanisms",
-      "website": "https://titandxp.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "mulesoft",
@@ -6406,29 +5803,10 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      }
-    },
-    {
-      "id": "salesforce-audience-studio",
-      "name": "Salesforce Audience Studio",
-      "category": "DMP",
-      "purpose": "DMP",
-      "description": "From getting started to realizing value to resolving issues, Salesforce Help has the support resources you need to achieve success now.",
-      "website": "https://help.salesforce.com",
-      "privacyPolicy": "https://calendly.com/pages/privacy#cookies-and-other-tracking-mechanisms",
-      "vendor": "Salesforce",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6444,10 +5822,10 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6463,10 +5841,10 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6482,10 +5860,10 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6499,15 +5877,15 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://calendly.com/pages/privacy#cookies-and-other-tracking-mechanisms",
-      "website": "https://titandxp.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "salesforce-marketing-cloud-personalisation",
@@ -6520,10 +5898,10 @@
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6533,38 +5911,19 @@
       "name": "Salesforce Web to Lead",
       "category": "Lead Generation",
       "purpose": "Lead Generation",
-      "description": "From getting started to realizing value to resolving issues, Salesforce Help has the support resources you need to achieve success now.",
-      "website": "https://help.salesforce.com",
-      "privacyPolicy": "https://calendly.com/pages/privacy#cookies-and-other-tracking-mechanisms",
+      "description": "",
+      "website": "https://www.salesforce.com",
+      "privacyPolicy": "",
       "vendor": "Salesforce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
-    },
-    {
-      "id": "salesloft",
-      "name": "SalesLoft",
-      "category": "Lead Generation",
-      "purpose": "Lead Generation",
-      "description": "An all-in-one workplace platform that allows highly collaborative teams to build, share, and automate custom workflows and processes for data-driven results",
-      "vendor": "SalesLoft",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.kintone.com/en-us/privacy-policy/?__hstc=251652889.827d19a3af1797781113fe1291650fd7.1718228314782.1720223082123.1720466926278.3&__hssc=251652889.1.1720466926278&__hsfp=253062604",
-      "website": "https://kintone.com"
     },
     {
       "id": "salesmanago",
@@ -6575,10 +5934,10 @@
       "vendor": "SALESmanago",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6594,10 +5953,10 @@
       "vendor": "SAP",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6615,10 +5974,10 @@
       "vendor": "SAP",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6632,10 +5991,10 @@
       "vendor": "Sassy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6651,10 +6010,10 @@
       "vendor": "Secomapp",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6670,10 +6029,10 @@
       "vendor": "Secure",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6689,10 +6048,10 @@
       "vendor": "securiti",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6708,10 +6067,10 @@
       "vendor": "Segment",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6729,10 +6088,10 @@
       "vendor": "Sendinblue",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6746,10 +6105,10 @@
       "vendor": "SendPulse",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6765,10 +6124,10 @@
       "vendor": "SessionCam",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6784,10 +6143,10 @@
       "vendor": "Share42",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6803,10 +6162,10 @@
       "vendor": "Shareaholic",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6822,10 +6181,10 @@
       "vendor": "ShareThis",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6842,10 +6201,10 @@
       "vendor": "SharpSpring",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6860,10 +6219,10 @@
       "vendor": "Shoplift",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6879,10 +6238,10 @@
       "vendor": "Shopware",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6900,10 +6259,10 @@
       "vendor": "Signal",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -6917,10 +6276,10 @@
       "vendor": "Simple Analytics",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6936,10 +6295,10 @@
       "vendor": "Sina",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6955,10 +6314,10 @@
       "vendor": "SiSense",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6974,10 +6333,10 @@
       "vendor": "Site24x7",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -6993,34 +6352,15 @@
       "vendor": "SiteSpect",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.sitespect.com/privacy-overview/",
       "website": "https://www.sitespect.com"
-    },
-    {
-      "id": "smart-emailing",
-      "name": "Smart Emailing",
-      "category": "Marketing Automation",
-      "purpose": "Marketing Automation",
-      "description": "Smart.io is available for sale on Atom. Buy this premium domain name and get a free logo. Smart.io has strong buyer interest, so act now!",
-      "vendor": "Smart",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.atom.com/privacy-policy",
-      "website": "https://www.smart.io"
     },
     {
       "id": "smartlook",
@@ -7031,10 +6371,10 @@
       "vendor": "Smartlook",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7050,10 +6390,10 @@
       "vendor": "Snapchat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7069,10 +6409,10 @@
       "vendor": "SnapWidget",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7088,10 +6428,10 @@
       "vendor": "Snitcher",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7107,34 +6447,15 @@
       "vendor": "Snowflake",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.snowflake.com/privacy-policy/",
       "website": "https://snowflake.com"
-    },
-    {
-      "id": "social-snap",
-      "name": "Social Snap",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "Find government benefits, services, agencies, and information at USA.gov. Contact elected officials. Learn about passports, Social Security, taxes, and more.",
-      "vendor": "Social",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.usa.gov/privacy-security",
-      "website": "https://www.usa.gov"
     },
     {
       "id": "speedcurve",
@@ -7145,10 +6466,10 @@
       "vendor": "SpeedCurve",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7164,10 +6485,10 @@
       "vendor": "Split",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7185,10 +6506,10 @@
       "vendor": "Split",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7202,10 +6523,10 @@
       "vendor": "Splunk",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7221,10 +6542,10 @@
       "vendor": "Spotler",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7240,10 +6561,10 @@
       "vendor": "Stackify",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7259,10 +6580,10 @@
       "vendor": "Stackla",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7278,10 +6599,10 @@
       "vendor": "Statsig",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7297,34 +6618,15 @@
       "vendor": "Storystream",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://storystream.ai/./legal-pages/privacy-policy",
       "website": "https://storystream.ai"
-    },
-    {
-      "id": "symmetri",
-      "name": "Symmetri",
-      "category": "AI-driven data insights",
-      "purpose": "AI-driven data insights",
-      "description": "We work with you to tailor digital BIM, product design and lifecycle solutions to help you work smarter and do more with less. That’s why our partnerships are long lasting.",
-      "vendor": "Symmetri",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.symetri.us/about-symetri/privacy-policy/",
-      "website": "https://www.symetri.us"
     },
     {
       "id": "taboola",
@@ -7335,10 +6637,10 @@
       "vendor": "Taboola",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7354,10 +6656,10 @@
       "vendor": "TagCommander",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7373,10 +6675,10 @@
       "vendor": "Tagembed",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7393,10 +6695,10 @@
       "vendor": "taggbox",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7411,10 +6713,10 @@
       "vendor": "Tawk.to",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7431,12 +6733,12 @@
       "vendor": "Tealium Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://tealium.com/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -7457,37 +6759,12 @@
       "vendor": "Tealium Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://tealium.com/dpa/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
-          "optOutMechanism": "Available"
-        },
-        "certifications": [
-          "ISO 27001",
-          "SOC 2"
-        ]
-      }
-    },
-    {
-      "id": "tealium-cdp",
-      "name": "Tealium CDP",
-      "category": "Customer Data Platform",
-      "purpose": "Customer Data Platform",
-      "description": "Welcome to Tealium – the leader in real-time customer data integration and management. Harness the power of your data with our comprehensive suite of solutions and insights to drive meaningful customer experiences. Explore how Tealium empowers businesses to connect, manage, and leverage data across every touchpoint in real-time.",
-      "website": "https://www.tealium.com",
-      "privacyPolicy": "https://tealium.com/privacy/",
-      "vendor": "Tealium Inc.",
-      "compliance": {
-        "gdpr": {
-          "compliant": true,
-          "dataProcessingAgreement": "https://tealium.com/dpa/",
-          "dataRetention": "Configurable"
-        },
-        "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -7501,19 +6778,19 @@
       "name": "The Hotels Network",
       "category": "Personalization",
       "purpose": "Personalization",
-      "description": "KAYAK searches hundreds of other travel sites at once to find the information you need to make the right decisions on flights, hotels & rental cars.",
+      "description": "",
       "vendor": "The",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
-      "privacyPolicy": "https://kayak.com/privacy",
-      "website": "https://kayak.com"
+      "privacyPolicy": "",
+      "website": ""
     },
     {
       "id": "thoughtmetric",
@@ -7524,10 +6801,10 @@
       "vendor": "ThoughtMetric",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7543,10 +6820,10 @@
       "vendor": "Thrive",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7562,10 +6839,10 @@
       "vendor": "Tidio",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7581,10 +6858,10 @@
       "vendor": "TikTok",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7602,10 +6879,10 @@
       "vendor": "TikTok",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7619,10 +6896,10 @@
       "vendor": "Tolstoy",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7630,39 +6907,20 @@
       "website": "https://tolstoy.com"
     },
     {
-      "id": "tolt",
-      "name": "Tolt",
-      "category": "Conversion Optimization",
-      "purpose": "Conversion Optimization",
-      "description": "Welcome to the Riverview School District located in Duvall, WA.",
-      "vendor": "Tolt",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.rsd407.org/privacy",
-      "website": "https://www.rsd407.org"
-    },
-    {
-      "id": "trackerplan",
-      "name": "Trackerplan",
+      "id": "trackingplan",
+      "name": "Trackingplan",
       "category": "Data Layer Optimization",
       "purpose": "Website tag auditing",
       "description": "Automatically detect what's affecting your digital analytics, maintain up-to-date tracking plans, and foster seamless collaboration with Trackingplan.",
       "website": "https://www.trackingplan.com",
       "privacyPolicy": "https://mhmarkets.com/ae/en/privacy-policy",
-      "vendor": "Trackerplan",
+      "vendor": "Trackingplan",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7676,10 +6934,10 @@
       "vendor": "TradeDoubler",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7695,34 +6953,15 @@
       "vendor": "Treasure Data",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.treasuredata.com/privacy-statement/",
       "website": "https://treasuredata.com"
-    },
-    {
-      "id": "triggered-messaging",
-      "name": "Triggered Messaging",
-      "category": "Personalization",
-      "purpose": "Personalization",
-      "description": "AI-driven licence plate and facial recognition with automated alerts and customer engagement tools. Strengthen security and improve operations across all sites.",
-      "vendor": "Triggered",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.triggermessage.co.za/privacy-policy/",
-      "website": "https://www.triggermessage.io"
     },
     {
       "id": "tune",
@@ -7735,10 +6974,10 @@
       "vendor": "TUNE",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7754,10 +6993,10 @@
       "vendor": "TurnTo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7767,16 +7006,16 @@
       "name": "SendGrid",
       "category": "Email Marketing",
       "purpose": "Email Marketing",
-      "description": "Powerful Transactional Email APIs that enable you to send, receive, and track emails, built with developers in mind. Learn more today!",
-      "website": "https://mailgun.com",
-      "privacyPolicy": "https://www.twilio.com/en-us/legal/privacy",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "Twilio",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7790,10 +7029,10 @@
       "vendor": "Twitter",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7811,10 +7050,10 @@
       "vendor": "Twitter",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7830,10 +7069,10 @@
       "vendor": "Twitter",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7847,10 +7086,10 @@
       "vendor": "Typeform",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7866,10 +7105,10 @@
       "vendor": "Unbounce",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7885,10 +7124,10 @@
       "vendor": "Unbxd",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7904,10 +7143,10 @@
       "vendor": "UpSellit",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7919,16 +7158,16 @@
       "name": "uptain",
       "category": "AB Testing",
       "purpose": "AB Testing",
-      "description": "SoftwareWorld is a Best Software Review Website to find the best reviewed and top rated software products for your business. Increase your software visibility with us.",
-      "website": "https://www.softwareworld.co",
-      "privacyPolicy": "https://top10.com/privacy-policy",
+      "description": "",
+      "website": "",
+      "privacyPolicy": "",
       "vendor": "uptain",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7944,10 +7183,10 @@
       "vendor": "UptimeRobot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7961,10 +7200,10 @@
       "vendor": "UserGuiding",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -7982,10 +7221,10 @@
       "vendor": "Userpilot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -7999,10 +7238,10 @@
       "vendor": "userTrack",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8018,34 +7257,15 @@
       "vendor": "UserZoom",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://www.usertesting.com/privacy-policy",
       "website": "https://www.usertesting.com"
-    },
-    {
-      "id": "usocial",
-      "name": "Usocial",
-      "category": "Social Sharing",
-      "purpose": "Social Sharing",
-      "description": "Official website of the U.S. Social Security Administration.",
-      "website": "https://ssa.gov",
-      "vendor": "Usocial",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.ssa.gov/agency/privacy.html"
     },
     {
       "id": "varify",
@@ -8056,10 +7276,10 @@
       "vendor": "Varify",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8075,10 +7295,10 @@
       "vendor": "Vidyard",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8094,10 +7314,10 @@
       "vendor": "Visual",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8113,10 +7333,10 @@
       "vendor": "VTEX",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8132,10 +7352,10 @@
       "vendor": "VWO",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8151,10 +7371,10 @@
       "vendor": "Walls.io",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8170,10 +7390,10 @@
       "vendor": "WebEngage",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8189,10 +7409,10 @@
       "vendor": "WebTrends",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8208,10 +7428,10 @@
       "vendor": "Weibo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8227,10 +7447,10 @@
       "vendor": "WhatConverts",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8246,53 +7466,15 @@
       "vendor": "Whova",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
       "privacyPolicy": "https://whova.com/privacy/cookie-statement/",
       "website": "https://whova.com"
-    },
-    {
-      "id": "widde",
-      "name": "Widde",
-      "category": "Conversion Optimization",
-      "purpose": "Conversion Optimization",
-      "description": "",
-      "vendor": "Widde",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://privacy.orthofeet.com/privacy-policy",
-      "website": "https://orthofeet.com"
-    },
-    {
-      "id": "wigzo",
-      "name": "Wigzo",
-      "category": "Personalization",
-      "purpose": "Personalization",
-      "description": "1 billion members | Manage your professional identity. Build and engage with your professional network. Access knowledge, insights and opportunities.",
-      "vendor": "Wigzo",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://in.linkedin.com/legal/privacy-policy?trk=linkedin-tc_auth-button_privacy-policy",
-      "website": "https://in.linkedin.com"
     },
     {
       "id": "wiredminds",
@@ -8305,10 +7487,10 @@
       "vendor": "Wiredminds",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -8322,10 +7504,10 @@
       "vendor": "WizRocket",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8343,10 +7525,10 @@
       "vendor": "Wizybot",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }
@@ -8360,10 +7542,10 @@
       "vendor": "Woopra",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8379,10 +7561,10 @@
       "vendor": "Wyng",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8398,10 +7580,10 @@
       "vendor": "Yandex",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8417,10 +7599,10 @@
       "vendor": "Yieldify",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8436,10 +7618,10 @@
       "vendor": "Yotpo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8455,10 +7637,10 @@
       "vendor": "Yottaa",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8466,41 +7648,22 @@
       "website": "https://www.yottaa.com"
     },
     {
-      "id": "zarget",
-      "name": "Zarget",
-      "category": "AB Testing",
-      "purpose": "AB Testing",
-      "description": "Shop Target online and in-store for everything from groceries and essentials to clothing and electronics. Choose contactless pickup or delivery today.",
-      "vendor": "Zarget",
-      "compliance": {
-        "gdpr": {
-          "compliant": false
-        },
-        "ccpa": {
-          "compliant": false
-        },
-        "certifications": []
-      },
-      "privacyPolicy": "https://www.target.com/c/target-privacy-policy/-/N-4sr7p",
-      "website": "https://www.target.com"
-    },
-    {
       "id": "zendesk-chat",
       "name": "Zendesk Chat",
       "category": "AI Chatbot",
       "purpose": "AI Chatbot solution",
-      "description": "Zendesk Chat - AI Chatbot technology",
-      "website": "https://www.zendesk-chat.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://www.zendesk.com/company/agreements-and-terms/privacy-policy/",
       "vendor": "Zendesk, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.zendesk.com/company/agreements-and-terms/data-processing-form/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -8514,18 +7677,18 @@
       "name": "Zendesk Chatbot",
       "category": "AI Chatbot",
       "purpose": "Customer Experience",
-      "description": "Choose the best software on Capterra, with insights from millions of users and 2.5 million+ verified reviews. Compare features, pricing, & more.",
-      "website": "https://capterra.com",
-      "privacyPolicy": "https://www.zendesk.com/company/agreements-and-terms/privacy-policy/",
+      "description": "",
+      "website": "https://www.zendesk.com",
+      "privacyPolicy": "https://www.zendesk.com/company/agreements-and-terms/privacy-notice/",
       "vendor": "Zendesk, Inc.",
       "compliance": {
         "gdpr": {
-          "compliant": true,
+          "compliant": null,
           "dataProcessingAgreement": "https://www.zendesk.com/company/agreements-and-terms/data-processing-form/",
           "dataRetention": "Configurable"
         },
         "ccpa": {
-          "compliant": true,
+          "compliant": null,
           "optOutMechanism": "Available"
         },
         "certifications": [
@@ -8543,10 +7706,10 @@
       "vendor": "Zeotap",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8562,10 +7725,10 @@
       "vendor": "ZipChat",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8581,10 +7744,10 @@
       "vendor": "Zoho",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       },
@@ -8596,16 +7759,16 @@
       "name": "ZoomInfo Chat",
       "category": "AI Widget",
       "purpose": "AI Widget",
-      "description": "Access our accurate and real time verified B2B database to drive growth. With built-in email verification, UpLead is the leader in high quality business contact data. Start your free 7-day trial today!",
-      "website": "https://uplead.com",
+      "description": "",
+      "website": "",
       "privacyPolicy": "https://zoominfo.com/privacy",
       "vendor": "ZoomInfo",
       "compliance": {
         "gdpr": {
-          "compliant": false
+          "compliant": null
         },
         "ccpa": {
-          "compliant": false
+          "compliant": null
         },
         "certifications": []
       }

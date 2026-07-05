@@ -37,10 +37,10 @@
       "title": "Añadir proveedor",
       "titleCatalog": "Añadir desde el catálogo",
       "subtitle": "Registra un nuevo proveedor externo",
-      "subtitleCatalog": "Busca proveedores preauditados y autocompleta los datos de cumplimiento",
+      "subtitleCatalog": "Busca en el catálogo inicial y prellena los datos del proveedor",
       "catalog": {
         "title": "Búsqueda en el catálogo de proveedores",
-        "subtitle": "Busca entre más de 700 proveedores MarTech, IA y SaaS preauditados con datos de cumplimiento",
+        "subtitle": "Busca en un catálogo inicial de encargados habituales de MarTech, IA y SaaS",
         "verified": "Verificado",
         "website": "Sitio web",
         "privacyPolicy": "Política de privacidad",
@@ -87,7 +87,7 @@
       "compliance": {
         "title": "Información de cumplimiento",
         "fromCatalog": "Del catálogo",
-        "subtitle": "Datos de cumplimiento preauditados del catálogo de proveedores",
+        "subtitle": "Datos de referencia del catálogo de proveedores — sin evaluar; verifícalos con el proveedor",
         "certifications": "Certificaciones",
         "privacyPolicyUrl": "URL de la política de privacidad",
         "dpaUrl": "URL del DPA",
@@ -1611,14 +1611,14 @@
       },
       "catalog": {
         "title": "Catálogo de proveedores",
-        "subtitle": "Busca entre más de 700 proveedores MarTech, IA y SaaS preauditados",
-        "lockedSubtitle": "Accede a más de 700 proveedores preauditados con datos de cumplimiento, certificaciones y enlaces a DPA",
+        "subtitle": "Busca en un catálogo inicial de encargados habituales de MarTech, IA y SaaS",
+        "lockedSubtitle": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores — las entradas no están auditadas; evalúa cada proveedor antes de confiar en los datos del catálogo",
         "active": "Activo",
         "addFromCatalog": "Añadir desde el catálogo",
         "perMonth": "/mes",
         "enable": "Activar",
         "contactUs": "Contáctanos",
-        "modalDescription": "Accede a más de 700 proveedores preauditados con datos de cumplimiento, certificaciones y enlaces a DPA."
+        "modalDescription": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas — evalúa cada proveedor antes de confiar en los datos del catálogo."
       },
       "card": {
         "noCategories": "Sin categorías",
@@ -4608,16 +4608,16 @@
       },
       "vendorCatalog": {
         "title": "Catálogo de proveedores",
-        "description": "Busca e importa desde una base de datos de más de 700 proveedores preauditados de MarTech, IA y SaaS.",
-        "badge": "Base de datos de proveedores preauditados",
+        "description": "Busca e importa desde un catálogo inicial de encargados habituales de MarTech, IA y SaaS. Las entradas son un punto de partida para tu propia evaluación, no una auditoría.",
+        "badge": "Catálogo inicial de proveedores",
         "cardTitle": "Catálogo de proveedores",
-        "cardSubtitle": "Busca entre más de 700 proveedores preauditados con datos de cumplimiento",
+        "cardSubtitle": "Busca en un catálogo inicial de encargados habituales",
         "features": {
           "profiles": "Perfiles de proveedor prellenados",
-          "certs": "Certificaciones de cumplimiento",
+          "certs": "Certificaciones cuando estén publicadas",
           "details": "Detalles del tratamiento de datos",
-          "sub": "Listas de subencargados",
-          "dpa": "Plantillas de DPA",
+          "sub": "Enlaces a las políticas de privacidad",
+          "dpa": "Enlaces a DPA cuando estén publicados",
           "import": "Importación con un clic a tu inventario"
         },
         "infoTitle": "Habilitar Catálogo de proveedores",
@@ -4693,7 +4693,7 @@
         "premiumItems": {
           "assessments": "Evaluaciones DPIA, PIA, TIA",
           "vendor": "Evaluaciones de riesgo de proveedor",
-          "catalog": "Catálogo de proveedores (700+ proveedores)",
+          "catalog": "Catálogo de proveedores (catálogo inicial de encargados habituales)",
           "audit": "Funciones avanzadas de auditoría"
         }
       }

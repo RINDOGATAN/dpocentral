@@ -42,7 +42,7 @@
 **On screen**: User selects "Import from Vendor Catalog." Search bar appears. User types "Slack", selects it. Types "Notion", selects it. Types "Stripe", selects it. Three vendor badges appear above the search.
 
 **Narration**:
-> First, tell us which vendors you use. Search our catalog of 700+ pre-audited vendors. Select the ones your organization relies on — Slack, Notion, Stripe — and DPO Central already knows what data they process, where they store it, and what transfer safeguards apply.
+> First, tell us which vendors you use. Search our starter catalog of common vendors. Select the ones your organization relies on — Slack, Notion, Stripe — and DPO Central already knows what data they process, where they store it, and what transfer safeguards apply.
 
 **Key UI to show**:
 - "5 Free" badge on the vendor card (no premium needed)
