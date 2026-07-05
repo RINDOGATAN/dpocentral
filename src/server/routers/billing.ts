@@ -9,7 +9,7 @@
 
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, organizationProcedure } from "../trpc";
+import { createTRPCRouter, organizationProcedure, adminOrgProcedure } from "../trpc";
 import { removeSubscriptionItem } from "@/lib/stripe";
 
 export const billingRouter = createTRPCRouter({
@@ -112,7 +112,10 @@ export const billingRouter = createTRPCRouter({
       }));
     }),
 
-  cancelFeature: organizationProcedure
+  // OWNER/ADMIN only — cancelling a paid subscription item is an org-admin
+  // action; on organizationProcedure any member (including VIEWER) could
+  // cancel billing features.
+  cancelFeature: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
