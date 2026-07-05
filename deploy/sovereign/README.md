@@ -37,7 +37,8 @@ open http://localhost:8485
 
 Sign in at `/sign-in` with the local login box (any email creates an
 account; the seed also provides `demo@privacysuite.example` with a demo
-organization attached). Port 8485 — 8484 is LexBooks on this hardware.
+organization attached). Port 8485 is the suite convention for DPO Central
+(change `PORT` in `.env` if it collides with something on your host).
 
 ## Day-2 operations
 
@@ -56,16 +57,15 @@ organization attached). Port 8485 — 8484 is LexBooks on this hardware.
 
 ## Sync & travel replica (cloud + local copies)
 
-**Local is primary.** Same discipline as the LexBooks bundle: the replica is
-this same compose stack elsewhere, seeded with `./restore.sh` from the latest
-backup, one active side at a time. Two-way merge of concurrent edits is
-deliberately unsupported.
+**Local is primary.** The replica is this same compose stack elsewhere,
+seeded with `./restore.sh` from the latest backup, one active side at a
+time. Two-way merge of concurrent edits is deliberately unsupported.
 
 ## Hardening (beyond localhost)
 
-The full checklist lives in the LexBooks template
-(`APPS/LexBooks/deploy/sovereign/HARDENING.md`) — same pattern applies here.
-The short version:
+Apply your firm's standard host-hardening checklist (firewall, SSH keys
+only, unattended security updates, disk encryption). The DPO Central
+specifics:
 
 1. **Network:** default `BIND_ADDR=127.0.0.1` needs nothing. Office LAN:
    `BIND_ADDR=0.0.0.0` + firewall the box to the office subnet. Never expose

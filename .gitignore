@@ -42,3 +42,8 @@ next-env.d.ts
 /prisma/*.db
 /prisma/*.db-journal
 /internal-docs/
+
+# Internal artifacts — kept locally, never shipped in the tracked tree
+/CLAUDE.md
+/docs/AUDIT-*.md
+/scripts/test-signin.py
