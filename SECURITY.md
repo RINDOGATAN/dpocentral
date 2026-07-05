@@ -1,81 +1,107 @@
 # DPO Central — Security Overview
 
-DPO Central is built with security as a foundational requirement. As a privacy management platform handling assessment results, incident records, vendor contracts, and data subject requests, we apply defense-in-depth across every layer.
+This document describes the security posture of **the open-source build of DPO
+Central** — the code in this repository, which is also what the
+`deploy/sovereign` Docker bundle runs. Where the hosted service or the optional
+private `@dpocentral/security` package adds protections on top, that is stated
+explicitly rather than implied. If a protection is not listed under "enforced
+in this build", assume it is not present in your install.
 
-## Authentication
+## Enforced in this build
 
-- **Multi-provider auth** via NextAuth with Google OAuth and email magic links
-- **JWT-based sessions** — no server-side session state to compromise
-- **No unnecessary token storage** — OAuth tokens are not persisted
-- **Account isolation** — each sign-in method is isolated; no silent cross-provider account linking
-- **Cross-app SSO** via secure, scoped session cookies across `*.todo.law` subdomains
+### Authentication
 
-## Authorization
+- NextAuth with JWT sessions; no server-side session store.
+- Sign-in methods are env-gated: Google OAuth, email magic links (Resend), and
+  a local credentials provider (`NEXT_PUBLIC_LOCAL_AUTH_ENABLED`).
+- **The local credentials provider is passwordless**: any email address signs
+  in and an account is created if none exists. It exists for single-firm
+  localhost/LAN installs. Do not expose an instance with it enabled to the
+  public internet — see the Hardening section of `deploy/sovereign/README.md`.
+- OAuth access/refresh tokens are not persisted; no silent cross-provider
+  account linking.
 
-- **Strict multi-tenancy** — every database query is scoped to the authenticated user's organization via middleware. No raw SQL.
-- **Role-based access control** — five-tier role hierarchy (Owner, Admin, Privacy Officer, Member, Viewer) enforces least-privilege on all mutations
+### Authorization
+
+- **Multi-tenancy**: every organization-scoped tRPC procedure resolves the
+  caller's membership and scopes database access by `organizationId`. All
+  database access goes through Prisma; no raw SQL.
+- **Role-based access control is enforced in this build.** The five-tier role
+  hierarchy (Owner, Admin, Privacy Officer, Member, Viewer) is checked in the
+  open-source core (`src/server/trpc.ts`), not in an optional package:
   - Read access: any organization member
   - Create/update: Members and above
-  - Sensitive operations (DSAR, incidents, assessments): Privacy Officers and above
-  - Destructive operations (delete, org settings): Admins and Owners only
-- **Platform admin gating** — admin panel access restricted to designated email addresses via environment configuration
+  - Sensitive operations (DSAR management, incidents, assessments): Privacy
+    Officers and above
+  - Destructive operations (deletes, organization settings): Admins and Owners
+  - Member-role changes: Owners only
+- **Platform admin gating**: platform-admin endpoints are restricted to the
+  email addresses listed in the `ADMIN_EMAILS` environment variable. If it is
+  unset, no one has platform-admin access.
 
-## Input Validation
+### Input validation
 
-- **Schema validation** on every API endpoint via Zod
-- **HTML sanitization** on all public-facing inputs (DSAR submissions, vendor questionnaire responses)
-- **Parameterized queries** — all database access via Prisma ORM; no SQL injection surface
+- Zod schema validation on every tRPC endpoint.
+- Parameterized queries via Prisma — no SQL injection surface.
+- **HTML sanitization is a pass-through in this build.** `sanitizeInput`
+  delegates to `@dpocentral/security` when installed; without it, submitted
+  strings are stored unchanged. Treat free-text fields (public DSAR
+  submissions, questionnaire responses) as untrusted on output.
 
-## Transport & Browser Security
+### Transport & browser security
 
-- **HSTS** with 2-year max-age, includeSubDomains, and preload
-- **Content Security Policy** with per-request nonces — no `unsafe-inline` scripts
-- **X-Frame-Options: DENY** — clickjacking protection
-- **X-Content-Type-Options: nosniff** — MIME sniffing prevention
-- **Strict Referrer-Policy** — cross-origin referrer information limited
-- **Permissions-Policy** — camera, microphone, and geolocation disabled
+- HSTS (2-year max-age, includeSubDomains, preload), `X-Frame-Options: DENY`,
+  `X-Content-Type-Options: nosniff`, strict Referrer-Policy, and a
+  Permissions-Policy disabling camera/microphone/geolocation — set on every
+  response.
+- **The Content Security Policy currently ships in Report-Only mode**
+  (`Content-Security-Policy-Report-Only`, with per-request nonces). It reports
+  violations; it does not block anything yet. Do not rely on CSP as an XSS
+  mitigation in this build.
 
-## Rate Limiting
+### Rate limiting
 
-- **Authentication endpoints** — throttled to prevent credential stuffing and magic link abuse
-- **Checkout and billing** — throttled to prevent payment fraud
-- **Public submission endpoints** — throttled to prevent spam
+- Authentication, checkout/billing, and public DSAR submission routes are
+  throttled. The limiter is **in-memory and per-instance**: adequate for a
+  single-instance self-hosted deployment, not a global limit on
+  multi-instance deployments.
 
-## API Security
+### Audit trail
 
-- **Timing-safe API key comparison** on administrative endpoints
-- **Payload size validation** on batch operations
-- **Token expiry enforcement** on all vendor questionnaire operations
-- **Public DSAR portal** validates active intake form configuration before accepting submissions
+- Create/update/delete operations across modules write audit log entries.
+- DSAR audit trails survive redaction (actions and timestamps, no PII).
+- Production logs avoid stack traces and sensitive context.
 
-## Audit Trail
+### Billing (only relevant when Stripe is configured)
 
-- **Comprehensive audit logging** for all create, update, and delete operations across every module
-- **Administrative action logging** — template sync, checkout, and webhook events are logged with metadata
-- **Structured logging** — production logs contain no stack traces or sensitive context
+- Stripe webhook signature verification (HMAC-SHA256); server-side checkout;
+  entitlements suspended on payment failure.
 
-## Data Minimization
+## Requires the private `@dpocentral/security` package
 
-- **Selective query responses** — API detail endpoints return only the fields needed by the UI, not entire database records
-- **License key masking** in administrative interfaces
-- **Domain-based join protection** — public email domains (Gmail, Outlook, etc.) cannot trigger automatic organization membership
+These protections are **not active** in a plain checkout or the sovereign
+bundle. They apply to the hosted service and commercial arrangements:
 
-## Stripe Integration
+- HTML sanitization of user-submitted content (see above).
+- The public-email-domain blocklist for domain-based auto-join. Without it,
+  an organization whose `domain` is set to a public email domain (e.g.
+  `gmail.com`) would auto-join every user signing in from that domain —
+  **do not set public email domains as organization domains** on open-source
+  installs.
 
-- **Webhook signature verification** via HMAC-SHA256
-- **Server-side checkout** — no client-side price manipulation possible
-- **Subscription lifecycle management** — entitlements are automatically suspended on payment failure
+## Known limitations of this build
 
-## Premium Security Features
+- CSP is report-only (see above).
+- Rate limits are per-instance, in-memory.
+- The passwordless local provider must never face the public internet.
+- Domain-based auto-join performs no domain-ownership verification.
+- The DSAR auto-redaction job (`/api/cron/dsar-redaction`) needs an external
+  scheduler and a configured `CRON_SECRET` on self-hosted installs; without
+  both, retention-based redaction does not run.
+- There is no automated test suite yet.
 
-The following advanced security capabilities are available with a DPO Central commercial license:
+## Responsible disclosure
 
-- Advanced vendor risk scoring and assessment scoring algorithms
-- DPIA, PIA, and TIA assessment templates with compliance-grade scoring
-- Extended audit and compliance reporting
-
-For details on premium features, contact us or visit the billing section in your dashboard.
-
-## Responsible Disclosure
-
-If you discover a security vulnerability, please report it responsibly. Do not open a public issue. Contact us directly at the email listed in the repository.
+If you discover a security vulnerability, please report it privately to
+**support@rindogatan.com**. Do not open a public issue. We will acknowledge
+receipt and keep you informed of remediation progress.
