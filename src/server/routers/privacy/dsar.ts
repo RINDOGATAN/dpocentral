@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure, organizationProcedure, officerProced
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
+import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
 
@@ -574,6 +575,13 @@ export const dsarRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { organizationId: _orgId, ...formData } = input;
+
+      // customCss is rendered inside a <style> block on the *public* DSAR
+      // portal — sanitize at write time so markup can never be stored
+      // (the portal sanitizes again at render as defense in depth).
+      if (formData.customCss) {
+        formData.customCss = sanitizeCss(formData.customCss);
+      }
 
       const existing = await ctx.prisma.dSARIntakeForm.findFirst({
         where: { organizationId: ctx.organization.id },
