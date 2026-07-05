@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, organizationProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { getSecurityModule } from "@/lib/security";
@@ -180,7 +180,7 @@ export const organizationRouter = createTRPCRouter({
     }),
 
   // Update organization details
-  update: organizationProcedure
+  update: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -231,7 +231,7 @@ export const organizationRouter = createTRPCRouter({
     }),
 
   // Add a member to the organization
-  addMember: organizationProcedure
+  addMember: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -311,8 +311,9 @@ export const organizationRouter = createTRPCRouter({
       return membership;
     }),
 
-  // Update a member's role
-  updateMember: organizationProcedure
+  // Update a member's role (procedure gate: OWNER/ADMIN; handler additionally
+  // restricts to OWNER only)
+  updateMember: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -391,7 +392,7 @@ export const organizationRouter = createTRPCRouter({
     }),
 
   // Remove a member from the organization
-  removeMember: organizationProcedure
+  removeMember: adminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -460,7 +461,7 @@ export const organizationRouter = createTRPCRouter({
     }),
 
   // Add jurisdiction to organization
-  addJurisdiction: organizationProcedure
+  addJurisdiction: officerProcedure
     .input(
       z.object({
         organizationId: z.string(),
