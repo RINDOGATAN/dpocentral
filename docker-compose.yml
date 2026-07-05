@@ -1,22 +1,23 @@
-version: '3.8'
-
+# Development database only. For a full self-hosted deployment use
+# deploy/sovereign/ (app + migrator + db). Credentials here match the
+# DATABASE_URL default in .env.example.
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: privacysuite-db
+    container_name: dpocentral-dev-db
     environment:
-      POSTGRES_USER: privacysuite
-      POSTGRES_PASSWORD: privacysuite_secret
-      POSTGRES_DB: privacysuite
+      POSTGRES_USER: dpocentral
+      POSTGRES_PASSWORD: dpocentral_dev
+      POSTGRES_DB: dpocentral
     ports:
       - "5434:5432"
     volumes:
-      - privacysuite_postgres_data:/var/lib/postgresql/data
+      - dpocentral_dev_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U privacysuite -d privacysuite"]
+      test: ["CMD-SHELL", "pg_isready -U dpocentral -d dpocentral"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  privacysuite_postgres_data:
+  dpocentral_dev_postgres_data:
