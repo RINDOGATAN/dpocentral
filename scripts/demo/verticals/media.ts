@@ -988,7 +988,7 @@ export const scenario: VerticalScenario = {
       type: "ACCESS",
       status: "COMPLETED",
       requesterName: "Annika Lindgren",
-      requesterEmail: "annika.lindgren@gmail.com",
+      requesterEmail: "annika.lindgren@gmail.example",
       relationship: "Subscriber",
       description:
         "I am a long-time subscriber and would like to access all data you hold about me, including my reading history, content preferences, ad targeting profile, and subscription records.",
@@ -1195,7 +1195,7 @@ export const scenario: VerticalScenario = {
       type: "PORTABILITY",
       status: "SUBMITTED",
       requesterName: "Sofia Papadopoulos",
-      requesterEmail: "sofia.p@outlook.com",
+      requesterEmail: "sofia.p@outlook.example",
       relationship: "Subscriber",
       description:
         "I am switching to another news platform and would like to receive all my data in a machine-readable format so I can transfer my reading preferences, saved articles, and subscription history to the new provider.",

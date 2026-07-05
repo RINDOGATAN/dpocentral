@@ -168,22 +168,31 @@ async function main() {
   console.log(`Created ${skillPackages.length} skill packages`);
 
   // ============================================================
-  // PLATFORM ADMIN
+  // PLATFORM ADMIN (demo only — opt-in via DEMO_SEED=true)
   // ============================================================
+  //
+  // Default installs seed no operator identities. Platform-admin access is
+  // gated by the ADMIN_EMAILS environment variable, not by this table; the
+  // row below exists only so the hosted demo instance (which sets
+  // DEMO_SEED=true explicitly) has a visible example record.
 
-  console.log("Creating platform admin...");
+  if (process.env.DEMO_SEED === "true") {
+    console.log("Creating demo platform admin (DEMO_SEED=true)...");
 
-  await prisma.platformAdmin.upsert({
-    where: { email: "smaldonado@privacycloud.com" },
-    update: { isActive: true },
-    create: {
-      email: "smaldonado@privacycloud.com",
-      name: "Sergio Maldonado",
-      isActive: true,
-    },
-  });
+    await prisma.platformAdmin.upsert({
+      where: { email: "admin@dpocentral.example" },
+      update: { isActive: true },
+      create: {
+        email: "admin@dpocentral.example",
+        name: "Demo Platform Admin",
+        isActive: true,
+      },
+    });
 
-  console.log("Created platform admin");
+    console.log("Created demo platform admin");
+  } else {
+    console.log("DEMO_SEED != true — skipping platform admin seed (none created)");
+  }
 
   // ============================================================
   // VENDOR CATALOG (Shared Reference Database)
@@ -604,12 +613,12 @@ async function main() {
   // Create demo organization
   const demoOrg = await prisma.organization.upsert({
     where: { slug: "demo" },
-    update: { domain: "privacycloud.com" },
+    update: { domain: "acme-demo.example" },
     create: {
       id: "demo-organization",
       name: "Acme Corporation (Demo)",
       slug: "demo",
-      domain: "privacycloud.com",
+      domain: "acme-demo.example",
       settings: { isDemo: true },
     },
   });

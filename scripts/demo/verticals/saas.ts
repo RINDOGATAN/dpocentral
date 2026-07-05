@@ -175,12 +175,12 @@ export const scenario: VerticalScenario = {
     },
     {
       id: "saas-dsar-3", publicId: "CF-DSAR-2025-003", type: "ACCESS", status: "IDENTITY_PENDING",
-      requesterName: "Alex Chen", requesterEmail: "alex.chen@gmail.com",
+      requesterName: "Alex Chen", requesterEmail: "alex.chen@gmail.example",
       relationship: "User", description: "I use CloudForge through my company's workspace. I want to know what personal data CloudForge has about me. I'm using my personal email because I don't want my employer to know I'm making this request.",
       receivedAt: "2025-12-01T08:00:00Z", dueDate: "2025-12-31",
       tasks: [
         { id: "saas-dsar-3-t1", dataAssetId: "saas-asset-user-db", assignee: "dpo", title: "Verify requester identity", description: "Requester used personal email, not their workspace email. Need to verify they are a genuine CloudForge user without alerting their workspace admin.", status: "IN_PROGRESS", notes: "Sent identity verification email requesting workspace email confirmation via separate secure channel." },
-        { id: "saas-dsar-3-t2", dataAssetId: "saas-asset-auth", assignee: "member1", title: "Cross-reference authentication records", description: "Check if alex.chen@gmail.com is linked to any CloudForge workspace account.", status: "PENDING" },
+        { id: "saas-dsar-3-t2", dataAssetId: "saas-asset-auth", assignee: "member1", title: "Cross-reference authentication records", description: "Check if alex.chen@gmail.example is linked to any CloudForge workspace account.", status: "PENDING" },
       ],
       communications: [
         { id: "saas-dsar-3-c1", direction: "INBOUND", channel: "Web Form", subject: "Data Access Request", content: "Submitted via public privacy request form.", sentAt: "2025-12-01T08:00:00Z" },

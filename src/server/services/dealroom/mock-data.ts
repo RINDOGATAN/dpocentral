@@ -60,17 +60,18 @@ export const languageNames: Record<string, string> = {
   sv: "Swedish",
 };
 
-// Mirrors the live Dealroom directory. Update via `vercel env pull` + curl against
-// /api/v1/experts/search when adding or removing experts in Dealroom.
-// Legal (lawyer) experts were removed from the platform (2026-07 decision) —
-// only technical/deployment experts are listed here.
+// Fictional placeholder profiles, shown only when no Dealroom directory is
+// configured (DEALROOM_* env unset). Live installs replace these with real
+// directory results via /api/v1/experts/search. Names, firms, and addresses
+// below are invented; emails use the reserved .example TLD and cannot be
+// delivered.
 export const mockExperts: ExpertProfile[] = [
   {
-    id: "cmmxonolh023n12pm68y7qlls",
-    name: "Wences Spiegel Marquez",
-    email: "wences.spiegel@rindogatan.com",
+    id: "mock-expert-1",
+    name: "Ines Valdemar",
+    email: "ines.valdemar@deployworks.example",
     title: "Deployment Consultant",
-    firm: "Rindogatan",
+    firm: "Deployworks (fictional)",
     bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
     expertTypes: ["deployment"],
     specializations: ["Self-Hosting / Deployment"],
@@ -84,17 +85,17 @@ export const mockExperts: ExpertProfile[] = [
     profileCompleteness: 75,
   },
   {
-    id: "cmpk5y19j0000q50ttihul1xk",
-    name: "Steve Crowley",
-    email: "steve.crowley@spc-consulting.com",
+    id: "mock-expert-2",
+    name: "Marek Toivonen",
+    email: "marek.toivonen@northstack.example",
     title: "Deployment Consultant",
-    firm: "SPC Consulting",
+    firm: "Northstack Consulting (fictional)",
     bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
     expertTypes: ["deployment"],
     specializations: ["Self-Hosting / Deployment"],
     certifications: [],
     languages: ["en", "es"],
-    location: { city: "London", country: "GB" },
+    location: { city: "Helsinki", country: "FI" },
     jurisdictions: ["EU", "US", "UK"],
     contactUrl: null,
     imageUrl: null,

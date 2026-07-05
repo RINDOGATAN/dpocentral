@@ -1008,7 +1008,7 @@ export const scenario: VerticalScenario = {
       type: "ACCESS",
       status: "COMPLETED",
       requesterName: "Marianne Kuiper",
-      requesterEmail: "m.kuiper@gmail.com",
+      requesterEmail: "m.kuiper@gmail.example",
       relationship: "Patient",
       description:
         "I would like to receive a complete copy of my medical records, including all diagnoses, treatment plans, lab results, and imaging reports from my 3 years as a patient at your Amsterdam clinic.",
@@ -1202,7 +1202,7 @@ export const scenario: VerticalScenario = {
       type: "ACCESS",
       status: "SUBMITTED",
       requesterName: "Bas Mulder",
-      requesterEmail: "bas.mulder@ziggo.nl",
+      requesterEmail: "bas.mulder@ziggo.example",
       requesterPhone: "+31612345678",
       relationship: "Patient",
       description:
