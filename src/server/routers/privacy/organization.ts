@@ -329,8 +329,41 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      // Scope the lookup to the caller's organization — a raw memberId must
+      // never reach across tenant boundaries.
+      const memberToUpdate = await ctx.prisma.organizationMember.findFirst({
+        where: {
+          id: input.memberId,
+          organizationId: ctx.organization.id,
+        },
+      });
+
+      if (!memberToUpdate) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Member not found in this organization",
+        });
+      }
+
+      // Cannot demote the last owner
+      if (memberToUpdate.role === "OWNER" && input.role !== "OWNER") {
+        const ownerCount = await ctx.prisma.organizationMember.count({
+          where: {
+            organizationId: ctx.organization.id,
+            role: "OWNER",
+          },
+        });
+
+        if (ownerCount <= 1) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot change the role of the last owner of an organization",
+          });
+        }
+      }
+
       const membership = await ctx.prisma.organizationMember.update({
-        where: { id: input.memberId },
+        where: { id: memberToUpdate.id },
         data: { role: input.role },
         include: {
           user: {
@@ -374,14 +407,21 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
-      const memberToRemove = await ctx.prisma.organizationMember.findUnique({
-        where: { id: input.memberId },
+      // Scope the lookup to the caller's organization — a raw memberId must
+      // never reach across tenant boundaries. This also makes the last-owner
+      // guard below correct: the member is guaranteed to belong to the same
+      // organization whose owners are being counted.
+      const memberToRemove = await ctx.prisma.organizationMember.findFirst({
+        where: {
+          id: input.memberId,
+          organizationId: ctx.organization.id,
+        },
       });
 
       if (!memberToRemove) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Member not found",
+          message: "Member not found in this organization",
         });
       }
 
@@ -403,7 +443,7 @@ export const organizationRouter = createTRPCRouter({
       }
 
       await ctx.prisma.organizationMember.delete({
-        where: { id: input.memberId },
+        where: { id: memberToRemove.id },
       });
 
       await ctx.prisma.auditLog.create({
