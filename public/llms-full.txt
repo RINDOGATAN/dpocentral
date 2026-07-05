@@ -68,7 +68,7 @@ Maintain your vendor register with contract tracking, questionnaires, and risk m
 - **Risk Tiers**: Low, Medium, High, Critical based on data processing scope
 - **Contract Management**: Track DPAs, SCCs, Sub-processor Agreements, Security Addenda
 - **Privacy Questionnaires**: 8-section security questionnaires (SIG/CAIQ/GDPR-based, 38 questions)
-- **Vendor Catalog**: Import from a catalog of 700+ pre-profiled vendors (Premium)
+- **Vendor Catalog**: Import from a starter catalog of common processors (Premium)
 - **Review Process**: Onboarding → Questionnaire → Contract Review → Approved → Periodic Review
 
 ---
@@ -131,7 +131,7 @@ DPO Central follows an open core model:
 **Premium (Commercial License — €9/mo per feature)**:
 - DPIA, PIA, TIA assessment templates & scoring
 - Vendor risk assessments & scoring
-- Vendor Catalog (700+ pre-profiled vendors)
+- Vendor Catalog (starter catalog of common processors)
 - ROPA export (PDF/DOCX)
 - Advanced audit features
 

@@ -30,7 +30,7 @@ async function main() {
       name: "VENDOR_CATALOG",
       displayName: "Vendor Catalog",
       assessmentType: null, // Not an assessment - it's a feature skill
-      description: "Access to pre-audited vendor database with 700+ MarTech, AI, and SaaS vendors. Search, autofill, and track vendor compliance information.",
+      description: "Access to a starter catalog of common MarTech, AI, and SaaS processors. Search, autofill, and track vendor information — assess each vendor before relying on catalog data.",
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
@@ -207,10 +207,12 @@ async function main() {
 
     let vendorCount = 0;
     for (const p of processors) {
-      // Extract compliance flags
+      // Extract compliance flags. null = not assessed (the catalog asserts no
+      // GDPR/CCPA compliance conclusions — see vendors/processors.json).
       const gdprCompliant = p.compliance?.gdpr?.compliant ?? null;
       const ccpaCompliant = p.compliance?.ccpa?.compliant ?? null;
       const certifications = p.compliance?.certifications || [];
+      const dpaUrl = p.compliance?.gdpr?.dataProcessingAgreement || null;
 
       // Build frameworks array based on compliance
       const frameworks: string[] = [];
@@ -225,6 +227,7 @@ async function main() {
           description: p.description || null,
           website: p.website || null,
           privacyPolicyUrl: p.privacyPolicy || null,
+          dpaUrl,
           gdprCompliant,
           ccpaCompliant,
           certifications,
@@ -238,6 +241,7 @@ async function main() {
           description: p.description || null,
           website: p.website || null,
           privacyPolicyUrl: p.privacyPolicy || null,
+          dpaUrl,
           gdprCompliant,
           ccpaCompliant,
           certifications,
