@@ -51,9 +51,10 @@ services:
     # ports:
     #   - "127.0.0.1:55433:5432"
 
-  # One-shot: pushes the Prisma schema (the repo has no migrations dir), then
-  # seeds baseline data (skill catalog, jurisdictions, templates, demo org)
-  # on FIRST boot only — an instance with users is never re-seeded.
+  # One-shot: applies the committed prisma/migrations history (migrate
+  # deploy; pre-migrations installs are auto-baselined), then seeds baseline
+  # data (jurisdictions, templates, demo org) on FIRST boot only — an
+  # instance with users is never re-seeded.
   # Safe to re-run any time: docker compose run --rm migrator
   migrator:
     build:
@@ -100,6 +101,10 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       # Platform-admin access (comma-separated emails), if you want /admin.
       ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      # Authorizes the DSAR retention auto-redaction endpoint (see the
+      # redaction-cron service below). The endpoint fails CLOSED: with this
+      # empty, retention-based redaction does not run.
+      CRON_SECRET: ${CRON_SECRET:-}
       # Runtime copies of the build-time brand/posture vars so server-rendered
       # output matches the client bundles.
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
@@ -114,6 +119,45 @@ services:
       - "${BIND_ADDR:-127.0.0.1}:${PORT:-8485}:3001"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    healthcheck:
+      # /api/health checks liveness + database reachability (200 ok / 503
+      # degraded). wget is busybox, present in the alpine runner image.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3001/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # Daily DSAR retention auto-redaction. The cloud runs this from
+  # vercel.json; sovereign installs get this tiny scheduler instead — it
+  # calls /api/cron/dsar-redaction once a day with CRON_SECRET. If
+  # CRON_SECRET is empty the endpoint refuses to run (fail closed) and this
+  # service just logs a warning, so retention enforcement is visible either
+  # way. Generate a secret: openssl rand -hex 32 → CRON_SECRET in .env.
+  redaction-cron:
+    image: curlimages/curl:latest
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ -z "$$CRON_SECRET" ]; then
+          echo "[redaction-cron] WARNING: CRON_SECRET is empty — DSAR retention auto-redaction is DISABLED (the endpoint fails closed). Set CRON_SECRET in .env and 'docker compose up -d' to enable."
+        fi
+        while true; do
+          if [ -n "$$CRON_SECRET" ]; then
+            echo "[redaction-cron] $$(date -u +%FT%TZ) triggering DSAR auto-redaction…"
+            curl -fsS -H "Authorization: Bearer $$CRON_SECRET" http://app:3001/api/cron/dsar-redaction \
+              || echo "[redaction-cron] run failed (see app logs)"
+            echo ""
+          fi
+          sleep 86400
+        done
 
   # Optional TLS front (profile "tls"): automatic HTTPS via Caddy for
   # LAN/VPS deployments. Set TLS_DOMAIN (public DNS → Let's Encrypt; LAN

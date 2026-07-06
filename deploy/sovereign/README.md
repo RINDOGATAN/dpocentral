@@ -6,7 +6,7 @@ codebase, two postures, switched by env, never forked).
 
 ```
 Postgres 16      firm privacy-program data      db
-migrator         prisma db push + first-boot seed (one-shot)
+migrator         prisma migrate deploy + first-boot seed (one-shot)
 Next.js app      the SAME app the cloud runs    app  → http://localhost:8485
 ```
 
@@ -42,8 +42,18 @@ organization attached). Port 8485 is the suite convention for DPO Central
 
 ## Day-2 operations
 
-- **Schema after `git pull`:** `docker compose run --rm migrator` — re-runs
-  `prisma db push`; the seed is skipped once the instance has users.
+- **Schema after `git pull`:** `docker compose run --rm migrator` — applies
+  any new committed migrations (`prisma migrate deploy`; installs created
+  before the migrations era are baselined automatically). The seed is
+  skipped once the instance has users.
+- **Health:** `GET /api/health` returns `200 {status:"ok"}` when the app and
+  database are up (503 when the DB is unreachable); the compose file wires
+  it as the app container's healthcheck, so `docker compose ps` shows real
+  readiness.
+- **DSAR retention auto-redaction:** the `redaction-cron` service triggers
+  `/api/cron/dsar-redaction` daily. Set `CRON_SECRET` in `.env` (openssl
+  rand -hex 32) — with it empty, the endpoint refuses to run (fails closed)
+  and the cron container logs a warning instead.
 - **Rebuild after an update or brand/posture change:**
   `docker compose up -d --build app`. All `NEXT_PUBLIC_*` vars are baked in
   at build time — editing them in `.env` without a rebuild does nothing.
