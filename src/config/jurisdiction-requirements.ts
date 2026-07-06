@@ -32,7 +32,7 @@ export interface JurisdictionRequirement {
 
 /**
  * Universal requirements: apply to any "comprehensive" privacy regulation
- * (GDPR, UK_GDPR, FADP, CPRA, VCDPA, LGPD, etc.).
+ * (GDPR, UK-GDPR, FADP, CCPA, VCDPA, LGPD, etc.).
  */
 const UNIVERSAL_REQUIREMENTS: JurisdictionRequirement[] = [
   {

@@ -1,6 +1,7 @@
-import { PrismaClient, AssessmentType } from "@prisma/client";
+import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
+import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
 
 const prisma = new PrismaClient();
 
@@ -258,131 +259,116 @@ async function main() {
   }
 
   // Seed Jurisdictions
-  const jurisdictions = [
-    {
-      code: "GDPR",
-      name: "General Data Protection Regulation",
-      region: "EU",
-      dsarDeadlineDays: 30,
-      breachNotificationHours: 72,
+  //
+  // Operative numbers (deadlines, breach windows, names, regulators) come
+  // from the shared source of truth in src/config/jurisdiction-data.ts.
+  // This file only adds the DB-specific extras (contact info, requirements).
+  const jurisdictionExtras: Record<
+    string,
+    { dpaCContactInfo: Prisma.InputJsonValue; requirements: Record<string, unknown> }
+  > = {
+    GDPR: {
       dpaCContactInfo: {
         note: "Contact your lead supervisory authority based on main establishment",
         euList: "https://edpb.europa.eu/about-edpb/about-edpb/members_en",
       },
       requirements: {
-        dsarExtensionDays: 60,
         breachThreshold: "risk to rights and freedoms",
         dpoRequired: ["public_authority", "large_scale_monitoring", "special_categories"],
       },
     },
-    {
-      code: "CCPA",
-      name: "California Consumer Privacy Act",
-      region: "US-CA",
-      dsarDeadlineDays: 45,
-      breachNotificationHours: 0, // "Without unreasonable delay"
+    "UK-GDPR": {
       dpaCContactInfo: {
-        name: "California Attorney General",
-        website: "https://oag.ca.gov/privacy",
+        name: "Information Commissioner's Office (ICO)",
+        website: "https://ico.org.uk/",
       },
       requirements: {
-        dsarExtensionDays: 45,
-        breachThreshold: "500+ California residents",
-        applicability: ["$25M+ revenue", "50K+ consumers/devices", "50%+ revenue from selling data"],
+        breachThreshold: "risk to rights and freedoms",
       },
     },
-    {
-      code: "CPRA",
-      name: "California Privacy Rights Act",
-      region: "US-CA",
-      dsarDeadlineDays: 45,
-      breachNotificationHours: 0,
+    // Single California jurisdiction: CCPA as amended by the CPRA. The CPRA
+    // amendments created the California Privacy Protection Agency (CPPA),
+    // which enforces alongside the Attorney General.
+    CCPA: {
       dpaCContactInfo: {
-        name: "California Privacy Protection Agency",
+        name: "California Privacy Protection Agency (CPPA)",
         website: "https://cppa.ca.gov/",
+        attorneyGeneral: "https://oag.ca.gov/privacy",
       },
       requirements: {
-        dsarExtensionDays: 45,
         breachThreshold: "500+ California residents",
-        sensitive_data_opt_in: true,
+        applicability: [
+          "$25M+ revenue",
+          "100,000+ consumers/households",
+          "50%+ revenue from selling/sharing personal information",
+        ],
+        sensitive_data_limit_right: true,
       },
     },
-    {
-      code: "LGPD",
-      name: "Lei Geral de Proteção de Dados",
-      region: "BR",
-      dsarDeadlineDays: 15,
-      breachNotificationHours: 48, // "Reasonable time" interpreted as 48h
+    LGPD: {
       dpaCContactInfo: {
         name: "ANPD - Autoridade Nacional de Proteção de Dados",
         website: "https://www.gov.br/anpd/",
       },
       requirements: {
-        dsarExtensionDays: 0,
         breachThreshold: "significant risk to data subjects",
+        breachNotificationNote:
+          "3 business days per ANPD Resolution CD/ANPD No. 15/2024",
       },
     },
-    {
-      code: "PIPEDA",
-      name: "Personal Information Protection and Electronic Documents Act",
-      region: "CA",
-      dsarDeadlineDays: 30,
-      breachNotificationHours: 0, // "As soon as feasible"
+    PIPEDA: {
       dpaCContactInfo: {
         name: "Office of the Privacy Commissioner of Canada",
         website: "https://www.priv.gc.ca/",
       },
       requirements: {
-        dsarExtensionDays: 30,
         breachThreshold: "real risk of significant harm",
       },
     },
-    {
-      code: "POPIA",
-      name: "Protection of Personal Information Act",
-      region: "ZA",
-      dsarDeadlineDays: 30,
-      breachNotificationHours: 0, // "As soon as reasonably possible"
+    POPIA: {
       dpaCContactInfo: {
         name: "Information Regulator South Africa",
         website: "https://www.justice.gov.za/inforeg/",
       },
       requirements: {
-        dsarExtensionDays: 0,
         breachThreshold: "reasonable grounds to believe compromise",
       },
     },
-    {
-      code: "PDPA-SG",
-      name: "Personal Data Protection Act (Singapore)",
-      region: "SG",
-      dsarDeadlineDays: 30,
-      breachNotificationHours: 72,
+    "PDPA-SG": {
       dpaCContactInfo: {
         name: "Personal Data Protection Commission",
         website: "https://www.pdpc.gov.sg/",
       },
       requirements: {
-        dsarExtensionDays: 30,
         breachThreshold: "significant harm or large scale",
       },
     },
-    {
-      code: "APPI",
-      name: "Act on Protection of Personal Information",
-      region: "JP",
-      dsarDeadlineDays: 14, // "Without delay"
-      breachNotificationHours: 72,
+    APPI: {
       dpaCContactInfo: {
         name: "Personal Information Protection Commission",
         website: "https://www.ppc.go.jp/en/",
       },
       requirements: {
-        dsarExtensionDays: 0,
         breachThreshold: "leak of personal data",
       },
     },
-  ];
+  };
+
+  const jurisdictions = JURISDICTION_CORE_DATA.map((core) => {
+    const extras = jurisdictionExtras[core.code];
+    return {
+      code: core.code,
+      name: core.name,
+      region: core.region,
+      dsarDeadlineDays: core.dsarDeadlineDays,
+      breachNotificationHours: core.breachNotificationHours,
+      dpaCContactInfo: extras?.dpaCContactInfo,
+      requirements: {
+        dsarExtensionDays: core.dsarExtensionDays ?? 0,
+        ...extras?.requirements,
+      } as Prisma.InputJsonValue,
+    };
+  });
 
   for (const jurisdiction of jurisdictions) {
     await prisma.jurisdiction.upsert({
@@ -405,7 +391,7 @@ async function main() {
   const liaTemplate = {
     type: "LIA" as const,
     name: "Legitimate Interest Assessment",
-    description: "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f)).",
+    description: "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f)). This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "1.0",
     isSystem: true,
     isActive: true,
@@ -541,7 +527,7 @@ async function main() {
   // Seed Vendor Questionnaire Template
   const vendorQuestionnaire = {
     name: "Standard Vendor Security Questionnaire",
-    description: "A comprehensive questionnaire for vendor due diligence.",
+    description: "A comprehensive questionnaire for vendor due diligence. This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "1.0",
     isSystem: true,
     isActive: true,

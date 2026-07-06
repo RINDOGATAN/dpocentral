@@ -1,4 +1,5 @@
 import { addDays, differenceInDays, differenceInHours } from "date-fns";
+import { JURISDICTION_CORE_DATA } from "@/config/jurisdiction-data";
 
 export interface SLAResult {
   dueDate: Date;
@@ -46,32 +47,23 @@ export function calculateDSARSLA(dueDate: Date): SLAResult {
 }
 
 /**
- * Get jurisdiction-specific DSAR deadline
+ * Jurisdiction-specific DSAR deadlines (days), derived from the shared
+ * source of truth in src/config/jurisdiction-data.ts.
  */
-export const JURISDICTION_DEADLINES: Record<string, number> = {
-  GDPR: 30,
-  CCPA: 45,
-  CPRA: 45,
-  LGPD: 15,
-  PIPEDA: 30,
-  POPIA: 30,
-  "PDPA-SG": 30,
-  APPI: 14,
-};
+export const JURISDICTION_DEADLINES: Record<string, number> = Object.fromEntries(
+  JURISDICTION_CORE_DATA.map((j) => [j.code, j.dsarDeadlineDays])
+);
 
 /**
- * Get jurisdiction-specific breach notification deadline (hours)
+ * Jurisdiction-specific breach notification deadlines (hours), derived from
+ * the shared source of truth in src/config/jurisdiction-data.ts.
+ * 0 = no fixed statutory clock ("without undue delay" regimes).
+ * Note: LGPD is 3 business days per ANPD Res. 15/2024 (72h approximation —
+ * the legal clock runs in business days).
  */
-export const BREACH_NOTIFICATION_DEADLINES: Record<string, number> = {
-  GDPR: 72,
-  CCPA: 0, // "Without unreasonable delay"
-  CPRA: 0,
-  LGPD: 48,
-  PIPEDA: 0, // "As soon as feasible"
-  POPIA: 0,
-  "PDPA-SG": 72,
-  APPI: 72,
-};
+export const BREACH_NOTIFICATION_DEADLINES: Record<string, number> = Object.fromEntries(
+  JURISDICTION_CORE_DATA.map((j) => [j.code, j.breachNotificationHours])
+);
 
 /**
  * Calculate breach notification deadline

@@ -133,7 +133,7 @@
         "deadlines": {
           "GDPR": "30 days (extendable by 60 days for complex requests)",
           "CCPA": "45 days (extendable by 45 days)",
-          "UK_GDPR": "30 days",
+          "UK-GDPR": "30 days",
           "LGPD": "15 days"
         },
         "requestTypes": [
