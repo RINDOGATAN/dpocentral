@@ -9,6 +9,7 @@ import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 import { getSecurityModule } from "@/lib/security";
+import { ensureDpoUser } from "@/lib/jit-provisioning";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -203,6 +204,34 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
       }
+
+      // JIT provisioning (DB-decoupling identity model A): a cross-app
+      // *.todo.law SSO cookie can present a valid session for a user who
+      // signed into another todo.law app but has no local DPO `users` row.
+      // Mint one from the token claims, keyed by email, and repoint the
+      // token at the local user id. Direct DPO sign-ins go through the
+      // PrismaAdapter (user present) and already have a local row, so this
+      // is a no-op for them. The JIT user has no org membership yet and
+      // lands in DPO's normal create-or-join-organization onboarding.
+      if (!user && token.email) {
+        const claimedId = token.sub ?? (token.id as string | undefined);
+        const existing = claimedId
+          ? await prisma.user.findUnique({
+              where: { id: claimedId },
+              select: { id: true },
+            })
+          : null;
+        if (!existing) {
+          const dpoUser = await ensureDpoUser(prisma, {
+            email: token.email,
+            name: token.name,
+            picture: token.picture,
+          });
+          token.sub = dpoUser.id;
+          token.id = dpoUser.id;
+        }
+      }
+
       // Fetch userType on sign-in, explicit session update, or if the
       // JWT was minted before userType existed (backfill for old tokens).
       const userId = token.sub ?? (token.id as string | undefined);

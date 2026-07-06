@@ -1313,7 +1313,11 @@ model PlatformAdmin {
 }
 
 // ============================================================
-// SHARED VENDOR REFERENCE CATALOG (Platform-wide, not org-scoped)
+// GLOBAL VENDOR REFERENCE CATALOG (DPO-owned, platform-wide, not org-scoped)
+// DPO Central owns this table in its own database. It is populated
+// by the vendor-catalog sync from vendor.watch's /catalog/sync API
+// (scripts/sync-vendor-catalog.ts), NOT from the shared DB. See
+// docs/vendor-data-sourcing.md.
 // ============================================================
 
 model VendorCatalog {
@@ -1389,14 +1393,15 @@ model VendorCatalog {
 }
 
 // ============================================================
-// VENDOR.WATCH STUBS — DO NOT MODIFY
-// These tables are owned by Vendor.Watch (vendorwatch repo).
-// They are listed here as stubs so that `prisma db push` from
-// DPO Central does NOT drop them. DPC never reads or writes
-// to these tables. If VW adds columns, update stubs to match.
+// DPO-OWNED VENDOR PORTFOLIO (per-user, formerly a vendor.watch stub)
+// DPO Central now owns this table in its own database. It stays
+// EMPTY until the deferred Part B of the DB decoupling: an
+// email-keyed API on vendor.watch pushes a user's portfolio into
+// DPO (no shared DB). Until then the quickstart "import from your
+// vendor.watch portfolio" step reads empty, which it handles
+// gracefully. See docs/vendor-data-sourcing.md.
 // ============================================================
 
-/// Stub: Vendor.Watch user vendor portfolios
 model VwPortfolioVendor {
   id               String    @id @default(cuid())
   accountId        String
@@ -1418,195 +1423,6 @@ model VwPortfolioVendor {
   @@index([accountId])
   @@index([vendorSlug])
   @@map("portfolio_vendors")
-}
-
-/// Stub: Vendor.Watch vendor claim requests
-model VwVendorClaim {
-  id                    String    @id @default(cuid())
-  vendorSlug            String
-  claimantEmail         String
-  claimantName          String?
-  status                String    @default("pending")
-  userId                String?
-  accountId             String?
-  emailDomain           String?
-  vendorDomain          String?
-  domainMatch           Boolean   @default(false)
-  verificationEmail     String?
-  verificationCode      String?
-  verificationExpiresAt DateTime?
-  reviewedBy            String?
-  reviewNotes           String?   @db.Text
-  verifiedAt            DateTime?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@index([vendorSlug])
-  @@index([claimantEmail])
-  @@index([userId])
-  @@map("vendor_claims")
-}
-
-/// Stub: Vendor.Watch vendor self-reported compliance questionnaires
-model VwVendorQuestionnaire {
-  id                         String    @id @default(cuid())
-  vendorSlug                 String    @unique
-  certifications             String[]
-  frameworks                 String[]
-  gdprCompliant              Boolean?
-  ccpaCompliant              Boolean?
-  hipaaCompliant             Boolean?
-  dataLocations              String[]
-  hasEuDataCenter            Boolean?
-  subprocessors              Json?
-  privacyPolicyUrl           String?
-  trustCenterUrl             String?
-  dpaUrl                     String?
-  securityPageUrl            String?
-  dataRetentionPolicy        String?   @db.Text
-  breachNotificationDays     Int?
-  encryptionAtRest           Boolean?
-  encryptionInTransit        Boolean?
-  penTestFrequency           String?
-  transferSafeguards         String?
-  supportsDsars              Boolean?
-  hasDesignatedDpo           Boolean?
-  hasRecentBreach            Boolean?
-  euAiActCompliant           Boolean?
-  aiCapabilities             String[]
-  modelHosting               String?
-  aiTechniques               String[]
-  euAiActRole                String?
-  euAiActAnnexIIIDomains     String[]
-  iso42001Certified          Boolean?
-  supportsAuditLogs          Boolean?
-  supportsExplainability     Boolean?
-  hasBiasMonitoring          Boolean?
-  hasModelCard               Boolean?
-  aiIncidentNotificationSLA  String?
-  dataProcessingTransparency Boolean?
-  aiModels                   Json?
-  privacyTechnologies        String[]
-  submittedBy                String?
-  status                     String    @default("draft")
-  submittedAt                DateTime?
-  approvedAt                 DateTime?
-  createdAt                  DateTime  @default(now())
-  updatedAt                  DateTime  @updatedAt
-
-  @@map("vw_vendor_questionnaires")
-}
-
-/// Stub: Vendor.Watch user-submitted vendor suggestions
-model VwVendorSuggestion {
-  id            String   @id @default(cuid())
-  vendorName    String
-  vendorWebsite String?
-  suggestedBy   String?
-  notes         String?  @db.Text
-  status        String   @default("pending")
-  createdAt     DateTime @default(now())
-
-  @@map("vendor_suggestions")
-}
-
-/// Stub: Vendor.Watch enrichment requests (5 free per user)
-model VwEnrichmentRequest {
-  id                 String    @id @default(cuid())
-  userId             String    @map("user_id")
-  vendorSlug         String    @map("vendor_slug")
-  status             String    @default("pending")
-  priority           String    @default("standard")
-  isFree             Boolean   @default(true) @map("is_free")
-  stripePaymentId    String?   @map("stripe_payment_id")
-  amountCents        Int?      @map("amount_cents")
-  completenessBefore Json?     @map("completeness_before")
-  completenessAfter  Json?     @map("completeness_after")
-  completedBy        String?   @map("completed_by")
-  requestedAt        DateTime  @default(now()) @map("requested_at")
-  completedAt        DateTime? @map("completed_at")
-  dueAt              DateTime? @map("due_at")
-
-  @@unique([userId, vendorSlug])
-  @@index([userId])
-  @@index([status])
-  @@index([priority, status])
-  @@map("vw_enrichment_requests")
-}
-
-/// Stub: Vendor.Watch certification evidence
-model VwCertEvidence {
-  id           String   @id @default(cuid())
-  vendorSlug   String
-  certName     String
-  evidenceType String   @default("url")
-  url          String?
-  blobUrl      String?
-  fileName     String?
-  uploadedBy   String
-  uploaderRole String   @default("vendor")
-  status       String   @default("active")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@index([vendorSlug])
-  @@index([vendorSlug, certName])
-  @@map("vw_cert_evidence")
-}
-
-/// Stub: Vendor.Watch DPA document analysis
-model VwDpaDocument {
-  id                 String    @id @default(cuid())
-  vendorSlug         String    @map("vendor_slug")
-  sourceUrl          String    @map("source_url")
-  finalUrl           String?   @map("final_url")
-  contentType        String    @map("content_type")
-  textContent        String?   @db.Text @map("text_content")
-  contentHash        String?   @map("content_hash")
-  contentLengthBytes Int?      @map("content_length_bytes")
-  isValidDpa         Boolean?  @map("is_valid_dpa")
-  validationMethod   String?   @map("validation_method")
-  complianceAnalysis Json?     @map("compliance_analysis")
-  analyzedAt         DateTime? @map("analyzed_at")
-  uploadedBy         String?   @map("uploaded_by")
-  uploadSource       String?   @default("fetch") @map("upload_source")
-  fetchedAt          DateTime  @default(now()) @map("fetched_at")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-
-  @@index([vendorSlug])
-  @@map("vw_dpa_documents")
-}
-
-/// Stub: Vendor.Watch expert privacy reviews
-model VwExpertReview {
-  id               String    @id @default(cuid())
-  vendorSlug       String    @map("vendor_slug")
-  requestedBy      String    @map("requested_by")
-  expertId         String?   @map("expert_id")
-  expertRefCode    String?   @map("expert_ref_code")
-  expertType       String?   @map("expert_type")
-  status           String    @default("pending")
-  stripePaymentId  String?   @map("stripe_payment_id")
-  amountCents      Int?      @map("amount_cents")
-  isFree           Boolean   @default(false) @map("is_free")
-  transparency     Json?     @default("{\"status\": \"pending\"}")
-  dataMinimization Json?     @default("{\"status\": \"pending\"}") @map("data_minimization")
-  accountability   Json?     @default("{\"status\": \"pending\"}")
-  security         Json?     @default("{\"status\": \"pending\"}")
-  quality          Json?     @default("{\"status\": \"pending\"}")
-  participation    Json?     @default("{\"status\": \"pending\"}")
-  summaryReport    String?   @db.Text @map("summary_report")
-  assignedAt       DateTime? @map("assigned_at")
-  completedAt      DateTime? @map("completed_at")
-  dueAt            DateTime? @map("due_at")
-  requestedAt      DateTime  @default(now()) @map("requested_at")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-
-  @@index([vendorSlug])
-  @@index([requestedBy])
-  @@map("vw_expert_reviews")
 }
 
 // ============================================================

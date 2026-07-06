@@ -68,6 +68,9 @@ async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
   throw lastError;
 }
 
+/** The extended Prisma client type (includes the retry $extends layer). */
+export type Db = ReturnType<typeof createPrismaClient>;
+
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
