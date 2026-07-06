@@ -34,11 +34,6 @@ const nextConfig: NextConfig = {
   ...(process.env.NEXT_OUTPUT_STANDALONE === "true"
     ? { output: "standalone" as const }
     : {}),
-  typescript: {
-    // Pre-existing noImplicitAny warnings across admin/export/router files.
-    // TODO: add explicit types and remove this override.
-    ignoreBuildErrors: true,
-  },
   serverExternalPackages: [
     "@dpocentral/premium-skills",
     "@dpocentral/security",
