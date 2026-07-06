@@ -10,7 +10,7 @@ async function main() {
     type: "LIA" as const,
     name: "Legitimate Interest Assessment",
     description:
-      "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f)).",
+      "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f)). This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "1.0",
     isSystem: true,
     isActive: true,
@@ -184,7 +184,7 @@ async function main() {
     type: "CUSTOM" as const,
     name: "Custom Assessment",
     description:
-      "A flexible assessment template for custom privacy reviews and evaluations.",
+      "A flexible assessment template for custom privacy reviews and evaluations. This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "1.0",
     isSystem: true,
     isActive: true,
@@ -288,7 +288,7 @@ async function main() {
     type: "TIA" as const,
     name: "Transfer Impact Assessment (TIA)",
     description:
-      "Assess the risks of transferring personal data to a third country and determine whether supplementary measures are needed to ensure an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II).",
+      "Assess the risks of transferring personal data to a third country and determine whether supplementary measures are needed to ensure an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II). This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "1.0",
     isSystem: true,
     isActive: true,

@@ -48,13 +48,20 @@ const s = StyleSheet.create({
     bottom: 24,
     left: tokens.page.margin.left,
     right: tokens.page.margin.right,
-    flexDirection: "row",
-    justifyContent: "space-between",
     fontSize: tokens.typography.size.micro,
     color: tokens.color.text.muted,
     borderTopWidth: 0.5,
     borderTopColor: tokens.color.border.hairline,
     paddingTop: tokens.space[3],
+  },
+  footerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  footerDisclaimer: {
+    fontSize: tokens.typography.size.micro,
+    color: tokens.color.text.muted,
+    marginBottom: 3,
   },
   footerLabel: {
     fontSize: tokens.typography.size.micro,
@@ -87,12 +94,18 @@ export function PageFrame({
       </View>
       {children}
       <View style={s.footer} fixed>
-        <Text style={s.footerLabel}>DPO Central</Text>
-        <Text style={s.footerLabel}>{date}</Text>
-        <Text
-          style={s.footerLabel}
-          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
-        />
+        <Text style={s.footerDisclaimer}>
+          DPO Central provides informational tools and templates, not legal advice.
+          Verify with qualified counsel before relying on outputs.
+        </Text>
+        <View style={s.footerRow}>
+          <Text style={s.footerLabel}>DPO Central</Text>
+          <Text style={s.footerLabel}>{date}</Text>
+          <Text
+            style={s.footerLabel}
+            render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+          />
+        </View>
       </View>
     </Page>
   );

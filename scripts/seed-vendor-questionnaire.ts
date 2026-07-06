@@ -8,7 +8,7 @@ async function main() {
   const questionnaire = {
     name: "Vendor Security & Privacy Assessment",
     description:
-      "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance.",
+      "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance. This template is informational, not legal advice. Verify outputs with qualified counsel.",
     version: "2.0",
     isSystem: true,
     isActive: true,
