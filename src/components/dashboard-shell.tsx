@@ -290,6 +290,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>{tFooter("serviceBy", { brandName: brand.nameUppercase, companyName: brand.companyName })}</p>
+          <p>{tFooter("disclaimer")}</p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-3.5 h-3.5" />

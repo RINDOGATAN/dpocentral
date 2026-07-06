@@ -2080,6 +2080,7 @@
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
+    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifique los resultados con un abogado cualificado antes de utilizarlos.",
     "userGuide": "Guía de usuario",
     "billing": "Facturación",
     "termsOfService": "Términos de servicio",
@@ -4286,7 +4287,7 @@
       "categories": {
         "title": "Categorías de regulación",
         "items": {
-          "comprehensive": { "title": "Integrales", "desc": "Marcos completos de privacidad que cubren todos los aspectos de la protección de datos, como RGPD, CPRA, LGPD y POPIA." },
+          "comprehensive": { "title": "Integrales", "desc": "Marcos completos de privacidad que cubren todos los aspectos de la protección de datos, como RGPD, CCPA/CPRA, LGPD y POPIA." },
           "sectoral": { "title": "Sectoriales", "desc": "Regulaciones específicas de sector dirigidas a industrias concretas, como HIPAA para salud y PCI DSS para datos de pago." },
           "ai": { "title": "Gobernanza de IA", "desc": "Regulaciones y marcos específicos de IA, como el Reglamento de IA de la UE, que abordan la transparencia algorítmica y la toma de decisiones automatizada." },
           "emerging": { "title": "Emergentes", "desc": "Leyes recién aprobadas o propuestas que aún no están plenamente vigentes, ayudándote a prepararte para los próximos requisitos de cumplimiento." }
@@ -4839,7 +4840,7 @@
       },
       "sla": {
         "title": "Seguimiento de plazos",
-        "intro": "El sistema calcula automáticamente los plazos según las jurisdicciones aplicadas. Los plazos son por marco: RGPD (30 días), CPRA (45 días), LGPD (15 días) y más de 40 otros.",
+        "intro": "El sistema calcula automáticamente los plazos según las jurisdicciones aplicadas. Los plazos son por marco: RGPD (30 días), CCPA/CPRA (45 días), LGPD (15 días) y más de 40 otros.",
         "stats": {
           "days": { "value": "15-45", "label": "días según jurisdicción" },
           "auto": { "value": "Auto", "label": "cálculo del plazo" },

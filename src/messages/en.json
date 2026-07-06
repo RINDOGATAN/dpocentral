@@ -2080,6 +2080,7 @@
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
+    "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs.",
     "userGuide": "User Guide",
     "billing": "Billing",
     "termsOfService": "Terms of Service",
@@ -4286,7 +4287,7 @@
       "categories": {
         "title": "Regulation Categories",
         "items": {
-          "comprehensive": { "title": "Comprehensive", "desc": "Full privacy frameworks covering all aspects of data protection, such as GDPR, CPRA, LGPD, and POPIA." },
+          "comprehensive": { "title": "Comprehensive", "desc": "Full privacy frameworks covering all aspects of data protection, such as GDPR, CCPA/CPRA, LGPD, and POPIA." },
           "sectoral": { "title": "Sectoral", "desc": "Industry-specific regulations targeting particular sectors, such as HIPAA for healthcare and PCI DSS for payment data." },
           "ai": { "title": "AI Governance", "desc": "AI-specific regulations and frameworks, such as the EU AI Act, addressing algorithmic transparency and automated decision-making." },
           "emerging": { "title": "Emerging", "desc": "Newly enacted or proposed laws that are not yet fully enforced, helping you prepare for upcoming compliance requirements." }
@@ -4839,7 +4840,7 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework — GDPR (30 days), CPRA (45 days), LGPD (15 days), and 40+ others.",
+        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework — GDPR (30 days), CCPA/CPRA (45 days), LGPD (15 days), and 40+ others.",
         "stats": {
           "days": { "value": "15-45", "label": "days by jurisdiction" },
           "auto": { "value": "Auto", "label": "deadline calculation" },
