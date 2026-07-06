@@ -47,8 +47,3 @@ next-env.d.ts
 /CLAUDE.md
 /docs/AUDIT-*.md
 /scripts/test-signin.py
-
-# Release-generated vendor catalog snapshot (dropped in at release time by
-# vendor.watch db:export-snapshot). Never committed; the test fixture lives
-# in tests/fixtures/. See docs/vendor-data-sourcing.md.
-/vendors/catalog-snapshot.json
