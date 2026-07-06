@@ -4,7 +4,8 @@
  * Provides subscription status and available plans for the billing page.
  * This router is only meaningful when selfServiceUpgrade is enabled.
  *
- * Proprietary - Requires commercial license
+ * AGPL-3.0 License - Part of the open-source core (a previous header
+ * mislabeled this file as proprietary; the whole program is AGPL).
  */
 
 import { z } from "zod";
