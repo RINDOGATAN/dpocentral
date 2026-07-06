@@ -4,7 +4,8 @@
  * Creates a Stripe Billing Portal session so customers can manage
  * their subscriptions, payment methods, and invoices.
  *
- * Proprietary - Requires commercial license
+ * AGPL-3.0 License - Part of the open-source core (a previous header
+ * mislabeled this file as proprietary; the whole program is AGPL).
  */
 
 import { NextRequest, NextResponse } from "next/server";
