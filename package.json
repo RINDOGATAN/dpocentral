@@ -20,6 +20,7 @@
     "db:migrate-dev": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed-vendors": "tsx scripts/seed-vendor-catalog.ts",
+    "db:sync-vendor-catalog": "tsx scripts/sync-vendor-catalog.ts",
     "db:seed-templates": "tsx scripts/seed-templates.ts",
     "db:seed-questionnaire": "tsx scripts/seed-vendor-questionnaire.ts",
     "db:seed-demo": "tsx scripts/seed-demo-scenario.ts",
