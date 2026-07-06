@@ -10,11 +10,11 @@ import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
 const jurisdictions = [
   { name: "GDPR", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "30 days", breach: "72 hours" },
-  { name: "CPRA", region: "California", regionColor: "bg-yellow-100 text-yellow-800 border-transparent", dsar: "45 days", breach: "Expedient" },
-  { name: "LGPD", region: "Brazil", regionColor: "bg-green-100 text-green-800 border-transparent", dsar: "15 days", breach: "Reasonable time" },
-  { name: "PIPL", region: "China", regionColor: "bg-red-100 text-red-800 border-transparent", dsar: "15 days", breach: "Immediately" },
+  { name: "CCPA/CPRA", region: "California", regionColor: "bg-yellow-100 text-yellow-800 border-transparent", dsar: "45 days", breach: "Expedient" },
+  { name: "LGPD", region: "Brazil", regionColor: "bg-green-100 text-green-800 border-transparent", dsar: "15 days", breach: "3 business days" },
+  { name: "PIPL", region: "China", regionColor: "bg-red-100 text-red-800 border-transparent", dsar: "Timely (no fixed deadline)", breach: "Immediately" },
   { name: "POPIA", region: "South Africa", regionColor: "bg-purple-100 text-purple-800 border-transparent", dsar: "30 days", breach: "As soon as possible" },
-  { name: "EU AI Act", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "N/A", breach: "72 hours" },
+  { name: "EU AI Act", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "N/A", breach: "Serious incidents: 15 days (Art. 73)" },
 ];
 
 export default async function DocsRegulationsPage() {
@@ -36,7 +36,7 @@ export default async function DocsRegulationsPage() {
 
   const managementRows: { name: string; statusKey: "Applied" | "NotApplied"; primary: boolean }[] = [
     { name: "GDPR", statusKey: "Applied", primary: true },
-    { name: "CPRA", statusKey: "Applied", primary: false },
+    { name: "CCPA/CPRA", statusKey: "Applied", primary: false },
     { name: "LGPD", statusKey: "NotApplied", primary: false },
   ];
 

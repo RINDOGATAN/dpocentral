@@ -4,6 +4,12 @@
  *
  * Used by the Regulatory Tracker to determine which regulations apply to an
  * organization based on where they operate and whose data they process.
+ *
+ * NOTE: This catalog is the extended *editorial* layer. For the jurisdictions
+ * seeded into the database (GDPR, UK-GDPR, CCPA, LGPD, PIPEDA, POPIA,
+ * PDPA-SG, APPI), the codes and operative numbers (dsarDeadlineDays,
+ * breachNotificationHours) MUST match src/config/jurisdiction-data.ts —
+ * the shared source of truth used by prisma/seed.ts and the SLA calculator.
  */
 
 // ============================================================
@@ -74,7 +80,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     category: "comprehensive",
   },
   {
-    code: "UK_GDPR",
+    code: "UK-GDPR",
     name: "UK General Data Protection Regulation",
     shortName: "UK GDPR",
     region: "UK",
@@ -137,16 +143,16 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
   // US STATES
   // ----------------------------------------------------------
   {
-    code: "CPRA",
-    name: "California Privacy Rights Act",
-    shortName: "CPRA",
+    code: "CCPA",
+    name: "California Consumer Privacy Act (as amended by CPRA)",
+    shortName: "CCPA/CPRA",
     region: "US-CA",
     country: "US",
-    effectiveDate: "2023-01-01",
+    effectiveDate: "2020-01-01",
     dsarDeadlineDays: 45,
     breachNotificationHours: 0, // Separate breach notification statute
     description:
-      "Amends and expands the CCPA, creating the California Privacy Protection Agency and adding rights like correction and limiting use of sensitive personal information.",
+      "California's comprehensive consumer privacy law. The CPRA amendments (effective January 2023) expanded the CCPA and created the California Privacy Protection Agency (CPPA), adding rights like correction and limiting use of sensitive personal information.",
     keyRequirements: [
       "Right to know, delete, correct, and opt-out of sale/sharing",
       "Right to limit use of sensitive personal information",
@@ -161,7 +167,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     ],
     penalties:
       "Up to $2,500 per unintentional violation; $7,500 per intentional violation or violations involving minors",
-    dpaName: "California Privacy Protection Agency (CPPA)",
+    dpaName: "California Privacy Protection Agency (CPPA) and California Attorney General",
     dpaUrl: "https://cppa.ca.gov",
     category: "comprehensive",
   },
@@ -699,14 +705,16 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "BR",
     effectiveDate: "2020-09-18",
     dsarDeadlineDays: 15,
-    breachNotificationHours: 48,
+    // 3 business days per ANPD Res. 15/2024 (72h is an approximation; the
+    // legal clock runs in business days)
+    breachNotificationHours: 72,
     description:
       "Brazil's comprehensive data protection law modeled on the GDPR, establishing rights for data subjects and obligations for controllers and processors.",
     keyRequirements: [
       "Legal basis required for processing (10 legal bases defined)",
       "Data Protection Officer appointment mandatory",
       "Data subject rights: confirmation, access, correction, anonymization, portability, deletion",
-      "Data breach notification to ANPD and data subjects within reasonable time",
+      "Data breach notification to ANPD and affected data subjects within 3 business days (ANPD Resolution CD/ANPD No. 15/2024)",
       "Records of processing activities",
     ],
     applicabilityCriteria: [
@@ -751,15 +759,15 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
   },
   {
     code: "LFPDPPP",
-    name: "Ley Federal de Proteccion de Datos Personales en Posesion de los Particulares",
+    name: "Ley Federal de Proteccion de Datos Personales en Posesion de los Particulares (2025)",
     shortName: "LFPDPPP",
     region: "MX",
     country: "MX",
-    effectiveDate: "2010-07-06",
+    effectiveDate: "2025-03-21",
     dsarDeadlineDays: 20,
     breachNotificationHours: 0, // "Immediately" upon awareness
     description:
-      "Mexico's federal data protection law for the private sector, establishing ARCO rights (Access, Rectification, Cancellation, Opposition).",
+      "Mexico's federal data protection law for the private sector, published 20 March 2025, replacing the 2010 law of the same name. It retains ARCO rights (Access, Rectification, Cancellation, Opposition). Following the early-2025 constitutional reform that abolished INAI, enforcement now sits with the Secretaria Anticorrupcion y Buen Gobierno (SABG).",
     keyRequirements: [
       "ARCO rights: Access, Rectification, Cancellation, Opposition",
       "Privacy notice (aviso de privacidad) required before or at data collection",
@@ -773,8 +781,8 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     ],
     penalties:
       "Fines from 100 to 320,000 times the daily minimum wage in Mexico City; imprisonment for certain violations",
-    dpaName: "Instituto Nacional de Transparencia (INAI)",
-    dpaUrl: "https://www.inai.org.mx",
+    dpaName: "Secretaria Anticorrupcion y Buen Gobierno (SABG)",
+    dpaUrl: "https://www.gob.mx/buengobierno",
     category: "comprehensive",
   },
 
@@ -817,7 +825,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     region: "JP",
     country: "JP",
     effectiveDate: "2022-04-01",
-    dsarDeadlineDays: 30,
+    dsarDeadlineDays: 14, // "Without delay" — operational approximation (matches jurisdiction-data.ts)
     breachNotificationHours: 72,
     description:
       "Japan's personal information protection law (as amended in 2022) with enhanced individual rights and stricter cross-border transfer rules.",
@@ -839,7 +847,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     category: "comprehensive",
   },
   {
-    code: "PDPA_SG",
+    code: "PDPA-SG",
     name: "Personal Data Protection Act (Singapore)",
     shortName: "PDPA (SG)",
     region: "SG",
@@ -1102,16 +1110,16 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     category: "comprehensive",
   },
   {
-    code: "NDPR",
-    name: "Nigeria Data Protection Regulation",
-    shortName: "NDPR",
+    code: "NDPA",
+    name: "Nigeria Data Protection Act 2023",
+    shortName: "NDPA",
     region: "NG",
     country: "NG",
     effectiveDate: "2023-06-12",
     dsarDeadlineDays: 30,
     breachNotificationHours: 72,
     description:
-      "Nigeria's data protection framework (upgraded to Act in 2023) establishing the Nigeria Data Protection Commission and comprehensive data protection requirements.",
+      "Nigeria's Data Protection Act 2023, which repealed and replaced the 2019 NDPR, establishing the Nigeria Data Protection Commission (NDPC) and comprehensive data protection requirements.",
     keyRequirements: [
       "Lawful basis for processing (consent, contract, legal obligation, etc.)",
       "Data Protection Impact Assessments for high-risk processing",
@@ -1233,7 +1241,10 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "EU",
     effectiveDate: "2024-08-01",
     dsarDeadlineDays: 0,
-    breachNotificationHours: 72,
+    // Art. 73 serious-incident reporting for high-risk systems: without
+    // undue delay and no later than 15 days (shorter for serious/widespread
+    // incidents). Not a 72h personal-data breach rule.
+    breachNotificationHours: 360,
     description:
       "The EU's comprehensive AI regulation establishing a risk-based framework for AI systems, with prohibitions on certain practices, strict requirements for high-risk systems, and transparency obligations.",
     keyRequirements: [
@@ -1275,7 +1286,7 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
       "Do you have customers, employees, or users in the United Kingdom?",
     helpText:
       "Since Brexit, the UK has its own data protection regime. This applies if you process data of UK residents or have a UK establishment.",
-    relevantJurisdictions: ["UK_GDPR"],
+    relevantJurisdictions: ["UK-GDPR"],
   },
   {
     id: "switzerland_presence",
@@ -1289,8 +1300,8 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
     question:
       "Do you have customers or users in California, or collect data of California residents?",
     helpText:
-      "The CPRA applies to businesses meeting certain thresholds that collect personal information of California consumers.",
-    relevantJurisdictions: ["CPRA"],
+      "The CCPA (as amended by the CPRA) applies to businesses meeting certain thresholds that collect personal information of California consumers.",
+    relevantJurisdictions: ["CCPA"],
   },
   {
     id: "us_multistate",
@@ -1350,7 +1361,7 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
       "Each of these Asia-Pacific jurisdictions has its own data protection law with specific requirements.",
     relevantJurisdictions: [
       "APPI",
-      "PDPA_SG",
+      "PDPA-SG",
       "PDPA_TH",
       "DPDPA_IN",
       "PRIVACY_ACT_AU",
@@ -1365,7 +1376,7 @@ export const APPLICABILITY_QUESTIONS: ApplicabilityQuestion[] = [
       "Do you operate in or serve customers in South Africa, Saudi Arabia, Nigeria, or Mexico?",
     helpText:
       "These jurisdictions have enacted comprehensive data protection laws with specific compliance requirements.",
-    relevantJurisdictions: ["POPIA", "PDPL_SA", "NDPR", "LFPDPPP"],
+    relevantJurisdictions: ["POPIA", "PDPL_SA", "NDPA", "LFPDPPP"],
   },
   {
     id: "ai_systems_eu",
