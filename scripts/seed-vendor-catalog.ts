@@ -1,58 +1,35 @@
+/**
+ * Seeds the global vendor catalog (`vendor_catalog`) from the release
+ * snapshot (`vendors/catalog-snapshot.json`) via the shared helper.
+ *
+ *   npm run db:seed-vendors            # upsert the snapshot catalog
+ *   npm run db:seed-vendors -- --prune # also reconcile: drop prunable orphans
+ *
+ * --prune deletes vendor-catalog rows that are absent from the snapshot AND
+ * owned by us (source ∈ vendor-watch/processors.json/seed). It NEVER deletes a
+ * verified, publicly-profiled, or operator-curated row. See
+ * src/lib/seed-catalog-from-snapshot.ts and docs/vendor-data-sourcing.md.
+ *
+ * The helper fails loudly (throws) if the snapshot is missing, unparseable, or
+ * implausibly small — the catalog is core to a fresh install.
+ */
+
 import { PrismaClient } from "@prisma/client";
-import * as fs from "fs";
-import * as path from "path";
+import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding vendor catalog from processors.json...");
+  const prune = process.argv.includes("--prune");
+  console.log(
+    `Seeding vendor catalog from catalog-snapshot.json${prune ? " (with --prune)" : ""}...`
+  );
 
-  const processorsPath = path.join(process.cwd(), "vendors", "processors.json");
-  const processorsFile = fs.readFileSync(processorsPath, "utf-8");
-  const { processors } = JSON.parse(processorsFile);
+  const { upserted, pruned, skipped } = await seedCatalogFromSnapshot(prisma, { prune });
 
-  let vendorCount = 0;
-  for (const p of processors) {
-    const gdprCompliant = p.compliance?.gdpr?.compliant ?? null;
-    const ccpaCompliant = p.compliance?.ccpa?.compliant ?? null;
-    const certifications = p.compliance?.certifications || [];
-
-    const frameworks: string[] = [];
-    if (gdprCompliant) frameworks.push("GDPR");
-    if (ccpaCompliant) frameworks.push("CCPA");
-
-    await prisma.vendorCatalog.upsert({
-      where: { slug: p.id },
-      update: {
-        name: p.name,
-        category: p.category,
-        description: p.description || null,
-        website: p.website || null,
-        privacyPolicyUrl: p.privacyPolicy || null,
-        gdprCompliant,
-        ccpaCompliant,
-        certifications,
-        frameworks,
-        source: "processors.json",
-      },
-      create: {
-        slug: p.id,
-        name: p.name,
-        category: p.category,
-        description: p.description || null,
-        website: p.website || null,
-        privacyPolicyUrl: p.privacyPolicy || null,
-        gdprCompliant,
-        ccpaCompliant,
-        certifications,
-        frameworks,
-        source: "processors.json",
-      },
-    });
-    vendorCount++;
-  }
-
-  console.log(`Seeded ${vendorCount} vendors into catalog.`);
+  console.log(
+    `Catalog seed complete: ${upserted} upserted, ${pruned} pruned, ${skipped} protected orphans kept.`
+  );
 }
 
 main()

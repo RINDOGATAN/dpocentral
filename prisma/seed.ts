@@ -1,7 +1,6 @@
 import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
-import * as fs from "fs";
-import * as path from "path";
 import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
+import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";
 
 const prisma = new PrismaClient();
 
@@ -199,64 +198,15 @@ async function main() {
   // VENDOR CATALOG (Shared Reference Database)
   // ============================================================
 
-  console.log("Seeding vendor catalog from processors.json...");
-
-  try {
-    const processorsPath = path.join(process.cwd(), "vendors", "processors.json");
-    const processorsFile = fs.readFileSync(processorsPath, "utf-8");
-    const { processors } = JSON.parse(processorsFile);
-
-    let vendorCount = 0;
-    for (const p of processors) {
-      // Extract compliance flags. null = not assessed (the catalog asserts no
-      // GDPR/CCPA compliance conclusions — see vendors/processors.json).
-      const gdprCompliant = p.compliance?.gdpr?.compliant ?? null;
-      const ccpaCompliant = p.compliance?.ccpa?.compliant ?? null;
-      const certifications = p.compliance?.certifications || [];
-      const dpaUrl = p.compliance?.gdpr?.dataProcessingAgreement || null;
-
-      // Build frameworks array based on compliance
-      const frameworks: string[] = [];
-      if (gdprCompliant) frameworks.push("GDPR");
-      if (ccpaCompliant) frameworks.push("CCPA");
-
-      await prisma.vendorCatalog.upsert({
-        where: { slug: p.id },
-        update: {
-          name: p.name,
-          category: p.category,
-          description: p.description || null,
-          website: p.website || null,
-          privacyPolicyUrl: p.privacyPolicy || null,
-          dpaUrl,
-          gdprCompliant,
-          ccpaCompliant,
-          certifications,
-          frameworks,
-          source: "processors.json",
-        },
-        create: {
-          slug: p.id,
-          name: p.name,
-          category: p.category,
-          description: p.description || null,
-          website: p.website || null,
-          privacyPolicyUrl: p.privacyPolicy || null,
-          dpaUrl,
-          gdprCompliant,
-          ccpaCompliant,
-          certifications,
-          frameworks,
-          source: "processors.json",
-        },
-      });
-      vendorCount++;
-    }
-
-    console.log(`Seeded ${vendorCount} vendors into catalog`);
-  } catch (error) {
-    console.log("Skipping vendor catalog seed (processors.json not found or error):", error);
-  }
+  // The global vendor catalog seeds from the release-generated snapshot
+  // (vendors/catalog-snapshot.json), the rich full catalog exported by
+  // vendor.watch in the same shape as the live /catalog/sync payload. The
+  // catalog is core to a fresh install, so seedCatalogFromSnapshot throws
+  // loudly if the snapshot is missing, unparseable, or implausibly small —
+  // we deliberately do NOT swallow that. See docs/vendor-data-sourcing.md.
+  console.log("Seeding vendor catalog from catalog-snapshot.json...");
+  const catalogResult = await seedCatalogFromSnapshot(prisma);
+  console.log(`Seeded ${catalogResult.upserted} vendors into catalog`);
 
   // Seed Jurisdictions
   //

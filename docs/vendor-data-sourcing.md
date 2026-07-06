@@ -20,6 +20,30 @@ is a DPO-owned mirror. It is populated by syncing from vendor.watch's
   then remove the credentials and stay air-gapped. See the sovereign
   `.env.example` for the operator-triggered refresh command.
 
+### Fresh-install seed: the release snapshot
+
+A fresh install does not have API credentials yet, so the catalog seeds from a
+release-generated snapshot rather than the live sync. `vendors/catalog-snapshot.json`
+is the full, rich catalog exported by vendor.watch at release time
+(`db:export-snapshot`) in the **same shape** as the live `/catalog/sync`
+payload, so it flows through the same mapper (`src/lib/vendor-watch-mapper.ts`).
+
+- `prisma/seed.ts` and `npm run db:seed-vendors` both call
+  `seedCatalogFromSnapshot` (`src/lib/seed-catalog-from-snapshot.ts`), which
+  reads `vendors/catalog-snapshot.json` and upserts every vendor by `slug`.
+  The catalog is core to a fresh install, so it fails **loudly** (throws) if
+  the snapshot is missing, unparseable, or implausibly small — never a silent
+  warn.
+- The snapshot is **not committed to this repo**. It is dropped in at release
+  time by vendor.watch's owner step. Only a small test fixture lives in
+  `tests/fixtures/`.
+- Reconciling existing installs: `npm run db:seed-vendors -- --prune` deletes
+  vendor-catalog rows absent from the snapshot **only** when they are ours
+  (`source` ∈ `vendor-watch` / `processors.json` / `seed`). It never deletes a
+  verified, publicly-profiled, or operator-curated row.
+- After a fresh install is seeded, the live sync
+  (`npm run db:sync-vendor-catalog`) keeps the catalog current going forward.
+
 ## 2. Per-user vendor.watch portfolio (DEFERRED — Part B)
 
 A user's personal vendor.watch portfolio (`portfolio_vendors`, model
