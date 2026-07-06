@@ -196,7 +196,7 @@ export default function CustomerDetailPage() {
               <div>
                 <CardTitle>Linked Organizations</CardTitle>
                 <CardDescription>
-                  Organizations using this customer's licenses
+                  Organizations using this customer&apos;s licenses
                 </CardDescription>
               </div>
               <Button size="sm" onClick={() => setShowLinkOrg(true)}>
