@@ -28,7 +28,7 @@ function JsonLd() {
           "@type": "Offer",
           price: "0",
           priceCurrency: "EUR",
-          description: "Open-core platform — core features free under AGPL-3.0, premium add-ons from €9/mo",
+          description: "Free and open source under AGPL-3.0. All features included.",
         },
         creator: {
           "@type": "Organization",
