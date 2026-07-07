@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import prisma from "../src/lib/prisma";
 import { ensureDefaultIntakeForm } from "../src/server/services/dsar/defaultIntakeForm";
 

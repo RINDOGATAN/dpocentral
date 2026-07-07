@@ -1,4 +1,6 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -291,6 +293,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>{tFooter("serviceBy", { brandName: brand.nameUppercase, companyName: brand.companyName })}</p>
           <p>{tFooter("disclaimer")}</p>
+          <p>
+            DPO Central &middot; AGPL-3.0 &middot; &copy; Rindogatan LLC &middot;{" "}
+            <Link href="/licenses" className="underline hover:text-foreground transition-colors">
+              Source &amp; licence
+            </Link>
+          </p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-3.5 h-3.5" />

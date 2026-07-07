@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import React from "react";
 import { Document, View, Text, StyleSheet } from "@react-pdf/renderer";
 import "../design-system/fonts";

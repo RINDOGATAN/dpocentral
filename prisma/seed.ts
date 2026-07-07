@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
 import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
 import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";

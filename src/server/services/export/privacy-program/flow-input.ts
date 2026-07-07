@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Pure, unit-testable transforms from raw Prisma rows into renderFlowGraphPng
  * inputs. Applies a production + participation filter by default and splits

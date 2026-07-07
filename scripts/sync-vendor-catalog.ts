@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Syncs DPO Central's global vendor catalog (`vendor_catalog`) from
  * vendor.watch's `/catalog/sync` API into DPO's OWN database.

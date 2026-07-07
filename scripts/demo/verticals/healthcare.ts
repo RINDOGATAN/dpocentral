@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/demo/verticals/healthcare.ts
 // Vertical demo scenario: Nordic Health Group — Dutch multi-clinic provider
 // 80K patient records, special category (health) data throughout
