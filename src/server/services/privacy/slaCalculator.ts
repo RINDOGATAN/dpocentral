@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { addDays, differenceInDays, differenceInHours } from "date-fns";
 import { JURISDICTION_CORE_DATA } from "@/config/jurisdiction-data";
 

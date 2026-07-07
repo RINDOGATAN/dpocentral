@@ -1,4 +1,7 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/demo/runner.ts
 // CLI entry point: seeds one or all vertical demo scenarios
 // Usage:

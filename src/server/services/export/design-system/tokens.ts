@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Design tokens for the rebuilt PDF reports (Privacy Program, ROPA, Vendor Register).
  * Single source of truth for color, typography, spacing, radii, page geometry.

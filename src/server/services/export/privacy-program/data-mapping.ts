@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Pure functions that transform raw Prisma rows into page-ready view-models for
  * the Privacy Program Report. Unit-testable and completely free of @react-pdf.
