@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";

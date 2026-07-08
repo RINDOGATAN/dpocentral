@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Jurisdiction Catalog (Feature 6)
  * 40+ privacy jurisdictions with requirements, thresholds, and applicability criteria.

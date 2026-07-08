@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/seed-demo-scenario.ts
 // Comprehensive demo seed: "Meridian Retail Group"
 // Usage: npm run db:seed-demo

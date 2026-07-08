@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Seeds the global vendor catalog (`vendor_catalog`) from the release
  * snapshot (`vendors/catalog-snapshot.json`) via the shared helper.

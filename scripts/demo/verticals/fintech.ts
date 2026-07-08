@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/demo/verticals/fintech.ts
 // Vertical demo scenario: "Vega Financial" — EU-licensed payment institution
 // 200K users, biometric KYC, AML monitoring, crypto compliance
