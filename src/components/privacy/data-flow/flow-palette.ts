@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Shared colour + visual tokens for the in-UI data flow map.
  * Mirrors the navy-semantic PDF palette so UI and exports feel consistent.

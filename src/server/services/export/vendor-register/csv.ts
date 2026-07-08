@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * CSV export for the Vendor Register. Kept separate from the PDF document so
  * routes can pull only the export format they need.

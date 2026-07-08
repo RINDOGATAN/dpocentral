@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/demo/verticals/professional-services.ts
 // Vertical demo scenario: Alder & Stone Consulting — EU consulting/legal firm (120 staff, 500 clients)
 

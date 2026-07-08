@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // src/config/dpia-template-v2.ts
 // Enriched DPIA template v2.0 — aligned with ICO 7-step framework + Dutch/EDPB best practice
 // Reusable by seed scripts and premium package

@@ -5,9 +5,12 @@ ground rules.
 
 ## Ground rules
 
-- **License**: DPO Central is AGPL-3.0-or-later. By contributing you agree
-  your contribution is licensed under the same terms. Do not submit code
-  you don't have the right to license this way.
+- **Licensing**: this project is published under **AGPL-3.0-or-later**, and
+  Rindogatan also offers it under a separate commercial licence. So that both
+  are possible, every contribution is covered by the
+  [Contributor License Agreement](CLA.md) and certified per commit with the
+  [Developer Certificate of Origin](DCO.txt). Do not submit code you don't have
+  the right to license this way.
 - **Security issues**: never open a public issue for a vulnerability —
   email **support@rindogatan.com** (see [SECURITY.md](SECURITY.md)).
 - **Legal content** (jurisdiction data, templates, deadlines): cite your
@@ -16,6 +19,25 @@ ground rules.
   source of truth for operative jurisdiction numbers is
   `src/config/jurisdiction-data.ts` — do not fork deadlines into other
   files.
+
+## Licensing your contribution
+
+Two things travel with every contribution:
+
+1. **Sign off each commit (DCO).** Add `Signed-off-by: Your Name
+   <you@example.com>` to every commit — `git commit -s` does it for you. This
+   certifies you wrote the code or have the right to submit it (see
+   [DCO.txt](DCO.txt)). Use your real name.
+2. **Sign the CLA once.** The first time you open a PR, accept the
+   [Contributor License Agreement](CLA.md): add your name to [AUTHORS](AUTHORS)
+   in the same PR and state in the PR description that you have read and accept
+   the CLA. The CLA grants Rindogatan the relicensing right that makes the dual
+   licence (AGPL + commercial) possible. You keep the copyright to your work; it
+   is a licence, not an assignment. Contributing on behalf of an employer? Have
+   them execute a Corporate CLA (email legal@rindogatan.com).
+
+PRs without a DCO sign-off, or from a contributor who has not accepted the CLA,
+cannot be merged.
 
 ## Development setup
 
@@ -46,6 +68,20 @@ npm run build
 - **Posture doctrine**: one codebase, two postures (cloud / sovereign),
   switched by environment only. No hosted-service hardcodes in shipped
   code; a feature whose env vars are empty must be a clean no-op.
+
+## SPDX headers
+
+Every source file carries a machine-readable licence header as its first lines
+(after a shebang or a `"use client"` / `"use server"` directive, if present):
+
+```ts
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+```
+
+New source files must include it. These headers survive copy-paste into other
+codebases and make the licence and its owner unambiguous. Do not remove or alter
+them. `scripts/add-spdx-headers.mjs` adds the header to any file missing it.
 
 ## Commit style
 

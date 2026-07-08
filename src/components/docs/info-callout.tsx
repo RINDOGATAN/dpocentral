@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { Lightbulb, AlertTriangle, Info, StickyNote } from "lucide-react";
 
 type CalloutType = "tip" | "warning" | "info" | "note";

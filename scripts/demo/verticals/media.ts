@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 // scripts/demo/verticals/media.ts
 // Vertical demo scenario: Herald Digital Media — European publisher
 // 2M readers, 150K subscribers, consent-driven ad tech (TCF 2.2)
