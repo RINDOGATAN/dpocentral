@@ -96,6 +96,10 @@ services:
       # these empty — the app boots and functions fully without them.
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      # Offline skill licensing — the sovereign purchase path. Storefront
+      # Ed25519 public key (PEM) + a stable install id for activation limits.
+      SKILL_SIGNING_PUBLIC_KEY: ${SKILL_SIGNING_PUBLIC_KEY:-}
+      DPO_INSTANCE_ID: ${DPO_INSTANCE_ID:-}
       # Optional cloud mailer (magic-link login). Off by default — local
       # credentials login needs no mailer.
       RESEND_API_KEY: ${RESEND_API_KEY:-}
