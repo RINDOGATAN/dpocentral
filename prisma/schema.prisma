@@ -1263,6 +1263,7 @@ model Customer {
 
   organizations CustomerOrganization[]
   entitlements  SkillEntitlement[]
+  activations   SkillActivation[]
 
   @@map("customers")
 }
@@ -1288,6 +1289,7 @@ model SkillEntitlement {
   licenseKey           String            @unique @default(cuid())
   licenseType          LicenseType
   status               EntitlementStatus @default(ACTIVE)
+  maxActivations       Int               @default(1) // From the offline licence file; Stripe entitlements keep the default
   stripeSubscriptionId String? // Stripe Subscription ID for recurring billing
   expiresAt            DateTime?
   createdAt            DateTime          @default(now())
@@ -1295,11 +1297,32 @@ model SkillEntitlement {
 
   customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
   skillPackage SkillPackage @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
+  activations  SkillActivation[]
 
   @@unique([customerId, skillPackageId])
   @@index([status])
   @@index([stripeSubscriptionId])
   @@map("skill_entitlements")
+}
+
+// One row per installation an offline licence is activated on. instanceId is
+// unique PER ENTITLEMENT (not globally): the same instance may activate many
+// entitlements, but counts only once against each licence's activation limit.
+model SkillActivation {
+  id            String   @id @default(cuid())
+  entitlementId String
+  customerId    String
+  instanceId    String // Stable install id: DPO_INSTANCE_ID env, else machine-fingerprint-derived
+  machineHash   String // SHA-256(hostname:mac)
+  activatedAt   DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
+
+  entitlement SkillEntitlement @relation(fields: [entitlementId], references: [id], onDelete: Cascade)
+  customer    Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([entitlementId, instanceId])
+  @@index([customerId])
+  @@map("skill_activations")
 }
 
 model PlatformAdmin {

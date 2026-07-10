@@ -29,6 +29,7 @@ import {
   BarChart3,
   Globe,
   Bot,
+  KeyRound,
   MoreHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,6 +78,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
     { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
     { href: "/privacy/transfers", label: tNav("transfers"), icon: Globe },
+    { href: "/privacy/skills", label: tNav("skills"), icon: KeyRound },
     ...(isProfessional
       ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
       : []),
