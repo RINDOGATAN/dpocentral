@@ -20,6 +20,7 @@ import { notificationRouter } from "./privacy/notification";
 import { reportsRouter } from "./privacy/reports";
 import { regulationsRouter } from "./privacy/regulations";
 import { aiGovernanceRouter } from "./privacy/aiGovernance";
+import { skillsRouter } from "./skills";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -40,6 +41,7 @@ export const appRouter = createTRPCRouter({
   reports: reportsRouter,
   regulations: regulationsRouter,
   aiGovernance: aiGovernanceRouter,
+  skills: skillsRouter,
 });
 
 export type AppRouter = typeof appRouter;
