@@ -28,7 +28,7 @@ function getPublicKeyPem(): string {
   return (
     process.env.SKILL_SIGNING_PUBLIC_KEY ||
     `-----BEGIN PUBLIC KEY-----
-MCowBQYDK2VwAyEAPlaceholder_Replace_With_Real_Key_In_Production==
+MCowBQYDK2VwAyEA7VIhH/9tFV23rRAWcQiGalDtND9AkWCJrdKxBfxF3dU=
 -----END PUBLIC KEY-----`
   );
 }
