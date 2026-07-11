@@ -79,7 +79,11 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  const aisUrl = "https://aisentinel.todo.law";
+  // Base URL of the paired AI Sentinel deployment used for the "view in AI
+  // Sentinel" deep-link. Defaults to the cloud instance; self-hosted suites set
+  // NEXT_PUBLIC_AI_SENTINEL_URL to their own AI Sentinel so the link stays local.
+  const aisUrl =
+    process.env.NEXT_PUBLIC_AI_SENTINEL_URL || "https://aisentinel.todo.law";
 
   return (
     <div className="space-y-6">
@@ -339,7 +343,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               </div>
               <Button variant="outline" size="sm" asChild>
                 <a
-                  href={`${aisUrl}/governance/ai-systems/${system.aiSentinelSystemId}`}
+                  href={`${aisUrl}/governance/ai-registry/${system.aiSentinelSystemId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
