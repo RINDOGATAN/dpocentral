@@ -1213,7 +1213,14 @@
         "linkedTitle": "Linked to AI Sentinel",
         "linkedBody": "This system is synced with AI Sentinel for deep AI governance management.",
         "lastSynced": "Last synced: {date}",
-        "openInSentinel": "Open in AI Sentinel"
+        "openInSentinel": "Open in AI Sentinel",
+        "aiActStatus": "AI Act status",
+        "statusFromSentinel": "Live from AI Sentinel",
+        "riskTier": "Risk tier",
+        "fria": "FRIA",
+        "conformity": "Conformity",
+        "oversightOpen": "Open oversight gates",
+        "notAssessed": "Not assessed"
       },
       "unacceptableTitle": "Prohibited AI System",
       "unacceptableBody": "This AI system has been classified as unacceptable risk under the EU AI Act. It must be decommissioned before August 2026.",

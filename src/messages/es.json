@@ -1213,7 +1213,14 @@
         "linkedTitle": "Vinculado con AI Sentinel",
         "linkedBody": "Este sistema está sincronizado con AI Sentinel para una gobernanza de IA en profundidad.",
         "lastSynced": "Última sincronización: {date}",
-        "openInSentinel": "Abrir en AI Sentinel"
+        "openInSentinel": "Abrir en AI Sentinel",
+        "aiActStatus": "Estado (Reglamento de IA)",
+        "statusFromSentinel": "En vivo desde AI Sentinel",
+        "riskTier": "Nivel de riesgo",
+        "fria": "FRIA",
+        "conformity": "Conformidad",
+        "oversightOpen": "Controles de supervisión abiertos",
+        "notAssessed": "Sin evaluar"
       },
       "unacceptableTitle": "Sistema de IA prohibido",
       "unacceptableBody": "Este sistema de IA se ha clasificado como de riesgo inaceptable según el Reglamento de IA de la UE. Debe ser retirado antes de agosto de 2026.",

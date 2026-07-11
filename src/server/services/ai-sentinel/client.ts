@@ -11,7 +11,12 @@
  */
 
 import { logger } from "@/lib/logger";
-import type { DPCSystemPayload, ExportResult, CheckAccountResult } from "./types";
+import type {
+  DPCSystemPayload,
+  ExportResult,
+  CheckAccountResult,
+  AiSentinelSystemStatus,
+} from "./types";
 
 const AI_SENTINEL_API_URL = process.env.AI_SENTINEL_API_URL;
 const AI_SENTINEL_API_KEY = process.env.AI_SENTINEL_API_KEY;
@@ -87,5 +92,40 @@ export async function exportAISystems(
   } catch (error) {
     logger.error("AI Sentinel export error", error instanceof Error ? error : undefined);
     return { exported: 0, alreadyExisted: 0, skipped: systems.length, mapped: [] };
+  }
+}
+
+/**
+ * Fetch the AI-Act status summary of a linked AI Sentinel system.
+ * Returns null when the integration is not configured or unreachable, so the
+ * caller can simply not render the panel.
+ */
+export async function getAiSentinelSystemStatus(
+  userEmail: string,
+  aisSystemId: string,
+): Promise<AiSentinelSystemStatus | null> {
+  if (!isAiSentinelConfigured()) {
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/ai-system-status`, {
+      method: "POST",
+      headers: {
+        "x-api-key": AI_SENTINEL_API_KEY!,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userEmail, aisSystemId }),
+    });
+
+    if (!res.ok) {
+      logger.error("AI Sentinel system-status failed", undefined, { status: res.status });
+      return null;
+    }
+
+    return res.json();
+  } catch (error) {
+    logger.error("AI Sentinel system-status error", error instanceof Error ? error : undefined);
+    return null;
   }
 }
