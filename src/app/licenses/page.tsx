@@ -20,10 +20,10 @@ export default function LicensesPage() {
   const COMMIT =
     process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA;
   const sourceUrl = COMMIT ? `${SOURCE}/tree/${COMMIT}` : SOURCE;
-  // The source repository is not public yet. Until it is, show an
-  // at-no-charge offer-on-request instead of a link that would 404. Flip
-  // NEXT_PUBLIC_SOURCE_PUBLIC=true once the repo is published.
-  const SOURCE_PUBLIC = process.env.NEXT_PUBLIC_SOURCE_PUBLIC === "true";
+  // The source repository is public, so the §13 corresponding-source link
+  // resolves by default. Set NEXT_PUBLIC_SOURCE_PUBLIC=false to fall back to the
+  // offer-on-request text (e.g. a white-label build from a private fork).
+  const SOURCE_PUBLIC = process.env.NEXT_PUBLIC_SOURCE_PUBLIC !== "false";
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-12 space-y-8">
