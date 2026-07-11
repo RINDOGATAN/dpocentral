@@ -343,7 +343,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               </div>
               <Button variant="outline" size="sm" asChild>
                 <a
-                  href={`${aisUrl}/governance/ai-systems/${system.aiSentinelSystemId}`}
+                  href={`${aisUrl}/governance/ai-registry/${system.aiSentinelSystemId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
