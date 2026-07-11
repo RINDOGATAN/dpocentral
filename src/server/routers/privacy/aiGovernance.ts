@@ -10,6 +10,7 @@ import {
   isAiSentinelConfigured,
   checkAiSentinelAccount,
   exportAISystems,
+  getAiSentinelSystemStatus,
 } from "../../services/ai-sentinel/client";
 import type { DPCSystemPayload } from "../../services/ai-sentinel/types";
 
@@ -409,5 +410,22 @@ export const aiGovernanceRouter = createTRPCRouter({
       });
 
       return result;
+    }),
+
+  // Read-through AI-Act status of the linked AI Sentinel system (the "one
+  // system, both regimes" view). Returns null when the integration is off or
+  // the system is not yet linked, so the UI simply hides the panel.
+  aiSentinelSystemStatus: organizationProcedure
+    .input(z.object({ organizationId: z.string(), systemId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (!isAiSentinelConfigured()) return null;
+      const system = await ctx.prisma.aISystem.findFirst({
+        where: { id: input.systemId, organizationId: input.organizationId },
+        select: { aiSentinelSystemId: true },
+      });
+      if (!system?.aiSentinelSystemId) return null;
+      const email = ctx.session.user.email;
+      if (!email) return null;
+      return getAiSentinelSystemStatus(email, system.aiSentinelSystemId);
     }),
 });
