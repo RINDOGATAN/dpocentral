@@ -31,10 +31,13 @@ vendored, embedded, or foundational.
 
 ## Data provenance
 
-- `vendors/processors.json` — a starter catalog of common processors,
-  compiled from public sources and cleaned in v3.0.0. Entries are **not
-  audited** and compliance status is **not assessed** (`null` = not
-  assessed). See the file's own description.
+- `vendors/catalog-snapshot.json` — the global vendor catalog, generated from
+  vendor.watch (the catalog system of record) in the same shape as its live
+  `/catalog/sync` payload and refreshed per release. Entries are compiled from
+  public sources; where vendor.watch's pipeline has assessed a vendor its
+  compliance fields are populated, otherwise they are **not assessed** (`null`).
+  A fresh install seeds from this snapshot; between releases it can be topped up
+  via `db:sync-vendor-catalog`. See `docs/vendor-data-sourcing.md`.
 - Jurisdiction data (`src/config/jurisdiction-data.ts`,
   `src/config/jurisdiction-catalog.ts`) — editorial summaries of public
   legislation, maintained by hand; each correction should cite its source
