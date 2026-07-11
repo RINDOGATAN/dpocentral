@@ -43,3 +43,21 @@ export interface CheckAccountResult {
   hasOrg: boolean;
   orgId?: string;
 }
+
+/**
+ * Read-through AI-Act status of a linked AI Sentinel system, for the unified
+ * "one system, both regimes" panel. All fields optional: `found: false` (or a
+ * null response) means not linked / not reachable, and the UI hides the panel.
+ */
+export interface AiSentinelSystemStatus {
+  found: boolean;
+  systemId?: string;
+  name?: string;
+  status?: string;
+  riskLevel?: string | null;
+  annexIIICategory?: string | null;
+  fria?: { status: string; riskScore: number | null; approvedAt: string | null } | null;
+  conformity?: { status: string; approvedAt: string | null } | null;
+  assessmentsTotal?: number;
+  openOversightGates?: number;
+}

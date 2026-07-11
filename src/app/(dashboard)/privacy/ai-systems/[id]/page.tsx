@@ -53,6 +53,18 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
     { enabled: !!orgId && !!id }
   );
 
+  // Read-through AI-Act status of the linked AI Sentinel system (the unified
+  // "one system, both regimes" view). Null/absent simply hides the panel.
+  const { data: sentinelStatus } = trpc.aiGovernance.aiSentinelSystemStatus.useQuery(
+    { organizationId: orgId, systemId: id },
+    {
+      enabled:
+        features.aiSentinelIntegrationEnabled &&
+        !!orgId &&
+        !!system?.aiSentinelSystemId,
+    }
+  );
+
   const updateStatus = trpc.aiGovernance.update.useMutation({
     onSuccess: () => {
       utils.aiGovernance.getById.invalidate({ organizationId: orgId, id });
@@ -352,6 +364,40 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                 </a>
               </Button>
             </div>
+
+            {sentinelStatus?.found && (
+              <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
+                <p className="text-xs font-medium uppercase tracking-wide text-blue-500 dark:text-blue-400 mb-3">
+                  {t("sentinel.aiActStatus")} · {t("sentinel.statusFromSentinel")}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div>
+                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.riskTier")}</p>
+                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                      {sentinelStatus.riskLevel ?? t("sentinel.notAssessed")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.fria")}</p>
+                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                      {sentinelStatus.fria?.status ?? t("sentinel.notAssessed")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.conformity")}</p>
+                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                      {sentinelStatus.conformity?.status ?? t("sentinel.notAssessed")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.oversightOpen")}</p>
+                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                      {sentinelStatus.openOversightGates ?? 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
