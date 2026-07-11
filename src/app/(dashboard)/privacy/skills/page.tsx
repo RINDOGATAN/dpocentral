@@ -10,9 +10,9 @@ import {
   Upload,
   Loader2,
   CheckCircle2,
-  Lock,
   Clock,
   FileCheck2,
+  ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -20,6 +20,11 @@ import { COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/currency";
+
+// The premium-skill marketplace lives on the todo.law storefront (central for
+// every deployment). Deep-link to DPO Central's skills so a locked skill is one
+// click from purchase, not a dead end.
+const STOREFRONT_URL = "https://todo.law/marketplace?app=dpo-central";
 
 // Minimal shape check before we send it to the server.
 function looksLikeLicense(x: unknown): x is Record<string, unknown> {
@@ -140,7 +145,18 @@ export default function SkillsPage() {
             <Loader2 className="h-4 w-4 animate-spin" /> {t("loading")}
           </div>
         ) : packages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("packagesNone")}</p>
+          <div className="rounded-lg border border-dashed p-6 text-center">
+            <p className="text-sm text-muted-foreground">{t("packagesNone")}</p>
+            <a
+              href={STOREFRONT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {t("browseMarketplace")}
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
         ) : (
           <ul className="grid gap-3">
             {packages.map((pkg) => {
@@ -190,10 +206,15 @@ export default function SkillsPage() {
                         {t("statusActive")}
                       </span>
                     ) : (
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                        <Lock className="h-3.5 w-3.5" />
-                        {t("statusLocked")}
-                      </span>
+                      <a
+                        href={STOREFRONT_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                      >
+                        {t("getIt")}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
                     )}
                   </Card>
                 </li>
