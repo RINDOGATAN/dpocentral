@@ -19,7 +19,7 @@ const isDev = features.devAuthEnabled;
 export default function SignInPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
-  const [devEmail, setDevEmail] = useState("demo@privacysuite.example");
+  const [devEmail, setDevEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isDevLoading, setIsDevLoading] = useState(false);
@@ -126,22 +126,24 @@ export default function SignInPage() {
           </p>
         </div>
 
-        {/* Dev Login - Only in development */}
+        {/* Local sign-in (self-hosted / offline) */}
         {isDev && (
-          <div className="mb-6 p-4 border-2 border-primary bg-primary/5">
-            <p className="text-xs text-primary font-semibold mb-3">{t("developmentMode")}</p>
+          <div className="mb-6">
             <form onSubmit={handleDevSignIn} className="space-y-3">
+              <Label htmlFor="local-email">{t("email")}</Label>
               <Input
+                id="local-email"
                 type="email"
                 value={devEmail}
                 onChange={(e) => setDevEmail(e.target.value)}
-                placeholder={t("devEmailPlaceholder")}
+                placeholder={t("emailPlaceholder")}
                 className="input-brutal"
+                autoFocus
                 required
               />
               <button
                 type="submit"
-                disabled={isDevLoading}
+                disabled={isDevLoading || !devEmail}
                 className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isDevLoading ? (
@@ -150,7 +152,10 @@ export default function SignInPage() {
                     {t("signingIn")}
                   </>
                 ) : (
-                  t("devSignIn")
+                  <>
+                    {t("continueWithEmail")}
+                    <ArrowRight className="w-4 h-4" />
+                  </>
                 )}
               </button>
             </form>
