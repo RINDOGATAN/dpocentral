@@ -77,6 +77,13 @@ if node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClie
 else
   echo "[migrate] first boot — seeding baseline + demo data…"
   npm run db:seed
+  # db:seed only creates the minimal baseline; the assessment templates
+  # (LIA/CUSTOM/TIA) + the vendor questionnaire live in their own seed scripts.
+  # Without these, the assessment wizards render empty. (Premium DPIA/PIA
+  # templates come from the @dpocentral/premium-skills package, which is not in
+  # the self-hosted image, so they are skipped here by design.)
+  npm run db:seed-templates
+  npm run db:seed-questionnaire
 fi
 
 echo "[migrate] done."

@@ -155,11 +155,28 @@ export async function getOrganizationEntitlements(organizationId: string) {
 export async function getEntitledAssessmentTypes(
   organizationId: string
 ): Promise<AssessmentType[]> {
-  // Start with free types
-  const entitledTypes: AssessmentType[] = [...FREE_ASSESSMENT_TYPES];
+  // Only offer a type whose TEMPLATE actually exists (content is present).
+  // Premium templates DPIA/PIA ship in the private @dpocentral/premium-skills
+  // package, which is NOT bundled in the self-hosted image; so on self-host they
+  // are not offered until that skill is installed, even though the licence is
+  // free (ALL_FEATURES_FREE). This prevents offering an assessment that would
+  // open to an empty template.
+  const templated = await prisma.assessmentTemplate.findMany({
+    select: { type: true },
+    distinct: ["type"],
+  });
+  const hasTemplate = new Set(templated.map((t) => t.type));
 
-  // Check each premium type
+  const entitledTypes: AssessmentType[] = [];
+
+  // Free types: offered if their template is seeded.
+  for (const t of FREE_ASSESSMENT_TYPES) {
+    if (hasTemplate.has(t)) entitledTypes.push(t);
+  }
+
+  // Premium types: offered only if BOTH the template exists AND entitled.
   for (const assessmentType of PREMIUM_ASSESSMENT_TYPES) {
+    if (!hasTemplate.has(assessmentType)) continue;
     const result = await checkAssessmentEntitlement(organizationId, assessmentType);
     if (result.entitled) {
       entitledTypes.push(assessmentType);

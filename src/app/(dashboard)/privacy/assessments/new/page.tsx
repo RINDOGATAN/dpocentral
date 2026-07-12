@@ -287,7 +287,7 @@ export default function NewAssessmentPage() {
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                {formatPrice(9)}{tp("perMonth")}
+                                {features.stripeEnabled ? `${formatPrice(9)}${tp("perMonth")}` : tp("premiumSkill")}
                               </Badge>
                             )
                           ) : (
@@ -306,7 +306,11 @@ export default function NewAssessmentPage() {
                       </p>
                       {isLocked && (
                         <p className="text-xs text-amber-600 mt-2 font-medium">
-                          {features.selfServiceUpgrade ? tp("clickToEnable") : tp("contactToEnable", { name: brand.companyName })}
+                          {!features.stripeEnabled
+                            ? tp("premiumSkillHint")
+                            : features.selfServiceUpgrade
+                              ? tp("clickToEnable")
+                              : tp("contactToEnable", { name: brand.companyName })}
                         </p>
                       )}
                     </CardContent>

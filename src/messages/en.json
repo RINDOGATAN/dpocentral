@@ -137,6 +137,8 @@
       "included": "Included",
       "clickToEnable": "Click to enable",
       "contactToEnable": "Contact {name} to enable",
+      "premiumSkill": "Premium skill",
+      "premiumSkillHint": "Available as a downloadable skill on the todo.law marketplace.",
       "selectTemplate": "Select Template",
       "selectTemplateSubtitle": "Multiple templates available for {name}",
       "changeType": "Change type",

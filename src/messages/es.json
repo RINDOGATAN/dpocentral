@@ -137,6 +137,8 @@
       "included": "Incluido",
       "clickToEnable": "Haz clic para activar",
       "contactToEnable": "Contacta con {name} para activarlo",
+      "premiumSkill": "Skill premium",
+      "premiumSkillHint": "Disponible como skill descargable en el marketplace de todo.law.",
       "selectTemplate": "Selecciona una plantilla",
       "selectTemplateSubtitle": "Hay varias plantillas disponibles para {name}",
       "changeType": "Cambiar tipo",
