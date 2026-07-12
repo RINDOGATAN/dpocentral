@@ -3,6 +3,12 @@
 
 import { AssessmentType, EntitlementStatus, LicenseType } from "@prisma/client";
 import prisma from "@/lib/prisma";
+import { features } from "@/config/features";
+
+// Self-hosted builds have no payment rail (Stripe is off), so every premium feature
+// is free. The per-feature unlocks (the hosted "$9 to unlock" model) apply ONLY to the
+// hosted product, where Stripe is enabled.
+const ALL_FEATURES_FREE = !features.stripeEnabled;
 
 // Premium assessment types that require entitlements
 export const PREMIUM_ASSESSMENT_TYPES: AssessmentType[] = [
@@ -33,6 +39,11 @@ export async function checkAssessmentEntitlement(
   organizationId: string,
   assessmentType: AssessmentType
 ): Promise<EntitlementCheckResult> {
+  // Self-hosted: no payment rail, so all premium assessments (DPIA/PIA/TIA/VENDOR) are free.
+  if (ALL_FEATURES_FREE) {
+    return { entitled: true, reason: "Self-hosted (all features free)" };
+  }
+
   // Free assessment types don't require entitlement
   if (FREE_ASSESSMENT_TYPES.includes(assessmentType)) {
     return { entitled: true, reason: "Free assessment type" };
@@ -261,6 +272,12 @@ export async function checkSkillEntitlement(
   organizationId: string,
   skillId: string
 ): Promise<EntitlementCheckResult> {
+  // Self-hosted: no payment rail, so all premium skills/features (vendor catalog,
+  // ROPA/PDF export, etc.) are free.
+  if (ALL_FEATURES_FREE) {
+    return { entitled: true, reason: "Self-hosted (all features free)" };
+  }
+
   // Find the skill package by skillId
   const skillPackage = await prisma.skillPackage.findFirst({
     where: {
