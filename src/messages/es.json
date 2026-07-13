@@ -2100,6 +2100,8 @@
     "activated": "{name} activada.",
     "packagesTitle": "Skills disponibles",
     "packagesNone": "No hay paquetes de skills instalados.",
+    "getIt": "Consíguela",
+    "browseMarketplace": "Explorar el marketplace",
     "loading": "Cargando…",
     "statusActive": "Activa",
     "statusLocked": "Bloqueada",

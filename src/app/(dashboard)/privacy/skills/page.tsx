@@ -13,6 +13,7 @@ import {
   Lock,
   Clock,
   FileCheck2,
+  ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -20,6 +21,7 @@ import { COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/currency";
+import { STOREFRONT_BUY, MARKETPLACE_URL } from "@/lib/marketplace";
 
 // Minimal shape check before we send it to the server.
 function looksLikeLicense(x: unknown): x is Record<string, unknown> {
@@ -140,7 +142,20 @@ export default function SkillsPage() {
             <Loader2 className="h-4 w-4 animate-spin" /> {t("loading")}
           </div>
         ) : packages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t("packagesNone")}</p>
+          <div className="rounded-lg border border-dashed p-6 text-center">
+            <p className="text-sm text-muted-foreground">{t("packagesNone")}</p>
+            {STOREFRONT_BUY && (
+              <a
+                href={MARKETPLACE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                {t("browseMarketplace")}
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
+          </div>
         ) : (
           <ul className="grid gap-3">
             {packages.map((pkg) => {
@@ -189,6 +204,16 @@ export default function SkillsPage() {
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         {t("statusActive")}
                       </span>
+                    ) : STOREFRONT_BUY ? (
+                      <a
+                        href={MARKETPLACE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                      >
+                        {t("getIt")}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
                     ) : (
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                         <Lock className="h-3.5 w-3.5" />
