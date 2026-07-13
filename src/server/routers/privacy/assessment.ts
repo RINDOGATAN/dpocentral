@@ -512,6 +512,34 @@ export const assessmentRouter = createTRPCRouter({
       return response;
     }),
 
+  // Delete responses (used to remove a repeatable-section instance / risk row).
+  deleteResponses: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        assessmentId: z.string(),
+        questionIds: z.array(z.string()).min(1).max(200),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.assessmentId, organizationId: ctx.organization.id },
+      });
+      if (!assessment) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+      if (assessment.status === AssessmentStatus.APPROVED) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot modify an approved assessment",
+        });
+      }
+      const result = await ctx.prisma.assessmentResponse.deleteMany({
+        where: { assessmentId: input.assessmentId, questionId: { in: input.questionIds } },
+      });
+      return { deleted: result.count };
+    }),
+
   // Calculate and update risk score
   calculateRisk: writerProcedure
     .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))

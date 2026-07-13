@@ -47,6 +47,7 @@ import {
   Save,
   Edit,
   Plus,
+  Trash2,
   Lightbulb,
   Sparkles,
   Check,
@@ -114,6 +115,8 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [savedIndicators, setSavedIndicators] = useState<Record<string, boolean>>({});
+  // Locally-added, not-yet-saved rows for repeatable sections: groupId -> [instanceId]
+  const [extraInstances, setExtraInstances] = useState<Record<string, string[]>>({});
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Mitigation dialog state
@@ -208,6 +211,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       }, 2000);
     },
     onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  // Delete a repeatable-section instance's saved responses (remove a risk row).
+  const deleteResponses = trpc.assessment.deleteResponses.useMutation({
+    onSuccess: () => {
+      utils.assessment.getById.invalidate();
+    },
+    onError: (error) => {
+      utils.assessment.getById.invalidate();
       toast.error(error.message || t("generic.somethingWentWrong"));
     },
   });
@@ -439,6 +453,81 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const template = assessment?.template;
   const rawSections = (template?.sections as any[]) || [];
   const sections = useTranslatedSections(template?.type, rawSections);
+
+  // ── Repeatable sections (e.g. a DPIA risk register) ──
+  // A template section with `repeatable: true` is expanded into one section per
+  // instance. Each instance keys its answers with a composite question id
+  // `${questionId}::${instanceId}` so rows never collide (AssessmentResponse is
+  // unique on [assessmentId, questionId]). Instances are recovered from saved
+  // responses on load, plus any locally-added-but-empty rows.
+  const INSTANCE_SEP = "::";
+  const expandedSections = useMemo(() => {
+    const responses = assessment?.responses ?? [];
+    const out: any[] = [];
+    for (const section of sections as any[]) {
+      if (!section?.repeatable) { out.push(section); continue; }
+      const baseSet = new Set<string>((section.questions || []).map((q: any) => q.id));
+      const seen: string[] = [];
+      for (const r of responses) {
+        const qid: string = r.questionId || "";
+        const idx = qid.lastIndexOf(INSTANCE_SEP);
+        if (idx < 0) continue;
+        if (baseSet.has(qid.slice(0, idx))) {
+          const inst = qid.slice(idx + INSTANCE_SEP.length);
+          if (inst && !seen.includes(inst)) seen.push(inst);
+        }
+      }
+      const extras = (extraInstances[section.id] ?? []).filter((i) => !seen.includes(i));
+      let instances = [...seen, ...extras];
+      if (instances.length === 0) instances = ["r0"];
+      const itemLabel: string = section.itemLabel || "Item";
+      instances.forEach((instId, i) => {
+        out.push({
+          ...section,
+          id: `${section.id}${INSTANCE_SEP}${instId}`,
+          title: `${itemLabel} ${i + 1}`,
+          description: i === 0 ? section.description : undefined,
+          questions: (section.questions || []).map((q: any) => ({
+            ...q,
+            id: `${q.id}${INSTANCE_SEP}${instId}`,
+          })),
+          _repeatable: true,
+          _groupId: section.id,
+          _instanceId: instId,
+          _itemLabel: itemLabel,
+          _canRemove: instances.length > 1,
+          _isLastInstance: i === instances.length - 1,
+          _instanceQuestionIds: (section.questions || []).map(
+            (q: any) => `${q.id}${INSTANCE_SEP}${instId}`
+          ),
+        });
+      });
+    }
+    return out;
+  }, [sections, assessment?.responses, extraInstances]);
+
+  const addInstance = useCallback((groupId: string) => {
+    const instId = Math.random().toString(36).slice(2, 9);
+    setExtraInstances((prev) => ({ ...prev, [groupId]: [...(prev[groupId] ?? []), instId] }));
+  }, []);
+  const removeInstance = useCallback(
+    (section: any) => {
+      const qids: string[] = section._instanceQuestionIds ?? [];
+      const hasSaved = (assessment?.responses ?? []).some((r: any) => qids.includes(r.questionId));
+      if (hasSaved && assessment?.id && organization?.id) {
+        deleteResponses.mutate({
+          organizationId: organization.id,
+          assessmentId: assessment.id,
+          questionIds: qids,
+        });
+      }
+      setExtraInstances((prev) => ({
+        ...prev,
+        [section._groupId]: (prev[section._groupId] ?? []).filter((i) => i !== section._instanceId),
+      }));
+    },
+    [assessment?.responses, assessment?.id, organization?.id, deleteResponses]
+  );
   const completionPercentage = assessment?.completionPercentage ?? 0;
   const totalQuestions = assessment?.totalQuestions ?? 0;
   const answeredQuestions = assessment?.responses?.length ?? 0;
@@ -446,15 +535,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const canSubmit =
     assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
 
-  // Check if all REQUIRED questions are answered (mirrors server-side validation)
-  const requiredQuestionIds = sections.flatMap((s: any) =>
+  // Check if all REQUIRED questions are answered (mirrors server-side validation).
+  // Uses expandedSections so repeatable instances' composite ids are counted.
+  const requiredQuestionIds = expandedSections.flatMap((s: any) =>
     (s.questions || []).filter((q: any) => q.required).map((q: any) => q.id)
   );
   const answeredIds = new Set(assessment?.responses?.map((r: any) => r.questionId) ?? []);
   const allRequiredAnswered = requiredQuestionIds.length === 0 || requiredQuestionIds.every((id: string) => answeredIds.has(id));
 
   // These hooks MUST be called unconditionally (before early returns)
-  const sectionCompletionData = useMemo(() => sections.map((section) => {
+  const sectionCompletionData = useMemo(() => expandedSections.map((section) => {
     const sectionQuestions = section.questions || [];
     const answeredInSection = assessment?.responses?.filter(
       (r: any) => r.sectionId === section.id
@@ -466,7 +556,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       total: sectionQuestions.length,
       isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
     };
-  }), [sections, assessment?.responses]);
+  }), [expandedSections, assessment?.responses]);
 
   const scrollToSection = useCallback((sectionId: string) => {
     setActiveSectionId(sectionId);
@@ -680,7 +770,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           )}
 
           {sections.length > 0 ? (
-            sections.map((section, sectionIndex) => {
+            expandedSections.map((section: any, sectionIndex: number) => {
               const sectionQuestions = section.questions || [];
               const answeredInSection = assessment.responses?.filter(
                 (r: any) => r.sectionId === section.id
@@ -701,6 +791,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           )}
                         </div>
                         <div className="flex items-center gap-2">
+                          {section._repeatable && section._canRemove && canSubmit && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 px-2 text-muted-foreground hover:text-destructive"
+                              onClick={() => removeInstance(section)}
+                            >
+                              <Trash2 className="w-3.5 h-3.5 mr-1" />
+                              {tCommon("delete")}
+                            </Button>
+                          )}
                           <Badge variant="outline" className={answeredInSection === sectionQuestions.length && sectionQuestions.length > 0 ? "border-primary text-primary" : ""}>
                             {answeredInSection === sectionQuestions.length && sectionQuestions.length > 0 && (
                               <Check className="w-3 h-3 mr-1" />
@@ -977,6 +1078,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       </div>
                     </CardContent>
                   </Card>
+                  {section._repeatable && section._isLastInstance && canSubmit && (
+                    <div className="mt-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addInstance(section._groupId)}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        {tCommon("add")} {section._itemLabel}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               );
             })
