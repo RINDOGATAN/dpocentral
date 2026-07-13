@@ -25,8 +25,11 @@ import { logger } from "@/lib/logger";
 // placeholder guarantees verification fails (never crashes) until the real
 // key is configured. Read lazily so tests and late-injected env both work.
 function getPublicKeyPem(): string {
+  // Self-host sets this via a docker .env, which can't hold a multiline PEM — so
+  // accept a `\n`-escaped one-liner and restore the newlines.
+  const env = process.env.SKILL_SIGNING_PUBLIC_KEY;
   return (
-    process.env.SKILL_SIGNING_PUBLIC_KEY ||
+    (env?.includes("\\n") ? env.replace(/\\n/g, "\n") : env) ||
     `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEA7VIhH/9tFV23rRAWcQiGalDtND9AkWCJrdKxBfxF3dU=
 -----END PUBLIC KEY-----`
