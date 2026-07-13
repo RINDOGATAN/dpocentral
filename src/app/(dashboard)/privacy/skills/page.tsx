@@ -14,6 +14,7 @@ import {
   Clock,
   FileCheck2,
   ExternalLink,
+  Package,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -36,6 +37,10 @@ export default function SkillsPage() {
   const [license, setLicense] = useState<Record<string, unknown> | null>(null);
   const [fileName, setFileName] = useState("");
 
+  const skillRef = useRef<HTMLInputElement>(null);
+  const [skillB64, setSkillB64] = useState<string | null>(null);
+  const [skillName, setSkillName] = useState("");
+
   const list = trpc.skills.list.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
@@ -47,6 +52,17 @@ export default function SkillsPage() {
       setLicense(null);
       setFileName("");
       if (fileRef.current) fileRef.current.value = "";
+      list.refetch();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const install = trpc.skills.installSkill.useMutation({
+    onSuccess: (r) => {
+      toast.success(t("skillInstalled", { type: r.assessmentType ?? "Skill" }));
+      setSkillB64(null);
+      setSkillName("");
+      if (skillRef.current) skillRef.current.value = "";
       list.refetch();
     },
     onError: (e) => toast.error(e.message),
@@ -67,6 +83,22 @@ export default function SkillsPage() {
       }
     };
     reader.readAsText(file);
+  };
+
+  const onSkillFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      // data URL "data:...;base64,AAAA" — keep only the base64 payload.
+      const result = String(reader.result);
+      const b64 = result.includes(",") ? result.slice(result.indexOf(",") + 1) : result;
+      if (!b64) {
+        toast.error(t("badSkillFile"));
+        return;
+      }
+      setSkillB64(b64);
+      setSkillName(file.name);
+    };
+    reader.readAsDataURL(file);
   };
 
   const packages = list.data ?? [];
@@ -128,6 +160,62 @@ export default function SkillsPage() {
                 </>
               ) : (
                 t("activate")
+              )}
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* Install a skill package (.skill) — delivers premium assessment content */}
+      <Card className="mt-4 p-6">
+        <div className="mb-1 flex items-center gap-2">
+          <Package className="h-4 w-4 text-primary" />
+          <h2 className="text-sm font-medium">{t("installTitle")}</h2>
+        </div>
+        <p className="mb-4 text-xs text-muted-foreground">{t("installHint")}</p>
+
+        <input
+          ref={skillRef}
+          type="file"
+          accept=".skill,application/zip"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onSkillFile(f);
+          }}
+        />
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Button type="button" variant="outline" onClick={() => skillRef.current?.click()}>
+            <Upload className="mr-2 h-4 w-4" />
+            {t("chooseSkillFile")}
+          </Button>
+          {skillName && (
+            <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+              <FileCheck2 className="h-4 w-4 text-primary" />
+              {skillName}
+            </span>
+          )}
+          <div className="sm:ml-auto">
+            <Button
+              type="button"
+              disabled={!skillB64 || !organization || install.isPending}
+              onClick={() =>
+                skillB64 &&
+                organization &&
+                install.mutate({
+                  organizationId: organization.id,
+                  packageBase64: skillB64,
+                })
+              }
+            >
+              {install.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("installing")}
+                </>
+              ) : (
+                t("installAction")
               )}
             </Button>
           </div>

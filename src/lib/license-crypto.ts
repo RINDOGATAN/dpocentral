@@ -87,6 +87,21 @@ export function sha256(data: Buffer | string): string {
   return createHash("sha256").update(data).digest("hex");
 }
 
+/**
+ * Deterministic hash of a skill package's files (sorted path + content).
+ * Byte-identical to deal-room's computePackageHash so one signing key + method
+ * covers contract .skill packages and assessment .skill packages alike.
+ */
+export function computePackageHash(files: Map<string, Buffer>): string {
+  const hash = createHash("sha256");
+  const sortedPaths = Array.from(files.keys()).sort();
+  for (const path of sortedPaths) {
+    hash.update(path);
+    hash.update(files.get(path)!);
+  }
+  return hash.digest("hex");
+}
+
 /** Validate storefront licence key format: LIC-XXXX-XXXX-XXXX-XXXX. */
 export function isValidLicenseKeyFormat(key: string): boolean {
   return /^LIC-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/i.test(key);

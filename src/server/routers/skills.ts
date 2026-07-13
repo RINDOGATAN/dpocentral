@@ -21,6 +21,7 @@ import {
   deactivateForOrg,
 } from "../services/licensing/activation";
 import { getMachineInfo } from "../services/licensing/fingerprint";
+import { installAssessmentSkillFromBuffer } from "../services/skills/assessment-installer";
 import type { LicenseFile } from "@/lib/license-crypto";
 
 // Mirrors the LicenseFile interface (and Dealroom's schema) exactly.
@@ -140,6 +141,37 @@ export const skillsRouter = createTRPCRouter({
         skillId: result.skillId,
         skillName: result.skillName,
         expiresAt: result.expiresAt,
+      };
+    }),
+
+  /**
+   * Install a downloaded assessment skill package (.skill) — OWNER/ADMIN.
+   * Delivers the premium assessment CONTENT (e.g. DPIA/PIA sections + scoring)
+   * that is stripped from the self-host image, verifying the storefront's
+   * Ed25519 signature. After install the type stops being hidden by the
+   * template-existence filter and the wizard opens with real content.
+   */
+  installSkill: adminOrgProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        // base64 of the .skill zip (any data-URL prefix stripped client-side)
+        packageBase64: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const buffer = Buffer.from(input.packageBase64, "base64");
+      const result = await installAssessmentSkillFromBuffer(buffer);
+      if (!result.success) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: result.errors.join("; ") || "Install failed",
+        });
+      }
+      return {
+        success: true,
+        assessmentType: result.assessmentType,
+        templateId: result.templateId,
       };
     }),
 
