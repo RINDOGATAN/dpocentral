@@ -93,14 +93,20 @@ export async function installAssessmentSkillFromBuffer(
     return { success: false, errors: ["TYPE_MISMATCH: manifest.assessmentType != template.type"] };
   }
 
-  // Integrity: every file the manifest lists must be present + hash-match.
+  // Integrity: every file the manifest lists must be present + hash-match. Build
+  // the exact file set the packager signed over — manifest.json plus every file
+  // in manifest.files (content/template.json, SKILL.md, ...). Hashing a subset
+  // would make the package hash (and thus the signature) mismatch.
   const files = new Map<string, Buffer>();
   files.set("manifest.json", manifestBuf);
-  files.set("content/template.json", templateBuf);
   for (const [p, h] of Object.entries(manifest.files)) {
     const b = read(p);
     if (!b) return { success: false, errors: [`MISSING_FILE: ${p}`] };
     if (sha256(b) !== h) return { success: false, errors: [`HASH_MISMATCH: ${p}`] };
+    files.set(p, b);
+  }
+  if (!files.has("content/template.json")) {
+    return { success: false, errors: ["MISSING_TEMPLATE: content/template.json not listed in manifest"] };
   }
 
   // Authenticity: Ed25519 over the package hash, against SKILL_SIGNING_PUBLIC_KEY.
