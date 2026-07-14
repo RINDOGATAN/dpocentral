@@ -68,6 +68,15 @@ export const skillsRouter = createTRPCRouter({
         ])
       );
 
+      // Which assessment skills have their content installed (system template
+      // present) — so the UI can show "Installed" instead of a buy CTA.
+      const templated = await ctx.prisma.assessmentTemplate.findMany({
+        where: { isSystem: true, organizationId: null },
+        select: { type: true },
+        distinct: ["type"],
+      });
+      const installedTypes = new Set(templated.map((t) => t.type));
+
       return packages.map((pkg) => {
         const ent = entitlementsByPackage.get(pkg.id);
         const isActive =
@@ -81,6 +90,7 @@ export const skillsRouter = createTRPCRouter({
           displayName: pkg.displayName,
           description: pkg.description,
           assessmentType: pkg.assessmentType,
+          installed: !!pkg.assessmentType && installedTypes.has(pkg.assessmentType),
           priceAmount: pkg.priceAmount,
           priceCurrency: pkg.priceCurrency,
           entitlement: ent

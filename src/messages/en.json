@@ -2109,6 +2109,8 @@
     "packagesTitle": "Available skills",
     "packagesNone": "No skill packages installed.",
     "getIt": "Get it",
+    "premiumBadge": "Premium",
+    "statusInstalled": "Installed",
     "browseMarketplace": "Browse the marketplace",
     "loading": "Loading…",
     "statusActive": "Active",

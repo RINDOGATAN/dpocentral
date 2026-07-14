@@ -271,8 +271,11 @@ export default function SkillsPage() {
                               })}
                             </span>
                           </>
+                        ) : isComingSoon || pkg.installed ? null : STOREFRONT_BUY ? (
+                          // Self-host: these are downloadable marketplace skills
+                          // (€60/yr, bought externally), not an in-app $9/mo feature.
+                          <span>{t("premiumBadge")}</span>
                         ) : (
-                          !isComingSoon &&
                           pkg.priceAmount != null && (
                             <span>
                               {formatPrice(pkg.priceAmount / 100)}
@@ -291,6 +294,11 @@ export default function SkillsPage() {
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         {t("statusActive")}
+                      </span>
+                    ) : pkg.installed ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        {t("statusInstalled")}
                       </span>
                     ) : STOREFRONT_BUY ? (
                       <a
