@@ -249,6 +249,10 @@ export default function SkillsPage() {
             {packages.map((pkg) => {
               const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId);
               const active = !!pkg.entitlement?.isActive;
+              // Features (no assessmentType) are in-app capabilities, free on
+              // self-host — never a "buy" item there. Only downloadable assessment
+              // skills are premium/marketplace.
+              const isIncluded = STOREFRONT_BUY && !pkg.assessmentType && !isComingSoon;
               return (
                 <li key={pkg.id}>
                   <Card className={`flex items-center justify-between gap-3 p-4 ${isComingSoon ? "opacity-60" : ""}`}>
@@ -271,7 +275,7 @@ export default function SkillsPage() {
                               })}
                             </span>
                           </>
-                        ) : isComingSoon || pkg.installed ? null : STOREFRONT_BUY ? (
+                        ) : isComingSoon || pkg.installed || isIncluded ? null : STOREFRONT_BUY ? (
                           // Self-host: these are downloadable marketplace skills
                           // (€60/yr, bought externally), not an in-app $9/mo feature.
                           <span>{t("premiumBadge")}</span>
@@ -299,6 +303,11 @@ export default function SkillsPage() {
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         {t("statusInstalled")}
+                      </span>
+                    ) : isIncluded ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        {t("statusIncluded")}
                       </span>
                     ) : STOREFRONT_BUY ? (
                       <a
