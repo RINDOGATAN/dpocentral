@@ -11,8 +11,9 @@
  */
 
 import { useState } from "react";
-import { Loader2, Sparkles, X, Mail } from "lucide-react";
+import { Loader2, Sparkles, X, Package, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MARKETPLACE_URL } from "@/lib/marketplace";
 import {
   Card,
   CardContent,
@@ -21,7 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
 
@@ -79,23 +79,25 @@ export function EnableFeatureModal({
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Contact us to enable this feature for your organization.
+              {skillName} is a premium skill on the todo.law marketplace. Buy it
+              there, then install the downloaded .skill on your Skills page to
+              enable it for your organization.
             </p>
           </CardContent>
-          <CardFooter className="flex justify-end gap-3">
+          <CardFooter className="flex flex-wrap justify-end gap-3">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
+            <Button variant="outline" asChild>
+              <a href="/privacy/skills">
+                <Package className="mr-2 h-4 w-4" />
+                Install on Skills page
+              </a>
+            </Button>
             <Button asChild>
-              <a
-                href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(
-                  `${brand.name} - Enable ${skillName}`
-                )}&body=${encodeURIComponent(
-                  `Hi,\n\nI would like to enable ${skillName} for my organization.\n\nOrganization ID: ${organizationId}\n\nPlease contact me with next steps.\n\nThank you.`
-                )}`}
-              >
-                <Mail className="mr-2 h-4 w-4" />
-                Contact Us
+              <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Get it on the marketplace
               </a>
             </Button>
           </CardFooter>
