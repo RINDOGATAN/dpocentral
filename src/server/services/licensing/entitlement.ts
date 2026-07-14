@@ -14,7 +14,6 @@ const ALL_FEATURES_FREE = !features.stripeEnabled;
 export const PREMIUM_ASSESSMENT_TYPES: AssessmentType[] = [
   "DPIA",
   "PIA",
-  "TIA",
   "VENDOR",
 ];
 

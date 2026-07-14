@@ -41,7 +41,7 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 
 // Premium assessment types that require entitlements
-const PREMIUM_TYPES = ["DPIA", "PIA", "TIA", "VENDOR"];
+const PREMIUM_TYPES = ["DPIA", "PIA", "VENDOR"];
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
@@ -52,7 +52,7 @@ const ASSESSMENT_TYPES: Array<{
   { type: "CUSTOM", icon: Settings2, premium: false },
   { type: "DPIA", icon: ShieldCheck, premium: true },
   { type: "PIA", icon: ClipboardCheck, premium: true },
-  { type: "TIA", icon: ArrowRightLeft, premium: true },
+  { type: "TIA", icon: ArrowRightLeft, premium: false },
   { type: "VENDOR", icon: Building2, premium: true },
 ];
 
