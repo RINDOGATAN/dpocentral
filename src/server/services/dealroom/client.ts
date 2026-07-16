@@ -17,7 +17,17 @@ const DEALROOM_API_KEY = process.env.DEALROOM_API_KEY;
 // Normalize: env var may include path prefix (e.g. ".../api/v1/experts") — strip to base domain
 const DEALROOM_API_URL = RAW_DEALROOM_URL.replace(/\/api\/v1\/experts\/?$/, "").replace(/\/+$/, "");
 
-const useMock = !DEALROOM_API_URL || !DEALROOM_API_KEY;
+// Mock experts are fictitious people (dev fixtures). They must never surface
+// in a production deployment: a self-hosted install without the Dealroom API
+// gets an EMPTY directory (the feature is flag-hidden there anyway), and a
+// hosted outage degrades to empty rather than impersonating humans. Demos can
+// opt back in explicitly with DEALROOM_MOCK_EXPERTS=true.
+const mockAllowed =
+  process.env.NODE_ENV !== "production" ||
+  process.env.DEALROOM_MOCK_EXPERTS === "true";
+const unconfigured = !DEALROOM_API_URL || !DEALROOM_API_KEY;
+const useMock = unconfigured && mockAllowed;
+const EMPTY_RESULT: ExpertSearchResult = { results: [], total: 0, offset: 0 };
 
 export type { ExpertProfile };
 
@@ -125,6 +135,9 @@ export async function searchExperts(
   if (useMock) {
     return filterMockExperts(params);
   }
+  if (unconfigured) {
+    return EMPTY_RESULT;
+  }
 
   const res = await fetch(`${DEALROOM_API_URL}/api/v1/experts/search`, {
     method: "POST",
@@ -146,12 +159,13 @@ export async function searchExperts(
 
   if (!res.ok) {
     const errorBody = await res.text().catch(() => "");
-    logger.error("Dealroom search failed — falling back to mock", undefined, {
+    logger.error("Dealroom search failed", undefined, {
       status: res.status,
       url: `${DEALROOM_API_URL}/api/v1/experts/search`,
       error: errorBody.slice(0, 300),
     });
-    return filterMockExperts(params); // Fallback to mock
+    // Degrade honestly: an empty directory, never fictitious people.
+    return mockAllowed ? filterMockExperts(params) : EMPTY_RESULT;
   }
 
   const data: ExpertSearchResult = await res.json();
@@ -186,6 +200,9 @@ export async function getExpertById(
   if (useMock) {
     return findMock();
   }
+  if (unconfigured) {
+    return null;
+  }
 
   const res = await fetch(`${DEALROOM_API_URL}/api/v1/experts/${id}`, {
     headers: {
@@ -195,7 +212,7 @@ export async function getExpertById(
   });
 
   if (!res.ok) {
-    return findMock();
+    return mockAllowed ? findMock() : null;
   }
 
   const expert: ExpertProfile = await res.json();
@@ -275,6 +292,12 @@ export async function contactExpert(
       status: "pending",
       createdAt: new Date().toISOString(),
     };
+  }
+  if (unconfigured) {
+    // Never pretend a message was sent: fail honestly so the UI says so.
+    throw new Error(
+      "The expert directory is not connected on this deployment, so the message was not sent."
+    );
   }
 
   const { expertId, ...body } = params;

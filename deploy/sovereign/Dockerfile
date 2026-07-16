@@ -51,6 +51,10 @@ ARG NEXT_PUBLIC_BRAND_LOGO_URL=""
 ARG NEXT_PUBLIC_APP_URL="http://localhost:8485"
 ARG NEXT_PUBLIC_AI_SENTINEL_URL=""
 ARG NEXT_PUBLIC_AI_SENTINEL_ENABLED=true
+# The expert directory is a cloud/marketplace feature: it needs the live
+# Dealroom API. On a sovereign box there is no such backend, so hide the
+# directory and its CTA entirely (the flag gates both).
+ARG NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED=false
 # Storefront for premium-skill discovery (self-host has no in-app checkout).
 ARG NEXT_PUBLIC_MARKETPLACE_URL="https://todo.law/legalskills"
 ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
@@ -64,6 +68,7 @@ ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
     NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     NEXT_PUBLIC_AI_SENTINEL_URL=$NEXT_PUBLIC_AI_SENTINEL_URL \
     NEXT_PUBLIC_AI_SENTINEL_ENABLED=$NEXT_PUBLIC_AI_SENTINEL_ENABLED \
+    NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED=$NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED \
     NEXT_OUTPUT_STANDALONE=true \
     NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production
