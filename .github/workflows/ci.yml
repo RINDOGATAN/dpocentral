@@ -33,7 +33,10 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npm run build
+        # Not `npm run build`: that script starts with `prisma migrate deploy`
+        # (hosted deploys migrate on build), which needs a reachable database.
+        # CI has none — build the app directly against the dummy URL.
+        run: npx next build
         env:
           # Build must not depend on real secrets. A dummy DATABASE_URL keeps
           # Prisma happy; no page hits the database at build time.
