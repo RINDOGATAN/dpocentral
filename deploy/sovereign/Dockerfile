@@ -61,7 +61,7 @@ ARG NEXT_PUBLIC_AI_SENTINEL_ENABLED=true
 # directory and its CTA entirely (the flag gates both).
 ARG NEXT_PUBLIC_EXPERT_DIRECTORY_ENABLED=false
 # Storefront for premium-skill discovery (self-host has no in-app checkout).
-ARG NEXT_PUBLIC_MARKETPLACE_URL="https://todo.law/legalskills"
+ARG NEXT_PUBLIC_MARKETPLACE_URL="https://todo.law/marketplace"
 ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
     NEXT_PUBLIC_MARKETPLACE_URL=$NEXT_PUBLIC_MARKETPLACE_URL \
     NEXT_PUBLIC_EMAIL_AUTH_ENABLED=$NEXT_PUBLIC_EMAIL_AUTH_ENABLED \
