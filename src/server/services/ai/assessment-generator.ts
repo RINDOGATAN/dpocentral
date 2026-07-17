@@ -2,54 +2,40 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * AI Assessment Generator Service (Feature 3 - Optional AI Enhancement)
+ * DPIA/PIA/TIA risk-narrative prompt builder.
  *
- * Generates risk assessment narratives for DPIAs using an LLM — preferably a
- * local OpenAI-compatible gateway (LLM_GATEWAY_URL/LLM_GATEWAY_KEY/
- * LLM_MODEL_ALIAS, the sovereign "one door"), else OpenAI or Anthropic
- * directly. This is entirely optional — if nothing is configured, all
- * exports are safe no-ops that return null.
+ * Builds the prompts for the AI risk assessment narrative from an
+ * AutoFillContext (the same context the deterministic rule engine in
+ * `src/config/dpia-auto-fill-rules.ts` consumes) and sends them through the
+ * one LLM Door (`services/ai/llm-door.ts`).
  *
- * No additional packages are required; this uses native fetch.
+ * Prompts are ALWAYS built server-side from Prisma-derived context — never
+ * from client-supplied text. Callers must pass the posture gate
+ * (`services/ai/posture.ts` requireAi) BEFORE calling generateRiskNarrative;
+ * this module performs no network I/O of its own.
  *
  * AGPL-3.0 License - Part of the open-source core
  */
 
 import type { AutoFillContext } from "@/config/dpia-auto-fill-rules";
-import { logger } from "@/lib/logger";
+import { chatComplete, type ChatResult } from "./llm-door";
 
 // ---------------------------------------------------------------------------
-// Configuration
+// Prompts
 // ---------------------------------------------------------------------------
 
-// The one LLM door (sovereign posture): an OpenAI-compatible gateway —
-// LiteLLM, LQ.AI, Ollama behind a proxy, or any /v1/chat/completions
-// endpoint. When LLM_GATEWAY_URL + LLM_MODEL_ALIAS are set they take
-// precedence over the direct-to-provider keys below.
-const LLM_GATEWAY_URL = process.env.LLM_GATEWAY_URL;
-const LLM_GATEWAY_KEY = process.env.LLM_GATEWAY_KEY;
-const LLM_MODEL_ALIAS = process.env.LLM_MODEL_ALIAS;
+const LOCALE_INSTRUCTIONS: Record<string, string> = {
+  en: "Write the narrative in English.",
+  es: "Redacta la narrativa en español de España (castellano peninsular), con terminología jurídica propia del RGPD y de la AEPD.",
+};
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+export function buildDpiaSystemPrompt(locale: string = "en"): string {
+  const languageLine = LOCALE_INSTRUCTIONS[locale] ?? LOCALE_INSTRUCTIONS.en;
 
-type Provider = "gateway" | "openai" | "anthropic" | null;
-
-function getProvider(): Provider {
-  if (LLM_GATEWAY_URL && LLM_MODEL_ALIAS) return "gateway";
-  if (OPENAI_API_KEY) return "openai";
-  if (ANTHROPIC_API_KEY) return "anthropic";
-  return null;
-}
-
-// ---------------------------------------------------------------------------
-// Prompt
-// ---------------------------------------------------------------------------
-
-function buildSystemPrompt(): string {
   return `You are a senior data protection consultant specializing in GDPR compliance and Data Protection Impact Assessments (DPIAs). Your role is to evaluate the data processing context provided and produce a clear, structured risk assessment narrative.
 
 Guidelines:
+- ${languageLine}
 - Write in formal, professional language suitable for a regulatory submission.
 - Reference specific GDPR articles and EDPB guidelines where relevant.
 - Identify concrete risks to data subjects' rights and freedoms.
@@ -60,7 +46,7 @@ Guidelines:
 - Do not invent facts; only assess what is provided in the context.`;
 }
 
-function buildUserPrompt(context: AutoFillContext): string {
+export function buildDpiaUserPrompt(context: AutoFillContext): string {
   const parts: string[] = [];
 
   parts.push(`## Processing Activity: ${context.activity.name}`);
@@ -95,9 +81,7 @@ function buildUserPrompt(context: AutoFillContext): string {
     parts.push("\n## Systems / Assets");
     for (const asset of context.assets) {
       const vendor = asset.vendor ? ` (vendor: ${asset.vendor})` : "";
-      const hosting = asset.hostingType
-        ? ` [${asset.hostingType}]`
-        : "";
+      const hosting = asset.hostingType ? ` [${asset.hostingType}]` : "";
       parts.push(`- ${asset.name} (${asset.type})${hosting}${vendor}`);
     }
   }
@@ -106,9 +90,7 @@ function buildUserPrompt(context: AutoFillContext): string {
     parts.push("\n## International Transfers");
     for (const t of context.transfers) {
       const safeguards = t.safeguards ? ` | Safeguards: ${t.safeguards}` : "";
-      parts.push(
-        `- To ${t.destinationCountry} via ${t.mechanism}${safeguards}`
-      );
+      parts.push(`- To ${t.destinationCountry} via ${t.mechanism}${safeguards}`);
     }
   }
 
@@ -131,198 +113,24 @@ function buildUserPrompt(context: AutoFillContext): string {
 }
 
 // ---------------------------------------------------------------------------
-// API Calls
-// ---------------------------------------------------------------------------
-
-async function callGateway(
-  systemPrompt: string,
-  userPrompt: string
-): Promise<string | null> {
-  try {
-    const base = LLM_GATEWAY_URL!.replace(/\/+$/, "");
-    const response = await fetch(`${base}/v1/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(LLM_GATEWAY_KEY
-          ? { Authorization: `Bearer ${LLM_GATEWAY_KEY}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        model: LLM_MODEL_ALIAS,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        max_tokens: 1500,
-        temperature: 0.3,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "");
-      logger.error("LLM gateway call failed", undefined, {
-        status: response.status,
-        error: errorText,
-      });
-      return null;
-    }
-
-    const data = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-
-    return data.choices?.[0]?.message?.content ?? null;
-  } catch (error) {
-    logger.error("LLM gateway call threw", undefined, {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
-}
-
-async function callOpenAI(
-  systemPrompt: string,
-  userPrompt: string
-): Promise<string | null> {
-  try {
-    const response = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          max_tokens: 1500,
-          temperature: 0.3,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "");
-      logger.error("OpenAI API call failed", undefined, {
-        status: response.status,
-        error: errorText,
-      });
-      return null;
-    }
-
-    const data = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-
-    return data.choices?.[0]?.message?.content ?? null;
-  } catch (error) {
-    logger.error("OpenAI API call threw", undefined, {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
-}
-
-async function callAnthropic(
-  systemPrompt: string,
-  userPrompt: string
-): Promise<string | null> {
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY!,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1500,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userPrompt }],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "");
-      logger.error("Anthropic API call failed", undefined, {
-        status: response.status,
-        error: errorText,
-      });
-      return null;
-    }
-
-    const data = (await response.json()) as {
-      content?: { type: string; text?: string }[];
-    };
-
-    const textBlock = data.content?.find((b) => b.type === "text");
-    return textBlock?.text ?? null;
-  } catch (error) {
-    logger.error("Anthropic API call threw", undefined, {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 /**
- * Generate a risk assessment narrative using an AI provider.
+ * Generate a risk assessment narrative through the LLM Door.
  *
- * Returns null if:
- * - No AI API key is configured (graceful no-op)
- * - The API call fails for any reason
- *
- * Callers should always treat this as optional and fall back to the
- * rule-based auto-fill responses from `dpia-auto-fill-rules.ts`.
+ * Returns null if no engine is configured or the call fails — callers
+ * always treat this as optional and keep the deterministic rule-based
+ * suggestions from `dpia-auto-fill-rules.ts` as the baseline.
  */
 export async function generateRiskNarrative(
-  context: AutoFillContext
-): Promise<string | null> {
-  const provider = getProvider();
-
-  if (!provider) {
-    return null;
-  }
-
-  const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(context);
-
-  switch (provider) {
-    case "gateway":
-      return callGateway(systemPrompt, userPrompt);
-    case "openai":
-      return callOpenAI(systemPrompt, userPrompt);
-    case "anthropic":
-      return callAnthropic(systemPrompt, userPrompt);
-    default:
-      return null;
-  }
-}
-
-/**
- * Check whether an AI provider is available for narrative generation.
- */
-export function isAIAvailable(): boolean {
-  return getProvider() !== null;
-}
-
-/**
- * Get the name of the configured AI provider (for display in UI).
- */
-export function getAIProviderName(): string | null {
-  const provider = getProvider();
-  if (provider === "gateway") return `LLM gateway (${LLM_MODEL_ALIAS})`;
-  if (provider === "openai") return "OpenAI";
-  if (provider === "anthropic") return "Anthropic";
-  return null;
+  context: AutoFillContext,
+  locale: string = "en"
+): Promise<ChatResult | null> {
+  return chatComplete({
+    system: buildDpiaSystemPrompt(locale),
+    user: buildDpiaUserPrompt(context),
+    maxTokens: 1500,
+    temperature: 0.3,
+  });
 }
