@@ -34,8 +34,16 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { features } from "@/config/features";
 
-const POSTURES = ["off", "local_gateway", "cloud_eu", "cloud_us"] as const;
-type Posture = (typeof POSTURES)[number];
+type Posture = "off" | "local_gateway" | "cloud_eu" | "cloud_us";
+
+// Product decision (2026-07-17, mirrors AI Sentinel #19): the picker offers a
+// SIMPLE choice — Off, Cloud LLM, or Local gateway (the latter only meaningful
+// on self-host). "Cloud LLM" is stored as `cloud_us` (the enum keeps all four
+// values — append-only DB discipline and canonical-door parity — and with a
+// single base engine every lane routes identically, so the recorded posture
+// and the physical traffic stay the same fact). `cloud_eu` remains valid for
+// any org that already saved it and is shown only in that legacy case.
+const OFFERED_POSTURES: readonly Posture[] = ["off", "cloud_us", "local_gateway"];
 
 interface AiPostureCardProps {
   organizationId: string;
@@ -98,7 +106,10 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {POSTURES.map((p) => {
+              {(OFFERED_POSTURES.includes(posture)
+                ? OFFERED_POSTURES
+                : [...OFFERED_POSTURES, posture]
+              ).map((p) => {
                 // Per-lane engine availability tag so an admin can't pick a
                 // lane with no engine without seeing it. Selection stays
                 // allowed — the server still answers ai_not_configured.

@@ -5780,7 +5780,7 @@
       "off": "Off — no AI calls",
       "local_gateway": "Local gateway (self-hosted engine)",
       "cloud_eu": "Cloud — EU provider",
-      "cloud_us": "Cloud — US provider"
+      "cloud_us": "Cloud LLM"
     },
     "postureCard": {
       "title": "AI assistance",
