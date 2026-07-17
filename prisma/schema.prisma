@@ -52,6 +52,10 @@ model User {
   // Expert engagement
   expertEngagements ExpertEngagement[]
 
+  // Embedded AI (optional assists)
+  aiPostureAcknowledgments OrganizationAiSettings[]
+  aiGenerations            AiGeneration[]
+
   @@map("users")
 }
 
@@ -132,6 +136,10 @@ model Organization {
   complianceSnapshots     ComplianceSnapshot[]
   aiSystems               AISystem[]
   expertEngagements       ExpertEngagement[]
+
+  // Embedded AI (optional assists)
+  aiSettings    OrganizationAiSettings?
+  aiGenerations AiGeneration[]
 
   @@map("organizations")
 }
@@ -1637,4 +1645,61 @@ model Feedback {
   createdAt DateTime @default(now())
 
   @@map("feedback")
+}
+
+// ============================================================
+// EMBEDDED AI (optional assists — per-org posture + audit)
+// ============================================================
+
+// Per-organization AI posture. Default is off: with no row (or posture
+// "off") the app makes zero AI calls — the README promise stays true by
+// default. Enabling requires a named admin acknowledgment
+// (acknowledgedById/At — the lawyer-acknowledged posture pattern).
+enum AiPosture {
+  off
+  local_gateway
+  cloud_eu
+  cloud_us
+}
+
+model OrganizationAiSettings {
+  id               String    @id @default(cuid())
+  organizationId   String    @unique
+  posture          AiPosture @default(off)
+  acknowledgedById String?
+  acknowledgedAt   DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  acknowledgedBy User?        @relation(fields: [acknowledgedById], references: [id], onDelete: SetNull)
+
+  @@map("organization_ai_settings")
+}
+
+// Metadata-only audit of AI generations (who/when/feature/model/tokens/
+// duration/acceptance). NEVER stores prompt or output text. Doubles as the
+// per-org rate-limit counter (rows per hour).
+model AiGeneration {
+  id               String    @id @default(cuid())
+  organizationId   String
+  userId           String?
+  feature          String // "dpia_narrative" | "breach_notification"
+  entityType       String? // "Assessment" | "IncidentNotification" | ...
+  entityId         String?
+  model            String?
+  posture          AiPosture
+  promptTokens     Int?
+  completionTokens Int?
+  totalTokens      Int?
+  durationMs       Int?
+  status           String    @default("ok") // "ok" | "error"
+  acceptedAt       DateTime?
+  createdAt        DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@map("ai_generations")
 }
