@@ -80,7 +80,10 @@ ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
 # prisma generate needs no live DB; give next build a placeholder so nothing
 # accidentally dials out during static generation.
 ENV DATABASE_URL=postgresql://build:build@localhost:5432/build
-RUN npm run build
+# The repo's `npm run build` also runs `prisma migrate deploy` (for the
+# hosted/Vercel lane) — that belongs to the migrator service, not an image
+# build with a placeholder DATABASE_URL. Invoke the buildable steps directly.
+RUN npx prisma generate && npx next build
 
 # ---- runner: minimal standalone runtime -------------------------------------
 FROM node:22-alpine AS runner
