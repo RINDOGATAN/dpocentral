@@ -13,6 +13,10 @@ import {
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappings";
+import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
+import { requireAi, assertAiRateLimit, recordGeneration, markAccepted } from "../../services/ai/posture";
+import { generateRiskNarrative } from "../../services/ai/assessment-generator";
+import { isValidLocale } from "@/i18n/config";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -1172,65 +1176,14 @@ export const assessmentRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      // Load the processing activity with all linked data
-      const activity = await ctx.prisma.processingActivity.findFirst({
-        where: {
-          id: input.processingActivityId,
-          organizationId: ctx.organization.id,
-        },
-        include: {
-          assets: {
-            include: {
-              dataAsset: {
-                include: {
-                  dataElements: true,
-                },
-              },
-            },
-          },
-          transfers: true,
-        },
-      });
-
-      if (!activity) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Processing activity not found",
-        });
-      }
-
-      // Load vendor if specified
-      const vendor = input.vendorId
-        ? await ctx.prisma.vendor.findFirst({
-            where: { id: input.vendorId, organizationId: ctx.organization.id },
-          })
-        : null;
-
-      // Build auto-fill context
-      const assets: { name: string; type: string; hostingType: string | null; vendor: string | null }[] =
-        activity.assets.map((pa: any) => ({
-          name: pa.dataAsset.name,
-          type: pa.dataAsset.type,
-          hostingType: pa.dataAsset.hostingType,
-          vendor: pa.dataAsset.vendor,
-        }));
-
-      const elements: { name: string; category: string; sensitivity: string; isSpecialCategory: boolean }[] =
-        activity.assets.flatMap((pa: any) =>
-          pa.dataAsset.dataElements.map((e: any) => ({
-            name: e.name,
-            category: e.category,
-            sensitivity: e.sensitivity,
-            isSpecialCategory: e.isSpecialCategory,
-          }))
+      // Shared context assembly (same loader the AI path uses)
+      const { activity, vendor, assets, elements, transfers } =
+        await buildAutoFillContext(
+          ctx.prisma,
+          ctx.organization.id,
+          input.processingActivityId,
+          input.vendorId
         );
-
-      const transfers: { destinationCountry: string; mechanism: string; safeguards: string | null }[] =
-        activity.transfers.map((t: any) => ({
-          destinationCountry: t.destinationCountry,
-          mechanism: t.mechanism,
-          safeguards: t.safeguards,
-        }));
 
       // Generate auto-fill responses using rule engine
       const suggestions: {
@@ -1393,5 +1346,86 @@ export const assessmentRouter = createTRPCRouter({
           hasSpecialCategory: hasSpecialData,
         },
       };
+    }),
+
+  // ============================================================
+  // OPTIONAL AI ASSIST (posture-gated; see services/ai/posture.ts)
+  // ============================================================
+
+  // Draft an AI risk narrative for a processing activity. Returns ONE extra
+  // suggestion in the same shape as the rule-based ones (source "AI (model)",
+  // low confidence to force review). The draft only ever lands in an editable
+  // field via the user's explicit Insert — never written to the DB here.
+  generateAiNarrative: officerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        processingActivityId: z.string(),
+        vendorId: z.string().optional(),
+        assessmentId: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Posture gate FIRST — posture off/missing means zero AI calls and
+      // no prompt building at all.
+      const settings = await requireAi(ctx.prisma, ctx.organization.id);
+      await assertAiRateLimit(ctx.prisma, ctx.organization.id);
+
+      // Server-side context only (shared with the rule path)
+      const { context } = await buildAutoFillContext(
+        ctx.prisma,
+        ctx.organization.id,
+        input.processingActivityId,
+        input.vendorId
+      );
+
+      const cookieLocale = ctx.getCookie("NEXT_LOCALE");
+      const locale = cookieLocale && isValidLocale(cookieLocale) ? cookieLocale : "en";
+
+      const result = await generateRiskNarrative(context, locale);
+
+      const generation = await recordGeneration(ctx.prisma, {
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+        feature: "dpia_narrative",
+        entityType: input.assessmentId ? "Assessment" : "ProcessingActivity",
+        entityId: input.assessmentId ?? input.processingActivityId,
+        model: result?.model ?? null,
+        posture: settings.posture,
+        promptTokens: result?.usage?.promptTokens ?? null,
+        completionTokens: result?.usage?.completionTokens ?? null,
+        totalTokens: result?.usage?.totalTokens ?? null,
+        durationMs: result?.durationMs ?? null,
+        status: result ? "ok" : "error",
+      });
+
+      if (!result) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "ai_failed" });
+      }
+
+      return {
+        generationId: generation.id,
+        model: result.model,
+        content: result.content,
+        // Same shape as the rule-based suggestions array
+        suggestion: {
+          sectionId: "s7",
+          questionId: "s7_risk_assessment",
+          suggestedResponse: result.content,
+          confidence: "low" as const,
+          source: `AI (${result.model})`,
+        },
+      };
+    }),
+
+  // Stamp acceptedAt on a generation when the user Inserts the draft.
+  markAiAccepted: officerProcedure
+    .input(z.object({ organizationId: z.string(), generationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const updated = await markAccepted(ctx.prisma, ctx.organization.id, input.generationId);
+      if (!updated) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Generation not found" });
+      }
+      return { ok: true };
     }),
 });

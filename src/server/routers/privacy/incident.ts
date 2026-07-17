@@ -15,6 +15,13 @@ import {
   DocumentType,
 } from "@prisma/client";
 import { addHours } from "date-fns";
+import { requireAi, assertAiRateLimit, recordGeneration } from "../../services/ai/posture";
+import { chatComplete } from "../../services/ai/llm-door";
+import {
+  buildBreachNotificationSystemPrompt,
+  buildBreachNotificationUserPrompt,
+} from "../../services/ai/prompts/breach-notification";
+import { isValidLocale } from "@/i18n/config";
 
 // Calculate notification deadline based on jurisdiction
 function calculateNotificationDeadline(
@@ -477,6 +484,107 @@ export const incidentRouter = createTRPCRouter({
       }
 
       return updated;
+    }),
+
+  // ============================================================
+  // OPTIONAL AI ASSIST (posture-gated; see services/ai/posture.ts)
+  // ============================================================
+
+  // Draft an Art. 33/34 breach notification for an existing notification
+  // record. The draft is returned to the client only — it lands in the
+  // editable content field via the user's explicit Insert and is saved
+  // through the normal updateNotification flow. Never written to the DB here.
+  generateNotificationDraft: officerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        incidentId: z.string(),
+        notificationId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Posture gate FIRST — posture off/missing means zero AI calls and
+      // no prompt building at all.
+      const settings = await requireAi(ctx.prisma, ctx.organization.id);
+      await assertAiRateLimit(ctx.prisma, ctx.organization.id);
+
+      const incident = await ctx.prisma.incident.findFirst({
+        where: { id: input.incidentId, organizationId: ctx.organization.id },
+      });
+      if (!incident) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Incident not found" });
+      }
+
+      const notification = await ctx.prisma.incidentNotification.findFirst({
+        where: { id: input.notificationId, incidentId: incident.id },
+        include: { jurisdiction: true },
+      });
+      if (!notification) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Notification not found" });
+      }
+
+      const cookieLocale = ctx.getCookie("NEXT_LOCALE");
+      const locale = cookieLocale && isValidLocale(cookieLocale) ? cookieLocale : "en";
+
+      // Prompts are built server-side from Prisma data only
+      const result = await chatComplete({
+        system: buildBreachNotificationSystemPrompt(notification.recipientType, locale),
+        user: buildBreachNotificationUserPrompt({
+          incident: {
+            title: incident.title,
+            description: incident.description,
+            type: incident.type,
+            severity: incident.severity,
+            discoveredAt: incident.discoveredAt,
+            discoveredBy: incident.discoveredBy,
+            discoveryMethod: incident.discoveryMethod,
+            affectedRecords: incident.affectedRecords,
+            affectedSubjects: incident.affectedSubjects,
+            dataCategories: incident.dataCategories.map((c) => String(c)),
+            containedAt: incident.containedAt,
+            containmentActions: incident.containmentActions,
+            rootCause: incident.rootCause,
+          },
+          notification: {
+            recipientType: notification.recipientType,
+            deadline: notification.deadline,
+          },
+          jurisdiction: notification.jurisdiction
+            ? {
+                name: notification.jurisdiction.name,
+                breachNotificationHours: notification.jurisdiction.breachNotificationHours,
+              }
+            : null,
+          organizationName: ctx.organization.name,
+        }),
+        maxTokens: 1500,
+        temperature: 0.3,
+      });
+
+      const generation = await recordGeneration(ctx.prisma, {
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+        feature: "breach_notification",
+        entityType: "IncidentNotification",
+        entityId: notification.id,
+        model: result?.model ?? null,
+        posture: settings.posture,
+        promptTokens: result?.usage?.promptTokens ?? null,
+        completionTokens: result?.usage?.completionTokens ?? null,
+        totalTokens: result?.usage?.totalTokens ?? null,
+        durationMs: result?.durationMs ?? null,
+        status: result ? "ok" : "error",
+      });
+
+      if (!result) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "ai_failed" });
+      }
+
+      return {
+        generationId: generation.id,
+        model: result.model,
+        content: result.content,
+      };
     }),
 
   // ============================================================

@@ -44,6 +44,10 @@ export interface FeatureFlags {
   i18nEnabled: boolean;
   availableLocales: string[];
   defaultLocale: string;
+
+  // Embedded AI assists (capability visibility only — the real switch is the
+  // per-organization posture, which defaults to off)
+  aiAssistEnabled: boolean;
 }
 
 /**
@@ -87,6 +91,9 @@ const defaultFeatures: FeatureFlags = {
   i18nEnabled: true,
   availableLocales: ["en", "es"],
   defaultLocale: "en",
+
+  // Embedded AI assists (UI affordance; posture is the real switch)
+  aiAssistEnabled: true,
 };
 
 /**
@@ -100,6 +107,7 @@ const defaultFeatures: FeatureFlags = {
  * - NEXT_PUBLIC_I18N_ENABLED
  * - NEXT_PUBLIC_AVAILABLE_LOCALES (comma-separated)
  * - NEXT_PUBLIC_DEFAULT_LOCALE
+ * - NEXT_PUBLIC_AI_ASSIST_ENABLED (=false hides the AI affordances entirely)
  */
 export function getFeatureFlags(): FeatureFlags {
   const envLocales = process.env.NEXT_PUBLIC_AVAILABLE_LOCALES;
@@ -155,6 +163,9 @@ export function getFeatureFlags(): FeatureFlags {
       : defaultFeatures.availableLocales,
     defaultLocale:
       process.env.NEXT_PUBLIC_DEFAULT_LOCALE || defaultFeatures.defaultLocale,
+    aiAssistEnabled:
+      process.env.NEXT_PUBLIC_AI_ASSIST_ENABLED !== "false" &&
+      defaultFeatures.aiAssistEnabled,
   };
 }
 

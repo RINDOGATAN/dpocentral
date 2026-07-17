@@ -20,6 +20,7 @@ import { notificationRouter } from "./privacy/notification";
 import { reportsRouter } from "./privacy/reports";
 import { regulationsRouter } from "./privacy/regulations";
 import { aiGovernanceRouter } from "./privacy/aiGovernance";
+import { aiRouter } from "./privacy/ai";
 import { skillsRouter } from "./skills";
 
 export const appRouter = createTRPCRouter({
@@ -41,6 +42,7 @@ export const appRouter = createTRPCRouter({
   reports: reportsRouter,
   regulations: regulationsRouter,
   aiGovernance: aiGovernanceRouter,
+  ai: aiRouter,
   skills: skillsRouter,
 });
 
