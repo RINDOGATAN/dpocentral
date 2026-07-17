@@ -14,7 +14,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappings";
 import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
-import { requireAi, assertAiRateLimit, recordGeneration, markAccepted } from "../../services/ai/posture";
+import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { isValidLocale } from "@/i18n/config";
 
@@ -1382,7 +1382,8 @@ export const assessmentRouter = createTRPCRouter({
       const cookieLocale = ctx.getCookie("NEXT_LOCALE");
       const locale = cookieLocale && isValidLocale(cookieLocale) ? cookieLocale : "en";
 
-      const result = await generateRiskNarrative(context, locale);
+      // Route through the lane the organization acknowledged.
+      const result = await generateRiskNarrative(context, locale, postureLane(settings.posture));
 
       const generation = await recordGeneration(ctx.prisma, {
         organizationId: ctx.organization.id,

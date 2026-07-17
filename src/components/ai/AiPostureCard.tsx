@@ -98,11 +98,32 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {POSTURES.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {t(`posture.${p}`)}
-                </SelectItem>
-              ))}
+              {POSTURES.map((p) => {
+                // Per-lane engine availability tag so an admin can't pick a
+                // lane with no engine without seeing it. Selection stays
+                // allowed — the server still answers ai_not_configured.
+                const laneAvailable = p === "off" ? null : status.lanes?.[p];
+                return (
+                  <SelectItem key={p} value={p}>
+                    <span className="flex items-center gap-2">
+                      {t(`posture.${p}`)}
+                      {laneAvailable !== null && laneAvailable !== undefined && (
+                        <span
+                          className={`text-[10px] leading-none px-1.5 py-0.5 rounded-full border ${
+                            laneAvailable
+                              ? "border-primary/50 text-primary"
+                              : "border-muted-foreground/40 text-muted-foreground"
+                          }`}
+                        >
+                          {laneAvailable
+                            ? t("postureCard.laneAvailable")
+                            : t("postureCard.laneUnavailable")}
+                        </span>
+                      )}
+                    </span>
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
@@ -135,17 +156,26 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
                 id="ai-posture-ack"
                 checked={acknowledged}
                 onCheckedChange={(checked) => setAcknowledged(checked === true)}
+                className="mt-0.5"
               />
-              <Label
-                htmlFor="ai-posture-ack"
-                className="text-xs font-normal leading-relaxed cursor-pointer"
-              >
-                {t("postureCard.acknowledgment")}
-              </Label>
+              <div className="space-y-1">
+                <Label
+                  htmlFor="ai-posture-ack"
+                  className="text-xs font-medium leading-relaxed cursor-pointer"
+                >
+                  {t("postureCard.ackLabel")}
+                </Label>
+                <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-0.5">
+                  <li>{t("postureCard.ackBullets.data")}</li>
+                  <li>{t("postureCard.ackBullets.review")}</li>
+                  <li>{t("postureCard.ackBullets.off")}</li>
+                </ul>
+              </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex flex-col items-end gap-1">
               <Button
                 size="sm"
+                className="disabled:opacity-40"
                 disabled={!acknowledged || setPostureMutation.isPending}
                 onClick={() =>
                   setPostureMutation.mutate({
@@ -160,6 +190,11 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
                 )}
                 {t("postureCard.save")}
               </Button>
+              {!acknowledged && (
+                <p className="text-xs text-muted-foreground">
+                  {t("postureCard.ackRequiredHint")}
+                </p>
+              )}
             </div>
           </>
         )}

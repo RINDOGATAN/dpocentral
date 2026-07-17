@@ -18,7 +18,7 @@
  */
 
 import type { AutoFillContext } from "@/config/dpia-auto-fill-rules";
-import { chatComplete, type ChatResult } from "./llm-door";
+import { chatComplete, type AiLane, type ChatResult } from "./llm-door";
 
 // ---------------------------------------------------------------------------
 // Prompts
@@ -125,12 +125,15 @@ export function buildDpiaUserPrompt(context: AutoFillContext): string {
  */
 export async function generateRiskNarrative(
   context: AutoFillContext,
-  locale: string = "en"
+  locale: string = "en",
+  /** The organization's acknowledged posture — routes to that lane's engine. */
+  lane?: AiLane
 ): Promise<ChatResult | null> {
   return chatComplete({
     system: buildDpiaSystemPrompt(locale),
     user: buildDpiaUserPrompt(context),
     maxTokens: 1500,
     temperature: 0.3,
+    lane,
   });
 }

@@ -15,7 +15,7 @@ import {
   DocumentType,
 } from "@prisma/client";
 import { addHours } from "date-fns";
-import { requireAi, assertAiRateLimit, recordGeneration } from "../../services/ai/posture";
+import { requireAi, assertAiRateLimit, recordGeneration, postureLane } from "../../services/ai/posture";
 import { chatComplete } from "../../services/ai/llm-door";
 import {
   buildBreachNotificationSystemPrompt,
@@ -559,6 +559,8 @@ export const incidentRouter = createTRPCRouter({
         }),
         maxTokens: 1500,
         temperature: 0.3,
+        // Route through the lane the organization acknowledged.
+        lane: postureLane(settings.posture),
       });
 
       const generation = await recordGeneration(ctx.prisma, {

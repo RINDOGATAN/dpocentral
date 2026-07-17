@@ -24,10 +24,33 @@
 import { TRPCError } from "@trpc/server";
 import type { OrganizationAiSettings, AiGeneration, AiPosture } from "@prisma/client";
 import type { Db } from "@/lib/prisma";
-import { isAIConfigured } from "./llm-door";
+import { isAIConfigured, type AiLane } from "./llm-door";
 
 /** Hosted metered-key cap: generations per organization per hour. */
 export const AI_RATE_LIMIT_PER_ORG_PER_HOUR = 30;
+
+/**
+ * The traffic lane an acknowledged posture routes to. "off" has no lane —
+ * callers get `undefined`, which the door treats as the base (unsuffixed)
+ * engine. This is the single mapping that makes the recorded posture and the
+ * physical traffic lane the same fact.
+ */
+export function postureLane(posture: AiPosture): AiLane | undefined {
+  return posture === "off" ? undefined : (posture as AiLane);
+}
+
+/**
+ * Engine availability per lane (lane-suffixed env triple, else the base one)
+ * for status UIs — so an admin can see which postures actually have an
+ * engine behind them before picking one.
+ */
+export function getLaneAvailability(): Record<AiLane, boolean> {
+  return {
+    local_gateway: isAIConfigured("local_gateway"),
+    cloud_eu: isAIConfigured("cloud_eu"),
+    cloud_us: isAIConfigured("cloud_us"),
+  };
+}
 
 // The subset of the (extended) client these helpers touch — unit tests pass a mock.
 type PrismaLike = Pick<Db, "organizationAiSettings" | "aiGeneration">;
@@ -49,7 +72,10 @@ export async function requireAi(
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_off" });
   }
 
-  if (!isAIConfigured()) {
+  // Engine availability is checked for the POSTURE'S lane (suffixed env
+  // triple, else the base one) — a single-engine install behaves as before,
+  // and a lane-only install correctly gates postures without an engine.
+  if (!isAIConfigured(postureLane(settings.posture))) {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_not_configured" });
   }
 

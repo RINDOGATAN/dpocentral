@@ -915,7 +915,9 @@
         "due": "Vence: {date}",
         "overdue": "VENCIDA",
         "empty": "No se han creado notificaciones",
-        "createDpa": "Crear notificación a la AEPD"
+        "createDpa": "Crear notificación a la AEPD",
+        "create": "Crear notificación",
+        "voluntaryHint": "Este incidente no requiere notificación — aun así, puedes crear una de forma voluntaria."
       },
       "documents": {
         "title": "Próximamente: subida de documentos",
@@ -970,6 +972,8 @@
         "selectJurisdiction": "Selecciona una jurisdicción",
         "jurisdictionWindow": "{name} (plazo de {hours}h)",
         "noJurisdictions": "No hay jurisdicciones aplicadas a esta organización",
+        "noJurisdictionsHint": "Todavía no hay jurisdicciones aplicadas a esta organización.",
+        "goToRegulations": "Añade jurisdicciones en Regulaciones",
         "recipient": "Tipo de destinatario",
         "recipientType": {
           "DPA": "Autoridad de Protección de Datos (AEPD)",
@@ -5766,7 +5770,11 @@
       "provenance": "Generado con IA ({model}) — revísalo antes de usarlo",
       "inserted": "Borrador insertado — revísalo y guárdalo",
       "offHint": "La asistencia de IA está desactivada en esta organización. Un administrador puede activarla en Ajustes.",
-      "notConfiguredHint": "La asistencia de IA está activada, pero no hay ningún motor de IA configurado en el servidor. Pide a tu administrador que configure LLM_GATEWAY_URL (o una clave de API)."
+      "notConfiguredHint": "La asistencia de IA está activada, pero todavía no hay ningún motor de IA disponible. Pide al administrador del servidor que configure un motor de IA (consulta el .env.example de la suite — la dirección de la pasarela es LLM_GATEWAY_URL).",
+      "linkActivityHint": "Vincula una actividad de tratamiento para redactar con IA.",
+      "waitHint": "Esto puede tardar unos minutos con un modelo local.",
+      "cancelWait": "Cancelar",
+      "cancelNote": "Se ha dejado de esperar. Puede que el servidor termine igualmente el borrador — cuenta para el límite horario de IA."
     },
     "posture": {
       "off": "Desactivado — sin llamadas a IA",
@@ -5781,7 +5789,15 @@
       "engineConfigured": "Motor configurado: {provider}",
       "engineNotConfigured": "No hay ningún motor de IA configurado en este servidor. La IA permanece inactiva aunque se seleccione una postura.",
       "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
-      "acknowledgment": "Estoy autorizado para activar la asistencia de IA en esta organización. Entiendo que los datos seleccionados se enviarán al motor de IA configurado, que el resultado de la IA es un borrador que debe revisar un profesional cualificado antes de usarse y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
+      "laneAvailable": "motor disponible",
+      "laneUnavailable": "sin motor",
+      "ackLabel": "Tengo autorización para activar la asistencia de IA en esta organización",
+      "ackBullets": {
+        "data": "Los datos seleccionados se envían al motor de IA de la postura elegida.",
+        "review": "El resultado de la IA es un borrador — debe revisarlo un profesional cualificado antes de usarse.",
+        "off": "Mientras la postura esté desactivada, no se realiza nunca ninguna llamada a IA."
+      },
+      "ackRequiredHint": "Marca la confirmación para continuar.",
       "save": "Guardar postura",
       "saved": "Postura de IA actualizada",
       "acknowledgedBy": "Activada y confirmada por {name} el {date}",
@@ -5796,7 +5812,7 @@
     },
     "errors": {
       "ai_off": "La asistencia de IA está desactivada en esta organización. Un administrador puede activarla en Ajustes.",
-      "ai_not_configured": "No hay ningún motor de IA configurado en el servidor. Configura LLM_GATEWAY_URL (o una clave de API) e inténtalo de nuevo.",
+      "ai_not_configured": "Todavía no hay ningún motor de IA disponible. Pide al administrador del servidor que configure uno (consulta el .env.example de la suite — LLM_GATEWAY_URL).",
       "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
       "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
     }

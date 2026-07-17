@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { parseDateInput, toDateInputValue } from "@/lib/date-input";
 
 const INCIDENT_TYPE_KEYS = [
   "DATA_BREACH", "UNAUTHORIZED_ACCESS", "DATA_LOSS", "SYSTEM_COMPROMISE",
@@ -60,7 +61,8 @@ export default function NewIncidentPage() {
     description: "",
     type: "",
     severity: "",
-    discoveredAt: new Date().toISOString().split("T")[0],
+    // Local calendar day — toISOString() is UTC and can be off by one.
+    discoveredAt: toDateInputValue(new Date()),
     discoveredBy: "",
     discoveryMethod: "",
     affectedRecords: "",
@@ -98,7 +100,9 @@ export default function NewIncidentPage() {
       description: formData.description,
       type: formData.type as any,
       severity: formData.severity as any,
-      discoveredAt: new Date(formData.discoveredAt),
+      // Parse the date-only input as a LOCAL date (new Date("YYYY-MM-DD")
+      // would be UTC midnight and render back as the previous day).
+      discoveredAt: parseDateInput(formData.discoveredAt),
       discoveredBy: formData.discoveredBy || undefined,
       discoveryMethod: formData.discoveryMethod || undefined,
       affectedRecords: formData.affectedRecords ? parseInt(formData.affectedRecords) : undefined,

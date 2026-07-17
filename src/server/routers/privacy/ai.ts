@@ -18,7 +18,11 @@
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, adminOrgProcedure } from "../../trpc";
 import { getAIProviderName, isAIConfigured } from "../../services/ai/llm-door";
-import { AI_RATE_LIMIT_PER_ORG_PER_HOUR } from "../../services/ai/posture";
+import {
+  AI_RATE_LIMIT_PER_ORG_PER_HOUR,
+  getLaneAvailability,
+  postureLane,
+} from "../../services/ai/posture";
 
 export const AI_POSTURES = ["off", "local_gateway", "cloud_eu", "cloud_us"] as const;
 
@@ -35,12 +39,19 @@ export const aiRouter = createTRPCRouter({
       });
 
       const posture = settings?.posture ?? "off";
-      const configured = isAIConfigured();
+      // configured/providerName describe the CURRENT posture's lane (posture
+      // off -> the no-lane default engine), so the UI reports the engine that
+      // would actually answer, not just "some engine exists".
+      const lane = postureLane(posture);
+      const configured = isAIConfigured(lane);
 
       return {
         posture,
         configured,
-        providerName: configured ? getAIProviderName() : null,
+        providerName: configured ? getAIProviderName(lane) : null,
+        // Per-lane engine availability so the posture picker can flag
+        // postures with no engine behind them.
+        lanes: getLaneAvailability(),
         acknowledgedAt: settings?.acknowledgedAt ?? null,
         acknowledgedBy: settings?.acknowledgedBy ?? null,
         // Generation can actually run only when both are true.

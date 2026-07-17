@@ -127,4 +127,15 @@ describe("breach notification prompt builders", () => {
     expect(prompt).toContain("72 hours");
     expect(prompt).toContain("Password reset");
   });
+
+  it("dates are human date-times with an explicit timezone, never raw ISO", () => {
+    const prompt = buildBreachNotificationUserPrompt(input);
+    // Deadline: 2026-07-04T10:00:00Z
+    expect(prompt).toContain("4 July 2026");
+    expect(prompt).toContain("(UTC)");
+    // Discovered/contained: 2026-07-01
+    expect(prompt).toContain("1 July 2026");
+    // No raw ISO timestamps for the model to echo into the draft
+    expect(prompt).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/);
+  });
 });

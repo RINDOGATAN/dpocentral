@@ -49,6 +49,8 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
+import { formatIncidentRef } from "@/lib/incident-ref";
+import { parseDateInput } from "@/lib/date-input";
 
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
@@ -240,7 +242,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-primary">{incident.publicId}</span>
+              {/* Human reference derived from the publicId (no sequence column;
+                  full id kept in the tooltip for search/support). */}
+              <span className="font-mono text-primary" title={incident.publicId}>
+                {formatIncidentRef(incident.publicId)}
+              </span>
               <Badge variant="outline">{tList(`type.${incident.type}` as `type.DATA_BREACH` | `type.UNAUTHORIZED_ACCESS` | `type.DATA_LOSS` | `type.SYSTEM_COMPROMISE` | `type.PHISHING` | `type.RANSOMWARE` | `type.INSIDER_THREAT` | `type.PHYSICAL_SECURITY` | `type.VENDOR_INCIDENT` | `type.OTHER`)}</Badge>
               <Badge variant="outline" className={severityColors[incident.severity] || ""}>
                 {tList(`severity.${incident.severity}` as `severity.LOW` | `severity.MEDIUM` | `severity.HIGH` | `severity.CRITICAL`)}
@@ -553,6 +559,19 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
         <TabsContent value="notifications" className="mt-4">
           {incident.notifications && incident.notifications.length > 0 ? (
             <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                {!incident.notificationRequired ? (
+                  <p className="text-xs text-muted-foreground">
+                    {tp("notifications.voluntaryHint")}
+                  </p>
+                ) : (
+                  <span />
+                )}
+                <Button size="sm" onClick={() => setNotifDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {tp("notifications.create")}
+                </Button>
+              </div>
               {incident.notifications.map((notification) => {
                 const deadline = new Date(notification.deadline);
                 const pastDue = deadline.getTime() < Date.now() && notification.status === "PENDING";
@@ -659,10 +678,19 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <CardContent className="py-8 text-center text-muted-foreground">
                 <Bell className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{tp("notifications.empty")}</p>
-                {incident.notificationRequired && (
-                  <Button className="mt-4" variant="destructive" onClick={() => setNotifDialogOpen(true)}>
-                    {tp("notifications.createDpa")}
-                  </Button>
+                {/* Creating a notification is always possible — voluntary
+                    notifications are legitimate even when none is required. */}
+                <Button
+                  className="mt-4"
+                  variant={incident.notificationRequired ? "destructive" : "outline"}
+                  onClick={() => setNotifDialogOpen(true)}
+                >
+                  {incident.notificationRequired
+                    ? tp("notifications.createDpa")
+                    : tp("notifications.create")}
+                </Button>
+                {!incident.notificationRequired && (
+                  <p className="text-xs mt-3">{tp("notifications.voluntaryHint")}</p>
                 )}
               </CardContent>
             </Card>
@@ -852,7 +880,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                   title: taskTitle.trim(),
                   description: taskDescription.trim() || undefined,
                   priority: taskPriority,
-                  dueDate: taskDueDate ? new Date(taskDueDate) : undefined,
+                  dueDate: taskDueDate ? parseDateInput(taskDueDate) : undefined,
                 })
               }
             >
@@ -890,6 +918,17 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                   )}
                 </SelectContent>
               </Select>
+              {jurisdictionsData && jurisdictionsData.jurisdictions.length === 0 && (
+                <p className="text-xs text-muted-foreground">
+                  {tp("notifDialog.noJurisdictionsHint")}{" "}
+                  <Link
+                    href="/privacy/regulations"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    {tp("notifDialog.goToRegulations")}
+                  </Link>
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>{tp("notifDialog.recipient")}</Label>

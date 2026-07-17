@@ -18,6 +18,8 @@ import {
   assertAiRateLimit,
   recordGeneration,
   markAccepted,
+  postureLane,
+  getLaneAvailability,
   AI_RATE_LIMIT_PER_ORG_PER_HOUR,
 } from "@/server/services/ai/posture";
 
@@ -32,6 +34,16 @@ const AI_ENV_KEYS = [
   "LLM_MODEL_ALIAS",
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
+  // Lane-suffixed engine triples (posture-routed lanes)
+  "LLM_GATEWAY_URL_LOCAL",
+  "LLM_GATEWAY_KEY_LOCAL",
+  "LLM_MODEL_ALIAS_LOCAL",
+  "LLM_GATEWAY_URL_EU",
+  "LLM_GATEWAY_KEY_EU",
+  "LLM_MODEL_ALIAS_EU",
+  "LLM_GATEWAY_URL_US",
+  "LLM_GATEWAY_KEY_US",
+  "LLM_MODEL_ALIAS_US",
 ] as const;
 
 function configureEngine() {
@@ -103,6 +115,64 @@ describe("requireAi truth table", () => {
       await expect(requireAi(prisma, "org-1")).resolves.toMatchObject({ posture });
     }
   );
+
+  it("gates per LANE: a lane-only engine passes its posture and rejects others", async () => {
+    // Only the EU lane has an engine — no base triple at all.
+    vi.stubEnv("LLM_GATEWAY_URL_EU", "https://eu-gateway.example");
+    vi.stubEnv("LLM_MODEL_ALIAS_EU", "mistral-large-eu");
+
+    prisma.organizationAiSettings.findUnique.mockResolvedValue({
+      organizationId: "org-1",
+      posture: "cloud_eu",
+    });
+    await expect(requireAi(prisma, "org-1")).resolves.toMatchObject({ posture: "cloud_eu" });
+
+    prisma.organizationAiSettings.findUnique.mockResolvedValue({
+      organizationId: "org-1",
+      posture: "cloud_us",
+    });
+    await expect(requireAi(prisma, "org-1")).rejects.toMatchObject({
+      code: "PRECONDITION_FAILED",
+      message: "ai_not_configured",
+    });
+  });
+});
+
+describe("postureLane / getLaneAvailability (per-lane status)", () => {
+  it("maps every on-posture to its lane and off to undefined", () => {
+    expect(postureLane("off" as any)).toBeUndefined();
+    expect(postureLane("local_gateway" as any)).toBe("local_gateway");
+    expect(postureLane("cloud_eu" as any)).toBe("cloud_eu");
+    expect(postureLane("cloud_us" as any)).toBe("cloud_us");
+  });
+
+  it("reports availability per lane for a lane-only install", () => {
+    vi.stubEnv("LLM_GATEWAY_URL_LOCAL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS_LOCAL", "llama3");
+
+    expect(getLaneAvailability()).toEqual({
+      local_gateway: true,
+      cloud_eu: false,
+      cloud_us: false,
+    });
+  });
+
+  it("a base engine makes every lane available (single-engine installs)", () => {
+    configureEngine();
+    expect(getLaneAvailability()).toEqual({
+      local_gateway: true,
+      cloud_eu: true,
+      cloud_us: true,
+    });
+  });
+
+  it("nothing configured -> no lane available", () => {
+    expect(getLaneAvailability()).toEqual({
+      local_gateway: false,
+      cloud_eu: false,
+      cloud_us: false,
+    });
+  });
 });
 
 describe("assertAiRateLimit", () => {

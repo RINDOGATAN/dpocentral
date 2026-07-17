@@ -25,6 +25,16 @@ const AI_ENV_KEYS = [
   "LLM_MODEL_ALIAS",
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
+  // Lane-suffixed engine triples (posture-routed lanes)
+  "LLM_GATEWAY_URL_LOCAL",
+  "LLM_GATEWAY_KEY_LOCAL",
+  "LLM_MODEL_ALIAS_LOCAL",
+  "LLM_GATEWAY_URL_EU",
+  "LLM_GATEWAY_KEY_EU",
+  "LLM_MODEL_ALIAS_EU",
+  "LLM_GATEWAY_URL_US",
+  "LLM_GATEWAY_KEY_US",
+  "LLM_MODEL_ALIAS_US",
 ] as const;
 
 beforeEach(() => {
@@ -77,6 +87,53 @@ describe("getProvider / isAIConfigured", () => {
     expect(getProvider()).toBe("gateway");
     // Trimmed alias shows up clean in the display name
     expect(getAIProviderName()).toBe("LLM gateway (llama3)");
+  });
+});
+
+describe("posture-routed lanes", () => {
+  it("the base (unsuffixed) triple answers a lane with no suffixed variables", () => {
+    vi.stubEnv("LLM_GATEWAY_URL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS", "qwen2.5:7b-instruct");
+
+    for (const lane of ["local_gateway", "cloud_eu", "cloud_us"] as const) {
+      expect(getProvider(lane)).toBe("gateway");
+      expect(isAIConfigured(lane)).toBe(true);
+      expect(getAIProviderName(lane)).toBe("LLM gateway (qwen2.5:7b-instruct)");
+    }
+  });
+
+  it("suffixed lane variables beat the base triple — only for their lane", () => {
+    vi.stubEnv("LLM_GATEWAY_URL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS", "qwen2.5:7b-instruct");
+    vi.stubEnv("LLM_GATEWAY_URL_EU", "https://eu-gateway.example");
+    vi.stubEnv("LLM_MODEL_ALIAS_EU", "mistral-large-eu");
+
+    expect(getAIProviderName("cloud_eu")).toBe("LLM gateway (mistral-large-eu)");
+    // Other lanes (and the no-lane default) still see the base engine
+    expect(getAIProviderName("cloud_us")).toBe("LLM gateway (qwen2.5:7b-instruct)");
+    expect(getAIProviderName("local_gateway")).toBe("LLM gateway (qwen2.5:7b-instruct)");
+    expect(getAIProviderName()).toBe("LLM gateway (qwen2.5:7b-instruct)");
+  });
+
+  it("falls back per VARIABLE: a suffixed URL can pair with the base alias", () => {
+    vi.stubEnv("LLM_GATEWAY_URL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS", "qwen2.5:7b-instruct");
+    vi.stubEnv("LLM_GATEWAY_URL_US", "https://us-gateway.example");
+
+    expect(getProvider("cloud_us")).toBe("gateway");
+    expect(getAIProviderName("cloud_us")).toBe("LLM gateway (qwen2.5:7b-instruct)");
+  });
+
+  it("a lane-only install configures ONLY that lane (no base fallback for others)", () => {
+    vi.stubEnv("LLM_GATEWAY_URL_LOCAL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS_LOCAL", "llama3");
+
+    expect(isAIConfigured("local_gateway")).toBe(true);
+    expect(getAIProviderName("local_gateway")).toBe("LLM gateway (llama3)");
+    // No base engine and no other suffixed engines
+    expect(isAIConfigured()).toBe(false);
+    expect(isAIConfigured("cloud_eu")).toBe(false);
+    expect(isAIConfigured("cloud_us")).toBe(false);
   });
 });
 

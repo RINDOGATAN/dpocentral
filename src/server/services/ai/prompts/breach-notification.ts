@@ -49,6 +49,24 @@ const LOCALE_INSTRUCTIONS: Record<string, string> = {
   es: "Redacta el borrador en español de España (castellano peninsular), con la terminología del RGPD y de la AEPD.",
 };
 
+/**
+ * Human date-time with an explicit timezone for prompt context. Raw ISO
+ * strings tend to be echoed verbatim into the draft (and read off-by-one
+ * across timezones); "4 July 2026 at 10:00 (UTC)" cannot be misread.
+ */
+function formatPromptDateTime(d: Date): string {
+  const formatted = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC",
+  }).format(d);
+  return `${formatted} (UTC)`;
+}
+
 // ---------------------------------------------------------------------------
 // Prompts
 // ---------------------------------------------------------------------------
@@ -90,7 +108,7 @@ export function buildBreachNotificationUserPrompt(
   parts.push(`**Type:** ${incident.type}`);
   parts.push(`**Severity:** ${incident.severity}`);
   parts.push(`**Description:** ${incident.description}`);
-  parts.push(`**Discovered at:** ${incident.discoveredAt.toISOString()}`);
+  parts.push(`**Discovered at:** ${formatPromptDateTime(incident.discoveredAt)}`);
   if (incident.discoveredBy) parts.push(`**Discovered by:** ${incident.discoveredBy}`);
   if (incident.discoveryMethod)
     parts.push(`**Discovery method:** ${incident.discoveryMethod}`);
@@ -101,14 +119,14 @@ export function buildBreachNotificationUserPrompt(
   if (incident.dataCategories.length > 0)
     parts.push(`**Data categories affected:** ${incident.dataCategories.join(", ")}`);
   if (incident.containedAt)
-    parts.push(`**Contained at:** ${incident.containedAt.toISOString()}`);
+    parts.push(`**Contained at:** ${formatPromptDateTime(incident.containedAt)}`);
   if (incident.containmentActions)
     parts.push(`**Containment actions:** ${incident.containmentActions}`);
   if (incident.rootCause) parts.push(`**Root cause:** ${incident.rootCause}`);
 
   parts.push(`\n## Notification`);
   parts.push(`**Recipient:** ${notification.recipientType}`);
-  parts.push(`**Deadline:** ${notification.deadline.toISOString()}`);
+  parts.push(`**Deadline:** ${formatPromptDateTime(notification.deadline)}`);
   if (jurisdiction) {
     parts.push(
       `**Jurisdiction:** ${jurisdiction.name} (notification window: ${jurisdiction.breachNotificationHours} hours)`

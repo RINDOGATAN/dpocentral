@@ -113,6 +113,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const tp = useTranslations("pages.assessmentDetail");
   const tList = useTranslations("pages.assessments");
   const tCommon = useTranslations("common");
+  const tAi = useTranslations("ai");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
@@ -458,8 +459,43 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   // Derived values — safe to compute even when assessment is null
   const template = assessment?.template;
-  const rawSections = (template?.sections as any[]) || [];
+  const rawSections = useMemo(() => (template?.sections as any[]) || [], [template?.sections]);
   const sections = useTranslatedSections(template?.type, rawSections);
+
+  // ── Optional AI risk-narrative target ──
+  // The AI draft is a DPIA/PIA/TIA *risk narrative*; it only makes sense in
+  // the template's risk/conclusion section (the same "s7"-style section the
+  // rule-based auto-fill targets). Resolve it from the RAW (untranslated)
+  // template instead of hardcoding a section id: last matching section wins
+  // (residual risk/conclusion over risk identification), and its first
+  // textarea question is the insert target. No match -> no AI affordance.
+  const aiNarrativeTarget = useMemo(() => {
+    const type = template?.type;
+    if (type !== "DPIA" && type !== "PIA" && type !== "TIA") return null;
+    for (const section of [...rawSections].reverse()) {
+      if (!section || section.repeatable) continue;
+      const haystack = `${section.id ?? ""} ${section.title ?? ""}`;
+      if (!/risk|residual|conclusion/i.test(haystack)) continue;
+      const question = (section.questions || []).find((q: any) => q.type === "textarea");
+      if (question) return { sectionId: section.id as string, questionId: question.id as string };
+    }
+    return null;
+  }, [rawSections, template?.type]);
+
+  // Posture status only matters for the "link a processing activity" hint
+  // (shown when posture is on but the assessment has nothing to draft from).
+  const { data: aiStatus } = trpc.ai.getStatus.useQuery(
+    { organizationId: organization?.id ?? "" },
+    {
+      enabled:
+        features.aiAssistEnabled &&
+        !!organization?.id &&
+        !!aiNarrativeTarget &&
+        !!assessment &&
+        !assessment.processingActivity?.id,
+      staleTime: 60_000,
+    }
+  );
 
   // ── Repeatable sections (e.g. a DPIA risk register) ──
   // A template section with `repeatable: true` is expanded into one section per
@@ -493,6 +529,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           ...section,
           id: `${section.id}${INSTANCE_SEP}${instId}`,
           title: `${itemLabel} ${i + 1}`,
+          _groupTitle: section.title,
+          _instanceIndex: i + 1,
+          _instanceCount: instances.length,
           description: i === 0 ? section.description : undefined,
           questions: (section.questions || []).map((q: any) => ({
             ...q,
@@ -556,9 +595,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     const answeredInSection = assessment?.responses?.filter(
       (r: any) => r.sectionId === section.id
     ).length ?? 0;
+    // Nav entries use the SECTION's own title, not the repeatable-group item
+    // label ("Risk 1") — the instance number is kept only when several
+    // instances exist, to disambiguate the pills.
+    const navTitle = section._repeatable
+      ? section._instanceCount > 1
+        ? `${section._groupTitle} · ${section._instanceIndex}`
+        : section._groupTitle
+      : section.title;
     return {
       id: section.id,
-      title: section.title,
+      title: navTitle,
       answered: answeredInSection,
       total: sectionQuestions.length,
       isComplete: answeredInSection === sectionQuestions.length && sectionQuestions.length > 0,
@@ -574,29 +621,21 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   }, []);
 
   // Insert an AI-drafted narrative into an EDITABLE response field (never
-  // saved directly): the risk/conclusion textarea when the template has one,
-  // else the first textarea question. The user reviews and saves through the
-  // normal response flow.
+  // saved directly): ONLY the resolved risk/conclusion section's target
+  // textarea — the same section that renders the "Draft with AI" button.
+  // The user reviews and saves through the normal response flow.
   const insertAiNarrative = useCallback((content: string) => {
-    let target: { sectionId: string; questionId: string } | null = null;
-    for (const section of [...expandedSections].reverse()) {
-      const q = (section.questions || []).find((q: any) => q.type === "textarea");
-      if (q) {
-        target = { sectionId: section.id, questionId: q.id };
-        break;
-      }
-    }
-    if (!target) return;
-    setEditingQuestion(target.questionId);
+    if (!aiNarrativeTarget) return;
+    setEditingQuestion(aiNarrativeTarget.questionId);
     setDraftResponses((prev) => ({
       ...prev,
-      [target!.questionId]: {
+      [aiNarrativeTarget.questionId]: {
         response: content,
-        notes: prev[target!.questionId]?.notes ?? "",
+        notes: prev[aiNarrativeTarget.questionId]?.notes ?? "",
       },
     }));
-    scrollToSection(target.sectionId);
-  }, [expandedSections, scrollToSection]);
+    scrollToSection(aiNarrativeTarget.sectionId);
+  }, [aiNarrativeTarget, scrollToSection]);
 
   const parseMultiselectValue = useCallback((val: string | undefined): string[] => {
     if (!val) return [];
@@ -774,29 +813,6 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         </TabsList>
 
         <TabsContent value="questions" className="mt-4 space-y-4">
-          {/* Optional AI assist — one more suggestion source alongside the
-              rule-based auto-fill. Posture-gated server-side; the draft only
-              lands in an editable response via Insert. */}
-          {features.aiAssistEnabled && assessment.processingActivity?.id && canSubmit && (
-            <AiDraftPanel
-              organizationId={organization?.id ?? ""}
-              onGenerate={async () => {
-                const res = await generateAiNarrative.mutateAsync({
-                  organizationId: organization?.id ?? "",
-                  processingActivityId: assessment.processingActivity!.id,
-                  vendorId: assessment.vendor?.id ?? undefined,
-                  assessmentId: id,
-                });
-                return {
-                  content: res.content,
-                  model: res.model,
-                  generationId: res.generationId,
-                };
-              }}
-              onInsert={insertAiNarrative}
-            />
-          )}
-
           {/* Section Navigation - sticky pills */}
           {sections.length > 1 && (
             <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b pb-3 pt-1 -mx-1 px-1">
@@ -872,6 +888,41 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       />
                     </CardHeader>
                     <CardContent>
+                      {/* Optional AI assist — rendered WITH the risk/conclusion
+                          section it drafts for (one more suggestion source
+                          alongside the rule-based auto-fill). Posture-gated
+                          server-side; the draft only lands in this section's
+                          target textarea via Insert. */}
+                      {features.aiAssistEnabled &&
+                        canSubmit &&
+                        aiNarrativeTarget?.sectionId === section.id &&
+                        (assessment.processingActivity?.id ? (
+                          <AiDraftPanel
+                            className="mb-5"
+                            organizationId={organization?.id ?? ""}
+                            onGenerate={async () => {
+                              const res = await generateAiNarrative.mutateAsync({
+                                organizationId: organization?.id ?? "",
+                                processingActivityId: assessment.processingActivity!.id,
+                                vendorId: assessment.vendor?.id ?? undefined,
+                                assessmentId: id,
+                              });
+                              return {
+                                content: res.content,
+                                model: res.model,
+                                generationId: res.generationId,
+                              };
+                            }}
+                            onInsert={insertAiNarrative}
+                          />
+                        ) : aiStatus && aiStatus.posture !== "off" ? (
+                          // Posture is on but there is nothing to draft from —
+                          // say so quietly instead of hiding the assist.
+                          <div className="mb-5 flex items-start gap-2 text-xs text-muted-foreground">
+                            <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                            <span>{tAi("panel.linkActivityHint")}</span>
+                          </div>
+                        ) : null)}
                       <div className="space-y-6">
                         {sectionQuestions.map((question: any, qIndex: number) => {
                           const response = assessment.responses?.find(
