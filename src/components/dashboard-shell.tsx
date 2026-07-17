@@ -306,7 +306,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <BookOpen className="w-3.5 h-3.5" />
               {tFooter("userGuide")}
             </Link>
-            {features.selfServiceUpgrade && (
+            {features.stripeEnabled && features.selfServiceUpgrade && (
               <>
                 <span className="text-border">&middot;</span>
                 <Link href="/privacy/billing" className="flex items-center gap-1.5 hover:text-foreground transition-colors">

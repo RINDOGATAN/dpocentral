@@ -2049,6 +2049,11 @@
     "failedToSendLink": "No se ha podido enviar el enlace mágico. Inténtalo de nuevo.",
     "unexpectedError": "Se ha producido un error inesperado.",
     "devSignInFailed": "Error al iniciar sesión en modo dev.",
+    "localSignInTitle": "Acceso local",
+    "localSignInBody": "Tu cuenta vive en este ordenador. Introduce tu correo para abrirla: no se envía nada a ningún sitio.",
+    "workspacePassphrase": "Frase de acceso del espacio de trabajo",
+    "workspacePassphraseHint": "Se estableció al instalar la suite. Recupérala en el ordenador donde se ejecuta la suite: ./suite.sh passphrase",
+    "wrongPassphrase": "Frase de acceso incorrecta. Compruébala con ./suite.sh passphrase en el ordenador anfitrión.",
     "error": {
       "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
       "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
@@ -2124,7 +2129,7 @@
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
-    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifique los resultados con un abogado cualificado antes de utilizarlos.",
+    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
     "userGuide": "Guía de usuario",
     "billing": "Facturación",
     "termsOfService": "Términos de servicio",

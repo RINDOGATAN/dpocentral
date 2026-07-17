@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -25,6 +26,7 @@ import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
 
 export default function BillingPage() {
+  const router = useRouter();
   const { organization } = useOrganization();
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
@@ -60,6 +62,17 @@ export default function BillingPage() {
       utils.billing.getAvailablePlans.invalidate();
     },
   });
+
+  // Self-hosted (Stripe disabled): there is nothing to bill — every feature
+  // is included. Showing "Inactive — €9/mo" rows here would contradict the
+  // Skills page ("Installed"/"Included"), so redirect there instead.
+  useEffect(() => {
+    if (!features.stripeEnabled) {
+      router.replace("/privacy/skills");
+    }
+  }, [router]);
+
+  if (!features.stripeEnabled) return null;
 
   if (statusLoading || plansLoading || !organization) {
     return (

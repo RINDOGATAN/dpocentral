@@ -13,6 +13,7 @@ import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 import { getSecurityModule } from "@/lib/security";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
+import { verifyWorkspacePassphrase } from "@/lib/workspace-passphrase";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -57,9 +58,22 @@ export const authOptions: NextAuthOptions = {
             name: "Dev Login",
             credentials: {
               email: { label: "Email", type: "email", placeholder: "dev@example.com" },
+              passphrase: { label: "Workspace passphrase", type: "password" },
             },
             async authorize(credentials) {
               if (!credentials?.email) return null;
+
+              // Workspace passphrase gate (suite installs set
+              // WORKSPACE_PASSPHRASE in the runtime env; ./suite.sh passphrase
+              // shows it). Read at call time so changing it never requires a
+              // rebuild. Unset/empty → open local sign-in, exactly as before.
+              const required = (process.env.WORKSPACE_PASSPHRASE ?? "").trim();
+              if (required) {
+                const input = (credentials.passphrase ?? "").trim();
+                if (!input || !verifyWorkspacePassphrase(input, required)) {
+                  return null;
+                }
+              }
 
               // Find or create user for dev mode
               let user = await prisma.user.findUnique({

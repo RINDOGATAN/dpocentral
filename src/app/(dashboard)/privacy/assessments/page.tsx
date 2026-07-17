@@ -26,6 +26,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
 
 const statusColors: Record<string, string> = {
@@ -313,7 +314,11 @@ export default function AssessmentsPage() {
             {[
               { type: "LIA", nameKey: "lia", premium: false },
               { type: "CUSTOM", nameKey: "custom", premium: false },
-              { type: "DPIA", nameKey: "dpia", premium: true },
+              // DPIA is premium only where a payment rail exists. On
+              // self-host (Stripe off) every feature is included — see
+              // ALL_FEATURES_FREE in server/services/licensing/entitlement.ts
+              // — so a lock badge here would be false.
+              { type: "DPIA", nameKey: "dpia", premium: features.stripeEnabled },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
                 <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">

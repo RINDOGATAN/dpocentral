@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { features } from "@/config/features";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
@@ -105,6 +106,13 @@ export default function QuickstartPage() {
 
   // Result data from execute mutation
   const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number; aiSystems?: number } | null>(null);
+
+  // Mark quickstart as seen (1 year) so the dashboard's first-visit
+  // auto-redirect (/privacy → /privacy/quickstart for empty orgs) fires only
+  // once instead of looping on every visit. Quickstart stays reachable via nav.
+  useEffect(() => {
+    document.cookie = "dpo_quickstart_seen=1; path=/; max-age=31536000; samesite=lax";
+  }, []);
 
   // Debounce search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -550,7 +558,10 @@ export default function QuickstartPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <Building2 className="w-8 h-8 text-primary" />
-                  {!catalogAccess?.hasAccess && (
+                  {/* Pricing-tier badge: only meaningful where a payment
+                      rail exists. On self-host everything is included, so
+                      "free" tiers would be confusing noise. */}
+                  {features.stripeEnabled && !catalogAccess?.hasAccess && (
                     <Badge variant="outline" className="text-green-600 border-green-600/50">
                       {tp("choose.fiveFree")}
                     </Badge>
@@ -584,9 +595,11 @@ export default function QuickstartPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <Sparkles className="w-8 h-8 text-primary" />
-                  <Badge variant="outline" className="text-green-600 border-green-600/50">
-                    {tp("choose.free")}
-                  </Badge>
+                  {features.stripeEnabled && (
+                    <Badge variant="outline" className="text-green-600 border-green-600/50">
+                      {tp("choose.free")}
+                    </Badge>
+                  )}
                   {useIndustry && (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                   )}

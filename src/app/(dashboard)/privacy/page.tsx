@@ -110,9 +110,15 @@ export default function PrivacyDashboardPage() {
   const fromQuickstart = searchParams.get("from") === "quickstart";
 
   useEffect(() => {
-    if (isEmptyOrg && !fromQuickstart) {
-      router.replace("/privacy/quickstart");
-    }
+    if (!isEmptyOrg || fromQuickstart) return;
+    // First visit only: once quickstart has been shown it sets a cookie
+    // (see quickstart/page.tsx), so an empty org can still navigate to the
+    // dashboard without being bounced back in a loop.
+    const quickstartSeen = document.cookie
+      .split("; ")
+      .includes("dpo_quickstart_seen=1");
+    if (quickstartSeen) return;
+    router.replace("/privacy/quickstart");
   }, [isEmptyOrg, fromQuickstart, router]);
 
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(

@@ -19,6 +19,9 @@ import { formatPrice } from "@/lib/currency";
 export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
   const price = formatPrice(9);
+  // /privacy/billing only exists when Stripe is on (self-host redirects it
+  // to /privacy/skills), so the self-service upsell links need both flags.
+  const canSelfService = features.stripeEnabled && features.selfServiceUpgrade;
 
   const dpiaWhenKeys = ["profiling", "special", "monitoring", "tech", "rights"] as const;
   const dpiaWorkflowKeys = ["describe", "assess", "identify", "measures", "document", "consult"] as const;
@@ -48,9 +51,9 @@ export default function DocsPremiumPage() {
               </div>
               <p className="text-sm text-muted-foreground">
                 {t("cardBodyPrefix")}{price}{t("cardBodyMid")}
-                {features.selfServiceUpgrade ? t("cardSelfService") : t("cardContact")}
+                {canSelfService ? t("cardSelfService") : t("cardContact")}
               </p>
-              {features.selfServiceUpgrade ? (
+              {canSelfService ? (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
                   <Link href="/privacy/billing">
                     <CreditCard className="h-4 w-4 mr-2" />
@@ -97,7 +100,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title={t("dpia.infoTitle")}>
-          {features.selfServiceUpgrade ? (
+          {canSelfService ? (
             <>
               {t("dpia.infoSelfPrefix")}
               <Link href="/privacy/billing" className="text-primary underline">{t("dpia.infoSelfLink")}</Link>
@@ -131,7 +134,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title={t("pia.infoTitle")}>
-          {features.selfServiceUpgrade ? (
+          {canSelfService ? (
             <>
               {t("pia.infoSelfPrefix")}
               <Link href="/privacy/billing" className="text-primary underline">{t("pia.infoSelfLink")}</Link>
@@ -172,7 +175,7 @@ export default function DocsPremiumPage() {
           </div>
         </div>
         <InfoCallout type="info" title={t("tia.infoTitle")}>
-          {features.selfServiceUpgrade ? (
+          {canSelfService ? (
             <>
               {t("tia.infoSelfPrefix")}
               <Link href="/privacy/billing" className="text-primary underline">{t("tia.infoSelfLink")}</Link>
@@ -207,7 +210,7 @@ export default function DocsPremiumPage() {
           {t("vendorRisk.tipBody")}
         </InfoCallout>
         <InfoCallout type="info" title={t("vendorRisk.infoTitle")}>
-          {features.selfServiceUpgrade ? (
+          {canSelfService ? (
             <>
               {t("vendorRisk.infoSelfPrefix")}
               <Link href="/privacy/billing" className="text-primary underline">{t("vendorRisk.infoSelfLink")}</Link>
@@ -250,7 +253,7 @@ export default function DocsPremiumPage() {
           </Card>
         </div>
         <InfoCallout type="info" title={t("vendorCatalog.infoTitle")}>
-          {features.selfServiceUpgrade ? (
+          {canSelfService ? (
             <>
               {t("vendorCatalog.infoSelfPrefix")}
               <Link href="/privacy/billing" className="text-primary underline">{t("vendorCatalog.infoSelfLink")}</Link>

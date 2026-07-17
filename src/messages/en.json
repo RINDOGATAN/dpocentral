@@ -2049,6 +2049,11 @@
     "failedToSendLink": "Failed to send magic link. Please try again.",
     "unexpectedError": "An unexpected error occurred.",
     "devSignInFailed": "Dev sign-in failed.",
+    "localSignInTitle": "Local sign-in",
+    "localSignInBody": "Your account lives on this computer. Enter your email to open it — nothing is sent anywhere.",
+    "workspacePassphrase": "Workspace passphrase",
+    "workspacePassphraseHint": "Set when the suite was installed. Recover it on the computer that runs the suite: ./suite.sh passphrase",
+    "wrongPassphrase": "Wrong passphrase — check ./suite.sh passphrase on the host computer.",
     "error": {
       "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
       "OAuthCallback": "Google sign-in failed. Please try again.",
