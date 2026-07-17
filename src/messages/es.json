@@ -5780,7 +5780,7 @@
       "off": "Desactivado — sin llamadas a IA",
       "local_gateway": "Pasarela local (motor autoalojado)",
       "cloud_eu": "Nube — proveedor de la UE",
-      "cloud_us": "Nube — proveedor de EE. UU."
+      "cloud_us": "LLM en la nube"
     },
     "postureCard": {
       "title": "Asistencia de IA",
