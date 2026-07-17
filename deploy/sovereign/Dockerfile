@@ -30,7 +30,12 @@ RUN node -e "\
   for (const k of Object.keys(lock.packages)) \
     if (k.includes('@dpocentral/')) delete lock.packages[k]; \
   fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));"
-RUN npm ci
+# Retry on a clean tree: under QEMU emulation (arm64 built on an amd64 CI
+# runner) npm intermittently races on parallel dir creation, or simply hangs
+# for hours (two 4h-hung builds on 2026-07-17). Same hardening as aisentinel.
+RUN npm ci \
+  || (echo "npm ci failed (emulation race?) — retrying clean" && rm -rf node_modules && npm ci) \
+  || (rm -rf node_modules && npm ci)
 
 # ---- builder: prisma client + standalone Next build (also the migrator) ----
 FROM node:22-alpine AS builder
