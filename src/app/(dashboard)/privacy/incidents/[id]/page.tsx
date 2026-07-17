@@ -47,6 +47,8 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
+import { features } from "@/config/features";
 
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
@@ -100,6 +102,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const [notifDialogOpen, setNotifDialogOpen] = useState(false);
   const [selectedJurisdictionId, setSelectedJurisdictionId] = useState<string>("");
   const [selectedRecipientType, setSelectedRecipientType] = useState<string>("DPA");
+
+  // Notification content editor (Insert target for the optional AI draft)
+  const [editingNotifId, setEditingNotifId] = useState<string | null>(null);
+  const [notifContent, setNotifContent] = useState("");
 
   const [timelineDialogOpen, setTimelineDialogOpen] = useState(false);
   const [timelineTitle, setTimelineTitle] = useState("");
@@ -160,6 +166,22 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
     },
     onError: (error) => toast.error(error.message || t("incident.taskCreateFailed")),
   });
+
+  const tAi = useTranslations("ai");
+
+  const updateNotification = trpc.incident.updateNotification.useMutation({
+    onSuccess: () => {
+      toast.success(tAi("notificationEditor.saved"));
+      utils.incident.getById.invalidate();
+      setEditingNotifId(null);
+      setNotifContent("");
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  // Optional AI assist — posture-gated server-side; the draft only lands in
+  // the editable content textarea via the user's Insert.
+  const generateNotificationDraft = trpc.incident.generateNotificationDraft.useMutation();
 
   const createNotification = trpc.incident.createNotification.useMutation({
     onSuccess: () => {
@@ -536,7 +558,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 const pastDue = deadline.getTime() < Date.now() && notification.status === "PENDING";
                 return (
                   <Card key={notification.id} className={pastDue ? "border-destructive/50" : ""}>
-                    <CardContent className="py-4">
+                    <CardContent className="py-4 space-y-3">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -549,7 +571,84 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                             {tp("notifications.due", { date: deadline.toLocaleString() })}
                           </p>
                         </div>
+                        {editingNotifId !== notification.id && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingNotifId(notification.id);
+                              setNotifContent(notification.content ?? "");
+                            }}
+                          >
+                            <Edit className="w-4 h-4 mr-2" />
+                            {tAi("notificationEditor.edit")}
+                          </Button>
+                        )}
                       </div>
+
+                      {editingNotifId !== notification.id && notification.content && (
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3 border-l-2 pl-3">
+                          {notification.content}
+                        </p>
+                      )}
+
+                      {editingNotifId === notification.id && (
+                        <div className="space-y-3 border-t pt-3">
+                          {features.aiAssistEnabled && (
+                            <AiDraftPanel
+                              organizationId={organization?.id ?? ""}
+                              onGenerate={async () => {
+                                const res = await generateNotificationDraft.mutateAsync({
+                                  organizationId: organization?.id ?? "",
+                                  incidentId: id,
+                                  notificationId: notification.id,
+                                });
+                                return {
+                                  content: res.content,
+                                  model: res.model,
+                                  generationId: res.generationId,
+                                };
+                              }}
+                              onInsert={(content) => setNotifContent(content)}
+                            />
+                          )}
+                          <Textarea
+                            value={notifContent}
+                            onChange={(e) => setNotifContent(e.target.value)}
+                            rows={10}
+                            placeholder={tAi("notificationEditor.placeholder")}
+                            className="text-sm"
+                          />
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingNotifId(null);
+                                setNotifContent("");
+                              }}
+                            >
+                              {tAi("notificationEditor.cancel")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              disabled={updateNotification.isPending}
+                              onClick={() =>
+                                updateNotification.mutate({
+                                  organizationId: organization?.id ?? "",
+                                  id: notification.id,
+                                  content: notifContent,
+                                })
+                              }
+                            >
+                              {updateNotification.isPending && (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              )}
+                              {tAi("notificationEditor.save")}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 );

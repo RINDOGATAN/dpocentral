@@ -58,6 +58,8 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
+import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
+import { features } from "@/config/features";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -389,6 +391,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }));
   }, []);
 
+  // Optional AI assist: draft a risk narrative from the linked processing
+  // activity (posture-gated server-side; one more suggestion source next to
+  // the rule-based auto-fill).
+  const generateAiNarrative = trpc.assessment.generateAiNarrative.useMutation();
+
   const handleAddMitigation = useCallback(() => {
     if (!organization?.id || !mitigationForm.title) return;
     addMitigation.mutate({
@@ -566,6 +573,31 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }
   }, []);
 
+  // Insert an AI-drafted narrative into an EDITABLE response field (never
+  // saved directly): the risk/conclusion textarea when the template has one,
+  // else the first textarea question. The user reviews and saves through the
+  // normal response flow.
+  const insertAiNarrative = useCallback((content: string) => {
+    let target: { sectionId: string; questionId: string } | null = null;
+    for (const section of [...expandedSections].reverse()) {
+      const q = (section.questions || []).find((q: any) => q.type === "textarea");
+      if (q) {
+        target = { sectionId: section.id, questionId: q.id };
+        break;
+      }
+    }
+    if (!target) return;
+    setEditingQuestion(target.questionId);
+    setDraftResponses((prev) => ({
+      ...prev,
+      [target!.questionId]: {
+        response: content,
+        notes: prev[target!.questionId]?.notes ?? "",
+      },
+    }));
+    scrollToSection(target.sectionId);
+  }, [expandedSections, scrollToSection]);
+
   const parseMultiselectValue = useCallback((val: string | undefined): string[] => {
     if (!val) return [];
     try {
@@ -742,6 +774,29 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         </TabsList>
 
         <TabsContent value="questions" className="mt-4 space-y-4">
+          {/* Optional AI assist — one more suggestion source alongside the
+              rule-based auto-fill. Posture-gated server-side; the draft only
+              lands in an editable response via Insert. */}
+          {features.aiAssistEnabled && assessment.processingActivity?.id && canSubmit && (
+            <AiDraftPanel
+              organizationId={organization?.id ?? ""}
+              onGenerate={async () => {
+                const res = await generateAiNarrative.mutateAsync({
+                  organizationId: organization?.id ?? "",
+                  processingActivityId: assessment.processingActivity!.id,
+                  vendorId: assessment.vendor?.id ?? undefined,
+                  assessmentId: id,
+                });
+                return {
+                  content: res.content,
+                  model: res.model,
+                  generationId: res.generationId,
+                };
+              }}
+              onInsert={insertAiNarrative}
+            />
+          )}
+
           {/* Section Navigation - sticky pills */}
           {sections.length > 1 && (
             <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b pb-3 pt-1 -mx-1 px-1">

@@ -31,6 +31,7 @@ import { trpc } from "@/lib/trpc";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
+import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 
@@ -493,6 +494,9 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* AI assistance (per-org posture, off by default) */}
+      {org && <AiPostureCard organizationId={orgId} isAdmin={isAdmin} />}
 
       <DeploymentExpertCta />
 

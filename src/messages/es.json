@@ -5756,5 +5756,49 @@
         }
       }
     }
+  },
+  "ai": {
+    "panel": {
+      "draftWithAi": "Redactar con IA",
+      "generating": "Redactando…",
+      "insert": "Insertar borrador",
+      "discard": "Descartar",
+      "provenance": "Generado con IA ({model}) — revísalo antes de usarlo",
+      "inserted": "Borrador insertado — revísalo y guárdalo",
+      "offHint": "La asistencia de IA está desactivada en esta organización. Un administrador puede activarla en Ajustes.",
+      "notConfiguredHint": "La asistencia de IA está activada, pero no hay ningún motor de IA configurado en el servidor. Pide a tu administrador que configure LLM_GATEWAY_URL (o una clave de API)."
+    },
+    "posture": {
+      "off": "Desactivado — sin llamadas a IA",
+      "local_gateway": "Pasarela local (motor autoalojado)",
+      "cloud_eu": "Nube — proveedor de la UE",
+      "cloud_us": "Nube — proveedor de EE. UU."
+    },
+    "postureCard": {
+      "title": "Asistencia de IA",
+      "description": "Asistentes opcionales de redacción con IA (narrativas de riesgo de EIPD, borradores de notificación de brechas). Desactivado por defecto: mientras la postura esté desactivada, este producto no realiza ninguna llamada a IA.",
+      "postureLabel": "Postura de IA",
+      "engineConfigured": "Motor configurado: {provider}",
+      "engineNotConfigured": "No hay ningún motor de IA configurado en este servidor. La IA permanece inactiva aunque se seleccione una postura.",
+      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "acknowledgment": "Estoy autorizado para activar la asistencia de IA en esta organización. Entiendo que los datos seleccionados se enviarán al motor de IA configurado, que el resultado de la IA es un borrador que debe revisar un profesional cualificado antes de usarse y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
+      "save": "Guardar postura",
+      "saved": "Postura de IA actualizada",
+      "acknowledgedBy": "Activada y confirmada por {name} el {date}",
+      "adminOnly": "Solo los propietarios y administradores de la organización pueden cambiar la postura de IA."
+    },
+    "notificationEditor": {
+      "edit": "Editar borrador",
+      "save": "Guardar borrador",
+      "cancel": "Cancelar",
+      "placeholder": "Contenido de la notificación…",
+      "saved": "Borrador de notificación guardado"
+    },
+    "errors": {
+      "ai_off": "La asistencia de IA está desactivada en esta organización. Un administrador puede activarla en Ajustes.",
+      "ai_not_configured": "No hay ningún motor de IA configurado en el servidor. Configura LLM_GATEWAY_URL (o una clave de API) e inténtalo de nuevo.",
+      "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
+      "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
+    }
   }
 }
