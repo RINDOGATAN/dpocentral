@@ -22,8 +22,10 @@ import {
 import { logger } from "@/lib/logger";
 
 // PEM (SPKI) Ed25519 public key of the storefront signing keypair. The
-// placeholder guarantees verification fails (never crashes) until the real
-// key is configured. Read lazily so tests and late-injected env both work.
+// baked-in default IS the real family-wide key (byte-identical to Dealroom's,
+// which verifies buyer licences in production) — SKILL_SIGNING_PUBLIC_KEY is
+// an override for key rotation, not required config. Read lazily so tests and
+// late-injected env both work.
 function getPublicKeyPem(): string {
   // Self-host sets this via a docker .env, which can't hold a multiline PEM — so
   // accept a `\n`-escaped one-liner and restore the newlines.

@@ -13,6 +13,24 @@
 
 import type { VendorWatchVendor } from "./vendor-watch-types";
 
+/**
+ * A few vendor.watch exports carry `subprocessors` as a JSON-*string* (an
+ * upstream double-encoding bug, e.g. conductrics/sealmetrics in the 2026-08
+ * snapshot). Recover the array so the Json column stores structured data;
+ * anything unparseable passes through untouched.
+ */
+function normalizeSubprocessors(s: unknown): unknown {
+  if (typeof s === "string") {
+    try {
+      const parsed: unknown = JSON.parse(s);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON — fall through and keep the raw string
+    }
+  }
+  return s;
+}
+
 export function mapVendorToUpsert(v: VendorWatchVendor) {
   return {
     name: v.name,
@@ -33,7 +51,7 @@ export function mapVendorToUpsert(v: VendorWatchVendor) {
     hipaaCompliant: v.hipaaCompliant,
     dataLocations: v.dataLocations || [],
     hasEuDataCenter: v.hasEuDataCenter,
-    subprocessors: v.subprocessors ?? undefined,
+    subprocessors: normalizeSubprocessors(v.subprocessors) ?? undefined,
     aiCapabilities: v.aiCapabilities || [],
     modelHosting: v.modelHosting,
     logoUrl: v.logoUrl,
