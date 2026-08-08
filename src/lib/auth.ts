@@ -31,6 +31,22 @@ const isProduction = process.env.NODE_ENV === "production";
 const cookieDomain = process.env.AUTH_COOKIE_DOMAIN || undefined;
 const cookiePrefix = isProduction ? "__Secure-" : "";
 
+// Cookie naming on the local-auth posture: browsers scope cookies per host,
+// NOT per port, and the self-hosted suite runs all three apps on localhost
+// with one shared NEXTAUTH_SECRET. With the NextAuth default names, signing
+// in to a sibling app (Dealroom, AI Sentinel) overwrites this app's session
+// cookie with a token whose user id only exists in the sibling's database —
+// DB writes then die on foreign-key violations. Scope our cookies with a
+// "dpocentral." prefix on the local-auth posture (the convention AI Sentinel
+// and Dealroom already use). Hosted keeps the default names, which the
+// *.todo.law cross-app SSO cookie expects.
+//
+// Secure-cookie handling for that block keys off the actual scheme, not
+// NODE_ENV alone: sovereign suite installs are production builds served over
+// plain http on localhost, where `secure` cookies would never be stored.
+const useSecureCookies =
+  isProduction && (process.env.NEXTAUTH_URL?.startsWith("https://") ?? true);
+
 // Wrap PrismaAdapter to strip OAuth tokens before storage.
 // DPO Central uses JWT sessions and never reads these tokens,
 // so storing them is unnecessary risk.
@@ -230,7 +246,14 @@ export const authOptions: NextAuthOptions = {
       // PrismaAdapter (user present) and already have a local row, so this
       // is a no-op for them. The JIT user has no org membership yet and
       // lands in DPO's normal create-or-join-organization onboarding.
-      if (!user && token.email) {
+      // The same situation arises on the self-hosted suite WITHOUT any SSO
+      // intent: all apps share localhost and one NEXTAUTH_SECRET, so a
+      // sibling app's cookie (minted before the per-app cookie prefix, or
+      // one that outlived a database wipe) decodes here with a foreign sub.
+      // Re-anchoring by email covers both cases; a token with no email to
+      // re-anchor with is cleared so it reads as signed out rather than
+      // reaching Prisma with a nonexistent user id (FK violations).
+      if (!user) {
         const claimedId = token.sub ?? (token.id as string | undefined);
         const existing = claimedId
           ? await prisma.user.findUnique({
@@ -239,13 +262,18 @@ export const authOptions: NextAuthOptions = {
             })
           : null;
         if (!existing) {
-          const dpoUser = await ensureDpoUser(prisma, {
-            email: token.email,
-            name: token.name,
-            picture: token.picture,
-          });
-          token.sub = dpoUser.id;
-          token.id = dpoUser.id;
+          if (token.email) {
+            const dpoUser = await ensureDpoUser(prisma, {
+              email: token.email,
+              name: token.name,
+              picture: token.picture,
+            });
+            token.sub = dpoUser.id;
+            token.id = dpoUser.id;
+          } else {
+            token.sub = undefined;
+            token.id = undefined;
+          }
         }
       }
 
@@ -301,6 +329,46 @@ export const authOptions: NextAuthOptions = {
       },
     },
   }),
+  // Self-host / local-auth posture (no cross-subdomain SSO): app-prefixed,
+  // host-only cookies so suite siblings on the same localhost cannot clobber
+  // this app's session. See the cookie-naming comment near the top.
+  ...(!cookieDomain &&
+    features.devAuthEnabled && {
+      cookies: {
+        sessionToken: {
+          name: useSecureCookies
+            ? "__Secure-dpocentral.session-token"
+            : "dpocentral.session-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+        callbackUrl: {
+          name: useSecureCookies
+            ? "__Secure-dpocentral.callback-url"
+            : "dpocentral.callback-url",
+          options: {
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+        csrfToken: {
+          name: useSecureCookies
+            ? "__Host-dpocentral.csrf-token"
+            : "dpocentral.csrf-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax" as const,
+            path: "/",
+            secure: useSecureCookies,
+          },
+        },
+      },
+    }),
   // Allow credentials in development
   ...(isDev && {
     debug: true,

@@ -69,7 +69,11 @@ export function sanitizeInput<T>(input: T): T {
 }
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  // The id check is redundant in the types but real at runtime: the jwt
+  // callback clears token.sub when a stale token cannot be re-anchored to a
+  // local user, and a session without a user id must read as signed out —
+  // never reach Prisma as userId: undefined.
+  if (!ctx.session || !ctx.session.user || !ctx.session.user.id) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({

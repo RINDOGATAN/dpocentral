@@ -7,11 +7,22 @@ const isProduction = process.env.NODE_ENV === "production";
 
 // All session cookie names used across todo.law apps
 const CROSS_APP_COOKIES = [
-  // Dealroom + DPO Central (NextAuth v4)
+  // Dealroom + DPO Central (NextAuth v4, hosted default names)
   "__Secure-next-auth.session-token",
   "__Secure-next-auth.callback-url",
   "next-auth.session-token",
   "next-auth.callback-url",
+  // DPO Central self-host posture (unique prefix — avoids the localhost
+  // cross-app cookie collision on the suite)
+  "__Secure-dpocentral.session-token",
+  "__Secure-dpocentral.callback-url",
+  "dpocentral.session-token",
+  "dpocentral.callback-url",
+  // Dealroom self-host posture (unique prefix)
+  "__Secure-dealroom.session-token",
+  "__Secure-dealroom.callback-url",
+  "dealroom.session-token",
+  "dealroom.callback-url",
   // AI Sentinel (NextAuth v4, unique prefix)
   "__Secure-aisentinel.session-token",
   "__Secure-aisentinel.callback-url",
