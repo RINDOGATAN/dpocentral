@@ -2,8 +2,9 @@
 # ============================================================================
 # DPO Central — sovereign image (deploy/sovereign/docker-compose.yml).
 # Multi-stage: deps → builder (prisma generate + standalone next build) →
-# runner (minimal). The `builder` stage doubles as the one-shot migrator
-# (it has the prisma CLI, tsx and the seed scripts).
+# runner (minimal app), plus a standalone `migrator` stage (prisma CLI + tsx +
+# migrations + seed scripts ONLY — no app build, ~300 MB vs the ~1.8 GB
+# builder stage it used to be published from).
 # The app code is UNCHANGED from cloud — only env differs (commandment #6).
 # ============================================================================
 
@@ -37,7 +38,7 @@ RUN npm ci \
   || (echo "npm ci failed (emulation race?) — retrying clean" && rm -rf node_modules && npm ci) \
   || (rm -rf node_modules && npm ci)
 
-# ---- builder: prisma client + standalone Next build (also the migrator) ----
+# ---- builder: prisma client + standalone Next build ------------------------
 FROM node:22-alpine AS builder
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
@@ -82,8 +83,45 @@ ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
 ENV DATABASE_URL=postgresql://build:build@localhost:5432/build
 # The repo's `npm run build` also runs `prisma migrate deploy` (for the
 # hosted/Vercel lane) — that belongs to the migrator service, not an image
-# build with a placeholder DATABASE_URL. Invoke the buildable steps directly.
-RUN npx prisma generate && npx next build
+# build with a placeholder DATABASE_URL. Invoke the buildable steps directly,
+# as separate layers so the client generation is independent of the app build.
+RUN npx prisma generate
+RUN npx next build
+
+# ---- migrator: one-shot migrate + first-boot seed (published separately) ----
+# Contains ONLY what deploy/sovereign/migrate.sh needs: the prisma CLI, tsx,
+# the generated client, the migrations history (append-only, forever) and the
+# seed scripts + their imports. The suite's compose runs it with
+# working_dir /app and entrypoint ["/bin/sh", "deploy/sovereign/migrate.sh"] —
+# keep that path layout stable.
+# Layers are ordered most-stable-first so a typical release only re-downloads
+# the few-MB tail (migrations / seed scripts / snapshot), not the deps.
+FROM node:22-alpine AS migrator
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
+# Versions pinned to package-lock.json — keep in sync when bumping
+# prisma/@prisma/client/tsx there. Installed explicitly instead of copying the
+# app's full node_modules (which is what made the old migrator image ~1.8 GB).
+# Caches are dropped in the same RUN so they never land in a layer (they are
+# ~275 MB — bigger than everything the image actually keeps).
+RUN npm install --no-save --no-audit --no-fund \
+      prisma@5.22.0 @prisma/client@5.22.0 tsx@4.22.3 \
+    && rm -rf /root/.npm /root/.cache
+# Client generation depends only on the schema, not the app build.
+COPY prisma/schema.prisma ./prisma/schema.prisma
+RUN npx prisma generate && rm -rf /root/.cache
+# Most-churn tail: migrations, seed scripts and the exact files they import
+# (tsx loads only what's imported — see prisma/seed.ts and scripts/seed-*.ts),
+# the vendor catalog snapshot, and the entrypoint script.
+COPY package.json ./
+COPY prisma/migrations ./prisma/migrations
+COPY prisma/seed.ts ./prisma/seed.ts
+COPY scripts/assert-safe-db.ts scripts/seed-templates.ts scripts/seed-vendor-questionnaire.ts ./scripts/
+COPY src/config/jurisdiction-data.ts ./src/config/jurisdiction-data.ts
+COPY src/lib/seed-catalog-from-snapshot.ts src/lib/vendor-watch-mapper.ts src/lib/vendor-watch-types.ts ./src/lib/
+COPY vendors/catalog-snapshot.json ./vendors/catalog-snapshot.json
+COPY deploy/sovereign/migrate.sh ./deploy/sovereign/migrate.sh
 
 # ---- runner: minimal standalone runtime -------------------------------------
 FROM node:22-alpine AS runner

@@ -3,7 +3,7 @@
 # instant"). One command brings up the FULL app on firm hardware:
 #
 #   Postgres 16  ← the firm's privacy program data, on the firm's disk
-#   migrator     ← one-shot: prisma db push + first-boot seed
+#   migrator     ← one-shot: prisma migrate deploy + first-boot seed
 #   app          ← the SAME Next.js app the cloud runs, standalone build
 #                  → http://localhost:8485
 #
@@ -16,7 +16,7 @@
 
 name: dpocentral-sovereign
 
-# One build definition, two targets (builder = migrator, runner = app).
+# One build definition, two targets (migrator = slim migrate/seed, runner = app).
 # NEXT_PUBLIC_* are baked into the bundles at BUILD time — changing them in
 # .env requires: docker compose up -d --build app
 x-build: &app-build
@@ -62,7 +62,7 @@ services:
   migrator:
     build:
       <<: *app-build
-      target: builder
+      target: migrator
     depends_on:
       db:
         condition: service_healthy
