@@ -2,11 +2,11 @@
   "schema": "dealroom.contract-pack/1",
   "contractType": "DPA",
   "sourceRepo": "RINDOGATAN/deal-room",
-  "sourceCommit": "81af8449a08b817ff9448ffe1fe26e36acd8f0df",
+  "sourceCommit": "676b81bdbdf6dba1421da0d71d2a67463806f331",
   "files": {
     "dpa/clauses.json": "7757fa7130518a74f439815ba34be7a04f096fffd1098c6566b10fe3fa106cac",
     "dpa/boilerplate.json": "50476a87ccce009e992c39f74bd09d5f9c8b1bd4333cbcab6b09cb20387e2706",
-    "dpa/parameters.json": "56ba110198f1eacf2d50786a065eca067f99c753887221479a40100a91a89646",
+    "dpa/parameters.json": "d7bf6b2fad48984869fe3e996536e13a3f884980697daebf80b595604201f64c",
     "dpa/metadata.json": "2d3a5ca542882826c7273070a2e424dda2c23430d9a3e3d9798cbdccaf7a9e4c",
     "derived-texts.json": "db9655b9994c4df9de4f567b8fa76ac315fa720b75833488a7c301180c599a4a"
   }
