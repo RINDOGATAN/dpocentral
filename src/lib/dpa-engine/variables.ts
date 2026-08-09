@@ -10,6 +10,7 @@
  */
 
 import { localize } from "./pack";
+import { splitMulti } from "./multi";
 import type {
   ClauseSelections,
   DpaContext,
@@ -62,12 +63,6 @@ export function missingRequiredFacts(
     .map((p) => p.id);
 }
 
-function splitMulti(value: string | undefined): string[] {
-  return (value ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 function letteredList(items: string[]): string {
   const letters = "abcdefghijklmnopqrstuvwxyz";

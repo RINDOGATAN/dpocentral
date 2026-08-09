@@ -58,6 +58,23 @@ const EMPTY_PARTY: PartyForm = {
   signatoryTitle: "",
 };
 
+type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+
+// The cover/jurisdiction-provision law and the negotiated forum clause must
+// never contradict each other: changing one side updates the other.
+const LAW_TO_GLJ_OPTION: Record<GoverningLaw, string> = {
+  SPAIN: "glj-es-madrid",
+  ENGLAND_WALES: "glj-uk-london",
+  CALIFORNIA: "glj-us-courts",
+};
+
+function lawForGljOption(optionId: string): GoverningLaw | null {
+  if (optionId.startsWith("glj-es")) return "SPAIN";
+  if (optionId.startsWith("glj-uk")) return "ENGLAND_WALES";
+  if (optionId.startsWith("glj-us")) return "CALIFORNIA";
+  return null; // glj-custom: the free-text law governs, keep the current key.
+}
+
 function partyInput(p: PartyForm) {
   return {
     name: p.name || undefined,
@@ -103,7 +120,8 @@ export function ProduceDpaDialog({
   const [facts, setFacts] = useState<Record<string, string>>({});
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [language, setLanguage] = useState<"en" | "es">(locale === "es" ? "es" : "en");
-  const [governingLaw, setGoverningLaw] = useState<"CALIFORNIA" | "ENGLAND_WALES" | "SPAIN">("SPAIN");
+  const [governingLaw, setGoverningLaw] = useState<GoverningLaw>("SPAIN");
+  const [requestId, setRequestId] = useState<string>(() => crypto.randomUUID());
   const [effectiveDate, setEffectiveDate] = useState(
     () => new Date().toISOString().slice(0, 10)
   );
@@ -128,6 +146,7 @@ export function ProduceDpaDialog({
       setFacts(prepare.data.facts);
       setSelections(prepare.data.selections);
       setGoverningLaw(prepare.data.governingLaw);
+      setRequestId(crypto.randomUUID());
       setController({
         ...EMPTY_PARTY,
         name: prepare.data.organization.name,
@@ -143,7 +162,7 @@ export function ProduceDpaDialog({
 
   const generate = trpc.vendor.generateDpa.useMutation({
     onSuccess: (data) => {
-      toast.success(tToast("dpaGenerated"));
+      toast.success(tToast(data.tiaIncluded ? "dpaGenerated" : "dpaGeneratedNoTia"));
       setResult({ dpaUrl: data.dpaUrl, tiaUrl: data.tiaUrl, warnings: data.warnings });
       utils.vendor.getById.invalidate({ organizationId, id: vendorId });
     },
@@ -153,9 +172,14 @@ export function ProduceDpaDialog({
   const issues = useMemo(() => checkFactConsistency(facts), [facts]);
   const allConfirmed = issues.every((i) => confirmed[i.code]);
   const catalog = prepare.data?.catalog;
+  // A required fact satisfied by its pack default counts as filled — the
+  // choice Selects display `value || default`, so requiring a literal fact
+  // value would deadlock the Generate button on a complete-looking form.
   const requiredMissing = (catalog?.parameters ?? [])
     .filter((p) => p.required)
-    .some((p) => !(facts[p.id] ?? "").trim());
+    .some((p) => !((facts[p.id] ?? "").trim() || (p.default ?? "").trim()));
+  const clausesMissing = (catalog?.clauses ?? []).some((c) => !selections[c.id]);
+  const dateInvalid = !effectiveDate || isNaN(new Date(effectiveDate).getTime());
 
   const setFact = (id: string, value: string) =>
     setFacts((prev) => ({ ...prev, [id]: value }));
@@ -182,7 +206,28 @@ export function ProduceDpaDialog({
       controller: partyInput(controller),
       processor: partyInput(processor),
       confirmedIssues: issues.filter((i) => confirmed[i.code]).map((i) => i.code),
+      requestId,
     });
+
+  const onGoverningLawChange = (v: GoverningLaw) => {
+    setGoverningLaw(v);
+    // Keep the forum clause on the same law (unless a custom forum is set).
+    const current = selections["governing-law-jurisdiction"] ?? "";
+    if (!current.startsWith("glj-custom")) {
+      setSelections((prev) => ({
+        ...prev,
+        "governing-law-jurisdiction": LAW_TO_GLJ_OPTION[v],
+      }));
+    }
+  };
+
+  const onClauseChange = (clauseId: string, optionId: string) => {
+    setSelections((prev) => ({ ...prev, [clauseId]: optionId }));
+    if (clauseId === "governing-law-jurisdiction") {
+      const law = lawForGljOption(optionId);
+      if (law) setGoverningLaw(law);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -236,7 +281,7 @@ export function ProduceDpaDialog({
                 </p>
                 {prepare.data!.notes.map((n, i) => (
                   <p key={i} className="text-muted-foreground">
-                    {n}
+                    {n[locale === "es" ? "es" : "en"]}
                   </p>
                 ))}
               </div>
@@ -270,7 +315,7 @@ export function ProduceDpaDialog({
                   <Label>{t("governingLawLabel")}</Label>
                   <Select
                     value={governingLaw}
-                    onValueChange={(v) => setGoverningLaw(v as typeof governingLaw)}
+                    onValueChange={(v) => onGoverningLawChange(v as GoverningLaw)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -441,9 +486,7 @@ export function ProduceDpaDialog({
                     <Label>{localize(clause.title)}</Label>
                     <Select
                       value={selected ?? ""}
-                      onValueChange={(v) =>
-                        setSelections((prev) => ({ ...prev, [clause.id]: v }))
-                      }
+                      onValueChange={(v) => onClauseChange(clause.id, v)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t("selectPlaceholder")} />
@@ -495,7 +538,13 @@ export function ProduceDpaDialog({
               </Button>
               <Button
                 onClick={onGenerate}
-                disabled={generate.isPending || requiredMissing || !allConfirmed}
+                disabled={
+                  generate.isPending ||
+                  requiredMissing ||
+                  clausesMissing ||
+                  dateInvalid ||
+                  !allConfirmed
+                }
               >
                 <FileText className="w-4 h-4 mr-2" />
                 {generate.isPending ? t("generating") : t("generate")}

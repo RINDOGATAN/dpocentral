@@ -86,6 +86,19 @@ describe("deriveObligations (§10)", () => {
     ).toContain("30 días");
   });
 
+  it("clamps month-end effective dates instead of overflowing the month", () => {
+    const i = input({ "toms-confirmed": "toms-testing" });
+    i.context.effectiveDate = new Date("2026-01-31");
+    const obligations = deriveObligations(i);
+    // Jan 31 + 1 month clamps to Feb 28, not Mar 3.
+    expect(
+      obligations.find((o) => o.code === "toms-vulnerability-scans")?.firstDue
+    ).toBe("2026-02-28");
+    expect(obligations.find((o) => o.code === "tia-reevaluation")?.firstDue).toBe(
+      "2027-01-31"
+    );
+  });
+
   it("earliestObligationDue picks the soonest scheduled date", () => {
     const obligations = deriveObligations(
       input({ "toms-confirmed": "toms-testing" })

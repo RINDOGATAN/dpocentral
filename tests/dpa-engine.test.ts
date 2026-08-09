@@ -173,6 +173,28 @@ describe("[token] interpolation (§3)", () => {
     const doc = assembleDpa(input({ facts: { "subprocessor-list": "" } }));
     expect(doc.warnings.some((w) => w.includes("blank"))).toBe(true);
   });
+
+  it("warns about the pack's native fill-in brackets that have no parameter", () => {
+    // The no-transfers option carries a literal jurisdiction election blank.
+    const doc = assembleDpa(
+      input({ selections: { "data-transfer": "transfer-none" } })
+    );
+    expect(
+      doc.warnings.some((w) => w.includes("[EEA/United Kingdom/United States]"))
+    ).toBe(true);
+  });
+
+  it("does not interpret $-sequences in fact values as replacement patterns", () => {
+    const out = interpolateTokens(
+      "List: [initial sub-processor list].",
+      { "subprocessor-list": "AWS $$ backup: D&B $& Co" },
+      getDpaPack().parameters,
+      "subprocessor-approval",
+      "en",
+      getDpaPack().derivedTexts.tokenTranslations
+    );
+    expect(out).toBe("List: AWS $$ backup: D&B $& Co.");
+  });
 });
 
 describe("showIf conditions (§6)", () => {
@@ -367,6 +389,22 @@ describe("document assembly (§2)", () => {
     expect(
       doc.articles.find((a) => a.clauseId === "governing-law-jurisdiction")?.group
     ).toBe("governingLaw");
+  });
+
+  it("refuses to assemble with a missing or unknown clause selection", () => {
+    // A silently dropped operative clause (liability, breach notification…)
+    // must never ship in a signature-ready contract.
+    const partial = Object.fromEntries(
+      Object.entries(BASE_SELECTIONS).filter(([id]) => id !== "breach-notification")
+    );
+    expect(() =>
+      assembleDpa({ facts: BASE_FACTS, selections: partial, context: BASE_CONTEXT })
+    ).toThrowError(/breach-notification/);
+    expect(() =>
+      assembleDpa(
+        input({ selections: { "breach-notification": "no-such-option" } })
+      )
+    ).toThrowError(DpaEngineError);
   });
 
   it("omits a clause whose selected option has empty legalText", () => {

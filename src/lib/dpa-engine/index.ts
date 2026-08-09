@@ -16,11 +16,11 @@ export {
   interpolateTokens,
   interpolateCurly,
   evalShowIf,
-  findUnfilledTokens,
+  findUnfilledBlanks,
 } from "./interpolate";
 export { assembleDpa, assembleStandaloneTia, DpaEngineError } from "./assemble";
 export { checkFactConsistency } from "./consistency";
 export { mapVendorToDpaInputs } from "./mapper";
-export type { MapperInput, MappedDpaInputs } from "./mapper";
+export type { MapperInput, MappedDpaInputs, MapperNote } from "./mapper";
 export { deriveObligations, earliestObligationDue } from "./obligations";
 export type { DerivedObligation, ObligationCadence } from "./obligations";

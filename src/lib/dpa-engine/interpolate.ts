@@ -51,9 +51,11 @@ export function interpolateTokens(
       if (localized) tokens.push(localized);
     }
     for (const token of tokens) {
+      // Function replacer: fact values are user text, and a plain string
+      // replacement would interpret $-sequences ($&, $$) in legal text.
       result = result.replace(
         new RegExp("\\[" + escapeRegExp(token) + "\\]", "gi"),
-        value
+        () => value
       );
     }
   }
@@ -98,33 +100,25 @@ export function evalShowIf(
 }
 
 /**
- * Find declared parameters whose `[token]` still sits unfilled in the
- * rendered clause texts (§3: warn before finalizing) — the fact was never
- * recorded and the parameter has no default, so the finished document would
- * ship with a visible fill-in blank.
+ * Find every `[bracket]` still sitting in the rendered clause texts (§3:
+ * warn before finalizing). Scanning the OUTPUT rather than the declared
+ * parameter tokens catches both unfilled parameter tokens and the pack's
+ * native fill-in blanks that have no parameter at all (e.g. the
+ * "[EEA/United Kingdom/United States]" election in the no-transfers
+ * option) — any surviving bracket is a blank the reviewer must resolve.
  */
-export function findUnfilledTokens(
-  clauses: Array<{ clauseId: string; legalText: string }>,
-  facts: DpaFacts,
-  parameters: PackParameter[],
-  lang: DpaLang,
-  tokenTranslations: PackDerivedTexts["tokenTranslations"]
-): PackParameter[] {
-  const missing: PackParameter[] = [];
-  for (const param of parameters) {
-    if (!param.token) continue;
-    if ((facts[param.id] ?? "").trim()) continue;
-    const spellings = [param.token.toLowerCase()];
-    if (lang !== "en") {
-      const localized = tokenTranslations[param.token.toLowerCase()]?.[lang];
-      if (localized) spellings.push(localized.toLowerCase());
+export function findUnfilledBlanks(
+  clauses: Array<{ clauseId: string; legalText: string }>
+): Array<{ clauseId: string; blank: string }> {
+  const found: Array<{ clauseId: string; blank: string }> = [];
+  const seen = new Set<string>();
+  for (const clause of clauses) {
+    for (const match of clause.legalText.matchAll(/\[[^\]\n]{1,120}\]/g)) {
+      const key = `${clause.clauseId}::${match[0]}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      found.push({ clauseId: clause.clauseId, blank: match[0] });
     }
-    const present = clauses.some(
-      (c) =>
-        (param.scope === "*" || param.scope === c.clauseId) &&
-        spellings.some((tk) => c.legalText.toLowerCase().includes(`[${tk}]`))
-    );
-    if (present) missing.push(param);
   }
-  return missing;
+  return found;
 }

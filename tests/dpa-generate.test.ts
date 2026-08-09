@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
     vendor: { findFirst: vi.fn(), update: vi.fn() },
     processingActivity: { findMany: vi.fn() },
     organizationJurisdiction: { findMany: vi.fn() },
-    vendorContract: { create: vi.fn(), update: vi.fn() },
+    vendorContract: { create: vi.fn(), update: vi.fn(), findFirst: vi.fn() },
     auditLog: { create: vi.fn() },
   },
 }));
@@ -104,6 +104,7 @@ beforeEach(() => {
     async ({ data }: { data: Record<string, unknown> }) => ({ id: "contract-1", ...data })
   );
   mocks.prisma.vendorContract.update.mockResolvedValue({});
+  mocks.prisma.vendorContract.findFirst.mockResolvedValue(null);
   mocks.prisma.vendor.update.mockResolvedValue({});
 });
 
@@ -200,6 +201,34 @@ describe("generateDpa", () => {
       confirmedIssues: ["pseudonymization-identifying-data"],
     });
     expect(confirmed.contractId).toBe("contract-1");
+  });
+
+  it("returns the existing contract on a requestId retry instead of duplicating", async () => {
+    const caller = callerWithRole("PRIVACY_OFFICER");
+    const requestId = "3b241101-e2bb-4255-8caf-4136c566a962";
+    mocks.prisma.vendorContract.findFirst.mockResolvedValue({
+      id: "contract-existing",
+      metadata: {
+        dpaEngine: { requestId, warnings: [], tiaIncluded: true },
+      },
+    });
+    const result = await caller.generateDpa({ ...GENERATE_INPUT, requestId });
+    expect(result.contractId).toBe("contract-existing");
+    expect(result.tiaUrl).toBe("/api/export/dpa/contract-existing?doc=tia");
+    expect(mocks.prisma.vendorContract.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects a missing clause selection as BAD_REQUEST", async () => {
+    const caller = callerWithRole("PRIVACY_OFFICER");
+    const partial = Object.fromEntries(
+      Object.entries(GENERATE_INPUT.selections).filter(
+        ([id]) => id !== "liability-indemnification"
+      )
+    );
+    await expect(
+      caller.generateDpa({ ...GENERATE_INPUT, selections: partial })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.prisma.vendorContract.create).not.toHaveBeenCalled();
   });
 
   it("rejects missing required facts as BAD_REQUEST", async () => {

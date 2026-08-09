@@ -10,7 +10,7 @@
 import { getDpaPack, localize } from "./pack";
 import {
   evalShowIf,
-  findUnfilledTokens,
+  findUnfilledBlanks,
   interpolateCurly,
   interpolateTokens,
 } from "./interpolate";
@@ -35,7 +35,8 @@ import type {
 export class DpaEngineError extends Error {
   constructor(
     message: string,
-    public readonly missingFacts: string[] = []
+    public readonly missingFacts: string[] = [],
+    public readonly invalidSelections: string[] = []
   ) {
     super(message);
     this.name = "DpaEngineError";
@@ -52,23 +53,27 @@ interface RenderedClause {
 function renderClauses(
   facts: Record<string, string>,
   selections: Record<string, string>,
-  lang: DpaLang,
-  warnings: string[]
+  lang: DpaLang
 ): RenderedClause[] {
   const pack = getDpaPack();
   const rendered: RenderedClause[] = [];
   const ordered = [...pack.clauses].sort((a, b) => a.order - b.order);
+  // Every clause needs a valid selection: a missing or unknown option id
+  // must fail generation, never silently drop an operative clause (breach
+  // notification, liability, …) from a signature-ready contract. Omission
+  // is only expressible through a selected option with empty legalText.
+  const invalid = ordered.filter(
+    (clause) => !clause.options.some((o) => o.id === selections[clause.id])
+  );
+  if (invalid.length) {
+    throw new DpaEngineError(
+      `Missing or unknown clause selections: ${invalid.map((c) => c.id).join(", ")}`,
+      [],
+      invalid.map((c) => c.id)
+    );
+  }
   for (const clause of ordered) {
-    const optionId = selections[clause.id];
-    const option = clause.options.find((o) => o.id === optionId);
-    if (!option) {
-      warnings.push(
-        lang === "es"
-          ? `Cláusula sin opción seleccionada: «${localize(clause.title, lang)}» — omitida.`
-          : `Clause has no selected option: "${localize(clause.title, lang)}" — omitted.`
-      );
-      continue;
-    }
+    const option = clause.options.find((o) => o.id === selections[clause.id])!;
     // Empty legalText means "clause omitted" (§2.6), e.g. the "none" option
     // of government-access-requests.
     const raw = option.legalText[lang] ?? option.legalText.en ?? "";
@@ -136,21 +141,17 @@ export function assembleDpa(input: AssembleInput): DpaDocumentModel {
   const bp = pack.boilerplate;
   const warnings: string[] = [];
 
-  const clauses = renderClauses(facts, selections, lang, warnings);
+  const clauses = renderClauses(facts, selections, lang);
 
-  // §3: warn when a declared parameter's token remains a fill-in blank.
-  for (const param of findUnfilledTokens(
-    clauses,
-    facts,
-    pack.parameters,
-    lang,
-    pack.derivedTexts.tokenTranslations
-  )) {
-    const label = localize(param.label, lang) || param.id;
+  // §3: warn on every [bracket] that survived interpolation — unfilled
+  // parameter tokens and the pack's native fill-in blanks alike.
+  for (const { clauseId, blank } of findUnfilledBlanks(clauses)) {
+    const clause = pack.clauses.find((c) => c.id === clauseId);
+    const title = clause ? localize(clause.title, lang) : clauseId;
     warnings.push(
       lang === "es"
-        ? `Campo sin cumplimentar en el documento: «${label}» queda como espacio en blanco.`
-        : `Unfilled fill-in blank in the document: "${label}" remains blank.`
+        ? `Espacio en blanco sin cumplimentar en la cláusula «${title}»: ${blank}`
+        : `Unfilled fill-in blank in clause "${title}": ${blank}`
     );
   }
 

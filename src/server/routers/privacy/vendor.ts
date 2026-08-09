@@ -15,6 +15,7 @@ import {
   mapVendorToDpaInputs,
 } from "@/lib/dpa-engine";
 import type { DpaContext } from "@/lib/dpa-engine";
+import type { DpaSnapshotStored } from "@/lib/dpa-engine/snapshot";
 import {
   VendorStatus,
   VendorRiskTier,
@@ -519,6 +520,9 @@ export const vendorRouter = createTRPCRouter({
         // §7: contradictions require explicit confirmation — the codes the
         // reviewer ticked in the UI.
         confirmedIssues: z.array(z.string()).default([]),
+        // Client-generated idempotency key: a retry after a lost response
+        // must return the already-created contract, not a duplicate.
+        requestId: z.string().uuid().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -527,6 +531,32 @@ export const vendorRouter = createTRPCRouter({
       });
       if (!vendor) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Vendor not found" });
+      }
+
+      if (input.requestId) {
+        const existing = await ctx.prisma.vendorContract.findFirst({
+          where: {
+            vendorId: vendor.id,
+            type: ContractType.DPA,
+            metadata: {
+              path: ["dpaEngine", "requestId"],
+              equals: input.requestId,
+            },
+          },
+        });
+        if (existing) {
+          const meta = existing.metadata as {
+            dpaEngine?: { warnings?: string[]; tiaIncluded?: boolean };
+          } | null;
+          const tiaIncluded = meta?.dpaEngine?.tiaIncluded ?? false;
+          return {
+            contractId: existing.id,
+            dpaUrl: `/api/export/dpa/${existing.id}?doc=dpa`,
+            tiaUrl: tiaIncluded ? `/api/export/dpa/${existing.id}?doc=tia` : null,
+            warnings: meta?.dpaEngine?.warnings ?? [],
+            tiaIncluded,
+          };
+        }
       }
 
       const issues = checkFactConsistency(input.facts);
@@ -573,6 +603,26 @@ export const vendorRouter = createTRPCRouter({
       // §10: the recurring obligations the produced DPA implies.
       const obligations = deriveObligations(assembleInput);
 
+      // Typed as the shared snapshot shape so the writer can never drift
+      // from what the download route's schema expects.
+      const snapshot: DpaSnapshotStored = {
+        version: 1,
+        language: input.language,
+        governingLaw: input.governingLaw,
+        facts: input.facts,
+        selections: input.selections,
+        controller: input.controller,
+        processor: input.processor,
+        dealName: input.dealName ?? null,
+        effectiveDate: input.effectiveDate.toISOString(),
+        producedAt: producedAt.toISOString(),
+        confirmedIssues: input.confirmedIssues,
+        requestId: input.requestId ?? null,
+        warnings,
+        tiaIncluded,
+        obligations,
+      };
+
       const contract = await ctx.prisma.vendorContract.create({
         data: {
           vendorId: vendor.id,
@@ -582,24 +632,7 @@ export const vendorRouter = createTRPCRouter({
             input.dealName?.trim() ||
             `DPA — ${vendor.name} (${input.effectiveDate.toISOString().slice(0, 10)})`,
           startDate: input.effectiveDate,
-          metadata: {
-            dpaEngine: {
-              version: 1,
-              language: input.language,
-              governingLaw: input.governingLaw,
-              facts: input.facts,
-              selections: input.selections,
-              controller: input.controller,
-              processor: input.processor,
-              dealName: input.dealName ?? null,
-              effectiveDate: input.effectiveDate.toISOString(),
-              producedAt: producedAt.toISOString(),
-              confirmedIssues: input.confirmedIssues,
-              warnings,
-              tiaIncluded,
-              obligations,
-            },
-          },
+          metadata: { dpaEngine: JSON.parse(JSON.stringify(snapshot)) },
         },
       });
 

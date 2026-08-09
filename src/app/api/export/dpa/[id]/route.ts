@@ -12,32 +12,11 @@
 
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { renderDpaPdf, renderTiaPdf } from "@/server/services/export/dpa/render";
+import { dpaSnapshotSchema } from "@/lib/dpa-engine/snapshot";
 import type { AssembleInput } from "@/lib/dpa-engine";
-
-const partySchema = z.object({
-  name: z.string().optional(),
-  address: z.string().optional(),
-  taxId: z.string().optional(),
-  signatoryName: z.string().optional(),
-  signatoryTitle: z.string().optional(),
-});
-
-const dpaEngineMetadata = z.object({
-  version: z.number(),
-  language: z.enum(["en", "es"]),
-  governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
-  facts: z.record(z.string(), z.string()),
-  selections: z.record(z.string(), z.string()),
-  controller: partySchema,
-  processor: partySchema,
-  dealName: z.string().nullable(),
-  effectiveDate: z.string(),
-  producedAt: z.string(),
-});
 
 export async function GET(
   request: Request,
@@ -80,7 +59,7 @@ export async function GET(
     }
 
     const stored = (contract.metadata as { dpaEngine?: unknown } | null)?.dpaEngine;
-    const parsed = dpaEngineMetadata.safeParse(stored);
+    const parsed = dpaSnapshotSchema.safeParse(stored);
     if (!parsed.success) {
       return Response.json(
         { error: "This contract has no generated DPA snapshot" },

@@ -74,7 +74,9 @@ describe("establishment inference (§7.4)", () => {
       baseInput({ countries: ["US", "Germany"] })
     );
     expect(facts["processor-establishment"]).toBeUndefined();
-    expect(notes.some((n) => n.includes("Establishment left blank"))).toBe(true);
+    expect(notes.some((n) => n.en.includes("Establishment left blank"))).toBe(true);
+    // Locale parity: every note ships in both languages.
+    expect(notes.every((n) => n.en.trim() && n.es.trim())).toBe(true);
   });
 
   it("treats unknown countries as OTHER", () => {
@@ -121,7 +123,10 @@ describe("declarations (§7.5)", () => {
     expect(facts["processor-dpf-certified"]).toBeUndefined();
   });
 
-  it("maps the vendor's own breach-history answer", () => {
+  it("never auto-classifies breach history — surfaces the raw answer for review", () => {
+    // The two seeded questionnaires give ir4 different meanings (breach
+    // history textarea vs incident-drills boolean), so classifying it would
+    // fabricate a representation.
     const withHistory = mapVendorToDpaInputs({
       ...baseInput(),
       questionnaireResponses: [
@@ -132,25 +137,31 @@ describe("declarations (§7.5)", () => {
         },
       ],
     });
-    expect(withHistory.facts["tia-breach-history"]).toBe("some");
+    expect(withHistory.facts["tia-breach-history"]).toBeUndefined();
+    expect(
+      withHistory.notes.some((n) => n.en.includes("One incident in 2024"))
+    ).toBe(true);
 
-    const declaredNone = mapVendorToDpaInputs({
+    // A boolean ir4 (the other questionnaire's drills question) is ignored.
+    const booleanAnswer = mapVendorToDpaInputs({
       ...baseInput(),
       questionnaireResponses: [
-        { status: "APPROVED", submittedAt: new Date(), responses: { ir4: "No" } },
+        { status: "APPROVED", submittedAt: new Date(), responses: { ir4: true } },
       ],
     });
-    expect(declaredNone.facts["tia-breach-history"]).toBe("none");
+    expect(booleanAnswer.facts["tia-breach-history"]).toBeUndefined();
+    expect(booleanAnswer.notes.some((n) => n.en.includes("incident-related"))).toBe(false);
   });
 
   it("ignores unsubmitted questionnaire drafts", () => {
-    const { facts } = mapVendorToDpaInputs({
+    const { facts, notes } = mapVendorToDpaInputs({
       ...baseInput(),
       questionnaireResponses: [
         { status: "IN_PROGRESS", responses: { ir4: "Yes, several." } },
       ],
     });
     expect(facts["tia-breach-history"]).toBeUndefined();
+    expect(notes.some((n) => n.en.includes("incident-related"))).toBe(false);
   });
 
   it("maps the breach-notification window and DPF mechanism answers", () => {
@@ -190,7 +201,21 @@ describe("purpose and selections", () => {
       ],
     });
     expect(facts["processing-purpose"]).toBe("Usage analytics for product improvement.");
-    expect(notes.some((n) => n.includes("Product analytics"))).toBe(true);
+    expect(notes.some((n) => n.en.includes("Product analytics"))).toBe(true);
+  });
+
+  it("does not link activities via short free-text recipient fragments", () => {
+    const { facts } = mapVendorToDpaInputs({
+      ...baseInput({ name: "Fitbit" }),
+      processingActivities: [
+        {
+          name: "Corporate IT",
+          purpose: "Internal IT support.",
+          recipients: ["IT"],
+        },
+      ],
+    });
+    expect(facts["processing-purpose"]).toBeUndefined();
   });
 
   it("selects transfer and government-access clauses by establishment", () => {
@@ -215,5 +240,22 @@ describe("purpose and selections", () => {
     });
     expect(us.governingLaw).toBe("CALIFORNIA");
     expect(us.selections["governing-law-jurisdiction"]).toBe("glj-us-courts");
+  });
+
+  it("honours the primary-first ordering of jurisdiction regions", () => {
+    // Primary California with a secondary UK office → California, not UK.
+    expect(
+      mapVendorToDpaInputs({
+        ...baseInput(),
+        organizationJurisdictionRegions: ["US-CA", "UK"],
+      }).governingLaw
+    ).toBe("CALIFORNIA");
+    // Primary EU keeps the Spanish default even with a later US entry.
+    expect(
+      mapVendorToDpaInputs({
+        ...baseInput(),
+        organizationJurisdictionRegions: ["EU", "US-CA"],
+      }).governingLaw
+    ).toBe("SPAIN");
   });
 });

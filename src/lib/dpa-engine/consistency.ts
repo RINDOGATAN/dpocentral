@@ -8,6 +8,7 @@
  * not inside the assembly.
  */
 
+import { splitMulti } from "./multi";
 import type { ConsistencyIssue, DpaFacts } from "./types";
 
 /** Directly identifying categories incompatible with a pseudonymization claim. */
@@ -17,13 +18,6 @@ const IDENTIFYING_CATEGORIES = [
   "financial-data",
   "account-credentials",
 ];
-
-function splitMulti(value: string | undefined): string[] {
-  return (value ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 /**
  * Returns the §7 contradictions present in the facts. An empty array means

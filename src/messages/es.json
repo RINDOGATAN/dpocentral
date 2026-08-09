@@ -2709,6 +2709,7 @@
     "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
   },
   "toasts": {
+    "dpaGeneratedNoTia": "DPA generado (este proveedor no requiere TIA)",
     "dpaGenerated": "DPA y TIA generados",
     "generic": {
       "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."

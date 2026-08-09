@@ -13,6 +13,7 @@
 import { getDpaPack } from "./pack";
 import { evalShowIf } from "./interpolate";
 import { applyFactDefaults, buildVariables } from "./variables";
+import { splitMulti } from "./multi";
 import type { AssembleInput, DpaLang } from "./types";
 
 export type ObligationCadence =
@@ -30,16 +31,15 @@ export interface DerivedObligation {
 }
 
 function addMonths(date: Date, months: number): string {
-  const d = new Date(date);
-  d.setUTCMonth(d.getUTCMonth() + months);
+  // Clamp to the target month's last day: a naive setUTCMonth on Jan 31
+  // + 1 month would overflow to Mar 3 and skip February entirely.
+  const year = date.getUTCFullYear();
+  const monthIndex = date.getUTCMonth() + months;
+  const lastDay = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+  const d = new Date(
+    Date.UTC(year, monthIndex, Math.min(date.getUTCDate(), lastDay))
+  );
   return d.toISOString().slice(0, 10);
-}
-
-function splitMulti(value: string | undefined): string[] {
-  return (value ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
 }
 
 const BREACH_WINDOW_LABEL: Record<string, Record<DpaLang, string>> = {
