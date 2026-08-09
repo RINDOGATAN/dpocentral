@@ -16,9 +16,7 @@ import { TiaDocument } from "./TiaDocument";
  *  callers can persist warnings/metadata alongside the PDF. */
 export async function renderDpaPdf(input: AssembleInput, orgName: string) {
   const model = assembleDpa(input);
-  const buffer = await renderToBuffer(
-    React.createElement(DpaDocument, { model, orgName })
-  );
+  const buffer = await renderToBuffer(<DpaDocument model={model} orgName={orgName} />);
   return { model, buffer };
 }
 
@@ -32,7 +30,7 @@ export async function renderTiaPdf(input: AssembleInput, orgName: string) {
     input.context.language
   );
   const buffer = await renderToBuffer(
-    React.createElement(TiaDocument, { model, orgName, date })
+    <TiaDocument model={model} orgName={orgName} date={date} />
   );
   return { model, buffer };
 }
