@@ -463,6 +463,7 @@ export const vendorRouter = createTRPCRouter({
             type: p.type,
             required: p.required ?? false,
             default: p.default,
+            group: p.group,
             label: p.label,
             hint: p.hint,
             placeholder: p.placeholder,

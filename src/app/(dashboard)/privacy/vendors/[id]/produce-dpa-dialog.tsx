@@ -352,12 +352,21 @@ export function ProduceDpaDialog({
             {/* ── Facts (pack parameters) ── */}
             <section className="space-y-4">
               <h3 className="text-sm font-semibold">{t("sectionFacts")}</h3>
-              {catalog.parameters.map((param) => {
+              {catalog.parameters.map((param, i) => {
                 const value = facts[param.id] ?? "";
                 const label = localize(param.label);
                 const hint = localize(param.hint);
+                // The pack groups related facts; render a subheading when
+                // the group changes (file order is the intended order).
+                const group = localize(param.group);
+                const prevGroup = i > 0 ? localize(catalog.parameters[i - 1]!.group) : "";
                 return (
                   <div key={param.id} className="space-y-1.5">
+                    {group && group !== prevGroup && (
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground pt-2">
+                        {group}
+                      </p>
+                    )}
                     <Label>
                       {label}
                       {param.required && <span className="text-destructive"> *</span>}

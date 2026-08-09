@@ -28,6 +28,8 @@ export interface PackParameter {
   default?: string;
   /** Exposes the value under this name for {curly} interpolation (§4a). */
   boilerplateVariable?: string;
+  /** Bilingual section heading for grouping related facts in review UIs. */
+  group?: Localized;
   label: Localized;
   hint?: Localized;
   placeholder?: Localized;
