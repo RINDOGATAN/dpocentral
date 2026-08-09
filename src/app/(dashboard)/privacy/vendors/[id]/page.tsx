@@ -47,6 +47,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { ProduceDpaDialog } from "./produce-dpa-dialog";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
 
 const statusColors: Record<string, string> = {
@@ -82,6 +83,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   // Dialog state
   const [editOpen, setEditOpen] = useState(false);
   const [contractOpen, setContractOpen] = useState(false);
+  const [dpaOpen, setDpaOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
 
   // Edit form
@@ -414,7 +416,11 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
         <TabsContent value="contracts" className="mt-4">
           {vendor.contracts && vendor.contracts.length > 0 ? (
             <div className="space-y-4">
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                <Button size="sm" variant="outline" onClick={() => setDpaOpen(true)}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  {tp("dpa.produce")}
+                </Button>
                 <Button size="sm" onClick={() => setContractOpen(true)}>
                   {tp("contracts.add")}
                 </Button>
@@ -439,18 +445,35 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                           )}
                         </p>
                       </div>
-                      {contract.documentUrl ? (
-                        <Button variant="outline" size="sm" asChild>
-                          <a href={contract.documentUrl} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            {tp("contracts.open")}
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button variant="outline" size="sm" disabled title={tp("contracts.noDocument")}>
-                          {tp("contracts.noDocument")}
-                        </Button>
-                      )}
+                      <div className="flex gap-2 shrink-0">
+                        {contract.documentUrl ? (
+                          <Button variant="outline" size="sm" asChild>
+                            <a href={contract.documentUrl} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              {tp("contracts.open")}
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" disabled title={tp("contracts.noDocument")}>
+                            {tp("contracts.noDocument")}
+                          </Button>
+                        )}
+                        {Boolean(
+                          (contract.metadata as { dpaEngine?: { tiaIncluded?: boolean } } | null)
+                            ?.dpaEngine?.tiaIncluded
+                        ) && (
+                          <Button variant="outline" size="sm" asChild>
+                            <a
+                              href={`/api/export/dpa/${contract.id}?doc=tia`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              {tp("dpa.openTia")}
+                            </a>
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -461,9 +484,15 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{tp("contracts.empty")}</p>
-                <Button className="mt-4" onClick={() => setContractOpen(true)}>
-                  {tp("contracts.add")}
-                </Button>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Button variant="outline" onClick={() => setDpaOpen(true)}>
+                    <FileText className="w-4 h-4 mr-2" />
+                    {tp("dpa.produce")}
+                  </Button>
+                  <Button onClick={() => setContractOpen(true)}>
+                    {tp("contracts.add")}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -600,6 +629,16 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Produce DPA + TIA Dialog */}
+      {organization?.id && (
+        <ProduceDpaDialog
+          organizationId={organization.id}
+          vendorId={id}
+          open={dpaOpen}
+          onOpenChange={setDpaOpen}
+        />
+      )}
 
       {/* Edit Vendor Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>

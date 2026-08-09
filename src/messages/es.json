@@ -985,6 +985,44 @@
       }
     },
     "vendorDetail": {
+      "dpa": {
+        "produce": "Generar DPA + TIA",
+        "openTia": "TIA",
+        "title": "Generar DPA + Evaluación de Impacto de la Transferencia",
+        "subtitle": "Revise cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El DPA (Anexos I–IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de sus respuestas confirmadas.",
+        "loading": "Mapeando los datos del proveedor…",
+        "notesTitle": "Cómo se precargaron estos datos",
+        "sectionAgreement": "Acuerdo y partes",
+        "languageLabel": "Idioma del documento",
+        "effectiveDateLabel": "Fecha de efectos",
+        "governingLawLabel": "Ley aplicable",
+        "dealNameLabel": "Nombre del acuerdo (opcional)",
+        "dealNamePlaceholder": "p. ej. Servicio de analítica CloudCo",
+        "law": {
+          "SPAIN": "Reino de España",
+          "ENGLAND_WALES": "Inglaterra y Gales",
+          "CALIFORNIA": "California (EE. UU.)"
+        },
+        "controllerName": "Responsable (su organización)",
+        "controllerAddress": "Dirección del Responsable",
+        "processorName": "Encargado (proveedor)",
+        "processorAddress": "Dirección del Encargado",
+        "signatoryName": "Nombre del firmante",
+        "signatoryTitle": "Cargo del firmante",
+        "sectionFacts": "Datos del tratamiento",
+        "sectionTerms": "Términos negociados",
+        "selectPlaceholder": "Seleccionar…",
+        "issuesTitle": "Estas respuestas se contradicen — confirme antes de generar",
+        "confirmIssue": "Confirmo que es exacto.",
+        "warningsTitle": "Revisar antes de firmar",
+        "successBody": "El DPA se ha generado y guardado como contrato pendiente de firma de este proveedor. Descargue los documentos abajo — seguirán disponibles en la lista de contratos.",
+        "downloadDpa": "Descargar DPA (PDF)",
+        "downloadTia": "Descargar TIA (PDF)",
+        "generate": "Generar documentos",
+        "generating": "Generando…",
+        "cancel": "Cancelar",
+        "close": "Cerrar"
+      },
       "notFound": "Proveedor no encontrado",
       "back": "Volver a proveedores",
       "delete": "Eliminar",
@@ -2671,6 +2709,7 @@
     "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
   },
   "toasts": {
+    "dpaGenerated": "DPA y TIA generados",
     "generic": {
       "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."
     },

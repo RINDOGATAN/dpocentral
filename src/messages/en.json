@@ -985,6 +985,44 @@
       }
     },
     "vendorDetail": {
+      "dpa": {
+        "produce": "Produce DPA + TIA",
+        "openTia": "TIA",
+        "title": "Produce DPA + Transfer Impact Assessment",
+        "subtitle": "Review every pre-filled fact before generating — they become representations in a signable document. The DPA (Annexes I–IV) and, for third-country transfers, a standalone TIA are generated from your confirmed answers.",
+        "loading": "Mapping the vendor's data…",
+        "notesTitle": "How these facts were pre-filled",
+        "sectionAgreement": "Agreement & parties",
+        "languageLabel": "Document language",
+        "effectiveDateLabel": "Effective date",
+        "governingLawLabel": "Governing law",
+        "dealNameLabel": "Agreement name (optional)",
+        "dealNamePlaceholder": "e.g. CloudCo analytics engagement",
+        "law": {
+          "SPAIN": "Kingdom of Spain",
+          "ENGLAND_WALES": "England and Wales",
+          "CALIFORNIA": "California (USA)"
+        },
+        "controllerName": "Controller (your organization)",
+        "controllerAddress": "Controller address",
+        "processorName": "Processor (vendor)",
+        "processorAddress": "Processor address",
+        "signatoryName": "Signatory name",
+        "signatoryTitle": "Signatory title",
+        "sectionFacts": "Processing facts",
+        "sectionTerms": "Negotiated terms",
+        "selectPlaceholder": "Select…",
+        "issuesTitle": "These answers contradict each other — confirm before generating",
+        "confirmIssue": "I confirm this is accurate.",
+        "warningsTitle": "Review before signing",
+        "successBody": "The DPA has been generated and stored against this vendor as a contract pending signature. Download the documents below — they remain available from the contract list.",
+        "downloadDpa": "Download DPA (PDF)",
+        "downloadTia": "Download TIA (PDF)",
+        "generate": "Generate documents",
+        "generating": "Generating…",
+        "cancel": "Cancel",
+        "close": "Close"
+      },
       "notFound": "Vendor not found",
       "back": "Back to Vendors",
       "delete": "Delete",
@@ -2671,6 +2709,7 @@
     "networkError": "Network error. Please check your connection."
   },
   "toasts": {
+    "dpaGenerated": "DPA and TIA generated",
     "generic": {
       "somethingWentWrong": "Something went wrong. Please try again."
     },

@@ -2,8 +2,17 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
+import {
+  assembleDpa,
+  assembleStandaloneTia,
+  checkFactConsistency,
+  DpaEngineError,
+  getDpaPack,
+  mapVendorToDpaInputs,
+} from "@/lib/dpa-engine";
+import type { DpaContext } from "@/lib/dpa-engine";
 import {
   VendorStatus,
   VendorRiskTier,
@@ -92,7 +101,7 @@ export const vendorRouter = createTRPCRouter({
         },
         include: {
           contracts: {
-            select: { id: true, name: true, type: true, status: true, startDate: true, endDate: true, renewalDate: true, autoRenewal: true, value: true, currency: true, documentUrl: true },
+            select: { id: true, name: true, type: true, status: true, startDate: true, endDate: true, renewalDate: true, autoRenewal: true, value: true, currency: true, documentUrl: true, metadata: true },
             orderBy: { endDate: "asc" },
           },
           questionnaireResponses: {
@@ -384,6 +393,242 @@ export const vendorRouter = createTRPCRouter({
       await ctx.prisma.vendorContract.delete({ where: { id: input.id } });
 
       return { success: true };
+    }),
+
+  // ============================================================
+  // DPA + TIA GENERATION (Dealroom contract pack, src/lib/dpa-engine)
+  // ============================================================
+
+  // Map the vendor's register data into a reviewable fact proposal, and
+  // ship the pack's parameter/clause catalog so the review form can render
+  // bilingual labels without bundling the pack client-side.
+  prepareDpa: officerProcedure
+    .input(z.object({ organizationId: z.string(), vendorId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const vendor = await ctx.prisma.vendor.findFirst({
+        where: { id: input.vendorId, organizationId: ctx.organization.id },
+        include: {
+          questionnaireResponses: {
+            select: { status: true, submittedAt: true, responses: true },
+          },
+        },
+      });
+      if (!vendor) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Vendor not found" });
+      }
+
+      const [activities, orgJurisdictions] = await Promise.all([
+        ctx.prisma.processingActivity.findMany({
+          where: { organizationId: ctx.organization.id, isActive: true },
+          select: { name: true, purpose: true, recipients: true },
+        }),
+        ctx.prisma.organizationJurisdiction.findMany({
+          where: { organizationId: ctx.organization.id },
+          orderBy: { isPrimary: "desc" },
+          select: { jurisdiction: { select: { region: true } } },
+        }),
+      ]);
+
+      const mapped = mapVendorToDpaInputs({
+        vendor: {
+          name: vendor.name,
+          address: vendor.address,
+          dataProcessed: vendor.dataProcessed,
+          countries: vendor.countries,
+          certifications: vendor.certifications,
+          metadata: vendor.metadata,
+        },
+        questionnaireResponses: vendor.questionnaireResponses.map((r) => ({
+          status: r.status,
+          submittedAt: r.submittedAt,
+          responses: r.responses,
+        })),
+        processingActivities: activities,
+        organizationJurisdictionRegions: orgJurisdictions.map(
+          (j) => j.jurisdiction.region
+        ),
+      });
+
+      const pack = getDpaPack();
+      return {
+        ...mapped,
+        issues: checkFactConsistency(mapped.facts),
+        vendor: { name: vendor.name, address: vendor.address },
+        organization: { name: ctx.organization.name },
+        catalog: {
+          parameters: pack.parameters.map((p) => ({
+            id: p.id,
+            type: p.type,
+            required: p.required ?? false,
+            default: p.default,
+            label: p.label,
+            hint: p.hint,
+            placeholder: p.placeholder,
+            options: p.options,
+            optionLabels: p.optionLabels,
+          })),
+          clauses: [...pack.clauses]
+            .sort((a, b) => a.order - b.order)
+            .map((c) => ({
+              id: c.id,
+              title: c.title,
+              options: [...c.options]
+                .sort((a, b) => a.order - b.order)
+                .map((o) => ({
+                  id: o.id,
+                  label: o.label,
+                  plainDescription: o.plainDescription,
+                })),
+            })),
+        },
+      };
+    }),
+
+  // Generate the DPA (+ standalone TIA when applicable) from the human-
+  // reviewed facts and store them against a VendorContract row. The PDFs
+  // are re-rendered deterministically from the stored inputs by
+  // GET /api/export/dpa/[contractId].
+  generateDpa: officerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        vendorId: z.string(),
+        language: z.enum(["en", "es"]),
+        effectiveDate: z.date(),
+        dealName: z.string().max(200).optional(),
+        governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+        facts: z.record(z.string(), z.string()),
+        selections: z.record(z.string(), z.string()),
+        controller: z.object({
+          name: z.string().optional(),
+          address: z.string().optional(),
+          taxId: z.string().optional(),
+          signatoryName: z.string().optional(),
+          signatoryTitle: z.string().optional(),
+        }),
+        processor: z.object({
+          name: z.string().optional(),
+          address: z.string().optional(),
+          taxId: z.string().optional(),
+          signatoryName: z.string().optional(),
+          signatoryTitle: z.string().optional(),
+        }),
+        // §7: contradictions require explicit confirmation — the codes the
+        // reviewer ticked in the UI.
+        confirmedIssues: z.array(z.string()).default([]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const vendor = await ctx.prisma.vendor.findFirst({
+        where: { id: input.vendorId, organizationId: ctx.organization.id },
+      });
+      if (!vendor) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Vendor not found" });
+      }
+
+      const issues = checkFactConsistency(input.facts);
+      const unconfirmed = issues.filter(
+        (i) => !input.confirmedIssues.includes(i.code)
+      );
+      if (unconfirmed.length) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: `Unconfirmed consistency issues: ${unconfirmed.map((i) => i.code).join(", ")}`,
+        });
+      }
+
+      const producedAt = new Date();
+      const context: DpaContext = {
+        language: input.language,
+        effectiveDate: input.effectiveDate,
+        governingLaw: input.governingLaw,
+        controller: input.controller,
+        processor: input.processor,
+        dealName: input.dealName,
+        producedDate: producedAt,
+      };
+
+      // Assemble now so invalid inputs fail here, not at download time.
+      let warnings: string[];
+      let tiaIncluded: boolean;
+      try {
+        const assembled = assembleDpa({
+          facts: input.facts,
+          selections: input.selections,
+          context,
+        });
+        warnings = assembled.warnings;
+        tiaIncluded =
+          assembleStandaloneTia({
+            facts: input.facts,
+            selections: input.selections,
+            context,
+          }) !== null;
+      } catch (err) {
+        if (err instanceof DpaEngineError) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
+        }
+        throw err;
+      }
+
+      const contract = await ctx.prisma.vendorContract.create({
+        data: {
+          vendorId: vendor.id,
+          type: ContractType.DPA,
+          status: ContractStatus.PENDING_SIGNATURE,
+          name:
+            input.dealName?.trim() ||
+            `DPA — ${vendor.name} (${input.effectiveDate.toISOString().slice(0, 10)})`,
+          startDate: input.effectiveDate,
+          metadata: {
+            dpaEngine: {
+              version: 1,
+              language: input.language,
+              governingLaw: input.governingLaw,
+              facts: input.facts,
+              selections: input.selections,
+              controller: input.controller,
+              processor: input.processor,
+              dealName: input.dealName ?? null,
+              effectiveDate: input.effectiveDate.toISOString(),
+              producedAt: producedAt.toISOString(),
+              confirmedIssues: input.confirmedIssues,
+              warnings,
+              tiaIncluded,
+            },
+          },
+        },
+      });
+
+      const dpaUrl = `/api/export/dpa/${contract.id}?doc=dpa`;
+      await ctx.prisma.vendorContract.update({
+        where: { id: contract.id },
+        data: { documentUrl: dpaUrl },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "VendorContract",
+          entityId: contract.id,
+          action: "GENERATE_DPA",
+          changes: {
+            vendorId: vendor.id,
+            language: input.language,
+            tiaIncluded,
+            warnings,
+          },
+        },
+      });
+
+      return {
+        contractId: contract.id,
+        dpaUrl,
+        tiaUrl: tiaIncluded ? `/api/export/dpa/${contract.id}?doc=tia` : null,
+        warnings,
+        tiaIncluded,
+      };
     }),
 
   // ============================================================
