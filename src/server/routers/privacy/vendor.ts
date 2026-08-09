@@ -8,7 +8,9 @@ import {
   assembleDpa,
   assembleStandaloneTia,
   checkFactConsistency,
+  deriveObligations,
   DpaEngineError,
+  earliestObligationDue,
   getDpaPack,
   mapVendorToDpaInputs,
 } from "@/lib/dpa-engine";
@@ -549,27 +551,26 @@ export const vendorRouter = createTRPCRouter({
       };
 
       // Assemble now so invalid inputs fail here, not at download time.
+      const assembleInput = {
+        facts: input.facts,
+        selections: input.selections,
+        context,
+      };
       let warnings: string[];
       let tiaIncluded: boolean;
       try {
-        const assembled = assembleDpa({
-          facts: input.facts,
-          selections: input.selections,
-          context,
-        });
+        const assembled = assembleDpa(assembleInput);
         warnings = assembled.warnings;
-        tiaIncluded =
-          assembleStandaloneTia({
-            facts: input.facts,
-            selections: input.selections,
-            context,
-          }) !== null;
+        tiaIncluded = assembleStandaloneTia(assembleInput) !== null;
       } catch (err) {
         if (err instanceof DpaEngineError) {
           throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
         }
         throw err;
       }
+
+      // §10: the recurring obligations the produced DPA implies.
+      const obligations = deriveObligations(assembleInput);
 
       const contract = await ctx.prisma.vendorContract.create({
         data: {
@@ -595,10 +596,24 @@ export const vendorRouter = createTRPCRouter({
               confirmedIssues: input.confirmedIssues,
               warnings,
               tiaIncluded,
+              obligations,
             },
           },
         },
       });
+
+      // Pull the vendor's next review forward to the earliest scheduled
+      // obligation (e.g. the 12-month TIA re-evaluation).
+      const earliestDue = earliestObligationDue(obligations);
+      if (
+        earliestDue &&
+        (!vendor.nextReviewAt || earliestDue < vendor.nextReviewAt)
+      ) {
+        await ctx.prisma.vendor.update({
+          where: { id: vendor.id },
+          data: { nextReviewAt: earliestDue },
+        });
+      }
 
       const dpaUrl = `/api/export/dpa/${contract.id}?doc=dpa`;
       await ctx.prisma.vendorContract.update({

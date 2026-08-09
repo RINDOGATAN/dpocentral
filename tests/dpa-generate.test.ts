@@ -14,7 +14,7 @@ import type { OrganizationRole } from "@prisma/client";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
-    vendor: { findFirst: vi.fn() },
+    vendor: { findFirst: vi.fn(), update: vi.fn() },
     processingActivity: { findMany: vi.fn() },
     organizationJurisdiction: { findMany: vi.fn() },
     vendorContract: { create: vi.fn(), update: vi.fn() },
@@ -104,6 +104,7 @@ beforeEach(() => {
     async ({ data }: { data: Record<string, unknown> }) => ({ id: "contract-1", ...data })
   );
   mocks.prisma.vendorContract.update.mockResolvedValue({});
+  mocks.prisma.vendor.update.mockResolvedValue({});
 });
 
 describe("role gate (officerProcedure)", () => {
@@ -161,6 +162,16 @@ describe("generateDpa", () => {
     expect(snapshot.selections).toEqual(GENERATE_INPUT.selections);
     expect(snapshot.language).toBe("en");
     expect(snapshot.tiaIncluded).toBe(true);
+
+    // §10: the TIA re-evaluation (12 months out) pulls the vendor's next
+    // review forward.
+    expect(snapshot.obligations.map((o: { code: string }) => o.code)).toContain(
+      "tia-reevaluation"
+    );
+    expect(mocks.prisma.vendor.update).toHaveBeenCalledWith({
+      where: { id: "vendor-1" },
+      data: { nextReviewAt: new Date("2027-08-09") },
+    });
   });
 
   it("reports no TIA for an EEA processor", async () => {
