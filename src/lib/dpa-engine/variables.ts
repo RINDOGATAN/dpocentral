@@ -101,10 +101,13 @@ function buildSignatureBlock(party: DpaParty, lang: DpaLang): string {
 }
 
 export function formatLongDate(date: Date, lang: DpaLang): string {
+  // Dates arrive as date-only values (UTC midnight); format in UTC so the
+  // rendered day never shifts with the server's timezone.
   return date.toLocaleDateString(lang === "es" ? "es-ES" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 
