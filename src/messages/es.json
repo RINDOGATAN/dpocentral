@@ -5170,6 +5170,47 @@
       }
     },
     "publicVendors": {
+        "dpa": {
+          "title": "Generar un DPA + Evaluación de Impacto de la Transferencia",
+          "intro": "DPO Central puede producir un Acuerdo de Encargo de Tratamiento listo para firmar y una Evaluación de Impacto de la Transferencia independiente para cualquier proveedor, a partir de su propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o español.",
+          "artifacts": {
+            "dpaTitle": "Acuerdo de Encargo de Tratamiento (PDF)",
+            "dpaDesc": "Acuerdo responsable-encargado conforme al artículo 28 con términos negociados y Anexos I–IV: descripción del tratamiento, medidas técnicas y organizativas (TOMs), incorporación de las Cláusulas Contractuales Tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la Evaluación de Impacto de la Transferencia. Los Anexos III–IV aparecen automáticamente cuando el encargado está establecido fuera del EEE/Reino Unido.",
+            "tiaTitle": "TIA independiente (PDF)",
+            "tiaDesc": "El Anexo IV reproducido sin modificación, precedido de un encabezado de identificación — listo para su puesta a disposición de la autoridad de control que lo solicite conforme a la Cláusula 14 de las CCT incorporadas. Sigue el marco de seis pasos de las Recomendaciones 01/2020 del CEPD."
+          },
+          "steps": {
+            "open": {
+              "title": "Abra el proveedor y elija «Generar DPA + TIA»",
+              "description": "En la página de detalle del proveedor, abra la pestaña Contratos y pulse «Generar DPA + TIA». Disponible para Propietarios, Administradores y Delegados de Privacidad."
+            },
+            "review": {
+              "title": "Revise los datos precargados",
+              "description": "Cada dato se propone a partir de su propia información y se muestra para revisión: nada entra en el documento sin ser visto. Las notas explican de dónde procede cada valor.",
+              "detail1": "Las categorías de datos provienen de los tipos de datos registrados del proveedor; la finalidad del tratamiento, de las actividades que lo nombran como destinatario.",
+              "detail2": "El establecimiento es donde el proveedor está establecido — solo se precarga cuando su registro es inequívoco.",
+              "detail3": "Elija los términos negociados (plazo de notificación de violaciones, régimen de subencargados, derechos de auditoría, responsabilidad, ley aplicable) y complete los datos de ambas partes."
+            },
+            "confirm": {
+              "title": "Confirme las contradicciones señaladas",
+              "description": "Si sus respuestas se contradicen — por ejemplo, declarar seudonimización mientras se transfieren datos directamente identificativos — la generación se bloquea hasta que confirme explícitamente cada punto señalado."
+            },
+            "generate": {
+              "title": "Genere los documentos",
+              "description": "El DPA se guarda como contrato del proveedor pendiente de firma. Los espacios en blanco pendientes se listan como avisos para que pueda resolverlos antes de la firma."
+            },
+            "download": {
+              "title": "Descargue y firme",
+              "description": "Descargue los PDF del DPA y la TIA desde la pantalla de éxito o en cualquier momento desde la pestaña Contratos del proveedor. Una vez contrafirmado, actualice el estado del contrato a Activo."
+            }
+          },
+          "honesty": {
+            "title": "El generador nunca exagera su postura",
+            "desc": "El Anexo II solo lista medidas de seguridad confirmadas con evidencia real de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la TIA, no garantías de TOMs. Las declaraciones del importador (solicitudes gubernamentales, historial de violaciones) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la TIA documenta riesgo residual salvo que exista al menos una medida suplementaria técnica."
+          },
+          "afterTitle": "Tras la generación",
+          "afterDesc": "El DPA producido implica un calendario de cumplimiento: la reevaluación de la TIA a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre acceso gubernamental y las cadencias propias de las TOMs confirmadas. La entrada más próxima adelanta automáticamente la fecha de próxima revisión del proveedor. Los documentos generados son plantillas para revisión por asesoría jurídica cualificada — no constituyen asesoramiento legal."
+        },
       "metaTitle": "Gestión de proveedores",
       "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, cuestionarios de privacidad, niveles de riesgo y flujos de revisión periódica.",
       "ogTitle": "Gestión de proveedores | DPO CENTRAL",

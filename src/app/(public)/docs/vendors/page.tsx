@@ -54,6 +54,13 @@ export default async function VendorsPage() {
     { key: "execute", actor: "legal" },
     { key: "approve", actor: "dpo" },
   ] as const;
+  const dpaSteps = [
+    { key: "open" },
+    { key: "review" },
+    { key: "confirm" },
+    { key: "generate" },
+    { key: "download" },
+  ] as const;
 
   return (
     <div className="space-y-12">
@@ -124,6 +131,51 @@ export default async function VendorsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Generating a DPA + TIA */}
+      <section id="dpa-tia" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("dpa.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("dpa.intro")}</p>
+
+        <div className="grid sm:grid-cols-2 gap-3 mb-8">
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">{t("dpa.artifacts.dpaTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("dpa.artifacts.dpaDesc")}</p>
+          </div>
+          <div className="p-4 rounded-lg border border-border bg-card">
+            <p className="text-sm font-semibold text-foreground mb-2">{t("dpa.artifacts.tiaTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("dpa.artifacts.tiaDesc")}</p>
+          </div>
+        </div>
+
+        {dpaSteps.map((step, i) => (
+          <WorkflowStep
+            key={step.key}
+            number={i + 1}
+            title={t(`dpa.steps.${step.key}.title`)}
+            description={t(`dpa.steps.${step.key}.description`)}
+            actor={t("howTo.actors.officer")}
+            details={
+              step.key === "review"
+                ? [
+                    t("dpa.steps.review.detail1"),
+                    t("dpa.steps.review.detail2"),
+                    t("dpa.steps.review.detail3"),
+                  ]
+                : undefined
+            }
+          />
+        ))}
+
+        <div className="p-4 rounded-lg border border-amber-500/20 bg-amber-500/10 mt-6">
+          <p className="text-sm font-semibold text-amber-400 mb-2">{t("dpa.honesty.title")}</p>
+          <p className="text-xs text-muted-foreground">{t("dpa.honesty.desc")}</p>
+        </div>
+        <div className="p-4 rounded-lg border border-border bg-card mt-3">
+          <p className="text-sm font-semibold text-foreground mb-2">{t("dpa.afterTitle")}</p>
+          <p className="text-xs text-muted-foreground">{t("dpa.afterDesc")}</p>
         </div>
       </section>
 

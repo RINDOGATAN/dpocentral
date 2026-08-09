@@ -5170,6 +5170,47 @@
       }
     },
     "publicVendors": {
+        "dpa": {
+          "title": "Generating a DPA + Transfer Impact Assessment",
+          "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program — the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
+          "artifacts": {
+            "dpaTitle": "Data Processing Agreement (PDF)",
+            "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I–IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III–IV appear automatically when the processor is established outside the EEA/UK.",
+            "tiaTitle": "Standalone TIA (PDF)",
+            "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header — ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
+          },
+          "steps": {
+            "open": {
+              "title": "Open the vendor and choose “Produce DPA + TIA”",
+              "description": "On the vendor's detail page, open the Contracts tab and click “Produce DPA + TIA”. Available to Owners, Admins, and Privacy Officers."
+            },
+            "review": {
+              "title": "Review the pre-filled facts",
+              "description": "Every fact is proposed from your own data and shown for review — nothing goes into the document unseen. Notes explain where each value came from.",
+              "detail1": "Data categories come from the vendor's recorded data types; the processing purpose from activities naming the vendor as a recipient.",
+              "detail2": "Establishment means where the vendor is established — it is only pre-filled when your register is unambiguous.",
+              "detail3": "Choose the negotiated terms (breach window, sub-processor regime, audit rights, liability, governing law) and complete both parties' details."
+            },
+            "confirm": {
+              "title": "Confirm any flagged contradictions",
+              "description": "If your answers contradict each other — for example claiming pseudonymization while transferring directly identifying data — generation is blocked until you explicitly confirm each flagged item."
+            },
+            "generate": {
+              "title": "Generate the documents",
+              "description": "The DPA is stored against the vendor as a contract pending signature. Any remaining fill-in blanks are listed as warnings so you can resolve them before signature."
+            },
+            "download": {
+              "title": "Download and sign",
+              "description": "Download the DPA and TIA PDFs from the success screen or anytime from the vendor's Contracts tab. Once countersigned, update the contract status to Active."
+            }
+          },
+          "honesty": {
+            "title": "The generator never overstates your posture",
+            "desc": "Annex II lists only security measures confirmed against actual audit evidence — certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
+          },
+          "afterTitle": "After generation",
+          "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review — not legal advice."
+        },
       "metaTitle": "Vendor Management",
       "metaDescription": "Maintain your vendor register with contract tracking, privacy questionnaires, risk tiers, and periodic review workflows.",
       "ogTitle": "Vendor Management | DPO CENTRAL",
