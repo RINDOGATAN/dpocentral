@@ -20,3 +20,5 @@ export {
 } from "./interpolate";
 export { assembleDpa, assembleStandaloneTia, DpaEngineError } from "./assemble";
 export { checkFactConsistency } from "./consistency";
+export { mapVendorToDpaInputs } from "./mapper";
+export type { MapperInput, MappedDpaInputs } from "./mapper";
