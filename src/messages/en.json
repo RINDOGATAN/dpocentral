@@ -1423,12 +1423,18 @@
         "trendUp": "+{points} pts",
         "trendDown": "{points} pts",
         "vsLastMonth": "vs last month",
-        "outOf": "/ 100"
+        "outOf": "/ 100",
+        "unrated": "Not yet rated",
+        "unratedRing": "Not rated",
+        "unratedSubtitle": "No module has data to score yet. Add data assets, assessments, DSARs, incidents or vendors and the score will appear here.",
+        "partialSubtitle": "Based on {rated} of {total} modules ({pct}% of the weighting). Modules with no data are excluded rather than counted as compliant."
       },
       "breakdown": {
         "heading": "Module Compliance Breakdown",
         "weight": "{value} weight",
         "compliantOf": "{compliant} of {total} compliant",
+        "unrated": "No data to score yet",
+        "unratedValue": "N/A",
         "ropa": "ROPA Completeness",
         "assessments": "Assessments",
         "dsarSla": "DSAR SLA",
@@ -2135,6 +2141,42 @@
     "skills": "Skills",
     "more": "More",
     "newOrganization": "New Organization"
+  },
+  "metadata": {
+    "tagline": "Privacy Management Made Simple",
+    "description": "GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform."
+  },
+  "enums": {
+    "dataCategory": {
+      "IDENTIFIERS": "Identifiers",
+      "DEMOGRAPHICS": "Demographics",
+      "FINANCIAL": "Financial",
+      "HEALTH": "Health",
+      "BIOMETRIC": "Biometric",
+      "LOCATION": "Location",
+      "BEHAVIORAL": "Behavioural",
+      "EMPLOYMENT": "Employment",
+      "EDUCATION": "Education",
+      "POLITICAL": "Political opinions",
+      "RELIGIOUS": "Religious beliefs",
+      "GENETIC": "Genetic",
+      "SEXUAL_ORIENTATION": "Sexual orientation",
+      "CRIMINAL": "Criminal records",
+      "OTHER": "Other"
+    }
+  },
+  "enableFeature": {
+    "title": "Enable {skill}",
+    "fallbackDescription": "Add {skill} to your organization.",
+    "price": "{price}/month — cancel anytime",
+    "cancel": "Cancel",
+    "confirm": "Enable Feature",
+    "redirecting": "Redirecting…",
+    "marketplaceBody": "{skill} is a premium skill on the todo.law marketplace. Buy it there, then install the downloaded .skill on your Skills page to enable it for your organization.",
+    "installOnSkills": "Install on Skills page",
+    "getOnMarketplace": "Get it on the marketplace",
+    "errorCheckout": "Couldn't start checkout. Please try again.",
+    "errorGeneric": "Something went wrong. Please try again."
   },
   "skills": {
     "title": "Skills",
@@ -3557,6 +3599,15 @@
     }
   },
   "docs": {
+    "nav": {
+      "heading": "Documentation",
+      "gettingStarted": "Getting Started",
+      "dataInventory": "Data Inventory",
+      "dsar": "DSAR Management",
+      "assessments": "Assessments",
+      "incidents": "Incidents",
+      "vendors": "Vendor Management"
+    },
     "common": {
       "previous": "Previous",
       "next": "Next"

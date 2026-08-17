@@ -1423,12 +1423,18 @@
         "trendUp": "+{points} pts",
         "trendDown": "{points} pts",
         "vsLastMonth": "vs el mes pasado",
-        "outOf": "/ 100"
+        "outOf": "/ 100",
+        "unrated": "Sin evaluar",
+        "unratedRing": "Sin evaluar",
+        "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade activos de datos, evaluaciones, DSAR, incidencias o proveedores y la puntuación aparecerá aquí.",
+        "partialSubtitle": "Calculada sobre {rated} de {total} módulos ({pct}% de la ponderación). Los módulos sin datos quedan excluidos en lugar de contarse como conformes."
       },
       "breakdown": {
         "heading": "Desglose de cumplimiento por módulo",
         "weight": "Peso: {value}",
         "compliantOf": "{compliant} de {total} cumplen",
+        "unrated": "Aún sin datos que puntuar",
+        "unratedValue": "N/D",
         "ropa": "Completitud del RAT",
         "assessments": "Evaluaciones",
         "dsarSla": "SLA de DSAR",
@@ -2135,6 +2141,42 @@
     "skills": "Skills",
     "more": "Más",
     "newOrganization": "Nueva organización"
+  },
+  "metadata": {
+    "tagline": "Gestión de la privacidad sin complicaciones",
+    "description": "Inventario de datos, gestión de DSAR, evaluaciones, seguimiento de incidencias y gestión de proveedores conformes al RGPD en una sola plataforma."
+  },
+  "enums": {
+    "dataCategory": {
+      "IDENTIFIERS": "Identificadores",
+      "DEMOGRAPHICS": "Datos demográficos",
+      "FINANCIAL": "Datos financieros",
+      "HEALTH": "Datos de salud",
+      "BIOMETRIC": "Datos biométricos",
+      "LOCATION": "Datos de ubicación",
+      "BEHAVIORAL": "Datos de comportamiento",
+      "EMPLOYMENT": "Datos laborales",
+      "EDUCATION": "Datos académicos",
+      "POLITICAL": "Opiniones políticas",
+      "RELIGIOUS": "Creencias religiosas",
+      "GENETIC": "Datos genéticos",
+      "SEXUAL_ORIENTATION": "Orientación sexual",
+      "CRIMINAL": "Antecedentes penales",
+      "OTHER": "Otros"
+    }
+  },
+  "enableFeature": {
+    "title": "Activar {skill}",
+    "fallbackDescription": "Añade {skill} a tu organización.",
+    "price": "{price}/mes — cancela cuando quieras",
+    "cancel": "Cancelar",
+    "confirm": "Activar función",
+    "redirecting": "Redirigiendo…",
+    "marketplaceBody": "{skill} es una skill premium del marketplace de todo.law. Cómprala allí y después instala el archivo .skill descargado en tu página de Skills para activarla en tu organización.",
+    "installOnSkills": "Instalar en la página de Skills",
+    "getOnMarketplace": "Conseguirla en el marketplace",
+    "errorCheckout": "No se pudo iniciar el pago. Inténtalo de nuevo.",
+    "errorGeneric": "Algo ha salido mal. Inténtalo de nuevo."
   },
   "skills": {
     "title": "Skills",
@@ -3557,6 +3599,15 @@
     }
   },
   "docs": {
+    "nav": {
+      "heading": "Documentación",
+      "gettingStarted": "Primeros pasos",
+      "dataInventory": "Inventario de datos",
+      "dsar": "Gestión de DSAR",
+      "assessments": "Evaluaciones",
+      "incidents": "Incidentes",
+      "vendors": "Gestión de proveedores"
+    },
     "common": {
       "previous": "Anterior",
       "next": "Siguiente"

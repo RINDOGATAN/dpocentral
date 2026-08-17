@@ -147,38 +147,61 @@ async function computeComplianceScore(
     }),
   ]);
 
-  // Calculate individual scores (0-100)
+  // Calculate individual scores (0-100), or null when there is nothing to judge.
+  //
+  // A module with no records is NOT compliant — it is unrated. Scoring an empty
+  // module 100 made an untouched privacy programme report near-perfect (an org
+  // with no assessments, DSARs, incidents or vendor reviews scored 97/100), which
+  // is exactly backwards for a compliance tool. Unrated modules are excluded from
+  // the weighted average and the remaining weights are renormalised, so the score
+  // always means "of what we can measure", and `coverage` says how much that is.
   const ropaScore = totalAssets > 0
     ? Math.round((assetsWithActivities / totalAssets) * 100)
-    : 100; // No assets = fully compliant (nothing to track)
+    : null;
 
   const assessmentScore = totalAssessments > 0
     ? Math.round((approvedAssessments / totalAssessments) * 100)
-    : 100;
+    : null;
 
   const dsarCompliant = totalDsars > 0
     ? totalDsars - overdueDsars
     : 0;
   const dsarScore = totalDsars > 0
     ? Math.round((dsarCompliant / totalDsars) * 100)
-    : 100;
+    : null;
 
   const incidentScore = incidentsRequiringNotification > 0
     ? Math.round((incidentsWithDeadlineMet / incidentsRequiringNotification) * 100)
-    : 100;
+    : null;
 
   const vendorScore = activeVendors > 0
     ? Math.round((vendorsReviewedRecently / activeVendors) * 100)
-    : 100;
+    : null;
 
   // Weighted formula: ROPA 25%, Assessment 20%, DSAR 25%, Incident 15%, Vendor 15%
-  const score = Math.round(
-    ropaScore * 0.25 +
-    assessmentScore * 0.20 +
-    dsarScore * 0.25 +
-    incidentScore * 0.15 +
-    vendorScore * 0.15
+  const weighted = [
+    { score: ropaScore, weight: 0.25 },
+    { score: assessmentScore, weight: 0.20 },
+    { score: dsarScore, weight: 0.25 },
+    { score: incidentScore, weight: 0.15 },
+    { score: vendorScore, weight: 0.15 },
+  ];
+  const rated = weighted.filter(
+    (m): m is { score: number; weight: number } => m.score !== null
   );
+  const ratedWeight = rated.reduce((sum, m) => sum + m.weight, 0);
+
+  // No module has any data yet: there is no honest score to report.
+  const score = ratedWeight > 0
+    ? Math.round(rated.reduce((sum, m) => sum + m.score * m.weight, 0) / ratedWeight)
+    : null;
+
+  const coverage = {
+    ratedModules: rated.length,
+    totalModules: weighted.length,
+    // 0–100, how much of the weighted model the score actually reflects
+    ratedWeightPct: Math.round(ratedWeight * 100),
+  };
 
   // Build risk indicators
   const riskIndicators: string[] = [];
@@ -204,6 +227,7 @@ async function computeComplianceScore(
 
   return {
     score,
+    coverage,
     breakdown: {
       ropa: { score: ropaScore, total: totalAssets, compliant: assetsWithActivities },
       assessment: { score: assessmentScore, total: totalAssessments, compliant: approvedAssessments },
@@ -255,6 +279,16 @@ export const reportsRouter = createTRPCRouter({
     .input(z.object({ organizationId: z.string() }))
     .mutation(async ({ ctx }) => {
       const complianceData = await computeComplianceScore(ctx.prisma, ctx.organization.id);
+
+      // Nothing is rated yet, so there is no score to record. Storing a
+      // placeholder here would poison the trend line with a fabricated value.
+      if (complianceData.score === null) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "No compliance data to snapshot yet. Add data assets, assessments, DSARs, incidents or vendors first.",
+        });
+      }
 
       // First day of current month
       const now = new Date();

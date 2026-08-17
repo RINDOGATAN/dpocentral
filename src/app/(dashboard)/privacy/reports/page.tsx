@@ -26,17 +26,22 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 
-function ScoreRing({ score }: { score: number }) {
+function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel: string }) {
   const size = 160;
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
+  // An unrated programme draws an empty ring, never a full one.
+  const offset = score === null ? circumference : circumference - (score / 100) * circumference;
 
   const color =
-    score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
+    score === null
+      ? "text-muted-foreground"
+      : score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
   const strokeColor =
-    score >= 80 ? "stroke-green-500" : score >= 60 ? "stroke-yellow-500" : "stroke-red-500";
+    score === null
+      ? "stroke-muted"
+      : score >= 80 ? "stroke-green-500" : score >= 60 ? "stroke-yellow-500" : "stroke-red-500";
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -63,8 +68,16 @@ function ScoreRing({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={`text-4xl font-bold ${color}`}>{score}</span>
-        <span className="text-xs text-muted-foreground">/&nbsp;100</span>
+        {score === null ? (
+          <span className="text-sm font-medium text-muted-foreground px-4 text-center">
+            {unratedLabel}
+          </span>
+        ) : (
+          <>
+            <span className={`text-4xl font-bold ${color}`}>{score}</span>
+            <span className="text-xs text-muted-foreground">/&nbsp;100</span>
+          </>
+        )}
       </div>
     </div>
   );
@@ -78,22 +91,30 @@ function ModuleBreakdownCard({
   weight,
   weightLabel,
   compliantLabel,
+  unratedLabel,
+  unratedValue,
   icon: Icon,
 }: {
   label: string;
-  score: number;
+  score: number | null;
   total: number;
   compliant: number;
   weight: string;
   weightLabel: string;
   compliantLabel: string;
+  unratedLabel: string;
+  unratedValue: string;
   icon: React.ElementType;
 }) {
+  // score === null means the module has no records, so it is unrated rather
+  // than perfect — it shows no percentage and contributes nothing to the total.
   const color =
-    score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
+    score === null
+      ? "text-muted-foreground"
+      : score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
 
   return (
-    <Card>
+    <Card className={score === null ? "border-dashed" : undefined}>
       <CardContent className="p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 flex items-center justify-center border rounded">
@@ -103,17 +124,23 @@ function ModuleBreakdownCard({
             <p className="text-sm font-medium truncate">{label}</p>
             <p className="text-xs text-muted-foreground">{weightLabel}</p>
           </div>
-          <span className={`text-lg font-bold ${color}`}>{score}%</span>
+          <span className={`text-lg font-bold ${color}`}>
+            {score === null ? unratedValue : `${score}%`}
+          </span>
         </div>
         <div className="w-full bg-muted rounded-full h-2">
-          <div
-            className={`h-2 rounded-full ${
-              score >= 80 ? "bg-green-500" : score >= 60 ? "bg-yellow-500" : "bg-red-500"
-            }`}
-            style={{ width: `${Math.min(score, 100)}%` }}
-          />
+          {score !== null && (
+            <div
+              className={`h-2 rounded-full ${
+                score >= 80 ? "bg-green-500" : score >= 60 ? "bg-yellow-500" : "bg-red-500"
+              }`}
+              style={{ width: `${Math.min(score, 100)}%` }}
+            />
+          )}
         </div>
-        <p className="text-xs text-muted-foreground mt-2">{compliantLabel}</p>
+        <p className="text-xs text-muted-foreground mt-2">
+          {score === null ? unratedLabel : compliantLabel}
+        </p>
       </CardContent>
     </Card>
   );
@@ -156,14 +183,22 @@ export default function ReportsPage() {
     );
   }
 
-  const score = complianceData?.score ?? 0;
+  const score = complianceData?.score ?? null;
   const breakdown = complianceData?.breakdown;
+  const coverage = complianceData?.coverage;
   const riskIndicators = complianceData?.riskIndicators ?? [];
 
   const scoreLabel =
-    score >= 80 ? tp("score.strong") : score >= 60 ? tp("score.moderate") : tp("score.needsAttention");
+    score === null
+      ? tp("score.unrated")
+      : score >= 80 ? tp("score.strong") : score >= 60 ? tp("score.moderate") : tp("score.needsAttention");
   const scoreBadgeVariant =
-    score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive";
+    score === null ? "outline" : score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive";
+
+  // The score only reflects modules that have data. Say so whenever that is
+  // less than the whole model, so a high number can't be read as full coverage.
+  const isPartial =
+    !!coverage && coverage.ratedModules > 0 && coverage.ratedModules < coverage.totalModules;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -210,13 +245,23 @@ export default function ReportsPage() {
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <ScoreRing score={score} />
+            <ScoreRing score={score} unratedLabel={tp("score.unratedRing")} />
             <div className="flex-1 text-center sm:text-left">
               <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                 <h2 className="text-lg font-semibold">{tp("score.title")}</h2>
                 <Badge variant={scoreBadgeVariant as any}>{scoreLabel}</Badge>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">{tp("score.subtitle")}</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                {score === null
+                  ? tp("score.unratedSubtitle")
+                  : isPartial
+                    ? tp("score.partialSubtitle", {
+                        rated: coverage!.ratedModules,
+                        total: coverage!.totalModules,
+                        pct: coverage!.ratedWeightPct,
+                      })
+                    : tp("score.subtitle")}
+              </p>
               {trendData && trendData.length > 1 && (
                 <div className="flex items-center gap-2 text-sm">
                   {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
@@ -256,6 +301,8 @@ export default function ReportsPage() {
               weight="25%"
               weightLabel={tp("breakdown.weight", { value: "25%" })}
               compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.ropa.compliant, total: breakdown.ropa.total })}
+              unratedLabel={tp("breakdown.unrated")}
+              unratedValue={tp("breakdown.unratedValue")}
               icon={Database}
             />
             <ModuleBreakdownCard
@@ -266,6 +313,8 @@ export default function ReportsPage() {
               weight="20%"
               weightLabel={tp("breakdown.weight", { value: "20%" })}
               compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.assessment.compliant, total: breakdown.assessment.total })}
+              unratedLabel={tp("breakdown.unrated")}
+              unratedValue={tp("breakdown.unratedValue")}
               icon={FileText}
             />
             <ModuleBreakdownCard
@@ -276,6 +325,8 @@ export default function ReportsPage() {
               weight="25%"
               weightLabel={tp("breakdown.weight", { value: "25%" })}
               compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.dsar.compliant, total: breakdown.dsar.total })}
+              unratedLabel={tp("breakdown.unrated")}
+              unratedValue={tp("breakdown.unratedValue")}
               icon={Clock}
             />
             <ModuleBreakdownCard
@@ -286,6 +337,8 @@ export default function ReportsPage() {
               weight="15%"
               weightLabel={tp("breakdown.weight", { value: "15%" })}
               compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.incident.compliant, total: breakdown.incident.total })}
+              unratedLabel={tp("breakdown.unrated")}
+              unratedValue={tp("breakdown.unratedValue")}
               icon={Shield}
             />
             <ModuleBreakdownCard
@@ -296,6 +349,8 @@ export default function ReportsPage() {
               weight="15%"
               weightLabel={tp("breakdown.weight", { value: "15%" })}
               compliantLabel={tp("breakdown.compliantOf", { compliant: breakdown.vendor.compliant, total: breakdown.vendor.total })}
+              unratedLabel={tp("breakdown.unrated")}
+              unratedValue={tp("breakdown.unratedValue")}
               icon={Building2}
             />
           </div>
