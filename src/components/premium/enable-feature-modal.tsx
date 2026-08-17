@@ -11,6 +11,7 @@
  */
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, Sparkles, X, Package, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MARKETPLACE_URL } from "@/lib/marketplace";
@@ -44,6 +45,8 @@ export function EnableFeatureModal({
 }: EnableFeatureModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Declared before the early returns below — hooks must not be conditional.
+  const t = useTranslations("enableFeature");
 
   if (!open) return null;
 
@@ -61,7 +64,7 @@ export function EnableFeatureModal({
             <div className="flex items-start justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                Enable {skillName}
+                {t("title", { skill: skillName })}
               </CardTitle>
               <Button
                 variant="ghost"
@@ -74,30 +77,28 @@ export function EnableFeatureModal({
             </div>
             <CardDescription>
               {skillDescription ||
-                `Add ${skillName} to your organization.`}
+                t("fallbackDescription", { skill: skillName })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              {skillName} is a premium skill on the todo.law marketplace. Buy it
-              there, then install the downloaded .skill on your Skills page to
-              enable it for your organization.
+              {t("marketplaceBody", { skill: skillName })}
             </p>
           </CardContent>
           <CardFooter className="flex flex-wrap justify-end gap-3">
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              {t("cancel")}
             </Button>
             <Button variant="outline" asChild>
               <a href="/privacy/skills">
                 <Package className="mr-2 h-4 w-4" />
-                Install on Skills page
+                {t("installOnSkills")}
               </a>
             </Button>
             <Button asChild>
               <a href={MARKETPLACE_URL} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Get it on the marketplace
+                {t("getOnMarketplace")}
               </a>
             </Button>
           </CardFooter>
@@ -123,7 +124,9 @@ export function EnableFeatureModal({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create checkout session");
+        // data.error is a server string and is not localised; fall back to a
+        // translated message when the API doesn't supply one.
+        throw new Error(data.error || t("errorCheckout"));
       }
 
       // Redirect to Stripe Checkout
@@ -131,7 +134,7 @@ export function EnableFeatureModal({
         window.location.href = data.url;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : t("errorGeneric"));
       setIsLoading(false);
     }
   };
@@ -148,7 +151,7 @@ export function EnableFeatureModal({
           <div className="flex items-start justify-between">
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              Enable {skillName}
+              {t("title", { skill: skillName })}
             </CardTitle>
             <Button
               variant="ghost"
@@ -161,13 +164,13 @@ export function EnableFeatureModal({
           </div>
           <CardDescription>
             {skillDescription ||
-              `Add ${skillName} to your organization.`}
+              t("fallbackDescription", { skill: skillName })}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">
-              {formatPrice(9)}/month — cancel anytime
+              {t("price", { price: formatPrice(9) })}
             </p>
           </div>
 
@@ -179,16 +182,16 @@ export function EnableFeatureModal({
         </CardContent>
         <CardFooter className="flex justify-end gap-3">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            Cancel
+            {t("cancel")}
           </Button>
           <Button onClick={handleEnable} disabled={isLoading} className="whitespace-nowrap">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />
-                Redirecting...
+                {t("redirecting")}
               </>
             ) : (
-              "Enable Feature"
+              t("confirm")
             )}
           </Button>
         </CardFooter>

@@ -4,7 +4,7 @@
 import type { Metadata, Viewport } from "next";
 import { Jost, Archivo_Black } from "next/font/google";
 import { getServerSession } from "next-auth";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { authOptions } from "@/lib/auth";
 import "./globals.css";
@@ -30,12 +30,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const metadata: Metadata = {
+// Metadata is generated per request so the title, description and OpenGraph
+// locale follow the active locale. As a static export it always emitted the
+// English tagline, so Spanish pages shipped English titles to browser tabs,
+// bookmarks, search results and link previews.
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const t = await getTranslations("metadata");
+  const title = `${brand.nameUppercase} - ${t("tagline")}`;
+  const description = t("description");
+
+  return {
   title: {
-    default: `${brand.nameUppercase} - ${brand.tagline}`,
+    default: title,
     template: `%s | ${brand.nameUppercase}`,
   },
-  description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+  description,
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "32x32" },
@@ -54,15 +64,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: brand.nameUppercase,
-    title: `${brand.nameUppercase} - ${brand.tagline}`,
-    description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+    title,
+    description,
     url: brand.appUrl,
-    locale: "en",
+    locale,
   },
   twitter: {
     card: "summary",
-    title: `${brand.nameUppercase} - ${brand.tagline}`,
-    description: `${brand.name} is ${brand.description.toLowerCase()} GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.`,
+    title,
+    description,
   },
   robots: {
     index: true,
@@ -84,7 +94,8 @@ export const metadata: Metadata = {
     "privacy software",
     "open source privacy",
   ],
-};
+  };
+}
 
 export default async function RootLayout({
   children,

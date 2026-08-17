@@ -117,6 +117,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
+  // Shared DataCategory labels — vendor records can carry any of the 15 enum
+  // values, so this covers the whole enum rather than a single form's subset.
+  const tDataCategory = useTranslations("enums.dataCategory");
 
   // Members for reviewer picker (lazy-loaded when dialog opens)
   const { data: orgData } = trpc.organization.getById.useQuery(
@@ -340,7 +343,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                   <div className="flex flex-wrap gap-2">
                     {(vendor.dataProcessed as string[]).map((data) => (
                       <Badge key={data} variant="outline">
-                        {data.replace("_", " ")}
+                        {tDataCategory.has(data as never)
+                          ? tDataCategory(data as never)
+                          : data.replace(/_/g, " ")}
                       </Badge>
                     ))}
                   </div>

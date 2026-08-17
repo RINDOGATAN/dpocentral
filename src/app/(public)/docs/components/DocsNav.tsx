@@ -4,6 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   BookOpen,
   Database,
@@ -15,44 +16,45 @@ import {
 
 const sections = [
   {
-    title: "Getting Started",
+    key: "gettingStarted",
     href: "/docs",
     icon: BookOpen,
   },
   {
-    title: "Data Inventory",
+    key: "dataInventory",
     href: "/docs/data-inventory",
     icon: Database,
   },
   {
-    title: "DSAR Management",
+    key: "dsar",
     href: "/docs/dsar",
     icon: FileText,
   },
   {
-    title: "Assessments",
+    key: "assessments",
     href: "/docs/assessments",
     icon: ClipboardCheck,
   },
   {
-    title: "Incidents",
+    key: "incidents",
     href: "/docs/incidents",
     icon: AlertTriangle,
   },
   {
-    title: "Vendor Management",
+    key: "vendors",
     href: "/docs/vendors",
     icon: Building2,
   },
-];
+] as const;
 
 export function DocsNav() {
   const pathname = usePathname();
+  const t = useTranslations("docs.nav");
 
   return (
     <nav className="space-y-1">
       <p className="text-xs font-display uppercase tracking-wider text-muted-foreground mb-4">
-        Documentation
+        {t("heading")}
       </p>
       {sections.map((section) => {
         const Icon = section.icon;
@@ -71,7 +73,7 @@ export function DocsNav() {
             }`}
           >
             <Icon className="w-4 h-4 shrink-0" />
-            {section.title}
+            {t(section.key)}
           </Link>
         );
       })}

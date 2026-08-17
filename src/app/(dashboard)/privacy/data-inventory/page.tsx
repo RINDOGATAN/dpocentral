@@ -110,6 +110,9 @@ const INITIAL_TRANSFER_FORM = {
 export default function DataInventoryPage() {
   const t = useTranslations("pages.dataInventory");
   const tCommon = useTranslations("common");
+  // Asset type labels live with the create-asset form; reuse them rather than
+  // rendering the raw enum, which showed as English on the Spanish UI.
+  const tAssetType = useTranslations("pages.newAsset.assetType");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const { organization } = useOrganization();
@@ -292,7 +295,7 @@ export default function DataInventoryPage() {
                               <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                             </div>
                             <Badge variant="outline" className="text-xs shrink-0">
-                              {asset.type.replace("_", " ")}
+                              {tAssetType(asset.type)}
                             </Badge>
                           </div>
                           <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{asset.name}</CardTitle>
