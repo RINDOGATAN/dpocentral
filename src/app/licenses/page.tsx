@@ -3,12 +3,15 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Licence & source",
-  description:
-    "DPO Central licensing, warranty disclaimer, and the AGPL corresponding-source offer.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata.licenses");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 // Appropriate Legal Notices (AGPL-3.0 §5(d)) and the offer of Corresponding
 // Source (AGPL-3.0 §13). Static server component — no data fetching, no auth,

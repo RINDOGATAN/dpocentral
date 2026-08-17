@@ -2197,7 +2197,17 @@
   },
   "metadata": {
     "tagline": "Gestión de la privacidad sin complicaciones",
-    "description": "Inventario de datos, gestión de DSAR, evaluaciones, seguimiento de incidencias y gestión de proveedores conformes al RGPD en una sola plataforma."
+    "description": "Inventario de datos, gestión de DSAR, evaluaciones, seguimiento de incidencias y gestión de proveedores conformes al RGPD en una sola plataforma.",
+    "security": {
+      "title": "Seguridad de los datos",
+      "description": "Cómo protege DPO Central tus datos: 10 capas de seguridad que cubren autenticación, RBAC, validación de entradas, seguridad en el transporte, registro de auditoría e infraestructura.",
+      "ogTitle": "Seguridad de los datos | DPO CENTRAL",
+      "ogDescription": "10 capas de seguridad: autenticación de conocimiento cero, RBAC de 5 niveles, limitación de peticiones, TLS + HSTS, registro de auditoría y despliegue en el edge."
+    },
+    "licenses": {
+      "title": "Licencia y código fuente",
+      "description": "DPO Central es software libre bajo AGPL-3.0. Consulta la licencia y obtén el código fuente completo correspondiente."
+    }
   },
   "enums": {
     "dataCategory": {
