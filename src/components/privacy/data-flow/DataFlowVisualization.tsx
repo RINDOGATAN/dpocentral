@@ -65,6 +65,7 @@ export function DataFlowVisualization({
 }: DataFlowVisualizationProps) {
   const router = useRouter();
   const t = useTranslations("toasts");
+  const tFlow = useTranslations("dataFlow");
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
   const [pendingDeleteFlow, setPendingDeleteFlow] = useState<FlowData | null>(null);
@@ -374,7 +375,7 @@ export function DataFlowVisualization({
         <CardContent className="py-12">
           <div className="flex flex-col items-center justify-center text-muted-foreground">
             <Loader2 className="w-8 h-8 animate-spin text-primary mb-4" />
-            <p>Loading data flow visualization...</p>
+            <p>{tFlow("empty.loading")}</p>
           </div>
         </CardContent>
       </Card>
@@ -387,8 +388,8 @@ export function DataFlowVisualization({
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>No data assets found</p>
-          <p className="text-sm mb-4">Add data assets first to visualize data flows</p>
+          <p>{tFlow("empty.noAssetsTitle")}</p>
+          <p className="text-sm mb-4">{tFlow("empty.noAssetsBody")}</p>
           <Button onClick={() => router.push("/privacy/data-inventory/new")}>
             <Plus className="w-4 h-4 mr-2" />
             Add Asset
@@ -404,8 +405,8 @@ export function DataFlowVisualization({
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>No data flows defined yet</p>
-          <p className="text-sm mb-4">Create flows to visualize how data moves between systems</p>
+          <p>{tFlow("empty.noFlowsTitle")}</p>
+          <p className="text-sm mb-4">{tFlow("empty.noFlowsBody")}</p>
           <Button onClick={() => setIsCreateFlowOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Create Flow
@@ -429,8 +430,8 @@ export function DataFlowVisualization({
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>No data flows connected to this asset</p>
-          <p className="text-sm mb-4">Create a flow to connect this asset to other systems</p>
+          <p>{tFlow("empty.noAssetFlowsTitle")}</p>
+          <p className="text-sm mb-4">{tFlow("empty.noAssetFlowsBody")}</p>
           <Button onClick={() => setIsCreateFlowOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Create Flow

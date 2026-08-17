@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { memo } from "react";
+import { useTranslations } from "next-intl";
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
 import {
   Database,
@@ -35,6 +36,10 @@ const assetTypeIcons: Record<string, typeof Database> = {
 type AssetNodeProps = NodeProps<Node<AssetNodeData>>;
 
 function AssetNodeComponent({ data, selected }: AssetNodeProps) {
+  const t = useTranslations("dataFlow.node");
+  // Type label comes from the shared asset-type messages; flow-palette.ts
+  // stays colours-only so it never carries untranslatable copy.
+  const tAssetType = useTranslations("pages.newAsset.assetType");
   const {
     asset,
     incomingFlows,
@@ -130,7 +135,7 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
               className="text-[10px] uppercase tracking-wider mt-0.5 font-medium"
               style={{ color: palette.text }}
             >
-              {palette.label}
+              {tAssetType(asset.type)}
               {asset.vendor && asset.type === "THIRD_PARTY" ? ` · ${asset.vendor}` : ""}
             </p>
           </div>
@@ -138,9 +143,9 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
             <span
               className="text-[8px] uppercase tracking-widest font-bold px-1.5 py-0.5"
               style={{ backgroundColor: "#dcfce7", color: "#166534" }}
-              title="Production environment"
+              title={t("productionTitle")}
             >
-              PROD
+              {t("production")}
             </span>
           )}
         </div>
@@ -183,10 +188,10 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
             <span className="flex items-center gap-1">
               <ArrowDownLeft className="w-3 h-3" />
               <span className="font-semibold" style={{ color: "#0f172a" }}>{incomingFlows}</span>
-              <span>in</span>
+              <span>{t("inbound")}</span>
             </span>
             <span className="flex items-center gap-1">
-              <span>out</span>
+              <span>{t("outbound")}</span>
               <span className="font-semibold" style={{ color: "#0f172a" }}>{outgoingFlows}</span>
               <ArrowUpRight className="w-3 h-3" />
             </span>

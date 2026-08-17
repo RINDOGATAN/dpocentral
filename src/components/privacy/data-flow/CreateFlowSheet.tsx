@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,23 +49,24 @@ const assetTypeIcons: Record<string, typeof Database> = {
   OTHER: Box,
 };
 
-const categoryLabels: Record<DataCategory, string> = {
-  IDENTIFIERS: "Identifiers",
-  DEMOGRAPHICS: "Demographics",
-  FINANCIAL: "Financial",
-  HEALTH: "Health",
-  BIOMETRIC: "Biometric",
-  LOCATION: "Location",
-  BEHAVIORAL: "Behavioral",
-  EMPLOYMENT: "Employment",
-  EDUCATION: "Education",
-  POLITICAL: "Political",
-  RELIGIOUS: "Religious",
-  GENETIC: "Genetic",
-  SEXUAL_ORIENTATION: "Sexual Orientation",
-  CRIMINAL: "Criminal",
-  OTHER: "Other",
-};
+// Keys only — labels come from the shared `enums.dataCategory` messages.
+const CATEGORY_KEYS: DataCategory[] = [
+  "IDENTIFIERS",
+  "DEMOGRAPHICS",
+  "FINANCIAL",
+  "HEALTH",
+  "BIOMETRIC",
+  "LOCATION",
+  "BEHAVIORAL",
+  "EMPLOYMENT",
+  "EDUCATION",
+  "POLITICAL",
+  "RELIGIOUS",
+  "GENETIC",
+  "SEXUAL_ORIENTATION",
+  "CRIMINAL",
+  "OTHER",
+];
 
 const frequencyOptions = [
   "Real-time",
@@ -125,6 +127,8 @@ export function CreateFlowSheet({
   mode = "create",
   initialData,
 }: CreateFlowSheetProps) {
+  const tSheet = useTranslations("dataFlow.sheet");
+  const tCategory = useTranslations("enums.dataCategory");
   const [form, setForm] = useState<CreateFlowData>(
     initialData ?? emptyForm(defaultSourceId, defaultDestinationId)
   );
@@ -167,21 +171,21 @@ export function CreateFlowSheet({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{mode === "edit" ? "Edit Data Flow" : "Create Data Flow"}</SheetTitle>
+          <SheetTitle>{mode === "edit" ? tSheet("editTitle") : tSheet("createTitle")}</SheetTitle>
           <SheetDescription>
             {mode === "edit"
-              ? "Update how data moves between systems"
-              : "Define how data moves between systems"}
+              ? tSheet("editDescription")
+              : tSheet("createDescription")}
           </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="flow-name">Flow Name *</Label>
+            <Label htmlFor="flow-name">{tSheet("name")}</Label>
             <Input
               id="flow-name"
-              placeholder="e.g., User sync to analytics"
+              placeholder={tSheet("namePlaceholder")}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -190,10 +194,10 @@ export function CreateFlowSheet({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="flow-description">Description</Label>
+            <Label htmlFor="flow-description">{tSheet("description")}</Label>
             <Textarea
               id="flow-description"
-              placeholder="Describe the purpose of this data flow"
+              placeholder={tSheet("descriptionPlaceholder")}
               rows={2}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -202,13 +206,13 @@ export function CreateFlowSheet({
 
           {/* Source Asset */}
           <div className="space-y-2">
-            <Label>Source Asset *</Label>
+            <Label>{tSheet("source")}</Label>
             <Select
               value={form.sourceAssetId}
               onValueChange={(value) => setForm({ ...form, sourceAssetId: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select source system" />
+                <SelectValue placeholder={tSheet("sourcePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {assets
@@ -224,13 +228,13 @@ export function CreateFlowSheet({
 
           {/* Destination Asset */}
           <div className="space-y-2">
-            <Label>Destination Asset *</Label>
+            <Label>{tSheet("destination")}</Label>
             <Select
               value={form.destinationAssetId}
               onValueChange={(value) => setForm({ ...form, destinationAssetId: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select destination system" />
+                <SelectValue placeholder={tSheet("destinationPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {assets
@@ -246,9 +250,9 @@ export function CreateFlowSheet({
 
           {/* Data Categories */}
           <div className="space-y-2">
-            <Label>Data Categories</Label>
+            <Label>{tSheet("categories")}</Label>
             <div className="flex flex-wrap gap-2 p-3 bg-muted/50 max-h-[150px] overflow-y-auto">
-              {Object.entries(categoryLabels).map(([value, label]) => {
+              {CATEGORY_KEYS.map((value) => {
                 const category = value as DataCategory;
                 const isSelected = form.dataCategories.includes(category);
                 return (
@@ -260,7 +264,7 @@ export function CreateFlowSheet({
                     }`}
                     onClick={() => toggleCategory(category)}
                   >
-                    {label}
+                    {tCategory(value as never)}
                     {isSelected && (
                       <X className="w-3 h-3 ml-1" />
                     )}
@@ -270,20 +274,20 @@ export function CreateFlowSheet({
             </div>
             {form.dataCategories.length > 0 && (
               <p className="text-xs text-muted-foreground">
-                {form.dataCategories.length} selected
+                {tSheet("categoriesSelected", { count: form.dataCategories.length })}
               </p>
             )}
           </div>
 
           {/* Frequency */}
           <div className="space-y-2">
-            <Label>Frequency</Label>
+            <Label>{tSheet("frequency")}</Label>
             <Select
               value={form.frequency}
               onValueChange={(value) => setForm({ ...form, frequency: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="How often data is transferred" />
+                <SelectValue placeholder={tSheet("frequencyPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {frequencyOptions.map((freq) => (
@@ -297,10 +301,10 @@ export function CreateFlowSheet({
 
           {/* Volume */}
           <div className="space-y-2">
-            <Label htmlFor="flow-volume">Data Volume</Label>
+            <Label htmlFor="flow-volume">{tSheet("volume")}</Label>
             <Input
               id="flow-volume"
-              placeholder="e.g., ~10,000 records/day"
+              placeholder={tSheet("volumePlaceholder")}
               value={form.volume}
               onChange={(e) => setForm({ ...form, volume: e.target.value })}
             />
@@ -308,10 +312,10 @@ export function CreateFlowSheet({
 
           {/* Encryption */}
           <div className="space-y-2">
-            <Label htmlFor="flow-encryption">Encryption Method</Label>
+            <Label htmlFor="flow-encryption">{tSheet("encryption")}</Label>
             <Input
               id="flow-encryption"
-              placeholder="e.g., TLS 1.3, AES-256"
+              placeholder={tSheet("encryptionPlaceholder")}
               value={form.encryptionMethod}
               onChange={(e) => setForm({ ...form, encryptionMethod: e.target.value })}
             />
@@ -337,7 +341,7 @@ export function CreateFlowSheet({
 
           <SheetFooter className="pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              {tSheet("cancel")}
             </Button>
             <Button
               type="submit"

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,23 +41,7 @@ const assetTypeIcons: Record<string, typeof Database> = {
   OTHER: Box,
 };
 
-const categoryLabels: Record<string, string> = {
-  IDENTIFIERS: "Identifiers",
-  DEMOGRAPHICS: "Demographics",
-  FINANCIAL: "Financial",
-  HEALTH: "Health",
-  BIOMETRIC: "Biometric",
-  LOCATION: "Location",
-  BEHAVIORAL: "Behavioral",
-  EMPLOYMENT: "Employment",
-  EDUCATION: "Education",
-  POLITICAL: "Political",
-  RELIGIOUS: "Religious",
-  GENETIC: "Genetic",
-  SEXUAL_ORIENTATION: "Sexual Orientation",
-  CRIMINAL: "Criminal",
-  OTHER: "Other",
-};
+
 
 interface FlowDetailsPanelProps {
   flow: FlowData | null;
@@ -73,6 +58,7 @@ export function FlowDetailsPanel({
   onEdit,
   onDelete,
 }: FlowDetailsPanelProps) {
+  const tCategory = useTranslations("enums.dataCategory");
   if (!flow) return null;
 
   const SourceIcon = assetTypeIcons[flow.sourceAsset.type] || Box;
@@ -132,7 +118,7 @@ export function FlowDetailsPanel({
               <div className="flex flex-wrap gap-2">
                 {flow.dataCategories.map((category) => (
                   <Badge key={category} variant="outline">
-                    {categoryLabels[category] || category}
+                    {tCategory.has(category as never) ? tCategory(category as never) : category}
                   </Badge>
                 ))}
               </div>
