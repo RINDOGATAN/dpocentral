@@ -31,6 +31,17 @@ function normalizeSubprocessors(s: unknown): unknown {
   return s;
 }
 
+/**
+ * vendor.watch's own profile UI tolerates availability sentinels like
+ * "Upon request" in URL fields; our register renders these as links, so
+ * anything that isn't http(s) becomes null. The exporter sanitizes since
+ * vendor.watch 05e51bd — this guards the live-sync path (which skips the
+ * snapshot verifier) against upstream regressions.
+ */
+function httpUrlOrNull(value: string | null | undefined): string | null {
+  return value && /^https?:\/\//i.test(value) ? value : null;
+}
+
 export function mapVendorToUpsert(v: VendorWatchVendor) {
   return {
     name: v.name,
@@ -39,10 +50,10 @@ export function mapVendorToUpsert(v: VendorWatchVendor) {
     description: v.description,
     tags: v.tags || [],
     website: v.website,
-    privacyPolicyUrl: v.privacyPolicyUrl,
-    trustCenterUrl: v.trustCenterUrl,
-    dpaUrl: v.dpaUrl,
-    securityPageUrl: v.securityPageUrl,
+    privacyPolicyUrl: httpUrlOrNull(v.privacyPolicyUrl),
+    trustCenterUrl: httpUrlOrNull(v.trustCenterUrl),
+    dpaUrl: httpUrlOrNull(v.dpaUrl),
+    securityPageUrl: httpUrlOrNull(v.securityPageUrl),
     certifications: v.certifications || [],
     frameworks: v.frameworks || [],
     gdprCompliant: v.gdprCompliant,

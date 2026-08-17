@@ -124,3 +124,23 @@ describe("seedCatalogFromSnapshot", () => {
     ).rejects.toThrow(/not found/);
   });
 });
+
+describe("mapVendorToUpsert URL fields", () => {
+  it("nulls availability sentinels — only http(s) values survive", async () => {
+    const { mapVendorToUpsert } = await import("@/lib/vendor-watch-mapper");
+    const mapped = mapVendorToUpsert({
+      slug: "acme",
+      name: "Acme",
+      category: "Analytics",
+      website: "https://acme.example",
+      dpaUrl: "Upon request",
+      privacyPolicyUrl: "https://acme.example/privacy",
+      trustCenterUrl: "contact sales",
+      securityPageUrl: "http://acme.example/security",
+    } as never);
+    expect(mapped.dpaUrl).toBeNull();
+    expect(mapped.trustCenterUrl).toBeNull();
+    expect(mapped.privacyPolicyUrl).toBe("https://acme.example/privacy");
+    expect(mapped.securityPageUrl).toBe("http://acme.example/security");
+  });
+});
