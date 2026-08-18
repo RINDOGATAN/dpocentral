@@ -102,8 +102,8 @@ describe("compliance score: empty modules are unrated, not compliant", () => {
     expect(result.score).toBeNull();
     expect(result.coverage.ratedModules).toBe(0);
     expect(result.coverage.ratedWeightPct).toBe(0);
-    for (const module of Object.values(result.breakdown)) {
-      expect(module.score).toBeNull();
+    for (const mod of Object.values(result.breakdown)) {
+      expect(mod.score).toBeNull();
     }
   });
 
