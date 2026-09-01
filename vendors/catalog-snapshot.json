@@ -1,7 +1,7 @@
 {
   "version": "1",
-  "generatedAt": "2026-09-01T01:38:18.742Z",
-  "sourceCommit": "8081cb5",
+  "generatedAt": "2026-09-01T16:19:22.858Z",
+  "sourceCommit": "bdd91c8",
   "count": 884,
   "vendors": [
     {
@@ -621,7 +621,7 @@
       "website": "https://act-on.com",
       "privacyPolicyUrl": "https://calendly.com/pages/privacy#cookies-and-other-tracking-mechanisms",
       "trustCenterUrl": null,
-      "dpaUrl": "https://act-on.com/data-processing-addendum/",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -663,7 +663,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:29.984Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:15:00.758Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -958,7 +958,7 @@
           "catalogVendorSlug": "openai"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -2450,7 +2450,7 @@
       "website": "https://www.adyen.com",
       "privacyPolicyUrl": "https://adyen.com/privacy-policy",
       "trustCenterUrl": "https://www.adyen.com/privacy-policy/security",
-      "dpaUrl": null,
+      "dpaUrl": "https://adyen.com/legal/data-processing-agreement",
       "securityPageUrl": null,
       "certifications": [
         "PCI DSS",
@@ -2494,7 +2494,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:45.630Z",
-      "updatedAt": "2026-08-05T16:02:04.507Z",
+      "updatedAt": "2026-09-01T08:23:21.807Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -2873,7 +2873,7 @@
           "sourceUrl": "https://ahrefs.com/legal/subprocessors-list"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -3267,7 +3267,7 @@
           "sourceUrl": "https://www.airship.com/legal/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -3477,7 +3477,7 @@
           "sourceUrl": "https://www.airtable.com/company/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -3507,7 +3507,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:50.518Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 70,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -4446,7 +4446,7 @@
           "catalogVendorSlug": "microsoft-azure"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -4758,7 +4758,7 @@
           "sourceUrl": "https://trust.anthropic.com/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -4804,7 +4804,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:52.622Z",
-      "updatedAt": "2026-08-05T18:14:16.405Z",
+      "updatedAt": "2026-09-01T08:23:32.831Z",
       "dpaComplianceScore": 66,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 33
@@ -5043,8 +5043,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for product notifications and video sharing over email",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "mailchimp"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "MessageBird USA, Inc",
@@ -5065,8 +5064,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for mobile product notifications and video sharing",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "onesignal"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Plivo, Inc.",
@@ -5122,8 +5120,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Customer service and technical support",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Amazon Web Services, Inc. (AWS Bedrock)",
@@ -5137,8 +5134,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Generative AI services provider for intelligence product features",
           "location": "Location of Processing USA, EEA (Belgium, Netherlands, Finland), Singapore, Taiwan",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "google-vertex-ai"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Databricks, Inc.",
@@ -5162,7 +5158,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -5192,7 +5188,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:32.757Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 32,
       "dpaGdprScore": 63,
       "dpaCcpaScore": 0
@@ -5651,7 +5647,7 @@
           "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -5934,7 +5930,7 @@
           "catalogVendorSlug": "vercel"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -6144,8 +6140,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for product notifications and video sharing over email",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "mailchimp"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "MessageBird USA, Inc",
@@ -6166,8 +6161,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for mobile product notifications and video sharing",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "onesignal"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Plivo, Inc.",
@@ -6223,8 +6217,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Customer service and technical support",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Amazon Web Services, Inc. (AWS Bedrock)",
@@ -6238,8 +6231,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Generative AI services provider for intelligence product features",
           "location": "Location of Processing USA, EEA (Belgium, Netherlands, Finland), Singapore, Taiwan",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "google-vertex-ai"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Databricks, Inc.",
@@ -6263,7 +6255,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -6293,7 +6285,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:49.859Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -6371,7 +6363,7 @@
       "website": "https://attio.com",
       "privacyPolicyUrl": "https://attio.com/legal/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://attio.com/legal/attio-data-processing-addendum",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -6411,10 +6403,10 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:40.314Z",
-      "updatedAt": "2026-08-05T16:06:36.633Z",
-      "dpaComplianceScore": null,
-      "dpaGdprScore": null,
-      "dpaCcpaScore": null
+      "updatedAt": "2026-09-01T08:23:55.213Z",
+      "dpaComplianceScore": 70,
+      "dpaGdprScore": 75,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleepzyh000xkov2fz96n77s",
@@ -7466,7 +7458,7 @@
           "sourceUrl": "https://www.bidswitch.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -7690,7 +7682,7 @@
           "sourceUrl": "https://www.bigcommerce.com/privacy/data-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -7852,7 +7844,7 @@
       "website": "https://bird.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://bird.com/legal/dpa",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -7892,10 +7884,10 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-08-30T23:56:11.324Z",
-      "dpaComplianceScore": null,
-      "dpaGdprScore": null,
-      "dpaCcpaScore": null
+      "updatedAt": "2026-09-01T08:27:06.353Z",
+      "dpaComplianceScore": 91,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 83
     },
     {
       "id": "cmmc1q0ko002adaj8tnfqqsxj",
@@ -8560,7 +8552,7 @@
           "sourceUrl": "https://www.bloomreach.com/en/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -8590,7 +8582,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:19:37.046Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 75,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -9296,7 +9288,7 @@
           "catalogVendorSlug": "amazon-web-services"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -9348,7 +9340,7 @@
       "website": "https://www.braze.com",
       "privacyPolicyUrl": "https://www.braze.com/company/legal/privacy",
       "trustCenterUrl": "https://www.braze.com/company/legal",
-      "dpaUrl": "https://www.braze.com/company/legal/dpa",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -9423,7 +9415,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:36.033Z",
-      "updatedAt": "2026-08-21T02:52:19.576Z",
+      "updatedAt": "2026-09-01T08:15:19.452Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -9817,7 +9809,7 @@
           "sourceUrl": "https://www.bynder.com/en/legal/sub-processors-bynder/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -9963,8 +9955,8 @@
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:50.190Z",
       "updatedAt": "2026-08-05T16:09:43.129Z",
-      "dpaComplianceScore": 66,
-      "dpaGdprScore": 75,
+      "dpaComplianceScore": 76,
+      "dpaGdprScore": 88,
       "dpaCcpaScore": 67
     },
     {
@@ -10692,7 +10684,7 @@
       "website": "https://www.chatbot-com.com",
       "privacyPolicyUrl": "https://www.chatbot-com.com/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://www.chatbot.com/legal/data-processing-addendum/",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -10732,7 +10724,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:37.299Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:15:24.377Z",
       "dpaComplianceScore": 76,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -11013,8 +11005,8 @@
           "sourceUrl": "https://compliance.churnzero.com/ (Legal → Subprocessors)"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
-      "subprocessorsSourceStatus": "gone",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
+      "subprocessorsSourceStatus": "blocked",
       "transferSafeguards": null,
       "supportsDsars": null,
       "hasDesignatedDpo": null,
@@ -11907,7 +11899,7 @@
       "website": "https://clickup.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": "https://security.clickup.com/?itemUid=c4223a81-5840-4e11-ac9f-2b812794a67e&source=click",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -11928,16 +11920,14 @@
           "source": "subprocessor-page",
           "purpose": "Infrastructure (Cloud Service Provider)",
           "location": "USA, Ireland, Germany, Australia, Singapore",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "amazon-web-services"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Amplitude",
           "source": "subprocessor-page",
           "purpose": "Analytics on product use",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "amplitude"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "APILayer",
@@ -11965,14 +11955,6 @@
           "source": "subprocessor-page",
           "purpose": "Credit card payments",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "braintree"
-        },
-        {
-          "name": "Braintrust",
-          "source": "subprocessor-page",
-          "purpose": "AI Monitoring",
-          "location": "USA",
           "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
@@ -11980,8 +11962,7 @@
           "source": "subprocessor-page",
           "purpose": "Data warehouse integration",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "census"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Chameleon",
@@ -12002,8 +11983,7 @@
           "source": "subprocessor-page",
           "purpose": "Logging and Monitoring",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "datadog"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "EXA",
@@ -12038,8 +12018,7 @@
           "source": "subprocessor-page",
           "purpose": "Customer engagement",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "iterable"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Nylas",
@@ -12081,16 +12060,14 @@
           "source": "subprocessor-page",
           "purpose": "Data warehouse, customer data platform",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "segment"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Similarweb",
           "source": "subprocessor-page",
           "purpose": "Business Intelligence (BI) Analytics",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "similarweb"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Singular Lab, Inc",
@@ -12111,16 +12088,14 @@
           "source": "subprocessor-page",
           "purpose": "Data warehouse",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "snowflake"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Stripe",
           "source": "subprocessor-page",
           "purpose": "Credit card payments",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "stripe"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "strongDM",
@@ -12134,8 +12109,7 @@
           "source": "subprocessor-page",
           "purpose": "Data visualization",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "tableau"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Turbopuffer Inc",
@@ -12149,8 +12123,7 @@
           "source": "subprocessor-page",
           "purpose": "Two-factor authentication codes",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "twilio"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Upwind",
@@ -12185,16 +12158,14 @@
           "source": "subprocessor-page",
           "purpose": "Application AI Functionality",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "anthropic"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "AssemblyAI",
           "source": "subprocessor-page",
           "purpose": "Application AI Functionality",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "assemblyai"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Baseten",
@@ -12243,8 +12214,7 @@
           "source": "subprocessor-page",
           "purpose": "Application AI Functionality",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "openai"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Seedance 2.0",
@@ -12258,16 +12228,14 @@
           "source": "subprocessor-page",
           "purpose": "Application AI Functionality",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "vercel"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Canny",
           "source": "subprocessor-page",
           "purpose": "Product feedback",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "canny"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Maven AGI",
@@ -12281,21 +12249,26 @@
           "source": "subprocessor-page",
           "purpose": "Customer relationship management (CRM)",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "salesforce"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "Zendesk",
           "source": "subprocessor-page",
           "purpose": "Customer support communication (chat and email)",
           "location": "USA",
-          "sourceUrl": "https://clickup.com/dpa/subprocessors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
         {
           "name": "PDF.co",
           "source": "subprocessor-page",
           "purpose": "Document Processing and Conversion",
+          "location": "USA",
+          "sourceUrl": "https://clickup.com/dpa/subprocessors"
+        },
+        {
+          "name": "Replit Inc",
+          "source": "subprocessor-page",
+          "purpose": "Application hosting and compute infrastructure",
           "location": "USA",
           "sourceUrl": "https://clickup.com/dpa/subprocessors"
         },
@@ -12314,7 +12287,7 @@
           "sourceUrl": "https://clickup.com/dpa/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -12344,7 +12317,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:50.386Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T09:14:15.711Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -12681,7 +12654,7 @@
       "website": "https://www.cloudflare.com",
       "privacyPolicyUrl": "https://www.cloudflare.com/privacypolicy/",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.cloudflare.com/cloudflare-customer-dpa/",
       "securityPageUrl": "https://www.cloudflare.com/cybersecurity/",
       "certifications": [],
       "frameworks": [],
@@ -12727,7 +12700,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T18:37:27.380Z",
-      "updatedAt": "2026-08-28T19:49:43.531Z",
+      "updatedAt": "2026-09-01T08:29:46.358Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -12743,7 +12716,7 @@
       "website": "https://www.cloudflare.com",
       "privacyPolicyUrl": "https://www.cloudflare.com/privacypolicy/",
       "trustCenterUrl": "https://www.cloudflare.com/trust-hub/",
-      "dpaUrl": "https://www.cloudflare.com/trust-hub/gdpr/",
+      "dpaUrl": "https://www.cloudflare.com/cloudflare-customer-dpa/",
       "securityPageUrl": "https://cloudflare.com/solutions/ai-security/",
       "certifications": [],
       "frameworks": [],
@@ -12785,7 +12758,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:38.297Z",
-      "updatedAt": "2026-08-05T16:10:32.929Z",
+      "updatedAt": "2026-09-01T08:29:46.172Z",
       "dpaComplianceScore": 86,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -12859,7 +12832,7 @@
       "website": "https://www.cloudflare.com",
       "privacyPolicyUrl": "https://www.cloudflare.com/privacypolicy/",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.cloudflare.com/cloudflare-customer-dpa/",
       "securityPageUrl": "https://www.cloudflare.com/trust-hub/",
       "certifications": [],
       "frameworks": [],
@@ -12905,7 +12878,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:37.097Z",
-      "updatedAt": "2026-08-28T19:49:43.531Z",
+      "updatedAt": "2026-09-01T08:29:47.768Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -13117,7 +13090,7 @@
           "sourceUrl": "https://cloudinary.com/trust/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -13485,7 +13458,7 @@
           "catalogVendorSlug": "vercel"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -13985,7 +13958,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:39.418Z",
-      "updatedAt": "2026-08-09T13:45:36.866Z",
+      "updatedAt": "2026-09-01T08:15:26.648Z",
       "dpaComplianceScore": 100,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 100
@@ -14225,8 +14198,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for product notifications and video sharing over email",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "mailchimp"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "MessageBird USA, Inc",
@@ -14247,8 +14219,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for mobile product notifications and video sharing",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "onesignal"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Plivo, Inc.",
@@ -14304,8 +14275,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Customer service and technical support",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Amazon Web Services, Inc. (AWS Bedrock)",
@@ -14319,8 +14289,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Generative AI services provider for intelligence product features",
           "location": "Location of Processing USA, EEA (Belgium, Netherlands, Finland), Singapore, Taiwan",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "google-vertex-ai"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Databricks, Inc.",
@@ -14344,7 +14313,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -14374,7 +14343,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:46.781Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -14517,7 +14486,7 @@
       "website": "https://www.contentful.com",
       "privacyPolicyUrl": "https://www.contentful.com/legal/privacy-at-contentful/cookie-notice/",
       "trustCenterUrl": "https://www.contentful.com/security/",
-      "dpaUrl": "https://www.contentful.com/legal/privacy-at-contentful/data-processing-addendum-for-customers/",
+      "dpaUrl": null,
       "securityPageUrl": "https://www.contentful.com/security/",
       "certifications": [],
       "frameworks": [],
@@ -14640,7 +14609,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:39.809Z",
-      "updatedAt": "2026-08-27T20:31:37.710Z",
+      "updatedAt": "2026-09-01T08:15:28.259Z",
       "dpaComplianceScore": 76,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -14690,126 +14659,126 @@
         {
           "name": "Content Square SAS",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Paris, France",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "New York, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "London, UK",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Israel Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Tel Aviv, Israel",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Singapore PTE",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Singapore",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Spain, S.L.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Madrid, Spain",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square GmbH",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Frankfurt, Germany",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Contentsquare Japan G.K.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Tokyo, Japan",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare DXA SAAS Solutions LLC",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Dubai, UAE",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare Italy S.r.l.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Milan, Italy",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare Egypt",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Cairo, Egypt",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Canada",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Toronto, Canada",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Germany GmbH",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Berlin, Germany",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar UK Limited",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "London, UK",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Netherlands BV",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Amsterdam, Netherlands",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Web Portugal, Unipessoal LDA",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Porto Salvo, Portugal",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Web Services Spain S.L.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Barcelona, Spain",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Loris Technologies, Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services and conversational intelligence",
+          "purpose": "Support, Maintenance, Professional Services and conversational intelligence services",
           "location": "Tel Aviv, Israel",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
@@ -14837,50 +14806,117 @@
         {
           "name": "Amazon Web Services, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data hosting for Experience Analytics, User Lifecycle, Data Connect, Loris AI (region per customer selection)",
-          "location": "Ireland (EU) or USA",
+          "purpose": "Data hosting for the following plans: Pro & Enterprise andExperience Analytics Extension to Product Analytics (“DXA Extension”)",
+          "location": "Customer may select* either:Europe: Ireland (AWS-EU-West-1)orUSA: Virginia, USA (AWS-US-East-1)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
-          "name": "Microsoft Azure",
+          "name": "Amazon Web Services, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data hosting for Experience Analytics plans (region per customer selection)",
-          "location": "Ireland (EU) or USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/",
-          "catalogVendorSlug": "microsoft-azure"
+          "purpose": "Data hosting",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above: Europe: Ireland (AWS-E",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "See “Product Analytics” section below for further sub-processors utilized for this feature",
+          "source": "subprocessor-page",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting for Data Connect",
+          "location": "Based on the location of the Customer: Europe: Frankfurt, Germany (AWS-EU-Central-1) or USA: Virgini",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Amazon Web Services Bedrock",
           "source": "subprocessor-page",
-          "purpose": "LLM for Sense AI features (Sense Chat, Error Summaries, Mapping Assistant, Session Replay Summaries)",
-          "location": "EU or USA regions",
+          "purpose": "Provides Large Language Model (LLM) for the following plans:Growth, Pro, and Enterprise",
+          "location": "Based on the location of the Customer, LLM is served from: Europe: Ireland (AWS-EU-West-1),United Ki",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
-          "name": "Microsoft Corporation (Azure OpenAI Service)",
+          "name": "Microsoft Corporation (Azure)",
           "source": "subprocessor-page",
-          "purpose": "LLM for Hotjar AI for Surveys and Conversation Intelligence",
-          "location": "France, EU/US/APAC regions",
+          "purpose": "Provides Large Language Model (LLM) for the following plans:Growth, Pro, and Enterprise",
+          "location": "Based on the location of the Customer, LLM is served from: EuropeorUSA",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Customer may select either:Europe: Ireland (AWS-EU-West-1),Frankfurt, Germany (AWS EU-Central-1) (at",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting for Data Connect",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above: Europe: Ireland (AWS-E",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services (AWS)",
+          "source": "subprocessor-page",
+          "purpose": "Hosting of Sense Chat and Customer Data and backups",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above:Europe: Ireland (AWS-EU",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "OpenAI OpCo, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "LLM is served in the same region selected by Customer under Section 1 above: EuropeorUSA",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Europe: Ireland (AWS-EU-West-1)",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "France",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Customer may select either: USA: Ohio, USA (AWS-US-East-2) EU: Ireland (AWS-EU-West-1)",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Microsoft Corporation (Azure)",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "Based on capacity, LLM is served from:Australia: New South Wales (Azure-Australia East)orEurope:Fran",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Deepgram, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Speech-to-text services (Conversation Intelligence)",
+          "purpose": "Speech-to-text services",
           "location": "San Francisco, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Snowflake Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data warehouse (Conversation Intelligence)",
-          "location": "Ohio, USA",
+          "purpose": "Data warehouse",
+          "location": "USA: Ohio, USA (AWS-US-East-2)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Salesforce, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Tableau dashboard reporting feature",
+          "purpose": "Tableau Dashboard reporting feature",
           "location": "San Francisco, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
@@ -14888,103 +14924,11 @@
           "name": "Turbopuffer Inc.",
           "source": "subprocessor-page",
           "purpose": "Vector database search and index service",
-          "location": "Ohio, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Twilio Inc.",
-          "source": "subprocessor-page",
-          "purpose": "User Interviews feature — data hosting",
-          "location": "Dublin, Ireland",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Postmark",
-          "source": "subprocessor-page",
-          "purpose": "User Tests and User Interviews — email delivery",
-          "location": "Chicago, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/",
-          "catalogVendorSlug": "postmark"
-        },
-        {
-          "name": "Tremendous, LLC",
-          "source": "subprocessor-page",
-          "purpose": "User Tests and User Interviews — participant rewards provider",
-          "location": "New York, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Atoms - Retex",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Milan, Italy",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Cardinal Path LLC",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Illinois, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Converteo SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Dentsu Manchester Limited",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Manchester, UK",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Group Onepoint SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Level Access, Inc.",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Virginia, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Scaletrix.AI (Alabs AI Privacy Limited)",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Gurgaon, India",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Temesis SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Up Reply GmbH",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Munich, Germany",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Zilker Trail Consulting",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Texas, USA",
+          "location": "USA: Ohio, USA (AWS-US-East-2)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -15030,7 +14974,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:40.054Z",
-      "updatedAt": "2026-08-05T17:20:58.719Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 81,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
@@ -15707,7 +15651,7 @@
       "website": "https://www.zoominfo.com",
       "privacyPolicyUrl": "https://www.zoominfo.com/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://zoominfo.com/legal/data-processing-addendum",
       "securityPageUrl": "https://www.zoominfo.com/legal/security-overview",
       "certifications": [],
       "frameworks": [],
@@ -15747,7 +15691,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:40.696Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:31:18.510Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -16044,7 +15988,7 @@
           "sourceUrl": "https://crisp.chat/en/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -16516,7 +16460,7 @@
       "website": "https://www.cyberark.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": "https://www.cyberark.com/solutions/industry-regulatory-compliance/",
+      "dpaUrl": "https://www.paloaltonetworks.com/idira",
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -16560,7 +16504,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:47.354Z",
-      "updatedAt": "2026-04-01T05:38:12.467Z",
+      "updatedAt": "2026-09-01T08:15:30.915Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -16737,7 +16681,7 @@
           "sourceUrl": "https://www.databricks.com/legal/databricks-subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -17030,7 +16974,7 @@
           "sourceUrl": "https://www.datadoghq.com/legal/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -17217,7 +17161,7 @@
           "sourceUrl": "https://www.datarobot.com/privacy/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -17635,7 +17579,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:35.178Z",
-      "updatedAt": "2026-08-17T23:58:20.078Z",
+      "updatedAt": "2026-09-01T08:31:32.586Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -18015,7 +17959,7 @@
           "sourceUrl": "https://deepgram.com/privacy/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -18699,8 +18643,8 @@
           "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
-      "subprocessorsSourceStatus": "gone",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
+      "subprocessorsSourceStatus": "blocked",
       "transferSafeguards": null,
       "supportsDsars": null,
       "hasDesignatedDpo": null,
@@ -18861,7 +18805,7 @@
       "website": "https://www.digitalocean.com",
       "privacyPolicyUrl": "https://digitalocean.com/legal/privacy-policy",
       "trustCenterUrl": "https://www.digitalocean.com/trust",
-      "dpaUrl": null,
+      "dpaUrl": "https://digitalocean.com/legal/data-processing-agreement",
       "securityPageUrl": "https://digitalocean.com/security",
       "certifications": [
         "SOC 2",
@@ -18906,7 +18850,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:44.842Z",
-      "updatedAt": "2026-08-05T16:12:20.306Z",
+      "updatedAt": "2026-09-01T08:31:47.629Z",
       "dpaComplianceScore": 71,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -19416,7 +19360,7 @@
       "website": "https://www.drip.com",
       "privacyPolicyUrl": "https://business.safety.google/privacy",
       "trustCenterUrl": "https://www.drip.com/terms",
-      "dpaUrl": "https://www.drip.com/hubfs/Drip%20Data%20Processing%20Agreement%20-%20October%202024.pdf",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -19456,7 +19400,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:43.428Z",
-      "updatedAt": "2026-03-04T02:10:48.462Z",
+      "updatedAt": "2026-09-01T08:15:34.977Z",
       "dpaComplianceScore": 68,
       "dpaGdprScore": 63,
       "dpaCcpaScore": 67
@@ -19649,7 +19593,7 @@
       "website": "https://marketingplatform.google.com/about/display-video-360/",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmarketingplatform.google.com%2Fgdpr%2F&dsh=S1863256644%3A1785564373340024&followup=https%3A%2F%2Fmarketingplatform.google.com%2Fgdpr%2F&passive=1209600&service=analytics&flowName=WebLiteSignIn&flowEntry=ServiceLogin&ifkv=Ac50bxvE_QpvwMNDYsu2kjNayAnIWExYaLI8h2IFf4hx_EFExUn-lqD9VkT1hYSC-4sYPKi1WSlWxg",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -19698,7 +19642,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:50.200Z",
-      "updatedAt": "2026-08-01T06:06:13.449Z",
+      "updatedAt": "2026-09-01T08:15:44.854Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -20483,7 +20427,7 @@
           "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -20661,7 +20605,7 @@
           "sourceUrl": "https://privacy.equativ.com/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -21313,7 +21257,7 @@
           "sourceUrl": "https://docs.fastly.com/products/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -21821,7 +21765,7 @@
           "sourceUrl": "https://www.figma.com/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -21878,7 +21822,7 @@
       "website": "https://findify.io",
       "privacyPolicyUrl": "https://www.maropost.com/legal/privacy-policy/?hsLang=en",
       "trustCenterUrl": null,
-      "dpaUrl": "https://maropost.com/platform/merchandising-cloud",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -21918,7 +21862,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:46.101Z",
-      "updatedAt": "2026-03-04T02:10:51.059Z",
+      "updatedAt": "2026-09-01T08:15:39.268Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -21934,7 +21878,7 @@
       "website": "https://firebase.google.com",
       "privacyPolicyUrl": "https://policies.google.com/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://firebase.google.com/terms/data-processing-terms",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "ISO 27001",
@@ -21986,7 +21930,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:48.307Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:15:45.355Z",
       "dpaComplianceScore": 65,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 50
@@ -22048,7 +21992,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:35.335Z",
-      "updatedAt": "2026-08-17T23:57:42.936Z",
+      "updatedAt": "2026-09-01T08:32:46.986Z",
       "dpaComplianceScore": 59,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 33
@@ -22064,7 +22008,7 @@
       "website": "https://www.fivetran.com",
       "privacyPolicyUrl": "https://www.fivetran.com/legal/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://trust.fivetran.com/?itemUid=c4223a81-5840-4e11-ac9f-2b812794a67e&source=click",
+      "dpaUrl": null,
       "securityPageUrl": "https://fivetran.com/security",
       "certifications": [
         "SOC 2",
@@ -22291,7 +22235,7 @@
           "sourceUrl": "https://fivetran.com/docs/trust/privacy"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -22321,7 +22265,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:51.829Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T08:15:39.560Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -22630,7 +22574,7 @@
       "website": "https://www.freshbooks.com",
       "privacyPolicyUrl": "https://freshbooks.com/policies/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://fbstaticprod-uploads.freshbooks.com/Terms%20and%20Conditions/2025/INTERNATIONAL%20DATA%20PROCESSING%20AGREEMENT.pdf",
       "securityPageUrl": "https://freshbooks.com/policies/security-safeguards",
       "certifications": [
         "SOC 2"
@@ -22672,7 +22616,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:50.074Z",
-      "updatedAt": "2026-08-05T16:13:10.110Z",
+      "updatedAt": "2026-09-01T08:33:21.310Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -22939,14 +22883,14 @@
           "name": "Microsoft Corporation",
           "source": "subprocessor-page",
           "purpose": "Freshworks offers various AI functionalities using a combination of its own proprietary AI models and models derived from Microsoft Azure OpenAI. Users will have the ability to apply human oversight o",
-          "location": "US, EU, IND, AUS*****",
+          "location": "US, EU, IND, AUS",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
-          "name": "Microsoft Corporation (Citus Data)",
+          "name": "Microsoft Corporation (Cosmos Database)",
           "source": "subprocessor-page",
-          "purpose": "Citus Data, Inc. a company held by Microsoft Inc., is used by us to collect customer feedback on the product. In case, a customer wishes not to participate in the survey, it can be disabled from the s",
-          "location": "US, EU, AUS*****, IND",
+          "purpose": "Cosmos Data (Microsoft Corporation) is used by Freshworks to process customer activity events — such as messages received, conversations resolved, or assignments made — so they can be reflected in nea",
+          "location": "US, EU, AUS, IND",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
@@ -23004,109 +22948,9 @@
           "purpose": "Wiz is used to continuously scan and analyse cloud environments for risks,including Data Security Posture Management, vulnerability management, misconfigurations, and exposure detection. It provides v",
           "location": "US, EU, AUS, IND, ME",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Bugsnag",
-          "source": "subprocessor-page",
-          "purpose": "Provides us with error tracking and reporting for FireHydrant services",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "bugsnag"
-        },
-        {
-          "name": "Datadog",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "datadog"
-        },
-        {
-          "name": "Honeycomb (Hound Technology, Inc)",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Posthog",
-          "source": "subprocessor-page",
-          "purpose": "Provides FireHydrant with product usage reporting",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "posthog"
-        },
-        {
-          "name": "Pusher",
-          "source": "subprocessor-page",
-          "purpose": "Supports FireHydrant services by providing real-time browser updates",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Segment",
-          "source": "subprocessor-page",
-          "purpose": "Provides marketing analytics and reporting for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "segment"
-        },
-        {
-          "name": "Stripe",
-          "source": "subprocessor-page",
-          "purpose": "Support FireHydrant customers to purchase and process credit card transactions in FireHydrant.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "stripe"
-        },
-        {
-          "name": "Recall.ai",
-          "source": "subprocessor-page",
-          "purpose": "Providing video transcription services for the FireHydrant services",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "AssemblyAI",
-          "source": "subprocessor-page",
-          "purpose": "Providing audio transcription services for FireHydrant",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "assemblyai"
-        },
-        {
-          "name": "Snipply, Inc. dba Velt.dev",
-          "source": "subprocessor-page",
-          "purpose": "Providing realtime text collaboration tooling within the FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Intercom",
-          "source": "subprocessor-page",
-          "purpose": "Provides support functions and communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "intercom"
-        },
-        {
-          "name": "Salesforce",
-          "source": "subprocessor-page",
-          "purpose": "Provides sales and support automation for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "salesforce"
-        },
-        {
-          "name": "Zendesk",
-          "source": "subprocessor-page",
-          "purpose": "Provides support communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -23136,7 +22980,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:40.183Z",
-      "updatedAt": "2026-08-05T16:23:27.271Z",
+      "updatedAt": "2026-09-01T09:14:16.912Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -23288,14 +23132,14 @@
           "name": "Microsoft Corporation",
           "source": "subprocessor-page",
           "purpose": "Freshworks offers various AI functionalities using a combination of its own proprietary AI models and models derived from Microsoft Azure OpenAI. Users will have the ability to apply human oversight o",
-          "location": "US, EU, IND, AUS*****",
+          "location": "US, EU, IND, AUS",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
-          "name": "Microsoft Corporation (Citus Data)",
+          "name": "Microsoft Corporation (Cosmos Database)",
           "source": "subprocessor-page",
-          "purpose": "Citus Data, Inc. a company held by Microsoft Inc., is used by us to collect customer feedback on the product. In case, a customer wishes not to participate in the survey, it can be disabled from the s",
-          "location": "US, EU, AUS*****, IND",
+          "purpose": "Cosmos Data (Microsoft Corporation) is used by Freshworks to process customer activity events — such as messages received, conversations resolved, or assignments made — so they can be reflected in nea",
+          "location": "US, EU, AUS, IND",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
@@ -23353,109 +23197,9 @@
           "purpose": "Wiz is used to continuously scan and analyse cloud environments for risks,including Data Security Posture Management, vulnerability management, misconfigurations, and exposure detection. It provides v",
           "location": "US, EU, AUS, IND, ME",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Bugsnag",
-          "source": "subprocessor-page",
-          "purpose": "Provides us with error tracking and reporting for FireHydrant services",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "bugsnag"
-        },
-        {
-          "name": "Datadog",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "datadog"
-        },
-        {
-          "name": "Honeycomb (Hound Technology, Inc)",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Posthog",
-          "source": "subprocessor-page",
-          "purpose": "Provides FireHydrant with product usage reporting",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "posthog"
-        },
-        {
-          "name": "Pusher",
-          "source": "subprocessor-page",
-          "purpose": "Supports FireHydrant services by providing real-time browser updates",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Segment",
-          "source": "subprocessor-page",
-          "purpose": "Provides marketing analytics and reporting for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "segment"
-        },
-        {
-          "name": "Stripe",
-          "source": "subprocessor-page",
-          "purpose": "Support FireHydrant customers to purchase and process credit card transactions in FireHydrant.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "stripe"
-        },
-        {
-          "name": "Recall.ai",
-          "source": "subprocessor-page",
-          "purpose": "Providing video transcription services for the FireHydrant services",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "AssemblyAI",
-          "source": "subprocessor-page",
-          "purpose": "Providing audio transcription services for FireHydrant",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "assemblyai"
-        },
-        {
-          "name": "Snipply, Inc. dba Velt.dev",
-          "source": "subprocessor-page",
-          "purpose": "Providing realtime text collaboration tooling within the FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Intercom",
-          "source": "subprocessor-page",
-          "purpose": "Provides support functions and communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "intercom"
-        },
-        {
-          "name": "Salesforce",
-          "source": "subprocessor-page",
-          "purpose": "Provides sales and support automation for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "salesforce"
-        },
-        {
-          "name": "Zendesk",
-          "source": "subprocessor-page",
-          "purpose": "Provides support communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -23485,7 +23229,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:40.709Z",
-      "updatedAt": "2026-08-05T16:23:35.171Z",
+      "updatedAt": "2026-09-01T09:14:17.055Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -23640,14 +23384,14 @@
           "name": "Microsoft Corporation",
           "source": "subprocessor-page",
           "purpose": "Freshworks offers various AI functionalities using a combination of its own proprietary AI models and models derived from Microsoft Azure OpenAI. Users will have the ability to apply human oversight o",
-          "location": "US, EU, IND, AUS*****",
+          "location": "US, EU, IND, AUS",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
-          "name": "Microsoft Corporation (Citus Data)",
+          "name": "Microsoft Corporation (Cosmos Database)",
           "source": "subprocessor-page",
-          "purpose": "Citus Data, Inc. a company held by Microsoft Inc., is used by us to collect customer feedback on the product. In case, a customer wishes not to participate in the survey, it can be disabled from the s",
-          "location": "US, EU, AUS*****, IND",
+          "purpose": "Cosmos Data (Microsoft Corporation) is used by Freshworks to process customer activity events — such as messages received, conversations resolved, or assignments made — so they can be reflected in nea",
+          "location": "US, EU, AUS, IND",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
@@ -23705,109 +23449,9 @@
           "purpose": "Wiz is used to continuously scan and analyse cloud environments for risks,including Data Security Posture Management, vulnerability management, misconfigurations, and exposure detection. It provides v",
           "location": "US, EU, AUS, IND, ME",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Bugsnag",
-          "source": "subprocessor-page",
-          "purpose": "Provides us with error tracking and reporting for FireHydrant services",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "bugsnag"
-        },
-        {
-          "name": "Datadog",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "datadog"
-        },
-        {
-          "name": "Honeycomb (Hound Technology, Inc)",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Posthog",
-          "source": "subprocessor-page",
-          "purpose": "Provides FireHydrant with product usage reporting",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "posthog"
-        },
-        {
-          "name": "Pusher",
-          "source": "subprocessor-page",
-          "purpose": "Supports FireHydrant services by providing real-time browser updates",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Segment",
-          "source": "subprocessor-page",
-          "purpose": "Provides marketing analytics and reporting for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "segment"
-        },
-        {
-          "name": "Stripe",
-          "source": "subprocessor-page",
-          "purpose": "Support FireHydrant customers to purchase and process credit card transactions in FireHydrant.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "stripe"
-        },
-        {
-          "name": "Recall.ai",
-          "source": "subprocessor-page",
-          "purpose": "Providing video transcription services for the FireHydrant services",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "AssemblyAI",
-          "source": "subprocessor-page",
-          "purpose": "Providing audio transcription services for FireHydrant",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "assemblyai"
-        },
-        {
-          "name": "Snipply, Inc. dba Velt.dev",
-          "source": "subprocessor-page",
-          "purpose": "Providing realtime text collaboration tooling within the FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Intercom",
-          "source": "subprocessor-page",
-          "purpose": "Provides support functions and communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "intercom"
-        },
-        {
-          "name": "Salesforce",
-          "source": "subprocessor-page",
-          "purpose": "Provides sales and support automation for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "salesforce"
-        },
-        {
-          "name": "Zendesk",
-          "source": "subprocessor-page",
-          "purpose": "Provides support communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -23837,7 +23481,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:41.200Z",
-      "updatedAt": "2026-08-05T16:23:35.243Z",
+      "updatedAt": "2026-09-01T09:14:17.034Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -23994,14 +23638,14 @@
           "name": "Microsoft Corporation",
           "source": "subprocessor-page",
           "purpose": "Freshworks offers various AI functionalities using a combination of its own proprietary AI models and models derived from Microsoft Azure OpenAI. Users will have the ability to apply human oversight o",
-          "location": "US, EU, IND, AUS*****",
+          "location": "US, EU, IND, AUS",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
-          "name": "Microsoft Corporation (Citus Data)",
+          "name": "Microsoft Corporation (Cosmos Database)",
           "source": "subprocessor-page",
-          "purpose": "Citus Data, Inc. a company held by Microsoft Inc., is used by us to collect customer feedback on the product. In case, a customer wishes not to participate in the survey, it can be disabled from the s",
-          "location": "US, EU, AUS*****, IND",
+          "purpose": "Cosmos Data (Microsoft Corporation) is used by Freshworks to process customer activity events — such as messages received, conversations resolved, or assignments made — so they can be reflected in nea",
+          "location": "US, EU, AUS, IND",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
         },
         {
@@ -24059,109 +23703,9 @@
           "purpose": "Wiz is used to continuously scan and analyse cloud environments for risks,including Data Security Posture Management, vulnerability management, misconfigurations, and exposure detection. It provides v",
           "location": "US, EU, AUS, IND, ME",
           "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Bugsnag",
-          "source": "subprocessor-page",
-          "purpose": "Provides us with error tracking and reporting for FireHydrant services",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "bugsnag"
-        },
-        {
-          "name": "Datadog",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "datadog"
-        },
-        {
-          "name": "Honeycomb (Hound Technology, Inc)",
-          "source": "subprocessor-page",
-          "purpose": "Provides performance measurement and log analysis for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Posthog",
-          "source": "subprocessor-page",
-          "purpose": "Provides FireHydrant with product usage reporting",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "posthog"
-        },
-        {
-          "name": "Pusher",
-          "source": "subprocessor-page",
-          "purpose": "Supports FireHydrant services by providing real-time browser updates",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Segment",
-          "source": "subprocessor-page",
-          "purpose": "Provides marketing analytics and reporting for FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "segment"
-        },
-        {
-          "name": "Stripe",
-          "source": "subprocessor-page",
-          "purpose": "Support FireHydrant customers to purchase and process credit card transactions in FireHydrant.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "stripe"
-        },
-        {
-          "name": "Recall.ai",
-          "source": "subprocessor-page",
-          "purpose": "Providing video transcription services for the FireHydrant services",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "AssemblyAI",
-          "source": "subprocessor-page",
-          "purpose": "Providing audio transcription services for FireHydrant",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "assemblyai"
-        },
-        {
-          "name": "Snipply, Inc. dba Velt.dev",
-          "source": "subprocessor-page",
-          "purpose": "Providing realtime text collaboration tooling within the FireHydrant services.",
-          "location": "US, EU",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/"
-        },
-        {
-          "name": "Intercom",
-          "source": "subprocessor-page",
-          "purpose": "Provides support functions and communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "intercom"
-        },
-        {
-          "name": "Salesforce",
-          "source": "subprocessor-page",
-          "purpose": "Provides sales and support automation for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "salesforce"
-        },
-        {
-          "name": "Zendesk",
-          "source": "subprocessor-page",
-          "purpose": "Provides support communications for FireHydrant services.",
-          "location": "US",
-          "sourceUrl": "https://www.freshworks.com/privacy/sub-processor/",
-          "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -24191,7 +23735,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:46.601Z",
-      "updatedAt": "2026-08-05T16:23:35.253Z",
+      "updatedAt": "2026-09-01T09:14:17.851Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -24287,7 +23831,7 @@
           "sourceUrl": "https://front.com/legal/list-of-subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -24317,7 +23861,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:12.963Z",
-      "updatedAt": "2026-09-01T00:21:51.350Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 76,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -24520,7 +24064,7 @@
           "catalogVendorSlug": "anthropic"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -25238,7 +24782,7 @@
       "website": "https://www.genesys.com",
       "privacyPolicyUrl": "https://www.genesys.com/company/legal/privacy-policy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://www.genesys.com/trust/gdpr",
+      "dpaUrl": null,
       "securityPageUrl": "https://www.genesys.com/trust-center/security",
       "certifications": [],
       "frameworks": [],
@@ -25289,7 +24833,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:47.094Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:15:42.646Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -25809,7 +25353,7 @@
           "sourceUrl": "https://docs.github.com/en/site-policy/privacy-policies/github-subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -26481,7 +26025,7 @@
           "sourceUrl": "https://gong.io/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -28245,7 +27789,7 @@
           "sourceUrl": "https://greenhouse.com/subprocessors-in-use"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -28561,7 +28105,7 @@
       "website": "https://amazon.com",
       "privacyPolicyUrl": "https://amazon.com/gp/help/customer/display.html?nodeId=468496&ref_=footer_privacy",
       "trustCenterUrl": "https://trust.liveramp.com/",
-      "dpaUrl": "https://habu.com/partners/amazon-marketing-cloud/dpa-for-amc/",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -28601,7 +28145,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:49.829Z",
-      "updatedAt": "2026-03-04T02:10:55.268Z",
+      "updatedAt": "2026-09-01T08:15:46.861Z",
       "dpaComplianceScore": 78,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -28814,126 +28358,126 @@
         {
           "name": "Content Square SAS",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Paris, France",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "New York, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "London, UK",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Israel Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Tel Aviv, Israel",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Singapore PTE",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Singapore",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Spain, S.L.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Madrid, Spain",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square GmbH",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Frankfurt, Germany",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Contentsquare Japan G.K.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Tokyo, Japan",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare DXA SAAS Solutions LLC",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Dubai, UAE",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare Italy S.r.l.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Milan, Italy",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "ContentSquare Egypt",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, professional services",
+          "purpose": "Support, Professional Services",
           "location": "Cairo, Egypt",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Content Square Canada",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — professional services",
+          "purpose": "Professional Services",
           "location": "Toronto, Canada",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Germany GmbH",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Berlin, Germany",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar UK Limited",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "London, UK",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Netherlands BV",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Amsterdam, Netherlands",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Web Portugal, Unipessoal LDA",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Porto Salvo, Portugal",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Hotjar Web Services Spain S.L.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services",
+          "purpose": "Support, Maintenance, Professional Services",
           "location": "Barcelona, Spain",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Loris Technologies, Ltd.",
           "source": "subprocessor-page",
-          "purpose": "Affiliate — support, maintenance, professional services and conversational intelligence",
+          "purpose": "Support, Maintenance, Professional Services and conversational intelligence services",
           "location": "Tel Aviv, Israel",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
@@ -28961,50 +28505,117 @@
         {
           "name": "Amazon Web Services, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data hosting for Experience Analytics, User Lifecycle, Data Connect, Loris AI (region per customer selection)",
-          "location": "Ireland (EU) or USA",
+          "purpose": "Data hosting for the following plans: Pro & Enterprise andExperience Analytics Extension to Product Analytics (“DXA Extension”)",
+          "location": "Customer may select* either:Europe: Ireland (AWS-EU-West-1)orUSA: Virginia, USA (AWS-US-East-1)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
-          "name": "Microsoft Azure",
+          "name": "Amazon Web Services, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data hosting for Experience Analytics plans (region per customer selection)",
-          "location": "Ireland (EU) or USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/",
-          "catalogVendorSlug": "microsoft-azure"
+          "purpose": "Data hosting",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above: Europe: Ireland (AWS-E",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "See “Product Analytics” section below for further sub-processors utilized for this feature",
+          "source": "subprocessor-page",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting for Data Connect",
+          "location": "Based on the location of the Customer: Europe: Frankfurt, Germany (AWS-EU-Central-1) or USA: Virgini",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Amazon Web Services Bedrock",
           "source": "subprocessor-page",
-          "purpose": "LLM for Sense AI features (Sense Chat, Error Summaries, Mapping Assistant, Session Replay Summaries)",
-          "location": "EU or USA regions",
+          "purpose": "Provides Large Language Model (LLM) for the following plans:Growth, Pro, and Enterprise",
+          "location": "Based on the location of the Customer, LLM is served from: Europe: Ireland (AWS-EU-West-1),United Ki",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
-          "name": "Microsoft Corporation (Azure OpenAI Service)",
+          "name": "Microsoft Corporation (Azure)",
           "source": "subprocessor-page",
-          "purpose": "LLM for Hotjar AI for Surveys and Conversation Intelligence",
-          "location": "France, EU/US/APAC regions",
+          "purpose": "Provides Large Language Model (LLM) for the following plans:Growth, Pro, and Enterprise",
+          "location": "Based on the location of the Customer, LLM is served from: EuropeorUSA",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Customer may select either:Europe: Ireland (AWS-EU-West-1),Frankfurt, Germany (AWS EU-Central-1) (at",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting for Data Connect",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above: Europe: Ireland (AWS-E",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services (AWS)",
+          "source": "subprocessor-page",
+          "purpose": "Hosting of Sense Chat and Customer Data and backups",
+          "location": "Data is hosted in the same region selected by Customer under Section 1 above:Europe: Ireland (AWS-EU",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "OpenAI OpCo, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "LLM is served in the same region selected by Customer under Section 1 above: EuropeorUSA",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Europe: Ireland (AWS-EU-West-1)",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "France",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data hosting",
+          "location": "Customer may select either: USA: Ohio, USA (AWS-US-East-2) EU: Ireland (AWS-EU-West-1)",
+          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
+        },
+        {
+          "name": "Microsoft Corporation (Azure)",
+          "source": "subprocessor-page",
+          "purpose": "Provides Large Language Model (LLM)",
+          "location": "Based on capacity, LLM is served from:Australia: New South Wales (Azure-Australia East)orEurope:Fran",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Deepgram, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Speech-to-text services (Conversation Intelligence)",
+          "purpose": "Speech-to-text services",
           "location": "San Francisco, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Snowflake Inc.",
           "source": "subprocessor-page",
-          "purpose": "Data warehouse (Conversation Intelligence)",
-          "location": "Ohio, USA",
+          "purpose": "Data warehouse",
+          "location": "USA: Ohio, USA (AWS-US-East-2)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
         {
           "name": "Salesforce, Inc.",
           "source": "subprocessor-page",
-          "purpose": "Tableau dashboard reporting feature",
+          "purpose": "Tableau Dashboard reporting feature",
           "location": "San Francisco, USA",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         },
@@ -29012,103 +28623,11 @@
           "name": "Turbopuffer Inc.",
           "source": "subprocessor-page",
           "purpose": "Vector database search and index service",
-          "location": "Ohio, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Twilio Inc.",
-          "source": "subprocessor-page",
-          "purpose": "User Interviews feature — data hosting",
-          "location": "Dublin, Ireland",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Postmark",
-          "source": "subprocessor-page",
-          "purpose": "User Tests and User Interviews — email delivery",
-          "location": "Chicago, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/",
-          "catalogVendorSlug": "postmark"
-        },
-        {
-          "name": "Tremendous, LLC",
-          "source": "subprocessor-page",
-          "purpose": "User Tests and User Interviews — participant rewards provider",
-          "location": "New York, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Atoms - Retex",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Milan, Italy",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Cardinal Path LLC",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Illinois, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Converteo SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Dentsu Manchester Limited",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Manchester, UK",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Group Onepoint SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Level Access, Inc.",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Virginia, USA",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Scaletrix.AI (Alabs AI Privacy Limited)",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Gurgaon, India",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Temesis SAS",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Paris, France",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Up Reply GmbH",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Munich, Germany",
-          "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
-        },
-        {
-          "name": "Zilker Trail Consulting",
-          "source": "subprocessor-page",
-          "purpose": "Professional services (opt-in only)",
-          "location": "Texas, USA",
+          "location": "USA: Ohio, USA (AWS-US-East-2)",
           "sourceUrl": "https://contentsquare.com/privacy-center/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -29144,7 +28663,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:50.079Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -29438,7 +28957,7 @@
           "catalogVendorSlug": "vitally"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -29780,7 +29299,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:50.584Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:39:41.550Z",
       "dpaComplianceScore": 74,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -30313,7 +29832,7 @@
       "website": "https://www.hubspot-chat.com",
       "privacyPolicyUrl": "https://legal.hubspot.com/privacy-policy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://legal.hubspot.com/dpa",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "ISO 27001",
@@ -30361,7 +29880,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:51.646Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:15:49.353Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -31503,7 +31022,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:33.722Z",
-      "updatedAt": "2026-08-17T23:33:20.011Z",
+      "updatedAt": "2026-09-01T08:40:41.656Z",
       "dpaComplianceScore": 74,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -32222,7 +31741,7 @@
           "sourceUrl": "https://intercom.com/legal/subprocessors-list"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -32581,7 +32100,7 @@
           "sourceUrl": "https://iterable.com/legal/iterable-sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -32948,7 +32467,7 @@
           "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -32994,7 +32513,7 @@
       "website": "https://www.jasper.ai",
       "privacyPolicyUrl": "https://www.jasper.ai/legal/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://jasper.ai/legal/dpa",
       "securityPageUrl": "https://jasper.ai/security",
       "certifications": [
         "SOC 2"
@@ -33245,7 +32764,7 @@
           "catalogVendorSlug": "zendesk"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -33291,7 +32810,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:42.346Z",
-      "updatedAt": "2026-08-05T16:27:50.401Z",
+      "updatedAt": "2026-09-01T08:40:53.692Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -33413,8 +32932,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for product notifications and video sharing over email",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "mailchimp"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "MessageBird USA, Inc",
@@ -33435,8 +32953,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for mobile product notifications and video sharing",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "onesignal"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Plivo, Inc.",
@@ -33492,8 +33009,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Customer service and technical support",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Amazon Web Services, Inc. (AWS Bedrock)",
@@ -33507,8 +33023,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Generative AI services provider for intelligence product features",
           "location": "Location of Processing USA, EEA (Belgium, Netherlands, Finland), Singapore, Taiwan",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "google-vertex-ai"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Databricks, Inc.",
@@ -33532,7 +33047,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -33562,7 +33077,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:46.532Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -33680,8 +33195,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for product notifications and video sharing over email",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "mailchimp"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "MessageBird USA, Inc",
@@ -33702,8 +33216,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Communications technology provider for mobile product notifications and video sharing",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "onesignal"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Plivo, Inc.",
@@ -33759,8 +33272,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Customer service and technical support",
           "location": "Location of Processing USA",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "zendesk"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Amazon Web Services, Inc. (AWS Bedrock)",
@@ -33774,8 +33286,7 @@
           "source": "subprocessor-page",
           "purpose": "Nature and Purpose of Processing Generative AI services provider for intelligence product features",
           "location": "Location of Processing USA, EEA (Belgium, Netherlands, Finland), Singapore, Taiwan",
-          "sourceUrl": "https://www.atlassian.com/legal/sub-processors",
-          "catalogVendorSlug": "google-vertex-ai"
+          "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         },
         {
           "name": "Databricks, Inc.",
@@ -33799,7 +33310,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -33829,7 +33340,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:40.834Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -34791,7 +34302,7 @@
           "sourceUrl": "https://www.keepersecurity.com/legal/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -34821,7 +34332,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:10.837Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 76,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -35570,7 +35081,7 @@
       "website": "https://launchdarkly.com",
       "privacyPolicyUrl": "https://launchdarkly.com/privacy/",
       "trustCenterUrl": "https://launchdarkly.com/security/",
-      "dpaUrl": null,
+      "dpaUrl": "https://launchdarkly.com/data-processing-addendum/",
       "securityPageUrl": "https://launchdarkly.com/security/",
       "certifications": [
         "SOC 2",
@@ -35613,7 +35124,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:51.439Z",
-      "updatedAt": "2026-08-28T19:49:43.531Z",
+      "updatedAt": "2026-09-01T08:44:23.086Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -35693,7 +35204,7 @@
       "website": "https://www.dealfront.com",
       "privacyPolicyUrl": "https://leadfeeder.com/privacy/",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://help.leadfeeder.com/en/articles/13921491-when-do-we-need-a-dpa-and-how-is-it-concluded",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -35736,7 +35247,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:01:55.047Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:44:19.224Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -36371,7 +35882,7 @@
           "sourceUrl": "https://www.employinc.com/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -36688,7 +36199,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:47.031Z",
-      "updatedAt": "2026-08-05T16:17:51.193Z",
+      "updatedAt": "2026-09-01T08:44:23.815Z",
       "dpaComplianceScore": 81,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 83
@@ -37227,7 +36738,7 @@
           "catalogVendorSlug": "zuora"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -37965,7 +37476,7 @@
           "sourceUrl": "https://www.atlassian.com/legal/privacy-policy"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -38425,7 +37936,7 @@
       "website": "https://www.lusha.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.lusha.com/legal/dpa-2-2/",
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -38474,7 +37985,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:50.639Z",
-      "updatedAt": "2026-06-01T08:32:54.244Z",
+      "updatedAt": "2026-09-01T08:45:18.616Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -38986,7 +38497,7 @@
       "website": "https://www.mailgun.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.mailgun.com/fr/legal/dpa-ancien/",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -39026,7 +38537,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-08-30T23:56:11.324Z",
+      "updatedAt": "2026-09-01T08:46:09.410Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -39327,7 +38838,7 @@
           "sourceUrl": "https://mailtrap.io/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -39404,7 +38915,7 @@
           "sourceUrl": "https://malwarebytes.com/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -39997,7 +39508,7 @@
           "sourceUrl": "https://mattermost.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -40027,7 +39538,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:11.497Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -40743,7 +40254,7 @@
       "website": "https://messagebird.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": "https://bird.com/en-us/legal/dpa",
+      "dpaUrl": "https://bird.com/legal/dpa",
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -40786,7 +40297,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:49.196Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:16:05.333Z",
       "dpaComplianceScore": 91,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
@@ -43395,7 +42906,7 @@
           "sourceUrl": "https://monday.com/l/privacy/sub-processors-subsidiaries-support/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -44630,7 +44141,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:44.577Z",
-      "updatedAt": "2026-08-21T02:51:44.587Z",
+      "updatedAt": "2026-09-01T08:51:48.743Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -44857,7 +44368,7 @@
           "catalogVendorSlug": "sendgrid"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -45305,7 +44816,7 @@
           "sourceUrl": "https://www.nosto.com/legal/privacy-nosto-subprocessors/"
         },
         {
-          "name": "MongoDB, Inc.",
+          "name": "MongoDB, Inc.,",
           "source": "subprocessor-page",
           "purpose": "Backup storage",
           "location": "United States",
@@ -45319,7 +44830,7 @@
           "sourceUrl": "https://www.nosto.com/legal/privacy-nosto-subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -45349,7 +44860,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:02.567Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T09:14:20.616Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -46316,7 +45827,7 @@
       "website": "https://onesignal.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://onesignal.com/dpa",
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -46361,7 +45872,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T17:06:40.948Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:55:06.614Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -47528,7 +47039,7 @@
           "sourceUrl": "https://www.outreach.ai/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -48158,7 +47669,7 @@
           "sourceUrl": "https://www.pagerduty.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -48264,7 +47775,7 @@
       "website": "https://www.pandadoc.com",
       "privacyPolicyUrl": "https://www.pandadoc.com/legal/privacy-notice/",
       "trustCenterUrl": "https://www.pandadoc.com/security/",
-      "dpaUrl": "https://www.pandadoc.com/legal/dpa/",
+      "dpaUrl": null,
       "securityPageUrl": "https://www.pandadoc.com/security/",
       "certifications": [
         "SOC 2",
@@ -48307,7 +47818,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:51.301Z",
-      "updatedAt": "2026-08-05T16:25:22.287Z",
+      "updatedAt": "2026-09-01T08:16:14.988Z",
       "dpaComplianceScore": 61,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 50
@@ -48695,7 +48206,7 @@
       "website": "https://www.payoneer.com",
       "privacyPolicyUrl": "https://www.payoneer.com/legal/privacy-policy/",
       "trustCenterUrl": null,
-      "dpaUrl": "https://www.payoneer.com/legal/biometric-data-processing/",
+      "dpaUrl": null,
       "securityPageUrl": "https://www.payoneer.com/about/security-center/",
       "certifications": [
         "PCI DSS",
@@ -48738,7 +48249,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:11.655Z",
-      "updatedAt": "2026-08-05T16:25:35.815Z",
+      "updatedAt": "2026-09-01T08:16:16.020Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -49026,7 +48537,7 @@
           "sourceUrl": "https://trust.pendo.io/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -49515,8 +49026,8 @@
           "sourceUrl": "https://security.pinecone.io/ (Subprocessors)"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
-      "subprocessorsSourceStatus": "gone",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
+      "subprocessorsSourceStatus": "blocked",
       "transferSafeguards": null,
       "supportsDsars": null,
       "hasDesignatedDpo": null,
@@ -49876,7 +49387,7 @@
       "website": "https://www.pipedrive.com",
       "privacyPolicyUrl": "https://www.pipedrive.com/en/privacy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.pipedrive.com/en/privacy/dpa",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -49922,7 +49433,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:05.966Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T08:56:54.904Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -50182,8 +49693,8 @@
           "sourceUrl": "https://planhat.com/legal/subprocessor-disclosure"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
-      "subprocessorsSourceStatus": "ok",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
+      "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
       "hasDesignatedDpo": null,
@@ -50212,7 +49723,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T23:48:59.062Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -50813,7 +50324,7 @@
           "sourceUrl": "https://posthog.com/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -51034,7 +50545,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:07.100Z",
-      "updatedAt": "2026-03-04T02:11:13.574Z",
+      "updatedAt": "2026-09-01T08:57:17.236Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -51711,12 +51222,6 @@
           "sourceUrl": "https://www.productboard.com/subprocessors/"
         },
         {
-          "name": "Tray.io, Inc (only for selected customers who require integration with Tray)",
-          "source": "subprocessor-page",
-          "location": "United States",
-          "sourceUrl": "https://www.productboard.com/subprocessors/"
-        },
-        {
           "name": "OpenAI, LLC",
           "source": "subprocessor-page",
           "location": "United States",
@@ -51771,7 +51276,7 @@
           "sourceUrl": "https://www.productboard.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -51801,7 +51306,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:46.326Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -52166,7 +51671,7 @@
           "sourceUrl": "https://www.pushwoosh.com/sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -52438,7 +51943,7 @@
           "catalogVendorSlug": "cloudflare"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -52556,7 +52061,7 @@
           "catalogVendorSlug": "cloudflare"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -53409,7 +52914,7 @@
           "catalogVendorSlug": "zoom"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -53642,7 +53147,7 @@
       "website": "https://www.recall.ai",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://recall.ai/data-processing-agreement",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -53682,7 +53187,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-08-30T23:56:11.324Z",
+      "updatedAt": "2026-09-01T08:57:59.685Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -53862,7 +53367,7 @@
           "sourceUrl": "http://getrecharge.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -53892,7 +53397,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T23:52:27.446Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 72,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -54020,7 +53525,7 @@
           "sourceUrl": "https://recurly.com/legal/privacy/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -54460,8 +53965,8 @@
           "sourceUrl": "https://trust.redis.io/ (Legal & Privacy → Subprocessors; also redis.io/legal/subprocessors/)"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
-      "subprocessorsSourceStatus": "gone",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
+      "subprocessorsSourceStatus": "blocked",
       "transferSafeguards": null,
       "supportsDsars": null,
       "hasDesignatedDpo": null,
@@ -54936,7 +54441,7 @@
           "sourceUrl": "https://resend.com/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -55578,7 +55083,7 @@
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
-          "name": "Deepgram",
+          "name": "Deepgram Deepgram Subprocessors",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Speech-to-text transcription services",
           "location": "Location of Processing United States 548 Market St, Suite 25104 San Francisco, California 94104, Uni",
@@ -55714,7 +55219,7 @@
           "name": "Zoom Video Communications, Inc.",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Video Hosting",
-          "location": "Location of Processing United States Zoom Video Communications, Inc.",
+          "location": "Location of Processing United States Zoom Video Communications, Inc. 55 Almaden Blvd San Jose, CA 95",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
@@ -55907,7 +55412,7 @@
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
-          "name": "Deepgram",
+          "name": "Deepgram Deepgram Subprocessors",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Speech-to-text transcription services",
           "location": "Location of Processing United States 548 Market St, Suite 25104 San Francisco, California 94104, Uni",
@@ -56085,7 +55590,7 @@
           "name": "Cloudflare",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Content Delivery and Traffic Filtering",
-          "location": "Location of Processing United States/Global Cloudflare, Inc.",
+          "location": "Location of Processing United States/Global Cloudflare, Inc. 101 Townsend Street San Francisco, CA 9",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
@@ -56099,14 +55604,14 @@
           "name": "MUX",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing A/V Ingestion, Transcoding & Distribution",
-          "location": "Location of Processing United States Mux, Inc.",
+          "location": "Location of Processing United States Mux, Inc. 50 Beale Street, Floor 9, San Francisco, CA, 94105, U",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
           "name": "Pusher",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Websockets as a service real time in Event Messaging",
-          "location": "Location of Processing United States MessageBird UK Limited",
+          "location": "Location of Processing United States MessageBird UK Limited 6 New St Sq, New Fetter Ln, London, Grea",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
@@ -56127,7 +55632,7 @@
           "name": "Twilio Sendgrid",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Email Messaging",
-          "location": "Location of Processing United States Twilio, Inc.",
+          "location": "Location of Processing United States Twilio, Inc. 375 Beale Street Suite 300 San Francisco, CA 94105",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
@@ -56183,7 +55688,7 @@
           "name": "Cloudflare",
           "source": "subprocessor-page",
           "purpose": "Purpose of Processing Content Delivery and Traffic Filtering",
-          "location": "Location of Processing United States / Global Cloudflare, Inc.",
+          "location": "Location of Processing United States / Global Cloudflare, Inc. 101 Townsend Street San Francisco, CA",
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         },
         {
@@ -56523,7 +56028,7 @@
           "sourceUrl": "https://ringcentral.com/legal/dpa-subprocessor-list.html"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -56553,7 +56058,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:11.302Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 100
@@ -56727,7 +56232,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:10.135Z",
-      "updatedAt": "2026-08-05T16:27:51.812Z",
+      "updatedAt": "2026-09-01T08:58:31.182Z",
       "dpaComplianceScore": 67,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -57019,7 +56524,7 @@
           "sourceUrl": "https://www.rokt.com/rokt-subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -57711,7 +57216,7 @@
           "sourceUrl": "https://saleor.io/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -58818,7 +58323,7 @@
       "website": "https://www.sanity.io",
       "privacyPolicyUrl": "https://sanity.io/legal/privacy",
       "trustCenterUrl": "https://www.sanity.io/security",
-      "dpaUrl": null,
+      "dpaUrl": "https://sanity.io/legal/dpa",
       "securityPageUrl": "https://sanity.io/security",
       "certifications": [
         "SOC 2"
@@ -58866,7 +58371,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:46.685Z",
-      "updatedAt": "2026-08-05T16:28:35.001Z",
+      "updatedAt": "2026-09-01T08:58:51.043Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -59674,7 +59179,7 @@
           "sourceUrl": "https://secureframe.com/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -60422,7 +59927,7 @@
           "sourceUrl": "https://sendbird.com/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -61175,7 +60680,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:34.856Z",
-      "updatedAt": "2026-08-17T23:57:41.958Z",
+      "updatedAt": "2026-09-01T08:59:48.416Z",
       "dpaComplianceScore": 70,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -62311,7 +61816,7 @@
           "sourceUrl": "https://sinch.com/legal/data-protection-agreement-sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -62341,7 +61846,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:11.342Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 73,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 50
@@ -62873,7 +62378,7 @@
           "sourceUrl": "https://www.sketch.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -63094,7 +62599,7 @@
       "website": "https://www.smartrecruiters.com",
       "privacyPolicyUrl": "https://smartrecruiters.com/legal/general-privacy-policy/",
       "trustCenterUrl": null,
-      "dpaUrl": "https://www.smartrecruiters.com/wp-content/uploads/GDPR.jpg",
+      "dpaUrl": "https://ta.smartrecruiters.com/rs/664-NIC-529/images/Pre-signed-DPA-GDPR-SmartRecruiters-with-Customers.pdf",
       "securityPageUrl": "https://www.smartrecruiters.com/topics/security-and-compliance/",
       "certifications": [
         "SOC 2",
@@ -63402,7 +62907,7 @@
           "sourceUrl": "https://smartrecruiters.com/legal/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -63432,7 +62937,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:39.802Z",
-      "updatedAt": "2026-08-05T16:40:55.335Z",
+      "updatedAt": "2026-09-01T09:01:36.942Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -64090,7 +63595,7 @@
           "sourceUrl": "https://snowflake.com/en/legal/privacy/snowflake-sub-processors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -64136,7 +63641,7 @@
       "website": "https://snowplow.io",
       "privacyPolicyUrl": "https://snowplow.io/privacy-policy",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://snowplow.io/dpa",
       "securityPageUrl": "https://snowplow.io/security",
       "certifications": [],
       "frameworks": [],
@@ -64183,7 +63688,7 @@
           "sourceUrl": "https://snowplow.io/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -64219,7 +63724,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T18:37:23.184Z",
-      "updatedAt": "2026-08-17T19:02:23.359Z",
+      "updatedAt": "2026-09-01T09:01:42.079Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -64474,8 +63979,7 @@
           "source": "subprocessor-page",
           "purpose": "Customer relationship management services and technical support services",
           "location": "USA",
-          "sourceUrl": "https://sophos.com/es-es/legal/sub-processor",
-          "catalogVendorSlug": "salesforce"
+          "sourceUrl": "https://sophos.com/es-es/legal/sub-processor"
         },
         {
           "name": "SendSafely Inc B2B",
@@ -64660,7 +64164,7 @@
           "sourceUrl": "https://sophos.com/es-es/legal/sub-processor"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -64690,7 +64194,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:47.993Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 70,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -64706,7 +64210,7 @@
       "website": "https://www.sovrn.com",
       "privacyPolicyUrl": "https://www.sovrn.com/privacy-policy/privacy-policy/",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.sovrn.com/legal/controller-controller/",
       "securityPageUrl": "https://sovrn.com/about-sovrn/security/",
       "certifications": [],
       "frameworks": [],
@@ -64987,7 +64491,7 @@
           "sourceUrl": "https://www.sovrn.com/legal/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -65023,7 +64527,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T18:37:27.066Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -65039,7 +64543,7 @@
       "website": "https://www.sparkpost.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": "https://bird.com/en-es/legal/sparkpost-security",
-      "dpaUrl": "https://bird.com/en-us/legal/dpa",
+      "dpaUrl": "https://bird.com/legal/dpa",
       "securityPageUrl": null,
       "certifications": [
         "SOC 2",
@@ -65082,7 +64586,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T23:49:00.353Z",
-      "updatedAt": "2026-06-01T08:33:37.576Z",
+      "updatedAt": "2026-09-01T08:16:39.878Z",
       "dpaComplianceScore": 91,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
@@ -65525,7 +65029,7 @@
       "website": "https://www.sprinklr.com",
       "privacyPolicyUrl": "https://www.sprinklr.com/privacy/",
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://www.sprinklr.com/legal/",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -65571,7 +65075,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-17T23:25:35.974Z",
-      "updatedAt": "2026-08-17T23:58:21.118Z",
+      "updatedAt": "2026-09-01T09:02:03.586Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -66055,7 +65559,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-08-21T15:48:52.054Z",
-      "updatedAt": "2026-08-21T17:18:16.155Z",
+      "updatedAt": "2026-09-01T09:02:26.412Z",
       "dpaComplianceScore": 62,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 33
@@ -66362,7 +65866,7 @@
           "catalogVendorSlug": "outreach"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -66392,7 +65896,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-07-17T16:20:12.149Z",
-      "updatedAt": "2026-08-05T16:42:08.413Z",
+      "updatedAt": "2026-09-01T09:03:07.896Z",
       "dpaComplianceScore": 72,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 33
@@ -66856,7 +66360,7 @@
           "name": "Stripe Payments Canada, Ltd.",
           "source": "subprocessor-page",
           "purpose": "Canada",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/en-ca/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -66870,14 +66374,14 @@
           "name": "Stripe, Inc. (until January 2, 2026) Stripe, LLC (per January 3, 2026)",
           "source": "subprocessor-page",
           "purpose": "United States",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Payments Company",
           "source": "subprocessor-page",
           "purpose": "United States",
-          "location": "Please see and",
+          "location": "Please see https://stripe.com/ssa and https://stripe.com/legal/spc",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -66926,14 +66430,14 @@
           "name": "Stripe Payments Australia Pty Ltd A.C.N. 160 180 343",
           "source": "subprocessor-page",
           "purpose": "Australia",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/au/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe India Private Limited",
           "source": "subprocessor-page",
           "purpose": "India",
-          "location": "Please see In order to meet regulatory data localization requirements for Indian payment transaction",
+          "location": "Please see https://stripe.com/en-in/ssaIn order to meet regulatory data localization requirements fo",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -66947,42 +66451,42 @@
           "name": "PT Stripe Payments Indonesia",
           "source": "subprocessor-page",
           "purpose": "Indonesia",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/id/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Japan, Inc.",
           "source": "subprocessor-page",
           "purpose": "Japan",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/en-jp/legal",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Payments Malaysia Sdn. Bhd.",
           "source": "subprocessor-page",
           "purpose": "Malaysia",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/en-my/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe New Zealand Limited",
           "source": "subprocessor-page",
           "purpose": "New Zealand",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/nz/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Payments Singapore Pte. Ltd.",
           "source": "subprocessor-page",
           "purpose": "Singapore",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/en-sg/legal",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Payments (Thailand) Ltd.",
           "source": "subprocessor-page",
           "purpose": "Thailand",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/th/legal/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -67017,7 +66521,7 @@
           "name": "Stripe Payments Europe Limited",
           "source": "subprocessor-page",
           "purpose": "Ireland",
-          "location": "Please see and .",
+          "location": "Please see https://stripe.com/ie/ssa and https://stripe.com/ie/legal/dpa.",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -67101,7 +66605,7 @@
           "name": "Stripe Payments UK, Ltd.",
           "source": "subprocessor-page",
           "purpose": "UK",
-          "location": "Together with Stripe Technology Company Limited and Stripe Payments Europe Limited",
+          "location": "Together with Stripe Technology Company Limited and Stripe Payments Europe Limited, the e-money lice",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
@@ -67122,18 +66626,18 @@
           "name": "Stripe Brasil Soluções de Pagamento - Instituição de Pagamento Ltda",
           "source": "subprocessor-page",
           "purpose": "Brazil",
-          "location": "Please see",
+          "location": "Please see https://stripe.com/br/ssa",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         },
         {
           "name": "Stripe Payments Mexico, S. de R.L. de C.V.",
           "source": "subprocessor-page",
           "purpose": "Mexico",
-          "location": "Please see Provides user support as well as internal operational support to other Stripe Affiliates.",
+          "location": "Please see https://stripe.com/en-mx/ssaProvides user support as well as internal operational support",
           "sourceUrl": "https://stripe.com/service-providers/legal"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -67169,7 +66673,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:45.492Z",
-      "updatedAt": "2026-09-01T00:20:42.533Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 80,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -67283,7 +66787,7 @@
           "sourceUrl": "https://www.sumologic.com/solutions/security/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -67541,7 +67045,7 @@
           "sourceUrl": "https://www.surveymonkey.com/mp/legal/eu-data-transfer-statement/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -67875,7 +67379,7 @@
           "sourceUrl": "https://synthesia.io/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -68357,7 +67861,7 @@
           "sourceUrl": "https://tailscale.com/dpa-subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -68753,7 +68257,7 @@
           "sourceUrl": "https://tealium.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -68800,7 +68304,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:17.979Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 82,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -68870,7 +68374,7 @@
           "sourceUrl": "https://tealium.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -68900,7 +68404,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:18.239Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -68970,7 +68474,7 @@
           "sourceUrl": "https://tealium.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -69006,7 +68510,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:02:18.105Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -69368,7 +68872,7 @@
           "catalogVendorSlug": "zoom"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -69398,7 +68902,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:47.599Z",
-      "updatedAt": "2026-08-31T23:46:40.851Z",
+      "updatedAt": "2026-09-01T09:06:52.887Z",
       "dpaComplianceScore": 63,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -70661,7 +70165,7 @@
           "sourceUrl": "https://totango.com/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -70938,7 +70442,7 @@
       "website": "https://www.tradedoubler.com",
       "privacyPolicyUrl": "https://www.tradedoubler.com/privacy-policy",
       "trustCenterUrl": null,
-      "dpaUrl": "https://tradedoubler.com/legal/dpa",
+      "dpaUrl": null,
       "securityPageUrl": "https://tradedoubler.com/legal/security",
       "certifications": [],
       "frameworks": [],
@@ -71022,7 +70526,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:19.522Z",
-      "updatedAt": "2026-09-01T00:14:29.905Z",
+      "updatedAt": "2026-09-01T08:16:50.810Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -71097,7 +70601,7 @@
       "website": "https://tray.ai",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://tray.ai/legal/dpa/",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -71137,7 +70641,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-08-30T23:56:11.324Z",
+      "updatedAt": "2026-09-01T09:07:22.226Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -71470,7 +70974,7 @@
       "website": "https://trustarc.com",
       "privacyPolicyUrl": "https://trust.trustarc.com/en-US/policies/trustarc-privacy-notice",
       "trustCenterUrl": "https://trustarc.com/data-processing-addendum/",
-      "dpaUrl": "https://trust.trustarc.com/en-US/policies/data-processing-addendum",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [
         "SOC 2"
@@ -71519,7 +71023,7 @@
           "sourceUrl": "https://trust.trustarc.com/en-US/policies/sub-processors-and-affiliates"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -71555,7 +71059,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:47.341Z",
-      "updatedAt": "2026-08-17T20:57:16.198Z",
+      "updatedAt": "2026-09-01T08:16:51.673Z",
       "dpaComplianceScore": 86,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -71974,7 +71478,7 @@
           "sourceUrl": "https://www.twilio.com/en-us/legal/sub-processors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -72258,7 +71762,7 @@
       "website": "https://www.typeform.com",
       "privacyPolicyUrl": "https://www.typeform.com/privacy",
       "trustCenterUrl": "https://trust.typeform.com/",
-      "dpaUrl": "https://www.typeform.com/dpa",
+      "dpaUrl": "https://www.typeform.com/legal/data-processing-agreement",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -72377,7 +71881,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:20.633Z",
-      "updatedAt": "2026-03-18T01:31:34.622Z",
+      "updatedAt": "2026-09-01T08:16:53.299Z",
       "dpaComplianceScore": 74,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 67
@@ -73252,7 +72756,7 @@
           "sourceUrl": "https://www.usertesting.com/privacy-center/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -73282,7 +72786,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-03-01T23:53:42.453Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:12:35.867Z",
       "dpaComplianceScore": 87,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 83
@@ -74030,7 +73534,7 @@
           "sourceUrl": "https://trust.vanta.com/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -74465,7 +73969,7 @@
           "sourceUrl": "https://www.vidyard.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -74632,7 +74136,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:22.281Z",
-      "updatedAt": "2026-08-05T16:33:06.071Z",
+      "updatedAt": "2026-09-01T09:08:40.628Z",
       "dpaComplianceScore": 71,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -74959,7 +74463,7 @@
       "source": "processors.json",
       "senecaLitigation": null,
       "createdAt": "2026-02-09T00:02:22.533Z",
-      "updatedAt": "2026-08-05T16:33:05.469Z",
+      "updatedAt": "2026-09-01T09:08:25.830Z",
       "dpaComplianceScore": 71,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 50
@@ -75311,7 +74815,7 @@
           "sourceUrl": "https://weaviate.io/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -75751,7 +75255,7 @@
           "sourceUrl": "https://webflow.com/legal/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "unreachable",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -76826,7 +76330,7 @@
       "website": "https://woocommerce.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": "https://woocommerce.com/",
-      "dpaUrl": "https://wordpress.com/support/data-processing-agreements/",
+      "dpaUrl": null,
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -76866,7 +76370,7 @@
       "source": null,
       "senecaLitigation": null,
       "createdAt": "2026-02-27T13:25:45.365Z",
-      "updatedAt": "2026-03-02T19:23:22.458Z",
+      "updatedAt": "2026-09-01T08:17:02.837Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -77050,7 +76554,7 @@
           "sourceUrl": "https://wpvip.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -77229,7 +76733,7 @@
           "sourceUrl": "https://workable.com/subprocessors"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -77259,7 +76763,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:39.678Z",
-      "updatedAt": "2026-09-01T00:31:07.384Z",
+      "updatedAt": "2026-09-01T16:11:15.112Z",
       "dpaComplianceScore": 63,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 17
@@ -77618,7 +77122,7 @@
           "sourceUrl": "https://writer.com/legal/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -77936,7 +77440,7 @@
       "website": "https://www.xero.com",
       "privacyPolicyUrl": "https://www.xero.com/legal/privacy/",
       "trustCenterUrl": null,
-      "dpaUrl": "https://xero.com/legal/terms/data-processing/",
+      "dpaUrl": "https://www.xero.com/us/legal/terms/data-processing/",
       "securityPageUrl": "https://www.xero.com/security/",
       "certifications": [
         "SOC 2",
@@ -78186,7 +77690,7 @@
           "sourceUrl": "https://xero.com/legal/xero-subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "no-table",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -78216,7 +77720,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-03-04T13:01:49.949Z",
-      "updatedAt": "2026-08-05T17:20:58.483Z",
+      "updatedAt": "2026-09-01T08:17:04.547Z",
       "dpaComplianceScore": 56,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 0
@@ -78706,7 +78210,7 @@
           "sourceUrl": "https://www.yotpo.com/subprocessors/"
         }
       ],
-      "subprocessorsCheckedAt": "2026-09-01T00:31:28.987Z",
+      "subprocessorsCheckedAt": "2026-09-01T16:11:15.112Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": null,
       "supportsDsars": null,
@@ -78939,7 +78443,7 @@
       "website": "https://zapier.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": null,
-      "dpaUrl": null,
+      "dpaUrl": "https://zapier.com/legal/data-processing-addendum",
       "securityPageUrl": null,
       "certifications": [],
       "frameworks": [],
@@ -78979,7 +78483,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-08-30T23:56:11.324Z",
-      "updatedAt": "2026-08-30T23:56:11.324Z",
+      "updatedAt": "2026-09-01T09:10:27.488Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
