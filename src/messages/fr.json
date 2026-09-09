@@ -56,10 +56,7 @@
     "developmentMode": "Mode developpement",
     "devSignIn": "Connexion dev (Instant)",
     "localSignInTitle": "Local sign-in",
-    "localSignInBody": "Your account lives on this computer. Enter your email to open it — nothing is sent anywhere.",
-    "workspacePassphrase": "Workspace passphrase",
-    "workspacePassphraseHint": "Set when the suite was installed. Recover it on the computer that runs the suite: ./suite.sh passphrase",
-    "wrongPassphrase": "Wrong passphrase — check ./suite.sh passphrase on the host computer."
+    "localSignInBody": "Your account lives on this computer. Enter your email to open it — nothing is sent anywhere."
   },
   "nav": {
     "dashboard": "Tableau de bord",

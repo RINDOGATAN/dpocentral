@@ -20,10 +20,6 @@ export default function SignInPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [devEmail, setDevEmail] = useState("");
-  const [devPassphrase, setDevPassphrase] = useState("");
-  // Whether this install requires the workspace passphrase (runtime env on
-  // the host — WORKSPACE_PASSPHRASE — so it must be fetched, not compiled in).
-  const [passphraseRequired, setPassphraseRequired] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isDevLoading, setIsDevLoading] = useState(false);
@@ -43,26 +39,6 @@ export default function SignInPage() {
       setIsGoogleLoading(false);
     }
   }, [searchParams, t]);
-
-  // Ask the server whether local sign-in is gated by a workspace passphrase
-  useEffect(() => {
-    if (!isDev) return;
-    let cancelled = false;
-    fetch("/api/self-host/auth-config")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((config) => {
-        if (!cancelled && config) {
-          setPassphraseRequired(config.passphraseRequired === true);
-        }
-      })
-      .catch(() => {
-        // Endpoint unreachable — keep the field hidden; the server still
-        // enforces the passphrase, so this fails closed, not open.
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,15 +83,12 @@ export default function SignInPage() {
     try {
       const result = await signIn("dev-credentials", {
         email: devEmail,
-        passphrase: devPassphrase,
         redirect: false,
         callbackUrl: "/privacy",
       });
 
       if (result?.error) {
-        setError(
-          passphraseRequired ? t("wrongPassphrase") : t("devSignInFailed")
-        );
+        setError(t("devSignInFailed"));
         setIsDevLoading(false);
       } else {
         window.location.href = result?.url ?? "/privacy";
@@ -182,24 +155,6 @@ export default function SignInPage() {
                 autoFocus
                 required
               />
-              {passphraseRequired && (
-                <div className="space-y-1">
-                  <Label htmlFor="local-passphrase">
-                    {t("workspacePassphrase")}
-                  </Label>
-                  <Input
-                    id="local-passphrase"
-                    type="password"
-                    value={devPassphrase}
-                    onChange={(e) => setDevPassphrase(e.target.value)}
-                    className="input-brutal"
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    {t("workspacePassphraseHint")}
-                  </p>
-                </div>
-              )}
               {error && (
                 <div className="p-4 bg-destructive/10 border border-destructive text-destructive text-sm">
                   {error}
