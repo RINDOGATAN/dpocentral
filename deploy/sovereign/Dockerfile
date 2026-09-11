@@ -117,9 +117,9 @@ RUN npx prisma generate && rm -rf /root/.cache
 COPY package.json ./
 COPY prisma/migrations ./prisma/migrations
 COPY prisma/seed.ts ./prisma/seed.ts
-COPY scripts/assert-safe-db.ts scripts/seed-templates.ts scripts/seed-vendor-questionnaire.ts ./scripts/
+COPY scripts/assert-safe-db.ts scripts/seed-templates.ts scripts/seed-vendor-questionnaire.ts scripts/remove-untouched-demo.ts ./scripts/
 COPY src/config/jurisdiction-data.ts ./src/config/jurisdiction-data.ts
-COPY src/lib/seed-catalog-from-snapshot.ts src/lib/vendor-watch-mapper.ts src/lib/vendor-watch-types.ts ./src/lib/
+COPY src/lib/seed-catalog-from-snapshot.ts src/lib/seed-system-content.ts src/lib/vendor-watch-mapper.ts src/lib/vendor-watch-types.ts ./src/lib/
 COPY vendors/catalog-snapshot.json ./vendors/catalog-snapshot.json
 COPY deploy/sovereign/migrate.sh ./deploy/sovereign/migrate.sh
 

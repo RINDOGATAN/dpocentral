@@ -28,10 +28,11 @@ async function main() {
     `Seeding vendor catalog from catalog-snapshot.json${prune ? " (with --prune)" : ""}...`
   );
 
-  const { upserted, pruned, skipped } = await seedCatalogFromSnapshot(prisma, { prune });
+  const { upserted, kept, pruned, skipped } = await seedCatalogFromSnapshot(prisma, { prune });
 
   console.log(
-    `Catalog seed complete: ${upserted} upserted, ${pruned} pruned, ${skipped} protected orphans kept.`
+    `Catalog seed complete: ${upserted} upserted, ${kept} operator-owned rows kept, ` +
+      `${pruned} pruned, ${skipped} protected orphans kept.`
   );
 }
 

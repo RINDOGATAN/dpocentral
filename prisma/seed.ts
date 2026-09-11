@@ -4,11 +4,23 @@
 import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
 import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
 import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";
+import {
+  describeOutcome,
+  upsertSystemQuestionnaire,
+  upsertSystemTemplate,
+} from "../src/lib/seed-system-content";
 
 const prisma = new PrismaClient();
 
+// Content-only refresh (self-host boots on existing installs, see
+// deploy/sovereign/migrate.sh): upsert the built-in content we own (skill
+// packages, the vendor catalog, jurisdictions, system templates) by stable
+// identifiers, prune catalog rows retired upstream, then stop. Accounts and
+// demo data are never (re)planted into a firm's database in this mode.
+const CONTENT_ONLY = process.env.SEED_CONTENT_ONLY === "true";
+
 async function main() {
-  console.log("Seeding database...");
+  console.log(CONTENT_ONLY ? "Refreshing built-in content (SEED_CONTENT_ONLY)..." : "Seeding database...");
 
   // ============================================================
   // SKILL PACKAGES (Premium Features)
@@ -183,7 +195,7 @@ async function main() {
   // row below exists only so the hosted demo instance (which sets
   // DEMO_SEED=true explicitly) has a visible example record.
 
-  if (process.env.DEMO_SEED === "true") {
+  if (process.env.DEMO_SEED === "true" && !CONTENT_ONLY) {
     console.log("Creating demo platform admin (DEMO_SEED=true)...");
 
     await prisma.platformAdmin.upsert({
@@ -198,7 +210,7 @@ async function main() {
 
     console.log("Created demo platform admin");
   } else {
-    console.log("DEMO_SEED != true — skipping platform admin seed (none created)");
+    console.log("Skipping platform admin seed (none created; needs DEMO_SEED=true outside content-only mode)");
   }
 
   // ============================================================
@@ -211,9 +223,21 @@ async function main() {
   // catalog is core to a fresh install, so seedCatalogFromSnapshot throws
   // loudly if the snapshot is missing, unparseable, or implausibly small —
   // we deliberately do NOT swallow that. See docs/vendor-data-sourcing.md.
+  //
+  // In content-only mode the refresh also prunes, so an upgraded install ends
+  // with the same catalog as a fresh one (vendors retired or renamed upstream
+  // would otherwise linger as duplicates). The prune is scoped: it deletes
+  // only rows from our own sources, never verified, publicly-profiled or
+  // operator-curated rows, and never against an undersized snapshot.
   console.log("Seeding vendor catalog from catalog-snapshot.json...");
-  const catalogResult = await seedCatalogFromSnapshot(prisma);
-  console.log(`Seeded ${catalogResult.upserted} vendors into catalog`);
+  const catalogResult = await seedCatalogFromSnapshot(prisma, { prune: CONTENT_ONLY });
+  console.log(
+    `Seeded ${catalogResult.upserted} vendors into catalog` +
+      (catalogResult.kept ? `, ${catalogResult.kept} operator-owned rows kept` : "") +
+      (CONTENT_ONLY
+        ? `, ${catalogResult.pruned} retired rows pruned, ${catalogResult.skipped} protected rows kept`
+        : "")
+  );
 
   // Seed Jurisdictions
   //
@@ -473,13 +497,13 @@ async function main() {
     },
   };
 
-  await prisma.assessmentTemplate.upsert({
-    where: { id: "system-lia-template" },
-    update: liaTemplate,
-    create: { id: "system-lia-template", ...liaTemplate },
-  });
-
-  console.log("Created assessment templates");
+  console.log(
+    describeOutcome(
+      "LIA template",
+      "system-lia-template",
+      await upsertSystemTemplate(prisma, "system-lia-template", liaTemplate)
+    )
+  );
 
   // Seed Vendor Questionnaire Template
   const vendorQuestionnaire = {
@@ -543,17 +567,34 @@ async function main() {
     ],
   };
 
-  await prisma.vendorQuestionnaire.upsert({
-    where: { id: "system-vendor-questionnaire" },
-    update: vendorQuestionnaire,
-    create: { id: "system-vendor-questionnaire", ...vendorQuestionnaire },
-  });
+  // Version 1.0 here; scripts/seed-vendor-questionnaire.ts carries the current
+  // 2.0. The guarded upsert never downgrades, so running this seed after that
+  // one leaves 2.0 in place.
+  console.log(
+    describeOutcome(
+      "Vendor questionnaire",
+      "system-vendor-questionnaire",
+      await upsertSystemQuestionnaire(prisma, "system-vendor-questionnaire", vendorQuestionnaire)
+    )
+  );
 
-  console.log("Created vendor questionnaire template");
+  if (CONTENT_ONLY) {
+    console.log("SEED_CONTENT_ONLY — built-in content refreshed; skipping demo data.");
+    return;
+  }
 
   // ============================================================
-  // DEMO ORGANIZATION WITH SAMPLE DATA
+  // DEMO ORGANIZATION WITH SAMPLE DATA (opt-in via DEMO_SEED=true)
   // ============================================================
+  //
+  // Default installs (self-host included) get no demo organization, user or
+  // sample records. The hosted demo sets DEMO_SEED=true when it is seeded.
+
+  if (process.env.DEMO_SEED !== "true") {
+    console.log("DEMO_SEED != true — skipping demo organization and sample data.");
+    console.log("Seeding completed!");
+    return;
+  }
 
   console.log("Creating demo organization...");
 

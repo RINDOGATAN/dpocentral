@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+// Safe to run on every boot of an existing install: each template is written
+// through upsertSystemTemplate, which refreshes only system rows and never
+// replaces a newer version (e.g. one installed from a signed skill package).
+
 import { PrismaClient } from "@prisma/client";
+import { describeOutcome, upsertSystemTemplate } from "../src/lib/seed-system-content";
 
 const prisma = new PrismaClient();
 
@@ -175,12 +180,13 @@ async function main() {
     },
   };
 
-  await prisma.assessmentTemplate.upsert({
-    where: { id: "system-lia-template" },
-    update: liaTemplate,
-    create: { id: "system-lia-template", ...liaTemplate },
-  });
-  console.log("  Upserted LIA template (system-lia-template)");
+  console.log(
+    describeOutcome(
+      "LIA template",
+      "system-lia-template",
+      await upsertSystemTemplate(prisma, "system-lia-template", liaTemplate)
+    )
+  );
 
   // CUSTOM Template (Free / built-in)
   const customTemplate = {
@@ -279,12 +285,13 @@ async function main() {
     },
   };
 
-  await prisma.assessmentTemplate.upsert({
-    where: { id: "system-custom-template" },
-    update: customTemplate,
-    create: { id: "system-custom-template", ...customTemplate },
-  });
-  console.log("  Upserted CUSTOM template (system-custom-template)");
+  console.log(
+    describeOutcome(
+      "CUSTOM template",
+      "system-custom-template",
+      await upsertSystemTemplate(prisma, "system-custom-template", customTemplate)
+    )
+  );
 
   // TIA Template (Free / built-in) — EDPB Recommendations 01/2020
   const tiaTemplate = {
@@ -582,12 +589,13 @@ async function main() {
     },
   };
 
-  await prisma.assessmentTemplate.upsert({
-    where: { id: "system-tia-template" },
-    update: tiaTemplate,
-    create: { id: "system-tia-template", ...tiaTemplate },
-  });
-  console.log("  Upserted TIA template (system-tia-template)");
+  console.log(
+    describeOutcome(
+      "TIA template",
+      "system-tia-template",
+      await upsertSystemTemplate(prisma, "system-tia-template", tiaTemplate)
+    )
+  );
 
   // Load premium templates from @dpocentral/premium-skills (if installed)
   try {
@@ -608,12 +616,13 @@ async function main() {
             sections: template.sections as any,
             scoringLogic: template.scoringLogic as any,
           };
-          await prisma.assessmentTemplate.upsert({
-            where: { id: templateId },
-            update: data,
-            create: { id: templateId, ...data },
-          });
-          console.log(`  Upserted ${skill.assessmentType} template (${templateId})`);
+          console.log(
+            describeOutcome(
+              `${skill.assessmentType} template`,
+              templateId,
+              await upsertSystemTemplate(prisma, templateId, data)
+            )
+          );
         }
       }
     }

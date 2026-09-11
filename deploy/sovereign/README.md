@@ -6,7 +6,7 @@ codebase, two postures, switched by env, never forked).
 
 ```
 Postgres 16      firm privacy-program data      db
-migrator         prisma migrate deploy + first-boot seed (one-shot)
+migrator         prisma migrate deploy + seed / content refresh (one-shot)
 Next.js app      the SAME app the cloud runs    app  → http://localhost:8485
 ```
 
@@ -36,16 +36,27 @@ open http://localhost:8485
 ```
 
 Sign in at `/sign-in` with the local login box (any email creates an
-account; the seed also provides `demo@privacysuite.example` with a demo
-organization attached). Port 8485 is the suite convention for DPO Central
+account) and create your organization. No demo organization or sample
+records are seeded; for an evaluation instance only, set `DEMO_SEED=true` in
+`.env` before the first boot to get `demo@privacysuite.example` with a
+sample organization attached. Port 8485 is the suite convention for DPO Central
 (change `PORT` in `.env` if it collides with something on your host).
 
 ## Day-2 operations
 
 - **Schema after `git pull`:** `docker compose run --rm migrator` — applies
   any new committed migrations (`prisma migrate deploy`; installs created
-  before the migrations era are baselined automatically). The seed is
-  skipped once the instance has users.
+  before the migrations era are baselined automatically). Once the instance
+  has users, every run refreshes the built-in content instead of seeding:
+  the vendor catalog, the system assessment templates and the vendor
+  questionnaire are brought up to the release's version (vendors retired
+  from the catalog are removed). Only rows the release owns are touched:
+  your organizations, records and cloned templates are never changed, a
+  catalog row you added or curated is never overwritten, and a template you
+  installed from a skill package at a newer version is kept. The same run
+  removes the sample demo organization that older releases seeded, but only
+  if nobody has used it (any added or edited record, or any other member,
+  keeps it in place).
 - **Health:** `GET /api/health` returns `200 {status:"ok"}` when the app and
   database are up (503 when the DB is unreachable); the compose file wires
   it as the app container's healthcheck, so `docker compose ps` shows real
@@ -100,7 +111,7 @@ specifics:
 ## Notes & limits
 
 - Single-firm posture. The demo organization (`Acme Corporation (Demo)`) is
-  seeded for orientation; real work goes in your own organization.
+  seeded only with `DEMO_SEED=true`; real work goes in your own organization.
 - The premium modules (`@dpocentral/premium-skills`, `@dpocentral/security`)
   are private packages and are not part of this build — the app's loaders
   degrade to open-source defaults automatically.

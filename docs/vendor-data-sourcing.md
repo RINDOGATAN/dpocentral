@@ -31,6 +31,8 @@ payload, so it flows through the same mapper (`src/lib/vendor-watch-mapper.ts`).
 - `prisma/seed.ts` and `npm run db:seed-vendors` both call
   `seedCatalogFromSnapshot` (`src/lib/seed-catalog-from-snapshot.ts`), which
   reads `vendors/catalog-snapshot.json` and upserts every vendor by `slug`.
+  An existing row is refreshed only when its `source` is ours (the same set
+  the prune uses); a row from any other source is never overwritten.
   The catalog is core to a fresh install, so it fails **loudly** (throws) if
   the snapshot is missing, unparseable, or implausibly small — never a silent
   warn.
@@ -40,7 +42,9 @@ payload, so it flows through the same mapper (`src/lib/vendor-watch-mapper.ts`).
 - Reconciling existing installs: `npm run db:seed-vendors -- --prune` deletes
   vendor-catalog rows absent from the snapshot **only** when they are ours
   (`source` ∈ `vendor-watch` / `processors.json` / `seed`). It never deletes a
-  verified, publicly-profiled, or operator-curated row.
+  verified, publicly-profiled, or operator-curated row. Self-host installs
+  run this reconcile automatically on every migrator boot
+  (`SEED_CONTENT_ONLY=true npm run db:seed`, see `deploy/sovereign/migrate.sh`).
 - After a fresh install is seeded, the live sync
   (`npm run db:sync-vendor-catalog`) keeps the catalog current going forward.
 

@@ -68,6 +68,9 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://dpocentral:${POSTGRES_PASSWORD}@db:5432/dpocentral
+      # Empty = no demo organization or sample records (the default). "true"
+      # seeds them on first boot, for an evaluation instance only.
+      DEMO_SEED: ${DEMO_SEED:-}
     volumes:
       - ./migrate.sh:/migrate.sh:ro
     entrypoint: ["/bin/sh", "/migrate.sh"]

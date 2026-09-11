@@ -35,9 +35,9 @@ import { mapVendorToUpsert } from "./vendor-watch-mapper";
 export const MIN_EXPECTED = 300;
 
 /**
- * Sources this reconciler is allowed to delete during a prune. A row from any
- * OTHER source (e.g. "manual", "ai-enriched") is operator- or app-owned and is
- * never touched, even if it is absent from the snapshot.
+ * Sources we own: the seed may refresh these rows, and a prune may delete
+ * them. A row from any OTHER source (e.g. "manual", "ai-enriched") is
+ * operator- or app-owned and is never touched, neither updated nor deleted.
  */
 export const PRUNABLE_SOURCES = new Set(["vendor-watch", "processors.json", "seed"]);
 
@@ -51,6 +51,8 @@ interface CatalogSnapshot {
 
 export interface SeedCatalogResult {
   upserted: number;
+  /** Snapshot vendors whose existing row is operator-owned, left untouched. */
+  kept: number;
   pruned: number;
   skipped: number;
 }
@@ -118,17 +120,31 @@ export async function seedCatalogFromSnapshot(
   const snapshot = readSnapshot(snapshotPath);
 
   // ── Upsert every snapshot vendor by slug ────────────────────────────────
+  // Existing installs run this on every boot, so an existing row is refreshed
+  // only when it came from a source we own (the same set the prune may
+  // delete). A row from any other source (e.g. "manual") was added or
+  // curated by the operator and is left exactly as it is.
+  const existingSources = new Map(
+    (
+      await prisma.vendorCatalog.findMany({ select: { slug: true, source: true } })
+    ).map((r) => [r.slug, r.source])
+  );
   const snapshotSlugs = new Set<string>();
   let upserted = 0;
+  let kept = 0;
 
   for (const v of snapshot.vendors) {
+    snapshotSlugs.add(v.slug);
+    if (existingSources.has(v.slug) && !PRUNABLE_SOURCES.has(existingSources.get(v.slug) ?? "")) {
+      kept++;
+      continue;
+    }
     const map = mapVendorToUpsert(v); // sets source: "vendor-watch"
     await prisma.vendorCatalog.upsert({
       where: { slug: v.slug },
       create: { ...map, slug: v.slug },
       update: { ...map },
     });
-    snapshotSlugs.add(v.slug);
     upserted++;
   }
 
@@ -174,5 +190,5 @@ export async function seedCatalogFromSnapshot(
     }
   }
 
-  return { upserted, pruned, skipped };
+  return { upserted, kept, pruned, skipped };
 }

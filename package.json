@@ -23,6 +23,7 @@
     "db:sync-vendor-catalog": "tsx scripts/assert-safe-db.ts && tsx scripts/sync-vendor-catalog.ts",
     "db:seed-templates": "tsx scripts/assert-safe-db.ts && tsx scripts/seed-templates.ts",
     "db:seed-questionnaire": "tsx scripts/assert-safe-db.ts && tsx scripts/seed-vendor-questionnaire.ts",
+    "db:remove-untouched-demo": "tsx scripts/assert-safe-db.ts && tsx scripts/remove-untouched-demo.ts",
     "db:seed-demo": "tsx scripts/assert-safe-db.ts && tsx scripts/seed-demo-scenario.ts",
     "db:seed-demo-saas": "tsx scripts/assert-safe-db.ts && tsx scripts/demo/runner.ts --vertical saas",
     "db:seed-demo-healthcare": "tsx scripts/assert-safe-db.ts && tsx scripts/demo/runner.ts --vertical healthcare",

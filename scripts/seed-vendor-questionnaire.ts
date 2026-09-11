@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+// Safe to run on every boot of an existing install: the questionnaire is
+// written through upsertSystemQuestionnaire, which refreshes only the system
+// row and never replaces a newer version.
+
 import { PrismaClient } from "@prisma/client";
+import { describeOutcome, upsertSystemQuestionnaire } from "../src/lib/seed-system-content";
 
 const prisma = new PrismaClient();
 
@@ -448,14 +453,12 @@ async function main() {
     ],
   };
 
-  await prisma.vendorQuestionnaire.upsert({
-    where: { id: "system-vendor-questionnaire" },
-    update: questionnaire,
-    create: { id: "system-vendor-questionnaire", ...questionnaire },
-  });
-
   console.log(
-    "  Upserted vendor questionnaire template (system-vendor-questionnaire)"
+    describeOutcome(
+      "Vendor questionnaire",
+      "system-vendor-questionnaire",
+      await upsertSystemQuestionnaire(prisma, "system-vendor-questionnaire", questionnaire)
+    )
   );
   console.log(
     "  8 sections, 38 questions — based on SIG, CAIQ, and GDPR Article 28"

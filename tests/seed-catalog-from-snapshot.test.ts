@@ -5,6 +5,8 @@
  *
  * Asserts:
  *  - every snapshot vendor is upserted by slug (create carries source:"vendor-watch");
+ *  - an existing row is refreshed only when its source is ours; an
+ *    operator-owned row ("manual", or no source) is never overwritten;
  *  - --prune deletes a stale prunable orphan but KEEPS a verified orphan and a
  *    non-prunable-source ("manual") orphan;
  *  - an undersized snapshot throws and never prunes.
@@ -63,7 +65,24 @@ describe("seedCatalogFromSnapshot", () => {
 
     // No prune requested → nothing deleted.
     expect(deleteMany).not.toHaveBeenCalled();
-    expect(res).toEqual({ upserted: 4, pruned: 0, skipped: 0 });
+    expect(res).toEqual({ upserted: 4, kept: 0, pruned: 0, skipped: 0 });
+  });
+
+  it("refreshes an existing row we own but leaves an operator-owned row untouched", async () => {
+    findMany.mockResolvedValue([
+      // Older copy of a snapshot vendor from our own source → refreshed.
+      { slug: "acme-analytics", source: "vendor-watch" },
+      // Same slug, added or curated by the operator → never overwritten.
+      { slug: "beacon-crm", source: "manual" },
+      // Legacy row with no recorded source → not provably ours, kept.
+      { slug: "cobalt-ai", source: null },
+    ]);
+
+    const res = await seedCatalogFromSnapshot(prisma, { snapshotPath: SNAPSHOT_PATH });
+
+    const upsertedSlugs = upsert.mock.calls.map((c) => (c[0] as { where: { slug: string } }).where.slug);
+    expect(upsertedSlugs.sort()).toEqual(["acme-analytics", "delta-mail"]);
+    expect(res).toEqual({ upserted: 2, kept: 2, pruned: 0, skipped: 0 });
   });
 
   it("with prune, deletes a stale prunable orphan but keeps a verified orphan and a manual orphan", async () => {

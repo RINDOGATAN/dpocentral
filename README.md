@@ -46,7 +46,7 @@ npm install
 docker compose up -d              # dev Postgres on localhost:5434
 cp .env.example .env.local        # defaults match the dev database
 npx prisma db push
-npm run db:seed                   # demo org, templates, starter vendor catalog
+DEMO_SEED=true npm run db:seed    # templates, vendor catalog (+ demo org with DEMO_SEED)
 npm run dev                       # http://localhost:3001
 ```
 

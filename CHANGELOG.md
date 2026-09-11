@@ -4,6 +4,35 @@ All notable changes to DPO Central are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [Semantic Versioning](https://semver.org).
 
+## [0.1.25] - 2026-09-11
+
+### Fixed
+
+- **Self-host installs now receive content updates.** The sovereign migrator
+  seeded only on first boot, so an upgraded install kept the vendor catalog
+  and templates it was born with (736 vendors from July against 884 on a
+  fresh install). Existing installs now refresh the built-in content on
+  every boot through a content-only seed mode (`SEED_CONTENT_ONLY`): the
+  vendor catalog, jurisdictions, skill packages, the system assessment
+  templates and the vendor questionnaire are upserted by stable identifiers,
+  and catalog rows retired upstream are pruned. Only rows the release owns
+  are written: a catalog row from any other source is never overwritten, and
+  a system template is never downgraded (one installed from a signed skill
+  package at a newer version is kept). No account or demo data is written in
+  this mode. A failed refresh is logged and the app still starts.
+- **Demo data now actually requires `DEMO_SEED=true`.** The demo
+  organization, demo user and sample records were seeded on every fresh
+  install although this changelog said otherwise; they are now gated like
+  the demo platform admin. The sovereign compose file passes `DEMO_SEED`
+  through to the migrator (empty by default).
+- **Existing installs drop the unused demo organization.** On boot, the
+  migrator removes the demo organization and demo user that earlier
+  releases seeded, but only when nobody has used them: any other member,
+  any added or edited record, or any audit activity keeps them, and the
+  deletion is checked table by table inside a transaction. It never runs
+  where `DEMO_SEED=true`. Available on its own as
+  `npm run db:remove-untouched-demo` (`-- --dry-run` to preview).
+
 ## [1.0.0] - 2026-07-06
 
 First public release of DPO Central, a multi-tenant privacy operations
