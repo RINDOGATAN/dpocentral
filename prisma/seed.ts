@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
+import { PrismaClient, AssessmentType, BillingInterval, Prisma } from "@prisma/client";
 import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
+import { SKILL_PRICE_CENTS, SKILL_PRICE_CURRENCY } from "../src/config/skill-packages";
 import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";
 import {
   describeOutcome,
@@ -53,8 +54,9 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
-      priceAmount: 900,
-      priceCurrency: "eur",
+      priceAmount: SKILL_PRICE_CENTS,
+      priceCurrency: SKILL_PRICE_CURRENCY,
+      billingInterval: BillingInterval.YEAR,
     },
     {
       id: "skill-dpia",
@@ -66,8 +68,9 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_DPIA,
-      priceAmount: 900,
-      priceCurrency: "eur",
+      priceAmount: SKILL_PRICE_CENTS,
+      priceCurrency: SKILL_PRICE_CURRENCY,
+      billingInterval: BillingInterval.YEAR,
     },
     {
       id: "skill-pia",
@@ -79,8 +82,9 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_PIA,
-      priceAmount: 900,
-      priceCurrency: "eur",
+      priceAmount: SKILL_PRICE_CENTS,
+      priceCurrency: SKILL_PRICE_CURRENCY,
+      billingInterval: BillingInterval.YEAR,
     },
     {
       id: "skill-tia",
@@ -105,8 +109,9 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_VENDOR,
-      priceAmount: 900,
-      priceCurrency: "eur",
+      priceAmount: SKILL_PRICE_CENTS,
+      priceCurrency: SKILL_PRICE_CURRENCY,
+      billingInterval: BillingInterval.YEAR,
     },
     {
       id: "skill-lia",
@@ -144,8 +149,9 @@ async function main() {
       isPremium: true,
       isActive: true,
       stripePriceId: STRIPE_PRICE_ROPA_EXPORT,
-      priceAmount: 900,
-      priceCurrency: "eur",
+      priceAmount: SKILL_PRICE_CENTS,
+      priceCurrency: SKILL_PRICE_CURRENCY,
+      billingInterval: BillingInterval.YEAR,
     },
     {
       id: "skill-dsar-portal",
@@ -177,9 +183,13 @@ async function main() {
   ];
 
   for (const pkg of skillPackages) {
+    // A content-only refresh (or a seed run without the STRIPE_PRICE_* env)
+    // must not blank a price id that a previous, configured run stored on
+    // hosted — leave stripePriceId alone unless this run knows a value.
+    const { stripePriceId, ...rest } = pkg;
     await prisma.skillPackage.upsert({
       where: { id: pkg.id },
-      update: pkg,
+      update: stripePriceId ? pkg : rest,
       create: pkg,
     });
   }

@@ -47,3 +47,4 @@ next-env.d.ts
 /CLAUDE.md
 /docs/AUDIT-*.md
 /scripts/test-signin.py
+/STATUS.md

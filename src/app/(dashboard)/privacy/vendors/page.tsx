@@ -37,6 +37,7 @@ import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages"
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
 
@@ -229,7 +230,7 @@ export default function VendorsPage() {
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
                     <Badge variant="secondary" className="bg-amber-100 text-amber-800">
-                      {formatPrice(9)}{t("catalog.perMonth")}
+                      {formatPrice(SKILL_PRICE_UNITS)}{t("catalog.perYear")}
                     </Badge>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">

@@ -4,11 +4,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 export function PremiumBadge() {
   return (
     <Badge variant="secondary" className="bg-amber-100 text-amber-800 text-[10px] px-1.5 py-0">
-      {formatPrice(9)}/mo
+      {formatPrice(SKILL_PRICE_UNITS)}/yr
     </Badge>
   );
 }

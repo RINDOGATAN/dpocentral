@@ -15,7 +15,6 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, organizationProcedure, adminOrgProcedure } from "../trpc";
 import { removeSubscriptionItem } from "@/lib/stripe";
-
 export const billingRouter = createTRPCRouter({
   getSubscriptionStatus: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
@@ -92,7 +91,9 @@ export const billingRouter = createTRPCRouter({
           customer: {
             include: {
               entitlements: {
-                where: { status: "ACTIVE" },
+                // TRIAL rows (flip-day grace) are offered for purchase, not
+                // shown as bought.
+                where: { status: "ACTIVE", licenseType: { not: "TRIAL" } },
                 select: { skillPackageId: true },
               },
             },
@@ -111,6 +112,7 @@ export const billingRouter = createTRPCRouter({
         description: pkg.description,
         priceAmount: pkg.priceAmount,
         priceCurrency: pkg.priceCurrency,
+        billingInterval: pkg.billingInterval,
         stripePriceId: pkg.stripePriceId,
         isEntitled: entitledPackageIds.has(pkg.id),
       }));

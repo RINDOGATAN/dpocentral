@@ -15,10 +15,11 @@ import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
-  const price = formatPrice(9);
+  const price = formatPrice(SKILL_PRICE_UNITS);
   // /privacy/billing only exists when Stripe is on (self-host redirects it
   // to /privacy/skills), so the self-service upsell links need both flags.
   const canSelfService = features.stripeEnabled && features.selfServiceUpgrade;

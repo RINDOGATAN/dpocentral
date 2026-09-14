@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 interface EnableFeatureModalProps {
   open: boolean;
@@ -170,7 +171,7 @@ export function EnableFeatureModal({
         <CardContent className="space-y-4">
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">
-              {t("price", { price: formatPrice(9) })}
+              {t("price", { price: formatPrice(SKILL_PRICE_UNITS) })}
             </p>
           </div>
 

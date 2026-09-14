@@ -134,7 +134,7 @@
       "selectTypeSubtitle": "Elige el tipo de evaluación que necesitas realizar",
       "comingSoon": "Próximamente",
       "active": "Activo",
-      "perMonth": "/mes",
+      "perYear": "/año",
       "included": "Incluido",
       "clickToEnable": "Haz clic para activar",
       "contactToEnable": "Contacta con {name} para activarlo",
@@ -1673,7 +1673,7 @@
         "lockedSubtitle": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores — las entradas no están auditadas; evalúa cada proveedor antes de confiar en los datos del catálogo",
         "active": "Activo",
         "addFromCatalog": "Añadir desde el catálogo",
-        "perMonth": "/mes",
+        "perYear": "/año",
         "enable": "Activar",
         "contactUs": "Contáctanos",
         "modalDescription": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas — evalúa cada proveedor antes de confiar en los datos del catálogo."
@@ -2228,7 +2228,7 @@
   "enableFeature": {
     "title": "Activar {skill}",
     "fallbackDescription": "Añade {skill} a tu organización.",
-    "price": "{price}/mes — cancela cuando quieras",
+    "price": "{price}/año — cancela cuando quieras",
     "cancel": "Cancelar",
     "confirm": "Activar función",
     "redirecting": "Redirigiendo…",
@@ -2269,7 +2269,7 @@
     "expires": "Caduca el {date}",
     "perpetual": "Licencia perpetua",
     "activations": "{used} de {max} activaciones usadas",
-    "perMonth": "/mes"
+    "perYear": "/año"
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
@@ -4703,10 +4703,10 @@
     },
     "premium": {
       "title": "Funciones complementarias",
-      "subtitle": "Las funciones complementarias amplían DPO Central con tipos avanzados de evaluación, inteligencia de proveedores y herramientas especializadas de cumplimiento. Cada una está disponible por {price}/mes.",
+      "subtitle": "Las funciones complementarias amplían DPO Central con tipos avanzados de evaluación, inteligencia de proveedores y herramientas especializadas de cumplimiento. Cada una está disponible por {price}/año.",
       "cardTitle": "Funciones complementarias",
       "cardBodyPrefix": "Estas funciones están disponibles como complementos por ",
-      "cardBodyMid": "/mes cada una. No están incluidas en el núcleo open source.",
+      "cardBodyMid": "/año cada una. No están incluidas en el núcleo open source.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
       "cardContact": " Contacta con nuestro equipo para habilitar funciones en tu organización.",
       "viewAddons": "Ver complementos",

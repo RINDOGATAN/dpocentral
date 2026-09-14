@@ -121,6 +121,24 @@ export async function getCustomer(
 }
 
 /**
+ * Resolve the Stripe customer for a buyer by e-mail, creating one only when
+ * none exists. The three suite apps share ONE Stripe account and identify a
+ * buyer by e-mail, so a customer created by a sibling app is reused here:
+ * one card on file, one portal, one invoice run per buyer.
+ */
+export async function findOrCreateCustomerByEmail(params: {
+  email: string;
+  name?: string;
+  metadata?: Record<string, string>;
+}): Promise<Stripe.Customer> {
+  const stripe = getStripe();
+  const existing = await stripe.customers.list({ email: params.email, limit: 1 });
+  const found = existing.data.find((c) => !c.deleted);
+  if (found) return found;
+  return createCustomer(params);
+}
+
+/**
  * Create a Stripe customer
  */
 export async function createCustomer(params: {

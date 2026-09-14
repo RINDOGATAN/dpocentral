@@ -277,13 +277,13 @@ export default function SkillsPage() {
                           </>
                         ) : isComingSoon || pkg.installed || isIncluded ? null : STOREFRONT_BUY ? (
                           // Self-host: these are downloadable marketplace skills
-                          // (€60/yr, bought externally), not an in-app $9/mo feature.
+                          // (annual licence, bought externally), not an in-app annual feature.
                           <span>{t("premiumBadge")}</span>
                         ) : (
                           pkg.priceAmount != null && (
                             <span>
                               {formatPrice(pkg.priceAmount / 100)}
-                              {t("perMonth")}
+                              {t("perYear")}
                             </span>
                           )
                         )}

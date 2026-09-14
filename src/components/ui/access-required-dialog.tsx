@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 interface AccessRequiredDialogProps {
   open: boolean;
@@ -26,7 +27,7 @@ export function AccessRequiredDialog({
 }: AccessRequiredDialogProps) {
   if (!open) return null;
 
-  const defaultMessage = `${featureName} is available as an add-on for ${formatPrice(9)}/month.`;
+  const defaultMessage = `${featureName} is available as an add-on for ${formatPrice(SKILL_PRICE_UNITS)}/year.`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -67,7 +68,7 @@ export function AccessRequiredDialog({
           <div className="mt-4 rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">Add-on Feature</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Enable this feature for your organization for {formatPrice(9)}/month. Cancel anytime.
+              Enable this feature for your organization for {formatPrice(SKILL_PRICE_UNITS)}/year. Cancel anytime.
             </p>
           </div>
         </CardContent>

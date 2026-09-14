@@ -4,10 +4,20 @@
 import { AssessmentType, EntitlementStatus, LicenseType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
+import {
+  COMPLETE_PACKAGE_SKILL_ID,
+  ROPA_EXPORT_SKILL_ID,
+  VENDOR_CATALOG_SKILL_ID,
+} from "./skill-ids";
+
+export { COMPLETE_PACKAGE_SKILL_ID, ROPA_EXPORT_SKILL_ID, VENDOR_CATALOG_SKILL_ID };
 
 // Self-hosted builds have no payment rail (Stripe is off), so every premium feature
-// is free. The per-feature unlocks (the hosted "$9 to unlock" model) apply ONLY to the
-// hosted product, where Stripe is enabled.
+// is free. The per-module unlocks (annual licence per module, same price as the
+// marketplace — src/config/skill-packages.ts) apply ONLY to the hosted product,
+// where Stripe is enabled. NOTE: this also means the build that switches Stripe on
+// paywalls every existing hosted organization at once; on flip day
+// scripts/grant-paywall-grace.ts writes TRIAL entitlements for modules in use.
 const ALL_FEATURES_FREE = !features.stripeEnabled;
 
 // Premium assessment types that require entitlements
@@ -267,9 +277,6 @@ export function isPremiumAssessmentType(assessmentType: AssessmentType): boolean
 // Feature-based Entitlements (for non-assessment skills)
 // ============================================================
 
-export const VENDOR_CATALOG_SKILL_ID = "com.nel.dpocentral.vendor-catalog";
-export const ROPA_EXPORT_SKILL_ID = "com.nel.dpocentral.ropa-export";
-export const COMPLETE_PACKAGE_SKILL_ID = "com.nel.dpocentral.complete";
 
 // The Complete package grants access to all premium assessment types and Vendor Catalog
 const COMPLETE_PACKAGE_INCLUDES = [

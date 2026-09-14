@@ -134,7 +134,7 @@
       "selectTypeSubtitle": "Choose the type of assessment you need to perform",
       "comingSoon": "Coming Soon",
       "active": "Active",
-      "perMonth": "/mo",
+      "perYear": "/yr",
       "included": "Included",
       "clickToEnable": "Click to enable",
       "contactToEnable": "Contact {name} to enable",
@@ -1673,7 +1673,7 @@
         "lockedSubtitle": "Get access to a starter catalog of common processors to speed up vendor intake — entries are not audited; assess each vendor before relying on catalog data",
         "active": "Active",
         "addFromCatalog": "Add from Catalog",
-        "perMonth": "/mo",
+        "perYear": "/yr",
         "enable": "Enable",
         "contactUs": "Contact Us",
         "modalDescription": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited — assess each vendor before relying on catalog data."
@@ -2228,7 +2228,7 @@
   "enableFeature": {
     "title": "Enable {skill}",
     "fallbackDescription": "Add {skill} to your organization.",
-    "price": "{price}/month — cancel anytime",
+    "price": "{price}/year — cancel anytime",
     "cancel": "Cancel",
     "confirm": "Enable Feature",
     "redirecting": "Redirecting…",
@@ -2269,7 +2269,7 @@
     "expires": "Expires {date}",
     "perpetual": "Perpetual licence",
     "activations": "{used} of {max} activations used",
-    "perMonth": "/mo"
+    "perYear": "/yr"
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
@@ -4703,10 +4703,10 @@
     },
     "premium": {
       "title": "Add-on Features",
-      "subtitle": "Add-on features extend DPO Central with advanced assessment types, vendor intelligence, and specialized compliance tools. Each is available for {price}/month.",
+      "subtitle": "Add-on features extend DPO Central with advanced assessment types, vendor intelligence, and specialized compliance tools. Each is available for {price}/year.",
       "cardTitle": "Add-on Features",
       "cardBodyPrefix": "These features are available as add-ons for ",
-      "cardBodyMid": "/month each. They are not included in the open-source core.",
+      "cardBodyMid": "/year each. They are not included in the open-source core.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
       "cardContact": " Contact our team to enable features for your organization.",
       "viewAddons": "View Add-ons",

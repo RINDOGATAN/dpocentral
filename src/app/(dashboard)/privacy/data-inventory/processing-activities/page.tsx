@@ -30,6 +30,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 const legalBasisLabels: Record<string, string> = {
   CONSENT: "Consent",
@@ -196,7 +197,7 @@ export default function ProcessingActivitiesPage() {
             <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
               <Lock className="w-4 h-4 mr-2 text-amber-500" />
               Export ROPA
-              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{formatPrice(9)}/mo</Badge>
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{formatPrice(SKILL_PRICE_UNITS)}/yr</Badge>
             </Button>
           )}
           <Button>

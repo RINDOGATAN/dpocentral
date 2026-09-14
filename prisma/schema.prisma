@@ -1240,6 +1240,14 @@ enum EntitlementStatus {
   SUSPENDED
 }
 
+// How a Stripe price for a package recurs. Every module is sold YEARLY at the
+// marketplace figure (owner decision 2026-09-13); MONTH exists only so a fork
+// can price differently without a schema change.
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
 model SkillPackage {
   id             String          @id @default(cuid())
   skillId        String          @unique // e.g., "com.nel.dpocentral.dpia"
@@ -1249,9 +1257,10 @@ model SkillPackage {
   description    String?         @db.Text
   isPremium      Boolean         @default(true)
   isActive       Boolean         @default(true)
-  stripePriceId  String? // Stripe Price ID for self-service checkout
-  priceAmount    Int? // Price in cents (e.g., 4900 = $49.00)
+  stripePriceId  String? // Stripe Price ID for self-service checkout (must match billingInterval)
+  priceAmount    Int? // Price in minor units per billingInterval (6000 = 60.00)
   priceCurrency  String?         @default("usd")
+  billingInterval BillingInterval @default(YEAR)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
@@ -1331,6 +1340,17 @@ model SkillActivation {
   @@unique([entitlementId, instanceId])
   @@index([customerId])
   @@map("skill_activations")
+}
+
+// Stripe webhook idempotency. Stripe retries deliveries and may send the same
+// event more than once; the event id is recorded in the same transaction as
+// the entitlement writes it caused, so a redelivery is a no-op.
+model ProcessedStripeEvent {
+  id          String   @id // Stripe event id (evt_...)
+  type        String
+  processedAt DateTime @default(now())
+
+  @@map("processed_stripe_events")
 }
 
 model PlatformAdmin {

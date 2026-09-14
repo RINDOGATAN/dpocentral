@@ -24,6 +24,7 @@ import {
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 interface EnableMultipleFeaturesModalProps {
   open: boolean;
@@ -43,7 +44,7 @@ export function EnableMultipleFeaturesModal({
 
   if (!open || !skills.length) return null;
 
-  const total = skills.length * 9;
+  const total = skills.length * SKILL_PRICE_UNITS;
 
   // If self-service upgrade is not enabled, show contact form
   if (!features.selfServiceUpgrade) {
@@ -169,7 +170,7 @@ export function EnableMultipleFeaturesModal({
 
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">
-              {formatPrice(total)}/month &mdash; cancel anytime
+              {formatPrice(total)}/year &mdash; cancel anytime
             </p>
           </div>
 

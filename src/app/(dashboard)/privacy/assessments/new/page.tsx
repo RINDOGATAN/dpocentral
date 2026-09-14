@@ -39,6 +39,7 @@ import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES, COMING_SOON_SKILL_IDS } from "@
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
+import { SKILL_PRICE_UNITS } from "@/config/skill-packages";
 
 // Premium assessment types that require entitlements
 const PREMIUM_TYPES = ["DPIA", "PIA", "VENDOR"];
@@ -287,7 +288,7 @@ export default function NewAssessmentPage() {
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                {features.stripeEnabled ? `${formatPrice(9)}${tp("perMonth")}` : tp("premiumSkill")}
+                                {features.stripeEnabled ? `${formatPrice(SKILL_PRICE_UNITS)}${tp("perYear")}` : tp("premiumSkill")}
                               </Badge>
                             )
                           ) : (

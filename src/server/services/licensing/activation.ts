@@ -144,6 +144,10 @@ export async function activateOffline(
       maxActivations: licenseFile.maxActivations,
       expiresAt: licenseFile.expiresAt ? new Date(licenseFile.expiresAt) : null,
       status: EntitlementStatus.ACTIVE,
+      // The licence file now owns this row. A Stripe subscription that used
+      // to pay for the same skill must no longer rewrite it (the webhook
+      // skips rows on another source), so drop the link.
+      stripeSubscriptionId: null,
     },
     create: {
       customerId: customer.id,

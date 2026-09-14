@@ -12,7 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
-import { createCheckoutSession, createCustomer } from "@/lib/stripe";
+import { createCheckoutSession, findOrCreateCustomerByEmail } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 
@@ -100,6 +100,10 @@ export async function POST(request: NextRequest) {
               where: {
                 skillPackageId: { in: skillPackages.map((p) => p.id) },
                 status: "ACTIVE",
+                // A flip-day TRIAL row (paywall grace) is exactly what the
+                // customer is buying their way out of — it never blocks.
+                licenseType: { not: "TRIAL" },
+                OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
               },
             },
           },
@@ -138,8 +142,9 @@ export async function POST(request: NextRequest) {
         customerId = existingByEmail.id;
         stripeCustomerId = existingByEmail.stripeCustomerId;
       } else {
-        // Create new customer
-        const stripeCustomer = await createCustomer({
+        // Create new customer (reusing a Stripe customer a sibling suite app
+        // may already have created for this e-mail)
+        const stripeCustomer = await findOrCreateCustomerByEmail({
           email: userEmail,
           name: userName || undefined,
           metadata: {
@@ -165,7 +170,7 @@ export async function POST(request: NextRequest) {
     } else if (!stripeCustomerId && customerOrg?.customer) {
       // Create Stripe customer for existing customer
       const existingCustomer = customerOrg.customer;
-      const stripeCustomer = await createCustomer({
+      const stripeCustomer = await findOrCreateCustomerByEmail({
         email: existingCustomer.email,
         name: existingCustomer.name,
         metadata: {

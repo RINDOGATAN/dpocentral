@@ -9,7 +9,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
-import { COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
+import { COMING_SOON_SKILL_IDS, SKILL_PRICE_UNITS } from "@/config/skill-packages";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { features } from "@/config/features";
-import { formatPrice } from "@/lib/currency";
+import { formatPrice, getCurrency, type Currency } from "@/lib/currency";
 
 export default function BillingPage() {
   const router = useRouter();
@@ -64,7 +64,7 @@ export default function BillingPage() {
   });
 
   // Self-hosted (Stripe disabled): there is nothing to bill — every feature
-  // is included. Showing "Inactive — €9/mo" rows here would contradict the
+  // is included. Showing "Inactive — price/year" rows here would contradict the
   // Skills page ("Installed"/"Included"), so redirect there instead.
   useEffect(() => {
     if (!features.stripeEnabled) {
@@ -90,13 +90,28 @@ export default function BillingPage() {
   // Build rows from available plans (all premium add-ons)
   const addOnRows = (plans ?? []).map((pkg) => {
     const entitlement = entitlementsBySkill.get(pkg.skillId);
-    const isActive = !!entitlement || pkg.isEntitled;
+    // A TRIAL row is the flip-day grace (scripts/grant-paywall-grace.ts):
+    // the module still works, but it is not bought — offer it for purchase.
+    const isTrial = entitlement?.licenseType === "TRIAL";
+    const isActive = (!!entitlement && !isTrial) || pkg.isEntitled;
     const isComingSoon = COMING_SOON_SKILL_IDS.has(pkg.skillId);
     return {
       id: pkg.id,
       skillId: pkg.skillId,
       name: pkg.name,
+      // Price per module from the package row (seeded from
+      // src/config/skill-packages.ts); the constant is only a fallback.
+      priceUnits: pkg.priceAmount != null ? pkg.priceAmount / 100 : SKILL_PRICE_UNITS,
+      // The row's currency, unless the visitor is on the USD override that
+      // checkout applies by geo-IP (STRIPE_PRICE_ID_USD, same amount in USD).
+      priceCurrency: (getCurrency() === "USD"
+        ? "USD"
+        : pkg.priceCurrency?.toUpperCase() === "USD"
+          ? "USD"
+          : "EUR") as Currency,
+      perInterval: pkg.billingInterval === "MONTH" ? "/month" : "/year",
       isActive,
+      isTrial,
       isComingSoon,
       entitlementId: entitlement?.id ?? null,
       stripeSubscriptionId: entitlement?.stripeSubscriptionId ?? null,
@@ -107,8 +122,15 @@ export default function BillingPage() {
   });
 
   const inactiveRows = addOnRows.filter((r) => !r.isActive && !r.isComingSoon);
-  const activeCount = addOnRows.filter((r) => r.isActive).length;
-  const monthlyTotal = activeCount * 9;
+  const activeRows = addOnRows.filter((r) => r.isActive);
+  const activeCount = activeRows.length;
+  const annualTotal = activeRows.reduce((sum, r) => sum + r.priceUnits, 0);
+  const selectedTotal = inactiveRows
+    .filter((r) => selectedIds.has(r.id))
+    .reduce((sum, r) => sum + r.priceUnits, 0);
+  const graceEndsAt = addOnRows
+    .filter((r) => r.isTrial && r.renewsAt)
+    .map((r) => r.renewsAt)[0] ?? null;
 
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
@@ -149,6 +171,19 @@ export default function BillingPage() {
           Manage your add-on features
         </p>
       </div>
+
+      {/* Paywall grace period: the organization pre-dates hosted billing */}
+      {graceEndsAt && (
+        <Card className="border-amber-500/50">
+          <CardContent className="pt-6">
+            <p className="text-sm">
+              Add-on features you were already using stay available until{" "}
+              <span className="font-semibold">{graceEndsAt}</span>. Enable them
+              below before then to keep access.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Add-on features table */}
       <Card>
@@ -205,6 +240,11 @@ export default function BillingPage() {
                         <CheckCircle2 className="h-4 w-4 text-primary" />
                         <span className="text-sm">Active</span>
                       </div>
+                    ) : row.isTrial ? (
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm">Trial until {row.renewsAt}</span>
+                      </div>
                     ) : (
                       <span className="text-sm text-muted-foreground">Inactive</span>
                     )}
@@ -224,7 +264,7 @@ export default function BillingPage() {
                       )
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{formatPrice(9)}/mo</span>
+                        <span className="text-sm text-muted-foreground">{formatPrice(row.priceUnits, row.priceCurrency)}{row.perInterval}</span>
                         {features.selfServiceUpgrade && (
                           <Button
                             variant="outline"
@@ -268,7 +308,7 @@ export default function BillingPage() {
             <div className="mt-4 flex items-center justify-between rounded-lg border p-3">
               <p className="text-sm text-muted-foreground">
                 {selectedIds.size} feature{selectedIds.size !== 1 ? "s" : ""} selected
-                &mdash; {formatPrice(selectedIds.size * 9)}/month
+                &mdash; {formatPrice(selectedTotal)}/year
               </p>
               <Button size="sm" onClick={handleEnableSelected}>
                 Enable Selected ({selectedIds.size})
@@ -278,16 +318,16 @@ export default function BillingPage() {
         </CardContent>
       </Card>
 
-      {/* Monthly total */}
+      {/* Annual total */}
       {activeCount > 0 && (
         <div className="text-sm text-muted-foreground">
           <p>
-            Your current monthly total:{" "}
-            <span className="font-semibold text-foreground">{formatPrice(monthlyTotal)}</span>
+            Your current annual total:{" "}
+            <span className="font-semibold text-foreground">{formatPrice(annualTotal)}</span>
           </p>
           <p>
-            Based on {activeCount} active add-on{activeCount !== 1 ? "s" : ""} at
-            {formatPrice(9)}/month each.
+            Based on {activeCount} active add-on{activeCount !== 1 ? "s" : ""},
+            billed yearly.
           </p>
         </div>
       )}
