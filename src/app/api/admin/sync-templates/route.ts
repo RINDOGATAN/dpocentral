@@ -2,12 +2,14 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import prisma from "@/lib/prisma";
 import { AssessmentType } from "@prisma/client";
 import { logger } from "@/lib/logger";
+import { safeEqual } from "@/lib/safe-equal";
 
-// API key for template sync (set in environment)
+// API key for template sync (set in environment). Compared in constant
+// time; the route is rate-limited per client address in src/middleware.ts
+// ("import" bucket, shared with /api/import/*).
 const SYNC_API_KEY = process.env.TEMPLATE_SYNC_API_KEY;
 
 // Max templates per sync request
@@ -25,15 +27,6 @@ interface TemplatePayload {
   scoringLogic?: any;
 }
 
-function timingSafeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    // Compare against self to consume constant time, then return false
-    crypto.timingSafeEqual(Buffer.from(a), Buffer.from(a));
-    return false;
-  }
-  return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
-}
-
 export async function POST(request: NextRequest) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const userAgent = request.headers.get("user-agent") || "unknown";
@@ -49,7 +42,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!apiKey || !timingSafeCompare(apiKey, SYNC_API_KEY)) {
+  if (!apiKey || !safeEqual(apiKey, SYNC_API_KEY)) {
     logger.warn("Template sync unauthorized attempt", { ip, userAgent });
     return NextResponse.json(
       { error: "Unauthorized" },

@@ -122,6 +122,20 @@ services:
       # redaction-cron service below). The endpoint fails CLOSED: with this
       # empty, retention-based redaction does not run.
       CRON_SECRET: ${CRON_SECRET:-}
+      # Rate limits (per-process, keyed by x-forwarded-for; see .env.example).
+      # Empty = built-in defaults. RATE_LIMIT_DISABLED=true only behind a
+      # proxy that already limits.
+      RATE_LIMIT_DISABLED: ${RATE_LIMIT_DISABLED:-}
+      RATE_LIMIT_SIGNIN: ${RATE_LIMIT_SIGNIN:-}
+      RATE_LIMIT_MAGIC_LINK: ${RATE_LIMIT_MAGIC_LINK:-}
+      RATE_LIMIT_AUTH: ${RATE_LIMIT_AUTH:-}
+      RATE_LIMIT_CHECKOUT: ${RATE_LIMIT_CHECKOUT:-}
+      RATE_LIMIT_DSAR_PUBLIC: ${RATE_LIMIT_DSAR_PUBLIC:-}
+      RATE_LIMIT_EXPORT: ${RATE_LIMIT_EXPORT:-}
+      RATE_LIMIT_HEALTH: ${RATE_LIMIT_HEALTH:-}
+      RATE_LIMIT_IMPORT: ${RATE_LIMIT_IMPORT:-}
+      RATE_LIMIT_CRON: ${RATE_LIMIT_CRON:-}
+      HEALTH_CACHE_MS: ${HEALTH_CACHE_MS:-}
       # Runtime copies of the build-time brand/posture vars so server-rendered
       # output matches the client bundles.
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}

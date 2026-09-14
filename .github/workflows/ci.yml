@@ -20,6 +20,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Dependency audit (fails on high or critical advisories)
+        # Safeguard check 6. Clean at the high threshold on 2026-09-14 (three
+        # moderate advisories open, listed in SECURITY.md "Known gaps"), so
+        # the gate blocks from the start. If it ever has to be relaxed, do it
+        # with `continue-on-error: true` and a dated comment here, never by
+        # lowering the level silently.
+        run: npm audit --audit-level=high
+
       - name: Generate Prisma client
         run: npx prisma generate
 
