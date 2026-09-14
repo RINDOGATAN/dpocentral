@@ -41,6 +41,8 @@ import {
   type LicenseFile,
 } from "@/lib/license-crypto";
 import { skillsRouter } from "@/server/routers/skills";
+import { STOREFRONT_SKILL_IDS } from "@/server/services/licensing/skill-ids";
+import { buildSkillPackageSeed } from "../prisma/skill-package-seed";
 import { callerFor, sessionFor } from "./helpers";
 
 const ORG = { id: "org-1", name: "Org", slug: "org" };
@@ -343,6 +345,64 @@ describe("skills.activateOffline flow", () => {
       message: expect.stringContaining("Activation limit reached (1)"),
     });
     expect(mocks.prisma.skillActivation.create).not.toHaveBeenCalled();
+  });
+
+  it("activates a storefront licence for each id catalogued outside the dpocentral namespace", async () => {
+    // The storefront issues licences for two privacy skills under
+    // com.nel.skills.*; activation looks the row up by that exact skillId, so
+    // the SEED must carry it. Resolve the mock from the real seed list rather
+    // than a fixture, so a row dropped from the seed fails this test.
+    const seeded = buildSkillPackageSeed({});
+    mocks.prisma.skillPackage.findUnique.mockImplementation(
+      async ({ where }: { where: { skillId?: string } }) =>
+        seeded.find((p) => p.skillId === where.skillId) ?? null
+    );
+
+    expect(STOREFRONT_SKILL_IDS).toEqual([
+      "com.nel.skills.dpia-companion",
+      "com.nel.skills.vendor-risk",
+    ]);
+
+    for (const skillId of STOREFRONT_SKILL_IDS) {
+      const row = seeded.find((p) => p.skillId === skillId);
+      expect(row, `${skillId} must be seeded`).toBeDefined();
+      expect(row?.isActive).toBe(true);
+      // Sold on the storefront only: no Stripe price, no in-app price.
+      expect(row?.stripePriceId).toBeNull();
+      expect(row?.priceAmount).toBeNull();
+
+      mocks.prisma.skillEntitlement.upsert.mockResolvedValueOnce({
+        id: `ent-${row!.id}`,
+        customerId: "cust-1",
+        skillPackageId: row!.id,
+        status: "ACTIVE",
+        maxActivations: 3,
+        expiresAt: null,
+        activations: [],
+      });
+      mocks.prisma.skillActivation.create.mockResolvedValueOnce({ id: `act-${row!.id}` });
+
+      const caller = callerWithRole("OWNER");
+      const result = await caller.activateOffline({
+        organizationId: ORG.id,
+        licenseFile: issueLicense({ licenseKey: `LIC-${row!.id}`, skillId }),
+      });
+
+      expect(result).toMatchObject({
+        success: true,
+        skillId,
+        skillName: row!.displayName,
+        activationId: `act-${row!.id}`,
+      });
+      const upsertArgs = mocks.prisma.skillEntitlement.upsert.mock.calls.at(-1)![0];
+      expect(upsertArgs.where).toEqual({
+        customerId_skillPackageId: { customerId: "cust-1", skillPackageId: row!.id },
+      });
+    }
+
+    // The two rows unlock the assessment types they are content for.
+    expect(seeded.find((p) => p.skillId === "com.nel.skills.dpia-companion")?.assessmentType).toBe("DPIA");
+    expect(seeded.find((p) => p.skillId === "com.nel.skills.vendor-risk")?.assessmentType).toBe("VENDOR");
   });
 
   it("links an existing customer (found by email) to the activating org", async () => {

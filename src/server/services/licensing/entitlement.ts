@@ -58,15 +58,20 @@ export async function checkAssessmentEntitlement(
     return { entitled: true, reason: "Free assessment type" };
   }
 
-  // Find the skill package for this assessment type
-  const skillPackage = await prisma.skillPackage.findFirst({
+  // Every active package that unlocks this assessment type. More than one may
+  // exist: DPO Central's own module (com.nel.dpocentral.dpia) and a storefront
+  // skill of the same type catalogued in the shared namespace
+  // (com.nel.skills.dpia-companion) both grant DPIA. A licence for any of
+  // them is enough.
+  const skillPackages = await prisma.skillPackage.findMany({
     where: {
       assessmentType,
       isActive: true,
     },
+    select: { id: true },
   });
 
-  if (!skillPackage) {
+  if (skillPackages.length === 0) {
     return {
       entitled: false,
       reason: `No skill package found for ${assessmentType}`,
@@ -76,10 +81,13 @@ export async function checkAssessmentEntitlement(
   // Also find the Complete package for bundle check
   const completePackage = await prisma.skillPackage.findFirst({
     where: {
-      skillId: "com.nel.dpocentral.complete",
+      skillId: COMPLETE_PACKAGE_SKILL_ID,
       isActive: true,
     },
   });
+
+  const grantingPackageIds = skillPackages.map((p) => p.id);
+  if (completePackage) grantingPackageIds.push(completePackage.id);
 
   // Find any customer linked to this organization
   const customerOrg = await prisma.customerOrganization.findFirst({
@@ -90,11 +98,7 @@ export async function checkAssessmentEntitlement(
           entitlements: {
             where: {
               status: EntitlementStatus.ACTIVE,
-              skillPackageId: {
-                in: completePackage
-                  ? [skillPackage.id, completePackage.id]
-                  : [skillPackage.id],
-              },
+              skillPackageId: { in: grantingPackageIds },
             },
           },
         },

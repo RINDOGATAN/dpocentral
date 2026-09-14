@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { PrismaClient, AssessmentType, BillingInterval, Prisma } from "@prisma/client";
+import { PrismaClient, AssessmentType, Prisma } from "@prisma/client";
 import { JURISDICTION_CORE_DATA } from "../src/config/jurisdiction-data";
-import { SKILL_PRICE_CENTS, SKILL_PRICE_CURRENCY } from "../src/config/skill-packages";
 import { seedCatalogFromSnapshot } from "../src/lib/seed-catalog-from-snapshot";
+import { buildSkillPackageSeed } from "./skill-package-seed";
 import {
   describeOutcome,
   upsertSystemQuestionnaire,
@@ -29,158 +29,9 @@ async function main() {
 
   console.log("Creating skill packages...");
 
-  // Stripe Price IDs - Set these from environment or after creating products in Stripe Dashboard
-  // Falls back to shared STRIPE_PRICE_ID when a skill-specific env var is not set
-  const STRIPE_PRICE_DEFAULT = process.env.STRIPE_PRICE_ID || null;
-  const STRIPE_PRICE_DPIA = process.env.STRIPE_PRICE_DPIA || STRIPE_PRICE_DEFAULT;
-  const STRIPE_PRICE_PIA = process.env.STRIPE_PRICE_PIA || STRIPE_PRICE_DEFAULT;
-  const STRIPE_PRICE_TIA = process.env.STRIPE_PRICE_TIA || STRIPE_PRICE_DEFAULT;
-  const STRIPE_PRICE_VENDOR = process.env.STRIPE_PRICE_VENDOR || STRIPE_PRICE_DEFAULT;
-  const STRIPE_PRICE_VENDOR_CATALOG = process.env.STRIPE_PRICE_VENDOR_CATALOG || STRIPE_PRICE_DEFAULT;
-  const STRIPE_PRICE_ROPA_EXPORT = process.env.STRIPE_PRICE_ROPA_EXPORT || STRIPE_PRICE_DEFAULT;
-
-  // These skillIds are the contract with the TODO.LAW storefront: offline
-  // licence files (see src/server/services/licensing/activation.ts) only
-  // activate when their skillId matches a row seeded here. A new sellable
-  // skill = a new entry in this array (+ an entitlement gate at its router).
-  const skillPackages = [
-    {
-      id: "skill-vendor-catalog",
-      skillId: "com.nel.dpocentral.vendor-catalog",
-      name: "VENDOR_CATALOG",
-      displayName: "Vendor Catalog",
-      assessmentType: null, // Not an assessment - it's a feature skill
-      description: "Access to a starter catalog of common MarTech, AI, and SaaS processors. Search, autofill, and track vendor information — assess each vendor before relying on catalog data.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: STRIPE_PRICE_VENDOR_CATALOG,
-      priceAmount: SKILL_PRICE_CENTS,
-      priceCurrency: SKILL_PRICE_CURRENCY,
-      billingInterval: BillingInterval.YEAR,
-    },
-    {
-      id: "skill-dpia",
-      skillId: "com.nel.dpocentral.dpia",
-      name: "DPIA",
-      displayName: "Data Protection Impact Assessment",
-      assessmentType: AssessmentType.DPIA,
-      description: "Conduct GDPR Article 35 compliant Data Protection Impact Assessments for high-risk processing activities.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: STRIPE_PRICE_DPIA,
-      priceAmount: SKILL_PRICE_CENTS,
-      priceCurrency: SKILL_PRICE_CURRENCY,
-      billingInterval: BillingInterval.YEAR,
-    },
-    {
-      id: "skill-pia",
-      skillId: "com.nel.dpocentral.pia",
-      name: "PIA",
-      displayName: "Privacy Impact Assessment",
-      assessmentType: AssessmentType.PIA,
-      description: "Comprehensive privacy impact assessments for new projects, systems, and initiatives.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: STRIPE_PRICE_PIA,
-      priceAmount: SKILL_PRICE_CENTS,
-      priceCurrency: SKILL_PRICE_CURRENCY,
-      billingInterval: BillingInterval.YEAR,
-    },
-    {
-      id: "skill-tia",
-      skillId: "com.nel.dpocentral.tia",
-      name: "TIA",
-      displayName: "Transfer Impact Assessment",
-      assessmentType: AssessmentType.TIA,
-      description: "Assess the risks of international data transfers and document appropriate safeguards.",
-      isPremium: false,
-      isActive: true,
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
-    },
-    {
-      id: "skill-vendor",
-      skillId: "com.nel.dpocentral.vendor",
-      name: "VENDOR",
-      displayName: "Vendor Risk Assessment",
-      assessmentType: AssessmentType.VENDOR,
-      description: "Evaluate third-party vendor privacy and security risks with comprehensive questionnaires.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: STRIPE_PRICE_VENDOR,
-      priceAmount: SKILL_PRICE_CENTS,
-      priceCurrency: SKILL_PRICE_CURRENCY,
-      billingInterval: BillingInterval.YEAR,
-    },
-    {
-      id: "skill-lia",
-      skillId: "com.nel.dpocentral.lia",
-      name: "LIA",
-      displayName: "Legitimate Interest Assessment",
-      assessmentType: AssessmentType.LIA,
-      description: "Document and balance legitimate interests against data subject rights.",
-      isPremium: false,
-      isActive: true,
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
-    },
-    {
-      id: "skill-custom",
-      skillId: "com.nel.dpocentral.custom",
-      name: "CUSTOM",
-      displayName: "Custom Assessment",
-      assessmentType: AssessmentType.CUSTOM,
-      description: "Create and conduct custom assessments tailored to your organization's needs.",
-      isPremium: false,
-      isActive: true,
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
-    },
-    {
-      id: "skill-ropa-export",
-      skillId: "com.nel.dpocentral.ropa-export",
-      name: "ROPA_EXPORT",
-      displayName: "ROPA Export",
-      assessmentType: null,
-      description: "Export your Record of Processing Activities (ROPA) as CSV or JSON for GDPR Article 30 compliance.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: STRIPE_PRICE_ROPA_EXPORT,
-      priceAmount: SKILL_PRICE_CENTS,
-      priceCurrency: SKILL_PRICE_CURRENCY,
-      billingInterval: BillingInterval.YEAR,
-    },
-    {
-      id: "skill-dsar-portal",
-      skillId: "com.nel.dpocentral.dsar-portal",
-      name: "DSAR_PORTAL",
-      displayName: "DSAR Public Portal",
-      assessmentType: null,
-      description: "Public-facing portal for data subjects to submit access, erasure, and other GDPR requests.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: null, // Coming soon — not purchasable yet
-      priceAmount: null,
-      priceCurrency: null,
-    },
-    // Complete Package - kept for existing entitlements, no longer sold individually
-    {
-      id: "skill-complete",
-      skillId: "com.nel.dpocentral.complete",
-      name: "COMPLETE",
-      displayName: "Complete Assessment Suite",
-      assessmentType: null, // Bundle - grants access to DPIA, PIA, TIA, VENDOR
-      description: "Full access to all premium assessment types: DPIA, PIA, TIA, and Vendor Risk Assessments. Includes Vendor Catalog access.",
-      isPremium: true,
-      isActive: true,
-      stripePriceId: null,
-      priceAmount: null,
-      priceCurrency: null,
-    },
-  ];
+  // The rows (and the storefront skillId contract) live in
+  // prisma/skill-package-seed.ts; Stripe price ids come from the environment.
+  const skillPackages = buildSkillPackageSeed(process.env);
 
   for (const pkg of skillPackages) {
     // A content-only refresh (or a seed run without the STRIPE_PRICE_* env)
