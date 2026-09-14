@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
+import { safeEqual } from "@/lib/safe-equal";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,7 +25,9 @@ export async function GET(request: Request) {
   // Fails CLOSED: if CRON_SECRET is not configured, the endpoint refuses to
   // run rather than becoming an unauthenticated trigger. Set CRON_SECRET in
   // the environment and send it as `Authorization: Bearer <secret>`.
-  const authHeader = request.headers.get("authorization");
+  // The comparison is constant-time (src/lib/safe-equal.ts) and the route
+  // is rate-limited per client address in src/middleware.ts ("cron" bucket).
+  const authHeader = request.headers.get("authorization") ?? "";
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
@@ -35,7 +38,7 @@ export async function GET(request: Request) {
     );
   }
 
-  if (authHeader !== `Bearer ${cronSecret}`) {
+  if (!safeEqual(authHeader, `Bearer ${cronSecret}`)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

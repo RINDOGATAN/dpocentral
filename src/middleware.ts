@@ -10,7 +10,31 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale } from "./i18n/config";
-import { authLimiter, checkoutLimiter, dsarPublicLimiter } from "./lib/rate-limit";
+import {
+  authLimiter,
+  checkoutLimiter,
+  cronLimiter,
+  dsarPublicLimiter,
+  healthLimiter,
+  importLimiter,
+  magicLinkLimiter,
+  signInLimiter,
+  type RateLimiter,
+} from "./lib/rate-limit";
+import { classifyRequest, type LimitedRoute } from "./lib/rate-limit-routes";
+
+// One bucket per route class; a request is counted in exactly one of them.
+// Ceilings and the RATE_LIMIT_* overrides live in src/lib/rate-limit.ts.
+const limiters: Record<LimitedRoute, RateLimiter> = {
+  magicLink: magicLinkLimiter,
+  signIn: signInLimiter,
+  auth: authLimiter,
+  checkout: checkoutLimiter,
+  dsarPublic: dsarPublicLimiter,
+  health: healthLimiter,
+  import: importLimiter,
+  cron: cronLimiter,
+};
 
 // next-intl middleware for locale routing
 const intlMiddleware = createMiddleware({
@@ -102,29 +126,12 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
 
-  // Rate limit auth routes
-  if (pathname.startsWith("/api/auth")) {
-    const result = authLimiter.check(`auth:${ip}`);
-    if (!result.success) {
-      return rateLimitResponse(result);
-    }
-  }
-
-  // Rate limit checkout/billing routes
-  if (pathname.startsWith("/api/checkout") || pathname.startsWith("/api/billing")) {
-    const result = checkoutLimiter.check(`checkout:${ip}`);
-    if (!result.success) {
-      return rateLimitResponse(result);
-    }
-  }
-
-  // Rate limit public DSAR intake + withdraw (unauthenticated). Matches tRPC
-  // paths like /api/trpc/dsar.submitPublic and dsar.withdrawPublic.
-  if (
-    pathname.startsWith("/api/trpc") &&
-    (pathname.includes("dsar.submitPublic") || pathname.includes("dsar.withdrawPublic"))
-  ) {
-    const result = dsarPublicLimiter.check(`dsar-public:${ip}`);
+  // Rate limit the public and static-key API surface, one bucket per route
+  // class (sign-in, magic link, other auth, checkout, public DSAR, health,
+  // import, cron). Per-process counters — see src/lib/rate-limit.ts.
+  const routeClass = classifyRequest(pathname, request.method);
+  if (routeClass) {
+    const result = limiters[routeClass].check(`${routeClass}:${ip}`);
     if (!result.success) {
       return rateLimitResponse(result);
     }
