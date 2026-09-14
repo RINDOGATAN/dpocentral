@@ -45,3 +45,12 @@ export const SKILL_PRICE_CURRENCY = "eur";
 export const SKILL_PRICE_INTERVAL = "YEAR" as const;
 /** Whole units for display when a package row carries no priceAmount. */
 export const SKILL_PRICE_UNITS = SKILL_PRICE_CENTS / 100;
+
+/**
+ * Marker this app writes into the metadata of every Checkout Session and
+ * Subscription it creates (`metadata.app`). The three suite apps share ONE
+ * Stripe account, so every app's webhook endpoint receives every app's
+ * events; the webhook uses this marker (and, failing that, whether the skill
+ * package ids resolve in this database) to ignore events that are not its own.
+ */
+export const BILLING_APP_ID = "dpocentral";

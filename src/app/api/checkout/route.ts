@@ -12,7 +12,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
-import { createCheckoutSession, findOrCreateCustomerByEmail } from "@/lib/stripe";
+import {
+  createCheckoutSession,
+  findOrCreateCustomerByEmail,
+  verifyCheckoutPrices,
+} from "@/lib/stripe";
+import { PriceMismatchError } from "@/lib/stripe-price-guard";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 
@@ -193,10 +198,30 @@ export async function POST(request: NextRequest) {
     const usdPriceId = process.env.STRIPE_PRICE_ID_USD;
 
     // Build line items (use USD price for US visitors if available)
+    const useUsd = isUSD && Boolean(usdPriceId);
     const lineItems = skillPackages.map((pkg) => ({
-      priceId: isUSD && usdPriceId ? usdPriceId : pkg.stripePriceId!,
+      priceId: useUsd ? usdPriceId! : pkg.stripePriceId!,
       skillPackageId: pkg.id,
     }));
+
+    // Refuse the purchase unless every Stripe price the session will carry
+    // is the package's price at the package's amount: the price ids come
+    // from env at seed time and the prices live in the Stripe dashboard, so
+    // this is the only check that the buyer is charged what the app shows.
+    // The USD price is a single yearly price at the same figure in USD.
+    await verifyCheckoutPrices(
+      skillPackages.map((pkg, i) => ({
+        priceId: lineItems[i].priceId,
+        pkg: {
+          id: pkg.id,
+          name: pkg.name,
+          priceAmount: pkg.priceAmount,
+          priceCurrency: pkg.priceCurrency,
+          billingInterval: pkg.billingInterval,
+        },
+        currencyOverride: useUsd ? "usd" : undefined,
+      }))
+    );
 
     // Create checkout session
     const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL;
@@ -227,6 +252,19 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
+    if (error instanceof PriceMismatchError) {
+      // Configuration drift between skill_packages and the Stripe
+      // dashboard. Refuse rather than charge an unadvertised figure; the
+      // specifics stay in the log.
+      logger.error("Checkout refused: Stripe price does not match package", error, {
+        priceId: error.priceId,
+        packageId: error.packageId,
+      });
+      return NextResponse.json(
+        { error: "Purchase refused: price configuration mismatch" },
+        { status: 500 }
+      );
+    }
     const message = error instanceof Error ? error.message : String(error);
     logger.error("Checkout error", error);
     return NextResponse.json(

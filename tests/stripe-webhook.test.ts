@@ -7,6 +7,9 @@
  *      subscription; rows with no billing source (TRIAL grace) are taken over.
  *  D3  Idempotency: the event id is written first, in the same transaction;
  *      a redelivery is a no-op that touches no entitlement.
+ *  D6  Foreign events: the suite shares one Stripe account, so an event of
+ *      another app (its `metadata.app`, or skill package ids unknown here)
+ *      is a 200 no-op — no Stripe fetch, no transaction, no write.
  *
  * Hermetic: Prisma and the Stripe client are module-mocked; the transaction
  * mock runs the callback against the same mocked client.
@@ -15,6 +18,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Prisma } from "@prisma/client";
 import type Stripe from "stripe";
+import { NextRequest } from "next/server";
 
 const mocks = vi.hoisted(() => ({
   prisma: {
@@ -23,6 +27,7 @@ const mocks = vi.hoisted(() => ({
     customer: { findUnique: vi.fn(), findFirst: vi.fn(), update: vi.fn() },
     customerOrganization: { upsert: vi.fn() },
     skillEntitlement: { findUnique: vi.fn(), upsert: vi.fn(), updateMany: vi.fn() },
+    skillPackage: { findMany: vi.fn() },
   },
   stripe: { verifyWebhookSignature: vi.fn(), getSubscription: vi.fn() },
 }));
@@ -33,7 +38,12 @@ vi.mock("@/config/features", () => ({ features: { stripeEnabled: true } }));
 vi.mock("next/headers", () => ({ headers: async () => ({ get: () => "sig" }) }));
 vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() } }));
 
-import { processStripeEvent, invoiceSubscriptionId } from "@/app/api/webhooks/stripe/route";
+import {
+  POST,
+  processStripeEvent,
+  invoiceSubscriptionId,
+  classifyEventOwnership,
+} from "@/app/api/webhooks/stripe/route";
 
 const CUSTOMER = { id: "cust-1", email: "buyer@test.example", stripeCustomerId: "cus_1" };
 
@@ -55,6 +65,13 @@ beforeEach(() => {
   mocks.prisma.processedStripeEvent.create.mockResolvedValue({});
   mocks.prisma.customer.findFirst.mockResolvedValue(CUSTOMER);
   mocks.prisma.skillEntitlement.updateMany.mockResolvedValue({ count: 1 });
+  // Ownership fallback: by default every skill package id an event names
+  // exists in this database (D6 overrides this per case).
+  mocks.prisma.skillPackage.findMany.mockImplementation(async ({ where }) =>
+    (where.OR as { id?: string }[])
+      .filter((clause) => clause.id)
+      .map((clause) => ({ id: clause.id, skillId: `com.nel.dpocentral.${clause.id}` }))
+  );
 });
 
 describe("invoiceSubscriptionId", () => {
@@ -218,7 +235,7 @@ describe("D3 — idempotency", () => {
       })
     );
 
-    expect(outcome).toEqual({ duplicate: true });
+    expect(outcome).toEqual({ duplicate: true, ignored: false });
     expect(mocks.prisma.skillEntitlement.updateMany).not.toHaveBeenCalled();
     expect(mocks.prisma.skillEntitlement.upsert).not.toHaveBeenCalled();
   });
@@ -228,5 +245,146 @@ describe("D3 — idempotency", () => {
     await expect(
       processStripeEvent(event("customer.subscription.deleted", { id: "sub_1", customer: "cus_1", metadata: {} }))
     ).rejects.toThrow("db down");
+  });
+});
+
+describe("D6 — events of another suite app are a 200 no-op", () => {
+  function expectUntouched() {
+    expect(mocks.stripe.getSubscription).not.toHaveBeenCalled();
+    expect(mocks.prisma.$transaction).not.toHaveBeenCalled();
+    expect(mocks.prisma.processedStripeEvent.create).not.toHaveBeenCalled();
+    expect(mocks.prisma.skillEntitlement.upsert).not.toHaveBeenCalled();
+    expect(mocks.prisma.skillEntitlement.updateMany).not.toHaveBeenCalled();
+    expect(mocks.prisma.customerOrganization.upsert).not.toHaveBeenCalled();
+  }
+
+  it("another app's marker on a subscription event: ignored before any fetch or write", async () => {
+    const outcome = await processStripeEvent(
+      event("customer.subscription.updated", {
+        id: "sub_ai",
+        status: "active",
+        customer: "cus_1", // the SAME Stripe customer: one account, one buyer
+        metadata: { app: "aisentinel", organizationId: "org-ai", skillPackageIds: "skill-dpia" },
+      })
+    );
+    expect(outcome).toEqual({ duplicate: false, ignored: true });
+    expectUntouched();
+  });
+
+  it("another app's marker on a checkout session: no subscription fetch", async () => {
+    const outcome = await processStripeEvent(
+      event("checkout.session.completed", {
+        id: "cs_ai",
+        subscription: "sub_ai",
+        customer: "cus_1",
+        customer_email: CUSTOMER.email,
+        metadata: { app: "dealroom", organizationId: "org-x", skillPackageIds: "skill-x" },
+      })
+    );
+    expect(outcome).toEqual({ duplicate: false, ignored: true });
+    expectUntouched();
+  });
+
+  it("another app's marker mirrored on a failed invoice: nothing suspended, no e-mail", async () => {
+    const outcome = await processStripeEvent(
+      event("invoice.payment_failed", {
+        customer: "cus_1",
+        parent: {
+          subscription_details: {
+            subscription: "sub_ai",
+            metadata: { app: "aisentinel", skillPackageIds: "skill-x" },
+          },
+        },
+      })
+    );
+    expect(outcome).toEqual({ duplicate: false, ignored: true });
+    expectUntouched();
+  });
+
+  it("no marker and skill package ids unknown here: ignored", async () => {
+    mocks.prisma.skillPackage.findMany.mockResolvedValue([]);
+    const outcome = await processStripeEvent(
+      event("customer.subscription.created", {
+        id: "sub_9",
+        status: "active",
+        customer: "cus_1",
+        metadata: { organizationId: "org-9", skillPackageIds: "ai-inventory,ai-registry" },
+      })
+    );
+    expect(outcome).toEqual({ duplicate: false, ignored: true });
+    expectUntouched();
+    expect(mocks.prisma.skillPackage.findMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("no marker and only some ids resolve here: ignored (conservative)", async () => {
+    mocks.prisma.skillPackage.findMany.mockResolvedValue([
+      { id: "skill-dpia", skillId: "com.nel.dpocentral.dpia" },
+    ]);
+    const ownership = await classifyEventOwnership(
+      event("customer.subscription.updated", {
+        id: "sub_9",
+        customer: "cus_1",
+        metadata: { skillPackageIds: "skill-dpia,ai-registry" },
+      })
+    );
+    expect(ownership).toEqual({
+      ours: false,
+      reason: "unknown-skill-packages",
+      detail: "ai-registry",
+    });
+  });
+
+  it("our marker settles ownership without a database lookup; ids resolving by skillId are ours too", async () => {
+    expect(
+      await classifyEventOwnership(
+        event("customer.subscription.updated", {
+          id: "sub_1",
+          customer: "cus_1",
+          metadata: { app: "dpocentral", skillPackageIds: "anything" },
+        })
+      )
+    ).toEqual({ ours: true });
+    expect(mocks.prisma.skillPackage.findMany).not.toHaveBeenCalled();
+
+    mocks.prisma.skillPackage.findMany.mockResolvedValue([
+      { id: "skill-dpia", skillId: "com.nel.dpocentral.dpia" },
+    ]);
+    expect(
+      await classifyEventOwnership(
+        event("customer.subscription.updated", {
+          id: "sub_1",
+          customer: "cus_1",
+          metadata: { skillPackageIds: "com.nel.dpocentral.dpia" },
+        })
+      )
+    ).toEqual({ ours: true });
+  });
+
+  it("our own events still flow: no marker, ids known here", async () => {
+    await processStripeEvent(
+      event("customer.subscription.deleted", {
+        id: "sub_1",
+        customer: "cus_1",
+        metadata: { skillPackageIds: "skill-dpia" },
+      })
+    );
+    expect(mocks.prisma.skillEntitlement.updateMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("POST answers 200 with ignored:true so Stripe does not retry", async () => {
+    mocks.stripe.verifyWebhookSignature.mockReturnValue(
+      event("customer.subscription.updated", {
+        id: "sub_ai",
+        status: "active",
+        customer: "cus_1",
+        metadata: { app: "aisentinel", skillPackageIds: "skill-x" },
+      })
+    );
+    const res = await POST(
+      new NextRequest("http://localhost:3001/api/webhooks/stripe", { method: "POST", body: "{}" })
+    );
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true, duplicate: false, ignored: true });
+    expectUntouched();
   });
 });

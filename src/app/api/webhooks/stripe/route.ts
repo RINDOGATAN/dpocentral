@@ -16,6 +16,11 @@
  *    with no billing source yet (TRIAL grace, admin grants), follow Stripe.
  *  - `invoice.payment_failed` suspends only the SUBSCRIPTION rows of the
  *    failed subscription, never an offline licence the customer also holds.
+ *  - Foreign events are a 200 no-op: the suite's apps share ONE Stripe
+ *    account, so this endpoint receives every app's events. An event whose
+ *    metadata names another app, or whose skill package ids do not resolve
+ *    in this database, is acknowledged and ignored before any write. (A
+ *    failure would make Stripe retry it for days.)
  *
  * AGPL-3.0 License - Part of the open-source core
  */
@@ -28,6 +33,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
+import { BILLING_APP_ID } from "@/config/skill-packages";
 import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
 import { logger } from "@/lib/logger";
 
@@ -52,6 +58,81 @@ function parseSkillPackageIds(metadata: Record<string, string> | null): string[]
     return [metadata.skillPackageId];
   }
   return [];
+}
+
+type EventMetadata = Record<string, string> | null;
+
+/**
+ * The metadata that names the app and the skill packages an event is about.
+ * Checkout sessions and subscriptions carry it directly; an invoice mirrors
+ * its subscription's metadata under `parent.subscription_details.metadata`
+ * (older API versions: `subscription_details.metadata`).
+ */
+function eventMetadata(event: Stripe.Event): EventMetadata {
+  switch (event.type) {
+    case "checkout.session.completed":
+      return ((event.data.object as Stripe.Checkout.Session).metadata ?? null) as EventMetadata;
+    case "customer.subscription.created":
+    case "customer.subscription.updated":
+    case "customer.subscription.deleted":
+      return ((event.data.object as Stripe.Subscription).metadata ?? null) as EventMetadata;
+    case "invoice.payment_failed": {
+      const invoice = event.data.object as Stripe.Invoice;
+      const legacy = (
+        invoice as unknown as { subscription_details?: { metadata?: EventMetadata } | null }
+      ).subscription_details?.metadata;
+      return (invoice.parent?.subscription_details?.metadata ?? legacy ?? null) as EventMetadata;
+    }
+    default:
+      return null;
+  }
+}
+
+export type EventOwnership =
+  | { ours: true }
+  | { ours: false; reason: "foreign-app" | "unknown-skill-packages"; detail: string };
+
+/**
+ * Decide whether an event belongs to this app. Two signals, in order:
+ *  1. `metadata.app` — written by this app's checkout since 2026-09-13; a
+ *     different value is another suite app's event, our own value settles it.
+ *  2. Without a marker (a sibling app that does not write one, or a session
+ *     created before the marker), the skill package ids: every id must
+ *     resolve to a `skill_packages` row here (by id or skillId). A list that
+ *     resolves only in part is treated as foreign (conservative: an id
+ *     collision with a sibling's seed must not grant anything here).
+ * Events carrying neither a marker nor skill package ids (an invoice with no
+ * subscription reference, an unhandled type) are left to the handlers, which
+ * already no-op when nothing here matches.
+ */
+export async function classifyEventOwnership(event: Stripe.Event): Promise<EventOwnership> {
+  const metadata = eventMetadata(event);
+  const app = metadata?.app;
+  if (app && app !== BILLING_APP_ID) {
+    return { ours: false, reason: "foreign-app", detail: app };
+  }
+  if (app === BILLING_APP_ID) {
+    return { ours: true };
+  }
+
+  const ids = parseSkillPackageIds(metadata);
+  if (!ids.length) {
+    return { ours: true };
+  }
+  const rows = await prisma.skillPackage.findMany({
+    where: { OR: ids.flatMap((id) => [{ id }, { skillId: id }]) },
+    select: { id: true, skillId: true },
+  });
+  const known = new Set<string>();
+  for (const row of rows) {
+    known.add(row.id);
+    known.add(row.skillId);
+  }
+  const unknown = ids.filter((id) => !known.has(id));
+  if (unknown.length) {
+    return { ours: false, reason: "unknown-skill-packages", detail: unknown.join(",") };
+  }
+  return { ours: true };
 }
 
 /**
@@ -154,12 +235,28 @@ interface AfterCommit {
 
 export interface ProcessOutcome {
   duplicate: boolean;
+  /** True when the event belongs to another suite app and was acknowledged untouched. */
+  ignored: boolean;
 }
 
 /**
  * Process one verified event exactly once. Exported for tests.
  */
 export async function processStripeEvent(event: Stripe.Event): Promise<ProcessOutcome> {
+  // Another app's event on the shared Stripe account: acknowledge and stop
+  // before any Stripe fetch or database write. Nothing is recorded either;
+  // a redelivery is classified the same way.
+  const ownership = await classifyEventOwnership(event);
+  if (!ownership.ours) {
+    logger.info("Ignoring Stripe event of another app", {
+      id: event.id,
+      type: event.type,
+      reason: ownership.reason,
+      detail: ownership.detail,
+    });
+    return { duplicate: false, ignored: true };
+  }
+
   // Network calls happen BEFORE the transaction opens.
   let checkoutSubscription: Stripe.Subscription | null = null;
   if (event.type === "checkout.session.completed") {
@@ -218,7 +315,7 @@ export async function processStripeEvent(event: Stripe.Event): Promise<ProcessOu
       err.code === "P2002"
     ) {
       logger.info("Duplicate Stripe event ignored", { id: event.id, type: event.type });
-      return { duplicate: true };
+      return { duplicate: true, ignored: false };
     }
     throw err;
   }
@@ -226,7 +323,7 @@ export async function processStripeEvent(event: Stripe.Event): Promise<ProcessOu
   if (after.paymentFailedEmail) {
     await sendPaymentFailedEmail(after.paymentFailedEmail);
   }
-  return { duplicate: false };
+  return { duplicate: false, ignored: false };
 }
 
 export async function POST(request: NextRequest) {
@@ -268,8 +365,13 @@ export async function POST(request: NextRequest) {
       type: event.type,
       id: event.id,
       duplicate: outcome.duplicate,
+      ignored: outcome.ignored,
     });
-    return NextResponse.json({ received: true, duplicate: outcome.duplicate });
+    return NextResponse.json({
+      received: true,
+      duplicate: outcome.duplicate,
+      ignored: outcome.ignored,
+    });
   } catch (error) {
     // A 500 makes Stripe retry; the idempotency row rolled back with the
     // transaction, so the retry is processed afresh.

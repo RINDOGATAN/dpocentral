@@ -13,6 +13,8 @@
 
 import Stripe from "stripe";
 import { features } from "@/config/features";
+import { BILLING_APP_ID } from "@/config/skill-packages";
+import { verifyPricesMatchPackages, type CheckoutPriceLine } from "@/lib/stripe-price-guard";
 
 /**
  * Stripe client instance (server-side only)
@@ -87,13 +89,18 @@ export async function createCheckoutSession(
     })),
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
+    // `app` marks the session and its subscription as this app's on the
+    // shared Stripe account; the webhook ignores events carrying another
+    // app's marker (see src/app/api/webhooks/stripe/route.ts).
     metadata: {
+      app: BILLING_APP_ID,
       organizationId: params.organizationId,
       skillPackageIds,
       ...params.metadata,
     },
     subscription_data: {
       metadata: {
+        app: BILLING_APP_ID,
         organizationId: params.organizationId,
         skillPackageIds,
       },
@@ -108,6 +115,16 @@ export async function createCheckoutSession(
   }
 
   return stripe.checkout.sessions.create(sessionParams);
+}
+
+/**
+ * Fetch every Stripe price a checkout is about to use and refuse the
+ * purchase unless each one matches its package (id, amount, currency,
+ * interval, active, recurring). Throws PriceMismatchError.
+ */
+export async function verifyCheckoutPrices(lines: CheckoutPriceLine[]): Promise<void> {
+  const stripe = getStripe();
+  await verifyPricesMatchPackages(lines, (priceId) => stripe.prices.retrieve(priceId));
 }
 
 /**
