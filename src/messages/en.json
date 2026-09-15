@@ -4519,7 +4519,7 @@
           "monitoring": { "label": "Compliance Monitoring", "value": "Active", "subtitle": "Continuous requirement tracking" }
         },
         "noteTitle": "Jurisdictions are additive",
-        "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if GDPR requires a 30-day DSAR response and LGPD requires 15 days, the system will enforce the 15-day deadline. This ensures you remain compliant with all applicable regulations simultaneously."
+        "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if GDPR requires a 30-day DSAR response and LGPD requires 15 days, the system will enforce the 15-day deadline. This helps you meet every applicable regulation at once."
       },
       "nav": {
         "previous": "Transfer Compliance",
