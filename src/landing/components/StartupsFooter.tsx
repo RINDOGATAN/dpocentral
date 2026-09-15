@@ -37,7 +37,7 @@ const StartupsFooter = ({ t }: StartupsFooterProps) => {
               {t("footer.security")}
             </a>
             <a
-              href="https://todo.law/home"
+              href="https://todo.law/"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("footer.forLawFirms")} &rarr;

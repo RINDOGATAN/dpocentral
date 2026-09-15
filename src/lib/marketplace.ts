@@ -9,7 +9,7 @@
 // yet catalogued there per-skill, so the CTA links to the marketplace root for
 // now; when they are catalogued, marketplaceSkillUrl(slug) deep-links directly.
 export const MARKETPLACE_URL = (
-  process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://todo.law/legalskills"
+  process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://todo.law/marketplace"
 ).replace(/\/+$/, "");
 
 // A self-hosted build has Stripe disabled at build time.
