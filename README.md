@@ -59,7 +59,9 @@ One codebase, two postures, switched by environment only:
 
 - **Sovereign** (self-hosted): local passwordless auth, no Stripe, optional
   OpenAI-compatible LLM gateway, your brand via `NEXT_PUBLIC_BRAND_*`.
-- **Cloud**: Google OAuth / magic links, Stripe-gated premium modules.
+- **Cloud**: Google OAuth / magic links. Premium modules can be gated by
+  Stripe (`NEXT_PUBLIC_STRIPE_ENABLED`); the gate is off today and the
+  hosted instance is a free demo.
 
 If a feature's environment variables are empty, the feature is a clean
 no-op — the app never requires an external service to boot.

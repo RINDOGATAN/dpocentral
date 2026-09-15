@@ -4519,7 +4519,7 @@
           "monitoring": { "label": "Monitorización de cumplimiento", "value": "Activa", "subtitle": "Seguimiento continuo de requisitos" }
         },
         "noteTitle": "Las jurisdicciones son acumulativas",
-        "noteBody": "Cuando varias jurisdicciones aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD requiere una respuesta DSAR en 30 días y la LGPD en 15, el sistema hará cumplir el plazo de 15 días. Así te mantienes conforme con todas las regulaciones aplicables a la vez."
+        "noteBody": "Cuando varias jurisdicciones aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD requiere una respuesta DSAR en 30 días y la LGPD en 15, el sistema hará cumplir el plazo de 15 días. Así te ayuda a cumplir todas las regulaciones aplicables a la vez."
       },
       "nav": {
         "previous": "Cumplimiento de transferencias",
