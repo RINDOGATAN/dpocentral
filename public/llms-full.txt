@@ -4,10 +4,13 @@
 
 DPO Central is an open-core GDPR privacy management platform built by TODO.LAW for startups and organizations that handle personal data. It replaces spreadsheets and fragmented workflows with five integrated privacy modules in one unified dashboard.
 
-Website: https://dpocentral.todo.law
+Hosted pilot: https://dpocentral.todo.law (free, with limits, no security certification; every module included; nothing is sold there)
+Run your own instance: https://www.todo.law/run
 Company: TODO.LAW (https://todo.law)
-License: Open Core — AGPL-3.0 (core) + Commercial (premium features)
+License: Open Core — AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
 Source: https://github.com/RINDOGATAN/dpocentral
+
+En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos y allí no se vende nada. Para datos reales de clientes, ejecuta tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ---
 
@@ -128,12 +131,19 @@ DPO Central follows an open core model:
 - AI governance register
 - Notifications & reports
 
-**Premium (Commercial License — €9/mo per feature)**:
+**Premium modules (€60 a year each in the kit, activated offline with a licence file)**:
 - DPIA, PIA, TIA assessment templates & scoring
 - Vendor risk assessments & scoring
 - Vendor Catalog (starter catalog of common processors)
 - ROPA export (PDF/DOCX)
 - Advanced audit features
+
+**Hosted pilot (free, with limits)**: every module above is included at no
+cost. Limits: one organization per account; edits for 90 days, then
+read-only with every export still available; a ceiling on records per
+organization (for example 25 systems, 50 vendors, 100 data subject
+requests). No security certification. For real client data, run your own
+instance: https://www.todo.law/run
 
 ---
 
@@ -146,7 +156,6 @@ DPO Central follows an open core model:
 - TLS-only with HSTS (2-year max-age), CSP, X-Frame-Options, X-Content-Type-Options
 - Full audit logging
 - Data minimization by design
-- Stripe-verified payment processing (no card data touches our servers)
 - Edge network deployment (Vercel)
 
 ---
@@ -164,7 +173,8 @@ DPO Central follows an open core model:
 
 ## Links
 
-- Application: https://dpocentral.todo.law
+- Hosted pilot: https://dpocentral.todo.law
+- Run your own instance: https://www.todo.law/run
 - Documentation: https://dpocentral.todo.law/docs
 - Data Security: https://dpocentral.todo.law/security
 - Company: https://todo.law

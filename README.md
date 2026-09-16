@@ -59,9 +59,16 @@ One codebase, two postures, switched by environment only:
 
 - **Sovereign** (self-hosted): local passwordless auth, no Stripe, optional
   OpenAI-compatible LLM gateway, your brand via `NEXT_PUBLIC_BRAND_*`.
-- **Cloud**: Google OAuth / magic links. Premium modules can be gated by
-  Stripe (`NEXT_PUBLIC_STRIPE_ENABLED`); the gate is off today and the
-  hosted instance is a free demo.
+- **Hosted pilot** (cloud): Google OAuth / magic links. A free pilot with
+  limits and no security certification: every module is included, one
+  organization per account, edits for 90 days and then read-only (exports
+  stay open), and a ceiling on records per organization (for example 25
+  systems, 50 vendors). Nothing is sold on the hosted service. For real client
+  data, run your own instance: <https://www.todo.law/run>.
+
+Premium modules cost €60 a year each in the kit (your own instance), activated
+offline with a licence file. The dormant Stripe code
+(`NEXT_PUBLIC_STRIPE_ENABLED`) is for forks only and stays off here.
 
 If a feature's environment variables are empty, the feature is a clean
 no-op — the app never requires an external service to boot.

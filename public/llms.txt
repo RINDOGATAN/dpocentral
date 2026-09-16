@@ -4,7 +4,9 @@
 
 DPO Central is an open-core GDPR privacy management platform built for startups and organizations handling personal data. It provides five integrated modules — Data Inventory, DSAR Management, Assessments, Incident Tracking, and Vendor Management — in one unified dashboard.
 
-Built by TODO.LAW. Available at https://dpocentral.todo.law
+Built by TODO.LAW. The hosted service at https://dpocentral.todo.law is a free pilot with limits and no security certification: every module is included and nothing is sold there. For real client data, run your own instance: https://www.todo.law/run. Premium modules cost €60 a year each in the kit (your own instance, offline activation).
+
+En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales de clientes, ejecuta tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ## Documentation
 

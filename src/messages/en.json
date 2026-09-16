@@ -4211,8 +4211,8 @@
           "activity": { "label": "Processing Activity", "desc": "One activity per vendor with purpose, legal basis, and data subjects" },
           "transfers": { "label": "Cross-Border Transfers", "desc": "Transfer records for each non-EU data location with SCCs as safeguard" }
         },
-        "tipTitle": "Free tier: 5 vendors from your portfolio",
-        "tipBody": "You can import up to 5 vendors from your Vendor.Watch portfolio for free during quickstart — no Vendor Catalog subscription needed. This matches Vendor.Watch's own free tier. To import more than 5, subscribe to the Vendor Catalog add-on."
+        "tipTitle": "How many vendors you can import",
+        "tipBody": "On the hosted pilot, the portfolio import is bounded only by the pilot limits (50 vendors). On your own instance, it takes up to 5 vendors from your Vendor.Watch portfolio, which matches Vendor.Watch's own free tier."
       },
       "industryTemplates": {
         "title": "Industry Templates",
@@ -4625,8 +4625,8 @@
         },
         "flowTipTitle": "Data Flow Map in PDFs",
         "flowTipBody": "The Data Inventory and ROPA PDFs render a beautiful auto-laid-out diagram of how data moves between your assets, with nodes colour-coded by asset type and edges labelled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing required — it's generated from your activity-asset links.",
-        "premiumTitle": "Premium feature (ROPA only)",
-        "premiumBody": "The ROPA PDF export is gated on a premium subscription. Every other PDF report is available to all users."
+        "premiumTitle": "ROPA export",
+        "premiumBody": "The ROPA PDF export is included on the hosted pilot and on your own instance, like every other PDF report."
       },
       "nav": {
         "previous": "Expert Help & Personas",
@@ -4702,15 +4702,16 @@
       }
     },
     "premium": {
-      "title": "Add-on Features",
-      "subtitle": "Add-on features extend DPO Central with advanced assessment types, vendor intelligence, and specialized compliance tools. Each is available for {price}/month.",
-      "cardTitle": "Add-on Features",
-      "cardBodyPrefix": "These features are available as add-ons for ",
-      "cardBodyMid": "/month each. They are not included in the open-source core.",
+      "title": "Premium Modules",
+      "subtitle": "Premium modules extend DPO Central with advanced assessment types, vendor intelligence, and specialized compliance tools. On the free hosted pilot every module is included. In the kit (your own instance), each costs {price} a year.",
+      "cardTitle": "Premium Modules",
+      "cardBodyPrefix": "In the kit (your own instance), premium modules cost ",
+      "cardBodyMid": " a year each and are activated offline with a licence file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
-      "cardContact": " Contact our team to enable features for your organization.",
+      "cardContact": " For real client data, run your own instance.",
+      "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
-      "contactUs": "Contact Us",
+      "runYourOwn": "Run your own instance",
       "dpia": {
         "title": "DPIA — Data Protection Impact Assessment",
         "description": "Required by GDPR Article 35 when processing is likely to result in high risk to individuals.",
@@ -4885,7 +4886,7 @@
       },
       "licensing": {
         "title": "Open Core Licensing",
-        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0, while advanced features require a commercial license.",
+        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. Premium modules cost €60 a year each in the kit (your own instance), activated offline with a licence file. The hosted service is a free pilot with limits: every module is included there, and nothing is sold.",
         "coreTitle": "Core (Open Source)",
         "coreItems": {
           "inventory": "Data Inventory & ROPA",
@@ -4894,7 +4895,7 @@
           "assessments": "Basic assessments (LIA, Custom)",
           "vendors": "Vendor management (basic)"
         },
-        "premiumTitle": "Premium (Commercial License)",
+        "premiumTitle": "Premium modules (€60 a year each in the kit)",
         "premiumItems": {
           "assessments": "DPIA, PIA, TIA assessments",
           "vendor": "Vendor risk assessments",

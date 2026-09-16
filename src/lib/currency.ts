@@ -8,6 +8,9 @@
 
 export type Currency = "USD" | "EUR";
 
+/** Yearly price, in euros, of one premium module in the self-hosted kit. */
+export const KIT_MODULE_PRICE_PER_YEAR = 60;
+
 export function getCurrency(): Currency {
   if (typeof document === "undefined") return "EUR";
   const match = document.cookie.match(/(?:^|;\s*)currency=(\w+)/);
