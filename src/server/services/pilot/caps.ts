@@ -168,12 +168,12 @@ export function pilotMessage(
   if (kind === "readOnly") {
     return locale === "es"
       ? `Esta organización piloto es de solo lectura: el piloto de ${PILOT_DAYS} días ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o ejecutar tu propia instancia (${run}).`
-      : `This pilot organisation is read-only: the ${PILOT_DAYS}-day pilot has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
+      : `This pilot organization is read-only: the ${PILOT_DAYS}-day pilot has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
   }
   if (kind === "oneOrganization") {
     return locale === "es"
       ? `El piloto alojado admite una organización por cuenta. Para gestionar más, ejecuta tu propia instancia (${run}). Puedes exportar lo que ya tienes (${exp}).`
-      : `The hosted pilot allows one organisation per account. To manage more, run your own instance (${run}). You can export what you already have (${exp}).`;
+      : `The hosted pilot allows one organization per account. To manage more, run your own instance (${run}). You can export what you already have (${exp}).`;
   }
   const r = resource ?? "dataAssets";
   const limit = PILOT_LIMITS[r];

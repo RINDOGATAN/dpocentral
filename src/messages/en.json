@@ -6008,5 +6008,44 @@
       "ai_rate_limited": "This organization has reached its hourly AI limit. Try again later.",
       "ai_failed": "The AI engine did not return a draft. Try again."
     }
+  },
+  "pilot": {
+    "banner": "Hosted pilot: free, capped, no security certification. For real client data, <run>run your own instance</run>.",
+    "bannerLabel": "Hosted pilot notice",
+    "dismiss": "Dismiss",
+    "settings": {
+      "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",
+      "description": "The hosted service is a free pilot. Every module is included. You can edit for {days} days from the start of your organization, within the limits below. After that, your organization is read-only and you can still export everything you created.",
+      "readOnly": "The pilot has ended. This organization is read-only. You can still export everything you created.",
+      "limitReached": "You have reached a pilot limit. You can no longer add records of that kind here.",
+      "waysOut": "To keep working without limits, <run>run your own instance</run>. To take your records with you, <export>export them</export>.",
+      "limitsTitle": "Limits",
+      "usage": "{used} of {limit}",
+      "resources": {
+        "dataAssets": "Systems",
+        "dataElements": "Data elements",
+        "processingActivities": "Processing activities",
+        "dataFlows": "Data flows",
+        "dataTransfers": "Transfers",
+        "vendors": "Vendors",
+        "vendorContracts": "Vendor contracts",
+        "dsarRequests": "Data subject requests",
+        "assessments": "Assessments",
+        "assessmentTemplates": "Assessment templates",
+        "incidents": "Incidents",
+        "aiSystems": "AI systems",
+        "members": "Members"
+      },
+      "exportTitle": "Export",
+      "exports": {
+        "all": "All records (JSON)",
+        "program": "Privacy program report (PDF)",
+        "ropa": "Record of processing activities (PDF)",
+        "vendorRegister": "Vendor register (CSV)",
+        "breachRegister": "Breach register (CSV)",
+        "dsarPerformance": "Data subject request report (PDF)",
+        "assessmentPortfolio": "Assessment portfolio (PDF)"
+      }
+    }
   }
 }

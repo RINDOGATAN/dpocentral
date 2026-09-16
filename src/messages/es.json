@@ -6008,5 +6008,44 @@
       "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
       "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
     }
+  },
+  "pilot": {
+    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "bannerLabel": "Aviso del piloto alojado",
+    "dismiss": "Cerrar",
+    "settings": {
+      "summary": "Piloto: {days, plural, one {queda # día} other {quedan # días}}, {used} de {limit} sistemas",
+      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos. Puedes editar durante {days} días desde el inicio de tu organización, dentro de los límites que ves abajo. Después, tu organización pasa a ser de solo lectura y puedes seguir exportando todo lo que creaste.",
+      "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que creaste.",
+      "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
+      "waysOut": "Para seguir trabajando sin límites, <run>ejecuta tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",
+      "limitsTitle": "Límites",
+      "usage": "{used} de {limit}",
+      "resources": {
+        "dataAssets": "Sistemas",
+        "dataElements": "Elementos de datos",
+        "processingActivities": "Actividades de tratamiento",
+        "dataFlows": "Flujos de datos",
+        "dataTransfers": "Transferencias",
+        "vendors": "Proveedores",
+        "vendorContracts": "Contratos con proveedores",
+        "dsarRequests": "Solicitudes de interesados",
+        "assessments": "Evaluaciones",
+        "assessmentTemplates": "Plantillas de evaluación",
+        "incidents": "Incidentes",
+        "aiSystems": "Sistemas de IA",
+        "members": "Miembros"
+      },
+      "exportTitle": "Exportar",
+      "exports": {
+        "all": "Todos los registros (JSON)",
+        "program": "Informe del programa de privacidad (PDF)",
+        "ropa": "Registro de actividades de tratamiento (PDF)",
+        "vendorRegister": "Registro de proveedores (CSV)",
+        "breachRegister": "Registro de brechas (CSV)",
+        "dsarPerformance": "Informe de solicitudes de interesados (PDF)",
+        "assessmentPortfolio": "Cartera de evaluaciones (PDF)"
+      }
+    }
   }
 }

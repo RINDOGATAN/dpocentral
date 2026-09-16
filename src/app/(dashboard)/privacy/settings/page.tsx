@@ -32,6 +32,7 @@ import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
+import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 
@@ -156,6 +157,9 @@ export default function SettingsPage() {
         <h1 className="text-xl sm:text-2xl font-semibold">{ts("title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{ts("subtitle")}</p>
       </div>
+
+      {/* Hosted pilot: days left, ceilings, exports (hidden on the kit) */}
+      {orgId && <PilotStatusCard organizationId={orgId} />}
 
       {/* Profile */}
       <Card>

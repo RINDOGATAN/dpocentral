@@ -282,7 +282,7 @@ describe("records ceiling", () => {
         organization: ORG,
       })
       .mockResolvedValueOnce(null);
-    await expect(addMember()).rejects.toThrow("one organisation per account");
+    await expect(addMember()).rejects.toThrow("one organization per account");
     expect(mocks.prisma.organizationMember.create).not.toHaveBeenCalled();
   });
 

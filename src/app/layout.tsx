@@ -11,6 +11,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { BrandTheme } from "@/components/brand-theme";
+import { PilotShell } from "@/components/pilot/pilot-shell";
 import { brand } from "@/config/brand";
 
 const jost = Jost({
@@ -112,8 +113,10 @@ export default async function RootLayout({
         <BrandTheme />
         <NextIntlClientProvider messages={messages}>
           <Providers session={session}>
-            {children}
-            <Toaster />
+            <PilotShell>
+              {children}
+              <Toaster />
+            </PilotShell>
           </Providers>
         </NextIntlClientProvider>
       </body>
