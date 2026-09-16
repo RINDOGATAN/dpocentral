@@ -7,7 +7,10 @@ updates:
       day: monday
       time: "08:00"
       timezone: Europe/Madrid
-    open-pull-requests-limit: 10
+    # Silenced on the owner's instruction (2026-09-16): no version-update PRs. Upgrades are done in our
+    # own dependency rounds (one package per commit, full gate). Security alerts stay on; the CI audit
+    # gate fails on high or critical advisories.
+    open-pull-requests-limit: 0
     groups:
       # Group all runtime patch/minor bumps so they land in one PR
       runtime-minor:
