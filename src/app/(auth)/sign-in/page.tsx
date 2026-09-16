@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
+import { HostedPilotSentence, useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 // Local (passwordless credentials) login: dev mode, or sovereign/self-hosted
 // builds with NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true.
@@ -18,6 +19,7 @@ const isDev = features.devAuthEnabled;
 
 export default function SignInPage() {
   const t = useTranslations("auth");
+  const hostedPilot = useHostedPilot();
   const [email, setEmail] = useState("");
   const [devEmail, setDevEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +134,11 @@ export default function SignInPage() {
           <p className="text-muted-foreground text-sm">
             {brand.tagline}
           </p>
+          {hostedPilot && (
+            <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
+              <HostedPilotSentence />
+            </p>
+          )}
         </div>
 
         {/* Local sign-in (self-hosted / offline) */}

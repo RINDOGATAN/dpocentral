@@ -4211,8 +4211,8 @@
           "activity": { "label": "Actividad de tratamiento", "desc": "Una actividad por proveedor con finalidad, base jurídica e interesados" },
           "transfers": { "label": "Transferencias internacionales", "desc": "Registros de transferencia para cada ubicación de datos fuera de la UE con SCCs como salvaguarda" }
         },
-        "tipTitle": "Plan gratuito: 5 proveedores de tu portafolio",
-        "tipBody": "Puedes importar hasta 5 proveedores de tu portafolio de Vendor.Watch gratis durante el inicio rápido, sin necesidad de suscripción al Catálogo de Proveedores. Coincide con el plan gratuito de Vendor.Watch. Para importar más de 5, suscríbete al complemento Catálogo de Proveedores."
+        "tipTitle": "Cuántos proveedores puedes importar",
+        "tipBody": "En el piloto alojado, la importación del portafolio solo está limitada por los límites del piloto (50 proveedores). En tu propia instancia, admite hasta 5 proveedores de tu portafolio de Vendor.Watch, lo que coincide con el plan gratuito de Vendor.Watch."
       },
       "industryTemplates": {
         "title": "Plantillas por sector",
@@ -4625,8 +4625,8 @@
         },
         "flowTipTitle": "Mapa de flujos de datos en PDFs",
         "flowTipBody": "Los PDFs de Inventario de datos y ROPA renderizan un diagrama auto-organizado de cómo se mueven los datos entre tus activos, con nodos coloreados por tipo de activo y aristas etiquetadas con las categorías de datos y la frecuencia. La versión ROPA agrupa los activos en clústeres con borde por actividad de tratamiento. No hay que dibujar nada: se genera a partir de tus vínculos actividad-activo.",
-        "premiumTitle": "Función premium (solo ROPA)",
-        "premiumBody": "La exportación PDF de ROPA está limitada a una suscripción premium. El resto de los informes PDF están disponibles para todos los usuarios."
+        "premiumTitle": "Exportación del ROPA",
+        "premiumBody": "La exportación PDF del ROPA está incluida en el piloto alojado y en tu propia instancia, como el resto de los informes PDF."
       },
       "nav": {
         "previous": "Ayuda experta y perfiles",
@@ -4702,15 +4702,16 @@
       }
     },
     "premium": {
-      "title": "Funciones complementarias",
-      "subtitle": "Las funciones complementarias amplían DPO Central con tipos avanzados de evaluación, inteligencia de proveedores y herramientas especializadas de cumplimiento. Cada una está disponible por {price}/mes.",
-      "cardTitle": "Funciones complementarias",
-      "cardBodyPrefix": "Estas funciones están disponibles como complementos por ",
-      "cardBodyMid": "/mes cada una. No están incluidas en el núcleo open source.",
+      "title": "Módulos premium",
+      "subtitle": "Los módulos premium amplían DPO Central con tipos avanzados de evaluación, inteligencia de proveedores y herramientas especializadas de cumplimiento. En el piloto alojado gratuito se incluyen todos. En el kit (tu propia instancia), cada uno cuesta {price} al año.",
+      "cardTitle": "Módulos premium",
+      "cardBodyPrefix": "En el kit (tu propia instancia), los módulos premium cuestan ",
+      "cardBodyMid": " al año cada uno y se activan sin conexión con un archivo de licencia. En el piloto alojado se incluyen todos sin coste, dentro de los límites del piloto.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
-      "cardContact": " Contacta con nuestro equipo para habilitar funciones en tu organización.",
+      "cardContact": " Para datos reales de clientes, ejecuta tu propia instancia.",
+      "badgeLabel": "Módulo premium",
       "viewAddons": "Ver complementos",
-      "contactUs": "Contactar",
+      "runYourOwn": "Ejecuta tu propia instancia",
       "dpia": {
         "title": "DPIA — Evaluación de Impacto en la Protección de Datos",
         "description": "Requerida por el Artículo 35 del RGPD cuando un tratamiento es probable que entrañe un riesgo alto para las personas.",
@@ -4885,7 +4886,7 @@
       },
       "licensing": {
         "title": "Licencia Open Core",
-        "intro": "DPO Central sigue un modelo open core. La plataforma principal está disponible bajo AGPL-3.0, mientras que las funciones avanzadas requieren una licencia comercial.",
+        "intro": "DPO Central sigue un modelo open core. La plataforma principal está disponible bajo AGPL-3.0. Los módulos premium cuestan 60 € al año cada uno en el kit (tu propia instancia) y se activan sin conexión con un archivo de licencia. El servicio alojado es un piloto gratuito con límites: allí se incluyen todos los módulos y no se vende nada.",
         "coreTitle": "Core (Open Source)",
         "coreItems": {
           "inventory": "Inventario de datos y ROPA",
@@ -4894,7 +4895,7 @@
           "assessments": "Evaluaciones básicas (LIA, Personalizadas)",
           "vendors": "Gestión de proveedores (básica)"
         },
-        "premiumTitle": "Premium (licencia comercial)",
+        "premiumTitle": "Módulos premium (60 € al año cada uno en el kit)",
         "premiumItems": {
           "assessments": "Evaluaciones DPIA, PIA, TIA",
           "vendor": "Evaluaciones de riesgo de proveedor",
@@ -6007,6 +6008,45 @@
       "ai_not_configured": "Todavía no hay ningún motor de IA disponible. Pide al administrador del servidor que configure uno (consulta el .env.example de la suite — LLM_GATEWAY_URL).",
       "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
       "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
+    }
+  },
+  "pilot": {
+    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "bannerLabel": "Aviso del piloto alojado",
+    "dismiss": "Cerrar",
+    "settings": {
+      "summary": "Piloto: {days, plural, one {queda # día} other {quedan # días}}, {used} de {limit} sistemas",
+      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos. Puedes editar durante {days} días desde el inicio de tu organización, dentro de los límites que ves abajo. Después, tu organización pasa a ser de solo lectura y puedes seguir exportando todo lo que creaste.",
+      "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que creaste.",
+      "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
+      "waysOut": "Para seguir trabajando sin límites, <run>ejecuta tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",
+      "limitsTitle": "Límites",
+      "usage": "{used} de {limit}",
+      "resources": {
+        "dataAssets": "Sistemas",
+        "dataElements": "Elementos de datos",
+        "processingActivities": "Actividades de tratamiento",
+        "dataFlows": "Flujos de datos",
+        "dataTransfers": "Transferencias",
+        "vendors": "Proveedores",
+        "vendorContracts": "Contratos con proveedores",
+        "dsarRequests": "Solicitudes de interesados",
+        "assessments": "Evaluaciones",
+        "assessmentTemplates": "Plantillas de evaluación",
+        "incidents": "Incidentes",
+        "aiSystems": "Sistemas de IA",
+        "members": "Miembros"
+      },
+      "exportTitle": "Exportar",
+      "exports": {
+        "all": "Todos los registros (JSON)",
+        "program": "Informe del programa de privacidad (PDF)",
+        "ropa": "Registro de actividades de tratamiento (PDF)",
+        "vendorRegister": "Registro de proveedores (CSV)",
+        "breachRegister": "Registro de brechas (CSV)",
+        "dsarPerformance": "Informe de solicitudes de interesados (PDF)",
+        "assessmentPortfolio": "Cartera de evaluaciones (PDF)"
+      }
     }
   }
 }

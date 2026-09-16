@@ -8,6 +8,11 @@ import { OrganizationRole, UserType } from "@prisma/client";
 import { getSecurityModule } from "@/lib/security";
 import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
 import { logger } from "@/lib/logger";
+import {
+  assertOneOrganizationPerAccount,
+  getPilotStatus,
+  pilotLocale,
+} from "@/server/services/pilot/caps";
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
@@ -82,6 +87,13 @@ export const organizationRouter = createTRPCRouter({
       };
     }),
 
+  // Hosted pilot status for the Settings card ({ hosted: false } on the kit)
+  getPilotStatus: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      return getPilotStatus(ctx.prisma, ctx.organization);
+    }),
+
   // Create a new organization
   create: protectedProcedure
     .input(
@@ -93,6 +105,13 @@ export const organizationRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Hosted pilot: one organisation per account (no-op on the kit)
+      await assertOneOrganizationPerAccount(
+        ctx.prisma,
+        ctx.session.user.id,
+        pilotLocale(ctx.getCookie("NEXT_LOCALE"))
+      );
+
       // Check if slug is already taken
       const existing = await ctx.prisma.organization.findUnique({
         where: { slug: input.slug },
@@ -279,6 +298,13 @@ export const organizationRouter = createTRPCRouter({
           message: "This user is already a member of the organization",
         });
       }
+
+      // Hosted pilot: the invitee may not already belong to another organisation
+      await assertOneOrganizationPerAccount(
+        ctx.prisma,
+        user.id,
+        pilotLocale(ctx.getCookie("NEXT_LOCALE"))
+      );
 
       const membership = await ctx.prisma.organizationMember.create({
         data: {

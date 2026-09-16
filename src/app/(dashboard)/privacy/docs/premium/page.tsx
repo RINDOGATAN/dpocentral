@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
-import { Lock, Shield, Globe, Building2, Search, Sparkles, Mail, CreditCard } from "lucide-react";
+import { Lock, Shield, Globe, Building2, Search, Sparkles, Server, CreditCard } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,11 +14,14 @@ import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
-import { formatPrice } from "@/lib/currency";
+import { formatPrice, KIT_MODULE_PRICE_PER_YEAR } from "@/lib/currency";
+import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
 
 export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
-  const price = formatPrice(9);
+  // Yearly price of one premium module in the kit (self-hosted, offline
+  // licence). The hosted pilot sells nothing.
+  const price = formatPrice(KIT_MODULE_PRICE_PER_YEAR, "EUR");
   // /privacy/billing only exists when Stripe is on (self-host redirects it
   // to /privacy/skills), so the self-service upsell links need both flags.
   const canSelfService = features.stripeEnabled && features.selfServiceUpgrade;
@@ -62,9 +65,9 @@ export default function DocsPremiumPage() {
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
-                  <a href={`mailto:${brand.supportEmail}`}>
-                    <Mail className="h-4 w-4 mr-2" />
-                    {t("contactUs")}
+                  <a href={RUN_YOUR_OWN_URL} target="_blank" rel="noopener noreferrer">
+                    <Server className="h-4 w-4 mr-2" />
+                    {t("runYourOwn")}
                   </a>
                 </Button>
               )}

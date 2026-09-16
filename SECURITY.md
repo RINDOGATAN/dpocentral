@@ -39,7 +39,8 @@ security:
 | DSAR retention job | Platform cron with `CRON_SECRET` | A small scheduler container calling the same route with `CRON_SECRET` |
 | Backups | The database provider's point-in-time restore | `backup.sh` (encrypted `pg_dump`) and `restore.sh`; the operator sets the schedule |
 | Secrets | Platform environment (sensitive values are write-only there) | `.env` next to the compose file, `chmod 600` |
-| Premium modules | Optional private packages and hosted billing (off by default) | Offline Ed25519-signed licence files; no phone-home |
+| Premium modules | All included in the free pilot; nothing is sold on the hosted service | Offline Ed25519-signed licence files (€60 a year each); no phone-home |
+| Pilot limits | One organization per account; read-only after 90 days (exports stay open); a records ceiling per organization (`src/server/services/pilot/caps.ts`). No security certification: not for real client data | None |
 
 The inventory of every environment variable, by name only, is in
 `docs/secrets-inventory.md`. Capacity limits and the scaling plan are in

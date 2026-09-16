@@ -6,10 +6,10 @@ DPO Central's **Quickstart** feature helps new organizations bootstrap a complet
 
 ## Overview
 
-| Approach | Direction | What it does | Pricing |
+| Approach | Direction | What it does | Access |
 |----------|-----------|--------------|---------|
-| **Vendor Import** | Bottom-up | Select vendors you already use; auto-generates data assets, elements, processing activities, and data transfers from each vendor's known data profile | Requires **Vendor Catalog** entitlement |
-| **Industry Template** | Top-down | Choose your industry; get a pre-built scaffold of internal data assets, processing activities, and data flows | Free (AGPL core) |
+| **Vendor Import** | Bottom-up | Select vendors you already use; auto-generates data assets, elements, processing activities, and data transfers from each vendor's known data profile | Included on the hosted pilot (within the pilot limits) and on your own instance |
+| **Industry Template** | Top-down | Choose your industry; get a pre-built scaffold of internal data assets, processing activities, and data flows | Included everywhere (AGPL core) |
 
 Both approaches are **non-destructive** — they only create new records and never modify or delete existing ones. Duplicate names are automatically skipped.
 
@@ -75,7 +75,7 @@ The adequacy list includes all EU/EEA member states plus countries with active E
 
 ### Entitlement gating
 
-Vendor import requires the **Vendor Catalog** entitlement (`com.nel.dpocentral.vendor-catalog`) or the **Complete** package. Organizations without access see the vendor card as locked with a "Premium" badge.
+Vendor import checks the **Vendor Catalog** entitlement (`com.nel.dpocentral.vendor-catalog`) or the **Complete** package. The check always passes on the hosted pilot (every module is included; the pilot's records ceiling applies instead, and a batch that would exceed it is rolled back) and on a self-hosted build with Stripe off. It only bites in a fork that turns on its own payment rail; there, organizations without access see the vendor card as locked with a "Premium" badge.
 
 ---
 

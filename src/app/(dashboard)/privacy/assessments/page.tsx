@@ -316,7 +316,7 @@ export default function AssessmentsPage() {
               { type: "CUSTOM", nameKey: "custom", premium: false },
               // DPIA is premium only where a payment rail exists. On
               // self-host (Stripe off) every feature is included — see
-              // ALL_FEATURES_FREE in server/services/licensing/entitlement.ts
+              // allFeaturesFree in server/services/licensing/entitlement.ts
               // — so a lock badge here would be false.
               { type: "DPIA", nameKey: "dpia", premium: features.stripeEnabled },
             ].map((item) => (
