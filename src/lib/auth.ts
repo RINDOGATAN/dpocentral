@@ -13,6 +13,7 @@ import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 import { getSecurityModule } from "@/lib/security";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
+import { isHostedDeployment } from "@/lib/hosted";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -183,7 +184,13 @@ export const authOptions: NextAuthOptions = {
               },
             });
 
-            if (!existingMembership) {
+            // Hosted pilot: one organisation per account, so an account that
+            // already belongs to one is not auto-joined to another.
+            const pilotBlocksJoin =
+              isHostedDeployment() &&
+              (await prisma.organizationMember.count({ where: { userId: user.id } })) > 0;
+
+            if (!existingMembership && !pilotBlocksJoin) {
               // Auto-add user as MEMBER
               await prisma.organizationMember.create({
                 data: {

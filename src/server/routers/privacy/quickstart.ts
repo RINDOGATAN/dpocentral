@@ -25,6 +25,24 @@ import {
   type IndustryTemplate,
 } from "../../../config/industry-templates";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
+import {
+  assertPilotCapacity,
+  hasPilotRoom,
+  pilotLocale,
+  type PilotResource,
+} from "../../services/pilot/caps";
+import { isHostedDeployment } from "@/lib/hosted";
+
+// Capped resources a quickstart batch can add.
+const PILOT_BATCH_RESOURCES: PilotResource[] = [
+  "vendors",
+  "dataAssets",
+  "dataElements",
+  "processingActivities",
+  "dataFlows",
+  "dataTransfers",
+  "assessments",
+];
 import { createAssessmentFromActivity } from "../../services/assessment-auto-create";
 import {
   isAiCapableVendor,
@@ -449,6 +467,7 @@ export const quickstartRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const orgId = ctx.organization.id;
       const userId = ctx.session.user.id;
+      const pilotLang = pilotLocale(ctx.getCookie("NEXT_LOCALE"));
       const skipAssets = new Set(input.skipAssetNames);
       const skipActivities = new Set(input.skipActivityNames);
 
@@ -489,7 +508,9 @@ export const quickstartRouter = createTRPCRouter({
             },
           });
           const remainingFree = Math.max(0, 5 - usedFreeSlots);
-          if (input.vendorSlugs.length > remainingFree) {
+          // The hosted pilot opens every module; its bound is the vendors
+          // ceiling, checked at the end of the transaction below.
+          if (!isHostedDeployment() && input.vendorSlugs.length > remainingFree) {
             throw new TRPCError({
               code: "FORBIDDEN",
               message: `You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have ${remainingFree} free slot${remainingFree !== 1 ? "s" : ""} remaining. Subscribe to the Vendor Catalog add-on to import more.`,
@@ -1037,6 +1058,12 @@ export const quickstartRouter = createTRPCRouter({
           });
         }
 
+        // Hosted pilot: a batch that takes the organisation over a records
+        // ceiling rolls back as a whole (no-op on the kit).
+        for (const resource of PILOT_BATCH_RESOURCES) {
+          await assertPilotCapacity(tx, orgId, resource, 0, pilotLang);
+        }
+
         return counts;
       }, { timeout: 30000 });
 
@@ -1044,6 +1071,7 @@ export const quickstartRouter = createTRPCRouter({
       if (pendingAiSystems.length > 0) {
         try {
           for (const { data: aiData, catalogSlug } of pendingAiSystems) {
+            if (!(await hasPilotRoom(ctx.prisma, orgId, "aiSystems"))) break;
             await ctx.prisma.aISystem.create({
               data: {
                 organizationId: orgId,

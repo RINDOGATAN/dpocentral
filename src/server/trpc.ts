@@ -11,6 +11,13 @@ import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
 import { sanitizeStrings } from "@/lib/sanitize";
 import { formatUserError } from "@/lib/format-error";
+import {
+  assertPilotCapacity,
+  assertPilotWritable,
+  CAPPED_CREATE_PATHS,
+  pilotLocale,
+  READ_ONLY_ALLOWED_PATHS,
+} from "@/server/services/pilot/caps";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -131,9 +138,28 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
   });
 });
 
+// Hosted pilot caps (no-op on the self-hosted kit): once the pilot period
+// ends, org-scoped mutations are refused (exports are GET routes and stay
+// open); creates are refused at the records ceiling.
+const enforcePilotCaps = t.middleware(async ({ ctx, next, path, type }) => {
+  if (type !== "mutation") return next();
+  const org = (ctx as { organization?: { id: string; createdAt: Date } }).organization;
+  if (!org) return next();
+  const locale = pilotLocale(ctx.getCookie("NEXT_LOCALE"));
+  if (!READ_ONLY_ALLOWED_PATHS.has(path)) {
+    assertPilotWritable(org, locale);
+  }
+  const resource = CAPPED_CREATE_PATHS[path];
+  if (resource) {
+    await assertPilotCapacity(ctx.prisma, org.id, resource, 1, locale);
+  }
+  return next();
+});
+
 export const organizationProcedure = t.procedure
   .use(enforceUserIsAuthed)
-  .use(withOrganization);
+  .use(withOrganization)
+  .use(enforcePilotCaps);
 
 // Role-based access control — enforced in the open-source core.
 // The baseline role gate below always applies, with or without the optional
@@ -198,17 +224,20 @@ const withOrganizationAndRole = (...roles: OrgRole[]) =>
 // Writer: can create/update records (everyone except VIEWER)
 export const writerProcedure = t.procedure
   .use(enforceUserIsAuthed)
-  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER"));
+  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER"))
+  .use(enforcePilotCaps);
 
 // Officer: DSAR management, incidents, assessments
 export const officerProcedure = t.procedure
   .use(enforceUserIsAuthed)
-  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER"));
+  .use(withOrganizationAndRole("OWNER", "ADMIN", "PRIVACY_OFFICER"))
+  .use(enforcePilotCaps);
 
 // Admin org: delete operations, org settings
 export const adminOrgProcedure = t.procedure
   .use(enforceUserIsAuthed)
-  .use(withOrganizationAndRole("OWNER", "ADMIN"));
+  .use(withOrganizationAndRole("OWNER", "ADMIN"))
+  .use(enforcePilotCaps);
 
 // Admin emails from environment variable (comma-separated)
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")

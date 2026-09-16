@@ -9,6 +9,7 @@ import { addDays } from "date-fns";
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
+import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
 
 // SLA Calculator service
 function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
@@ -676,6 +677,11 @@ export const dsarRouter = createTRPCRouter({
           message: "Organization or intake form not found",
         });
       }
+
+      // Hosted pilot caps also bound the public intake (no-op on the kit)
+      const pilotLang = pilotLocale(input.locale);
+      assertPilotWritable(org, pilotLang);
+      await assertPilotCapacity(ctx.prisma, org.id, "dsarRequests", 1, pilotLang);
 
       const deadlineDays = org.jurisdictions[0]?.jurisdiction.dsarDeadlineDays ?? 30;
       const receivedAt = new Date();

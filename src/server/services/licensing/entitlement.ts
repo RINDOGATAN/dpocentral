@@ -4,11 +4,14 @@
 import { AssessmentType, EntitlementStatus, LicenseType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
+import { isHostedDeployment } from "@/lib/hosted";
 
-// Self-hosted builds have no payment rail (Stripe is off), so every premium feature
-// is free. The per-feature unlocks (the hosted "$9 to unlock" model) apply ONLY to the
-// hosted product, where Stripe is enabled.
-const ALL_FEATURES_FREE = !features.stripeEnabled;
+// Self-hosted builds have no payment rail (Stripe is off), so no feature is gated
+// by an entitlement. The hosted service is a free pilot: every module is open to
+// every organisation there too, and its limits are the pilot caps
+// (services/pilot/caps.ts), never a purchase. Per-feature unlocks apply only to a
+// fork that re-arms Stripe outside the hosted pilot.
+const allFeaturesFree = () => !features.stripeEnabled || isHostedDeployment();
 
 // Premium assessment types that require entitlements
 export const PREMIUM_ASSESSMENT_TYPES: AssessmentType[] = [
@@ -38,8 +41,8 @@ export async function checkAssessmentEntitlement(
   organizationId: string,
   assessmentType: AssessmentType
 ): Promise<EntitlementCheckResult> {
-  // Self-hosted: no payment rail, so all premium assessments (DPIA/PIA/TIA/VENDOR) are free.
-  if (ALL_FEATURES_FREE) {
+  // Self-hosted or hosted pilot: all premium assessments (DPIA/PIA/TIA/VENDOR) are open.
+  if (allFeaturesFree()) {
     return { entitled: true, reason: "Self-hosted (all features free)" };
   }
 
@@ -158,7 +161,7 @@ export async function getEntitledAssessmentTypes(
   // Premium templates DPIA/PIA ship in the private @dpocentral/premium-skills
   // package, which is NOT bundled in the self-hosted image; so on self-host they
   // are not offered until that skill is installed, even though the licence is
-  // free (ALL_FEATURES_FREE). This prevents offering an assessment that would
+  // free (allFeaturesFree). This prevents offering an assessment that would
   // open to an empty template.
   const templated = await prisma.assessmentTemplate.findMany({
     select: { type: true },
@@ -288,9 +291,9 @@ export async function checkSkillEntitlement(
   organizationId: string,
   skillId: string
 ): Promise<EntitlementCheckResult> {
-  // Self-hosted: no payment rail, so all premium skills/features (vendor catalog,
-  // ROPA/PDF export, etc.) are free.
-  if (ALL_FEATURES_FREE) {
+  // Self-hosted or hosted pilot: all premium skills/features (vendor catalog,
+  // ROPA/PDF export, etc.) are open.
+  if (allFeaturesFree()) {
     return { entitled: true, reason: "Self-hosted (all features free)" };
   }
 
