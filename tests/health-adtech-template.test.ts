@@ -5,6 +5,8 @@
  * the report prints (src/lib/health-adtech/results.ts).
  */
 
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
@@ -107,6 +109,25 @@ describe("content", () => {
     expect(healthAdtechTemplateData.type).toBe("DPIA");
     expect(isHealthAdtechTemplate(healthAdtechTemplateData)).toBe(true);
     expect(isHealthAdtechTemplate({ scoringLogic: { method: "weighted_average" } })).toBe(false);
+  });
+});
+
+describe("sources", () => {
+  // Split so this file does not match itself.
+  const banned = ["California Lawyers " + "Association", "Global assessments " + "across"];
+  const files = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+      e.isDirectory() ? files(path.join(dir, e.name)) : [path.join(dir, e.name)]
+    );
+
+  it("cites no secondary article in any source or message bundle", () => {
+    const root = path.resolve(__dirname, "..");
+    const scanned = ["src", "scripts", "prisma", "tests"].flatMap((d) => files(path.join(root, d)));
+    expect(scanned.some((f) => f.endsWith("en.json"))).toBe(true);
+    for (const f of scanned) {
+      const text = readFileSync(f, "utf8");
+      for (const b of banned) expect(text.includes(b), `${f}: ${b}`).toBe(false);
+    }
   });
 });
 
@@ -312,10 +333,18 @@ describe("jurisdictions change the report", () => {
   it("keeps the unsourced help text flagged and cites the checked sources", () => {
     const help = (id: string) =>
       HEALTH_ADTECH_SECTIONS.flatMap((s) => s.questions).find((q) => q.id === id)!.help!;
-    for (const id of ["hd1_2", "hd2_4", "hd6_1", "hd8_8", "hd8_9"]) expect(help(id).en, id).toMatch(/\[to verify\]/);
+    for (const id of ["hd2_4", "hd8_8", "hd8_9"]) expect(help(id).en, id).toMatch(/\[to verify\]/);
     const cited: Record<string, string> = {
-      hd5_1: "11 CCR 7152(a)(5)-(6)",
-      hd7_1: "11 CCR 7152(a)(5)-(6)",
+      hd1_2: "Source: 11 CCR 7150(b) (checked 16 September 2026).",
+      hd2_1: "11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a)",
+      hd2_2: "GDPR Art. 35(7)(b)",
+      hd3_1: "11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a)",
+      hd4_1: "Source: 11 CCR 7152(a)(4) (checked 16 September 2026).",
+      hd5_1: "11 CCR 7152(a)(5); GDPR Art. 35(7)(c)",
+      hd5_2: "11 CCR 7152(a)(5); GDPR Art. 35(7)(c)",
+      hd7_1: "11 CCR 7152(a)(6); GDPR Art. 35(7)(d)",
+      hd9_2: "11 CCR 7152(a)(7) to (9)",
+      hd10_1: "11 CCR 7152(a)(7) to (9)",
       hd8_1: "RCW 19.373.030; Nevada NRS 603A.500",
       hd8_2: "RCW 19.373.070; Nevada NRS 603A.535",
       hd8_3: "RCW 19.373.080; NRS 603A.540",
@@ -328,6 +357,22 @@ describe("jurisdictions change the report", () => {
       expect(help(id).en, id).not.toMatch(/\[to verify\]|workshop brief/);
       expect(help(id).es, id).not.toMatch(/\[por verificar\]|encargo del taller/);
     }
+  });
+
+  it("describes the five-factor method as the template's own, without a flag", () => {
+    const help = HEALTH_ADTECH_SECTIONS[5].questions.find((q) => q.id === "hd6_1")!.help!;
+    expect(help.en).toMatch(/Method of this template/);
+    expect(help.es).toMatch(/Método de esta plantilla/);
+    expect(help.en).not.toMatch(/\[to verify\]|Source:/);
+    expect(help.es).not.toMatch(/\[por verificar\]|Fuente:/);
+  });
+
+  it("describes the nine elements of a CCPA risk assessment in both languages", () => {
+    const meta = healthAdtechMessages("en").template[HEALTH_ADTECH_TEMPLATE_ID].description;
+    const metaEs = healthAdtechMessages("es").template[HEALTH_ADTECH_TEMPLATE_ID].description;
+    expect(meta).toContain("the nine elements of a CCPA risk assessment (11 CCR 7152(a))");
+    expect(metaEs).toContain("los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a))");
+    expect(meta).not.toMatch(/eight-part/);
   });
 
   it("bands the five factors and reads Spanish answers", () => {
