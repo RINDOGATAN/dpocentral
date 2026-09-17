@@ -5421,8 +5421,8 @@
   },
   "healthAdtechReport": {
     "title": "Resultado por jurisdicción",
-    "subtitle": "Sigue a las jurisdicciones seleccionadas en la sección 1. Las afirmaciones marcadas [por verificar] aún no están confirmadas; es un borrador para revisión por un abogado, no asesoramiento jurídico.",
-    "noJurisdictions": "Selecciona las jurisdicciones en la sección 1 para ver el modelo de consentimiento y las obligaciones de cada una.",
+    "subtitle": "Sigue a las jurisdicciones seleccionadas en «Alcance y análisis de umbral». Las afirmaciones marcadas [por verificar] aún no están confirmadas; es un borrador para revisión por un abogado, no asesoramiento jurídico.",
+    "noJurisdictions": "Selecciona las jurisdicciones en «Alcance y análisis de umbral» para ver el modelo de consentimiento y las obligaciones de cada una.",
     "jurisdiction": "Jurisdicción",
     "consentModel": "Modelo de consentimiento",
     "obligations": "Obligaciones",
@@ -5438,6 +5438,7 @@
     "blockingSummary": "Al menos una conclusión debe resolverse antes de que el tratamiento pueda seguir adelante.",
     "fiveFactorTitle": "Clasificación como datos de salud (cinco factores)",
     "fiveFactorScore": "Puntuación {score} de {max}",
+    "scoreLabel": "Puntuación",
     "fiveFactorPending": "{answered} de 5 factores puntuados",
     "decisionTitle": "Mitigación y decisión",
     "mitigation": "Vía principal de mitigación",
@@ -5791,43 +5792,43 @@
       },
       "section": {
         "hd1": {
-          "title": "1. Alcance y análisis de umbral",
+          "title": "Alcance y análisis de umbral",
           "description": "Selecciona primero las jurisdicciones: la respuesta añade las preguntas y obligaciones que exige cada una."
         },
         "hd2": {
-          "title": "2. Finalidad, necesidad y minimización de datos",
+          "title": "Finalidad, necesidad y minimización de datos",
           "description": "Por qué se realiza el tratamiento y por qué es necesario cada dato."
         },
         "hd3": {
-          "title": "3. Descripción del tratamiento",
+          "title": "Descripción del tratamiento",
           "description": "Los hechos operativos: fuentes, recogida, datos, conservación, personas afectadas y destinatarios."
         },
         "hd4": {
-          "title": "4. Beneficios",
+          "title": "Beneficios",
           "description": "Los beneficios que se ponderan frente a los riesgos."
         },
         "hd5": {
-          "title": "5. Impactos negativos",
+          "title": "Impactos negativos",
           "description": "Los daños que el tratamiento podría causar a los consumidores."
         },
         "hd6": {
-          "title": "6. ¿Son datos de salud? Clasificación por cinco factores",
+          "title": "¿Son datos de salud? Clasificación por cinco factores",
           "description": "Puntúa cada factor; el informe suma las puntuaciones (de 0 a 15) y asigna una banda."
         },
         "hd7": {
-          "title": "7. Garantías y mitigación",
+          "title": "Garantías y mitigación",
           "description": "Las medidas que abordan los riesgos y la vía principal de mitigación elegida."
         },
         "hd8": {
-          "title": "8. Requisitos de las jurisdicciones seleccionadas",
-          "description": "Preguntas que añaden las jurisdicciones seleccionadas en la sección 1."
+          "title": "Requisitos de las jurisdicciones seleccionadas",
+          "description": "Preguntas que añaden las jurisdicciones seleccionadas en «Alcance y análisis de umbral»."
         },
         "hd9": {
-          "title": "9. Riesgo residual y decisión final",
+          "title": "Riesgo residual y decisión final",
           "description": "El riesgo que subsiste tras las garantías y la decisión adoptada."
         },
         "hd10": {
-          "title": "10. Aprobación",
+          "title": "Aprobación",
           "description": "Quién firma, cuándo y cuándo se revisará la evaluación."
         },
         "s1": {

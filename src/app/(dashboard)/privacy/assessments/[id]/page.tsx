@@ -67,6 +67,7 @@ import {
   withoutHidden,
 } from "@/lib/assessment-conditions";
 import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import { localizeValues } from "@/lib/template-i18n-core";
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 
 const statusColors: Record<string, string> = {
@@ -682,6 +683,19 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     return val ? [val] : [];
   }, []);
 
+  // Stored (English) options by question id, to show a choice saved in
+  // English in the current language (matched by position).
+  const storedOptions = useMemo(() => {
+    const map = new Map<string, string[] | undefined>();
+    for (const s of rawSections) for (const q of s?.questions ?? []) map.set(q.id, q.options);
+    return map;
+  }, [rawSections]);
+  const shownValues = useCallback(
+    (question: any, values: string[]) =>
+      localizeValues(values, storedOptions.get(String(question.id).split("::")[0]), question.options),
+    [storedOptions]
+  );
+
   const vendorPets = suggestions?.vendorPets ?? [];
   const vendorName = suggestions?.vendorName ?? null;
   const hasSuggestions = (suggestions?.riskBasedSuggestions?.length ?? 0) > 0 || vendorPets.length > 0;
@@ -1070,7 +1084,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                   <div className="space-y-2">
                                     <Label className="text-xs text-muted-foreground">{tp("question.chooseOne")}</Label>
                                     <Select
-                                      value={responseValue || ""}
+                                      value={responseValue ? shownValues(question, [responseValue])[0] : ""}
                                       onValueChange={(value) => handleAutoSave(question.id, section.id, question, value)}
                                       disabled={!canSubmit}
                                     >
@@ -1099,7 +1113,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     <Label className="text-xs text-muted-foreground">{tp("question.selectAllApply")}</Label>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                       {(question.options as string[]).map((option: string) => {
-                                        const currentValues = parseMultiselectValue(responseValue);
+                                        const currentValues = shownValues(question, parseMultiselectValue(responseValue));
                                         const isChecked = currentValues.includes(option);
                                         return (
                                           <label

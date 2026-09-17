@@ -177,7 +177,7 @@ const YES_NO_NOTE: BiText = {
 export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd1",
-    title: { en: "1. Scope and threshold analysis", es: "1. Alcance y análisis de umbral" },
+    title: { en: "Scope and threshold analysis", es: "Alcance y análisis de umbral" },
     description: {
       en: "Select the jurisdictions first: the answer adds the questions and obligations each one requires.",
       es: "Selecciona primero las jurisdicciones: la respuesta añade las preguntas y obligaciones que exige cada una.",
@@ -340,8 +340,8 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd2",
     title: {
-      en: "2. Purpose, necessity and data minimisation",
-      es: "2. Finalidad, necesidad y minimización de datos",
+      en: "Purpose, necessity and data minimisation",
+      es: "Finalidad, necesidad y minimización de datos",
     },
     description: {
       en: "Why the processing takes place and why each data item is needed.",
@@ -446,7 +446,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   },
   {
     id: "hd3",
-    title: { en: "3. Description of the processing", es: "3. Descripción del tratamiento" },
+    title: { en: "Description of the processing", es: "Descripción del tratamiento" },
     description: {
       en: "The operational facts: sources, collection, data, retention, people affected and recipients.",
       es: "Los hechos operativos: fuentes, recogida, datos, conservación, personas afectadas y destinatarios.",
@@ -553,7 +553,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   },
   {
     id: "hd4",
-    title: { en: "4. Benefits", es: "4. Beneficios" },
+    title: { en: "Benefits", es: "Beneficios" },
     description: {
       en: "The benefits to weigh against the risks.",
       es: "Los beneficios que se ponderan frente a los riesgos.",
@@ -582,7 +582,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   },
   {
     id: "hd5",
-    title: { en: "5. Negative impacts", es: "5. Impactos negativos" },
+    title: { en: "Negative impacts", es: "Impactos negativos" },
     description: {
       en: "The harms the processing could cause to consumers.",
       es: "Los daños que el tratamiento podría causar a los consumidores.",
@@ -635,8 +635,8 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd6",
     title: {
-      en: "6. Is it health data? Five-factor classification",
-      es: "6. ¿Son datos de salud? Clasificación por cinco factores",
+      en: "Is it health data? Five-factor classification",
+      es: "¿Son datos de salud? Clasificación por cinco factores",
     },
     description: {
       en: "Score each factor; the report adds the scores (0 to 15) and gives a band.",
@@ -768,8 +768,8 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd7",
     title: {
-      en: "7. Safeguards and mitigation",
-      es: "7. Garantías y mitigación",
+      en: "Safeguards and mitigation",
+      es: "Garantías y mitigación",
     },
     description: {
       en: "The measures that address the risks and the main mitigation route chosen.",
@@ -831,12 +831,12 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd8",
     title: {
-      en: "8. Requirements of the selected jurisdictions",
-      es: "8. Requisitos de las jurisdicciones seleccionadas",
+      en: "Requirements of the selected jurisdictions",
+      es: "Requisitos de las jurisdicciones seleccionadas",
     },
     description: {
-      en: "Questions added by the jurisdictions selected in section 1.",
-      es: "Preguntas que añaden las jurisdicciones seleccionadas en la sección 1.",
+      en: "Questions added by the jurisdictions selected under \"Scope and threshold analysis\".",
+      es: "Preguntas que añaden las jurisdicciones seleccionadas en «Alcance y análisis de umbral».",
     },
     questions: [
       {
@@ -997,8 +997,8 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   {
     id: "hd9",
     title: {
-      en: "9. Residual risk and determination",
-      es: "9. Riesgo residual y decisión final",
+      en: "Residual risk and determination",
+      es: "Riesgo residual y decisión final",
     },
     description: {
       en: "The risk that remains after the safeguards, and the decision.",
@@ -1063,7 +1063,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
   },
   {
     id: "hd10",
-    title: { en: "10. Approval", es: "10. Aprobación" },
+    title: { en: "Approval", es: "Aprobación" },
     description: {
       en: "Who signs, when, and when the assessment will be reviewed.",
       es: "Quién firma, cuándo y cuándo se revisará la evaluación.",

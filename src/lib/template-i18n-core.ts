@@ -82,6 +82,29 @@ export function translateTemplateMeta(
   };
 }
 
+/**
+ * Shows saved option values in the target language: each value is matched by
+ * position in the stored list or in any other language's list. Values that
+ * match nothing (free text, "Yes"/"No") are kept.
+ */
+export function localizeValues(
+  values: string[],
+  storedOptions: string[] | undefined,
+  targetOptions: string[] | undefined,
+  otherOptionLists: ReadonlyArray<string[] | undefined> = []
+): string[] {
+  if (!storedOptions || !targetOptions) return values;
+  const lists = [storedOptions, ...otherOptionLists];
+  return values.map((v) => {
+    if (targetOptions.includes(v)) return v;
+    for (const list of lists) {
+      const i = list?.indexOf(v) ?? -1;
+      if (i >= 0 && i < targetOptions.length) return targetOptions[i];
+    }
+    return v;
+  });
+}
+
 /** A lookup over a plain message object (the `templates` subtree). */
 export function objectLookup(tree: unknown): TemplateLookup {
   return (key) => {

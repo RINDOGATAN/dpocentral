@@ -125,7 +125,7 @@ describe("message bundles", () => {
 
   it("translate the stored sections and the template name into Spanish", () => {
     const esSections = sectionsForLocale("DPIA", stored, "es");
-    expect(esSections[0].title).toBe("1. Alcance y análisis de umbral");
+    expect(esSections[0].title).toBe("Alcance y análisis de umbral");
     expect(esSections[0].questions![0].options).toContain("UE/EEE (RGPD)");
     const meta = translateTemplateMeta(
       { id: HEALTH_ADTECH_TEMPLATE_ID, type: "DPIA", name: "x", description: "y" },

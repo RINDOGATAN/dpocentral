@@ -18,6 +18,8 @@ import {
   fmtDate,
 } from "./pdf-styles";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { HealthAdtechPages } from "./health-adtech-report";
+import type { HealthAdtechResult } from "@/lib/health-adtech/results";
 
 // English fallback map (keys scoped to pdf.assessmentReport)
 const EN_FALLBACK: Record<string, string> = {
@@ -166,11 +168,14 @@ export function AssessmentReport({
   data,
   t,
   locale,
+  healthAdtech,
 }: {
   data: AssessmentExportData;
   /** Scoped to `pdf.assessmentReport`. Optional — English fallback. */
   t?: PdfT;
   locale?: string;
+  /** Result pages of the health-data advertising template, when it applies. */
+  healthAdtech?: { result: HealthAdtechResult; t: PdfT };
 }) {
   const tr: PdfT = t ?? fallbackT;
   const date = fmtDate(new Date());
@@ -389,6 +394,18 @@ export function AssessmentReport({
           </ContentPage>
         );
       })}
+
+      {/* ── Health-data advertising result ────────────── */}
+      {healthAdtech && (
+        <HealthAdtechPages
+          result={healthAdtech.result}
+          t={healthAdtech.t}
+          lang={locale === "es" ? "es" : "en"}
+          title={data.name}
+          orgName={orgName}
+          date={date}
+        />
+      )}
 
       {/* ── Risk Assessment Summary ───────────────────── */}
       {data.riskLevel && (

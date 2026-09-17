@@ -5421,8 +5421,8 @@
   },
   "healthAdtechReport": {
     "title": "Result by jurisdiction",
-    "subtitle": "Follows the jurisdictions selected in section 1. Statements marked [to verify] are not yet confirmed; this is a draft for review by counsel, not legal advice.",
-    "noJurisdictions": "Select the jurisdictions in section 1 to see the consent model and the obligations for each.",
+    "subtitle": "Follows the jurisdictions selected under \"Scope and threshold analysis\". Statements marked [to verify] are not yet confirmed; this is a draft for review by counsel, not legal advice.",
+    "noJurisdictions": "Select the jurisdictions under \"Scope and threshold analysis\" to see the consent model and the obligations for each.",
     "jurisdiction": "Jurisdiction",
     "consentModel": "Consent model",
     "obligations": "Obligations",
@@ -5438,6 +5438,7 @@
     "blockingSummary": "At least one finding must be resolved before the processing can go ahead.",
     "fiveFactorTitle": "Health-data classification (five factors)",
     "fiveFactorScore": "Score {score} of {max}",
+    "scoreLabel": "Score",
     "fiveFactorPending": "{answered} of 5 factors scored",
     "decisionTitle": "Mitigation and decision",
     "mitigation": "Main mitigation route",
@@ -5791,43 +5792,43 @@
       },
       "section": {
         "hd1": {
-          "title": "1. Scope and threshold analysis",
+          "title": "Scope and threshold analysis",
           "description": "Select the jurisdictions first: the answer adds the questions and obligations each one requires."
         },
         "hd2": {
-          "title": "2. Purpose, necessity and data minimisation",
+          "title": "Purpose, necessity and data minimisation",
           "description": "Why the processing takes place and why each data item is needed."
         },
         "hd3": {
-          "title": "3. Description of the processing",
+          "title": "Description of the processing",
           "description": "The operational facts: sources, collection, data, retention, people affected and recipients."
         },
         "hd4": {
-          "title": "4. Benefits",
+          "title": "Benefits",
           "description": "The benefits to weigh against the risks."
         },
         "hd5": {
-          "title": "5. Negative impacts",
+          "title": "Negative impacts",
           "description": "The harms the processing could cause to consumers."
         },
         "hd6": {
-          "title": "6. Is it health data? Five-factor classification",
+          "title": "Is it health data? Five-factor classification",
           "description": "Score each factor; the report adds the scores (0 to 15) and gives a band."
         },
         "hd7": {
-          "title": "7. Safeguards and mitigation",
+          "title": "Safeguards and mitigation",
           "description": "The measures that address the risks and the main mitigation route chosen."
         },
         "hd8": {
-          "title": "8. Requirements of the selected jurisdictions",
-          "description": "Questions added by the jurisdictions selected in section 1."
+          "title": "Requirements of the selected jurisdictions",
+          "description": "Questions added by the jurisdictions selected under \"Scope and threshold analysis\"."
         },
         "hd9": {
-          "title": "9. Residual risk and determination",
+          "title": "Residual risk and determination",
           "description": "The risk that remains after the safeguards, and the decision."
         },
         "hd10": {
-          "title": "10. Approval",
+          "title": "Approval",
           "description": "Who signs, when, and when the assessment will be reviewed."
         },
         "s1": {

@@ -12,7 +12,9 @@
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 import { locales, type Locale } from "@/i18n/config";
+import { answerValues } from "@/lib/assessment-conditions";
 import {
+  localizeValues,
   objectLookup,
   translateSections,
   translateTemplateMeta,
@@ -38,6 +40,45 @@ export function allLocalizedSections<S extends RawSection>(
   sections: ReadonlyArray<S>
 ): S[][] {
   return locales.map((locale) => sectionsForLocale(type, sections, locale));
+}
+
+type OptionQuestion = { id: string; type?: unknown; options?: string[] };
+
+/**
+ * Formats saved answers in the given language: options matched by position
+ * across languages, lists joined with "; ", Yes/No translated. Free text is
+ * printed as saved.
+ */
+export function answerFormatter(
+  type: string,
+  storedSections: ReadonlyArray<RawSection>,
+  locale: Locale,
+  labels: { yes: string; no: string }
+): (questionId: string, raw: unknown) => string {
+  const index = (sections: ReadonlyArray<RawSection>) => {
+    const map = new Map<string, OptionQuestion>();
+    for (const s of sections) for (const q of s.questions ?? []) map.set(q.id, q);
+    return map;
+  };
+  const stored = index(storedSections);
+  const shown = index(sectionsForLocale(type, storedSections, locale));
+  const others = allLocalizedSections(type, storedSections).map(index);
+
+  return (questionId, raw) => {
+    const text = typeof raw === "string" ? raw : JSON.stringify(raw);
+    const baseId = questionId.split("::")[0];
+    const q = stored.get(baseId);
+    if (q?.type === "boolean") {
+      return text === "Yes" ? labels.yes : text === "No" ? labels.no : text;
+    }
+    if (!q?.options) return text;
+    return localizeValues(
+      answerValues(raw),
+      q.options,
+      shown.get(baseId)?.options,
+      others.map((m) => m.get(baseId)?.options)
+    ).join("; ");
+  };
 }
 
 export function templateMetaForLocale(
