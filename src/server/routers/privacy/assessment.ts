@@ -17,6 +17,7 @@ import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
 import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -56,6 +57,7 @@ export const assessmentRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      await ensureHostedTemplates();
       return ctx.prisma.assessmentTemplate.findMany({
         where: {
           OR: [
@@ -1159,6 +1161,7 @@ export const assessmentRouter = createTRPCRouter({
   getEntitledTypes: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
+      await ensureHostedTemplates();
       const entitledTypes = await getEntitledAssessmentTypes(ctx.organization.id);
       return { entitledTypes };
     }),

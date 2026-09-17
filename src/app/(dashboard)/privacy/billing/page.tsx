@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/table";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { sellingEnabled } from "@/lib/premium-gate";
 
 export default function BillingPage() {
   const router = useRouter();
@@ -63,16 +65,18 @@ export default function BillingPage() {
     },
   });
 
-  // Self-hosted (Stripe disabled): there is nothing to bill — every feature
-  // is included. Showing "Inactive — €9/mo" rows here would contradict the
-  // Skills page ("Installed"/"Included"), so redirect there instead.
+  // Self-hosted (Stripe disabled) or the hosted pilot: there is nothing to
+  // bill — every feature is included. Showing "Inactive — €9/mo" rows here
+  // would contradict the Skills page ("Installed"/"Included"), so redirect
+  // there instead.
+  const selling = sellingEnabled(features.stripeEnabled, useHostedPilot());
   useEffect(() => {
-    if (!features.stripeEnabled) {
+    if (!selling) {
       router.replace("/privacy/skills");
     }
-  }, [router]);
+  }, [router, selling]);
 
-  if (!features.stripeEnabled) return null;
+  if (!selling) return null;
 
   if (statusLoading || plansLoading || !organization) {
     return (

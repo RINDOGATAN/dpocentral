@@ -31,6 +31,8 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { DPIA_TEMPLATE_ID } from "@/config/dpia-template-v2";
 
 type WizardStep = "select" | "preview" | "review" | "create";
 
@@ -38,6 +40,8 @@ export default function DpiaAutoFillPage() {
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tAutoFill = useTranslations("pages.dpiaAutoFill");
+  const hosted = useHostedPilot();
   const [step, setStep] = useState<WizardStep>("select");
   const [selectedActivityId, setSelectedActivityId] = useState<string>("");
   const [selectedVendorId, setSelectedVendorId] = useState<string>("");
@@ -108,14 +112,19 @@ export default function DpiaAutoFillPage() {
   const createAssessment = trpc.assessment.create.useMutation();
   const saveResponse = trpc.assessment.saveResponse.useMutation();
 
-  const hasDpiaAccess = entitledTypes?.entitledTypes.includes("DPIA");
+  // The hosted pilot opens every type; the kit shows the licence notice until
+  // a DPIA template is installed.
+  const showLicenceNotice =
+    !hosted && !!entitledTypes && !entitledTypes.entitledTypes.includes("DPIA");
 
   const handleCreate = async () => {
     if (!autoFill || !templates || templates.length === 0) return;
 
     setIsCreating(true);
     try {
-      const template = templates[0];
+      // The suggestions target the standard DPIA's question ids; other DPIA
+      // templates (e.g. a global one) have their own.
+      const template = templates.find((tpl) => tpl.id === DPIA_TEMPLATE_ID) ?? templates[0];
       const assessment = await createAssessment.mutateAsync({
         organizationId: orgId,
         templateId: template.id,
@@ -199,16 +208,15 @@ export default function DpiaAutoFillPage() {
         ))}
       </div>
 
-      {!hasDpiaAccess && (
+      {showLicenceNotice && (
         <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
               <div>
-                <p className="font-medium">DPIA requires a premium license</p>
+                <p className="font-medium">{tAutoFill("licenceNoticeTitle")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  The auto-fill wizard will generate a Legitimate Interests Assessment (LIA) instead.
-                  Upgrade to access full DPIA templates.
+                  {tAutoFill("licenceNoticeBody")}
                 </p>
               </div>
             </div>
@@ -409,7 +417,7 @@ export default function DpiaAutoFillPage() {
               Create Assessment
             </CardTitle>
             <CardDescription>
-              A draft {hasDpiaAccess ? "DPIA" : "LIA"} will be created with {autoFill?.suggestions.length ?? 0} pre-filled responses
+              A draft DPIA will be created with {autoFill?.suggestions.length ?? 0} pre-filled responses
             </CardDescription>
           </CardHeader>
           <CardContent>

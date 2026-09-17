@@ -39,27 +39,27 @@ import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES, COMING_SOON_SKILL_IDS } from "@
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
-
-// Premium assessment types that require entitlements
-const PREMIUM_TYPES = ["DPIA", "PIA", "VENDOR"];
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { isAssessmentTypeLocked, isPremiumTypeKey } from "@/lib/premium-gate";
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
   icon: typeof Scale;
-  premium: boolean;
 }> = [
-  { type: "LIA", icon: Scale, premium: false },
-  { type: "CUSTOM", icon: Settings2, premium: false },
-  { type: "DPIA", icon: ShieldCheck, premium: true },
-  { type: "PIA", icon: ClipboardCheck, premium: true },
-  { type: "TIA", icon: ArrowRightLeft, premium: false },
-  { type: "VENDOR", icon: Building2, premium: true },
+  { type: "LIA", icon: Scale },
+  { type: "CUSTOM", icon: Settings2 },
+  { type: "DPIA", icon: ShieldCheck },
+  { type: "PIA", icon: ClipboardCheck },
+  { type: "TIA", icon: ArrowRightLeft },
+  { type: "VENDOR", icon: Building2 },
 ];
 
 export default function NewAssessmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
+  // Hosted pilot: every type is open, nothing is sold, no lock is shown.
+  const hosted = useHostedPilot();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newAssessment");
   const tCommon = useTranslations("common");
@@ -156,7 +156,7 @@ export default function NewAssessmentPage() {
       toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
 
-      if (error.data?.code === "FORBIDDEN") {
+      if (error.data?.code === "FORBIDDEN" && !hosted) {
         setUpgradeFeatureName(typeName(selectedType));
         setUpgradeSkillKey(selectedType ?? "");
         setUpgradeModalOpen(true);
@@ -165,16 +165,14 @@ export default function NewAssessmentPage() {
   });
 
   const isTypeEntitled = (type: string) => entitledTypes.includes(type as any);
-  const isPremiumType = (type: string) => PREMIUM_TYPES.includes(type);
   const isComingSoon = (type: string) => COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS[type] ?? "");
+  const isTypeLocked = (type: string) =>
+    isAssessmentTypeLocked({ type, entitledTypes, hosted, comingSoon: isComingSoon(type) });
 
   const handleTypeSelect = (type: string) => {
     if (isComingSoon(type)) return;
 
-    const isPremium = isPremiumType(type);
-    const isEntitled = isTypeEntitled(type);
-
-    if (isPremium && !isEntitled) {
+    if (isTypeLocked(type)) {
       setUpgradeFeatureName(typeName(type));
       setUpgradeSkillKey(type);
       setUpgradeModalOpen(true);
@@ -232,10 +230,11 @@ export default function NewAssessmentPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {ASSESSMENT_TYPES.map((at) => {
                 const Icon = at.icon;
-                const isPremium = at.premium;
+                // On the hosted pilot no card carries a premium mark.
+                const isPremium = isPremiumTypeKey(at.type) && !hosted;
                 const isEntitled = isTypeEntitled(at.type);
                 const comingSoon = isComingSoon(at.type);
-                const isLocked = isPremium && !isEntitled && !comingSoon;
+                const isLocked = isTypeLocked(at.type);
 
                 return (
                   <Card
@@ -260,8 +259,10 @@ export default function NewAssessmentPage() {
                                 : "border-primary bg-primary/10"
                           }`}
                         >
-                          {comingSoon || isLocked ? (
+                          {isLocked || (comingSoon && !hosted) ? (
                             <Lock className={`w-5 h-5 ${comingSoon ? "text-muted-foreground/50" : "text-amber-500"}`} />
+                          ) : comingSoon ? (
+                            <Icon className="w-5 h-5 text-muted-foreground/50" />
                           ) : (
                             <Icon className="w-5 h-5 text-primary" />
                           )}

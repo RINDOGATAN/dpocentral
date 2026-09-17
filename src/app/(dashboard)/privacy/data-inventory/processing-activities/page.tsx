@@ -29,6 +29,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { formatPrice } from "@/lib/currency";
 
 const legalBasisLabels: Record<string, string> = {
@@ -71,7 +72,9 @@ export default function ProcessingActivitiesPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
-  const hasRopaAccess = ropaAccess?.hasAccess ?? false;
+  // The hosted pilot includes the export: no lock or price there.
+  const hosted = useHostedPilot();
+  const hasRopaAccess = hosted || (ropaAccess?.hasAccess ?? false);
 
   const { data: activitiesData, isLoading } = trpc.dataInventory.listActivities.useQuery(
     { organizationId: organization?.id ?? "" },

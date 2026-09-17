@@ -183,6 +183,10 @@
         "VENDOR_desc": "Evalúa los riesgos de privacidad y seguridad asociados a proveedores externos."
       }
     },
+    "dpiaAutoFill": {
+      "licenceNoticeTitle": "La plantilla de DPIA no está instalada",
+      "licenceNoticeBody": "Para crear la DPIA, instala la skill de DPIA desde la página Skills con tu licencia."
+    },
     "newIncident": {
       "title": "Notificar incidente",
       "subtitle": "Documenta un incidente de seguridad o brecha de datos",

@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/currency";
 import { STOREFRONT_BUY, MARKETPLACE_URL } from "@/lib/marketplace";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 // Minimal shape check before we send it to the server.
 function looksLikeLicense(x: unknown): x is Record<string, unknown> {
@@ -33,6 +34,7 @@ export default function SkillsPage() {
   const t = useTranslations("skills");
   const locale = useLocale();
   const { organization } = useOrganization();
+  const hosted = useHostedPilot();
   const fileRef = useRef<HTMLInputElement>(null);
   const [license, setLicense] = useState<Record<string, unknown> | null>(null);
   const [fileName, setFileName] = useState("");
@@ -251,8 +253,10 @@ export default function SkillsPage() {
               const active = !!pkg.entitlement?.isActive;
               // Features (no assessmentType) are in-app capabilities, free on
               // self-host — never a "buy" item there. Only downloadable assessment
-              // skills are premium/marketplace.
-              const isIncluded = STOREFRONT_BUY && !pkg.assessmentType && !isComingSoon;
+              // skills are premium/marketplace. The hosted pilot includes every
+              // package and sells none.
+              const isIncluded =
+                !isComingSoon && (hosted || (STOREFRONT_BUY && !pkg.assessmentType));
               return (
                 <li key={pkg.id}>
                   <Card className={`flex items-center justify-between gap-3 p-4 ${isComingSoon ? "opacity-60" : ""}`}>

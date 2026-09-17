@@ -183,6 +183,10 @@
         "VENDOR_desc": "Evaluate privacy and security risks associated with third-party vendors."
       }
     },
+    "dpiaAutoFill": {
+      "licenceNoticeTitle": "The DPIA template is not installed",
+      "licenceNoticeBody": "To create the DPIA, install the DPIA skill from the Skills page with your licence."
+    },
     "newIncident": {
       "title": "Report Incident",
       "subtitle": "Document a security incident or data breach",

@@ -57,6 +57,7 @@ import { useTranslations } from "next-intl";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 
 const DataFlowVisualization = dynamic(
@@ -127,7 +128,9 @@ export default function DataInventoryPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
-  const hasRopaAccess = ropaAccess?.hasAccess ?? false;
+  // The hosted pilot includes the export: no lock or price there.
+  const hosted = useHostedPilot();
+  const hasRopaAccess = hosted || (ropaAccess?.hasAccess ?? false);
 
   const {
     data: assetsPages,
