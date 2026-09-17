@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useTemplateMeta } from "@/lib/template-i18n";
 
 const typeLabels: Record<string, string> = {
   DPIA: "Data Protection Impact Assessment",
@@ -36,6 +37,7 @@ export default function AssessmentTemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const templateMeta = useTemplateMeta();
 
   const { data: templates, isLoading } = trpc.assessment.listTemplates.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -142,10 +144,10 @@ export default function AssessmentTemplatesPage() {
                         <Badge variant="secondary">System</Badge>
                       </div>
                     </div>
-                    <CardTitle className="mt-3">{template.name}</CardTitle>
+                    <CardTitle className="mt-3">{templateMeta(template).name}</CardTitle>
                     {template.description && (
                       <CardDescription className="line-clamp-2">
-                        {template.description}
+                        {templateMeta(template).description}
                       </CardDescription>
                     )}
                   </CardHeader>

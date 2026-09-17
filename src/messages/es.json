@@ -183,6 +183,10 @@
         "VENDOR_desc": "Evalúa los riesgos de privacidad y seguridad asociados a proveedores externos."
       }
     },
+    "dpiaAutoFill": {
+      "licenceNoticeTitle": "La plantilla de DPIA no está instalada",
+      "licenceNoticeBody": "Para crear la DPIA, instala la skill de DPIA desde la página Skills con tu licencia."
+    },
     "newIncident": {
       "title": "Notificar incidente",
       "subtitle": "Documenta un incidente de seguridad o brecha de datos",
@@ -5415,6 +5419,39 @@
       }
     }
   },
+  "healthAdtechReport": {
+    "title": "Resultado por jurisdicción",
+    "subtitle": "Sigue a las jurisdicciones seleccionadas en «Alcance y análisis de umbral». Las afirmaciones marcadas [por verificar] aún no están confirmadas; es un borrador para revisión por un abogado, no asesoramiento jurídico.",
+    "noJurisdictions": "Selecciona las jurisdicciones en «Alcance y análisis de umbral» para ver el modelo de consentimiento y las obligaciones de cada una.",
+    "jurisdiction": "Jurisdicción",
+    "consentModel": "Modelo de consentimiento",
+    "obligations": "Obligaciones",
+    "findings": "Conclusiones a partir de las respuestas",
+    "noFindings": "Por ahora las respuestas no muestran ningún problema.",
+    "source": "Fuente",
+    "toVerify": "[por verificar]",
+    "severity": {
+      "blocking": "Debe resolverse",
+      "gap": "Carencia",
+      "note": "Nota"
+    },
+    "blockingSummary": "Al menos una conclusión debe resolverse antes de que el tratamiento pueda seguir adelante.",
+    "fiveFactorTitle": "Clasificación como datos de salud (cinco factores)",
+    "fiveFactorScore": "Puntuación {score} de {max}",
+    "scoreLabel": "Puntuación",
+    "fiveFactorPending": "{answered} de 5 factores puntuados",
+    "decisionTitle": "Mitigación y decisión",
+    "mitigation": "Vía principal de mitigación",
+    "residualRisk": "Riesgo residual",
+    "determination": "Decisión final",
+    "priorConsultation": "Consulta previa (art. 36)",
+    "signatureTitle": "Aprobación",
+    "signer": "Firmado por (directivo)",
+    "signedOn": "Fecha de aprobación",
+    "reviewDate": "Fecha de revisión",
+    "signatureLine": "Firma",
+    "notRecorded": "Sin registrar"
+  },
   "templates": {
     "lia": {
       "section": {
@@ -5747,7 +5784,53 @@
       }
     },
     "dpia": {
+      "template": {
+        "system-dpia-health-adtech-template": {
+          "name": "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
+          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: el procedimiento de ocho fases de la CCPA y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
+        }
+      },
       "section": {
+        "hd1": {
+          "title": "Alcance y análisis de umbral",
+          "description": "Selecciona primero las jurisdicciones: la respuesta añade las preguntas y obligaciones que exige cada una."
+        },
+        "hd2": {
+          "title": "Finalidad, necesidad y minimización de datos",
+          "description": "Por qué se realiza el tratamiento y por qué es necesario cada dato."
+        },
+        "hd3": {
+          "title": "Descripción del tratamiento",
+          "description": "Los hechos operativos: fuentes, recogida, datos, conservación, personas afectadas y destinatarios."
+        },
+        "hd4": {
+          "title": "Beneficios",
+          "description": "Los beneficios que se ponderan frente a los riesgos."
+        },
+        "hd5": {
+          "title": "Impactos negativos",
+          "description": "Los daños que el tratamiento podría causar a los consumidores."
+        },
+        "hd6": {
+          "title": "¿Son datos de salud? Clasificación por cinco factores",
+          "description": "Puntúa cada factor; el informe suma las puntuaciones (de 0 a 15) y asigna una banda."
+        },
+        "hd7": {
+          "title": "Garantías y mitigación",
+          "description": "Las medidas que abordan los riesgos y la vía principal de mitigación elegida."
+        },
+        "hd8": {
+          "title": "Requisitos de las jurisdicciones seleccionadas",
+          "description": "Preguntas que añaden las jurisdicciones seleccionadas en «Alcance y análisis de umbral»."
+        },
+        "hd9": {
+          "title": "Riesgo residual y decisión final",
+          "description": "El riesgo que subsiste tras las garantías y la decisión adoptada."
+        },
+        "hd10": {
+          "title": "Aprobación",
+          "description": "Quién firma, cuándo y cuándo se revisará la evaluación."
+        },
         "s1": {
           "title": "Descripción del tratamiento",
           "description": "Describe la naturaleza, el alcance y la finalidad del tratamiento"
@@ -5778,6 +5861,305 @@
         }
       },
       "question": {
+        "hd1_1": {
+          "text": "¿Qué jurisdicciones se aplican a este tratamiento?",
+          "helpText": "Selecciona todas las jurisdicciones cuyos residentes aportan datos que se recogen o usan. Si cambias la selección, cambian las preguntas siguientes y el informe. Fuente: catálogo de jurisdicciones de DPO Central (RGPD, RGPD del Reino Unido, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington y Nevada no figuran en el catálogo.",
+          "options": [
+            "UE/EEE (RGPD)",
+            "Reino Unido (RGPD del Reino Unido)",
+            "California (CCPA/CPRA)",
+            "Washington (My Health My Data Act)",
+            "Nevada (ley sobre datos de salud del consumidor)",
+            "Maryland (MODPA)",
+            "Connecticut (CTDPA)",
+            "Colorado (CPA)",
+            "Virginia (VCDPA)",
+            "Texas (TDPSA)",
+            "Oregón (OCPA)",
+            "Otro estado de EE. UU. con una ley general de privacidad"
+          ]
+        },
+        "hd1_2": {
+          "text": "¿Qué supuestos de evaluación de riesgos de la CCPA cumple el tratamiento?",
+          "helpText": "Cualquier supuesto obliga a realizar la evaluación de riesgos. Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "options": [
+            "Venta o intercambio (sharing) de información personal",
+            "Tratamiento de información personal sensible",
+            "Tecnología de decisiones automatizadas (ADMT) para una decisión significativa",
+            "Observación automatizada de empleados, contratistas, candidatos o estudiantes",
+            "Inferencia de rasgos sensibles a partir de la presencia en un lugar sensible",
+            "Tratamiento para entrenar tecnología ADMT, biométrica o de elaboración de perfiles",
+            "Ninguno de ellos"
+          ]
+        },
+        "hd1_3": {
+          "text": "¿Qué supuestos del artículo 35(3) del RGPD se aplican?",
+          "helpText": "Cualquier supuesto obliga a realizar la EIPD (DPIA) antes de iniciar el tratamiento. Fuente: art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de DPIA de DPO Central.",
+          "options": [
+            "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35(3)(a))",
+            "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35(3)(b))",
+            "Observación sistemática a gran escala de una zona de acceso público (art. 35(3)(c))",
+            "Ninguno, pero el tratamiento sigue siendo probablemente de alto riesgo",
+            "Ninguno de ellos"
+          ]
+        },
+        "hd1_4": {
+          "text": "¿Qué supuestos de evaluación de protección de datos de los estados de EE. UU. se aplican?",
+          "helpText": "Cualquier supuesto obliga a realizar una evaluación de protección de datos en los estados seleccionados. Fuente: catálogo de jurisdicciones de DPO Central, ficha VCDPA and CTDPA. La lista de supuestos varía según el estado [por verificar en cada estado].",
+          "options": [
+            "Publicidad segmentada",
+            "Venta de datos personales",
+            "Tratamiento de datos sensibles (incluidos los de salud)",
+            "Elaboración de perfiles con riesgo previsible de daño",
+            "Ninguno de ellos"
+          ]
+        },
+        "hd1_5": {
+          "text": "Resultado del análisis de umbral",
+          "options": [
+            "Es necesaria una evaluación completa",
+            "No es necesaria ninguna evaluación (motivos en las notas)",
+            "Aún sin determinar"
+          ]
+        },
+        "hd2_1": {
+          "text": "¿Cuál es la finalidad empresarial concreta del tratamiento?",
+          "helpText": "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing». Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+        },
+        "hd2_2": {
+          "text": "¿Por qué es necesaria cada categoría de datos para esa finalidad y qué alternativas menos intrusivas has valorado?",
+          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+        },
+        "hd2_3": {
+          "text": "¿Qué medidas de minimización de datos se aplican (campos excluidos, parámetros eliminados, agregación)?",
+          "helpText": "Maryland limita la recogida a lo razonablemente necesario. Fuente: catálogo de jurisdicciones de DPO Central, ficha MODPA."
+        },
+        "hd2_4": {
+          "text": "¿En qué base jurídica del RGPD y, para los datos de salud, en qué condición del artículo 9(2) te basas?",
+          "helpText": "Debe identificarse una condición del artículo 9(2) para cada categoría especial. Para los datos de salud usados en publicidad, el consentimiento explícito suele ser la única condición disponible [por verificar]. El interés legítimo solo puede amparar datos que no sean de categoría especial. Fuente: reglas de autocompletado y plantilla de DPIA de DPO Central (condiciones del art. 9(2) y bases del art. 6).",
+          "options": [
+            "Consentimiento (art. 6(1)(a)) y consentimiento explícito (art. 9(2)(a))",
+            "Interés legítimo (art. 6(1)(f)), sin datos de categoría especial",
+            "Otra base (explícala en las notas)"
+          ]
+        },
+        "hd2_5": {
+          "text": "Si te basas en el interés legítimo, resume la ponderación.",
+          "helpText": "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una LIA completa. Fuente: art. 6(1)(f) del RGPD, plantilla de LIA de DPO Central."
+        },
+        "hd3_1": {
+          "text": "¿De qué fuentes proceden los datos (sitios web, aplicaciones, páginas, socios)?",
+          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+        },
+        "hd3_2": {
+          "text": "¿Cómo se recogen los datos?",
+          "options": [
+            "Píxel o etiqueta en páginas web",
+            "SDK en una aplicación móvil",
+            "Eventos desde el servidor (API de conversiones)",
+            "Parámetros de URL, de búsqueda o de eventos",
+            "Datos recibidos de socios o de intermediarios de datos",
+            "Otro (explícalo en las notas)"
+          ]
+        },
+        "hd3_3": {
+          "text": "¿Qué categorías de datos se tratan, campo por campo?",
+          "helpText": "Enumera cada campo y evento: nombres de eventos, URL y rutas de páginas, términos de búsqueda, categorías de producto, identificadores de dispositivo, dirección IP, ubicación. Marca cualquier campo que pueda revelar una condición de salud."
+        },
+        "hd3_4": {
+          "text": "¿Durante cuánto tiempo se conserva cada categoría, por tu parte y por cada destinatario?"
+        },
+        "hd3_5": {
+          "text": "¿Qué consumidores se ven afectados y cuántos son?",
+          "helpText": "Incluye a los menores y a otros colectivos vulnerables cuando proceda."
+        },
+        "hd3_6": {
+          "text": "¿Quién recibe los datos y en qué calidad?",
+          "helpText": "Para cada destinatario indica su calidad: proveedor de servicios, contratista o tercero (CCPA); encargado o responsable del tratamiento (RGPD). Fuente: catálogo de jurisdicciones de DPO Central, ficha CCPA/CPRA and GDPR."
+        },
+        "hd3_7": {
+          "text": "¿Qué comunicaciones a terceros se producen y alguna de ellas constituye una venta o un intercambio (sharing)?"
+        },
+        "hd4_1": {
+          "text": "¿Qué beneficios obtiene la empresa?",
+          "helpText": "Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026)."
+        },
+        "hd4_2": {
+          "text": "¿Qué beneficios obtienen los consumidores?"
+        },
+        "hd4_3": {
+          "text": "¿Qué beneficios obtiene la sociedad, si los hay?"
+        },
+        "hd5_1": {
+          "text": "¿Qué impactos negativos podría causar el tratamiento?",
+          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
+          "options": [
+            "Acceso o comunicación no autorizados",
+            "Discriminación",
+            "Pérdida de control del consumidor sobre sus datos",
+            "Prácticas coercitivas o manipuladoras",
+            "Daño económico",
+            "Daño físico",
+            "Daño reputacional",
+            "Daño psicológico"
+          ]
+        },
+        "hd5_2": {
+          "text": "Para cada impacto seleccionado, describe cómo podría producirse, su probabilidad y su gravedad.",
+          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+        },
+        "hd6_1": {
+          "text": "Factor 1, fuente: ¿de dónde proceden los datos?",
+          "helpText": "Las opciones van en orden creciente de riesgo (0 a 3). Los cinco factores siguen el artículo; la puntuación y las bandas son el método de esta plantilla, no un criterio legal. Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "options": [
+            "Contexto de público general sin relación con la salud",
+            "Contexto de bienestar o estilo de vida",
+            "Página, aplicación o búsqueda relacionada con la salud",
+            "Prestador sanitario, farmacia o aplicación de salud"
+          ]
+        },
+        "hd6_2": {
+          "text": "Factor 2, contenido: ¿qué revelan los datos?",
+          "options": [
+            "Ninguna información de salud",
+            "Un indicio indirecto, como una categoría de producto",
+            "Un interés por la salud o una condición inferida",
+            "Una condición o un tratamiento concretos, o salud reproductiva o sexual"
+          ]
+        },
+        "hd6_3": {
+          "text": "Factor 3, uso: ¿cómo se usan los datos?",
+          "options": [
+            "Solo medición, sin segmentación",
+            "Publicidad contextual amplia",
+            "Segmento de audiencia basado en un interés por la salud",
+            "Segmentación o exclusión de personas por su condición de salud"
+          ]
+        },
+        "hd6_4": {
+          "text": "Factor 4, expectativas: ¿esperarían los consumidores este uso?",
+          "options": [
+            "Los consumidores lo esperan",
+            "Los consumidores probablemente lo esperan",
+            "Los consumidores probablemente no lo esperan",
+            "Los consumidores no lo esperarían"
+          ]
+        },
+        "hd6_5": {
+          "text": "Factor 5, daño: ¿qué gravedad tendría el daño si los datos se usaran indebidamente o se revelaran?",
+          "options": [
+            "Insignificante",
+            "Limitado",
+            "Significativo",
+            "Grave (por ejemplo, discriminación o revelación de una condición)"
+          ]
+        },
+        "hd6_6": {
+          "text": "Motivos de las puntuaciones"
+        },
+        "hd7_1": {
+          "text": "¿Qué vía principal de mitigación eliges?",
+          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
+          "options": [
+            "Obtener consentimiento expreso (opt-in) en todo el país",
+            "Suprimir los datos relacionados con la salud de los consumidores de estados con consentimiento expreso",
+            "Confiar en la diligencia debida y en los controles contractuales con los socios",
+            "Evitar campañas de alto riesgo (sin segmentación por condiciones de salud)",
+            "Desidentificar los datos antes de cualquier comunicación"
+          ]
+        },
+        "hd7_2": {
+          "text": "¿Qué otras garantías se aplican?",
+          "helpText": "Colorado, Connecticut y Texas reconocen los mecanismos universales de exclusión voluntaria. Fuente: catálogo de jurisdicciones de DPO Central, ficha CPA, CTDPA and TDPSA.",
+          "options": [
+            "Eliminar rutas de URL, términos de búsqueda y parámetros de los eventos del píxel y del SDK",
+            "Respetar las señales de preferencia de exclusión voluntaria",
+            "Cláusulas contractuales que prohíben la reidentificación y el uso posterior",
+            "Diligencia debida sobre el socio antes de cualquier comunicación",
+            "Plazo de conservación más breve para los eventos relacionados con la salud",
+            "Controles de acceso y registro de auditoría",
+            "Otra (explícala en las notas)"
+          ]
+        },
+        "hd7_3": {
+          "text": "Describe la diligencia debida sobre los socios y las cláusulas contractuales vigentes."
+        },
+        "hd8_1": {
+          "text": "Washington o Nevada: ¿obtienes el consentimiento del consumidor antes de recoger sus datos de salud y un consentimiento distinto antes de compartirlos?",
+          "helpText": "Responde Sí o No; añade el detalle en las notas. Fuente: Washington, RCW 19.373.030; Nevada, NRS 603A.500 (comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_2": {
+          "text": "Washington o Nevada: ¿se vende algún dato de salud del consumidor y, en tal caso, cuentas con una autorización firmada y válida de cada consumidor?",
+          "helpText": "Responde Sí solo si no hay venta o si cada venta está cubierta por una autorización firmada que identifique los datos, al vendedor y a cada comprador. Fuente: Washington, RCW 19.373.070; Nevada, NRS 603A.535 (comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_3": {
+          "text": "Washington o Nevada: ¿utilizas una geovalla alrededor de lugares donde se prestan servicios sanitarios para identificar o seguir a los consumidores, o para enviarles mensajes?",
+          "helpText": "Esta geovalla está prohibida: a menos de 2.000 pies de asistencia sanitaria presencial en Washington y a menos de 1.750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse. Fuente: RCW 19.373.080; NRS 603A.540 (comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_4": {
+          "text": "Maryland: ¿alguna comunicación constituye una venta de datos sensibles, incluidos los de salud?",
+          "helpText": "Maryland prohíbe vender datos sensibles; no es solo un derecho de oposición, y el consentimiento no hace lícita esa venta. Los datos sensibles solo pueden tratarse cuando sea estrictamente necesario para un producto o servicio solicitado por el consumidor. Fuente: Md. Com. Law 14-4607(a)(1),(2) (ley de 2024, cap. 454; comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_5": {
+          "text": "California: ¿ofreces y respetas el derecho a limitar el uso y la comunicación de la información personal sensible?",
+          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, ficha CCPA/CPRA."
+        },
+        "hd8_6": {
+          "text": "California: ¿en qué fecha se documentó esta evaluación de riesgos y cuándo vence la presentación abreviada?",
+          "helpText": "Calendario: evaluar antes de iniciar el tratamiento; el tratamiento iniciado antes de 2026 debe evaluarse a más tardar el 31 de diciembre de 2027; la información resumida y la declaración de un directivo se presentan a CalPrivacy a más tardar el 1 de abril de 2028; el informe completo se entrega en 30 días desde el requerimiento. Usa el formato AAAA-MM-DD. Fuente: 11 CCR 7155(a),(b) y 7157(a),(e) (comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_7": {
+          "text": "California: ¿qué directivo firmará la declaración que acompaña a la presentación (nombre y cargo)?",
+          "helpText": "La declaración se hace bajo pena de perjurio y la firma un miembro de la alta dirección directamente responsable del cumplimiento en evaluaciones de riesgos. Fuente: 11 CCR 7157(b)(5),(c) (comprobado el 16 de septiembre de 2026)."
+        },
+        "hd8_8": {
+          "text": "Estados de EE. UU.: ¿obtienes consentimiento expreso (opt-in) antes de tratar datos sensibles, incluidos los de salud?",
+          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, ficha CTDPA, CPA, VCDPA, TDPSA and OCPA. En otros estados, revisa cada ley [por verificar]. En Maryland, el consentimiento no permite una venta."
+        },
+        "hd8_9": {
+          "text": "Estados de EE. UU.: ¿pueden los consumidores excluirse de la publicidad segmentada y de la venta de sus datos?",
+          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, ficha CTDPA, CPA, VCDPA, TDPSA and OCPA (right to opt out). El alcance exacto del derecho en cada estado [por verificar]."
+        },
+        "hd8_10": {
+          "text": "UE/EEE o Reino Unido: ¿has recabado el asesoramiento del delegado de protección de datos sobre esta EIPD?",
+          "helpText": "Fuente: plantilla de DPIA de DPO Central (sección de consulta)."
+        },
+        "hd9_1": {
+          "text": "¿Cuál es el riesgo residual tras las garantías?",
+          "helpText": "Fuente: plantilla de DPIA de DPO Central (preguntas sobre los arts. 35 y 36 del RGPD).",
+          "options": [
+            "Bajo",
+            "Medio",
+            "Alto",
+            "Muy alto"
+          ]
+        },
+        "hd9_2": {
+          "text": "Decisión final",
+          "options": [
+            "Seguir adelante según lo previsto",
+            "Seguir adelante con las garantías indicadas",
+            "Seguir adelante solo tras la consulta previa a la autoridad de control",
+            "No seguir adelante"
+          ]
+        },
+        "hd9_3": {
+          "text": "UE/EEE o Reino Unido: ¿es necesaria la consulta previa a la autoridad de control (art. 36)?",
+          "helpText": "Es necesaria cuando la EIPD muestra un riesgo alto que las medidas no reducen. El informe lo señala cuando el riesgo residual es Alto o Muy alto. Fuente: plantilla de DPIA de DPO Central (preguntas sobre los arts. 35 y 36 del RGPD)."
+        },
+        "hd9_4": {
+          "text": "Motivos de la decisión"
+        },
+        "hd10_1": {
+          "text": "Directivo que aprueba y firma (nombre y cargo)"
+        },
+        "hd10_2": {
+          "text": "Fecha de aprobación (AAAA-MM-DD)"
+        },
+        "hd10_3": {
+          "text": "Fecha de revisión (AAAA-MM-DD)",
+          "helpText": "Revisa la evaluación al menos cuando cambien el tratamiento, los socios o la ley."
+        },
         "q1_1": {
           "text": "¿Qué categorías de datos personales se tratarán?",
           "helpText": "Enumera todas las categorías de datos (p. ej., identificadores, financieros, conductuales, categorías especiales). Sé específico con cada categoría."

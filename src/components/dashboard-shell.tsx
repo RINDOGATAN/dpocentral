@@ -53,6 +53,8 @@ import { PersonaSelector } from "@/components/privacy/persona-selector";
 import { OnboardingWelcome } from "@/components/privacy/onboarding-welcome";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { features } from "@/config/features";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 
@@ -60,6 +62,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading } = useOrganization();
+  const hosted = useHostedPilot();
   const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -306,7 +309,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <BookOpen className="w-3.5 h-3.5" />
               {tFooter("userGuide")}
             </Link>
-            {features.stripeEnabled && features.selfServiceUpgrade && (
+            {sellingEnabled(features.stripeEnabled, hosted) && features.selfServiceUpgrade && (
               <>
                 <span className="text-border">&middot;</span>
                 <Link href="/privacy/billing" className="flex items-center gap-1.5 hover:text-foreground transition-colors">

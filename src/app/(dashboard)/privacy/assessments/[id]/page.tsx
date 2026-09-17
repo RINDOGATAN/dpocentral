@@ -60,6 +60,15 @@ import { useOrganization } from "@/lib/organization-context";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
+import {
+  answerMapFrom,
+  hasConditions,
+  hiddenByConditions,
+  withoutHidden,
+} from "@/lib/assessment-conditions";
+import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import { localizeValues } from "@/lib/template-i18n-core";
+import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -460,7 +469,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // Derived values — safe to compute even when assessment is null
   const template = assessment?.template;
   const rawSections = useMemo(() => (template?.sections as any[]) || [], [template?.sections]);
-  const sections = useTranslatedSections(template?.type, rawSections);
+  const translatedSections = useTranslatedSections(template?.type, rawSections);
+  // Conditional questions (`showIf`): hidden ones are not shown or counted.
+  const conditional = useMemo(() => hasConditions(rawSections), [rawSections]);
+  const sections = useMemo(() => {
+    if (!conditional) return translatedSections;
+    const hidden = hiddenByConditions(
+      rawSections,
+      answerMapFrom(assessment?.responses),
+      [translatedSections]
+    );
+    return withoutHidden(translatedSections, hidden);
+  }, [conditional, rawSections, translatedSections, assessment?.responses]);
 
   // ── Optional AI risk-narrative target ──
   // The AI draft is a DPIA/PIA/TIA *risk narrative*; it only makes sense in
@@ -574,9 +594,24 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     },
     [assessment?.responses, assessment?.id, organization?.id, deleteResponses]
   );
-  const completionPercentage = assessment?.completionPercentage ?? 0;
-  const totalQuestions = assessment?.totalQuestions ?? 0;
-  const answeredQuestions = assessment?.responses?.length ?? 0;
+  // With conditions the visible set changes as answers change, so progress is
+  // counted here over the visible questions; otherwise the server's figures.
+  const visibleCounts = useMemo(() => {
+    if (!conditional) return null;
+    const answered = new Set((assessment?.responses ?? []).map((r: any) => r.questionId));
+    let total = 0;
+    let done = 0;
+    for (const s of expandedSections) {
+      for (const q of s.questions || []) {
+        total++;
+        if (answered.has(q.id)) done++;
+      }
+    }
+    return { total, done, percentage: total > 0 ? Math.round((done / total) * 100) : 0 };
+  }, [conditional, expandedSections, assessment?.responses]);
+  const completionPercentage = visibleCounts?.percentage ?? assessment?.completionPercentage ?? 0;
+  const totalQuestions = visibleCounts?.total ?? assessment?.totalQuestions ?? 0;
+  const answeredQuestions = visibleCounts?.done ?? assessment?.responses?.length ?? 0;
 
   const canSubmit =
     assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
@@ -647,6 +682,19 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }
     return val ? [val] : [];
   }, []);
+
+  // Stored (English) options by question id, to show a choice saved in
+  // English in the current language (matched by position).
+  const storedOptions = useMemo(() => {
+    const map = new Map<string, string[] | undefined>();
+    for (const s of rawSections) for (const q of s?.questions ?? []) map.set(q.id, q.options);
+    return map;
+  }, [rawSections]);
+  const shownValues = useCallback(
+    (question: any, values: string[]) =>
+      localizeValues(values, storedOptions.get(String(question.id).split("::")[0]), question.options),
+    [storedOptions]
+  );
 
   const vendorPets = suggestions?.vendorPets ?? [];
   const vendorName = suggestions?.vendorName ?? null;
@@ -1036,7 +1084,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                   <div className="space-y-2">
                                     <Label className="text-xs text-muted-foreground">{tp("question.chooseOne")}</Label>
                                     <Select
-                                      value={responseValue || ""}
+                                      value={responseValue ? shownValues(question, [responseValue])[0] : ""}
                                       onValueChange={(value) => handleAutoSave(question.id, section.id, question, value)}
                                       disabled={!canSubmit}
                                     >
@@ -1065,7 +1113,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     <Label className="text-xs text-muted-foreground">{tp("question.selectAllApply")}</Label>
                                     <div className="grid gap-2 sm:grid-cols-2">
                                       {(question.options as string[]).map((option: string) => {
-                                        const currentValues = parseMultiselectValue(responseValue);
+                                        const currentValues = shownValues(question, parseMultiselectValue(responseValue));
                                         const isChecked = currentValues.includes(option);
                                         return (
                                           <label
@@ -1206,6 +1254,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <p>{tp("question.emptyTitle")}</p>
               </CardContent>
             </Card>
+          )}
+          {isHealthAdtechTemplate(template) && (
+            <HealthAdtechSummary responses={assessment.responses ?? []} />
           )}
         </TabsContent>
 

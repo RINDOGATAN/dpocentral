@@ -45,6 +45,8 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { features } from "@/config/features";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
@@ -76,6 +78,9 @@ export default function QuickstartPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
+  // Pricing-tier badges only where something is sold (never on the hosted pilot).
+  const hosted = useHostedPilot();
+  const selling = sellingEnabled(features.stripeEnabled, hosted);
   const orgId = organization?.id ?? "";
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
@@ -561,7 +566,7 @@ export default function QuickstartPage() {
                   {/* Pricing-tier badge: only meaningful where a payment
                       rail exists. On self-host everything is included, so
                       "free" tiers would be confusing noise. */}
-                  {features.stripeEnabled && !catalogAccess?.hasAccess && (
+                  {selling && !catalogAccess?.hasAccess && (
                     <Badge variant="outline" className="text-green-600 border-green-600/50">
                       {tp("choose.fiveFree")}
                     </Badge>
@@ -595,7 +600,7 @@ export default function QuickstartPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <Sparkles className="w-8 h-8 text-primary" />
-                  {features.stripeEnabled && (
+                  {selling && (
                     <Badge variant="outline" className="text-green-600 border-green-600/50">
                       {tp("choose.free")}
                     </Badge>

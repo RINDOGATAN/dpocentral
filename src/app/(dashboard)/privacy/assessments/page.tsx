@@ -28,6 +28,8 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { sellingEnabled } from "@/lib/premium-gate";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -51,6 +53,7 @@ export default function AssessmentsPage() {
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
   const { organization } = useOrganization();
+  const hosted = useHostedPilot();
 
   const { data: assessmentsData, isLoading } = trpc.assessment.list.useQuery(
     { organizationId: organization?.id ?? "", search: debouncedSearch || undefined },
@@ -314,11 +317,11 @@ export default function AssessmentsPage() {
             {[
               { type: "LIA", nameKey: "lia", premium: false },
               { type: "CUSTOM", nameKey: "custom", premium: false },
-              // DPIA is premium only where a payment rail exists. On
-              // self-host (Stripe off) every feature is included — see
+              // DPIA is premium only where something is sold: never on the
+              // hosted pilot, and not on self-host (Stripe off) — see
               // allFeaturesFree in server/services/licensing/entitlement.ts
-              // — so a lock badge here would be false.
-              { type: "DPIA", nameKey: "dpia", premium: features.stripeEnabled },
+              // — so a lock badge there would be false.
+              { type: "DPIA", nameKey: "dpia", premium: sellingEnabled(features.stripeEnabled, hosted) },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
                 <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">

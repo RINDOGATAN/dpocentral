@@ -11,7 +11,22 @@ import { AssessmentReport } from "@/server/services/export/assessment-report";
 import type { AssessmentExportData } from "@/server/services/export/assessment-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-import { locales, defaultLocale } from "@/i18n/config";
+import { locales, defaultLocale, type Locale } from "@/i18n/config";
+import type { PdfT } from "@/server/services/export/privacy-program/data-mapping";
+import {
+  answerMapFrom,
+  hasConditions,
+  hiddenByConditions,
+  withoutHidden,
+} from "@/lib/assessment-conditions";
+import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import { assessmentProgress } from "@/server/services/assessment/progress";
+import {
+  allLocalizedSections,
+  answerFormatter,
+  sectionsForLocale,
+  templateMetaForLocale,
+} from "@/server/services/assessment/template-locales";
 
 export async function GET(
   request: Request,
@@ -78,12 +93,41 @@ export async function GET(
   // The premium gate is on *creating* assessments (template access),
   // not on exporting completed ones.
 
-  // Build export data
-  const sections = (assessment.template.sections as any[]) || [];
-  const totalQuestions = sections.reduce(
-    (sum: number, sec: any) => sum + (sec.questions?.length || 0),
-    0
+  const url = new URL(request.url);
+  const requestedLocale = url.searchParams.get("locale");
+  const cookieLocale = await getCookieLocale();
+  const resolvedLocale = ([requestedLocale, cookieLocale, defaultLocale].find(
+    (l): l is string => !!l && (locales as readonly string[]).includes(l)
+  ) ?? defaultLocale) as Locale;
+
+  // Build export data: template text in the report's language, and only the
+  // questions the answers make visible (templates with `showIf`).
+  const templateType = assessment.template.type;
+  const storedSections = (assessment.template.sections as any[]) || [];
+  const localizedSections = sectionsForLocale(templateType, storedSections, resolvedLocale);
+  const conditional = hasConditions(storedSections);
+  const hidden = conditional
+    ? hiddenByConditions(
+        storedSections,
+        answerMapFrom(assessment.responses),
+        allLocalizedSections(templateType, storedSections)
+      )
+    : null;
+  const sections = hidden ? withoutHidden(localizedSections, hidden) : localizedSections;
+  const exportedResponses = hidden
+    ? assessment.responses.filter((r) => !hidden.questions.has(r.questionId))
+    : assessment.responses;
+  const { totalQuestions, completionPercentage } = assessmentProgress(
+    assessment.template,
+    assessment.responses
   );
+  const templateName = templateMetaForLocale(assessment.template, resolvedLocale).name;
+  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.assessmentReport" });
+
+  const displayAnswer = answerFormatter(templateType, storedSections, resolvedLocale, {
+    yes: t("yes"),
+    no: t("no"),
+  });
 
   const data: AssessmentExportData = {
     id: assessment.id,
@@ -98,16 +142,16 @@ export async function GET(
     dueDate: assessment.dueDate,
     template: {
       type: assessment.template.type,
-      name: assessment.template.name,
+      name: templateName,
       version: assessment.template.version,
       sections,
     },
     processingActivity: assessment.processingActivity,
     vendor: assessment.vendor,
-    responses: assessment.responses.map((r) => ({
+    responses: exportedResponses.map((r) => ({
       sectionId: r.sectionId,
       questionId: r.questionId,
-      response: typeof r.response === "string" ? r.response : JSON.stringify(r.response),
+      response: displayAnswer(r.questionId, r.response),
       riskScore: r.riskScore,
       notes: r.notes,
       responder: r.responder,
@@ -131,22 +175,23 @@ export async function GET(
       approver: a.approver,
     })),
     organization: { name: assessment.organization.name },
-    completionPercentage:
-      totalQuestions > 0
-        ? Math.round((assessment.responses.length / totalQuestions) * 100)
-        : 0,
+    completionPercentage,
     totalQuestions,
   };
 
-  const url = new URL(request.url);
-  const requestedLocale = url.searchParams.get("locale");
-  const cookieLocale = await getCookieLocale();
-  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
-    (l): l is string => !!l && (locales as readonly string[]).includes(l)
-  ) ?? defaultLocale;
-  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.assessmentReport" });
+  const healthAdtech = isHealthAdtechTemplate(assessment.template)
+    ? {
+        result: computeHealthAdtechResult(assessment.responses),
+        t: (await getTranslations({
+          locale: resolvedLocale,
+          namespace: "healthAdtechReport",
+        })) as unknown as PdfT,
+      }
+    : undefined;
 
-  const buffer = await renderToBuffer(AssessmentReport({ data, t, locale: resolvedLocale }));
+  const buffer = await renderToBuffer(
+    AssessmentReport({ data, t, locale: resolvedLocale, healthAdtech })
+  );
   const dateStr = fmtDate(new Date());
   const filename = `Assessment-${assessment.template.type}-${assessment.name.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf`;
 

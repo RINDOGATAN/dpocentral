@@ -35,6 +35,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -91,7 +92,10 @@ export default function VendorsPage() {
     { enabled: !!organization?.id }
   );
 
-  const hasVendorCatalog = catalogAccess?.hasAccess ?? false;
+  // The hosted pilot includes the catalogue: never show its lock or price there,
+  // not even while the access query loads.
+  const hosted = useHostedPilot();
+  const hasVendorCatalog = hosted || (catalogAccess?.hasAccess ?? false);
 
   const vendors = vendorsData?.vendors ?? [];
   const byStatus = statsData?.byStatus as Record<string, number> | undefined;
