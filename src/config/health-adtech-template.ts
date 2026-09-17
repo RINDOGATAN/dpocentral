@@ -5,10 +5,10 @@
  * Global assessment template: "Health data in advertising: CCPA risk
  * assessment and GDPR DPIA".
  *
- * Structure: the eight-part CCPA risk-assessment workflow described by the
- * California Lawyers Association ("Global assessments across CCPA and GDPR",
- * part one, 14 September 2026) combined with the content GDPR Article 35(7)
- * requires, plus a jurisdiction-specific section and an approval section.
+ * Structure: the nine elements of a CCPA risk assessment (11 CCR 7152(a))
+ * combined with the content GDPR Article 35(7) requires, plus a
+ * jurisdiction-specific section and an approval section. The five-factor
+ * health-data classification and its scoring are this template's own method.
  *
  * This file is the single bilingual source. The English text is what the
  * database stores (AssessmentTemplate.sections); the Spanish text is written
@@ -60,24 +60,32 @@ export interface BiSection {
 
 // ── Sources (quoted in help text) ────────────────────────────────────────
 
-const TO_VERIFY: BiText = { en: "[to verify]", es: "[por verificar]" };
-
 const src = (en: string, es: string): BiText => ({ en: `Source: ${en}.`, es: `Fuente: ${es}.` });
 const join = (...parts: BiText[]): BiText => ({
   en: parts.map((p) => p.en).join(" "),
   es: parts.map((p) => p.es).join(" "),
 });
 
-const CLA = {
-  en: "California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026)",
-  es: "California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026)",
-};
-const SRC_CLA = src(CLA.en, CLA.es);
 // Primary texts checked on 16 September 2026.
 const CHECKED = { en: "checked 16 September 2026", es: "comprobado el 16 de septiembre de 2026" };
-const SRC_CA_IMPACTS = src(
-  `11 CCR 7152(a)(5)-(6) (${CHECKED.en}); ${CLA.en}`,
-  `11 CCR 7152(a)(5)-(6) (${CHECKED.es}); ${CLA.es}`
+const SRC_CA_TRIGGERS = src(`11 CCR 7150(b) (${CHECKED.en})`, `11 CCR 7150(b) (${CHECKED.es})`);
+const SRC_PROCESSING = src(
+  `11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a) (${CHECKED.en})`,
+  `11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (${CHECKED.es})`
+);
+const SRC_NECESSITY = src(`GDPR Art. 35(7)(b) (${CHECKED.en})`, `art. 35(7)(b) del RGPD (${CHECKED.es})`);
+const SRC_CA_BENEFITS = src(`11 CCR 7152(a)(4) (${CHECKED.en})`, `11 CCR 7152(a)(4) (${CHECKED.es})`);
+const SRC_IMPACTS = src(
+  `11 CCR 7152(a)(5); GDPR Art. 35(7)(c) (${CHECKED.en})`,
+  `11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (${CHECKED.es})`
+);
+const SRC_SAFEGUARDS = src(
+  `11 CCR 7152(a)(6); GDPR Art. 35(7)(d) (${CHECKED.en})`,
+  `11 CCR 7152(a)(6); art. 35(7)(d) del RGPD (${CHECKED.es})`
+);
+const SRC_CA_DECISION = src(
+  `11 CCR 7152(a)(7) to (9) (${CHECKED.en})`,
+  `11 CCR 7152(a)(7) a (9) (${CHECKED.es})`
 );
 const SRC_CA_TIMETABLE = src(
   `11 CCR 7155(a),(b) and 7157(a),(e) (${CHECKED.en})`,
@@ -111,10 +119,6 @@ const SRC_CATALOGUE = (entry: string) =>
 const SRC_DPIA_TEMPLATE = src(
   "DPO Central DPIA template (GDPR Art. 35 and Art. 36 questions)",
   "plantilla de DPIA de DPO Central (preguntas sobre los arts. 35 y 36 del RGPD)"
-);
-const SRC_ART35_7 = src(
-  "GDPR Art. 35(7), as listed in the DPO Central assessment report",
-  "art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central"
 );
 const SRC_ART35_3 = src(
   "GDPR Art. 35(3)(a) to (c), as used in the DPO Central risk mappings and DPIA template",
@@ -244,8 +248,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
             en: "Any trigger means a risk assessment is required.",
             es: "Cualquier supuesto obliga a realizar la evaluación de riesgos.",
           },
-          SRC_CLA,
-          TO_VERIFY
+          SRC_CA_TRIGGERS
         ),
         options: {
           en: [
@@ -385,7 +388,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
             en: "Name the campaign, measurement or audience use; avoid general wording such as \"marketing\".",
             es: "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing».",
           },
-          SRC_ART35_7
+          SRC_PROCESSING
         ),
       },
       {
@@ -396,7 +399,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "Why is each category of data necessary for that purpose, and what less intrusive alternatives did you consider?",
           es: "¿Por qué es necesaria cada categoría de datos para esa finalidad y qué alternativas menos intrusivas has valorado?",
         },
-        help: SRC_ART35_7,
+        help: SRC_NECESSITY,
       },
       {
         id: "hd2_3",
@@ -484,7 +487,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "What are the sources of the data (websites, apps, pages, partners)?",
           es: "¿De qué fuentes proceden los datos (sitios web, aplicaciones, páginas, socios)?",
         },
-        help: SRC_ART35_7,
+        help: SRC_PROCESSING,
       },
       {
         id: "hd3_2",
@@ -588,7 +591,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         type: "textarea",
         required: true,
         text: { en: "What are the benefits to the business?", es: "¿Qué beneficios obtiene la empresa?" },
-        help: SRC_CLA,
+        help: SRC_CA_BENEFITS,
       },
       {
         id: "hd4_2",
@@ -620,7 +623,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "Which negative impacts could the processing cause?",
           es: "¿Qué impactos negativos podría causar el tratamiento?",
         },
-        help: SRC_CA_IMPACTS,
+        help: SRC_IMPACTS,
         options: {
           en: [
             "Unauthorised access or disclosure",
@@ -652,7 +655,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "For each impact selected, describe how it could occur, its likelihood and its severity.",
           es: "Para cada impacto seleccionado, describe cómo podría producirse, su probabilidad y su gravedad.",
         },
-        help: SRC_ART35_7,
+        help: SRC_IMPACTS,
       },
     ],
   },
@@ -672,14 +675,10 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         type: "select",
         required: true,
         text: { en: "Factor 1, source: where does the data come from?", es: "Factor 1, fuente: ¿de dónde proceden los datos?" },
-        help: join(
-          {
-            en: "Options are in rising order of risk (0 to 3). The five factors follow the article; the scoring and the bands are this template's method, not a legal test.",
-            es: "Las opciones van en orden creciente de riesgo (0 a 3). Los cinco factores siguen el artículo; la puntuación y las bandas son el método de esta plantilla, no un criterio legal.",
-          },
-          SRC_CLA,
-          TO_VERIFY
-        ),
+        help: {
+          en: "Options are in rising order of risk (0 to 3). Method of this template, not a legal test: the five factors follow the NAI Factor Analysis (2026), and the scoring and the bands are the template's own.",
+          es: "Las opciones van en orden creciente de riesgo (0 a 3). Método de esta plantilla, no un criterio legal: los cinco factores siguen el NAI Factor Analysis (2026), y la puntuación y las bandas son propias de la plantilla.",
+        },
         options: {
           en: [
             "General-audience context with no link to health",
@@ -805,7 +804,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         type: "select",
         required: true,
         text: { en: "Which main mitigation route do you choose?", es: "¿Qué vía principal de mitigación eliges?" },
-        help: SRC_CA_IMPACTS,
+        help: SRC_SAFEGUARDS,
         options: MITIGATION_OPTIONS,
       },
       {
@@ -1047,6 +1046,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         type: "select",
         required: true,
         text: { en: "Final determination", es: "Decisión final" },
+        help: SRC_CA_DECISION,
         options: {
           en: [
             "Proceed as planned",
@@ -1103,6 +1103,13 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "Executive who approves and signs (name and title)",
           es: "Directivo que aprueba y firma (nombre y cargo)",
         },
+        help: join(
+          {
+            en: "Record also who contributed to the assessment.",
+            es: "Indica también quién ha participado en la evaluación.",
+          },
+          SRC_CA_DECISION
+        ),
       },
       {
         id: SIGNATURE_QUESTION_IDS.date,
@@ -1130,8 +1137,8 @@ export const HEALTH_ADTECH_NAME: BiText = {
 };
 
 export const HEALTH_ADTECH_DESCRIPTION: BiText = {
-  en: "One global assessment for pixels, SDKs and audiences that may involve health data: the eight-part CCPA risk-assessment workflow and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice.",
-  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: el procedimiento de ocho fases de la CCPA y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico.",
+  en: "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice.",
+  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico.",
 };
 
 // ── Stored (English) template ─────────────────────────────────────────────

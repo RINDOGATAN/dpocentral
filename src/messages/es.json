@@ -5787,7 +5787,7 @@
       "template": {
         "system-dpia-health-adtech-template": {
           "name": "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
-          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: el procedimiento de ocho fases de la CCPA y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
+          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
         }
       },
       "section": {
@@ -5881,7 +5881,7 @@
         },
         "hd1_2": {
           "text": "¿Qué supuestos de evaluación de riesgos de la CCPA cumple el tratamiento?",
-          "helpText": "Cualquier supuesto obliga a realizar la evaluación de riesgos. Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "helpText": "Cualquier supuesto obliga a realizar la evaluación de riesgos. Fuente: 11 CCR 7150(b) (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Venta o intercambio (sharing) de información personal",
             "Tratamiento de información personal sensible",
@@ -5924,11 +5924,11 @@
         },
         "hd2_1": {
           "text": "¿Cuál es la finalidad empresarial concreta del tratamiento?",
-          "helpText": "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing». Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+          "helpText": "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing». Fuente: 11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd2_2": {
           "text": "¿Por qué es necesaria cada categoría de datos para esa finalidad y qué alternativas menos intrusivas has valorado?",
-          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+          "helpText": "Fuente: art. 35(7)(b) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd2_3": {
           "text": "¿Qué medidas de minimización de datos se aplican (campos excluidos, parámetros eliminados, agregación)?",
@@ -5949,7 +5949,7 @@
         },
         "hd3_1": {
           "text": "¿De qué fuentes proceden los datos (sitios web, aplicaciones, páginas, socios)?",
-          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+          "helpText": "Fuente: 11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd3_2": {
           "text": "¿Cómo se recogen los datos?",
@@ -5982,7 +5982,7 @@
         },
         "hd4_1": {
           "text": "¿Qué beneficios obtiene la empresa?",
-          "helpText": "Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026)."
+          "helpText": "Fuente: 11 CCR 7152(a)(4) (comprobado el 16 de septiembre de 2026)."
         },
         "hd4_2": {
           "text": "¿Qué beneficios obtienen los consumidores?"
@@ -5992,7 +5992,7 @@
         },
         "hd5_1": {
           "text": "¿Qué impactos negativos podría causar el tratamiento?",
-          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
+          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Acceso o comunicación no autorizados",
             "Discriminación",
@@ -6006,11 +6006,11 @@
         },
         "hd5_2": {
           "text": "Para cada impacto seleccionado, describe cómo podría producirse, su probabilidad y su gravedad.",
-          "helpText": "Fuente: art. 35(7) del RGPD, según la lista del informe de evaluación de DPO Central."
+          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd6_1": {
           "text": "Factor 1, fuente: ¿de dónde proceden los datos?",
-          "helpText": "Las opciones van en orden creciente de riesgo (0 a 3). Los cinco factores siguen el artículo; la puntuación y las bandas son el método de esta plantilla, no un criterio legal. Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "helpText": "Las opciones van en orden creciente de riesgo (0 a 3). Método de esta plantilla, no un criterio legal: los cinco factores siguen el NAI Factor Analysis (2026), y la puntuación y las bandas son propias de la plantilla.",
           "options": [
             "Contexto de público general sin relación con la salud",
             "Contexto de bienestar o estilo de vida",
@@ -6059,7 +6059,7 @@
         },
         "hd7_1": {
           "text": "¿Qué vía principal de mitigación eliges?",
-          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
+          "helpText": "Fuente: 11 CCR 7152(a)(6); art. 35(7)(d) del RGPD (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Obtener consentimiento expreso (opt-in) en todo el país",
             "Suprimir los datos relacionados con la salud de los consumidores de estados con consentimiento expreso",
@@ -6136,6 +6136,7 @@
         },
         "hd9_2": {
           "text": "Decisión final",
+          "helpText": "Fuente: 11 CCR 7152(a)(7) a (9) (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Seguir adelante según lo previsto",
             "Seguir adelante con las garantías indicadas",
@@ -6151,7 +6152,8 @@
           "text": "Motivos de la decisión"
         },
         "hd10_1": {
-          "text": "Directivo que aprueba y firma (nombre y cargo)"
+          "text": "Directivo que aprueba y firma (nombre y cargo)",
+          "helpText": "Indica también quién ha participado en la evaluación. Fuente: 11 CCR 7152(a)(7) a (9) (comprobado el 16 de septiembre de 2026)."
         },
         "hd10_2": {
           "text": "Fecha de aprobación (AAAA-MM-DD)"

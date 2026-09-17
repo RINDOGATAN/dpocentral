@@ -5787,7 +5787,7 @@
       "template": {
         "system-dpia-health-adtech-template": {
           "name": "Health data in advertising: CCPA risk assessment and GDPR DPIA",
-          "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the eight-part CCPA risk-assessment workflow and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
+          "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
         }
       },
       "section": {
@@ -5881,7 +5881,7 @@
         },
         "hd1_2": {
           "text": "Which CCPA risk-assessment triggers does the processing meet?",
-          "helpText": "Any trigger means a risk assessment is required. Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "helpText": "Any trigger means a risk assessment is required. Source: 11 CCR 7150(b) (checked 16 September 2026).",
           "options": [
             "Selling or sharing personal information",
             "Processing sensitive personal information",
@@ -5924,11 +5924,11 @@
         },
         "hd2_1": {
           "text": "What is the specific business purpose of the processing?",
-          "helpText": "Name the campaign, measurement or audience use; avoid general wording such as \"marketing\". Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+          "helpText": "Name the campaign, measurement or audience use; avoid general wording such as \"marketing\". Source: 11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a) (checked 16 September 2026)."
         },
         "hd2_2": {
           "text": "Why is each category of data necessary for that purpose, and what less intrusive alternatives did you consider?",
-          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+          "helpText": "Source: GDPR Art. 35(7)(b) (checked 16 September 2026)."
         },
         "hd2_3": {
           "text": "Which data minimisation measures apply (fields excluded, parameters removed, aggregation)?",
@@ -5949,7 +5949,7 @@
         },
         "hd3_1": {
           "text": "What are the sources of the data (websites, apps, pages, partners)?",
-          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+          "helpText": "Source: 11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a) (checked 16 September 2026)."
         },
         "hd3_2": {
           "text": "How is the data collected?",
@@ -5982,7 +5982,7 @@
         },
         "hd4_1": {
           "text": "What are the benefits to the business?",
-          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026)."
+          "helpText": "Source: 11 CCR 7152(a)(4) (checked 16 September 2026)."
         },
         "hd4_2": {
           "text": "What are the benefits to consumers?"
@@ -5992,7 +5992,7 @@
         },
         "hd5_1": {
           "text": "Which negative impacts could the processing cause?",
-          "helpText": "Source: 11 CCR 7152(a)(5)-(6) (checked 16 September 2026); California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026).",
+          "helpText": "Source: 11 CCR 7152(a)(5); GDPR Art. 35(7)(c) (checked 16 September 2026).",
           "options": [
             "Unauthorised access or disclosure",
             "Discrimination",
@@ -6006,11 +6006,11 @@
         },
         "hd5_2": {
           "text": "For each impact selected, describe how it could occur, its likelihood and its severity.",
-          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+          "helpText": "Source: 11 CCR 7152(a)(5); GDPR Art. 35(7)(c) (checked 16 September 2026)."
         },
         "hd6_1": {
           "text": "Factor 1, source: where does the data come from?",
-          "helpText": "Options are in rising order of risk (0 to 3). The five factors follow the article; the scoring and the bands are this template's method, not a legal test. Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "helpText": "Options are in rising order of risk (0 to 3). Method of this template, not a legal test: the five factors follow the NAI Factor Analysis (2026), and the scoring and the bands are the template's own.",
           "options": [
             "General-audience context with no link to health",
             "Wellness or lifestyle context",
@@ -6059,7 +6059,7 @@
         },
         "hd7_1": {
           "text": "Which main mitigation route do you choose?",
-          "helpText": "Source: 11 CCR 7152(a)(5)-(6) (checked 16 September 2026); California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026).",
+          "helpText": "Source: 11 CCR 7152(a)(6); GDPR Art. 35(7)(d) (checked 16 September 2026).",
           "options": [
             "Obtain opt-in consent nationwide",
             "Suppress health-related data for consumers in opt-in states",
@@ -6136,6 +6136,7 @@
         },
         "hd9_2": {
           "text": "Final determination",
+          "helpText": "Source: 11 CCR 7152(a)(7) to (9) (checked 16 September 2026).",
           "options": [
             "Proceed as planned",
             "Proceed with the safeguards listed",
@@ -6151,7 +6152,8 @@
           "text": "Reasons for the determination"
         },
         "hd10_1": {
-          "text": "Executive who approves and signs (name and title)"
+          "text": "Executive who approves and signs (name and title)",
+          "helpText": "Record also who contributed to the assessment. Source: 11 CCR 7152(a)(7) to (9) (checked 16 September 2026)."
         },
         "hd10_2": {
           "text": "Date of approval (YYYY-MM-DD)"
