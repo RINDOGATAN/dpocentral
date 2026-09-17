@@ -58,6 +58,7 @@ import {
   resetHostedTemplatesForTests,
 } from "@/server/services/pilot/hosted-templates";
 import { DPIA_TEMPLATE_ID } from "@/config/dpia-template-v2";
+import { HEALTH_ADTECH_TEMPLATE_ID } from "@/config/health-adtech-template";
 import { assessmentRouter } from "@/server/routers/privacy/assessment";
 import { callerFor, sessionFor } from "./helpers";
 
@@ -164,6 +165,21 @@ describe("hosted templates written at runtime", () => {
     expect(mocks.prisma.assessmentTemplate.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ id: DPIA_TEMPLATE_ID, type: "DPIA", isSystem: true }),
+      })
+    );
+  });
+
+  it("writes the global health-data advertising template on the hosted pilot", async () => {
+    hosted();
+    await ensureHostedTemplates();
+    expect(mocks.prisma.assessmentTemplate.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          id: HEALTH_ADTECH_TEMPLATE_ID,
+          type: "DPIA",
+          isSystem: true,
+          scoringLogic: expect.objectContaining({ method: "health_adtech_v1" }),
+        }),
       })
     );
   });

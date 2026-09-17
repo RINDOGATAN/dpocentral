@@ -60,6 +60,14 @@ import { useOrganization } from "@/lib/organization-context";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
+import {
+  answerMapFrom,
+  hasConditions,
+  hiddenByConditions,
+  withoutHidden,
+} from "@/lib/assessment-conditions";
+import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -460,7 +468,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // Derived values — safe to compute even when assessment is null
   const template = assessment?.template;
   const rawSections = useMemo(() => (template?.sections as any[]) || [], [template?.sections]);
-  const sections = useTranslatedSections(template?.type, rawSections);
+  const translatedSections = useTranslatedSections(template?.type, rawSections);
+  // Conditional questions (`showIf`): hidden ones are not shown or counted.
+  const conditional = useMemo(() => hasConditions(rawSections), [rawSections]);
+  const sections = useMemo(() => {
+    if (!conditional) return translatedSections;
+    const hidden = hiddenByConditions(
+      rawSections,
+      answerMapFrom(assessment?.responses),
+      [translatedSections]
+    );
+    return withoutHidden(translatedSections, hidden);
+  }, [conditional, rawSections, translatedSections, assessment?.responses]);
 
   // ── Optional AI risk-narrative target ──
   // The AI draft is a DPIA/PIA/TIA *risk narrative*; it only makes sense in
@@ -574,9 +593,24 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     },
     [assessment?.responses, assessment?.id, organization?.id, deleteResponses]
   );
-  const completionPercentage = assessment?.completionPercentage ?? 0;
-  const totalQuestions = assessment?.totalQuestions ?? 0;
-  const answeredQuestions = assessment?.responses?.length ?? 0;
+  // With conditions the visible set changes as answers change, so progress is
+  // counted here over the visible questions; otherwise the server's figures.
+  const visibleCounts = useMemo(() => {
+    if (!conditional) return null;
+    const answered = new Set((assessment?.responses ?? []).map((r: any) => r.questionId));
+    let total = 0;
+    let done = 0;
+    for (const s of expandedSections) {
+      for (const q of s.questions || []) {
+        total++;
+        if (answered.has(q.id)) done++;
+      }
+    }
+    return { total, done, percentage: total > 0 ? Math.round((done / total) * 100) : 0 };
+  }, [conditional, expandedSections, assessment?.responses]);
+  const completionPercentage = visibleCounts?.percentage ?? assessment?.completionPercentage ?? 0;
+  const totalQuestions = visibleCounts?.total ?? assessment?.totalQuestions ?? 0;
+  const answeredQuestions = visibleCounts?.done ?? assessment?.responses?.length ?? 0;
 
   const canSubmit =
     assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
@@ -1206,6 +1240,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <p>{tp("question.emptyTitle")}</p>
               </CardContent>
             </Card>
+          )}
+          {isHealthAdtechTemplate(template) && (
+            <HealthAdtechSummary responses={assessment.responses ?? []} />
           )}
         </TabsContent>
 

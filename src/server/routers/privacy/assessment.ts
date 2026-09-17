@@ -18,9 +18,21 @@ import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLa
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
+import { assessmentProgress, unansweredRequired } from "../../services/assessment/progress";
+import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
+  // The health-data advertising template derives its level from its own
+  // result (residual risk, five-factor band, blocking findings).
+  if (isHealthAdtechTemplate(template)) {
+    const result = computeHealthAdtechResult(responses);
+    if (result.riskLevel && result.riskScore != null) {
+      return { score: result.riskScore, level: RiskLevel[result.riskLevel] };
+    }
+    return { score: 0, level: RiskLevel.LOW };
+  }
+
   if (!responses.length) return { score: 0, level: RiskLevel.LOW };
 
   let totalWeight = 0;
@@ -285,15 +297,10 @@ export const assessmentRouter = createTRPCRouter({
           message: "Assessment template is missing — it may have been deleted",
         });
       }
-      const sections = (template.sections as any[]) || [];
-      const totalQuestions = sections.reduce(
-        (sum, s) => sum + (s.questions?.length || 0),
-        0
+      const { completionPercentage, totalQuestions } = assessmentProgress(
+        template,
+        assessment.responses
       );
-      const answeredQuestions = assessment.responses.length;
-      const completionPercentage = totalQuestions > 0
-        ? Math.round((answeredQuestions / totalQuestions) * 100)
-        : 0;
 
       return { ...assessment, completionPercentage, totalQuestions };
     }),
@@ -614,17 +621,8 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
-      // Check all required questions are answered
-      const sections = (assessment.template.sections as any[]) || [];
-      const requiredQuestionIds = sections.flatMap((s) =>
-        (s.questions || [])
-          .filter((q: any) => q.required)
-          .map((q: any) => q.id)
-      );
-      const answeredIds = assessment.responses.map((r) => r.questionId);
-      const unanswered = requiredQuestionIds.filter(
-        (id) => !answeredIds.includes(id)
-      );
+      // Check all required questions are answered (visible ones only)
+      const unanswered = unansweredRequired(assessment.template, assessment.responses);
 
       if (unanswered.length > 0) {
         throw new TRPCError({
@@ -933,17 +931,8 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
-      // Check all required questions are answered
-      const sections = (assessment.template.sections as any[]) || [];
-      const requiredQuestionIds = sections.flatMap((s) =>
-        (s.questions || [])
-          .filter((q: any) => q.required)
-          .map((q: any) => q.id)
-      );
-      const answeredIds = assessment.responses.map((r) => r.questionId);
-      const unanswered = requiredQuestionIds.filter(
-        (id) => !answeredIds.includes(id)
-      );
+      // Check all required questions are answered (visible ones only)
+      const unanswered = unansweredRequired(assessment.template, assessment.responses);
 
       if (unanswered.length > 0) {
         throw new TRPCError({

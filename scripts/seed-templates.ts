@@ -7,6 +7,10 @@
 
 import { PrismaClient } from "@prisma/client";
 import { describeOutcome, upsertSystemTemplate } from "../src/lib/seed-system-content";
+import {
+  HEALTH_ADTECH_TEMPLATE_ID,
+  healthAdtechTemplateData,
+} from "../src/config/health-adtech-template";
 
 const prisma = new PrismaClient();
 
@@ -628,6 +632,30 @@ async function main() {
     }
   } catch {
     console.log("  Premium skills not installed. Skipping premium templates.");
+  }
+
+  // Global DPIA "Health data in advertising". A DPIA-type template, so on the
+  // kit it accompanies a licensed DPIA: it is written only once a DPIA system
+  // template is installed (signed skill), which keeps the licence gate. The
+  // hosted pilot writes it at runtime (src/server/services/pilot/hosted-templates.ts).
+  const licensedDpia = await prisma.assessmentTemplate.findFirst({
+    where: { type: "DPIA", isSystem: true, organizationId: null, id: { not: HEALTH_ADTECH_TEMPLATE_ID } },
+    select: { id: true },
+  });
+  if (licensedDpia) {
+    console.log(
+      describeOutcome(
+        "Health data in advertising DPIA template",
+        HEALTH_ADTECH_TEMPLATE_ID,
+        await upsertSystemTemplate(prisma, HEALTH_ADTECH_TEMPLATE_ID, {
+          ...healthAdtechTemplateData,
+          sections: healthAdtechTemplateData.sections as object,
+          scoringLogic: healthAdtechTemplateData.scoringLogic as object,
+        })
+      )
+    );
+  } else {
+    console.log("  No DPIA template installed. Skipping the health-data advertising DPIA.");
   }
 
   console.log("Done! Assessment templates seeded successfully.");

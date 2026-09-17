@@ -5419,6 +5419,38 @@
       }
     }
   },
+  "healthAdtechReport": {
+    "title": "Result by jurisdiction",
+    "subtitle": "Follows the jurisdictions selected in section 1. Statements marked [to verify] are not yet confirmed; this is a draft for review by counsel, not legal advice.",
+    "noJurisdictions": "Select the jurisdictions in section 1 to see the consent model and the obligations for each.",
+    "jurisdiction": "Jurisdiction",
+    "consentModel": "Consent model",
+    "obligations": "Obligations",
+    "findings": "Findings from the answers",
+    "noFindings": "No issue found in the answers so far.",
+    "source": "Source",
+    "toVerify": "[to verify]",
+    "severity": {
+      "blocking": "Must be resolved",
+      "gap": "Gap",
+      "note": "Note"
+    },
+    "blockingSummary": "At least one finding must be resolved before the processing can go ahead.",
+    "fiveFactorTitle": "Health-data classification (five factors)",
+    "fiveFactorScore": "Score {score} of {max}",
+    "fiveFactorPending": "{answered} of 5 factors scored",
+    "decisionTitle": "Mitigation and decision",
+    "mitigation": "Main mitigation route",
+    "residualRisk": "Residual risk",
+    "determination": "Final determination",
+    "priorConsultation": "Prior consultation (Art. 36)",
+    "signatureTitle": "Approval",
+    "signer": "Signed by (executive)",
+    "signedOn": "Date of approval",
+    "reviewDate": "Review date",
+    "signatureLine": "Signature",
+    "notRecorded": "Not recorded"
+  },
   "templates": {
     "lia": {
       "section": {
@@ -5751,7 +5783,53 @@
       }
     },
     "dpia": {
+      "template": {
+        "system-dpia-health-adtech-template": {
+          "name": "Health data in advertising: CCPA risk assessment and GDPR DPIA",
+          "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the eight-part CCPA risk-assessment workflow and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
+        }
+      },
       "section": {
+        "hd1": {
+          "title": "1. Scope and threshold analysis",
+          "description": "Select the jurisdictions first: the answer adds the questions and obligations each one requires."
+        },
+        "hd2": {
+          "title": "2. Purpose, necessity and data minimisation",
+          "description": "Why the processing takes place and why each data item is needed."
+        },
+        "hd3": {
+          "title": "3. Description of the processing",
+          "description": "The operational facts: sources, collection, data, retention, people affected and recipients."
+        },
+        "hd4": {
+          "title": "4. Benefits",
+          "description": "The benefits to weigh against the risks."
+        },
+        "hd5": {
+          "title": "5. Negative impacts",
+          "description": "The harms the processing could cause to consumers."
+        },
+        "hd6": {
+          "title": "6. Is it health data? Five-factor classification",
+          "description": "Score each factor; the report adds the scores (0 to 15) and gives a band."
+        },
+        "hd7": {
+          "title": "7. Safeguards and mitigation",
+          "description": "The measures that address the risks and the main mitigation route chosen."
+        },
+        "hd8": {
+          "title": "8. Requirements of the selected jurisdictions",
+          "description": "Questions added by the jurisdictions selected in section 1."
+        },
+        "hd9": {
+          "title": "9. Residual risk and determination",
+          "description": "The risk that remains after the safeguards, and the decision."
+        },
+        "hd10": {
+          "title": "10. Approval",
+          "description": "Who signs, when, and when the assessment will be reviewed."
+        },
         "s1": {
           "title": "Processing Description",
           "description": "Describe the nature, scope, and purpose of the processing"
@@ -5782,6 +5860,305 @@
         }
       },
       "question": {
+        "hd1_1": {
+          "text": "Which jurisdictions apply to this processing?",
+          "helpText": "Select every jurisdiction whose residents' data is collected or used. Changing the selection changes the questions below and the report. Source: DPO Central jurisdiction catalogue (GDPR, UK GDPR, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington and Nevada are not in the catalogue.",
+          "options": [
+            "EU/EEA (GDPR)",
+            "United Kingdom (UK GDPR)",
+            "California (CCPA/CPRA)",
+            "Washington (My Health My Data Act)",
+            "Nevada (consumer health data law)",
+            "Maryland (MODPA)",
+            "Connecticut (CTDPA)",
+            "Colorado (CPA)",
+            "Virginia (VCDPA)",
+            "Texas (TDPSA)",
+            "Oregon (OCPA)",
+            "Another US state with a comprehensive privacy law"
+          ]
+        },
+        "hd1_2": {
+          "text": "Which CCPA risk-assessment triggers does the processing meet?",
+          "helpText": "Any trigger means a risk assessment is required. Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "options": [
+            "Selling or sharing personal information",
+            "Processing sensitive personal information",
+            "Automated decision-making technology (ADMT) for a significant decision",
+            "Automated observation of employees, contractors, job applicants or students",
+            "Inferring sensitive traits from presence at a sensitive location",
+            "Processing to train ADMT, biometric or profiling technology",
+            "None of these"
+          ]
+        },
+        "hd1_3": {
+          "text": "Which GDPR Article 35(3) cases apply?",
+          "helpText": "Any case means a DPIA is required before the processing starts. Source: GDPR Art. 35(3)(a) to (c), as used in the DPO Central risk mappings and DPIA template.",
+          "options": [
+            "Systematic and extensive evaluation, including profiling, with legal or similarly significant effects (Art. 35(3)(a))",
+            "Large-scale processing of special category data, such as health data (Art. 35(3)(b))",
+            "Systematic monitoring of a publicly accessible area on a large scale (Art. 35(3)(c))",
+            "None of these, but the processing is still likely to be high risk",
+            "None of these"
+          ]
+        },
+        "hd1_4": {
+          "text": "Which US state data protection assessment triggers apply?",
+          "helpText": "Any trigger means a data protection assessment is required in the states selected. Source: DPO Central jurisdiction catalogue, VCDPA and CTDPA entry. The trigger list varies by state [to verify for each state].",
+          "options": [
+            "Targeted advertising",
+            "Sale of personal data",
+            "Processing sensitive data (including health data)",
+            "Profiling with a foreseeable risk of harm",
+            "None of these"
+          ]
+        },
+        "hd1_5": {
+          "text": "Result of the threshold analysis",
+          "options": [
+            "A full assessment is required",
+            "No assessment is required (reasons recorded in the notes)",
+            "Not yet determined"
+          ]
+        },
+        "hd2_1": {
+          "text": "What is the specific business purpose of the processing?",
+          "helpText": "Name the campaign, measurement or audience use; avoid general wording such as \"marketing\". Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+        },
+        "hd2_2": {
+          "text": "Why is each category of data necessary for that purpose, and what less intrusive alternatives did you consider?",
+          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+        },
+        "hd2_3": {
+          "text": "Which data minimisation measures apply (fields excluded, parameters removed, aggregation)?",
+          "helpText": "Maryland limits collection to what is reasonably necessary. Source: DPO Central jurisdiction catalogue, MODPA entry."
+        },
+        "hd2_4": {
+          "text": "Which GDPR legal basis and, for health data, which Article 9(2) condition do you rely on?",
+          "helpText": "An Article 9(2) condition must be identified for each special category. For health data used in advertising, explicit consent is usually the only available condition [to verify]. Legitimate interest can only support data that is not special category data. Source: DPO Central DPIA auto-fill rules (Art. 9(2)) and DPIA template (Art. 6 bases).",
+          "options": [
+            "Consent (Art. 6(1)(a)) and explicit consent (Art. 9(2)(a))",
+            "Legitimate interests (Art. 6(1)(f)), with no special category data",
+            "Another basis (explain in the notes)"
+          ]
+        },
+        "hd2_5": {
+          "text": "If you rely on legitimate interest, summarise the balancing test.",
+          "helpText": "Record the interest, the necessity and the balance against the individuals' rights; a full LIA can be attached. Source: GDPR Art. 6(1)(f), DPO Central LIA template."
+        },
+        "hd3_1": {
+          "text": "What are the sources of the data (websites, apps, pages, partners)?",
+          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+        },
+        "hd3_2": {
+          "text": "How is the data collected?",
+          "options": [
+            "Pixel or tag on web pages",
+            "SDK in a mobile app",
+            "Server-side events (conversion API)",
+            "URL, search or event parameters",
+            "Data received from partners or data brokers",
+            "Other (explain in the notes)"
+          ]
+        },
+        "hd3_3": {
+          "text": "Which categories of data are processed, field by field?",
+          "helpText": "List each field and event: event names, page URLs and paths, search terms, product categories, device identifiers, IP address, location. Mark any field that can reveal a health condition."
+        },
+        "hd3_4": {
+          "text": "How long is each category kept, by you and by each recipient?"
+        },
+        "hd3_5": {
+          "text": "Which consumers are affected, and how many?",
+          "helpText": "Include minors and other vulnerable groups where relevant."
+        },
+        "hd3_6": {
+          "text": "Who receives the data, and in what role?",
+          "helpText": "For each recipient give the role: service provider, contractor or third party (CCPA); processor or controller (GDPR). Source: DPO Central jurisdiction catalogue, CCPA/CPRA and GDPR entry."
+        },
+        "hd3_7": {
+          "text": "Which disclosures to third parties take place, and is any of them a sale or sharing?"
+        },
+        "hd4_1": {
+          "text": "What are the benefits to the business?",
+          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026)."
+        },
+        "hd4_2": {
+          "text": "What are the benefits to consumers?"
+        },
+        "hd4_3": {
+          "text": "What are the benefits to the public, if any?"
+        },
+        "hd5_1": {
+          "text": "Which negative impacts could the processing cause?",
+          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "options": [
+            "Unauthorised access or disclosure",
+            "Discrimination",
+            "Loss of consumer control over their data",
+            "Coercive or manipulative practices",
+            "Economic harm",
+            "Physical harm",
+            "Reputational harm",
+            "Psychological harm"
+          ]
+        },
+        "hd5_2": {
+          "text": "For each impact selected, describe how it could occur, its likelihood and its severity.",
+          "helpText": "Source: GDPR Art. 35(7), as listed in the DPO Central assessment report."
+        },
+        "hd6_1": {
+          "text": "Factor 1, source: where does the data come from?",
+          "helpText": "Options are in rising order of risk (0 to 3). The five factors follow the article; the scoring and the bands are this template's method, not a legal test. Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "options": [
+            "General-audience context with no link to health",
+            "Wellness or lifestyle context",
+            "Health-related page, app or search",
+            "Healthcare provider, pharmacy or health app"
+          ]
+        },
+        "hd6_2": {
+          "text": "Factor 2, content: what does the data say?",
+          "options": [
+            "No health information",
+            "An indirect indicator, such as a product category",
+            "A health interest or an inferred condition",
+            "A specific condition or treatment, or reproductive or sexual health"
+          ]
+        },
+        "hd6_3": {
+          "text": "Factor 3, use: how is the data used?",
+          "options": [
+            "Measurement only, no targeting",
+            "Broad contextual advertising",
+            "Audience segment based on a health interest",
+            "Targeting or excluding individuals by health condition"
+          ]
+        },
+        "hd6_4": {
+          "text": "Factor 4, expectations: would consumers expect this use?",
+          "options": [
+            "Consumers expect it",
+            "Consumers probably expect it",
+            "Consumers probably do not expect it",
+            "Consumers would not expect it"
+          ]
+        },
+        "hd6_5": {
+          "text": "Factor 5, harm: how serious would the harm be if the data were misused or disclosed?",
+          "options": [
+            "Negligible",
+            "Limited",
+            "Significant",
+            "Severe (for example discrimination or disclosure of a condition)"
+          ]
+        },
+        "hd6_6": {
+          "text": "Reasons for the scores"
+        },
+        "hd7_1": {
+          "text": "Which main mitigation route do you choose?",
+          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "options": [
+            "Obtain opt-in consent nationwide",
+            "Suppress health-related data for consumers in opt-in states",
+            "Rely on partner due diligence and contract controls",
+            "Avoid high-risk campaigns (no targeting on health conditions)",
+            "De-identify the data before any disclosure"
+          ]
+        },
+        "hd7_2": {
+          "text": "Which other safeguards apply?",
+          "helpText": "Colorado, Connecticut and Texas recognise universal opt-out mechanisms. Source: DPO Central jurisdiction catalogue, CPA, CTDPA and TDPSA entry.",
+          "options": [
+            "Remove URL paths, search terms and parameters from pixel and SDK events",
+            "Honour opt-out preference signals",
+            "Contract terms prohibiting re-identification and onward use",
+            "Partner due diligence before any disclosure",
+            "Shorter retention for health-related events",
+            "Access controls and audit logging",
+            "Other (explain in the notes)"
+          ]
+        },
+        "hd7_3": {
+          "text": "Describe the partner due diligence and the contract terms in place."
+        },
+        "hd8_1": {
+          "text": "Washington or Nevada: do you obtain the consumer's consent before collecting consumer health data, and separate consent before sharing it?",
+          "helpText": "Answer Yes or No; add the detail in the notes. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+        },
+        "hd8_2": {
+          "text": "Washington or Nevada: is any consumer health data sold, and if so, do you hold a valid signed authorisation from each consumer?",
+          "helpText": "Answer Yes only if there is no sale, or every sale is covered by a signed authorisation. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+        },
+        "hd8_3": {
+          "text": "Washington or Nevada: do you use a geofence around places where health care is provided to identify, track or send messages to consumers?",
+          "helpText": "This geofencing is prohibited; a Yes is reported as a breach to resolve. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+        },
+        "hd8_4": {
+          "text": "Maryland: does any disclosure amount to a sale of sensitive data, including health data?",
+          "helpText": "Maryland prohibits the sale of sensitive data; it is not only an opt-out. Source: DPO Central jurisdiction catalogue, MODPA entry. Consent does not make such a sale lawful [to verify]."
+        },
+        "hd8_5": {
+          "text": "California: do you offer and honour the right to limit the use and disclosure of sensitive personal information?",
+          "helpText": "Source: DPO Central jurisdiction catalogue, CCPA/CPRA entry."
+        },
+        "hd8_6": {
+          "text": "California: on what date was this risk assessment documented, and when is the abridged filing due?",
+          "helpText": "Timetable: risk assessments documented from 1 January 2026; abridged filing with the California Privacy Protection Agency from 1 April 2028; the full assessment provided on request within 30 days. Use the format YYYY-MM-DD. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+        },
+        "hd8_7": {
+          "text": "California: which executive will sign the attestation that accompanies the filing (name and title)?",
+          "helpText": "Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+        },
+        "hd8_8": {
+          "text": "US states: do you obtain opt-in consent before processing sensitive data, including health data?",
+          "helpText": "Source: DPO Central jurisdiction catalogue, CTDPA, CPA, VCDPA, TDPSA and OCPA entry. For other states, check each law [to verify]. In Maryland, consent does not permit a sale."
+        },
+        "hd8_9": {
+          "text": "US states: can consumers opt out of targeted advertising and the sale of their data?",
+          "helpText": "Source: DPO Central jurisdiction catalogue, CTDPA, CPA, VCDPA, TDPSA and OCPA (right to opt out) entry. The exact scope of the opt-out in each state [to verify]."
+        },
+        "hd8_10": {
+          "text": "EU/EEA or UK: did you seek the advice of the data protection officer on this DPIA?",
+          "helpText": "Source: DPO Central DPIA template (consultation section)."
+        },
+        "hd9_1": {
+          "text": "What is the residual risk after the safeguards?",
+          "helpText": "Source: DPO Central DPIA template (GDPR Art. 35 and Art. 36 questions).",
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Very high"
+          ]
+        },
+        "hd9_2": {
+          "text": "Final determination",
+          "options": [
+            "Proceed as planned",
+            "Proceed with the safeguards listed",
+            "Proceed only after prior consultation with the supervisory authority",
+            "Do not proceed"
+          ]
+        },
+        "hd9_3": {
+          "text": "EU/EEA or UK: is prior consultation with the supervisory authority required (Art. 36)?",
+          "helpText": "Required where the DPIA shows a high risk that the measures do not reduce. The report flags it when the residual risk is High or Very high. Source: DPO Central DPIA template (GDPR Art. 35 and Art. 36 questions)."
+        },
+        "hd9_4": {
+          "text": "Reasons for the determination"
+        },
+        "hd10_1": {
+          "text": "Executive who approves and signs (name and title)"
+        },
+        "hd10_2": {
+          "text": "Date of approval (YYYY-MM-DD)"
+        },
+        "hd10_3": {
+          "text": "Review date (YYYY-MM-DD)",
+          "helpText": "Review at least when the processing, the partners or the law change."
+        },
         "q1_1": {
           "text": "What categories of personal data will be processed?",
           "helpText": "List all data categories (e.g. identifiers, financial, behavioral, special category). Be specific about each category."

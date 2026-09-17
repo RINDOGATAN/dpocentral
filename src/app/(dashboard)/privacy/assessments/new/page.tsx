@@ -41,6 +41,7 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked, isPremiumTypeKey } from "@/lib/premium-gate";
+import { useTemplateMeta } from "@/lib/template-i18n";
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
@@ -60,6 +61,7 @@ export default function NewAssessmentPage() {
   const { organization } = useOrganization();
   // Hosted pilot: every type is open, nothing is sold, no lock is shown.
   const hosted = useHostedPilot();
+  const templateMeta = useTemplateMeta();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newAssessment");
   const tCommon = useTranslations("common");
@@ -358,10 +360,10 @@ export default function NewAssessmentPage() {
                         <Badge variant="secondary" className="text-xs">{tp("system")}</Badge>
                       )}
                     </div>
-                    <h4 className="font-medium mt-2">{template.name}</h4>
+                    <h4 className="font-medium mt-2">{templateMeta(template).name}</h4>
                     {template.description && (
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {template.description}
+                        {templateMeta(template).description}
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground mt-2">
@@ -408,7 +410,7 @@ export default function NewAssessmentPage() {
                   <CardTitle>{tp("details")}</CardTitle>
                   <CardDescription>
                     {selectedTemplate
-                      ? tp("usingTemplate", { name: selectedTemplate.name })
+                      ? tp("usingTemplate", { name: templateMeta(selectedTemplate).name })
                       : tp("subtitleCreating", { name: typeName(selectedType) })}
                   </CardDescription>
                 </div>

@@ -3,7 +3,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import {
+  translateSections,
+  translateTemplateMeta,
+  type RawSection,
+  type TemplateLookup,
+} from "@/lib/template-i18n-core";
 
 /**
  * Assessment templates ship with their question text, helpText, section
@@ -14,29 +20,15 @@ import { useMemo } from "react";
  * and fall back to the raw English when a key is missing.
  *
  * Key shape:
+ *   templates.<type>.template.<templateId>.{name,description}
  *   templates.<type>.section.<sectionId>.{title,description}
  *   templates.<type>.question.<questionId>.{text,helpText,options[]}
  *
  * <type> is the AssessmentTemplate.type enum value (DPIA, LIA, TIA, VENDOR,
  * CUSTOM), lowercased. Section/question IDs come from the seed JSON and are
- * already template-scoped (lia1, q1_1, etc.).
+ * already template-scoped (lia1, q1_1, etc.). The translation itself lives in
+ * template-i18n-core.ts, shared with the server.
  */
-
-type RawQuestion = {
-  id: string;
-  text: string;
-  helpText?: string;
-  options?: string[];
-  [k: string]: unknown;
-};
-
-type RawSection = {
-  id: string;
-  title: string;
-  description?: string;
-  questions?: RawQuestion[];
-  [k: string]: unknown;
-};
 
 export type TemplateType = string | null | undefined;
 
@@ -44,9 +36,20 @@ export interface TranslatedTemplate {
   sections: RawSection[];
 }
 
-function templateNamespace(type: TemplateType): string {
-  if (!type) return "custom";
-  return type.toLowerCase();
+function useTemplateLookup(): TemplateLookup {
+  const t = useTranslations("templates");
+  return useCallback(
+    (key: string) => {
+      try {
+        if (!t.has(key)) return undefined;
+        const raw = t.raw(key);
+        return Array.isArray(raw) ? raw : t(key);
+      } catch {
+        return undefined;
+      }
+    },
+    [t]
+  );
 }
 
 /**
@@ -58,62 +61,19 @@ export function useTranslatedSections(
   type: TemplateType,
   rawSections: RawSection[] | undefined | null
 ): RawSection[] {
-  const t = useTranslations("templates");
-  const ns = templateNamespace(type);
-
+  const lookup = useTemplateLookup();
   return useMemo(() => {
     if (!rawSections || rawSections.length === 0) return [];
+    return translateSections(type, rawSections, lookup);
+  }, [rawSections, type, lookup]);
+}
 
-    const get = (key: string, fallback: string): string => {
-      try {
-        return t.has(key) ? t(key) : fallback;
-      } catch {
-        return fallback;
-      }
-    };
-
-    const getArray = (key: string, fallback: string[] | undefined): string[] | undefined => {
-      if (!fallback) return undefined;
-      try {
-        if (!t.has(key)) return fallback;
-        const raw = t.raw(key);
-        if (!Array.isArray(raw)) return fallback;
-        // Map each option by index; missing entries fall back.
-        return fallback.map((orig, i) => {
-          const tr = raw[i];
-          return typeof tr === "string" ? tr : orig;
-        });
-      } catch {
-        return fallback;
-      }
-    };
-
-    return rawSections.map((section) => {
-      const sectionId = section.id;
-      const translatedTitle = get(
-        `${ns}.section.${sectionId}.title`,
-        section.title
-      );
-      const translatedDescription = section.description
-        ? get(`${ns}.section.${sectionId}.description`, section.description)
-        : section.description;
-
-      const translatedQuestions = (section.questions ?? []).map((q) => {
-        const qid = q.id;
-        const text = get(`${ns}.question.${qid}.text`, q.text);
-        const helpText = q.helpText
-          ? get(`${ns}.question.${qid}.helpText`, q.helpText)
-          : q.helpText;
-        const options = getArray(`${ns}.question.${qid}.options`, q.options);
-        return { ...q, text, helpText, options };
-      });
-
-      return {
-        ...section,
-        title: translatedTitle,
-        description: translatedDescription,
-        questions: translatedQuestions,
-      };
-    });
-  }, [rawSections, ns, t]);
+/** Translates a template's name and description where a translation exists. */
+export function useTemplateMeta() {
+  const lookup = useTemplateLookup();
+  return useCallback(
+    (template: { id: string; type: string; name: string; description?: string | null }) =>
+      translateTemplateMeta(template, lookup),
+    [lookup]
+  );
 }

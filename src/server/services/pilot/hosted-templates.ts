@@ -23,12 +23,25 @@ import prismaClient from "@/lib/prisma";
 import { isHostedDeployment } from "@/lib/hosted";
 import { upsertSystemTemplate } from "@/lib/seed-system-content";
 import { DPIA_TEMPLATE_ID, dpiaTemplateData } from "@/config/dpia-template-v2";
+import {
+  HEALTH_ADTECH_TEMPLATE_ID,
+  healthAdtechTemplateData,
+} from "@/config/health-adtech-template";
 
 /** Global system templates written on the hosted pilot (id -> data). */
 export const HOSTED_SYSTEM_TEMPLATES: Array<{
   id: string;
   data: Parameters<typeof upsertSystemTemplate>[2];
-}> = [];
+}> = [
+  {
+    id: HEALTH_ADTECH_TEMPLATE_ID,
+    data: {
+      ...healthAdtechTemplateData,
+      sections: healthAdtechTemplateData.sections as object,
+      scoringLogic: healthAdtechTemplateData.scoringLogic as object,
+    },
+  },
+];
 
 let ensured: Promise<void> | null = null;
 
