@@ -11,6 +11,7 @@ import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
 import { sanitizeStrings } from "@/lib/sanitize";
 import { formatUserError } from "@/lib/format-error";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import {
   assertPilotCapacity,
   assertPilotWritable,
@@ -145,7 +146,7 @@ const enforcePilotCaps = t.middleware(async ({ ctx, next, path, type }) => {
   if (type !== "mutation") return next();
   const org = (ctx as { organization?: { id: string; createdAt: Date } }).organization;
   if (!org) return next();
-  const locale = pilotLocale(ctx.getCookie("NEXT_LOCALE"));
+  const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
   if (!READ_ONLY_ALLOWED_PATHS.has(path)) {
     assertPilotWritable(org, locale);
   }

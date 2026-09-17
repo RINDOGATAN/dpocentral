@@ -16,7 +16,7 @@ import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappin
 import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
 import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
-import { isValidLocale } from "@/i18n/config";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -1379,8 +1379,7 @@ export const assessmentRouter = createTRPCRouter({
         input.vendorId
       );
 
-      const cookieLocale = ctx.getCookie("NEXT_LOCALE");
-      const locale = cookieLocale && isValidLocale(cookieLocale) ? cookieLocale : "en";
+      const locale = localeFromCookieGetter(ctx.getCookie) ?? "en";
 
       // Route through the lane the organization acknowledged.
       const result = await generateRiskNarrative(context, locale, postureLane(settings.posture));

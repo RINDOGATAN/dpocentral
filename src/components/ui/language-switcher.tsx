@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { locales, localeNames, type Locale } from "@/i18n/config";
+import { writeLocaleCookie } from "@/i18n/locale-cookie";
 import { features } from "@/config/features";
 
 export function LanguageSwitcher() {
@@ -38,7 +39,7 @@ function LanguageSwitcherInner() {
 
   const handleLocaleChange = (newLocale: Locale) => {
     // Set locale cookie and reload to apply server-side
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    writeLocaleCookie(newLocale);
     router.refresh();
   };
 
