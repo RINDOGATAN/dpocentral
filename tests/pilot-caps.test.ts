@@ -222,6 +222,14 @@ describe("the 90-day switch to read-only", () => {
     hosted();
     setNow(PILOT_DAYS);
     callerWithRole("OWNER");
+    const caller = orgCaller((name) => (name === "locale" ? "es" : undefined));
+    await expect(addJurisdiction(caller)).rejects.toThrow("solo lectura");
+  });
+
+  it("still honours the legacy NEXT_LOCALE cookie when no locale cookie is present", async () => {
+    hosted();
+    setNow(PILOT_DAYS);
+    callerWithRole("OWNER");
     const caller = orgCaller((name) => (name === "NEXT_LOCALE" ? "es" : undefined));
     await expect(addJurisdiction(caller)).rejects.toThrow("solo lectura");
   });

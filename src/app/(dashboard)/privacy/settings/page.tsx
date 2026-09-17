@@ -35,6 +35,7 @@ import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
+import { writeLocaleCookie } from "@/i18n/locale-cookie";
 
 const personaIcons = {
   BUSINESS_OWNER: Building2,
@@ -96,7 +97,7 @@ export default function SettingsPage() {
 
   // ----- Locale -----
   const setLocale = (newLocale: Locale) => {
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    writeLocaleCookie(newLocale);
     window.location.reload();
   };
 

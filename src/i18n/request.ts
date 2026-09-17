@@ -8,8 +8,9 @@
  */
 
 import { getRequestConfig } from "next-intl/server";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { defaultLocale, isValidLocale, locales, type Locale } from "./config";
+import { getCookieLocale } from "./server-locale";
 
 function pickFromAcceptLanguage(header: string | null): Locale | null {
   if (!header) return null;
@@ -28,11 +29,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
   // 1. Try the locale from middleware/[locale] segment
   let locale = await requestLocale;
 
-  // 2. Fall back to cookie-based locale (set by LanguageSwitcher)
+  // 2. Fall back to the `locale` cookie (last value wins; see locale-cookie.ts)
   if (!locale || !isValidLocale(locale)) {
-    const cookieStore = await cookies();
-    const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
-    if (cookieLocale && isValidLocale(cookieLocale)) {
+    const cookieLocale = await getCookieLocale();
+    if (cookieLocale) {
       locale = cookieLocale;
     }
   }

@@ -21,7 +21,7 @@ import {
   buildBreachNotificationSystemPrompt,
   buildBreachNotificationUserPrompt,
 } from "../../services/ai/prompts/breach-notification";
-import { isValidLocale } from "@/i18n/config";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 
 // Calculate notification deadline based on jurisdiction
 function calculateNotificationDeadline(
@@ -523,8 +523,7 @@ export const incidentRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Notification not found" });
       }
 
-      const cookieLocale = ctx.getCookie("NEXT_LOCALE");
-      const locale = cookieLocale && isValidLocale(cookieLocale) ? cookieLocale : "en";
+      const locale = localeFromCookieGetter(ctx.getCookie) ?? "en";
 
       // Prompts are built server-side from Prisma data only
       const result = await chatComplete({

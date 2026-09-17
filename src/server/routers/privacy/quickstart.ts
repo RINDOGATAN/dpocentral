@@ -31,6 +31,7 @@ import {
   pilotLocale,
   type PilotResource,
 } from "../../services/pilot/caps";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
 
 // Capped resources a quickstart batch can add.
@@ -467,7 +468,7 @@ export const quickstartRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const orgId = ctx.organization.id;
       const userId = ctx.session.user.id;
-      const pilotLang = pilotLocale(ctx.getCookie("NEXT_LOCALE"));
+      const pilotLang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       const skipAssets = new Set(input.skipAssetNames);
       const skipActivities = new Set(input.skipActivityNames);
 

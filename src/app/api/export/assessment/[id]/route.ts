@@ -3,7 +3,7 @@
 
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { getCookieLocale } from "@/i18n/server-locale";
 import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
@@ -140,8 +140,7 @@ export async function GET(
 
   const url = new URL(request.url);
   const requestedLocale = url.searchParams.get("locale");
-  const cookieStore = await cookies();
-  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const cookieLocale = await getCookieLocale();
   const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
     (l): l is string => !!l && (locales as readonly string[]).includes(l)
   ) ?? defaultLocale;

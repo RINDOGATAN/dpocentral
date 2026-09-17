@@ -3,7 +3,7 @@
 
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { getCookieLocale } from "@/i18n/server-locale";
 import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
@@ -45,10 +45,9 @@ export async function GET(request: Request) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Locale resolution: ?locale=es  →  NEXT_LOCALE cookie  →  default.
+    // Locale resolution: ?locale=es  →  `locale` cookie  →  default.
     const requestedLocale = searchParams.get("locale");
-    const cookieStore = await cookies();
-    const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+    const cookieLocale = await getCookieLocale();
     const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
       (l): l is string => !!l && (locales as readonly string[]).includes(l)
     ) ?? defaultLocale;

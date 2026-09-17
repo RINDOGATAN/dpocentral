@@ -13,6 +13,7 @@ import {
   getPilotStatus,
   pilotLocale,
 } from "@/server/services/pilot/caps";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
@@ -109,7 +110,7 @@ export const organizationRouter = createTRPCRouter({
       await assertOneOrganizationPerAccount(
         ctx.prisma,
         ctx.session.user.id,
-        pilotLocale(ctx.getCookie("NEXT_LOCALE"))
+        pilotLocale(localeFromCookieGetter(ctx.getCookie))
       );
 
       // Check if slug is already taken
@@ -303,7 +304,7 @@ export const organizationRouter = createTRPCRouter({
       await assertOneOrganizationPerAccount(
         ctx.prisma,
         user.id,
-        pilotLocale(ctx.getCookie("NEXT_LOCALE"))
+        pilotLocale(localeFromCookieGetter(ctx.getCookie))
       );
 
       const membership = await ctx.prisma.organizationMember.create({

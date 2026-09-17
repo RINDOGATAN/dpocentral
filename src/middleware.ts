@@ -9,7 +9,8 @@
 
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
-import { locales, defaultLocale } from "./i18n/config";
+import { locales, defaultLocale, type Locale } from "./i18n/config";
+import { localeCookieCleanup, localeCookieWrites } from "./i18n/locale-cookie";
 import {
   authLimiter,
   checkoutLimiter,
@@ -41,6 +42,9 @@ const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
   localePrefix: "as-needed",
+  // The language cookie is `locale`, written only by src/i18n/locale-cookie.ts
+  // when the visitor chooses. next-intl must not write its own.
+  localeCookie: false,
 });
 
 function getClientIp(request: NextRequest): string {
@@ -122,6 +126,21 @@ function applyCsp(response: NextResponse) {
   response.headers.set("x-nonce", nonce);
 }
 
+/**
+ * Language cookie on the way out. `chosen` is a language the visitor picked
+ * through the request (the DSAR `?lang=` link): record it. Otherwise, collapse
+ * duplicate `locale` cookies an older release left behind. Never a default.
+ */
+function applyLocaleCookies(response: NextResponse, request: NextRequest, chosen?: Locale) {
+  const hostname = request.nextUrl.hostname;
+  const cookies = chosen
+    ? localeCookieWrites(chosen, hostname)
+    : localeCookieCleanup(request.headers.get("cookie"), hostname);
+  for (const cookie of cookies) {
+    response.headers.append("Set-Cookie", cookie);
+  }
+}
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
@@ -160,18 +179,16 @@ export default function middleware(request: NextRequest) {
   ) {
     const response = currencyResponse || NextResponse.next();
     // Allow shareable locale-forced links into the public DSAR portal:
-    // `/dsar/<slug>?lang=es` sets the NEXT_LOCALE cookie so SSR picks
+    // `/dsar/<slug>?lang=es` sets the `locale` cookie so SSR picks
     // the right language on first render (no JS-side flash).
+    let chosen: Locale | undefined;
     if (pathname.startsWith("/dsar")) {
       const langParam = request.nextUrl.searchParams.get("lang");
       if (langParam && (locales as readonly string[]).includes(langParam)) {
-        response.cookies.set("NEXT_LOCALE", langParam, {
-          path: "/",
-          maxAge: 60 * 60 * 24 * 365,
-          sameSite: "lax",
-        });
+        chosen = langParam as Locale;
       }
     }
+    applyLocaleCookies(response, request, chosen);
     applyCsp(response);
     return response;
   }
@@ -184,6 +201,7 @@ export default function middleware(request: NextRequest) {
 
   if (!i18nRoutingEnabled) {
     const response = currencyResponse || NextResponse.next();
+    applyLocaleCookies(response, request);
     applyCsp(response);
     return response;
   }
@@ -201,6 +219,7 @@ export default function middleware(request: NextRequest) {
     }
   }
 
+  applyLocaleCookies(intlResponse, request);
   applyCsp(intlResponse);
   return intlResponse;
 }
