@@ -68,9 +68,40 @@ const join = (...parts: BiText[]): BiText => ({
   es: parts.map((p) => p.es).join(" "),
 });
 
-const SRC_CLA = src(
-  "California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026)",
-  "California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026)"
+const CLA = {
+  en: "California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026)",
+  es: "California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026)",
+};
+const SRC_CLA = src(CLA.en, CLA.es);
+// Primary texts checked on 16 September 2026.
+const CHECKED = { en: "checked 16 September 2026", es: "comprobado el 16 de septiembre de 2026" };
+const SRC_CA_IMPACTS = src(
+  `11 CCR 7152(a)(5)-(6) (${CHECKED.en}); ${CLA.en}`,
+  `11 CCR 7152(a)(5)-(6) (${CHECKED.es}); ${CLA.es}`
+);
+const SRC_CA_TIMETABLE = src(
+  `11 CCR 7155(a),(b) and 7157(a),(e) (${CHECKED.en})`,
+  `11 CCR 7155(a),(b) y 7157(a),(e) (${CHECKED.es})`
+);
+const SRC_CA_ATTESTATION = src(
+  `11 CCR 7157(b)(5),(c) (${CHECKED.en})`,
+  `11 CCR 7157(b)(5),(c) (${CHECKED.es})`
+);
+const SRC_WA_NV_CONSENT = src(
+  `Washington RCW 19.373.030; Nevada NRS 603A.500 (${CHECKED.en})`,
+  `Washington, RCW 19.373.030; Nevada, NRS 603A.500 (${CHECKED.es})`
+);
+const SRC_WA_NV_SALE = src(
+  `Washington RCW 19.373.070; Nevada NRS 603A.535 (${CHECKED.en})`,
+  `Washington, RCW 19.373.070; Nevada, NRS 603A.535 (${CHECKED.es})`
+);
+const SRC_WA_NV_GEOFENCE = src(
+  `RCW 19.373.080; NRS 603A.540 (${CHECKED.en})`,
+  `RCW 19.373.080; NRS 603A.540 (${CHECKED.es})`
+);
+const SRC_MD_SALE = src(
+  `Md. Com. Law 14-4607(a)(1),(2) (2024 ch. 454; ${CHECKED.en})`,
+  `Md. Com. Law 14-4607(a)(1),(2) (ley de 2024, cap. 454; ${CHECKED.es})`
 );
 const SRC_CATALOGUE = (entry: string) =>
   src(
@@ -88,13 +119,6 @@ const SRC_ART35_7 = src(
 const SRC_ART35_3 = src(
   "GDPR Art. 35(3)(a) to (c), as used in the DPO Central risk mappings and DPIA template",
   "art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de DPIA de DPO Central"
-);
-const SRC_NOT_IN_APP = join(
-  src(
-    "not in DPO Central's regulation data; stated in the workshop brief",
-    "no figura en los datos normativos de DPO Central; consta en el encargo del taller"
-  ),
-  TO_VERIFY
 );
 
 // ── Jurisdictions (question hd1_1) ───────────────────────────────────────
@@ -596,7 +620,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "Which negative impacts could the processing cause?",
           es: "¿Qué impactos negativos podría causar el tratamiento?",
         },
-        help: join(SRC_CLA, TO_VERIFY),
+        help: SRC_CA_IMPACTS,
         options: {
           en: [
             "Unauthorised access or disclosure",
@@ -781,7 +805,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         type: "select",
         required: true,
         text: { en: "Which main mitigation route do you choose?", es: "¿Qué vía principal de mitigación eliges?" },
-        help: join(SRC_CLA, TO_VERIFY),
+        help: SRC_CA_IMPACTS,
         options: MITIGATION_OPTIONS,
       },
       {
@@ -848,7 +872,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "Washington or Nevada: do you obtain the consumer's consent before collecting consumer health data, and separate consent before sharing it?",
           es: "Washington o Nevada: ¿obtienes el consentimiento del consumidor antes de recoger sus datos de salud y un consentimiento distinto antes de compartirlos?",
         },
-        help: join(YES_NO_NOTE, SRC_NOT_IN_APP),
+        help: join(YES_NO_NOTE, SRC_WA_NV_CONSENT),
       },
       {
         id: "hd8_2",
@@ -861,10 +885,10 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         },
         help: join(
           {
-            en: "Answer Yes only if there is no sale, or every sale is covered by a signed authorisation.",
-            es: "Responde Sí solo si no hay venta o si cada venta está cubierta por una autorización firmada.",
+            en: "Answer Yes only if there is no sale, or every sale is covered by a signed authorisation naming the data, the seller and each purchaser.",
+            es: "Responde Sí solo si no hay venta o si cada venta está cubierta por una autorización firmada que identifique los datos, al vendedor y a cada comprador.",
           },
-          SRC_NOT_IN_APP
+          SRC_WA_NV_SALE
         ),
       },
       {
@@ -878,10 +902,10 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         },
         help: join(
           {
-            en: "This geofencing is prohibited; a Yes is reported as a breach to resolve.",
-            es: "Esta geovalla está prohibida; un Sí aparece en el informe como un incumplimiento que debe resolverse.",
+            en: "This geofencing is prohibited: within 2,000 feet of in-person health care in Washington, within 1,750 feet of a medical facility in Nevada. A Yes is reported as a breach to resolve.",
+            es: "Esta geovalla está prohibida: a menos de 2.000 pies de asistencia sanitaria presencial en Washington y a menos de 1.750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse.",
           },
-          SRC_NOT_IN_APP
+          SRC_WA_NV_GEOFENCE
         ),
       },
       {
@@ -895,14 +919,10 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         },
         help: join(
           {
-            en: "Maryland prohibits the sale of sensitive data; it is not only an opt-out.",
-            es: "Maryland prohíbe la venta de datos sensibles; no se trata solo de un derecho de exclusión voluntaria.",
+            en: "Maryland prohibits the sale of sensitive data; it is not only an opt-out, and consent does not make such a sale lawful. Sensitive data may be processed only where strictly necessary for a product or service the consumer requested.",
+            es: "Maryland prohíbe vender datos sensibles; no es solo un derecho de oposición, y el consentimiento no hace lícita esa venta. Los datos sensibles solo pueden tratarse cuando sea estrictamente necesario para un producto o servicio solicitado por el consumidor.",
           },
-          SRC_CATALOGUE("MODPA"),
-          {
-            en: "Consent does not make such a sale lawful [to verify].",
-            es: "El consentimiento no convierte esa venta en lícita [por verificar].",
-          }
+          SRC_MD_SALE
         ),
       },
       {
@@ -927,10 +947,10 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         },
         help: join(
           {
-            en: "Timetable: risk assessments documented from 1 January 2026; abridged filing with the California Privacy Protection Agency from 1 April 2028; the full assessment provided on request within 30 days. Use the format YYYY-MM-DD.",
-            es: "Calendario: evaluaciones de riesgos documentadas desde el 1 de enero de 2026; presentación abreviada ante la California Privacy Protection Agency desde el 1 de abril de 2028; la evaluación completa se entrega a requerimiento en un plazo de 30 días. Usa el formato AAAA-MM-DD.",
+            en: "Timetable: assess before the processing starts; processing begun before 2026 must be assessed by 31 December 2027; summary information and an executive attestation are submitted to CalPrivacy by 1 April 2028; the full report is produced within 30 days of a request. Use the format YYYY-MM-DD.",
+            es: "Calendario: evaluar antes de iniciar el tratamiento; el tratamiento iniciado antes de 2026 debe evaluarse a más tardar el 31 de diciembre de 2027; la información resumida y la declaración de un directivo se presentan a CalPrivacy a más tardar el 1 de abril de 2028; el informe completo se entrega en 30 días desde el requerimiento. Usa el formato AAAA-MM-DD.",
           },
-          SRC_NOT_IN_APP
+          SRC_CA_TIMETABLE
         ),
       },
       {
@@ -942,7 +962,13 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           en: "California: which executive will sign the attestation that accompanies the filing (name and title)?",
           es: "California: ¿qué directivo firmará la declaración que acompaña a la presentación (nombre y cargo)?",
         },
-        help: SRC_NOT_IN_APP,
+        help: join(
+          {
+            en: "The attestation is made under penalty of perjury by a member of executive management who is directly responsible for risk-assessment compliance.",
+            es: "La declaración se hace bajo pena de perjurio y la firma un miembro de la alta dirección directamente responsable del cumplimiento en evaluaciones de riesgos.",
+          },
+          SRC_CA_ATTESTATION
+        ),
       },
       {
         id: "hd8_8",

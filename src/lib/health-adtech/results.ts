@@ -133,10 +133,7 @@ function textAnswer(answers: AnswerMap, questionId: string): string | null {
 const bi =(en: string, es: string): BiText => ({ en, es });
 const CATALOGUE = (entry: string) =>
   bi(`DPO Central jurisdiction catalogue (${entry})`, `Catálogo de jurisdicciones de DPO Central (${entry})`);
-const NOT_IN_APP = bi(
-  "Workshop brief; not in DPO Central's regulation data",
-  "Encargo del taller; no figura en los datos normativos de DPO Central"
-);
+const PRIMARY = (en: string, es: string) => bi(`Primary source (checked 16 September 2026): ${en}`, `Fuente primaria (comprobada el 16 de septiembre de 2026): ${es}`);
 const DPIA_TEMPLATE = bi("DPO Central DPIA template", "Plantilla de DPIA de DPO Central");
 const REPORT_ART35_7 = bi(
   "GDPR Art. 35(7), DPO Central assessment report",
@@ -208,32 +205,40 @@ const UNIVERSAL_OPT_OUT = (entry: string) =>
     CATALOGUE(entry)
   );
 
-const HEALTH_DATA_LAW: Obligation[] = [
-  ob(
-    bi(
-      "Consent before collecting consumer health data, and separate consent before sharing it",
-      "Consentimiento antes de recoger datos de salud del consumidor y un consentimiento distinto antes de compartirlos"
+const HEALTH_DATA_LAW = (code: "WA" | "NV"): Obligation[] => {
+  const wa = code === "WA";
+  return [
+    ob(
+      bi(
+        "Consent before collecting consumer health data, and separate consent before sharing it",
+        "Consentimiento antes de recoger datos de salud del consumidor y un consentimiento distinto antes de compartirlos"
+      ),
+      wa ? PRIMARY("RCW 19.373.030", "RCW 19.373.030") : PRIMARY("NRS 603A.500", "NRS 603A.500")
     ),
-    NOT_IN_APP,
-    true
-  ),
-  ob(
-    bi(
-      "A valid signed authorisation from the consumer before any sale of consumer health data",
-      "Una autorización firmada y válida del consumidor antes de cualquier venta de sus datos de salud"
+    ob(
+      bi(
+        wa
+          ? "A valid authorisation signed by the consumer before any sale, naming the data, the seller and each purchaser, and expiring after one year"
+          : "The consumer's written authorisation, with the prescribed contents, before any sale of consumer health data",
+        wa
+          ? "Una autorización válida firmada por el consumidor antes de cualquier venta, que identifique los datos, al vendedor y a cada comprador, y que caduque al cabo de un año"
+          : "La autorización escrita del consumidor, con el contenido exigido, antes de cualquier venta de sus datos de salud"
+      ),
+      wa ? PRIMARY("RCW 19.373.070", "RCW 19.373.070") : PRIMARY("NRS 603A.535", "NRS 603A.535")
     ),
-    NOT_IN_APP,
-    true
-  ),
-  ob(
-    bi(
-      "No geofencing around places where health care is provided",
-      "Prohibición de geovallas alrededor de lugares donde se prestan servicios sanitarios"
+    ob(
+      bi(
+        wa
+          ? "No geofence within 2,000 feet of an entity that provides in-person health care services"
+          : "No geofence within 1,750 feet of a medical facility to identify or track consumers seeking in-person care",
+        wa
+          ? "Prohibidas las geovallas a menos de 2.000 pies de un centro que presta asistencia sanitaria presencial"
+          : "Prohibidas las geovallas a menos de 1.750 pies de un centro médico para identificar o seguir a quienes buscan asistencia presencial"
+      ),
+      wa ? PRIMARY("RCW 19.373.080", "RCW 19.373.080") : PRIMARY("NRS 603A.540", "NRS 603A.540")
     ),
-    NOT_IN_APP,
-    true
-  ),
-];
+  ];
+};
 
 const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: boolean; obligations: Obligation[] }> = {
   EU: {
@@ -241,7 +246,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
       "Opt-in: explicit consent (Art. 9(2)(a)) is usually the only condition for health data used in advertising",
       "Consentimiento previo: el consentimiento explícito (art. 9(2)(a)) suele ser la única condición para usar datos de salud en publicidad"
     ),
-    consentToVerify: true,
+    consentToVerify: false,
     obligations: GDPR_OBLIGATIONS("GDPR"),
   },
   UK: {
@@ -249,7 +254,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
       "Opt-in: explicit consent (UK GDPR Art. 9(2)(a)) is usually the only condition for health data used in advertising",
       "Consentimiento previo: el consentimiento explícito (art. 9(2)(a) del RGPD del Reino Unido) suele ser la única condición para usar datos de salud en publicidad"
     ),
-    consentToVerify: true,
+    consentToVerify: false,
     obligations: GDPR_OBLIGATIONS("UK GDPR"),
   },
   CA: {
@@ -275,44 +280,42 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
       ),
       ob(
         bi(
-          "Timetable: assessments documented from 1 January 2026; abridged filing from 1 April 2028; full assessment on request within 30 days",
-          "Calendario: evaluaciones documentadas desde el 1 de enero de 2026; presentación abreviada desde el 1 de abril de 2028; evaluación completa a requerimiento en 30 días"
+          "Timetable: assess before the processing starts; processing begun before 2026 assessed by 31 December 2027; review every three years and within 45 days of a material change; keep every version five years; summary information submitted by 1 April 2028; the full report within 30 days of a request",
+          "Calendario: evaluar antes de iniciar el tratamiento; el iniciado antes de 2026, evaluado a más tardar el 31 de diciembre de 2027; revisión cada tres años y en 45 días tras un cambio material; conservar cada versión cinco años; información resumida presentada a más tardar el 1 de abril de 2028; el informe completo en 30 días desde el requerimiento"
         ),
-        NOT_IN_APP,
-        true
+        PRIMARY("11 CCR 7155, 7157(a), 7157(e)", "11 CCR 7155, 7157(a), 7157(e)")
       ),
       ob(
         bi(
-          "Attestation of the filing signed by an executive",
-          "Declaración de la presentación firmada por un directivo"
+          "Attestation under penalty of perjury, submitted by a member of executive management responsible for risk-assessment compliance",
+          "Declaración bajo pena de perjurio, presentada por un miembro de la alta dirección responsable del cumplimiento en evaluaciones de riesgos"
         ),
-        NOT_IN_APP,
-        true
+        PRIMARY("11 CCR 7157(b)(5), 7157(c)", "11 CCR 7157(b)(5), 7157(c)")
       ),
     ],
   },
   WA: {
     consentModel: bi(
-      "Opt-in: consent to collect, separate consent to share, signed authorisation to sell",
-      "Consentimiento previo: para recoger, otro distinto para compartir y autorización firmada para vender"
+      "Opt-in: consent to collect, separate consent to share (RCW 19.373.030); signed authorisation to sell (RCW 19.373.070)",
+      "Consentimiento previo: para recoger y otro distinto para compartir (RCW 19.373.030); autorización firmada para vender (RCW 19.373.070)"
     ),
-    consentToVerify: true,
-    obligations: HEALTH_DATA_LAW,
+    consentToVerify: false,
+    obligations: HEALTH_DATA_LAW("WA"),
   },
   NV: {
     consentModel: bi(
-      "Opt-in: consent to collect, separate consent to share, signed authorisation to sell",
-      "Consentimiento previo: para recoger, otro distinto para compartir y autorización firmada para vender"
+      "Opt-in: consent to collect, separate consent to share (NRS 603A.500); written authorisation to sell (NRS 603A.535)",
+      "Consentimiento previo: para recoger y otro distinto para compartir (NRS 603A.500); autorización escrita para vender (NRS 603A.535)"
     ),
-    consentToVerify: true,
-    obligations: HEALTH_DATA_LAW,
+    consentToVerify: false,
+    obligations: HEALTH_DATA_LAW("NV"),
   },
   MD: {
     consentModel: bi(
-      "Prohibition: sensitive data may not be sold; consent is not a route to a sale",
-      "Prohibición: los datos sensibles no pueden venderse; el consentimiento no habilita la venta"
+      "Prohibition: selling sensitive data is prohibited (Com. Law 14-4607(a)(2)); sensitive data only where strictly necessary for a product or service the consumer requested (14-4607(a)(1))",
+      "Prohibición: está prohibido vender datos sensibles (Com. Law 14-4607(a)(2)); los datos sensibles solo cuando sean estrictamente necesarios para un producto o servicio solicitado por el consumidor (14-4607(a)(1))"
     ),
-    consentToVerify: true,
+    consentToVerify: false,
     obligations: [
       ob(
         bi("Prohibition on the sale of sensitive data", "Prohibición de vender datos sensibles"),
@@ -436,7 +439,7 @@ function findingsFor(
     if (yesNo(answers, "hd8_4") === true)
       out.push(f("blocking", "A sale of sensitive data is prohibited in Maryland.", "La venta de datos sensibles está prohibida en Maryland."));
     if (mitigation === 0)
-      out.push(f("note", "Nationwide consent does not permit a sale of sensitive data in Maryland [to verify].", "El consentimiento en todo el país no permite vender datos sensibles en Maryland [por verificar]."));
+      out.push(f("note", "Nationwide consent does not permit a sale of sensitive data in Maryland (Com. Law 14-4607(a)(2)).", "El consentimiento en todo el país no permite vender datos sensibles en Maryland (Com. Law 14-4607(a)(2))."));
   }
 
   if (["MD", "CT", "CO", "VA", "TX", "OR", "US_OTHER"].includes(code)) {

@@ -252,15 +252,20 @@ describe("jurisdictions change the report", () => {
   it("lists the consent model and sourced obligations per jurisdiction", () => {
     const r = computeHealthAdtechResult([jurisdictions(["MD", "CA", "CT"]), ...facts]);
     const md = r.jurisdictions.find((j) => j.code === "MD")!;
-    expect(md.consentModel.en).toMatch(/may not be sold/);
+    expect(md.consentModel.en).toMatch(/selling sensitive data is prohibited \(Com\. Law 14-4607\(a\)\(2\)\)/);
+    expect(md.consentModel.en).not.toMatch(/\[to verify\]/);
     expect(md.obligations[0].source.en).toMatch(/MODPA/);
     expect(md.findings.some((f) => f.severity === "blocking")).toBe(true);
 
     const ca = r.jurisdictions.find((j) => j.code === "CA")!;
     expect(ca.consentModel.en).toMatch(/right to limit/);
     const timetable = ca.obligations.find((o) => /1 April 2028/.test(o.text.en))!;
-    expect(timetable.toVerify).toBe(true);
+    expect(timetable.toVerify).toBe(false);
+    expect(timetable.source.en).toMatch(/11 CCR 7155, 7157\(a\), 7157\(e\)/);
     expect(timetable.text.es).toMatch(/1 de abril de 2028/);
+    const attestation = ca.obligations.find((o) => /Attestation/.test(o.text.en))!;
+    expect(attestation.toVerify).toBe(false);
+    expect(attestation.source.en).toMatch(/11 CCR 7157\(b\)\(5\), 7157\(c\)/);
     expect(ca.findings.map((f) => f.text.en).join(" ")).toMatch(/right to limit/);
 
     const ct = r.jurisdictions.find((j) => j.code === "CT")!;
@@ -269,12 +274,59 @@ describe("jurisdictions change the report", () => {
     expect(r.jurisdictions.map((j) => j.code)).toEqual(["CA", "MD", "CT"]);
   });
 
-  it("marks unsourced consent models and obligations as to verify", () => {
+  it("cites the primary sources for Washington and Nevada and does not flag them", () => {
     const r = computeHealthAdtechResult([jurisdictions(["WA", "NV"])]);
+    const cites = { WA: ["RCW 19.373.030", "RCW 19.373.070", "RCW 19.373.080"], NV: ["NRS 603A.500", "NRS 603A.535", "NRS 603A.540"] };
     for (const j of r.jurisdictions) {
-      expect(j.consentModel.en).toMatch(/\[to verify\]/);
-      expect(j.consentModel.es).toMatch(/\[por verificar\]/);
-      expect(j.obligations.every((o) => o.toVerify)).toBe(true);
+      expect(j.consentModel.en).not.toMatch(/\[to verify\]/);
+      expect(j.consentModel.es).not.toMatch(/\[por verificar\]/);
+      expect(j.obligations.some((o) => o.toVerify)).toBe(false);
+      const expected = cites[j.code as "WA" | "NV"];
+      expect(j.consentModel.en).toContain(expected[0]);
+      expect(j.obligations.map((o) => o.source.en)).toEqual(
+        expected.map((c) => `Primary source (checked 16 September 2026): ${c}`)
+      );
+      expect(j.obligations.every((o) => o.source.es.startsWith("Fuente primaria (comprobada el 16 de septiembre de 2026): "))).toBe(true);
+    }
+  });
+
+  it("does not flag the EU and UK consent models", () => {
+    const r = computeHealthAdtechResult([jurisdictions(["EU", "UK"])]);
+    for (const j of r.jurisdictions) {
+      expect(j.consentModel.en).toMatch(/Art\. 9\(2\)\(a\)/);
+      expect(j.consentModel.en).not.toMatch(/\[to verify\]/);
+    }
+  });
+
+  it("still marks the unsourced US state items as to verify", () => {
+    const r = computeHealthAdtechResult([jurisdictions(["CT", "CO", "VA", "TX", "OR", "US_OTHER"])]);
+    for (const j of r.jurisdictions) {
+      const optOut = j.obligations.find((o) => /right to opt out|opt-out and assessment rules/.test(o.text.en))!;
+      expect(optOut.toVerify, j.code).toBe(true);
+    }
+    const other = r.jurisdictions.find((j) => j.code === "US_OTHER")!;
+    expect(other.consentModel.en).toMatch(/\[to verify\]/);
+    expect(other.consentModel.es).toMatch(/\[por verificar\]/);
+  });
+
+  it("keeps the unsourced help text flagged and cites the checked sources", () => {
+    const help = (id: string) =>
+      HEALTH_ADTECH_SECTIONS.flatMap((s) => s.questions).find((q) => q.id === id)!.help!;
+    for (const id of ["hd1_2", "hd2_4", "hd6_1", "hd8_8", "hd8_9"]) expect(help(id).en, id).toMatch(/\[to verify\]/);
+    const cited: Record<string, string> = {
+      hd5_1: "11 CCR 7152(a)(5)-(6)",
+      hd7_1: "11 CCR 7152(a)(5)-(6)",
+      hd8_1: "RCW 19.373.030; Nevada NRS 603A.500",
+      hd8_2: "RCW 19.373.070; Nevada NRS 603A.535",
+      hd8_3: "RCW 19.373.080; NRS 603A.540",
+      hd8_4: "Md. Com. Law 14-4607(a)(1),(2)",
+      hd8_6: "11 CCR 7155(a),(b) and 7157(a),(e)",
+      hd8_7: "11 CCR 7157(b)(5),(c)",
+    };
+    for (const [id, cite] of Object.entries(cited)) {
+      expect(help(id).en, id).toContain(cite);
+      expect(help(id).en, id).not.toMatch(/\[to verify\]|workshop brief/);
+      expect(help(id).es, id).not.toMatch(/\[por verificar\]|encargo del taller/);
     }
   });
 

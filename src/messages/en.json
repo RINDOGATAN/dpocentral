@@ -5992,7 +5992,7 @@
         },
         "hd5_1": {
           "text": "Which negative impacts could the processing cause?",
-          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "helpText": "Source: 11 CCR 7152(a)(5)-(6) (checked 16 September 2026); California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026).",
           "options": [
             "Unauthorised access or disclosure",
             "Discrimination",
@@ -6059,7 +6059,7 @@
         },
         "hd7_1": {
           "text": "Which main mitigation route do you choose?",
-          "helpText": "Source: California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026). [to verify]",
+          "helpText": "Source: 11 CCR 7152(a)(5)-(6) (checked 16 September 2026); California Lawyers Association, \"Global assessments across CCPA and GDPR\", part one (14 September 2026).",
           "options": [
             "Obtain opt-in consent nationwide",
             "Suppress health-related data for consumers in opt-in states",
@@ -6086,19 +6086,19 @@
         },
         "hd8_1": {
           "text": "Washington or Nevada: do you obtain the consumer's consent before collecting consumer health data, and separate consent before sharing it?",
-          "helpText": "Answer Yes or No; add the detail in the notes. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+          "helpText": "Answer Yes or No; add the detail in the notes. Source: Washington RCW 19.373.030; Nevada NRS 603A.500 (checked 16 September 2026)."
         },
         "hd8_2": {
           "text": "Washington or Nevada: is any consumer health data sold, and if so, do you hold a valid signed authorisation from each consumer?",
-          "helpText": "Answer Yes only if there is no sale, or every sale is covered by a signed authorisation. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+          "helpText": "Answer Yes only if there is no sale, or every sale is covered by a signed authorisation naming the data, the seller and each purchaser. Source: Washington RCW 19.373.070; Nevada NRS 603A.535 (checked 16 September 2026)."
         },
         "hd8_3": {
           "text": "Washington or Nevada: do you use a geofence around places where health care is provided to identify, track or send messages to consumers?",
-          "helpText": "This geofencing is prohibited; a Yes is reported as a breach to resolve. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+          "helpText": "This geofencing is prohibited: within 2,000 feet of in-person health care in Washington, within 1,750 feet of a medical facility in Nevada. A Yes is reported as a breach to resolve. Source: RCW 19.373.080; NRS 603A.540 (checked 16 September 2026)."
         },
         "hd8_4": {
           "text": "Maryland: does any disclosure amount to a sale of sensitive data, including health data?",
-          "helpText": "Maryland prohibits the sale of sensitive data; it is not only an opt-out. Source: DPO Central jurisdiction catalogue, MODPA entry. Consent does not make such a sale lawful [to verify]."
+          "helpText": "Maryland prohibits the sale of sensitive data; it is not only an opt-out, and consent does not make such a sale lawful. Sensitive data may be processed only where strictly necessary for a product or service the consumer requested. Source: Md. Com. Law 14-4607(a)(1),(2) (2024 ch. 454; checked 16 September 2026)."
         },
         "hd8_5": {
           "text": "California: do you offer and honour the right to limit the use and disclosure of sensitive personal information?",
@@ -6106,11 +6106,11 @@
         },
         "hd8_6": {
           "text": "California: on what date was this risk assessment documented, and when is the abridged filing due?",
-          "helpText": "Timetable: risk assessments documented from 1 January 2026; abridged filing with the California Privacy Protection Agency from 1 April 2028; the full assessment provided on request within 30 days. Use the format YYYY-MM-DD. Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+          "helpText": "Timetable: assess before the processing starts; processing begun before 2026 must be assessed by 31 December 2027; summary information and an executive attestation are submitted to CalPrivacy by 1 April 2028; the full report is produced within 30 days of a request. Use the format YYYY-MM-DD. Source: 11 CCR 7155(a),(b) and 7157(a),(e) (checked 16 September 2026)."
         },
         "hd8_7": {
           "text": "California: which executive will sign the attestation that accompanies the filing (name and title)?",
-          "helpText": "Source: not in DPO Central's regulation data; stated in the workshop brief. [to verify]"
+          "helpText": "The attestation is made under penalty of perjury by a member of executive management who is directly responsible for risk-assessment compliance. Source: 11 CCR 7157(b)(5),(c) (checked 16 September 2026)."
         },
         "hd8_8": {
           "text": "US states: do you obtain opt-in consent before processing sensitive data, including health data?",

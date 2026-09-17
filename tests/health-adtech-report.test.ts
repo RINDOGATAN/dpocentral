@@ -154,7 +154,9 @@ describe("health-data advertising report", () => {
       expect(text).toContain(result.fiveFactor.bandLabel![lang]);
       expect(text).toContain(result.mitigation![lang]);
       expect(text).toContain("Chief Executive Officer");
-      expect(text).toContain(lang === "es" ? "[por verificar]" : "[to verify]");
+      expect(text).toContain("RCW 19.373.030");
+      expect(text).toContain("11 CCR 7157(b)(5), 7157(c)");
+      expect(text).toContain(lang === "es" ? "Fuente primaria (comprobada el 16 de septiembre de 2026)" : "Primary source (checked 16 September 2026)");
       expect(text).toContain(lang === "es" ? "art. 36" : "Art. 36");
     });
 
@@ -204,6 +206,18 @@ describe("health-data advertising report", () => {
     expect(a).toContain("Washington");
     expect(b).not.toContain("Washington");
     expect(b).toContain("Maryland (MODPA)");
-    expect(b).toContain("may not be sold");
+    expect(a).toContain("RCW 19.373.080");
+    expect(b).not.toContain("RCW 19.373.080");
+    expect(b).toContain("selling sensitive data is prohibited (Com. Law 14-4607(a)(2))");
+  });
+
+  it("prints the mark next to an item that is still unsourced", () => {
+    const t = translator((en as any).healthAdtechReport);
+    const ct = computeHealthAdtechResult([
+      { questionId: "hd1_1", response: JSON.stringify([JURISDICTIONS[6].en]) },
+      ...responses.slice(1),
+    ]);
+    const text = collectText(HealthAdtechPages({ result: ct, lang: "en", t, title: "x", orgName: "o", date: "d" })).join("\n");
+    expect(text).toContain("Offer the right to opt out (including targeted advertising and sale) [to verify]");
   });
 });

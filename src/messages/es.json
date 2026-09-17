@@ -5992,7 +5992,7 @@
         },
         "hd5_1": {
           "text": "¿Qué impactos negativos podría causar el tratamiento?",
-          "helpText": "Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
           "options": [
             "Acceso o comunicación no autorizados",
             "Discriminación",
@@ -6059,7 +6059,7 @@
         },
         "hd7_1": {
           "text": "¿Qué vía principal de mitigación eliges?",
-          "helpText": "Fuente: California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026). [por verificar]",
+          "helpText": "Fuente: 11 CCR 7152(a)(5)-(6) (comprobado el 16 de septiembre de 2026); California Lawyers Association, «Global assessments across CCPA and GDPR», primera parte (14 de septiembre de 2026).",
           "options": [
             "Obtener consentimiento expreso (opt-in) en todo el país",
             "Suprimir los datos relacionados con la salud de los consumidores de estados con consentimiento expreso",
@@ -6086,19 +6086,19 @@
         },
         "hd8_1": {
           "text": "Washington o Nevada: ¿obtienes el consentimiento del consumidor antes de recoger sus datos de salud y un consentimiento distinto antes de compartirlos?",
-          "helpText": "Responde Sí o No; añade el detalle en las notas. Fuente: no figura en los datos normativos de DPO Central; consta en el encargo del taller. [por verificar]"
+          "helpText": "Responde Sí o No; añade el detalle en las notas. Fuente: Washington, RCW 19.373.030; Nevada, NRS 603A.500 (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_2": {
           "text": "Washington o Nevada: ¿se vende algún dato de salud del consumidor y, en tal caso, cuentas con una autorización firmada y válida de cada consumidor?",
-          "helpText": "Responde Sí solo si no hay venta o si cada venta está cubierta por una autorización firmada. Fuente: no figura en los datos normativos de DPO Central; consta en el encargo del taller. [por verificar]"
+          "helpText": "Responde Sí solo si no hay venta o si cada venta está cubierta por una autorización firmada que identifique los datos, al vendedor y a cada comprador. Fuente: Washington, RCW 19.373.070; Nevada, NRS 603A.535 (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_3": {
           "text": "Washington o Nevada: ¿utilizas una geovalla alrededor de lugares donde se prestan servicios sanitarios para identificar o seguir a los consumidores, o para enviarles mensajes?",
-          "helpText": "Esta geovalla está prohibida; un Sí aparece en el informe como un incumplimiento que debe resolverse. Fuente: no figura en los datos normativos de DPO Central; consta en el encargo del taller. [por verificar]"
+          "helpText": "Esta geovalla está prohibida: a menos de 2.000 pies de asistencia sanitaria presencial en Washington y a menos de 1.750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse. Fuente: RCW 19.373.080; NRS 603A.540 (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_4": {
           "text": "Maryland: ¿alguna comunicación constituye una venta de datos sensibles, incluidos los de salud?",
-          "helpText": "Maryland prohíbe la venta de datos sensibles; no se trata solo de un derecho de exclusión voluntaria. Fuente: catálogo de jurisdicciones de DPO Central, ficha MODPA. El consentimiento no convierte esa venta en lícita [por verificar]."
+          "helpText": "Maryland prohíbe vender datos sensibles; no es solo un derecho de oposición, y el consentimiento no hace lícita esa venta. Los datos sensibles solo pueden tratarse cuando sea estrictamente necesario para un producto o servicio solicitado por el consumidor. Fuente: Md. Com. Law 14-4607(a)(1),(2) (ley de 2024, cap. 454; comprobado el 16 de septiembre de 2026)."
         },
         "hd8_5": {
           "text": "California: ¿ofreces y respetas el derecho a limitar el uso y la comunicación de la información personal sensible?",
@@ -6106,11 +6106,11 @@
         },
         "hd8_6": {
           "text": "California: ¿en qué fecha se documentó esta evaluación de riesgos y cuándo vence la presentación abreviada?",
-          "helpText": "Calendario: evaluaciones de riesgos documentadas desde el 1 de enero de 2026; presentación abreviada ante la California Privacy Protection Agency desde el 1 de abril de 2028; la evaluación completa se entrega a requerimiento en un plazo de 30 días. Usa el formato AAAA-MM-DD. Fuente: no figura en los datos normativos de DPO Central; consta en el encargo del taller. [por verificar]"
+          "helpText": "Calendario: evaluar antes de iniciar el tratamiento; el tratamiento iniciado antes de 2026 debe evaluarse a más tardar el 31 de diciembre de 2027; la información resumida y la declaración de un directivo se presentan a CalPrivacy a más tardar el 1 de abril de 2028; el informe completo se entrega en 30 días desde el requerimiento. Usa el formato AAAA-MM-DD. Fuente: 11 CCR 7155(a),(b) y 7157(a),(e) (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_7": {
           "text": "California: ¿qué directivo firmará la declaración que acompaña a la presentación (nombre y cargo)?",
-          "helpText": "Fuente: no figura en los datos normativos de DPO Central; consta en el encargo del taller. [por verificar]"
+          "helpText": "La declaración se hace bajo pena de perjurio y la firma un miembro de la alta dirección directamente responsable del cumplimiento en evaluaciones de riesgos. Fuente: 11 CCR 7157(b)(5),(c) (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_8": {
           "text": "Estados de EE. UU.: ¿obtienes consentimiento expreso (opt-in) antes de tratar datos sensibles, incluidos los de salud?",
