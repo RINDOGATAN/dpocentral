@@ -18,6 +18,7 @@ import {
   CAPPED_CREATE_PATHS,
   pilotLocale,
   READ_ONLY_ALLOWED_PATHS,
+  recordPilotFirstSignIn,
 } from "@/server/services/pilot/caps";
 
 interface CreateContextOptions {
@@ -139,13 +140,17 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
   });
 });
 
-// Hosted pilot caps (no-op on the self-hosted kit): once the pilot period
-// ends, org-scoped mutations are refused (exports are GET routes and stay
-// open); creates are refused at the records ceiling.
+// Hosted pilot caps (no-op on the self-hosted kit): the first request by a
+// signed-in member after the pilot went live records the organisation's first
+// sign-in, which starts the editing window. Once the window ends, org-scoped
+// mutations are refused (exports are GET routes and stay open); creates are
+// refused at the records ceiling.
 const enforcePilotCaps = t.middleware(async ({ ctx, next, path, type }) => {
-  if (type !== "mutation") return next();
-  const org = (ctx as { organization?: { id: string; createdAt: Date } }).organization;
+  const org = (ctx as { organization?: { id: string; pilotStartedAt: Date | null } })
+    .organization;
   if (!org) return next();
+  await recordPilotFirstSignIn(ctx.prisma, org);
+  if (type !== "mutation") return next();
   const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
   if (!READ_ONLY_ALLOWED_PATHS.has(path)) {
     assertPilotWritable(org, locale);

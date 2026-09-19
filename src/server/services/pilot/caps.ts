@@ -15,8 +15,9 @@ import {
  * The hosted service is a free pilot. Every module is open to every
  * organisation, and these caps apply:
  *   - one organisation per account;
- *   - edits for PILOT_DAYS from the organisation's start, then read-only
- *     (exports stay available: they are GET routes under /api/export);
+ *   - edits for PILOT_DAYS from the organisation's first sign-in after the
+ *     pilot went live, then read-only (exports stay available: they are GET
+ *     routes under /api/export);
  *   - a ceiling on the records an organisation can hold (PILOT_LIMITS).
  * The self-hosted kit is never capped: every function here is a no-op unless
  * isHostedDeployment() is true.
@@ -25,11 +26,16 @@ import {
 export const PILOT_DAYS = 90;
 
 /**
- * The pilot clock starts at the later of the organisation's creation and this
- * date, so organisations that existed before the caps shipped are not made
- * read-only on the day of the release.
+ * The date the hosted pilot went live. The editing window never starts before
+ * it, and a sign-in before it does not start the clock.
  */
 export const PILOT_CLOCK_START = new Date("2026-10-01T00:00:00Z");
+
+/**
+ * The field the pilot clock reads. `pilotStartedAt` is the organisation's
+ * first sign-in after the pilot went live; null until that sign-in happens.
+ */
+export type PilotClockOrg = { pilotStartedAt: Date | null };
 
 export type PilotResource =
   | "dataAssets"
@@ -183,28 +189,68 @@ export function pilotMessage(
     : `You have reached the pilot limit of ${limit} ${label}. To continue, run your own instance (${run}) or export your records (${exp}).`;
 }
 
-export function pilotStart(org: { createdAt: Date }): Date {
-  const created = new Date(org.createdAt);
-  return created > PILOT_CLOCK_START ? created : PILOT_CLOCK_START;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Start of the editing window: the first sign-in after the pilot went live,
+ * never before PILOT_CLOCK_START. Null while no sign-in has been recorded (an
+ * organisation that existed before the pilot starts at its next sign-in, not
+ * at its creation date).
+ */
+export function pilotStart(org: PilotClockOrg): Date | null {
+  if (!org.pilotStartedAt) return null;
+  const signedIn = new Date(org.pilotStartedAt);
+  return signedIn > PILOT_CLOCK_START ? signedIn : PILOT_CLOCK_START;
 }
 
-export function pilotEndsAt(org: { createdAt: Date }): Date {
-  return new Date(pilotStart(org).getTime() + PILOT_DAYS * 24 * 60 * 60 * 1000);
+export function pilotEndsAt(org: PilotClockOrg): Date | null {
+  const start = pilotStart(org);
+  return start ? new Date(start.getTime() + PILOT_DAYS * DAY_MS) : null;
 }
 
-/** Whole days of editing left (0 once read-only). */
-export function pilotDaysLeft(org: { createdAt: Date }, now: Date = new Date()): number {
-  const ms = pilotEndsAt(org).getTime() - now.getTime();
-  return ms <= 0 ? 0 : Math.ceil(ms / (24 * 60 * 60 * 1000));
+/** Whole days of editing left (0 once read-only; the full window before it starts). */
+export function pilotDaysLeft(org: PilotClockOrg, now: Date = new Date()): number {
+  const end = pilotEndsAt(org);
+  if (!end) return PILOT_DAYS;
+  const ms = end.getTime() - now.getTime();
+  return ms <= 0 ? 0 : Math.ceil(ms / DAY_MS);
 }
 
-export function isPilotReadOnly(org: { createdAt: Date }, now: Date = new Date()): boolean {
-  return now.getTime() >= pilotEndsAt(org).getTime();
+export function isPilotReadOnly(org: PilotClockOrg, now: Date = new Date()): boolean {
+  const end = pilotEndsAt(org);
+  return end !== null && now.getTime() >= end.getTime();
+}
+
+/**
+ * Records the organisation's first sign-in after the pilot went live. Called
+ * when a signed-in member reaches the organisation (src/server/trpc.ts). A
+ * no-op on the kit, before PILOT_CLOCK_START, and once a start is recorded.
+ * Sets `org.pilotStartedAt` in place so the rest of the request sees it. The
+ * update only matches a null column, so a concurrent request cannot move a
+ * recorded start.
+ */
+export async function recordPilotFirstSignIn(
+  db: {
+    organization: {
+      updateMany: (args: { where: object; data: object }) => Promise<unknown>;
+    };
+  },
+  org: { id: string } & PilotClockOrg,
+  now: Date = new Date()
+): Promise<void> {
+  if (!isHostedDeployment()) return;
+  if (org.pilotStartedAt) return;
+  if (now.getTime() < PILOT_CLOCK_START.getTime()) return;
+  await db.organization.updateMany({
+    where: { id: org.id, pilotStartedAt: null },
+    data: { pilotStartedAt: now },
+  });
+  org.pilotStartedAt = now;
 }
 
 /** Throws FORBIDDEN on the hosted pilot once the organisation is read-only. */
 export function assertPilotWritable(
-  org: { createdAt: Date },
+  org: PilotClockOrg,
   locale: Locale = "en",
   now: Date = new Date()
 ): void {
@@ -285,14 +331,16 @@ export type PilotStatus =
       hosted: true;
       days: number;
       daysLeft: number;
-      endsAt: Date;
+      /** False until the first sign-in after the pilot went live is recorded. */
+      started: boolean;
+      endsAt: Date | null;
       readOnly: boolean;
       usage: { resource: PilotResource; used: number; limit: number }[];
     };
 
 export async function getPilotStatus(
   db: PilotDb,
-  org: { id: string; createdAt: Date },
+  org: { id: string } & PilotClockOrg,
   now: Date = new Date()
 ): Promise<PilotStatus> {
   if (!isHostedDeployment()) return { hosted: false };
@@ -306,6 +354,7 @@ export async function getPilotStatus(
   return {
     hosted: true,
     days: PILOT_DAYS,
+    started: pilotStart(org) !== null,
     daysLeft: pilotDaysLeft(org, now),
     endsAt: pilotEndsAt(org),
     readOnly: isPilotReadOnly(org, now),

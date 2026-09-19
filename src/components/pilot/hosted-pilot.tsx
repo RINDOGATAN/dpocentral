@@ -88,15 +88,15 @@ export function HostedPilotBanner() {
   return (
     <>
       {/* Spacer so the fixed bar never covers the end of the page */}
-      <div aria-hidden className="h-10" />
+      <div aria-hidden className="h-16 sm:h-12" />
       <div
         role="region"
         aria-label={t("bannerLabel")}
         data-testid="hosted-pilot-banner"
         className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-background/95 backdrop-blur text-xs sm:text-sm"
       >
-        <div className="mx-auto max-w-7xl px-4 h-10 flex items-center justify-between gap-3">
-          <HostedPilotSentence className="truncate" />
+        <div className="mx-auto max-w-7xl px-4 py-2 min-h-10 flex items-center justify-between gap-3">
+          <HostedPilotSentence className="line-clamp-3 sm:line-clamp-2" />
           <button
             type="button"
             onClick={dismiss}

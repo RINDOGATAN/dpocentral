@@ -6395,12 +6395,12 @@
     }
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
     "bannerLabel": "Aviso del piloto alojado",
     "dismiss": "Cerrar",
     "settings": {
       "summary": "Piloto: {days, plural, one {queda # día} other {quedan # días}}, {used} de {limit} sistemas",
-      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos. Puedes editar durante {days} días desde el inicio de tu organización, dentro de los límites que ves abajo. Después, tu organización pasa a ser de solo lectura y puedes seguir exportando todo lo que creaste.",
+      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos, dentro de los límites que ves abajo. {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
       "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que creaste.",
       "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
       "waysOut": "Para seguir trabajando sin límites, <run>ejecuta tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",

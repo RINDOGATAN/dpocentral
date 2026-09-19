@@ -6395,12 +6395,12 @@
     }
   },
   "pilot": {
-    "banner": "Hosted pilot: free, capped, no security certification. For real client data, <run>run your own instance</run>.",
+    "banner": "Hosted pilot: free, capped, no security certification. 90 days of editing from your first sign-in, then read-only with export. For real client data, <run>run your own instance</run>.",
     "bannerLabel": "Hosted pilot notice",
     "dismiss": "Dismiss",
     "settings": {
       "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",
-      "description": "The hosted service is a free pilot. Every module is included. You can edit for {days} days from the start of your organization, within the limits below. After that, your organization is read-only and you can still export everything you created.",
+      "description": "The hosted service is a free pilot. Every module is included, within the limits below. {days} days of editing from your first sign-in, then read-only with export.",
       "readOnly": "The pilot has ended. This organization is read-only. You can still export everything you created.",
       "limitReached": "You have reached a pilot limit. You can no longer add records of that kind here.",
       "waysOut": "To keep working without limits, <run>run your own instance</run>. To take your records with you, <export>export them</export>.",

@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => {
   const counter = () => ({ count: vi.fn().mockResolvedValue(0) });
   return {
     prisma: {
-      organization: { findUnique: vi.fn(), create: vi.fn() },
+      organization: { findUnique: vi.fn(), create: vi.fn(), updateMany: vi.fn() },
       organizationMember: {
         findUnique: vi.fn(),
         findFirst: vi.fn(),
@@ -80,7 +80,9 @@ import {
   PILOT_CLOCK_START,
   PILOT_DAYS,
   PILOT_LIMITS,
+  isPilotReadOnly,
   pilotDaysLeft,
+  pilotStart,
   type PilotDb,
 } from "@/server/services/pilot/caps";
 import { checkSkillEntitlement } from "@/server/services/licensing/entitlement";
@@ -88,9 +90,15 @@ import { createInnerTRPCContext, createTRPCRouter } from "@/server/trpc";
 import { callerFor, sessionFor } from "./helpers";
 
 const DAY = 24 * 60 * 60 * 1000;
-// An organisation created well after the pilot clock start.
+// An organisation created, and first signed into, well after the pilot went live.
 const CREATED = new Date(PILOT_CLOCK_START.getTime() + 30 * DAY);
-const ORG = { id: "org-1", name: "Org", slug: "org", createdAt: CREATED };
+const ORG = {
+  id: "org-1",
+  name: "Org",
+  slug: "org",
+  createdAt: CREATED,
+  pilotStartedAt: CREATED as Date | null,
+};
 
 function setNow(daysAfterCreation: number) {
   vi.setSystemTime(new Date(CREATED.getTime() + daysAfterCreation * DAY));
@@ -212,10 +220,13 @@ describe("the 90-day switch to read-only", () => {
     expect(mocks.prisma.organizationJurisdiction.upsert).toHaveBeenCalled();
   });
 
-  it("starts the clock no earlier than the pilot clock start", () => {
-    const old = { createdAt: new Date("2025-01-01T00:00:00Z") };
+  it("never starts the window before the deployment date", () => {
+    const early = { pilotStartedAt: new Date(PILOT_CLOCK_START.getTime() - 20 * DAY) };
+    expect(pilotStart(early)).toEqual(PILOT_CLOCK_START);
     vi.setSystemTime(PILOT_CLOCK_START);
-    expect(pilotDaysLeft(old)).toBe(PILOT_DAYS);
+    expect(pilotDaysLeft(early)).toBe(PILOT_DAYS);
+    vi.setSystemTime(new Date(PILOT_CLOCK_START.getTime() + (PILOT_DAYS - 1) * DAY));
+    expect(isPilotReadOnly(early)).toBe(false);
   });
 
   it("answers in Castilian Spanish when the locale is es", async () => {
@@ -232,6 +243,103 @@ describe("the 90-day switch to read-only", () => {
     callerWithRole("OWNER");
     const caller = orgCaller((name) => (name === "NEXT_LOCALE" ? "es" : undefined));
     await expect(addJurisdiction(caller)).rejects.toThrow("solo lectura");
+  });
+});
+
+describe("the clock starts at the first sign-in", () => {
+  // A signed-in member reaching the organisation, with a fresh org row.
+  function signedInTo(org: typeof ORG) {
+    mocks.prisma.organizationMember.findUnique.mockResolvedValue({
+      id: "member-1",
+      userId: "user-1",
+      organizationId: org.id,
+      role: "OWNER",
+      organization: org,
+    });
+    return orgCaller();
+  }
+  const status = (org: typeof ORG) =>
+    signedInTo(org).getPilotStatus({ organizationId: org.id });
+
+  it("starts a new organisation's window at its first sign-in", async () => {
+    hosted();
+    const firstSignIn = new Date(CREATED.getTime() + 3 * DAY);
+    vi.setSystemTime(firstSignIn);
+    const org = { ...ORG, pilotStartedAt: null };
+    expect(await status(org)).toMatchObject({
+      hosted: true,
+      started: true,
+      daysLeft: PILOT_DAYS,
+      readOnly: false,
+    });
+    expect(mocks.prisma.organization.updateMany).toHaveBeenCalledWith({
+      where: { id: "org-1", pilotStartedAt: null },
+      data: { pilotStartedAt: firstSignIn },
+    });
+    // Counted from the sign-in, not from the creation three days earlier.
+    expect(pilotDaysLeft(org, new Date(CREATED.getTime() + PILOT_DAYS * DAY))).toBe(3);
+  });
+
+  it("starts an organisation created before the pilot at its first sign-in after it", async () => {
+    hosted();
+    const signIn = new Date(PILOT_CLOCK_START.getTime() + 40 * DAY);
+    vi.setSystemTime(signIn);
+    const org = { ...ORG, createdAt: new Date("2025-01-01T00:00:00Z"), pilotStartedAt: null };
+    // With no recorded sign-in the window has not started: full days, writable.
+    expect(isPilotReadOnly(org)).toBe(false);
+    expect(pilotDaysLeft(org)).toBe(PILOT_DAYS);
+    await addJurisdiction(signedInTo(org));
+    expect(mocks.prisma.organizationJurisdiction.upsert).toHaveBeenCalled();
+    expect(org.pilotStartedAt).toEqual(signIn);
+    vi.setSystemTime(new Date(signIn.getTime() + (PILOT_DAYS - 1) * DAY));
+    expect(await status(org)).toMatchObject({ daysLeft: 1, readOnly: false });
+    vi.setSystemTime(new Date(signIn.getTime() + PILOT_DAYS * DAY));
+    await expect(addJurisdiction(signedInTo(org))).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("does not start the clock on a sign-in before the deployment date", async () => {
+    hosted();
+    vi.setSystemTime(new Date(PILOT_CLOCK_START.getTime() - 5 * DAY));
+    const org = { ...ORG, createdAt: new Date("2026-09-01T00:00:00Z"), pilotStartedAt: null };
+    expect(await status(org)).toMatchObject({ started: false, daysLeft: PILOT_DAYS });
+    expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
+    expect(org.pilotStartedAt).toBeNull();
+  });
+
+  it("keeps a recorded start", async () => {
+    hosted();
+    setNow(10);
+    expect(await status({ ...ORG })).toMatchObject({ daysLeft: PILOT_DAYS - 10 });
+    expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("does not record or count anything on the kit", async () => {
+    kit();
+    const org = { ...ORG, pilotStartedAt: null };
+    expect(await status(org)).toEqual({ hosted: false });
+    expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("leaves the public request form open for an organisation whose window has not started", async () => {
+    hosted();
+    mocks.prisma.organization.findUnique.mockResolvedValue({
+      ...ORG,
+      pilotStartedAt: null,
+      dsarIntakeForms: [{ id: "form-1" }],
+      jurisdictions: [],
+    });
+    mocks.prisma.dSARRequest.count.mockResolvedValue(PILOT_LIMITS.dsarRequests);
+    const anon = callerFor(dsarRouter, null) as ReturnType<typeof dsarRouter.createCaller>;
+    // Refused only by the ceiling, not by the clock; and a visitor never starts the clock.
+    await expect(
+      anon.submitPublic({
+        orgSlug: "org",
+        type: "ACCESS",
+        requesterName: "A",
+        requesterEmail: "a@test.example",
+      })
+    ).rejects.toThrow("pilot limit");
+    expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
   });
 });
 
