@@ -42,9 +42,12 @@ security:
 | Premium modules | All included in the free pilot; nothing is sold on the hosted service | Offline Ed25519-signed licence files (€60 a year each); no phone-home |
 | Pilot limits | One organization per account; 90 days of editing from the organization's first sign-in, then read-only with export; a records ceiling per organization (`src/server/services/pilot/caps.ts`). No security certification: not for real client data | None |
 
-The inventory of every environment variable, by name only, is in
-`docs/secrets-inventory.md`. Capacity limits and the scaling plan are in
-`docs/capacity.md`.
+Who is responsible for what in each posture, with a checklist for the hosted
+maintainer and one for the firm running the bundle, is in `docs/security.md`.
+Schema changes are forward-only; how they are applied and how an upgrade is
+rehearsed on a copy is in `docs/migrations.md`. The inventory of every
+environment variable, by name only, is in `docs/secrets-inventory.md`.
+Capacity limits and the scaling plan are in `docs/capacity.md`.
 
 ## Enforced in this build
 
@@ -202,12 +205,13 @@ Stated so they can be weighed, not implied.
    closed**: if `CRON_SECRET` is unset it refuses to run (HTTP 503) rather
    than accepting unauthenticated triggers — which also means retention-based
    redaction does not run until you configure it.
-7. **Dependency advisories below "high" are not blocking.** On 14 September
-   2026 three moderate advisories are open (a test-runner mock package, and
-   an archive library used for licence bundles); the CI gate fails only on
-   high or critical.
+7. **Dependency advisories below "high" are not blocking.** On 19 September
+   2026 two moderate advisories are open, both in the test runner (a mock
+   package and the runner that depends on it; development only, the fix is a
+   major upgrade); the CI gate fails only on high or critical.
 8. **A restore rehearsal is not recorded in this repository.** The scripts
-   exist for the bundle; whether and when a restore was last rehearsed is the
-   operator's record, not the tree's.
+   exist for the bundle and the procedure is written down
+   (`docs/migrations.md`); whether and when a restore was last rehearsed is
+   the operator's record, not the tree's.
 9. **The health endpoint is public** and discloses the application version.
    It exposes nothing else.
