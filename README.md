@@ -61,8 +61,8 @@ One codebase, two postures, switched by environment only:
   OpenAI-compatible LLM gateway, your brand via `NEXT_PUBLIC_BRAND_*`.
 - **Hosted pilot** (cloud): Google OAuth / magic links. A free pilot with
   limits and no security certification: every module is included, one
-  organization per account, edits for 90 days and then read-only (exports
-  stay open), and a ceiling on records per organization (for example 25
+  organization per account, 90 days of editing from your first sign-in, then
+  read-only with export, and a ceiling on records per organization (for example 25
   systems, 50 vendors). Nothing is sold on the hosted service. For real client
   data, run your own instance: <https://www.todo.law/run>.
 

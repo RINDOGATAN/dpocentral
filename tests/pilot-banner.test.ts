@@ -38,7 +38,7 @@ describe("hosted pilot banner", () => {
     const html = renderPage("en");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
     expect(html).toContain(
-      "Hosted pilot: free, capped, no security certification. For real client data, "
+      "Hosted pilot: free, capped, no security certification. 90 days of editing from your first sign-in, then read-only with export. For real client data, "
     );
     expect(html).toContain('href="https://www.todo.law/run"');
     expect(html).toContain("run your own instance</a>.");
@@ -50,7 +50,7 @@ describe("hosted pilot banner", () => {
     const html = renderPage("es");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
     expect(html).toContain(
-      "Piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, "
+      "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, "
     );
     expect(html).toContain("ejecuta tu propia instancia</a>.");
     expect(html).toContain('aria-label="Cerrar"');
@@ -63,6 +63,22 @@ describe("hosted pilot banner", () => {
     expect(html).not.toContain("hosted-pilot");
     expect(html).not.toContain("Hosted pilot");
     expect(html).toBe("<main>page</main>");
+  });
+
+  it("states the editing window in the sign-up sentence and in Settings, in both languages", () => {
+    // The sign-up screen renders HostedPilotSentence, i.e. `pilot.banner`.
+    expect(en.pilot.banner).toContain(
+      "90 days of editing from your first sign-in, then read-only with export."
+    );
+    expect(es.pilot.banner).toContain(
+      "90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación."
+    );
+    expect(en.pilot.settings.description).toContain(
+      "{days} days of editing from your first sign-in, then read-only with export."
+    );
+    expect(es.pilot.settings.description).toContain(
+      "{days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación."
+    );
   });
 
   it("keeps the pilot messages in both languages with the same keys", () => {

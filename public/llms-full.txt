@@ -139,8 +139,9 @@ DPO Central follows an open core model:
 - Advanced audit features
 
 **Hosted pilot (free, with limits)**: every module above is included at no
-cost. Limits: one organization per account; edits for 90 days, then
-read-only with every export still available; a ceiling on records per
+cost. Limits: one organization per account; 90 days of editing from your
+first sign-in, then read-only with export (every export stays available); a
+ceiling on records per
 organization (for example 25 systems, 50 vendors, 100 data subject
 requests). No security certification. For real client data, run your own
 instance: https://www.todo.law/run
