@@ -192,7 +192,8 @@ describe("health-data advertising report", () => {
  * and on the page that cites them, instead of leaving the date to speak for
  * itself: after a year the reader is told to read each source again. The
  * "[to verify]" marks stay, because the primary text was not in hand to clear
- * them, and the template's own description says those points are unconfirmed.
+ * them, and the report says those points are unconfirmed on the very page that
+ * prints them.
  */
 describe("the age of the sources", () => {
   const day = 24 * 60 * 60 * 1000;
@@ -220,9 +221,29 @@ describe("the age of the sources", () => {
     });
   }
 
-  it("keeps the unconfirmed marks, and says so in the template's description", () => {
-    expect(HEALTH_ADTECH_DESCRIPTION.en).toContain("[to verify]");
-    expect(HEALTH_ADTECH_DESCRIPTION.es).toContain("[por verificar]");
+  /**
+   * The template's description is now one sentence, because it is the card
+   * text, so the notice lives where the marks are read: the report's own
+   * subtitle. Both bundles carry it, and it still names counsel and refuses to
+   * be legal advice.
+   */
+  it("keeps the unconfirmed marks, and says so where they are printed", () => {
+    const subtitle = (bundle: unknown) =>
+      (bundle as { healthAdtechReport: { subtitle: string } }).healthAdtechReport.subtitle;
+    expect(subtitle(en)).toContain("[to verify]");
+    expect(subtitle(en)).toMatch(/draft for review by counsel, not legal advice/i);
+    expect(subtitle(es)).toContain("[por verificar]");
+    expect(subtitle(es)).toMatch(/borrador para revisión por un abogado, no asesoramiento jurídico/i);
+  });
+
+  it("keeps the card sentence to one sentence, with both citations", () => {
+    for (const text of [HEALTH_ADTECH_DESCRIPTION.en, HEALTH_ADTECH_DESCRIPTION.es]) {
+      expect(text.match(/\.\s/g) ?? []).toHaveLength(0);
+      expect(text).toContain("11 CCR 7152(a)");
+      expect(text).toMatch(/35\(7\)/);
+      expect(text).not.toMatch(/[—–]/);
+    }
+    expect(HEALTH_ADTECH_DESCRIPTION.es).not.toMatch(/\busted(es)?\b/i);
   });
 });
 

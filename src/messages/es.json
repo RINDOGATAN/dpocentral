@@ -5924,12 +5924,12 @@
     "dpia": {
       "template": {
         "system-dpia-template": {
-          "name": "Evaluación de impacto relativa a la protección de datos (DPIA)",
-          "description": "Una DPIA que sigue el marco que elijas al principio: las normas europeas (Reglamento (UE) 2016/679, artículos 35 y 36), las normas californianas de evaluación de riesgos (11 CCR, artículo 10) o ambas. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Informativo, no constituye asesoramiento jurídico."
+          "name": "Evaluación de impacto en la protección de datos (genérica)",
+          "description": "Una evaluación que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas."
         },
         "system-dpia-health-adtech-template": {
-          "name": "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
-          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
+          "name": "Datos de salud en publicidad",
+          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35(7) del RGPD."
         }
       },
       "section": {

@@ -129,7 +129,14 @@ export default function AssessmentTemplatesPage() {
                     </div>
                     <CardTitle className="mt-3">{templateMeta(template).name}</CardTitle>
                     {template.description && (
-                      <CardDescription className="line-clamp-2">
+                      // Two lines is all the card gives, and the Castilian text
+                      // runs longer than the English, so the full sentence stays
+                      // reachable: in the DOM for a screen reader, and on hover
+                      // through the title.
+                      <CardDescription
+                        className="line-clamp-2"
+                        title={templateMeta(template).description ?? undefined}
+                      >
                         {templateMeta(template).description}
                       </CardDescription>
                     )}
@@ -191,7 +198,7 @@ export default function AssessmentTemplatesPage() {
                     </div>
                     <CardTitle className="mt-3">{template.name}</CardTitle>
                     {template.description && (
-                      <CardDescription className="line-clamp-2">
+                      <CardDescription className="line-clamp-2" title={template.description}>
                         {template.description}
                       </CardDescription>
                     )}

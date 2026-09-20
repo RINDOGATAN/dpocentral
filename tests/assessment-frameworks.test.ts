@@ -332,6 +332,23 @@ describe("message bundles", () => {
       description: dpiaTemplateData.description,
     });
   });
+
+  /**
+   * Both texts are card copy: a short name, and one sentence with no citation
+   * stack, so nothing the card clamps away carries meaning of its own.
+   */
+  it("names the template the generic one, in a sentence a card can hold", () => {
+    const meta = (locale: "en" | "es") => dpiaFrameworkMessages(locale).template[DPIA_TEMPLATE_ID];
+    expect(meta("en").name).toBe("Data Protection Impact Assessment (generic)");
+    expect(meta("es").name).toBe("Evaluación de impacto en la protección de datos (genérica)");
+    for (const locale of ["en", "es"] as const) {
+      const description = meta(locale).description;
+      expect(description.match(/\.\s/g) ?? [], locale).toHaveLength(0);
+      expect(description, locale).not.toMatch(/2016\/679|11 CCR/);
+      expect(description.length, locale).toBeLessThan(160);
+    }
+    expect(meta("es").description).not.toMatch(/\busted(es)?\b/i);
+  });
 });
 
 describe("no long dash in the text added for the frameworks", () => {

@@ -384,7 +384,12 @@ export default function NewAssessmentPage() {
                     </div>
                     <h4 className="font-medium mt-2">{templateMeta(template).name}</h4>
                     {template.description && (
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                      // Clamped to two lines, so the full sentence stays
+                      // reachable on hover as well as in the DOM.
+                      <p
+                        className="text-xs text-muted-foreground mt-1 line-clamp-2"
+                        title={templateMeta(template).description ?? undefined}
+                      >
                         {templateMeta(template).description}
                       </p>
                     )}
