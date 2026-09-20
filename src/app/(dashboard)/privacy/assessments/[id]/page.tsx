@@ -57,6 +57,8 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { StatusChip } from "@/components/ui/status-chip";
+import type { StatusTone } from "@/config/status-tone";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
@@ -88,13 +90,14 @@ const riskColors: Record<string, string> = {
   CRITICAL: "border-destructive bg-destructive text-destructive-foreground",
 };
 
-const mitigationStatusColors: Record<string, string> = {
-  IDENTIFIED: "border-muted-foreground text-muted-foreground",
-  PLANNED: "border-blue-500 text-blue-600",
-  IN_PROGRESS: "border-primary text-primary",
-  IMPLEMENTED: "border-green-500 text-green-600",
-  VERIFIED: "border-green-600 bg-green-600 text-white",
-  NOT_REQUIRED: "border-muted-foreground/50 text-muted-foreground/50",
+/** Where a mitigation stands. The word is the label; the tone adds the icon. */
+const mitigationStatusTone: Record<string, StatusTone> = {
+  IDENTIFIED: "neutral",
+  PLANNED: "info",
+  IN_PROGRESS: "warning",
+  IMPLEMENTED: "success",
+  VERIFIED: "success",
+  NOT_REQUIRED: "neutral",
 };
 
 const typeKeys: Record<string, string> = {
@@ -933,7 +936,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   >
                     {sec.isComplete && <Check className="w-3.5 h-3.5" />}
                     <span className="whitespace-nowrap">{sec.title}</span>
-                    <span className={`text-xs ${activeSectionId === sec.id ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+                    <span className={`text-xs ${activeSectionId === sec.id ? "text-primary-foreground" : "text-muted-foreground"}`}>
                       {sec.answered}/{sec.total}
                     </span>
                   </button>
@@ -1364,9 +1367,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                         <div className="flex items-center gap-2 flex-wrap">
                           <AlertTriangle className="w-4 h-4 text-primary" />
                           <span className="font-medium">{mitigation.title}</span>
-                          <Badge variant="outline" className={mitigationStatusColors[mitigation.status] || ""}>
+                          <StatusChip tone={mitigationStatusTone[mitigation.status] ?? "neutral"}>
                             {tp(`mitigationStatus.${mitigation.status}` as `mitigationStatus.IDENTIFIED` | `mitigationStatus.PLANNED` | `mitigationStatus.IN_PROGRESS` | `mitigationStatus.IMPLEMENTED` | `mitigationStatus.VERIFIED` | `mitigationStatus.NOT_REQUIRED`)}
-                          </Badge>
+                          </StatusChip>
                           <Badge variant="outline">{tp("mitigations.priorityBadge", { value: mitigation.priority })}</Badge>
                           {mitigation.owner && (
                             <span className="text-xs text-muted-foreground">
@@ -1594,9 +1597,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="font-medium text-sm">{pet}</span>
-                                <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                <StatusChip tone="success" className="text-xs">
                                   {tp("vendorPets.implements")}
-                                </Badge>
+                                </StatusChip>
                               </div>
                               {risks.length > 0 && (
                                 <p className="text-xs text-muted-foreground mt-1">
@@ -1642,9 +1645,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                             <div className="flex items-center gap-2">
                               <span className="text-sm">{pet}</span>
                               {isVendorPet && (
-                                <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                <StatusChip tone="success" className="text-xs">
                                   {tp("vendorPets.implements")}
-                                </Badge>
+                                </StatusChip>
                               )}
                             </div>
                             <Button

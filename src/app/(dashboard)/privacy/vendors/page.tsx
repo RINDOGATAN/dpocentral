@@ -40,6 +40,9 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
+import { toneForRiskTier } from "@/config/status-tone";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
@@ -49,12 +52,8 @@ const statusColors: Record<string, string> = {
   TERMINATED: "border-muted-foreground text-muted-foreground",
 };
 
-const riskColors: Record<string, string> = {
-  LOW: "border-primary text-primary",
-  MEDIUM: "border-muted-foreground text-muted-foreground",
-  HIGH: "border-muted-foreground bg-muted-foreground/20 text-foreground",
-  CRITICAL: "border-muted-foreground bg-muted-foreground text-foreground",
-};
+// Risk tier goes through the shared tones, the same ones the vendor register
+// report prints. The old map was 2.59 to 1 at CRITICAL.
 
 export default function VendorsPage() {
   const t = useTranslations("pages.vendors");
@@ -179,10 +178,11 @@ export default function VendorsPage() {
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.highRisk > 0 ? "text-amber-400" : "text-foreground"}`}>
-              {stats.highRisk}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.highRisk")}</p>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.highRisk}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 inline-flex items-center gap-1">
+              {stats.highRisk > 0 && <StatusMark tone="warning" className="h-3.5 w-3.5" />}
+              {t("stats.highRisk")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -222,19 +222,19 @@ export default function VendorsPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-dashed border-amber-500/50 bg-amber-500/5">
+        <Card className={`border-dashed ${toneBorder("warning")} ${toneTint("warning")}`}>
           <CardContent className="py-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-amber-500 flex items-center justify-center shrink-0">
-                  <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 border-2 flex items-center justify-center shrink-0 ${toneBorder("warning")}`}>
+                  <Lock className={`w-5 h-5 sm:w-6 sm:h-6 ${toneMark("warning")}`} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800">
+                    <StatusChip tone="warning" hideIcon>
                       {formatPrice(9)}{t("catalog.perMonth")}
-                    </Badge>
+                    </StatusChip>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground">
                     {t("catalog.lockedSubtitle")}
@@ -298,9 +298,9 @@ export default function VendorsPage() {
                         {t(`status.${vendor.status}`)}
                       </Badge>
                       {vendor.riskTier && (
-                        <Badge variant="outline" className={riskColors[vendor.riskTier] || ""}>
+                        <StatusChip tone={toneForRiskTier(vendor.riskTier)}>
                           {t("card.riskBadge", { level: t(`riskTier.${vendor.riskTier}`) })}
-                        </Badge>
+                        </StatusChip>
                       )}
                     </div>
                   </div>

@@ -25,6 +25,9 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneFill, toneMark, toneStroke, toneTint } from "@/config/status-palette";
+import { toneForScore } from "@/config/status-tone";
 
 function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel: string }) {
   const size = 160;
@@ -34,14 +37,10 @@ function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel
   // An unrated programme draws an empty ring, never a full one.
   const offset = score === null ? circumference : circumference - (score / 100) * circumference;
 
-  const color =
-    score === null
-      ? "text-muted-foreground"
-      : score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
-  const strokeColor =
-    score === null
-      ? "stroke-muted"
-      : score >= 80 ? "stroke-green-500" : score >= 60 ? "stroke-yellow-500" : "stroke-red-500";
+  // The band is a tone: it colours the ring and adds an icon, and the number
+  // itself stays in the body colour where it is readable.
+  const tone = score === null ? null : toneForScore(score);
+  const strokeColor = tone === null ? "stroke-muted" : toneStroke(tone);
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -51,9 +50,8 @@ function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-muted/30"
+          className="stroke-muted-foreground/30"
         />
         <circle
           cx={size / 2}
@@ -74,8 +72,10 @@ function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel
           </span>
         ) : (
           <>
-            <span className={`text-4xl font-bold ${color}`}>{score}</span>
-            <span className="text-xs text-muted-foreground">/&nbsp;100</span>
+            <span className="text-4xl font-bold text-foreground">{score}</span>
+            <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
+              {tone && <StatusMark tone={tone} className="h-3.5 w-3.5" />}/&nbsp;100
+            </span>
           </>
         )}
       </div>
@@ -108,10 +108,7 @@ function ModuleBreakdownCard({
 }) {
   // score === null means the module has no records, so it is unrated rather
   // than perfect — it shows no percentage and contributes nothing to the total.
-  const color =
-    score === null
-      ? "text-muted-foreground"
-      : score >= 80 ? "text-green-500" : score >= 60 ? "text-yellow-500" : "text-red-500";
+  const tone = score === null ? null : toneForScore(score);
 
   return (
     <Card className={score === null ? "border-dashed" : undefined}>
@@ -124,17 +121,16 @@ function ModuleBreakdownCard({
             <p className="text-sm font-medium truncate">{label}</p>
             <p className="text-xs text-muted-foreground">{weightLabel}</p>
           </div>
-          <span className={`text-lg font-bold ${color}`}>
+          <span className="text-lg font-bold inline-flex items-center gap-1">
+            {tone && <StatusMark tone={tone} className="h-4 w-4" />}
             {score === null ? unratedValue : `${score}%`}
           </span>
         </div>
         <div className="w-full bg-muted rounded-full h-2">
-          {score !== null && (
+          {tone !== null && (
             <div
-              className={`h-2 rounded-full ${
-                score >= 80 ? "bg-green-500" : score >= 60 ? "bg-yellow-500" : "bg-red-500"
-              }`}
-              style={{ width: `${Math.min(score, 100)}%` }}
+              className={`h-2 rounded-full ${toneFill(tone)}`}
+              style={{ width: `${Math.min(score ?? 0, 100)}%` }}
             />
           )}
         </div>
@@ -266,16 +262,16 @@ export default function ReportsPage() {
                 <div className="flex items-center gap-2 text-sm">
                   {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
                     <>
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                      <span className="text-green-500">
+                      <TrendingUp className={`w-4 h-4 ${toneMark("success")}`} />
+                      <span className="font-medium">
                         {tp("score.trendUp", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
                       </span>
                       <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
                     </>
                   ) : (
                     <>
-                      <TrendingDown className="w-4 h-4 text-red-500" />
-                      <span className="text-red-500">
+                      <TrendingDown className={`w-4 h-4 ${toneMark("danger")}`} />
+                      <span className="font-medium">
                         {tp("score.trendDown", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
                       </span>
                       <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
@@ -362,7 +358,7 @@ export default function ReportsPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-yellow-500" />
+              <AlertTriangle className={`w-4 h-4 ${toneMark("warning")}`} />
               {tp("risk.title")}
             </CardTitle>
             <CardDescription>{tp("risk.subtitle")}</CardDescription>
@@ -372,9 +368,9 @@ export default function ReportsPage() {
               {riskIndicators.map((indicator, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 text-sm p-2 rounded border border-yellow-500/20 bg-yellow-500/5"
+                  className={`flex items-center gap-3 text-sm p-2 rounded border ${toneBorder("warning")} ${toneTint("warning")}`}
                 >
-                  <AlertTriangle className="w-4 h-4 text-yellow-500 shrink-0" />
+                  <AlertTriangle className={`w-4 h-4 shrink-0 ${toneMark("warning")}`} />
                   <span>{indicator}</span>
                 </div>
               ))}
@@ -386,7 +382,7 @@ export default function ReportsPage() {
       {riskIndicators.length === 0 && complianceData && (
         <Card>
           <CardContent className="py-6 text-center">
-            <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
+            <CheckCircle2 className={`w-8 h-8 mx-auto mb-2 ${toneMark("success")}`} />
             <p className="text-sm text-muted-foreground">{tp("risk.noneTitle")}</p>
           </CardContent>
         </Card>
@@ -446,10 +442,11 @@ export default function ReportsPage() {
                     <p className="text-xs text-muted-foreground">{tp("modules.dsarOpen")}</p>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold ${moduleStats.dsar.overdue > 0 ? "text-red-500" : ""}`}>
-                      {moduleStats.dsar.overdue}
+                    <p className="text-2xl font-bold">{moduleStats.dsar.overdue}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      {moduleStats.dsar.overdue > 0 && <StatusMark tone="danger" className="h-3 w-3" />}
+                      {tp("modules.dsarOverdue")}
                     </p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.dsarOverdue")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{tp("modules.daysShort", { days: moduleStats.dsar.avgResolutionDays })}</p>
@@ -474,18 +471,22 @@ export default function ReportsPage() {
                     <p className="text-xs text-muted-foreground">{tp("modules.assessmentTotal")}</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-green-500">{moduleStats.assessment.approved}</p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentApproved")}</p>
+                    <p className="text-2xl font-bold">{moduleStats.assessment.approved}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      <StatusMark tone="success" className="h-3 w-3" />
+                      {tp("modules.assessmentApproved")}
+                    </p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{moduleStats.assessment.inProgress}</p>
                     <p className="text-xs text-muted-foreground">{tp("modules.assessmentInProgress")}</p>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold ${moduleStats.assessment.highRisk > 0 ? "text-yellow-500" : ""}`}>
-                      {moduleStats.assessment.highRisk}
+                    <p className="text-2xl font-bold">{moduleStats.assessment.highRisk}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      {moduleStats.assessment.highRisk > 0 && <StatusMark tone="warning" className="h-3 w-3" />}
+                      {tp("modules.assessmentHighRisk")}
                     </p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.assessmentHighRisk")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -510,10 +511,11 @@ export default function ReportsPage() {
                     <p className="text-xs text-muted-foreground">{tp("modules.incidentOpen")}</p>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold ${moduleStats.incident.critical > 0 ? "text-red-500" : ""}`}>
-                      {moduleStats.incident.critical}
+                    <p className="text-2xl font-bold">{moduleStats.incident.critical}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      {moduleStats.incident.critical > 0 && <StatusMark tone="danger" className="h-3 w-3" />}
+                      {tp("modules.incidentCritical")}
                     </p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.incidentCritical")}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{tp("modules.daysShort", { days: moduleStats.incident.avgResolutionDays })}</p>
@@ -542,16 +544,18 @@ export default function ReportsPage() {
                     <p className="text-xs text-muted-foreground">{tp("modules.vendorActive")}</p>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold ${moduleStats.vendor.highRisk > 0 ? "text-yellow-500" : ""}`}>
-                      {moduleStats.vendor.highRisk}
+                    <p className="text-2xl font-bold">{moduleStats.vendor.highRisk}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      {moduleStats.vendor.highRisk > 0 && <StatusMark tone="warning" className="h-3 w-3" />}
+                      {tp("modules.vendorHighRisk")}
                     </p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.vendorHighRisk")}</p>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold ${moduleStats.vendor.withoutReview > 0 ? "text-red-500" : ""}`}>
-                      {moduleStats.vendor.withoutReview}
+                    <p className="text-2xl font-bold">{moduleStats.vendor.withoutReview}</p>
+                    <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                      {moduleStats.vendor.withoutReview > 0 && <StatusMark tone="danger" className="h-3 w-3" />}
+                      {tp("modules.vendorNoReview")}
                     </p>
-                    <p className="text-xs text-muted-foreground">{tp("modules.vendorNoReview")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -579,13 +583,7 @@ export default function ReportsPage() {
                         <div className="flex items-center gap-2">
                           <div className="w-24 bg-muted rounded-full h-2">
                             <div
-                              className={`h-2 rounded-full ${
-                                snapshot.score >= 80
-                                  ? "bg-green-500"
-                                  : snapshot.score >= 60
-                                  ? "bg-yellow-500"
-                                  : "bg-red-500"
-                              }`}
+                              className={`h-2 rounded-full ${toneFill(toneForScore(snapshot.score))}`}
                               style={{ width: `${Math.min(snapshot.score, 100)}%` }}
                             />
                           </div>

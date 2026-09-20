@@ -16,6 +16,8 @@ import {
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useRouter } from "next/navigation";
+import { StatusMark } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
 
 function timeAgo(date: Date | string | null): string {
   if (!date) return "No activity";
@@ -89,10 +91,13 @@ export default function ClientsPage() {
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${attentionCount > 0 ? "text-amber-400" : "text-foreground"}`}>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">
               {attentionCount}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground">Need Attention</p>
+            <p className="text-xs sm:text-sm text-muted-foreground inline-flex items-center gap-1">
+              {attentionCount > 0 && <StatusMark tone="warning" className="h-3.5 w-3.5" />}
+              Need Attention
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -116,7 +121,7 @@ export default function ClientsPage() {
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {client.needsAttention && (
-                      <AlertCircle className="w-4 h-4 text-amber-400" />
+                      <AlertCircle className={`w-4 h-4 ${toneMark("warning")}`} />
                     )}
                     <Badge variant="outline" className="text-xs">
                       {client.role.replace("_", " ")}
@@ -130,7 +135,9 @@ export default function ClientsPage() {
                     <span>
                       {client.openDsars} DSARs
                       {client.overdueDsars > 0 && (
-                        <span className="text-amber-400 ml-1">({client.overdueDsars} overdue)</span>
+                        <span className="ml-1 inline-flex items-center gap-1 font-medium">
+                          <StatusMark tone="warning" className="h-3 w-3" />({client.overdueDsars} overdue)
+                        </span>
                       )}
                     </span>
                   </div>

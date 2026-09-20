@@ -73,7 +73,7 @@ export default function SkillPackagesPage() {
       {(!skillPackages || skillPackages.length === 0) && (
         <Card>
           <CardContent className="py-12 text-center">
-            <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="font-medium">No skill packages found</h3>
             <p className="text-sm text-muted-foreground mt-1">
               Run the seed script to create default skill packages

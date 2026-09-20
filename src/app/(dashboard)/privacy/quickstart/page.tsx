@@ -50,6 +50,8 @@ import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 // ============================================================
 // ICON MAP
@@ -317,7 +319,7 @@ export default function QuickstartPage() {
                   step === s.key
                     ? "bg-primary text-primary-foreground"
                     : step === "success" || arr.findIndex((x) => x.key === step) > i
-                    ? "bg-primary/20 text-primary"
+                    ? "bg-primary/15 text-primary"
                     : "bg-muted text-muted-foreground"
                 }`}
               >
@@ -410,9 +412,9 @@ export default function QuickstartPage() {
                                   </Badge>
                                 )}
                                 {v!.criticality === "high" && (
-                                  <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500">
+                                  <StatusChip tone="warning" className="text-xs">
                                     {tp("welcome.highCriticality")}
-                                  </Badge>
+                                  </StatusChip>
                                 )}
                               </div>
                               <span className="text-xs text-muted-foreground">
@@ -567,9 +569,7 @@ export default function QuickstartPage() {
                       rail exists. On self-host everything is included, so
                       "free" tiers would be confusing noise. */}
                   {selling && !catalogAccess?.hasAccess && (
-                    <Badge variant="outline" className="text-green-600 border-green-600/50">
-                      {tp("choose.fiveFree")}
-                    </Badge>
+                    <StatusChip tone="success">{tp("choose.fiveFree")}</StatusChip>
                   )}
                   {useVendors && (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -601,9 +601,7 @@ export default function QuickstartPage() {
                 <div className="flex items-center justify-between">
                   <Sparkles className="w-8 h-8 text-primary" />
                   {selling && (
-                    <Badge variant="outline" className="text-green-600 border-green-600/50">
-                      {tp("choose.free")}
-                    </Badge>
+                    <StatusChip tone="success">{tp("choose.free")}</StatusChip>
                   )}
                   {useIndustry && (
                     <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -807,12 +805,9 @@ export default function QuickstartPage() {
                           </Badge>
                         )}
                         {p.isHighRisk && !isExisting && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs border-amber-500/50 text-amber-500"
-                          >
+                          <StatusChip tone="warning" className="text-xs">
                             {tp("vendors.highRisk")}
-                          </Badge>
+                          </StatusChip>
                         )}
                       </div>
                       {!isExisting && (
@@ -1189,7 +1184,7 @@ export default function QuickstartPage() {
                           {p.vendorName}
                           {p.isAiCapable && (
                             <span title={tp("review.aiTooltip")}>
-                              <Bot className="w-3.5 h-3.5 text-blue-500" />
+                              <Bot className={`w-3.5 h-3.5 ${toneMark("info")}`} />
                             </span>
                           )}
                         </span>
@@ -1269,9 +1264,9 @@ export default function QuickstartPage() {
         const nothingCreated = totalCreated === 0;
         return (
         <div className="space-y-6">
-          <Card className={nothingCreated ? "border-primary/30 bg-primary/5" : "border-green-500/30 bg-green-500/5"}>
+          <Card className={nothingCreated ? "border-primary/30 bg-primary/5" : `${toneBorder("success")} ${toneTint("success")}`}>
             <CardContent className="p-8 text-center">
-              <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${nothingCreated ? "text-primary" : "text-green-500"}`} />
+              <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${nothingCreated ? "text-primary" : toneMark("success")}`} />
               <h2 className="text-xl font-semibold mb-2">
                 {nothingCreated ? tp("success.alreadySetTitle") : tp("success.createdTitle")}
               </h2>

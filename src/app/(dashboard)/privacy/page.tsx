@@ -45,6 +45,8 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneForRiskTier } from "@/config/status-tone";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -297,7 +299,10 @@ export default function PrivacyDashboardPage() {
             <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.openDSARs}</div>
             <p className="text-xs text-muted-foreground mt-1">
               {dashboardStats.overdueDSARs > 0 ? (
-                <span className="text-amber-400/90 font-medium">{tp("stats.overdueCount", { count: dashboardStats.overdueDSARs })}</span>
+                <span className="inline-flex items-center gap-1 font-medium">
+                  <StatusMark tone="warning" className="h-3.5 w-3.5" />
+                  {tp("stats.overdueCount", { count: dashboardStats.overdueDSARs })}
+                </span>
               ) : (
                 tp("stats.allOnTrack")
               )}
@@ -493,18 +498,9 @@ export default function PrivacyDashboardPage() {
                       <p className="text-xs text-muted-foreground truncate">{vendor.categories?.[0] || tp("vendors.categoryFallback")}</p>
                     </div>
                     {vendor.riskTier && (
-                      <Badge
-                        variant="outline"
-                        className={`text-xs shrink-0 ${
-                          vendor.riskTier === "CRITICAL" || vendor.riskTier === "HIGH"
-                            ? "border-destructive/50 text-destructive"
-                            : vendor.riskTier === "LOW"
-                            ? "border-green-500/50 text-green-500"
-                            : ""
-                        }`}
-                      >
+                      <StatusChip tone={toneForRiskTier(vendor.riskTier)} className="text-xs shrink-0">
                         {vendor.riskTier}
-                      </Badge>
+                      </StatusChip>
                     )}
                   </div>
                 </Link>

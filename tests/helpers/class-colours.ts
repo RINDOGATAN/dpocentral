@@ -167,6 +167,26 @@ export interface Pair {
 
 const CARD = SCREEN_SURFACE.card;
 
+/**
+ * A `-foreground` token exists to be painted on its partner surface, and that
+ * surface is usually set on an ancestor rather than on the same element. Where
+ * a string names no background of its own, these are measured against their
+ * partner instead of against the card.
+ */
+const PAIRED_SURFACE: Record<string, string> = {
+  "primary-foreground": "primary",
+  "secondary-foreground": "secondary",
+  "destructive-foreground": "destructive",
+  "accent-foreground": "accent",
+  "card-foreground": "card",
+  "popover-foreground": "popover",
+  "muted-foreground": "muted",
+  "sidebar-foreground": "sidebar",
+  "sidebar-primary-foreground": "sidebar-primary",
+  "sidebar-accent-foreground": "sidebar-accent",
+  "lime-foreground": "lime",
+};
+
 /** `hover:bg-primary` is the `hover` state; a bare class is the base state. */
 function splitVariant(c: string): { state: string; bare: string } {
   const colon = c.lastIndexOf(":");
@@ -232,7 +252,14 @@ export function pairsInString(value: string): { pairs: Pair[]; unknown: string[]
         : [{ hex: CARD, label: "the card" }];
 
     for (const t of stateTexts) {
-      for (const g of grounds) {
+      const token = splitVariant(t.klass).bare.replace(/^text-/, "").replace(/\/\d+$/, "");
+      const partner = stateBgs.length === 0 ? PAIRED_SURFACE[token] : undefined;
+      const against =
+        partner && THEME[partner]
+          ? [{ hex: THEME[partner], label: `its own surface, ${partner}` }]
+          : grounds;
+
+      for (const g of against) {
         const fg = t.alpha < 1 ? rgbToHex(blend(t.hex, g.hex, t.alpha)) : t.hex;
         pairs.push({
           klass: t.klass,

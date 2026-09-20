@@ -99,3 +99,17 @@ export function toneBorder(tone: StatusTone): string {
 export function toneTint(tone: StatusTone): string {
   return screenPalette[tone].tint.class;
 }
+
+/**
+ * A solid fill for a progress bar or a chart series. Same colour as the mark,
+ * so it clears 3 to 1 on both surfaces. A bar filled this way still needs its
+ * value in words beside it; the fill is the shape, not the meaning.
+ */
+export function toneFill(tone: StatusTone): string {
+  return screenPalette[tone].mark.class.replace(/^text-/, "bg-");
+}
+
+/** The same colour as an SVG stroke, for a ring or a line on a chart. */
+export function toneStroke(tone: StatusTone): string {
+  return screenPalette[tone].mark.class.replace(/^text-/, "stroke-");
+}

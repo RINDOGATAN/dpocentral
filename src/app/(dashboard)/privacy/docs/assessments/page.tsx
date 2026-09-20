@@ -112,7 +112,7 @@ export default async function DocsAssessmentsPage() {
                     status === "APPROVED"
                       ? "bg-primary text-primary-foreground border-transparent"
                       : status === "IN_PROGRESS"
-                        ? "bg-primary/20 text-primary border-transparent"
+                        ? "bg-primary/15 text-primary border-transparent"
                         : ""
                   }`}
                 >

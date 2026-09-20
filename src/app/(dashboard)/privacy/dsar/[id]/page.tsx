@@ -48,6 +48,8 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
+import { StatusMark } from "@/components/ui/status-chip";
+import { toneBorder } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-muted-foreground text-muted-foreground",
@@ -325,7 +327,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </CardContent>
         </Card>
 
-        <Card className={isCompleted ? "border-primary" : isOverdue ? "border-destructive" : isAtRisk ? "border-muted-foreground" : ""}>
+        <Card className={isCompleted ? "border-primary" : isOverdue ? toneBorder("danger") : isAtRisk ? toneBorder("warning") : ""}>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">{tp("sla.title")}</CardTitle>
           </CardHeader>
@@ -337,9 +339,15 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                   {tp("sla.completed")}
                 </span>
               ) : isOverdue ? (
-                <span className="text-amber-400 font-semibold">{tp("sla.overdue")}</span>
+                <span className="flex items-center gap-2 font-semibold">
+                  <StatusMark tone="danger" className="h-8 w-8" />
+                  {tp("sla.overdue")}
+                </span>
               ) : isAtRisk ? (
-                <span className="bg-muted-foreground/20 text-foreground px-2 py-1">{tp("sla.daysShort", { count: daysRemaining })}</span>
+                <span className="flex items-center gap-2">
+                  <StatusMark tone="warning" className="h-8 w-8" />
+                  {tp("sla.daysShort", { count: daysRemaining })}
+                </span>
               ) : (
                 tp("sla.daysShort", { count: daysRemaining })
               )}

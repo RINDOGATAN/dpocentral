@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 type Step = "basics" | "classification" | "compliance" | "review";
 
@@ -220,8 +221,8 @@ export default function RegisterAISystemPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {riskSuggestion && (
-              <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-blue-600 mt-0.5" />
+              <div className={`p-3 rounded-lg flex items-start gap-2 ${toneTint("info")}`}>
+                <Sparkles className={`w-4 h-4 mt-0.5 ${toneMark("info")}`} />
                 <div className="text-sm">
                   <span className="font-medium">Suggested risk level: </span>
                   <Badge className="ml-1">{riskSuggestion.riskLevel.replace("_", " ")}</Badge>
@@ -264,9 +265,9 @@ export default function RegisterAISystemPage() {
             </div>
 
             {form.riskLevel === "UNACCEPTABLE" && (
-              <div className="p-3 bg-red-50 dark:bg-red-950 rounded-lg flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5" />
-                <p className="text-sm text-red-700 dark:text-red-300">
+              <div className={`p-3 rounded-lg flex items-start gap-2 border ${toneBorder("danger")} ${toneTint("danger")}`}>
+                <AlertTriangle className={`w-4 h-4 mt-0.5 ${toneMark("danger")}`} />
+                <p className="text-sm">
                   Unacceptable risk AI systems are prohibited under the EU AI Act.
                   If this system falls into this category, it must be decommissioned.
                 </p>

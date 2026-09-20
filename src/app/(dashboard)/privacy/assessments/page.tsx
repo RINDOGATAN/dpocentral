@@ -25,6 +25,8 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneForRiskTier } from "@/config/status-tone";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
@@ -40,12 +42,9 @@ const statusColors: Record<string, string> = {
   REJECTED: "border-muted-foreground text-muted-foreground",
 };
 
-const riskColors: Record<string, string> = {
-  LOW: "border-primary text-primary",
-  MEDIUM: "border-muted-foreground text-muted-foreground",
-  HIGH: "border-muted-foreground bg-muted-foreground/20 text-foreground",
-  CRITICAL: "border-muted-foreground bg-muted-foreground text-foreground",
-};
+// Risk level goes through the shared tones, so each level shows its own icon
+// beside its own word. The old map printed CRITICAL as white on mid grey, which
+// was 2.59 to 1 and unreadable.
 
 export default function AssessmentsPage() {
   const t = useTranslations("pages.assessments");
@@ -156,10 +155,11 @@ export default function AssessmentsPage() {
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${highRiskCount > 0 ? "text-amber-400" : "text-foreground"}`}>
-              {highRiskCount}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.highRisk")}</p>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{highRiskCount}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 inline-flex items-center gap-1">
+              {highRiskCount > 0 && <StatusMark tone="warning" className="h-3.5 w-3.5" />}
+              {t("stats.highRisk")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -207,9 +207,9 @@ export default function AssessmentsPage() {
                         {assessment.template?.type ? t(`type.${assessment.template.type}`) : assessment.template?.type}
                       </Badge>
                       {assessment.riskLevel && (
-                        <Badge variant="outline" className={`text-xs ${riskColors[assessment.riskLevel] || ""}`}>
+                        <StatusChip tone={toneForRiskTier(assessment.riskLevel)} className="text-xs">
                           {t("card.riskBadge", { level: t(`riskLevel.${assessment.riskLevel}`) })}
-                        </Badge>
+                        </StatusChip>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
@@ -248,9 +248,9 @@ export default function AssessmentsPage() {
                           {t(`status.${assessment.status}`)}
                         </Badge>
                         {assessment.riskLevel && (
-                          <Badge variant="outline" className={riskColors[assessment.riskLevel] || ""}>
+                          <StatusChip tone={toneForRiskTier(assessment.riskLevel)}>
                             {t("card.riskBadge", { level: t(`riskLevel.${assessment.riskLevel}`) })}
-                          </Badge>
+                          </StatusChip>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">

@@ -31,13 +31,11 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneForRiskTier } from "@/config/status-tone";
 
-const severityColors: Record<string, string> = {
-  LOW: "border-primary text-primary",
-  MEDIUM: "border-muted-foreground text-muted-foreground",
-  HIGH: "border-muted-foreground bg-muted-foreground/20 text-foreground",
-  CRITICAL: "border-muted-foreground bg-muted-foreground text-foreground",
-};
+// Severity goes through the shared tones. The old map printed CRITICAL as
+// white on mid grey, 2.59 to 1, and told the four levels apart by weight alone.
 
 const statusColors: Record<string, string> = {
   REPORTED: "border-primary text-primary",
@@ -157,10 +155,13 @@ export default function IncidentsPage() {
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.critical > 0 ? "text-amber-400" : "text-foreground"}`}>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">
               {stats.critical}
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.critical")}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 inline-flex items-center gap-1">
+              {stats.critical > 0 && <StatusMark tone="danger" className="h-3.5 w-3.5" />}
+              {t("stats.critical")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -205,9 +206,9 @@ export default function IncidentsPage() {
                   <div className="flex flex-col gap-3 sm:hidden">
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-medium font-mono text-primary text-sm">{incident.publicId}</span>
-                      <Badge variant="outline" className={`text-xs shrink-0 ${severityColors[incident.severity] || ""}`}>
+                      <StatusChip tone={toneForRiskTier(incident.severity)} className="text-xs shrink-0">
                         {t(`severity.${incident.severity}`)}
-                      </Badge>
+                      </StatusChip>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2">
                       {incident.title}
@@ -248,9 +249,9 @@ export default function IncidentsPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary">{incident.publicId}</span>
                         <Badge variant="outline">{t(`type.${incident.type}`)}</Badge>
-                        <Badge variant="outline" className={severityColors[incident.severity] || ""}>
+                        <StatusChip tone={toneForRiskTier(incident.severity)}>
                           {t(`severity.${incident.severity}`)}
-                        </Badge>
+                        </StatusChip>
                         <Badge variant="outline" className={statusColors[incident.status] || ""}>
                           {t(`status.${incident.status}`)}
                         </Badge>

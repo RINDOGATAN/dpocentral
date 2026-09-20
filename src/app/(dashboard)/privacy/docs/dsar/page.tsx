@@ -16,7 +16,7 @@ import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 const statusColors: Record<string, string> = {
   SUBMITTED: "bg-blue-100 text-blue-800 border-transparent",
   IDENTITY_PENDING: "bg-yellow-100 text-yellow-800 border-transparent",
-  IN_PROGRESS: "bg-primary/20 text-primary border-transparent",
+  IN_PROGRESS: "bg-primary/15 text-primary border-transparent",
   COMPLETED: "bg-green-100 text-green-800 border-transparent",
 };
 

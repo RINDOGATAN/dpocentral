@@ -26,6 +26,8 @@ import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
 
 export default function BillingPage() {
   const router = useRouter();
@@ -201,8 +203,8 @@ export default function BillingPage() {
                   <TableCell>
                     {row.isComingSoon ? (
                       <div className="flex items-center gap-1.5">
-                        <Clock className="h-4 w-4 text-amber-500" />
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">Coming Soon</Badge>
+                        <Clock className={`h-4 w-4 ${toneMark("warning")}`} />
+                        <StatusChip tone="warning" hideIcon className="text-[10px] px-1.5 py-0">Coming Soon</StatusChip>
                       </div>
                     ) : row.isActive ? (
                       <div className="flex items-center gap-1.5">
@@ -222,9 +224,9 @@ export default function BillingPage() {
                           Renews {row.renewsAt}
                         </span>
                       ) : (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                        <StatusChip tone="success" className="text-xs">
                           Active
-                        </Badge>
+                        </StatusChip>
                       )
                     ) : (
                       <div className="flex items-center gap-2">

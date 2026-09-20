@@ -415,7 +415,7 @@ export default function NewAssessmentPage() {
       {selectedType && !templatesLoading && templates && templates.length === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
-            <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p className="font-medium">{tp("noTemplatesTitle")}</p>
             <p className="text-sm text-muted-foreground mt-1">
               {tp("noTemplatesBody", { name: typeName(selectedType) })}

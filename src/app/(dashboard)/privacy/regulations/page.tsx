@@ -37,6 +37,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useTranslations } from "next-intl";
+import { toneMark } from "@/config/status-palette";
 
 export default function RegulationsPage() {
   const t = useTranslations("pages.regulations");
@@ -297,9 +298,9 @@ export default function RegulationsPage() {
                                     : CircleDashed;
                               const iconClass =
                                 req.status === "satisfied"
-                                  ? "text-green-500"
+                                  ? toneMark("success")
                                   : req.status === "partial"
-                                    ? "text-amber-500"
+                                    ? toneMark("warning")
                                     : "text-muted-foreground";
                               return (
                                 <li key={req.id} className="flex items-start gap-3 text-sm">

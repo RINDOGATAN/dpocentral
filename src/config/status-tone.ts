@@ -78,3 +78,59 @@ export function toneForScore(score: number): StatusTone {
   if (score >= 60) return "warning";
   return "danger";
 }
+
+/** The AI Act risk levels, which run the same four steps as a risk tier. */
+export function toneForAiRiskLevel(level: string | null | undefined): StatusTone {
+  switch (level) {
+    case "UNACCEPTABLE":
+      return "danger";
+    case "HIGH_RISK":
+      return "warning";
+    case "LIMITED":
+      return "info";
+    case "MINIMAL":
+      return "success";
+    default:
+      return "neutral";
+  }
+}
+
+/** How sensitive a data element is, from public through special category. */
+export function toneForSensitivity(level: string | null | undefined): StatusTone {
+  switch (level) {
+    case "SPECIAL_CATEGORY":
+      return "danger";
+    case "RESTRICTED":
+      return "warning";
+    case "CONFIDENTIAL":
+      return "info";
+    default:
+      return "neutral";
+  }
+}
+
+/** Where a record sits in a review workflow: registered, reviewed, decided. */
+export function toneForComplianceStatus(status: string | null | undefined): StatusTone {
+  switch (status) {
+    case "COMPLIANT":
+    case "RESOLVED":
+    case "COMPLETED":
+    case "APPROVED":
+      return "success";
+    case "NON_COMPLIANT":
+    case "OVERDUE":
+    case "REJECTED":
+      return "danger";
+    case "UNDER_REVIEW":
+    case "IN_PROGRESS":
+    case "INVESTIGATING":
+    case "PENDING":
+      return "warning";
+    case "REGISTERED":
+    case "OPEN":
+    case "NEW":
+      return "info";
+    default:
+      return "neutral";
+  }
+}
