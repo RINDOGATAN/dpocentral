@@ -15,6 +15,7 @@ import {
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
+import { assessmentProgress } from "@/server/services/assessment/progress";
 
 export async function GET(request: NextRequest) {
   const token = await getToken({ req: request });
@@ -57,22 +58,28 @@ export async function GET(request: NextRequest) {
       vendor: { select: { name: true } },
       mitigations: { select: { status: true } },
       approvals: { select: { status: true }, orderBy: { level: "desc" }, take: 1 },
-      _count: { select: { responses: true } },
+      // The answers themselves, not a count: completion is measured over the
+      // questions the answers make visible, the same way the single export
+      // and the assessment page measure it.
+      responses: { select: { questionId: true, response: true } },
     },
     orderBy: { updatedAt: "desc" },
   });
 
   // ── Transform to portfolio items ───────────────────────
   const portfolioAssessments: PortfolioAssessment[] = assessments.map((a) => {
-    const sections = (a.template?.sections as any[]) || [];
-    const totalQuestions = sections.reduce(
-      (sum: number, sec: any) => sum + (sec.questions?.length || 0),
-      0
+    // One completion figure for the whole product: the conditional-aware
+    // calculation. Counting every question of the template, including the
+    // ones the answers hide, made the portfolio and the single assessment
+    // report two different percentages for the same assessment.
+    const {
+      totalQuestions,
+      answeredQuestions: responseCount,
+      completionPercentage,
+    } = assessmentProgress(
+      { type: a.template?.type ?? "CUSTOM", sections: a.template?.sections ?? [] },
+      a.responses
     );
-    const responseCount = a._count.responses;
-    const completionPercentage = totalQuestions > 0
-      ? Math.round((responseCount / totalQuestions) * 100)
-      : 0;
 
     const mitigationCount = a.mitigations.length;
     const mitigationsCompleted = a.mitigations.filter(
