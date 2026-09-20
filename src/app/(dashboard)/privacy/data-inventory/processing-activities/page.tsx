@@ -153,21 +153,21 @@ export default function ProcessingActivitiesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/data-inventory">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/data-inventory" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label="Back">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-2xl font-semibold">Processing Activities</h1>
             <p className="text-muted-foreground">
               Record of Processing Activities (ROPA) for GDPR compliance
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {hasRopaAccess ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

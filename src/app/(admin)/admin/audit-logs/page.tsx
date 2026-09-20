@@ -73,7 +73,7 @@ export default function AuditLogsPage() {
           />
         </div>
         <Select value={entityType} onValueChange={(v) => setEntityType(v === "__all__" ? "" : v)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Entity Type" />
           </SelectTrigger>
           <SelectContent>
@@ -84,7 +84,7 @@ export default function AuditLogsPage() {
           </SelectContent>
         </Select>
         <Select value={action} onValueChange={(v) => setAction(v === "__all__" ? "" : v)}>
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className="w-full sm:w-[150px]">
             <SelectValue placeholder="Action" />
           </SelectTrigger>
           <SelectContent>
@@ -191,7 +191,7 @@ export default function AuditLogsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <code className="text-xs">{log.entityId}</code>
+                      <code className="text-xs break-all">{log.entityId}</code>
                     </TableCell>
                   </TableRow>
                   {expandedRow === log.id && (

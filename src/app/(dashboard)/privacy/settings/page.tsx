@@ -182,8 +182,8 @@ export default function SettingsPage() {
           </div>
           <div className="space-y-2">
             <Label>{tProfile("email")}</Label>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Mail className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground break-all">
+              <Mail className="w-3.5 h-3.5 shrink-0" />
               {profile?.email ?? "—"}
             </div>
             <p className="text-xs text-muted-foreground">{tProfile("emailHint")}</p>

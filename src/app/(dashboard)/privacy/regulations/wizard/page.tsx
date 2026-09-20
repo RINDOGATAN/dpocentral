@@ -79,7 +79,7 @@ export default function RegulationsWizardPage() {
                 <Card key={q.id}>
                   <CardContent className="py-4">
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm">{q.question}</p>
                         <p className="text-xs text-muted-foreground mt-1">{q.helpText}</p>
                       </div>

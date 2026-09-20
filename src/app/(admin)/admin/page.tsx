@@ -222,7 +222,7 @@ export default function AdminDashboardPage() {
                     <span className="truncate">{log.entityType}</span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
-                    <span>{log.user?.name || log.user?.email || "System"}</span>
+                    <span className="truncate max-w-[10rem] sm:max-w-none">{log.user?.name || log.user?.email || "System"}</span>
                     {log.organization && (
                       <span className="hidden sm:inline">{log.organization.name}</span>
                     )}

@@ -217,19 +217,19 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/vendors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/vendors" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div className="w-12 h-12 border-2 border-primary flex items-center justify-center">
+          <div className="w-12 h-12 border-2 border-primary flex items-center justify-center shrink-0">
             <Building2 className="w-6 h-6 text-primary" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-semibold">{vendor.name}</h1>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-2xl font-semibold break-words min-w-0">{vendor.name}</h1>
               <Badge variant="outline" className={statusColors[vendor.status] || ""}>
                 {tList(`status.${vendor.status}` as `status.PROSPECTIVE` | `status.ACTIVE` | `status.UNDER_REVIEW` | `status.SUSPENDED` | `status.TERMINATED`)}
               </Badge>
@@ -239,12 +239,12 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 </Badge>
               )}
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground break-words">
               {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
             {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
             {tp("delete")}
@@ -292,7 +292,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <span className="text-sm">{tp("info.email")}</span>
             </div>
             {vendor.contactEmail ? (
-              <a href={`mailto:${vendor.contactEmail}`} className="text-primary hover:underline">
+              <a href={`mailto:${vendor.contactEmail}`} className="text-primary hover:underline break-all">
                 {vendor.contactEmail}
               </a>
             ) : (
@@ -489,7 +489,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{tp("contracts.empty")}</p>
-                <div className="mt-4 flex justify-center gap-2">
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
                   <Button variant="outline" onClick={() => setDpaOpen(true)}>
                     <FileText className="w-4 h-4 mr-2" />
                     {tp("dpa.produce")}

@@ -134,15 +134,15 @@ export default function AISystemsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Bot className="w-6 h-6" />
+            <Bot className="w-6 h-6 shrink-0" />
             {tp("title")}
           </h1>
           <p className="text-muted-foreground">{tp("subtitle")}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {showAisExport && (
             <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
               <DialogTrigger asChild>
@@ -282,7 +282,7 @@ export default function AISystemsPage() {
           />
         </div>
         <Select value={riskFilter} onValueChange={setRiskFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder={tp("filter.riskLevel")} />
           </SelectTrigger>
           <SelectContent>
@@ -294,7 +294,7 @@ export default function AISystemsPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder={tp("filter.status")} />
           </SelectTrigger>
           <SelectContent>

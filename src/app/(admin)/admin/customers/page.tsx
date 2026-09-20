@@ -57,14 +57,14 @@ export default function CustomersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold">Customers</h1>
           <p className="text-muted-foreground">
             Manage customer accounts and their entitlements
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
+        <Button className="w-full sm:w-auto" onClick={() => setShowCreateForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
           New Customer
         </Button>
@@ -181,13 +181,13 @@ export default function CustomersPage() {
           {data.customers.map((customer) => (
             <Card key={customer.id}>
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">{customer.name}</h3>
                       <Badge variant="outline">{customer.type}</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground break-all">
                       {customer.email}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">

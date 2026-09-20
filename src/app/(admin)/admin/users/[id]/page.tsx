@@ -56,16 +56,16 @@ export default function UserDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/admin/users">
+      <div className="flex items-center gap-4 min-w-0">
+        <Link href="/admin/users" className="shrink-0">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold">{user.name || "Unnamed User"}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-muted-foreground">{user.email}</span>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <span className="text-muted-foreground break-all">{user.email}</span>
             {user.userType && <Badge variant="secondary">{user.userType}</Badge>}
           </div>
         </div>
@@ -81,13 +81,13 @@ export default function UserDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">ID</span>
-                  <code className="text-xs">{user.id}</code>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground shrink-0">ID</span>
+                  <code className="text-xs break-all">{user.id}</code>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Email</span>
-                  <span>{user.email}</span>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground shrink-0">Email</span>
+                  <span className="break-all">{user.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Verified</span>

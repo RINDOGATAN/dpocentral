@@ -124,22 +124,25 @@ export default async function DocsDataInventoryPage() {
 
       <DocSection id="data-flows" title={t("flows.title")} description={t("flows.description")}>
         <FeatureMockup title={t("flows.mockupTitle")}>
-          <div className="flex items-center justify-center gap-4 py-4">
-            <div className="text-center">
+          {/* Three boxes and two arrows: wider than a phone. It scrolls inside
+              its own container rather than widening the page, and stays left
+              aligned there so the first box is reachable. */}
+          <div className="flex items-center justify-start sm:justify-center gap-4 py-4 overflow-x-auto">
+            <div className="text-center shrink-0">
               <div className="rounded-lg border-2 border-primary/50 bg-primary/5 p-3 mb-1">
                 <Database className="h-5 w-5 text-primary mx-auto" />
               </div>
               <p className="text-xs font-medium">{t("flows.nodes.crm")}</p>
             </div>
-            <ArrowRightLeft className="h-5 w-5 text-muted-foreground" />
-            <div className="text-center">
+            <ArrowRightLeft className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div className="text-center shrink-0">
               <div className="rounded-lg border-2 border-primary/50 bg-primary/5 p-3 mb-1">
                 <Database className="h-5 w-5 text-primary mx-auto" />
               </div>
               <p className="text-xs font-medium">{t("flows.nodes.marketing")}</p>
             </div>
-            <ArrowRightLeft className="h-5 w-5 text-muted-foreground" />
-            <div className="text-center">
+            <ArrowRightLeft className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div className="text-center shrink-0">
               <div className="rounded-lg border-2 border-blue-500/50 bg-blue-500/5 p-3 mb-1">
                 <Globe className="h-5 w-5 text-blue-500 mx-auto" />
               </div>
