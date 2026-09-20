@@ -20,6 +20,7 @@ import {
 import { emailFrom, emailFooterHtml } from "@/config/brand";
 import { brand } from "@/config/brand";
 import { logger } from "@/lib/logger";
+import { sendInternalNotice } from "@/server/services/notifications/internal-inbox";
 
 function escapeHtml(str: string): string {
   return str
@@ -94,7 +95,9 @@ export const expertsRouter = createTRPCRouter({
       const expert = await getExpertById(input.expertId);
 
       // Log an engagement record so the org has a CRM-style history.
-      // Verifies org membership before writing — silently skips if not a member.
+      // Verifies org membership before writing.
+      let stored = false;
+      let organizationName: string | null = null;
       if (input.organizationId && ctx.session.user.id) {
         const membership = await prisma.organizationMember.findUnique({
           where: {
@@ -103,8 +106,10 @@ export const expertsRouter = createTRPCRouter({
               userId: ctx.session.user.id,
             },
           },
+          include: { organization: { select: { name: true } } },
         });
         if (membership) {
+          organizationName = membership.organization?.name ?? null;
           await prisma.expertEngagement.create({
             data: {
               organizationId: input.organizationId,
@@ -119,8 +124,55 @@ export const expertsRouter = createTRPCRouter({
               externalRequestId: typeof result === "object" && result && "id" in result ? String((result as { id?: unknown }).id ?? "") || null : null,
             },
           });
+          stored = true;
         }
       }
+
+      if (!stored) {
+        // No engagement row exists for this request, so the copy below is the
+        // only trace of it. Say so at error level rather than losing it
+        // quietly.
+        logger.error(
+          "A request for technical help was not recorded: no organization was given, or the requester is not a member of it. The copy to our inbox is the only record.",
+          undefined,
+          {
+            expertId: input.expertId,
+            organizationId: input.organizationId ?? null,
+            userId: ctx.session.user.id,
+          }
+        );
+      }
+
+      // Copy every request to our own inbox. Before 2026-09-20 a request went
+      // to the expert (when a record carried an address) and back to the
+      // person who asked, and nothing reached us, so we never learned that a
+      // firm had asked for help. The directory's one entry has no address on
+      // file, which makes this copy the only way the request is answered.
+      // It runs whether or not the mail service is configured: an unconfigured
+      // service is logged loudly by sendInternalNotice, never skipped.
+      const requestedAt = new Date();
+      await sendInternalNotice({
+        subject: `Technical help requested: ${input.subject}`,
+        intro: "Someone asked for technical help through the directory.",
+        replyTo: input.requesterEmail,
+        fields: [
+          { label: "Who asked", value: input.requesterName },
+          { label: "Organisation", value: input.requesterCompany ?? organizationName },
+          { label: "Their address", value: input.requesterEmail },
+          { label: "Subject", value: input.subject },
+          { label: "Asked of", value: expert?.name ?? input.expertName ?? null },
+          { label: "Governing law", value: input.governingLaw },
+          { label: "When", value: requestedAt.toISOString() },
+          { label: "Recorded in the engagement log", value: stored ? "yes" : "no" },
+        ],
+        body: input.message ?? null,
+        record: {
+          expertId: input.expertId,
+          organizationId: input.organizationId ?? null,
+          stored,
+          requestedAt: requestedAt.toISOString(),
+        },
+      });
 
       // 3. Send emails (must await — serverless kills the runtime after response)
       const r = getResend();
