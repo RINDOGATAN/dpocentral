@@ -231,13 +231,13 @@ export default function OrganizationDetailPage() {
                 </>
               ) : (
                 <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">ID</span>
-                    <code className="text-xs">{org.id}</code>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground shrink-0">ID</span>
+                    <code className="text-xs break-all">{org.id}</code>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Slug</span>
-                    <span>{org.slug}</span>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground shrink-0">Slug</span>
+                    <span className="break-all">{org.slug}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Domain</span>
