@@ -68,6 +68,7 @@ import {
 } from "@/server/services/pilot/hosted-templates";
 import { DPIA_TEMPLATE_ID, DPIA_TEMPLATE_VERSION } from "@/config/dpia-template-v2";
 import { HEALTH_ADTECH_TEMPLATE_ID } from "@/config/health-adtech-template";
+import { seedHealthAdtechTemplate } from "@/lib/seed-health-adtech";
 import { assessmentRouter } from "@/server/routers/privacy/assessment";
 import { callerFor, sessionFor } from "./helpers";
 
@@ -97,6 +98,17 @@ beforeEach(() => {
   mocks.prisma.customerOrganization.findFirst.mockResolvedValue(null);
   mocks.prisma.assessmentTemplate.findUnique.mockResolvedValue(null);
   mocks.prisma.assessmentTemplate.findMany.mockResolvedValue([]);
+  // The health-data template follows one rule on every deployment: it is
+  // written only where a DPIA system template is installed. Standing in for
+  // the database, this reports one as soon as it has been created.
+  mocks.prisma.assessmentTemplate.findFirst.mockImplementation(async ({ where }) => {
+    if (where?.type !== "DPIA") return null;
+    const created = mocks.prisma.assessmentTemplate.create.mock.calls.some((call) => {
+      const data = (call[0] as { data: { id?: string; type?: string } }).data;
+      return data.type === "DPIA" && data.id !== HEALTH_ADTECH_TEMPLATE_ID;
+    });
+    return created ? { id: DPIA_TEMPLATE_ID } : null;
+  });
 });
 
 afterEach(() => {
@@ -279,6 +291,36 @@ describe("hosted templates written at runtime", () => {
       ([arg]) => arg.where.id === DPIA_TEMPLATE_ID
     );
     expect(dpiaLookups).toHaveLength(1);
+  });
+
+  it("writes the health-data template only after a DPIA template exists", async () => {
+    // Nothing installed: the rule refuses, whichever path asks.
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(null);
+    const refused = await seedHealthAdtechTemplate(mocks.prisma as never);
+    expect(refused).toEqual({ written: false, reason: "no-dpia-template" });
+    expect(mocks.prisma.assessmentTemplate.create).not.toHaveBeenCalled();
+
+    // A DPIA template installed: written.
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue({ id: DPIA_TEMPLATE_ID });
+    const written = await seedHealthAdtechTemplate(mocks.prisma as never);
+    expect(written).toEqual({ written: true, outcome: "created" });
+    expect(mocks.prisma.assessmentTemplate.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ id: HEALTH_ADTECH_TEMPLATE_ID }),
+      })
+    );
+  });
+
+  it("is the one rule both seeding paths apply", () => {
+    const source = (rel: string) => readFileSync(path.resolve(__dirname, "..", rel), "utf8");
+    for (const file of [
+      "scripts/seed-templates.ts",
+      "src/server/services/pilot/hosted-templates.ts",
+    ]) {
+      expect(source(file), file).toContain("seedHealthAdtechTemplate");
+      // Neither writes it on its own terms any more.
+      expect(source(file).includes("healthAdtechTemplateData"), file).toBe(false);
+    }
   });
 
   it("never touches a DPIA row that belongs to an organization", async () => {

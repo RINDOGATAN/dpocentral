@@ -24,13 +24,15 @@ import type { PrismaClient } from "@prisma/client";
 import prismaClient from "@/lib/prisma";
 import { isHostedDeployment } from "@/lib/hosted";
 import { upsertSystemTemplate } from "@/lib/seed-system-content";
+import { seedHealthAdtechTemplate } from "@/lib/seed-health-adtech";
 import { DPIA_TEMPLATE_ID, dpiaTemplateData } from "@/config/dpia-template-v2";
-import {
-  HEALTH_ADTECH_TEMPLATE_ID,
-  healthAdtechTemplateData,
-} from "@/config/health-adtech-template";
 
-/** Global system templates written on the hosted pilot (id -> data). */
+/**
+ * Global system templates written on the hosted pilot (id -> data). The
+ * "Health data in advertising" template is not in this list: it follows the
+ * one rule both seeding paths apply (src/lib/seed-health-adtech.ts) and is
+ * written after these, once the standard DPIA is in place.
+ */
 export const HOSTED_SYSTEM_TEMPLATES: Array<{
   id: string;
   data: Parameters<typeof upsertSystemTemplate>[2];
@@ -46,14 +48,6 @@ export const HOSTED_SYSTEM_TEMPLATES: Array<{
       };
     })(),
   },
-  {
-    id: HEALTH_ADTECH_TEMPLATE_ID,
-    data: {
-      ...healthAdtechTemplateData,
-      sections: healthAdtechTemplateData.sections as object,
-      scoringLogic: healthAdtechTemplateData.scoringLogic as object,
-    },
-  },
 ];
 
 let ensured: Promise<void> | null = null;
@@ -64,6 +58,9 @@ async function writeHostedTemplates(): Promise<void> {
   for (const template of HOSTED_SYSTEM_TEMPLATES) {
     await upsertSystemTemplate(prisma, template.id, template.data);
   }
+  // The standard DPIA is written above, so the rule is satisfied here; the
+  // kit reaches the same function from the content seed.
+  await seedHealthAdtechTemplate(prisma);
 }
 
 /**
