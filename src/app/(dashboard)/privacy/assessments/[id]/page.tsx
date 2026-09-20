@@ -769,17 +769,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/assessments">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/assessments" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div className="w-12 h-12 border-2 border-primary flex items-center justify-center">
+          <div className="w-12 h-12 border-2 border-primary flex items-center justify-center shrink-0">
             <ClipboardCheck className="w-6 h-6 text-primary" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="outline">{template?.type ? tList(`type.${template.type}` as `type.DPIA` | `type.PIA` | `type.TIA` | `type.LIA` | `type.VENDOR` | `type.CUSTOM`) : ""}</Badge>
               <Badge variant="outline" className={statusColors[assessment.status] || ""}>
@@ -791,13 +791,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 </Badge>
               )}
             </div>
-            <h1 className="text-2xl font-semibold mt-1">{assessment.name}</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl font-semibold mt-1 break-words">{assessment.name}</h1>
+            <p className="text-muted-foreground break-words">
               {typeKeys[template?.type ?? ""] ? tAssessments(`types.${typeKeys[template?.type ?? ""]}`) : template?.name}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() => window.open(`/api/export/assessment/${id}`, "_blank")}

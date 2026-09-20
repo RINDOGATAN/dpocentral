@@ -155,7 +155,7 @@ export default function TransferDetailPage() {
             </div>
           </div>
         </div>
-        <Link href={`/privacy/transfers/${id}/edit`}>
+        <Link href={`/privacy/transfers/${id}/edit`} className="shrink-0">
           <Button variant="outline" size="sm">
             <Edit className="w-4 h-4 mr-2" />
             {t("edit")}

@@ -150,8 +150,8 @@ export default function PrivacyDashboardPage() {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{organization?.name || tp("subtitle")}</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-semibold truncate">{organization?.name || tp("subtitle")}</h1>
           <p className="text-sm sm:text-base text-muted-foreground">
             {tp("subtitle")}
           </p>

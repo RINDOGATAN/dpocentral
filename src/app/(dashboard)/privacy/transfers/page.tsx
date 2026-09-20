@@ -113,15 +113,15 @@ export default function TransfersListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Globe className="w-6 h-6 text-primary" />
+            <Globe className="w-6 h-6 text-primary shrink-0" />
             {tList("title")}
           </h1>
           <p className="text-muted-foreground">{tList("subtitle")}</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
+        <Button className="w-full sm:w-auto" onClick={() => setDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           {tList("add")}
         </Button>

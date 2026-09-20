@@ -57,14 +57,14 @@ export default function CustomersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold">Customers</h1>
           <p className="text-muted-foreground">
             Manage customer accounts and their entitlements
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
+        <Button className="w-full sm:w-auto" onClick={() => setShowCreateForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
           New Customer
         </Button>
