@@ -5220,11 +5220,11 @@
     },
     "publicAssessments": {
       "metaTitle": "Assessments",
-      "metaDescription": "Conduct DPIAs, PIAs, TIAs, LIAs, and vendor risk assessments with configurable templates, approval workflows, and risk scoring.",
+      "metaDescription": "Conduct DPIAs, TIAs, LIAs and custom assessments with configurable templates, approval workflows and risk scoring.",
       "ogTitle": "Assessments | DPO CENTRAL",
-      "ogDescription": "Privacy impact assessments — DPIA, PIA, TIA, LIA, and vendor risk with templates, approval workflows, and risk scoring.",
+      "ogDescription": "Impact assessments: DPIA, TIA, LIA and custom, with templates, approval workflows and risk scoring.",
       "title": "Assessments",
-      "subtitle": "Conduct privacy impact assessments using configurable templates. Score risks, document mitigations, and manage approval workflows for DPIAs, PIAs, LIAs, TIAs, and vendor risk assessments.",
+      "subtitle": "Conduct privacy impact assessments using configurable templates. Score risks, document mitigations, and manage approval workflows for DPIAs, TIAs, LIAs and custom assessments.",
       "templates": {
         "title": "Assessment Templates",
         "intro": "Choose from built-in templates or create custom assessments. Each template includes pre-configured questions, risk criteria, and approval workflows.",
@@ -5238,9 +5238,7 @@
           "LIA": { "name": "Legitimate Interests Assessment", "desc": "Evaluate whether legitimate interests can be relied upon as a legal basis" },
           "CUSTOM": { "name": "Custom Assessment", "desc": "Create your own assessment template with custom questions and criteria" },
           "DPIA": { "name": "Data Protection Impact Assessment", "desc": "Required under GDPR Article 35 for high-risk processing activities" },
-          "PIA": { "name": "Privacy Impact Assessment", "desc": "Broader privacy analysis for new projects and systems" },
-          "TIA": { "name": "Transfer Impact Assessment", "desc": "Evaluate safeguards for international data transfers (Schrems II)" },
-          "VENDOR": { "name": "Vendor Risk Assessment", "desc": "Assess privacy risks of third-party vendors and processors" }
+          "TIA": { "name": "Transfer Impact Assessment", "desc": "Evaluate safeguards for international data transfers (Schrems II)" }
         }
       },
       "approvals": {

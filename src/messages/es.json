@@ -5220,11 +5220,11 @@
     },
     "publicAssessments": {
       "metaTitle": "Evaluaciones",
-      "metaDescription": "Realiza DPIAs, PIAs, TIAs, LIAs y evaluaciones de riesgo de proveedor con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
+      "metaDescription": "Realiza DPIAs, TIAs, LIAs y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
       "ogTitle": "Evaluaciones | DPO CENTRAL",
-      "ogDescription": "Evaluaciones de impacto en privacidad: DPIA, PIA, TIA, LIA y riesgo de proveedor con plantillas, flujos de aprobación y puntuación de riesgo.",
+      "ogDescription": "Evaluaciones de impacto: DPIA, TIA, LIA y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
       "title": "Evaluaciones",
-      "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, PIAs, LIAs, TIAs y evaluaciones de riesgo de proveedor.",
+      "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, TIAs, LIAs y evaluaciones personalizadas.",
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
@@ -5238,9 +5238,7 @@
           "LIA": { "name": "Evaluación de interés legítimo", "desc": "Valora si el interés legítimo puede invocarse como base jurídica" },
           "CUSTOM": { "name": "Evaluación personalizada", "desc": "Crea tu propia plantilla de evaluación con preguntas y criterios personalizados" },
           "DPIA": { "name": "Evaluación de impacto en protección de datos", "desc": "Requerida por el Artículo 35 del RGPD para tratamientos de alto riesgo" },
-          "PIA": { "name": "Evaluación de impacto en privacidad", "desc": "Análisis más amplio de privacidad para nuevos proyectos y sistemas" },
-          "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" },
-          "VENDOR": { "name": "Evaluación de riesgo de proveedor", "desc": "Valora los riesgos de privacidad de proveedores y encargados externos" }
+          "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" }
         }
       },
       "approvals": {

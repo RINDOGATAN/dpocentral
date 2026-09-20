@@ -26,13 +26,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+/**
+ * The types the product offers, with the tier the mark describes.
+ *
+ * A type is offered only once a template exists for it, which is what
+ * getEntitledAssessmentTypes reports; PIA and VENDOR have no template and are
+ * not offered on any build, so they are not listed here either. The tier is
+ * the one the licence gate uses: PREMIUM_ASSESSMENT_TYPES in
+ * server/services/licensing/entitlement.ts, where TIA is free.
+ */
 const templateData: { type: string; tier: "Core" | "Premium" }[] = [
   { type: "LIA", tier: "Core" },
   { type: "CUSTOM", tier: "Core" },
+  { type: "TIA", tier: "Core" },
   { type: "DPIA", tier: "Premium" },
-  { type: "PIA", tier: "Premium" },
-  { type: "TIA", tier: "Premium" },
-  { type: "VENDOR", tier: "Premium" },
 ];
 
 const riskLevels = [
