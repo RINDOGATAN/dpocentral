@@ -124,16 +124,16 @@ export default function OrganizationDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/admin/organizations">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/admin/organizations" className="shrink-0">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div>
-            <h1 className="text-2xl font-semibold">{org.name}</h1>
-            <div className="flex items-center gap-2 mt-1">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold break-words">{org.name}</h1>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
               <Badge variant="outline">{org.slug}</Badge>
               {org.domain && <Badge variant="secondary">{org.domain}</Badge>}
             </div>
@@ -402,7 +402,7 @@ export default function OrganizationDetailPage() {
                         <span className="truncate">{log.entityType}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
-                        <span>{log.user?.name || log.user?.email || "System"}</span>
+                        <span className="truncate max-w-[10rem] sm:max-w-none">{log.user?.name || log.user?.email || "System"}</span>
                         <span>{new Date(log.createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>

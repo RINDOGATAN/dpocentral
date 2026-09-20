@@ -41,14 +41,14 @@ export default function VendorQuestionnairesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/vendors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/vendors" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label={t("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-2xl font-semibold">{t("title")}</h1>
             <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
