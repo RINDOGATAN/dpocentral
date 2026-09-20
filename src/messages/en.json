@@ -5496,7 +5496,7 @@
       "gap": "Gap",
       "note": "Note"
     },
-    "blockingSummary": "At least one finding must be resolved before the processing can go ahead.",
+    "blockingSummary": "At least one finding is one to resolve: on the sources recorded here, the processing as described does not meet a requirement. The assessment can still be submitted, approved and exported; while the finding stands, the risk level is raised to at least High.",
     "fiveFactorTitle": "Health-data classification (five factors)",
     "fiveFactorScore": "Score {score} of {max}",
     "scoreLabel": "Score",

@@ -5496,7 +5496,7 @@
       "gap": "Carencia",
       "note": "Nota"
     },
-    "blockingSummary": "Al menos una conclusión debe resolverse antes de que el tratamiento pueda seguir adelante.",
+    "blockingSummary": "Al menos una conclusión está pendiente de resolver: según las fuentes recogidas aquí, el tratamiento descrito no cumple un requisito. La evaluación se puede presentar, aprobar y exportar igualmente; mientras la conclusión siga abierta, el nivel de riesgo sube como mínimo a Alto.",
     "fiveFactorTitle": "Clasificación como datos de salud (cinco factores)",
     "fiveFactorScore": "Puntuación {score} de {max}",
     "scoreLabel": "Puntuación",

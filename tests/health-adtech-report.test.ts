@@ -179,3 +179,38 @@ describe("health-data advertising report", () => {
     expect(text).toContain("Offer the right to opt out (including targeted advertising and sale) [to verify]");
   });
 });
+
+/**
+ * The banner over a blocking finding says only what the product does. Nothing
+ * stops a submission, an approval or an export because of a finding, so the
+ * sentence must not claim the processing cannot go ahead. What does happen,
+ * the risk escalation, is still there and is still stated.
+ */
+describe("the blocking banner", () => {
+  const blocking = computeHealthAdtechResult([
+    // Washington: a sale of consumer health data without a signed authorisation.
+    { questionId: "hd1_1", response: JSON.stringify([JURISDICTIONS[3].en]) },
+    { questionId: "hd8_2", response: "No" },
+  ]);
+
+  it("is raised by a finding the answers produce", () => {
+    expect(blocking.blocking).toBe(true);
+  });
+
+  it("raises the risk level to at least High", () => {
+    expect(blocking.riskLevel).toBe("HIGH");
+  });
+
+  for (const [lang, bundle] of [["en", en], ["es", es]] as const) {
+    it(`does not claim the processing is stopped (${lang})`, () => {
+      const text = (bundle as any).healthAdtechReport.blockingSummary as string;
+      for (const claim of [
+        "before the processing can go ahead",
+        "antes de que el tratamiento pueda seguir adelante",
+      ]) {
+        expect(text).not.toContain(claim);
+      }
+      expect(text.length).toBeGreaterThan(40);
+    });
+  }
+});
