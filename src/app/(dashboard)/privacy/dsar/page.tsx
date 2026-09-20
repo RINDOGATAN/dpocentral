@@ -28,6 +28,8 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-primary text-primary",
@@ -129,9 +131,9 @@ export default function DSARPage() {
           {isPortalComingSoon ? (
             <div className="sm:flex-none">
               <Button variant="outline" size="icon" aria-label={t("settings")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>
-                <Lock className="w-4 h-4 sm:mr-2 text-amber-500" />
+                <Lock className={`w-4 h-4 sm:mr-2 ${toneMark("warning")}`} />
                 <span className="hidden sm:inline">{t("settings")}</span>
-                <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500 hidden sm:inline-flex">{t("comingSoon")}</Badge>
+                <StatusChip tone="warning" className="ml-2 text-[10px] px-1.5 py-0 hidden sm:inline-flex">{t("comingSoon")}</StatusChip>
               </Button>
             </div>
           ) : (
@@ -168,10 +170,11 @@ export default function DSARPage() {
         </Card>
         <Card>
           <CardContent className="p-4 sm:pt-6">
-            <div className={`text-xl sm:text-2xl font-bold ${stats.overdue > 0 ? "text-amber-400" : "text-foreground"}`}>
-              {stats.overdue}
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("stats.overdue")}</p>
+            <div className="text-xl sm:text-2xl font-bold text-foreground">{stats.overdue}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 inline-flex items-center gap-1">
+              {stats.overdue > 0 && <StatusMark tone="warning" className="h-3.5 w-3.5" />}
+              {t("stats.overdue")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -234,8 +237,12 @@ export default function DSARPage() {
                           {new Date(request.dueDate).toLocaleDateString()}
                         </span>
                       ) : (
-                        <span className={request.slaStatus === "overdue" ? "text-amber-400 font-medium" : ""}>
-                          <Clock className="inline h-3 w-3 mr-1" />
+                        <span className={request.slaStatus === "overdue" ? "font-medium" : ""}>
+                          {request.slaStatus === "overdue" ? (
+                            <StatusMark tone="warning" className="inline h-3 w-3 mr-1" />
+                          ) : (
+                            <Clock className="inline h-3 w-3 mr-1" />
+                          )}
                           {request.slaStatus === "overdue"
                             ? t("card.daysOverdueShort", { count: Math.abs(request.daysUntilDue ?? 0) })
                             : request.daysUntilDue === 0
@@ -303,7 +310,12 @@ export default function DSARPage() {
                         <>
                           <p className="text-sm font-medium text-muted-foreground">
                             {request.slaStatus === "overdue"
-                              ? <span className="text-amber-400 font-medium">{t("card.daysOverdue", { count: Math.abs(request.daysUntilDue ?? 0) })}</span>
+                              ? (
+                                <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                                  <StatusMark tone="warning" className="h-3.5 w-3.5" />
+                                  {t("card.daysOverdue", { count: Math.abs(request.daysUntilDue ?? 0) })}
+                                </span>
+                              )
                               : request.daysUntilDue === 0
                                 ? t("card.dueToday")
                                 : t("card.daysLeft", { count: request.daysUntilDue ?? 0 })
@@ -356,14 +368,14 @@ export default function DSARPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <p className="font-medium text-sm sm:text-base">{t("publicPortal.title")}</p>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-amber-500/10 text-amber-500">{t("comingSoon")}</Badge>
+                  <StatusChip tone="warning" className="text-[10px] px-1.5 py-0">{t("comingSoon")}</StatusChip>
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
                   {t("publicPortal.comingSoonSubtitle")}
                 </p>
               </div>
               <Button variant="outline" className="w-full sm:w-auto" disabled>
-                <Lock className="w-4 h-4 mr-2 text-amber-500" />
+                <Lock className={`w-4 h-4 mr-2 ${toneMark("warning")}`} />
                 {t("publicPortal.open")}
               </Button>
             </>

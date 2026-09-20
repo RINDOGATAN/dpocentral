@@ -6,6 +6,9 @@ import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
 import { brand } from "@/config/brand";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneTint } from "@/config/status-palette";
+import type { StatusTone } from "@/config/status-tone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicDsar");
@@ -21,22 +24,24 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const statusColors: { status: string; color: string }[] = [
-  { status: "SUBMITTED", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  { status: "IDENTITY_PENDING", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { status: "IN_PROGRESS", color: "bg-primary/10 text-primary border-primary/20" },
-  { status: "ON_HOLD", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-  { status: "COMPLETED", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { status: "REJECTED", color: "bg-red-500/10 text-red-400 border-red-500/20" },
+// The documentation shows the same tones the product paints, and reads the
+// same way without them: every chip and panel carries its icon and its word.
+const statusTones: { status: string; tone: StatusTone }[] = [
+  { status: "SUBMITTED", tone: "info" },
+  { status: "IDENTITY_PENDING", tone: "warning" },
+  { status: "IN_PROGRESS", tone: "info" },
+  { status: "ON_HOLD", tone: "warning" },
+  { status: "COMPLETED", tone: "success" },
+  { status: "REJECTED", tone: "danger" },
 ];
 
-const privacyItems: { key: string; color: string }[] = [
-  { key: "min", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { key: "consent", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { key: "auto", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  { key: "pii", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  { key: "manual", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { key: "audit", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+const privacyItems: { key: string; tone: StatusTone }[] = [
+  { key: "min", tone: "success" },
+  { key: "consent", tone: "success" },
+  { key: "auto", tone: "info" },
+  { key: "pii", tone: "info" },
+  { key: "manual", tone: "warning" },
+  { key: "audit", tone: "warning" },
 ];
 
 const requestTypes = ["ACCESS", "ERASURE", "RECTIFICATION", "PORTABILITY", "OBJECTION", "RESTRICTION"] as const;
@@ -48,10 +53,10 @@ export default async function DSARPage() {
   const portalSettings = ["title", "types", "css", "thanks", "retention", "notice"] as const;
   const taskItems = ["verify", "crm", "email", "compile", "redact", "deliver"] as const;
   const slaStats = ["days", "auto", "alerts"] as const;
-  const slaColors: Record<typeof slaStats[number], string> = {
-    days: "text-green-400",
-    auto: "text-amber-400",
-    alerts: "text-red-400",
+  const slaTones: Record<typeof slaStats[number], StatusTone> = {
+    days: "success",
+    auto: "warning",
+    alerts: "danger",
   };
   const retentionSteps = ["completed", "period", "auto", "anon"] as const;
   const redactedKeys = ["contact", "description", "comms", "data"] as const;
@@ -88,10 +93,10 @@ export default async function DSARPage() {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {statusColors.map((s) => (
-            <span key={s.status} className={`text-xs px-3 py-1 rounded-full border ${s.color}`}>
+          {statusTones.map((s) => (
+            <StatusChip key={s.status} tone={s.tone} className="px-3 py-1">
               {s.status.replace(/_/g, " ")}
-            </span>
+            </StatusChip>
           ))}
         </div>
       </section>
@@ -103,9 +108,15 @@ export default async function DSARPage() {
 
         <div className="grid sm:grid-cols-2 gap-3">
           {privacyItems.map((item) => (
-            <div key={item.key} className={`p-4 rounded-lg border ${item.color}`}>
-              <p className="text-sm font-semibold">{t(`privacy.items.${item.key}.title`)}</p>
-              <p className="text-xs mt-1 opacity-80">{t(`privacy.items.${item.key}.desc`)}</p>
+            <div
+              key={item.key}
+              className={`p-4 rounded-lg border ${toneBorder(item.tone)} ${toneTint(item.tone)}`}
+            >
+              <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <StatusMark tone={item.tone} />
+                {t(`privacy.items.${item.key}.title`)}
+              </p>
+              <p className="text-xs mt-1 text-muted-foreground">{t(`privacy.items.${item.key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -181,8 +192,11 @@ export default async function DSARPage() {
           <div className="grid sm:grid-cols-3 gap-4">
             {slaStats.map((key) => (
               <div key={key} className="text-center">
-                <p className={`text-2xl font-bold ${slaColors[key]}`}>{t(`sla.stats.${key}.value`)}</p>
-                <p className="text-xs text-muted-foreground">{t(`sla.stats.${key}.label`)}</p>
+                <p className="text-2xl font-bold text-foreground">{t(`sla.stats.${key}.value`)}</p>
+                <p className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                  <StatusMark tone={slaTones[key]} className="h-3 w-3" />
+                  {t(`sla.stats.${key}.label`)}
+                </p>
               </div>
             ))}
           </div>

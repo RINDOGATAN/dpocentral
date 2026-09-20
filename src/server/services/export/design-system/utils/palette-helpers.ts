@@ -2,6 +2,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { tokens, type CriticalityLevel, type SemanticTone } from "../tokens";
+import {
+  toneForRiskTier as sharedToneForRiskTier,
+  toneForVendorStatus as sharedToneForVendorStatus,
+} from "@/config/status-tone";
 
 export function colorForCriticality(level: string | null | undefined): string {
   if (!level) return tokens.color.semantic.neutral.solid;
@@ -21,26 +25,13 @@ export function semanticTone(tone: SemanticTone) {
 }
 
 /**
- * Risk-tier → semantic tone mapping (for PillBadge).
- * Kept separate from criticality so the mapping can evolve per report context.
+ * Risk tier and vendor status to semantic tone (for PillBadge).
+ *
+ * The mapping now lives in src/config/status-tone.ts, so the screen and the
+ * printed report reach the same tone for the same vendor. Re-exported here
+ * because the report primitives have always imported it from this module.
  */
-export function toneForRiskTier(tier: string | null | undefined): SemanticTone {
-  switch (tier) {
-    case "CRITICAL": return "danger";
-    case "HIGH":     return "warning";
-    case "MEDIUM":   return "info";
-    case "LOW":      return "success";
-    default:         return "neutral";
-  }
-}
+export const toneForRiskTier: (tier: string | null | undefined) => SemanticTone =
+  sharedToneForRiskTier;
 
-export function toneForVendorStatus(status: string): SemanticTone {
-  switch (status) {
-    case "ACTIVE":       return "success";
-    case "SUSPENDED":
-    case "TERMINATED":   return "danger";
-    case "UNDER_REVIEW":
-    case "PENDING":      return "warning";
-    default:             return "neutral";
-  }
-}
+export const toneForVendorStatus: (status: string) => SemanticTone = sharedToneForVendorStatus;

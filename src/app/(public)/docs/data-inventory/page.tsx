@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForSensitivity } from "@/config/status-tone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicDataInventory");
@@ -22,12 +24,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const assetTypes = ["DATABASE", "APPLICATION", "FILE_SYSTEM", "CLOUD_SERVICE", "API", "PHYSICAL"] as const;
 
+// The documentation shows the same tones the product paints, each with the
+// icon that says the same thing as the hue.
 const sensitivities = [
-  { level: "PUBLIC", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { level: "INTERNAL", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  { level: "CONFIDENTIAL", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { level: "RESTRICTED", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-  { level: "SPECIAL_CATEGORY", color: "bg-red-500/10 text-red-400 border-red-500/20" },
+  "PUBLIC",
+  "INTERNAL",
+  "CONFIDENTIAL",
+  "RESTRICTED",
+  "SPECIAL_CATEGORY",
 ];
 
 const legalBases = [
@@ -80,10 +84,10 @@ export default async function DataInventoryPage() {
         <p className="text-sm text-muted-foreground mb-6">{t("elements.intro")}</p>
 
         <div className="flex flex-wrap gap-2 mb-6">
-          {sensitivities.map((s) => (
-            <span key={s.level} className={`text-xs px-3 py-1 rounded-full border ${s.color}`}>
-              {s.level.replace("_", " ")}
-            </span>
+          {sensitivities.map((level) => (
+            <StatusChip key={level} tone={toneForSensitivity(level)} className="px-3 py-1">
+              {level.replace("_", " ")}
+            </StatusChip>
           ))}
         </div>
 

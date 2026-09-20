@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { features } from "@/config/features";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 type Posture = "off" | "local_gateway" | "cloud_eu" | "cloud_us";
 
@@ -145,8 +146,8 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
         </div>
 
         {showNotConfiguredWarning && (
-          <div className="flex items-start gap-2 p-3 rounded-md bg-yellow-50 dark:bg-yellow-950 text-sm">
-            <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 shrink-0" />
+          <div className={`flex items-start gap-2 p-3 rounded-md border text-sm ${toneBorder("warning")} ${toneTint("warning")}`}>
+            <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${toneMark("warning")}`} />
             <span>{t("postureCard.notConfiguredWarning")}</span>
           </div>
         )}

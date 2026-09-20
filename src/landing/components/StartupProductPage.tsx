@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { StatusMark } from "@/components/ui/status-chip";
 
 export interface Feature {
   id: string;
@@ -245,12 +246,17 @@ const StartupProductPage = ({
                       <button
                         onClick={handleResendMagicLink}
                         disabled={sending}
-                        className="text-sm text-accent hover:text-accent/80 transition-colors font-body flex items-center gap-1"
+                        className="text-sm text-accent hover:text-accent/90 transition-colors font-body flex items-center gap-1"
                       >
                         {sending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                         {tAuth("sent.resend")}
                       </button>
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && (
+                        <p className="text-sm text-foreground mt-3 inline-flex items-center gap-1.5">
+                          <StatusMark tone="danger" className="h-4 w-4" />
+                          {error}
+                        </p>
+                      )}
                     </div>
                   ) : cardMode === "login" ? (
                     <div className="relative animate-fade-in">
@@ -274,7 +280,12 @@ const StartupProductPage = ({
                         </button>
                       </form>
                       {googleDivider}
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && (
+                        <p className="text-sm text-foreground mt-3 inline-flex items-center gap-1.5">
+                          <StatusMark tone="danger" className="h-4 w-4" />
+                          {error}
+                        </p>
+                      )}
                       <button
                         onClick={() => { setCardMode("signup"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"
@@ -307,7 +318,12 @@ const StartupProductPage = ({
                         </button>
                       </form>
                       {googleDivider}
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && (
+                        <p className="text-sm text-foreground mt-3 inline-flex items-center gap-1.5">
+                          <StatusMark tone="danger" className="h-4 w-4" />
+                          {error}
+                        </p>
+                      )}
                       <button
                         onClick={() => { setCardMode("login"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"

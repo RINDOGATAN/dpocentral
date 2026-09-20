@@ -318,7 +318,7 @@ export default function SkillsPage() {
                         href={MARKETPLACE_URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/15"
                       >
                         {t("getIt")}
                         <ExternalLink className="h-3.5 w-3.5" />

@@ -32,13 +32,11 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
+import { toneForAiRiskLevel } from "@/config/status-tone";
 
-const RISK_COLORS: Record<string, string> = {
-  UNACCEPTABLE: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-  HIGH_RISK: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-  LIMITED: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  MINIMAL: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-};
+// Risk level goes through the shared tones: toneForAiRiskLevel.
 
 export default function AISystemDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -111,12 +109,12 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               <span className="truncate">{system.name}</span>
             </h1>
             <div className="flex flex-wrap items-center gap-2 mt-1">
-              <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
+              <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>
                 {tList(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
-              </Badge>
+              </StatusChip>
               {system.aiSentinelSystemId && (
-                <Badge variant="outline" className="text-blue-600 border-blue-600/50">
-                  <Shield className="w-3 h-3 mr-1" /> {t("linked")}
+                <Badge variant="outline" className={toneBorder("info")}>
+                  <Shield className={`w-3 h-3 mr-1 ${toneMark("info")}`} /> {t("linked")}
                 </Badge>
               )}
             </div>
@@ -177,15 +175,9 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                         <Badge variant="outline" className="text-xs">{model.source}</Badge>
                       )}
                       {model.euAiActRiskTier && (
-                        <Badge className={`text-xs ${
-                          model.euAiActRiskTier === "UNACCEPTABLE" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" :
-                          model.euAiActRiskTier === "HIGH_RISK" ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" :
-                          model.euAiActRiskTier === "LIMITED" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" :
-                          model.euAiActRiskTier === "MINIMAL" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" :
-                          ""
-                        }`}>
+                        <StatusChip tone={toneForAiRiskLevel(model.euAiActRiskTier)} className="text-xs">
                           {tList(`riskLevel.${model.euAiActRiskTier}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
-                        </Badge>
+                        </StatusChip>
                       )}
                     </div>
                   </div>
@@ -256,17 +248,17 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             {system.euAiActCompliant != null && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">{t("details.euAiActCompliant")}</span>
-                <Badge variant={system.euAiActCompliant ? "outline" : "secondary"} className={system.euAiActCompliant ? "text-green-600 border-green-600/50" : ""}>
+                <StatusChip tone={system.euAiActCompliant ? "success" : "neutral"}>
                   {system.euAiActCompliant ? t("details.yes") : t("details.no")}
-                </Badge>
+                </StatusChip>
               </div>
             )}
             {system.iso42001Certified != null && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">{t("details.iso42001")}</span>
-                <Badge variant={system.iso42001Certified ? "outline" : "secondary"} className={system.iso42001Certified ? "text-green-600 border-green-600/50" : ""}>
+                <StatusChip tone={system.iso42001Certified ? "success" : "neutral"}>
                   {system.iso42001Certified ? t("details.yes") : t("details.no")}
-                </Badge>
+                </StatusChip>
               </div>
             )}
           </CardContent>
@@ -338,16 +330,16 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
 
       {/* AI Sentinel Integration Card */}
       {features.aiSentinelIntegrationEnabled && system.aiSentinelSystemId && (
-        <Card className="border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/30">
+        <Card className={`${toneBorder("info")} ${toneTint("info")}`}>
           <CardContent className="pt-6">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
+                <Shield className={`w-5 h-5 mt-0.5 ${toneMark("info")}`} />
                 <div>
-                  <p className="font-medium text-blue-700 dark:text-blue-300">{t("sentinel.linkedTitle")}</p>
-                  <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{t("sentinel.linkedBody")}</p>
+                  <p className="font-medium">{t("sentinel.linkedTitle")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{t("sentinel.linkedBody")}</p>
                   {system.aiSentinelSyncedAt && (
-                    <p className="text-xs text-blue-500 dark:text-blue-500 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {t("sentinel.lastSynced", { date: new Date(system.aiSentinelSyncedAt).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })}
                     </p>
                   )}
@@ -366,32 +358,32 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             </div>
 
             {sentinelStatus?.found && (
-              <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
-                <p className="text-xs font-medium uppercase tracking-wide text-blue-500 dark:text-blue-400 mb-3">
+              <div className={`mt-4 pt-4 border-t ${toneBorder("info")}`}>
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-3">
                   {t("sentinel.aiActStatus")} · {t("sentinel.statusFromSentinel")}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div>
-                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.riskTier")}</p>
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                    <p className="text-xs text-muted-foreground">{t("sentinel.riskTier")}</p>
+                    <p className="text-sm font-semibold">
                       {sentinelStatus.riskLevel ?? t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.fria")}</p>
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                    <p className="text-xs text-muted-foreground">{t("sentinel.fria")}</p>
+                    <p className="text-sm font-semibold">
                       {sentinelStatus.fria?.status ?? t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.conformity")}</p>
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                    <p className="text-xs text-muted-foreground">{t("sentinel.conformity")}</p>
+                    <p className="text-sm font-semibold">
                       {sentinelStatus.conformity?.status ?? t("sentinel.notAssessed")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-blue-500 dark:text-blue-400">{t("sentinel.oversightOpen")}</p>
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                    <p className="text-xs text-muted-foreground">{t("sentinel.oversightOpen")}</p>
+                    <p className="text-sm font-semibold">
                       {sentinelStatus.openOversightGates ?? 0}
                     </p>
                   </div>
@@ -403,13 +395,13 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
       )}
 
       {system.riskLevel === "UNACCEPTABLE" && (
-        <Card className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950">
+        <Card className={`${toneBorder("danger")} ${toneTint("danger")}`}>
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
+              <AlertTriangle className={`w-5 h-5 mt-0.5 ${toneMark("danger")}`} />
               <div>
-                <p className="font-medium text-red-700 dark:text-red-300">{t("unacceptableTitle")}</p>
-                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{t("unacceptableBody")}</p>
+                <p className="font-medium">{t("unacceptableTitle")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("unacceptableBody")}</p>
               </div>
             </div>
           </CardContent>
@@ -417,13 +409,13 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
       )}
 
       {system.riskLevel === "HIGH_RISK" && (
-        <Card className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950">
+        <Card className={`${toneBorder("warning")} ${toneTint("warning")}`}>
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-orange-600 mt-0.5" />
+              <Shield className={`w-5 h-5 mt-0.5 ${toneMark("warning")}`} />
               <div>
-                <p className="font-medium text-orange-700 dark:text-orange-300">{t("highRiskTitle")}</p>
-                <ul className="text-sm text-orange-600 dark:text-orange-400 mt-2 space-y-1 list-disc list-inside">
+                <p className="font-medium">{t("highRiskTitle")}</p>
+                <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
                   <li>{t("highRiskItems.riskMgmt")}</li>
                   <li>{t("highRiskItems.dataGovernance")}</li>
                   <li>{t("highRiskItems.technicalDoc")}</li>

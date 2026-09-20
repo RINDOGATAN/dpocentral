@@ -45,21 +45,21 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
+import { toneForAiRiskLevel, type StatusTone } from "@/config/status-tone";
 
-const RISK_COLORS: Record<string, string> = {
-  UNACCEPTABLE: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-  HIGH_RISK: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-  LIMITED: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  MINIMAL: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-};
-
-const STATUS_VARIANTS: Record<string, { className: string; variant?: "secondary" | "outline" }> = {
-  DRAFT: { className: "", variant: "secondary" },
-  REGISTERED: { className: "bg-blue-100 text-blue-800" },
-  UNDER_REVIEW: { className: "bg-yellow-100 text-yellow-800" },
-  COMPLIANT: { className: "bg-green-100 text-green-800" },
-  NON_COMPLIANT: { className: "bg-red-100 text-red-800" },
-  DECOMMISSIONED: { className: "", variant: "outline" },
+/**
+ * Risk level and status both go through the shared tones, so each label shows
+ * its own icon beside its own word rather than relying on the hue.
+ */
+const STATUS_TONE: Record<string, StatusTone> = {
+  DRAFT: "neutral",
+  REGISTERED: "info",
+  UNDER_REVIEW: "warning",
+  COMPLIANT: "success",
+  NON_COMPLIANT: "danger",
+  DECOMMISSIONED: "neutral",
 };
 
 export default function AISystemsPage() {
@@ -188,12 +188,13 @@ export default function AISystemsPage() {
                       <div className="flex-1 min-w-0">
                         <span className="text-sm font-medium">{system.name}</span>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <Badge className={`text-[10px] ${RISK_COLORS[system.riskLevel] ?? ""}`}>
+                          <StatusChip tone={toneForAiRiskLevel(system.riskLevel)} className="text-[10px]">
                             {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
-                          </Badge>
+                          </StatusChip>
                           {system.aiSentinelSystemId && (
-                            <span className="text-[10px] text-green-600 flex items-center gap-1">
-                              <Shield className="w-3 h-3" /> {tp("sentinel.alreadySynced")}
+                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <Shield className={`w-3 h-3 ${toneMark("success")}`} />{" "}
+                              {tp("sentinel.alreadySynced")}
                             </span>
                           )}
                         </div>
@@ -245,26 +246,38 @@ export default function AISystemsPage() {
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.byRiskLevel.UNACCEPTABLE ?? 0}</div>
-              <div className="text-xs text-muted-foreground">{tp("stats.unacceptable")}</div>
+              <div className="text-2xl font-bold">{stats.byRiskLevel.UNACCEPTABLE ?? 0}</div>
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                <StatusMark tone="danger" className="h-3 w-3" />
+                {tp("stats.unacceptable")}
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
-              <div className="text-2xl font-bold text-orange-600">{stats.byRiskLevel.HIGH_RISK ?? 0}</div>
-              <div className="text-xs text-muted-foreground">{tp("stats.highRisk")}</div>
+              <div className="text-2xl font-bold">{stats.byRiskLevel.HIGH_RISK ?? 0}</div>
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                <StatusMark tone="warning" className="h-3 w-3" />
+                {tp("stats.highRisk")}
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
-              <div className="text-2xl font-bold text-yellow-600">{stats.byRiskLevel.LIMITED ?? 0}</div>
-              <div className="text-xs text-muted-foreground">{tp("stats.limited")}</div>
+              <div className="text-2xl font-bold">{stats.byRiskLevel.LIMITED ?? 0}</div>
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                <StatusMark tone="info" className="h-3 w-3" />
+                {tp("stats.limited")}
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4 pb-3 text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.byRiskLevel.MINIMAL ?? 0}</div>
-              <div className="text-xs text-muted-foreground">{tp("stats.minimal")}</div>
+              <div className="text-2xl font-bold">{stats.byRiskLevel.MINIMAL ?? 0}</div>
+              <div className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                <StatusMark tone="success" className="h-3 w-3" />
+                {tp("stats.minimal")}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -337,20 +350,17 @@ export default function AISystemsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">{system.name}</span>
-                        <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
+                        <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>
                           {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
-                        </Badge>
-                        {(() => {
-                          const v = STATUS_VARIANTS[system.status];
-                          return v ? (
-                            <Badge variant={v.variant} className={v.className}>
-                              {tp(`status.${system.status}` as `status.DRAFT` | `status.REGISTERED` | `status.UNDER_REVIEW` | `status.COMPLIANT` | `status.NON_COMPLIANT` | `status.DECOMMISSIONED`)}
-                            </Badge>
-                          ) : null;
-                        })()}
+                        </StatusChip>
+                        {STATUS_TONE[system.status] && (
+                          <StatusChip tone={STATUS_TONE[system.status]}>
+                            {tp(`status.${system.status}` as `status.DRAFT` | `status.REGISTERED` | `status.UNDER_REVIEW` | `status.COMPLIANT` | `status.NON_COMPLIANT` | `status.DECOMMISSIONED`)}
+                          </StatusChip>
+                        )}
                         {system.aiSentinelSystemId && (
-                          <span className="inline-flex items-center gap-1 text-[10px] text-blue-600 dark:text-blue-400" title="Synced with AI Sentinel">
-                            <Shield className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground" title="Synced with AI Sentinel">
+                            <Shield className={`w-3 h-3 ${toneMark("info")}`} />
                             AIS
                           </span>
                         )}

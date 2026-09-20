@@ -330,7 +330,7 @@ export default function NewAssessmentPage() {
                         {tp(`type.${at.type}_desc` as `type.LIA_desc` | `type.CUSTOM_desc` | `type.DPIA_desc` | `type.PIA_desc` | `type.TIA_desc` | `type.VENDOR_desc`)}
                       </p>
                       {isLocked && (
-                        <p className="text-xs text-amber-600 mt-2 font-medium">
+                        <p className="text-xs text-muted-foreground mt-2 font-medium">
                           {!features.stripeEnabled
                             ? tp("premiumSkillHint")
                             : features.selfServiceUpgrade
@@ -415,7 +415,7 @@ export default function NewAssessmentPage() {
       {selectedType && !templatesLoading && templates && templates.length === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
-            <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p className="font-medium">{tp("noTemplatesTitle")}</p>
             <p className="text-sm text-muted-foreground mt-1">
               {tp("noTemplatesBody", { name: typeName(selectedType) })}

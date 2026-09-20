@@ -11,14 +11,10 @@ import { ArrowLeft, ArrowRight, Database, Edit, Loader2, Server, Workflow } from
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import type { DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForSensitivity } from "@/config/status-tone";
 
-const sensitivityColors: Record<string, string> = {
-  PUBLIC: "border-primary text-primary",
-  INTERNAL: "border-primary text-primary",
-  CONFIDENTIAL: "border-muted-foreground text-muted-foreground",
-  RESTRICTED: "border-muted-foreground bg-muted-foreground/20 text-foreground",
-  SPECIAL_CATEGORY: "border-muted-foreground bg-muted-foreground text-foreground",
-};
+// Sensitivity goes through the shared tones: toneForSensitivity.
 
 const categoryLabels: Record<DataCategory, string> = {
   IDENTIFIERS: "Identifiers",
@@ -105,9 +101,9 @@ export default function DataElementDetailPage() {
             <h1 className="text-xl sm:text-2xl font-semibold font-mono truncate">{element.name}</h1>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
               <Badge variant="outline">{categoryLabels[element.category as DataCategory]}</Badge>
-              <Badge variant="outline" className={sensitivityColors[element.sensitivity as string] || ""}>
+              <StatusChip tone={toneForSensitivity(element.sensitivity as string)}>
                 {sensitivityLabels[element.sensitivity as DataSensitivity]}
-              </Badge>
+              </StatusChip>
               {element.isPersonalData && <Badge variant="outline">Personal Data</Badge>}
               {element.isSpecialCategory && <Badge variant="destructive">Special Category</Badge>}
             </div>

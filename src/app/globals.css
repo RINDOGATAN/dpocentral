@@ -26,6 +26,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -79,8 +80,11 @@
   /* Accent = Blue (subtle tint for hover states) */
   --accent: #53aecc;
   --accent-foreground: #fefeff;
-  /* Warning/Destructive - Amber instead of Red */
+  /* Warning/Destructive - Amber instead of Red.
+     The text printed on it is the near black background colour: white on this
+     amber is 2.1 to 1 and unreadable, near black is 8.1 to 1. */
   --destructive: #f59e0b;
+  --destructive-foreground: #1a1a1a;
   /* Borders - visible but subtle */
   --border: #333333;
   --input: #242424;

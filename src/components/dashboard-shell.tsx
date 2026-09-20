@@ -162,7 +162,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                         <Button
                           variant="ghost"
                           className={`w-full justify-start gap-3 h-12 text-base ${
-                            isActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""
+                            isActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""
                           }`}
                         >
                           <Icon className="w-5 h-5" />
@@ -212,7 +212,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`gap-2 ${isActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""}`}
+                    className={`gap-2 ${isActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
                   >
                     <Icon className="w-4 h-4" />
                     <span className="hidden lg:inline">{item.label}</span>
@@ -226,7 +226,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={`gap-2 ${isMoreActive ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary" : ""}`}
+                    className={`gap-2 ${isMoreActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
                   >
                     <MoreHorizontal className="w-4 h-4" />
                     <span className="hidden lg:inline">{tNav("more")}</span>
@@ -311,29 +311,29 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </Link>
             {sellingEnabled(features.stripeEnabled, hosted) && features.selfServiceUpgrade && (
               <>
-                <span className="text-border">&middot;</span>
+                <span aria-hidden className="text-muted-foreground">&middot;</span>
                 <Link href="/privacy/billing" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                   <CreditCard className="w-3.5 h-3.5" />
                   {tFooter("billing")}
                 </Link>
               </>
             )}
-            <span className="text-border">&middot;</span>
+            <span aria-hidden className="text-muted-foreground">&middot;</span>
             <a href={brand.termsOfUseUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Scale className="w-3.5 h-3.5" />
               {tFooter("termsOfService")}
             </a>
-            <span className="text-border">&middot;</span>
+            <span aria-hidden className="text-muted-foreground">&middot;</span>
             <a href={brand.privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Shield className="w-3.5 h-3.5" />
               {tFooter("privacyPolicy")}
             </a>
-            <span className="text-border">&middot;</span>
+            <span aria-hidden className="text-muted-foreground">&middot;</span>
             <Link href="/security" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Lock className="w-3.5 h-3.5" />
               {tFooter("dataSecurity")}
             </Link>
-            <span className="text-border">&middot;</span>
+            <span aria-hidden className="text-muted-foreground">&middot;</span>
             <LanguageSwitcher />
           </div>
         </div>

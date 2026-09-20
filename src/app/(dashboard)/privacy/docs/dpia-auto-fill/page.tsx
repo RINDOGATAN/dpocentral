@@ -3,17 +3,20 @@
 
 import { Sparkles, Bot, CheckCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
 import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import type { StatusTone } from "@/config/status-tone";
 
-const confidenceColors: Record<string, string> = {
-  HIGH: "bg-green-100 text-green-800 border-transparent",
-  MEDIUM: "bg-yellow-100 text-yellow-800 border-transparent",
-  LOW: "bg-orange-100 text-orange-800 border-transparent",
+// The documentation shows the same tones the product paints. Confidence runs
+// the other way from risk: HIGH confidence is the good outcome.
+const confidenceTone: Record<string, StatusTone> = {
+  HIGH: "success",
+  MEDIUM: "warning",
+  LOW: "danger",
 };
 
 const autoFillRows: { key: string; confidence: string }[] = [
@@ -28,11 +31,7 @@ const autoFillRows: { key: string; confidence: string }[] = [
   { key: "risk", confidence: "MEDIUM" },
 ];
 
-const confidenceLevels: { level: "HIGH" | "MEDIUM" | "LOW"; color: string }[] = [
-  { level: "HIGH", color: confidenceColors.HIGH },
-  { level: "MEDIUM", color: confidenceColors.MEDIUM },
-  { level: "LOW", color: confidenceColors.LOW },
-];
+const confidenceLevels: ("HIGH" | "MEDIUM" | "LOW")[] = ["HIGH", "MEDIUM", "LOW"];
 
 export default async function DocsDpiaAutoFillPage() {
   const t = await getTranslations("docs.dpiaAutoFill");
@@ -98,9 +97,9 @@ export default async function DocsDpiaAutoFillPage() {
                     <td className="py-2 pr-4 text-xs text-muted-foreground">{t(`sources.rows.${row.key}.question`)}</td>
                     <td className="py-2 pr-4 text-xs text-muted-foreground">{t(`sources.rows.${row.key}.source`)}</td>
                     <td className="py-2">
-                      <Badge variant="outline" className={`text-[10px] ${confidenceColors[row.confidence]}`}>
+                      <StatusChip tone={confidenceTone[row.confidence] ?? "neutral"} className="text-[10px]">
                         {row.confidence}
-                      </Badge>
+                      </StatusChip>
                     </td>
                   </tr>
                 ))}
@@ -112,12 +111,12 @@ export default async function DocsDpiaAutoFillPage() {
 
       <DocSection id="confidence-levels" title={t("confidence.title")} description={t("confidence.description")}>
         <div className="space-y-3">
-          {confidenceLevels.map((item) => (
-            <div key={item.level} className="flex items-start gap-3">
-              <Badge variant="outline" className={`text-[10px] mt-0.5 shrink-0 ${item.color}`}>
-                {item.level}
-              </Badge>
-              <p className="text-sm text-muted-foreground">{t(`confidence.items.${item.level}`)}</p>
+          {confidenceLevels.map((level) => (
+            <div key={level} className="flex items-start gap-3">
+              <StatusChip tone={confidenceTone[level]} className="text-[10px] mt-0.5 shrink-0">
+                {level}
+              </StatusChip>
+              <p className="text-sm text-muted-foreground">{t(`confidence.items.${level}`)}</p>
             </div>
           ))}
         </div>

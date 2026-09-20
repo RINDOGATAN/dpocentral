@@ -12,11 +12,12 @@ import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusMark } from "@/components/ui/status-chip";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "bg-blue-100 text-blue-800 border-transparent",
   IDENTITY_PENDING: "bg-yellow-100 text-yellow-800 border-transparent",
-  IN_PROGRESS: "bg-primary/20 text-primary border-transparent",
+  IN_PROGRESS: "bg-primary/15 text-primary border-transparent",
   COMPLETED: "bg-green-100 text-green-800 border-transparent",
 };
 
@@ -105,8 +106,15 @@ export default async function DocsDsarPage() {
                 <div key={sla.id} className="space-y-1.5">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium">{sla.id}</span>
-                    <span className={`text-xs ${overdue ? "text-destructive font-medium" : sla.days > 20 ? "text-yellow-600" : "text-muted-foreground"}`}>
-                      {overdue ? t("sla.overdueLabel") : t("sla.daysRemaining", { count: sla.total - sla.days })}
+                    <span className="text-xs inline-flex items-center gap-1 text-muted-foreground">
+                      {overdue ? (
+                        <StatusMark tone="danger" className="h-3 w-3" />
+                      ) : sla.days > 20 ? (
+                        <StatusMark tone="warning" className="h-3 w-3" />
+                      ) : null}
+                      <span className={overdue ? "font-medium text-foreground" : undefined}>
+                        {overdue ? t("sla.overdueLabel") : t("sla.daysRemaining", { count: sla.total - sla.days })}
+                      </span>
                     </span>
                   </div>
                   <Progress value={(sla.days / sla.total) * 100} className="h-2" />

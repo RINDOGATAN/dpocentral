@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { toneMark } from "@/config/status-palette";
 
 export default function RegulationsWizardPage() {
   const router = useRouter();
@@ -142,7 +143,7 @@ export default function RegulationsWizardPage() {
           {results?.applicableJurisdictions.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center">
-                <CheckCircle2 className="w-12 h-12 mx-auto text-green-500 mb-4" />
+                <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${toneMark("success")}`} />
                 <p className="text-muted-foreground">
                   No additional regulations identified. You may want to review the full catalog.
                 </p>
@@ -164,7 +165,7 @@ export default function RegulationsWizardPage() {
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                             <span>DSAR: {j.dsarDeadlineDays}d</span>
                             <span>Breach: {j.breachNotificationHours}h</span>
-                            <span className="text-yellow-600">{j.penalties}</span>
+                            <span className="text-foreground">{j.penalties}</span>
                           </div>
                         </div>
                         <Badge className="shrink-0">{j.category}</Badge>

@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import type { AssetData } from "./useDataFlowGraph";
 import { DataCategory } from "@prisma/client";
+import { StatusNote } from "@/components/ui/status-note";
 
 const assetTypeIcons: Record<string, typeof Database> = {
   DATABASE: Server,
@@ -334,9 +335,9 @@ export function CreateFlowSheet({
           </div>
 
           {error && (
-            <div className="text-sm text-destructive p-2 bg-destructive/10">
+            <StatusNote tone="danger" className="border p-2">
               {error}
-            </div>
+            </StatusNote>
           )}
 
           <SheetFooter className="pt-4">

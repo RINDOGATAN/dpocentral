@@ -39,6 +39,7 @@ import { Download, FileText, Info, TriangleAlert } from "lucide-react";
 // Pure §7 checks only — never import the engine barrel here: it would pull
 // the whole contract pack's JSON into the client bundle.
 import { checkFactConsistency } from "@/lib/dpa-engine/consistency";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 type Localized = string | { [lang: string]: string };
 
@@ -241,9 +242,9 @@ export function ProduceDpaDialog({
           <div className="space-y-4 py-2">
             <p className="text-sm">{t("successBody")}</p>
             {result.warnings.length > 0 && (
-              <div className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm space-y-1">
+              <div className={`rounded-md border p-3 text-sm space-y-1 ${toneBorder("warning")} ${toneTint("warning")}`}>
                 <p className="font-medium flex items-center gap-2">
-                  <TriangleAlert className="w-4 h-4" /> {t("warningsTitle")}
+                  <TriangleAlert className={`w-4 h-4 ${toneMark("warning")}`} /> {t("warningsTitle")}
                 </p>
                 {result.warnings.map((w, i) => (
                   <p key={i}>{w}</p>
@@ -511,9 +512,9 @@ export function ProduceDpaDialog({
 
             {/* ── §7 contradictions requiring explicit confirmation ── */}
             {issues.length > 0 && (
-              <div className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm space-y-2">
+              <div className={`rounded-md border p-3 text-sm space-y-2 ${toneBorder("warning")} ${toneTint("warning")}`}>
                 <p className="font-medium flex items-center gap-2">
-                  <TriangleAlert className="w-4 h-4" /> {t("issuesTitle")}
+                  <TriangleAlert className={`w-4 h-4 ${toneMark("warning")}`} /> {t("issuesTitle")}
                 </p>
                 {issues.map((issue) => (
                   <label key={issue.code} className="flex items-start gap-2 font-normal">

@@ -145,7 +145,7 @@ export default function OrganizationsPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="font-medium">No organizations found</h3>
             <p className="text-sm text-muted-foreground mt-1">
               {search ? "Try adjusting your search" : "No organizations exist yet"}

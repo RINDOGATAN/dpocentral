@@ -126,7 +126,7 @@ export default async function DocsOverviewPage() {
           <div className="space-y-3">
             {(["step1", "step2"] as const).map((step, i) => (
               <div key={step} className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                <span className="w-6 h-6 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold shrink-0">
                   {i + 1}
                 </span>
                 <div>
@@ -139,7 +139,7 @@ export default async function DocsOverviewPage() {
           <div className="space-y-3">
             {(["step3", "step4"] as const).map((step, i) => (
               <div key={step} className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                <span className="w-6 h-6 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold shrink-0">
                   {i + 3}
                 </span>
                 <div>

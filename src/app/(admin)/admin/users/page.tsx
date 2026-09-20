@@ -89,7 +89,7 @@ export default function UsersPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <UserCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <UserCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="font-medium">No users found</h3>
             <p className="text-sm text-muted-foreground mt-1">
               {search ? "Try adjusting your search" : "No users exist yet"}

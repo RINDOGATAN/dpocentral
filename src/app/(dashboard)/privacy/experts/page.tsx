@@ -35,6 +35,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ExpertContactDialog } from "@/components/privacy/expert-contact-dialog";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertEngagementStatus } from "@prisma/client";
+import { toneChip, toneMark } from "@/config/status-palette";
 
 const PAGE_SIZE = 20;
 
@@ -224,8 +225,8 @@ export default function ExpertsPage() {
                         </Badge>
                       ))}
                       {expert.acceptingClients && (
-                        <span className="flex items-center gap-1 text-[10px] text-green-600">
-                          <CheckCircle2 className="w-3 h-3" />
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <CheckCircle2 className={`w-3 h-3 ${toneMark("success")}`} />
                           {t("available")}
                         </span>
                       )}
@@ -344,7 +345,7 @@ const STATUS_TONE: Record<ExpertEngagementStatus, string> = {
   CONTACTED: "border-muted-foreground text-muted-foreground",
   RESPONDED: "border-primary text-primary",
   ENGAGED: "border-primary bg-primary text-primary-foreground",
-  COMPLETED: "border-green-500 text-green-600",
+  COMPLETED: `border-transparent ${toneChip("success")}`,
   DECLINED: "border-muted-foreground text-muted-foreground",
 };
 

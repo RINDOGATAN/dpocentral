@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 const MECHANISM_KEYS = [
   "ADEQUACY_DECISION", "STANDARD_CONTRACTUAL_CLAUSES", "BINDING_CORPORATE_RULES",
@@ -47,8 +48,8 @@ const MECHANISM_KEYS = [
 
 const statusColors: Record<string, string> = {
   COMPLIANT: "border-primary text-primary bg-primary/5",
-  NEEDS_REVIEW: "border-yellow-500 text-yellow-700 bg-yellow-50 dark:text-yellow-300 dark:bg-yellow-950/30",
-  NON_COMPLIANT: "border-destructive text-destructive bg-destructive/5",
+  NEEDS_REVIEW: `border-transparent ${toneChip("warning")}`,
+  NON_COMPLIANT: `border-transparent ${toneChip("danger")}`,
   PENDING: "border-muted-foreground text-muted-foreground",
 };
 
@@ -146,7 +147,7 @@ export default function TransfersListPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-yellow-600" /> {tList("needsReview")}
+              <Clock className={`w-3.5 h-3.5 ${toneMark("warning")}`} /> {tList("needsReview")}
             </p>
             <p className="text-3xl font-semibold">{stats?.needsReview ?? 0}</p>
           </CardContent>
@@ -162,7 +163,7 @@ export default function TransfersListPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <CalendarClock className="w-3.5 h-3.5 text-yellow-600" /> {tList("expiring30d")}
+              <CalendarClock className={`w-3.5 h-3.5 ${toneMark("warning")}`} /> {tList("expiring30d")}
             </p>
             <p className="text-3xl font-semibold">{stats?.expiringSoon ?? 0}</p>
           </CardContent>
@@ -170,9 +171,9 @@ export default function TransfersListPage() {
       </div>
 
       {stats?.withoutTia ? (
-        <Card className="border-yellow-500/40 bg-yellow-50/40 dark:bg-yellow-950/10">
+        <Card className={`${toneBorder("warning")} ${toneTint("warning")}`}>
           <CardContent className="py-4 flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <AlertTriangle className={`w-5 h-5 ${toneMark("warning")}`} />
             <div className="text-sm">
               {tList.rich("tiaWarning", {
                 count: stats.withoutTia,

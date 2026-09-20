@@ -234,7 +234,7 @@ export default function AuditLogsPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <ScrollText className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
+            <ScrollText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="font-medium">No audit logs found</h3>
             <p className="text-sm text-muted-foreground mt-1">
               Try adjusting your filters

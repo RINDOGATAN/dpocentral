@@ -53,19 +53,15 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForSensitivity } from "@/config/status-tone";
 
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
   { loading: () => <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div> }
 );
 
-const sensitivityColors: Record<string, string> = {
-  PUBLIC: "border-primary text-primary",
-  INTERNAL: "border-primary text-primary",
-  CONFIDENTIAL: "border-muted-foreground text-muted-foreground",
-  RESTRICTED: "border-muted-foreground bg-muted-foreground/20 text-foreground",
-  SPECIAL_CATEGORY: "border-muted-foreground bg-muted-foreground text-foreground",
-};
+// Sensitivity goes through the shared tones: toneForSensitivity.
 
 const CATEGORY_KEYS: DataCategory[] = [
   "IDENTIFIERS",
@@ -458,9 +454,9 @@ export default function DataAssetDetailPage() {
                         </div>
                       </Link>
                       <div className="flex items-center gap-2 sm:shrink-0 pl-7 sm:pl-0">
-                        <Badge variant="outline" className={sensitivityColors[element.sensitivity] || ""}>
+                        <StatusChip tone={toneForSensitivity(element.sensitivity)}>
                           {tp(`sensitivity.${element.sensitivity}` as `sensitivity.PUBLIC` | `sensitivity.INTERNAL` | `sensitivity.CONFIDENTIAL` | `sensitivity.RESTRICTED` | `sensitivity.SPECIAL_CATEGORY`)}
-                        </Badge>
+                        </StatusChip>
                         {element.isPersonalData && (
                           <Badge variant="outline" className="hidden sm:inline-flex">{tp("elements.personalData")}</Badge>
                         )}
