@@ -2053,6 +2053,7 @@
         "title": "Quick Actions",
         "subtitle": "Common tasks",
         "addAsset": "Add Data Asset",
+        "newDpia": "Start a DPIA",
         "newDsar": "New DSAR",
         "reportIncident": "Report Incident",
         "addVendor": "Add Vendor",

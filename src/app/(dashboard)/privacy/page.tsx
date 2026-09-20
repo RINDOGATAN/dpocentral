@@ -423,6 +423,14 @@ export default function PrivacyDashboardPage() {
             <CardDescription className="text-xs sm:text-sm">{tp("quickActions.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2 grid-cols-1 sm:grid-cols-2 p-4 pt-0 sm:p-6 sm:pt-0">
+            {/* Two clicks to a new DPIA: here, then Create. The type is
+                pre-selected, so the form opens straight on the details. */}
+            <Link href="/privacy/assessments/new?type=DPIA">
+              <Button variant="outline" className="w-full justify-start h-11">
+                <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
+                <span className="truncate">{tp("quickActions.newDpia")}</span>
+              </Button>
+            </Link>
             <Link href="/privacy/data-inventory/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Database className="w-4 h-4 mr-2 shrink-0" />

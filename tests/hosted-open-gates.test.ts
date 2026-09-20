@@ -6,6 +6,10 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import en from "@/messages/en.json";
+import es from "@/messages/es.json";
 
 const mocks = vi.hoisted(() => ({
   prisma: {
@@ -243,6 +247,55 @@ describe("hosted templates written at runtime", () => {
     const writeOrder = mocks.prisma.assessmentTemplate.create.mock.invocationCallOrder[0];
     const listOrder = mocks.prisma.assessmentTemplate.findMany.mock.invocationCallOrder.at(-1)!;
     expect(writeOrder).toBeLessThan(listOrder);
+  });
+});
+
+describe("the export carries no gate of its own", () => {
+  const source = (rel: string) => readFileSync(path.resolve(__dirname, "..", rel), "utf8");
+
+  it("never asks about entitlement, a licence or a premium type", () => {
+    const route = source("src/app/api/export/assessment/[id]/route.ts");
+    for (const gate of [
+      "checkAssessmentEntitlement",
+      "isPremiumAssessmentType",
+      "getEntitledAssessmentTypes",
+      "hasRopaExportAccess",
+      "skillPackage",
+    ]) {
+      expect(route.includes(gate), gate).toBe(false);
+    }
+  });
+
+  it("exports the portfolio without a gate either", () => {
+    const route = source("src/app/api/export/assessment-portfolio/route.ts");
+    for (const gate of ["checkAssessmentEntitlement", "isPremiumAssessmentType"]) {
+      expect(route.includes(gate), gate).toBe(false);
+    }
+  });
+});
+
+describe("reaching a new DPIA", () => {
+  it("takes two clicks from the dashboard: the quick action, then Create", () => {
+    const dashboard = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/page.tsx"),
+      "utf8"
+    );
+    expect(dashboard).toContain('href="/privacy/assessments/new?type=DPIA"');
+
+    // The form opens on the details because the type comes from the query.
+    const form = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/assessments/new/page.tsx"),
+      "utf8"
+    );
+    expect(form).toContain('searchParams.get("type")');
+  });
+
+  it("offers the label in both languages", () => {
+    expect(en.pages.dashboard.quickActions.newDpia).toBeTruthy();
+    expect(es.pages.dashboard.quickActions.newDpia).toBeTruthy();
+    expect(es.pages.dashboard.quickActions.newDpia).not.toBe(
+      en.pages.dashboard.quickActions.newDpia
+    );
   });
 });
 
