@@ -5149,6 +5149,7 @@
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
+        "hostedNote": "Todos los tipos están disponibles en este servicio alojado, sin coste y sin bloqueo de la exportación. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Core",
@@ -5209,13 +5210,43 @@
           "approve": { "title": "Aprobación final", "description": "Una vez aprobada, la evaluación queda bloqueada y se almacena como registro de cumplimiento." }
         }
       },
+      "walkthrough": {
+        "title": "Haz una DPIA en ocho pasos",
+        "intro": "Este es el recorrido por las pantallas reales, desde el panel hasta el informe exportado.",
+        "actors": {
+          "dpo": "DPO",
+          "approver": "Aprobador"
+        },
+        "steps": {
+          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido." },
+          "create": { "title": "Ponle nombre y créala", "description": "Dale un nombre a la evaluación. Puedes vincularla a una actividad de tratamiento de tu inventario y a un proveedor. Ambas cosas son opcionales y alimentan el autorrelleno.", "detail1": "Una actividad de tratamiento vinculada permite proponer respuestas a partir de tu inventario de datos", "detail2": "Un proveedor vinculado aporta sus certificaciones y tecnologías de privacidad" },
+          "frameworks": { "title": "Elige los marcos", "description": "La primera pregunta pide qué normas debe satisfacer la evaluación: las europeas, las californianas o ambas. La respuesta determina qué preguntas aparecen a continuación y sobre qué requisitos informa el informe.", "detail1": "Unión Europea: Reglamento (UE) 2016/679, artículos 35 y 36", "detail2": "California: 11 CCR, secciones 7150, 7152, 7155 y 7157" },
+          "european": { "title": "Recorre los pasos europeos", "description": "Descripción del tratamiento, alcance y contexto, necesidad y proporcionalidad, consulta, identificación de riesgos, medidas y riesgo residual con la conclusión. Las pestañas de la parte superior muestran cuánto llevas respondido en cada paso." },
+          "california": { "title": "Responde los pasos californianos", "description": "Solo aparecen si eliges California. Primero, las actividades que hacen necesaria una evaluación de riesgos; si no se cumple ninguna, el producto lo dice y no afirma ningún requisito californiano. Después, los nueve contenidos, los plazos, la presentación y la certificación del directivo." },
+          "outstanding": { "title": "Resuelve lo que queda pendiente", "description": "Un panel situado encima de la evaluación enumera con claridad todo lo que falta: las preguntas sin responder y los requisitos legales que todavía no cubre nada. Cada elemento es un enlace que salta al paso y al campo que lo responde." },
+          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario decide un aprobador designado." },
+          "export": { "title": "Exporta el informe", "description": "La exportación está disponible en cualquier momento y nunca se deniega. Mientras quede algo pendiente, el documento se marca como borrador en todas las páginas y enumera lo que falta en la primera." }
+        }
+      },
+      "conformance": {
+        "title": "La tabla de conformidad",
+        "intro": "Toda evaluación terminada incluye una tabla con una fila por cada requisito de los marcos elegidos, su fuente primaria y si las respuestas lo cubren. Nada se marca como cubierto si no lo cubre una respuesta, y el informe dice con claridad cuándo la evaluación todavía no cumple un marco.",
+        "columns": {
+          "citation": "Fuente",
+          "requirement": "Requisito"
+        },
+        "note": "Las filas siguientes son los requisitos que el producto controla hoy. En el informe cada una lleva además su estado, cubierto o pendiente, y el paso de la evaluación que lo responde.",
+        "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica el resultado con un abogado cualificado antes de basarte en él."
+      },
       "exports": {
         "title": "Exportaciones PDF",
         "intro": "Exporta evaluaciones individuales o todo tu portafolio como informes PDF formateados profesionalmente. Diseñados para reguladores, auditores y presentaciones de comité.",
         "individualTitle": "Exportación de evaluación individual",
         "individualDesc": "Exporta cualquier evaluación individual como un PDF detallado con portada, resumen ejecutivo, todas las preguntas y respuestas, puntuaciones de riesgo, mitigaciones e historial de aprobaciones.",
         "individualFeatures": {
-          "cover": "Portada con referencia al Art. 35 del RGPD",
+          "conformance": "Tabla de conformidad: una fila por requisito, cubierto o pendiente",
+          "draft": "Marca de borrador en todas las páginas mientras quede algo pendiente",
+          "cover": "Portada con el tipo de evaluación y su fuente primaria",
           "stats": "Tarjetas de estadísticas (riesgo, finalización, mitigaciones)",
           "qa": "Preguntas y respuestas por sección con etiquetas de riesgo en línea",
           "mitigation": "Tabla de seguimiento de mitigaciones",

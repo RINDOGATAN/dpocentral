@@ -5149,6 +5149,7 @@
       "templates": {
         "title": "Assessment Templates",
         "intro": "Choose from built-in templates or create custom assessments. Each template includes pre-configured questions, risk criteria, and approval workflows.",
+        "hostedNote": "Every type is open on this hosted service, at no charge and with no lock on the export. The Premium mark applies to the self-hosted kit, where such a type is installed from a signed module.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Core",
@@ -5209,13 +5210,43 @@
           "approve": { "title": "Final Approval", "description": "Once approved, the assessment is locked and stored as a compliance record." }
         }
       },
+      "walkthrough": {
+        "title": "Run a DPIA in eight steps",
+        "intro": "This is the path through the real screens, from the dashboard to the exported report.",
+        "actors": {
+          "dpo": "DPO",
+          "approver": "Approver"
+        },
+        "steps": {
+          "start": { "title": "Start a DPIA from the dashboard", "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen." },
+          "create": { "title": "Name it and create it", "description": "Give the assessment a name. You may link it to a processing activity from your inventory and to a vendor. Both are optional and both feed the auto-fill.", "detail1": "A linked processing activity lets the app propose answers from your data inventory", "detail2": "A linked vendor brings in its certifications and privacy technologies" },
+          "frameworks": { "title": "Choose the frameworks", "description": "The first question asks which rules the assessment has to satisfy: the European ones, the Californian ones, or both. The answer decides which questions appear below and which requirements the report reports on.", "detail1": "European Union: Regulation (EU) 2016/679, Articles 35 and 36", "detail2": "California: 11 CCR sections 7150, 7152, 7155 and 7157" },
+          "european": { "title": "Work through the European steps", "description": "Processing description, scope and context, necessity and proportionality, consultation, risk identification, measures, and residual risk with the conclusion. The pills at the top of the page show how much of each step is answered." },
+          "california": { "title": "Answer the Californian steps", "description": "Shown only when California is chosen. First the activities that make a risk assessment necessary; if none of them applies, the product says so and claims no Californian requirement. Then the nine content items, the timetable, the submission and the executive attestation." },
+          "outstanding": { "title": "Clear what is outstanding", "description": "A panel above the assessment lists everything still missing, in plain words: the questions nobody has answered and the legal requirements nothing covers yet. Every item is a link that jumps to the step and the field that answers it." },
+          "approve": { "title": "Record mitigations and approve", "description": "Add mitigation measures for the risks you identified, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver decides." },
+          "export": { "title": "Export the report", "description": "Export is available at every stage and never refuses. While anything is outstanding the document is marked a draft on every page and lists what is missing on the first one." }
+        }
+      },
+      "conformance": {
+        "title": "The conformance table",
+        "intro": "Every finished assessment carries a table with one row per requirement of the frameworks you chose, its primary source, and whether the answers cover it. Nothing is marked covered unless an answer covers it, and the report says outright when the assessment does not yet conform to a framework.",
+        "columns": {
+          "citation": "Source",
+          "requirement": "Requirement"
+        },
+        "note": "The rows below are the requirements the product tracks today. In the report each one also carries its status, covered or outstanding, and the step of the assessment that answers it.",
+        "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs."
+      },
       "exports": {
         "title": "PDF Exports",
         "intro": "Export individual assessments or your entire assessment portfolio as professionally formatted PDF reports. Designed for regulators, auditors, and board presentations.",
         "individualTitle": "Individual Assessment Export",
         "individualDesc": "Export any single assessment as a detailed PDF with cover page, executive summary, all questions and responses, risk scores, mitigations, and approval history.",
         "individualFeatures": {
-          "cover": "Cover page with GDPR Art. 35 reference",
+          "conformance": "Conformance table: one row per requirement, covered or outstanding",
+          "draft": "Draft mark on every page while anything is outstanding",
+          "cover": "Cover page with the assessment type and its primary source",
           "stats": "Stat cards (risk, completion, mitigations)",
           "qa": "Section-by-section Q&A with inline risk badges",
           "mitigation": "Mitigation tracking table",
