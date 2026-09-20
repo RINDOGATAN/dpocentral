@@ -29,16 +29,8 @@ import {
   sectionsForLocale,
 } from "@/server/services/assessment/template-locales";
 import { visibleSections, answerMapFrom } from "@/lib/assessment-conditions";
-import type { PdfT } from "@/server/services/export/privacy-program/data-mapping";
+import { collectText, translator } from "./pdf-text";
 
-function translator(bundle: Record<string, unknown>): PdfT {
-  return (key, values) => {
-    let node: unknown = bundle;
-    for (const part of key.split(".")) node = (node as Record<string, unknown> | undefined)?.[part];
-    const text = typeof node === "string" ? node : key;
-    return values ? text.replace(/\{(\w+)\}/g, (_, v) => String(values[v] ?? "")) : text;
-  };
-}
 
 const option = (id: string, index: number, lang: "en" | "es" = "en") => {
   const q = HEALTH_ADTECH_SECTIONS.flatMap((s) => s.questions).find((x) => x.id === id)!;
@@ -59,40 +51,6 @@ const responses = [
   { questionId: "hd10_2", response: "2026-09-17" },
   { questionId: "hd10_3", response: "2027-09-17" },
 ];
-
-/** All text in a react-pdf element tree (function components expanded). */
-function collectText(node: unknown, out: string[] = []): string[] {
-  if (node == null || typeof node === "boolean") return out;
-  if (typeof node === "string" || typeof node === "number") {
-    out.push(String(node));
-    return out;
-  }
-  if (Array.isArray(node)) {
-    node.forEach((n) => collectText(n, out));
-    return out;
-  }
-  if (React.isValidElement(node)) {
-    const el = node as React.ReactElement<Record<string, unknown>>;
-    if (typeof el.type === "function") {
-      return collectText((el.type as (p: unknown) => unknown)(el.props), out);
-    }
-    // Table headers and rows, metadata items.
-    for (const [key, value] of Object.entries(el.props)) {
-      if (key === "children" || !Array.isArray(value)) continue;
-      for (const item of value) {
-        if (Array.isArray(item)) item.forEach((cell) => collectText(cell, out));
-        else if (item && typeof item === "object" && "label" in item) {
-          collectText((item as { label: unknown }).label, out);
-          collectText((item as { value: unknown }).value, out);
-        } else collectText(item, out);
-      }
-    }
-    collectText(el.props.children, out);
-    if (typeof el.props.value === "string" || typeof el.props.value === "number") out.push(String(el.props.value));
-    if (typeof el.props.label === "string") out.push(el.props.label);
-  }
-  return out;
-}
 
 function reportData(lang: "en" | "es"): AssessmentExportData {
   const pdfLabels = ((lang === "es" ? es : en) as any).pdf.assessmentReport;

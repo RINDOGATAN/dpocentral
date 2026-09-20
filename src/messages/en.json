@@ -644,6 +644,19 @@
       "submit": "Create Request"
     },
     "assessmentDetail": {
+      "completeness": {
+        "title": "What is still outstanding",
+        "allDone": "Everything this assessment needs has been answered.",
+        "questionsTitle": "Questions still to answer ({count})",
+        "requirementsTitle": "Requirements still outstanding ({count})",
+        "frameworkPartial": "{framework}: {covered} of {total} requirements covered.",
+        "frameworkComplete": "{framework}: every requirement covered ({total} of {total}).",
+        "notConforming": "This assessment does not yet conform to the rules of {framework}.",
+        "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
+        "jump": "Go to the step that answers this",
+        "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
+        "submitHint": "Answer the questions listed above to submit this assessment."
+      },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
       "riskBadge": "{level} Risk",
@@ -3180,6 +3193,27 @@
       }
     },
     "assessmentReport": {
+      "draftMark": "Draft",
+      "draftTitle": "This document is a draft",
+      "draftIntro": "The items below are still outstanding, so every page of this document is marked a draft. Answer them in the app and export again for a final version.",
+      "draftQuestions": "Questions not yet answered",
+      "draftRequirements": "Requirements not yet covered",
+      "draftMore": "and {count} more",
+      "conformanceTitle": "Framework conformance",
+      "conformanceIntro": "One row per requirement of the frameworks chosen for this assessment, with the step of the assessment that answers it. A requirement nothing answers is marked outstanding.",
+      "conformanceColumns": {
+        "requirement": "Requirement",
+        "citation": "Source",
+        "status": "Status",
+        "step": "Answered in"
+      },
+      "conformanceCovered": "Covered",
+      "conformanceOutstanding": "Outstanding",
+      "conformanceNotAnswered": "Not asked in this assessment",
+      "conformanceComplete": "{framework}: every requirement covered ({covered} of {total}).",
+      "conformancePartial": "{framework}: {covered} of {total} requirements covered. This assessment does not conform to the rules of {framework} until the rest are answered.",
+      "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
+      "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
       "coverGenerated": "Generated: {date}",
       "coverConfidential": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
@@ -3203,11 +3237,6 @@
         "linkedVendor": "Linked Vendor"
       },
       "description": "Description",
-      "dpiaCalloutTitle": "GDPR Article 35(7) — Required DPIA Elements",
-      "dpiaCallout1": "Systematic description of processing operations and purposes",
-      "dpiaCallout2": "Assessment of necessity and proportionality",
-      "dpiaCallout3": "Assessment of risks to rights and freedoms of data subjects",
-      "dpiaCallout4": "Measures envisaged to address risks and demonstrate compliance",
       "sectionProgress": "{answered} of {total} questions answered",
       "sectionComplete": "Complete",
       "questionRequired": "REQUIRED",

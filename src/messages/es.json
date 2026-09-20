@@ -644,6 +644,19 @@
       "submit": "Crear solicitud"
     },
     "assessmentDetail": {
+      "completeness": {
+        "title": "Qué queda pendiente",
+        "allDone": "Se ha respondido a todo lo que necesita esta evaluación.",
+        "questionsTitle": "Preguntas por responder ({count})",
+        "requirementsTitle": "Requisitos pendientes ({count})",
+        "frameworkPartial": "{framework}: {covered} de {total} requisitos cubiertos.",
+        "frameworkComplete": "{framework}: todos los requisitos cubiertos ({total} de {total}).",
+        "notConforming": "Esta evaluación todavía no cumple las normas de {framework}.",
+        "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
+        "jump": "Ir al paso que lo responde",
+        "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
+        "submitHint": "Responde las preguntas enumeradas arriba para enviar esta evaluación."
+      },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
       "riskBadge": "Riesgo {level}",
@@ -3180,6 +3193,27 @@
       }
     },
     "assessmentReport": {
+      "draftMark": "Borrador",
+      "draftTitle": "Este documento es un borrador",
+      "draftIntro": "Los elementos siguientes siguen pendientes, por lo que todas las páginas de este documento se marcan como borrador. Respóndelos en la aplicación y vuelve a exportar para obtener una versión definitiva.",
+      "draftQuestions": "Preguntas sin responder",
+      "draftRequirements": "Requisitos aún no cubiertos",
+      "draftMore": "y {count} más",
+      "conformanceTitle": "Conformidad con los marcos",
+      "conformanceIntro": "Una fila por cada requisito de los marcos elegidos para esta evaluación, con el paso de la evaluación que lo responde. Un requisito que no responde nada se marca como pendiente.",
+      "conformanceColumns": {
+        "requirement": "Requisito",
+        "citation": "Fuente",
+        "status": "Estado",
+        "step": "Respondido en"
+      },
+      "conformanceCovered": "Cubierto",
+      "conformanceOutstanding": "Pendiente",
+      "conformanceNotAnswered": "No se pregunta en esta evaluación",
+      "conformanceComplete": "{framework}: todos los requisitos cubiertos ({covered} de {total}).",
+      "conformancePartial": "{framework}: {covered} de {total} requisitos cubiertos. Esta evaluación no cumple las normas de {framework} hasta que se respondan los demás.",
+      "conformanceCaliforniaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento.",
+      "conformanceDisclaimer": "Esta tabla recoge qué requisitos cubren las respuestas. No es un dictamen jurídico ni constituye asesoramiento jurídico.",
       "coverGenerated": "Generado: {date}",
       "coverConfidential": "CONFIDENCIAL — Este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse a personal autorizado y a las autoridades de control cuando lo requieran.",
       "executiveSummary": "Resumen ejecutivo",
@@ -3203,11 +3237,6 @@
         "linkedVendor": "Proveedor vinculado"
       },
       "description": "Descripción",
-      "dpiaCalloutTitle": "RGPD Artículo 35(7) — Elementos requeridos en la DPIA",
-      "dpiaCallout1": "Descripción sistemática de las operaciones de tratamiento y sus finalidades",
-      "dpiaCallout2": "Evaluación de la necesidad y proporcionalidad",
-      "dpiaCallout3": "Evaluación de los riesgos para los derechos y libertades de los interesados",
-      "dpiaCallout4": "Medidas previstas para afrontar los riesgos y demostrar el cumplimiento",
       "sectionProgress": "{answered} de {total} preguntas respondidas",
       "sectionComplete": "Completa",
       "questionRequired": "OBLIGATORIA",

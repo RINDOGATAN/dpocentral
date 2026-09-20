@@ -449,6 +449,24 @@ export const s = StyleSheet.create({
     height: 3,
     backgroundColor: PRIMARY,
   },
+  // Draft mark, repeated on every page of a document that is not finished.
+  draftMark: {
+    position: "absolute" as const,
+    top: 16,
+    right: 16,
+    fontSize: 8,
+    fontFamily: "Inter",
+    fontWeight: 700,
+    letterSpacing: 1,
+    color: "#b45309",
+    backgroundColor: "#fef3c7",
+    borderWidth: 1,
+    borderColor: "#fcd34d",
+    borderRadius: 3,
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    textTransform: "uppercase" as const,
+  },
   // Table of Contents
   tocEntry: {
     flexDirection: "row" as const,
@@ -721,16 +739,24 @@ export function ContentPage({
   date,
   children,
   accentStripe = false,
+  draftLabel,
 }: {
   title: string;
   orgName: string;
   date: string;
   children: React.ReactNode;
   accentStripe?: boolean;
+  /** Marks every page of this document a draft. Omit for a finished document. */
+  draftLabel?: string;
 }) {
   return (
     <Page size="A4" style={s.page} wrap>
       {accentStripe && <View style={s.contentStripe} fixed />}
+      {draftLabel && (
+        <Text style={s.draftMark} fixed>
+          {draftLabel}
+        </Text>
+      )}
       <PageHeader title={title} orgName={orgName} />
       {children}
       <PageFooter date={date} />

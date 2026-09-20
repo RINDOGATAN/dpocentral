@@ -21,6 +21,8 @@ import {
 } from "@/lib/assessment-conditions";
 import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 import { assessmentProgress } from "@/server/services/assessment/progress";
+import { assessmentCompleteness } from "@/lib/assessment-completeness";
+import { exportConformance } from "@/server/services/export/assessment-conformance";
 import {
   allLocalizedSections,
   answerFormatter,
@@ -89,9 +91,11 @@ export async function GET(
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Note: export is allowed for any assessment the user can access.
-  // The premium gate is on *creating* assessments (template access),
-  // not on exporting completed ones.
+  // Export is allowed for any assessment the user can access, finished or
+  // not. The premium gate is on *creating* assessments (template access),
+  // never on exporting one. An unfinished assessment still exports: the
+  // document is marked a draft and lists what is outstanding on its first
+  // page. Refusing the export is what made it useless.
 
   const url = new URL(request.url);
   const requestedLocale = url.searchParams.get("locale");
@@ -127,6 +131,20 @@ export async function GET(
   const displayAnswer = answerFormatter(templateType, storedSections, resolvedLocale, {
     yes: t("yes"),
     no: t("no"),
+  });
+
+  // What is still outstanding, in the report's language. The same module
+  // feeds the completeness panel in the app, so the two never disagree.
+  const completeness = assessmentCompleteness({
+    templateId: assessment.template.id,
+    visibleSections: sections,
+    responses: assessment.responses,
+  });
+  const { draft, conformance } = exportConformance({
+    completeness,
+    sections: sections as Array<{ id: string; title: string }>,
+    lang: resolvedLocale === "es" ? "es" : "en",
+    t: t as unknown as PdfT,
   });
 
   const data: AssessmentExportData = {
@@ -177,6 +195,8 @@ export async function GET(
     organization: { name: assessment.organization.name },
     completionPercentage,
     totalQuestions,
+    draft,
+    conformance,
   };
 
   const healthAdtech = isHealthAdtechTemplate(assessment.template)

@@ -69,6 +69,8 @@ import {
 import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 import { localizeValues } from "@/lib/template-i18n-core";
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
+import { CompletenessPanel } from "@/components/assessments/completeness-panel";
+import { assessmentCompleteness } from "@/lib/assessment-completeness";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -655,6 +657,36 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }
   }, []);
 
+  // What is still outstanding, from the same module the export reads: the
+  // required questions nobody has answered and the legal requirements nothing
+  // covers yet.
+  const completeness = useMemo(
+    () =>
+      assessmentCompleteness({
+        templateId: template?.id,
+        visibleSections: expandedSections,
+        responses: assessment?.responses ?? [],
+      }),
+    [template?.id, expandedSections, assessment?.responses]
+  );
+
+  /** Jump to the step and field that answers an outstanding item. */
+  const jumpToQuestion = useCallback(
+    (sectionId: string, questionId: string) => {
+      scrollToSection(sectionId);
+      const question = expandedSections
+        .flatMap((s: any) => (s.questions ?? []) as any[])
+        .find((q: any) => q.id === questionId);
+      const isTextType =
+        !!question &&
+        (question.type === "textarea" ||
+          question.type === "text" ||
+          (!question.type && !question.options));
+      if (isTextType) startEditingQuestion(questionId);
+    },
+    [expandedSections, scrollToSection, startEditingQuestion]
+  );
+
   // Insert an AI-drafted narrative into an EDITABLE response field (never
   // saved directly): ONLY the resolved risk/conclusion section's target
   // textarea — the same section that renders the "Draft with AI" button.
@@ -801,6 +833,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <Progress value={completionPercentage} className="h-2" />
         </CardContent>
       </Card>
+
+      {/* What is still outstanding, each item a link to the step that answers it */}
+      <CompletenessPanel completeness={completeness} onJump={jumpToQuestion} />
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-4">

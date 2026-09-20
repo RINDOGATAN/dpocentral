@@ -40,11 +40,26 @@ const EN_FALLBACK: Record<string, string> = {
   "meta.linkedActivity": "Linked Activity",
   "meta.linkedVendor": "Linked Vendor",
   description: "Description",
-  dpiaCalloutTitle: "GDPR Article 35(7) — Required DPIA Elements",
-  dpiaCallout1: "Systematic description of processing operations and purposes",
-  dpiaCallout2: "Assessment of necessity and proportionality",
-  dpiaCallout3: "Assessment of risks to rights and freedoms of data subjects",
-  dpiaCallout4: "Measures envisaged to address risks and demonstrate compliance",
+  draftMark: "Draft",
+  draftTitle: "This document is a draft",
+  draftIntro:
+    "The items below are still outstanding, so every page of this document is marked a draft. Answer them in the app and export again for a final version.",
+  draftQuestions: "Questions not yet answered",
+  draftRequirements: "Requirements not yet covered",
+  conformanceTitle: "Framework conformance",
+  conformanceIntro:
+    "One row per requirement of the frameworks chosen for this assessment, with the step of the assessment that answers it. A requirement nothing answers is marked outstanding.",
+  "conformanceColumns.requirement": "Requirement",
+  "conformanceColumns.citation": "Source",
+  "conformanceColumns.status": "Status",
+  "conformanceColumns.step": "Answered in",
+  conformanceCovered: "Covered",
+  conformanceOutstanding: "Outstanding",
+  conformanceNotAnswered: "Not asked in this assessment",
+  conformanceCaliforniaNotRequired:
+    "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
+  conformanceDisclaimer:
+    "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
   sectionComplete: "Complete",
   questionRequired: "REQUIRED",
   notAnswered: "Not yet answered",
@@ -97,6 +112,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     questionNumber: "Q{n}.",
     priorityCode: "P{n}",
     approvalLevel: "Level {n}",
+    draftMore: "and {count} more",
   };
   const template = templates[key] ?? key;
   if (!values) return template;
@@ -162,6 +178,61 @@ export interface AssessmentExportData {
   organization: { name: string };
   completionPercentage: number;
   totalQuestions: number;
+  /**
+   * Set while anything is outstanding. The export never refuses: it succeeds,
+   * marks every page a draft and lists what is missing on the first page.
+   */
+  draft?: {
+    outstandingQuestions: Array<{ sectionTitle: string; text: string }>;
+    outstandingRequirements: Array<{ citation: string; label: string }>;
+  };
+  /**
+   * The conformance table, already resolved into the report's language.
+   * Absent for a template that has no requirement table.
+   */
+  conformance?: {
+    rows: Array<{
+      id: string;
+      citation: string;
+      label: string;
+      covered: boolean;
+      /** Section of the assessment that answers it, null when nothing does. */
+      step: string | null;
+    }>;
+    /** One line per framework, already worded (complete or partial). */
+    verdicts: string[];
+    /** Set when 11 CCR 7150(b) is answered "none of these". */
+    californiaNotRequired: boolean;
+  };
+}
+
+/** How many outstanding items the first page lists before summarising. */
+const FIRST_PAGE_OUTSTANDING = 8;
+
+/** A short list of outstanding items; the tail is counted rather than listed. */
+function OutstandingList({
+  title,
+  items,
+  more,
+}: {
+  title: string;
+  items: string[];
+  more: (count: number) => string;
+}) {
+  if (items.length === 0) return null;
+  const shown = items.slice(0, FIRST_PAGE_OUTSTANDING);
+  const rest = items.length - shown.length;
+  return (
+    <View style={{ marginTop: 6 }}>
+      <Text style={[s.calloutText, { fontFamily: "Inter", fontWeight: 700 }]}>{title}</Text>
+      {shown.map((item, i) => (
+        <Text key={i} style={s.calloutText}>
+          {"•"}  {item}
+        </Text>
+      ))}
+      {rest > 0 && <Text style={s.calloutText}>{more(rest)}</Text>}
+    </View>
+  );
 }
 
 export function AssessmentReport({
@@ -178,6 +249,7 @@ export function AssessmentReport({
   healthAdtech?: { result: HealthAdtechResult; t: PdfT };
 }) {
   const tr: PdfT = t ?? fallbackT;
+  const draftLabel = data.draft ? tr("draftMark") : undefined;
   const date = fmtDate(new Date());
   const orgName = data.organization.name;
   const type = data.template.type;
@@ -203,6 +275,7 @@ export function AssessmentReport({
       {/* ── Cover Page ────────────────────────────────── */}
       <Page size="A4" style={s.coverPage}>
         <View style={s.coverStripe} />
+        {draftLabel && <Text style={s.draftMark}>{draftLabel}</Text>}
         <Text style={s.coverOrgName}>{orgName}</Text>
         <Text style={s.coverTitle}>{data.name}</Text>
         <Text style={s.coverSubtitle}>{typeLabel}</Text>
@@ -212,11 +285,30 @@ export function AssessmentReport({
           </Text>
         )}
         <Text style={s.coverDate}>{tr("coverGenerated", { date })}</Text>
+
+        {/* What is outstanding, on the first page, so nobody has to hunt. */}
+        {data.draft && (
+          <View style={[s.calloutBox, { alignSelf: "stretch", marginTop: 16 }]}>
+            <Text style={s.calloutTitle}>{tr("draftTitle")}</Text>
+            <Text style={s.calloutText}>{tr("draftIntro")}</Text>
+            <OutstandingList
+              title={tr("draftQuestions")}
+              items={data.draft.outstandingQuestions.map((q) => `${q.sectionTitle}: ${q.text}`)}
+              more={(count) => tr("draftMore", { count })}
+            />
+            <OutstandingList
+              title={tr("draftRequirements")}
+              items={data.draft.outstandingRequirements.map((r) => `${r.citation} ${r.label}`)}
+              more={(count) => tr("draftMore", { count })}
+            />
+          </View>
+        )}
+
         <Text style={s.coverConfidential}>{tr("coverConfidential")}</Text>
       </Page>
 
       {/* ── Executive Summary ─────────────────────────── */}
-      <ContentPage title={data.name} orgName={orgName} date={date}>
+      <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
         <Text style={s.sectionTitle}>{tr("executiveSummary")}</Text>
 
         {/* Stat cards */}
@@ -266,17 +358,44 @@ export function AssessmentReport({
           </View>
         )}
 
-        {/* GDPR Article 35(7) callout for DPIA */}
-        {type === "DPIA" && (
-          <View style={s.calloutBox}>
-            <Text style={s.calloutTitle}>{tr("dpiaCalloutTitle")}</Text>
-            <Text style={s.calloutText}>{"\u2713"}  {tr("dpiaCallout1")}</Text>
-            <Text style={s.calloutText}>{"\u2713"}  {tr("dpiaCallout2")}</Text>
-            <Text style={s.calloutText}>{"\u2713"}  {tr("dpiaCallout3")}</Text>
-            <Text style={s.calloutText}>{"\u2713"}  {tr("dpiaCallout4")}</Text>
-          </View>
-        )}
       </ContentPage>
+
+      {/* \u2500\u2500 Framework conformance \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
+      {data.conformance && (
+        <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
+          <Text style={s.sectionTitle}>{tr("conformanceTitle")}</Text>
+          <Text style={s.paragraph}>{tr("conformanceIntro")}</Text>
+
+          <View style={s.calloutBox}>
+            {data.conformance.verdicts.map((line, i) => (
+              <Text key={i} style={s.calloutText}>
+                {line}
+              </Text>
+            ))}
+            {data.conformance.californiaNotRequired && (
+              <Text style={s.calloutText}>{tr("conformanceCaliforniaNotRequired")}</Text>
+            )}
+          </View>
+
+          <DataTable
+            headers={[
+              tr("conformanceColumns.citation"),
+              tr("conformanceColumns.requirement"),
+              tr("conformanceColumns.status"),
+              tr("conformanceColumns.step"),
+            ]}
+            colWidths={[1.4, 4.6, 1.2, 2]}
+            rows={data.conformance.rows.map((row) => [
+              row.citation,
+              row.label,
+              row.covered ? tr("conformanceCovered") : tr("conformanceOutstanding"),
+              row.step ?? tr("conformanceNotAnswered"),
+            ])}
+          />
+
+          <Text style={[s.notesText, { marginTop: 10 }]}>{tr("conformanceDisclaimer")}</Text>
+        </ContentPage>
+      )}
 
       {/* ── Question Sections (one ContentPage per section) ── */}
       {sections.map((section, sectionIndex) => {
@@ -291,6 +410,7 @@ export function AssessmentReport({
             title={data.name}
             orgName={orgName}
             date={date}
+            draftLabel={draftLabel}
           >
             {/* Section header with accent */}
             <AccentSectionHeader
@@ -404,12 +524,13 @@ export function AssessmentReport({
           title={data.name}
           orgName={orgName}
           date={date}
+          draftLabel={draftLabel}
         />
       )}
 
       {/* ── Risk Assessment Summary ───────────────────── */}
       {data.riskLevel && (
-        <ContentPage title={data.name} orgName={orgName} date={date}>
+        <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
           <Text style={s.sectionTitle}>{tr("riskAssessmentSummary")}</Text>
 
           <View style={s.statsGrid}>
@@ -475,7 +596,7 @@ export function AssessmentReport({
 
       {/* ── Mitigations ───────────────────────────────── */}
       {data.mitigations.length > 0 && (
-        <ContentPage title={data.name} orgName={orgName} date={date}>
+        <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
           <Text style={s.sectionTitle}>{tr("mitigationsTitle")}</Text>
 
           <View style={s.statsGrid}>
@@ -535,7 +656,7 @@ export function AssessmentReport({
 
       {/* ── Approval History ──────────────────────────── */}
       {data.approvals.length > 0 && (
-        <ContentPage title={data.name} orgName={orgName} date={date}>
+        <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
           <Text style={s.sectionTitle}>{tr("approvalHistory")}</Text>
           <DataTable
             headers={[

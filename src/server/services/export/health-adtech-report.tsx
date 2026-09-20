@@ -27,6 +27,7 @@ export function HealthAdtechPages({
   title,
   orgName,
   date,
+  draftLabel,
 }: {
   result: HealthAdtechResult;
   lang: Lang;
@@ -34,6 +35,8 @@ export function HealthAdtechPages({
   title: string;
   orgName: string;
   date: string;
+  /** Marks these pages a draft, like every other page of the document. */
+  draftLabel?: string;
 }) {
   const none = t("notRecorded");
   const severity = (key: string) => t(`severity.${key}`);
@@ -54,7 +57,7 @@ export function HealthAdtechPages({
 
   return (
     <>
-      <ContentPage title={title} orgName={orgName} date={date}>
+      <ContentPage title={title} orgName={orgName} date={date} draftLabel={draftLabel}>
         <Text style={s.sectionTitle}>{t("title")}</Text>
         <Text style={s.paragraph}>{t("subtitle")}</Text>
 
@@ -79,7 +82,7 @@ export function HealthAdtechPages({
         )}
       </ContentPage>
 
-      <ContentPage title={title} orgName={orgName} date={date}>
+      <ContentPage title={title} orgName={orgName} date={date} draftLabel={draftLabel}>
         <Text style={s.sectionTitle}>{t("fiveFactorTitle")}</Text>
         <View style={s.statsGrid}>
           <StatCard
