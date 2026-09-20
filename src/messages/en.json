@@ -6683,5 +6683,14 @@
         "assessmentPortfolio": "Assessment portfolio (PDF)"
       }
     }
+  },
+  "feedback": {
+    "title": "Tell us what is wrong",
+    "placeholder": "How can we improve this tool?",
+    "submit": "Send feedback",
+    "sending": "Sending...",
+    "error": "The message could not be sent. Please try again.",
+    "sentTitle": "Thank you for your feedback.",
+    "sentBody": "We read every message and use it to improve this tool."
   }
 }
