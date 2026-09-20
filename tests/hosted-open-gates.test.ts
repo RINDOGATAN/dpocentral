@@ -57,7 +57,11 @@ import {
   getEntitledAssessmentTypes,
   hasRopaExportAccess,
   hasVendorCatalogAccess,
+  isPremiumAssessmentType,
+  FREE_ASSESSMENT_TYPES,
+  PREMIUM_ASSESSMENT_TYPES,
 } from "@/server/services/licensing/entitlement";
+import { AssessmentType } from "@prisma/client";
 import {
   ensureHostedTemplates,
   resetHostedTemplatesForTests,
@@ -138,6 +142,29 @@ describe("the lock rule shared by the pages", () => {
   it("offers every other type, locked or not", () => {
     for (const type of ["DPIA", "LIA", "TIA", "CUSTOM"]) {
       expect(isAssessmentTypeOffered({ type, entitledTypes: [] })).toBe(true);
+    }
+  });
+
+  /**
+   * One rule for who may create what. The gate the pages apply and the gate
+   * the server applies must say the same thing about every assessment type,
+   * and no type may fall between the two lists as the transfer assessment did.
+   */
+  it("names every assessment type exactly once, free or premium", () => {
+    const all = Object.values(AssessmentType) as string[];
+    for (const type of all) {
+      const premium = (PREMIUM_ASSESSMENT_TYPES as string[]).includes(type);
+      const free = (FREE_ASSESSMENT_TYPES as string[]).includes(type);
+      expect({ type, named: [premium, free].filter(Boolean).length }).toEqual({ type, named: 1 });
+    }
+  });
+
+  it("agrees with the pure gate on every assessment type", () => {
+    for (const type of Object.values(AssessmentType)) {
+      expect({ type, premium: isPremiumTypeKey(type) }).toEqual({
+        type,
+        premium: isPremiumAssessmentType(type),
+      });
     }
   });
 
