@@ -18,7 +18,11 @@ import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLa
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
-import { assessmentProgress, unansweredRequired } from "../../services/assessment/progress";
+import {
+  assessmentProgress,
+  describeUnanswered,
+  unansweredRequired,
+} from "../../services/assessment/progress";
 import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 
 // Risk scoring service
@@ -627,7 +631,7 @@ export const assessmentRouter = createTRPCRouter({
       if (unanswered.length > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Please answer all required questions. Missing: ${unanswered.length}`,
+          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
         });
       }
 
@@ -937,7 +941,7 @@ export const assessmentRouter = createTRPCRouter({
       if (unanswered.length > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Please answer all required questions. Missing: ${unanswered.length}`,
+          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
         });
       }
 

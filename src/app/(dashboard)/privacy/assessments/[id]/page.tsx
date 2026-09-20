@@ -615,8 +615,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const totalQuestions = visibleCounts?.total ?? assessment?.totalQuestions ?? 0;
   const answeredQuestions = visibleCounts?.done ?? assessment?.responses?.length ?? 0;
 
+  // A rejected assessment is editable again: the author has to be able to act
+  // on the rejection and resubmit. Only an approved one is locked, which is
+  // what the server enforces too (saveResponse refuses APPROVED alone).
   const canSubmit =
-    assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
+    assessment?.status === "IN_PROGRESS" ||
+    assessment?.status === "DRAFT" ||
+    assessment?.status === "REJECTED";
 
   // Check if all REQUIRED questions are answered (mirrors server-side validation).
   // Uses expandedSections so repeatable instances' composite ids are counted.
