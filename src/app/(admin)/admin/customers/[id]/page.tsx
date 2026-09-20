@@ -165,15 +165,15 @@ export default function CustomerDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/admin/customers">
+      <div className="flex items-center gap-4 min-w-0 flex-wrap">
+        <Link href="/admin/customers" className="shrink-0">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold">{customer.name}</h1>
-          <p className="text-muted-foreground">{customer.email}</p>
+          <p className="text-muted-foreground break-all">{customer.email}</p>
         </div>
         <Badge variant="outline" className="ml-2">
           {customer.type}

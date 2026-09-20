@@ -264,16 +264,16 @@ export default function OrganizationDetailPage() {
                   {org.members.map((member) => (
                     <div
                       key={member.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
+                      className="flex items-center justify-between gap-3 p-3 border rounded-lg"
                     >
-                      <div>
+                      <div className="min-w-0">
                         <Link
                           href={`/admin/users/${member.user.id}`}
                           className="font-medium hover:underline"
                         >
                           {member.user.name || "Unnamed"}
                         </Link>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground break-all">
                           {member.user.email}
                         </p>
                       </div>
@@ -299,11 +299,11 @@ export default function OrganizationDetailPage() {
                 {org.customerLinks.map((link) => (
                   <div
                     key={link.customer.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
+                    className="flex items-center justify-between gap-3 p-3 border rounded-lg"
                   >
-                    <div>
+                    <div className="min-w-0">
                       <p className="font-medium">{link.customer.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground break-all">
                         {link.customer.email}
                       </p>
                     </div>

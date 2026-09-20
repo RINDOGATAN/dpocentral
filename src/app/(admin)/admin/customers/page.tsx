@@ -181,13 +181,13 @@ export default function CustomersPage() {
           {data.customers.map((customer) => (
             <Card key={customer.id}>
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">{customer.name}</h3>
                       <Badge variant="outline">{customer.type}</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground break-all">
                       {customer.email}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">

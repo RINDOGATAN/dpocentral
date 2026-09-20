@@ -54,8 +54,8 @@ export default function UsersPage() {
           {data.users.map((user) => (
             <Card key={user.id}>
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">
                         {user.name || "Unnamed User"}
@@ -64,7 +64,7 @@ export default function UsersPage() {
                         <Badge variant="secondary">{user.userType}</Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground break-all">{user.email}</p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
                       <span className="flex items-center gap-1">
                         <Building2 className="w-4 h-4" />

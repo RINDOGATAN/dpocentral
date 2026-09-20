@@ -292,7 +292,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <span className="text-sm">{tp("info.email")}</span>
             </div>
             {vendor.contactEmail ? (
-              <a href={`mailto:${vendor.contactEmail}`} className="text-primary hover:underline">
+              <a href={`mailto:${vendor.contactEmail}`} className="text-primary hover:underline break-all">
                 {vendor.contactEmail}
               </a>
             ) : (

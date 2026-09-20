@@ -56,16 +56,16 @@ export default function UserDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/admin/users">
+      <div className="flex items-center gap-4 min-w-0">
+        <Link href="/admin/users" className="shrink-0">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold">{user.name || "Unnamed User"}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-muted-foreground">{user.email}</span>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <span className="text-muted-foreground break-all">{user.email}</span>
             {user.userType && <Badge variant="secondary">{user.userType}</Badge>}
           </div>
         </div>

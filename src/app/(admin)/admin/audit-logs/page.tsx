@@ -191,7 +191,7 @@ export default function AuditLogsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <code className="text-xs">{log.entityId}</code>
+                      <code className="text-xs break-all">{log.entityId}</code>
                     </TableCell>
                   </TableRow>
                   {expandedRow === log.id && (
