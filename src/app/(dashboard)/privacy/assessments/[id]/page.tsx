@@ -69,6 +69,8 @@ import {
 import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 import { localizeValues } from "@/lib/template-i18n-core";
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
+import { CompletenessPanel } from "@/components/assessments/completeness-panel";
+import { assessmentCompleteness } from "@/lib/assessment-completeness";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -130,6 +132,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // Locally-added, not-yet-saved rows for repeatable sections: groupId -> [instanceId]
   const [extraInstances, setExtraInstances] = useState<Record<string, string[]>>({});
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  // Where a refused submission sends the reader: the list of what is missing,
+  // each item a link to the field that answers it.
+  const completenessRef = useRef<HTMLDivElement | null>(null);
 
   // Mitigation dialog state
   const [addMitigationOpen, setAddMitigationOpen] = useState(false);
@@ -186,13 +191,20 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const utils = trpc.useUtils();
 
+  // A refusal names the questions that are missing (server side) and takes
+  // the reader to the list of them, where every item links to its field.
+  const showWhatIsMissing = useCallback((message: string) => {
+    toast.error(message || t("generic.somethingWentWrong"));
+    completenessRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [t]);
+
   const submitAssessment = trpc.assessment.submit.useMutation({
     onSuccess: () => {
       toast.success(t("assessment.submittedForReview"));
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || t("generic.somethingWentWrong"));
+      showWhatIsMissing(error.message);
     },
   });
 
@@ -270,7 +282,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || t("generic.somethingWentWrong"));
+      showWhatIsMissing(error.message);
     },
   });
 
@@ -613,8 +625,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const totalQuestions = visibleCounts?.total ?? assessment?.totalQuestions ?? 0;
   const answeredQuestions = visibleCounts?.done ?? assessment?.responses?.length ?? 0;
 
+  // A rejected assessment is editable again: the author has to be able to act
+  // on the rejection and resubmit. Only an approved one is locked, which is
+  // what the server enforces too (saveResponse refuses APPROVED alone).
   const canSubmit =
-    assessment?.status === "IN_PROGRESS" || assessment?.status === "DRAFT";
+    assessment?.status === "IN_PROGRESS" ||
+    assessment?.status === "DRAFT" ||
+    assessment?.status === "REJECTED";
 
   // Check if all REQUIRED questions are answered (mirrors server-side validation).
   // Uses expandedSections so repeatable instances' composite ids are counted.
@@ -654,6 +671,36 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, []);
+
+  // What is still outstanding, from the same module the export reads: the
+  // required questions nobody has answered and the legal requirements nothing
+  // covers yet.
+  const completeness = useMemo(
+    () =>
+      assessmentCompleteness({
+        templateId: template?.id,
+        visibleSections: expandedSections,
+        responses: assessment?.responses ?? [],
+      }),
+    [template?.id, expandedSections, assessment?.responses]
+  );
+
+  /** Jump to the step and field that answers an outstanding item. */
+  const jumpToQuestion = useCallback(
+    (sectionId: string, questionId: string) => {
+      scrollToSection(sectionId);
+      const question = expandedSections
+        .flatMap((s: any) => (s.questions ?? []) as any[])
+        .find((q: any) => q.id === questionId);
+      const isTextType =
+        !!question &&
+        (question.type === "textarea" ||
+          question.type === "text" ||
+          (!question.type && !question.options));
+      if (isTextType) startEditingQuestion(questionId);
+    },
+    [expandedSections, scrollToSection, startEditingQuestion]
+  );
 
   // Insert an AI-drafted narrative into an EDITABLE response field (never
   // saved directly): ONLY the resolved risk/conclusion section's target
@@ -767,6 +814,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 })
               }
               disabled={submitAndApprove.isPending || !allRequiredAnswered}
+              title={allRequiredAnswered ? undefined : tp("completeness.submitHint")}
             >
               {submitAndApprove.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
               {tp("submitApprove")}
@@ -781,6 +829,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 })
               }
               disabled={submitAssessment.isPending || !allRequiredAnswered}
+              title={allRequiredAnswered ? undefined : tp("completeness.submitHint")}
             >
               {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               {tp("submitReview")}
@@ -801,6 +850,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           <Progress value={completionPercentage} className="h-2" />
         </CardContent>
       </Card>
+
+      {/* What is still outstanding, each item a link to the step that answers it */}
+      <div ref={completenessRef}>
+        <CompletenessPanel completeness={completeness} onJump={jumpToQuestion} />
+      </div>
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-4">

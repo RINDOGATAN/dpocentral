@@ -9,10 +9,12 @@
  * instance writes the missing system templates (created at runtime, no seed or
  * migration step needed on deploy):
  *
- *  - the standard DPIA (src/config/dpia-template-v2.ts), only when no row with
- *    its id exists, so a newer DPIA already in the database is never touched;
- *  - the global templates in HOSTED_SYSTEM_TEMPLATES, through the guarded
- *    upsert that refreshes system rows and never downgrades them.
+ *  - the standard DPIA (src/config/dpia-template-v2.ts) and the global
+ *    templates in HOSTED_SYSTEM_TEMPLATES, all through the guarded upsert
+ *    (src/lib/seed-system-content.ts): only a system row with no organization
+ *    is written, and a row whose version is newer than the built-in one (for
+ *    instance one installed from a signed skill) is kept as it is. That is how
+ *    a new template version reaches the hosted service on deploy.
  *
  * The self-hosted kit never runs this: there a premium type is offered only
  * once its template is installed from a signed skill (the licence gate).
@@ -22,24 +24,29 @@ import type { PrismaClient } from "@prisma/client";
 import prismaClient from "@/lib/prisma";
 import { isHostedDeployment } from "@/lib/hosted";
 import { upsertSystemTemplate } from "@/lib/seed-system-content";
+import { seedHealthAdtechTemplate } from "@/lib/seed-health-adtech";
 import { DPIA_TEMPLATE_ID, dpiaTemplateData } from "@/config/dpia-template-v2";
-import {
-  HEALTH_ADTECH_TEMPLATE_ID,
-  healthAdtechTemplateData,
-} from "@/config/health-adtech-template";
 
-/** Global system templates written on the hosted pilot (id -> data). */
+/**
+ * Global system templates written on the hosted pilot (id -> data). The
+ * "Health data in advertising" template is not in this list: it follows the
+ * one rule both seeding paths apply (src/lib/seed-health-adtech.ts) and is
+ * written after these, once the standard DPIA is in place.
+ */
 export const HOSTED_SYSTEM_TEMPLATES: Array<{
   id: string;
   data: Parameters<typeof upsertSystemTemplate>[2];
 }> = [
   {
-    id: HEALTH_ADTECH_TEMPLATE_ID,
-    data: {
-      ...healthAdtechTemplateData,
-      sections: healthAdtechTemplateData.sections as object,
-      scoringLogic: healthAdtechTemplateData.scoringLogic as object,
-    },
+    id: DPIA_TEMPLATE_ID,
+    data: (() => {
+      const { id: _id, ...data } = dpiaTemplateData;
+      return {
+        ...data,
+        sections: data.sections as object,
+        scoringLogic: data.scoringLogic as object,
+      };
+    })(),
   },
 ];
 
@@ -48,24 +55,12 @@ let ensured: Promise<void> | null = null;
 async function writeHostedTemplates(): Promise<void> {
   // The seed helpers take the plain client type; the app client is extended.
   const prisma = prismaClient as unknown as PrismaClient;
-  const existing = await prisma.assessmentTemplate.findUnique({
-    where: { id: DPIA_TEMPLATE_ID },
-    select: { id: true },
-  });
-  if (!existing) {
-    const { id, ...data } = dpiaTemplateData;
-    await prisma.assessmentTemplate.create({
-      data: {
-        id,
-        ...data,
-        sections: data.sections as object,
-        scoringLogic: data.scoringLogic as object,
-      },
-    });
-  }
   for (const template of HOSTED_SYSTEM_TEMPLATES) {
     await upsertSystemTemplate(prisma, template.id, template.data);
   }
+  // The standard DPIA is written above, so the rule is satisfied here; the
+  // kit reaches the same function from the content seed.
+  await seedHealthAdtechTemplate(prisma);
 }
 
 /**

@@ -40,3 +40,23 @@ export function isAssessmentTypeLocked(params: {
   if (params.hosted || params.comingSoon) return false;
   return isPremiumTypeKey(params.type) && !params.entitledTypes.includes(params.type);
 }
+
+/**
+ * Whether an assessment type is offered at all.
+ *
+ * A type announced as coming soon has no template behind it, so choosing it
+ * leads nowhere: on the hosted service the lock is not shown either, which
+ * made the card look available. Such a type is offered only once a template
+ * for it exists, which is exactly what getEntitledAssessmentTypes reports
+ * (it lists a type only when its template is installed). Every other type is
+ * offered, locked or not: a locked card is a door that leads to the licence
+ * notice, which is somewhere.
+ */
+export function isAssessmentTypeOffered(params: {
+  type: string;
+  entitledTypes: readonly string[];
+  comingSoon?: boolean;
+}): boolean {
+  if (!params.comingSoon) return true;
+  return params.entitledTypes.includes(params.type);
+}

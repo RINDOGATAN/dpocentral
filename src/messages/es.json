@@ -185,7 +185,86 @@
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "La plantilla de DPIA no está instalada",
-      "licenceNoticeBody": "Para crear la DPIA, instala la skill de DPIA desde la página Skills con tu licencia."
+      "licenceNoticeBody": "Para crear la DPIA, instala la skill de DPIA desde la página Skills con tu licencia.",
+      "title": "Redactar una DPIA automáticamente",
+      "subtitle": "Redacta una DPIA a partir de la actividad de tratamiento que ya tienes registrada",
+      "step": {
+        "select": "Elegir",
+        "preview": "Vista previa",
+        "review": "Revisar",
+        "create": "Crear"
+      },
+      "selectTitle": "Elige la actividad de tratamiento",
+      "selectSubtitle": "Las respuestas se redactan a partir de la actividad que elijas",
+      "activityLabel": "Actividad de tratamiento",
+      "activityPlaceholder": "Elige una actividad de tratamiento",
+      "vendorLabel": "Proveedor vinculado (opcional)",
+      "vendorPlaceholder": "Elige un proveedor",
+      "none": "Ninguno",
+      "loading": "Cargando",
+      "next": "Ver el borrador",
+      "previewTitle": "El borrador",
+      "previewSubtitle": "A partir de qué se redactarán las respuestas",
+      "analysing": "Leyendo la actividad de tratamiento",
+      "failedTitle": "No se ha podido preparar el borrador",
+      "failedBody": "Algo ha fallado al leer esta actividad de tratamiento.",
+      "back": "Atrás",
+      "retry": "Reintentar",
+      "countAssets": "Sistemas",
+      "countElements": "Elementos de datos",
+      "countTransfers": "Transferencias",
+      "countFilled": "Respuestas redactadas",
+      "specialCategory": "Esta actividad tiene registrados datos de categoría especial, así que la DPIA es el paso adecuado.",
+      "reviewStep": "Revisar las respuestas",
+      "reviewTitle": "Revisa y edita las respuestas",
+      "reviewSubtitle": "Edita cualquier respuesta redactada antes de crear la evaluación",
+      "confidence": "Confianza {level}",
+      "confidenceLevel": {
+        "high": "alta",
+        "medium": "media",
+        "low": "baja"
+      },
+      "source": "Fuente: {source}",
+      "createStep": "Crear la evaluación",
+      "createTitle": "Crear la evaluación",
+      "createSubtitle": "Se creará una DPIA en borrador con {count} respuestas ya escritas",
+      "activity": "Actividad",
+      "vendor": "Proveedor",
+      "filledCount": "Respuestas ya escritas",
+      "creating": "Creando la evaluación y guardando las respuestas",
+      "create": "Crear y abrir la evaluación",
+      "missingTemplateTitle": "No está la plantilla de DPIA estándar",
+      "missingTemplateBody": "Estas respuestas se escriben contra las preguntas de la plantilla de DPIA estándar. Sin ella, el asistente las escribiría contra las preguntas de otra plantilla, así que se detiene aquí. Instala o siembra la plantilla de DPIA estándar y vuelve a empezar."
+    },
+    "trialAssessments": {
+      "remaining": "El piloto incluye {limit} evaluaciones de impacto y quedan {remaining} por usar.",
+      "usedUp": "Ya se han creado las {limit} evaluaciones de impacto que incluye el piloto. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite.",
+      "contact": "Consulta sobre un despliegue propio"
+    },
+    "assessmentTemplates": {
+      "title": "Plantillas de evaluación",
+      "subtitle": "Las plantillas con las que se puede empezar una evaluación",
+      "searchPlaceholder": "Buscar plantillas",
+      "tabSystem": "Incluidas ({count})",
+      "tabCustom": "Tuyas ({count})",
+      "system": "Incluida",
+      "sectionsCount": "{count} secciones",
+      "clone": "Copiar",
+      "use": "Usar",
+      "clonePrompt": "Nombre de la copia:",
+      "cloneSuffix": "{name} (copia)",
+      "noSystemTitle": "No hay ninguna plantilla incluida instalada",
+      "noSystemBody": "Ejecuta la siembra de contenido para escribir las plantillas incluidas.",
+      "noCustomTitle": "Todavía no tienes ninguna plantilla propia",
+      "noCustomBody": "Copia una plantilla incluida para empezar la tuya. La copia pertenece a tu organización y se puede responder desde el primer momento.",
+      "aboutTitle": "Sobre estas plantillas",
+      "aboutSubtitle": "Una plantilla contiene las secciones y las preguntas que hace una evaluación",
+      "aboutDpia": "DPIA (artículo 35)",
+      "aboutDpiaBody": "Obligatoria cuando es probable que el tratamiento entrañe un alto riesgo para las personas.",
+      "aboutTia": "TIA (capítulo V)",
+      "aboutTiaBody": "Evalúa una transferencia de datos personales a un país fuera del Espacio Económico Europeo.",
+      "aboutLia": "LIA (artículo 6(1)(f))",
+      "aboutLiaBody": "La ponderación que hay que hacer antes de basarse en el interés legítimo como base jurídica."
     },
     "newIncident": {
       "title": "Notificar incidente",
@@ -644,6 +723,19 @@
       "submit": "Crear solicitud"
     },
     "assessmentDetail": {
+      "completeness": {
+        "title": "Qué queda pendiente",
+        "allDone": "Se ha respondido a todo lo que necesita esta evaluación.",
+        "questionsTitle": "Preguntas por responder ({count})",
+        "requirementsTitle": "Requisitos pendientes ({count})",
+        "frameworkPartial": "{framework}: {covered} de {total} requisitos cubiertos.",
+        "frameworkComplete": "{framework}: todos los requisitos cubiertos ({total} de {total}).",
+        "notConforming": "Esta evaluación todavía no cumple las normas de {framework}.",
+        "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
+        "jump": "Ir al paso que lo responde",
+        "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
+        "submitHint": "Responde las preguntas enumeradas arriba para enviar esta evaluación."
+      },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
       "riskBadge": "Riesgo {level}",
@@ -2040,6 +2132,7 @@
         "title": "Acciones rápidas",
         "subtitle": "Tareas habituales",
         "addAsset": "Añadir activo de datos",
+        "newDpia": "Empezar una DPIA",
         "newDsar": "Nueva DSAR",
         "reportIncident": "Notificar incidente",
         "addVendor": "Añadir proveedor",
@@ -3180,6 +3273,27 @@
       }
     },
     "assessmentReport": {
+      "draftMark": "Borrador",
+      "draftTitle": "Este documento es un borrador",
+      "draftIntro": "Los elementos siguientes siguen pendientes, por lo que todas las páginas de este documento se marcan como borrador. Respóndelos en la aplicación y vuelve a exportar para obtener una versión definitiva.",
+      "draftQuestions": "Preguntas sin responder",
+      "draftRequirements": "Requisitos aún no cubiertos",
+      "draftMore": "y {count} más",
+      "conformanceTitle": "Conformidad con los marcos",
+      "conformanceIntro": "Una fila por cada requisito de los marcos elegidos para esta evaluación, con el paso de la evaluación que lo responde. Un requisito que no responde nada se marca como pendiente.",
+      "conformanceColumns": {
+        "requirement": "Requisito",
+        "citation": "Fuente",
+        "status": "Estado",
+        "step": "Respondido en"
+      },
+      "conformanceCovered": "Cubierto",
+      "conformanceOutstanding": "Pendiente",
+      "conformanceNotAnswered": "No se pregunta en esta evaluación",
+      "conformanceComplete": "{framework}: todos los requisitos cubiertos ({covered} de {total}).",
+      "conformancePartial": "{framework}: {covered} de {total} requisitos cubiertos. Esta evaluación no cumple las normas de {framework} hasta que se respondan los demás.",
+      "conformanceCaliforniaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento.",
+      "conformanceDisclaimer": "Esta tabla recoge qué requisitos cubren las respuestas. No es un dictamen jurídico ni constituye asesoramiento jurídico.",
       "coverGenerated": "Generado: {date}",
       "coverConfidential": "CONFIDENCIAL — Este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse a personal autorizado y a las autoridades de control cuando lo requieran.",
       "executiveSummary": "Resumen ejecutivo",
@@ -3203,11 +3317,6 @@
         "linkedVendor": "Proveedor vinculado"
       },
       "description": "Descripción",
-      "dpiaCalloutTitle": "RGPD Artículo 35(7) — Elementos requeridos en la DPIA",
-      "dpiaCallout1": "Descripción sistemática de las operaciones de tratamiento y sus finalidades",
-      "dpiaCallout2": "Evaluación de la necesidad y proporcionalidad",
-      "dpiaCallout3": "Evaluación de los riesgos para los derechos y libertades de los interesados",
-      "dpiaCallout4": "Medidas previstas para afrontar los riesgos y demostrar el cumplimiento",
       "sectionProgress": "{answered} de {total} preguntas respondidas",
       "sectionComplete": "Completa",
       "questionRequired": "OBLIGATORIA",
@@ -5119,6 +5228,7 @@
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
+        "hostedNote": "Todos los tipos están disponibles en este servicio alojado, sin coste y sin bloqueo de la exportación. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Core",
@@ -5179,13 +5289,43 @@
           "approve": { "title": "Aprobación final", "description": "Una vez aprobada, la evaluación queda bloqueada y se almacena como registro de cumplimiento." }
         }
       },
+      "walkthrough": {
+        "title": "Haz una DPIA en ocho pasos",
+        "intro": "Este es el recorrido por las pantallas reales, desde el panel hasta el informe exportado.",
+        "actors": {
+          "dpo": "DPO",
+          "approver": "Aprobador"
+        },
+        "steps": {
+          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido." },
+          "create": { "title": "Ponle nombre y créala", "description": "Dale un nombre a la evaluación. Puedes vincularla a una actividad de tratamiento de tu inventario y a un proveedor. Ambas cosas son opcionales y alimentan el autorrelleno.", "detail1": "Una actividad de tratamiento vinculada permite proponer respuestas a partir de tu inventario de datos", "detail2": "Un proveedor vinculado aporta sus certificaciones y tecnologías de privacidad" },
+          "frameworks": { "title": "Elige los marcos", "description": "La primera pregunta pide qué normas debe satisfacer la evaluación: las europeas, las californianas o ambas. La respuesta determina qué preguntas aparecen a continuación y sobre qué requisitos informa el informe.", "detail1": "Unión Europea: Reglamento (UE) 2016/679, artículos 35 y 36", "detail2": "California: 11 CCR, secciones 7150, 7152, 7155 y 7157" },
+          "european": { "title": "Recorre los pasos europeos", "description": "Descripción del tratamiento, alcance y contexto, necesidad y proporcionalidad, consulta, identificación de riesgos, medidas y riesgo residual con la conclusión. Las pestañas de la parte superior muestran cuánto llevas respondido en cada paso." },
+          "california": { "title": "Responde los pasos californianos", "description": "Solo aparecen si eliges California. Primero, las actividades que hacen necesaria una evaluación de riesgos; si no se cumple ninguna, el producto lo dice y no afirma ningún requisito californiano. Después, los nueve contenidos, los plazos, la presentación y la certificación del directivo." },
+          "outstanding": { "title": "Resuelve lo que queda pendiente", "description": "Un panel situado encima de la evaluación enumera con claridad todo lo que falta: las preguntas sin responder y los requisitos legales que todavía no cubre nada. Cada elemento es un enlace que salta al paso y al campo que lo responde." },
+          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario decide un aprobador designado." },
+          "export": { "title": "Exporta el informe", "description": "La exportación está disponible en cualquier momento y nunca se deniega. Mientras quede algo pendiente, el documento se marca como borrador en todas las páginas y enumera lo que falta en la primera." }
+        }
+      },
+      "conformance": {
+        "title": "La tabla de conformidad",
+        "intro": "Toda evaluación terminada incluye una tabla con una fila por cada requisito de los marcos elegidos, su fuente primaria y si las respuestas lo cubren. Nada se marca como cubierto si no lo cubre una respuesta, y el informe dice con claridad cuándo la evaluación todavía no cumple un marco.",
+        "columns": {
+          "citation": "Fuente",
+          "requirement": "Requisito"
+        },
+        "note": "Las filas siguientes son los requisitos que el producto controla hoy. En el informe cada una lleva además su estado, cubierto o pendiente, y el paso de la evaluación que lo responde.",
+        "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica el resultado con un abogado cualificado antes de basarte en él."
+      },
       "exports": {
         "title": "Exportaciones PDF",
         "intro": "Exporta evaluaciones individuales o todo tu portafolio como informes PDF formateados profesionalmente. Diseñados para reguladores, auditores y presentaciones de comité.",
         "individualTitle": "Exportación de evaluación individual",
         "individualDesc": "Exporta cualquier evaluación individual como un PDF detallado con portada, resumen ejecutivo, todas las preguntas y respuestas, puntuaciones de riesgo, mitigaciones e historial de aprobaciones.",
         "individualFeatures": {
-          "cover": "Portada con referencia al Art. 35 del RGPD",
+          "conformance": "Tabla de conformidad: una fila por requisito, cubierto o pendiente",
+          "draft": "Marca de borrador en todas las páginas mientras quede algo pendiente",
+          "cover": "Portada con el tipo de evaluación y su fuente primaria",
           "stats": "Tarjetas de estadísticas (riesgo, finalización, mitigaciones)",
           "qa": "Preguntas y respuestas por sección con etiquetas de riesgo en línea",
           "mitigation": "Tabla de seguimiento de mitigaciones",
@@ -5430,12 +5570,14 @@
     "noFindings": "Por ahora las respuestas no muestran ningún problema.",
     "source": "Fuente",
     "toVerify": "[por verificar]",
+    "sourcesChecked": "Las fuentes primarias se leyeron por última vez el {date}. Un punto marcado [por verificar] no está confirmado con el texto primario; confírmalo antes de basarte en él.",
+    "sourcesStale": "De eso hace {months} meses. Vuelve a leer cada fuente, o confirma cada punto con el texto primario, antes de basarte en esta evaluación.",
     "severity": {
       "blocking": "Debe resolverse",
       "gap": "Carencia",
       "note": "Nota"
     },
-    "blockingSummary": "Al menos una conclusión debe resolverse antes de que el tratamiento pueda seguir adelante.",
+    "blockingSummary": "Al menos una conclusión está pendiente de resolver: según las fuentes recogidas aquí, el tratamiento descrito no cumple un requisito. La evaluación se puede presentar, aprobar y exportar igualmente; mientras la conclusión siga abierta, el nivel de riesgo sube como mínimo a Alto.",
     "fiveFactorTitle": "Clasificación como datos de salud (cinco factores)",
     "fiveFactorScore": "Puntuación {score} de {max}",
     "scoreLabel": "Puntuación",
@@ -5785,12 +5927,28 @@
     },
     "dpia": {
       "template": {
+        "system-dpia-template": {
+          "name": "Evaluación de impacto relativa a la protección de datos (DPIA)",
+          "description": "Una DPIA que sigue el marco que elijas al principio: las normas europeas (Reglamento (UE) 2016/679, artículos 35 y 36), las normas californianas de evaluación de riesgos (11 CCR, artículo 10) o ambas. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Informativo, no constituye asesoramiento jurídico."
+        },
         "system-dpia-health-adtech-template": {
           "name": "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
           "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
         }
       },
       "section": {
+        "s0": {
+          "title": "Alcance de esta evaluación",
+          "description": "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y sobre qué requisitos informa el informe."
+        },
+        "s8": {
+          "title": "California: contenido de la evaluación de riesgos",
+          "description": "Las actividades que hacen necesaria una evaluación de riesgos y los contenidos que debe incluir."
+        },
+        "s9": {
+          "title": "California: plazos, presentación y certificación",
+          "description": "Cuándo se realiza, se revisa y se conserva la evaluación, y qué debe llegar a la agencia."
+        },
         "hd1": {
           "title": "Alcance y análisis de umbral",
           "description": "Selecciona primero las jurisdicciones: la respuesta añade las preguntas y obligaciones que exige cada una."
@@ -5861,6 +6019,103 @@
         }
       },
       "question": {
+        "q0_1": {
+          "text": "¿Qué marcos debe satisfacer esta evaluación?",
+          "helpText": "Selecciona uno o ambos. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Fuentes: Reglamento (UE) 2016/679, artículos 35 y 36; Código de Reglamentos de California, título 11, división 6, capítulo 1, artículo 10.",
+          "options": [
+            "Unión Europea: Reglamento (UE) 2016/679, artículo 35",
+            "California: reglamento de evaluación de riesgos de la CCPA, 11 CCR artículo 10"
+          ]
+        },
+        "q8_1": {
+          "text": "¿Qué supuestos de evaluación de riesgos de California cumple el tratamiento?",
+          "helpText": "Cualquiera de ellos obliga a realizar la evaluación de riesgos. Si no se cumple ninguno, el informe lo dice con claridad y no afirma ningún requisito de California. Fuente: 11 CCR 7150(b).",
+          "options": [
+            "Venta o intercambio (sharing) de información personal",
+            "Tratamiento de información personal sensible",
+            "Tecnología de decisiones automatizadas (ADMT) para una decisión significativa",
+            "Observación automatizada de empleados, contratistas, candidatos o estudiantes",
+            "Inferencia de rasgos sensibles a partir de la presencia en un lugar sensible",
+            "Tratamiento para entrenar tecnología ADMT, biométrica o de elaboración de perfiles",
+            "Ninguno de ellos"
+          ]
+        },
+        "q8_2": {
+          "text": "Elementos operativos del tratamiento",
+          "helpText": "Cómo se recoge la información personal, de qué fuentes, cuánto tiempo se conserva, a cuántos consumidores afecta, a quién se comunica y qué tecnología se emplea. Fuente: 11 CCR 7152(a)(3)."
+        },
+        "q8_3": {
+          "text": "Beneficios del tratamiento para la empresa, el consumidor, otras partes interesadas y el público",
+          "helpText": "Fuente: 11 CCR 7152(a)(4)."
+        },
+        "q8_4": {
+          "text": "Efectos negativos sobre la privacidad de los consumidores",
+          "helpText": "Describe cada efecto, sobre quién recae y su gravedad. Fuente: 11 CCR 7152(a)(5)."
+        },
+        "q8_5": {
+          "text": "Salvaguardas previstas para afrontar los efectos negativos",
+          "helpText": "Fuente: 11 CCR 7152(a)(6)."
+        },
+        "q8_6": {
+          "text": "¿Iniciará o continuará la empresa el tratamiento?",
+          "helpText": "Pondera los efectos negativos, ya mitigados por las salvaguardas, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
+          "options": [
+            "Sí: los beneficios superan a los efectos negativos una vez aplicadas las salvaguardas",
+            "No: los efectos negativos superan a los beneficios",
+            "Aún sin decidir"
+          ]
+        },
+        "q8_7": {
+          "text": "Nombres y cargos de quienes prepararon, revisaron y aprobaron esta evaluación",
+          "helpText": "Fuente: 11 CCR 7152(a)(8)."
+        },
+        "q8_8": {
+          "text": "Fechas en que esta evaluación fue revisada y aprobada",
+          "helpText": "Fuente: 11 CCR 7152(a)(9)."
+        },
+        "q9_1": {
+          "text": "¿Cuándo se realiza esta evaluación en relación con el tratamiento?",
+          "helpText": "Fuente: 11 CCR 7155(a).",
+          "options": [
+            "Antes de que comience el tratamiento",
+            "El tratamiento ya está en marcha",
+            "El tratamiento ya ha terminado"
+          ]
+        },
+        "q9_2": {
+          "text": "Calendario de revisión y actualización, el cambio que adelanta una revisión y durante cuánto tiempo se conserva esta evaluación",
+          "helpText": "Fuente: 11 CCR 7155(b) y (c)."
+        },
+        "q9_3": {
+          "text": "Presentación a la Agencia de Protección de la Privacidad de California antes del 1 de abril de 2028",
+          "helpText": "Fuente: 11 CCR 7157(a).",
+          "options": [
+            "Prevista",
+            "Ya presentada",
+            "No procede: no se cumple ningún supuesto"
+          ]
+        },
+        "q9_4": {
+          "text": "Directivo que certificará esta evaluación (nombre y cargo)",
+          "helpText": "Fuente: 11 CCR 7157(b)(5) y (c)."
+        },
+        "q9_5": {
+          "text": "¿Puede facilitarse la evaluación completa en un plazo de 30 días desde la solicitud de la agencia o del fiscal general?",
+          "helpText": "Fuente: 11 CCR 7157(e).",
+          "options": [
+            "Sí",
+            "No",
+            "Todavía no"
+          ]
+        },
+        "q4_3": {
+          "text": "La opinión de los interesados o de sus representantes, o el motivo por el que no se ha recabado",
+          "helpText": "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35(9)."
+        },
+        "q7_4": {
+          "text": "Cuándo se revisará esta evaluación y qué cambio del riesgo adelanta la revisión",
+          "helpText": "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35(11)."
+        },
         "hd1_1": {
           "text": "¿Qué jurisdicciones se aplican a este tratamiento?",
           "helpText": "Selecciona todas las jurisdicciones cuyos residentes aportan datos que se recogen o usan. Si cambias la selección, cambian las preguntas siguientes y el informe. Fuente: catálogo de jurisdicciones de DPO Central (RGPD, RGPD del Reino Unido, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington y Nevada no figuran en el catálogo.",

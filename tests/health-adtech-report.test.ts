@@ -18,8 +18,15 @@ import {
   type AssessmentExportData,
 } from "@/server/services/export/assessment-report";
 import { HealthAdtechPages } from "@/server/services/export/health-adtech-report";
-import { computeHealthAdtechResult } from "@/lib/health-adtech/results";
 import {
+  computeHealthAdtechResult,
+  sourcesAgeMonths,
+  sourcesAreStale,
+  SOURCES_CHECKED_LABEL,
+  SOURCES_CHECKED_ON,
+} from "@/lib/health-adtech/results";
+import {
+  HEALTH_ADTECH_DESCRIPTION,
   HEALTH_ADTECH_SECTIONS,
   JURISDICTIONS,
   healthAdtechTemplateData,
@@ -29,16 +36,8 @@ import {
   sectionsForLocale,
 } from "@/server/services/assessment/template-locales";
 import { visibleSections, answerMapFrom } from "@/lib/assessment-conditions";
-import type { PdfT } from "@/server/services/export/privacy-program/data-mapping";
+import { collectText, translator } from "./pdf-text";
 
-function translator(bundle: Record<string, unknown>): PdfT {
-  return (key, values) => {
-    let node: unknown = bundle;
-    for (const part of key.split(".")) node = (node as Record<string, unknown> | undefined)?.[part];
-    const text = typeof node === "string" ? node : key;
-    return values ? text.replace(/\{(\w+)\}/g, (_, v) => String(values[v] ?? "")) : text;
-  };
-}
 
 const option = (id: string, index: number, lang: "en" | "es" = "en") => {
   const q = HEALTH_ADTECH_SECTIONS.flatMap((s) => s.questions).find((x) => x.id === id)!;
@@ -60,40 +59,6 @@ const responses = [
   { questionId: "hd10_3", response: "2027-09-17" },
 ];
 
-/** All text in a react-pdf element tree (function components expanded). */
-function collectText(node: unknown, out: string[] = []): string[] {
-  if (node == null || typeof node === "boolean") return out;
-  if (typeof node === "string" || typeof node === "number") {
-    out.push(String(node));
-    return out;
-  }
-  if (Array.isArray(node)) {
-    node.forEach((n) => collectText(n, out));
-    return out;
-  }
-  if (React.isValidElement(node)) {
-    const el = node as React.ReactElement<Record<string, unknown>>;
-    if (typeof el.type === "function") {
-      return collectText((el.type as (p: unknown) => unknown)(el.props), out);
-    }
-    // Table headers and rows, metadata items.
-    for (const [key, value] of Object.entries(el.props)) {
-      if (key === "children" || !Array.isArray(value)) continue;
-      for (const item of value) {
-        if (Array.isArray(item)) item.forEach((cell) => collectText(cell, out));
-        else if (item && typeof item === "object" && "label" in item) {
-          collectText((item as { label: unknown }).label, out);
-          collectText((item as { value: unknown }).value, out);
-        } else collectText(item, out);
-      }
-    }
-    collectText(el.props.children, out);
-    if (typeof el.props.value === "string" || typeof el.props.value === "number") out.push(String(el.props.value));
-    if (typeof el.props.label === "string") out.push(el.props.label);
-  }
-  return out;
-}
-
 function reportData(lang: "en" | "es"): AssessmentExportData {
   const pdfLabels = ((lang === "es" ? es : en) as any).pdf.assessmentReport;
   const format = answerFormatter("DPIA", healthAdtechTemplateData.sections, lang, {
@@ -107,7 +72,7 @@ function reportData(lang: "en" | "es"): AssessmentExportData {
   ) as AssessmentExportData["template"]["sections"];
   return {
     id: "a-1",
-    name: "Workshop DPIA",
+    name: "Health data DPIA",
     description: null,
     status: "IN_PROGRESS",
     riskLevel: "HIGH",
@@ -144,7 +109,7 @@ describe("health-data advertising report", () => {
 
     it(`prints the jurisdiction table, band, mitigation and signature (${lang})`, () => {
       const text = collectText(
-        HealthAdtechPages({ result, lang, t, title: "Workshop DPIA", orgName: "Org", date: "2026-09-17" })
+        HealthAdtechPages({ result, lang, t, title: "Health data DPIA", orgName: "Org", date: "2026-09-17" })
       ).join("\n");
       const labels = (bundle as any).healthAdtechReport;
       for (const key of ["title", "jurisdiction", "consentModel", "obligations", "findings", "fiveFactorTitle", "decisionTitle", "signatureTitle", "signer"]) {
@@ -220,4 +185,78 @@ describe("health-data advertising report", () => {
     const text = collectText(HealthAdtechPages({ result: ct, lang: "en", t, title: "x", orgName: "o", date: "d" })).join("\n");
     expect(text).toContain("Offer the right to opt out (including targeted advertising and sale) [to verify]");
   });
+});
+
+/**
+ * The sources carry a fixed date. The product says how old it is, in the app
+ * and on the page that cites them, instead of leaving the date to speak for
+ * itself: after a year the reader is told to read each source again. The
+ * "[to verify]" marks stay, because the primary text was not in hand to clear
+ * them, and the template's own description says those points are unconfirmed.
+ */
+describe("the age of the sources", () => {
+  const day = 24 * 60 * 60 * 1000;
+
+  it("counts whole months from the stamped date", () => {
+    expect(sourcesAgeMonths(SOURCES_CHECKED_ON)).toBe(0);
+    expect(sourcesAgeMonths(new Date(SOURCES_CHECKED_ON.getTime() + 40 * day))).toBe(1);
+    expect(sourcesAgeMonths(new Date("2027-09-16T00:00:00Z"))).toBe(12);
+  });
+
+  it("calls them stale only after the window", () => {
+    expect(sourcesAreStale(SOURCES_CHECKED_ON)).toBe(false);
+    expect(sourcesAreStale(new Date("2027-09-15T00:00:00Z"))).toBe(false);
+    expect(sourcesAreStale(new Date("2027-09-16T00:00:00Z"))).toBe(true);
+  });
+
+  for (const [lang, bundle] of [["en", en], ["es", es]] as const) {
+    it(`prints the date on the page that cites the sources (${lang})`, () => {
+      const t = translator((bundle as any).healthAdtechReport);
+      const result = computeHealthAdtechResult(responses);
+      const text = collectText(
+        HealthAdtechPages({ result, lang, t, title: "x", orgName: "o", date: "d" })
+      ).join("\n");
+      expect(text).toContain(SOURCES_CHECKED_LABEL[lang]);
+    });
+  }
+
+  it("keeps the unconfirmed marks, and says so in the template's description", () => {
+    expect(HEALTH_ADTECH_DESCRIPTION.en).toContain("[to verify]");
+    expect(HEALTH_ADTECH_DESCRIPTION.es).toContain("[por verificar]");
+  });
+});
+
+/**
+ * The banner over a blocking finding says only what the product does. Nothing
+ * stops a submission, an approval or an export because of a finding, so the
+ * sentence must not claim the processing cannot go ahead. What does happen,
+ * the risk escalation, is still there and is still stated.
+ */
+describe("the blocking banner", () => {
+  const blocking = computeHealthAdtechResult([
+    // Washington: a sale of consumer health data without a signed authorisation.
+    { questionId: "hd1_1", response: JSON.stringify([JURISDICTIONS[3].en]) },
+    { questionId: "hd8_2", response: "No" },
+  ]);
+
+  it("is raised by a finding the answers produce", () => {
+    expect(blocking.blocking).toBe(true);
+  });
+
+  it("raises the risk level to at least High", () => {
+    expect(blocking.riskLevel).toBe("HIGH");
+  });
+
+  for (const [lang, bundle] of [["en", en], ["es", es]] as const) {
+    it(`does not claim the processing is stopped (${lang})`, () => {
+      const text = (bundle as any).healthAdtechReport.blockingSummary as string;
+      for (const claim of [
+        "before the processing can go ahead",
+        "antes de que el tratamiento pueda seguir adelante",
+      ]) {
+        expect(text).not.toContain(claim);
+      }
+      expect(text.length).toBeGreaterThan(40);
+    });
+  }
 });

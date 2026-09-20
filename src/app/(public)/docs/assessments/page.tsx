@@ -2,9 +2,15 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+import {
+  DPIA_FRAMEWORK_ELEMENTS,
+  FRAMEWORK_CITATIONS,
+  FRAMEWORK_IDS,
+  FRAMEWORK_LABELS,
+} from "@/config/assessment-frameworks";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicAssessments");
@@ -43,11 +49,32 @@ const mitigationItems: { key: string; statusKey: "Implemented" | "Planned" | "In
   { key: "dlp", statusKey: "InProgress" },
 ];
 
+/** The DPIA walkthrough, in the order of the real screens. */
+const walkthroughSteps = [
+  { key: "start", actor: "dpo" },
+  { key: "create", actor: "dpo", details: 2 },
+  { key: "frameworks", actor: "dpo", details: 2 },
+  { key: "european", actor: "dpo" },
+  { key: "california", actor: "dpo" },
+  { key: "outstanding", actor: "dpo" },
+  { key: "approve", actor: "approver" },
+  { key: "export", actor: "dpo" },
+] as const;
+
 export default async function AssessmentsPage() {
   const t = await getTranslations("docs.publicAssessments");
+  const lang = (await getLocale()) === "es" ? "es" : "en";
 
   const approvalSteps = ["draft", "progress", "review", "approved"] as const;
-  const individualFeatures = ["cover", "stats", "qa", "mitigation", "history"] as const;
+  const individualFeatures = [
+    "conformance",
+    "draft",
+    "cover",
+    "stats",
+    "qa",
+    "mitigation",
+    "history",
+  ] as const;
   const portfolioFeatures = ["status", "type", "highRisk", "mitigation", "perType"] as const;
   const creatingSteps = [
     { key: "select", actor: "dpo" },
@@ -89,6 +116,8 @@ export default async function AssessmentsPage() {
             </div>
           ))}
         </div>
+
+        <p className="text-xs text-muted-foreground mt-4">{t("templates.hostedNote")}</p>
       </section>
 
       {/* Approval Workflow */}
@@ -148,6 +177,61 @@ export default async function AssessmentsPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Run a DPIA, step by step, on the real screens */}
+      <section id="walkthrough" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("walkthrough.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("walkthrough.intro")}</p>
+        {walkthroughSteps.map((step, i) => (
+          <WorkflowStep
+            key={step.key}
+            number={i + 1}
+            title={t(`walkthrough.steps.${step.key}.title`)}
+            description={t(`walkthrough.steps.${step.key}.description`)}
+            actor={t(`walkthrough.actors.${step.actor}`)}
+            details={
+              "details" in step
+                ? [
+                    t(`walkthrough.steps.${step.key}.detail1`),
+                    t(`walkthrough.steps.${step.key}.detail2`),
+                  ]
+                : undefined
+            }
+          />
+        ))}
+      </section>
+
+      {/* The conformance table, rendered from the product's own requirement data */}
+      <section id="conformance" className="scroll-mt-20">
+        <h2 className="text-xl font-semibold text-foreground mb-4">{t("conformance.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-6">{t("conformance.intro")}</p>
+
+        <div className="space-y-6">
+          {FRAMEWORK_IDS.map((framework) => (
+            <div key={framework} className="rounded-lg border border-border bg-card p-4">
+              <p className="text-sm font-semibold text-foreground">
+                {FRAMEWORK_LABELS[framework][lang]}
+              </p>
+              <p className="text-xs text-muted-foreground mb-3">
+                {FRAMEWORK_CITATIONS[framework][lang]}
+              </p>
+              <div className="flex flex-col gap-2">
+                {DPIA_FRAMEWORK_ELEMENTS.filter((e) => e.framework === framework).map((e) => (
+                  <div key={e.id} className="flex items-start gap-3 text-sm">
+                    <span className="shrink-0 font-mono text-xs text-primary w-28">
+                      {e.citation[lang]}
+                    </span>
+                    <span className="text-muted-foreground">{e.label[lang]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-xs text-muted-foreground mt-4">{t("conformance.note")}</p>
+        <p className="text-xs text-muted-foreground mt-2">{t("conformance.disclaimer")}</p>
       </section>
 
       {/* Creating an Assessment */}

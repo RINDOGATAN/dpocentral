@@ -20,8 +20,17 @@ export const PREMIUM_ASSESSMENT_TYPES: AssessmentType[] = [
   "VENDOR",
 ];
 
-// Free assessment types available to all users
-export const FREE_ASSESSMENT_TYPES: AssessmentType[] = ["LIA", "CUSTOM"];
+// Free assessment types available to all users.
+//
+// TIA is free: its template is seeded by the open-source content seed
+// (scripts/seed-templates.ts), and assessment.createForTransfer creates one
+// from a transfer with no entitlement check at all. It used to appear in
+// neither list, which left the two gates disagreeing: the pure gate treated
+// it as free and the server never reported it as entitled, so the type was
+// offered but never listed. Between the two lists every AssessmentType is
+// named exactly once, and tests/hosted-open-gates.test.ts fails if that stops
+// being true.
+export const FREE_ASSESSMENT_TYPES: AssessmentType[] = ["TIA", "LIA", "CUSTOM"];
 
 export interface EntitlementCheckResult {
   entitled: boolean;

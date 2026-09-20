@@ -12,7 +12,14 @@ import {
   PDF_COLORS,
 } from "./pdf-styles";
 import type { PdfT } from "./privacy-program/data-mapping";
-import { tx, type HealthAdtechResult, type Lang } from "@/lib/health-adtech/results";
+import {
+  sourcesAgeMonths,
+  sourcesAreStale,
+  SOURCES_CHECKED_LABEL,
+  tx,
+  type HealthAdtechResult,
+  type Lang,
+} from "@/lib/health-adtech/results";
 
 /**
  * Result pages of the "Health data in advertising" assessment: the table by
@@ -27,6 +34,7 @@ export function HealthAdtechPages({
   title,
   orgName,
   date,
+  draftLabel,
 }: {
   result: HealthAdtechResult;
   lang: Lang;
@@ -34,6 +42,8 @@ export function HealthAdtechPages({
   title: string;
   orgName: string;
   date: string;
+  /** Marks these pages a draft, like every other page of the document. */
+  draftLabel?: string;
 }) {
   const none = t("notRecorded");
   const severity = (key: string) => t(`severity.${key}`);
@@ -54,9 +64,15 @@ export function HealthAdtechPages({
 
   return (
     <>
-      <ContentPage title={title} orgName={orgName} date={date}>
+      <ContentPage title={title} orgName={orgName} date={date} draftLabel={draftLabel}>
         <Text style={s.sectionTitle}>{t("title")}</Text>
         <Text style={s.paragraph}>{t("subtitle")}</Text>
+
+        {/* How old the primary sources are, on the page that cites them. */}
+        <Text style={s.paragraph}>
+          {t("sourcesChecked", { date: SOURCES_CHECKED_LABEL[lang] })}
+          {sourcesAreStale() ? ` ${t("sourcesStale", { months: sourcesAgeMonths() })}` : ""}
+        </Text>
 
         {result.blocking && (
           <View
@@ -79,7 +95,7 @@ export function HealthAdtechPages({
         )}
       </ContentPage>
 
-      <ContentPage title={title} orgName={orgName} date={date}>
+      <ContentPage title={title} orgName={orgName} date={date} draftLabel={draftLabel}>
         <Text style={s.sectionTitle}>{t("fiveFactorTitle")}</Text>
         <View style={s.statsGrid}>
           <StatCard

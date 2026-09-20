@@ -18,8 +18,23 @@ import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLa
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
-import { assessmentProgress, unansweredRequired } from "../../services/assessment/progress";
+import {
+  assertHostedDpiaQuota,
+  hostedDpiaQuota,
+  pilotLocale,
+} from "../../services/pilot/caps";
+import {
+  assessmentProgress,
+  describeUnanswered,
+  unansweredRequired,
+} from "../../services/assessment/progress";
 import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import {
+  AUTO_FILL_TARGETS,
+  LEGAL_BASIS_OPTIONS,
+  SENSITIVITY_SPECIAL_CATEGORY,
+  type AutoFillTarget,
+} from "@/config/dpia-auto-fill-targets";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -337,6 +352,17 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      // The hosted trial includes three impact assessments per organisation.
+      // Everything already created stays fully usable; only creating a fourth
+      // is refused. A no-op on the kit.
+      if (template.type === AssessmentType.DPIA) {
+        await assertHostedDpiaQuota(
+          ctx.prisma,
+          ctx.organization.id,
+          pilotLocale(localeFromCookieGetter(ctx.getCookie))
+        );
+      }
+
       // Check entitlement for premium assessment types
       if (isPremiumAssessmentType(template.type)) {
         const entitlementResult = await checkAssessmentEntitlement(
@@ -375,7 +401,9 @@ export const assessmentRouter = createTRPCRouter({
           entityType: "Assessment",
           entityId: assessment.id,
           action: "CREATE",
-          changes: input,
+          // The template type is recorded here so the trial's count of impact
+          // assessments survives a deletion (services/pilot/caps.ts).
+          changes: { ...input, templateType: template.type },
         },
       });
 
@@ -627,7 +655,7 @@ export const assessmentRouter = createTRPCRouter({
       if (unanswered.length > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Please answer all required questions. Missing: ${unanswered.length}`,
+          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
         });
       }
 
@@ -937,7 +965,7 @@ export const assessmentRouter = createTRPCRouter({
       if (unanswered.length > 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Please answer all required questions. Missing: ${unanswered.length}`,
+          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
         });
       }
 
@@ -1146,6 +1174,12 @@ export const assessmentRouter = createTRPCRouter({
       };
     }),
 
+  // How many impact assessments the hosted trial still includes. Off the
+  // hosted service it reports no cap at all.
+  dpiaQuota: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => hostedDpiaQuota(ctx.prisma, ctx.organization.id)),
+
   // Get entitled assessment types for the current organization
   getEntitledTypes: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
@@ -1177,7 +1211,10 @@ export const assessmentRouter = createTRPCRouter({
           input.vendorId
         );
 
-      // Generate auto-fill responses using rule engine
+      // Auto-filled answers. Every one of them is written against a question
+      // the standard DPIA template actually asks; the ids live in one place
+      // (src/config/dpia-auto-fill-targets.ts) and a test holds them to the
+      // template. A draft with nowhere to land is not produced at all.
       const suggestions: {
         sectionId: string;
         questionId: string;
@@ -1186,102 +1223,95 @@ export const assessmentRouter = createTRPCRouter({
         source: string;
       }[] = [];
 
-      // Section 1: Processing Description
-      suggestions.push({
-        sectionId: "s1",
-        questionId: "s1_processing_description",
-        suggestedResponse: `${activity.name}: ${activity.purpose || activity.description || "Processing activity as part of organizational operations."}`,
-        confidence: "high",
-        source: "Processing activity purpose",
-      });
+      const suggest = (
+        target: AutoFillTarget,
+        suggestedResponse: string,
+        confidence: "high" | "medium" | "low",
+        source: string
+      ) => suggestions.push({ ...target, suggestedResponse, confidence, source });
 
-      // Legal basis
-      const legalBasisMap: Record<string, string> = {
-        CONSENT: "Processing is based on the data subject's consent (Art. 6(1)(a) GDPR). Consent is freely given, specific, informed, and unambiguous.",
-        CONTRACT: "Processing is necessary for the performance of a contract with the data subject (Art. 6(1)(b) GDPR).",
-        LEGAL_OBLIGATION: "Processing is necessary for compliance with a legal obligation to which the controller is subject (Art. 6(1)(c) GDPR).",
-        VITAL_INTERESTS: "Processing is necessary to protect vital interests of the data subject or another natural person (Art. 6(1)(d) GDPR).",
-        PUBLIC_TASK: "Processing is necessary for the performance of a task carried out in the public interest (Art. 6(1)(e) GDPR).",
-        LEGITIMATE_INTERESTS: "Processing is based on the legitimate interests of the controller (Art. 6(1)(f) GDPR). A balancing test has been conducted to ensure interests do not override the rights of data subjects.",
-      };
-      if (activity.legalBasis) {
-        suggestions.push({
-          sectionId: "s1",
-          questionId: "s1_legal_basis",
-          suggestedResponse: legalBasisMap[activity.legalBasis] || `Legal basis: ${activity.legalBasis}`,
-          confidence: "high",
-          source: "Processing activity legal basis",
-        });
+      // Purpose of the processing
+      suggest(
+        AUTO_FILL_TARGETS.purpose,
+        `${activity.name}: ${activity.purpose || activity.description || "Processing activity as part of organizational operations."}`,
+        "high",
+        "Processing activity purpose"
+      );
+
+      // Legal basis, as the exact option the question offers
+      const legalBasisOption = activity.legalBasis
+        ? LEGAL_BASIS_OPTIONS[activity.legalBasis]
+        : undefined;
+      if (legalBasisOption) {
+        suggest(
+          AUTO_FILL_TARGETS.legalBasis,
+          legalBasisOption,
+          "high",
+          "Processing activity legal basis"
+        );
       }
 
       // Data categories
+      const specialCat = elements.filter((e) => e.isSpecialCategory);
       if (elements.length > 0) {
         const categories = [...new Set(elements.map((e) => e.category))];
-        const specialCat = elements.filter((e) => e.isSpecialCategory);
-        suggestions.push({
-          sectionId: "s3",
-          questionId: "s3_data_categories",
-          suggestedResponse: `Data categories processed: ${categories.join(", ")}. Specific data elements include: ${elements.map((e) => e.name).join(", ")}.`,
-          confidence: "high",
-          source: "Linked data elements",
-        });
+        suggest(
+          AUTO_FILL_TARGETS.dataCategories,
+          `Data categories processed: ${categories.join(", ")}. Specific data elements include: ${elements.map((e) => e.name).join(", ")}.${
+            specialCat.length > 0
+              ? ` Special category data is processed: ${specialCat.map((e) => e.name).join(", ")}. Additional safeguards are required under Art. 9 GDPR.`
+              : ""
+          }`,
+          "high",
+          "Linked data elements"
+        );
 
         if (specialCat.length > 0) {
-          suggestions.push({
-            sectionId: "s3",
-            questionId: "s3_special_categories",
-            suggestedResponse: `Special category data is processed: ${specialCat.map((e) => e.name).join(", ")}. Additional safeguards are required under Art. 9 GDPR.`,
-            confidence: "high",
-            source: "Special category data elements",
-          });
+          suggest(
+            AUTO_FILL_TARGETS.sensitivity,
+            SENSITIVITY_SPECIAL_CATEGORY,
+            "high",
+            "Special category data elements"
+          );
+          suggest(AUTO_FILL_TARGETS.specialCategory, "Yes", "high", "Special category data elements");
         }
       }
 
-      // Data subjects
-      if (activity.dataSubjects.length > 0) {
-        suggestions.push({
-          sectionId: "s3",
-          questionId: "s3_data_subjects",
-          suggestedResponse: `Data subjects affected: ${activity.dataSubjects.join(", ")}.`,
-          confidence: "high",
-          source: "Processing activity data subjects",
-        });
-      }
-
-      // Recipients
-      if (activity.recipients.length > 0) {
-        suggestions.push({
-          sectionId: "s3",
-          questionId: "s3_recipients",
-          suggestedResponse: `Data recipients: ${activity.recipients.join(", ")}.`,
-          confidence: "high",
-          source: "Processing activity recipients",
-        });
+      // Recipients, and the vendor that processes the data
+      const recipientLines = [
+        ...(activity.recipients.length > 0
+          ? [`Data recipients: ${activity.recipients.join(", ")}.`]
+          : []),
+        ...(vendor
+          ? [
+              `Data is processed by ${vendor.name}.${
+                vendor.certifications.length > 0
+                  ? ` ${vendor.name} holds: ${vendor.certifications.join(", ")}.`
+                  : ""
+              }`,
+            ]
+          : []),
+        ...(activity.dataSubjects.length > 0
+          ? [`Data subjects affected: ${activity.dataSubjects.join(", ")}.`]
+          : []),
+      ];
+      if (recipientLines.length > 0) {
+        suggest(
+          AUTO_FILL_TARGETS.recipients,
+          recipientLines.join(" "),
+          "high",
+          "Processing activity recipients"
+        );
       }
 
       // Retention
       if (activity.retentionPeriod) {
-        suggestions.push({
-          sectionId: "s4",
-          questionId: "s4_retention",
-          suggestedResponse: `Data retention period: ${activity.retentionPeriod}${activity.retentionDays ? ` (${activity.retentionDays} days)` : ""}. Data is deleted or anonymized after the retention period expires.`,
-          confidence: "high",
-          source: "Processing activity retention policy",
-        });
-      }
-
-      // Security measures
-      if (vendor) {
-        const certs = vendor.certifications.length > 0
-          ? `Vendor ${vendor.name} holds: ${vendor.certifications.join(", ")}.`
-          : "";
-        suggestions.push({
-          sectionId: "s4",
-          questionId: "s4_security",
-          suggestedResponse: `Data is processed by ${vendor.name}.${certs ? " " + certs : ""} Technical and organizational measures include encryption in transit and at rest, access controls, and regular security assessments.`,
-          confidence: vendor.certifications.length > 0 ? "medium" : "low",
-          source: "Vendor compliance profile",
-        });
+        suggest(
+          AUTO_FILL_TARGETS.retention,
+          `Data retention period: ${activity.retentionPeriod}${activity.retentionDays ? ` (${activity.retentionDays} days)` : ""}. Data is deleted or anonymized after the retention period expires.`,
+          "high",
+          "Processing activity retention policy"
+        );
       }
 
       // International transfers
@@ -1289,43 +1319,40 @@ export const assessmentRouter = createTRPCRouter({
         const transferSummary = transfers
           .map((t) => `${t.destinationCountry} (${t.mechanism.replace(/_/g, " ")})`)
           .join("; ");
-        suggestions.push({
-          sectionId: "s5",
-          questionId: "s5_transfers",
-          suggestedResponse: `International data transfers: ${transferSummary}. ${transfers.some((t) => t.safeguards) ? "Safeguards include: " + transfers.filter((t) => t.safeguards).map((t) => t.safeguards).join("; ") + "." : "Appropriate safeguards must be verified."}`,
-          confidence: "medium",
-          source: "Data transfer records",
-        });
+        suggest(
+          AUTO_FILL_TARGETS.transfers,
+          `International data transfers: ${transferSummary}. ${transfers.some((t) => t.safeguards) ? "Safeguards include: " + transfers.filter((t) => t.safeguards).map((t) => t.safeguards).join("; ") + "." : "Appropriate safeguards must be verified."}`,
+          "medium",
+          "Data transfer records"
+        );
       }
 
-      // Necessity and proportionality
-      suggestions.push({
-        sectionId: "s2",
-        questionId: "s2_necessity",
-        suggestedResponse: `The processing of ${elements.length} data elements across ${assets.length} system(s) is necessary to achieve the stated purpose: ${activity.purpose || activity.name}. Data minimization has been considered — only data elements essential to the processing purpose are collected.`,
-        confidence: "medium",
-        source: "Activity and data element analysis",
-      });
+      // Data minimisation
+      suggest(
+        AUTO_FILL_TARGETS.minimisation,
+        `The processing of ${elements.length} data elements across ${assets.length} system(s) is necessary to achieve the stated purpose: ${activity.purpose || activity.name}. Data minimization has been considered. Only data elements essential to the processing purpose are collected.`,
+        "medium",
+        "Activity and data element analysis"
+      );
 
-      // Risk assessment
-      const hasSpecialData = elements.some((e) => e.isSpecialCategory);
+      // Risks to data subjects
       const hasTransfers = transfers.length > 0;
       const isLargeScale = elements.length > 10;
       const riskFactors = [
-        ...(hasSpecialData ? ["special category data processed"] : []),
+        ...(specialCat.length > 0 ? ["special category data processed"] : []),
         ...(hasTransfers ? [`international transfers to ${transfers.length} destination(s)`] : []),
         ...(isLargeScale ? ["large-scale data processing"] : []),
       ];
 
-      suggestions.push({
-        sectionId: "s7",
-        questionId: "s7_risk_assessment",
-        suggestedResponse: riskFactors.length > 0
+      suggest(
+        AUTO_FILL_TARGETS.risks,
+        riskFactors.length > 0
           ? `Risk factors identified: ${riskFactors.join(", ")}. Mitigation measures should address each factor. Overall risk level requires assessment against the likelihood and severity of harm to data subjects.`
           : "No elevated risk factors identified based on available data. Standard data protection measures apply.",
-        confidence: riskFactors.length > 0 ? "medium" : "low",
-        source: "Automated risk factor analysis",
-      });
+        riskFactors.length > 0 ? "medium" : "low",
+        "Automated risk factor analysis"
+      );
+      const hasSpecialData = specialCat.length > 0;
 
       return {
         activityName: activity.name,
@@ -1401,8 +1428,7 @@ export const assessmentRouter = createTRPCRouter({
         content: result.content,
         // Same shape as the rule-based suggestions array
         suggestion: {
-          sectionId: "s7",
-          questionId: "s7_risk_assessment",
+          ...AUTO_FILL_TARGETS.risks,
           suggestedResponse: result.content,
           confidence: "low" as const,
           source: `AI (${result.model})`,

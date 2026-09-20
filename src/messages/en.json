@@ -185,7 +185,86 @@
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "The DPIA template is not installed",
-      "licenceNoticeBody": "To create the DPIA, install the DPIA skill from the Skills page with your licence."
+      "licenceNoticeBody": "To create the DPIA, install the DPIA skill from the Skills page with your licence.",
+      "title": "Auto-fill a DPIA",
+      "subtitle": "Draft a DPIA from the processing activity you already recorded",
+      "step": {
+        "select": "Choose",
+        "preview": "Preview",
+        "review": "Review",
+        "create": "Create"
+      },
+      "selectTitle": "Choose the processing activity",
+      "selectSubtitle": "The answers are drafted from the activity you choose",
+      "activityLabel": "Processing activity",
+      "activityPlaceholder": "Choose a processing activity",
+      "vendorLabel": "Linked vendor (optional)",
+      "vendorPlaceholder": "Choose a vendor",
+      "none": "None",
+      "loading": "Loading",
+      "next": "Preview the draft",
+      "previewTitle": "The draft",
+      "previewSubtitle": "What the answers will be drafted from",
+      "analysing": "Reading the processing activity",
+      "failedTitle": "The draft could not be prepared",
+      "failedBody": "Something went wrong while reading this processing activity.",
+      "back": "Back",
+      "retry": "Try again",
+      "countAssets": "Systems",
+      "countElements": "Data elements",
+      "countTransfers": "Transfers",
+      "countFilled": "Answers drafted",
+      "specialCategory": "Special category data is recorded for this activity, so a DPIA is the right step.",
+      "reviewStep": "Review the answers",
+      "reviewTitle": "Review and edit the answers",
+      "reviewSubtitle": "Edit any drafted answer before the assessment is created",
+      "confidence": "{level} confidence",
+      "confidenceLevel": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "source": "Source: {source}",
+      "createStep": "Create the assessment",
+      "createTitle": "Create the assessment",
+      "createSubtitle": "A draft DPIA will be created with {count} answers already written",
+      "activity": "Activity",
+      "vendor": "Vendor",
+      "filledCount": "Answers already written",
+      "creating": "Creating the assessment and saving the answers",
+      "create": "Create and open the assessment",
+      "missingTemplateTitle": "The standard DPIA template is not there",
+      "missingTemplateBody": "These answers are written against the questions of the standard DPIA template. Without it the wizard would write them against another template's questions, so it stops here. Install or seed the standard DPIA template and start again."
+    },
+    "trialAssessments": {
+      "remaining": "{remaining} of {limit} impact assessments are included in the trial and still to use.",
+      "usedUp": "All {limit} impact assessments included in the trial have been created. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit.",
+      "contact": "Ask about a deployment of your own"
+    },
+    "assessmentTemplates": {
+      "title": "Assessment templates",
+      "subtitle": "The templates an assessment can be started from",
+      "searchPlaceholder": "Search templates",
+      "tabSystem": "Built in ({count})",
+      "tabCustom": "Your own ({count})",
+      "system": "Built in",
+      "sectionsCount": "{count} sections",
+      "clone": "Copy",
+      "use": "Use",
+      "clonePrompt": "Name for the copy:",
+      "cloneSuffix": "{name} (copy)",
+      "noSystemTitle": "No built-in template is installed",
+      "noSystemBody": "Run the content seed to write the built-in templates.",
+      "noCustomTitle": "You have no template of your own yet",
+      "noCustomBody": "Copy a built-in template to start one. The copy belongs to your organisation and can be answered straight away.",
+      "aboutTitle": "About these templates",
+      "aboutSubtitle": "A template holds the sections and the questions an assessment asks",
+      "aboutDpia": "DPIA (Article 35)",
+      "aboutDpiaBody": "Required where the processing is likely to result in a high risk to individuals.",
+      "aboutTia": "TIA (Chapter V)",
+      "aboutTiaBody": "Assesses a transfer of personal data to a country outside the European Economic Area.",
+      "aboutLia": "LIA (Article 6(1)(f))",
+      "aboutLiaBody": "The balancing test to run before relying on legitimate interests as the legal basis."
     },
     "newIncident": {
       "title": "Report Incident",
@@ -644,6 +723,19 @@
       "submit": "Create Request"
     },
     "assessmentDetail": {
+      "completeness": {
+        "title": "What is still outstanding",
+        "allDone": "Everything this assessment needs has been answered.",
+        "questionsTitle": "Questions still to answer ({count})",
+        "requirementsTitle": "Requirements still outstanding ({count})",
+        "frameworkPartial": "{framework}: {covered} of {total} requirements covered.",
+        "frameworkComplete": "{framework}: every requirement covered ({total} of {total}).",
+        "notConforming": "This assessment does not yet conform to the rules of {framework}.",
+        "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
+        "jump": "Go to the step that answers this",
+        "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
+        "submitHint": "Answer the questions listed above to submit this assessment."
+      },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
       "riskBadge": "{level} Risk",
@@ -2040,6 +2132,7 @@
         "title": "Quick Actions",
         "subtitle": "Common tasks",
         "addAsset": "Add Data Asset",
+        "newDpia": "Start a DPIA",
         "newDsar": "New DSAR",
         "reportIncident": "Report Incident",
         "addVendor": "Add Vendor",
@@ -3180,6 +3273,27 @@
       }
     },
     "assessmentReport": {
+      "draftMark": "Draft",
+      "draftTitle": "This document is a draft",
+      "draftIntro": "The items below are still outstanding, so every page of this document is marked a draft. Answer them in the app and export again for a final version.",
+      "draftQuestions": "Questions not yet answered",
+      "draftRequirements": "Requirements not yet covered",
+      "draftMore": "and {count} more",
+      "conformanceTitle": "Framework conformance",
+      "conformanceIntro": "One row per requirement of the frameworks chosen for this assessment, with the step of the assessment that answers it. A requirement nothing answers is marked outstanding.",
+      "conformanceColumns": {
+        "requirement": "Requirement",
+        "citation": "Source",
+        "status": "Status",
+        "step": "Answered in"
+      },
+      "conformanceCovered": "Covered",
+      "conformanceOutstanding": "Outstanding",
+      "conformanceNotAnswered": "Not asked in this assessment",
+      "conformanceComplete": "{framework}: every requirement covered ({covered} of {total}).",
+      "conformancePartial": "{framework}: {covered} of {total} requirements covered. This assessment does not conform to the rules of {framework} until the rest are answered.",
+      "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
+      "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
       "coverGenerated": "Generated: {date}",
       "coverConfidential": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
@@ -3203,11 +3317,6 @@
         "linkedVendor": "Linked Vendor"
       },
       "description": "Description",
-      "dpiaCalloutTitle": "GDPR Article 35(7) — Required DPIA Elements",
-      "dpiaCallout1": "Systematic description of processing operations and purposes",
-      "dpiaCallout2": "Assessment of necessity and proportionality",
-      "dpiaCallout3": "Assessment of risks to rights and freedoms of data subjects",
-      "dpiaCallout4": "Measures envisaged to address risks and demonstrate compliance",
       "sectionProgress": "{answered} of {total} questions answered",
       "sectionComplete": "Complete",
       "questionRequired": "REQUIRED",
@@ -5119,6 +5228,7 @@
       "templates": {
         "title": "Assessment Templates",
         "intro": "Choose from built-in templates or create custom assessments. Each template includes pre-configured questions, risk criteria, and approval workflows.",
+        "hostedNote": "Every type is open on this hosted service, at no charge and with no lock on the export. The Premium mark applies to the self-hosted kit, where such a type is installed from a signed module.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Core",
@@ -5179,13 +5289,43 @@
           "approve": { "title": "Final Approval", "description": "Once approved, the assessment is locked and stored as a compliance record." }
         }
       },
+      "walkthrough": {
+        "title": "Run a DPIA in eight steps",
+        "intro": "This is the path through the real screens, from the dashboard to the exported report.",
+        "actors": {
+          "dpo": "DPO",
+          "approver": "Approver"
+        },
+        "steps": {
+          "start": { "title": "Start a DPIA from the dashboard", "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen." },
+          "create": { "title": "Name it and create it", "description": "Give the assessment a name. You may link it to a processing activity from your inventory and to a vendor. Both are optional and both feed the auto-fill.", "detail1": "A linked processing activity lets the app propose answers from your data inventory", "detail2": "A linked vendor brings in its certifications and privacy technologies" },
+          "frameworks": { "title": "Choose the frameworks", "description": "The first question asks which rules the assessment has to satisfy: the European ones, the Californian ones, or both. The answer decides which questions appear below and which requirements the report reports on.", "detail1": "European Union: Regulation (EU) 2016/679, Articles 35 and 36", "detail2": "California: 11 CCR sections 7150, 7152, 7155 and 7157" },
+          "european": { "title": "Work through the European steps", "description": "Processing description, scope and context, necessity and proportionality, consultation, risk identification, measures, and residual risk with the conclusion. The pills at the top of the page show how much of each step is answered." },
+          "california": { "title": "Answer the Californian steps", "description": "Shown only when California is chosen. First the activities that make a risk assessment necessary; if none of them applies, the product says so and claims no Californian requirement. Then the nine content items, the timetable, the submission and the executive attestation." },
+          "outstanding": { "title": "Clear what is outstanding", "description": "A panel above the assessment lists everything still missing, in plain words: the questions nobody has answered and the legal requirements nothing covers yet. Every item is a link that jumps to the step and the field that answers it." },
+          "approve": { "title": "Record mitigations and approve", "description": "Add mitigation measures for the risks you identified, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver decides." },
+          "export": { "title": "Export the report", "description": "Export is available at every stage and never refuses. While anything is outstanding the document is marked a draft on every page and lists what is missing on the first one." }
+        }
+      },
+      "conformance": {
+        "title": "The conformance table",
+        "intro": "Every finished assessment carries a table with one row per requirement of the frameworks you chose, its primary source, and whether the answers cover it. Nothing is marked covered unless an answer covers it, and the report says outright when the assessment does not yet conform to a framework.",
+        "columns": {
+          "citation": "Source",
+          "requirement": "Requirement"
+        },
+        "note": "The rows below are the requirements the product tracks today. In the report each one also carries its status, covered or outstanding, and the step of the assessment that answers it.",
+        "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs."
+      },
       "exports": {
         "title": "PDF Exports",
         "intro": "Export individual assessments or your entire assessment portfolio as professionally formatted PDF reports. Designed for regulators, auditors, and board presentations.",
         "individualTitle": "Individual Assessment Export",
         "individualDesc": "Export any single assessment as a detailed PDF with cover page, executive summary, all questions and responses, risk scores, mitigations, and approval history.",
         "individualFeatures": {
-          "cover": "Cover page with GDPR Art. 35 reference",
+          "conformance": "Conformance table: one row per requirement, covered or outstanding",
+          "draft": "Draft mark on every page while anything is outstanding",
+          "cover": "Cover page with the assessment type and its primary source",
           "stats": "Stat cards (risk, completion, mitigations)",
           "qa": "Section-by-section Q&A with inline risk badges",
           "mitigation": "Mitigation tracking table",
@@ -5430,12 +5570,14 @@
     "noFindings": "No issue found in the answers so far.",
     "source": "Source",
     "toVerify": "[to verify]",
+    "sourcesChecked": "Primary sources last read on {date}. A point marked [to verify] is not confirmed against the primary text; confirm it before relying on it.",
+    "sourcesStale": "That was {months} months ago. Read each source again, or confirm every point against the primary text, before this assessment is relied on.",
     "severity": {
       "blocking": "Must be resolved",
       "gap": "Gap",
       "note": "Note"
     },
-    "blockingSummary": "At least one finding must be resolved before the processing can go ahead.",
+    "blockingSummary": "At least one finding is one to resolve: on the sources recorded here, the processing as described does not meet a requirement. The assessment can still be submitted, approved and exported; while the finding stands, the risk level is raised to at least High.",
     "fiveFactorTitle": "Health-data classification (five factors)",
     "fiveFactorScore": "Score {score} of {max}",
     "scoreLabel": "Score",
@@ -5785,12 +5927,28 @@
     },
     "dpia": {
       "template": {
+        "system-dpia-template": {
+          "name": "Data Protection Impact Assessment (DPIA)",
+          "description": "A DPIA that follows the framework you choose at the start: the European rules (Regulation (EU) 2016/679, Articles 35 and 36), the Californian risk assessment rules (11 CCR article 10), or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Informational, not legal advice."
+        },
         "system-dpia-health-adtech-template": {
           "name": "Health data in advertising: CCPA risk assessment and GDPR DPIA",
           "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
         }
       },
       "section": {
+        "s0": {
+          "title": "Scope of this assessment",
+          "description": "Choose the frameworks this assessment has to satisfy. The choice decides which questions are asked below and which requirements the report reports on."
+        },
+        "s8": {
+          "title": "California: contents of the risk assessment",
+          "description": "The activities that make a risk assessment necessary, and the content items it must contain."
+        },
+        "s9": {
+          "title": "California: timetable, submission and attestation",
+          "description": "When the assessment is conducted, reviewed and kept, and what has to reach the agency."
+        },
         "hd1": {
           "title": "Scope and threshold analysis",
           "description": "Select the jurisdictions first: the answer adds the questions and obligations each one requires."
@@ -5861,6 +6019,103 @@
         }
       },
       "question": {
+        "q0_1": {
+          "text": "Which frameworks does this assessment have to satisfy?",
+          "helpText": "Select one or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Sources: Regulation (EU) 2016/679, Articles 35 and 36; California Code of Regulations, title 11, division 6, chapter 1, article 10.",
+          "options": [
+            "European Union: Regulation (EU) 2016/679, Article 35",
+            "California: CCPA risk assessment regulations, 11 CCR article 10"
+          ]
+        },
+        "q8_1": {
+          "text": "Which California risk assessment triggers does the processing meet?",
+          "helpText": "Any one of them means a risk assessment is required. If none apply, the report says so plainly and claims no Californian requirement. Source: 11 CCR 7150(b).",
+          "options": [
+            "Selling or sharing personal information",
+            "Processing sensitive personal information",
+            "Automated decision-making technology (ADMT) for a significant decision",
+            "Automated observation of employees, contractors, job applicants or students",
+            "Inferring sensitive traits from presence at a sensitive location",
+            "Processing to train ADMT, biometric or profiling technology",
+            "None of these"
+          ]
+        },
+        "q8_2": {
+          "text": "Operational elements of the processing",
+          "helpText": "How the personal information is collected, from which sources, how long it is kept, how many consumers it concerns, who it is disclosed to, and the technology used. Source: 11 CCR 7152(a)(3)."
+        },
+        "q8_3": {
+          "text": "Benefits of the processing to the business, the consumer, other stakeholders and the public",
+          "helpText": "Source: 11 CCR 7152(a)(4)."
+        },
+        "q8_4": {
+          "text": "Negative impacts on consumers' privacy",
+          "helpText": "Describe each impact, who it falls on and how serious it is. Source: 11 CCR 7152(a)(5)."
+        },
+        "q8_5": {
+          "text": "Safeguards planned to address the negative impacts",
+          "helpText": "Source: 11 CCR 7152(a)(6)."
+        },
+        "q8_6": {
+          "text": "Will the business start or continue the processing?",
+          "helpText": "Weigh the negative impacts, as mitigated by the safeguards, against the benefits. Source: 11 CCR 7152(a)(7).",
+          "options": [
+            "Yes: the benefits outweigh the negative impacts once the safeguards are in place",
+            "No: the negative impacts outweigh the benefits",
+            "Not decided yet"
+          ]
+        },
+        "q8_7": {
+          "text": "Names and positions of the people who prepared, reviewed and approved this assessment",
+          "helpText": "Source: 11 CCR 7152(a)(8)."
+        },
+        "q8_8": {
+          "text": "Dates on which this assessment was reviewed and approved",
+          "helpText": "Source: 11 CCR 7152(a)(9)."
+        },
+        "q9_1": {
+          "text": "When is this assessment being conducted, in relation to the processing?",
+          "helpText": "Source: 11 CCR 7155(a).",
+          "options": [
+            "Before the processing begins",
+            "The processing is already under way",
+            "The processing has ended"
+          ]
+        },
+        "q9_2": {
+          "text": "Review and update schedule, the change that brings a review forward, and how long this assessment is kept",
+          "helpText": "Source: 11 CCR 7155(b) and (c)."
+        },
+        "q9_3": {
+          "text": "Submission to the California Privacy Protection Agency by 1 April 2028",
+          "helpText": "Source: 11 CCR 7157(a).",
+          "options": [
+            "Planned",
+            "Already submitted",
+            "Not applicable: no trigger is met"
+          ]
+        },
+        "q9_4": {
+          "text": "Executive who will attest to this assessment (name and position)",
+          "helpText": "Source: 11 CCR 7157(b)(5) and (c)."
+        },
+        "q9_5": {
+          "text": "Can the full assessment be provided within 30 days of a request from the agency or the Attorney General?",
+          "helpText": "Source: 11 CCR 7157(e).",
+          "options": [
+            "Yes",
+            "No",
+            "Not yet"
+          ]
+        },
+        "q4_3": {
+          "text": "The views of data subjects or their representatives, or the reason for not seeking them",
+          "helpText": "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9)."
+        },
+        "q7_4": {
+          "text": "When this assessment will be reviewed, and the change in risk that brings the review forward",
+          "helpText": "Give a review date and name the changes that require an earlier review, such as a new purpose, a new recipient or a new technology. Source: Regulation (EU) 2016/679, Article 35(11)."
+        },
         "hd1_1": {
           "text": "Which jurisdictions apply to this processing?",
           "helpText": "Select every jurisdiction whose residents' data is collected or used. Changing the selection changes the questions below and the report. Source: DPO Central jurisdiction catalogue (GDPR, UK GDPR, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington and Nevada are not in the catalogue.",

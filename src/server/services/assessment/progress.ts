@@ -38,6 +38,25 @@ export function unansweredRequired(
 }
 
 /**
+ * Names the unanswered required questions, so a refusal says what is missing
+ * instead of only how much. Long lists are cut short with a count.
+ */
+export function describeUnanswered(
+  template: ProgressTemplate,
+  unanswered: string[],
+  limit = 3
+): string {
+  const text = new Map<string, string>();
+  for (const s of sectionsOf(template)) {
+    for (const q of s.questions ?? []) text.set(q.id, q.text);
+  }
+  const named = unanswered.map((id) => text.get(id.split("::")[0]) ?? id);
+  const shown = named.slice(0, limit).join("; ");
+  const rest = named.length - Math.min(limit, named.length);
+  return rest > 0 ? `${shown}; and ${rest} more` : shown;
+}
+
+/**
  * Completion. Templates with conditions count their visible questions only;
  * others keep the original count (every saved response over every question).
  */

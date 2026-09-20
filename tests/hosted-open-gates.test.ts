@@ -6,6 +6,10 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import en from "@/messages/en.json";
+import es from "@/messages/es.json";
 
 const mocks = vi.hoisted(() => ({
   prisma: {
@@ -15,7 +19,7 @@ const mocks = vi.hoisted(() => ({
       count: vi.fn().mockResolvedValue(0),
     },
     organization: { findUnique: vi.fn() },
-    auditLog: { create: vi.fn() },
+    auditLog: { create: vi.fn(), count: vi.fn().mockResolvedValue(0) },
     skillPackage: { findFirst: vi.fn() },
     customerOrganization: { findFirst: vi.fn() },
     assessment: { create: vi.fn(), count: vi.fn().mockResolvedValue(0) },
@@ -44,6 +48,7 @@ vi.mock("@/config/features", async (importOriginal) => {
 
 import {
   isAssessmentTypeLocked,
+  isAssessmentTypeOffered,
   isPremiumTypeKey,
   sellingEnabled,
 } from "@/lib/premium-gate";
@@ -52,13 +57,18 @@ import {
   getEntitledAssessmentTypes,
   hasRopaExportAccess,
   hasVendorCatalogAccess,
+  isPremiumAssessmentType,
+  FREE_ASSESSMENT_TYPES,
+  PREMIUM_ASSESSMENT_TYPES,
 } from "@/server/services/licensing/entitlement";
+import { AssessmentType } from "@prisma/client";
 import {
   ensureHostedTemplates,
   resetHostedTemplatesForTests,
 } from "@/server/services/pilot/hosted-templates";
-import { DPIA_TEMPLATE_ID } from "@/config/dpia-template-v2";
+import { DPIA_TEMPLATE_ID, DPIA_TEMPLATE_VERSION } from "@/config/dpia-template-v2";
 import { HEALTH_ADTECH_TEMPLATE_ID } from "@/config/health-adtech-template";
+import { seedHealthAdtechTemplate } from "@/lib/seed-health-adtech";
 import { assessmentRouter } from "@/server/routers/privacy/assessment";
 import { callerFor, sessionFor } from "./helpers";
 
@@ -88,6 +98,17 @@ beforeEach(() => {
   mocks.prisma.customerOrganization.findFirst.mockResolvedValue(null);
   mocks.prisma.assessmentTemplate.findUnique.mockResolvedValue(null);
   mocks.prisma.assessmentTemplate.findMany.mockResolvedValue([]);
+  // The health-data template follows one rule on every deployment: it is
+  // written only where a DPIA system template is installed. Standing in for
+  // the database, this reports one as soon as it has been created.
+  mocks.prisma.assessmentTemplate.findFirst.mockImplementation(async ({ where }) => {
+    if (where?.type !== "DPIA") return null;
+    const created = mocks.prisma.assessmentTemplate.create.mock.calls.some((call) => {
+      const data = (call[0] as { data: { id?: string; type?: string } }).data;
+      return data.type === "DPIA" && data.id !== HEALTH_ADTECH_TEMPLATE_ID;
+    });
+    return created ? { id: DPIA_TEMPLATE_ID } : null;
+  });
 });
 
 afterEach(() => {
@@ -116,6 +137,56 @@ describe("the lock rule shared by the pages", () => {
     ).toBe(false);
     expect(isPremiumTypeKey("VENDOR")).toBe(true);
     expect(isPremiumTypeKey("LIA")).toBe(false);
+  });
+
+  it("does not offer a type announced as coming soon, on any deployment", () => {
+    for (const type of ["PIA", "VENDOR"]) {
+      expect(isAssessmentTypeOffered({ type, entitledTypes: [], comingSoon: true })).toBe(false);
+    }
+  });
+
+  it("offers it again once a template for it exists", () => {
+    expect(
+      isAssessmentTypeOffered({ type: "PIA", entitledTypes: ["PIA"], comingSoon: true })
+    ).toBe(true);
+  });
+
+  it("offers every other type, locked or not", () => {
+    for (const type of ["DPIA", "LIA", "TIA", "CUSTOM"]) {
+      expect(isAssessmentTypeOffered({ type, entitledTypes: [] })).toBe(true);
+    }
+  });
+
+  /**
+   * One rule for who may create what. The gate the pages apply and the gate
+   * the server applies must say the same thing about every assessment type,
+   * and no type may fall between the two lists as the transfer assessment did.
+   */
+  it("names every assessment type exactly once, free or premium", () => {
+    const all = Object.values(AssessmentType) as string[];
+    for (const type of all) {
+      const premium = (PREMIUM_ASSESSMENT_TYPES as string[]).includes(type);
+      const free = (FREE_ASSESSMENT_TYPES as string[]).includes(type);
+      expect({ type, named: [premium, free].filter(Boolean).length }).toEqual({ type, named: 1 });
+    }
+  });
+
+  it("agrees with the pure gate on every assessment type", () => {
+    for (const type of Object.values(AssessmentType)) {
+      expect({ type, premium: isPremiumTypeKey(type) }).toEqual({
+        type,
+        premium: isPremiumAssessmentType(type),
+      });
+    }
+  });
+
+  it("is the rule the type grid applies", () => {
+    const page = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/assessments/new/page.tsx"),
+      "utf8"
+    );
+    expect(page).toContain("isAssessmentTypeOffered");
+    expect(page).toContain("offeredTypes.map");
   });
 });
 
@@ -184,10 +255,28 @@ describe("hosted templates written at runtime", () => {
     );
   });
 
-  it("never overwrites a DPIA that already exists, and runs once", async () => {
+  it("refreshes an older system DPIA so a new template version reaches the pilot", async () => {
     hosted();
     mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
-      where.id === DPIA_TEMPLATE_ID ? { id: DPIA_TEMPLATE_ID } : null
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "2.0", isSystem: true, organizationId: null }
+        : null
+    );
+    await ensureHostedTemplates();
+    expect(mocks.prisma.assessmentTemplate.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: DPIA_TEMPLATE_ID },
+        data: expect.objectContaining({ version: DPIA_TEMPLATE_VERSION }),
+      })
+    );
+  });
+
+  it("keeps a DPIA whose installed version is newer, and runs once", async () => {
+    hosted();
+    mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "9.0", isSystem: true, organizationId: null }
+        : null
     );
     await ensureHostedTemplates();
     await ensureHostedTemplates();
@@ -204,6 +293,49 @@ describe("hosted templates written at runtime", () => {
     expect(dpiaLookups).toHaveLength(1);
   });
 
+  it("writes the health-data template only after a DPIA template exists", async () => {
+    // Nothing installed: the rule refuses, whichever path asks.
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(null);
+    const refused = await seedHealthAdtechTemplate(mocks.prisma as never);
+    expect(refused).toEqual({ written: false, reason: "no-dpia-template" });
+    expect(mocks.prisma.assessmentTemplate.create).not.toHaveBeenCalled();
+
+    // A DPIA template installed: written.
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue({ id: DPIA_TEMPLATE_ID });
+    const written = await seedHealthAdtechTemplate(mocks.prisma as never);
+    expect(written).toEqual({ written: true, outcome: "created" });
+    expect(mocks.prisma.assessmentTemplate.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ id: HEALTH_ADTECH_TEMPLATE_ID }),
+      })
+    );
+  });
+
+  it("is the one rule both seeding paths apply", () => {
+    const source = (rel: string) => readFileSync(path.resolve(__dirname, "..", rel), "utf8");
+    for (const file of [
+      "scripts/seed-templates.ts",
+      "src/server/services/pilot/hosted-templates.ts",
+    ]) {
+      expect(source(file), file).toContain("seedHealthAdtechTemplate");
+      // Neither writes it on its own terms any more.
+      expect(source(file).includes("healthAdtechTemplateData"), file).toBe(false);
+    }
+  });
+
+  it("never touches a DPIA row that belongs to an organization", async () => {
+    hosted();
+    mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "1.0", isSystem: false, organizationId: "org-1" }
+        : null
+    );
+    await ensureHostedTemplates();
+    expect(mocks.prisma.assessmentTemplate.update).not.toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: DPIA_TEMPLATE_ID } })
+    );
+  });
+
   it("writes them before the template list and the offered types are read", async () => {
     hosted();
     const caller = callerFor(assessmentRouter, sessionFor("user-1"));
@@ -212,6 +344,55 @@ describe("hosted templates written at runtime", () => {
     const writeOrder = mocks.prisma.assessmentTemplate.create.mock.invocationCallOrder[0];
     const listOrder = mocks.prisma.assessmentTemplate.findMany.mock.invocationCallOrder.at(-1)!;
     expect(writeOrder).toBeLessThan(listOrder);
+  });
+});
+
+describe("the export carries no gate of its own", () => {
+  const source = (rel: string) => readFileSync(path.resolve(__dirname, "..", rel), "utf8");
+
+  it("never asks about entitlement, a licence or a premium type", () => {
+    const route = source("src/app/api/export/assessment/[id]/route.ts");
+    for (const gate of [
+      "checkAssessmentEntitlement",
+      "isPremiumAssessmentType",
+      "getEntitledAssessmentTypes",
+      "hasRopaExportAccess",
+      "skillPackage",
+    ]) {
+      expect(route.includes(gate), gate).toBe(false);
+    }
+  });
+
+  it("exports the portfolio without a gate either", () => {
+    const route = source("src/app/api/export/assessment-portfolio/route.ts");
+    for (const gate of ["checkAssessmentEntitlement", "isPremiumAssessmentType"]) {
+      expect(route.includes(gate), gate).toBe(false);
+    }
+  });
+});
+
+describe("reaching a new DPIA", () => {
+  it("takes two clicks from the dashboard: the quick action, then Create", () => {
+    const dashboard = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/page.tsx"),
+      "utf8"
+    );
+    expect(dashboard).toContain('href="/privacy/assessments/new?type=DPIA"');
+
+    // The form opens on the details because the type comes from the query.
+    const form = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/assessments/new/page.tsx"),
+      "utf8"
+    );
+    expect(form).toContain('searchParams.get("type")');
+  });
+
+  it("offers the label in both languages", () => {
+    expect(en.pages.dashboard.quickActions.newDpia).toBeTruthy();
+    expect(es.pages.dashboard.quickActions.newDpia).toBeTruthy();
+    expect(es.pages.dashboard.quickActions.newDpia).not.toBe(
+      en.pages.dashboard.quickActions.newDpia
+    );
   });
 });
 
@@ -228,7 +409,7 @@ describe("creating a premium assessment", () => {
     callerFor(assessmentRouter, sessionFor("user-1")).create({
       organizationId: "org-1",
       templateId: DPIA_TEMPLATE_ID,
-      name: "Workshop DPIA",
+      name: "Health data DPIA",
     });
 
   it("is allowed on the hosted pilot without any licence", async () => {
