@@ -4,7 +4,8 @@
 export interface ExpertProfile {
   id: string;
   name: string | null;
-  email: string;
+  /** Null when no verified address is on file. Never a placeholder address. */
+  email: string | null;
   title: string | null;
   firm: string | null;
   bio: string | null;
@@ -63,52 +64,51 @@ export const languageNames: Record<string, string> = {
   sv: "Swedish",
 };
 
-// Fictional placeholder profiles, shown only when no Dealroom directory is
-// configured (DEALROOM_* env unset). Live installs replace these with real
-// directory results via /api/v1/experts/search. Names, firms, and addresses
-// below are invented; emails use the reserved .example TLD and cannot be
-// delivered.
-export const mockExperts: ExpertProfile[] = [
+// ---------------------------------------------------------------------------
+// The directory of people available for technical help.
+//
+// THIS ENTRY IS A REAL PERSON. It is not a fixture, not a placeholder and not
+// sample data. Do not replace it with an invented profile, and do not add
+// invented profiles beside it: the fictional names, firms and .example
+// addresses that used to live in this file were removed on 2026-09-20 by the
+// owner's decision, and no user may ever be shown an invented person again.
+//
+// Only fields that are known to be true are filled in. Every other field is
+// left null or empty on purpose, and must stay that way until the owner
+// supplies the real value — an empty card is correct, a plausible-looking
+// invented one is not. The contact address in particular is unset because it
+// is not recorded anywhere in this repository; see the request-routing note in
+// src/server/routers/privacy/experts.ts, which copies every request to our own
+// inbox so nothing is lost while the address is missing.
+//
+// The allow-list in ./client.ts (PERMITTED_DIRECTORY_NAMES) is the enforcement
+// point: it also filters what the upstream directory returns, so a new name
+// appearing upstream cannot reach a user. Adding someone here without adding
+// them there shows nobody.
+// ---------------------------------------------------------------------------
+export const directoryExperts: ExpertProfile[] = [
   {
-    id: "mock-expert-1",
-    name: "Ines Valdemar",
-    email: "ines.valdemar@deployworks.example",
-    title: "Deployment Consultant",
-    firm: "Deployworks (fictional)",
-    bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
-    expertTypes: ["deployment"],
-    specializations: ["Self-Hosting / Deployment"],
+    id: "technical-help-1",
+    name: "Steve Crowley",
+    email: null, // real address not on file — see the note above
+    title: null,
+    firm: null,
+    bio: null,
+    expertTypes: ["technical"],
+    specializations: [],
     certifications: [],
-    languages: ["en", "es"],
-    location: { city: "London", country: "GB" },
-    jurisdictions: ["EU", "US", "UK"],
+    languages: ["en"],
+    location: { city: null, country: null },
+    jurisdictions: [],
     contactUrl: null,
     imageUrl: null,
     acceptingClients: true,
-    profileCompleteness: 75,
-  },
-  {
-    id: "mock-expert-2",
-    name: "Marek Toivonen",
-    email: "marek.toivonen@northstack.example",
-    title: "Deployment Consultant",
-    firm: "Northstack Consulting (fictional)",
-    bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
-    expertTypes: ["deployment"],
-    specializations: ["Self-Hosting / Deployment"],
-    certifications: [],
-    languages: ["en", "es"],
-    location: { city: "Helsinki", country: "FI" },
-    jurisdictions: ["EU", "US", "UK"],
-    contactUrl: null,
-    imageUrl: null,
-    acceptingClients: true,
-    profileCompleteness: 75,
+    profileCompleteness: 100,
   },
 ];
 
 // Taxonomy used by getSpecializations() — surfaces in the filter dropdown in
-// both mock and live modes. Includes all values used by live experts, plus
+// both fallback and live modes. Includes all values used by live experts, plus
 // forward-looking taxonomy entries that future experts may adopt.
 export const specializations = [
   "Self-Hosting / Deployment",

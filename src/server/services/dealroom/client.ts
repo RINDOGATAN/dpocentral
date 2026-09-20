@@ -2,13 +2,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import {
-  mockExperts,
+  directoryExperts,
   specializations,
   expertTypes,
   countryNames,
   languageNames,
   type ExpertProfile,
-} from "./mock-data";
+} from "./directory-data";
 import { logger } from "@/lib/logger";
 
 const RAW_DEALROOM_URL = process.env.DEALROOM_API_URL ?? "";
@@ -17,17 +17,13 @@ const DEALROOM_API_KEY = process.env.DEALROOM_API_KEY;
 // Normalize: env var may include path prefix (e.g. ".../api/v1/experts") — strip to base domain
 const DEALROOM_API_URL = RAW_DEALROOM_URL.replace(/\/api\/v1\/experts\/?$/, "").replace(/\/+$/, "");
 
-// Mock experts are fictitious people (dev fixtures). They must never surface
-// in a production deployment: a self-hosted install without the Dealroom API
-// gets an EMPTY directory (the feature is flag-hidden there anyway), and a
-// hosted outage degrades to empty rather than impersonating humans. Demos can
-// opt back in explicitly with DEALROOM_MOCK_EXPERTS=true.
-const mockAllowed =
-  process.env.NODE_ENV !== "production" ||
-  process.env.DEALROOM_MOCK_EXPERTS === "true";
+// With no directory service configured, the local list in ./directory-data.ts
+// is what a user sees. That list used to hold invented people, so production
+// was made to show an empty directory instead. It now holds one real person
+// and nothing else, so the local list is served everywhere, on every posture,
+// including when the directory service is configured but fails. The old
+// DEALROOM_MOCK_EXPERTS opt-in is gone: there is no fiction left to opt in to.
 const unconfigured = !DEALROOM_API_URL || !DEALROOM_API_KEY;
-const useMock = unconfigured && mockAllowed;
-const EMPTY_RESULT: ExpertSearchResult = { results: [], total: 0, offset: 0 };
 
 export type { ExpertProfile };
 
@@ -48,29 +44,50 @@ export interface ExpertSearchResult {
   offset: number;
 }
 
-// Lawyer experts are no longer offered through this platform (2026-07 decision).
-// Hard client-side exclusion: strip the "legal" type from every profile and drop
-// experts who have no other type, regardless of what mock data or the Dealroom
-// API returns. Technical/deployment experts are unaffected.
+// Lawyer services are not offered through this platform (2026-07 decision), so
+// the "legal" label is stripped from every profile before it is shown. It is a
+// label strip only: since 2026-09-20 the allow-list below decides who appears,
+// and a permitted person is never dropped for carrying that label.
 const EXCLUDED_EXPERT_TYPE = "legal";
 
-function stripLegalType(expert: ExpertProfile): ExpertProfile | null {
+function stripLegalType(expert: ExpertProfile): ExpertProfile {
   const types = expert.expertTypes.filter(
     (t) => t.toLowerCase() !== EXCLUDED_EXPERT_TYPE
   );
-  if (types.length === 0) return null; // legal-only expert — never expose
   if (types.length === expert.expertTypes.length) return expert;
   return { ...expert, expertTypes: types };
 }
 
-function stripLegalExperts(experts: ExpertProfile[]): ExpertProfile[] {
-  return experts
-    .map(stripLegalType)
-    .filter((e): e is ExpertProfile => e !== null);
+// ---------------------------------------------------------------------------
+// The allow-list. Exactly one person may appear in the directory of people
+// available for technical help (owner's decision, 2026-09-20).
+//
+// This is enforced at the point the list is READ, not only in the local list,
+// so a name added to the upstream directory — however plausible, however real
+// — cannot reach a user here until it is added to this set on purpose. Match
+// is on the name, case- and whitespace-insensitive, because the upstream id
+// is not ours to rely on.
+//
+// Removing this filter, or widening it, needs the owner's decision. Do not
+// widen it to make a test or a demo look better.
+// ---------------------------------------------------------------------------
+const PERMITTED_DIRECTORY_NAMES = new Set(["steve crowley"]);
+
+function normalizeName(name: string | null): string {
+  return (name ?? "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-function filterMockExperts(params: ExpertSearchParams): ExpertSearchResult {
-  let results = stripLegalExperts(mockExperts);
+export function isPermittedExpert(expert: ExpertProfile): boolean {
+  return PERMITTED_DIRECTORY_NAMES.has(normalizeName(expert.name));
+}
+
+/** The only gate that decides who a user sees. Applied to every source. */
+function permittedOnly(experts: ExpertProfile[]): ExpertProfile[] {
+  return experts.filter(isPermittedExpert).map(stripLegalType);
+}
+
+function filterLocalDirectory(params: ExpertSearchParams): ExpertSearchResult {
+  let results = permittedOnly(directoryExperts);
 
   if (params.query) {
     const q = params.query.toLowerCase();
@@ -132,11 +149,8 @@ function filterMockExperts(params: ExpertSearchParams): ExpertSearchResult {
 export async function searchExperts(
   params: ExpertSearchParams
 ): Promise<ExpertSearchResult> {
-  if (useMock) {
-    return filterMockExperts(params);
-  }
   if (unconfigured) {
-    return EMPTY_RESULT;
+    return filterLocalDirectory(params);
   }
 
   const res = await fetch(`${DEALROOM_API_URL}/api/v1/experts/search`, {
@@ -164,18 +178,14 @@ export async function searchExperts(
       url: `${DEALROOM_API_URL}/api/v1/experts/search`,
       error: errorBody.slice(0, 300),
     });
-    // Degrade honestly: an empty directory, never fictitious people.
-    return mockAllowed ? filterMockExperts(params) : EMPTY_RESULT;
+    // Degrade to the local list, which holds only permitted people.
+    return filterLocalDirectory(params);
   }
 
   const data: ExpertSearchResult = await res.json();
 
-  // Hard exclusion of legal experts (see stripLegalExperts above)
-  const beforeStrip = data.results.length;
-  data.results = stripLegalExperts(data.results);
-  if (data.results.length !== beforeStrip) {
-    data.total = Math.max(0, data.total - (beforeStrip - data.results.length));
-  }
+  // The allow-list decides who a user sees, whatever the upstream returns.
+  data.results = permittedOnly(data.results ?? []);
 
   // Client-side exclude filter (Dealroom API doesn't support excludeType)
   if (params.excludeType) {
@@ -183,25 +193,33 @@ export async function searchExperts(
     data.results = data.results.filter(
       (e) => !(e.expertTypes.length === 1 && e.expertTypes[0].toLowerCase() === exc)
     );
-    data.total = data.results.length;
   }
 
+  const offset = params.offset ?? 0;
+
+  // The filter runs after the upstream has paged, so a permitted person sitting
+  // on a later upstream page would leave the first page empty. On an empty
+  // first page, serve the local list instead: the person must be listed, and
+  // the local list is subject to the same allow-list.
+  if (data.results.length === 0 && offset === 0) {
+    return filterLocalDirectory(params);
+  }
+
+  // `total` counts what survives the filter, not the upstream directory:
+  // reporting the upstream count would page the user into empty results.
+  data.total = offset + data.results.length;
+  data.offset = offset;
   return data;
 }
 
 export async function getExpertById(
   id: string
 ): Promise<ExpertProfile | null> {
-  const findMock = () => {
-    const expert = mockExperts.find((e) => e.id === id);
-    return expert ? stripLegalType(expert) : null;
-  };
+  const findLocal = () =>
+    permittedOnly(directoryExperts).find((e) => e.id === id) ?? null;
 
-  if (useMock) {
-    return findMock();
-  }
   if (unconfigured) {
-    return null;
+    return findLocal();
   }
 
   const res = await fetch(`${DEALROOM_API_URL}/api/v1/experts/${id}`, {
@@ -212,11 +230,13 @@ export async function getExpertById(
   });
 
   if (!res.ok) {
-    return mockAllowed ? findMock() : null;
+    return findLocal();
   }
 
   const expert: ExpertProfile = await res.json();
-  return stripLegalType(expert);
+  // Same gate as the list: an id that resolves upstream to a person who is not
+  // on the allow-list must not resolve to a profile here either.
+  return isPermittedExpert(expert) ? stripLegalType(expert) : findLocal();
 }
 
 export function getSpecializations(): string[] {
@@ -224,10 +244,11 @@ export function getSpecializations(): string[] {
 }
 
 export function getCountries(): { code: string; name: string }[] {
-  if (useMock) {
+  if (unconfigured) {
+    // Offer only the countries the local list can actually match on.
     const codes = [
       ...new Set(
-        mockExperts
+        permittedOnly(directoryExperts)
           .map((e) => e.location.country)
           .filter((c): c is string => c != null)
       ),
@@ -244,9 +265,9 @@ export function getCountries(): { code: string; name: string }[] {
 }
 
 export function getLanguages(): { code: string; name: string }[] {
-  if (useMock) {
+  if (unconfigured) {
     const codes = [
-      ...new Set(mockExperts.flatMap((e) => e.languages)),
+      ...new Set(permittedOnly(directoryExperts).flatMap((e) => e.languages)),
     ].sort();
     return codes.map((code) => ({
       code,
@@ -281,23 +302,22 @@ export interface ContactExpertResult {
 export async function contactExpert(
   params: ContactExpertParams
 ): Promise<ContactExpertResult> {
-  if (useMock) {
-    // Validate the expert exists in mock data
-    const expert = mockExperts.find((e) => e.id === params.expertId);
-    if (!expert) {
-      logger.warn("Contact request for unknown mock expert", { expertId: params.expertId });
+  if (unconfigured) {
+    // With no directory service, the request is handled here: the caller
+    // (src/server/routers/privacy/experts.ts) records it and copies it to our
+    // own inbox, so it does reach a human. Returning a local id rather than
+    // throwing is honest for that reason, and only for that reason — if the
+    // inbox copy is ever removed, this must go back to throwing.
+    if (!permittedOnly(directoryExperts).some((e) => e.id === params.expertId)) {
+      logger.warn("Contact request for an unknown directory entry", {
+        expertId: params.expertId,
+      });
     }
     return {
-      requestId: `req-mock-${Date.now()}`,
+      requestId: `req-local-${Date.now()}`,
       status: "pending",
       createdAt: new Date().toISOString(),
     };
-  }
-  if (unconfigured) {
-    // Never pretend a message was sent: fail honestly so the UI says so.
-    throw new Error(
-      "The expert directory is not connected on this deployment, so the message was not sent."
-    );
   }
 
   const { expertId, ...body } = params;
@@ -357,7 +377,8 @@ export interface ContactRequestResult {
 export async function getContactRequest(
   requestId: string
 ): Promise<ContactRequestResult | null> {
-  if (useMock) {
+  // Locally handled requests have no upstream record to look up.
+  if (unconfigured) {
     return null;
   }
 

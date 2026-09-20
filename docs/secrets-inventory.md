@@ -39,7 +39,7 @@ Columns:
 | `TEMPLATE_SYNC_API_KEY` | yes | Hosted env (not in either env example; unset = route disabled) | `POST /api/admin/sync-templates` (assessment template upsert) | Hosted operator | not recorded |
 | `VENDORWATCH_CATALOG_API_KEY` | yes | Hosted env; Kit .env (optional, for a one-off catalog refresh) | Pulls the vendor catalog from the sibling app's sync endpoint (`npm run db:sync-vendor-catalog`) | Issued by the sibling app's operator | not recorded |
 | `AI_SENTINEL_API_KEY` | yes | Hosted env; Kit .env (optional) | Pushes AI systems to the AI-governance sibling app and reads its AI-Act status | Issued by the sibling app's operator | not recorded |
-| `DEALROOM_API_KEY` | yes | Hosted env (optional; unset = mock expert directory) | Reads the contract-negotiation sibling app's expert directory | Issued by the sibling app's operator | not recorded |
+| `DEALROOM_API_KEY` | yes | Hosted env (optional; unset = the local directory list in `src/server/services/dealroom/directory-data.ts`) | Reads the contract-negotiation sibling app's expert directory | Issued by the sibling app's operator | not recorded |
 | `LLM_GATEWAY_KEY` (and the lane variants `_EU`, `_US`, `_LOCAL`) | yes | Hosted env; Kit .env | Authenticates to the OpenAI-compatible AI gateway for narrative generation | Whoever runs the gateway; self-host administrator | not recorded |
 | `OPENAI_API_KEY` | yes | Hosted env (optional fallback provider) | Direct AI provider access when no gateway is configured | Hosted operator, in the provider console | not recorded |
 | `ANTHROPIC_API_KEY` | yes | Hosted env (optional fallback provider) | Direct AI provider access when no gateway is configured | Hosted operator, in the provider console | not recorded |
@@ -60,7 +60,7 @@ Columns:
 | `DPO_INSTANCE_ID` | no | Kit .env (optional); Hosted env (optional) | Stable install id for licence activation limits; defaults to a machine fingerprint | n/a | n/a |
 | `VENDORWATCH_CATALOG_API_URL` | no | Hosted env; Kit .env | Where the catalog sync pulls from | n/a | n/a |
 | `AI_SENTINEL_API_URL` | no | Hosted env; Kit .env | Server-to-server endpoint of the AI-governance sibling | n/a | n/a |
-| `DEALROOM_API_URL`, `DEALROOM_MOCK_EXPERTS` | no | Hosted env | Expert directory endpoint; explicit opt-in to the mock directory | n/a | n/a |
+| `DEALROOM_API_URL` | no | Hosted env | Expert directory endpoint. Whether it is set or not, only the people on the allow-list in `src/server/services/dealroom/client.ts` are ever shown. (`DEALROOM_MOCK_EXPERTS` was removed on 2026-09-20 with the invented profiles it used to reveal; setting it now does nothing.) | n/a | n/a |
 | `LLM_GATEWAY_URL`, `LLM_MODEL_ALIAS` (and `_EU`, `_US`, `_LOCAL` lane variants) | no | Hosted env; Kit .env | Which AI gateway and model answer, per confidentiality lane | n/a | n/a |
 | `STRIPE_PRICE_ID`, `STRIPE_PRICE_DPIA`, `STRIPE_PRICE_PIA`, `STRIPE_PRICE_TIA`, `STRIPE_PRICE_VENDOR`, `STRIPE_PRICE_VENDOR_CATALOG`, `STRIPE_PRICE_ROPA_EXPORT`, `STRIPE_PRICE_ID_USD` | no (price identifiers) | Hosted env, read by the seed and the checkout route | Which price each module is sold at | n/a | n/a |
 | `RATE_LIMIT_DISABLED`, `RATE_LIMIT_SIGNIN`, `RATE_LIMIT_MAGIC_LINK`, `RATE_LIMIT_AUTH`, `RATE_LIMIT_CHECKOUT`, `RATE_LIMIT_DSAR_PUBLIC`, `RATE_LIMIT_EXPORT`, `RATE_LIMIT_HEALTH`, `RATE_LIMIT_IMPORT`, `RATE_LIMIT_CRON` | no | Hosted env (optional); Kit .env (optional) | Rate-limit ceilings per route class and the disable switch for proxied installs (`src/lib/rate-limit.ts`) | n/a | n/a |
