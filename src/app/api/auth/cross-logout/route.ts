@@ -1,54 +1,33 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { NextResponse } from "next/server";
+/**
+ * Cross-logout: expire every session cookie this host can reach.
+ *
+ * The names, and why each one is expired twice (host-only and on the parent
+ * domain), are in `src/lib/suite-logout.ts`. The headers are appended rather
+ * than set through `response.cookies`, which keys by name and would keep only
+ * the last write of a name — exactly the one cookie too few that left the
+ * user signed in.
+ */
 
-const isProduction = process.env.NODE_ENV === "production";
+import { NextRequest, NextResponse } from "next/server";
+import { sessionCookieExpiries } from "@/lib/suite-logout";
 
-// All session cookie names used across todo.law apps
-const CROSS_APP_COOKIES = [
-  // Dealroom + DPO Central (NextAuth v4, hosted default names)
-  "__Secure-next-auth.session-token",
-  "__Secure-next-auth.callback-url",
-  "next-auth.session-token",
-  "next-auth.callback-url",
-  // DPO Central self-host posture (unique prefix — avoids the localhost
-  // cross-app cookie collision on the suite)
-  "__Secure-dpocentral.session-token",
-  "__Secure-dpocentral.callback-url",
-  "dpocentral.session-token",
-  "dpocentral.callback-url",
-  // Dealroom self-host posture (unique prefix)
-  "__Secure-dealroom.session-token",
-  "__Secure-dealroom.callback-url",
-  "dealroom.session-token",
-  "dealroom.callback-url",
-  // AI Sentinel (NextAuth v4, unique prefix)
-  "__Secure-aisentinel.session-token",
-  "__Secure-aisentinel.callback-url",
-  "aisentinel.session-token",
-  "aisentinel.callback-url",
-  // Seneca (NextAuth v5)
-  "__Secure-authjs.session-token",
-  "__Secure-authjs.callback-url",
-  "authjs.session-token",
-  "authjs.callback-url",
-];
-
-export async function POST() {
-  const response = NextResponse.json({ ok: true });
-  const domain = isProduction ? ".todo.law" : undefined;
-
-  for (const name of CROSS_APP_COOKIES) {
-    response.cookies.set(name, "", {
-      expires: new Date(0),
-      path: "/",
-      ...(domain && { domain }),
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: "lax",
-    });
+/** Appends the expiry of every session cookie name to a response. */
+export function expireSessionCookies(request: NextRequest, response: NextResponse): NextResponse {
+  const url = new URL(request.url);
+  const expiries = sessionCookieExpiries(url.hostname, {
+    secure: url.protocol === "https:",
+    env: process.env,
+  });
+  for (const cookie of expiries) {
+    response.headers.append("Set-Cookie", cookie);
   }
-
+  response.headers.set("Cache-Control", "no-store");
   return response;
+}
+
+export async function POST(request: NextRequest) {
+  return expireSessionCookies(request, NextResponse.json({ ok: true }));
 }
