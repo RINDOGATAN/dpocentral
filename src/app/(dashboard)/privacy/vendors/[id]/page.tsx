@@ -489,7 +489,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{tp("contracts.empty")}</p>
-                <div className="mt-4 flex justify-center gap-2">
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
                   <Button variant="outline" onClick={() => setDpaOpen(true)}>
                     <FileText className="w-4 h-4 mr-2" />
                     {tp("dpa.produce")}

@@ -290,7 +290,7 @@ export default function ExpertsPage() {
 
           {/* Pagination */}
           {(hasMore || offset > 0) && (
-            <div className="flex items-center justify-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               {offset > 0 && (
                 <Button
                   variant="outline"

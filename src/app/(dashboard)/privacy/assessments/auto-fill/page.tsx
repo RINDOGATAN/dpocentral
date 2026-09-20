@@ -299,7 +299,7 @@ export default function DpiaAutoFillPage() {
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
                   {autoFillError.message || tAutoFill("failedBody")}
                 </p>
-                <div className="flex gap-2 justify-center pt-2">
+                <div className="flex flex-wrap gap-2 justify-center pt-2">
                   <Button variant="outline" onClick={() => setStep("select")}>
                     <ArrowLeft className="w-4 h-4 mr-2" /> {tAutoFill("back")}
                   </Button>

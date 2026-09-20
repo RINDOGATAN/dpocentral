@@ -247,7 +247,7 @@ export default function ReportsPage() {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <ScoreRing score={score} unratedLabel={tp("score.unratedRing")} />
             <div className="flex-1 text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
                 <h2 className="text-lg font-semibold">{tp("score.title")}</h2>
                 <Badge variant={scoreBadgeVariant as any}>{scoreLabel}</Badge>
               </div>

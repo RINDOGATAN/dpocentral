@@ -40,7 +40,7 @@ export default function QuickstartError({
           <AlertTriangle className="w-12 h-12 mx-auto text-destructive mb-4" />
           <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
           <p className="text-muted-foreground max-w-md mx-auto mb-6">{message}</p>
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
             <Button onClick={reset} variant="outline">
               <RotateCcw className="w-4 h-4 mr-2" />
               Try again
