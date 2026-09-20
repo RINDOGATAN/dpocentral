@@ -6687,5 +6687,14 @@
         "assessmentPortfolio": "Cartera de evaluaciones (PDF)"
       }
     }
+  },
+  "feedback": {
+    "title": "Cuéntanos qué no funciona",
+    "placeholder": "¿Cómo podemos mejorar esta herramienta?",
+    "submit": "Enviar comentarios",
+    "sending": "Enviando...",
+    "error": "No se ha podido enviar el mensaje. Inténtalo de nuevo.",
+    "sentTitle": "Gracias por tus comentarios.",
+    "sentBody": "Leemos todos los mensajes y los usamos para mejorar esta herramienta."
   }
 }
