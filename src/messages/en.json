@@ -5928,12 +5928,12 @@
     "dpia": {
       "template": {
         "system-dpia-template": {
-          "name": "Data Protection Impact Assessment (DPIA)",
-          "description": "A DPIA that follows the framework you choose at the start: the European rules (Regulation (EU) 2016/679, Articles 35 and 36), the Californian risk assessment rules (11 CCR article 10), or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Informational, not legal advice."
+          "name": "Data Protection Impact Assessment (generic)",
+          "description": "A DPIA that follows the framework you choose at the start: the European rules, the Californian risk assessment rules, or both."
         },
         "system-dpia-health-adtech-template": {
-          "name": "Health data in advertising: CCPA risk assessment and GDPR DPIA",
-          "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
+          "name": "Health data in advertising",
+          "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and Article 35(7) GDPR."
         }
       },
       "section": {

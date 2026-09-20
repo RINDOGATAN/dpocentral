@@ -365,14 +365,20 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
   ],
 };
 
+/**
+ * The description is one sentence, because it is the card text. The frameworks
+ * with their citations are the first question of the assessment, and the
+ * "not legal advice" notice is on the report and in the public documentation
+ * (docs.publicAssessments.conformance.disclaimer).
+ */
 const TEMPLATE_META: { name: BiText; description: BiText } = {
   name: {
-    en: "Data Protection Impact Assessment (DPIA)",
-    es: "Evaluación de impacto relativa a la protección de datos (DPIA)",
+    en: "Data Protection Impact Assessment (generic)",
+    es: "Evaluación de impacto en la protección de datos (genérica)",
   },
   description: {
-    en: "A DPIA that follows the framework you choose at the start: the European rules (Regulation (EU) 2016/679, Articles 35 and 36), the Californian risk assessment rules (11 CCR article 10), or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Informational, not legal advice.",
-    es: "Una DPIA que sigue el marco que elijas al principio: las normas europeas (Reglamento (UE) 2016/679, artículos 35 y 36), las normas californianas de evaluación de riesgos (11 CCR, artículo 10) o ambas. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Informativo, no constituye asesoramiento jurídico.",
+    en: "A DPIA that follows the framework you choose at the start: the European rules, the Californian risk assessment rules, or both.",
+    es: "Una evaluación que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas.",
   },
 };
 

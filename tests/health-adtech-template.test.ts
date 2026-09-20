@@ -152,7 +152,17 @@ describe("message bundles", () => {
       { id: HEALTH_ADTECH_TEMPLATE_ID, type: "DPIA", name: "x", description: "y" },
       objectLookup((es as any).templates)
     );
-    expect(meta.name).toMatch(/^Datos de salud en publicidad/);
+    expect(meta.name).toBe("Datos de salud en publicidad");
+  });
+
+  it("gives the template a short name in both languages", () => {
+    expect(healthAdtechMessages("en").template[HEALTH_ADTECH_TEMPLATE_ID].name).toBe(
+      "Health data in advertising"
+    );
+    expect(healthAdtechMessages("es").template[HEALTH_ADTECH_TEMPLATE_ID].name).toBe(
+      "Datos de salud en publicidad"
+    );
+    expect(healthAdtechTemplateData.name).toBe("Health data in advertising");
   });
 
   it("leave the standard DPIA translations in place", () => {

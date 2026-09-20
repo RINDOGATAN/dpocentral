@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Global assessment template: "Health data in advertising: CCPA risk
- * assessment and GDPR DPIA".
+ * Global assessment template: "Health data in advertising".
  *
  * Structure: the nine elements of a CCPA risk assessment (11 CCR 7152(a))
  * combined with the content GDPR Article 35(7) requires, plus a
@@ -1132,13 +1131,19 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
 ];
 
 export const HEALTH_ADTECH_NAME: BiText = {
-  en: "Health data in advertising: CCPA risk assessment and GDPR DPIA",
-  es: "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
+  en: "Health data in advertising",
+  es: "Datos de salud en publicidad",
 };
 
+/**
+ * One sentence, because this is the card text. The draft notice the longer
+ * version carried is not lost: it is the report's own subtitle
+ * (healthAdtechReport.subtitle), on every screen and page that prints a
+ * [to verify] mark.
+ */
 export const HEALTH_ADTECH_DESCRIPTION: BiText = {
-  en: "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice.",
-  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico.",
+  en: "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and Article 35(7) GDPR.",
+  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35(7) del RGPD.",
 };
 
 // ── Stored (English) template ─────────────────────────────────────────────
