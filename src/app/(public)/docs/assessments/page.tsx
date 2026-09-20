@@ -26,13 +26,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+/**
+ * The types the product offers, with the tier the mark describes.
+ *
+ * A type is offered only once a template exists for it, which is what
+ * getEntitledAssessmentTypes reports; PIA and VENDOR have no template and are
+ * not offered on any build, so they are not listed here either. The tier is
+ * the one the licence gate uses: PREMIUM_ASSESSMENT_TYPES in
+ * server/services/licensing/entitlement.ts, where TIA is free.
+ */
 const templateData: { type: string; tier: "Core" | "Premium" }[] = [
   { type: "LIA", tier: "Core" },
   { type: "CUSTOM", tier: "Core" },
+  { type: "TIA", tier: "Core" },
   { type: "DPIA", tier: "Premium" },
-  { type: "PIA", tier: "Premium" },
-  { type: "TIA", tier: "Premium" },
-  { type: "VENDOR", tier: "Premium" },
 ];
 
 const riskLevels = [
@@ -76,14 +83,6 @@ export default async function AssessmentsPage() {
     "history",
   ] as const;
   const portfolioFeatures = ["status", "type", "highRisk", "mitigation", "perType"] as const;
-  const creatingSteps = [
-    { key: "select", actor: "dpo" },
-    { key: "scope", actor: "dpo", hasDetails: true },
-    { key: "complete", actor: "dpo" },
-    { key: "mitigations", actor: "dpo" },
-    { key: "submit", actor: "dpo" },
-    { key: "approve", actor: "approver" },
-  ] as const;
 
   return (
     <div className="space-y-12">
@@ -232,28 +231,6 @@ export default async function AssessmentsPage() {
 
         <p className="text-xs text-muted-foreground mt-4">{t("conformance.note")}</p>
         <p className="text-xs text-muted-foreground mt-2">{t("conformance.disclaimer")}</p>
-      </section>
-
-      {/* Creating an Assessment */}
-      <section id="creating" className="scroll-mt-20">
-        <h2 className="text-xl font-semibold text-foreground mb-6">{t("creating.title")}</h2>
-        {creatingSteps.map((step, i) => (
-          <WorkflowStep
-            key={step.key}
-            number={i + 1}
-            title={t(`creating.steps.${step.key}.title`)}
-            description={t(`creating.steps.${step.key}.description`)}
-            actor={t(`creating.actors.${step.actor}`)}
-            details={
-              step.key === "scope"
-                ? [
-                    t("creating.steps.scope.detail1"),
-                    t("creating.steps.scope.detail2"),
-                  ]
-                : undefined
-            }
-          />
-        ))}
       </section>
 
       {/* PDF Exports */}

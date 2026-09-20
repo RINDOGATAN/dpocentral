@@ -4957,6 +4957,18 @@
       "ogDescription": "Guía rápida, roles de usuario y resumen de módulos para la gestión de privacidad RGPD.",
       "heroTitle": "DPO Central",
       "heroSubtitle": "Una única fuente de verdad para tu programa de gestión de privacidad. DPO Central ayuda a las organizaciones a gestionar el inventario de datos, las DSAR, evaluaciones, incidentes y relaciones con proveedores desde una plataforma unificada.",
+      "hostedPilot": {
+        "title": "Piloto alojado",
+        "intro": "El servicio alojado sirve para probar el producto. Es gratuito y no está pensado para asuntos reales de clientes. Una instancia propia no tiene ninguno de los límites siguientes.",
+        "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
+        "assessments": "Cada organización puede crear {assessments} evaluaciones de impacto. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
+        "ceilingsTitle": "Límites de registros",
+        "ceilingsIntro": "Una organización puede tener como máximo:",
+        "oneOrganization": "Una cuenta pertenece a una sola organización.",
+        "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
+        "safeguards": "No hay garantías contractuales: ni contrato de encargo del tratamiento, ni nivel de servicio, ni certificación de seguridad.",
+        "run": "Para trabajar con datos reales de clientes, <run>usa tu propia instancia</run>."
+      },
       "quickstart": {
         "title": "Inicio rápido",
         "step1": { "label": "Inicia sesión", "desc": "Usa tu enlace mágico por correo o cuenta de Google" },
@@ -5220,14 +5232,14 @@
     },
     "publicAssessments": {
       "metaTitle": "Evaluaciones",
-      "metaDescription": "Realiza DPIAs, PIAs, TIAs, LIAs y evaluaciones de riesgo de proveedor con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
+      "metaDescription": "Realiza DPIAs, TIAs, LIAs y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
       "ogTitle": "Evaluaciones | DPO CENTRAL",
-      "ogDescription": "Evaluaciones de impacto en privacidad: DPIA, PIA, TIA, LIA y riesgo de proveedor con plantillas, flujos de aprobación y puntuación de riesgo.",
+      "ogDescription": "Evaluaciones de impacto: DPIA, TIA, LIA y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
       "title": "Evaluaciones",
-      "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, PIAs, LIAs, TIAs y evaluaciones de riesgo de proveedor.",
+      "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, TIAs, LIAs y evaluaciones personalizadas.",
       "templates": {
         "title": "Plantillas de evaluación",
-        "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
+        "intro": "Elige una plantilla integrada, o la personalizada para una revisión que no encaje en ninguna de las demás. Cada plantilla lleva sus propias preguntas y criterios de riesgo, y toda evaluación creada a partir de una recorre el mismo flujo de aprobación.",
         "hostedNote": "Todos los tipos están disponibles en este servicio alojado, sin coste y sin bloqueo de la exportación. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
         "premiumBadge": "Premium",
         "tiers": {
@@ -5236,11 +5248,9 @@
         },
         "items": {
           "LIA": { "name": "Evaluación de interés legítimo", "desc": "Valora si el interés legítimo puede invocarse como base jurídica" },
-          "CUSTOM": { "name": "Evaluación personalizada", "desc": "Crea tu propia plantilla de evaluación con preguntas y criterios personalizados" },
+          "CUSTOM": { "name": "Evaluación personalizada", "desc": "Plantilla flexible para una revisión de privacidad que no cubre ninguno de los demás tipos" },
           "DPIA": { "name": "Evaluación de impacto en protección de datos", "desc": "Requerida por el Artículo 35 del RGPD para tratamientos de alto riesgo" },
-          "PIA": { "name": "Evaluación de impacto en privacidad", "desc": "Análisis más amplio de privacidad para nuevos proyectos y sistemas" },
-          "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" },
-          "VENDOR": { "name": "Evaluación de riesgo de proveedor", "desc": "Valora los riesgos de privacidad de proveedores y encargados externos" }
+          "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" }
         }
       },
       "approvals": {
@@ -5256,7 +5266,7 @@
       "riskScoring": {
         "title": "Puntuación de riesgo",
         "intro": "Cada evaluación calcula un nivel de riesgo general basado en la probabilidad e impacto de los riesgos identificados. El sistema admite cuatro niveles de riesgo.",
-        "outro": "Las puntuaciones de riesgo se calculan a partir de las respuestas individuales y pueden ser anuladas por el evaluador con justificación. El nivel de riesgo general determina los requisitos de revisión y las prioridades de mitigación."
+        "outro": "La puntuación se calcula a partir de las respuestas a medida que avanzas, y el nivel general resulta del conjunto de todas ellas. Aparece en la evaluación, en el informe exportado y en el informe de portafolio, que dedica tarjetas propias a las evaluaciones de riesgo alto."
       },
       "mitigations": {
         "title": "Mitigaciones de riesgo",
@@ -5274,21 +5284,6 @@
           "dlp": "Desplegar herramientas de prevención de pérdida de datos (DLP)"
         }
       },
-      "creating": {
-        "title": "Crear una evaluación",
-        "actors": {
-          "dpo": "DPO",
-          "approver": "Aprobador"
-        },
-        "steps": {
-          "select": { "title": "Selecciona una plantilla", "description": "Elige una plantilla de evaluación (LIA, DPIA, PIA, TIA, Vendor o Personalizada) desde el módulo de Evaluaciones." },
-          "scope": { "title": "Define el alcance y contexto", "description": "Define el alcance de la evaluación, la actividad de tratamiento que se evalúa y los activos de datos relevantes.", "detail1": "Vincula a actividades de tratamiento concretas de tu inventario de datos", "detail2": "Identifica los elementos de datos e interesados implicados" },
-          "complete": { "title": "Completa las preguntas", "description": "Responde cada pregunta de la plantilla. El sistema calcula las puntuaciones de riesgo a medida que avanzas." },
-          "mitigations": { "title": "Documenta las mitigaciones", "description": "Para cada riesgo identificado, documenta medidas de mitigación, asigna responsables y establece plazos." },
-          "submit": { "title": "Envía a revisión", "description": "Envía la evaluación completada para aprobación. Los revisores pueden aprobar, rechazar o solicitar cambios." },
-          "approve": { "title": "Aprobación final", "description": "Una vez aprobada, la evaluación queda bloqueada y se almacena como registro de cumplimiento." }
-        }
-      },
       "walkthrough": {
         "title": "Haz una DPIA en ocho pasos",
         "intro": "Este es el recorrido por las pantallas reales, desde el panel hasta el informe exportado.",
@@ -5297,13 +5292,13 @@
           "approver": "Aprobador"
         },
         "steps": {
-          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido." },
+          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido. Desde el módulo de Evaluaciones se llega al mismo formulario, para todos los tipos que ofrece el producto." },
           "create": { "title": "Ponle nombre y créala", "description": "Dale un nombre a la evaluación. Puedes vincularla a una actividad de tratamiento de tu inventario y a un proveedor. Ambas cosas son opcionales y alimentan el autorrelleno.", "detail1": "Una actividad de tratamiento vinculada permite proponer respuestas a partir de tu inventario de datos", "detail2": "Un proveedor vinculado aporta sus certificaciones y tecnologías de privacidad" },
           "frameworks": { "title": "Elige los marcos", "description": "La primera pregunta pide qué normas debe satisfacer la evaluación: las europeas, las californianas o ambas. La respuesta determina qué preguntas aparecen a continuación y sobre qué requisitos informa el informe.", "detail1": "Unión Europea: Reglamento (UE) 2016/679, artículos 35 y 36", "detail2": "California: 11 CCR, secciones 7150, 7152, 7155 y 7157" },
           "european": { "title": "Recorre los pasos europeos", "description": "Descripción del tratamiento, alcance y contexto, necesidad y proporcionalidad, consulta, identificación de riesgos, medidas y riesgo residual con la conclusión. Las pestañas de la parte superior muestran cuánto llevas respondido en cada paso." },
           "california": { "title": "Responde los pasos californianos", "description": "Solo aparecen si eliges California. Primero, las actividades que hacen necesaria una evaluación de riesgos; si no se cumple ninguna, el producto lo dice y no afirma ningún requisito californiano. Después, los nueve contenidos, los plazos, la presentación y la certificación del directivo." },
           "outstanding": { "title": "Resuelve lo que queda pendiente", "description": "Un panel situado encima de la evaluación enumera con claridad todo lo que falta: las preguntas sin responder y los requisitos legales que todavía no cubre nada. Cada elemento es un enlace que salta al paso y al campo que lo responde." },
-          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario decide un aprobador designado." },
+          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados, cada una con un responsable y una fecha límite, y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario, un aprobador designado la aprueba, la rechaza o la devuelve para que se corrija. Una evaluación aprobada queda bloqueada y se conserva como registro." },
           "export": { "title": "Exporta el informe", "description": "La exportación está disponible en cualquier momento y nunca se deniega. Mientras quede algo pendiente, el documento se marca como borrador en todas las páginas y enumera lo que falta en la primera." }
         }
       },
@@ -6650,7 +6645,7 @@
     }
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "banner": "Piloto alojado: gratuito, limitado (<docs>ver documentación</docs>) y sin garantías contractuales. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
     "bannerLabel": "Aviso del piloto alojado",
     "dismiss": "Cerrar",
     "settings": {

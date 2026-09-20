@@ -31,3 +31,6 @@ export const CONTACT_URL = "https://www.todo.law/contact";
 
 /** In-app anchor of the pilot card, which lists every export. */
 export const PILOT_EXPORT_PATH = "/privacy/settings#pilot-export";
+
+/** The documentation section that states what the hosted pilot allows. */
+export const PILOT_DOCS_PATH = "/docs#hosted-pilot";
