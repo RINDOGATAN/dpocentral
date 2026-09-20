@@ -2196,6 +2196,7 @@
     "devSignInFailed": "Error al iniciar sesión en modo dev.",
     "localSignInTitle": "Acceso local",
     "localSignInBody": "Tu cuenta vive en este ordenador. Introduce tu correo para abrirla: no se envía nada a ningún sitio.",
+    "signedOut": "Has cerrado la sesión. Vuelve a entrar para continuar.",
     "error": {
       "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
       "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
