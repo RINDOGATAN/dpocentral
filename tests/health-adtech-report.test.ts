@@ -107,7 +107,7 @@ function reportData(lang: "en" | "es"): AssessmentExportData {
   ) as AssessmentExportData["template"]["sections"];
   return {
     id: "a-1",
-    name: "Workshop DPIA",
+    name: "Health data DPIA",
     description: null,
     status: "IN_PROGRESS",
     riskLevel: "HIGH",
@@ -144,7 +144,7 @@ describe("health-data advertising report", () => {
 
     it(`prints the jurisdiction table, band, mitigation and signature (${lang})`, () => {
       const text = collectText(
-        HealthAdtechPages({ result, lang, t, title: "Workshop DPIA", orgName: "Org", date: "2026-09-17" })
+        HealthAdtechPages({ result, lang, t, title: "Health data DPIA", orgName: "Org", date: "2026-09-17" })
       ).join("\n");
       const labels = (bundle as any).healthAdtechReport;
       for (const key of ["title", "jurisdiction", "consentModel", "obligations", "findings", "fiveFactorTitle", "decisionTitle", "signatureTitle", "signer"]) {

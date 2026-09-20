@@ -228,7 +228,7 @@ describe("creating a premium assessment", () => {
     callerFor(assessmentRouter, sessionFor("user-1")).create({
       organizationId: "org-1",
       templateId: DPIA_TEMPLATE_ID,
-      name: "Workshop DPIA",
+      name: "Health data DPIA",
     });
 
   it("is allowed on the hosted pilot without any licence", async () => {
