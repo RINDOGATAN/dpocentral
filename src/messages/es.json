@@ -5274,21 +5274,6 @@
           "dlp": "Desplegar herramientas de prevención de pérdida de datos (DLP)"
         }
       },
-      "creating": {
-        "title": "Crear una evaluación",
-        "actors": {
-          "dpo": "DPO",
-          "approver": "Aprobador"
-        },
-        "steps": {
-          "select": { "title": "Selecciona una plantilla", "description": "Elige una plantilla de evaluación (LIA, DPIA, PIA, TIA, Vendor o Personalizada) desde el módulo de Evaluaciones." },
-          "scope": { "title": "Define el alcance y contexto", "description": "Define el alcance de la evaluación, la actividad de tratamiento que se evalúa y los activos de datos relevantes.", "detail1": "Vincula a actividades de tratamiento concretas de tu inventario de datos", "detail2": "Identifica los elementos de datos e interesados implicados" },
-          "complete": { "title": "Completa las preguntas", "description": "Responde cada pregunta de la plantilla. El sistema calcula las puntuaciones de riesgo a medida que avanzas." },
-          "mitigations": { "title": "Documenta las mitigaciones", "description": "Para cada riesgo identificado, documenta medidas de mitigación, asigna responsables y establece plazos." },
-          "submit": { "title": "Envía a revisión", "description": "Envía la evaluación completada para aprobación. Los revisores pueden aprobar, rechazar o solicitar cambios." },
-          "approve": { "title": "Aprobación final", "description": "Una vez aprobada, la evaluación queda bloqueada y se almacena como registro de cumplimiento." }
-        }
-      },
       "walkthrough": {
         "title": "Haz una DPIA en ocho pasos",
         "intro": "Este es el recorrido por las pantallas reales, desde el panel hasta el informe exportado.",
@@ -5297,13 +5282,13 @@
           "approver": "Aprobador"
         },
         "steps": {
-          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido." },
+          "start": { "title": "Empieza una DPIA desde el panel", "description": "El panel incluye la acción rápida «Empezar una DPIA». Abre el formulario de nueva evaluación con el tipo ya elegido. Desde el módulo de Evaluaciones se llega al mismo formulario, para todos los tipos que ofrece el producto." },
           "create": { "title": "Ponle nombre y créala", "description": "Dale un nombre a la evaluación. Puedes vincularla a una actividad de tratamiento de tu inventario y a un proveedor. Ambas cosas son opcionales y alimentan el autorrelleno.", "detail1": "Una actividad de tratamiento vinculada permite proponer respuestas a partir de tu inventario de datos", "detail2": "Un proveedor vinculado aporta sus certificaciones y tecnologías de privacidad" },
           "frameworks": { "title": "Elige los marcos", "description": "La primera pregunta pide qué normas debe satisfacer la evaluación: las europeas, las californianas o ambas. La respuesta determina qué preguntas aparecen a continuación y sobre qué requisitos informa el informe.", "detail1": "Unión Europea: Reglamento (UE) 2016/679, artículos 35 y 36", "detail2": "California: 11 CCR, secciones 7150, 7152, 7155 y 7157" },
           "european": { "title": "Recorre los pasos europeos", "description": "Descripción del tratamiento, alcance y contexto, necesidad y proporcionalidad, consulta, identificación de riesgos, medidas y riesgo residual con la conclusión. Las pestañas de la parte superior muestran cuánto llevas respondido en cada paso." },
           "california": { "title": "Responde los pasos californianos", "description": "Solo aparecen si eliges California. Primero, las actividades que hacen necesaria una evaluación de riesgos; si no se cumple ninguna, el producto lo dice y no afirma ningún requisito californiano. Después, los nueve contenidos, los plazos, la presentación y la certificación del directivo." },
           "outstanding": { "title": "Resuelve lo que queda pendiente", "description": "Un panel situado encima de la evaluación enumera con claridad todo lo que falta: las preguntas sin responder y los requisitos legales que todavía no cubre nada. Cada elemento es un enlace que salta al paso y al campo que lo responde." },
-          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario decide un aprobador designado." },
+          "approve": { "title": "Registra las mitigaciones y aprueba", "description": "Añade medidas de mitigación para los riesgos identificados, cada una con un responsable y una fecha límite, y envía la evaluación. Una organización de una sola persona puede enviar y aprobar en un solo paso; en caso contrario, un aprobador designado la aprueba, la rechaza o la devuelve para que se corrija. Una evaluación aprobada queda bloqueada y se conserva como registro." },
           "export": { "title": "Exporta el informe", "description": "La exportación está disponible en cualquier momento y nunca se deniega. Mientras quede algo pendiente, el documento se marca como borrador en todas las páginas y enumera lo que falta en la primera." }
         }
       },

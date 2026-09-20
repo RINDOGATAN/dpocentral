@@ -5274,21 +5274,6 @@
           "dlp": "Deploy data loss prevention (DLP) tools"
         }
       },
-      "creating": {
-        "title": "Creating an Assessment",
-        "actors": {
-          "dpo": "DPO",
-          "approver": "Approver"
-        },
-        "steps": {
-          "select": { "title": "Select Template", "description": "Choose an assessment template (LIA, DPIA, PIA, TIA, Vendor, or Custom) from the Assessments module." },
-          "scope": { "title": "Set Scope and Context", "description": "Define the assessment scope, processing activity being evaluated, and relevant data assets.", "detail1": "Link to specific processing activities from your data inventory", "detail2": "Identify the data elements and data subjects involved" },
-          "complete": { "title": "Complete Questions", "description": "Answer each question in the template. The system calculates risk scores as you progress." },
-          "mitigations": { "title": "Document Mitigations", "description": "For each identified risk, document mitigation measures, assign owners, and set deadlines." },
-          "submit": { "title": "Submit for Review", "description": "Submit the completed assessment for approval. Reviewers can approve, reject, or request changes." },
-          "approve": { "title": "Final Approval", "description": "Once approved, the assessment is locked and stored as a compliance record." }
-        }
-      },
       "walkthrough": {
         "title": "Run a DPIA in eight steps",
         "intro": "This is the path through the real screens, from the dashboard to the exported report.",
@@ -5297,13 +5282,13 @@
           "approver": "Approver"
         },
         "steps": {
-          "start": { "title": "Start a DPIA from the dashboard", "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen." },
+          "start": { "title": "Start a DPIA from the dashboard", "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen. The Assessments module reaches the same form, for every type the product offers." },
           "create": { "title": "Name it and create it", "description": "Give the assessment a name. You may link it to a processing activity from your inventory and to a vendor. Both are optional and both feed the auto-fill.", "detail1": "A linked processing activity lets the app propose answers from your data inventory", "detail2": "A linked vendor brings in its certifications and privacy technologies" },
           "frameworks": { "title": "Choose the frameworks", "description": "The first question asks which rules the assessment has to satisfy: the European ones, the Californian ones, or both. The answer decides which questions appear below and which requirements the report reports on.", "detail1": "European Union: Regulation (EU) 2016/679, Articles 35 and 36", "detail2": "California: 11 CCR sections 7150, 7152, 7155 and 7157" },
           "european": { "title": "Work through the European steps", "description": "Processing description, scope and context, necessity and proportionality, consultation, risk identification, measures, and residual risk with the conclusion. The pills at the top of the page show how much of each step is answered." },
           "california": { "title": "Answer the Californian steps", "description": "Shown only when California is chosen. First the activities that make a risk assessment necessary; if none of them applies, the product says so and claims no Californian requirement. Then the nine content items, the timetable, the submission and the executive attestation." },
           "outstanding": { "title": "Clear what is outstanding", "description": "A panel above the assessment lists everything still missing, in plain words: the questions nobody has answered and the legal requirements nothing covers yet. Every item is a link that jumps to the step and the field that answers it." },
-          "approve": { "title": "Record mitigations and approve", "description": "Add mitigation measures for the risks you identified, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver decides." },
+          "approve": { "title": "Record mitigations and approve", "description": "Add mitigation measures for the risks you identified, each with an owner and a due date, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver approves the assessment, rejects it or returns it for changes. An approved assessment is locked and kept as a record." },
           "export": { "title": "Export the report", "description": "Export is available at every stage and never refuses. While anything is outstanding the document is marked a draft on every page and lists what is missing on the first one." }
         }
       },
