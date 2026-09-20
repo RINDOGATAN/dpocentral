@@ -304,7 +304,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               Source &amp; licence
             </Link>
           </p>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
             <Link href="/privacy/docs" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-3.5 h-3.5" />
               {tFooter("userGuide")}

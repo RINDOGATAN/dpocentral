@@ -71,7 +71,7 @@ export default function AdminLayout({
           <p className="text-muted-foreground">
             You do not have platform admin privileges.
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center">
             <Link href="/privacy">
               <Button variant="outline">Go to Dashboard</Button>
             </Link>
@@ -91,11 +91,11 @@ export default function AdminLayout({
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
-        <div className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/admin" className="flex items-center gap-2">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 md:gap-6 min-w-0">
+            <Link href="/admin" className="flex items-center gap-2 min-w-0">
               <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-              <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>DPO Central Admin</span>
+              <span className="truncate" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>DPO Central Admin</span>
             </Link>
 
             {/* Navigation */}
@@ -126,8 +126,8 @@ export default function AdminLayout({
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden sm:inline">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            <span className="text-sm text-muted-foreground hidden sm:inline max-w-[200px] truncate">
               {session?.user?.email}
             </span>
             <Link href="/privacy">
@@ -148,11 +148,11 @@ export default function AdminLayout({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-6 py-6">{children}</main>
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">{children}</main>
 
       {/* Footer */}
       <footer className="border-t border-border mt-auto py-4">
-        <div className="max-w-[1600px] mx-auto px-6 text-center text-xs text-muted-foreground">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground">
           <p>{brand.name} Platform Administration - {brand.companyName}</p>
         </div>
       </footer>
