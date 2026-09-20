@@ -259,13 +259,13 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/dsar">
+        <div className="flex items-center gap-4 min-w-0">
+          <Link href="/privacy/dsar" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-semibold font-mono">{request.publicId}</h1>
               <Badge variant="outline">{tList(`type.${request.type}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</Badge>
@@ -273,7 +273,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                 {tList(`status.${request.status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED` | `status.REJECTED`)}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">
+            {/* An address is one unbroken token and is routinely longer than a
+                phone screen: it has to be allowed to break. */}
+            <p className="text-sm text-muted-foreground break-words">
               {request.requesterName} - {request.requesterEmail}
             </p>
           </div>

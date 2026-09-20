@@ -81,13 +81,13 @@ export default function UserDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">ID</span>
-                  <code className="text-xs">{user.id}</code>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground shrink-0">ID</span>
+                  <code className="text-xs break-all">{user.id}</code>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Email</span>
-                  <span>{user.email}</span>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground shrink-0">Email</span>
+                  <span className="break-all">{user.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Verified</span>
