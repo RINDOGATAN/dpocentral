@@ -37,6 +37,16 @@ describe("a refusal says what is missing", () => {
     expect(router).toContain("describeUnanswered(assessment.template, unanswered)");
     expect(router).not.toContain("Please answer all required questions");
   });
+
+  it("takes the reader to the list of what is missing, where each item links to its field", () => {
+    const page = source("src/app/(dashboard)/privacy/assessments/[id]/page.tsx");
+    // Both refusals, the submit and the submit-and-approve, land there.
+    expect(page.match(/showWhatIsMissing\(error\.message\)/g)).toHaveLength(2);
+    expect(page).toContain("completenessRef.current?.scrollIntoView");
+    expect(page).toContain("<div ref={completenessRef}>");
+    // And the button that is disabled says why.
+    expect(page.match(/title=\{allRequiredAnswered \? undefined : tp\("completeness\.submitHint"\)\}/g)).toHaveLength(2);
+  });
 });
 
 describe("a rejected assessment can be worked on again", () => {

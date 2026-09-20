@@ -132,6 +132,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // Locally-added, not-yet-saved rows for repeatable sections: groupId -> [instanceId]
   const [extraInstances, setExtraInstances] = useState<Record<string, string[]>>({});
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  // Where a refused submission sends the reader: the list of what is missing,
+  // each item a link to the field that answers it.
+  const completenessRef = useRef<HTMLDivElement | null>(null);
 
   // Mitigation dialog state
   const [addMitigationOpen, setAddMitigationOpen] = useState(false);
@@ -188,13 +191,20 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
   const utils = trpc.useUtils();
 
+  // A refusal names the questions that are missing (server side) and takes
+  // the reader to the list of them, where every item links to its field.
+  const showWhatIsMissing = useCallback((message: string) => {
+    toast.error(message || t("generic.somethingWentWrong"));
+    completenessRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [t]);
+
   const submitAssessment = trpc.assessment.submit.useMutation({
     onSuccess: () => {
       toast.success(t("assessment.submittedForReview"));
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || t("generic.somethingWentWrong"));
+      showWhatIsMissing(error.message);
     },
   });
 
@@ -272,7 +282,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       utils.assessment.getById.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || t("generic.somethingWentWrong"));
+      showWhatIsMissing(error.message);
     },
   });
 
@@ -804,6 +814,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 })
               }
               disabled={submitAndApprove.isPending || !allRequiredAnswered}
+              title={allRequiredAnswered ? undefined : tp("completeness.submitHint")}
             >
               {submitAndApprove.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle2 className="w-4 h-4 mr-2" />}
               {tp("submitApprove")}
@@ -818,6 +829,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 })
               }
               disabled={submitAssessment.isPending || !allRequiredAnswered}
+              title={allRequiredAnswered ? undefined : tp("completeness.submitHint")}
             >
               {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               {tp("submitReview")}
@@ -840,7 +852,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       </Card>
 
       {/* What is still outstanding, each item a link to the step that answers it */}
-      <CompletenessPanel completeness={completeness} onJump={jumpToQuestion} />
+      <div ref={completenessRef}>
+        <CompletenessPanel completeness={completeness} onJump={jumpToQuestion} />
+      </div>
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-4">
