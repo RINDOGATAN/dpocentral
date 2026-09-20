@@ -2,16 +2,20 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Things a user sends to us must reach us.
+ * A request for technical help reaches us, and only us.
  *
- * A request for technical help used to go to the expert, when their record
+ * It used to go to the person listed in the directory, when their record
  * carried an address, and back to the person who asked. Nothing reached us, so
  * we never learned that a firm had asked. These tests lock the contract: the
- * request is stored, our inbox is among the recipients, every user-supplied
- * value is escaped, and a mail failure — including an unconfigured mail
- * service — loses neither the record nor the log line.
+ * request is stored, our inbox is the recipient, the directory person's
+ * address is never written to, every user-supplied value is escaped, and a
+ * mail failure — including an unconfigured mail service — loses neither the
+ * record nor the log line.
  *
- * The same contract for the feedback control is in tests/feedback-inbox.test.ts.
+ * Where our inbox is has one resolution order, tested here: CONTACT_EMAIL,
+ * then ADMIN_EMAILS, then the standing address.
+ *
+ * Feedback deliberately mails nothing; see tests/feedback-inbox.test.ts.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -43,6 +47,8 @@ import {
   DEFAULT_INTERNAL_INBOX,
 } from "@/server/services/notifications/internal-inbox";
 import { expertsRouter } from "@/server/routers/privacy/experts";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
 import { callerFor, sessionFor } from "./helpers";
 
 const session = sessionFor("user-1", "asker@firm.test");
@@ -70,6 +76,7 @@ function inboxCall() {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("RESEND_API_KEY", "test-key");
+  vi.stubEnv("CONTACT_EMAIL", "");
   vi.stubEnv("ADMIN_EMAILS", "");
   mocks.send.mockResolvedValue({ data: { id: "mail-1" }, error: null });
   mocks.prisma.organizationMember.findUnique.mockResolvedValue({
@@ -86,12 +93,25 @@ afterEach(() => {
 });
 
 describe("where our inbox is", () => {
-  it("is every address in ADMIN_EMAILS when that is set", () => {
+  it("is CONTACT_EMAIL first, the same address the daily digest mails to", () => {
+    vi.stubEnv("CONTACT_EMAIL", " owner@firm.test ");
+    vi.stubEnv("ADMIN_EMAILS", "ops@firm.test");
+    expect(internalInboxAddresses()).toEqual(["owner@firm.test"]);
+  });
+
+  it("takes every address in CONTACT_EMAIL", () => {
+    vi.stubEnv("CONTACT_EMAIL", "first@firm.test, second@firm.test");
+    expect(internalInboxAddresses()).toEqual(["first@firm.test", "second@firm.test"]);
+  });
+
+  it("falls back to ADMIN_EMAILS when CONTACT_EMAIL is empty", () => {
+    vi.stubEnv("CONTACT_EMAIL", "");
     vi.stubEnv("ADMIN_EMAILS", " first@firm.test , second@firm.test ");
     expect(internalInboxAddresses()).toEqual(["first@firm.test", "second@firm.test"]);
   });
 
-  it("falls back to the standing address when ADMIN_EMAILS is empty", () => {
+  it("falls back to the standing address when neither is set", () => {
+    vi.stubEnv("CONTACT_EMAIL", "");
     vi.stubEnv("ADMIN_EMAILS", "");
     expect(internalInboxAddresses()).toEqual([DEFAULT_INTERNAL_INBOX]);
   });
@@ -142,7 +162,7 @@ describe("a request for technical help", () => {
   const caller = () =>
     callerFor(expertsRouter, session) as ReturnType<typeof expertsRouter.createCaller>;
 
-  it("is stored and copied to our inbox", async () => {
+  it("is stored and sent to our inbox", async () => {
     await caller().contact(request);
 
     expect(mocks.prisma.expertEngagement.create).toHaveBeenCalledOnce();
@@ -150,7 +170,10 @@ describe("a request for technical help", () => {
     const copy = inboxCall();
     expect(copy).toBeDefined();
     expect(copy.replyTo).toBe(request.requesterEmail);
-    expect(copy.subject).toContain(request.subject);
+    // The requester's words stay out of the mail header and appear as an
+    // escaped field in the body.
+    expect(copy.subject).not.toContain(request.subject);
+    expect(copy.html).toContain(request.subject);
     expect(copy.html).toContain("Asking Person");
     expect(copy.html).toContain("Asking Firm");
     expect(copy.html).toContain("asker@firm.test");
@@ -180,6 +203,50 @@ describe("a request for technical help", () => {
 
     await expect(caller().contact(request)).resolves.toBeDefined();
     expect(mocks.prisma.expertEngagement.create).toHaveBeenCalledOnce();
+    expect(mocks.logger.error).toHaveBeenCalled();
+  });
+
+  /** The confirmation that went back to the person who asked. */
+  function confirmation() {
+    return mocks.send.mock.calls
+      .map(([payload]) => payload)
+      .find((payload) => payload.to === request.requesterEmail);
+  }
+
+  it("confirms to the person who asked, in the language they are reading", async () => {
+    await caller().contact(request);
+    expect(confirmation()?.subject).toBe(
+      enMessages.experts.contact.confirmationEmail.subject
+    );
+
+    vi.clearAllMocks();
+    mocks.send.mockResolvedValue({ data: { id: "mail-2" }, error: null });
+    mocks.prisma.expertEngagement.create.mockResolvedValue({ id: "eng-2" });
+    mocks.prisma.organizationMember.findUnique.mockResolvedValue({
+      organizationId: "org-1",
+      userId: "user-1",
+      role: "OWNER",
+      organization: { name: "Asking Firm" },
+    });
+
+    const spanish = callerFor(expertsRouter, session, {
+      locale: "es",
+    }) as ReturnType<typeof expertsRouter.createCaller>;
+    await spanish.contact(request);
+    expect(confirmation()?.subject).toBe(
+      esMessages.experts.contact.confirmationEmail.subject
+    );
+    expect(confirmation()?.subject).not.toBe(
+      enMessages.experts.contact.confirmationEmail.subject
+    );
+  });
+
+  it("tells nobody it was sent when the mail service is not configured", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+
+    await expect(caller().contact(request)).resolves.toMatchObject({
+      confirmationSent: false,
+    });
     expect(mocks.logger.error).toHaveBeenCalled();
   });
 

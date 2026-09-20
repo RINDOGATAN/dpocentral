@@ -28,12 +28,17 @@ export function sessionFor(
 
 type Callable = { createCaller: (ctx: ReturnType<typeof createInnerTRPCContext>) => unknown };
 
-/** Build a caller for a router with the given session (null = anonymous). */
+/**
+ * Build a caller for a router with the given session (null = anonymous).
+ * `cookies` stands in for the request's cookies — pass `{ locale: "es" }` to
+ * exercise the language a reply is written in.
+ */
 export function callerFor<R extends Callable>(
   router: R,
-  session: Session | null
+  session: Session | null,
+  cookies: Record<string, string> = {}
 ): ReturnType<R["createCaller"]> {
   return router.createCaller(
-    createInnerTRPCContext({ session, getCookie: () => undefined })
+    createInnerTRPCContext({ session, getCookie: (name) => cookies[name] })
   ) as ReturnType<R["createCaller"]>;
 }

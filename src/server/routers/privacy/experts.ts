@@ -10,6 +10,7 @@ import prisma from "@/lib/prisma";
 import {
   searchExperts,
   getExpertById,
+  getExpertRecord,
   getSpecializations,
   getCountries,
   getLanguages,
@@ -17,10 +18,36 @@ import {
   contactExpert,
   getContactRequest,
 } from "../../services/dealroom/client";
-import { emailFrom, emailFooterHtml } from "@/config/brand";
-import { brand } from "@/config/brand";
+import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
 import { logger } from "@/lib/logger";
 import { sendInternalNotice } from "@/server/services/notifications/internal-inbox";
+import { defaultLocale, type Locale } from "@/i18n/config";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
+
+/**
+ * The confirmation the person who asked receives, in their own language.
+ *
+ * The copy is read straight from the message bundles rather than through
+ * next-intl's server helpers: this runs inside a tRPC mutation, where there is
+ * no request config to read, and the bundles are the same strings the
+ * interface uses, so the two never drift.
+ */
+const CONFIRMATION_COPY: Record<
+  Locale,
+  typeof enMessages.experts.contact.confirmationEmail
+> = {
+  en: enMessages.experts.contact.confirmationEmail,
+  es: esMessages.experts.contact.confirmationEmail,
+};
+
+/** Substitutes {placeholders}. Every value must already be escaped. */
+function fill(template: string, values: Record<string, string>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) =>
+    key in values ? values[key] : match
+  );
+}
 
 function escapeHtml(str: string): string {
   return str
@@ -31,13 +58,17 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#39;");
 }
 
-let resend: Resend | null = null;
+// Cached by key, not by first use: a client built from an earlier key must
+// never outlive it, or an instance with no key configured would look to this
+// code as though mail were working.
+let cachedClient: { key: string; client: Resend } | null = null;
 function getResend(): Resend | null {
-  if (resend) return resend;
   const key = process.env.RESEND_API_KEY;
   if (!key) return null;
-  resend = new Resend(key);
-  return resend;
+  if (cachedClient?.key !== key) {
+    cachedClient = { key, client: new Resend(key) };
+  }
+  return cachedClient.client;
 }
 
 export const expertsRouter = createTRPCRouter({
@@ -91,8 +122,11 @@ export const expertsRouter = createTRPCRouter({
       // 1. Submit to Dealroom (or mock)
       const result = await contactExpert(input);
 
-      // 2. Look up expert profile for their email
-      const expert = await getExpertById(input.expertId);
+      // 2. The full record, address included. It is read for our own storage
+      //    only: the address is written to the engagement row so we can reach
+      //    the person ourselves, and is never mailed to and never returned to
+      //    a client. See the note in ../../services/dealroom/client.ts.
+      const expert = await getExpertRecord(input.expertId);
 
       // Log an engagement record so the org has a CRM-style history.
       // Verifies org membership before writing.
@@ -143,16 +177,21 @@ export const expertsRouter = createTRPCRouter({
         );
       }
 
-      // Copy every request to our own inbox. Before 2026-09-20 a request went
-      // to the expert (when a record carried an address) and back to the
-      // person who asked, and nothing reached us, so we never learned that a
-      // firm had asked for help. The directory's one entry has no address on
-      // file, which makes this copy the only way the request is answered.
-      // It runs whether or not the mail service is configured: an unconfigured
-      // service is logged loudly by sendInternalNotice, never skipped.
+      // Every request goes to us and only to us. Before 2026-09-20 a request
+      // went to the person listed in the directory, when their record carried
+      // an address, and nothing reached us, so we never learned that a firm
+      // had asked for help. Their address is now ours to hold and never to
+      // hand out: nothing is mailed to it from this product, and we contact
+      // them ourselves. This notice is therefore the request, not a copy of
+      // it. It runs whether or not the mail service is configured: an
+      // unconfigured service is logged loudly by sendInternalNotice, never
+      // skipped.
       const requestedAt = new Date();
-      await sendInternalNotice({
-        subject: `Technical help requested: ${input.subject}`,
+      const notice = await sendInternalNotice({
+        // The product, not the requester's words: a mail header is not HTML,
+        // and nothing a user typed belongs in one. Their subject is a field
+        // below, where it is escaped like every other value.
+        subject: `Technical help requested through ${brand.name}`,
         intro: "Someone asked for technical help through the directory.",
         replyTo: input.requesterEmail,
         fields: [
@@ -160,6 +199,7 @@ export const expertsRouter = createTRPCRouter({
           { label: "Organisation", value: input.requesterCompany ?? organizationName },
           { label: "Their address", value: input.requesterEmail },
           { label: "Subject", value: input.subject },
+          { label: "Product", value: brand.name },
           { label: "Asked of", value: expert?.name ?? input.expertName ?? null },
           { label: "Governing law", value: input.governingLaw },
           { label: "When", value: requestedAt.toISOString() },
@@ -174,96 +214,94 @@ export const expertsRouter = createTRPCRouter({
         },
       });
 
-      // 3. Send emails (must await — serverless kills the runtime after response)
-      const r = getResend();
-      if (r) {
-        const from = emailFrom();
-        const footer = emailFooterHtml();
-        // Escape user-provided values before embedding in HTML emails
-        const safeName = escapeHtml(input.requesterName);
-        const safeEmail = escapeHtml(input.requesterEmail);
-        const safeSubject = escapeHtml(input.subject);
-        const safeExpertName = escapeHtml(expert?.name ?? "there");
-        const companyLine = input.requesterCompany
-          ? `<p style="margin:0;color:#6b7280;font-size:13px;">Company: ${escapeHtml(input.requesterCompany)}</p>`
-          : "";
-        const messageLine = input.message
-          ? `<div style="margin-top:16px;padding:12px 16px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;"><p style="margin:0;font-size:14px;color:#374151;white-space:pre-wrap;">${escapeHtml(input.message)}</p></div>`
-          : "";
-
-        const emailPromises: Promise<void>[] = [];
-
-        // Email to expert
-        if (expert?.email) {
-          emailPromises.push(
-            r.emails.send({
-              from,
-              replyTo: input.requesterEmail,
-              to: expert.email,
-              subject: `New inquiry: ${input.subject}`,
-              html: `
-                <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px;">
-                  <p>Hi ${safeExpertName},</p>
-                  <p>You have received a new inquiry via ${brand.nameUppercase}:</p>
-                  <div style="margin:16px 0;padding:16px;border:1px solid #e5e7eb;border-radius:8px;">
-                    <p style="margin:0 0 4px;font-weight:600;font-size:15px;">${safeSubject}</p>
-                    <p style="margin:0;color:#6b7280;font-size:13px;">From: ${safeName} &lt;${safeEmail}&gt;</p>
-                    ${companyLine}
-                  </div>
-                  ${messageLine}
-                  <p style="margin-top:16px;">Please reply directly to <a href="mailto:${safeEmail}" style="color:#2563eb;">${safeEmail}</a>.</p>
-                  <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
-                  <p style="color:#9ca3af;font-size:11px;">${footer}</p>
-                </div>
-              `.trim(),
-            }).then((res) => {
-              if (res.error) {
-                logger.error("Resend rejected expert email", undefined, { error: JSON.stringify(res.error), to: expert.email });
-              } else {
-                logger.info("Expert notification email sent", { to: expert.email, id: res.data?.id });
-              }
-            }).catch((err) => {
-              logger.error("Failed to send expert notification email", err, { expertId: input.expertId, to: expert.email });
-            })
-          );
-        }
-
-        // Confirmation email to requester
-        emailPromises.push(
-          r.emails.send({
-            from,
-            to: input.requesterEmail,
-            subject: `Your request has been sent — ${input.subject}`,
-            html: `
-              <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px;">
-                <p>Hi ${safeName},</p>
-                <p>Your request has been sent to <strong>${escapeHtml(expert?.name ?? "the expert")}</strong>${expert?.firm ? ` at ${escapeHtml(expert.firm)}` : ""}. They will respond directly to this email address.</p>
-                <div style="margin:16px 0;padding:16px;border:1px solid #e5e7eb;border-radius:8px;">
-                  <p style="margin:0 0 4px;font-weight:600;font-size:15px;">${safeSubject}</p>
-                  <p style="margin:0;color:#6b7280;font-size:13px;">Sent to: ${escapeHtml(expert?.name ?? "Expert")}${expert?.firm ? ` — ${escapeHtml(expert.firm)}` : ""}</p>
-                </div>
-                ${messageLine}
-                <p style="margin-top:16px;color:#6b7280;font-size:13px;">If you don't hear back within 2 business days, please contact <a href="mailto:${brand.supportEmail}" style="color:#2563eb;">${brand.supportEmail}</a>.</p>
-                <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
-                <p style="color:#9ca3af;font-size:11px;">${footer}</p>
-              </div>
-            `.trim(),
-          }).then((res) => {
-            if (res.error) {
-              logger.error("Resend rejected requester email", undefined, { error: JSON.stringify(res.error), to: input.requesterEmail });
-            } else {
-              logger.info("Requester confirmation email sent", { to: input.requesterEmail, id: res.data?.id });
-            }
-          }).catch((err) => {
-            logger.error("Failed to send requester confirmation email", err, { to: input.requesterEmail });
-          })
-        );
-
-        // Wait for all emails to complete before returning
-        await Promise.all(emailPromises);
+      // Nothing was stored and nothing reached our inbox: the request exists
+      // only in the log above. Say so rather than showing the person a
+      // confirmation for something that did not happen.
+      if (!stored && !notice.delivered) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "Your request could not be recorded or delivered. Please try again, or write to us directly.",
+        });
       }
 
-      return result;
+      // 3. The confirmation to the person who asked, in their own language.
+      //    Awaited: serverless kills the runtime once the response is sent.
+      const locale: Locale = localeFromCookieGetter(ctx.getCookie) ?? defaultLocale;
+      const copy = CONFIRMATION_COPY[locale];
+      const r = getResend();
+
+      if (!r) {
+        // Say it plainly. The request is held (in the engagement row, in the
+        // inbox notice, or both), but the person who asked has not been told
+        // anything, so someone has to answer them by hand.
+        logger.error(
+          "RESEND_API_KEY is not configured, so the person who asked for technical help received no confirmation. Their request is held and must be answered by hand.",
+          undefined,
+          {
+            to: input.requesterEmail,
+            expertId: input.expertId,
+            stored,
+            deliveredToInbox: notice.delivered,
+          }
+        );
+        return { ...result, confirmationSent: false };
+      }
+
+      // Escape every user-supplied value before it enters the message.
+      const safeName = escapeHtml(input.requesterName);
+      const safeSubject = escapeHtml(input.subject);
+      const safeSupport = escapeHtml(brand.supportEmail);
+      const messageLine = input.message
+        ? `<div style="margin-top:16px;padding:12px 16px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;"><p style="margin:0;font-size:14px;color:#374151;white-space:pre-wrap;">${escapeHtml(input.message)}</p></div>`
+        : "";
+
+      // The subject line carries no user text: a mail header is not HTML, and
+      // nothing a requester typed belongs in one.
+      const confirmationSent = await r.emails
+        .send({
+          from: emailFrom(),
+          to: input.requesterEmail,
+          subject: copy.subject,
+          html: `
+            <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:24px;">
+              <p>${fill(copy.greeting, { name: safeName })}</p>
+              <p>${fill(copy.received, { product: escapeHtml(brand.name) })}</p>
+              <div style="margin:16px 0;padding:16px;border:1px solid #e5e7eb;border-radius:8px;">
+                <p style="margin:0 0 4px;color:#6b7280;font-size:12px;">${escapeHtml(copy.requestLabel)}</p>
+                <p style="margin:0;font-weight:600;font-size:15px;">${safeSubject}</p>
+              </div>
+              ${messageLine}
+              <p style="margin-top:16px;color:#6b7280;font-size:13px;">${fill(copy.closing, {
+                support: `<a href="mailto:${safeSupport}" style="color:#2563eb;">${safeSupport}</a>`,
+              })}</p>
+              <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
+              <p style="color:#9ca3af;font-size:11px;">${emailFooterHtml()}</p>
+            </div>
+          `.trim(),
+        })
+        .then((res) => {
+          if (res.error) {
+            logger.error("The mail service rejected the confirmation to the person who asked.", undefined, {
+              error: JSON.stringify(res.error),
+              to: input.requesterEmail,
+            });
+            return false;
+          }
+          logger.info("Confirmation sent to the person who asked", {
+            to: input.requesterEmail,
+            id: res.data?.id,
+          });
+          return true;
+        })
+        .catch((err) => {
+          logger.error("Sending the confirmation to the person who asked failed.", err, {
+            to: input.requesterEmail,
+          });
+          return false;
+        });
+
+      return { ...result, confirmationSent };
     }),
 
   getContactRequest: protectedProcedure
@@ -290,9 +328,27 @@ export const expertsRouter = createTRPCRouter({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
+      // Named fields, not `include`: the row carries the directory person's
+      // address (expertEmail), which is ours to hold and never to hand out.
+      // A client receives everything else. Adding a column to the model must
+      // not silently add it to this response.
       return prisma.expertEngagement.findMany({
         where: { organizationId: input.organizationId },
-        include: {
+        select: {
+          id: true,
+          organizationId: true,
+          expertId: true,
+          expertName: true,
+          expertFirm: true,
+          contactedById: true,
+          subject: true,
+          message: true,
+          notes: true,
+          status: true,
+          contactedAt: true,
+          updatedAt: true,
+          closedAt: true,
+          externalRequestId: true,
           contactedBy: { select: { id: true, name: true, email: true } },
         },
         orderBy: { contactedAt: "desc" },

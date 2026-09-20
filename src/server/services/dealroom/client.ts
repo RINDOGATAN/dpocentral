@@ -27,6 +27,27 @@ const unconfigured = !DEALROOM_API_URL || !DEALROOM_API_KEY;
 
 export type { ExpertProfile };
 
+// ---------------------------------------------------------------------------
+// The contact address of a person in the directory is ours to hold, never
+// ours to hand out (owner's decision, 2026-09-20). No user may see it, in a
+// card, in a detail panel, in an export or in any API response, and no request
+// is mailed to it from this product: every request goes to our own inbox and
+// we contact the person ourselves.
+//
+// The address is therefore stripped at the boundary rather than at each call
+// site: the exported read functions return PublicExpertProfile, which has no
+// `email` field at all, so forgetting to strip it is a type error rather than
+// a leak. getExpertRecord() is the single way to reach the full record, and is
+// for our own storage only — see src/server/routers/privacy/experts.ts.
+// ---------------------------------------------------------------------------
+export type PublicExpertProfile = Omit<ExpertProfile, "email">;
+
+function toPublicExpert(expert: ExpertProfile): PublicExpertProfile {
+  const shown: PublicExpertProfile & { email?: string | null } = { ...expert };
+  delete shown.email;
+  return shown;
+}
+
 export interface ExpertSearchParams {
   query?: string;
   specialization?: string;
@@ -38,7 +59,15 @@ export interface ExpertSearchParams {
   offset?: number;
 }
 
+/** What a client receives: profiles with no contact address. */
 export interface ExpertSearchResult {
+  results: PublicExpertProfile[];
+  total: number;
+  offset: number;
+}
+
+/** What the directory holds internally, address included. */
+interface DirectorySearchResult {
   results: ExpertProfile[];
   total: number;
   offset: number;
@@ -77,7 +106,7 @@ function normalizeName(name: string | null): string {
   return (name ?? "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-export function isPermittedExpert(expert: ExpertProfile): boolean {
+export function isPermittedExpert(expert: Pick<ExpertProfile, "name">): boolean {
   return PERMITTED_DIRECTORY_NAMES.has(normalizeName(expert.name));
 }
 
@@ -86,7 +115,7 @@ function permittedOnly(experts: ExpertProfile[]): ExpertProfile[] {
   return experts.filter(isPermittedExpert).map(stripLegalType);
 }
 
-function filterLocalDirectory(params: ExpertSearchParams): ExpertSearchResult {
+function filterLocalDirectory(params: ExpertSearchParams): DirectorySearchResult {
   let results = permittedOnly(directoryExperts);
 
   if (params.query) {
@@ -146,9 +175,10 @@ function filterLocalDirectory(params: ExpertSearchParams): ExpertSearchResult {
   return { results, total, offset };
 }
 
-export async function searchExperts(
+/** The directory as we hold it. Internal: the results carry the address. */
+async function searchDirectory(
   params: ExpertSearchParams
-): Promise<ExpertSearchResult> {
+): Promise<DirectorySearchResult> {
   if (unconfigured) {
     return filterLocalDirectory(params);
   }
@@ -182,7 +212,7 @@ export async function searchExperts(
     return filterLocalDirectory(params);
   }
 
-  const data: ExpertSearchResult = await res.json();
+  const data: DirectorySearchResult = await res.json();
 
   // The allow-list decides who a user sees, whatever the upstream returns.
   data.results = permittedOnly(data.results ?? []);
@@ -212,7 +242,20 @@ export async function searchExperts(
   return data;
 }
 
-export async function getExpertById(
+/** The directory as a user sees it: every profile without its address. */
+export async function searchExperts(
+  params: ExpertSearchParams
+): Promise<ExpertSearchResult> {
+  const found = await searchDirectory(params);
+  return { ...found, results: found.results.map(toPublicExpert) };
+}
+
+/**
+ * The full record, address included. For our own use only: storing it on an
+ * engagement row so we can contact the person ourselves. Never return the
+ * value of this function to a client — use getExpertById for that.
+ */
+export async function getExpertRecord(
   id: string
 ): Promise<ExpertProfile | null> {
   const findLocal = () =>
@@ -237,6 +280,14 @@ export async function getExpertById(
   // Same gate as the list: an id that resolves upstream to a person who is not
   // on the allow-list must not resolve to a profile here either.
   return isPermittedExpert(expert) ? stripLegalType(expert) : findLocal();
+}
+
+/** One person as a user sees them: the profile without its address. */
+export async function getExpertById(
+  id: string
+): Promise<PublicExpertProfile | null> {
+  const expert = await getExpertRecord(id);
+  return expert ? toPublicExpert(expert) : null;
 }
 
 export function getSpecializations(): string[] {
