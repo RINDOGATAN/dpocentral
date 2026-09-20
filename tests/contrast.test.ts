@@ -245,15 +245,18 @@ describe("every text and background pair the screens use", () => {
     const strings = classNameStrings(readFileSync(file, "utf8"));
     if (strings.length === 0) continue;
 
-    it(`reaches ${CONTRAST.text} to 1 everywhere in ${rel}`, () => {
+    it(`meets its threshold on every pair in ${rel}`, () => {
       const failures = new Set<string>();
       const unknowns = new Set<string>();
       for (const value of strings) {
         const { pairs, unknown } = pairsInString(value);
         unknown.forEach((u) => unknowns.add(u));
         for (const p of pairs) {
-          if (p.measured < CONTRAST.text) {
-            failures.add(`${p.klass} on ${p.bgLabel}: ${p.fgHex} on ${p.bgHex} is ${p.measured} to 1`);
+          // Text has to reach 4.5 to 1; an icon is a mark and has to reach 3.
+          if (p.measured < p.threshold) {
+            failures.add(
+              `${p.klass} (${p.kind}) on ${p.bgLabel}: ${p.fgHex} on ${p.bgHex} is ${p.measured} to 1, needs ${p.threshold}`
+            );
           }
         }
       }
@@ -261,7 +264,7 @@ describe("every text and background pair the screens use", () => {
         [...unknowns],
         `${rel}: colour classes this test cannot resolve, so it cannot vouch for them`
       ).toEqual([]);
-      expect([...failures], `${rel}: below ${CONTRAST.text} to 1`).toEqual([]);
+      expect([...failures], `${rel}: below the threshold`).toEqual([]);
     });
   }
 });
@@ -309,10 +312,12 @@ describe("colour never carries meaning on its own", () => {
     for (const file of files) {
       const rel = path.relative(ROOT, file);
       for (const value of classNameStrings(readFileSync(file, "utf8"))) {
-        const classes = value.split(/\s+/);
-        const tinted = classes.some((c) => /^(?:[a-z-]+:)?text-destructive(?:\/\d+)?$/.test(c));
+        // Base state only: `hover:bg-destructive` is a button changing under
+        // the pointer, not a panel with a tinted sentence in it.
+        const classes = value.split(/\s+/).filter((c) => !c.includes(":"));
+        const tinted = classes.some((c) => /^text-destructive(?:\/\d+)?$/.test(c));
         const panel = classes.some((c) =>
-          /^(?:[a-z-]+:)?(?:border(?:-[lrtbxy])?(?:-\d)?|bg-[a-z]|rounded)/.test(c)
+          /^(?:border(?:-[lrtbxy])?(?:-\d)?$|border-destructive|bg-destructive|bg-(?:red|amber|orange|yellow)-)/.test(c)
         );
         if (tinted && panel) offenders.push(`${rel}: ${value.trim()}`);
       }

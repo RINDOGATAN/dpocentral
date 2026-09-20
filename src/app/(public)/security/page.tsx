@@ -22,6 +22,7 @@ import {
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { toneChip } from "@/config/status-palette";
 import {
   Accordion,
   AccordionContent,
@@ -62,7 +63,7 @@ const categories: CategoryDef[] = [
         icon: Lock,
         titleKey: "sections.authentication",
         badgeKey: "badges.zeroKnowledge",
-        badgeClass: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("success")}`,
         itemKeys: ["items.auth1", "items.auth2", "items.auth3", "items.auth4", "items.auth5"],
         highlightKey: "items.authHighlight",
         highlightType: "tip",
@@ -72,7 +73,7 @@ const categories: CategoryDef[] = [
         icon: Users,
         titleKey: "sections.authorization",
         badgeKey: "badges.fiveTierRbac",
-        badgeClass: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("info")}`,
         itemKeys: ["items.authz1", "items.authz2", "items.authz3", "items.authz4", "items.authz5"],
         highlightKey: "items.authzHighlight",
         highlightType: "info",
@@ -103,7 +104,7 @@ const categories: CategoryDef[] = [
         icon: Shield,
         titleKey: "sections.rateLimiting",
         badgeKey: "badges.perEndpoint",
-        badgeClass: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("warning")}`,
         itemKeys: ["items.rate1", "items.rate2", "items.rate3", "items.rate4"],
       },
     ],
@@ -118,7 +119,7 @@ const categories: CategoryDef[] = [
         icon: Globe,
         titleKey: "sections.transport",
         badgeKey: "badges.sixHeaders",
-        badgeClass: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("success")}`,
         itemKeys: ["items.transport1", "items.transport2", "items.transport3", "items.transport4", "items.transport5"],
         highlightKey: "items.transportHighlight",
         highlightType: "tip",
@@ -140,7 +141,7 @@ const categories: CategoryDef[] = [
         icon: CreditCard,
         titleKey: "sections.payment",
         badgeKey: "badges.stripeVerified",
-        badgeClass: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("neutral")}`,
         itemKeys: ["items.pay1", "items.pay2", "items.pay3"],
       },
     ],
@@ -155,7 +156,7 @@ const categories: CategoryDef[] = [
         icon: Server,
         titleKey: "sections.hosting",
         badgeKey: "badges.edgeNetwork",
-        badgeClass: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 border-transparent",
+        badgeClass: `border-transparent ${toneChip("info")}`,
         itemKeys: ["items.infra1", "items.infra2", "items.infra3", "items.infra4"],
       },
     ],
@@ -185,7 +186,7 @@ export default function SecurityPage() {
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/15 border border-primary/20">
               <Shield className="w-5 h-5 text-primary" />
             </div>
-            <Badge variant="outline" className="text-[10px] bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 border-transparent">
+            <Badge variant="outline" className={`text-[10px] border-transparent ${toneChip("success")}`}>
               {t("badge")}
             </Badge>
           </div>

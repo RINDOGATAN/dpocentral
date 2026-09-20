@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneTint } from "@/config/status-palette";
+import { toneForRiskTier, type StatusTone } from "@/config/status-tone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicIncidents");
@@ -20,19 +23,22 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const severityLevels = [
-  { level: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { level: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { level: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-  { level: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-] as const;
+// The documentation shows the same tones the product paints, and reads the
+// same way without them: every panel carries its icon and its word.
+const severityLevels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
 
-const dashboardStats: { key: string; value: string; color: string }[] = [
-  { key: "total", value: "12", color: "text-foreground" },
-  { key: "open", value: "3", color: "text-amber-400" },
-  { key: "critical", value: "1", color: "text-red-400" },
-  { key: "pendingDpa", value: "1", color: "text-orange-400" },
+const dashboardStats: { key: string; value: string; tone: StatusTone | null }[] = [
+  { key: "total", value: "12", tone: null },
+  { key: "open", value: "3", tone: "warning" },
+  { key: "critical", value: "1", tone: "danger" },
+  { key: "pendingDpa", value: "1", tone: "warning" },
 ];
+
+const TIMELINE_TONE: Record<string, StatusTone> = {
+  CREATED: "info",
+  NOTIFICATION: "danger",
+  RESOLVED: "success",
+};
 
 const timelineEntries: { key: string; time: string; type: string }[] = [
   { key: "reported", time: "09:15", type: "CREATED" },
@@ -84,10 +90,16 @@ export default async function IncidentsPage() {
         <p className="text-sm text-muted-foreground mb-6">{t("severity.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {severityLevels.map((s) => (
-            <div key={s.level} className={`p-3 rounded-lg border ${s.color}`}>
-              <p className="text-sm font-semibold">{s.level}</p>
-              <p className="text-[10px] mt-1 opacity-80">{t(`severity.items.${s.level}`)}</p>
+          {severityLevels.map((level) => (
+            <div
+              key={level}
+              className={`p-3 rounded-lg border ${toneBorder(toneForRiskTier(level))} ${toneTint(toneForRiskTier(level))}`}
+            >
+              <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <StatusMark tone={toneForRiskTier(level)} />
+                {level}
+              </p>
+              <p className="text-[10px] mt-1 text-muted-foreground">{t(`severity.items.${level}`)}</p>
             </div>
           ))}
         </div>
@@ -98,9 +110,10 @@ export default async function IncidentsPage() {
         <h2 className="text-xl font-semibold text-foreground mb-4">{t("notifications.title")}</h2>
         <p className="text-sm text-muted-foreground mb-6">{t("notifications.intro")}</p>
 
-        <div className="p-4 rounded-lg border border-red-500/30 bg-red-500/5">
+        <div className={`p-4 rounded-lg border ${toneBorder("danger")} ${toneTint("danger")}`}>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-red-400 font-semibold text-sm">{t("notifications.ruleLabel")}</span>
+            <StatusMark tone="danger" />
+            <span className="text-foreground font-semibold text-sm">{t("notifications.ruleLabel")}</span>
           </div>
           <p className="text-xs text-muted-foreground">{t("notifications.ruleBody")}</p>
         </div>
@@ -114,8 +127,11 @@ export default async function IncidentsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {dashboardStats.map((stat) => (
             <div key={stat.key} className="p-4 rounded-lg border border-border bg-card text-center">
-              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t(`dashboard.stats.${stat.key}`)}</p>
+              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1">
+                {stat.tone && <StatusMark tone={stat.tone} className="h-3 w-3" />}
+                {t(`dashboard.stats.${stat.key}`)}
+              </p>
             </div>
           ))}
         </div>
@@ -133,19 +149,15 @@ export default async function IncidentsPage() {
               <div key={entry.key} className="flex gap-3">
                 <span className="text-xs text-muted-foreground shrink-0 w-12 pt-0.5">{entry.time}</span>
                 <div className="flex items-start gap-2">
-                  <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full shrink-0 ${
-                      entry.type === "CREATED"
-                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                        : entry.type === "NOTIFICATION"
-                        ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                        : entry.type === "RESOLVED"
-                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                        : "bg-muted text-muted-foreground border border-border"
-                    }`}
-                  >
-                    {entry.type}
-                  </span>
+                  {TIMELINE_TONE[entry.type] ? (
+                    <StatusChip tone={TIMELINE_TONE[entry.type]} className="text-[10px] px-2 py-0.5 shrink-0">
+                      {entry.type}
+                    </StatusChip>
+                  ) : (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0 bg-muted text-muted-foreground border border-border">
+                      {entry.type}
+                    </span>
+                  )}
                   <span className="text-sm text-foreground">{t(`timeline.entries.${entry.key}`)}</span>
                 </div>
               </div>

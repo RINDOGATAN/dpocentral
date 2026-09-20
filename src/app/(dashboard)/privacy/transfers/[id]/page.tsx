@@ -31,7 +31,7 @@ import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palett
 const statusColors: Record<string, string> = {
   COMPLIANT: "border-primary text-primary bg-primary/5",
   NEEDS_REVIEW: `border-transparent ${toneChip("warning")}`,
-  NON_COMPLIANT: "border-destructive text-destructive bg-destructive/5",
+  NON_COMPLIANT: `border-transparent ${toneChip("danger")}`,
   PENDING: "border-muted-foreground text-muted-foreground",
 };
 

@@ -24,6 +24,7 @@ import {
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { StatusNote } from "@/components/ui/status-note";
 
 interface EnableMultipleFeaturesModalProps {
   open: boolean;
@@ -174,9 +175,9 @@ export function EnableMultipleFeaturesModal({
           </div>
 
           {error && (
-            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg">
+            <StatusNote tone="danger" className="rounded-lg border p-3">
               {error}
-            </div>
+            </StatusNote>
           )}
         </CardContent>
         <CardFooter className="flex justify-end gap-3">

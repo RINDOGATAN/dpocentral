@@ -58,6 +58,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { StatusChip } from "@/components/ui/status-chip";
+import { toneChip } from "@/config/status-palette";
 import type { StatusTone } from "@/config/status-tone";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
@@ -80,7 +81,7 @@ const statusColors: Record<string, string> = {
   PENDING_REVIEW: "border-muted-foreground text-muted-foreground",
   PENDING_APPROVAL: "border-muted-foreground text-muted-foreground",
   APPROVED: "border-primary bg-primary text-primary-foreground",
-  REJECTED: "border-destructive text-destructive",
+  REJECTED: `border-transparent ${toneChip("danger")}`,
 };
 
 const riskColors: Record<string, string> = {

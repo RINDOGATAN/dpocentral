@@ -49,12 +49,14 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ProduceDpaDialog } from "./produce-dpa-dialog";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneChip } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
   UNDER_REVIEW: "border-muted-foreground text-muted-foreground",
-  SUSPENDED: "border-destructive text-destructive",
+  SUSPENDED: `border-transparent ${toneChip("danger")}`,
   TERMINATED: "border-muted-foreground text-muted-foreground",
 };
 
@@ -572,9 +574,9 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                               {tp("reviews.completed")}
                             </Badge>
                           ) : isOverdue ? (
-                            <Badge variant="outline" className="text-[10px] border-destructive text-destructive">
+                            <StatusChip tone="danger" className="text-[10px]">
                               {tp("reviews.overdue")}
-                            </Badge>
+                            </StatusChip>
                           ) : (
                             <Badge variant="outline" className="text-[10px]">
                               {tp("reviews.scheduled")}

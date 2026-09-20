@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { HostedPilotSentence, useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { StatusNote } from "@/components/ui/status-note";
 
 // Local (passwordless credentials) login: dev mode, or sovereign/self-hosted
 // builds with NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true.
@@ -170,9 +171,9 @@ export default function SignInPage() {
                 required
               />
               {error && (
-                <div className="p-4 bg-destructive/10 border border-destructive text-destructive text-sm">
+                <StatusNote tone="danger" className="border">
                   {error}
-                </div>
+                </StatusNote>
               )}
               <button
                 type="submit"
@@ -213,9 +214,9 @@ export default function SignInPage() {
 
           {/* When the local form is shown, the error renders there instead */}
           {error && !isDev && (
-            <div className="p-4 bg-destructive/10 border border-destructive text-destructive text-sm">
+            <StatusNote tone="danger" className="border">
               {error}
-            </div>
+            </StatusNote>
           )}
 
           <button

@@ -330,7 +330,7 @@ export default function NewAssessmentPage() {
                         {tp(`type.${at.type}_desc` as `type.LIA_desc` | `type.CUSTOM_desc` | `type.DPIA_desc` | `type.PIA_desc` | `type.TIA_desc` | `type.VENDOR_desc`)}
                       </p>
                       {isLocked && (
-                        <p className="text-xs text-amber-600 mt-2 font-medium">
+                        <p className="text-xs text-muted-foreground mt-2 font-medium">
                           {!features.stripeEnabled
                             ? tp("premiumSkillHint")
                             : features.selfServiceUpgrade

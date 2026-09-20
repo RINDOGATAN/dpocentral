@@ -49,7 +49,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { StatusMark } from "@/components/ui/status-chip";
-import { toneBorder } from "@/config/status-palette";
+import { toneBorder, toneChip } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-muted-foreground text-muted-foreground",
@@ -60,7 +60,7 @@ const statusColors: Record<string, string> = {
   REVIEW_PENDING: "border-muted-foreground text-muted-foreground",
   APPROVED: "border-primary text-primary",
   COMPLETED: "border-primary bg-primary text-primary-foreground",
-  REJECTED: "border-destructive text-destructive",
+  REJECTED: `border-transparent ${toneChip("danger")}`,
   CANCELLED: "border-muted-foreground text-muted-foreground",
 };
 
@@ -68,7 +68,7 @@ const taskStatusColors: Record<string, string> = {
   PENDING: "border-muted-foreground text-muted-foreground",
   IN_PROGRESS: "border-primary text-primary",
   COMPLETED: "border-primary bg-primary text-primary-foreground",
-  BLOCKED: "border-destructive text-destructive",
+  BLOCKED: `border-transparent ${toneChip("danger")}`,
   NOT_APPLICABLE: "border-muted-foreground text-muted-foreground",
 };
 

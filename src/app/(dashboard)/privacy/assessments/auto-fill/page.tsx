@@ -33,6 +33,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { autoFillTemplate } from "@/lib/auto-fill-template";
+import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 type WizardStep = "select" | "preview" | "review" | "create";
 
@@ -173,9 +174,9 @@ export default function DpiaAutoFillPage() {
 
   const confidenceColor = (c: string) => {
     switch (c) {
-      case "high": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "medium": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "low": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "high": return toneChip("success");
+      case "medium": return toneChip("warning");
+      case "low": return toneChip("danger");
       default: return "";
     }
   };
@@ -210,10 +211,10 @@ export default function DpiaAutoFillPage() {
       </div>
 
       {showLicenceNotice && (
-        <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
+        <Card className={`${toneBorder("warning")} ${toneTint("warning")}`}>
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
+              <AlertTriangle className={`w-5 h-5 mt-0.5 ${toneMark("warning")}`} />
               <div>
                 <p className="font-medium">{tAutoFill("licenceNoticeTitle")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -330,8 +331,8 @@ export default function DpiaAutoFillPage() {
                 </div>
 
                 {autoFill.context.hasSpecialCategory && (
-                  <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg">
-                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                  <div className={`flex items-center gap-2 p-3 rounded-lg border ${toneBorder("warning")} ${toneTint("warning")}`}>
+                    <AlertTriangle className={`w-4 h-4 ${toneMark("warning")}`} />
                     <span className="text-sm">{tAutoFill("specialCategory")}</span>
                   </div>
                 )}

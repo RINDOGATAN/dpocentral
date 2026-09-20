@@ -11,6 +11,8 @@ import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForRiskTier } from "@/config/status-tone";
 
 const typeConfig: Record<string, { premium: boolean; color: string }> = {
   LIA: { premium: false, color: "bg-green-100 text-green-800 border-transparent" },
@@ -21,12 +23,8 @@ const typeConfig: Record<string, { premium: boolean; color: string }> = {
   VENDOR: { premium: true, color: "bg-orange-100 text-orange-800 border-transparent" },
 };
 
-const riskConfig: Record<string, string> = {
-  LOW: "bg-green-100 text-green-800 border-transparent",
-  MEDIUM: "bg-yellow-100 text-yellow-800 border-transparent",
-  HIGH: "bg-orange-100 text-orange-800 border-transparent",
-  CRITICAL: "bg-red-100 text-red-800 border-transparent",
-};
+// The documentation shows the same tones the product paints: toneForRiskTier.
+const riskLevels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
 export default async function DocsAssessmentsPage() {
   const t = await getTranslations("docs.assessments");
@@ -83,9 +81,9 @@ export default async function DocsAssessmentsPage() {
       <DocSection id="risk-scoring" title={t("riskScoring.title")} description={t("riskScoring.description")}>
         <FeatureMockup title={t("riskScoring.mockupTitle")}>
           <div className="flex flex-wrap gap-3">
-            {Object.entries(riskConfig).map(([level, color]) => (
+            {riskLevels.map((level) => (
               <div key={level} className="flex items-center gap-2">
-                <Badge variant="outline" className={`${color}`}>{level}</Badge>
+                <StatusChip tone={toneForRiskTier(level)}>{level}</StatusChip>
                 <span className="text-xs text-muted-foreground">
                   {t(`riskScoring.levels.${level}`)}
                 </span>

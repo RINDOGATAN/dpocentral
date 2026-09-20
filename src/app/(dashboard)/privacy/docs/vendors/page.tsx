@@ -10,19 +10,11 @@ import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForRiskTier, toneForVendorStatus } from "@/config/status-tone";
 
-const vendorStatusColors: Record<string, string> = {
-  ACTIVE: "bg-green-100 text-green-800 border-transparent",
-  UNDER_REVIEW: "bg-yellow-100 text-yellow-800 border-transparent",
-  SUSPENDED: "bg-red-100 text-red-800 border-transparent",
-};
-
-const riskTierColors: Record<string, string> = {
-  LOW: "bg-green-100 text-green-800 border-transparent",
-  MEDIUM: "bg-yellow-100 text-yellow-800 border-transparent",
-  HIGH: "bg-orange-100 text-orange-800 border-transparent",
-  CRITICAL: "bg-red-100 text-red-800 border-transparent",
-};
+// The documentation shows the same tones the product paints: toneForRiskTier
+// and toneForVendorStatus, the same two helpers the vendor register uses.
 
 export default async function DocsVendorsPage() {
   const t = await getTranslations("docs.vendors");
@@ -94,12 +86,12 @@ export default async function DocsVendorsPage() {
                   <p className="text-xs text-muted-foreground mt-0.5 ml-6">{t(`adding.categories.${vendor.categoryKey}`)}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={`text-[10px] ${riskTierColors[vendor.risk]}`}>
+                  <StatusChip tone={toneForRiskTier(vendor.risk)} className="text-[10px]">
                     {vendor.risk} {t("adding.riskSuffix")}
-                  </Badge>
-                  <Badge variant="outline" className={`text-[10px] ${vendorStatusColors[vendor.status]}`}>
+                  </StatusChip>
+                  <StatusChip tone={toneForVendorStatus(vendor.status)} className="text-[10px]">
                     {t(`adding.statusLabels.${vendor.status}`)}
-                  </Badge>
+                  </StatusChip>
                 </div>
               </div>
             ))}

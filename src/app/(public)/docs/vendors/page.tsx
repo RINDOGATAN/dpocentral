@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
+import { StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneTint } from "@/config/status-palette";
+import { toneForRiskTier, type StatusTone } from "@/config/status-tone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicVendors");
@@ -20,25 +23,22 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// The documentation shows the same tones the product paints, and reads the
+// same way without them: every panel carries its icon and its word.
 const vendorStatuses = [
-  { key: "ACTIVE", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { key: "UNDER_REVIEW", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { key: "SUSPENDED", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-  { key: "OFFBOARDED", color: "bg-muted text-muted-foreground border-border" },
-] as const;
+  { key: "ACTIVE", tone: "success" },
+  { key: "UNDER_REVIEW", tone: "warning" },
+  { key: "SUSPENDED", tone: "danger" },
+  { key: "OFFBOARDED", tone: "neutral" },
+] as const satisfies ReadonlyArray<{ key: string; tone: StatusTone }>;
 
-const riskTiers = [
-  { tier: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { tier: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { tier: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-  { tier: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-];
+const riskTiers = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
-const dashboardStats: { key: string; value: string; color: string }[] = [
-  { key: "total", value: "24", color: "text-foreground" },
-  { key: "active", value: "18", color: "text-green-400" },
-  { key: "highRisk", value: "3", color: "text-orange-400" },
-  { key: "pendingReview", value: "5", color: "text-amber-400" },
+const dashboardStats: { key: string; value: string; tone: StatusTone | null }[] = [
+  { key: "total", value: "24", tone: null },
+  { key: "active", value: "18", tone: "success" },
+  { key: "highRisk", value: "3", tone: "warning" },
+  { key: "pendingReview", value: "5", tone: "info" },
 ];
 
 export default async function VendorsPage() {
@@ -77,9 +77,15 @@ export default async function VendorsPage() {
 
         <div className="grid sm:grid-cols-2 gap-3 mb-6">
           {vendorStatuses.map((s) => (
-            <div key={s.key} className={`p-4 rounded-lg border ${s.color}`}>
-              <p className="text-sm font-semibold">{t(`register.statuses.${s.key}.label`)}</p>
-              <p className="text-xs mt-1 opacity-80">{t(`register.statuses.${s.key}.desc`)}</p>
+            <div
+              key={s.key}
+              className={`p-4 rounded-lg border ${toneBorder(s.tone)} ${toneTint(s.tone)}`}
+            >
+              <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <StatusMark tone={s.tone} />
+                {t(`register.statuses.${s.key}.label`)}
+              </p>
+              <p className="text-xs mt-1 text-muted-foreground">{t(`register.statuses.${s.key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -91,9 +97,15 @@ export default async function VendorsPage() {
         <p className="text-sm text-muted-foreground mb-6">{t("riskTiers.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {riskTiers.map((t2) => (
-            <div key={t2.tier} className={`p-3 rounded-lg border text-center ${t2.color}`}>
-              <p className="text-sm font-semibold">{t2.tier}</p>
+          {riskTiers.map((tier) => (
+            <div
+              key={tier}
+              className={`p-3 rounded-lg border text-center ${toneBorder(toneForRiskTier(tier))} ${toneTint(toneForRiskTier(tier))}`}
+            >
+              <p className="text-sm font-semibold text-foreground flex items-center justify-center gap-2">
+                <StatusMark tone={toneForRiskTier(tier)} />
+                {tier}
+              </p>
             </div>
           ))}
         </div>
@@ -109,8 +121,11 @@ export default async function VendorsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {dashboardStats.map((stat) => (
             <div key={stat.key} className="p-4 rounded-lg border border-border bg-card text-center">
-              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t(`dashboard.stats.${stat.key}`)}</p>
+              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1">
+                {stat.tone && <StatusMark tone={stat.tone} className="h-3 w-3" />}
+                {t(`dashboard.stats.${stat.key}`)}
+              </p>
             </div>
           ))}
         </div>
@@ -169,8 +184,11 @@ export default async function VendorsPage() {
           />
         ))}
 
-        <div className="p-4 rounded-lg border border-amber-500/20 bg-amber-500/10 mt-6">
-          <p className="text-sm font-semibold text-amber-400 mb-2">{t("dpa.honesty.title")}</p>
+        <div className={`p-4 rounded-lg border mt-6 ${toneBorder("warning")} ${toneTint("warning")}`}>
+          <p className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+            <StatusMark tone="warning" />
+            {t("dpa.honesty.title")}
+          </p>
           <p className="text-xs text-muted-foreground">{t("dpa.honesty.desc")}</p>
         </div>
         <div className="p-4 rounded-lg border border-border bg-card mt-3">

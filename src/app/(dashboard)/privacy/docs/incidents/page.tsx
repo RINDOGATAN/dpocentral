@@ -10,20 +10,16 @@ import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneForRiskTier, type StatusTone } from "@/config/status-tone";
 
-const severityColors: Record<string, string> = {
-  LOW: "bg-green-100 text-green-800 border-transparent",
-  MEDIUM: "bg-yellow-100 text-yellow-800 border-transparent",
-  HIGH: "bg-orange-100 text-orange-800 border-transparent",
-  CRITICAL: "bg-red-100 text-red-800 border-transparent",
-};
-
-const statusColors: Record<string, string> = {
-  OPEN: "bg-blue-100 text-blue-800 border-transparent",
-  INVESTIGATING: "bg-yellow-100 text-yellow-800 border-transparent",
-  CONTAINED: "bg-orange-100 text-orange-800 border-transparent",
-  RESOLVED: "bg-green-100 text-green-800 border-transparent",
-  CLOSED: "bg-gray-100 text-gray-800 border-transparent",
+// The documentation shows the same tones the product paints.
+const statusTone: Record<string, StatusTone> = {
+  OPEN: "info",
+  INVESTIGATING: "warning",
+  CONTAINED: "warning",
+  RESOLVED: "success",
+  CLOSED: "neutral",
 };
 
 export default async function DocsIncidentsPage() {
@@ -95,17 +91,17 @@ export default async function DocsIncidentsPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{t(`reporting.cards.${incident.key}`)}</span>
-                    <Badge variant="outline" className={`text-[10px] ${severityColors[incident.severity]}`}>
+                    <StatusChip tone={toneForRiskTier(incident.severity)} className="text-[10px]">
                       {incident.severity}
-                    </Badge>
+                    </StatusChip>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {t("reporting.reportedLabel", { date: incident.date })}
                   </p>
                 </div>
-                <Badge variant="outline" className={`text-[10px] ${statusColors[incident.status]}`}>
+                <StatusChip tone={statusTone[incident.status] ?? "neutral"} className="text-[10px]">
                   {incident.status}
-                </Badge>
+                </StatusChip>
               </div>
             ))}
           </div>

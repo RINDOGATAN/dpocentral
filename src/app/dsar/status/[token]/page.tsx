@@ -23,6 +23,8 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Shield, Clock, CheckCircle2, Circle, Loader2, AlertTriangle, XCircle, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { DSARStatus, DSARType } from "@prisma/client";
+import { StatusNote } from "@/components/ui/status-note";
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 const TIMELINE_STEP_KEYS: { key: DSARStatus; tKey: string }[] = [
   { key: "SUBMITTED", tKey: "submitted" },
@@ -188,19 +190,21 @@ export default function DSARStatusPage() {
             )}
 
             {isFailed && (
-              <div className="p-4 bg-destructive/10 rounded-lg text-sm text-destructive">
+              <StatusNote tone="danger" className="rounded-lg border">
                 {request.status === "REJECTED" ? t("rejectedNotice") : t("cancelledNotice")}
-              </div>
+              </StatusNote>
             )}
 
-            <div className={`flex items-center justify-between p-4 rounded-lg ${pastDue ? "bg-destructive/10" : "bg-muted"}`}>
+            <div
+              className={`flex items-center justify-between p-4 rounded-lg ${pastDue ? `border ${toneBorder("warning")} ${toneTint("warning")}` : "bg-muted"}`}
+            >
               <div className="flex items-center gap-2">
-                <Clock className={`w-4 h-4 ${pastDue ? "text-destructive" : "text-muted-foreground"}`} />
+                <Clock className={`w-4 h-4 ${pastDue ? toneMark("warning") : "text-muted-foreground"}`} />
                 <span className="text-sm">{t("expectedCompletion")}</span>
               </div>
               <div className="text-right">
                 <p className="font-medium">{dueDate.toLocaleDateString()}</p>
-                <p className={`text-xs ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>
+                <p className={`text-xs ${pastDue ? "text-foreground font-medium" : "text-muted-foreground"}`}>
                   {isDone
                     ? t("completedLabel")
                     : pastDue

@@ -41,7 +41,7 @@ export function loadThemeTokens(): Record<string, string> {
   const css = readFileSync(path.join(ROOT, "src/app/globals.css"), "utf8");
   const root = css.slice(css.indexOf(":root {"), css.indexOf("/* No separate dark mode"));
   const found: Record<string, string> = {};
-  for (const m of root.matchAll(/--([a-z-]+):\s*(#[0-9a-fA-F]{3,8});/g)) {
+  for (const m of root.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-fA-F]{3,8});/g)) {
     found[m[1]] = m[2];
   }
   return found;

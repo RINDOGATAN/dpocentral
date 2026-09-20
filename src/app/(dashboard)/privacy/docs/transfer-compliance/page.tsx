@@ -4,18 +4,28 @@
 import { Globe, FileCheck, Shield, CheckCircle, Lock, FileText, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
 import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
+import type { StatusTone } from "@/config/status-tone";
 
-const complianceStatusColors: Record<string, string> = {
-  COMPLIANT: "bg-green-100 text-green-800 border-transparent",
-  NEEDS_REVIEW: "bg-yellow-100 text-yellow-800 border-transparent",
-  NON_COMPLIANT: "bg-red-100 text-red-800 border-transparent",
-  PENDING: "bg-gray-100 text-gray-800 border-transparent",
+// The documentation shows the same tones the product paints.
+const complianceStatusTone: Record<string, StatusTone> = {
+  COMPLIANT: "success",
+  NEEDS_REVIEW: "warning",
+  NON_COMPLIANT: "danger",
+  PENDING: "neutral",
+};
+
+const sccStatusTone: Record<string, StatusTone> = {
+  Active: "success",
+  "Expiring Soon": "warning",
+  Urgent: "warning",
+  Expired: "danger",
 };
 
 const adequacyCountries: { key: string; year: string }[] = [
@@ -89,9 +99,9 @@ export default async function DocsTransferCompliancePage() {
           <div className="space-y-3">
             {statusKeys.map((key) => (
               <div key={key} className="flex items-start gap-3">
-                <Badge variant="outline" className={`text-[10px] mt-0.5 shrink-0 ${complianceStatusColors[key]}`}>
+                <StatusChip tone={complianceStatusTone[key] ?? "neutral"} className="text-[10px] mt-0.5 shrink-0">
                   {t(`complianceStatus.labels.${key}`)}
-                </Badge>
+                </StatusChip>
                 <p className="text-sm text-muted-foreground">{t(`complianceStatus.descriptions.${key}`)}</p>
               </div>
             ))}
@@ -117,12 +127,12 @@ export default async function DocsTransferCompliancePage() {
             {adequacyCountries.map((item) => (
               <div key={item.key} className="flex items-center justify-between rounded-md border px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <CheckCircle className={`h-4 w-4 ${toneMark("success")}`} />
                   <span className="text-sm font-medium">{t(`adequacy.countries.${item.key}`)}</span>
                 </div>
-                <Badge variant="outline" className="text-[10px] bg-green-100 text-green-800 border-transparent">
+                <StatusChip tone="success" className="text-[10px]">
                   {t("adequacy.sinceLabel", { year: item.year })}
-                </Badge>
+                </StatusChip>
               </div>
             ))}
           </div>
@@ -162,20 +172,9 @@ export default async function DocsTransferCompliancePage() {
                     {scc.destination} — {t("sccTracking.expiresLabel", { date: scc.expires })}
                   </p>
                 </div>
-                <Badge
-                  variant="outline"
-                  className={`text-[10px] ${
-                    scc.status === "Active"
-                      ? "bg-green-100 text-green-800 border-transparent"
-                      : scc.status === "Expiring Soon"
-                        ? "bg-yellow-100 text-yellow-800 border-transparent"
-                        : scc.status === "Urgent"
-                          ? "bg-orange-100 text-orange-800 border-transparent"
-                          : "bg-red-100 text-red-800 border-transparent"
-                  }`}
-                >
+                <StatusChip tone={sccStatusTone[scc.status] ?? "neutral"} className="text-[10px]">
                   {scc.status === "Expired" ? t("sccTracking.expiredLabel") : t("sccTracking.remaining", { count: scc.daysLeft })}
-                </Badge>
+                </StatusChip>
               </div>
             ))}
           </div>

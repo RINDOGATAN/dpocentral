@@ -4,18 +4,23 @@
 import { Bot, AlertTriangle, CheckCircle2, Clock, ShieldCheck, Eye, BookOpen, Users, Database, Building2, ClipboardCheck, Shield, ArrowRightLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
 import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { StatusChip } from "@/components/ui/status-chip";
+import { toneMark } from "@/config/status-palette";
+import type { StatusTone } from "@/config/status-tone";
 
-const riskColors: Record<string, string> = {
-  UNACCEPTABLE: "bg-red-100 text-red-800 border-transparent",
-  HIGH: "bg-orange-100 text-orange-800 border-transparent",
-  LIMITED: "bg-yellow-100 text-yellow-800 border-transparent",
-  MINIMAL: "bg-green-100 text-green-800 border-transparent",
+// The documentation shows the same tones the product paints. The AI Act levels
+// here are UNACCEPTABLE, HIGH, LIMITED and MINIMAL, which map onto the same
+// four tones as HIGH_RISK does in the register.
+const riskTone: Record<string, StatusTone> = {
+  UNACCEPTABLE: "danger",
+  HIGH: "warning",
+  LIMITED: "info",
+  MINIMAL: "success",
 };
 
 const riskLevels = ["UNACCEPTABLE", "HIGH", "LIMITED", "MINIMAL"] as const;
@@ -25,9 +30,9 @@ export default async function DocsAiGovernancePage() {
 
   const statCards: { key: string; value: string; icon: typeof Bot; color: string }[] = [
     { key: "total", value: "12", icon: Bot, color: "" },
-    { key: "highRisk", value: "3", icon: AlertTriangle, color: "text-orange-600" },
-    { key: "compliant", value: "9", icon: CheckCircle2, color: "text-green-600" },
-    { key: "review", value: "2", icon: Clock, color: "text-yellow-600" },
+    { key: "highRisk", value: "3", icon: AlertTriangle, color: toneMark("warning") },
+    { key: "compliant", value: "9", icon: CheckCircle2, color: toneMark("success") },
+    { key: "review", value: "2", icon: Clock, color: toneMark("info") },
   ];
 
   const stepKeys = ["details", "classify", "document", "review"] as const;
@@ -87,7 +92,7 @@ export default async function DocsAiGovernancePage() {
             <div className="flex flex-wrap gap-3">
               {riskLevels.map((key) => (
                 <div key={key} className="flex items-center gap-2">
-                  <Badge variant="outline" className={riskColors[key]}>{t(`riskLevels.labels.${key}`)}</Badge>
+                  <StatusChip tone={riskTone[key]}>{t(`riskLevels.labels.${key}`)}</StatusChip>
                   <span className="text-xs text-muted-foreground">{t(`riskLevels.descriptions.${key}`)}</span>
                 </div>
               ))}
@@ -108,9 +113,9 @@ export default async function DocsAiGovernancePage() {
                 {riskLevels.map((key, i) => (
                   <tr key={key} className={i % 2 === 1 ? "bg-muted/20" : ""}>
                     <td className="px-4 py-2">
-                      <Badge variant="outline" className={`text-[10px] ${riskColors[key]}`}>
+                      <StatusChip tone={riskTone[key]} className="text-[10px]">
                         {t(`riskLevels.labels.${key}`)}
-                      </Badge>
+                      </StatusChip>
                     </td>
                     <td className="px-4 py-2 text-muted-foreground">{t(`riskLevels.examples.${key}`)}</td>
                   </tr>
@@ -147,9 +152,9 @@ export default async function DocsAiGovernancePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground">{t("suggestion.suggestedLabel")}</span>
-                  <Badge variant="outline" className={`text-[10px] ${riskColors[system.suggested]}`}>
+                  <StatusChip tone={riskTone[system.suggested] ?? "neutral"} className="text-[10px]">
                     {t(`riskLevels.labels.${system.suggested}`)}
-                  </Badge>
+                  </StatusChip>
                 </div>
               </div>
             ))}
@@ -243,7 +248,7 @@ export default async function DocsAiGovernancePage() {
             <span className="text-muted-foreground hidden sm:block">&rarr;</span>
             <span className="text-muted-foreground sm:hidden">&darr;</span>
             <div className="rounded-lg border p-3 text-center flex-1">
-              <Shield className="h-5 w-5 mx-auto text-blue-600 mb-1" />
+              <Shield className={`h-5 w-5 mx-auto mb-1 ${toneMark("info")}`} />
               <p className="font-medium">{t("sentinel.stage3.title")}</p>
               <p className="text-xs text-muted-foreground">{t("sentinel.stage3.subtitle")}</p>
             </div>

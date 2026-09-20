@@ -36,7 +36,9 @@ export const tokens = {
     text: {
       primary:   "#0b1f2a",
       secondary: "#475569",
-      muted:     "#64748b",
+      // Slate 500 measured 4.34 to 1 on the pale slate and red tints this
+      // report prints on. Two steps darker clears 4.9 to 1 on every surface.
+      muted:     "#5b6b7f",
       inverse:   "#ffffff",
     },
     border: {

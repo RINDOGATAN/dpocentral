@@ -23,6 +23,7 @@ import { Shield, CheckCircle2, Loader2, AlertTriangle, Copy, Check } from "lucid
 import { trpc } from "@/lib/trpc";
 import { sanitizeCss } from "@/lib/sanitize";
 import { DSARType } from "@prisma/client";
+import { StatusNote } from "@/components/ui/status-note";
 
 const ALL_TYPES: DSARType[] = [
   "ACCESS",
@@ -309,9 +310,9 @@ export default function PublicDSARPage() {
               </div>
 
               {submitMutation.error && (
-                <div className="text-sm text-destructive p-3 bg-destructive/10 rounded-lg">
+                <StatusNote tone="danger" className="rounded-lg border">
                   {submitMutation.error.message}
-                </div>
+                </StatusNote>
               )}
 
               <Button

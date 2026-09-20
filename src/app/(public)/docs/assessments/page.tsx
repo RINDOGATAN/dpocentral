@@ -11,6 +11,9 @@ import {
   FRAMEWORK_IDS,
   FRAMEWORK_LABELS,
 } from "@/config/assessment-frameworks";
+import { StatusChip, StatusMark } from "@/components/ui/status-chip";
+import { toneBorder, toneTint } from "@/config/status-palette";
+import { toneForRiskTier } from "@/config/status-tone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicAssessments");
@@ -42,12 +45,15 @@ const templateData: { type: string; tier: "Core" | "Premium" }[] = [
   { type: "DPIA", tier: "Premium" },
 ];
 
-const riskLevels = [
-  { level: "LOW", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-  { level: "MEDIUM", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-  { level: "HIGH", color: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-  { level: "CRITICAL", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-];
+// The documentation shows the same tones the product paints, each with the
+// icon that says the same thing as the hue.
+const riskLevels = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+
+const MITIGATION_TONE = {
+  Implemented: "success",
+  InProgress: "warning",
+  Planned: "info",
+} as const;
 
 const mitigationItems: { key: string; statusKey: "Implemented" | "Planned" | "InProgress" }[] = [
   { key: "encryption", statusKey: "Implemented" },
@@ -105,9 +111,9 @@ export default async function AssessmentsPage() {
                   {tmpl.type}
                 </span>
                 {tmpl.tier === "Premium" && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <StatusChip tone="warning" hideIcon className="text-[10px] px-2 py-0.5">
                     {t("templates.premiumBadge")}
-                  </span>
+                  </StatusChip>
                 )}
               </div>
               <p className="text-sm font-medium text-foreground">{t(`templates.items.${tmpl.type}.name`)}</p>
@@ -140,9 +146,15 @@ export default async function AssessmentsPage() {
         <p className="text-sm text-muted-foreground mb-6">{t("riskScoring.intro")}</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {riskLevels.map((r) => (
-            <div key={r.level} className={`p-3 rounded-lg border text-center ${r.color}`}>
-              <p className="text-sm font-semibold">{r.level}</p>
+          {riskLevels.map((level) => (
+            <div
+              key={level}
+              className={`p-3 rounded-lg border text-center ${toneBorder(toneForRiskTier(level))} ${toneTint(toneForRiskTier(level))}`}
+            >
+              <p className="text-sm font-semibold text-foreground flex items-center justify-center gap-2">
+                <StatusMark tone={toneForRiskTier(level)} />
+                {level}
+              </p>
             </div>
           ))}
         </div>
@@ -161,17 +173,9 @@ export default async function AssessmentsPage() {
             {mitigationItems.map((m) => (
               <div key={m.key} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
                 <span className="text-sm text-foreground">{t(`mitigations.items.${m.key}`)}</span>
-                <span
-                  className={`text-xs shrink-0 ml-3 px-2 py-0.5 rounded-full ${
-                    m.statusKey === "Implemented"
-                      ? "bg-green-500/10 text-green-400"
-                      : m.statusKey === "InProgress"
-                      ? "bg-amber-500/10 text-amber-400"
-                      : "bg-blue-500/10 text-blue-400"
-                  }`}
-                >
+                <StatusChip tone={MITIGATION_TONE[m.statusKey]} className="text-xs shrink-0 ml-3 px-2 py-0.5">
                   {t(`mitigations.statuses.${m.statusKey}`)}
-                </span>
+                </StatusChip>
               </div>
             ))}
           </div>

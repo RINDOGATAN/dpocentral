@@ -221,7 +221,7 @@ export function PreviewCanvas() {
   );
 
   if (isLoading) {
-    return <div className="text-sm text-slate-500 p-8">Laying out…</div>;
+    return <div className="text-sm text-muted-foreground p-8">Laying out…</div>;
   }
 
   return (
