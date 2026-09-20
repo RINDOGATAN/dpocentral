@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft,
-  Plus,
   Search,
   FileText,
   ClipboardCheck,
@@ -24,19 +23,12 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useTemplateMeta } from "@/lib/template-i18n";
 
-const typeLabels: Record<string, string> = {
-  DPIA: "Data Protection Impact Assessment",
-  PIA: "Privacy Impact Assessment",
-  TIA: "Transfer Impact Assessment",
-  LIA: "Legitimate Interest Assessment",
-  VENDOR: "Vendor Risk Assessment",
-  CUSTOM: "Custom Assessment",
-};
-
 export default function AssessmentTemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.assessmentTemplates");
+  const tCommon = useTranslations("common");
   const templateMeta = useTemplateMeta();
 
   const { data: templates, isLoading } = trpc.assessment.listTemplates.useQuery(
@@ -56,23 +48,18 @@ export default function AssessmentTemplatesPage() {
     },
   });
 
-  const systemTemplates = templates?.filter((t) => t.isSystem) ?? [];
-  const customTemplates = templates?.filter((t) => !t.isSystem) ?? [];
+  const systemTemplates = templates?.filter((tpl) => tpl.isSystem) ?? [];
+  const customTemplates = templates?.filter((tpl) => !tpl.isSystem) ?? [];
 
-  const filteredSystemTemplates = systemTemplates.filter(
-    (t) =>
-      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const matches = (tpl: { name: string; type: string }) =>
+    tpl.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    tpl.type.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const filteredCustomTemplates = customTemplates.filter(
-    (t) =>
-      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSystemTemplates = systemTemplates.filter(matches);
+  const filteredCustomTemplates = customTemplates.filter(matches);
 
   const handleClone = (templateId: string, templateName: string) => {
-    const name = prompt("Enter a name for the cloned template:", `${templateName} (Copy)`);
+    const name = prompt(tp("clonePrompt"), tp("cloneSuffix", { name: templateName }));
     if (name) {
       cloneTemplate.mutate({
         organizationId: organization?.id ?? "",
@@ -85,24 +72,16 @@ export default function AssessmentTemplatesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/assessments">
-            <Button variant="ghost" size="icon" aria-label="Back">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-semibold">Assessment Templates</h1>
-            <p className="text-muted-foreground">
-              Manage and customize assessment templates
-            </p>
-          </div>
+      <div className="flex items-center gap-4">
+        <Link href="/privacy/assessments">
+          <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-semibold">{tp("title")}</h1>
+          <p className="text-muted-foreground">{tp("subtitle")}</p>
         </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Create Template
-        </Button>
       </div>
 
       {/* Search */}
@@ -110,7 +89,7 @@ export default function AssessmentTemplatesPage() {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search templates..."
+            placeholder={tp("searchPlaceholder")}
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -121,8 +100,12 @@ export default function AssessmentTemplatesPage() {
       {/* Tabs */}
       <Tabs defaultValue="system">
         <TabsList>
-          <TabsTrigger value="system">System Templates ({systemTemplates.length})</TabsTrigger>
-          <TabsTrigger value="custom">Custom Templates ({customTemplates.length})</TabsTrigger>
+          <TabsTrigger value="system">
+            {tp("tabSystem", { count: systemTemplates.length })}
+          </TabsTrigger>
+          <TabsTrigger value="custom">
+            {tp("tabCustom", { count: customTemplates.length })}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="system" className="mt-4">
@@ -141,7 +124,7 @@ export default function AssessmentTemplatesPage() {
                       </div>
                       <div className="flex gap-2">
                         <Badge variant="outline">{template.type}</Badge>
-                        <Badge variant="secondary">System</Badge>
+                        <Badge variant="secondary">{tp("system")}</Badge>
                       </div>
                     </div>
                     <CardTitle className="mt-3">{templateMeta(template).name}</CardTitle>
@@ -154,21 +137,23 @@ export default function AssessmentTemplatesPage() {
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">
-                        {(template.sections as any[])?.length || 0} sections
+                        {tp("sectionsCount", {
+                          count: (template.sections as unknown[])?.length || 0,
+                        })}
                       </span>
                       <div className="flex gap-2">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleClone(template.id, template.name)}
+                          onClick={() => handleClone(template.id, templateMeta(template).name)}
                           disabled={cloneTemplate.isPending}
                         >
                           <Copy className="w-4 h-4 mr-1" />
-                          Clone
+                          {tp("clone")}
                         </Button>
-                        <Link href={`/privacy/assessments/new?template=${template.id}`}>
+                        <Link href={`/privacy/assessments/new?type=${template.type}`}>
                           <Button variant="outline" size="sm">
-                            Use
+                            {tp("use")}
                           </Button>
                         </Link>
                       </div>
@@ -181,8 +166,8 @@ export default function AssessmentTemplatesPage() {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No system templates found</p>
-                <p className="text-sm">Run the database seed to add default templates</p>
+                <p>{tp("noSystemTitle")}</p>
+                <p className="text-sm">{tp("noSystemBody")}</p>
               </CardContent>
             </Card>
           )}
@@ -214,18 +199,15 @@ export default function AssessmentTemplatesPage() {
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">
-                        {(template.sections as any[])?.length || 0} sections
+                        {tp("sectionsCount", {
+                          count: (template.sections as unknown[])?.length || 0,
+                        })}
                       </span>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">
-                          Edit
+                      <Link href={`/privacy/assessments/new?type=${template.type}`}>
+                        <Button variant="outline" size="sm">
+                          {tp("use")}
                         </Button>
-                        <Link href={`/privacy/assessments/new?template=${template.id}`}>
-                          <Button variant="outline" size="sm">
-                            Use
-                          </Button>
-                        </Link>
-                      </div>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
@@ -235,12 +217,8 @@ export default function AssessmentTemplatesPage() {
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No custom templates yet</p>
-                <p className="text-sm mb-4">Clone a system template or create your own</p>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Template
-                </Button>
+                <p>{tp("noCustomTitle")}</p>
+                <p className="text-sm">{tp("noCustomBody")}</p>
               </CardContent>
             </Card>
           )}
@@ -250,30 +228,22 @@ export default function AssessmentTemplatesPage() {
       {/* Template Info */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">About Assessment Templates</CardTitle>
-          <CardDescription>
-            Templates define the structure and questions for privacy assessments
-          </CardDescription>
+          <CardTitle className="text-base">{tp("aboutTitle")}</CardTitle>
+          <CardDescription>{tp("aboutSubtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3 text-sm">
             <div>
-              <h4 className="font-medium mb-2">DPIA (Article 35)</h4>
-              <p className="text-muted-foreground">
-                Required when processing is likely to result in high risk to individuals.
-              </p>
+              <h4 className="font-medium mb-2">{tp("aboutDpia")}</h4>
+              <p className="text-muted-foreground">{tp("aboutDpiaBody")}</p>
             </div>
             <div>
-              <h4 className="font-medium mb-2">TIA (Schrems II)</h4>
-              <p className="text-muted-foreground">
-                Assess risks of international data transfers following Schrems II ruling.
-              </p>
+              <h4 className="font-medium mb-2">{tp("aboutTia")}</h4>
+              <p className="text-muted-foreground">{tp("aboutTiaBody")}</p>
             </div>
             <div>
-              <h4 className="font-medium mb-2">LIA (Article 6.1.f)</h4>
-              <p className="text-muted-foreground">
-                Balance test required when relying on legitimate interests as legal basis.
-              </p>
+              <h4 className="font-medium mb-2">{tp("aboutLia")}</h4>
+              <p className="text-muted-foreground">{tp("aboutLiaBody")}</p>
             </div>
           </div>
         </CardContent>

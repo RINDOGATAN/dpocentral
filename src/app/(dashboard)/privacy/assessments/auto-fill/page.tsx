@@ -183,11 +183,9 @@ export default function DpiaAutoFillPage() {
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-primary" />
-          DPIA Auto-Fill Wizard
+          {tAutoFill("title")}
         </h1>
-        <p className="text-muted-foreground">
-          Auto-generate a DPIA from your existing data inventory
-        </p>
+        <p className="text-muted-foreground">{tAutoFill("subtitle")}</p>
       </div>
 
       {/* Step indicator */}
@@ -202,7 +200,7 @@ export default function DpiaAutoFillPage() {
                   : "bg-muted text-muted-foreground"
               }`}
             >
-              {i + 1}. {s.charAt(0).toUpperCase() + s.slice(1)}
+              {i + 1}. {tAutoFill(`step.${s}` as `step.select` | `step.preview` | `step.review` | `step.create`)}
             </span>
           </div>
         ))}
@@ -228,21 +226,21 @@ export default function DpiaAutoFillPage() {
       {step === "select" && (
         <Card>
           <CardHeader>
-            <CardTitle>Select Processing Activity</CardTitle>
-            <CardDescription>
-              Choose a processing activity to auto-fill the assessment from
-            </CardDescription>
+            <CardTitle>{tAutoFill("selectTitle")}</CardTitle>
+            <CardDescription>{tAutoFill("selectSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">Processing Activity</label>
+              <label className="text-sm font-medium mb-2 block">
+                {tAutoFill("activityLabel")}
+              </label>
               <Select value={selectedActivityId} onValueChange={setSelectedActivityId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a processing activity..." />
+                  <SelectValue placeholder={tAutoFill("activityPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {activitiesLoading && (
-                    <SelectItem value="_loading" disabled>Loading...</SelectItem>
+                    <SelectItem value="_loading" disabled>{tAutoFill("loading")}</SelectItem>
                   )}
                   {activities?.activities?.map((a: { id: string; name: string }) => (
                     <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
@@ -252,13 +250,13 @@ export default function DpiaAutoFillPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 block">Linked Vendor (optional)</label>
+              <label className="text-sm font-medium mb-2 block">{tAutoFill("vendorLabel")}</label>
               <Select value={selectedVendorId} onValueChange={setSelectedVendorId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a vendor..." />
+                  <SelectValue placeholder={tAutoFill("vendorPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="">{tAutoFill("none")}</SelectItem>
                   {vendors?.vendors?.map((v: { id: string; name: string }) => (
                     <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
                   ))}
@@ -271,7 +269,7 @@ export default function DpiaAutoFillPage() {
                 disabled={!selectedActivityId}
                 onClick={() => setStep("preview")}
               >
-                Preview Auto-Fill <ArrowRight className="w-4 h-4 ml-2" />
+                {tAutoFill("next")} <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </CardContent>
@@ -282,30 +280,28 @@ export default function DpiaAutoFillPage() {
       {step === "preview" && (
         <Card>
           <CardHeader>
-            <CardTitle>Auto-Fill Preview</CardTitle>
-            <CardDescription>
-              Review the data that will be used to pre-fill your assessment
-            </CardDescription>
+            <CardTitle>{tAutoFill("previewTitle")}</CardTitle>
+            <CardDescription>{tAutoFill("previewSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             {autoFillLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                <span className="ml-2">Analyzing processing activity...</span>
+                <span className="ml-2">{tAutoFill("analysing")}</span>
               </div>
             ) : autoFillError ? (
               <div className="py-8 text-center space-y-3">
                 <AlertTriangle className="w-10 h-10 mx-auto text-destructive" />
-                <p className="font-medium">Could not generate auto-fill suggestions</p>
+                <p className="font-medium">{tAutoFill("failedTitle")}</p>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  {autoFillError.message || "Something went wrong analyzing this processing activity."}
+                  {autoFillError.message || tAutoFill("failedBody")}
                 </p>
                 <div className="flex gap-2 justify-center pt-2">
                   <Button variant="outline" onClick={() => setStep("select")}>
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                    <ArrowLeft className="w-4 h-4 mr-2" /> {tAutoFill("back")}
                   </Button>
                   <Button variant="outline" onClick={() => refetchAutoFill()}>
-                    Retry
+                    {tAutoFill("retry")}
                   </Button>
                 </div>
               </div>
@@ -314,35 +310,35 @@ export default function DpiaAutoFillPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">{autoFill.context.assetCount}</div>
-                    <div className="text-xs text-muted-foreground">Assets</div>
+                    <div className="text-xs text-muted-foreground">{tAutoFill("countAssets")}</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">{autoFill.context.elementCount}</div>
-                    <div className="text-xs text-muted-foreground">Data Elements</div>
+                    <div className="text-xs text-muted-foreground">{tAutoFill("countElements")}</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">{autoFill.context.transferCount}</div>
-                    <div className="text-xs text-muted-foreground">Transfers</div>
+                    <div className="text-xs text-muted-foreground">{tAutoFill("countTransfers")}</div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">{autoFill.suggestions.length}</div>
-                    <div className="text-xs text-muted-foreground">Auto-Filled</div>
+                    <div className="text-xs text-muted-foreground">{tAutoFill("countFilled")}</div>
                   </div>
                 </div>
 
                 {autoFill.context.hasSpecialCategory && (
                   <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg">
                     <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                    <span className="text-sm">Special category data detected — DPIA strongly recommended</span>
+                    <span className="text-sm">{tAutoFill("specialCategory")}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between pt-4">
                   <Button variant="outline" onClick={() => setStep("select")}>
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                    <ArrowLeft className="w-4 h-4 mr-2" /> {tAutoFill("back")}
                   </Button>
                   <Button onClick={() => setStep("review")}>
-                    Review Responses <ArrowRight className="w-4 h-4 ml-2" />
+                    {tAutoFill("reviewStep")} <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
               </div>
@@ -358,11 +354,9 @@ export default function DpiaAutoFillPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Edit3 className="w-5 h-5" />
-                Review & Edit Responses
+                {tAutoFill("reviewTitle")}
               </CardTitle>
-              <CardDescription>
-                Edit any auto-filled responses before creating the assessment
-              </CardDescription>
+              <CardDescription>{tAutoFill("reviewSubtitle")}</CardDescription>
             </CardHeader>
           </Card>
 
@@ -374,11 +368,18 @@ export default function DpiaAutoFillPage() {
                     {s.questionId.replace(/_/g, " ").replace(/^s\d+ /, "")}
                   </CardTitle>
                   <Badge className={confidenceColor(s.confidence)}>
-                    {s.confidence} confidence
+                    {tAutoFill("confidence", {
+                      level: tAutoFill(
+                        `confidenceLevel.${s.confidence}` as
+                          | "confidenceLevel.high"
+                          | "confidenceLevel.medium"
+                          | "confidenceLevel.low"
+                      ),
+                    })}
                   </Badge>
                 </div>
                 <CardDescription className="text-xs">
-                  Source: {s.source}
+                  {tAutoFill("source", { source: s.source })}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -399,10 +400,10 @@ export default function DpiaAutoFillPage() {
 
           <div className="flex justify-between pt-4">
             <Button variant="outline" onClick={() => setStep("preview")}>
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back
+              <ArrowLeft className="w-4 h-4 mr-2" /> {tAutoFill("back")}
             </Button>
             <Button onClick={() => setStep("create")}>
-              Create Assessment <CheckCircle2 className="w-4 h-4 ml-2" />
+              {tAutoFill("createStep")} <CheckCircle2 className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
@@ -414,43 +415,43 @@ export default function DpiaAutoFillPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              Create Assessment
+              {tAutoFill("createTitle")}
             </CardTitle>
             <CardDescription>
-              A draft DPIA will be created with {autoFill?.suggestions.length ?? 0} pre-filled responses
+              {tAutoFill("createSubtitle", { count: autoFill?.suggestions.length ?? 0 })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="p-4 bg-muted rounded-lg space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Activity:</span>
+                  <span className="text-muted-foreground">{tAutoFill("activity")}</span>
                   <span className="font-medium">{autoFill?.activityName}</span>
                 </div>
                 {autoFill?.vendorName && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Vendor:</span>
+                    <span className="text-muted-foreground">{tAutoFill("vendor")}</span>
                     <span className="font-medium">{autoFill.vendorName}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Pre-filled questions:</span>
+                  <span className="text-muted-foreground">{tAutoFill("filledCount")}</span>
                   <span className="font-medium">{autoFill?.suggestions.length ?? 0}</span>
                 </div>
               </div>
 
               <div className="flex justify-between pt-4">
                 <Button variant="outline" onClick={() => setStep("review")}>
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                  <ArrowLeft className="w-4 h-4 mr-2" /> {tAutoFill("back")}
                 </Button>
                 <Button
                   onClick={handleCreate}
                   disabled={isCreating}
                 >
                   {isCreating ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating & saving responses...</>
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {tAutoFill("creating")}</>
                   ) : (
-                    <><Sparkles className="w-4 h-4 mr-2" /> Create & Open Assessment</>
+                    <><Sparkles className="w-4 h-4 mr-2" /> {tAutoFill("create")}</>
                   )}
                 </Button>
               </div>
