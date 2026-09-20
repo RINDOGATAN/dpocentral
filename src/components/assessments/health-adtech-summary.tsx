@@ -8,6 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import {
   computeHealthAdtechResult,
+  sourcesAgeMonths,
+  sourcesAreStale,
+  SOURCES_CHECKED_LABEL,
   tx,
   type Finding,
   type Lang,
@@ -41,6 +44,18 @@ export function HealthAdtechSummary({
         <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* How old the sources are, rather than a fixed date left to speak
+            for itself. */}
+        <p className="text-xs text-muted-foreground">
+          {t("sourcesChecked", { date: SOURCES_CHECKED_LABEL[lang] })}
+          {sourcesAreStale() && (
+            <span className="text-amber-700 dark:text-amber-400">
+              {" "}
+              {t("sourcesStale", { months: sourcesAgeMonths() })}
+            </span>
+          )}
+        </p>
+
         {result.blocking && (
           <p className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
             {t("blockingSummary")}

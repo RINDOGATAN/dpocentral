@@ -5565,6 +5565,8 @@
     "noFindings": "Por ahora las respuestas no muestran ningún problema.",
     "source": "Fuente",
     "toVerify": "[por verificar]",
+    "sourcesChecked": "Las fuentes primarias se leyeron por última vez el {date}. Un punto marcado [por verificar] no está confirmado con el texto primario; confírmalo antes de basarte en él.",
+    "sourcesStale": "De eso hace {months} meses. Vuelve a leer cada fuente, o confirma cada punto con el texto primario, antes de basarte en esta evaluación.",
     "severity": {
       "blocking": "Debe resolverse",
       "gap": "Carencia",

@@ -5565,6 +5565,8 @@
     "noFindings": "No issue found in the answers so far.",
     "source": "Source",
     "toVerify": "[to verify]",
+    "sourcesChecked": "Primary sources last read on {date}. A point marked [to verify] is not confirmed against the primary text; confirm it before relying on it.",
+    "sourcesStale": "That was {months} months ago. Read each source again, or confirm every point against the primary text, before this assessment is relied on.",
     "severity": {
       "blocking": "Must be resolved",
       "gap": "Gap",

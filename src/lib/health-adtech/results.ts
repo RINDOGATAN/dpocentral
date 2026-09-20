@@ -131,9 +131,40 @@ function textAnswer(answers: AnswerMap, questionId: string): string | null {
 // ── Static obligations per jurisdiction ───────────────────────────────────
 
 const bi =(en: string, es: string): BiText => ({ en, es });
+
+/**
+ * The day every primary source below was last read. It is stamped on each
+ * source line, and the app and the export say how old it is rather than
+ * leaving a fixed date to speak for itself: after
+ * SOURCES_STALE_AFTER_MONTHS the reader is told to confirm each point
+ * against the primary text. Move this date only when the sources have
+ * actually been read again.
+ */
+export const SOURCES_CHECKED_ON = new Date("2026-09-16T00:00:00Z");
+export const SOURCES_CHECKED_LABEL: BiText = bi("16 September 2026", "16 de septiembre de 2026");
+export const SOURCES_STALE_AFTER_MONTHS = 12;
+
+/** Whole months since the sources were last read. */
+export function sourcesAgeMonths(now: Date = new Date()): number {
+  const months =
+    (now.getUTCFullYear() - SOURCES_CHECKED_ON.getUTCFullYear()) * 12 +
+    (now.getUTCMonth() - SOURCES_CHECKED_ON.getUTCMonth());
+  const beforeTheDay = now.getUTCDate() < SOURCES_CHECKED_ON.getUTCDate();
+  return Math.max(0, months - (beforeTheDay ? 1 : 0));
+}
+
+/** True once the stamp is older than the staleness window. */
+export function sourcesAreStale(now: Date = new Date()): boolean {
+  return sourcesAgeMonths(now) >= SOURCES_STALE_AFTER_MONTHS;
+}
+
 const CATALOGUE = (entry: string) =>
   bi(`DPO Central jurisdiction catalogue (${entry})`, `Catálogo de jurisdicciones de DPO Central (${entry})`);
-const PRIMARY = (en: string, es: string) => bi(`Primary source (checked 16 September 2026): ${en}`, `Fuente primaria (comprobada el 16 de septiembre de 2026): ${es}`);
+const PRIMARY = (en: string, es: string) =>
+  bi(
+    `Primary source (checked ${SOURCES_CHECKED_LABEL.en}): ${en}`,
+    `Fuente primaria (comprobada el ${SOURCES_CHECKED_LABEL.es}): ${es}`
+  );
 const DPIA_TEMPLATE = bi("DPO Central DPIA template", "Plantilla de DPIA de DPO Central");
 const REPORT_ART35_7 = bi(
   "GDPR Art. 35(7), DPO Central assessment report",

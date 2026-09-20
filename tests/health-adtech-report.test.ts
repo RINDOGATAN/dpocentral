@@ -18,8 +18,15 @@ import {
   type AssessmentExportData,
 } from "@/server/services/export/assessment-report";
 import { HealthAdtechPages } from "@/server/services/export/health-adtech-report";
-import { computeHealthAdtechResult } from "@/lib/health-adtech/results";
 import {
+  computeHealthAdtechResult,
+  sourcesAgeMonths,
+  sourcesAreStale,
+  SOURCES_CHECKED_LABEL,
+  SOURCES_CHECKED_ON,
+} from "@/lib/health-adtech/results";
+import {
+  HEALTH_ADTECH_DESCRIPTION,
   HEALTH_ADTECH_SECTIONS,
   JURISDICTIONS,
   healthAdtechTemplateData,
@@ -177,6 +184,45 @@ describe("health-data advertising report", () => {
     ]);
     const text = collectText(HealthAdtechPages({ result: ct, lang: "en", t, title: "x", orgName: "o", date: "d" })).join("\n");
     expect(text).toContain("Offer the right to opt out (including targeted advertising and sale) [to verify]");
+  });
+});
+
+/**
+ * The sources carry a fixed date. The product says how old it is, in the app
+ * and on the page that cites them, instead of leaving the date to speak for
+ * itself: after a year the reader is told to read each source again. The
+ * "[to verify]" marks stay, because the primary text was not in hand to clear
+ * them, and the template's own description says those points are unconfirmed.
+ */
+describe("the age of the sources", () => {
+  const day = 24 * 60 * 60 * 1000;
+
+  it("counts whole months from the stamped date", () => {
+    expect(sourcesAgeMonths(SOURCES_CHECKED_ON)).toBe(0);
+    expect(sourcesAgeMonths(new Date(SOURCES_CHECKED_ON.getTime() + 40 * day))).toBe(1);
+    expect(sourcesAgeMonths(new Date("2027-09-16T00:00:00Z"))).toBe(12);
+  });
+
+  it("calls them stale only after the window", () => {
+    expect(sourcesAreStale(SOURCES_CHECKED_ON)).toBe(false);
+    expect(sourcesAreStale(new Date("2027-09-15T00:00:00Z"))).toBe(false);
+    expect(sourcesAreStale(new Date("2027-09-16T00:00:00Z"))).toBe(true);
+  });
+
+  for (const [lang, bundle] of [["en", en], ["es", es]] as const) {
+    it(`prints the date on the page that cites the sources (${lang})`, () => {
+      const t = translator((bundle as any).healthAdtechReport);
+      const result = computeHealthAdtechResult(responses);
+      const text = collectText(
+        HealthAdtechPages({ result, lang, t, title: "x", orgName: "o", date: "d" })
+      ).join("\n");
+      expect(text).toContain(SOURCES_CHECKED_LABEL[lang]);
+    });
+  }
+
+  it("keeps the unconfirmed marks, and says so in the template's description", () => {
+    expect(HEALTH_ADTECH_DESCRIPTION.en).toContain("[to verify]");
+    expect(HEALTH_ADTECH_DESCRIPTION.es).toContain("[por verificar]");
   });
 });
 
