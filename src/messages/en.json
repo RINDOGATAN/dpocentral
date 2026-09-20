@@ -4957,6 +4957,18 @@
       "ogDescription": "Quick start guide, user roles, and module overview for GDPR privacy management.",
       "heroTitle": "DPO Central",
       "heroSubtitle": "A single source of truth for your privacy management program. DPO Central helps organizations manage data inventory, DSARs, assessments, incidents, and vendor relationships from one unified platform.",
+      "hostedPilot": {
+        "title": "Hosted pilot",
+        "intro": "The hosted service is there to try the product. It is free, and it is not meant for real client matter. An instance of your own carries none of the limits below.",
+        "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
+        "assessments": "An organization may create {assessments} impact assessments. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
+        "ceilingsTitle": "Record ceilings",
+        "ceilingsIntro": "An organization can hold up to:",
+        "oneOrganization": "An account belongs to one organization.",
+        "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
+        "safeguards": "There are no contractual safeguards: no data processing agreement, no service level and no security certification.",
+        "run": "To work with real customer details, <run>run your own instance</run>."
+      },
       "quickstart": {
         "title": "Quick Start",
         "step1": { "label": "Sign in", "desc": "Use your email magic link or Google account" },
@@ -6633,7 +6645,7 @@
     }
   },
   "pilot": {
-    "banner": "Hosted pilot: free, capped, no security certification. 90 days of editing from your first sign-in, then read-only with export. For real client data, <run>run your own instance</run>.",
+    "banner": "Hosted pilot: free, capped (<docs>see docs</docs>), and with no contractual safeguards. To deploy real customer details, <run>run your own instance</run>.",
     "bannerLabel": "Hosted pilot notice",
     "dismiss": "Dismiss",
     "settings": {

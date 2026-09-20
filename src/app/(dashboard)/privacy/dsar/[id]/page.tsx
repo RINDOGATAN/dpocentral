@@ -278,14 +278,14 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {request.status !== "COMPLETED" && request.status !== "CANCELLED" && (
             <>
               <Select
                 value={request.status}
                 onValueChange={(value) => handleStatusChange(value as DSARStatus)}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

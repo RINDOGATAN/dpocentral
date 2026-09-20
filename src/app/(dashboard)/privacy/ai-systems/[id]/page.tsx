@@ -134,7 +134,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             onValueChange={(v) => updateStatus.mutate({ organizationId: orgId, id, status: v as any })}
             disabled={updateStatus.isPending}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

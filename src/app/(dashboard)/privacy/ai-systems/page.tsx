@@ -282,7 +282,7 @@ export default function AISystemsPage() {
           />
         </div>
         <Select value={riskFilter} onValueChange={setRiskFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder={tp("filter.riskLevel")} />
           </SelectTrigger>
           <SelectContent>
@@ -294,7 +294,7 @@ export default function AISystemsPage() {
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder={tp("filter.status")} />
           </SelectTrigger>
           <SelectContent>

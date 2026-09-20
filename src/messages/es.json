@@ -4957,6 +4957,18 @@
       "ogDescription": "Guía rápida, roles de usuario y resumen de módulos para la gestión de privacidad RGPD.",
       "heroTitle": "DPO Central",
       "heroSubtitle": "Una única fuente de verdad para tu programa de gestión de privacidad. DPO Central ayuda a las organizaciones a gestionar el inventario de datos, las DSAR, evaluaciones, incidentes y relaciones con proveedores desde una plataforma unificada.",
+      "hostedPilot": {
+        "title": "Piloto alojado",
+        "intro": "El servicio alojado sirve para probar el producto. Es gratuito y no está pensado para asuntos reales de clientes. Una instancia propia no tiene ninguno de los límites siguientes.",
+        "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
+        "assessments": "Cada organización puede crear {assessments} evaluaciones de impacto. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
+        "ceilingsTitle": "Límites de registros",
+        "ceilingsIntro": "Una organización puede tener como máximo:",
+        "oneOrganization": "Una cuenta pertenece a una sola organización.",
+        "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
+        "safeguards": "No hay garantías contractuales: ni contrato de encargo del tratamiento, ni nivel de servicio, ni certificación de seguridad.",
+        "run": "Para trabajar con datos reales de clientes, <run>usa tu propia instancia</run>."
+      },
       "quickstart": {
         "title": "Inicio rápido",
         "step1": { "label": "Inicia sesión", "desc": "Usa tu enlace mágico por correo o cuenta de Google" },
@@ -6633,7 +6645,7 @@
     }
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "banner": "Piloto alojado: gratuito, limitado (<docs>ver documentación</docs>) y sin garantías contractuales. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
     "bannerLabel": "Aviso del piloto alojado",
     "dismiss": "Cerrar",
     "settings": {

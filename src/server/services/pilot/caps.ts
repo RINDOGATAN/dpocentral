@@ -141,7 +141,8 @@ export const READ_ONLY_ALLOWED_PATHS = new Set<string>([
 
 type Locale = "en" | "es";
 
-const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
+/** Lower-case names of the capped resources, for use inside a sentence or list. */
+export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
   dataAssets: { en: "systems", es: "sistemas" },
   dataElements: { en: "data elements", es: "elementos de datos" },
   processingActivities: { en: "processing activities", es: "actividades de tratamiento" },

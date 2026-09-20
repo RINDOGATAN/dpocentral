@@ -12,7 +12,16 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import {
+  HOSTED_DPIA_LIMIT,
+  PILOT_DAYS,
+  PILOT_LIMITS,
+  RESOURCE_LABELS,
+  pilotLocale,
+  type PilotResource,
+} from "@/server/services/pilot/caps";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicOverview");
@@ -30,6 +39,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DocsOverviewPage() {
   const t = await getTranslations("docs.publicOverview");
+  // The figures come from the pilot configuration, never from prose, so the
+  // page cannot drift from what the product enforces.
+  const locale = pilotLocale(await getLocale());
+  const ceilings = (Object.keys(PILOT_LIMITS) as PilotResource[]).map((resource) => ({
+    resource,
+    limit: PILOT_LIMITS[resource],
+    label: RESOURCE_LABELS[resource][locale],
+  }));
 
   const modules: { key: string; href: string; icon: typeof Database }[] = [
     { key: "inventory", href: "/docs/data-inventory", icon: Database },
@@ -60,6 +77,44 @@ export default async function DocsOverviewPage() {
         <h1 className="text-3xl font-display uppercase tracking-wide text-foreground mb-4">{t("heroTitle")}</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">{t("heroSubtitle")}</p>
       </div>
+
+      {/* Hosted pilot: what the free hosted service allows, and what it does not */}
+      <section id="hosted-pilot" className="scroll-mt-24 p-6 rounded-2xl border border-border bg-card">
+        <h2 className="text-lg font-semibold text-foreground mb-3">{t("hostedPilot.title")}</h2>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>{t("hostedPilot.intro")}</p>
+          <p>{t("hostedPilot.window", { days: PILOT_DAYS })}</p>
+          <p>{t("hostedPilot.assessments", { assessments: HOSTED_DPIA_LIMIT })}</p>
+          <div>
+            <p className="font-medium text-foreground">{t("hostedPilot.ceilingsTitle")}</p>
+            <p className="mt-1">{t("hostedPilot.ceilingsIntro")}</p>
+            <ul className="mt-2 grid sm:grid-cols-2 gap-x-6 gap-y-1">
+              {ceilings.map((c) => (
+                <li key={c.resource}>
+                  &#8226; {c.limit} {c.label}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2">{t("hostedPilot.oneOrganization")}</p>
+          </div>
+          <p>{t("hostedPilot.exports")}</p>
+          <p>{t("hostedPilot.safeguards")}</p>
+          <p>
+            {t.rich("hostedPilot.run", {
+              run: (chunks) => (
+                <a
+                  href={RUN_YOUR_OWN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline font-medium text-foreground"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
+        </div>
+      </section>
 
       {/* Quick Start */}
       <div className="card-brutal">
