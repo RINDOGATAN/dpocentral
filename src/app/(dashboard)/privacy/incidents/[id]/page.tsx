@@ -222,15 +222,15 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/incidents">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Link href="/privacy/incidents" className="shrink-0">
             <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div
-            className={`w-12 h-12 border-2 flex items-center justify-center ${
+            className={`w-12 h-12 border-2 flex items-center justify-center shrink-0 ${
               isHighSeverity
                 ? "border-destructive bg-destructive/20"
                 : "border-primary"
@@ -240,7 +240,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               className={`w-6 h-6 ${isHighSeverity ? "text-destructive" : "text-primary"}`}
             />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               {/* Human reference derived from the publicId (no sequence column;
                   full id kept in the tooltip for search/support). */}
@@ -255,10 +255,10 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                 {tList(`status.${incident.status}` as `status.REPORTED` | `status.INVESTIGATING` | `status.CONTAINED` | `status.ERADICATED` | `status.RECOVERING` | `status.CLOSED` | `status.FALSE_POSITIVE`)}
               </Badge>
             </div>
-            <h1 className="text-2xl font-semibold mt-1">{incident.title}</h1>
+            <h1 className="text-2xl font-semibold mt-1 break-words">{incident.title}</h1>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href={`/privacy/incidents/${id}/edit`}>
             <Button variant="outline">
               <Edit className="w-4 h-4 mr-2" />

@@ -87,15 +87,15 @@ export default function RegulationsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Scale className="w-6 h-6" />
+            <Scale className="w-6 h-6 shrink-0" />
             {t("title")}
           </h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() =>

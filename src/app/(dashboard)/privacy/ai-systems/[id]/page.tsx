@@ -100,17 +100,17 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <Button variant="ghost" size="sm" asChild className="shrink-0">
             <Link href="/privacy/ai-systems"><ArrowLeft className="w-4 h-4" /></Link>
           </Button>
-          <div>
-            <h1 className="text-2xl font-semibold flex items-center gap-2">
-              <Bot className="w-6 h-6" />
-              {system.name}
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold flex items-center gap-2 min-w-0">
+              <Bot className="w-6 h-6 shrink-0" />
+              <span className="truncate">{system.name}</span>
             </h1>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-wrap items-center gap-2 mt-1">
               <Badge className={RISK_COLORS[system.riskLevel] ?? ""}>
                 {tList(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
               </Badge>
@@ -122,7 +122,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Link href={`/privacy/ai-systems/${id}/edit`}>
             <Button variant="outline" size="sm">
               <Edit3 className="w-4 h-4 mr-2" />
