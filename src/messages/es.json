@@ -5227,7 +5227,7 @@
       "subtitle": "Realiza evaluaciones de impacto en privacidad usando plantillas configurables. Puntúa riesgos, documenta mitigaciones y gestiona flujos de aprobación para DPIAs, TIAs, LIAs y evaluaciones personalizadas.",
       "templates": {
         "title": "Plantillas de evaluación",
-        "intro": "Elige entre plantillas integradas o crea evaluaciones personalizadas. Cada plantilla incluye preguntas preconfiguradas, criterios de riesgo y flujos de aprobación.",
+        "intro": "Elige una plantilla integrada, o la personalizada para una revisión que no encaje en ninguna de las demás. Cada plantilla lleva sus propias preguntas y criterios de riesgo, y toda evaluación creada a partir de una recorre el mismo flujo de aprobación.",
         "hostedNote": "Todos los tipos están disponibles en este servicio alojado, sin coste y sin bloqueo de la exportación. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
         "premiumBadge": "Premium",
         "tiers": {
@@ -5236,7 +5236,7 @@
         },
         "items": {
           "LIA": { "name": "Evaluación de interés legítimo", "desc": "Valora si el interés legítimo puede invocarse como base jurídica" },
-          "CUSTOM": { "name": "Evaluación personalizada", "desc": "Crea tu propia plantilla de evaluación con preguntas y criterios personalizados" },
+          "CUSTOM": { "name": "Evaluación personalizada", "desc": "Plantilla flexible para una revisión de privacidad que no cubre ninguno de los demás tipos" },
           "DPIA": { "name": "Evaluación de impacto en protección de datos", "desc": "Requerida por el Artículo 35 del RGPD para tratamientos de alto riesgo" },
           "TIA": { "name": "Evaluación de impacto de transferencia", "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)" }
         }
@@ -5254,7 +5254,7 @@
       "riskScoring": {
         "title": "Puntuación de riesgo",
         "intro": "Cada evaluación calcula un nivel de riesgo general basado en la probabilidad e impacto de los riesgos identificados. El sistema admite cuatro niveles de riesgo.",
-        "outro": "Las puntuaciones de riesgo se calculan a partir de las respuestas individuales y pueden ser anuladas por el evaluador con justificación. El nivel de riesgo general determina los requisitos de revisión y las prioridades de mitigación."
+        "outro": "La puntuación se calcula a partir de las respuestas a medida que avanzas, y el nivel general resulta del conjunto de todas ellas. Aparece en la evaluación, en el informe exportado y en el informe de portafolio, que dedica tarjetas propias a las evaluaciones de riesgo alto."
       },
       "mitigations": {
         "title": "Mitigaciones de riesgo",

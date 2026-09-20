@@ -5227,7 +5227,7 @@
       "subtitle": "Conduct privacy impact assessments using configurable templates. Score risks, document mitigations, and manage approval workflows for DPIAs, TIAs, LIAs and custom assessments.",
       "templates": {
         "title": "Assessment Templates",
-        "intro": "Choose from built-in templates or create custom assessments. Each template includes pre-configured questions, risk criteria, and approval workflows.",
+        "intro": "Choose a built-in template, or the custom one for a review that none of the others covers. Each template carries its own questions and risk criteria, and every assessment made from one goes through the same approval workflow.",
         "hostedNote": "Every type is open on this hosted service, at no charge and with no lock on the export. The Premium mark applies to the self-hosted kit, where such a type is installed from a signed module.",
         "premiumBadge": "Premium",
         "tiers": {
@@ -5236,7 +5236,7 @@
         },
         "items": {
           "LIA": { "name": "Legitimate Interests Assessment", "desc": "Evaluate whether legitimate interests can be relied upon as a legal basis" },
-          "CUSTOM": { "name": "Custom Assessment", "desc": "Create your own assessment template with custom questions and criteria" },
+          "CUSTOM": { "name": "Custom Assessment", "desc": "A flexible template for a privacy review that none of the other types covers" },
           "DPIA": { "name": "Data Protection Impact Assessment", "desc": "Required under GDPR Article 35 for high-risk processing activities" },
           "TIA": { "name": "Transfer Impact Assessment", "desc": "Evaluate safeguards for international data transfers (Schrems II)" }
         }
@@ -5254,7 +5254,7 @@
       "riskScoring": {
         "title": "Risk Scoring",
         "intro": "Each assessment calculates an overall risk level based on the likelihood and impact of identified risks. The system supports four risk levels.",
-        "outro": "Risk scores are calculated from individual question responses and can be overridden by the assessor with justification. The overall risk level drives review requirements and mitigation priorities."
+        "outro": "The score is calculated from the answers as you work through the assessment, and the overall level follows from all of them together. It appears on the assessment, on the exported report, and in the portfolio report, which gives the assessments at high risk their own cards."
       },
       "mitigations": {
         "title": "Risk Mitigations",
@@ -5315,7 +5315,7 @@
           "history": "Approval history"
         },
         "portfolioTitle": "Assessment Portfolio Report",
-        "portfolioDesc": "Export a cross-assessment summary showing your entire impact assessment program status — by type, risk level, and completion.",
+        "portfolioDesc": "Export a cross-assessment summary showing your entire impact assessment programme status, by type, risk level and completion.",
         "portfolioFeatures": {
           "status": "Status & risk distribution across all assessments",
           "type": "Type breakdown (DPIA, LIA, Custom)",
