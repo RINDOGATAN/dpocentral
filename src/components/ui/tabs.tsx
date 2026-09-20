@@ -16,7 +16,13 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-11 sm:h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      // max-w-full + overflow-x-auto: a tab strip that is wider than the
+      // viewport scrolls inside its own bar instead of widening the page.
+      // justify-start keeps the first tab reachable once it does scroll
+      // (a centred overflowing flex container puts its start out of reach);
+      // where the strip fits, inline-flex sizes it to its content, so
+      // justify has no visible effect and nothing changes on a desktop.
+      "inline-flex h-11 sm:h-9 max-w-full items-center justify-start overflow-x-auto rounded-lg bg-muted p-1 text-muted-foreground",
       className
     )}
     {...props}
