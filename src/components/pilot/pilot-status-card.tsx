@@ -3,8 +3,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
-import { Download } from "lucide-react";
+import { AlertTriangle, Download } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusNote } from "@/components/ui/status-note";
+import { toneMark } from "@/config/status-palette";
 import { trpc } from "@/lib/trpc";
 import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
 
@@ -65,14 +67,14 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
       </CardHeader>
       <CardContent className="space-y-4">
         {status.readOnly && (
-          <p className="p-3 border border-destructive text-destructive text-sm">
+          <StatusNote tone="warning" className="border">
             {t("settings.readOnly")}
-          </p>
+          </StatusNote>
         )}
         {!status.readOnly && atCeiling && (
-          <p className="p-3 border border-destructive text-destructive text-sm">
+          <StatusNote tone="warning" className="border">
             {t("settings.limitReached")}
-          </p>
+          </StatusNote>
         )}
         <p className="text-sm">{t.rich("settings.waysOut", links)}</p>
 
@@ -84,8 +86,13 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
                 <span className="text-muted-foreground">
                   {t(`settings.resources.${u.resource}`)}
                 </span>
-                <span className={u.used >= u.limit ? "text-destructive font-medium" : ""}>
-                  {t("settings.usage", { used: u.used, limit: u.limit })}
+                <span className="inline-flex items-center gap-1">
+                  {u.used >= u.limit && (
+                    <AlertTriangle aria-hidden className={`h-3.5 w-3.5 ${toneMark("warning")}`} />
+                  )}
+                  <span className={u.used >= u.limit ? "font-medium" : ""}>
+                    {t("settings.usage", { used: u.used, limit: u.limit })}
+                  </span>
                 </span>
               </li>
             ))}

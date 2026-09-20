@@ -4,8 +4,12 @@
 
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { StatusChip } from "@/components/ui/status-chip";
+import { StatusNote } from "@/components/ui/status-note";
+import { toneMark } from "@/config/status-palette";
+import type { StatusTone } from "@/config/status-tone";
 import {
   computeHealthAdtechResult,
   sourcesAgeMonths,
@@ -16,10 +20,11 @@ import {
   type Lang,
 } from "@/lib/health-adtech/results";
 
-const severityClass: Record<Finding["severity"], string> = {
-  blocking: "border-destructive bg-destructive/10 text-destructive",
-  gap: "border-amber-500 text-amber-700 dark:text-amber-400",
-  note: "border-muted-foreground text-muted-foreground",
+/** Each severity keeps its word and gains the tone's icon with it. */
+const severityTone: Record<Finding["severity"], StatusTone> = {
+  blocking: "danger",
+  gap: "warning",
+  note: "neutral",
 };
 
 /**
@@ -49,17 +54,18 @@ export function HealthAdtechSummary({
         <p className="text-xs text-muted-foreground">
           {t("sourcesChecked", { date: SOURCES_CHECKED_LABEL[lang] })}
           {sourcesAreStale() && (
-            <span className="text-amber-700 dark:text-amber-400">
+            <span className="inline-flex items-center gap-1 text-foreground">
               {" "}
+              <AlertTriangle aria-hidden className={`h-3.5 w-3.5 ${toneMark("warning")}`} />
               {t("sourcesStale", { months: sourcesAgeMonths() })}
             </span>
           )}
         </p>
 
         {result.blocking && (
-          <p className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
-            {t("blockingSummary")}
-          </p>
+          <StatusNote tone="danger" title={t("severity.blocking")} className="rounded-md border">
+            <p>{t("blockingSummary")}</p>
+          </StatusNote>
         )}
 
         {result.jurisdictions.length === 0 ? (
@@ -80,7 +86,13 @@ export function HealthAdtechSummary({
                   {j.obligations.map((o, i) => (
                     <li key={i}>
                       {tx(o.text, lang)}
-                      {o.toVerify && <span className="text-amber-700 dark:text-amber-400"> {t("toVerify")}</span>}
+                      {o.toVerify && (
+                        <span className="inline-flex items-center gap-1 font-medium">
+                          {" "}
+                          <AlertTriangle aria-hidden className={`h-3.5 w-3.5 ${toneMark("warning")}`} />
+                          {t("toVerify")}
+                        </span>
+                      )}
                       <span className="block text-xs text-muted-foreground">
                         {t("source")}: {tx(o.source, lang)}
                       </span>
@@ -96,9 +108,9 @@ export function HealthAdtechSummary({
                   <ul className="mt-1 flex flex-col gap-1 text-sm">
                     {j.findings.map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <Badge variant="outline" className={`shrink-0 ${severityClass[f.severity]}`}>
+                        <StatusChip tone={severityTone[f.severity]} className="shrink-0">
                           {t(`severity.${f.severity}` as "severity.blocking" | "severity.gap" | "severity.note")}
-                        </Badge>
+                        </StatusChip>
                         <span>{tx(f.text, lang)}</span>
                       </li>
                     ))}

@@ -116,7 +116,7 @@ export default function AdminLayout({
                       size="sm"
                       className={`gap-2 ${
                         isActive
-                          ? "bg-primary/20 text-primary hover:bg-primary/30 hover:text-primary"
+                          ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary"
                           : ""
                       }`}
                     >

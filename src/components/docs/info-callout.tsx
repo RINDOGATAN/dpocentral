@@ -3,6 +3,8 @@
 
 import { Lightbulb, AlertTriangle, Info, StickyNote } from "lucide-react";
 
+import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
+
 type CalloutType = "tip" | "warning" | "info" | "note";
 
 interface InfoCalloutProps {
@@ -11,10 +13,24 @@ interface InfoCalloutProps {
   children: React.ReactNode;
 }
 
+/**
+ * Each callout says what it is three ways that do not need colour vision: its
+ * icon, its left border and its heading. The sentence keeps the body colour.
+ */
 const calloutConfig: Record<CalloutType, { icon: React.ElementType; border: string; bg: string; iconColor: string }> = {
   tip: { icon: Lightbulb, border: "border-primary", bg: "bg-primary/5", iconColor: "text-primary" },
-  warning: { icon: AlertTriangle, border: "border-destructive", bg: "bg-destructive/5", iconColor: "text-destructive" },
-  info: { icon: Info, border: "border-blue-500", bg: "bg-blue-500/5", iconColor: "text-blue-500" },
+  warning: {
+    icon: AlertTriangle,
+    border: toneBorder("warning"),
+    bg: toneTint("warning"),
+    iconColor: toneMark("warning"),
+  },
+  info: {
+    icon: Info,
+    border: toneBorder("info"),
+    bg: toneTint("info"),
+    iconColor: toneMark("info"),
+  },
   note: { icon: StickyNote, border: "border-muted-foreground", bg: "bg-muted/50", iconColor: "text-muted-foreground" },
 };
 
