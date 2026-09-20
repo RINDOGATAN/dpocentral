@@ -6,7 +6,8 @@
  *
  * A section or a question may carry `showIf: { questionId, anyOf }`: it is
  * shown only when the answer to `questionId` (a select or multiselect in the
- * same template) includes at least one of the `anyOf` options. Options are
+ * same template) includes at least one of the `anyOf` options, or, with
+ * `alsoWhenUnanswered`, while that question has no answer at all. Options are
  * named in the template's stored language (English); an answer saved in
  * another language is matched through the translated option list at the
  * same position. Templates without `showIf` behave exactly as before.
@@ -21,6 +22,16 @@
 export interface ShowIf {
   questionId: string;
   anyOf: string[];
+  /**
+   * Show the item as well when the controlling question has no answer yet.
+   *
+   * Used where a condition is added to a question that already existed: an
+   * assessment started before the controlling question was introduced keeps
+   * showing it, instead of losing answers it already holds. A condition that
+   * gates genuinely new content leaves this off, so the new questions appear
+   * only for the answer that asks for them.
+   */
+  alsoWhenUnanswered?: boolean;
 }
 
 export interface ConditionalQuestion {
@@ -122,6 +133,7 @@ export function hiddenByConditions(
       controller?.options,
       localized.map((l) => l.get(cond.questionId)?.options)
     );
+    if (values.length === 0) return !!cond.alsoWhenUnanswered;
     return values.some((v) => cond.anyOf.includes(v));
   };
 

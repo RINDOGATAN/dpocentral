@@ -57,7 +57,7 @@ import {
   ensureHostedTemplates,
   resetHostedTemplatesForTests,
 } from "@/server/services/pilot/hosted-templates";
-import { DPIA_TEMPLATE_ID } from "@/config/dpia-template-v2";
+import { DPIA_TEMPLATE_ID, DPIA_TEMPLATE_VERSION } from "@/config/dpia-template-v2";
 import { HEALTH_ADTECH_TEMPLATE_ID } from "@/config/health-adtech-template";
 import { assessmentRouter } from "@/server/routers/privacy/assessment";
 import { callerFor, sessionFor } from "./helpers";
@@ -184,10 +184,28 @@ describe("hosted templates written at runtime", () => {
     );
   });
 
-  it("never overwrites a DPIA that already exists, and runs once", async () => {
+  it("refreshes an older system DPIA so a new template version reaches the pilot", async () => {
     hosted();
     mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
-      where.id === DPIA_TEMPLATE_ID ? { id: DPIA_TEMPLATE_ID } : null
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "2.0", isSystem: true, organizationId: null }
+        : null
+    );
+    await ensureHostedTemplates();
+    expect(mocks.prisma.assessmentTemplate.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: DPIA_TEMPLATE_ID },
+        data: expect.objectContaining({ version: DPIA_TEMPLATE_VERSION }),
+      })
+    );
+  });
+
+  it("keeps a DPIA whose installed version is newer, and runs once", async () => {
+    hosted();
+    mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "9.0", isSystem: true, organizationId: null }
+        : null
     );
     await ensureHostedTemplates();
     await ensureHostedTemplates();
@@ -202,6 +220,19 @@ describe("hosted templates written at runtime", () => {
       ([arg]) => arg.where.id === DPIA_TEMPLATE_ID
     );
     expect(dpiaLookups).toHaveLength(1);
+  });
+
+  it("never touches a DPIA row that belongs to an organization", async () => {
+    hosted();
+    mocks.prisma.assessmentTemplate.findUnique.mockImplementation(async ({ where }) =>
+      where.id === DPIA_TEMPLATE_ID
+        ? { id: DPIA_TEMPLATE_ID, version: "1.0", isSystem: false, organizationId: "org-1" }
+        : null
+    );
+    await ensureHostedTemplates();
+    expect(mocks.prisma.assessmentTemplate.update).not.toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: DPIA_TEMPLATE_ID } })
+    );
   });
 
   it("writes them before the template list and the offered types are read", async () => {

@@ -42,6 +42,7 @@ const USER_VISIBLE_FILES = [
   path.join(ROOT, "src/messages/es.json"),
   path.join(ROOT, "src/config/dpia-template-v2.ts"),
   path.join(ROOT, "src/config/health-adtech-template.ts"),
+  path.join(ROOT, "src/config/assessment-frameworks.ts"),
   ...walk(path.join(ROOT, "src/app/(public)/docs")).filter((f) => f.endsWith(".tsx")),
 ];
 

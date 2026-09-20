@@ -5785,12 +5785,28 @@
     },
     "dpia": {
       "template": {
+        "system-dpia-template": {
+          "name": "Data Protection Impact Assessment (DPIA)",
+          "description": "A DPIA that follows the framework you choose at the start: the European rules (Regulation (EU) 2016/679, Articles 35 and 36), the Californian risk assessment rules (11 CCR article 10), or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Informational, not legal advice."
+        },
         "system-dpia-health-adtech-template": {
           "name": "Health data in advertising: CCPA risk assessment and GDPR DPIA",
           "description": "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and the GDPR Article 35(7) content, with questions and obligations that follow the jurisdictions selected. Draft for review by counsel; statements marked [to verify] are not yet confirmed. This template is informational, not legal advice."
         }
       },
       "section": {
+        "s0": {
+          "title": "Scope of this assessment",
+          "description": "Choose the frameworks this assessment has to satisfy. The choice decides which questions are asked below and which requirements the report reports on."
+        },
+        "s8": {
+          "title": "California: contents of the risk assessment",
+          "description": "The activities that make a risk assessment necessary, and the content items it must contain."
+        },
+        "s9": {
+          "title": "California: timetable, submission and attestation",
+          "description": "When the assessment is conducted, reviewed and kept, and what has to reach the agency."
+        },
         "hd1": {
           "title": "Scope and threshold analysis",
           "description": "Select the jurisdictions first: the answer adds the questions and obligations each one requires."
@@ -5861,6 +5877,103 @@
         }
       },
       "question": {
+        "q0_1": {
+          "text": "Which frameworks does this assessment have to satisfy?",
+          "helpText": "Select one or both. The report lists every requirement of the frameworks selected and marks each one covered or outstanding. Sources: Regulation (EU) 2016/679, Articles 35 and 36; California Code of Regulations, title 11, division 6, chapter 1, article 10.",
+          "options": [
+            "European Union: Regulation (EU) 2016/679, Article 35",
+            "California: CCPA risk assessment regulations, 11 CCR article 10"
+          ]
+        },
+        "q8_1": {
+          "text": "Which California risk assessment triggers does the processing meet?",
+          "helpText": "Any one of them means a risk assessment is required. If none apply, the report says so plainly and claims no Californian requirement. Source: 11 CCR 7150(b).",
+          "options": [
+            "Selling or sharing personal information",
+            "Processing sensitive personal information",
+            "Automated decision-making technology (ADMT) for a significant decision",
+            "Automated observation of employees, contractors, job applicants or students",
+            "Inferring sensitive traits from presence at a sensitive location",
+            "Processing to train ADMT, biometric or profiling technology",
+            "None of these"
+          ]
+        },
+        "q8_2": {
+          "text": "Operational elements of the processing",
+          "helpText": "How the personal information is collected, from which sources, how long it is kept, how many consumers it concerns, who it is disclosed to, and the technology used. Source: 11 CCR 7152(a)(3)."
+        },
+        "q8_3": {
+          "text": "Benefits of the processing to the business, the consumer, other stakeholders and the public",
+          "helpText": "Source: 11 CCR 7152(a)(4)."
+        },
+        "q8_4": {
+          "text": "Negative impacts on consumers' privacy",
+          "helpText": "Describe each impact, who it falls on and how serious it is. Source: 11 CCR 7152(a)(5)."
+        },
+        "q8_5": {
+          "text": "Safeguards planned to address the negative impacts",
+          "helpText": "Source: 11 CCR 7152(a)(6)."
+        },
+        "q8_6": {
+          "text": "Will the business start or continue the processing?",
+          "helpText": "Weigh the negative impacts, as mitigated by the safeguards, against the benefits. Source: 11 CCR 7152(a)(7).",
+          "options": [
+            "Yes: the benefits outweigh the negative impacts once the safeguards are in place",
+            "No: the negative impacts outweigh the benefits",
+            "Not decided yet"
+          ]
+        },
+        "q8_7": {
+          "text": "Names and positions of the people who prepared, reviewed and approved this assessment",
+          "helpText": "Source: 11 CCR 7152(a)(8)."
+        },
+        "q8_8": {
+          "text": "Dates on which this assessment was reviewed and approved",
+          "helpText": "Source: 11 CCR 7152(a)(9)."
+        },
+        "q9_1": {
+          "text": "When is this assessment being conducted, in relation to the processing?",
+          "helpText": "Source: 11 CCR 7155(a).",
+          "options": [
+            "Before the processing begins",
+            "The processing is already under way",
+            "The processing has ended"
+          ]
+        },
+        "q9_2": {
+          "text": "Review and update schedule, the change that brings a review forward, and how long this assessment is kept",
+          "helpText": "Source: 11 CCR 7155(b) and (c)."
+        },
+        "q9_3": {
+          "text": "Submission to the California Privacy Protection Agency by 1 April 2028",
+          "helpText": "Source: 11 CCR 7157(a).",
+          "options": [
+            "Planned",
+            "Already submitted",
+            "Not applicable: no trigger is met"
+          ]
+        },
+        "q9_4": {
+          "text": "Executive who will attest to this assessment (name and position)",
+          "helpText": "Source: 11 CCR 7157(b)(5) and (c)."
+        },
+        "q9_5": {
+          "text": "Can the full assessment be provided within 30 days of a request from the agency or the Attorney General?",
+          "helpText": "Source: 11 CCR 7157(e).",
+          "options": [
+            "Yes",
+            "No",
+            "Not yet"
+          ]
+        },
+        "q4_3": {
+          "text": "The views of data subjects or their representatives, or the reason for not seeking them",
+          "helpText": "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9)."
+        },
+        "q7_4": {
+          "text": "When this assessment will be reviewed, and the change in risk that brings the review forward",
+          "helpText": "Give a review date and name the changes that require an earlier review, such as a new purpose, a new recipient or a new technology. Source: Regulation (EU) 2016/679, Article 35(11)."
+        },
         "hd1_1": {
           "text": "Which jurisdictions apply to this processing?",
           "helpText": "Select every jurisdiction whose residents' data is collected or used. Changing the selection changes the questions below and the report. Source: DPO Central jurisdiction catalogue (GDPR, UK GDPR, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington and Nevada are not in the catalogue.",

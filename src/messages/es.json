@@ -5785,12 +5785,28 @@
     },
     "dpia": {
       "template": {
+        "system-dpia-template": {
+          "name": "Evaluación de impacto relativa a la protección de datos (DPIA)",
+          "description": "Una DPIA que sigue el marco que elijas al principio: las normas europeas (Reglamento (UE) 2016/679, artículos 35 y 36), las normas californianas de evaluación de riesgos (11 CCR, artículo 10) o ambas. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Informativo, no constituye asesoramiento jurídico."
+        },
         "system-dpia-health-adtech-template": {
           "name": "Datos de salud en publicidad: evaluación de riesgos de la CCPA y EIPD del RGPD",
           "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el contenido del artículo 35(7) del RGPD, con preguntas y obligaciones que siguen a las jurisdicciones seleccionadas. Borrador para revisión por un abogado; las afirmaciones marcadas [por verificar] aún no están confirmadas. Esta plantilla es informativa y no constituye asesoramiento jurídico."
         }
       },
       "section": {
+        "s0": {
+          "title": "Alcance de esta evaluación",
+          "description": "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y sobre qué requisitos informa el informe."
+        },
+        "s8": {
+          "title": "California: contenido de la evaluación de riesgos",
+          "description": "Las actividades que hacen necesaria una evaluación de riesgos y los contenidos que debe incluir."
+        },
+        "s9": {
+          "title": "California: plazos, presentación y certificación",
+          "description": "Cuándo se realiza, se revisa y se conserva la evaluación, y qué debe llegar a la agencia."
+        },
         "hd1": {
           "title": "Alcance y análisis de umbral",
           "description": "Selecciona primero las jurisdicciones: la respuesta añade las preguntas y obligaciones que exige cada una."
@@ -5861,6 +5877,103 @@
         }
       },
       "question": {
+        "q0_1": {
+          "text": "¿Qué marcos debe satisfacer esta evaluación?",
+          "helpText": "Selecciona uno o ambos. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Fuentes: Reglamento (UE) 2016/679, artículos 35 y 36; Código de Reglamentos de California, título 11, división 6, capítulo 1, artículo 10.",
+          "options": [
+            "Unión Europea: Reglamento (UE) 2016/679, artículo 35",
+            "California: reglamento de evaluación de riesgos de la CCPA, 11 CCR artículo 10"
+          ]
+        },
+        "q8_1": {
+          "text": "¿Qué supuestos de evaluación de riesgos de California cumple el tratamiento?",
+          "helpText": "Cualquiera de ellos obliga a realizar la evaluación de riesgos. Si no se cumple ninguno, el informe lo dice con claridad y no afirma ningún requisito de California. Fuente: 11 CCR 7150(b).",
+          "options": [
+            "Venta o intercambio (sharing) de información personal",
+            "Tratamiento de información personal sensible",
+            "Tecnología de decisiones automatizadas (ADMT) para una decisión significativa",
+            "Observación automatizada de empleados, contratistas, candidatos o estudiantes",
+            "Inferencia de rasgos sensibles a partir de la presencia en un lugar sensible",
+            "Tratamiento para entrenar tecnología ADMT, biométrica o de elaboración de perfiles",
+            "Ninguno de ellos"
+          ]
+        },
+        "q8_2": {
+          "text": "Elementos operativos del tratamiento",
+          "helpText": "Cómo se recoge la información personal, de qué fuentes, cuánto tiempo se conserva, a cuántos consumidores afecta, a quién se comunica y qué tecnología se emplea. Fuente: 11 CCR 7152(a)(3)."
+        },
+        "q8_3": {
+          "text": "Beneficios del tratamiento para la empresa, el consumidor, otras partes interesadas y el público",
+          "helpText": "Fuente: 11 CCR 7152(a)(4)."
+        },
+        "q8_4": {
+          "text": "Efectos negativos sobre la privacidad de los consumidores",
+          "helpText": "Describe cada efecto, sobre quién recae y su gravedad. Fuente: 11 CCR 7152(a)(5)."
+        },
+        "q8_5": {
+          "text": "Salvaguardas previstas para afrontar los efectos negativos",
+          "helpText": "Fuente: 11 CCR 7152(a)(6)."
+        },
+        "q8_6": {
+          "text": "¿Iniciará o continuará la empresa el tratamiento?",
+          "helpText": "Pondera los efectos negativos, ya mitigados por las salvaguardas, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
+          "options": [
+            "Sí: los beneficios superan a los efectos negativos una vez aplicadas las salvaguardas",
+            "No: los efectos negativos superan a los beneficios",
+            "Aún sin decidir"
+          ]
+        },
+        "q8_7": {
+          "text": "Nombres y cargos de quienes prepararon, revisaron y aprobaron esta evaluación",
+          "helpText": "Fuente: 11 CCR 7152(a)(8)."
+        },
+        "q8_8": {
+          "text": "Fechas en que esta evaluación fue revisada y aprobada",
+          "helpText": "Fuente: 11 CCR 7152(a)(9)."
+        },
+        "q9_1": {
+          "text": "¿Cuándo se realiza esta evaluación en relación con el tratamiento?",
+          "helpText": "Fuente: 11 CCR 7155(a).",
+          "options": [
+            "Antes de que comience el tratamiento",
+            "El tratamiento ya está en marcha",
+            "El tratamiento ya ha terminado"
+          ]
+        },
+        "q9_2": {
+          "text": "Calendario de revisión y actualización, el cambio que adelanta una revisión y durante cuánto tiempo se conserva esta evaluación",
+          "helpText": "Fuente: 11 CCR 7155(b) y (c)."
+        },
+        "q9_3": {
+          "text": "Presentación a la Agencia de Protección de la Privacidad de California antes del 1 de abril de 2028",
+          "helpText": "Fuente: 11 CCR 7157(a).",
+          "options": [
+            "Prevista",
+            "Ya presentada",
+            "No procede: no se cumple ningún supuesto"
+          ]
+        },
+        "q9_4": {
+          "text": "Directivo que certificará esta evaluación (nombre y cargo)",
+          "helpText": "Fuente: 11 CCR 7157(b)(5) y (c)."
+        },
+        "q9_5": {
+          "text": "¿Puede facilitarse la evaluación completa en un plazo de 30 días desde la solicitud de la agencia o del fiscal general?",
+          "helpText": "Fuente: 11 CCR 7157(e).",
+          "options": [
+            "Sí",
+            "No",
+            "Todavía no"
+          ]
+        },
+        "q4_3": {
+          "text": "La opinión de los interesados o de sus representantes, o el motivo por el que no se ha recabado",
+          "helpText": "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35(9)."
+        },
+        "q7_4": {
+          "text": "Cuándo se revisará esta evaluación y qué cambio del riesgo adelanta la revisión",
+          "helpText": "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35(11)."
+        },
         "hd1_1": {
           "text": "¿Qué jurisdicciones se aplican a este tratamiento?",
           "helpText": "Selecciona todas las jurisdicciones cuyos residentes aportan datos que se recogen o usan. Si cambias la selección, cambian las preguntas siguientes y el informe. Fuente: catálogo de jurisdicciones de DPO Central (RGPD, RGPD del Reino Unido, CCPA/CPRA, MODPA, CTDPA, CPA, VCDPA, TDPSA, OCPA); Washington y Nevada no figuran en el catálogo.",

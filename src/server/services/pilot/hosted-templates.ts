@@ -9,10 +9,12 @@
  * instance writes the missing system templates (created at runtime, no seed or
  * migration step needed on deploy):
  *
- *  - the standard DPIA (src/config/dpia-template-v2.ts), only when no row with
- *    its id exists, so a newer DPIA already in the database is never touched;
- *  - the global templates in HOSTED_SYSTEM_TEMPLATES, through the guarded
- *    upsert that refreshes system rows and never downgrades them.
+ *  - the standard DPIA (src/config/dpia-template-v2.ts) and the global
+ *    templates in HOSTED_SYSTEM_TEMPLATES, all through the guarded upsert
+ *    (src/lib/seed-system-content.ts): only a system row with no organization
+ *    is written, and a row whose version is newer than the built-in one (for
+ *    instance one installed from a signed skill) is kept as it is. That is how
+ *    a new template version reaches the hosted service on deploy.
  *
  * The self-hosted kit never runs this: there a premium type is offered only
  * once its template is installed from a signed skill (the licence gate).
@@ -34,6 +36,17 @@ export const HOSTED_SYSTEM_TEMPLATES: Array<{
   data: Parameters<typeof upsertSystemTemplate>[2];
 }> = [
   {
+    id: DPIA_TEMPLATE_ID,
+    data: (() => {
+      const { id: _id, ...data } = dpiaTemplateData;
+      return {
+        ...data,
+        sections: data.sections as object,
+        scoringLogic: data.scoringLogic as object,
+      };
+    })(),
+  },
+  {
     id: HEALTH_ADTECH_TEMPLATE_ID,
     data: {
       ...healthAdtechTemplateData,
@@ -48,21 +61,6 @@ let ensured: Promise<void> | null = null;
 async function writeHostedTemplates(): Promise<void> {
   // The seed helpers take the plain client type; the app client is extended.
   const prisma = prismaClient as unknown as PrismaClient;
-  const existing = await prisma.assessmentTemplate.findUnique({
-    where: { id: DPIA_TEMPLATE_ID },
-    select: { id: true },
-  });
-  if (!existing) {
-    const { id, ...data } = dpiaTemplateData;
-    await prisma.assessmentTemplate.create({
-      data: {
-        id,
-        ...data,
-        sections: data.sections as object,
-        scoringLogic: data.scoringLogic as object,
-      },
-    });
-  }
   for (const template of HOSTED_SYSTEM_TEMPLATES) {
     await upsertSystemTemplate(prisma, template.id, template.data);
   }
