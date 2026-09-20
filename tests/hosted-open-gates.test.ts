@@ -48,6 +48,7 @@ vi.mock("@/config/features", async (importOriginal) => {
 
 import {
   isAssessmentTypeLocked,
+  isAssessmentTypeOffered,
   isPremiumTypeKey,
   sellingEnabled,
 } from "@/lib/premium-gate";
@@ -120,6 +121,33 @@ describe("the lock rule shared by the pages", () => {
     ).toBe(false);
     expect(isPremiumTypeKey("VENDOR")).toBe(true);
     expect(isPremiumTypeKey("LIA")).toBe(false);
+  });
+
+  it("does not offer a type announced as coming soon, on any deployment", () => {
+    for (const type of ["PIA", "VENDOR"]) {
+      expect(isAssessmentTypeOffered({ type, entitledTypes: [], comingSoon: true })).toBe(false);
+    }
+  });
+
+  it("offers it again once a template for it exists", () => {
+    expect(
+      isAssessmentTypeOffered({ type: "PIA", entitledTypes: ["PIA"], comingSoon: true })
+    ).toBe(true);
+  });
+
+  it("offers every other type, locked or not", () => {
+    for (const type of ["DPIA", "LIA", "TIA", "CUSTOM"]) {
+      expect(isAssessmentTypeOffered({ type, entitledTypes: [] })).toBe(true);
+    }
+  });
+
+  it("is the rule the type grid applies", () => {
+    const page = readFileSync(
+      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/assessments/new/page.tsx"),
+      "utf8"
+    );
+    expect(page).toContain("isAssessmentTypeOffered");
+    expect(page).toContain("offeredTypes.map");
   });
 });
 

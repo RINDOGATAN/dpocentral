@@ -40,7 +40,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { isAssessmentTypeLocked, isPremiumTypeKey } from "@/lib/premium-gate";
+import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { useTemplateMeta } from "@/lib/template-i18n";
 
 const ASSESSMENT_TYPES: Array<{
@@ -167,9 +167,17 @@ export default function NewAssessmentPage() {
   });
 
   const isTypeEntitled = (type: string) => entitledTypes.includes(type as any);
-  const isComingSoon = (type: string) => COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS[type] ?? "");
+  // Announced but with no template written yet. Once a template exists the
+  // type is entitled, and it is an ordinary card again.
+  const isComingSoon = (type: string) =>
+    COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS[type] ?? "") && !isTypeEntitled(type);
   const isTypeLocked = (type: string) =>
     isAssessmentTypeLocked({ type, entitledTypes, hosted, comingSoon: isComingSoon(type) });
+  // A type with no template behind it is not offered at all: the card used to
+  // sit in the grid announcing itself and leading nowhere.
+  const offeredTypes = ASSESSMENT_TYPES.filter((at) =>
+    isAssessmentTypeOffered({ type: at.type, entitledTypes, comingSoon: isComingSoon(at.type) })
+  );
 
   const handleTypeSelect = (type: string) => {
     if (isComingSoon(type)) return;
@@ -230,23 +238,20 @@ export default function NewAssessmentPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {ASSESSMENT_TYPES.map((at) => {
+              {offeredTypes.map((at) => {
                 const Icon = at.icon;
                 // On the hosted pilot no card carries a premium mark.
                 const isPremium = isPremiumTypeKey(at.type) && !hosted;
                 const isEntitled = isTypeEntitled(at.type);
-                const comingSoon = isComingSoon(at.type);
                 const isLocked = isTypeLocked(at.type);
 
                 return (
                   <Card
                     key={at.type}
                     className={`transition-all ${
-                      comingSoon
-                        ? "border-dashed opacity-60 cursor-default"
-                        : isLocked
-                          ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
-                          : "cursor-pointer hover:border-primary/50 hover:shadow-md"
+                      isLocked
+                        ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
+                        : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
                     onClick={() => handleTypeSelect(at.type)}
                   >
@@ -254,30 +259,19 @@ export default function NewAssessmentPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div
                           className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center ${
-                            comingSoon
-                              ? "border-muted-foreground/30 bg-muted"
-                              : isLocked
-                                ? "border-amber-500 bg-amber-500/10"
-                                : "border-primary bg-primary/10"
+                            isLocked
+                              ? "border-amber-500 bg-amber-500/10"
+                              : "border-primary bg-primary/10"
                           }`}
                         >
-                          {isLocked || (comingSoon && !hosted) ? (
-                            <Lock className={`w-5 h-5 ${comingSoon ? "text-muted-foreground/50" : "text-amber-500"}`} />
-                          ) : comingSoon ? (
-                            <Icon className="w-5 h-5 text-muted-foreground/50" />
+                          {isLocked ? (
+                            <Lock className="w-5 h-5 text-amber-500" />
                           ) : (
                             <Icon className="w-5 h-5 text-primary" />
                           )}
                         </div>
                         <div className="flex gap-1.5">
-                          {comingSoon ? (
-                            <Badge
-                              variant="secondary"
-                              className="bg-muted text-muted-foreground text-xs"
-                            >
-                              {tp("comingSoon")}
-                            </Badge>
-                          ) : isPremium ? (
+                          {isPremium ? (
                             isEntitled ? (
                               <Badge
                                 variant="secondary"
