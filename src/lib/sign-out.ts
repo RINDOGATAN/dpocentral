@@ -15,18 +15,18 @@
  *      host can reach, host-only and domain-wide (src/lib/suite-logout.ts).
  *      This is what removes a cookie NextAuth does not know it wrote, such as
  *      a host-only one left by an older release.
- *   3. A full page load of the sign-in page, so nothing of the signed-in
- *      dashboard survives in memory and the next request is made with the
- *      cleared cookie jar.
+ *   3. A full page load of the suite walk, which expires this host's cookies
+ *      again on its very first response, sends the browser through each
+ *      sibling product's cross-logout endpoint, and lands on the sign-in
+ *      page. Signing out of one product signs the user out of the suite, and
+ *      nothing of the signed-in dashboard survives in memory.
  *
  * Neither network step may block the third: a failure there must still leave
- * the user on the sign-in page, never back in the dashboard.
+ * the user signed out and on the sign-in page, never back in the dashboard.
  */
 
 import { signOut } from "next-auth/react";
-import { CROSS_LOGOUT_PATH } from "@/lib/suite-logout";
-
-export const SIGNED_OUT_PATH = "/sign-in?signedOut=1";
+import { CROSS_LOGOUT_PATH, SUITE_LOGOUT_PATH } from "@/lib/suite-logout";
 
 export async function signOutOfSuite(): Promise<void> {
   try {
@@ -39,5 +39,5 @@ export async function signOutOfSuite(): Promise<void> {
   } catch {
     // Offline or refused: land the user on the sign-in page regardless.
   }
-  window.location.href = SIGNED_OUT_PATH;
+  window.location.href = SUITE_LOGOUT_PATH;
 }
