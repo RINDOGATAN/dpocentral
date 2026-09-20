@@ -17,6 +17,7 @@ import { describe, it, expect, afterEach, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 import {
+  HOSTED_SIBLING_ORIGINS,
   SESSION_COOKIE_NAMES,
   SIGNED_OUT_PATH,
   parentCookieDomain,
@@ -152,6 +153,7 @@ describe("the walk", () => {
   }
 
   it("visits each sibling once and returns to this product's sign-in page", async () => {
+    vi.stubEnv("SUITE_LOGOUT_URLS", "suite");
     const { visited, landing } = await walk(`${HOSTED}/api/auth/suite-logout`);
     expect(visited).toEqual([
       "dpocentral.todo.law",
@@ -171,7 +173,20 @@ describe("the walk", () => {
     expect(suiteLogoutHops("dpocentral.todo.law", process.env)).toEqual([
       "https://a.example.com/api/auth/cross-logout",
     ]);
+    expect(suiteLogoutHops("dpocentral.todo.law", { SUITE_LOGOUT_URLS: "suite" })).toEqual(
+      HOSTED_SIBLING_ORIGINS.map((origin) => `${origin}/api/auth/cross-logout`)
+    );
+  });
+
+  it("does not walk at all unless the deployment asked for it", async () => {
+    expect(suiteLogoutHops("dpocentral.todo.law", {})).toEqual([]);
     expect(suiteLogoutHops("localhost", {})).toEqual([]);
+
+    // A sibling that does not serve the hop would end the sign-out on its own
+    // error page, so an unconfigured deployment lands the user straight away.
+    const res = await suiteLogoutGet(new NextRequest(`${HOSTED}/api/auth/suite-logout`));
+    expect(res.headers.get("location")).toBe(`${HOSTED}${SIGNED_OUT_PATH}`);
+    expect(setCookies(res).length).toBe(SESSION_COOKIE_NAMES.length * 2);
   });
 
   it("does not become an open redirect", async () => {
@@ -207,6 +222,7 @@ describe("a sibling that fails", () => {
   ];
 
   it("does not block the local sign-out: the cookies are already expired", async () => {
+    vi.stubEnv("SUITE_LOGOUT_URLS", "suite");
     const jar: Jar = new Map([
       [key(SESSION), "host-only-token"],
       [key(SESSION, ".todo.law"), "suite-token"],

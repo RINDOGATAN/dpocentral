@@ -18,7 +18,8 @@
  * the session: one name, two cookies, both have to go.
  *
  * A host can only clear its OWN cookies, so clearing from this app cannot
- * reach a sibling's host-only cookie. The walk below closes that: the browser
+ * reach a sibling's host-only cookie. The walk below closes that, where a
+ * deployment asks for it (`SUITE_LOGOUT_URLS`): the browser
  * is sent through each sibling's cross-logout endpoint in turn, each hop
  * carrying the address to return to, and the last one returns to this app's
  * sign-in page. The local cookies are expired on the FIRST response of the
@@ -83,8 +84,11 @@ export const SESSION_COOKIE_NAMES = [
   "authjs.callback-url",
 ] as const;
 
-/** The sibling products that share the hosted cloud with this one. */
-const HOSTED_SIBLING_ORIGINS = [
+/**
+ * The sibling products that share the hosted cloud with this one, which is
+ * what `SUITE_LOGOUT_URLS=suite` means.
+ */
+export const HOSTED_SIBLING_ORIGINS = [
   "https://dealroom.todo.law",
   "https://aisentinel.todo.law",
 ];
@@ -133,20 +137,24 @@ export function sessionCookieExpiries(
 
 /**
  * The sibling cross-logout endpoints this deployment walks through, in order.
- * `SUITE_LOGOUT_URLS` (comma separated origins) overrides the list; on the
- * hosted cloud the default is the other two suite products. This app's own
- * host is never a hop.
+ * `SUITE_LOGOUT_URLS` names them: comma separated origins, or the word
+ * `suite` for the hosted siblings above. This app's own host is never a hop.
+ *
+ * There is no walk unless the deployment asks for one, and deliberately so: a
+ * hop only helps if the sibling serves `GET /api/auth/cross-logout?next=`,
+ * and sending a browser to a sibling that does not would end the sign-out on
+ * that sibling's error page. A deployment turns the walk on when its siblings
+ * are ready. Nothing is lost while it is off: the self-hosted kit runs every
+ * app on one host, where expiring the names above already reached them.
  */
 export function suiteLogoutHops(hostname: string | null | undefined, env: Env = {}): string[] {
   const configured = (env.SUITE_LOGOUT_URLS ?? "").trim();
-  const origins = configured
-    ? configured.split(",").map((value) => value.trim()).filter(Boolean)
-    : isHostedHost(hostname)
+  const origins =
+    configured.toLowerCase() === "suite"
       ? HOSTED_SIBLING_ORIGINS
-      : // Off the hosted cloud there is nothing to walk: the self-hosted kit
-        // runs every app on one host, so expiring the names above already
-        // reached the siblings' cookies.
-        [];
+      : configured
+        ? configured.split(",").map((value) => value.trim()).filter(Boolean)
+        : [];
 
   const hops: string[] = [];
   for (const origin of origins) {
