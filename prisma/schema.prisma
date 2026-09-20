@@ -162,7 +162,7 @@ model ExpertEngagement {
   expertId          String                 // External (Dealroom) expert ID
   expertName        String                 // Snapshot at contact time
   expertFirm        String?
-  expertEmail       String?
+  expertEmail       String?                // Ours to hold, never handed out: no query that answers a client may select it
   contactedById     String                 // user that initiated contact
   subject           String
   message           String?                @db.Text

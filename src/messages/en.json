@@ -2789,9 +2789,16 @@
     },
     "contact": {
       "title": "Contact {name}",
-      "description": "Send a message to this expert. They'll respond to your email directly.",
-      "requestSent": "Request Sent",
-      "requestSentBody": "Your message has been sent to {name}. They'll respond directly to your email.",
+      "description": "Your request goes to our team, who will put you in touch and reply to your email address.",
+      "requestSent": "We have your request",
+      "requestSentBody": "It has reached our team, and we will reply to your email address.",
+      "confirmationEmail": {
+        "subject": "We have your request for technical help",
+        "greeting": "Hello {name},",
+        "received": "We have your request for technical help. It reached the team behind {product}, not the person listed in the directory, and we will reply to this address.",
+        "requestLabel": "Your request",
+        "closing": "If you have heard nothing from us within two working days, please write to {support}."
+      },
       "nameLabel": "Name *",
       "emailLabel": "Email *",
       "companyLabel": "Company",
@@ -3896,7 +3903,7 @@
           "specialization": "Filter by specialization (GDPR, DPIA, DSAR, etc.)",
           "countryLang": "Filter by country and language",
           "certifications": "View certifications (CIPP/E, CIPM, etc.)",
-          "contact": "Contact experts directly via their profile"
+          "contact": "Ask for help from a profile. The request goes to our team, who reply to you and put you in touch"
         }
       },
       "clientDashboard": {

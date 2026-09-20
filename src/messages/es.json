@@ -2789,9 +2789,16 @@
     },
     "contact": {
       "title": "Contactar con {name}",
-      "description": "Envía un mensaje a este experto. Responderá directamente a tu correo electrónico.",
-      "requestSent": "Solicitud enviada",
-      "requestSentBody": "Tu mensaje ha sido enviado a {name}. Responderá directamente a tu correo electrónico.",
+      "description": "Tu solicitud llega a nuestro equipo, que te pondrá en contacto y responderá a tu dirección de correo electrónico.",
+      "requestSent": "Hemos recibido tu solicitud",
+      "requestSentBody": "Ha llegado a nuestro equipo y responderemos a tu dirección de correo electrónico.",
+      "confirmationEmail": {
+        "subject": "Hemos recibido tu solicitud de ayuda técnica",
+        "greeting": "Hola, {name}:",
+        "received": "Hemos recibido tu solicitud de ayuda técnica. Ha llegado al equipo de {product}, no a la persona que figura en el directorio, y responderemos a esta dirección.",
+        "requestLabel": "Tu solicitud",
+        "closing": "Si no tienes noticias nuestras en dos días laborables, escribe a {support}."
+      },
       "nameLabel": "Nombre *",
       "emailLabel": "Correo electrónico *",
       "companyLabel": "Empresa",
@@ -3896,7 +3903,7 @@
           "specialization": "Filtra por especialización (RGPD, DPIA, DSAR, etc.)",
           "countryLang": "Filtra por país e idioma",
           "certifications": "Consulta certificaciones (CIPP/E, CIPM, etc.)",
-          "contact": "Contacta con los expertos directamente desde su perfil"
+          "contact": "Pide ayuda desde un perfil. La solicitud llega a nuestro equipo, que te responde y te pone en contacto"
         }
       },
       "clientDashboard": {

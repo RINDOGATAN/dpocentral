@@ -93,7 +93,7 @@ export function ExpertContactDialog({
             <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto" />
             <DialogTitle className="text-lg">{t("requestSent")}</DialogTitle>
             <p className="text-sm text-muted-foreground">
-              {t("requestSentBody", { name: expertName })}
+              {t("requestSentBody")}
             </p>
             <Button variant="outline" onClick={handleClose} className="mt-2">
               {tCommon("close")}

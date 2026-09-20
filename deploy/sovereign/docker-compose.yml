@@ -118,6 +118,8 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       # Platform-admin access (comma-separated emails), if you want /admin.
       ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      # Where a request for technical help goes. Falls back to ADMIN_EMAILS.
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-}
       # Authorizes the DSAR retention auto-redaction endpoint (see the
       # redaction-cron service below). The endpoint fails CLOSED: with this
       # empty, retention-based redaction does not run.

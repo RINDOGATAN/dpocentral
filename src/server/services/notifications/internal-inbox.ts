@@ -4,10 +4,12 @@
 /**
  * Our own inbox.
  *
- * Some things a user sends are addressed to us, not to another user: a request
- * for technical help, a note left through the feedback control. Until
- * 2026-09-20 those were written to a table and nothing else happened, so no
- * one learned that a firm had asked for anything.
+ * Some things a user sends are addressed to us, not to another user. A request
+ * for technical help is the one that comes this way: a person is waiting for
+ * an answer, so the request is mailed the moment it arrives. In-app feedback
+ * is deliberately NOT sent from here — it is a note to read tomorrow, and the
+ * storefront's daily digest already reads the feedback table and mails it to
+ * CONTACT_EMAIL. Sending it twice only makes the same inbox noisier.
  *
  * This module is the single place that answers two questions: where our inbox
  * is, and how a plain notice gets there. Three rules hold for every caller:
@@ -26,20 +28,36 @@ import { Resend } from "resend";
 import { emailFrom } from "@/config/brand";
 import { logger } from "@/lib/logger";
 
-/** Where requests go when ADMIN_EMAILS is not set. */
+/** Where things go when neither CONTACT_EMAIL nor ADMIN_EMAILS is set. */
 export const DEFAULT_INTERNAL_INBOX = "info@todo.law";
 
-/**
- * Our inbox: every address in ADMIN_EMAILS, or the default if it is empty.
- * ADMIN_EMAILS is already the list of people who operate this instance, so a
- * self-hoster's copy reaches the self-hoster, not us.
- */
-export function internalInboxAddresses(): string[] {
-  const configured = (process.env.ADMIN_EMAILS ?? "")
+function addressList(value: string | undefined): string[] {
+  return (value ?? "")
     .split(",")
     .map((address) => address.trim())
     .filter(Boolean);
-  return configured.length > 0 ? configured : [DEFAULT_INTERNAL_INBOX];
+}
+
+/**
+ * Our inbox, resolved in one order and one order only:
+ *
+ *   1. CONTACT_EMAIL — the same variable the daily digest already mails to,
+ *      so a request lands where the operator is already reading, without
+ *      anyone having to type an address into a second setting.
+ *   2. ADMIN_EMAILS — the people who operate this instance. A self-hoster's
+ *      copy reaches the self-hoster, not us.
+ *   3. The standing address, so a copy is never addressed to nobody.
+ *
+ * Each variable may hold several comma-separated addresses.
+ */
+export function internalInboxAddresses(): string[] {
+  const contact = addressList(process.env.CONTACT_EMAIL);
+  if (contact.length > 0) return contact;
+
+  const admins = addressList(process.env.ADMIN_EMAILS);
+  if (admins.length > 0) return admins;
+
+  return [DEFAULT_INTERNAL_INBOX];
 }
 
 export function escapeHtml(value: string): string {

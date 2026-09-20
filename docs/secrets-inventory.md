@@ -56,6 +56,7 @@ Columns:
 | `AUTH_COOKIE_DOMAIN` | no | Hosted env only | Opts into the cross-app session cookie on the parent domain; empty = host-only cookies (every self-host) | n/a | n/a |
 | `GOOGLE_CLIENT_ID` | no (public OAuth client id) | Hosted env | Pairs with the client secret | With the secret | n/a |
 | `ADMIN_EMAILS` | no, but sensitive (grants platform-admin) | Hosted env; Kit .env | Who may use the platform-admin routes; unset = nobody | Hosted operator; self-host administrator | n/a |
+| `CONTACT_EMAIL` | no | Hosted env; Kit .env | Where a request for technical help is mailed. Resolved first, before `ADMIN_EMAILS`, then `info@todo.law`. The same variable the daily feedback digest mails to. | Hosted operator; self-host administrator | n/a |
 | `SKILL_SIGNING_PUBLIC_KEY` | no (a public key) | Hosted env; Kit .env; a baked-in default in code | Verifies offline licence files; the private half never touches this tree | The storefront operator, on key rotation only | set in the hosted environment in July 2026 |
 | `DPO_INSTANCE_ID` | no | Kit .env (optional); Hosted env (optional) | Stable install id for licence activation limits; defaults to a machine fingerprint | n/a | n/a |
 | `VENDORWATCH_CATALOG_API_URL` | no | Hosted env; Kit .env | Where the catalog sync pulls from | n/a | n/a |

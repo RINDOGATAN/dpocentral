@@ -2,12 +2,17 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The feedback control used to write a row and stop, so every note anyone left
- * sat unread in the table. It now stores the row and copies it to our inbox,
- * with the page it came from, whether the sender was signed in, and the date.
+ * In-app feedback is stored and nothing else.
  *
- * The row is the record. A mail failure — including an unconfigured mail
- * service — costs the copy, never the row, and is logged at error level.
+ * The storefront's daily digest reads the feedback table and mails it to
+ * CONTACT_EMAIL, which is the inbox the operator already reads. An instant
+ * copy was added on 2026-09-20 and removed the same day: it told that inbox
+ * the same thing twice. These tests lock both halves of that decision — the
+ * row is always written, and nothing is mailed from the mutation.
+ *
+ * A request for technical help is different and keeps its instant mail, since
+ * a person is waiting for an answer. That contract is in
+ * tests/internal-inbox.test.ts.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -30,7 +35,6 @@ vi.mock("resend", () => ({
   },
 }));
 
-import { DEFAULT_INTERNAL_INBOX } from "@/server/services/notifications/internal-inbox";
 import { feedbackRouter } from "@/server/routers/feedback";
 import { callerFor, sessionFor } from "./helpers";
 
@@ -41,20 +45,11 @@ const anonymous = () =>
 const signedIn = () =>
   callerFor(feedbackRouter, session) as ReturnType<typeof feedbackRouter.createCaller>;
 
-function inboxCall() {
-  return mocks.send.mock.calls
-    .map(([payload]) => payload)
-    .find((payload) =>
-      (Array.isArray(payload.to) ? payload.to : [payload.to]).includes(
-        DEFAULT_INTERNAL_INBOX
-      )
-    );
-}
-
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv("RESEND_API_KEY", "test-key");
-  vi.stubEnv("ADMIN_EMAILS", "");
+  vi.stubEnv("CONTACT_EMAIL", "owner@firm.test");
+  vi.stubEnv("ADMIN_EMAILS", "ops@firm.test");
   mocks.send.mockResolvedValue({ data: { id: "mail-1" }, error: null });
   mocks.prisma.feedback.create.mockResolvedValue({ id: "fb-1" });
 });
@@ -64,62 +59,29 @@ afterEach(() => {
 });
 
 describe("in-app feedback", () => {
-  it("is stored and copied to our inbox, with the page and the date", async () => {
-    await signedIn().submit({
-      message: "The vendor filter forgets itself.",
-      page: "/privacy/vendors",
+  it("stores the row, with the page it came from", async () => {
+    await expect(
+      signedIn().submit({
+        message: "The vendor filter forgets itself.",
+        page: "/privacy/vendors",
+      })
+    ).resolves.toEqual({ success: true });
+
+    expect(mocks.prisma.feedback.create).toHaveBeenCalledOnce();
+    expect(mocks.prisma.feedback.create.mock.calls[0][0]).toMatchObject({
+      data: { message: "The vendor filter forgets itself.", page: "/privacy/vendors" },
     });
+  });
 
+  it("stores a note left by someone who is not signed in", async () => {
+    await expect(anonymous().submit({ message: "a" })).resolves.toEqual({ success: true });
     expect(mocks.prisma.feedback.create).toHaveBeenCalledOnce();
-
-    const copy = inboxCall();
-    expect(copy).toBeDefined();
-    expect(copy.html).toContain("/privacy/vendors");
-    expect(copy.html).toContain("The vendor filter forgets itself.");
-    expect(copy.html).toContain(new Date().getFullYear().toString());
   });
 
-  it("goes to ADMIN_EMAILS when that is set", async () => {
-    vi.stubEnv("ADMIN_EMAILS", "ops@firm.test");
-    await signedIn().submit({ message: "a" });
+  it("sends no mail, so the daily digest is the only report of it", async () => {
+    await signedIn().submit({ message: "a", page: "/privacy" });
+    await anonymous().submit({ message: "b" });
 
-    const recipients = mocks.send.mock.calls.flatMap(([payload]) =>
-      Array.isArray(payload.to) ? payload.to : [payload.to]
-    );
-    expect(recipients).toContain("ops@firm.test");
-  });
-
-  it("says whether the sender was signed in", async () => {
-    await signedIn().submit({ message: "a" });
-    expect(inboxCall().html).toContain(">yes</td>");
-
-    vi.clearAllMocks();
-    mocks.prisma.feedback.create.mockResolvedValue({ id: "fb-2" });
-    mocks.send.mockResolvedValue({ data: { id: "mail-2" }, error: null });
-    await anonymous().submit({ message: "a" });
-    expect(inboxCall().html).toContain(">no</td>");
-    expect(inboxCall().html).not.toContain(">yes</td>");
-  });
-
-  it("keeps the stored row when the mail service fails", async () => {
-    mocks.send.mockRejectedValue(new Error("mail service down"));
-
-    await expect(signedIn().submit({ message: "a" })).resolves.toEqual({ success: true });
-    expect(mocks.prisma.feedback.create).toHaveBeenCalledOnce();
-    expect(mocks.logger.error).toHaveBeenCalled();
-  });
-
-  it("keeps the stored row when the mail service is not configured", async () => {
-    vi.stubEnv("RESEND_API_KEY", "");
-
-    await expect(signedIn().submit({ message: "a" })).resolves.toEqual({ success: true });
-    expect(mocks.prisma.feedback.create).toHaveBeenCalledOnce();
     expect(mocks.send).not.toHaveBeenCalled();
-    expect(mocks.logger.error).toHaveBeenCalled();
-  });
-
-  it("escapes what the sender wrote", async () => {
-    await signedIn().submit({ message: '<script>alert("x")</script>', page: "/privacy" });
-    expect(inboxCall().html).not.toContain("<script>");
   });
 });
