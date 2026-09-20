@@ -26,5 +26,8 @@ export function isHostedDeployment(
 /** Where a pilot user learns to run their own instance. */
 export const RUN_YOUR_OWN_URL = "https://www.todo.law/run";
 
+/** Where a firm that has used up a trial allowance asks for a deployment. */
+export const CONTACT_URL = "https://www.todo.law/contact";
+
 /** In-app anchor of the pilot card, which lists every export. */
 export const PILOT_EXPORT_PATH = "/privacy/settings#pilot-export";

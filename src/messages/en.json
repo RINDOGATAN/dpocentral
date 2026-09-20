@@ -236,6 +236,11 @@
       "missingTemplateTitle": "The standard DPIA template is not there",
       "missingTemplateBody": "These answers are written against the questions of the standard DPIA template. Without it the wizard would write them against another template's questions, so it stops here. Install or seed the standard DPIA template and start again."
     },
+    "trialAssessments": {
+      "remaining": "{remaining} of {limit} impact assessments are included in the trial and still to use.",
+      "usedUp": "All {limit} impact assessments included in the trial have been created. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit.",
+      "contact": "Ask about a deployment of your own"
+    },
     "assessmentTemplates": {
       "title": "Assessment templates",
       "subtitle": "The templates an assessment can be started from",

@@ -4,6 +4,7 @@
 import { TRPCError } from "@trpc/server";
 import { brand } from "@/config/brand";
 import {
+  CONTACT_URL,
   isHostedDeployment,
   PILOT_EXPORT_PATH,
   RUN_YOUR_OWN_URL,
@@ -187,6 +188,92 @@ export function pilotMessage(
   return locale === "es"
     ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, ejecuta tu propia instancia (${run}) o exporta tus registros (${exp}).`
     : `You have reached the pilot limit of ${limit} ${label}. To continue, run your own instance (${run}) or export your records (${exp}).`;
+}
+
+// ── Impact assessments on the trial ──────────────────────────────────────
+
+/**
+ * Impact assessments (type DPIA) an organisation may create on the hosted
+ * trial. The overall records ceiling (PILOT_LIMITS.assessments) still
+ * applies; this narrower rule bites first.
+ */
+export const HOSTED_DPIA_LIMIT = 3;
+
+/**
+ * The count is of impact assessments CREATED, not of the ones still there:
+ * deleting one does not free a place. Two sources, and the larger wins:
+ *
+ *  - the audit log, which records every creation and survives a deletion;
+ *  - the assessments the organisation holds now, which covers anything
+ *    created before the audit entry carried the template type.
+ */
+export type DpiaCountDb = {
+  auditLog: { count: (args: { where: object }) => Promise<number> };
+  assessment: { count: (args: { where: object }) => Promise<number> };
+};
+
+export async function countDpiaCreated(
+  db: DpiaCountDb,
+  organizationId: string
+): Promise<number> {
+  const [logged, held] = await Promise.all([
+    db.auditLog.count({
+      where: {
+        organizationId,
+        entityType: "Assessment",
+        action: "CREATE",
+        changes: { path: ["templateType"], equals: "DPIA" },
+      },
+    }),
+    db.assessment.count({
+      where: { organizationId, template: { type: "DPIA" } },
+    }),
+  ]);
+  return Math.max(logged, held);
+}
+
+export type DpiaQuota =
+  | { capped: false }
+  | { capped: true; limit: number; used: number; remaining: number };
+
+/** What the new-assessment screen shows. Uncapped off the hosted trial. */
+export async function hostedDpiaQuota(
+  db: DpiaCountDb,
+  organizationId: string
+): Promise<DpiaQuota> {
+  if (!isHostedDeployment()) return { capped: false };
+  const used = await countDpiaCreated(db, organizationId);
+  return {
+    capped: true,
+    limit: HOSTED_DPIA_LIMIT,
+    used,
+    remaining: Math.max(0, HOSTED_DPIA_LIMIT - used),
+  };
+}
+
+/**
+ * What a firm is told when the trial's impact assessments are used up: what
+ * the trial includes, that deleting does not free a place, and where to ask
+ * for a deployment of their own. No price, and nothing already created is
+ * touched: editing, submitting, approving and exporting stay open.
+ */
+export function dpiaCapMessage(locale: Locale): string {
+  return locale === "es"
+    ? `El piloto incluye ${HOSTED_DPIA_LIMIT} evaluaciones de impacto y esta organización ya las ha usado todas. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite: ${CONTACT_URL}`
+    : `The trial includes ${HOSTED_DPIA_LIMIT} impact assessments, and this organization has used all of them. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit: ${CONTACT_URL}`;
+}
+
+/** Throws FORBIDDEN on the hosted trial once the allowance is used up. */
+export async function assertHostedDpiaQuota(
+  db: DpiaCountDb,
+  organizationId: string,
+  locale: Locale = "en"
+): Promise<void> {
+  if (!isHostedDeployment()) return;
+  const used = await countDpiaCreated(db, organizationId);
+  if (used >= HOSTED_DPIA_LIMIT) {
+    throw new TRPCError({ code: "FORBIDDEN", message: dpiaCapMessage(locale) });
+  }
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;

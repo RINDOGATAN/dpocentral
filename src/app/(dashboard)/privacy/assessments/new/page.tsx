@@ -40,6 +40,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { CONTACT_URL } from "@/lib/hosted";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { useTemplateMeta } from "@/lib/template-i18n";
 
@@ -64,6 +65,7 @@ export default function NewAssessmentPage() {
   const templateMeta = useTemplateMeta();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newAssessment");
+  const tTrial = useTranslations("pages.trialAssessments");
   const tCommon = useTranslations("common");
   const typeName = (type: string | null | undefined) =>
     type
@@ -98,6 +100,13 @@ export default function NewAssessmentPage() {
   );
 
   const entitledTypes = entitledData?.entitledTypes ?? [];
+
+  // The hosted trial includes three impact assessments. Off the hosted
+  // service this reports no cap and nothing is shown.
+  const { data: dpiaQuota } = trpc.assessment.dpiaQuota.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
 
   // Load templates filtered by selected type
   const { data: templates, isLoading: templatesLoading } = trpc.assessment.listTemplates.useQuery(
@@ -228,6 +237,25 @@ export default function NewAssessmentPage() {
           </p>
         </div>
       </div>
+
+      {/* What the trial includes: a plain line, before anyone starts. */}
+      {dpiaQuota?.capped && (
+        <p className="text-sm text-muted-foreground">
+          {dpiaQuota.remaining > 0
+            ? tTrial("remaining", { remaining: dpiaQuota.remaining, limit: dpiaQuota.limit })
+            : tTrial("usedUp", { limit: dpiaQuota.limit })}{" "}
+          {dpiaQuota.remaining === 0 && (
+            <a
+              href={CONTACT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-4"
+            >
+              {tTrial("contact")}
+            </a>
+          )}
+        </p>
+      )}
 
       {/* Step 1: Type Selection */}
       {!selectedType && (

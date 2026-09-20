@@ -236,6 +236,11 @@
       "missingTemplateTitle": "No está la plantilla de DPIA estándar",
       "missingTemplateBody": "Estas respuestas se escriben contra las preguntas de la plantilla de DPIA estándar. Sin ella, el asistente las escribiría contra las preguntas de otra plantilla, así que se detiene aquí. Instala o siembra la plantilla de DPIA estándar y vuelve a empezar."
     },
+    "trialAssessments": {
+      "remaining": "El piloto incluye {limit} evaluaciones de impacto y quedan {remaining} por usar.",
+      "usedUp": "Ya se han creado las {limit} evaluaciones de impacto que incluye el piloto. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite.",
+      "contact": "Consulta sobre un despliegue propio"
+    },
     "assessmentTemplates": {
       "title": "Plantillas de evaluación",
       "subtitle": "Las plantillas con las que se puede empezar una evaluación",

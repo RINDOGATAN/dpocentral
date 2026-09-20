@@ -19,6 +19,11 @@ import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
 import {
+  assertHostedDpiaQuota,
+  hostedDpiaQuota,
+  pilotLocale,
+} from "../../services/pilot/caps";
+import {
   assessmentProgress,
   describeUnanswered,
   unansweredRequired,
@@ -347,6 +352,17 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      // The hosted trial includes three impact assessments per organisation.
+      // Everything already created stays fully usable; only creating a fourth
+      // is refused. A no-op on the kit.
+      if (template.type === AssessmentType.DPIA) {
+        await assertHostedDpiaQuota(
+          ctx.prisma,
+          ctx.organization.id,
+          pilotLocale(localeFromCookieGetter(ctx.getCookie))
+        );
+      }
+
       // Check entitlement for premium assessment types
       if (isPremiumAssessmentType(template.type)) {
         const entitlementResult = await checkAssessmentEntitlement(
@@ -385,7 +401,9 @@ export const assessmentRouter = createTRPCRouter({
           entityType: "Assessment",
           entityId: assessment.id,
           action: "CREATE",
-          changes: input,
+          // The template type is recorded here so the trial's count of impact
+          // assessments survives a deletion (services/pilot/caps.ts).
+          changes: { ...input, templateType: template.type },
         },
       });
 
@@ -1155,6 +1173,12 @@ export const assessmentRouter = createTRPCRouter({
         templateCount: byType.length,
       };
     }),
+
+  // How many impact assessments the hosted trial still includes. Off the
+  // hosted service it reports no cap at all.
+  dpiaQuota: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => hostedDpiaQuota(ctx.prisma, ctx.organization.id)),
 
   // Get entitled assessment types for the current organization
   getEntitledTypes: organizationProcedure

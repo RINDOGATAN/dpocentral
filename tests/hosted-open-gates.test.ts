@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => ({
       count: vi.fn().mockResolvedValue(0),
     },
     organization: { findUnique: vi.fn() },
-    auditLog: { create: vi.fn() },
+    auditLog: { create: vi.fn(), count: vi.fn().mockResolvedValue(0) },
     skillPackage: { findFirst: vi.fn() },
     customerOrganization: { findFirst: vi.fn() },
     assessment: { create: vi.fn(), count: vi.fn().mockResolvedValue(0) },
