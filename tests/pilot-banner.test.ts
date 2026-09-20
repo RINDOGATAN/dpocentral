@@ -33,12 +33,15 @@ function renderPage(locale: "en" | "es") {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("hosted pilot banner", () => {
-  it("is present on the hosted service, in English, with the /run link", () => {
+  it("is present on the hosted service, in English, with the docs and /run links", () => {
     vi.stubEnv("VERCEL_ENV", "production");
     const html = renderPage("en");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
+    expect(html).toContain("Hosted pilot: free, capped (");
+    expect(html).toContain('href="/docs#hosted-pilot"');
+    expect(html).toContain("see docs</a>");
     expect(html).toContain(
-      "Hosted pilot: free, capped, no security certification. 90 days of editing from your first sign-in, then read-only with export. For real client data, "
+      "), and with no contractual safeguards. To deploy real customer details, "
     );
     expect(html).toContain('href="https://www.todo.law/run"');
     expect(html).toContain("run your own instance</a>.");
@@ -49,10 +52,12 @@ describe("hosted pilot banner", () => {
     vi.stubEnv("AUTH_COOKIE_DOMAIN", ".todo.law");
     const html = renderPage("es");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
+    expect(html).toContain("Piloto alojado: gratuito, limitado (");
+    expect(html).toContain("ver documentación</a>");
     expect(html).toContain(
-      "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, "
+      ") y sin garantías contractuales. Para manejar datos reales de clientes, "
     );
-    expect(html).toContain("ejecuta tu propia instancia</a>.");
+    expect(html).toContain("usa tu propia instancia</a>.");
     expect(html).toContain('aria-label="Cerrar"');
   });
 
@@ -65,14 +70,13 @@ describe("hosted pilot banner", () => {
     expect(html).toBe("<main>page</main>");
   });
 
-  it("states the editing window in the sign-up sentence and in Settings, in both languages", () => {
+  it("sends the reader to the documentation for the limits, in both languages", () => {
     // The sign-up screen renders HostedPilotSentence, i.e. `pilot.banner`.
-    expect(en.pilot.banner).toContain(
-      "90 days of editing from your first sign-in, then read-only with export."
-    );
-    expect(es.pilot.banner).toContain(
-      "90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación."
-    );
+    expect(en.pilot.banner).toContain("<docs>see docs</docs>");
+    expect(es.pilot.banner).toContain("<docs>ver documentación</docs>");
+  });
+
+  it("states the editing window in Settings, in both languages", () => {
     expect(en.pilot.settings.description).toContain(
       "{days} days of editing from your first sign-in, then read-only with export."
     );
