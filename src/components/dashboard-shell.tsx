@@ -57,6 +57,7 @@ import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
+import { signOutOfSuite } from "@/lib/sign-out";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -276,9 +277,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={async () => {
-                await fetch("/api/auth/cross-logout", { method: "POST" });
-                window.location.href = "/sign-in";
+              onClick={() => {
+                void signOutOfSuite();
               }}
               title={tNav("signOut")}
             >

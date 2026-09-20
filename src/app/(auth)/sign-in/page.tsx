@@ -28,6 +28,8 @@ export default function SignInPage() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  // Set by the sign-out walk when it lands the user back here.
+  const signedOut = searchParams.get("signedOut") === "1";
 
   // Capture OAuth errors from next-auth redirect (e.g. ?error=OAuthAccountNotLinked)
   useEffect(() => {
@@ -134,6 +136,11 @@ export default function SignInPage() {
           <p className="text-muted-foreground text-sm">
             {brand.tagline}
           </p>
+          {signedOut && (
+            <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
+              {t("signedOut")}
+            </p>
+          )}
           {hostedPilot && (
             <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
               <HostedPilotSentence />

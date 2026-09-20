@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
   LayoutDashboard,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { signOutOfSuite } from "@/lib/sign-out";
 import { brand } from "@/config/brand";
 
 const adminNavItems = [
@@ -77,7 +78,9 @@ export default function AdminLayout({
             </Link>
             <Button
               variant="ghost"
-              onClick={() => signOut({ callbackUrl: "/sign-in" })}
+              onClick={() => {
+                void signOutOfSuite();
+              }}
             >
               Sign Out
             </Button>
@@ -138,7 +141,9 @@ export default function AdminLayout({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => signOut({ callbackUrl: "/sign-in" })}
+              onClick={() => {
+                void signOutOfSuite();
+              }}
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />

@@ -33,6 +33,22 @@ hosted environment. Nothing in the build refuses it if it were set (known gap
 `AUTH_COOKIE_DOMAIN=".todo.law"`. This is the only posture where that variable
 is set.
 
+**Signing out.** Signing out of one product signs the user out of the suite.
+Every session cookie name is expired twice, once on `.todo.law` and once with
+no domain at all, because a host-only cookie of the same name is a different
+cookie and a deletion carrying a domain does not remove it. The browser is
+then walked through each sibling product's cross-logout endpoint, which is the
+only way their host-only cookies can be reached, and lands on the sign-in
+page. This host's cookies are expired on the first response of the walk, so a
+sibling that is down or slow cannot leave the user signed in here.
+
+The siblings are named by `SUITE_LOGOUT_URLS` (comma separated origins, or the
+word `suite` for the todo.law products). Unset, there is no walk and sign-out
+clears this host only. Turn it on once each sibling serves
+`GET /api/auth/cross-logout?next=`, which clears that host's cookies and
+returns: a hop to a product that does not serve it would end the sign-out on
+that product's error page. The rules are in `src/lib/suite-logout.ts`.
+
 **Pilot limits.** One organisation per account, 90 days of editing from the
 organisation's first sign-in, then read-only with export, and a records
 ceiling per organisation (`src/server/services/pilot/caps.ts`). These limits
