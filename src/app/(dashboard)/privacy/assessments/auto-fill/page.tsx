@@ -32,7 +32,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { DPIA_TEMPLATE_ID } from "@/config/dpia-template-v2";
+import { autoFillTemplate } from "@/lib/auto-fill-template";
 
 type WizardStep = "select" | "preview" | "review" | "create";
 
@@ -117,14 +117,17 @@ export default function DpiaAutoFillPage() {
   const showLicenceNotice =
     !hosted && !!entitledTypes && !entitledTypes.entitledTypes.includes("DPIA");
 
+  // The suggestions are keyed to the standard DPIA's question ids. Without
+  // that template there is nothing to write them against, and the wizard
+  // refuses rather than writing them against another template's questions.
+  const template = autoFillTemplate(templates);
+  const templateMissing = step === "create" && !!templates && !template;
+
   const handleCreate = async () => {
-    if (!autoFill || !templates || templates.length === 0) return;
+    if (!autoFill || !template) return;
 
     setIsCreating(true);
     try {
-      // The suggestions target the standard DPIA's question ids; other DPIA
-      // templates (e.g. a global one) have their own.
-      const template = templates.find((tpl) => tpl.id === DPIA_TEMPLATE_ID) ?? templates[0];
       const assessment = await createAssessment.mutateAsync({
         organizationId: orgId,
         templateId: template.id,
@@ -423,6 +426,22 @@ export default function DpiaAutoFillPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              {templateMissing && (
+                <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-destructive mt-0.5" />
+                    <div>
+                      <p className="font-medium text-destructive">
+                        {tAutoFill("missingTemplateTitle")}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {tAutoFill("missingTemplateBody")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="p-4 bg-muted rounded-lg space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{tAutoFill("activity")}</span>
@@ -446,7 +465,7 @@ export default function DpiaAutoFillPage() {
                 </Button>
                 <Button
                   onClick={handleCreate}
-                  disabled={isCreating}
+                  disabled={isCreating || !template}
                 >
                   {isCreating ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {tAutoFill("creating")}</>
