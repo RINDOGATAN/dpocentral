@@ -1903,7 +1903,8 @@
         "descriptionViewer": "Read-only — only owners and admins can change these values.",
         "name": "Name",
         "domain": "Domain",
-        "domainHint": "Public email domains (gmail.com etc.) are not allowed.",
+        "domainHint": "Only the domain of the owner's own sign-in address is accepted. Public email domains (gmail.com etc.) are not allowed.",
+        "domainNotAccepted": "The domain was not saved: it must match the domain of the owner's own sign-in address.",
         "save": "Save organization",
         "cancel": "Cancel",
         "updated": "Organization updated"
