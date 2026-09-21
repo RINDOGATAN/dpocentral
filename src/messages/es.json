@@ -239,7 +239,7 @@
     "trialAssessments": {
       "remaining": "El piloto incluye {limit} evaluaciones de impacto y quedan {remaining} por usar.",
       "usedUp": "Ya se han creado las {limit} evaluaciones de impacto que incluye el piloto. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite.",
-      "contact": "Consulta sobre un despliegue propio"
+      "keepGoing": "Sigue en tu propia instancia"
     },
     "assessmentTemplates": {
       "title": "Plantillas de evaluación",

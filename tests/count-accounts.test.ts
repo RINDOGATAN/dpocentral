@@ -97,25 +97,25 @@ describe("count-accounts: shape", () => {
     expect(typeof result.source).toBe("string");
   });
 
-  it("has 4 to 10 activity keys, snake_case, ending in _total or _30d", async () => {
+  it("has 4 to 12 activity keys, snake_case, ending in _total or _30d", async () => {
     const { db } = mockDb();
     const { activity } = await collectCounts(db, NOW);
     const keys = Object.keys(activity);
 
     expect(keys.length).toBeGreaterThanOrEqual(4);
-    expect(keys.length).toBeLessThanOrEqual(10);
+    expect(keys.length).toBeLessThanOrEqual(12);
     for (const key of keys) {
       expect(key).toMatch(/^[a-z0-9]+(_[a-z0-9]+)*_(total|30d)$/);
     }
   });
 
-  it("labels every activity key, in at most five words, and nothing else", async () => {
+  it("labels every activity key, in at most six words, and nothing else", async () => {
     const { db } = mockDb();
     const { activity, activity_labels } = await collectCounts(db, NOW);
 
     expect(Object.keys(activity_labels)).toEqual(Object.keys(activity));
     for (const label of Object.values(activity_labels)) {
-      expect(label.trim().split(/\s+/).length).toBeLessThanOrEqual(5);
+      expect(label.trim().split(/\s+/).length).toBeLessThanOrEqual(6);
       expect(label).toMatch(/^[A-Za-z0-9 ,]+$/);
     }
     expect(activity_labels).toEqual(ACTIVITY_LABELS);
@@ -217,6 +217,30 @@ describe("count-accounts: demo exclusion", () => {
     expect(wheres).toContain(JSON.stringify({ status: "APPROVED", completedAt: { gte: SINCE } }));
     expect(wheres).toContain(JSON.stringify({ status: "COMPLETED", completedAt: { gte: SINCE } }));
     expect(wheres).toContain(JSON.stringify({ receivedAt: { gte: SINCE } }));
+  });
+
+  it("counts organisations at a pilot limit: distinct organizations, demo excluded, labelled", async () => {
+    const { db, calls } = mockDb({
+      organization: (where) => (!where ? 40 : JSON.stringify(where).includes("gte") ? 2 : 5),
+    });
+    const { organizations, activity, activity_labels } = await collectCounts(db, NOW);
+
+    expect(organizations).toBe(40);
+    expect(activity.organisations_at_limit_total).toBe(5);
+    expect(activity.organisations_at_limit_30d).toBe(2);
+    expect(Number.isInteger(activity.organisations_at_limit_total)).toBe(true);
+    expect(Number.isInteger(activity.organisations_at_limit_30d)).toBe(true);
+    expect(activity_labels.organisations_at_limit_total).toBe("Organisations at a pilot limit");
+    expect(activity_labels.organisations_at_limit_30d).toBe("At a pilot limit, 30 days");
+
+    const wheres = calls.filter((c) => c.model === "organization" && c.where).map((c) => c.where);
+    expect(wheres).toEqual([
+      { auditLogs: { some: { action: "PILOT_LIMIT_REACHED" } }, NOT: DEMO_ORGANIZATION },
+      {
+        auditLogs: { some: { action: "PILOT_LIMIT_REACHED", createdAt: { gte: SINCE } } },
+        NOT: DEMO_ORGANIZATION,
+      },
+    ]);
   });
 
   it("paying counts customers, never trials, never expired", async () => {

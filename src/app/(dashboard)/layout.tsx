@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard-shell";
+import { SignedInPilotBanner } from "@/components/pilot/pilot-shell";
 
 export default async function DashboardLayout({
   children,
@@ -17,5 +18,11 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  return <DashboardShell>{children}</DashboardShell>;
+  return (
+    <>
+      <DashboardShell>{children}</DashboardShell>
+      {/* The pilot banner is shown only once a person is signed in */}
+      <SignedInPilotBanner />
+    </>
+  );
 }
