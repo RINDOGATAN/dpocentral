@@ -6,15 +6,17 @@ import { HostedPilotBanner, HostedPilotProvider } from "./hosted-pilot";
 
 /**
  * Server wrapper for the root layout: tells client components whether this is
- * the hosted pilot and, if so, shows the pilot banner. Renders nothing extra
- * on the self-hosted kit.
+ * the hosted pilot. It renders no banner: the public pages (landing, docs,
+ * sign-in) carry none, and reserve no space for one.
  */
 export function PilotShell({ children }: { children: React.ReactNode }) {
-  const hosted = isHostedDeployment();
-  return (
-    <HostedPilotProvider hosted={hosted}>
-      {children}
-      {hosted && <HostedPilotBanner />}
-    </HostedPilotProvider>
-  );
+  return <HostedPilotProvider hosted={isHostedDeployment()}>{children}</HostedPilotProvider>;
+}
+
+/**
+ * The pilot banner, for the signed-in application only (mounted by the
+ * dashboard layout). Renders nothing on the self-hosted kit.
+ */
+export function SignedInPilotBanner() {
+  return isHostedDeployment() ? <HostedPilotBanner /> : null;
 }

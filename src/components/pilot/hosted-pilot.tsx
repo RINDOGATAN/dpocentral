@@ -47,7 +47,7 @@ export function HostedPilotSentence({ className }: { className?: string }) {
   return (
     <span className={className} data-testid="hosted-pilot-sentence">
       {t.rich("banner", {
-        // The banner sits on every page, so both links open in a new tab and
+        // The banner sits on every signed-in page, so both links open in a new tab and
         // nobody loses a half-filled form by reading the limits.
         docs: (chunks) => (
           <a
@@ -74,7 +74,7 @@ export function HostedPilotSentence({ className }: { className?: string }) {
   );
 }
 
-/** One-line banner on every hosted page, dismissible for the browser session. */
+/** One-line banner on every signed-in hosted page, dismissible for the browser session. */
 export function HostedPilotBanner() {
   const t = useTranslations("pilot");
   // Dismissal lives in sessionStorage; the server render always shows the bar.
