@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, adminProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, adminProcedure, protectedProcedure, isPlatformAdmin } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { CustomerType, LicenseType, EntitlementStatus, UserType } from "@prisma/client";
 import {
@@ -17,17 +17,10 @@ export const platformAdminRouter = createTRPCRouter({
   // ============================================================
 
   // Check if current user is a platform admin (via ADMIN_EMAILS env var)
+  // Same rule as adminProcedure, so the interface never offers what the
+  // server will refuse (own sign-in + the local row's address).
   isAdmin: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx.session.user?.email) {
-      return { isAdmin: false };
-    }
-
-    const adminEmails = (process.env.ADMIN_EMAILS || "")
-      .split(",")
-      .map((e) => e.trim().toLowerCase())
-      .filter(Boolean);
-
-    return { isAdmin: adminEmails.includes(ctx.session.user.email.toLowerCase()) };
+    return { isAdmin: await isPlatformAdmin(ctx) };
   }),
 
   // ============================================================

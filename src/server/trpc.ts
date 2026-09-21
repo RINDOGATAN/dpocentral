@@ -251,13 +251,34 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
-// Platform admin middleware - checks if user email is in ADMIN_EMAILS
+/**
+ * Platform-admin rights come from this product's own records only:
+ *  - the session must carry the stamp of a sign-in this product performed
+ *    itself (a sibling's token identifies the person, it grants nothing);
+ *  - the address compared with ADMIN_EMAILS is the one on the LOCAL user row,
+ *    never the one a token claims.
+ * Anything missing: not an admin.
+ */
+export async function isPlatformAdmin(ctx: {
+  session: Session | null;
+  prisma: { user: { findUnique: (typeof prisma)["user"]["findUnique"] } };
+}): Promise<boolean> {
+  const user = ctx.session?.user;
+  if (!user?.id || user.signedInHere !== true || ADMIN_EMAILS.length === 0) return false;
+  const row = await ctx.prisma.user.findUnique({
+    where: { id: user.id },
+    select: { email: true },
+  });
+  return !!row?.email && ADMIN_EMAILS.includes(row.email.toLowerCase());
+}
+
+// Platform admin middleware - checks the local user row against ADMIN_EMAILS
 const enforcePlatformAdmin = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user?.email) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  if (!ADMIN_EMAILS.includes(ctx.session.user.email.toLowerCase())) {
+  if (!(await isPlatformAdmin(ctx))) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Platform admin access required",

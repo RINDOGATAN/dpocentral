@@ -217,12 +217,17 @@ export const authOptions: NextAuthOptions = {
       if (session.user && token.sub) {
         session.user.id = token.sub;
         session.user.userType = token.userType ?? null;
+        session.user.signedInHere = token.dpoSignIn === true;
       }
       return session;
     },
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        // Stamped ONLY by a sign-in this product performed itself. A sibling's
+        // token may say who the person is; it never carries this claim, and
+        // platform-admin rights require it (src/server/trpc.ts).
+        token.dpoSignIn = true;
       }
 
       // JIT provisioning (DB-decoupling identity model A): a cross-app
@@ -249,6 +254,12 @@ export const authOptions: NextAuthOptions = {
             })
           : null;
         if (!existing) {
+          // The token was minted elsewhere. It may identify the person; it
+          // carries NO rights across: not the sign-in stamp that platform
+          // admin requires, and not a sibling's idea of the account type
+          // (re-read from this product's own row below).
+          token.dpoSignIn = false;
+          token.userType = undefined;
           if (token.email) {
             const dpoUser = await ensureDpoUser(prisma, {
               email: token.email,
