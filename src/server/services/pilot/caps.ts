@@ -2,10 +2,11 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { TRPCError } from "@trpc/server";
+import type { Prisma } from "@prisma/client";
 import { brand } from "@/config/brand";
 import {
-  CONTACT_URL,
   isHostedDeployment,
+  MANAGED_URL,
   PILOT_EXPORT_PATH,
   RUN_YOUR_OWN_URL,
 } from "@/lib/hosted";
@@ -252,27 +253,90 @@ export async function hostedDpiaQuota(
   };
 }
 
+/** The one link in the limit message, in the reader's language. */
+export const KEEP_GOING_LABEL: Record<Locale, string> = {
+  en: "Keep going on your own instance",
+  es: "Sigue en tu propia instancia",
+};
+
 /**
  * What a firm is told when the trial's impact assessments are used up: what
- * the trial includes, that deleting does not free a place, and where to ask
- * for a deployment of their own. No price, and nothing already created is
- * touched: editing, submitting, approving and exporting stay open.
+ * the trial includes, that deleting does not free a place, and one link to
+ * keep going on an instance of their own (the managed service). No price, and
+ * nothing already created is touched: editing, submitting, approving and
+ * exporting stay open.
  */
 export function dpiaCapMessage(locale: Locale): string {
+  const keepGoing = `${KEEP_GOING_LABEL[locale]}: ${MANAGED_URL[locale]}`;
   return locale === "es"
-    ? `El piloto incluye ${HOSTED_DPIA_LIMIT} evaluaciones de impacto y esta organización ya las ha usado todas. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite: ${CONTACT_URL}`
-    : `The trial includes ${HOSTED_DPIA_LIMIT} impact assessments, and this organization has used all of them. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit: ${CONTACT_URL}`;
+    ? `El piloto incluye ${HOSTED_DPIA_LIMIT} evaluaciones de impacto y esta organización ya las ha usado todas. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite. ${keepGoing}`
+    : `The trial includes ${HOSTED_DPIA_LIMIT} impact assessments, and this organization has used all of them. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit. ${keepGoing}`;
 }
 
-/** Throws FORBIDDEN on the hosted trial once the allowance is used up. */
+// ── A pilot limit reached: one audit row, read as a count ───────────────
+
+/**
+ * The audit action written when a pilot limit refuses an action. The
+ * storefront's daily digest counts distinct organisations with this action
+ * over the last day, and scripts/count-accounts.mjs counts them for the
+ * board. Do not rename it, or the limit names below.
+ */
+export const PILOT_LIMIT_REACHED = "PILOT_LIMIT_REACHED";
+
+/** Short fixed names of the limits that write the row. */
+export type PilotLimitName = "impact_assessments";
+
+export type PilotLimitAuditDb = {
+  auditLog: {
+    create: (args: { data: Prisma.AuditLogUncheckedCreateInput }) => Promise<unknown>;
+  };
+};
+
+/**
+ * Records that `organizationId` reached `limit`: at most one row per
+ * organisation, per limit, per calendar day (UTC). The row id is derived from
+ * those three, so a second refusal the same day, even a concurrent one,
+ * collides on the primary key and writes nothing. The row carries the limit's
+ * name and nothing else: no user, no free text. Never throws: a failure to
+ * write must not change the refusal the caller is about to return.
+ */
+export async function recordPilotLimitReached(
+  db: PilotLimitAuditDb,
+  organizationId: string,
+  limit: PilotLimitName,
+  now: Date = new Date()
+): Promise<void> {
+  const day = now.toISOString().slice(0, 10);
+  try {
+    await db.auditLog.create({
+      data: {
+        id: `pilot-limit-${limit}-${day}-${organizationId}`,
+        organizationId,
+        entityType: "Organization",
+        entityId: organizationId,
+        action: PILOT_LIMIT_REACHED,
+        metadata: { limit },
+      },
+    });
+  } catch {
+    // Already recorded today (primary key), or the write failed: either way
+    // the refusal goes ahead unchanged.
+  }
+}
+
+/**
+ * Throws FORBIDDEN on the hosted trial once the allowance is used up, after
+ * recording that the organisation reached the limit.
+ */
 export async function assertHostedDpiaQuota(
-  db: DpiaCountDb,
+  db: DpiaCountDb & PilotLimitAuditDb,
   organizationId: string,
   locale: Locale = "en"
 ): Promise<void> {
   if (!isHostedDeployment()) return;
   const used = await countDpiaCreated(db, organizationId);
   if (used >= HOSTED_DPIA_LIMIT) {
+    await recordPilotLimitReached(db, organizationId, "impact_assessments");
     throw new TRPCError({ code: "FORBIDDEN", message: dpiaCapMessage(locale) });
   }
 }

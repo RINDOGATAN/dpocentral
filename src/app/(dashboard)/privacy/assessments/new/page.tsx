@@ -31,7 +31,7 @@ import {
   Settings2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -40,7 +40,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { CONTACT_URL } from "@/lib/hosted";
+import { managedUrl } from "@/lib/hosted";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { useTemplateMeta } from "@/lib/template-i18n";
 
@@ -67,6 +67,7 @@ export default function NewAssessmentPage() {
   const tp = useTranslations("pages.newAssessment");
   const tTrial = useTranslations("pages.trialAssessments");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const typeName = (type: string | null | undefined) =>
     type
       ? tp(`type.${type}` as `type.LIA` | `type.CUSTOM` | `type.DPIA` | `type.PIA` | `type.TIA` | `type.VENDOR`)
@@ -246,12 +247,13 @@ export default function NewAssessmentPage() {
             : tTrial("usedUp", { limit: dpiaQuota.limit })}{" "}
           {dpiaQuota.remaining === 0 && (
             <a
-              href={CONTACT_URL}
+              href={managedUrl(locale)}
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-4"
+              data-testid="pilot-limit-keep-going"
             >
-              {tTrial("contact")}
+              {tTrial("keepGoing")}
             </a>
           )}
         </p>

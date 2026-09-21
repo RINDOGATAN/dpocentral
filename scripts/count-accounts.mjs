@@ -47,6 +47,11 @@
  *                                last 30 days (a create, change, delete or
  *                                export; reading alone leaves no entry),
  *                                seeded demo users excluded by id.
+ *     organisations_at_limit_*   distinct Organizations with at least one
+ *                                AuditLog entry of action PILOT_LIMIT_REACHED
+ *                                (written when a hosted pilot limit refuses
+ *                                an action; src/server/services/pilot/caps.ts),
+ *                                by that entry's createdAt.
  *   activity_labels  the same keys, each with a plain English label.
  *
  * Demo exclusion: an organization is demo when it carries a seeded id, a
@@ -115,7 +120,12 @@ export const ACTIVITY_LABELS = {
   dsar_requests_completed_30d: "Privacy requests completed, 30 days",
   processing_activities_recorded_total: "Processing activities recorded",
   active_users_30d: "Active users, 30 days",
+  organisations_at_limit_total: "Organisations at a pilot limit",
+  organisations_at_limit_30d: "At a pilot limit, 30 days",
 };
+
+/** The audit action written when a hosted pilot limit refuses an action. */
+export const PILOT_LIMIT_REACHED = "PILOT_LIMIT_REACHED";
 
 export const SOURCE =
   "Hosted database, read-only, COUNT queries only. users and organizations are every row, demo rows " +
@@ -123,7 +133,8 @@ export const SOURCE =
   "entitlement (no seeder creates a customer, so nothing to exclude); installs is null because " +
   "self-hosted installs report to nobody. activity excludes demo organizations (seeded id, seeded slug " +
   "or the isDemo flag) and seeded demo users; active_users_30d is users with an audit entry in 30 days " +
-  "(a change or an export, not a read). Not excluded, because the schema cannot tell them apart: sample " +
+  "(a change or an export, not a read); organisations_at_limit is distinct organizations with a " +
+  "PILOT_LIMIT_REACHED audit entry. Not excluded, because the schema cannot tell them apart: sample " +
   "records added inside a real organization, and the owner's own test accounts.";
 
 /**
@@ -185,6 +196,8 @@ export async function collectCounts(db, now = new Date()) {
     dsarCompleted30d,
     processingActivitiesTotal,
     activeUsers30d,
+    atLimitTotal,
+    atLimit30d,
   ] = await Promise.all([
     db.user.count(),
     db.organization.count(),
@@ -216,6 +229,17 @@ export async function collectCounts(db, now = new Date()) {
         NOT: DEMO_USER,
       },
     }),
+    // Organizations are counted, not audit rows, so an organization that hit
+    // the limit on ten days is one.
+    db.organization.count({
+      where: { auditLogs: { some: { action: PILOT_LIMIT_REACHED } }, NOT: DEMO_ORGANIZATION },
+    }),
+    db.organization.count({
+      where: {
+        auditLogs: { some: { action: PILOT_LIMIT_REACHED, createdAt: { gte: since } } },
+        NOT: DEMO_ORGANIZATION,
+      },
+    }),
   ]);
 
   return {
@@ -237,6 +261,8 @@ export async function collectCounts(db, now = new Date()) {
       dsar_requests_completed_30d: dsarCompleted30d,
       processing_activities_recorded_total: processingActivitiesTotal,
       active_users_30d: asInteger(activeUsers30d),
+      organisations_at_limit_total: asInteger(atLimitTotal),
+      organisations_at_limit_30d: asInteger(atLimit30d),
     },
     activity_labels: ACTIVITY_LABELS,
   };

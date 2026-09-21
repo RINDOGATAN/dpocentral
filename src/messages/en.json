@@ -239,7 +239,7 @@
     "trialAssessments": {
       "remaining": "{remaining} of {limit} impact assessments are included in the trial and still to use.",
       "usedUp": "All {limit} impact assessments included in the trial have been created. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit.",
-      "contact": "Ask about a deployment of your own"
+      "keepGoing": "Keep going on your own instance"
     },
     "assessmentTemplates": {
       "title": "Assessment templates",
