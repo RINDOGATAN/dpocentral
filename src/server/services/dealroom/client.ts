@@ -434,7 +434,7 @@ export async function getContactRequest(
   }
 
   const res = await fetch(
-    `${DEALROOM_API_URL}/api/v1/experts/requests/${requestId}`,
+    `${DEALROOM_API_URL}/api/v1/experts/requests/${encodeURIComponent(requestId)}`,
     {
       headers: {
         Authorization: `Bearer ${DEALROOM_API_KEY}`,

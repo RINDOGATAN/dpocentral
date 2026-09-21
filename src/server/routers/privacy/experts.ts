@@ -329,7 +329,20 @@ export const expertsRouter = createTRPCRouter({
 
   getContactRequest: protectedProcedure
     .input(z.object({ requestId: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
+      // The upstream record holds the requester's name, address and message,
+      // and is fetched with OUR key: only a request recorded on an engagement
+      // of an organisation the caller belongs to may be looked up.
+      const engagement = await prisma.expertEngagement.findFirst({
+        where: {
+          externalRequestId: input.requestId,
+          organization: { members: { some: { userId: ctx.session.user.id } } },
+        },
+        select: { id: true },
+      });
+      if (!engagement) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Request not found" });
+      }
       return getContactRequest(input.requestId);
     }),
 
