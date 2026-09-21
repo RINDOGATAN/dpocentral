@@ -4,8 +4,12 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers";
 import { createTRPCContext } from "@/server/trpc";
+import { limitPublicTrpc } from "@/lib/rate-limit-trpc";
 
 const handler = (req: Request) =>
+  // The middleware never sees a dotted tRPC path, so the public DSAR limit is
+  // applied here, on the decoded procedure name (src/lib/rate-limit-trpc.ts).
+  limitPublicTrpc(req) ??
   fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
