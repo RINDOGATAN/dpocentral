@@ -195,8 +195,13 @@ Stated so they can be weighed, not implied.
    construction: setting `NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true` in the hosted
    environment and rebuilding would enable it. The rule is documented; the
    guard is not written.
-4. **Domain-based auto-join performs no domain-ownership verification**, and
-   the public-domain blocklist needs the private package.
+4. **Domain-based auto-join rests on the owner's sign-in address, not on a
+   DNS proof.** An organisation carries a domain only when it equals the
+   domain of its owner's own proven sign-in address and is not a public mail
+   provider (the list is in the open-source core, `src/lib/org-domain.ts`);
+   the auto-join re-checks this at every sign-in and joins nobody where two
+   organisations store one domain. Any one employee of a company can still be
+   the first to claim its domain.
 5. **Audit logs have no retention or export path.** Rows are kept
    indefinitely; reads and sign-ins are not logged; "available on request"
    means an operator query.

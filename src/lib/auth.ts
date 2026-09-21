@@ -11,7 +11,7 @@ import prisma from "@/lib/prisma";
 import { brand, emailFrom, emailFooterHtml } from "@/config/brand";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
-import { getSecurityModule } from "@/lib/security";
+import { emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
 
@@ -162,18 +162,12 @@ export const authOptions: NextAuthOptions = {
       // Wrapped in try/catch so sign-in succeeds even if auto-join fails
       try {
         if (user.email) {
-          const emailDomain = user.email.split("@")[1];
+          const emailDomain = emailDomainOf(user.email);
 
-          // Skip auto-join for public email domains (requires @dpocentral/security)
-          const security = getSecurityModule();
-          if (security?.isPublicEmailDomain?.(emailDomain?.toLowerCase() ?? "")) {
-            return true;
-          }
-
-          // Find organization with matching domain
-          const matchingOrg = await prisma.organization.findFirst({
-            where: { domain: emailDomain },
-          });
+          // The one organisation whose stored domain still passes the domain
+          // rule against its OWNER's proven address today (never a public
+          // domain, never where two organisations store the same domain).
+          const matchingOrg = await findAutoJoinOrganization(prisma, user.email);
 
           if (matchingOrg) {
             // Check if user is already a member
@@ -223,12 +217,17 @@ export const authOptions: NextAuthOptions = {
       if (session.user && token.sub) {
         session.user.id = token.sub;
         session.user.userType = token.userType ?? null;
+        session.user.signedInHere = token.dpoSignIn === true;
       }
       return session;
     },
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        // Stamped ONLY by a sign-in this product performed itself. A sibling's
+        // token may say who the person is; it never carries this claim, and
+        // platform-admin rights require it (src/server/trpc.ts).
+        token.dpoSignIn = true;
       }
 
       // JIT provisioning (DB-decoupling identity model A): a cross-app
@@ -255,6 +254,12 @@ export const authOptions: NextAuthOptions = {
             })
           : null;
         if (!existing) {
+          // The token was minted elsewhere. It may identify the person; it
+          // carries NO rights across: not the sign-in stamp that platform
+          // admin requires, and not a sibling's idea of the account type
+          // (re-read from this product's own row below).
+          token.dpoSignIn = false;
+          token.userType = undefined;
           if (token.email) {
             const dpoUser = await ensureDpoUser(prisma, {
               email: token.email,

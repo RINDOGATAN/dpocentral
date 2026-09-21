@@ -112,8 +112,10 @@ export default function SettingsPage() {
   }, [org, orgFormDirty]);
 
   const updateOrg = trpc.organization.update.useMutation({
-    onSuccess: () => {
+    onSuccess: (saved, sent) => {
       toast.success(tOrg("updated"));
+      // A domain that is not the owner's own is saved as "no domain".
+      if (sent.domain && !saved.domain) toast.warning(tOrg("domainNotAccepted"));
       utils.organization.getById.invalidate();
       setOrgFormDirty(false);
     },

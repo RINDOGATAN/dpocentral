@@ -1903,7 +1903,8 @@
         "descriptionViewer": "Solo lectura — solo los propietarios y administradores pueden cambiar estos valores.",
         "name": "Nombre",
         "domain": "Dominio",
-        "domainHint": "No se permiten dominios de correo público (gmail.com, etc.).",
+        "domainHint": "Solo se acepta el dominio de la dirección con la que inicia sesión el propietario. No se permiten dominios de correo público (gmail.com, etc.).",
+        "domainNotAccepted": "El dominio no se ha guardado: debe coincidir con el dominio de la dirección con la que inicia sesión el propietario.",
         "save": "Guardar organización",
         "cancel": "Cancelar",
         "updated": "Organización actualizada"

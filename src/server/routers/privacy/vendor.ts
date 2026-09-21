@@ -26,6 +26,7 @@ import {
   DataCategory,
 } from "@prisma/client";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
+import { assertUsersAreMembers } from "../../org-ownership";
 
 export const vendorRouter = createTRPCRouter({
   // ============================================================
@@ -733,6 +734,9 @@ export const vendorRouter = createTRPCRouter({
           message: "Vendor not found",
         });
       }
+
+      // The reviewer must be a member of this organisation
+      await assertUsersAreMembers(ctx.prisma.organizationMember, [input.reviewerId], ctx.organization.id, "Reviewer");
 
       return ctx.prisma.vendorReview.create({
         data: {

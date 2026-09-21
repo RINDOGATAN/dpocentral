@@ -5,7 +5,12 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { OrganizationRole, UserType } from "@prisma/client";
-import { getSecurityModule } from "@/lib/security";
+import {
+  isPublicEmailDomain,
+  ownerProvenEmailOf,
+  permittedOrgDomain,
+  provenEmailOf,
+} from "@/lib/org-domain";
 import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
 import { logger } from "@/lib/logger";
 import {
@@ -125,11 +130,19 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      // The domain drives the sign-in auto-join, so it is never taken on the
+      // caller's word: only the domain of the creator's own proven address,
+      // never a public one. Anything else: created without a domain.
+      const domain = permittedOrgDomain(
+        input.domain,
+        await provenEmailOf(ctx.prisma, ctx.session.user.id)
+      );
+
       const organization = await ctx.prisma.organization.create({
         data: {
           name: input.name,
           slug: input.slug,
-          domain: input.domain,
+          domain,
           members: {
             create: {
               userId: ctx.session.user.id,
@@ -221,20 +234,29 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
-      // Reject public email domains as org domains (requires @dpocentral/security)
-      const security = getSecurityModule();
-      if (input.domain && security?.isPublicEmailDomain?.(input.domain.toLowerCase())) {
+      // Reject public email domains as org domains
+      if (input.domain && isPublicEmailDomain(input.domain)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Public email domains (e.g. gmail.com) cannot be used as organization domains",
         });
       }
 
+      // Same rule as create: only the domain of the OWNER's own proven
+      // address is stored. Anything else is saved as "no domain".
+      const domain =
+        input.domain === undefined
+          ? undefined
+          : permittedOrgDomain(
+              input.domain,
+              await ownerProvenEmailOf(ctx.prisma, ctx.organization.id)
+            );
+
       const organization = await ctx.prisma.organization.update({
         where: { id: ctx.organization.id },
         data: {
           name: input.name,
-          domain: input.domain,
+          domain,
           settings: input.settings,
         },
       });

@@ -22,6 +22,7 @@ import {
   buildBreachNotificationUserPrompt,
 } from "../../services/ai/prompts/breach-notification";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 
 // Calculate notification deadline based on jurisdiction
 function calculateNotificationDeadline(
@@ -662,6 +663,14 @@ export const incidentRouter = createTRPCRouter({
         });
       }
 
+      // The assignee must be a member of this organisation (F2)
+      await assertUsersAreMembers(
+        ctx.prisma.organizationMember,
+        [input.assigneeId],
+        ctx.organization.id,
+        "Assignee"
+      );
+
       return ctx.prisma.incidentTask.create({
         data: {
           incidentId: input.incidentId,
@@ -710,6 +719,14 @@ export const incidentRouter = createTRPCRouter({
         });
       }
 
+      // The assignee must be a member of this organisation (F2)
+      await assertUsersAreMembers(
+        ctx.prisma.organizationMember,
+        [input.assigneeId],
+        ctx.organization.id,
+        "Assignee"
+      );
+
       const updateData: any = { ...data };
       if (input.status === TaskStatus.COMPLETED) {
         updateData.completedAt = new Date();
@@ -753,6 +770,14 @@ export const incidentRouter = createTRPCRouter({
           message: "Incident not found",
         });
       }
+
+      // The asset must belong to this organisation (F2)
+      await assertIdsInOrg(
+        ctx.prisma.dataAsset,
+        [input.dataAssetId],
+        { organizationId: ctx.organization.id },
+        "Data asset"
+      );
 
       return ctx.prisma.incidentAffectedAsset.upsert({
         where: {

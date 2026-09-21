@@ -34,8 +34,20 @@ export type LimitedRoute =
   | "import"
   | "cron";
 
-export function classifyRequest(pathname: string, method: string): LimitedRoute | null {
+export function classifyRequest(rawPathname: string, method: string): LimitedRoute | null {
   const upper = method.toUpperCase();
+
+  // Match on the DECODED path: the tRPC handler decodes the procedure name,
+  // so "dsar%2EsubmitPublic" reaches dsar.submitPublic and must be counted as
+  // such. A path that cannot be decoded is counted in the strictest bucket
+  // its prefix allows rather than let through uncounted.
+  let pathname: string;
+  try {
+    pathname = decodeURIComponent(rawPathname);
+  } catch {
+    if (rawPathname.startsWith("/api/trpc")) return "dsarPublic";
+    pathname = rawPathname;
+  }
 
   if (pathname.startsWith("/api/auth")) {
     if (pathname === "/api/auth/signin/email" && upper === "POST") return "magicLink";
