@@ -13,6 +13,7 @@ import {
   getAiSentinelSystemStatus,
 } from "../../services/ai-sentinel/client";
 import type { DPCSystemPayload } from "../../services/ai-sentinel/types";
+import { assertIdsInOrg } from "../../org-ownership";
 
 export const aiGovernanceRouter = createTRPCRouter({
   // ============================================================
@@ -111,6 +112,9 @@ export const aiGovernanceRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // The linked vendor must belong to this organisation
+      await assertIdsInOrg(ctx.prisma.vendor, [input.vendorId], { organizationId: ctx.organization.id }, "Vendor");
+
       const system = await ctx.prisma.aISystem.create({
         data: {
           organizationId: ctx.organization.id,
@@ -180,6 +184,9 @@ export const aiGovernanceRouter = createTRPCRouter({
           message: "AI system not found",
         });
       }
+
+      // A newly linked vendor must belong to this organisation
+      await assertIdsInOrg(ctx.prisma.vendor, [input.vendorId], { organizationId: ctx.organization.id }, "Vendor");
 
       const updated = await ctx.prisma.aISystem.update({
         where: { id },

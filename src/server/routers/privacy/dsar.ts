@@ -10,6 +10,7 @@ import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
 import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
+import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 
 // SLA Calculator service
 function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
@@ -343,6 +344,10 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
+      // The asset and the assignee must belong to this organisation too
+      await assertIdsInOrg(ctx.prisma.dataAsset, [input.dataAssetId], { organizationId: ctx.organization.id }, "Data asset");
+      await assertUsersAreMembers(ctx.prisma.organizationMember, [input.assigneeId], ctx.organization.id, "Assignee");
+
       const task = await ctx.prisma.dSARTask.create({
         data: {
           dsarRequestId: input.dsarRequestId,
@@ -392,6 +397,9 @@ export const dsarRouter = createTRPCRouter({
           message: "Task not found",
         });
       }
+
+      // A new assignee must be a member of this organisation
+      await assertUsersAreMembers(ctx.prisma.organizationMember, [input.assigneeId], ctx.organization.id, "Assignee");
 
       const updateData: any = { ...data };
       if (input.status === DSARTaskStatus.COMPLETED) {

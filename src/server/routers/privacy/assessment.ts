@@ -35,6 +35,7 @@ import {
   SENSITIVITY_SPECIAL_CATEGORY,
   type AutoFillTarget,
 } from "@/config/dpia-auto-fill-targets";
+import { assertIdsInOrg } from "../../org-ownership";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -377,6 +378,11 @@ export const assessmentRouter = createTRPCRouter({
           });
         }
       }
+
+      // The linked activity and vendor must be the caller's own (F2)
+      const orgScope = { organizationId: ctx.organization.id };
+      await assertIdsInOrg(ctx.prisma.processingActivity, [input.processingActivityId], orgScope, "Processing activity");
+      await assertIdsInOrg(ctx.prisma.vendor, [input.vendorId], orgScope, "Vendor");
 
       const assessment = await ctx.prisma.assessment.create({
         data: {
@@ -1389,6 +1395,14 @@ export const assessmentRouter = createTRPCRouter({
       // no prompt building at all.
       const settings = await requireAi(ctx.prisma, ctx.organization.id);
       await assertAiRateLimit(ctx.prisma, ctx.organization.id);
+
+      // The assessment the draft is logged against must be the caller's own (F2)
+      await assertIdsInOrg(
+        ctx.prisma.assessment,
+        [input.assessmentId],
+        { organizationId: ctx.organization.id },
+        "Assessment"
+      );
 
       // Server-side context only (shared with the rule path)
       const { context } = await buildAutoFillContext(

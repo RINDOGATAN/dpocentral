@@ -6,6 +6,7 @@ import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProce
 import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
+import { assertIdsInOrg } from "../../org-ownership";
 
 // ============================================================
 // AUTO-FLOW GENERATION
@@ -612,6 +613,14 @@ export const dataInventoryRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { assetIds, organizationId: _orgId, ...data } = input;
 
+      // Every linked asset must belong to the caller's organisation
+      await assertIdsInOrg(
+        ctx.prisma.dataAsset,
+        assetIds,
+        { organizationId: ctx.organization.id },
+        "Data asset"
+      );
+
       const activity = await ctx.prisma.processingActivity.create({
         data: {
           organizationId: ctx.organization.id,
@@ -725,6 +734,23 @@ export const dataInventoryRouter = createTRPCRouter({
         });
       }
 
+      // Every asset, and every element of that asset, must belong to the
+      // caller's organisation (checked before the existing links are removed)
+      await assertIdsInOrg(
+        ctx.prisma.dataAsset,
+        input.assets.map((a) => a.assetId),
+        { organizationId: ctx.organization.id },
+        "Data asset"
+      );
+      for (const { assetId, elementIds } of input.assets) {
+        await assertIdsInOrg(
+          ctx.prisma.dataElement,
+          elementIds ?? [],
+          { organizationId: ctx.organization.id, dataAssetId: assetId },
+          "Data element"
+        );
+      }
+
       // Remove existing links (cascade deletes element links)
       await ctx.prisma.processingActivityAsset.deleteMany({
         where: { processingActivityId: input.activityId },
@@ -783,6 +809,21 @@ export const dataInventoryRouter = createTRPCRouter({
           message: "Data asset not found",
         });
       }
+
+      // Every activity, and every element of this asset, must belong to the
+      // caller's organisation (checked before the existing links are removed)
+      await assertIdsInOrg(
+        ctx.prisma.processingActivity,
+        input.activities.map((a) => a.activityId),
+        { organizationId: ctx.organization.id },
+        "Processing activity"
+      );
+      await assertIdsInOrg(
+        ctx.prisma.dataElement,
+        input.activities.flatMap((a) => a.elementIds ?? []),
+        { organizationId: ctx.organization.id, dataAssetId: input.assetId },
+        "Data element"
+      );
 
       // Remove existing links for this asset (cascade deletes element links)
       await ctx.prisma.processingActivityAsset.deleteMany({
@@ -914,6 +955,14 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Both ends of the flow must belong to the caller's organisation
+      await assertIdsInOrg(
+        ctx.prisma.dataAsset,
+        [input.sourceAssetId, input.destinationAssetId],
+        { organizationId: ctx.organization.id },
+        "Data asset"
+      );
+
       const flow = await ctx.prisma.dataFlow.create({
         data: {
           organizationId: ctx.organization.id,
@@ -966,6 +1015,14 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, ...data } = input;
+
+      // A re-pointed end must belong to the caller's organisation
+      await assertIdsInOrg(
+        ctx.prisma.dataAsset,
+        [input.sourceAssetId, input.destinationAssetId],
+        { organizationId: ctx.organization.id },
+        "Data asset"
+      );
 
       const flow = await ctx.prisma.dataFlow.updateMany({
         where: { id, organizationId: ctx.organization.id },
@@ -1069,6 +1126,15 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // The linked activity must belong to the caller's organisation
+      // (jurisdictions are global reference rows, not organisation data)
+      await assertIdsInOrg(
+        ctx.prisma.processingActivity,
+        [input.processingActivityId],
+        { organizationId: ctx.organization.id },
+        "Processing activity"
+      );
+
       const transfer = await ctx.prisma.dataTransfer.create({
         data: {
           organizationId: ctx.organization.id,
