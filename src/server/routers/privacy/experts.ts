@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { ExpertEngagementStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure, writerProcedure } from "../../trpc";
 import prisma from "@/lib/prisma";
 import {
   searchExperts,
@@ -70,6 +70,29 @@ function getResend(): Resend | null {
   }
   return cachedClient.client;
 }
+
+// What a client may receive of an engagement row, for EVERY procedure that
+// answers with one. Named fields, not `include`: the row carries the directory
+// person's address (expertEmail), which is ours to hold and never to hand
+// out. A client receives everything else. Adding a column to the model must
+// not silently add it to a response.
+const ENGAGEMENT_CLIENT_SELECT = {
+  id: true,
+  organizationId: true,
+  expertId: true,
+  expertName: true,
+  expertFirm: true,
+  contactedById: true,
+  subject: true,
+  message: true,
+  notes: true,
+  status: true,
+  contactedAt: true,
+  updatedAt: true,
+  closedAt: true,
+  externalRequestId: true,
+  contactedBy: { select: { id: true, name: true, email: true } },
+} as const;
 
 export const expertsRouter = createTRPCRouter({
   search: protectedProcedure
@@ -328,36 +351,17 @@ export const expertsRouter = createTRPCRouter({
         throw new TRPCError({ code: "FORBIDDEN" });
       }
 
-      // Named fields, not `include`: the row carries the directory person's
-      // address (expertEmail), which is ours to hold and never to hand out.
-      // A client receives everything else. Adding a column to the model must
-      // not silently add it to this response.
       return prisma.expertEngagement.findMany({
         where: { organizationId: input.organizationId },
-        select: {
-          id: true,
-          organizationId: true,
-          expertId: true,
-          expertName: true,
-          expertFirm: true,
-          contactedById: true,
-          subject: true,
-          message: true,
-          notes: true,
-          status: true,
-          contactedAt: true,
-          updatedAt: true,
-          closedAt: true,
-          externalRequestId: true,
-          contactedBy: { select: { id: true, name: true, email: true } },
-        },
+        select: ENGAGEMENT_CLIENT_SELECT,
         orderBy: { contactedAt: "desc" },
       });
     }),
 
   // Update engagement status + notes. Closing an engagement (COMPLETED /
-  // DECLINED) stamps closedAt. Verifies org membership.
-  updateEngagement: protectedProcedure
+  // DECLINED) stamps closedAt. A write: membership and a writing role are
+  // resolved by writerProcedure (a VIEWER is refused).
+  updateEngagement: writerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -367,26 +371,24 @@ export const expertsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const membership = await prisma.organizationMember.findUnique({
-        where: {
-          organizationId_userId: {
-            organizationId: input.organizationId,
-            userId: ctx.session.user.id,
-          },
-        },
+      const engagement = await prisma.expertEngagement.findFirst({
+        where: { id: input.engagementId, organizationId: ctx.organization.id },
+        select: { id: true },
       });
-      if (!membership) {
-        throw new TRPCError({ code: "FORBIDDEN" });
+      if (!engagement) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Engagement not found" });
       }
 
       const isClosing = input.status === "COMPLETED" || input.status === "DECLINED";
       return prisma.expertEngagement.update({
-        where: { id: input.engagementId, organizationId: input.organizationId },
+        where: { id: engagement.id, organizationId: ctx.organization.id },
         data: {
           status: input.status,
           notes: input.notes,
           closedAt: isClosing ? new Date() : undefined,
         },
+        // The same withheld shape as the list: never the whole row.
+        select: ENGAGEMENT_CLIENT_SELECT,
       });
     }),
 });
