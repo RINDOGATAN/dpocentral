@@ -30,7 +30,7 @@ class Guard {
     const watch = (page: Page) => {
       page.on("pageerror", (err) => this.problems.push(`uncaught exception: ${err.message}`));
       page.on("console", (msg) => {
-        if (msg.type() !== "error") return;
+        if (msg.type() !== "error" || this.consoleAllowed()) return;
         const text = msg.text();
         // The browser logs every 4xx/5xx as "Failed to load resource"; the
         // response listener below judges those against the step's allow-list.
@@ -48,19 +48,22 @@ class Guard {
     if (!url.startsWith(this.origin)) return;
     const status = res.status();
     const path = url.slice(this.origin.length);
-    if (status >= 500) {
-      this.problems.push(`${status} ${res.request().method()} ${path}`);
-      return;
-    }
-    if (status >= 400 && path.startsWith("/api/")) {
-      const what = `${status} ${res.request().method()} ${path}`;
-      if (!this.allowed.some((re) => re.test(what))) this.problems.push(what);
-    }
+    const what = `${status} ${res.request().method()} ${path}`;
+    if (this.allowed.some((re) => re.test(what))) return;
+    if (status >= 500 || (status >= 400 && path.startsWith("/api/"))) this.problems.push(what);
   }
 
-  begin(allow: RegExp[] = []) {
+  /** allow: responses the step expects ("500 GET /probe/error"). */
+  begin(allow: RegExp[] = [], allowConsole = false) {
     this.problems = [];
     this.allowed = allow;
+    this.allowConsole = allowConsole;
+  }
+
+  private allowConsole = false;
+
+  consoleAllowed() {
+    return this.allowConsole;
   }
 
   take(): string[] {
@@ -80,9 +83,14 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
   guard.attach(context);
   const email = `smoke-${testInfo.project.name}-${stamp}@example.com`;
 
-  async function step(name: string, fn: () => Promise<void>, allow: RegExp[] = []) {
+  async function step(
+    name: string,
+    fn: () => Promise<void>,
+    allow: RegExp[] = [],
+    opts: { allowConsole?: boolean } = {}
+  ) {
     await test.step(name, async () => {
-      guard.begin(allow);
+      guard.begin(allow, opts.allowConsole);
       let failure: string | null = null;
       try {
         await fn();
@@ -129,6 +137,41 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
     expect(res?.status()).toBeLessThan(400);
     await expect(page.locator("body")).toBeVisible();
   });
+
+  // ── Honest failure (test-only probes, E2E_FAILURE_PROBE=true) ────────
+  if (process.env.E2E_FAILURE_PROBE === "true") {
+    await step(
+      "a page that fails: plain sentence, a way back, a reference, no raw text",
+      async () => {
+        const res = await page.goto("/probe/error");
+        expect(res?.status()).toBe(500);
+        await expect(page.getByTestId("error-reference")).toBeVisible();
+        await expect(page.getByTestId("error-reference")).toContainText(/\S{6,}/);
+        await expect(page.getByRole("button", { name: /try again/i })).toBeVisible();
+        await expect(page.getByRole("link", { name: /back to the home page/i })).toBeVisible();
+        await expect(page.getByRole("link", { name: /how to report a problem/i })).toHaveAttribute(
+          "href",
+          "/docs#support"
+        );
+        const text = await page.locator("body").innerText();
+        for (const raw of ["ECONNRESET", "10.0.0.7", "probe.ts", "Deliberate"]) expect(text).not.toContain(raw);
+      },
+      [/^500 GET \/probe\/error$/],
+      // React reports the failed render in the console, and the error page
+      // logs the error with its reference: both expected here.
+      { allowConsole: true }
+    );
+
+    await step("a procedure that fails: a message to act on, with a reference", async () => {
+      const res = await page.request.get("/api/trpc/diagnostics.failureProbe");
+      expect(res.status()).toBe(500);
+      const text = await res.text();
+      const error = JSON.parse(text).error.json;
+      expect(error.message).toMatch(/try again/i);
+      expect(error.message).toContain(error.data.reference);
+      for (const raw of ["ECONNRESET", "10.0.0.7", "probe.ts", "Deliberate"]) expect(text).not.toContain(raw);
+    });
+  }
 
   await step("local sign-in", async () => {
     await page.goto("/sign-in");

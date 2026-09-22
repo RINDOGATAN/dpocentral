@@ -10,7 +10,9 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
 import { sanitizeStrings } from "@/lib/sanitize";
-import { formatUserError } from "@/lib/format-error";
+import { formatUserError, isTransientDbMessage, TRANSIENT_MESSAGE } from "@/lib/format-error";
+import { invalidInputMessage, newErrorReference, unexpectedFailureMessage } from "@/lib/error-reference";
+import { logger } from "@/lib/logger";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import {
   assertPilotCapacity,
@@ -46,16 +48,47 @@ export const createTRPCContext = async (opts: { req: Request }) => {
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
-    const sanitizedMessage =
-      error.code === "INTERNAL_SERVER_ERROR"
-        ? formatUserError(error.cause ?? error, "An unexpected error occurred. Please try again.")
-        : shape.message;
+  errorFormatter({ shape, error, path, ctx }) {
+    let message = shape.message;
+    let reference: string | null = null;
+    const locale = () => pilotLocale(ctx ? localeFromCookieGetter(ctx.getCookie) : undefined);
+    if (error.code === "BAD_REQUEST" && error.cause instanceof ZodError) {
+      // The validator's message is a JSON dump; name the fields instead.
+      const fields = [
+        ...new Set(
+          error.cause.issues
+            .map((issue) => issue.path.filter((p) => typeof p === "string").pop())
+            .filter((p): p is string => !!p)
+        ),
+      ].slice(0, 5);
+      message = invalidInputMessage(locale(), fields);
+    } else if (error.code === "INTERNAL_SERVER_ERROR") {
+      // A TRPCError thrown on purpose carries a message written for people
+      // and no foreign cause. Anything else is unexpected: the person gets
+      // a sentence they can act on and a reference, the log gets the real
+      // error under the same reference. Nothing raw reaches the browser.
+      const unexpected = error.cause !== undefined && !(error.cause instanceof TRPCError);
+      if (unexpected) {
+        reference = newErrorReference();
+        logger.error(`tRPC ${path ?? "<no-path>"} failed [ref ${reference}]`, error.cause);
+        const raw = error.cause instanceof Error ? error.cause.message : "";
+        message = isTransientDbMessage(raw)
+          ? TRANSIENT_MESSAGE
+          : unexpectedFailureMessage(locale(), reference);
+      } else {
+        message = formatUserError(error, "An unexpected error occurred. Please try again.");
+      }
+    }
+    // tRPC adds the stack whenever NODE_ENV is not "production" (a mis-set
+    // self-host included): only a developer's machine gets it.
+    const { stack, ...rest } = shape.data;
+    const dataWithoutStack = process.env.NODE_ENV === "development" ? { ...rest, stack } : rest;
     return {
       ...shape,
-      message: sanitizedMessage,
+      message,
       data: {
-        ...shape.data,
+        ...dataWithoutStack,
+        reference,
         zodError:
           process.env.NODE_ENV === "development" && error.cause instanceof ZodError
             ? error.cause.flatten()

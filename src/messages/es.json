@@ -6702,5 +6702,17 @@
     "error": "No se ha podido enviar el mensaje. Inténtalo de nuevo.",
     "sentTitle": "Gracias por tus comentarios.",
     "sentBody": "Leemos todos los mensajes y los usamos para mejorar esta herramienta."
+  },
+  "errorPage": {
+    "title": "Algo ha fallado",
+    "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",
+    "transient": "Estamos reconectando con el servicio. Vuelve a intentarlo en un momento.",
+    "tryAgain": "Volver a intentarlo",
+    "backDashboard": "Volver al panel",
+    "backHome": "Volver a la página de inicio",
+    "backSignIn": "Volver al inicio de sesión",
+    "reference": "Referencia: {reference}",
+    "referenceHelp": "Si vuelve a ocurrir, notifícalo indicando esta referencia.",
+    "help": "Cómo notificar un problema"
   }
 }

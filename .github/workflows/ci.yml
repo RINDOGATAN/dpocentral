@@ -77,6 +77,9 @@ jobs:
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true"
       DEMO_SEED: "false"
       SMOKE_PORT: "3101"
+      # Test-only failure probes (src/lib/failure-probe.ts): the walk checks
+      # what a person sees when a page or a procedure fails.
+      E2E_FAILURE_PROBE: "true"
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@v4

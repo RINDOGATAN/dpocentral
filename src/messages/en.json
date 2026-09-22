@@ -6702,5 +6702,17 @@
     "error": "The message could not be sent. Please try again.",
     "sentTitle": "Thank you for your feedback.",
     "sentBody": "We read every message and use it to improve this tool."
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "This page could not be shown. Your saved records are not affected.",
+    "transient": "We're reconnecting to the service. Please try again in a moment.",
+    "tryAgain": "Try again",
+    "backDashboard": "Back to the dashboard",
+    "backHome": "Back to the home page",
+    "backSignIn": "Back to sign-in",
+    "reference": "Reference: {reference}",
+    "referenceHelp": "If it happens again, report it and quote this reference.",
+    "help": "How to report a problem"
   }
 }
