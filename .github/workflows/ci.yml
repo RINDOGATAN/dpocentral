@@ -95,6 +95,11 @@ jobs:
       - name: Apply every migration, in order, to the empty database
         run: npx prisma migrate deploy
 
+      - name: Prove every migration is applied and none failed
+        # (A schema diff is not asserted: the history creates seven tables the
+        # schema no longer models, the vw_* stubs among them; see STATUS.md.)
+        run: npx prisma migrate status
+
       - name: Seed (as a first boot does)
         run: |
           npm run db:seed
