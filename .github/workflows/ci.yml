@@ -50,3 +50,69 @@ jobs:
           # Prisma happy; no page hits the database at build time.
           DATABASE_URL: postgresql://user:pass@localhost:5432/db?schema=public
           NEXT_TELEMETRY_DISABLED: "1"
+
+  smoke:
+    # A fresh self-hosted install from zero, then a pilot user's walk in a
+    # real browser (e2e/smoke.spec.ts) at 1280 px and 390 px. Throwaway
+    # Postgres in the job; never the hosted database.
+    name: fresh install · browser smoke walk
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: dpocentral
+          POSTGRES_PASSWORD: dpocentral_ci
+          POSTGRES_DB: dpocentral
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dpocentral -d dpocentral"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://dpocentral:dpocentral_ci@localhost:5432/dpocentral?schema=public
+      NEXTAUTH_URL: http://localhost:3101
+      NEXTAUTH_SECRET: ci-smoke-secret-not-used-anywhere-else
+      # The self-hosted posture: local sign-in, baked in at build time.
+      NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true"
+      DEMO_SEED: "false"
+      SMOKE_PORT: "3101"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply every migration, in order, to the empty database
+        run: npx prisma migrate deploy
+
+      - name: Seed (as a first boot does)
+        run: |
+          npm run db:seed
+          npm run db:seed-templates
+          npm run db:seed-questionnaire
+
+      - name: Build
+        run: npx next build
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke walk
+        run: npx playwright test
+
+      - name: Keep the report when the walk fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
