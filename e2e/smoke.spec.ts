@@ -138,6 +138,15 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
     await expect(page.locator("body")).toBeVisible();
   });
 
+  await step("health: database and migrations match this build", async () => {
+    const res = await page.request.get("/api/health");
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ status: "ok", db: "up" });
+    expect(body.version).toBeTruthy();
+    expect(body.commit).toBeTruthy();
+  });
+
   // ── Honest failure (test-only probes, E2E_FAILURE_PROBE=true) ────────
   if (process.env.E2E_FAILURE_PROBE === "true") {
     await step(

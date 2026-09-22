@@ -5,11 +5,15 @@
  * Health endpoint — /api/health
  *
  * Used by the sovereign bundle's Docker healthcheck, suite.sh readiness
- * probes, and any external monitor. Unauthenticated by design: it exposes
- * only liveness, DB reachability, and the app version — no tenant data.
+ * probes, the hosting provider's checks, the storefront's digest and any
+ * external monitor. Unauthenticated by design: it exposes only liveness,
+ * the reason word, the app version and commit — never user data.
  *
- * 200 {status:"ok"}       — app up, database reachable
- * 503 {status:"degraded"} — app up, database unreachable
+ * 200 {status:"ok", db:"up", version, commit}
+ *     — the database answered within 2 s and its last applied migration is
+ *       this build's last migration
+ * 503 {status:"degraded", reason:"database"|"migrations", db, version, commit}
+ *     — no detail beyond the reason word (src/lib/health-probe.ts)
  *
  * Protection: rate-limited per client address in src/middleware.ts
  * ("health" bucket), and the database probe is cached per process for
