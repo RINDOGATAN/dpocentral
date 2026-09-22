@@ -10,8 +10,7 @@
  * `?doc=dpa` (default) or `?doc=tia`.
  */
 
-import { getToken } from "next-auth/jwt";
-import type { NextRequest } from "next/server";
+import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { renderDpaPdf, renderTiaPdf } from "@/server/services/export/dpa/render";
@@ -26,7 +25,7 @@ export async function GET(
   const { searchParams } = new URL(request.url);
   const doc = searchParams.get("doc") === "tia" ? "tia" : "dpa";
 
-  const token = await getToken({ req: request as unknown as NextRequest });
+  const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

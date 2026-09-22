@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc";
 
 interface Organization {
@@ -23,10 +24,17 @@ const OrganizationContext = createContext<OrganizationContextType | undefined>(u
 
 export function OrganizationProvider({ children }: { children: ReactNode }) {
   const [organization, setOrganizationState] = useState<Organization | null>(null);
+  // The provider wraps every page, signed-in or not. Asking for the list
+  // before there is a session only earns a 401 (and a console error) on the
+  // landing page, the sign-in page and the public pages.
+  const { status: sessionStatus } = useSession();
+  const signedIn = sessionStatus === "authenticated";
 
-  const { data: orgsData, isLoading, refetch } = trpc.organization.list.useQuery(undefined, {
+  const { data: orgsData, isLoading: listLoading, refetch } = trpc.organization.list.useQuery(undefined, {
     retry: false,
+    enabled: signedIn,
   });
+  const isLoading = sessionStatus === "loading" || (signedIn && listLoading);
 
   const organizations = orgsData ?? [];
 

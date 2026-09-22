@@ -1041,7 +1041,9 @@
           "EVIDENCE": "Evidence",
           "COMMUNICATION": "Communication",
           "DECISION": "Decision",
-          "NOTE": "Note"
+          "NOTE": "Note",
+          "STATUS_CHANGE": "Status change",
+          "NOTIFICATION": "Notification"
         }
       },
       "taskDialog": {
@@ -4978,6 +4980,12 @@
         "safeguards": "There are no contractual safeguards: no data processing agreement, no service level and no security certification.",
         "run": "To work with real customer details, <run>run your own instance</run>."
       },
+      "support": {
+        "title": "When something goes wrong",
+        "report": "To report a problem, use Feedback at the top of any page once you are signed in. Say what you were doing and what you saw. On the hosted service, every message reaches the team in its daily review.",
+        "reference": "When a page or an action fails, you see a reference, such as E-3F9A01C2 or a string of digits. Please quote it in your report with what you were doing: a failure on the server is recorded under that reference, which lets us find its exact cause. The reference contains nothing about you or your records.",
+        "exports": "Exports are always available. If a page fails, your records are not affected, and every report and data export can still be downloaded."
+      },
       "quickstart": {
         "title": "Quick Start",
         "step1": { "label": "Sign in", "desc": "Use your email magic link or Google account" },
@@ -6700,5 +6708,17 @@
     "error": "The message could not be sent. Please try again.",
     "sentTitle": "Thank you for your feedback.",
     "sentBody": "We read every message and use it to improve this tool."
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "This page could not be shown. Your saved records are not affected.",
+    "transient": "We're reconnecting to the service. Please try again in a moment.",
+    "tryAgain": "Try again",
+    "backDashboard": "Back to the dashboard",
+    "backHome": "Back to the home page",
+    "backSignIn": "Back to sign-in",
+    "reference": "Reference: {reference}",
+    "referenceHelp": "If it happens again, report it and quote this reference.",
+    "help": "How to report a problem"
   }
 }

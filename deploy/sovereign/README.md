@@ -57,10 +57,12 @@ sample organization attached. Port 8485 is the suite convention for DPO Central
   removes the sample demo organization that older releases seeded, but only
   if nobody has used it (any added or edited record, or any other member,
   keeps it in place).
-- **Health:** `GET /api/health` returns `200 {status:"ok"}` when the app and
-  database are up (503 when the DB is unreachable); the compose file wires
-  it as the app container's healthcheck, so `docker compose ps` shows real
-  readiness.
+- **Health:** `GET /api/health` returns `200 {status:"ok"}` when the database
+  answers within 2 seconds and its last applied migration is the image's
+  last migration; otherwise `503` with `reason` `database` or `migrations`
+  (an app image newer or older than the migrator that ran). It also reports
+  `version` and `commit`. The compose file wires it as the app container's
+  healthcheck, so `docker compose ps` shows real readiness.
 - **DSAR retention auto-redaction:** the `redaction-cron` service triggers
   `/api/cron/dsar-redaction` daily. Set `CRON_SECRET` in `.env` (openssl
   rand -hex 32) — with it empty, the endpoint refuses to run (fails closed)

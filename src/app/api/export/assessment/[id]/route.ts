@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { getToken } from "next-auth/jwt";
-import type { NextRequest } from "next/server";
+import { getSessionToken } from "@/lib/session-cookie";
 import { getCookieLocale } from "@/i18n/server-locale";
 import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
@@ -36,7 +35,7 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  const token = await getToken({ req: request as unknown as NextRequest });
+  const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

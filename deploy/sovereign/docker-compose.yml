@@ -153,8 +153,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
-      # /api/health checks liveness + database reachability (200 ok / 503
-      # degraded). wget is busybox, present in the alpine runner image.
+      # /api/health: 200 when the database answers and its migrations match
+      # this image (503 degraded otherwise). wget is busybox, present in the
+      # alpine runner image.
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3001/api/health || exit 1"]
       interval: 30s
       timeout: 5s

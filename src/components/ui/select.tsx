@@ -8,7 +8,28 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const Select = SelectPrimitive.Root
+// Radix reports onValueChange("") when a controlled value arrives before the
+// options have registered: an edit form that fills itself from the saved
+// record would lose the saved choice (and its submit button stays disabled
+// on a required field). No item may have the value "", so "" is never a
+// person's choice: drop it.
+function Select({
+  onValueChange,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Root>) {
+  return (
+    <SelectPrimitive.Root
+      {...props}
+      onValueChange={
+        onValueChange
+          ? (value: string) => {
+              if (value !== "") onValueChange(value)
+            }
+          : undefined
+      }
+    />
+  )
+}
 
 const SelectGroup = SelectPrimitive.Group
 

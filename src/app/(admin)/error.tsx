@@ -4,7 +4,7 @@
 
 import { ErrorPage } from "@/components/error-page";
 
-export default function QuickstartError({
+export default function AdminError({
   error,
   reset,
 }: {

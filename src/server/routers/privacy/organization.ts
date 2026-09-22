@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
@@ -19,6 +20,37 @@ import {
   pilotLocale,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+
+/**
+ * A free organisation slug close to the one asked for. The slug is the
+ * public request-form address (/dsar/<slug>), so it stays lowercase letters,
+ * digits and hyphens, 2 to 50 characters. A name with no Latin letters or
+ * digits gives "org"; a taken slug gets a short random suffix. Two firms may
+ * share a name; neither is told the other exists.
+ */
+export async function availableSlug(
+  prisma: { organization: { findUnique: (args: { where: { slug: string } }) => Promise<unknown> } },
+  wanted: string
+): Promise<string> {
+  const cleaned = wanted
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-{2,}/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 44)
+    .replace(/-+$/, "");
+  const base = cleaned.length >= 2 ? cleaned : cleaned ? `${cleaned}-org` : "org";
+  const taken = async (slug: string) => !!(await prisma.organization.findUnique({ where: { slug } }));
+  if (base.length >= 2 && !(await taken(base))) return base;
+  for (let i = 0; i < 5; i++) {
+    const candidate = `${base}-${randomBytes(3).toString("hex").slice(0, 5)}`;
+    if (!(await taken(candidate))) return candidate;
+  }
+  throw new TRPCError({
+    code: "CONFLICT",
+    message: "This organisation could not be created. Please try again with a slightly different name.",
+  });
+}
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
@@ -105,7 +137,10 @@ export const organizationRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1).max(200),
-        slug: z.string().min(2).max(50).regex(/^[a-z0-9-]+$/),
+        // The client derives the slug from the name. A person never sees or
+        // chooses it, so a name that yields a short, empty or taken slug
+        // must not block the first-run screen: availableSlug() settles it.
+        slug: z.string().max(200),
         domain: z.string().optional(),
         creatorType: z.nativeEnum(UserType).optional(),
       })
@@ -118,17 +153,7 @@ export const organizationRouter = createTRPCRouter({
         pilotLocale(localeFromCookieGetter(ctx.getCookie))
       );
 
-      // Check if slug is already taken
-      const existing = await ctx.prisma.organization.findUnique({
-        where: { slug: input.slug },
-      });
-
-      if (existing) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "An organization with this slug already exists",
-        });
-      }
+      const slug = await availableSlug(ctx.prisma, input.slug);
 
       // The domain drives the sign-in auto-join, so it is never taken on the
       // caller's word: only the domain of the creator's own proven address,
@@ -141,7 +166,7 @@ export const organizationRouter = createTRPCRouter({
       const organization = await ctx.prisma.organization.create({
         data: {
           name: input.name,
-          slug: input.slug,
+          slug,
           domain,
           members: {
             create: {
@@ -163,7 +188,7 @@ export const organizationRouter = createTRPCRouter({
           entityType: "Organization",
           entityId: organization.id,
           action: "CREATE",
-          changes: { name: input.name, slug: input.slug },
+          changes: { name: input.name, slug },
         },
       });
 

@@ -4,12 +4,12 @@
 
 import { ErrorPage } from "@/components/error-page";
 
-export default function QuickstartError({
+export default function PublicError({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErrorPage error={error} reset={reset} back="dashboard" />;
+  return <ErrorPage error={error} reset={reset} back="home" />;
 }

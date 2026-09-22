@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { buildCommit, lastMigrationInTree } from "./src/lib/build-info";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -34,6 +35,12 @@ const nextConfig: NextConfig = {
   ...(process.env.NEXT_OUTPUT_STANDALONE === "true"
     ? { output: "standalone" as const }
     : {}),
+  // Read at build time for /api/health (src/lib/build-info.ts): the running
+  // server has neither prisma/migrations nor .git to look at.
+  env: {
+    BUILD_LAST_MIGRATION: lastMigrationInTree(),
+    BUILD_COMMIT: buildCommit(),
+  },
   serverExternalPackages: [
     "@dpocentral/premium-skills",
     "@dpocentral/security",

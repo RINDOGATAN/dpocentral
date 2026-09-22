@@ -14,6 +14,7 @@ import { logger } from "@/lib/logger";
 import { emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
+import { sessionTokenCookieName } from "@/lib/session-cookie";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -297,7 +298,8 @@ export const authOptions: NextAuthOptions = {
   ...(cookieDomain && {
     cookies: {
       sessionToken: {
-        name: `${cookiePrefix}next-auth.session-token`,
+        // Route handlers read the token under this same name (session-cookie.ts).
+        name: sessionTokenCookieName()!,
         options: {
           httpOnly: true,
           sameSite: "lax" as const,
@@ -334,9 +336,8 @@ export const authOptions: NextAuthOptions = {
     features.devAuthEnabled && {
       cookies: {
         sessionToken: {
-          name: useSecureCookies
-            ? "__Secure-dpocentral.session-token"
-            : "dpocentral.session-token",
+          // Route handlers read the token under this same name (session-cookie.ts).
+          name: sessionTokenCookieName()!,
           options: {
             httpOnly: true,
             sameSite: "lax" as const,
