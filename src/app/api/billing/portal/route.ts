@@ -12,7 +12,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { createPortalSession } from "@/lib/stripe";
 import { features } from "@/config/features";
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const token = await getToken({ req: request });
+    const token = await getSessionToken(request);
     const userEmail = token?.email as string | undefined;
     if (!userEmail) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

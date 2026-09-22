@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { getSessionToken } from "@/lib/session-cookie";
 import { getCookieLocale } from "@/i18n/server-locale";
 import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
@@ -18,7 +18,7 @@ import { locales, defaultLocale } from "@/i18n/config";
 import { assessmentProgress } from "@/server/services/assessment/progress";
 
 export async function GET(request: NextRequest) {
-  const token = await getToken({ req: request });
+  const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

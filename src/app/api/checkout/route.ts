@@ -10,7 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, createCustomer } from "@/lib/stripe";
 import { features } from "@/config/features";
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Get authenticated user from JWT token
-    const token = await getToken({ req: request });
+    const token = await getSessionToken(request);
     const userEmail = token?.email as string | undefined;
     const userName = token?.name as string | undefined;
     if (!userEmail) {
