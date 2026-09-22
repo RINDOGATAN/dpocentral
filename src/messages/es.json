@@ -1041,7 +1041,9 @@
           "EVIDENCE": "Evidencia",
           "COMMUNICATION": "Comunicación",
           "DECISION": "Decisión",
-          "NOTE": "Nota"
+          "NOTE": "Nota",
+          "STATUS_CHANGE": "Cambio de estado",
+          "NOTIFICATION": "Notificación"
         }
       },
       "taskDialog": {

@@ -476,7 +476,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{entry.title}</span>
                           <Badge variant="outline" className="text-xs">
-                            {tp(`timelineDialog.type.${entry.entryType}` as `timelineDialog.type.OBSERVATION` | `timelineDialog.type.ACTION` | `timelineDialog.type.EVIDENCE` | `timelineDialog.type.COMMUNICATION` | `timelineDialog.type.DECISION` | `timelineDialog.type.NOTE`)}
+                            {/* The router also writes STATUS_CHANGE and NOTIFICATION, and the
+                                entry type is free text: an unknown type shows as written. */}
+                            {tp.has(`timelineDialog.type.${entry.entryType}`)
+                              ? tp(`timelineDialog.type.${entry.entryType}` as `timelineDialog.type.OBSERVATION`)
+                              : entry.entryType}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
