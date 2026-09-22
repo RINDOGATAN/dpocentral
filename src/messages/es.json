@@ -4980,6 +4980,12 @@
         "safeguards": "No hay garantías contractuales: ni contrato de encargo del tratamiento, ni nivel de servicio, ni certificación de seguridad.",
         "run": "Para trabajar con datos reales de clientes, <run>usa tu propia instancia</run>."
       },
+      "support": {
+        "title": "Cuando algo falla",
+        "report": "Para notificar un problema, usa «Comentarios» en la parte superior de cualquier página una vez iniciada la sesión. Indica qué estabas haciendo y qué viste. En el servicio alojado, todos los mensajes llegan al equipo en su revisión diaria.",
+        "reference": "Cuando una página o una acción falla, ves una referencia, por ejemplo E-3F9A01C2 o una serie de cifras. Indícala en tu mensaje junto con lo que estabas haciendo: un fallo en el servidor queda registrado con esa referencia, lo que nos permite encontrar su causa exacta. La referencia no contiene nada sobre ti ni sobre tus registros.",
+        "exports": "Las exportaciones están siempre disponibles. Si una página falla, tus registros no se ven afectados, y todos los informes y exportaciones de datos se pueden seguir descargando."
+      },
       "quickstart": {
         "title": "Inicio rápido",
         "step1": { "label": "Inicia sesión", "desc": "Usa tu enlace mágico por correo o cuenta de Google" },

@@ -116,6 +116,16 @@ export default async function DocsOverviewPage() {
         </div>
       </section>
 
+      {/* When something goes wrong: how to report it; linked from every error page */}
+      <section id="support" className="scroll-mt-24 p-6 rounded-2xl border border-border bg-card">
+        <h2 className="text-lg font-semibold text-foreground mb-3">{t("support.title")}</h2>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>{t("support.report")}</p>
+          <p>{t("support.reference")}</p>
+          <p>{t("support.exports")}</p>
+        </div>
+      </section>
+
       {/* Quick Start */}
       <div className="card-brutal">
         <div className="flex items-center gap-3 mb-4">
