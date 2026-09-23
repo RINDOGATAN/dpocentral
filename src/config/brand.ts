@@ -206,11 +206,35 @@ export function getBrandConfig(): BrandConfig {
  */
 export const brand = getBrandConfig();
 
+const DEFAULT_MAIL_ADDRESS = defaultBrand.emailFrom;
+
 /**
- * Generate email "from" field with friendly name
+ * Build a sender header: "<Product> by <Company> <address>".
+ *
+ * The address may come from NEXT_PUBLIC_EMAIL_FROM, which some deployments
+ * set with a display name of its own ("DPO CENTRAL <noreply@todo.law>"). Only
+ * the address is kept, so the display name is always the one built here and
+ * an environment variable cannot change it. The product name is the
+ * title-case `name`, never `nameUppercase`.
+ */
+export function formatMailFrom(
+  productName: string,
+  companyName: string,
+  rawAddress: string | undefined
+): string {
+  const raw = (rawAddress ?? "").trim();
+  const bracketed = raw.match(/<([^<>]*)>/);
+  const candidate = bracketed ? bracketed[1] : raw.split(/\s+/).pop() ?? "";
+  const address = candidate.trim().includes("@") ? candidate.trim() : DEFAULT_MAIL_ADDRESS;
+  return `${productName} by ${companyName} <${address}>`;
+}
+
+/**
+ * The sender header for every e-mail this app sends. Every send call uses it;
+ * no literal `from:` string belongs anywhere else.
  */
 export function emailFrom(): string {
-  return `${brand.name} by ${brand.companyName} <${brand.emailFrom}>`;
+  return formatMailFrom(brand.name, brand.companyName, brand.emailFrom);
 }
 
 /**
