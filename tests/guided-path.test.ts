@@ -53,7 +53,7 @@ const COMPLETE: PathCounts = {
   assessmentsApproved: 1,
   transfers: 1,
   dsarRequests: 1,
-  dsarIntakeForms: 1,
+  dsarIntakeConfigured: true,
   incidents: 1,
   aiSystems: 0,
 };
@@ -102,6 +102,9 @@ describe("the shape of the path", () => {
     const guided = new Set([
       ...steps.flatMap((s) => (s.href ? [s.href.split("?")[0]] : [])),
       ...PATH.library({ stripeEnabled: true, clientMode: true }).map((i) => i.href.split("?")[0]),
+      // "All clients" sits at the top of the menu (the client switcher block in
+      // guided-layout.tsx), not in the library: one client view, one place.
+      "/privacy/clients",
     ]);
     // The Classic top-bar entries (src/components/dashboard-shell.tsx) plus
     // Settings. Every one must be reachable from Guided, once.
@@ -257,8 +260,10 @@ describe("the done rules", () => {
     );
   });
 
-  it("rights: an intake form starts it, a received request finishes it", () => {
-    expect(statusOf("dsar", { dsarIntakeForms: 1 })).toBe("started");
+  it("rights: not started with only the auto-seeded intake, started once it is set up, done on a request", () => {
+    // A brand-new org (only the seeded default intake, no requests) stays "todo".
+    expect(statusOf("dsar", {})).toBe("todo");
+    expect(statusOf("dsar", { dsarIntakeConfigured: true })).toBe("started");
     expect(statusOf("dsar", { dsarRequests: 1 })).toBe("done");
   });
 
@@ -301,6 +306,29 @@ describe("progress and the next step", () => {
       done: counted,
       total: counted,
     });
+  });
+
+  it("shows a stage of only unbuilt steps as 'coming', never '0 of 0', and never counts it", () => {
+    // "Policies and people" has only steps whose page is still to come.
+    const people = PATH.stages.find((s) => s.id === "people")!;
+    expect(people.steps.every((s) => s.coming)).toBe(true);
+
+    const fresh = evaluatePath(PATH, EMPTY_PATH_COUNTS);
+    const progress = stageProgress(people, fresh);
+    expect(progress.state).toBe("coming");
+    expect(progress.total).toBe(0);
+    expect(progress.done).toBe(0);
+
+    // A coming stage adds nothing to the overall total, and is never the next step.
+    const counted = steps.filter(isCounted).length;
+    expect(overallProgress(PATH, evaluatePath(PATH, COMPLETE)).total).toBe(counted);
+    for (const st of people.steps) expect(nextStep(PATH, fresh)?.step.id).not.toBe(st.id);
+
+    // Every non-coming stage keeps a real state, never "coming".
+    for (const stage of PATH.stages) {
+      const anyCounted = stage.steps.some(isCounted);
+      if (anyCounted) expect(stageProgress(stage, fresh).state).not.toBe("coming");
+    }
   });
 });
 

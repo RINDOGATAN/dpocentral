@@ -70,8 +70,12 @@ export interface PathCounts {
 
   /** Data-subject requests received. */
   dsarRequests: number;
-  /** Public DSAR intake forms configured (the surface is ready to receive). */
-  dsarIntakeForms: number;
+  /**
+   * Whether the org has actually set up its DSAR intake, past the default form
+   * we auto-seed at org creation (so the public portal works out of the box).
+   * The mere presence of the seeded form is no signal; see isIntakeConfigured.
+   */
+  dsarIntakeConfigured: boolean;
 
   incidents: number;
 
@@ -91,7 +95,7 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
   assessmentsApproved: 0,
   transfers: 0,
   dsarRequests: 0,
-  dsarIntakeForms: 0,
+  dsarIntakeConfigured: false,
   incidents: 0,
   aiSystems: 0,
 };
@@ -241,9 +245,9 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
           id: "dsar",
           href: "/privacy/dsar",
           icon: FileText,
-          rule: "Done when at least one rights request has been received. Started when a public intake form is configured (the surface is ready to receive).",
+          rule: "Done when at least one rights request has been received. Started when the org has set up its intake past the auto-seeded default (the surface is ready to receive). Not started for a new org that has only the seeded form and no requests.",
           status: (c) =>
-            c.dsarRequests > 0 ? "done" : c.dsarIntakeForms > 0 ? "started" : "todo",
+            c.dsarRequests > 0 ? "done" : c.dsarIntakeConfigured ? "started" : "todo",
         },
         {
           id: "notices",
@@ -275,13 +279,13 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
       ],
     },
   ],
-  // "All clients" (the portfolio, at the top of the menu) is the one client
-  // view in Guided; the older client cards are reachable only by address.
+  // "All clients" is the one client view in Guided, and it sits once, at the
+  // top of the menu (the client switcher block in guided-layout.tsx). It is
+  // deliberately NOT repeated here under "Library and tools".
   // "Library and tools": every Classic entry that is not a step, once.
-  library: ({ stripeEnabled, clientMode }) => [
+  library: ({ stripeEnabled }) => [
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
     { id: "experts", href: "/privacy/experts", icon: Search },
-    ...(clientMode ? [{ id: "clients", href: "/privacy/clients", icon: Users }] : []),
     { id: "skills", href: "/privacy/skills", icon: KeyRound },
     ...(stripeEnabled
       ? [{ id: "billing", href: "/privacy/billing", icon: CreditCard }]

@@ -12,6 +12,7 @@
 
 import type { Db } from "@/lib/prisma";
 import type { PathCounts } from "@/components/guided/path-config";
+import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
 
 function settingsObject(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -37,7 +38,7 @@ export async function loadPathCounts(
     assessmentsApproved,
     transfers,
     dsarRequests,
-    dsarIntakeForms,
+    intakeForm,
     incidents,
     aiSystems,
   ] = await Promise.all([
@@ -52,7 +53,22 @@ export async function loadPathCounts(
     prisma.assessment.count({ where: { ...org, status: "APPROVED" } }),
     prisma.dataTransfer.count({ where: org }),
     prisma.dSARRequest.count({ where: org }),
-    prisma.dSARIntakeForm.count({ where: { ...org, isActive: true } }),
+    // The active intake form's shape, not just its presence: every org is
+    // auto-seeded a default form so the public portal works out of the box, so
+    // the mere existence of a form is no signal. We read its fields and decide
+    // whether the org has actually set up its intake (isIntakeConfigured).
+    prisma.dSARIntakeForm.findFirst({
+      where: { ...org, isActive: true },
+      select: {
+        slug: true,
+        title: true,
+        description: true,
+        thankYouMessage: true,
+        privacyNoticeUrl: true,
+        customCss: true,
+        fields: true,
+      },
+    }),
     prisma.incident.count({ where: org }),
     // The AI systems table is optional on some deployments (the quick start
     // guards its creation the same way); an unreadable table counts as none.
@@ -74,7 +90,7 @@ export async function loadPathCounts(
     assessmentsApproved,
     transfers,
     dsarRequests,
-    dsarIntakeForms,
+    dsarIntakeConfigured: intakeForm ? isIntakeConfigured(intakeForm) : false,
     incidents,
     aiSystems,
   };

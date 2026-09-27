@@ -30,8 +30,11 @@ import type { LucideIcon } from "lucide-react";
  */
 export type StepStatus = "done" | "started" | "todo" | "coming" | "hidden";
 
-/** A stage as a whole: not started, in progress, or done. */
-export type StageState = "todo" | "started" | "done";
+/**
+ * A stage as a whole: not started, in progress, done, or "coming" (a stage
+ * whose steps all have no page yet, so it carries no count and no progress).
+ */
+export type StageState = "todo" | "started" | "done" | "coming";
 
 export interface PathStep<C> {
   /** Stable id; also the i18n key under `steps.<id>`. */
@@ -121,13 +124,23 @@ export interface StageProgress {
 /**
  * "2 of 3" for a stage: done steps over counted steps. The stage is done when
  * every counted step is; in progress when any counted step is done or started.
+ *
+ * A stage with no counted steps at all — only steps whose page is still to
+ * come — is "coming": it is shown with that word instead of a "0 of 0" count,
+ * never counts towards overall progress, and is never offered as a next step.
  */
 export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): StageProgress {
   const counted = stage.steps.filter((s) => isCounted(s) && isShown(s, statuses));
   const done = counted.filter((s) => statuses[s.id] === "done").length;
   const moving = counted.some((s) => statuses[s.id] === "done" || statuses[s.id] === "started");
-  const state: StageState =
-    counted.length > 0 && done === counted.length ? "done" : moving ? "started" : "todo";
+  const allComing = counted.length === 0 && stage.steps.some((s) => s.coming);
+  const state: StageState = allComing
+    ? "coming"
+    : counted.length > 0 && done === counted.length
+      ? "done"
+      : moving
+        ? "started"
+        : "todo";
   return { done, total: counted.length, state };
 }
 

@@ -182,6 +182,9 @@ export default function PrivacyDashboardPage() {
             <span className="hidden sm:inline">{tp("exportReport")}</span>
             <span className="sm:hidden">{tp("exportReportShort")}</span>
           </Button>
+        {/* One client switcher: Guided carries it in the left menu (the client
+            switcher block), so the page-header switch is Classic-only. */}
+        {skin !== "guided" && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2 shrink-0">
@@ -210,11 +213,14 @@ export default function PrivacyDashboardPage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
         </div>
       </div>
 
-      {/* Quickstart Card — shown when org has few records */}
-      {showQuickstart &&
+      {/* Quickstart Card — shown when org has few records. Guided leads to the
+          quick start through the one "Next step" card above, so this second
+          call to action is Classic-only: one card at the top. */}
+      {skin !== "guided" && showQuickstart &&
         (portfolio?.hasPortfolio ? (
           /* VW portfolio detected — show tailored card */
           <Card className="border-primary/50 bg-primary/5">

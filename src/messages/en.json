@@ -6846,7 +6846,8 @@
     "stageState": {
       "todo": "not started",
       "started": "in progress",
-      "done": "done"
+      "done": "done",
+      "coming": "Coming"
     },
     "stepStatus": {
       "done": "done",

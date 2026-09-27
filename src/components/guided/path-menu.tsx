@@ -143,7 +143,11 @@ export function PathMenu<C>({
           const progress = statuses ? stageProgress(stage, statuses) : null;
           const href = stageTarget(stage, statuses);
           const label = `${t("stageNumber", { number: index + 1 })}: ${t(`stages.${stage.id}`)}${
-            progress ? `, ${t("stageProgress", { done: progress.done, total: progress.total })}` : ""
+            progress
+              ? progress.state === "coming"
+                ? `, ${t("stageState.coming")}`
+                : `, ${t("stageProgress", { done: progress.done, total: progress.total })}`
+              : ""
           }`;
           const active = stage.id === currentStage?.id;
           const ring = (
@@ -265,9 +269,13 @@ export function PathMenu<C>({
                   {/* Always one line tall, filled or not, so nothing moves when progress arrives. */}
                   <span className="truncate text-xs text-muted-foreground tabular-nums">
                     {progress ? (
-                      `${t("stageProgress", { done: progress.done, total: progress.total })} · ${t(
-                        `stageState.${progress.state}`,
-                      )}`
+                      progress.state === "coming" ? (
+                        t("stageState.coming")
+                      ) : (
+                        `${t("stageProgress", { done: progress.done, total: progress.total })} · ${t(
+                          `stageState.${progress.state}`,
+                        )}`
+                      )
                     ) : (
                       <>
                         <span aria-hidden="true">&nbsp;</span>
