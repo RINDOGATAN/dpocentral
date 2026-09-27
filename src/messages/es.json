@@ -1385,6 +1385,11 @@
       "back": "Panel",
       "title": "Asistente del programa de privacidad",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
+      "programName": {
+        "label": "Nombre del programa",
+        "help": "Este nombre identifica tu programa de privacidad en el panel, en la pantalla de resultados y en tus exportaciones. Comienza con el nombre de tu organización; cámbialo si tu programa se conoce por otro nombre.",
+        "placeholder": "p. ej. Programa de privacidad de Acme"
+      },
       "steps": {
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
@@ -1471,6 +1476,7 @@
       "review": {
         "title": "Revisar y confirmar",
         "subtitle": "Revisa lo que se va a crear y construye tu programa de privacidad.",
+        "forProgramme": "Para el programa {name}",
         "back": "Atrás",
         "stats": {
           "vendors": "Proveedores",
@@ -1497,6 +1503,11 @@
       "success": {
         "alreadySetTitle": "¡Todo está ya configurado!",
         "createdTitle": "¡Programa de privacidad creado!",
+        "forProgramme": "El programa {name}",
+        "createdListTitle": "Qué se ha creado",
+        "createdListVendors": "Proveedores",
+        "createdListAssets": "Activos de datos",
+        "createdListActivities": "Actividades de tratamiento",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
         "cardDataInventory": "Inventario de datos",

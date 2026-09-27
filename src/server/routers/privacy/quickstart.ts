@@ -463,6 +463,7 @@ export const quickstartRouter = createTRPCRouter({
         skipAssetNames: z.array(z.string()).default([]),
         skipActivityNames: z.array(z.string()).default([]),
         fromPortfolio: z.boolean().default(false),
+        programName: z.string().max(200).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -1098,6 +1099,25 @@ export const quickstartRouter = createTRPCRouter({
           }
         } catch (aiErr) {
           console.warn("[quickstart] Skipping AI system creation (table may not exist):", aiErr);
+        }
+      }
+
+      // Save the programme's name onto the organisation (additive merge into
+      // its settings JSON) so the result screen and exports can name it.
+      // Best-effort: a failure here never fails the quickstart.
+      if (input.programName && input.programName.trim()) {
+        try {
+          const org = await ctx.prisma.organization.findUnique({
+            where: { id: orgId },
+            select: { settings: true },
+          });
+          const settings = (org?.settings as Record<string, unknown> | null) ?? {};
+          await ctx.prisma.organization.update({
+            where: { id: orgId },
+            data: { settings: { ...settings, programName: input.programName.trim() } },
+          });
+        } catch (nameErr) {
+          console.warn("[quickstart] Could not save programme name:", nameErr);
         }
       }
 

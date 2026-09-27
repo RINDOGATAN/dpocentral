@@ -1385,6 +1385,11 @@
       "back": "Dashboard",
       "title": "Privacy Program Quickstart",
       "subtitle": "Get a head start on your privacy program",
+      "programName": {
+        "label": "Programme name",
+        "help": "This names your privacy programme across the dashboard, the result screen and your exports. It starts as your organisation's name; change it if your programme goes by something else.",
+        "placeholder": "e.g. Acme Privacy Programme"
+      },
       "steps": {
         "choose": "Choose Path",
         "vendors": "Select Vendors",
@@ -1471,6 +1476,7 @@
       "review": {
         "title": "Review & Confirm",
         "subtitle": "Review what will be created, then build your privacy program.",
+        "forProgramme": "For the {name} programme",
         "back": "Back",
         "stats": {
           "vendors": "Vendors",
@@ -1497,6 +1503,11 @@
       "success": {
         "alreadySetTitle": "Everything is already set up!",
         "createdTitle": "Privacy Program Created!",
+        "forProgramme": "The {name} programme",
+        "createdListTitle": "What was created",
+        "createdListVendors": "Vendors",
+        "createdListAssets": "Data assets",
+        "createdListActivities": "Processing activities",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program has been bootstrapped. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
