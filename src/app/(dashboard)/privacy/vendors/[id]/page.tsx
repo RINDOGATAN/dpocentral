@@ -50,6 +50,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ProduceDpaDialog } from "./produce-dpa-dialog";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
+import { TemplateBadge } from "@/components/privacy/template-badge";
 import { toneChip } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
@@ -240,6 +241,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                   {tp("riskBadge", { level: tList(`riskTier.${vendor.riskTier}` as `riskTier.LOW` | `riskTier.MEDIUM` | `riskTier.HIGH` | `riskTier.CRITICAL`) })}
                 </Badge>
               )}
+              <TemplateBadge metadata={vendor.metadata} className="text-xs" />
             </div>
             <p className="text-muted-foreground break-words">
               {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}

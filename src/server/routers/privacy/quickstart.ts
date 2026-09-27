@@ -685,6 +685,8 @@ export const quickstartRouter = createTRPCRouter({
                 hostingType: mapping.asset.hostingType,
                 vendor: catalogVendor.name,
                 isProduction: true,
+                // Provenance for the "From … quick start" badge (item 3).
+                metadata: { source: "quickstart" },
               },
             });
             counts.assets++;
@@ -731,6 +733,8 @@ export const quickstartRouter = createTRPCRouter({
                   retentionPeriod: mapping.activity.retentionPeriod,
                   retentionDays: mapping.activity.retentionDays,
                   isActive: true,
+                  // Provenance for the "From … quick start" badge (item 3).
+                  metadata: { source: "quickstart" },
                 },
               });
               counts.activities++;
@@ -925,6 +929,8 @@ export const quickstartRouter = createTRPCRouter({
                 hostingType: templateAsset.hostingType,
                 owner: templateAsset.owner,
                 isProduction: true,
+                // Provenance for the "From the … template" badge (item 3).
+                metadata: { source: "template", templateId: template.id, templateName: template.name },
               },
             });
             counts.assets++;
@@ -978,6 +984,8 @@ export const quickstartRouter = createTRPCRouter({
                 retentionPeriod: templateActivity.retentionPeriod,
                 retentionDays: templateActivity.retentionDays,
                 isActive: true,
+                // Provenance for the "From the … template" badge (item 3).
+                metadata: { source: "template", templateId: template.id, templateName: template.name },
               },
             });
             counts.activities++;

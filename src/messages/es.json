@@ -35,7 +35,10 @@
     "sortLabel": "Ordenar",
     "sortNewest": "Más recientes primero",
     "sortOldest": "Más antiguos primero",
-    "sortName": "Nombre (A-Z)"
+    "sortName": "Nombre (A-Z)",
+    "fromTemplate": "De la plantilla {name}",
+    "fromTemplateGeneric": "De una plantilla",
+    "fromQuickstart": "Del inicio rápido"
   },
   "pages": {
     "newVendor": {

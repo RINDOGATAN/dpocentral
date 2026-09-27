@@ -42,6 +42,7 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { TemplateBadge } from "@/components/privacy/template-badge";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForRiskTier } from "@/config/status-tone";
@@ -319,6 +320,7 @@ export default function VendorsPage() {
                   <CardDescription>
                     {(vendor.categories as string[])?.join(" - ") || t("card.noCategories")}
                   </CardDescription>
+                  <TemplateBadge metadata={vendor.metadata} className="mt-1 w-fit text-xs" />
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {vendor.dataProcessed && (vendor.dataProcessed as string[]).length > 0 && (

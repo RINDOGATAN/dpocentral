@@ -54,6 +54,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
+import { TemplateBadge } from "@/components/privacy/template-badge";
 import { toneForSensitivity } from "@/config/status-tone";
 
 const DataFlowVisualization = dynamic(
@@ -341,6 +342,7 @@ export default function DataAssetDetailPage() {
                 {asset.isProduction && (
                   <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
                 )}
+                <TemplateBadge metadata={asset.metadata} className="text-xs" />
               </div>
             </div>
           </div>
