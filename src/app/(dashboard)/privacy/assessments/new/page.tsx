@@ -42,6 +42,7 @@ import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { managedUrl } from "@/lib/hosted";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
+import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
 
 const ASSESSMENT_TYPES: Array<{
@@ -149,12 +150,8 @@ export default function NewAssessmentPage() {
   }, [hasMoreVendors, isFetchingMoreVendors, fetchNextVendorsPage]);
   const vendors = vendorsPages?.pages.flatMap((p) => p.vendors) ?? [];
 
-  // Auto-select template when templates load for selected type
-  const effectiveTemplateId = (() => {
-    if (selectedTemplateId) return selectedTemplateId;
-    if (templates && templates.length === 1) return templates[0].id;
-    return "";
-  })();
+  // Auto-select the sole template of a type; the picker only appears for >1.
+  const effectiveTemplateId = resolveAutoTemplateId(selectedTemplateId, templates);
 
   const selectedTemplate = templates?.find((t) => t.id === effectiveTemplateId);
 
