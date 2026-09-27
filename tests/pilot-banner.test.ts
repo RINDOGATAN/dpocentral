@@ -28,6 +28,13 @@ vi.mock("next/navigation", () => ({
   redirect: mocks.redirect,
   useSearchParams: () => new URLSearchParams(),
 }));
+// The signed-in layout now reads the layout-choice cookie and the request
+// path (src/lib/skin.ts, the safe return on session end). Neither is under
+// test here; a request scope is not set up, so stub both.
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(async () => ({ get: () => undefined })),
+  headers: vi.fn(async () => ({ get: () => null })),
+}));
 // The shell itself (navigation, organisation hooks) is not under test here.
 vi.mock("@/components/dashboard-shell", () => ({
   DashboardShell: ({ children }: { children: React.ReactNode }) =>
@@ -151,7 +158,11 @@ describe("hosted pilot banner: public pages", () => {
   it("the signed-in layout still sends a visitor with no session to sign in", async () => {
     mocks.session = null;
     await DashboardLayout({ children: "page" });
-    expect(mocks.redirect).toHaveBeenCalledWith("/sign-in");
+    // The session ends after 12 hours; the visitor is sent to sign-in with a
+    // safe return path back to the page they were on.
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      expect.stringMatching(/^\/sign-in\?/),
+    );
   });
 });
 

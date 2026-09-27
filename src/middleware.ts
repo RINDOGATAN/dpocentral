@@ -23,6 +23,13 @@ import {
   type RateLimiter,
 } from "./lib/rate-limit";
 import { classifyRequest, type LimitedRoute } from "./lib/rate-limit-routes";
+import {
+  SKIN_COOKIE,
+  SKIN_COOKIE_OPTIONS,
+  SKIN_QUERY,
+  isDashboardPath,
+  skinFromQuery,
+} from "./lib/skin";
 
 // One bucket per route class; a request is counted in exactly one of them.
 // Ceilings and the RATE_LIMIT_* overrides live in src/lib/rate-limit.ts.
@@ -145,6 +152,24 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
 
+  // `?skin=guided` / `?skin=classic` on a dashboard address (for demos): keep
+  // the choice in its cookie and come back to the same address without the
+  // parameter, so the layout reads the cookie on the one render that follows.
+  const askedSkin = skinFromQuery(request.nextUrl.searchParams.get(SKIN_QUERY));
+  if (askedSkin && isDashboardPath(pathname)) {
+    const clean = request.nextUrl.clone();
+    clean.searchParams.delete(SKIN_QUERY);
+    const redirect = NextResponse.redirect(clean);
+    redirect.cookies.set(SKIN_COOKIE, askedSkin, SKIN_COOKIE_OPTIONS);
+    return redirect;
+  }
+
+  // Carry the path being requested so a server component (the dashboard
+  // layout) can send a signed-out visitor back to it after sign-in.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+  const forwarded = { request: { headers: requestHeaders } };
+
   // Rate limit the public and static-key API surface, one bucket per route
   // class (sign-in, magic link, other auth, checkout, public DSAR, health,
   // import, cron). Per-process counters — see src/lib/rate-limit.ts.
@@ -162,7 +187,7 @@ export default function middleware(request: NextRequest) {
   if (!hasCurrency) {
     const country = request.headers.get("x-vercel-ip-country") || "";
     const currency = country === "US" ? "USD" : "EUR";
-    currencyResponse = NextResponse.next();
+    currencyResponse = NextResponse.next(forwarded);
     currencyResponse.cookies.set("currency", currency, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
@@ -177,7 +202,7 @@ export default function middleware(request: NextRequest) {
     pathname.startsWith("/dsar") ||
     pathname.includes(".")
   ) {
-    const response = currencyResponse || NextResponse.next();
+    const response = currencyResponse || NextResponse.next(forwarded);
     // Allow shareable locale-forced links into the public DSAR portal:
     // `/dsar/<slug>?lang=es` sets the `locale` cookie so SSR picks
     // the right language on first render (no JS-side flash).
@@ -200,7 +225,7 @@ export default function middleware(request: NextRequest) {
   const i18nRoutingEnabled = process.env.NEXT_PUBLIC_I18N_ENABLED === "true";
 
   if (!i18nRoutingEnabled) {
-    const response = currencyResponse || NextResponse.next();
+    const response = currencyResponse || NextResponse.next(forwarded);
     applyLocaleCookies(response, request);
     applyCsp(response);
     return response;

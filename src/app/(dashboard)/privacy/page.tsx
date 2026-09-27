@@ -47,6 +47,8 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
+import { useSkin } from "@/components/guided/skin-context";
+import { NextStepCard } from "@/components/guided/next-step-card";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -55,6 +57,7 @@ export default function PrivacyDashboardPage() {
   const tp = useTranslations("pages.dashboard");
   const tCommon = useTranslations("common");
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
+  const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -150,6 +153,9 @@ export default function PrivacyDashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Guided only: the first step on the path that is not done. One card. */}
+      {skin === "guided" && <NextStepCard waitForFresh={fromQuickstart} />}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="min-w-0">

@@ -83,6 +83,8 @@ describe("no sideways scrolling at phone width, signed in", () => {
     const allowed: Record<string, string> = {
       "src/components/dashboard-shell.tsx w-[280px]":
         "the navigation drawer: fixed position, off canvas, narrower than the phone",
+      "src/components/guided/guided-layout.tsx w-[300px]":
+        "the guided navigation drawer: fixed position, off canvas, narrower than the phone",
       "src/app/(dashboard)/privacy/docs/layout.tsx w-[280px]":
         "the user guide drawer: fixed position, off canvas, narrower than the phone",
       "src/app/(dashboard)/privacy/page.tsx w-[240px]":

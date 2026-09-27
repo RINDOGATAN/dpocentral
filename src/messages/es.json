@@ -6709,6 +6709,175 @@
     "sentTitle": "Gracias por tus comentarios.",
     "sentBody": "Leemos todos los mensajes y los usamos para mejorar esta herramienta."
   },
+  "guided": {
+    "loading": "Cargando",
+    "overview": "Resumen",
+    "overallLabel": "Su programa",
+    "overall": "{percent}% completado",
+    "navLabel": "Ruta del programa de privacidad",
+    "pathTitle": "La ruta",
+    "libraryTitle": "Biblioteca y herramientas",
+    "stageNumber": "Fase {number}",
+    "stageProgress": "{done} de {total}",
+    "stageState": {
+      "todo": "sin empezar",
+      "started": "en curso",
+      "done": "hecho"
+    },
+    "stepStatus": {
+      "done": "hecho",
+      "started": "en curso",
+      "todo": "sin empezar",
+      "coming": "próximamente",
+      "optional": "opcional"
+    },
+    "account": "Cuenta",
+    "switchClient": "Cliente",
+    "allClients": "Todos los clientes",
+    "addOrganization": "Añadir una organización",
+    "expand": "Ampliar el menú",
+    "collapse": "Contraer el menú",
+    "phoneBar": "Fase {number} de {total}, {stage}",
+    "phoneBarDone": "Todas las fases están hechas",
+    "phoneBarOpen": "Abrir la ruta del programa",
+    "stages": {
+      "setup": "Puesta en marcha",
+      "people": "Políticas y personas",
+      "inventory": "Conozca sus datos",
+      "assess": "Evalúe el riesgo",
+      "rights": "Derechos y transparencia",
+      "respond": "Responda y mejore"
+    },
+    "steps": {
+      "quickstart": {
+        "label": "Inicio rápido",
+        "why": "Ponga en marcha su programa en unos minutos: jurisdicciones, una plantilla sectorial y proveedores del catálogo.",
+        "do": "Use el inicio rápido para configurar jurisdicciones, una plantilla y sus primeros proveedores."
+      },
+      "applies": {
+        "label": "Qué le aplica",
+        "why": "Indique dónde opera y qué leyes le aplican, para acotar el resto del programa a su caso.",
+        "do": "Declare las jurisdicciones y las leyes que aplican a su organización."
+      },
+      "privacyPolicy": {
+        "label": "Política de privacidad y avisos",
+        "why": "Publique los avisos que informan a las personas de cómo se usan sus datos.",
+        "do": "Registre su política de privacidad y los avisos que da a los interesados."
+      },
+      "dpoAppointed": {
+        "label": "DPD y funciones",
+        "why": "Designe a un responsable de protección de datos y defina quién hace qué.",
+        "do": "Designe a un DPD o responsable de privacidad y registre las funciones."
+      },
+      "training": {
+        "label": "Formación del personal",
+        "why": "Forme a las personas que tratan datos personales.",
+        "do": "Registre la formación en privacidad que ha completado su personal."
+      },
+      "dataInventory": {
+        "label": "Inventario de datos",
+        "why": "Sepa qué datos personales tiene y dónde residen.",
+        "do": "Registre sus activos de datos: los sistemas y almacenes con datos personales."
+      },
+      "ropa": {
+        "label": "Registro de actividades",
+        "why": "Mantenga el registro del artículo 30 sobre cómo trata datos personales.",
+        "do": "Registre cada actividad de tratamiento: su fin, base jurídica y datos."
+      },
+      "vendors": {
+        "label": "Proveedores y encargados",
+        "why": "Controle los proveedores que tratan datos personales por usted.",
+        "do": "Añada los proveedores que tratan datos personales, desde el catálogo."
+      },
+      "aiSystems": {
+        "label": "Sistemas de IA",
+        "why": "Vea los sistemas de IA que usan datos personales; gobiérnelos en AI Sentinel.",
+        "do": "Revise los sistemas de IA que usan datos personales, gobernados en AI Sentinel."
+      },
+      "assessments": {
+        "label": "Evaluaciones",
+        "why": "Analice el riesgo y realice una EIPD cuando el tratamiento sea de alto riesgo.",
+        "do": "Analice su tratamiento y realice una EIPD cuando el riesgo sea alto."
+      },
+      "transfers": {
+        "label": "Transferencias",
+        "why": "Registre las transferencias internacionales y la garantía en que se apoya cada una.",
+        "do": "Registre cada transferencia internacional y su mecanismo de transferencia."
+      },
+      "vendorDueDiligence": {
+        "label": "Diligencia debida de proveedores",
+        "why": "Evalúe a cada proveedor que trata datos personales por usted.",
+        "do": "Complete una evaluación de diligencia debida para cada proveedor."
+      },
+      "lia": {
+        "label": "Evaluación de interés legítimo",
+        "why": "Pondere sus intereses frente a los derechos de las personas cuando se apoye en ellos.",
+        "do": "Realice una evaluación de interés legítimo cuando esa sea su base jurídica."
+      },
+      "dsar": {
+        "label": "Solicitudes de derechos",
+        "why": "Reciba y responda las solicitudes de los interesados dentro del plazo.",
+        "do": "Configure el formulario de recepción y responda las solicitudes a tiempo."
+      },
+      "notices": {
+        "label": "Avisos y consentimiento",
+        "why": "Conserve los avisos y los registros de consentimiento que se deben a las personas.",
+        "do": "Registre los avisos y el consentimiento en los que se apoya."
+      },
+      "incidents": {
+        "label": "Registro de brechas",
+        "why": "Registre los incidentes y controle el plazo de 72 horas.",
+        "do": "Registre los incidentes en el registro y vigile el plazo de 72 horas."
+      },
+      "audits": {
+        "label": "Auditorías e informes",
+        "why": "Revise el programa e informe a la dirección.",
+        "do": "Registre auditorías, revisiones e informes a la dirección."
+      }
+    },
+    "library": {
+      "reports": "Informes",
+      "experts": "Buscar un experto",
+      "clients": "Todos los clientes",
+      "skills": "Módulos",
+      "billing": "Facturación",
+      "help": "Ayuda y documentación",
+      "settings": "Ajustes"
+    },
+    "nextStep": {
+      "title": "Siguiente paso",
+      "stage": "Fase {number}: {stage}",
+      "button": "Ir a {step}",
+      "allDoneTitle": "Su programa está en marcha",
+      "allDoneBody": "Todos los pasos de la ruta están hechos. Mantenga sus registros al día y revíselos con regularidad.",
+      "allDoneButton": "Volver al resumen"
+    },
+    "band": {
+      "step": "Paso {number}",
+      "next": "Siguiente paso",
+      "finish": "Finalizar",
+      "stageDone": "Fase {number} completada. Siguiente: {next}.",
+      "lastStageDone": "Fase {number} completada. Todas las fases están hechas."
+    },
+    "plan": {
+      "label": "Plan",
+      "day": "Día {day} de {total}",
+      "onPlan": "Según lo previsto",
+      "behind": "Con {days} días de retraso",
+      "complete": "Plan completado",
+      "remaining": "Quedan {count} fases: {stages}",
+      "notStarted": "Sin empezar"
+    },
+    "layout": {
+      "title": "Diseño",
+      "description": "Elija cómo se organiza el panel. Es una preferencia para este navegador.",
+      "guided": "Guiado",
+      "classic": "Clásico (se retirará)",
+      "changed": "Diseño cambiado.",
+      "useGuided": "Usar el diseño guiado",
+      "useClassic": "Usar el diseño clásico"
+    }
+  },
   "errorPage": {
     "title": "Algo ha fallado",
     "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",

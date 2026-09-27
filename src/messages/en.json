@@ -6709,6 +6709,175 @@
     "sentTitle": "Thank you for your feedback.",
     "sentBody": "We read every message and use it to improve this tool."
   },
+  "guided": {
+    "loading": "Loading",
+    "overview": "Overview",
+    "overallLabel": "Your program",
+    "overall": "{percent}% complete",
+    "navLabel": "Privacy program path",
+    "pathTitle": "The path",
+    "libraryTitle": "Library and tools",
+    "stageNumber": "Stage {number}",
+    "stageProgress": "{done} of {total}",
+    "stageState": {
+      "todo": "not started",
+      "started": "in progress",
+      "done": "done"
+    },
+    "stepStatus": {
+      "done": "done",
+      "started": "in progress",
+      "todo": "not started",
+      "coming": "coming",
+      "optional": "optional"
+    },
+    "account": "Account",
+    "switchClient": "Client",
+    "allClients": "All clients",
+    "addOrganization": "Add an organisation",
+    "expand": "Expand the menu",
+    "collapse": "Collapse the menu",
+    "phoneBar": "Stage {number} of {total}, {stage}",
+    "phoneBarDone": "Every stage is done",
+    "phoneBarOpen": "Open the program path",
+    "stages": {
+      "setup": "Set up",
+      "people": "Policies and people",
+      "inventory": "Know your data",
+      "assess": "Assess the risk",
+      "rights": "Rights and transparency",
+      "respond": "Respond and improve"
+    },
+    "steps": {
+      "quickstart": {
+        "label": "Quick start",
+        "why": "Set up your program in minutes: jurisdictions, an industry template and vendors from the catalogue.",
+        "do": "Run the quick start to set up jurisdictions, a template and your first vendors."
+      },
+      "applies": {
+        "label": "What applies",
+        "why": "Say where you operate and which laws apply, so the rest of the program is scoped to you.",
+        "do": "Declare the jurisdictions and laws that apply to your organisation."
+      },
+      "privacyPolicy": {
+        "label": "Privacy policy and notices",
+        "why": "Publish the notices that tell people how their data is used.",
+        "do": "Record your privacy policy and the notices you give to data subjects."
+      },
+      "dpoAppointed": {
+        "label": "DPO and roles",
+        "why": "Appoint a data protection lead and set who does what.",
+        "do": "Appoint a DPO or privacy lead and record the roles around privacy."
+      },
+      "training": {
+        "label": "Staff training",
+        "why": "Train the people who handle personal data.",
+        "do": "Record the privacy training your staff have completed."
+      },
+      "dataInventory": {
+        "label": "Data inventory",
+        "why": "Know what personal data you hold and where it lives.",
+        "do": "Record your data assets: the systems and stores that hold personal data."
+      },
+      "ropa": {
+        "label": "Records of processing",
+        "why": "Keep the Article 30 record of how you process personal data.",
+        "do": "Record each processing activity: its purpose, legal basis and data."
+      },
+      "vendors": {
+        "label": "Vendors and processors",
+        "why": "Track the vendors that process personal data for you.",
+        "do": "Add the vendors that process personal data, from the catalogue."
+      },
+      "aiSystems": {
+        "label": "AI systems",
+        "why": "See the AI systems that use personal data; govern them in AI Sentinel.",
+        "do": "Review the AI systems using personal data, governed in AI Sentinel."
+      },
+      "assessments": {
+        "label": "Assessments",
+        "why": "Screen for risk and run a DPIA where processing is high risk.",
+        "do": "Screen your processing and run a DPIA where the risk is high."
+      },
+      "transfers": {
+        "label": "Transfers",
+        "why": "Record cross-border transfers and the safeguard each one relies on.",
+        "do": "Record each cross-border transfer and its transfer mechanism."
+      },
+      "vendorDueDiligence": {
+        "label": "Vendor due diligence",
+        "why": "Assess each vendor that processes personal data for you.",
+        "do": "Complete a due-diligence assessment for each vendor."
+      },
+      "lia": {
+        "label": "Legitimate-interest assessments",
+        "why": "Balance your interests against people's rights where you rely on them.",
+        "do": "Run a legitimate-interest assessment where that is your legal basis."
+      },
+      "dsar": {
+        "label": "Rights requests",
+        "why": "Receive and answer data-subject requests within the deadline.",
+        "do": "Set up the intake form and answer rights requests on time."
+      },
+      "notices": {
+        "label": "Notices and consent",
+        "why": "Keep the notices and consent records people are owed.",
+        "do": "Record the notices and consent you rely on."
+      },
+      "incidents": {
+        "label": "Breach register",
+        "why": "Log incidents and track the 72-hour breach clock.",
+        "do": "Record incidents in the register and watch the 72-hour clock."
+      },
+      "audits": {
+        "label": "Audits and reports",
+        "why": "Review the program and report to management.",
+        "do": "Record audits, reviews and reports to management."
+      }
+    },
+    "library": {
+      "reports": "Reports",
+      "experts": "Find an expert",
+      "clients": "All clients",
+      "skills": "Skills",
+      "billing": "Billing",
+      "help": "Help and docs",
+      "settings": "Settings"
+    },
+    "nextStep": {
+      "title": "Next step",
+      "stage": "Stage {number}: {stage}",
+      "button": "Go to {step}",
+      "allDoneTitle": "Your program is set up",
+      "allDoneBody": "Every step on the path is done. Keep your records current and review them regularly.",
+      "allDoneButton": "Back to the overview"
+    },
+    "band": {
+      "step": "Step {number}",
+      "next": "Next step",
+      "finish": "Finish",
+      "stageDone": "Stage {number} complete. Next: {next}.",
+      "lastStageDone": "Stage {number} complete. Every stage is done."
+    },
+    "plan": {
+      "label": "Plan",
+      "day": "Day {day} of {total}",
+      "onPlan": "On plan",
+      "behind": "Behind plan by {days} days",
+      "complete": "Plan complete",
+      "remaining": "{count} stages left: {stages}",
+      "notStarted": "Not started"
+    },
+    "layout": {
+      "title": "Layout",
+      "description": "Choose how the dashboard is laid out. This is a choice for this browser.",
+      "guided": "Guided",
+      "classic": "Classic (will be retired)",
+      "changed": "Layout changed.",
+      "useGuided": "Use the guided layout",
+      "useClassic": "Use the classic layout"
+    }
+  },
   "errorPage": {
     "title": "Something went wrong",
     "body": "This page could not be shown. Your saved records are not affected.",
