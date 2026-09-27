@@ -45,6 +45,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { PageHeader } from "@/components/privacy/page-header";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
@@ -141,15 +142,12 @@ export default function AISystemsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Bot className="w-6 h-6 shrink-0" />
-            {tp("title")}
-          </h1>
-          <p className="text-muted-foreground">{tp("subtitle")}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
+      <PageHeader
+        icon={Bot}
+        title={tp("title")}
+        description={tp("subtitle")}
+        actions={
+          <>
           {showAisExport && (
             <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
               <DialogTrigger asChild>
@@ -239,8 +237,9 @@ export default function AISystemsPage() {
               {tp("register")}
             </Link>
           </Button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Stats */}
       {stats && stats.total > 0 && (

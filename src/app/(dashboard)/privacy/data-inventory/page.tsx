@@ -58,6 +58,7 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
@@ -208,12 +209,11 @@ export default function DataInventoryPage() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <div className="flex gap-2">
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" aria-label={t("export")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
@@ -251,8 +251,9 @@ export default function DataInventoryPage() {
               <span className="sm:hidden">{t("addAssetShort")}</span>
             </Button>
           </Link>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Search and Filters */}
       <div className="flex flex-wrap gap-2 sm:gap-4">

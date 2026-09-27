@@ -41,6 +41,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { PageHeader } from "@/components/privacy/page-header";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 const MECHANISM_KEYS = [
@@ -117,19 +118,17 @@ export default function TransfersListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Globe className="w-6 h-6 text-primary shrink-0" />
-            {tList("title")}
-          </h1>
-          <p className="text-muted-foreground">{tList("subtitle")}</p>
-        </div>
-        <Button className="w-full sm:w-auto" onClick={() => setDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          {tList("add")}
-        </Button>
-      </div>
+      <PageHeader
+        icon={Globe}
+        title={tList("title")}
+        description={tList("subtitle")}
+        actions={
+          <Button className="w-full sm:w-auto" onClick={() => setDialogOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {tList("add")}
+          </Button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
