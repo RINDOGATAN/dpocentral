@@ -31,7 +31,11 @@
     "more": "More",
     "less": "Less",
     "showAll": "Show All",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "sortLabel": "Sort",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "sortName": "Name (A-Z)"
   },
   "pages": {
     "newVendor": {

@@ -30,6 +30,8 @@ import { toneForRiskTier } from "@/config/status-tone";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 
@@ -51,6 +53,7 @@ export default function AssessmentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const { organization } = useOrganization();
   const hosted = useHostedPilot();
 
@@ -90,6 +93,11 @@ export default function AssessmentsPage() {
         return assessments;
     }
   })();
+
+  const sortedAssessments = sortByListSort(filteredAssessments, sort, {
+    date: (a) => a.createdAt,
+    name: (a) => a.name,
+  });
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -164,15 +172,18 @@ export default function AssessmentsPage() {
         </Card>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("search")}
-          className="pl-9"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      {/* Search + sort */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t("search")}
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <SortControl value={sort} onChange={setSort} />
       </div>
 
       {/* Tabs */}
@@ -188,9 +199,9 @@ export default function AssessmentsPage() {
       {/* Assessment List */}
       {isLoading ? (
         <ListPageSkeleton />
-      ) : filteredAssessments.length > 0 ? (
+      ) : sortedAssessments.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {filteredAssessments.map((assessment) => (
+          {sortedAssessments.map((assessment) => (
             <Link key={assessment.id} href={`/privacy/assessments/${assessment.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">

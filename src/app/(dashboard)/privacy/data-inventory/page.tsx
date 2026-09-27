@@ -55,6 +55,8 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useTranslations } from "next-intl";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
@@ -116,6 +118,7 @@ export default function DataInventoryPage() {
   const tAssetType = useTranslations("pages.newAsset.assetType");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const { organization } = useOrganization();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -190,8 +193,16 @@ export default function DataInventoryPage() {
     },
   });
 
-  const dataAssets = assetsPages?.pages.flatMap((p) => p.assets) ?? [];
-  const processingActivities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+  const dataAssets = sortByListSort(
+    assetsPages?.pages.flatMap((p) => p.assets) ?? [],
+    sort,
+    { date: (a) => a.createdAt, name: (a) => a.name },
+  );
+  const processingActivities = sortByListSort(
+    activitiesPages?.pages.flatMap((p) => p.activities) ?? [],
+    sort,
+    { date: (a) => a.createdAt, name: (a) => a.name },
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -253,6 +264,7 @@ export default function DataInventoryPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <SortControl value={sort} onChange={setSort} />
         <Button variant="outline" size="icon" aria-label={t("filters")} className="shrink-0 sm:hidden">
           <Filter className="w-4 h-4" />
         </Button>
