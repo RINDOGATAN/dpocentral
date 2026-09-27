@@ -1210,20 +1210,29 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                   <>
                                     {isEditing ? (
                                       <div className="space-y-3">
-                                        <Textarea
-                                          placeholder={tp("question.responsePlaceholder")}
-                                          rows={3}
-                                          value={draftValue}
-                                          onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
-                                          className="min-h-[44px]"
-                                        />
-                                        <Textarea
-                                          placeholder={tp("question.notesPlaceholder")}
-                                          rows={2}
-                                          value={draftResponses[question.id]?.notes || ""}
-                                          onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
-                                          className="text-sm"
-                                        />
+                                        <div className="space-y-1.5">
+                                          <Label htmlFor={`response-${question.id}`}>{tp("question.responseLabel")}</Label>
+                                          <Textarea
+                                            id={`response-${question.id}`}
+                                            placeholder={tp("question.responsePlaceholder")}
+                                            rows={3}
+                                            value={draftValue}
+                                            onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
+                                            className="min-h-[44px]"
+                                          />
+                                          <p className="text-xs text-muted-foreground">{tp("question.responseHelp")}</p>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                          <Label htmlFor={`notes-${question.id}`}>{tp("question.notesLabel")}</Label>
+                                          <Textarea
+                                            id={`notes-${question.id}`}
+                                            placeholder={tp("question.notesPlaceholder")}
+                                            rows={2}
+                                            value={draftResponses[question.id]?.notes || ""}
+                                            onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
+                                            className="text-sm"
+                                          />
+                                        </div>
                                         <div className="flex items-center gap-2">
                                           <Button
                                             size="sm"

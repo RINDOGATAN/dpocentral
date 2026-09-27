@@ -386,14 +386,17 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {isAdmin && (
-              <div className="flex flex-col sm:flex-row gap-2 pb-3 border-b">
-                <Input
-                  type="email"
-                  placeholder={tMembers("inviteEmailPlaceholder")}
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="flex-1"
-                />
+              <div className="space-y-2 pb-3 border-b">
+                <Label htmlFor="invite-email">{tMembers("inviteLabel")}</Label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    id="invite-email"
+                    type="email"
+                    placeholder={tMembers("inviteEmailPlaceholder")}
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    className="flex-1"
+                  />
                 <Select
                   value={inviteRole}
                   onValueChange={(v) => setInviteRole(v as OrganizationRole)}
@@ -428,6 +431,8 @@ export default function SettingsPage() {
                   )}
                   {tMembers("add")}
                 </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">{tMembers("inviteHelp")}</p>
               </div>
             )}
 

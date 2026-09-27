@@ -775,6 +775,9 @@
         "selectOption": "Selecciona una opción...",
         "selectAllApply": "Selecciona todas las que apliquen",
         "responsePlaceholder": "Escribe tu respuesta aquí...",
+        "responseLabel": "Tu respuesta",
+        "responseHelp": "Tu respuesta se guarda en esta evaluación y aparece en su informe.",
+        "notesLabel": "Notas (opcional)",
         "notesPlaceholder": "Notas adicionales (opcional)...",
         "save": "Guardar",
         "cancel": "Cancelar",
@@ -1933,6 +1936,8 @@
         "title": "Miembros del equipo",
         "descriptionAdmin": "Invita a compañeros para colaborar en tu programa de privacidad.",
         "descriptionViewer": "Solo los propietarios y administradores pueden gestionar los miembros.",
+        "inviteLabel": "Invitar a un compañero",
+        "inviteHelp": "Introduce su correo de trabajo y elige un rol. Recibirá una invitación para unirse a esta organización.",
         "inviteEmailPlaceholder": "companero@ejemplo.com",
         "add": "Añadir",
         "added": "Miembro añadido",
@@ -2519,7 +2524,9 @@
     },
     "cssCard": {
       "title": "Estilo personalizado",
-      "description": "Añade CSS personalizado para combinar con tu marca (opcional)"
+      "description": "Añade CSS personalizado para combinar con tu marca (opcional)",
+      "label": "CSS personalizado",
+      "help": "Se aplica al formulario público de solicitudes. Déjalo vacío para usar el estilo predeterminado."
     },
     "actions": {
       "cancel": "Cancelar",
@@ -2797,6 +2804,7 @@
       "contactedBy": "{name} · {date}",
       "notes": "Notas",
       "notesPlaceholder": "Anota resultados, honorarios, entregables, seguimiento…",
+      "notesHelp": "Solo tu equipo ve estas notas; no se comparten con el experto.",
       "addNotes": "Añadir notas",
       "saveNotes": "Guardar",
       "cancelNotes": "Cancelar",
@@ -6720,6 +6728,8 @@
   },
   "feedback": {
     "title": "Cuéntanos qué no funciona",
+    "label": "Tu mensaje",
+    "help": "Cuéntanos qué no funciona o qué te ayudaría. Leemos todos los mensajes.",
     "placeholder": "¿Cómo podemos mejorar esta herramienta?",
     "submit": "Enviar comentarios",
     "sending": "Enviando...",

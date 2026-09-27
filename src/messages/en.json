@@ -775,6 +775,9 @@
         "selectOption": "Select an option...",
         "selectAllApply": "Select all that apply",
         "responsePlaceholder": "Type your response here...",
+        "responseLabel": "Your answer",
+        "responseHelp": "Your answer is saved to this assessment and appears in its report.",
+        "notesLabel": "Notes (optional)",
         "notesPlaceholder": "Additional notes (optional)...",
         "save": "Save",
         "cancel": "Cancel",
@@ -1933,6 +1936,8 @@
         "title": "Team Members",
         "descriptionAdmin": "Invite teammates to collaborate on your privacy program.",
         "descriptionViewer": "Only owners and admins can manage members.",
+        "inviteLabel": "Invite a teammate",
+        "inviteHelp": "Enter their work email and choose a role. They receive an invitation to join this organization.",
         "inviteEmailPlaceholder": "teammate@example.com",
         "add": "Add",
         "added": "Member added",
@@ -2519,7 +2524,9 @@
     },
     "cssCard": {
       "title": "Custom Styling",
-      "description": "Add custom CSS to match your brand (optional)"
+      "description": "Add custom CSS to match your brand (optional)",
+      "label": "Custom CSS",
+      "help": "Applied to the public request form. Leave empty to use the default styling."
     },
     "actions": {
       "cancel": "Cancel",
@@ -2797,6 +2804,7 @@
       "contactedBy": "{name} · {date}",
       "notes": "Notes",
       "notesPlaceholder": "Track outcomes, fees, deliverables, follow-ups…",
+      "notesHelp": "Only your team sees these notes; they are not shared with the expert.",
       "addNotes": "Add notes",
       "saveNotes": "Save",
       "cancelNotes": "Cancel",
@@ -6720,6 +6728,8 @@
   },
   "feedback": {
     "title": "Tell us what is wrong",
+    "label": "Your message",
+    "help": "Tell us what is not working or what would help. We read every message.",
     "placeholder": "How can we improve this tool?",
     "submit": "Send feedback",
     "sending": "Sending...",

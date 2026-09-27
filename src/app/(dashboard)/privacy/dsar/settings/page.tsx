@@ -314,7 +314,8 @@ export default function DSARSettingsPage() {
             <CardTitle>{t("cssCard.title")}</CardTitle>
             <CardDescription>{t("cssCard.description")}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-2">
+            <Label htmlFor="customCss">{t("cssCard.label")}</Label>
             <Textarea
               id="customCss"
               placeholder=".intake-form { /* your styles */ }"
@@ -323,6 +324,7 @@ export default function DSARSettingsPage() {
               value={formData.customCss}
               onChange={(e) => setFormData({ ...formData, customCss: e.target.value })}
             />
+            <p className="text-xs text-muted-foreground">{t("cssCard.help")}</p>
           </CardContent>
         </Card>
 
