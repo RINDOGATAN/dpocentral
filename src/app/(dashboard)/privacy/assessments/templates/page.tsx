@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useTemplateMeta } from "@/lib/template-i18n";
@@ -29,6 +30,7 @@ export default function AssessmentTemplatesPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.assessmentTemplates");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const templateMeta = useTemplateMeta();
 
   const { data: templates, isLoading } = trpc.assessment.listTemplates.useQuery(
@@ -123,7 +125,7 @@ export default function AssessmentTemplatesPage() {
                         <ClipboardCheck className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex gap-2">
-                        <Badge variant="outline">{template.type}</Badge>
+                        <Badge variant="outline">{enumLabel("assessmentType", template.type)}</Badge>
                         <Badge variant="secondary">{tp("system")}</Badge>
                       </div>
                     </div>
@@ -194,7 +196,7 @@ export default function AssessmentTemplatesPage() {
                       <div className="w-10 h-10 border-2 border-primary flex items-center justify-center">
                         <ClipboardCheck className="w-5 h-5 text-primary" />
                       </div>
-                      <Badge variant="outline">{template.type}</Badge>
+                      <Badge variant="outline">{enumLabel("assessmentType", template.type)}</Badge>
                     </div>
                     <CardTitle className="mt-3">{template.name}</CardTitle>
                     {template.description && (

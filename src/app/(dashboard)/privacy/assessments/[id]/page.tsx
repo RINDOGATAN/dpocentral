@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { useTranslatedSections } from "@/lib/template-i18n";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -128,6 +129,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const tp = useTranslations("pages.assessmentDetail");
   const tList = useTranslations("pages.assessments");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const tAi = useTranslations("ai");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
@@ -1453,7 +1455,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           <span className="font-medium">
                             {tp("approvals.level", { n: approval.level })}
                           </span>
-                          <Badge variant="outline">{approval.status}</Badge>
+                          <Badge variant="outline">{enumLabel("approvalStatus", approval.status)}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
                           {tp("approvals.approver", { name: approval.approver?.name || approval.approver?.email || "" })}

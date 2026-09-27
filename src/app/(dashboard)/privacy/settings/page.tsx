@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
@@ -54,6 +55,7 @@ export default function SettingsPage() {
   const tLang = useTranslations("pages.settings.language");
   const tOrg = useTranslations("pages.settings.organization");
   const tMembers = useTranslations("pages.settings.members");
+  const { label: enumLabel } = useEnumLabels();
   const { userType } = useUserType();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
@@ -408,7 +410,7 @@ export default function SettingsPage() {
                     {ROLE_OPTIONS.filter((r) => (isOwner ? true : r !== "OWNER")).map(
                       (role) => (
                         <SelectItem key={role} value={role}>
-                          {role}
+                          {enumLabel("role", role)}
                         </SelectItem>
                       )
                     )}
@@ -472,14 +474,14 @@ export default function SettingsPage() {
                         <SelectContent>
                           {ROLE_OPTIONS.map((role) => (
                             <SelectItem key={role} value={role}>
-                              {role}
+                              {enumLabel("role", role)}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     ) : (
                       <Badge variant="outline" className="text-xs">
-                        {member.role}
+                        {enumLabel("role", member.role)}
                       </Badge>
                     )}
                     {isAdmin && !isSelf && member.role !== "OWNER" && (

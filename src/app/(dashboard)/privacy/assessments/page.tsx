@@ -32,6 +32,7 @@ import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 
@@ -54,6 +55,7 @@ export default function AssessmentsPage() {
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
   const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
+  const { label: enumLabel } = useEnumLabels();
   const { organization } = useOrganization();
   const hosted = useHostedPilot();
 
@@ -215,7 +217,7 @@ export default function AssessmentsPage() {
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="outline" className="text-xs">
-                        {assessment.template?.type ? t(`type.${assessment.template.type}`) : assessment.template?.type}
+                        {enumLabel("assessmentType", assessment.template?.type)}
                       </Badge>
                       {assessment.riskLevel && (
                         <StatusChip tone={toneForRiskTier(assessment.riskLevel)} className="text-xs">
@@ -254,7 +256,7 @@ export default function AssessmentsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">{assessment.name}</span>
-                        <Badge variant="outline">{assessment.template?.type ? t(`type.${assessment.template.type}`) : assessment.template?.type}</Badge>
+                        <Badge variant="outline">{enumLabel("assessmentType", assessment.template?.type)}</Badge>
                         <Badge variant="outline" className={statusColors[assessment.status] || ""}>
                           {t(`status.${assessment.status}`)}
                         </Badge>
@@ -338,7 +340,7 @@ export default function AssessmentsPage() {
                 <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                   <CardContent className="pt-4">
                     <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline">{item.type}</Badge>
+                      <Badge variant="outline">{enumLabel("assessmentType", item.type)}</Badge>
                       {item.premium && (
                         <Badge variant="secondary" className="gap-1">
                           <Lock className="w-3 h-3" />

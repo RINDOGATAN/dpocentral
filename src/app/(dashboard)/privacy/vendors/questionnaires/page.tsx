@@ -19,6 +19,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { desnake } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -157,7 +158,7 @@ export default function VendorQuestionnairesPage() {
                                       variant="outline"
                                       className="text-[10px] px-1.5 py-0 shrink-0 mt-0.5"
                                     >
-                                      {q.type}
+                                      {desnake(q.type)}
                                     </Badge>
                                     <span className="text-muted-foreground">{q.text}</span>
                                   </li>

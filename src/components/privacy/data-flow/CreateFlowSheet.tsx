@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -130,6 +131,7 @@ export function CreateFlowSheet({
 }: CreateFlowSheetProps) {
   const tSheet = useTranslations("dataFlow.sheet");
   const tCategory = useTranslations("enums.dataCategory");
+  const { label: enumLabel } = useEnumLabels();
   const [form, setForm] = useState<CreateFlowData>(
     initialData ?? emptyForm(defaultSourceId, defaultDestinationId)
   );
@@ -162,7 +164,7 @@ export function CreateFlowSheet({
         <Icon className="w-4 h-4 text-muted-foreground" />
         <span className="truncate">{asset.name}</span>
         <Badge variant="outline" className="text-[10px] ml-auto">
-          {asset.type}
+          {enumLabel("dataAssetType", asset.type)}
         </Badge>
       </div>
     );

@@ -2348,6 +2348,101 @@
       "SEXUAL_ORIENTATION": "Sexual orientation",
       "CRIMINAL": "Criminal records",
       "OTHER": "Other"
+    },
+    "assessmentType": {
+      "DPIA": "DPIA", "PIA": "PIA", "TIA": "TIA", "LIA": "LIA",
+      "VENDOR": "Vendor assessment", "CUSTOM": "Custom"
+    },
+    "assessmentStatus": {
+      "DRAFT": "Draft", "IN_PROGRESS": "In progress", "PENDING_REVIEW": "Pending review",
+      "PENDING_APPROVAL": "Pending approval", "APPROVED": "Approved", "REJECTED": "Rejected",
+      "ARCHIVED": "Archived"
+    },
+    "approvalStatus": {
+      "PENDING": "Pending", "APPROVED": "Approved", "REJECTED": "Rejected", "DELEGATED": "Delegated"
+    },
+    "dsarType": {
+      "ACCESS": "Access", "RECTIFICATION": "Rectification", "ERASURE": "Erasure",
+      "PORTABILITY": "Portability", "OBJECTION": "Objection", "RESTRICTION": "Restriction",
+      "AUTOMATED_DECISION": "Automated decision", "WITHDRAW_CONSENT": "Withdraw consent",
+      "OTHER": "Other"
+    },
+    "dsarStatus": {
+      "SUBMITTED": "Submitted", "IDENTITY_PENDING": "Identity pending",
+      "IDENTITY_VERIFIED": "Identity verified", "IN_PROGRESS": "In progress",
+      "DATA_COLLECTED": "Data collected", "REVIEW_PENDING": "Review pending",
+      "APPROVED": "Approved", "COMPLETED": "Completed", "REJECTED": "Rejected",
+      "CANCELLED": "Cancelled"
+    },
+    "dsarTaskStatus": {
+      "PENDING": "Pending", "IN_PROGRESS": "In progress", "COMPLETED": "Completed",
+      "BLOCKED": "Blocked", "NOT_APPLICABLE": "Not applicable"
+    },
+    "incidentSeverity": {
+      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+    },
+    "incidentStatus": {
+      "REPORTED": "Reported", "INVESTIGATING": "Investigating", "CONTAINED": "Contained",
+      "ERADICATED": "Eradicated", "RECOVERING": "Recovering", "CLOSED": "Closed",
+      "FALSE_POSITIVE": "False positive"
+    },
+    "incidentType": {
+      "DATA_BREACH": "Data breach", "UNAUTHORIZED_ACCESS": "Unauthorised access",
+      "DATA_LOSS": "Data loss", "SYSTEM_COMPROMISE": "System compromise",
+      "PHISHING": "Phishing", "RANSOMWARE": "Ransomware", "INSIDER_THREAT": "Insider threat",
+      "PHYSICAL_SECURITY": "Physical security", "VENDOR_INCIDENT": "Vendor incident",
+      "OTHER": "Other"
+    },
+    "transferMechanism": {
+      "ADEQUACY_DECISION": "Adequacy decision",
+      "STANDARD_CONTRACTUAL_CLAUSES": "Standard contractual clauses",
+      "BINDING_CORPORATE_RULES": "Binding corporate rules", "DEROGATION": "Derogation",
+      "CERTIFICATION": "Certification", "CODE_OF_CONDUCT": "Code of conduct", "OTHER": "Other"
+    },
+    "transferStatus": {
+      "COMPLIANT": "Compliant", "NEEDS_REVIEW": "Needs review",
+      "NON_COMPLIANT": "Non-compliant", "PENDING": "Pending"
+    },
+    "riskLevel": {
+      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+    },
+    "legalBasis": {
+      "CONSENT": "Consent", "CONTRACT": "Contract", "LEGAL_OBLIGATION": "Legal obligation",
+      "VITAL_INTERESTS": "Vital interests", "PUBLIC_TASK": "Public task",
+      "LEGITIMATE_INTERESTS": "Legitimate interests"
+    },
+    "vendorStatus": {
+      "PROSPECTIVE": "Prospective", "ACTIVE": "Active", "UNDER_REVIEW": "Under review",
+      "SUSPENDED": "Suspended", "TERMINATED": "Terminated"
+    },
+    "contractType": {
+      "DPA": "DPA", "MSA": "MSA", "NDA": "NDA", "SCC": "SCC",
+      "SUBPROCESSOR": "Subprocessor", "OTHER": "Other"
+    },
+    "contractStatus": {
+      "DRAFT": "Draft", "PENDING_SIGNATURE": "Pending signature", "ACTIVE": "Active",
+      "EXPIRED": "Expired", "TERMINATED": "Terminated", "RENEWED": "Renewed"
+    },
+    "dataAssetType": {
+      "DATABASE": "Database", "APPLICATION": "Application", "FILE_SYSTEM": "File system",
+      "CLOUD_SERVICE": "Cloud service", "THIRD_PARTY": "Third party", "PHYSICAL": "Physical",
+      "OTHER": "Other"
+    },
+    "dataSensitivity": {
+      "PUBLIC": "Public", "INTERNAL": "Internal", "CONFIDENTIAL": "Confidential",
+      "RESTRICTED": "Restricted", "SPECIAL_CATEGORY": "Special category"
+    },
+    "notificationStatus": {
+      "PENDING": "Pending", "SENT": "Sent", "NOT_REQUIRED": "Not required",
+      "OVERDUE": "Overdue", "ACKNOWLEDGED": "Acknowledged"
+    },
+    "reviewType": {
+      "SECURITY": "Security", "PRIVACY": "Privacy", "COMPLIANCE": "Compliance",
+      "DUE_DILIGENCE": "Due diligence", "ANNUAL": "Annual", "OTHER": "Other"
+    },
+    "role": {
+      "OWNER": "Owner", "ADMIN": "Admin", "PRIVACY_OFFICER": "Privacy officer",
+      "MEMBER": "Member", "VIEWER": "Viewer"
     }
   },
   "enableFeature": {

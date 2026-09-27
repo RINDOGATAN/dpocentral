@@ -45,6 +45,7 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
@@ -56,6 +57,7 @@ export default function PrivacyDashboardPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.dashboard");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
@@ -369,7 +371,7 @@ export default function PrivacyDashboardPage() {
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary text-sm">{dsar.publicId}</span>
-                        <Badge variant="outline" className="text-xs">{dsar.type}</Badge>
+                        <Badge variant="outline" className="text-xs">{enumLabel("dsarType", dsar.type)}</Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground truncate">{dsar.requesterName}</p>
                     </div>
@@ -505,7 +507,7 @@ export default function PrivacyDashboardPage() {
                     </div>
                     {vendor.riskTier && (
                       <StatusChip tone={toneForRiskTier(vendor.riskTier)} className="text-xs shrink-0">
-                        {vendor.riskTier}
+                        {enumLabel("riskLevel", vendor.riskTier)}
                       </StatusChip>
                     )}
                   </div>

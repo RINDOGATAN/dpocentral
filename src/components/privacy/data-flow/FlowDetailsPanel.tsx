@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,6 +60,7 @@ export function FlowDetailsPanel({
   onDelete,
 }: FlowDetailsPanelProps) {
   const tCategory = useTranslations("enums.dataCategory");
+  const { label: enumLabel } = useEnumLabels();
   if (!flow) return null;
 
   const SourceIcon = assetTypeIcons[flow.sourceAsset.type] || Box;
@@ -93,7 +95,7 @@ export function FlowDetailsPanel({
                 </div>
                 <div className="min-w-0">
                   <p className="font-medium text-sm truncate">{flow.sourceAsset.name}</p>
-                  <p className="text-xs text-muted-foreground">{flow.sourceAsset.type}</p>
+                  <p className="text-xs text-muted-foreground">{enumLabel("dataAssetType", flow.sourceAsset.type)}</p>
                 </div>
               </div>
               <ArrowRight className="w-5 h-5 text-primary shrink-0" />
@@ -103,7 +105,7 @@ export function FlowDetailsPanel({
                 </div>
                 <div className="min-w-0">
                   <p className="font-medium text-sm truncate">{flow.destinationAsset.name}</p>
-                  <p className="text-xs text-muted-foreground">{flow.destinationAsset.type}</p>
+                  <p className="text-xs text-muted-foreground">{enumLabel("dataAssetType", flow.destinationAsset.type)}</p>
                 </div>
               </div>
             </div>

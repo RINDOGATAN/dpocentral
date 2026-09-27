@@ -49,6 +49,7 @@ import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { StatusChip } from "@/components/ui/status-chip";
@@ -88,6 +89,7 @@ export default function QuickstartPage() {
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
+  const { label: enumLabel } = useEnumLabels();
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -1000,7 +1002,7 @@ export default function QuickstartPage() {
                             <span className="font-medium">{a.name}</span>
                             <div className="flex items-center gap-2">
                               <Badge variant="outline" className="text-xs">
-                                {a.type}
+                                {enumLabel("dataAssetType", a.type)}
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
@@ -1035,7 +1037,7 @@ export default function QuickstartPage() {
                             <span className="font-medium">{a.name}</span>
                             <div className="flex items-center gap-2">
                               <Badge variant="outline" className="text-xs">
-                                {a.legalBasis}
+                                {enumLabel("legalBasis", a.legalBasis)}
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
