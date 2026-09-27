@@ -741,14 +741,15 @@
         "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
         "jump": "Ir al paso que lo responde",
         "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
-        "submitHint": "Responde las preguntas enumeradas arriba para enviar esta evaluación."
+        "submitHint": "Responde las preguntas enumeradas arriba antes de enviar esta evaluación a revisión."
       },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
       "riskBadge": "Riesgo {level}",
       "exportPdf": "Exportar PDF",
-      "submitApprove": "Enviar y aprobar",
-      "submitReview": "Enviar a revisión",
+      "submitApprove": "Aprobar evaluación",
+      "submitReview": "Enviar a revisión interna",
+      "reviewRecipients": "Al enviarla, los responsables de privacidad, los administradores y el propietario de tu organización la reciben para revisión interna.",
       "progress": {
         "answered": "{answered} de {total} preguntas respondidas"
       },

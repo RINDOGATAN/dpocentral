@@ -741,14 +741,15 @@
         "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
         "jump": "Go to the step that answers this",
         "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
-        "submitHint": "Answer the questions listed above to submit this assessment."
+        "submitHint": "Answer the questions listed above before you send this assessment for review."
       },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
       "riskBadge": "{level} Risk",
       "exportPdf": "Export PDF",
-      "submitApprove": "Submit & Approve",
-      "submitReview": "Submit for Review",
+      "submitApprove": "Approve assessment",
+      "submitReview": "Send for internal review",
+      "reviewRecipients": "When you send this, your organisation's privacy officers, admins and owner receive it for internal review.",
       "progress": {
         "answered": "{answered} of {total} questions answered"
       },

@@ -852,6 +852,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <span className="font-medium">{completionPercentage}%</span>
           </div>
           <Progress value={completionPercentage} className="h-2" />
+          {canSubmit && !isSingleUser && (
+            <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5">
+              <Send className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              {tp("reviewRecipients")}
+            </p>
+          )}
         </CardContent>
       </Card>
 
