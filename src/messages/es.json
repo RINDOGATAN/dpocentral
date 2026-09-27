@@ -1915,7 +1915,7 @@
         "businessOwner": "Empresario",
         "businessOwnerDesc": "Cumplimiento de privacidad para tu organización",
         "privacyProfessional": "Profesional de privacidad",
-        "privacyProfessionalDesc": "Asesorando a varias organizaciones en privacidad"
+        "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones"
       },
       "language": {
         "title": "Idioma",
@@ -2510,7 +2510,7 @@
     "businessOwner": "Propietario de empresa",
     "businessOwnerDesc": "Necesito cumplimiento en protección de datos para mi organización",
     "privacyProfessional": "Profesional de privacidad",
-    "privacyProfessionalDesc": "Asesoro a varias organizaciones en protección de datos",
+    "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
     "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "ej., Acme Corporation",
     "getStarted": "Comenzar",

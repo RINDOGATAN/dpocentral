@@ -1915,7 +1915,7 @@
         "businessOwner": "Business Owner",
         "businessOwnerDesc": "Privacy compliance for your organization",
         "privacyProfessional": "Privacy Professional",
-        "privacyProfessionalDesc": "Advising multiple organizations on privacy"
+        "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations"
       },
       "language": {
         "title": "Language",
@@ -2510,7 +2510,7 @@
     "businessOwner": "Business Owner",
     "businessOwnerDesc": "I need privacy compliance for my organisation",
     "privacyProfessional": "Privacy Professional",
-    "privacyProfessionalDesc": "I advise multiple organisations on privacy",
+    "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organisations",
     "orgName": "Organisation Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "getStarted": "Get Started",
