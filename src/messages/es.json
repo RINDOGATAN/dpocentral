@@ -1704,6 +1704,11 @@
         "alreadySynced": "Ya sincronizado",
         "sending": "Enviando…",
         "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}"
+      },
+      "governNote": {
+        "title": "La gobernanza de la IA se hace en AI Sentinel",
+        "body": "Este registro enumera los sistemas de IA que usan datos personales, para que tus registros de privacidad estén completos. Para clasificar el riesgo de un sistema, aplicar supervisión o realizar una evaluación de la conformidad, gobiérnalo en AI Sentinel.",
+        "open": "Abrir AI Sentinel"
       }
     },
     "incidents": {

@@ -1704,6 +1704,11 @@
         "alreadySynced": "Already synced",
         "sending": "Sending…",
         "sendCount": "Send {count, plural, one {# system} other {# systems}}"
+      },
+      "governNote": {
+        "title": "AI governance happens in AI Sentinel",
+        "body": "This register lists the AI systems that use personal data, so your privacy records are complete. To classify a system's risk, run oversight or a conformity assessment, govern it in AI Sentinel.",
+        "open": "Open AI Sentinel"
       }
     },
     "incidents": {

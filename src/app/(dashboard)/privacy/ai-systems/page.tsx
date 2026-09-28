@@ -241,6 +241,28 @@ export default function AISystemsPage() {
         }
       />
 
+      {/* AI governance is done in AI Sentinel, not here. This register keeps the
+          privacy record complete and links across to govern a system. */}
+      <div className="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3 min-w-0">
+          <Shield className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium">{tp("sentinel.governNote.title")}</p>
+            <p className="text-xs text-muted-foreground">{tp("sentinel.governNote.body")}</p>
+          </div>
+        </div>
+        <Button variant="outline" size="sm" asChild className="shrink-0 self-start sm:self-auto">
+          <a
+            href={`${process.env.NEXT_PUBLIC_AI_SENTINEL_URL || "https://aisentinel.todo.law"}/governance/ai-registry`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {tp("sentinel.governNote.open")}
+            <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </Button>
+      </div>
+
       {/* Stats */}
       {stats && stats.total > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
