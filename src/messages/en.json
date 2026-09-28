@@ -1838,7 +1838,8 @@
       },
       "emptyOpen": "No open incidents",
       "emptyCritical": "No critical incidents",
-      "emptyClosed": "No closed incidents"
+      "emptyClosed": "No closed incidents",
+      "emptyFiltered": "No incidents match these filters"
     },
     "vendors": {
       "title": "Vendor Management",
@@ -1899,7 +1900,8 @@
       },
       "emptyActive": "No active vendors",
       "emptyReview": "No vendors under review",
-      "emptyHighRisk": "No high risk vendors"
+      "emptyHighRisk": "No high risk vendors",
+      "emptyFiltered": "No vendors match these filters"
     },
     "assessments": {
       "title": "Assessments",
@@ -1957,6 +1959,7 @@
       "emptyDpia": "No DPIA assessments",
       "emptyVendor": "No vendor assessments",
       "emptyTia": "No TIA assessments",
+      "emptyFiltered": "No assessments match these filters",
       "quickStart": {
         "title": "Quick Start Templates",
         "subtitle": "Start a new assessment from a template",
@@ -2099,6 +2102,7 @@
       "emptyOpen": "No open requests",
       "emptyOverdue": "No overdue requests",
       "emptyCompleted": "No completed requests",
+      "emptyFiltered": "No requests match these filters",
       "publicPortal": {
         "title": "Public Intake Portal",
         "subtitle": "Share this link with data subjects",
@@ -8525,6 +8529,8 @@
       }
     },
     "library": {
+      "needsAction": "Needs action",
+      "incomplete": "Incomplete",
       "reports": "Reports",
       "experts": "Find an expert",
       "clients": "All clients",
@@ -8704,5 +8710,95 @@
     "reference": "Reference: {reference}",
     "referenceHelp": "If it happens again, report it and quote this reference.",
     "help": "How to report a problem"
+  },
+  "views": {
+    "filter": {
+      "any": "Any",
+      "unassigned": "No department",
+      "department": "Department",
+      "assetType": "Type",
+      "status": "Status",
+      "riskTier": "Risk",
+      "type": "Type",
+      "severity": "Severity",
+      "clear": "Clear ({count})"
+    },
+    "saved": {
+      "label": "Saved views",
+      "save": "Save view",
+      "created": "View saved",
+      "remove": "Remove {name}",
+      "dialogTitle": "Save this view",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. High-risk vendors",
+      "cancel": "Cancel",
+      "confirm": "Save"
+    },
+    "departmentSwitch": {
+      "label": "For my department",
+      "wholeOrg": "Whole organisation"
+    },
+    "needsAction": {
+      "title": "Needs action",
+      "subtitle": "Everything waiting for you, in one place.",
+      "empty": "Nothing needs action right now.",
+      "deptNote": "Showing one department. Organisation-wide items are on the full list.",
+      "kind": {
+        "review-due": "Reviews due",
+        "dsar-due": "Rights requests due",
+        "breach-window": "Breaches to notify",
+        "assessment-approval": "Assessments to approve"
+      },
+      "hint": {
+        "review-due": "Processing records whose review date has passed.",
+        "dsar-due": "Open requests near or past their deadline.",
+        "breach-window": "Open breaches that must be notified.",
+        "assessment-approval": "Assessments sent for review or approval."
+      }
+    },
+    "incomplete": {
+      "title": "Incomplete records",
+      "subtitle": "Processing records missing a field a record of processing needs.",
+      "empty": "Every record is complete.",
+      "missingCount": "{count, plural, one {# field missing} other {# fields missing}}"
+    },
+    "field": {
+      "dataSubjects": "Data subjects",
+      "categories": "Data categories",
+      "recipients": "Recipients",
+      "retention": "Retention period"
+    }
+  },
+  "departments": {
+    "title": "Departments",
+    "description": "Group records and systems by department, give each an owner, and limit who sees what.",
+    "empty": "No departments yet.",
+    "counts": "{records} records · {systems} systems · {members} members",
+    "ownedBy": "owned by {name}",
+    "edit": "Edit department",
+    "delete": "Delete department",
+    "addLabel": "Add a department",
+    "namePlaceholder": "Department name",
+    "parent": "Parent department",
+    "owner": "Owner",
+    "noParent": "No parent",
+    "noOwner": "No owner",
+    "add": "Add",
+    "created": "Department created",
+    "updated": "Department updated",
+    "deleted": "Department deleted",
+    "deleteTitle": "Delete this department?",
+    "deleteConfirm": "Records in \"{name}\" keep their data and lose the department. This cannot be undone.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "name": "Name",
+    "editTitle": "Edit department",
+    "access": {
+      "title": "Member access",
+      "description": "Limit a member to one or more departments. No limit means the whole organisation.",
+      "wholeOrg": "Whole organisation",
+      "limited": "{count, plural, one {# department} other {# departments}}",
+      "saved": "Access updated"
+    }
   }
 }

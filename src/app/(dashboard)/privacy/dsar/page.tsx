@@ -2,17 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FileText,
   Plus,
-  Search,
   Clock,
   AlertTriangle,
   CheckCircle2,
@@ -25,11 +22,11 @@ import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-package
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
-import { SortControl } from "@/components/privacy/sort-control";
-import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { ListFilterBar } from "@/components/privacy/list-filter-bar";
+import { useListFilters } from "@/lib/use-list-filters";
+import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneMark } from "@/config/status-palette";
@@ -45,16 +42,11 @@ const statusColors: Record<string, string> = {
   REJECTED: "border-muted-foreground text-muted-foreground",
 };
 
-const OPEN_STATUSES = ["SUBMITTED", "IDENTITY_PENDING", "IDENTITY_VERIFIED", "IN_PROGRESS", "DATA_COLLECTED", "REVIEW_PENDING"];
-
 const isPortalComingSoon = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.DSAR_PORTAL);
 
 export default function DSARPage() {
   const t = useTranslations("pages.dsar");
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebounce(searchQuery);
-  const [activeTab, setActiveTab] = useState("all");
-  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
+  const { def, filters, setFilter, applyAll, clearAll } = useListFilters("dsar");
   const { organization } = useOrganization();
 
   const {
@@ -64,7 +56,7 @@ export default function DSARPage() {
     fetchNextPage,
     isFetchingNextPage,
   } = trpc.dsar.list.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    { organizationId: organization?.id ?? "", search: filters.q || undefined, limit: 100 },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -94,23 +86,18 @@ export default function DSARPage() {
     atRisk: 0,
   };
 
-  const filteredRequests = (() => {
-    switch (activeTab) {
-      case "open":
-        return requests.filter((r) => OPEN_STATUSES.includes(r.status));
-      case "overdue":
-        return requests.filter((r) => r.slaStatus === "overdue" && OPEN_STATUSES.includes(r.status));
-      case "completed":
-        return requests.filter((r) => r.status === "COMPLETED" || r.status === "REJECTED");
-      default:
-        return requests;
-    }
-  })();
+  const filteredRequests = requests.filter(
+    (r) =>
+      (!filters.type || r.type === filters.type) &&
+      (!filters.status || r.status === filters.status),
+  );
 
-  const sortedRequests = sortByListSort(filteredRequests, sort, {
+  const sortedRequests = sortByListSort(filteredRequests, filters.sort ?? DEFAULT_LIST_SORT, {
     date: (r) => r.createdAt,
     name: (r) => r.requesterName ?? "",
   });
+
+  const noFilters = !filters.q && !filters.type && !filters.status;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -194,29 +181,15 @@ export default function DSARPage() {
         </Card>
       </div>
 
-      {/* Search + sort */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("search")}
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <SortControl value={sort} onChange={setSort} />
-      </div>
-
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
-          <TabsTrigger value="open">{t("tabs.open")}</TabsTrigger>
-          <TabsTrigger value="overdue">{t("tabs.overdue")}</TabsTrigger>
-          <TabsTrigger value="completed">{t("tabs.completed")}</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Filters, search, sort and saved views (all in the URL) */}
+      <ListFilterBar
+        def={def}
+        organizationId={organization?.id ?? ""}
+        filters={filters}
+        setFilter={setFilter}
+        applyAll={applyAll}
+        clearAll={clearAll}
+      />
 
       {/* Request List */}
       {isLoading ? (
@@ -345,7 +318,7 @@ export default function DSARPage() {
             </Link>
           ))}
         </div>
-      ) : activeTab === "all" ? (
+      ) : noFilters ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -363,11 +336,7 @@ export default function DSARPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>
-              {activeTab === "open" && t("emptyOpen")}
-              {activeTab === "overdue" && t("emptyOverdue")}
-              {activeTab === "completed" && t("emptyCompleted")}
-            </p>
+            <p>{t("emptyFiltered")}</p>
           </CardContent>
         </Card>
       )}

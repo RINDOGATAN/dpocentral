@@ -35,6 +35,9 @@ model User {
   // Organization relations
   organizationMemberships OrganizationMember[]
 
+  // Saved list views (a personal preference kept per organisation)
+  savedViews SavedView[]
+
   // Privacy relations
   assignedDSARTasks       DSARTask[]
   dsarCommunications      DSARCommunication[]
@@ -120,6 +123,8 @@ model Organization {
   // Relations
   members              OrganizationMember[]
   jurisdictions        OrganizationJurisdiction[]
+  businessUnits        BusinessUnit[]
+  savedViews           SavedView[]
   dataAssets           DataAsset[]
   dataElements         DataElement[]
   processingActivities ProcessingActivity[]
@@ -201,8 +206,82 @@ model OrganizationMember {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Departments (business units): the ones this member owns, and the ones this
+  // member is limited to (no rows = the whole organisation, the default).
+  ownedBusinessUnits      BusinessUnit[]       @relation("BusinessUnitOwner")
+  businessUnitMemberships BusinessUnitMember[]
+
   @@unique([organizationId, userId])
   @@map("organization_members")
+}
+
+// ============================================================
+// BUSINESS UNITS (DEPARTMENTS) & SAVED VIEWS
+// ============================================================
+
+// A department within an organisation: a name, an optional parent (one level of
+// nesting), an owning member, and the members limited to it. Processing records
+// and data assets (systems) point at a department; nothing is required to, so an
+// organisation that never creates one behaves exactly as before. Deleting a
+// department never deletes its records: they fall back to no department
+// (onDelete: SetNull).
+model BusinessUnit {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  parentId       String?
+  ownerId        String? // OrganizationMember.id
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization         Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parent               BusinessUnit?        @relation("BusinessUnitParent", fields: [parentId], references: [id], onDelete: SetNull)
+  children             BusinessUnit[]       @relation("BusinessUnitParent")
+  owner                OrganizationMember?  @relation("BusinessUnitOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  members              BusinessUnitMember[]
+  dataAssets           DataAsset[]
+  processingActivities ProcessingActivity[]
+
+  @@index([organizationId])
+  @@index([parentId])
+  @@map("business_units")
+}
+
+// Limits a member to one or more departments. No rows for a member means the
+// whole organisation, exactly as before departments existed.
+model BusinessUnitMember {
+  id             String   @id @default(cuid())
+  businessUnitId String
+  memberId       String // OrganizationMember.id
+  createdAt      DateTime @default(now())
+
+  businessUnit BusinessUnit       @relation(fields: [businessUnitId], references: [id], onDelete: Cascade)
+  member       OrganizationMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([businessUnitId, memberId])
+  @@index([memberId])
+  @@map("business_unit_members")
+}
+
+// A named filter set a person keeps for one list in one organisation. A personal
+// preference, not a governance record: it belongs to one user and carries no
+// audit entry. `list` names which list it applies to (data-inventory, vendors,
+// assessments, dsar, incidents); `filters` is the stored filter vocabulary.
+model SavedView {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  list           String
+  name           String
+  filters        Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, userId])
+  @@map("saved_views")
 }
 
 // ============================================================
@@ -287,6 +366,7 @@ model DataAsset {
   hostingType    String? // On-premise, Cloud, Hybrid
   vendor         String? // If third-party hosted
   isProduction   Boolean       @default(true)
+  businessUnitId String? // Owning department (nullable; SetNull on delete)
   metadata       Json? // Additional custom fields
   // Provenance quad: how the row was created, and who (if anyone) has taken it
   // over. Defaults keep every pre-existing row USER_ENTERED and unconfirmed.
@@ -298,6 +378,7 @@ model DataAsset {
   updatedAt      DateTime      @updatedAt
 
   organization             Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  businessUnit             BusinessUnit?             @relation(fields: [businessUnitId], references: [id], onDelete: SetNull)
   dataElements             DataElement[]
   processingActivityAssets ProcessingActivityAsset[]
   sourceFlows              DataFlow[]                @relation("SourceAsset")
@@ -306,6 +387,7 @@ model DataAsset {
   dsarTasks                DSARTask[]
 
   @@index([organizationId])
+  @@index([businessUnitId])
   @@map("data_assets")
 }
 
@@ -377,6 +459,7 @@ model ProcessingActivity {
   automatedDecisionMaking Boolean        @default(false)
   automatedDecisionDetail String?        @db.Text
   isActive                Boolean        @default(true)
+  businessUnitId          String? // Owning department (nullable; SetNull on delete)
   lastReviewedAt          DateTime?
   nextReviewAt            DateTime?
   metadata                Json?
@@ -388,11 +471,13 @@ model ProcessingActivity {
   updatedAt               DateTime       @updatedAt
 
   organization Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  businessUnit BusinessUnit?             @relation(fields: [businessUnitId], references: [id], onDelete: SetNull)
   assets       ProcessingActivityAsset[]
   transfers    DataTransfer[]
   assessments  Assessment[]
 
   @@index([organizationId])
+  @@index([businessUnitId])
   @@map("processing_activities")
 }
 
