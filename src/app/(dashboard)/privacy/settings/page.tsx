@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ApplicabilityCard } from "@/components/privacy/applicability-check";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -375,6 +376,14 @@ export default function SettingsPage() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      {/* What applies: the posture applicability check, editable here. */}
+      {org && (
+        <ApplicabilityCard
+          organizationId={orgId}
+          canWrite={!!org.currentUserRole && org.currentUserRole !== "VIEWER"}
+        />
       )}
 
       {/* Team Members */}

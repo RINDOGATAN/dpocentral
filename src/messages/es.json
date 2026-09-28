@@ -7082,6 +7082,79 @@
       "body": "Las organizaciones de las que eres miembro aparecerán aquí."
     }
   },
+  "applicability": {
+    "cardTitle": "Qué te aplica",
+    "cardDescription": "Unas preguntas sencillas sobre cómo usas los datos personales. Junto con las jurisdicciones en las que operas, muestran qué leyes y obligaciones te aplican. Todo sigue siendo editable.",
+    "intro": "Responde lo que puedas. «Aún no lo sé» es válido: aparece como algo por comprobar, nunca como algo resuelto.",
+    "roleTitle": "Tu papel",
+    "saved": "Guardado.",
+    "answer": {
+      "YES": "Sí",
+      "NO": "No",
+      "UNSURE": "Aún no lo sé"
+    },
+    "questions": {
+      "actAsController": {
+        "label": "¿Decides por qué y cómo se usan los datos personales?",
+        "hint": "Si es así, eres responsable de esos datos y asumes las obligaciones principales."
+      },
+      "actAsProcessor": {
+        "label": "¿Tratas datos personales para otras organizaciones siguiendo sus instrucciones?",
+        "hint": "Si es así, eres encargado de esos datos, vinculado por un contrato escrito."
+      },
+      "largeVolume": {
+        "label": "¿Eres una empresa grande por facturación o por el número de personas cuyos datos tratas?",
+        "hint": "Por ejemplo, los umbrales de la CCPA: facturación anual alta o los datos de más de 100.000 consumidores."
+      },
+      "sensitiveData": {
+        "label": "¿Tratas categorías especiales de datos, como salud, origen, religión o datos biométricos?",
+        "hint": "Estos datos conllevan obligaciones adicionales en el RGPD (art. 9)."
+      },
+      "children": {
+        "label": "¿Tratas datos personales de menores?",
+        "hint": "Los datos de menores elevan el listón del consentimiento, los avisos y las evaluaciones de impacto."
+      },
+      "largeScaleMonitoring": {
+        "label": "¿Observas a las personas de forma habitual y sistemática a gran escala?",
+        "hint": "Por ejemplo, seguimiento del comportamiento en línea, elaboración de perfiles o videovigilancia amplia."
+      },
+      "publicAuthority": {
+        "label": "¿Eres una autoridad u organismo público?",
+        "hint": "Las autoridades públicas deben designar un delegado de protección de datos."
+      }
+    },
+    "appliesTitle": "Esto te aplica",
+    "appliesEmpty": "De momento tus respuestas no activan nada. Añade dónde operas o responde más preguntas.",
+    "checkTitle": "Conviene comprobar",
+    "whyLabel": "Por qué",
+    "noJurisdictions": "Añade dónde operas en la página Qué aplica, para poder mostrar las leyes que dependen del lugar.",
+    "editableNote": "Esto es orientación, no asesoramiento legal, y la correspondencia aún está en revisión. Puedes cambiar tus respuestas cuando quieras.",
+    "items": {
+      "gdpr": "RGPD (UE)",
+      "ukGdpr": "RGPD del Reino Unido",
+      "processorDuties": "Obligaciones del encargado (RGPD art. 28)",
+      "dpoRequired": "Puede exigirse un delegado de protección de datos (art. 37)",
+      "dpiaLikely": "Es probable que se necesite una evaluación de impacto (art. 35)",
+      "ccpa": "CCPA/CPRA (California)",
+      "usStates": "Leyes de privacidad de estados de EE. UU."
+    },
+    "reasons": {
+      "operatesEu": "Operas en la UE.",
+      "operatesUk": "Operas en el Reino Unido.",
+      "operatesCalifornia": "Operas en California.",
+      "operatesUsStates": "Operas en estados de EE. UU. con leyes de privacidad.",
+      "controller": "Eres responsable del tratamiento.",
+      "processor": "Eres encargado del tratamiento.",
+      "roleUnsure": "Tu papel aún no está definido.",
+      "publicAuthority": "Eres una autoridad pública.",
+      "largeScaleMonitoring": "Observas a las personas a gran escala.",
+      "sensitiveData": "Tratas categorías especiales de datos.",
+      "children": "Tratas datos de menores.",
+      "largeVolume": "Alcanzas un umbral de empresa grande.",
+      "thresholds": "Lo deciden los umbrales concretos.",
+      "answerUnsure": "Una respuesta aún no está definida."
+    }
+  },
   "errorPage": {
     "title": "Algo ha fallado",
     "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",

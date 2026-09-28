@@ -7082,6 +7082,79 @@
       "body": "Organisations you are a member of will appear here."
     }
   },
+  "applicability": {
+    "cardTitle": "What applies to you",
+    "cardDescription": "A few plain questions about how you use personal data. With the jurisdictions you operate in, they show which laws and duties apply. Everything stays editable.",
+    "intro": "Answer what you can. \"Not sure yet\" is fine: it shows as worth checking, never as settled.",
+    "roleTitle": "Your role",
+    "saved": "Saved.",
+    "answer": {
+      "YES": "Yes",
+      "NO": "No",
+      "UNSURE": "Not sure yet"
+    },
+    "questions": {
+      "actAsController": {
+        "label": "Do you decide why and how personal data is used?",
+        "hint": "If so, you are a controller for that data and carry the main duties."
+      },
+      "actAsProcessor": {
+        "label": "Do you process personal data for other organisations on their instructions?",
+        "hint": "If so, you are a processor for that data, bound by a written contract."
+      },
+      "largeVolume": {
+        "label": "Are you a large business by revenue or by the number of people whose data you handle?",
+        "hint": "For example the CCPA's thresholds: high annual revenue, or the data of 100,000+ consumers."
+      },
+      "sensitiveData": {
+        "label": "Do you process special category data, such as health, race, religion or biometric data?",
+        "hint": "This data carries extra duties under the GDPR (Art. 9)."
+      },
+      "children": {
+        "label": "Do you process children's personal data?",
+        "hint": "Children's data raises the bar for consent, notices and impact assessments."
+      },
+      "largeScaleMonitoring": {
+        "label": "Do you monitor people regularly and systematically on a large scale?",
+        "hint": "For example tracking online behaviour, profiling, or wide video surveillance."
+      },
+      "publicAuthority": {
+        "label": "Are you a public authority or body?",
+        "hint": "Public authorities must appoint a data protection officer."
+      }
+    },
+    "appliesTitle": "These apply to you",
+    "appliesEmpty": "Nothing applies yet from your answers. Add where you operate, or answer more questions.",
+    "checkTitle": "Worth checking",
+    "whyLabel": "Why",
+    "noJurisdictions": "Add where you operate on the What applies page, so the laws that depend on a place can be shown.",
+    "editableNote": "This is guidance, not legal advice, and the mapping is still under review. You can change your answers at any time.",
+    "items": {
+      "gdpr": "GDPR (EU)",
+      "ukGdpr": "UK GDPR",
+      "processorDuties": "Processor duties (GDPR Art. 28)",
+      "dpoRequired": "A data protection officer may be required (Art. 37)",
+      "dpiaLikely": "A data protection impact assessment is likely (Art. 35)",
+      "ccpa": "CCPA/CPRA (California)",
+      "usStates": "US state privacy laws"
+    },
+    "reasons": {
+      "operatesEu": "You operate in the EU.",
+      "operatesUk": "You operate in the UK.",
+      "operatesCalifornia": "You operate in California.",
+      "operatesUsStates": "You operate in US states with privacy laws.",
+      "controller": "You are a controller.",
+      "processor": "You are a processor.",
+      "roleUnsure": "Your role is not settled yet.",
+      "publicAuthority": "You are a public authority.",
+      "largeScaleMonitoring": "You monitor people on a large scale.",
+      "sensitiveData": "You process special category data.",
+      "children": "You process children's data.",
+      "largeVolume": "You meet a large-business threshold.",
+      "thresholds": "The exact thresholds decide.",
+      "answerUnsure": "An answer is not settled yet."
+    }
+  },
   "errorPage": {
     "title": "Something went wrong",
     "body": "This page could not be shown. Your saved records are not affected.",
