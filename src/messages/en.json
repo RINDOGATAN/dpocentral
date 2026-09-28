@@ -1699,8 +1699,13 @@
         "category": "Category: {value}"
       },
       "empty": {
-        "title": "No AI systems registered",
-        "subtitle": "Start by registering AI systems your organization uses or deploys"
+        "title": "No AI systems yet",
+        "subtitle": "AI systems appear here when you add vendors that use personal data, so your privacy records are complete. Their governance is done in AI Sentinel."
+      },
+      "readOnly": {
+        "title": "AI systems are managed in AI Sentinel",
+        "body": "You cannot add or edit an AI system here. This register lists the systems that use personal data so your privacy records stay complete; their governance is done in AI Sentinel.",
+        "back": "Back to AI systems"
       },
       "sentinel": {
         "send": "Send to AI Sentinel",
@@ -1710,12 +1715,12 @@
         "allSynced": "All systems are already synced. Re-sending will push the latest state.",
         "alreadySynced": "Already synced",
         "sending": "Sending…",
-        "sendCount": "Send {count, plural, one {# system} other {# systems}}"
-      },
-      "governNote": {
-        "title": "AI governance happens in AI Sentinel",
-        "body": "This register lists the AI systems that use personal data, so your privacy records are complete. To classify a system's risk, run oversight or a conformity assessment, govern it in AI Sentinel.",
-        "open": "Open AI Sentinel"
+        "sendCount": "Send {count, plural, one {# system} other {# systems}}",
+        "governNote": {
+          "title": "AI governance happens in AI Sentinel",
+          "body": "This register lists the AI systems that use personal data, so your privacy records are complete. To classify a system's risk, run oversight or a conformity assessment, govern it in AI Sentinel.",
+          "open": "Open AI Sentinel"
+        }
       }
     },
     "incidents": {

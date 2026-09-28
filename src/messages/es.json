@@ -1699,8 +1699,13 @@
         "category": "Categoría: {value}"
       },
       "empty": {
-        "title": "No hay sistemas de IA registrados",
-        "subtitle": "Comienza registrando los sistemas de IA que tu organización usa o despliega"
+        "title": "Aún no hay sistemas de IA",
+        "subtitle": "Los sistemas de IA aparecen aquí cuando añades proveedores que usan datos personales, para que tus registros de privacidad estén completos. Su gobernanza se hace en AI Sentinel."
+      },
+      "readOnly": {
+        "title": "Los sistemas de IA se gestionan en AI Sentinel",
+        "body": "Aquí no puedes añadir ni editar un sistema de IA. Este registro enumera los sistemas que usan datos personales para que tus registros de privacidad estén completos; su gobernanza se hace en AI Sentinel.",
+        "back": "Volver a sistemas de IA"
       },
       "sentinel": {
         "send": "Enviar a AI Sentinel",
@@ -1710,12 +1715,12 @@
         "allSynced": "Todos los sistemas ya están sincronizados. Reenviarlos actualizará su estado más reciente.",
         "alreadySynced": "Ya sincronizado",
         "sending": "Enviando…",
-        "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}"
-      },
-      "governNote": {
-        "title": "La gobernanza de la IA se hace en AI Sentinel",
-        "body": "Este registro enumera los sistemas de IA que usan datos personales, para que tus registros de privacidad estén completos. Para clasificar el riesgo de un sistema, aplicar supervisión o realizar una evaluación de la conformidad, gobiérnalo en AI Sentinel.",
-        "open": "Abrir AI Sentinel"
+        "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}",
+        "governNote": {
+          "title": "La gobernanza de la IA se hace en AI Sentinel",
+          "body": "Este registro enumera los sistemas de IA que usan datos personales, para que tus registros de privacidad estén completos. Para clasificar el riesgo de un sistema, aplicar supervisión o realizar una evaluación de la conformidad, gobiérnalo en AI Sentinel.",
+          "open": "Abrir AI Sentinel"
+        }
       }
     },
     "incidents": {

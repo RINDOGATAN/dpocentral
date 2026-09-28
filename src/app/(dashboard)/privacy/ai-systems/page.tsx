@@ -27,7 +27,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Bot,
   Search,
-  Plus,
   Loader2,
   AlertTriangle,
   CheckCircle2,
@@ -231,12 +230,6 @@ export default function AISystemsPage() {
               </DialogContent>
             </Dialog>
           )}
-          <Button asChild>
-            <Link href="/privacy/ai-systems/register">
-              <Plus className="w-4 h-4 mr-2" />
-              {tp("register")}
-            </Link>
-          </Button>
           </>
         }
       />
@@ -359,13 +352,18 @@ export default function AISystemsPage() {
           <CardContent className="py-12 text-center">
             <Bot className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-medium mb-2">{tp("empty.title")}</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
               {tp("empty.subtitle")}
             </p>
-            <Button asChild>
-              <Link href="/privacy/ai-systems/register">
-                <Plus className="w-4 h-4 mr-2" /> {tp("register")}
-              </Link>
+            <Button variant="outline" asChild>
+              <a
+                href={`${process.env.NEXT_PUBLIC_AI_SENTINEL_URL || "https://aisentinel.todo.law"}/governance/ai-registry`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tp("sentinel.governNote.open")}
+                <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+              </a>
             </Button>
           </CardContent>
         </Card>
