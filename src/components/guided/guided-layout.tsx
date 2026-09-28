@@ -31,6 +31,7 @@ import {
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHelpButton } from "@/components/help/page-help-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -134,6 +135,7 @@ export function GuidedLayout({
             </Link>
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <PageHelpButton />
             <Button
               variant="ghost"
               size="icon"

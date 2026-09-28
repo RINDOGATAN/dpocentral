@@ -7024,6 +7024,35 @@
       "useClassic": "Use the classic layout"
     }
   },
+  "help": {
+    "open": "Help for this page",
+    "subtitle": "What this page is for, and where to read more.",
+    "purpose": "What this is for",
+    "firstStep": "What to do first",
+    "terms": "Terms on this page",
+    "guides": "Short guides",
+    "learnMore": "Read more",
+    "officialText": "The words of the law",
+    "keyTerms": "Key terms",
+    "termMeaningOf": "What does \"{term}\" mean?",
+    "exampleLead": "For example:",
+    "guideRole": "Controller or processor?",
+    "guideDpo": "Do I need a DPO?",
+    "guideDpia": "When is a DPIA required?",
+    "firstRun": {
+      "title": "How DPO Central works",
+      "intro": "One minute on how it works. You can reopen this any time from the help button in the top bar.",
+      "step1": "Set up: say where you operate and what you do, and DPO Central works out which laws apply.",
+      "step2": "Know your data: record the personal data you hold, your vendors, and how you process it.",
+      "step3": "Keep it current: run the assessments each law expects, answer rights requests on time, and log any breach.",
+      "promise": "One privacy programme: the records, assessments and requests each law expects, kept in one place.",
+      "clientsLine": "Working for several clients?",
+      "clientsLink": "All clients shows where each one stands.",
+      "guidesTitle": "Start with a short guide",
+      "dismiss": "Got it",
+      "reopen": "Reopen it any time from the help button."
+    }
+  },
   "errorPage": {
     "title": "Something went wrong",
     "body": "This page could not be shown. Your saved records are not affected.",

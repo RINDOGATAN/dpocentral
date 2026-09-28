@@ -34,6 +34,7 @@ import {
   LayoutPanelLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHelpButton } from "@/components/help/page-help-button";
 import {
   Sheet,
   SheetContent,
@@ -288,6 +289,7 @@ export function DashboardShell({
 
           {/* Right side actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <PageHelpButton />
             <Button
               variant="ghost"
               size="icon"

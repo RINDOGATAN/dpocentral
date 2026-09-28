@@ -7024,6 +7024,35 @@
       "useClassic": "Usar el diseño clásico"
     }
   },
+  "help": {
+    "open": "Ayuda de esta página",
+    "subtitle": "Para qué sirve esta página y dónde leer más.",
+    "purpose": "Para qué sirve",
+    "firstStep": "Qué hacer primero",
+    "terms": "Términos de esta página",
+    "guides": "Guías breves",
+    "learnMore": "Leer más",
+    "officialText": "El texto de la ley",
+    "keyTerms": "Términos clave",
+    "termMeaningOf": "¿Qué significa «{term}»?",
+    "exampleLead": "Por ejemplo:",
+    "guideRole": "¿Responsable o encargado?",
+    "guideDpo": "¿Necesito un DPD?",
+    "guideDpia": "¿Cuándo se exige una EIPD?",
+    "firstRun": {
+      "title": "Cómo funciona DPO Central",
+      "intro": "Un minuto sobre cómo funciona. Puedes volver a abrirlo cuando quieras desde el botón de ayuda de la barra superior.",
+      "step1": "Configura: indica dónde operas y a qué te dedicas, y DPO Central determina qué leyes aplican.",
+      "step2": "Conoce tus datos: registra los datos personales que tienes, tus proveedores y cómo los tratas.",
+      "step3": "Mantenlo al día: realiza las evaluaciones que exige cada ley, responde a las solicitudes de derechos a tiempo y registra cualquier brecha.",
+      "promise": "Un único programa de privacidad: los registros, las evaluaciones y las solicitudes que espera cada ley, en un solo lugar.",
+      "clientsLine": "¿Trabajas para varios clientes?",
+      "clientsLink": "Todos los clientes muestra dónde está cada uno.",
+      "guidesTitle": "Empieza por una guía breve",
+      "dismiss": "Entendido",
+      "reopen": "Vuelve a abrirlo cuando quieras desde el botón de ayuda."
+    }
+  },
   "errorPage": {
     "title": "Algo ha fallado",
     "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",
