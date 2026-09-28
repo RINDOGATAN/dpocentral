@@ -45,6 +45,7 @@ import {
 import { IncidentStatus, TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
@@ -98,6 +99,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const tp = useTranslations("pages.incidentDetail");
   const tList = useTranslations("pages.incidents");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
 
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<IncidentStatus | "">("");
@@ -538,7 +540,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">{task.status}</Badge>
+                        <Badge variant="outline">{enumLabel("dsarTaskStatus", task.status)}</Badge>
                         <Badge variant="outline">{tp("tasks.priority", { value: task.priority })}</Badge>
                       </div>
                     </div>
@@ -587,7 +589,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                           <div className="flex items-center gap-2 flex-wrap">
                             <Bell className="w-4 h-4 text-primary" />
                             <span className="font-medium">{notification.recipientType}</span>
-                            <Badge variant="outline">{notification.status}</Badge>
+                            <Badge variant="outline">{enumLabel("notificationStatus", notification.status)}</Badge>
                             {pastDue && <Badge variant="destructive">{tp("notifications.overdue")}</Badge>}
                           </div>
                           <p className={`text-sm mt-1 ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>

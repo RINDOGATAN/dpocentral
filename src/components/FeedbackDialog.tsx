@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 interface FeedbackDialogProps {
@@ -69,13 +70,18 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
               }}
               className="space-y-4"
             >
-              <Textarea
-                placeholder={t("placeholder")}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                rows={4}
-                maxLength={2000}
-              />
+              <div className="space-y-1.5">
+                <Label htmlFor="feedback-message">{t("label")}</Label>
+                <Textarea
+                  id="feedback-message"
+                  placeholder={t("placeholder")}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={4}
+                  maxLength={2000}
+                />
+                <p className="text-xs text-muted-foreground">{t("help")}</p>
+              </div>
               <div className="flex justify-end">
                 <Button
                   type="submit"

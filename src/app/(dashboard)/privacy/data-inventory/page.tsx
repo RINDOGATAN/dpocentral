@@ -55,6 +55,10 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useTranslations } from "next-intl";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { TemplateBadge } from "@/components/privacy/template-badge";
+import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
@@ -116,6 +120,7 @@ export default function DataInventoryPage() {
   const tAssetType = useTranslations("pages.newAsset.assetType");
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const { organization } = useOrganization();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -190,18 +195,25 @@ export default function DataInventoryPage() {
     },
   });
 
-  const dataAssets = assetsPages?.pages.flatMap((p) => p.assets) ?? [];
-  const processingActivities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+  const dataAssets = sortByListSort(
+    assetsPages?.pages.flatMap((p) => p.assets) ?? [],
+    sort,
+    { date: (a) => a.createdAt, name: (a) => a.name },
+  );
+  const processingActivities = sortByListSort(
+    activitiesPages?.pages.flatMap((p) => p.activities) ?? [],
+    sort,
+    { date: (a) => a.createdAt, name: (a) => a.name },
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <div className="flex gap-2">
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" aria-label={t("export")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
@@ -239,8 +251,9 @@ export default function DataInventoryPage() {
               <span className="sm:hidden">{t("addAssetShort")}</span>
             </Button>
           </Link>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Search and Filters */}
       <div className="flex flex-wrap gap-2 sm:gap-4">
@@ -253,6 +266,7 @@ export default function DataInventoryPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <SortControl value={sort} onChange={setSort} />
         <Button variant="outline" size="icon" aria-label={t("filters")} className="shrink-0 sm:hidden">
           <Filter className="w-4 h-4" />
         </Button>
@@ -303,6 +317,7 @@ export default function DataInventoryPage() {
                           </div>
                           <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{asset.name}</CardTitle>
                           <CardDescription className="text-xs sm:text-sm">{asset.owner || t("asset.ownerEmpty")}</CardDescription>
+                          <TemplateBadge metadata={asset.metadata} className="mt-1 w-fit text-xs" />
                         </CardHeader>
                         <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
                           <div className="flex justify-between text-xs sm:text-sm">
@@ -375,6 +390,7 @@ export default function DataInventoryPage() {
                             <Badge className="shrink-0 text-xs">{activity.legalBasis ? t(`legalBasis.${activity.legalBasis}`) : t("activity.noBasis")}</Badge>
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2">{activity.purpose}</p>
+                          <TemplateBadge metadata={activity.metadata} className="text-xs" />
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>{t("activity.assetsCount", { count: activity.assets?.length ?? 0 })}</span>
                             <Button variant="ghost" size="sm" className="h-8 px-2">
@@ -390,6 +406,7 @@ export default function DataInventoryPage() {
                               <div>
                                 <CardTitle className="text-base">{activity.name}</CardTitle>
                                 <CardDescription className="line-clamp-1">{activity.purpose}</CardDescription>
+                                <TemplateBadge metadata={activity.metadata} className="mt-1.5 text-xs" />
                               </div>
                               <Badge>{activity.legalBasis ? t(`legalBasis.${activity.legalBasis}`) : t("activity.noBasis")}</Badge>
                             </div>

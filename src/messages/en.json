@@ -31,7 +31,14 @@
     "more": "More",
     "less": "Less",
     "showAll": "Show All",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "sortLabel": "Sort",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "sortName": "Name (A-Z)",
+    "fromTemplate": "From the {name} template",
+    "fromTemplateGeneric": "From a template",
+    "fromQuickstart": "From quick start"
   },
   "pages": {
     "newVendor": {
@@ -734,14 +741,15 @@
         "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
         "jump": "Go to the step that answers this",
         "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
-        "submitHint": "Answer the questions listed above to submit this assessment."
+        "submitHint": "Answer the questions listed above before you send this assessment for review."
       },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
       "riskBadge": "{level} Risk",
       "exportPdf": "Export PDF",
-      "submitApprove": "Submit & Approve",
-      "submitReview": "Submit for Review",
+      "submitApprove": "Approve assessment",
+      "submitReview": "Send for internal review",
+      "reviewRecipients": "When you send this, your organisation's privacy officers, admins and owner receive it for internal review.",
       "progress": {
         "answered": "{answered} of {total} questions answered"
       },
@@ -768,6 +776,9 @@
         "selectOption": "Select an option...",
         "selectAllApply": "Select all that apply",
         "responsePlaceholder": "Type your response here...",
+        "responseLabel": "Your answer",
+        "responseHelp": "Your answer is saved to this assessment and appears in its report.",
+        "notesLabel": "Notes (optional)",
         "notesPlaceholder": "Additional notes (optional)...",
         "save": "Save",
         "cancel": "Cancel",
@@ -1381,6 +1392,11 @@
       "back": "Dashboard",
       "title": "Privacy Program Quickstart",
       "subtitle": "Get a head start on your privacy program",
+      "programName": {
+        "label": "Programme name",
+        "help": "This names your privacy programme across the dashboard, the result screen and your exports. It starts as your organisation's name; change it if your programme goes by something else.",
+        "placeholder": "e.g. Acme Privacy Programme"
+      },
       "steps": {
         "choose": "Choose Path",
         "vendors": "Select Vendors",
@@ -1467,6 +1483,7 @@
       "review": {
         "title": "Review & Confirm",
         "subtitle": "Review what will be created, then build your privacy program.",
+        "forProgramme": "For the {name} programme",
         "back": "Back",
         "stats": {
           "vendors": "Vendors",
@@ -1493,6 +1510,11 @@
       "success": {
         "alreadySetTitle": "Everything is already set up!",
         "createdTitle": "Privacy Program Created!",
+        "forProgramme": "The {name} programme",
+        "createdListTitle": "What was created",
+        "createdListVendors": "Vendors",
+        "createdListAssets": "Data assets",
+        "createdListActivities": "Processing activities",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program has been bootstrapped. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
@@ -1893,7 +1915,7 @@
         "businessOwner": "Business Owner",
         "businessOwnerDesc": "Privacy compliance for your organization",
         "privacyProfessional": "Privacy Professional",
-        "privacyProfessionalDesc": "Advising multiple organizations on privacy"
+        "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations"
       },
       "language": {
         "title": "Language",
@@ -1915,6 +1937,8 @@
         "title": "Team Members",
         "descriptionAdmin": "Invite teammates to collaborate on your privacy program.",
         "descriptionViewer": "Only owners and admins can manage members.",
+        "inviteLabel": "Invite a teammate",
+        "inviteHelp": "Enter their work email and choose a role. They receive an invitation to join this organization.",
         "inviteEmailPlaceholder": "teammate@example.com",
         "add": "Add",
         "added": "Member added",
@@ -2324,6 +2348,101 @@
       "SEXUAL_ORIENTATION": "Sexual orientation",
       "CRIMINAL": "Criminal records",
       "OTHER": "Other"
+    },
+    "assessmentType": {
+      "DPIA": "DPIA", "PIA": "PIA", "TIA": "TIA", "LIA": "LIA",
+      "VENDOR": "Vendor assessment", "CUSTOM": "Custom"
+    },
+    "assessmentStatus": {
+      "DRAFT": "Draft", "IN_PROGRESS": "In progress", "PENDING_REVIEW": "Pending review",
+      "PENDING_APPROVAL": "Pending approval", "APPROVED": "Approved", "REJECTED": "Rejected",
+      "ARCHIVED": "Archived"
+    },
+    "approvalStatus": {
+      "PENDING": "Pending", "APPROVED": "Approved", "REJECTED": "Rejected", "DELEGATED": "Delegated"
+    },
+    "dsarType": {
+      "ACCESS": "Access", "RECTIFICATION": "Rectification", "ERASURE": "Erasure",
+      "PORTABILITY": "Portability", "OBJECTION": "Objection", "RESTRICTION": "Restriction",
+      "AUTOMATED_DECISION": "Automated decision", "WITHDRAW_CONSENT": "Withdraw consent",
+      "OTHER": "Other"
+    },
+    "dsarStatus": {
+      "SUBMITTED": "Submitted", "IDENTITY_PENDING": "Identity pending",
+      "IDENTITY_VERIFIED": "Identity verified", "IN_PROGRESS": "In progress",
+      "DATA_COLLECTED": "Data collected", "REVIEW_PENDING": "Review pending",
+      "APPROVED": "Approved", "COMPLETED": "Completed", "REJECTED": "Rejected",
+      "CANCELLED": "Cancelled"
+    },
+    "dsarTaskStatus": {
+      "PENDING": "Pending", "IN_PROGRESS": "In progress", "COMPLETED": "Completed",
+      "BLOCKED": "Blocked", "NOT_APPLICABLE": "Not applicable"
+    },
+    "incidentSeverity": {
+      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+    },
+    "incidentStatus": {
+      "REPORTED": "Reported", "INVESTIGATING": "Investigating", "CONTAINED": "Contained",
+      "ERADICATED": "Eradicated", "RECOVERING": "Recovering", "CLOSED": "Closed",
+      "FALSE_POSITIVE": "False positive"
+    },
+    "incidentType": {
+      "DATA_BREACH": "Data breach", "UNAUTHORIZED_ACCESS": "Unauthorised access",
+      "DATA_LOSS": "Data loss", "SYSTEM_COMPROMISE": "System compromise",
+      "PHISHING": "Phishing", "RANSOMWARE": "Ransomware", "INSIDER_THREAT": "Insider threat",
+      "PHYSICAL_SECURITY": "Physical security", "VENDOR_INCIDENT": "Vendor incident",
+      "OTHER": "Other"
+    },
+    "transferMechanism": {
+      "ADEQUACY_DECISION": "Adequacy decision",
+      "STANDARD_CONTRACTUAL_CLAUSES": "Standard contractual clauses",
+      "BINDING_CORPORATE_RULES": "Binding corporate rules", "DEROGATION": "Derogation",
+      "CERTIFICATION": "Certification", "CODE_OF_CONDUCT": "Code of conduct", "OTHER": "Other"
+    },
+    "transferStatus": {
+      "COMPLIANT": "Compliant", "NEEDS_REVIEW": "Needs review",
+      "NON_COMPLIANT": "Non-compliant", "PENDING": "Pending"
+    },
+    "riskLevel": {
+      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+    },
+    "legalBasis": {
+      "CONSENT": "Consent", "CONTRACT": "Contract", "LEGAL_OBLIGATION": "Legal obligation",
+      "VITAL_INTERESTS": "Vital interests", "PUBLIC_TASK": "Public task",
+      "LEGITIMATE_INTERESTS": "Legitimate interests"
+    },
+    "vendorStatus": {
+      "PROSPECTIVE": "Prospective", "ACTIVE": "Active", "UNDER_REVIEW": "Under review",
+      "SUSPENDED": "Suspended", "TERMINATED": "Terminated"
+    },
+    "contractType": {
+      "DPA": "DPA", "MSA": "MSA", "NDA": "NDA", "SCC": "SCC",
+      "SUBPROCESSOR": "Subprocessor", "OTHER": "Other"
+    },
+    "contractStatus": {
+      "DRAFT": "Draft", "PENDING_SIGNATURE": "Pending signature", "ACTIVE": "Active",
+      "EXPIRED": "Expired", "TERMINATED": "Terminated", "RENEWED": "Renewed"
+    },
+    "dataAssetType": {
+      "DATABASE": "Database", "APPLICATION": "Application", "FILE_SYSTEM": "File system",
+      "CLOUD_SERVICE": "Cloud service", "THIRD_PARTY": "Third party", "PHYSICAL": "Physical",
+      "OTHER": "Other"
+    },
+    "dataSensitivity": {
+      "PUBLIC": "Public", "INTERNAL": "Internal", "CONFIDENTIAL": "Confidential",
+      "RESTRICTED": "Restricted", "SPECIAL_CATEGORY": "Special category"
+    },
+    "notificationStatus": {
+      "PENDING": "Pending", "SENT": "Sent", "NOT_REQUIRED": "Not required",
+      "OVERDUE": "Overdue", "ACKNOWLEDGED": "Acknowledged"
+    },
+    "reviewType": {
+      "SECURITY": "Security", "PRIVACY": "Privacy", "COMPLIANCE": "Compliance",
+      "DUE_DILIGENCE": "Due diligence", "ANNUAL": "Annual", "OTHER": "Other"
+    },
+    "role": {
+      "OWNER": "Owner", "ADMIN": "Admin", "PRIVACY_OFFICER": "Privacy officer",
+      "MEMBER": "Member", "VIEWER": "Viewer"
     }
   },
   "enableFeature": {
@@ -2391,7 +2510,7 @@
     "businessOwner": "Business Owner",
     "businessOwnerDesc": "I need privacy compliance for my organisation",
     "privacyProfessional": "Privacy Professional",
-    "privacyProfessionalDesc": "I advise multiple organisations on privacy",
+    "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organisations",
     "orgName": "Organisation Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "getStarted": "Get Started",
@@ -2501,7 +2620,9 @@
     },
     "cssCard": {
       "title": "Custom Styling",
-      "description": "Add custom CSS to match your brand (optional)"
+      "description": "Add custom CSS to match your brand (optional)",
+      "label": "Custom CSS",
+      "help": "Applied to the public request form. Leave empty to use the default styling."
     },
     "actions": {
       "cancel": "Cancel",
@@ -2779,6 +2900,7 @@
       "contactedBy": "{name} · {date}",
       "notes": "Notes",
       "notesPlaceholder": "Track outcomes, fees, deliverables, follow-ups…",
+      "notesHelp": "Only your team sees these notes; they are not shared with the expert.",
       "addNotes": "Add notes",
       "saveNotes": "Save",
       "cancelNotes": "Cancel",
@@ -6702,12 +6824,184 @@
   },
   "feedback": {
     "title": "Tell us what is wrong",
+    "label": "Your message",
+    "help": "Tell us what is not working or what would help. We read every message.",
     "placeholder": "How can we improve this tool?",
     "submit": "Send feedback",
     "sending": "Sending...",
     "error": "The message could not be sent. Please try again.",
     "sentTitle": "Thank you for your feedback.",
     "sentBody": "We read every message and use it to improve this tool."
+  },
+  "guided": {
+    "loading": "Loading",
+    "overview": "Overview",
+    "overallLabel": "Your program",
+    "overall": "{percent}% complete",
+    "navLabel": "Privacy program path",
+    "pathTitle": "The path",
+    "libraryTitle": "Library and tools",
+    "stageNumber": "Stage {number}",
+    "stageProgress": "{done} of {total}",
+    "stageState": {
+      "todo": "not started",
+      "started": "in progress",
+      "done": "done",
+      "coming": "Coming"
+    },
+    "stepStatus": {
+      "done": "done",
+      "started": "in progress",
+      "todo": "not started",
+      "coming": "coming",
+      "optional": "optional"
+    },
+    "account": "Account",
+    "switchClient": "Client",
+    "allClients": "All clients",
+    "addOrganization": "Add an organisation",
+    "expand": "Expand the menu",
+    "collapse": "Collapse the menu",
+    "phoneBar": "Stage {number} of {total}, {stage}",
+    "phoneBarDone": "Every stage is done",
+    "phoneBarOpen": "Open the program path",
+    "stages": {
+      "setup": "Set up",
+      "people": "Policies and people",
+      "inventory": "Know your data",
+      "assess": "Assess the risk",
+      "rights": "Rights and transparency",
+      "respond": "Respond and improve"
+    },
+    "steps": {
+      "quickstart": {
+        "label": "Quick start",
+        "why": "Set up your program in minutes: jurisdictions, an industry template and vendors from the catalogue.",
+        "do": "Run the quick start to set up jurisdictions, a template and your first vendors."
+      },
+      "applies": {
+        "label": "What applies",
+        "why": "Say where you operate and which laws apply, so the rest of the program is scoped to you.",
+        "do": "Declare the jurisdictions and laws that apply to your organisation."
+      },
+      "privacyPolicy": {
+        "label": "Privacy policy and notices",
+        "why": "Publish the notices that tell people how their data is used.",
+        "do": "Record your privacy policy and the notices you give to data subjects."
+      },
+      "dpoAppointed": {
+        "label": "DPO and roles",
+        "why": "Appoint a data protection lead and set who does what.",
+        "do": "Appoint a DPO or privacy lead and record the roles around privacy."
+      },
+      "training": {
+        "label": "Staff training",
+        "why": "Train the people who handle personal data.",
+        "do": "Record the privacy training your staff have completed."
+      },
+      "dataInventory": {
+        "label": "Data inventory",
+        "why": "Know what personal data you hold and where it lives.",
+        "do": "Record your data assets: the systems and stores that hold personal data."
+      },
+      "ropa": {
+        "label": "Records of processing",
+        "why": "Keep the Article 30 record of how you process personal data.",
+        "do": "Record each processing activity: its purpose, legal basis and data."
+      },
+      "vendors": {
+        "label": "Vendors and processors",
+        "why": "Track the vendors that process personal data for you.",
+        "do": "Add the vendors that process personal data, from the catalogue."
+      },
+      "aiSystems": {
+        "label": "AI systems",
+        "why": "See the AI systems that use personal data; govern them in AI Sentinel.",
+        "do": "Review the AI systems using personal data, governed in AI Sentinel."
+      },
+      "assessments": {
+        "label": "Assessments",
+        "why": "Screen for risk and run a DPIA where processing is high risk.",
+        "do": "Screen your processing and run a DPIA where the risk is high."
+      },
+      "transfers": {
+        "label": "Transfers",
+        "why": "Record cross-border transfers and the safeguard each one relies on.",
+        "do": "Record each cross-border transfer and its transfer mechanism."
+      },
+      "vendorDueDiligence": {
+        "label": "Vendor due diligence",
+        "why": "Assess each vendor that processes personal data for you.",
+        "do": "Complete a due-diligence assessment for each vendor."
+      },
+      "lia": {
+        "label": "Legitimate-interest assessments",
+        "why": "Balance your interests against people's rights where you rely on them.",
+        "do": "Run a legitimate-interest assessment where that is your legal basis."
+      },
+      "dsar": {
+        "label": "Rights requests",
+        "why": "Receive and answer data-subject requests within the deadline.",
+        "do": "Set up the intake form and answer rights requests on time."
+      },
+      "notices": {
+        "label": "Notices and consent",
+        "why": "Keep the notices and consent records people are owed.",
+        "do": "Record the notices and consent you rely on."
+      },
+      "incidents": {
+        "label": "Breach register",
+        "why": "Log incidents and track the 72-hour breach clock.",
+        "do": "Record incidents in the register and watch the 72-hour clock."
+      },
+      "audits": {
+        "label": "Audits and reports",
+        "why": "Review the program and report to management.",
+        "do": "Record audits, reviews and reports to management."
+      }
+    },
+    "library": {
+      "reports": "Reports",
+      "experts": "Find an expert",
+      "clients": "All clients",
+      "skills": "Skills",
+      "billing": "Billing",
+      "help": "Help and docs",
+      "settings": "Settings"
+    },
+    "nextStep": {
+      "title": "Next step",
+      "stage": "Stage {number}: {stage}",
+      "button": "Go to {step}",
+      "allDoneTitle": "Your program is set up",
+      "allDoneBody": "Every step on the path is done. Keep your records current and review them regularly.",
+      "allDoneButton": "Back to the overview"
+    },
+    "band": {
+      "step": "Step {number}",
+      "next": "Next step",
+      "finish": "Finish",
+      "stageDone": "Stage {number} complete. Next: {next}.",
+      "lastStageDone": "Stage {number} complete. Every stage is done."
+    },
+    "plan": {
+      "label": "Plan",
+      "day": "Day {day} of {total}",
+      "onPlan": "On plan",
+      "behind": "Behind plan by {days} days",
+      "complete": "Plan complete",
+      "remaining": "{count} stages left: {stages}",
+      "notStarted": "Not started"
+    },
+    "layout": {
+      "title": "Layout",
+      "description": "Choose how the dashboard is laid out. This is a choice for this browser.",
+      "guided": "Guided",
+      "classic": "Classic (will be retired)",
+      "changed": "Layout changed.",
+      "useGuided": "Use the guided layout",
+      "useClassic": "Use the classic layout"
+    }
   },
   "errorPage": {
     "title": "Something went wrong",

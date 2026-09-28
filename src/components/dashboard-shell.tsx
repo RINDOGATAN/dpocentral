@@ -31,6 +31,7 @@ import {
   Bot,
   KeyRound,
   MoreHorizontal,
+  LayoutPanelLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,17 +59,28 @@ import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { signOutOfSuite } from "@/lib/sign-out";
+import type { Skin } from "@/lib/skin";
+import { SkinProvider, useSkin } from "@/components/guided/skin-context";
+import { GuidedLayout } from "@/components/guided/guided-layout";
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({
+  children,
+  skin = "guided",
+  menuCollapsed = false,
+}: {
+  children: React.ReactNode;
+  /** The layout chosen in the `dpc_skin` cookie (src/lib/skin.ts). Guided unless Classic is chosen. */
+  skin?: Skin;
+  /** Guided only: the left menu shows icons only (`dpc_menu` cookie). */
+  menuCollapsed?: boolean;
+}) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading } = useOrganization();
-  const hosted = useHostedPilot();
   const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const tNav = useTranslations("nav");
-  const tFooter = useTranslations("footer");
 
   // Primary nav: always visible in the top bar
   const primaryNavItems = [
@@ -126,7 +138,26 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     return <OrganizationSetup />;
   }
 
+  // Guided (the default; Classic stays per browser for a while): the privacy
+  // program path as a left menu. The pages, the footer and the feedback dialog
+  // are the same as Classic.
+  if (skin === "guided") {
+    return (
+      <SkinProvider skin="guided">
+        <GuidedLayout
+          footer={<DashboardFooter />}
+          initialCollapsed={menuCollapsed}
+          onFeedback={() => setFeedbackOpen(true)}
+        >
+          {children}
+        </GuidedLayout>
+        <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+      </SkinProvider>
+    );
+  }
+
   return (
+    <SkinProvider skin="classic">
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
@@ -274,6 +305,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <Settings className="w-4 h-4" />
               </Button>
             </Link>
+            <UseGuidedLayout />
             <Button
               variant="ghost"
               size="icon"
@@ -293,7 +325,40 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/* Footer */}
+      <DashboardFooter />
+
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+    </div>
+    </SkinProvider>
+  );
+}
+
+/**
+ * Classic only: the way back to Guided, beside the other account actions. The
+ * Guided layout has the matching "Use the classic layout" in its account menu,
+ * and Settings offers both through the Layout card.
+ */
+function UseGuidedLayout() {
+  const { setSkin } = useSkin();
+  const t = useTranslations("guided.layout");
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setSkin("guided")}
+      title={t("useGuided")}
+    >
+      <LayoutPanelLeft className="w-4 h-4" />
+      <span className="sr-only">{t("useGuided")}</span>
+    </Button>
+  );
+}
+
+/** The footer both layouts share: service line, legal links, source offer. */
+function DashboardFooter() {
+  const tFooter = useTranslations("footer");
+  const hosted = useHostedPilot();
+  return (
       <footer className="border-t border-border mt-auto py-4">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 text-center text-xs text-muted-foreground space-y-1">
           <p>{tFooter("serviceBy", { brandName: brand.nameUppercase, companyName: brand.companyName })}</p>
@@ -338,8 +403,5 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </footer>
-
-      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
-    </div>
   );
 }

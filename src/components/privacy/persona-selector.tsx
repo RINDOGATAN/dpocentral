@@ -24,7 +24,7 @@ const personas = [
     type: "PRIVACY_PROFESSIONAL" as UserType,
     icon: Briefcase,
     title: "Privacy Professional",
-    description: "I advise multiple organizations on privacy",
+    description: "A law firm, a consultancy, or another adviser managing privacy for several organizations",
   },
 ] as const;
 

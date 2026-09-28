@@ -31,7 +31,14 @@
     "more": "Más",
     "less": "Menos",
     "showAll": "Mostrar todo",
-    "viewDetails": "Ver detalles"
+    "viewDetails": "Ver detalles",
+    "sortLabel": "Ordenar",
+    "sortNewest": "Más recientes primero",
+    "sortOldest": "Más antiguos primero",
+    "sortName": "Nombre (A-Z)",
+    "fromTemplate": "De la plantilla {name}",
+    "fromTemplateGeneric": "De una plantilla",
+    "fromQuickstart": "Del inicio rápido"
   },
   "pages": {
     "newVendor": {
@@ -734,14 +741,15 @@
         "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
         "jump": "Ir al paso que lo responde",
         "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
-        "submitHint": "Responde las preguntas enumeradas arriba para enviar esta evaluación."
+        "submitHint": "Responde las preguntas enumeradas arriba antes de enviar esta evaluación a revisión."
       },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
       "riskBadge": "Riesgo {level}",
       "exportPdf": "Exportar PDF",
-      "submitApprove": "Enviar y aprobar",
-      "submitReview": "Enviar a revisión",
+      "submitApprove": "Aprobar evaluación",
+      "submitReview": "Enviar a revisión interna",
+      "reviewRecipients": "Al enviarla, los responsables de privacidad, los administradores y el propietario de tu organización la reciben para revisión interna.",
       "progress": {
         "answered": "{answered} de {total} preguntas respondidas"
       },
@@ -768,6 +776,9 @@
         "selectOption": "Selecciona una opción...",
         "selectAllApply": "Selecciona todas las que apliquen",
         "responsePlaceholder": "Escribe tu respuesta aquí...",
+        "responseLabel": "Tu respuesta",
+        "responseHelp": "Tu respuesta se guarda en esta evaluación y aparece en su informe.",
+        "notesLabel": "Notas (opcional)",
         "notesPlaceholder": "Notas adicionales (opcional)...",
         "save": "Guardar",
         "cancel": "Cancelar",
@@ -1381,6 +1392,11 @@
       "back": "Panel",
       "title": "Asistente del programa de privacidad",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
+      "programName": {
+        "label": "Nombre del programa",
+        "help": "Este nombre identifica tu programa de privacidad en el panel, en la pantalla de resultados y en tus exportaciones. Comienza con el nombre de tu organización; cámbialo si tu programa se conoce por otro nombre.",
+        "placeholder": "p. ej. Programa de privacidad de Acme"
+      },
       "steps": {
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
@@ -1467,6 +1483,7 @@
       "review": {
         "title": "Revisar y confirmar",
         "subtitle": "Revisa lo que se va a crear y construye tu programa de privacidad.",
+        "forProgramme": "Para el programa {name}",
         "back": "Atrás",
         "stats": {
           "vendors": "Proveedores",
@@ -1493,6 +1510,11 @@
       "success": {
         "alreadySetTitle": "¡Todo está ya configurado!",
         "createdTitle": "¡Programa de privacidad creado!",
+        "forProgramme": "El programa {name}",
+        "createdListTitle": "Qué se ha creado",
+        "createdListVendors": "Proveedores",
+        "createdListAssets": "Activos de datos",
+        "createdListActivities": "Actividades de tratamiento",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
         "cardDataInventory": "Inventario de datos",
@@ -1893,7 +1915,7 @@
         "businessOwner": "Empresario",
         "businessOwnerDesc": "Cumplimiento de privacidad para tu organización",
         "privacyProfessional": "Profesional de privacidad",
-        "privacyProfessionalDesc": "Asesorando a varias organizaciones en privacidad"
+        "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones"
       },
       "language": {
         "title": "Idioma",
@@ -1915,6 +1937,8 @@
         "title": "Miembros del equipo",
         "descriptionAdmin": "Invita a compañeros para colaborar en tu programa de privacidad.",
         "descriptionViewer": "Solo los propietarios y administradores pueden gestionar los miembros.",
+        "inviteLabel": "Invitar a un compañero",
+        "inviteHelp": "Introduce su correo de trabajo y elige un rol. Recibirá una invitación para unirse a esta organización.",
         "inviteEmailPlaceholder": "companero@ejemplo.com",
         "add": "Añadir",
         "added": "Miembro añadido",
@@ -2324,6 +2348,101 @@
       "SEXUAL_ORIENTATION": "Orientación sexual",
       "CRIMINAL": "Antecedentes penales",
       "OTHER": "Otros"
+    },
+    "assessmentType": {
+      "DPIA": "DPIA", "PIA": "PIA", "TIA": "TIA", "LIA": "LIA",
+      "VENDOR": "Evaluación de proveedor", "CUSTOM": "Personalizada"
+    },
+    "assessmentStatus": {
+      "DRAFT": "Borrador", "IN_PROGRESS": "En curso", "PENDING_REVIEW": "Pendiente de revisión",
+      "PENDING_APPROVAL": "Pendiente de aprobación", "APPROVED": "Aprobada", "REJECTED": "Rechazada",
+      "ARCHIVED": "Archivada"
+    },
+    "approvalStatus": {
+      "PENDING": "Pendiente", "APPROVED": "Aprobada", "REJECTED": "Rechazada", "DELEGATED": "Delegada"
+    },
+    "dsarType": {
+      "ACCESS": "Acceso", "RECTIFICATION": "Rectificación", "ERASURE": "Supresión",
+      "PORTABILITY": "Portabilidad", "OBJECTION": "Oposición", "RESTRICTION": "Limitación",
+      "AUTOMATED_DECISION": "Decisión automatizada", "WITHDRAW_CONSENT": "Retirada del consentimiento",
+      "OTHER": "Otro"
+    },
+    "dsarStatus": {
+      "SUBMITTED": "Enviada", "IDENTITY_PENDING": "Identidad pendiente",
+      "IDENTITY_VERIFIED": "Identidad verificada", "IN_PROGRESS": "En curso",
+      "DATA_COLLECTED": "Datos recopilados", "REVIEW_PENDING": "Pendiente de revisión",
+      "APPROVED": "Aprobada", "COMPLETED": "Completada", "REJECTED": "Rechazada",
+      "CANCELLED": "Cancelada"
+    },
+    "dsarTaskStatus": {
+      "PENDING": "Pendiente", "IN_PROGRESS": "En curso", "COMPLETED": "Completada",
+      "BLOCKED": "Bloqueada", "NOT_APPLICABLE": "No aplicable"
+    },
+    "incidentSeverity": {
+      "LOW": "Baja", "MEDIUM": "Media", "HIGH": "Alta", "CRITICAL": "Crítica"
+    },
+    "incidentStatus": {
+      "REPORTED": "Notificado", "INVESTIGATING": "En investigación", "CONTAINED": "Contenido",
+      "ERADICATED": "Erradicado", "RECOVERING": "En recuperación", "CLOSED": "Cerrado",
+      "FALSE_POSITIVE": "Falso positivo"
+    },
+    "incidentType": {
+      "DATA_BREACH": "Brecha de datos", "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
+      "DATA_LOSS": "Pérdida de datos", "SYSTEM_COMPROMISE": "Sistema comprometido",
+      "PHISHING": "Phishing", "RANSOMWARE": "Ransomware", "INSIDER_THREAT": "Amenaza interna",
+      "PHYSICAL_SECURITY": "Seguridad física", "VENDOR_INCIDENT": "Incidente de proveedor",
+      "OTHER": "Otro"
+    },
+    "transferMechanism": {
+      "ADEQUACY_DECISION": "Decisión de adecuación",
+      "STANDARD_CONTRACTUAL_CLAUSES": "Cláusulas contractuales tipo",
+      "BINDING_CORPORATE_RULES": "Normas corporativas vinculantes", "DEROGATION": "Excepción",
+      "CERTIFICATION": "Certificación", "CODE_OF_CONDUCT": "Código de conducta", "OTHER": "Otro"
+    },
+    "transferStatus": {
+      "COMPLIANT": "Conforme", "NEEDS_REVIEW": "Requiere revisión",
+      "NON_COMPLIANT": "No conforme", "PENDING": "Pendiente"
+    },
+    "riskLevel": {
+      "LOW": "Bajo", "MEDIUM": "Medio", "HIGH": "Alto", "CRITICAL": "Crítico"
+    },
+    "legalBasis": {
+      "CONSENT": "Consentimiento", "CONTRACT": "Contrato", "LEGAL_OBLIGATION": "Obligación legal",
+      "VITAL_INTERESTS": "Intereses vitales", "PUBLIC_TASK": "Misión de interés público",
+      "LEGITIMATE_INTERESTS": "Interés legítimo"
+    },
+    "vendorStatus": {
+      "PROSPECTIVE": "Potencial", "ACTIVE": "Activo", "UNDER_REVIEW": "En revisión",
+      "SUSPENDED": "Suspendido", "TERMINATED": "Finalizado"
+    },
+    "contractType": {
+      "DPA": "DPA", "MSA": "MSA", "NDA": "NDA", "SCC": "CCT",
+      "SUBPROCESSOR": "Subencargado", "OTHER": "Otro"
+    },
+    "contractStatus": {
+      "DRAFT": "Borrador", "PENDING_SIGNATURE": "Pendiente de firma", "ACTIVE": "Activo",
+      "EXPIRED": "Caducado", "TERMINATED": "Finalizado", "RENEWED": "Renovado"
+    },
+    "dataAssetType": {
+      "DATABASE": "Base de datos", "APPLICATION": "Aplicación", "FILE_SYSTEM": "Sistema de archivos",
+      "CLOUD_SERVICE": "Servicio en la nube", "THIRD_PARTY": "Tercero", "PHYSICAL": "Físico",
+      "OTHER": "Otro"
+    },
+    "dataSensitivity": {
+      "PUBLIC": "Público", "INTERNAL": "Interno", "CONFIDENTIAL": "Confidencial",
+      "RESTRICTED": "Restringido", "SPECIAL_CATEGORY": "Categoría especial"
+    },
+    "notificationStatus": {
+      "PENDING": "Pendiente", "SENT": "Enviada", "NOT_REQUIRED": "No requerida",
+      "OVERDUE": "Vencida", "ACKNOWLEDGED": "Confirmada"
+    },
+    "reviewType": {
+      "SECURITY": "Seguridad", "PRIVACY": "Privacidad", "COMPLIANCE": "Cumplimiento",
+      "DUE_DILIGENCE": "Diligencia debida", "ANNUAL": "Anual", "OTHER": "Otro"
+    },
+    "role": {
+      "OWNER": "Propietario", "ADMIN": "Administrador", "PRIVACY_OFFICER": "Responsable de privacidad",
+      "MEMBER": "Miembro", "VIEWER": "Lector"
     }
   },
   "enableFeature": {
@@ -2391,7 +2510,7 @@
     "businessOwner": "Propietario de empresa",
     "businessOwnerDesc": "Necesito cumplimiento en protección de datos para mi organización",
     "privacyProfessional": "Profesional de privacidad",
-    "privacyProfessionalDesc": "Asesoro a varias organizaciones en protección de datos",
+    "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
     "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "ej., Acme Corporation",
     "getStarted": "Comenzar",
@@ -2501,7 +2620,9 @@
     },
     "cssCard": {
       "title": "Estilo personalizado",
-      "description": "Añade CSS personalizado para combinar con tu marca (opcional)"
+      "description": "Añade CSS personalizado para combinar con tu marca (opcional)",
+      "label": "CSS personalizado",
+      "help": "Se aplica al formulario público de solicitudes. Déjalo vacío para usar el estilo predeterminado."
     },
     "actions": {
       "cancel": "Cancelar",
@@ -2779,6 +2900,7 @@
       "contactedBy": "{name} · {date}",
       "notes": "Notas",
       "notesPlaceholder": "Anota resultados, honorarios, entregables, seguimiento…",
+      "notesHelp": "Solo tu equipo ve estas notas; no se comparten con el experto.",
       "addNotes": "Añadir notas",
       "saveNotes": "Guardar",
       "cancelNotes": "Cancelar",
@@ -6702,12 +6824,184 @@
   },
   "feedback": {
     "title": "Cuéntanos qué no funciona",
+    "label": "Tu mensaje",
+    "help": "Cuéntanos qué no funciona o qué te ayudaría. Leemos todos los mensajes.",
     "placeholder": "¿Cómo podemos mejorar esta herramienta?",
     "submit": "Enviar comentarios",
     "sending": "Enviando...",
     "error": "No se ha podido enviar el mensaje. Inténtalo de nuevo.",
     "sentTitle": "Gracias por tus comentarios.",
     "sentBody": "Leemos todos los mensajes y los usamos para mejorar esta herramienta."
+  },
+  "guided": {
+    "loading": "Cargando",
+    "overview": "Resumen",
+    "overallLabel": "Su programa",
+    "overall": "{percent}% completado",
+    "navLabel": "Ruta del programa de privacidad",
+    "pathTitle": "La ruta",
+    "libraryTitle": "Biblioteca y herramientas",
+    "stageNumber": "Fase {number}",
+    "stageProgress": "{done} de {total}",
+    "stageState": {
+      "todo": "sin empezar",
+      "started": "en curso",
+      "done": "hecho",
+      "coming": "Próximamente"
+    },
+    "stepStatus": {
+      "done": "hecho",
+      "started": "en curso",
+      "todo": "sin empezar",
+      "coming": "próximamente",
+      "optional": "opcional"
+    },
+    "account": "Cuenta",
+    "switchClient": "Cliente",
+    "allClients": "Todos los clientes",
+    "addOrganization": "Añadir una organización",
+    "expand": "Ampliar el menú",
+    "collapse": "Contraer el menú",
+    "phoneBar": "Fase {number} de {total}, {stage}",
+    "phoneBarDone": "Todas las fases están hechas",
+    "phoneBarOpen": "Abrir la ruta del programa",
+    "stages": {
+      "setup": "Puesta en marcha",
+      "people": "Políticas y personas",
+      "inventory": "Conozca sus datos",
+      "assess": "Evalúe el riesgo",
+      "rights": "Derechos y transparencia",
+      "respond": "Responda y mejore"
+    },
+    "steps": {
+      "quickstart": {
+        "label": "Inicio rápido",
+        "why": "Ponga en marcha su programa en unos minutos: jurisdicciones, una plantilla sectorial y proveedores del catálogo.",
+        "do": "Use el inicio rápido para configurar jurisdicciones, una plantilla y sus primeros proveedores."
+      },
+      "applies": {
+        "label": "Qué le aplica",
+        "why": "Indique dónde opera y qué leyes le aplican, para acotar el resto del programa a su caso.",
+        "do": "Declare las jurisdicciones y las leyes que aplican a su organización."
+      },
+      "privacyPolicy": {
+        "label": "Política de privacidad y avisos",
+        "why": "Publique los avisos que informan a las personas de cómo se usan sus datos.",
+        "do": "Registre su política de privacidad y los avisos que da a los interesados."
+      },
+      "dpoAppointed": {
+        "label": "DPD y funciones",
+        "why": "Designe a un responsable de protección de datos y defina quién hace qué.",
+        "do": "Designe a un DPD o responsable de privacidad y registre las funciones."
+      },
+      "training": {
+        "label": "Formación del personal",
+        "why": "Forme a las personas que tratan datos personales.",
+        "do": "Registre la formación en privacidad que ha completado su personal."
+      },
+      "dataInventory": {
+        "label": "Inventario de datos",
+        "why": "Sepa qué datos personales tiene y dónde residen.",
+        "do": "Registre sus activos de datos: los sistemas y almacenes con datos personales."
+      },
+      "ropa": {
+        "label": "Registro de actividades",
+        "why": "Mantenga el registro del artículo 30 sobre cómo trata datos personales.",
+        "do": "Registre cada actividad de tratamiento: su fin, base jurídica y datos."
+      },
+      "vendors": {
+        "label": "Proveedores y encargados",
+        "why": "Controle los proveedores que tratan datos personales por usted.",
+        "do": "Añada los proveedores que tratan datos personales, desde el catálogo."
+      },
+      "aiSystems": {
+        "label": "Sistemas de IA",
+        "why": "Vea los sistemas de IA que usan datos personales; gobiérnelos en AI Sentinel.",
+        "do": "Revise los sistemas de IA que usan datos personales, gobernados en AI Sentinel."
+      },
+      "assessments": {
+        "label": "Evaluaciones",
+        "why": "Analice el riesgo y realice una EIPD cuando el tratamiento sea de alto riesgo.",
+        "do": "Analice su tratamiento y realice una EIPD cuando el riesgo sea alto."
+      },
+      "transfers": {
+        "label": "Transferencias",
+        "why": "Registre las transferencias internacionales y la garantía en que se apoya cada una.",
+        "do": "Registre cada transferencia internacional y su mecanismo de transferencia."
+      },
+      "vendorDueDiligence": {
+        "label": "Diligencia debida de proveedores",
+        "why": "Evalúe a cada proveedor que trata datos personales por usted.",
+        "do": "Complete una evaluación de diligencia debida para cada proveedor."
+      },
+      "lia": {
+        "label": "Evaluación de interés legítimo",
+        "why": "Pondere sus intereses frente a los derechos de las personas cuando se apoye en ellos.",
+        "do": "Realice una evaluación de interés legítimo cuando esa sea su base jurídica."
+      },
+      "dsar": {
+        "label": "Solicitudes de derechos",
+        "why": "Reciba y responda las solicitudes de los interesados dentro del plazo.",
+        "do": "Configure el formulario de recepción y responda las solicitudes a tiempo."
+      },
+      "notices": {
+        "label": "Avisos y consentimiento",
+        "why": "Conserve los avisos y los registros de consentimiento que se deben a las personas.",
+        "do": "Registre los avisos y el consentimiento en los que se apoya."
+      },
+      "incidents": {
+        "label": "Registro de brechas",
+        "why": "Registre los incidentes y controle el plazo de 72 horas.",
+        "do": "Registre los incidentes en el registro y vigile el plazo de 72 horas."
+      },
+      "audits": {
+        "label": "Auditorías e informes",
+        "why": "Revise el programa e informe a la dirección.",
+        "do": "Registre auditorías, revisiones e informes a la dirección."
+      }
+    },
+    "library": {
+      "reports": "Informes",
+      "experts": "Buscar un experto",
+      "clients": "Todos los clientes",
+      "skills": "Módulos",
+      "billing": "Facturación",
+      "help": "Ayuda y documentación",
+      "settings": "Ajustes"
+    },
+    "nextStep": {
+      "title": "Siguiente paso",
+      "stage": "Fase {number}: {stage}",
+      "button": "Ir a {step}",
+      "allDoneTitle": "Su programa está en marcha",
+      "allDoneBody": "Todos los pasos de la ruta están hechos. Mantenga sus registros al día y revíselos con regularidad.",
+      "allDoneButton": "Volver al resumen"
+    },
+    "band": {
+      "step": "Paso {number}",
+      "next": "Siguiente paso",
+      "finish": "Finalizar",
+      "stageDone": "Fase {number} completada. Siguiente: {next}.",
+      "lastStageDone": "Fase {number} completada. Todas las fases están hechas."
+    },
+    "plan": {
+      "label": "Plan",
+      "day": "Día {day} de {total}",
+      "onPlan": "Según lo previsto",
+      "behind": "Con {days} días de retraso",
+      "complete": "Plan completado",
+      "remaining": "Quedan {count} fases: {stages}",
+      "notStarted": "Sin empezar"
+    },
+    "layout": {
+      "title": "Diseño",
+      "description": "Elija cómo se organiza el panel. Es una preferencia para este navegador.",
+      "guided": "Guiado",
+      "classic": "Clásico (se retirará)",
+      "changed": "Diseño cambiado.",
+      "useGuided": "Usar el diseño guiado",
+      "useClassic": "Usar el diseño clásico"
+    }
   },
   "errorPage": {
     "title": "Algo ha fallado",

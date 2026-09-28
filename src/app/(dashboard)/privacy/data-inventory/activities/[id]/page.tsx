@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -48,6 +49,7 @@ export default function ActivityDetailPage() {
   const id = params.id as string;
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const { label: enumLabel } = useEnumLabels();
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
   // Map of assetId -> elementIds (undefined = all elements)
@@ -463,7 +465,7 @@ export default function ActivityDetailPage() {
                     </p>
                   </div>
                   <Badge variant="outline" className="text-xs">
-                    {transfer.mechanism.replace("_", " ")}
+                    {enumLabel("transferMechanism", transfer.mechanism)}
                   </Badge>
                 </div>
               ))}
@@ -497,7 +499,7 @@ export default function ActivityDetailPage() {
                       )}
                     </div>
                     <Badge variant="outline" className="text-xs">
-                      {assessment.status}
+                      {enumLabel("assessmentStatus", assessment.status)}
                     </Badge>
                   </div>
                 </Link>

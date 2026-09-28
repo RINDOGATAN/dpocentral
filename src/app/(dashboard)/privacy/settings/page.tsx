@@ -27,12 +27,14 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
+import { LayoutCard } from "@/components/guided/layout-card";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { writeLocaleCookie } from "@/i18n/locale-cookie";
@@ -53,6 +55,7 @@ export default function SettingsPage() {
   const tLang = useTranslations("pages.settings.language");
   const tOrg = useTranslations("pages.settings.organization");
   const tMembers = useTranslations("pages.settings.members");
+  const { label: enumLabel } = useEnumLabels();
   const { userType } = useUserType();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
@@ -163,6 +166,10 @@ export default function SettingsPage() {
 
       {/* Hosted pilot: days left, ceilings, exports (hidden on the kit) */}
       {orgId && <PilotStatusCard organizationId={orgId} />}
+
+      {/* Layout: Guided (default) or Classic (will be retired). A per-browser
+          choice; the change applies at once. */}
+      <LayoutCard />
 
       {/* Profile */}
       <Card>
@@ -381,14 +388,17 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {isAdmin && (
-              <div className="flex flex-col sm:flex-row gap-2 pb-3 border-b">
-                <Input
-                  type="email"
-                  placeholder={tMembers("inviteEmailPlaceholder")}
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="flex-1"
-                />
+              <div className="space-y-2 pb-3 border-b">
+                <Label htmlFor="invite-email">{tMembers("inviteLabel")}</Label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    id="invite-email"
+                    type="email"
+                    placeholder={tMembers("inviteEmailPlaceholder")}
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    className="flex-1"
+                  />
                 <Select
                   value={inviteRole}
                   onValueChange={(v) => setInviteRole(v as OrganizationRole)}
@@ -400,7 +410,7 @@ export default function SettingsPage() {
                     {ROLE_OPTIONS.filter((r) => (isOwner ? true : r !== "OWNER")).map(
                       (role) => (
                         <SelectItem key={role} value={role}>
-                          {role}
+                          {enumLabel("role", role)}
                         </SelectItem>
                       )
                     )}
@@ -423,6 +433,8 @@ export default function SettingsPage() {
                   )}
                   {tMembers("add")}
                 </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">{tMembers("inviteHelp")}</p>
               </div>
             )}
 
@@ -462,14 +474,14 @@ export default function SettingsPage() {
                         <SelectContent>
                           {ROLE_OPTIONS.map((role) => (
                             <SelectItem key={role} value={role}>
-                              {role}
+                              {enumLabel("role", role)}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     ) : (
                       <Badge variant="outline" className="text-xs">
-                        {member.role}
+                        {enumLabel("role", member.role)}
                       </Badge>
                     )}
                     {isAdmin && !isSelf && member.role !== "OWNER" && (

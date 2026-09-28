@@ -13,6 +13,7 @@ import { vendorCatalogRouter } from "./vendorCatalog";
 import { billingRouter } from "./billing";
 import { feedbackRouter } from "./feedback";
 import { quickstartRouter } from "./privacy/quickstart";
+import { programPathRouter } from "./privacy/programPath";
 import { userRouter } from "./privacy/user";
 import { expertsRouter } from "./privacy/experts";
 import { clientsRouter } from "./privacy/clients";
@@ -36,6 +37,7 @@ export const appRouter = createTRPCRouter({
   billing: billingRouter,
   feedback: feedbackRouter,
   quickstart: quickstartRouter,
+  programPath: programPathRouter,
   user: userRouter,
   experts: expertsRouter,
   clients: clientsRouter,

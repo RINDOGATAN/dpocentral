@@ -39,6 +39,9 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { PageHeader } from "@/components/privacy/page-header";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 const MECHANISM_KEYS = [
@@ -66,6 +69,7 @@ export default function TransfersListPage() {
   const tToasts = useTranslations("toasts");
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const [form, setForm] = useState({
     name: "",
     destinationCountry: "",
@@ -114,19 +118,17 @@ export default function TransfersListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Globe className="w-6 h-6 text-primary shrink-0" />
-            {tList("title")}
-          </h1>
-          <p className="text-muted-foreground">{tList("subtitle")}</p>
-        </div>
-        <Button className="w-full sm:w-auto" onClick={() => setDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          {tList("add")}
-        </Button>
-      </div>
+      <PageHeader
+        icon={Globe}
+        title={tList("title")}
+        description={tList("subtitle")}
+        actions={
+          <Button className="w-full sm:w-auto" onClick={() => setDialogOpen(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {tList("add")}
+          </Button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
@@ -187,8 +189,15 @@ export default function TransfersListPage() {
       {/* Transfer list */}
       <Card>
         <CardHeader>
-          <CardTitle>{tList("all")}</CardTitle>
-          <CardDescription>{tList("allSubtitle")}</CardDescription>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="min-w-0">
+              <CardTitle>{tList("all")}</CardTitle>
+              <CardDescription>{tList("allSubtitle")}</CardDescription>
+            </div>
+            {transfers && transfers.length > 0 && (
+              <SortControl value={sort} onChange={setSort} />
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {!transfers || transfers.length === 0 ? (
@@ -203,7 +212,10 @@ export default function TransfersListPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {transfers.map((transfer) => {
+              {sortByListSort(transfers, sort, {
+                date: (tr) => tr.createdAt,
+                name: (tr) => tr.name,
+              }).map((transfer) => {
                 const status = (transfer.complianceStatus as string | null) || "PENDING";
                 return (
                   <Link

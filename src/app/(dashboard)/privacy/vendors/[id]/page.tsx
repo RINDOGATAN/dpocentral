@@ -50,6 +50,8 @@ import { useOrganization } from "@/lib/organization-context";
 import { ProduceDpaDialog } from "./produce-dpa-dialog";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
+import { TemplateBadge } from "@/components/privacy/template-badge";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { toneChip } from "@/config/status-palette";
 
 const statusColors: Record<string, string> = {
@@ -119,6 +121,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   // Shared DataCategory labels — vendor records can carry any of the 15 enum
   // values, so this covers the whole enum rather than a single form's subset.
   const tDataCategory = useTranslations("enums.dataCategory");
@@ -240,6 +243,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                   {tp("riskBadge", { level: tList(`riskTier.${vendor.riskTier}` as `riskTier.LOW` | `riskTier.MEDIUM` | `riskTier.HIGH` | `riskTier.CRITICAL`) })}
                 </Badge>
               )}
+              <TemplateBadge metadata={vendor.metadata} className="text-xs" />
             </div>
             <p className="text-muted-foreground break-words">
               {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}
@@ -440,8 +444,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                         <div className="flex items-center gap-2 flex-wrap">
                           <FileText className="w-4 h-4 text-primary shrink-0" />
                           <span className="font-medium truncate">{contract.name}</span>
-                          <Badge variant="outline">{contract.type}</Badge>
-                          <Badge variant="outline">{contract.status}</Badge>
+                          <Badge variant="outline">{enumLabel("contractType", contract.type)}</Badge>
+                          <Badge variant="outline">{enumLabel("contractStatus", contract.status)}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
                           {contract.startDate && (
@@ -523,8 +527,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                     <div className="min-w-0 flex-1">
                       <p className="font-medium truncate">{a.template?.name ?? tp("assessments.customAssessment")}</p>
                       <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                        {a.template?.type && <Badge variant="outline" className="text-[10px]">{a.template.type}</Badge>}
-                        <Badge variant="outline" className="text-[10px]">{a.status}</Badge>
+                        {a.template?.type && <Badge variant="outline" className="text-[10px]">{enumLabel("assessmentType", a.template.type)}</Badge>}
+                        <Badge variant="outline" className="text-[10px]">{enumLabel("assessmentStatus", a.status)}</Badge>
                         {a.riskLevel && (
                           <Badge variant="outline" className="text-[10px]">
                             {tp("assessments.risk", { level: a.riskLevel })}

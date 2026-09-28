@@ -54,6 +54,8 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
+import { TemplateBadge } from "@/components/privacy/template-badge";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { toneForSensitivity } from "@/config/status-tone";
 
 const DataFlowVisualization = dynamic(
@@ -99,6 +101,7 @@ export default function DataAssetDetailPage() {
   const tCommon = useTranslations("common");
   const tp = useTranslations("pages.assetDetail");
   const tList = useTranslations("pages.dataInventory");
+  const { label: enumLabel } = useEnumLabels();
 
   const [confirmAssetOpen, setConfirmAssetOpen] = useState(false);
   const [pendingElement, setPendingElement] = useState<{ id: string; name: string } | null>(null);
@@ -337,10 +340,11 @@ export default function DataAssetDetailPage() {
             <div>
               <h1 className="text-2xl font-semibold">{asset.name}</h1>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline">{asset.type}</Badge>
+                <Badge variant="outline">{enumLabel("dataAssetType", asset.type)}</Badge>
                 {asset.isProduction && (
                   <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
                 )}
+                <TemplateBadge metadata={asset.metadata} className="text-xs" />
               </div>
             </div>
           </div>
@@ -519,7 +523,7 @@ export default function DataAssetDetailPage() {
                             <div>
                               <p className="font-medium">{link.processingActivity.name}</p>
                               <p className="text-xs text-muted-foreground">
-                                {link.processingActivity.legalBasis ? tList(`legalBasis.${link.processingActivity.legalBasis}` as `legalBasis.CONSENT` | `legalBasis.CONTRACT` | `legalBasis.LEGAL_OBLIGATION` | `legalBasis.VITAL_INTERESTS` | `legalBasis.PUBLIC_TASK` | `legalBasis.LEGITIMATE_INTERESTS`) : link.processingActivity.legalBasis}
+                                {enumLabel("legalBasis", link.processingActivity.legalBasis)}
                                 {link.processingActivity.purpose && ` — ${link.processingActivity.purpose}`}
                               </p>
                             </div>

@@ -348,11 +348,23 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
     expect(body).toContain(assetName);
   });
 
-  // ── Sign-out ─────────────────────────────────────────────────────────
-  await step("sign-out", async () => {
+  // ── Layout and sign-out ──────────────────────────────────────────────
+  // Guided is the default; Classic stays reachable per browser. Check Classic
+  // renders (its top-bar sign-out button), then return to Guided.
+  await step("classic layout stays reachable", async () => {
+    await page.goto("/privacy?skin=classic");
+    // The middleware strips ?skin= and sets the cookie; Classic renders the
+    // sign-out control as a visible top-bar button.
+    await expect(page.getByRole("button", { name: /sign out/i }).first()).toBeVisible();
+    await page.goto("/privacy?skin=guided");
+    await expect(page.getByRole("button", { name: /account/i })).toBeVisible();
+  });
+
+  await step("sign-out through the guided account menu", async () => {
     await page.goto("/privacy");
-    // The header renders one sign-out control per layout; use the visible one.
-    await page.getByRole("button", { name: /sign out/i }).filter({ visible: true }).first().click();
+    // Guided keeps sign-out in the account menu.
+    await page.getByRole("button", { name: /account/i }).click();
+    await page.getByRole("menuitem", { name: /sign out/i }).click();
     await page.waitForURL("**/sign-in**");
     await page.goto("/privacy");
     await page.waitForURL("**/sign-in**");

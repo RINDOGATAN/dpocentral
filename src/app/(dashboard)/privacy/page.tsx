@@ -45,8 +45,11 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
+import { useSkin } from "@/components/guided/skin-context";
+import { NextStepCard } from "@/components/guided/next-step-card";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -54,7 +57,9 @@ export default function PrivacyDashboardPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.dashboard");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
+  const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -150,6 +155,9 @@ export default function PrivacyDashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Guided only: the first step on the path that is not done. One card. */}
+      {skin === "guided" && <NextStepCard waitForFresh={fromQuickstart} />}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="min-w-0">
@@ -174,6 +182,9 @@ export default function PrivacyDashboardPage() {
             <span className="hidden sm:inline">{tp("exportReport")}</span>
             <span className="sm:hidden">{tp("exportReportShort")}</span>
           </Button>
+        {/* One client switcher: Guided carries it in the left menu (the client
+            switcher block), so the page-header switch is Classic-only. */}
+        {skin !== "guided" && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2 shrink-0">
@@ -202,11 +213,14 @@ export default function PrivacyDashboardPage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
         </div>
       </div>
 
-      {/* Quickstart Card — shown when org has few records */}
-      {showQuickstart &&
+      {/* Quickstart Card — shown when org has few records. Guided leads to the
+          quick start through the one "Next step" card above, so this second
+          call to action is Classic-only: one card at the top. */}
+      {skin !== "guided" && showQuickstart &&
         (portfolio?.hasPortfolio ? (
           /* VW portfolio detected — show tailored card */
           <Card className="border-primary/50 bg-primary/5">
@@ -363,7 +377,7 @@ export default function PrivacyDashboardPage() {
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium font-mono text-primary text-sm">{dsar.publicId}</span>
-                        <Badge variant="outline" className="text-xs">{dsar.type}</Badge>
+                        <Badge variant="outline" className="text-xs">{enumLabel("dsarType", dsar.type)}</Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground truncate">{dsar.requesterName}</p>
                     </div>
@@ -499,7 +513,7 @@ export default function PrivacyDashboardPage() {
                     </div>
                     {vendor.riskTier && (
                       <StatusChip tone={toneForRiskTier(vendor.riskTier)} className="text-xs shrink-0">
-                        {vendor.riskTier}
+                        {enumLabel("riskLevel", vendor.riskTier)}
                       </StatusChip>
                     )}
                   </div>

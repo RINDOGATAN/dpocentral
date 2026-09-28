@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -440,12 +441,15 @@ function EngagementHistory({ orgId }: { orgId: string }) {
 
               {isEditing ? (
                 <div className="space-y-2">
+                  <Label htmlFor={`engagement-notes-${eng.id}`}>{tEng("notes")}</Label>
                   <Textarea
+                    id={`engagement-notes-${eng.id}`}
                     rows={3}
                     placeholder={tEng("notesPlaceholder")}
                     value={draftNotes}
                     onChange={(e) => setDraftNotes(e.target.value)}
                   />
+                  <p className="text-xs text-muted-foreground">{tEng("notesHelp")}</p>
                   <div className="flex gap-2">
                     <Button
                       size="sm"

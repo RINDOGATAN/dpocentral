@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight, Database, Edit, Loader2, Server, Workflow } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useEnumLabels } from "@/lib/enum-labels";
 import type { DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneForSensitivity } from "@/config/status-tone";
@@ -55,6 +56,7 @@ export default function DataElementDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { organization } = useOrganization();
+  const { label: enumLabel } = useEnumLabels();
 
   const { data: element, isLoading } = trpc.dataInventory.getElement.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -156,7 +158,7 @@ export default function DataElementDetailPage() {
                   <div>
                     <p className="font-medium">{element.dataAsset.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {element.dataAsset.type}
+                      {enumLabel("dataAssetType", element.dataAsset.type)}
                       {element.dataAsset.vendor ? ` — ${element.dataAsset.vendor}` : ""}
                     </p>
                   </div>

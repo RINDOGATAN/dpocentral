@@ -40,6 +40,10 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { TemplateBadge } from "@/components/privacy/template-badge";
+import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForRiskTier } from "@/config/status-tone";
@@ -60,6 +64,7 @@ export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
@@ -119,15 +124,19 @@ export default function VendorsPage() {
     }
   })();
 
+  const sortedVendors = sortByListSort(filteredVendors, sort, {
+    date: (v) => v.createdAt,
+    name: (v) => v.name,
+  });
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <div className="flex gap-2">
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" aria-label={t("exportRegister")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2">
@@ -159,8 +168,9 @@ export default function VendorsPage() {
               <span className="sm:hidden">{t("addVendorShort")}</span>
             </Button>
           </Link>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
@@ -259,15 +269,18 @@ export default function VendorsPage() {
         </Card>
       )}
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("search")}
-          className="pl-9"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      {/* Search + sort */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t("search")}
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <SortControl value={sort} onChange={setSort} />
       </div>
 
       {/* Tabs */}
@@ -283,9 +296,9 @@ export default function VendorsPage() {
       {/* Vendor List */}
       {isLoading ? (
         <ListPageSkeleton />
-      ) : filteredVendors.length > 0 ? (
+      ) : sortedVendors.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
-          {filteredVendors.map((vendor) => (
+          {sortedVendors.map((vendor) => (
             <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader className="pb-3">
@@ -308,6 +321,7 @@ export default function VendorsPage() {
                   <CardDescription>
                     {(vendor.categories as string[])?.join(" - ") || t("card.noCategories")}
                   </CardDescription>
+                  <TemplateBadge metadata={vendor.metadata} className="mt-1 w-fit text-xs" />
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {vendor.dataProcessed && (vendor.dataProcessed as string[]).length > 0 && (

@@ -43,6 +43,9 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { PageHeader } from "@/components/privacy/page-header";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
@@ -71,6 +74,7 @@ export default function AISystemsPage() {
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const debouncedSearch = useDebounce(search, 300);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [selectedExportIds, setSelectedExportIds] = useState<string[]>([]);
@@ -100,6 +104,10 @@ export default function AISystemsPage() {
   const data = useMemo(
     () => ({ systems: pages?.pages.flatMap((p) => p.systems) ?? [] }),
     [pages]
+  );
+  const sortedSystems = useMemo(
+    () => sortByListSort(data.systems, sort, { date: (s) => s.createdAt, name: (s) => s.name }),
+    [data.systems, sort]
   );
 
   const { data: stats } = trpc.aiGovernance.getStats.useQuery(
@@ -134,15 +142,12 @@ export default function AISystemsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Bot className="w-6 h-6 shrink-0" />
-            {tp("title")}
-          </h1>
-          <p className="text-muted-foreground">{tp("subtitle")}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
+      <PageHeader
+        icon={Bot}
+        title={tp("title")}
+        description={tp("subtitle")}
+        actions={
+          <>
           {showAisExport && (
             <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
               <DialogTrigger asChild>
@@ -232,8 +237,9 @@ export default function AISystemsPage() {
               {tp("register")}
             </Link>
           </Button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Stats */}
       {stats && stats.total > 0 && (
@@ -318,6 +324,7 @@ export default function AISystemsPage() {
             <SelectItem value="NON_COMPLIANT">{tp("status.NON_COMPLIANT")}</SelectItem>
           </SelectContent>
         </Select>
+        <SortControl value={sort} onChange={setSort} />
       </div>
 
       {/* System List */}
@@ -342,7 +349,7 @@ export default function AISystemsPage() {
         </Card>
       ) : (
         <div className="flex flex-col gap-4">
-          {data?.systems.map((system) => (
+          {sortedSystems.map((system) => (
             <Link key={system.id} href={`/privacy/ai-systems/${system.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
                 <CardContent className="py-4">

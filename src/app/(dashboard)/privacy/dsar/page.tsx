@@ -28,6 +28,9 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
+import { SortControl } from "@/components/privacy/sort-control";
+import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneMark } from "@/config/status-palette";
 
@@ -51,6 +54,7 @@ export default function DSARPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery);
   const [activeTab, setActiveTab] = useState("all");
+  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
   const { organization } = useOrganization();
 
   const {
@@ -103,15 +107,19 @@ export default function DSARPage() {
     }
   })();
 
+  const sortedRequests = sortByListSort(filteredRequests, sort, {
+    date: (r) => r.createdAt,
+    name: (r) => r.requesterName ?? "",
+  });
+
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <div className="flex gap-2">
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <>
           <Button
             variant="outline"
             size="icon"
@@ -151,8 +159,9 @@ export default function DSARPage() {
               <span className="sm:hidden">{t("newRequestShort")}</span>
             </Button>
           </Link>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
@@ -185,15 +194,18 @@ export default function DSARPage() {
         </Card>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("search")}
-          className="pl-9"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      {/* Search + sort */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t("search")}
+            className="pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <SortControl value={sort} onChange={setSort} />
       </div>
 
       {/* Tabs */}
@@ -209,9 +221,9 @@ export default function DSARPage() {
       {/* Request List */}
       {isLoading ? (
         <ListPageSkeleton />
-      ) : filteredRequests.length > 0 ? (
+      ) : sortedRequests.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {filteredRequests.map((request) => (
+          {sortedRequests.map((request) => (
             <Link key={request.id} href={`/privacy/dsar/${request.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <CardContent className="p-4">

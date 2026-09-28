@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -48,6 +49,7 @@ import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { StatusChip } from "@/components/ui/status-chip";
@@ -87,12 +89,19 @@ export default function QuickstartPage() {
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
+  const { label: enumLabel } = useEnumLabels();
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
 
   // Wizard state — start at "welcome" if from VW, otherwise "choose"
   const [step, setStep] = useState<WizardStep>(fromVendorWatch ? "welcome" : "choose");
+  // The programme's name, asked first and prefilled with the organisation's
+  // name. Carried on the result screen and saved to the organisation so
+  // exports can name the programme. `null` means "untouched": show the org
+  // name until the person edits the field.
+  const [programNameInput, setProgramNameInput] = useState<string | null>(null);
+  const programName = programNameInput ?? organization?.name ?? "";
   const [useVendors, setUseVendors] = useState(false);
   const [useIndustry, setUseIndustry] = useState(false);
   const [portfolioInitialized, setPortfolioInitialized] = useState(false);
@@ -252,6 +261,7 @@ export default function QuickstartPage() {
       skipAssetNames,
       skipActivityNames,
       fromPortfolio: isPortfolioFlow && useVendors,
+      programName: programName.trim() || undefined,
     });
   };
 
@@ -338,6 +348,22 @@ export default function QuickstartPage() {
             </span>
           ))}
         </div>
+      )}
+
+      {/* Programme name — asked first, prefilled with the organisation's name */}
+      {(step === "choose" || step === "welcome") && (
+        <Card>
+          <CardContent className="p-4 space-y-1.5">
+            <Label htmlFor="quickstart-program-name">{tp("programName.label")}</Label>
+            <Input
+              id="quickstart-program-name"
+              value={programName}
+              onChange={(e) => setProgramNameInput(e.target.value)}
+              placeholder={tp("programName.placeholder")}
+            />
+            <p className="text-xs text-muted-foreground">{tp("programName.help")}</p>
+          </CardContent>
+        </Card>
       )}
 
       {/* ════════════════════════════════════════════════
@@ -976,7 +1002,7 @@ export default function QuickstartPage() {
                             <span className="font-medium">{a.name}</span>
                             <div className="flex items-center gap-2">
                               <Badge variant="outline" className="text-xs">
-                                {a.type}
+                                {enumLabel("dataAssetType", a.type)}
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
@@ -1011,7 +1037,7 @@ export default function QuickstartPage() {
                             <span className="font-medium">{a.name}</span>
                             <div className="flex items-center gap-2">
                               <Badge variant="outline" className="text-xs">
-                                {a.legalBasis}
+                                {enumLabel("legalBasis", a.legalBasis)}
                               </Badge>
                               {a.alreadyExists && (
                                 <Badge variant="secondary" className="text-xs">
@@ -1076,6 +1102,11 @@ export default function QuickstartPage() {
             <div>
               <h2 className="text-lg font-semibold">{tp("review.title")}</h2>
               <p className="text-sm text-muted-foreground">{tp("review.subtitle")}</p>
+              {programName.trim() && (
+                <p className="text-sm font-medium text-primary mt-0.5">
+                  {tp("review.forProgramme", { name: programName.trim() })}
+                </p>
+              )}
             </div>
             <Button
               variant="ghost"
@@ -1270,11 +1301,63 @@ export default function QuickstartPage() {
               <h2 className="text-xl font-semibold mb-2">
                 {nothingCreated ? tp("success.alreadySetTitle") : tp("success.createdTitle")}
               </h2>
+              {programName.trim() && (
+                <p className="text-sm font-medium text-primary mb-2">
+                  {tp("success.forProgramme", { name: programName.trim() })}
+                </p>
+              )}
               <p className="text-muted-foreground max-w-md mx-auto">
                 {nothingCreated ? tp("success.alreadySetBody") : tp("success.createdBody")}
               </p>
             </CardContent>
           </Card>
+
+          {/* What was created — the named records, each list sorted newest-first
+              so these sit at the top of the list its card links to. */}
+          {!nothingCreated && (() => {
+            const createdVendors = useVendors && vendorPreview
+              ? vendorPreview.previews
+                  .filter((p) => !vendorPreview.existingVendorNames.includes(p.vendorName))
+                  .map((p) => p.vendorName)
+              : [];
+            const createdAssets = useIndustry && industryPreview
+              ? industryPreview.assets.filter((a) => !a.alreadyExists).map((a) => a.name)
+              : [];
+            if (createdVendors.length === 0 && createdAssets.length === 0) return null;
+            return (
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">{tp("success.createdListTitle")}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {createdVendors.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListVendors")}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {createdVendors.map((name) => (
+                          <Link key={name} href={`/privacy/vendors?search=${encodeURIComponent(name)}`}>
+                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {createdAssets.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListAssets")}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {createdAssets.map((name) => (
+                          <Link key={name} href={`/privacy/data-inventory?search=${encodeURIComponent(name)}`}>
+                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           <ExpertHelpCta context="quickstart" />
 

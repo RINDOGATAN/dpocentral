@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { useTranslatedSections } from "@/lib/template-i18n";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -128,6 +129,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const tp = useTranslations("pages.assessmentDetail");
   const tList = useTranslations("pages.assessments");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const tAi = useTranslations("ai");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
   const [draftResponses, setDraftResponses] = useState<Record<string, { response: string; notes: string }>>({});
@@ -852,6 +854,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <span className="font-medium">{completionPercentage}%</span>
           </div>
           <Progress value={completionPercentage} className="h-2" />
+          {canSubmit && !isSingleUser && (
+            <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5">
+              <Send className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              {tp("reviewRecipients")}
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -1210,20 +1218,29 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                   <>
                                     {isEditing ? (
                                       <div className="space-y-3">
-                                        <Textarea
-                                          placeholder={tp("question.responsePlaceholder")}
-                                          rows={3}
-                                          value={draftValue}
-                                          onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
-                                          className="min-h-[44px]"
-                                        />
-                                        <Textarea
-                                          placeholder={tp("question.notesPlaceholder")}
-                                          rows={2}
-                                          value={draftResponses[question.id]?.notes || ""}
-                                          onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
-                                          className="text-sm"
-                                        />
+                                        <div className="space-y-1.5">
+                                          <Label htmlFor={`response-${question.id}`}>{tp("question.responseLabel")}</Label>
+                                          <Textarea
+                                            id={`response-${question.id}`}
+                                            placeholder={tp("question.responsePlaceholder")}
+                                            rows={3}
+                                            value={draftValue}
+                                            onChange={(e) => updateDraftResponse(question.id, "response", e.target.value)}
+                                            className="min-h-[44px]"
+                                          />
+                                          <p className="text-xs text-muted-foreground">{tp("question.responseHelp")}</p>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                          <Label htmlFor={`notes-${question.id}`}>{tp("question.notesLabel")}</Label>
+                                          <Textarea
+                                            id={`notes-${question.id}`}
+                                            placeholder={tp("question.notesPlaceholder")}
+                                            rows={2}
+                                            value={draftResponses[question.id]?.notes || ""}
+                                            onChange={(e) => updateDraftResponse(question.id, "notes", e.target.value)}
+                                            className="text-sm"
+                                          />
+                                        </div>
                                         <div className="flex items-center gap-2">
                                           <Button
                                             size="sm"
@@ -1438,7 +1455,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           <span className="font-medium">
                             {tp("approvals.level", { n: approval.level })}
                           </span>
-                          <Badge variant="outline">{approval.status}</Badge>
+                          <Badge variant="outline">{enumLabel("approvalStatus", approval.status)}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
                           {tp("approvals.approver", { name: approval.approver?.name || approval.approver?.email || "" })}
