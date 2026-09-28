@@ -1397,7 +1397,14 @@
         "help": "Este nombre identifica tu programa de privacidad en el panel, en la pantalla de resultados y en tus exportaciones. Comienza con el nombre de tu organización; cámbialo si tu programa se conoce por otro nombre.",
         "placeholder": "p. ej. Programa de privacidad de Acme"
       },
+      "applies": {
+        "title": "Qué te aplica",
+        "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
+        "skip": "Aún no lo sé — omitir",
+        "continue": "Guardar y continuar"
+      },
       "steps": {
+        "applies": "Qué aplica",
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
         "yourVendors": "Tus proveedores",

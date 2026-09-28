@@ -1397,7 +1397,14 @@
         "help": "This names your privacy programme across the dashboard, the result screen and your exports. It starts as your organisation's name; change it if your programme goes by something else.",
         "placeholder": "e.g. Acme Privacy Programme"
       },
+      "applies": {
+        "title": "What applies to you",
+        "intro": "A few short questions about how you handle personal data. Together with the laws you operate under, they show what is likely to apply and what is worth checking. You can skip this now and set it later in Settings.",
+        "skip": "Not sure yet — skip",
+        "continue": "Save and continue"
+      },
       "steps": {
+        "applies": "What applies",
         "choose": "Choose Path",
         "vendors": "Select Vendors",
         "yourVendors": "Your Vendors",
