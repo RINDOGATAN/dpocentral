@@ -77,6 +77,7 @@ export const clientTemplateRouter = createTRPCRouter({
         parts: plan.parts,
         counts: plan.counts,
         skipped: plan.skipped,
+        dsarIntakeSkippedEdited: plan.dsarIntakeSkippedEdited,
         replacements: plan.replacements,
         flagged: plan.flagged,
       };

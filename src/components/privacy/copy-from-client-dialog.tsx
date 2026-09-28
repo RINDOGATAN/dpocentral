@@ -304,6 +304,7 @@ export function CopyFromClientDialog({
                   const blocked = !!needs && !parts.includes(needs);
                   const count = preview?.counts[p];
                   const skipped = preview?.skipped[p] ?? 0;
+                  const editedSkip = p === "dsarIntake" && !!preview?.dsarIntakeSkippedEdited;
                   return (
                     <label
                       key={p}
@@ -326,7 +327,11 @@ export function CopyFromClientDialog({
                           {blocked && needs
                             ? t("needsPart", { part: t(`parts.${needs}.label`) })
                             : t(`parts.${p}.hint`)}
-                          {skipped > 0 && <> {t("skipped", { count: skipped })}</>}
+                          {editedSkip ? (
+                            <> {t("dsarIntakeEdited")}</>
+                          ) : (
+                            skipped > 0 && <> {t("skipped", { count: skipped })}</>
+                          )}
                         </span>
                       </span>
                     </label>

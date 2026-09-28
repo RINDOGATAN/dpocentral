@@ -44,6 +44,7 @@ import {
   type CopyPart,
 } from "@/config/client-template";
 import { makeScrubber, type ScrubFlag, type Scrubber } from "@/lib/client-template/scrub";
+import { isIntakeConfigured, type IntakeFormShape } from "@/server/services/dsar/defaultIntakeForm";
 
 // ─── Permission ──────────────────────────────────────────────────────────────
 
@@ -168,6 +169,12 @@ interface DsarRow {
   thankYouMessage: string | null;
   privacyNoticeUrl: string | null;
   retentionDays: number;
+  /**
+   * When set, the target already has an untouched seeded default form and the
+   * copy replaces its wording and options in place rather than creating a
+   * second form (the public slug is unique per organisation).
+   */
+  replaceFormId: string | null;
 }
 interface JurisdictionLink {
   jurisdictionId: string;
@@ -179,6 +186,12 @@ export interface ClientTemplatePlan {
   counts: CopyCounts;
   /** What the source holds but the target already has (same name): left alone. */
   skipped: CopyCounts;
+  /**
+   * True when the source has an intake form but the target's own form has been
+   * set up by a person, so it is left as it is rather than overwritten. The
+   * dialog says so instead of the generic "already here" note.
+   */
+  dsarIntakeSkippedEdited: boolean;
   flagged: FlaggedItem[];
   /** Times the source's name was replaced with the new client's. */
   replacements: number;
@@ -225,6 +238,7 @@ export async function planClientTemplate(
     parts,
     counts: EMPTY_COUNTS(),
     skipped: EMPTY_COUNTS(),
+    dsarIntakeSkippedEdited: false,
     flagged: [],
     replacements: 0,
     jurisdictions: [],
@@ -439,6 +453,12 @@ export async function planClientTemplate(
 
   // DSAR intake form settings: the public form's wording and options. Copied
   // as an inactive draft; a live public form is never turned on by a copy.
+  //
+  // Every organisation is seeded with one default intake form so its public
+  // portal works out of the box. That untouched default is not "already here":
+  // the copy replaces its wording and options in place (the public slug is
+  // unique per organisation, so a second form cannot be created), left inactive
+  // until reviewed. A form a person has set up is never overwritten.
   if (want("dsarIntake")) {
     const [rows, existing] = await Promise.all([
       db.dSARIntakeForm.findMany({
@@ -457,21 +477,54 @@ export async function planClientTemplate(
         },
         orderBy: { createdAt: "asc" },
       }),
-      tgt ? db.dSARIntakeForm.findMany({ where: tgt, select: { name: true } }) : Promise.resolve([]),
+      tgt
+        ? db.dSARIntakeForm.findMany({
+            where: tgt,
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              title: true,
+              description: true,
+              thankYouMessage: true,
+              privacyNoticeUrl: true,
+              customCss: true,
+              fields: true,
+            },
+          })
+        : Promise.resolve([]),
     ]);
-    const taken = new Set(existing.map((f) => key(f.name)));
-    for (const row of rows) {
-      const item = scrubItem("dsarIntake", "name", {
-        ...row,
-        fields: (row.fields ?? {}) as Prisma.InputJsonValue,
-      });
-      if (taken.has(key(item.out.name))) {
-        plan.skipped.dsarIntake += 1;
-        continue;
+    const untouchedDefault = existing.find((f) => !isIntakeConfigured(f as IntakeFormShape)) ?? null;
+    // The target manages its own set-up intake form (no seeded default left to
+    // replace): the source's form is left behind, and the dialog says so.
+    if (rows.length > 0 && existing.length > 0 && !untouchedDefault) {
+      plan.dsarIntakeSkippedEdited = true;
+    } else {
+      // The public slug is unique per organisation; the seeded default's slug is
+      // freed because that row is replaced in place, not kept alongside.
+      const takenSlugs = new Set(existing.map((f) => f.slug as string));
+      if (untouchedDefault) takenSlugs.delete(untouchedDefault.slug as string);
+      let replaced = false;
+      for (const row of rows) {
+        const item = scrubItem("dsarIntake", "name", {
+          ...row,
+          fields: (row.fields ?? {}) as Prisma.InputJsonValue,
+        });
+        if (untouchedDefault && !replaced) {
+          // Replace the seeded default's wording and options in place.
+          replaced = true;
+          item.keep();
+          plan.dsarForms.push({ ...(item.out as unknown as DsarRow), replaceFormId: untouchedDefault.id as string });
+          continue;
+        }
+        if (takenSlugs.has(item.out.slug)) {
+          plan.skipped.dsarIntake += 1;
+          continue;
+        }
+        takenSlugs.add(item.out.slug);
+        item.keep();
+        plan.dsarForms.push({ ...(item.out as unknown as DsarRow), replaceFormId: null });
       }
-      taken.add(key(item.out.name));
-      item.keep();
-      plan.dsarForms.push(item.out as unknown as DsarRow);
     }
   }
 
@@ -632,24 +685,32 @@ export async function applyClientTemplate(
   }
 
   for (const f of plan.dsarForms) {
-    const form = await db.dSARIntakeForm.create({
-      data: {
-        organizationId,
-        name: f.name,
-        slug: f.slug,
-        title: f.title,
-        description: f.description,
-        fields: f.fields,
-        enabledTypes: f.enabledTypes,
-        customCss: f.customCss,
-        thankYouMessage: f.thankYouMessage,
-        privacyNoticeUrl: f.privacyNoticeUrl,
-        retentionDays: f.retentionDays,
-        // A copy never turns on a live public intake form.
-        isActive: false,
-      },
-      select: { id: true },
-    });
+    const data = {
+      name: f.name,
+      slug: f.slug,
+      title: f.title,
+      description: f.description,
+      fields: f.fields,
+      enabledTypes: f.enabledTypes,
+      customCss: f.customCss,
+      thankYouMessage: f.thankYouMessage,
+      privacyNoticeUrl: f.privacyNoticeUrl,
+      retentionDays: f.retentionDays,
+      // A copy never turns on a live public intake form.
+      isActive: false,
+    };
+    // Replace the target's untouched seeded default in place, or create a new
+    // form where there is none to replace.
+    const form = f.replaceFormId
+      ? await db.dSARIntakeForm.update({
+          where: { id: f.replaceFormId },
+          data,
+          select: { id: true },
+        })
+      : await db.dSARIntakeForm.create({
+          data: { organizationId, ...data },
+          select: { id: true },
+        });
     ids.set(idKey("dsarIntake", f.name), form.id);
   }
 

@@ -3,8 +3,8 @@
     "titleCurrent": "Empezar desde otro cliente",
     "titleNew": "Crear un cliente nuevo a partir de este",
     "cardHint": "Copia el inventario de datos, las actividades de tratamiento, los proveedores y las plantillas de otro de tus clientes, como borradores.",
-    "descriptionCurrent": "Copia un programa de otro de tus clientes a este, como borradores. No se traslada nada sobre el otro cliente.",
-    "descriptionNew": "Crea un cliente nuevo y copia en él el programa de este cliente, como borradores. No se traslada nada que identifique a {source}.",
+    "descriptionCurrent": "Copia un programa de otro de tus clientes a este, como borradores. El nombre completo del otro cliente se sustituye por el de este. Cualquier otro dato que pueda remitir a él se enumera abajo para que lo revises antes de copiar.",
+    "descriptionNew": "Crea un cliente nuevo y copia en él el programa de este cliente, como borradores. El nombre completo de {source} se sustituye por el del cliente nuevo. Cualquier otro dato que pueda remitir a él se enumera abajo para que lo revises antes de copiar.",
     "sourceLabel": "Copiar de",
     "sourcePlaceholder": "Elige un cliente",
     "sourceHint": "Puedes copiar de clientes en los que seas propietario o administrador.",
@@ -15,6 +15,7 @@
     "partsLegend": "Qué copiar",
     "needsPart": "Necesita {part}",
     "skipped": "({count} ya presentes, sin tocar)",
+    "dsarIntakeEdited": "El formulario de solicitudes propio de este cliente ya está configurado, así que se deja como está.",
     "neverCopied": "Nunca se copia: solicitudes de derechos, incidentes, evaluaciones y sus pruebas, contratos, la traza de auditoría, miembros, licencias ni sistemas de IA.",
     "flagsTitle": "{count, plural, one {# elemento aún apunta al otro cliente} other {# elementos aún apuntan al otro cliente}}",
     "flagsHint": "El nombre completo del otro cliente se ha sustituido. Estos son formas abreviadas, direcciones web o de correo que solo una persona puede juzgar. Revísalos y luego confirma.",
@@ -1719,7 +1720,7 @@
     },
     "aiSystems": {
       "title": "Registro de gobernanza de IA",
-      "subtitle": "Registra y clasifica los sistemas de IA conforme al Reglamento de IA de la UE",
+      "subtitle": "Los sistemas de IA que usan datos personales, para un registro de privacidad completo. Su gobernanza se realiza en AI Sentinel.",
       "register": "Registrar sistema de IA",
       "search": "Buscar sistemas de IA...",
       "filter": {

@@ -3,8 +3,8 @@
     "titleCurrent": "Start from another client",
     "titleNew": "Start a new client from this one",
     "cardHint": "Copy the data inventory, processing activities, vendors and templates from one of your other clients, as drafts.",
-    "descriptionCurrent": "Copy a programme from one of your other clients into this one, as drafts. Nothing about the other client is carried across.",
-    "descriptionNew": "Create a new client and copy this client's programme into it, as drafts. Nothing that identifies {source} is carried across.",
+    "descriptionCurrent": "Copy a programme from one of your other clients into this one, as drafts. The other client's full name is replaced with this client's. Anything else that may point back to it is listed below for you to review before copying.",
+    "descriptionNew": "Create a new client and copy this client's programme into it, as drafts. {source}'s full name is replaced with the new client's. Anything else that may point back to it is listed below for you to review before copying.",
     "sourceLabel": "Copy from",
     "sourcePlaceholder": "Choose a client",
     "sourceHint": "You can copy from clients where you are an owner or an admin.",
@@ -15,6 +15,7 @@
     "partsLegend": "What to copy",
     "needsPart": "Needs {part}",
     "skipped": "({count} already here, left alone)",
+    "dsarIntakeEdited": "This client's own request form has been set up, so it is left as it is.",
     "neverCopied": "Never copied: rights requests, incidents, assessments and their evidence, contracts, the audit trail, members, licences and AI systems.",
     "flagsTitle": "{count, plural, one {# item still points at the other client} other {# items still point at the other client}}",
     "flagsHint": "The other client's full name was replaced. These are short forms, web or e-mail addresses that only a person can judge. Review them, then confirm.",
@@ -1719,7 +1720,7 @@
     },
     "aiSystems": {
       "title": "AI Governance Register",
-      "subtitle": "Register and classify AI systems per the EU AI Act",
+      "subtitle": "The AI systems that use personal data, for complete privacy records. Their governance is done in AI Sentinel.",
       "register": "Register AI System",
       "search": "Search AI systems...",
       "filter": {

@@ -19,6 +19,7 @@
 
 import { describe, expect, it, beforeEach } from "vitest";
 import { COPY_PARTS, NEVER_COPY } from "@/config/client-template";
+import { DEFAULT_INTAKE_FORM } from "@/server/services/dsar/defaultIntakeForm";
 import {
   applyClientTemplate,
   assertTemplatePermission,
@@ -101,6 +102,26 @@ function seed() {
       },
     ] as Row[],
     auditLog: [] as Row[],
+  };
+}
+
+/** An org's auto-seeded default intake form (pristine, as ensureDefaultIntakeForm writes it). */
+function seedDefaultForm(orgId: string): Row {
+  return {
+    id: `def-${orgId}`,
+    organizationId: orgId,
+    name: DEFAULT_INTAKE_FORM.name,
+    slug: DEFAULT_INTAKE_FORM.slug,
+    title: DEFAULT_INTAKE_FORM.title,
+    description: DEFAULT_INTAKE_FORM.description,
+    fields: [],
+    enabledTypes: [...DEFAULT_INTAKE_FORM.enabledTypes],
+    customCss: null,
+    thankYouMessage: DEFAULT_INTAKE_FORM.thankYouMessage,
+    privacyNoticeUrl: null,
+    retentionDays: 90,
+    isActive: true,
+    createdAt: new Date(1),
   };
 }
 
@@ -236,6 +257,31 @@ describe("the copy scope", () => {
     await copy(["dsarIntake"]);
     const [form] = inTarget("dSARIntakeForm");
     expect(form).toMatchObject({ name: "Public intake", slug: "dsar", isActive: false });
+  });
+
+  it("replaces the target's untouched seeded default in place, left inactive", async () => {
+    store.dSARIntakeForm.push(seedDefaultForm(TGT));
+    const { plan } = await copy(["dsarIntake"]);
+    expect(plan.counts.dsarIntake).toBe(1);
+    expect(plan.dsarIntakeSkippedEdited).toBe(false);
+    // The default is overwritten in place, so the target still has exactly one form.
+    const forms = inTarget("dSARIntakeForm");
+    expect(forms).toHaveLength(1);
+    expect(forms[0].id).toBe(`def-${TGT}`);
+    expect(forms[0]).toMatchObject({ name: "Public intake", slug: "dsar", title: "Make a request", isActive: false });
+  });
+
+  it("leaves a person-edited intake form as it is and says so", async () => {
+    const edited = seedDefaultForm(TGT);
+    edited.title = "Send us your data request"; // a person changed the public title
+    store.dSARIntakeForm.push(edited);
+    const { plan } = await copy(["dsarIntake"]);
+    expect(plan.counts.dsarIntake).toBe(0);
+    expect(plan.dsarIntakeSkippedEdited).toBe(true);
+    const forms = inTarget("dSARIntakeForm");
+    expect(forms).toHaveLength(1);
+    expect(forms[0].title).toBe("Send us your data request");
+    expect(forms[0].id).toBe(`def-${TGT}`);
   });
 
   it("never overwrites an asset the target already has", async () => {
