@@ -15,6 +15,12 @@ import type { Db } from "@/lib/prisma";
  * A row created before these columns existed defaults to USER_ENTERED, so it is
  * treated as possibly edited and is never removed automatically.
  *
+ * The "kept" tally is honest about template origin: it counts both the template
+ * rows kept because a child shows a human touch AND the template rows a person
+ * has explicitly confirmed (provenance AUTO_TEMPLATE, confirmedAt set). Those
+ * confirmed rows are template-created but owned, so they belong in "kept", not
+ * left out of the count entirely.
+ *
  * A candidate is KEPT if it, or any child that shows a human touch, would take
  * real work down with it:
  *   - a processing activity with an assessment past DRAFT, or a cross-border
@@ -43,6 +49,8 @@ export interface TemplateRemovalPlan {
 }
 
 const CANDIDATE = { provenance: "AUTO_TEMPLATE" as const, confirmedAt: null };
+/** Template-created rows a person has confirmed: kept, never removal candidates. */
+const CONFIRMED = { provenance: "AUTO_TEMPLATE" as const, confirmedAt: { not: null } };
 
 export async function planTemplateRemoval(
   prisma: Db,
@@ -153,12 +161,26 @@ export async function planTemplateRemoval(
   }
   const removeAssetIds = candidateAssetIds.filter((id) => !protectedAssets.has(id));
 
+  // Template rows a person has confirmed. They are not removal candidates, and
+  // they belong in the "kept" tally so the count a person sees is honest.
+  const [confirmedActivities, confirmedVendors, confirmedAssets] = await Promise.all([
+    prisma.processingActivity.findMany({ where: { organizationId, ...CONFIRMED }, select: { id: true } }),
+    prisma.vendor.findMany({ where: { organizationId, ...CONFIRMED }, select: { id: true } }),
+    prisma.dataAsset.findMany({ where: { organizationId, ...CONFIRMED }, select: { id: true } }),
+  ]);
+
   const processingActivities = {
     remove: removeActivityIds.length,
-    keep: candidateActivityIds.length - removeActivityIds.length,
+    keep: candidateActivityIds.length - removeActivityIds.length + confirmedActivities.length,
   };
-  const vendors = { remove: removeVendorIds.length, keep: candidateVendorIds.length - removeVendorIds.length };
-  const dataAssets = { remove: removeAssetIds.length, keep: candidateAssetIds.length - removeAssetIds.length };
+  const vendors = {
+    remove: removeVendorIds.length,
+    keep: candidateVendorIds.length - removeVendorIds.length + confirmedVendors.length,
+  };
+  const dataAssets = {
+    remove: removeAssetIds.length,
+    keep: candidateAssetIds.length - removeAssetIds.length + confirmedAssets.length,
+  };
 
   return {
     vendors,

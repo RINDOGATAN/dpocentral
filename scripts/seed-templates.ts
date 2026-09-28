@@ -9,6 +9,10 @@ import { PrismaClient } from "@prisma/client";
 import { describeOutcome, upsertSystemTemplate } from "../src/lib/seed-system-content";
 import { seedHealthAdtechTemplate } from "../src/lib/seed-health-adtech";
 import { HEALTH_ADTECH_TEMPLATE_ID } from "../src/config/health-adtech-template";
+import {
+  ASSESSMENT_TEMPLATES_V2,
+  templateSeedData,
+} from "../src/config/assessment-templates-v2";
 
 const prisma = new PrismaClient();
 
@@ -598,6 +602,37 @@ async function main() {
       await upsertSystemTemplate(prisma, "system-tia-template", tiaTemplate)
     )
   );
+
+  // Version 2 structured question sets (LIA, TIA, PIA, Custom). New rows that
+  // supersede the v1 free-text templates, so new assessments use v2 while running
+  // assessments keep their v1. Same source as the migration
+  // (src/config/assessment-templates-v2.ts), so the two never drift apart.
+  // Idempotent: upsert refreshes only the system rows, and the supersede is
+  // guarded on supersededAt IS NULL. Keeps fresh installs in step (v2 current,
+  // v1 superseded, never both current).
+  for (const template of ASSESSMENT_TEMPLATES_V2) {
+    console.log(
+      describeOutcome(
+        `${template.type} template v2`,
+        template.id,
+        await upsertSystemTemplate(prisma, template.id, templateSeedData(template))
+      )
+    );
+    if (template.supersedes) {
+      const retired = await prisma.assessmentTemplate.updateMany({
+        where: {
+          id: template.supersedes,
+          isSystem: true,
+          organizationId: null,
+          supersededAt: null,
+        },
+        data: { supersededAt: new Date() },
+      });
+      if (retired.count > 0) {
+        console.log(`  ${template.supersedes}: superseded by ${template.id}`);
+      }
+    }
+  }
 
   // Load premium templates from @dpocentral/premium-skills (if installed)
   try {
