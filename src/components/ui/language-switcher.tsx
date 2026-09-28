@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { locales, localeNames, type Locale } from "@/i18n/config";
+import { locales, localeNames, localeShortNames, type Locale } from "@/i18n/config";
 import { writeLocaleCookie } from "@/i18n/locale-cookie";
 import { features } from "@/config/features";
 
@@ -45,9 +45,16 @@ function LanguageSwitcherInner() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1.5 hover:text-foreground transition-colors cursor-pointer">
-        <Globe className="w-3.5 h-3.5" />
-        {localeNames[locale]}
+      <DropdownMenuTrigger
+        aria-label={localeNames[locale]}
+        className="flex items-center gap-1.5 hover:text-foreground transition-colors cursor-pointer"
+      >
+        <Globe className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        {/* Full name where there is room; a two-letter code on a narrow phone,
+            where the top bar cannot spare the width. The accessible name above
+            carries the full language name in both cases. */}
+        <span className="hidden sm:inline" aria-hidden="true">{localeNames[locale]}</span>
+        <span className="sm:hidden" aria-hidden="true">{localeShortNames[locale]}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
         {locales.map((loc) => (

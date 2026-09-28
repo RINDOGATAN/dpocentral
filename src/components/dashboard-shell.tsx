@@ -227,7 +227,9 @@ export function DashboardShell({
 
             <Link href="/privacy" className="flex items-center gap-2 shrink-0">
               <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-              <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
+              {/* The name hides under `sm` so the top-bar controls stay on the
+                  bar at 360 px (the logo mark keeps the brand present). */}
+              <span className="hidden sm:inline" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
             </Link>
 
           </div>

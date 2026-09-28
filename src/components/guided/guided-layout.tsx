@@ -63,11 +63,11 @@ const ALL_CLIENTS_HREF = "/privacy/clients";
 
 const BRAND_STYLE = { fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 } as const;
 
-function BrandMark() {
+function BrandMark({ nameClassName }: { nameClassName?: string }) {
   return (
     <>
       <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-      <span className="text-lg tracking-tight" style={BRAND_STYLE}>
+      <span className={cn("text-lg tracking-tight", nameClassName)} style={BRAND_STYLE}>
         {brand.nameUppercase}
       </span>
     </>
@@ -131,7 +131,9 @@ export function GuidedLayout({
               <span className="sr-only">{tn("openMenu")}</span>
             </Button>
             <Link href="/privacy" className="flex shrink-0 items-center gap-2">
-              <BrandMark />
+              {/* The logo mark alone under `sm`, so "?" and Account stay on the
+                  bar at 360 px; the name returns once there is room. */}
+              <BrandMark nameClassName="hidden sm:inline" />
             </Link>
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
