@@ -93,6 +93,9 @@ export const assessmentRouter = createTRPCRouter({
             { isSystem: true },
           ],
           isActive: true,
+          // A superseded template is no longer offered for NEW assessments; an
+          // assessment already using it still opens it through getTemplate.
+          supersededAt: null,
           type: input.type,
         },
         orderBy: [{ isSystem: "desc" }, { name: "asc" }],

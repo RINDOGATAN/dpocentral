@@ -13,6 +13,7 @@ import {
   provenEmailOf,
 } from "@/lib/org-domain";
 import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
+import { planTemplateRemoval, removeTemplateItems } from "@/server/services/template-items/remove";
 import { logger } from "@/lib/logger";
 import {
   assertOneOrganizationPerAccount,
@@ -298,6 +299,45 @@ export const organizationRouter = createTRPCRouter({
       });
 
       return organization;
+    }),
+
+  /**
+   * How many quick-start / template-created items "Remove all template items"
+   * would clear, and how many it would keep (the ones a person has edited).
+   * Read-only, so every member can see the count before anyone acts.
+   */
+  templateItemsPlan: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const plan = await planTemplateRemoval(ctx.prisma, ctx.organization.id);
+      // The ids stay on the server; the UI only needs the counts.
+      return {
+        vendors: plan.vendors,
+        dataAssets: plan.dataAssets,
+        processingActivities: plan.processingActivities,
+        totalRemove: plan.totalRemove,
+        totalKeep: plan.totalKeep,
+      };
+    }),
+
+  /**
+   * Remove the unedited quick-start / template-created vendors, data assets and
+   * processing activities in one step. Edited items stay. Owners and admins
+   * only, and it is recorded in the audit trail.
+   */
+  removeTemplateItems: adminOrgProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .mutation(async ({ ctx }) => {
+      if (!["OWNER", "ADMIN"].includes(ctx.membership.role)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have permission to remove template items",
+        });
+      }
+      return removeTemplateItems(ctx.prisma, {
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+      });
     }),
 
   // Add a member to the organization

@@ -1972,6 +1972,19 @@
     "settings": {
       "title": "Settings",
       "subtitle": "Manage your account, organization, and team.",
+      "templateItems": {
+        "title": "Remove all template items",
+        "lead": "The quick start and the industry templates create example vendors, data assets and processing activities to get you started. This removes the ones nobody has edited, in one step. Anything you have opened and changed is kept.",
+        "count": "{remove} items would be removed and {keep} kept.",
+        "keptNote": "Records created before 28 September 2026 are kept.",
+        "vendors": "vendors",
+        "dataAssets": "data assets",
+        "processingActivities": "processing activities",
+        "button": "Remove all template items",
+        "confirm": "Yes, remove {count}",
+        "cancel": "Cancel",
+        "removed": "Removed {count} template items"
+      },
       "profile": {
         "title": "Profile",
         "description": "Your account information",
