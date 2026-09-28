@@ -8,6 +8,11 @@ import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
 import { assertIdsInOrg } from "../../org-ownership";
+import {
+  departmentScopeConditions,
+  loadBusinessUnitScope,
+} from "@/server/services/business-units/scope";
+import type { Db } from "@/lib/prisma";
 
 // ============================================================
 // AUTO-FLOW GENERATION
@@ -108,6 +113,27 @@ async function generateFlowsForActivity(
   return created;
 }
 
+/**
+ * Validate a department id: null/undefined clears it; a non-empty id must belong
+ * to this organisation, so a record can never point at another org's department.
+ * Returns the id to store (or null).
+ */
+async function resolveBusinessUnitId(
+  prisma: Pick<Db, "businessUnit">,
+  organizationId: string,
+  businessUnitId: string | null | undefined,
+): Promise<string | null> {
+  if (!businessUnitId) return null;
+  const found = await prisma.businessUnit.findFirst({
+    where: { id: businessUnitId, organizationId },
+    select: { id: true },
+  });
+  if (!found) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown department." });
+  }
+  return businessUnitId;
+}
+
 export const dataInventoryRouter = createTRPCRouter({
   // ============================================================
   // DATA ASSETS
@@ -119,16 +145,22 @@ export const dataInventoryRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         type: z.nativeEnum(DataAssetType).optional(),
+        // The department to narrow to (a business unit id, or "unassigned"), on
+        // top of whatever the member is already limited to server-side.
+        department: z.string().optional(),
         search: z.string().optional(),
         limit: z.number().min(1).max(500).default(50),
         cursor: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      const deptConditions = departmentScopeConditions(scope, input.department);
       const assets = await ctx.prisma.dataAsset.findMany({
         where: {
           organizationId: ctx.organization.id,
           type: input.type,
+          ...(deptConditions.length > 0 ? { AND: deptConditions as never } : {}),
           ...(input.search && {
             OR: [
               { name: { contains: input.search, mode: "insensitive" } },
@@ -165,10 +197,13 @@ export const dataInventoryRouter = createTRPCRouter({
   getAsset: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      const deptConditions = departmentScopeConditions(scope);
       const asset = await ctx.prisma.dataAsset.findFirst({
         where: {
           id: input.id,
           organizationId: ctx.organization.id,
+          ...(deptConditions.length > 0 ? { AND: deptConditions as never } : {}),
         },
         include: {
           dataElements: {
@@ -218,10 +253,16 @@ export const dataInventoryRouter = createTRPCRouter({
         hostingType: z.string().optional(),
         vendor: z.string().optional(),
         isProduction: z.boolean().default(true),
+        businessUnitId: z.string().nullable().optional(),
         metadata: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const businessUnitId = await resolveBusinessUnitId(
+        ctx.prisma,
+        ctx.organization.id,
+        input.businessUnitId,
+      );
       const asset = await ctx.prisma.dataAsset.create({
         data: {
           organizationId: ctx.organization.id,
@@ -233,6 +274,7 @@ export const dataInventoryRouter = createTRPCRouter({
           hostingType: input.hostingType,
           vendor: input.vendor,
           isProduction: input.isProduction,
+          businessUnitId,
           metadata: input.metadata,
         },
       });
@@ -265,16 +307,22 @@ export const dataInventoryRouter = createTRPCRouter({
         hostingType: z.string().optional().nullable(),
         vendor: z.string().optional().nullable(),
         isProduction: z.boolean().optional(),
+        businessUnitId: z.string().nullable().optional(),
         metadata: z.record(z.string(), z.any()).optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, organizationId, metadata, ...restData } = input;
+      const { id, organizationId, metadata, businessUnitId, ...restData } = input;
+
+      if (businessUnitId !== undefined) {
+        await resolveBusinessUnitId(ctx.prisma, ctx.organization.id, businessUnitId);
+      }
 
       const asset = await ctx.prisma.dataAsset.updateMany({
         where: { id, organizationId: ctx.organization.id },
         data: {
           ...restData,
+          ...(businessUnitId !== undefined && { businessUnitId }),
           ...(metadata !== undefined && { metadata: metadata ?? undefined }),
         },
       });
@@ -514,16 +562,20 @@ export const dataInventoryRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         isActive: z.boolean().optional(),
+        department: z.string().optional(),
         search: z.string().optional(),
         limit: z.number().min(1).max(500).default(50),
         cursor: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      const deptConditions = departmentScopeConditions(scope, input.department);
       const activities = await ctx.prisma.processingActivity.findMany({
         where: {
           organizationId: ctx.organization.id,
           isActive: input.isActive,
+          ...(deptConditions.length > 0 ? { AND: deptConditions as never } : {}),
           ...(input.search && {
             OR: [
               { name: { contains: input.search, mode: "insensitive" } },
@@ -562,10 +614,13 @@ export const dataInventoryRouter = createTRPCRouter({
   getActivity: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      const deptConditions = departmentScopeConditions(scope);
       const activity = await ctx.prisma.processingActivity.findFirst({
         where: {
           id: input.id,
           organizationId: ctx.organization.id,
+          ...(deptConditions.length > 0 ? { AND: deptConditions as never } : {}),
         },
         include: {
           assets: {
@@ -616,11 +671,12 @@ export const dataInventoryRouter = createTRPCRouter({
         retentionDays: z.number().optional(),
         automatedDecisionMaking: z.boolean().default(false),
         automatedDecisionDetail: z.string().optional(),
+        businessUnitId: z.string().nullable().optional(),
         assetIds: z.array(z.string()).default([]),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { assetIds, organizationId: _orgId, ...data } = input;
+      const { assetIds, organizationId: _orgId, businessUnitId, ...data } = input;
 
       // Every linked asset must belong to the caller's organisation
       await assertIdsInOrg(
@@ -630,9 +686,16 @@ export const dataInventoryRouter = createTRPCRouter({
         "Data asset"
       );
 
+      const resolvedBusinessUnitId = await resolveBusinessUnitId(
+        ctx.prisma,
+        ctx.organization.id,
+        businessUnitId,
+      );
+
       const activity = await ctx.prisma.processingActivity.create({
         data: {
           organizationId: ctx.organization.id,
+          businessUnitId: resolvedBusinessUnitId,
           ...data,
           assets: {
             create: assetIds.map((assetId) => ({
@@ -681,15 +744,23 @@ export const dataInventoryRouter = createTRPCRouter({
         retentionDays: z.number().optional().nullable(),
         automatedDecisionMaking: z.boolean().optional(),
         automatedDecisionDetail: z.string().optional().nullable(),
+        businessUnitId: z.string().nullable().optional(),
         isActive: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, organizationId, ...data } = input;
+      const { id, organizationId, businessUnitId, ...data } = input;
+
+      if (businessUnitId !== undefined) {
+        await resolveBusinessUnitId(ctx.prisma, ctx.organization.id, businessUnitId);
+      }
 
       const activity = await ctx.prisma.processingActivity.updateMany({
         where: { id, organizationId: ctx.organization.id },
-        data,
+        data: {
+          ...data,
+          ...(businessUnitId !== undefined && { businessUnitId }),
+        },
       });
 
       if (activity.count === 0) {

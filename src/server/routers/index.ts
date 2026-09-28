@@ -23,6 +23,9 @@ import { reportsRouter } from "./privacy/reports";
 import { regulationsRouter } from "./privacy/regulations";
 import { aiGovernanceRouter } from "./privacy/aiGovernance";
 import { aiRouter } from "./privacy/ai";
+import { businessUnitRouter } from "./privacy/businessUnit";
+import { savedViewRouter } from "./privacy/savedView";
+import { viewsRouter } from "./privacy/views";
 import { skillsRouter } from "./skills";
 import { diagnosticsRouter } from "./diagnostics";
 
@@ -48,6 +51,9 @@ export const appRouter = createTRPCRouter({
   regulations: regulationsRouter,
   aiGovernance: aiGovernanceRouter,
   ai: aiRouter,
+  businessUnit: businessUnitRouter,
+  savedView: savedViewRouter,
+  views: viewsRouter,
   skills: skillsRouter,
   diagnostics: diagnosticsRouter,
 });
