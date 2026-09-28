@@ -1,4 +1,61 @@
 {
+  "clientTemplate": {
+    "titleCurrent": "Start from another client",
+    "titleNew": "Start a new client from this one",
+    "cardHint": "Copy the data inventory, processing activities, vendors and templates from one of your other clients, as drafts.",
+    "descriptionCurrent": "Copy a programme from one of your other clients into this one, as drafts. Nothing about the other client is carried across.",
+    "descriptionNew": "Create a new client and copy this client's programme into it, as drafts. Nothing that identifies {source} is carried across.",
+    "sourceLabel": "Copy from",
+    "sourcePlaceholder": "Choose a client",
+    "sourceHint": "You can copy from clients where you are an owner or an admin.",
+    "noSources": "You are not an owner or an admin of any other client to copy from.",
+    "loading": "Loading",
+    "newNameLabel": "New client's name",
+    "newNamePlaceholder": "e.g. Bluefield Partners",
+    "partsLegend": "What to copy",
+    "needsPart": "Needs {part}",
+    "skipped": "({count} already here, left alone)",
+    "neverCopied": "Never copied: rights requests, incidents, assessments and their evidence, contracts, the audit trail, members, licences and AI systems.",
+    "flagsTitle": "{count, plural, one {# item still points at the other client} other {# items still point at the other client}}",
+    "flagsHint": "The other client's full name was replaced. These are short forms, web or e-mail addresses that only a person can judge. Review them, then confirm.",
+    "moreFlags": "and {count} more",
+    "flagsAcknowledge": "I have reviewed the items above",
+    "summary": "{count, plural, one {# record will be copied} other {# records will be copied}}",
+    "submitCurrent": "Copy into this client",
+    "submitNew": "Create and copy",
+    "done": "Copied as drafts",
+    "failed": "The copy could not be completed",
+    "resultSummary": "Copied into {client} as drafts.",
+    "resultStarted": "Each copied record is marked as a template copy until someone reviews it here.",
+    "resultFlaggedTitle": "Review these for a mention of the other client",
+    "openClient": "Open {client}",
+    "parts": {
+      "jurisdictions": {
+        "label": "Jurisdictions",
+        "hint": "The laws this client operates under (only into a client that has declared none)."
+      },
+      "dataAssets": {
+        "label": "Data inventory",
+        "hint": "Systems and the data elements recorded in them."
+      },
+      "processingActivities": {
+        "label": "Processing activities",
+        "hint": "Records of processing, brought in as drafts."
+      },
+      "vendors": {
+        "label": "Vendors",
+        "hint": "The vendor register entries, without contracts, contacts or scores."
+      },
+      "assessmentTemplates": {
+        "label": "Assessment templates",
+        "hint": "Your own questionnaires and custom questions."
+      },
+      "dsarIntake": {
+        "label": "DSAR intake form",
+        "hint": "The public request form's wording and options, kept off until reviewed."
+      }
+    }
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",

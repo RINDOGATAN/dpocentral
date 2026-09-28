@@ -53,6 +53,7 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { ApplicabilityQuestions, ApplicabilityResult } from "@/components/privacy/applicability-check";
+import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
 import {
   EMPTY_APPLICABILITY_ANSWERS,
   hasAnyApplicabilityAnswer,
@@ -95,7 +96,12 @@ export default function QuickstartPage() {
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
+  const tct = useTranslations("clientTemplate");
   const { label: enumLabel } = useEnumLabels();
+
+  // "Start from another client" — copy a programme from one of the user's other
+  // clients into the one open now, as drafts (directive stage 2b).
+  const [copyDialogOpen, setCopyDialogOpen] = useState(false);
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -723,6 +729,24 @@ export default function QuickstartPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Start from another client — a consultant's shortcut, opens the
+              copy dialog rather than advancing the wizard. */}
+          <Card
+            className="cursor-pointer transition-all hover:border-primary/50"
+            onClick={() => setCopyDialogOpen(true)}
+          >
+            <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+              <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                <Building2 className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm sm:text-base">{tct("titleCurrent")}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{tct("cardHint")}</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-primary shrink-0" />
+            </CardContent>
+          </Card>
 
           <DeploymentExpertCta />
 
@@ -1503,6 +1527,12 @@ export default function QuickstartPage() {
         </div>
         );
       })()}
+
+      <CopyFromClientDialog
+        open={copyDialogOpen}
+        onOpenChange={setCopyDialogOpen}
+        mode={{ kind: "current" }}
+      />
     </div>
   );
 }

@@ -10,11 +10,21 @@
  * its own dashboard.
  */
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Building2, Clock, Loader2, AlertCircle, FileText, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AlertTriangle, Building2, Clock, Loader2, AlertCircle, FileText, ArrowRight, MoreVertical, Copy } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
+import { canUseForTemplate } from "@/config/client-template";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { StatusMark } from "@/components/ui/status-chip";
@@ -82,8 +92,13 @@ export default function ClientsPage() {
   const router = useRouter();
   const t = useTranslations("portfolio");
   const tg = useTranslations("guided");
+  const tct = useTranslations("clientTemplate");
   const { label: enumLabel } = useEnumLabels();
   const relative = useRelativeTime();
+
+  // "Start a new client from this one": the row's client is the source; the
+  // dialog creates the new client and copies into it. Owner/admin only.
+  const [copyFrom, setCopyFrom] = useState<{ id: string; name: string } | null>(null);
 
   const requestsDue = clients?.reduce((s, c) => s + c.overdueDsars + c.dueSoonDsars, 0) ?? 0;
   const totalIncidents = clients?.reduce((s, c) => s + c.openIncidents, 0) ?? 0;
@@ -156,6 +171,31 @@ export default function ClientsPage() {
                       <Badge variant="outline" className="text-xs">
                         {enumLabel("role", client.role)}
                       </Badge>
+                      {canUseForTemplate(client.role) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              aria-label={tct("titleNew")}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenuItem
+                              onSelect={() =>
+                                setCopyFrom({ id: client.organizationId, name: client.organizationName })
+                              }
+                            >
+                              <Copy className="w-4 h-4 mr-2" />
+                              {tct("titleNew")}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </div>
                   </div>
 
@@ -217,6 +257,14 @@ export default function ClientsPage() {
           </CardContent>
         </Card>
       )}
+
+      <CopyFromClientDialog
+        open={!!copyFrom}
+        onOpenChange={(next) => {
+          if (!next) setCopyFrom(null);
+        }}
+        mode={copyFrom ? { kind: "new", source: copyFrom } : { kind: "current" }}
+      />
     </div>
   );
 }
