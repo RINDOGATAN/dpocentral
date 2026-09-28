@@ -131,6 +131,35 @@ describe("planTemplateRemoval", () => {
   });
 });
 
+describe("backfilled rows are never removal candidates", () => {
+  // The unreleased migration backfills every pre-existing template row to
+  // AUTO_TEMPLATE and sets confirmedAt = updatedAt (confirmedBy stays null), so a
+  // row that existed before deploy — which a client may have edited with no record
+  // of it — is never removed. Only rows created after deploy (confirmedAt null),
+  // and never since edited, are candidates.
+  it("keeps a migration-backfilled row, removes a fresh quick-start row, keeps an edited one", async () => {
+    const p = makePrisma();
+
+    // Backfilled by the migration: AUTO_TEMPLATE, confirmedAt = updatedAt.
+    const updatedAt = new Date("2026-09-01T00:00:00Z");
+    p.vendor.create({
+      data: { id: "backfilled", organizationId: ORG, provenance: "AUTO_TEMPLATE", confirmedBy: null, confirmedAt: updatedAt, updatedAt },
+    });
+    // Created by the quick start after the change and never edited: a candidate.
+    p.vendor.create({
+      data: { id: "fresh", organizationId: ORG, provenance: "AUTO_TEMPLATE", confirmedBy: null, confirmedAt: null },
+    });
+    // Created after the change, then edited: markConfirmed stamped confirmedAt.
+    p.vendor.create({
+      data: { id: "editedSince", organizationId: ORG, provenance: "AUTO_TEMPLATE", confirmedBy: "u1", confirmedAt: new Date() },
+    });
+
+    const plan = await planTemplateRemoval(p as never, ORG);
+    expect(plan.removeIds.vendors).toEqual(["fresh"]);
+    expect(plan.totalRemove).toBe(1);
+  });
+});
+
 describe("removeTemplateItems", () => {
   it("removes only the unedited template rows and records it", async () => {
     const p = seed();

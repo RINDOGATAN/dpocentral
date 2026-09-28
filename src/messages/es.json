@@ -1976,6 +1976,7 @@
         "title": "Eliminar todos los elementos de plantilla",
         "lead": "El inicio rápido y las plantillas sectoriales crean proveedores, activos de datos y actividades de tratamiento de ejemplo para empezar. Esto elimina, en un solo paso, los que nadie ha editado. Se conserva todo lo que hayas abierto y modificado.",
         "count": "Se eliminarían {remove} elementos y se conservarían {keep}.",
+        "keptNote": "Los registros creados antes del 28 de septiembre de 2026 se conservan.",
         "vendors": "proveedores",
         "dataAssets": "activos de datos",
         "processingActivities": "actividades de tratamiento",

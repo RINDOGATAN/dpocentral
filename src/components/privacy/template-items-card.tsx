@@ -68,6 +68,7 @@ export function TemplateItemsCard({
             `${plan.processingActivities.remove} ${t("processingActivities")}`,
           ].join(" · ")}
         </p>
+        <p className="text-xs text-muted-foreground">{t("keptNote")}</p>
         {canManage &&
           (confirming ? (
             <div className="flex items-center gap-2">
