@@ -449,10 +449,13 @@ export const assessmentRouter = createTRPCRouter({
       });
       if (existing) return existing;
 
-      // Find a TIA template — prefer org-owned, fall back to system
+      // Find a TIA template: prefer org-owned, fall back to system, and never a
+      // template retired by a newer version (supersededAt set).
       const template = await ctx.prisma.assessmentTemplate.findFirst({
         where: {
           type: AssessmentType.TIA,
+          isActive: true,
+          supersededAt: null,
           OR: [
             { organizationId: ctx.organization.id },
             { isSystem: true },

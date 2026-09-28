@@ -1975,7 +1975,7 @@
       "templateItems": {
         "title": "Remove all template items",
         "lead": "The quick start and the industry templates create example vendors, data assets and processing activities to get you started. This removes the ones nobody has edited, in one step. Anything you have opened and changed is kept.",
-        "count": "{remove} items would be removed and {keep} kept.",
+        "count": "{remove, plural, one {# item} other {# items}} would be removed and {keep} kept.",
         "keptNote": "Records created before 28 September 2026 are kept.",
         "vendors": "vendors",
         "dataAssets": "data assets",
@@ -1983,7 +1983,7 @@
         "button": "Remove all template items",
         "confirm": "Yes, remove {count}",
         "cancel": "Cancel",
-        "removed": "Removed {count} template items"
+        "removed": "{count, plural, one {Removed # template item} other {Removed # template items}}"
       },
       "profile": {
         "title": "Profile",
@@ -2438,105 +2438,186 @@
       "OTHER": "Other"
     },
     "assessmentType": {
-      "DPIA": "DPIA", "PIA": "PIA", "TIA": "TIA", "LIA": "LIA",
-      "VENDOR": "Vendor assessment", "CUSTOM": "Custom"
+      "DPIA": "DPIA",
+      "PIA": "PIA",
+      "TIA": "TIA",
+      "LIA": "LIA",
+      "VENDOR": "Vendor assessment",
+      "CUSTOM": "Custom"
     },
     "assessmentStatus": {
-      "DRAFT": "Draft", "IN_PROGRESS": "In progress", "PENDING_REVIEW": "Pending review",
-      "PENDING_APPROVAL": "Pending approval", "APPROVED": "Approved", "REJECTED": "Rejected",
+      "DRAFT": "Draft",
+      "IN_PROGRESS": "In progress",
+      "PENDING_REVIEW": "Pending review",
+      "PENDING_APPROVAL": "Pending approval",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
       "ARCHIVED": "Archived"
     },
     "approvalStatus": {
-      "PENDING": "Pending", "APPROVED": "Approved", "REJECTED": "Rejected", "DELEGATED": "Delegated"
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "DELEGATED": "Delegated"
     },
     "dsarType": {
-      "ACCESS": "Access", "RECTIFICATION": "Rectification", "ERASURE": "Erasure",
-      "PORTABILITY": "Portability", "OBJECTION": "Objection", "RESTRICTION": "Restriction",
-      "AUTOMATED_DECISION": "Automated decision", "WITHDRAW_CONSENT": "Withdraw consent",
+      "ACCESS": "Access",
+      "RECTIFICATION": "Rectification",
+      "ERASURE": "Erasure",
+      "PORTABILITY": "Portability",
+      "OBJECTION": "Objection",
+      "RESTRICTION": "Restriction",
+      "AUTOMATED_DECISION": "Automated decision",
+      "WITHDRAW_CONSENT": "Withdraw consent",
       "OTHER": "Other"
     },
     "dsarStatus": {
-      "SUBMITTED": "Submitted", "IDENTITY_PENDING": "Identity pending",
-      "IDENTITY_VERIFIED": "Identity verified", "IN_PROGRESS": "In progress",
-      "DATA_COLLECTED": "Data collected", "REVIEW_PENDING": "Review pending",
-      "APPROVED": "Approved", "COMPLETED": "Completed", "REJECTED": "Rejected",
+      "SUBMITTED": "Submitted",
+      "IDENTITY_PENDING": "Identity pending",
+      "IDENTITY_VERIFIED": "Identity verified",
+      "IN_PROGRESS": "In progress",
+      "DATA_COLLECTED": "Data collected",
+      "REVIEW_PENDING": "Review pending",
+      "APPROVED": "Approved",
+      "COMPLETED": "Completed",
+      "REJECTED": "Rejected",
       "CANCELLED": "Cancelled"
     },
     "dsarTaskStatus": {
-      "PENDING": "Pending", "IN_PROGRESS": "In progress", "COMPLETED": "Completed",
-      "BLOCKED": "Blocked", "NOT_APPLICABLE": "Not applicable"
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "BLOCKED": "Blocked",
+      "NOT_APPLICABLE": "Not applicable"
     },
     "incidentSeverity": {
-      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
     },
     "incidentStatus": {
-      "REPORTED": "Reported", "INVESTIGATING": "Investigating", "CONTAINED": "Contained",
-      "ERADICATED": "Eradicated", "RECOVERING": "Recovering", "CLOSED": "Closed",
+      "REPORTED": "Reported",
+      "INVESTIGATING": "Investigating",
+      "CONTAINED": "Contained",
+      "ERADICATED": "Eradicated",
+      "RECOVERING": "Recovering",
+      "CLOSED": "Closed",
       "FALSE_POSITIVE": "False positive"
     },
     "incidentType": {
-      "DATA_BREACH": "Data breach", "UNAUTHORIZED_ACCESS": "Unauthorised access",
-      "DATA_LOSS": "Data loss", "SYSTEM_COMPROMISE": "System compromise",
-      "PHISHING": "Phishing", "RANSOMWARE": "Ransomware", "INSIDER_THREAT": "Insider threat",
-      "PHYSICAL_SECURITY": "Physical security", "VENDOR_INCIDENT": "Vendor incident",
+      "DATA_BREACH": "Data breach",
+      "UNAUTHORIZED_ACCESS": "Unauthorised access",
+      "DATA_LOSS": "Data loss",
+      "SYSTEM_COMPROMISE": "System compromise",
+      "PHISHING": "Phishing",
+      "RANSOMWARE": "Ransomware",
+      "INSIDER_THREAT": "Insider threat",
+      "PHYSICAL_SECURITY": "Physical security",
+      "VENDOR_INCIDENT": "Vendor incident",
       "OTHER": "Other"
     },
     "transferMechanism": {
       "ADEQUACY_DECISION": "Adequacy decision",
       "STANDARD_CONTRACTUAL_CLAUSES": "Standard contractual clauses",
-      "BINDING_CORPORATE_RULES": "Binding corporate rules", "DEROGATION": "Derogation",
-      "CERTIFICATION": "Certification", "CODE_OF_CONDUCT": "Code of conduct", "OTHER": "Other"
+      "BINDING_CORPORATE_RULES": "Binding corporate rules",
+      "DEROGATION": "Derogation",
+      "CERTIFICATION": "Certification",
+      "CODE_OF_CONDUCT": "Code of conduct",
+      "OTHER": "Other"
     },
     "transferStatus": {
-      "COMPLIANT": "Compliant", "NEEDS_REVIEW": "Needs review",
-      "NON_COMPLIANT": "Non-compliant", "PENDING": "Pending"
+      "COMPLIANT": "Compliant",
+      "NEEDS_REVIEW": "Needs review",
+      "NON_COMPLIANT": "Non-compliant",
+      "PENDING": "Pending"
     },
     "riskLevel": {
-      "LOW": "Low", "MEDIUM": "Medium", "HIGH": "High", "CRITICAL": "Critical"
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
     },
     "legalBasis": {
-      "CONSENT": "Consent", "CONTRACT": "Contract", "LEGAL_OBLIGATION": "Legal obligation",
-      "VITAL_INTERESTS": "Vital interests", "PUBLIC_TASK": "Public task",
+      "CONSENT": "Consent",
+      "CONTRACT": "Contract",
+      "LEGAL_OBLIGATION": "Legal obligation",
+      "VITAL_INTERESTS": "Vital interests",
+      "PUBLIC_TASK": "Public task",
       "LEGITIMATE_INTERESTS": "Legitimate interests"
     },
     "vendorStatus": {
-      "PROSPECTIVE": "Prospective", "ACTIVE": "Active", "UNDER_REVIEW": "Under review",
-      "SUSPENDED": "Suspended", "TERMINATED": "Terminated"
+      "PROSPECTIVE": "Prospective",
+      "ACTIVE": "Active",
+      "UNDER_REVIEW": "Under review",
+      "SUSPENDED": "Suspended",
+      "TERMINATED": "Terminated"
     },
     "contractType": {
-      "DPA": "DPA", "MSA": "MSA", "NDA": "NDA", "SCC": "SCC",
-      "SUBPROCESSOR": "Subprocessor", "OTHER": "Other"
+      "DPA": "DPA",
+      "MSA": "MSA",
+      "NDA": "NDA",
+      "SCC": "SCC",
+      "SUBPROCESSOR": "Subprocessor",
+      "OTHER": "Other"
     },
     "contractStatus": {
-      "DRAFT": "Draft", "PENDING_SIGNATURE": "Pending signature", "ACTIVE": "Active",
-      "EXPIRED": "Expired", "TERMINATED": "Terminated", "RENEWED": "Renewed"
+      "DRAFT": "Draft",
+      "PENDING_SIGNATURE": "Pending signature",
+      "ACTIVE": "Active",
+      "EXPIRED": "Expired",
+      "TERMINATED": "Terminated",
+      "RENEWED": "Renewed"
     },
     "dataAssetType": {
-      "DATABASE": "Database", "APPLICATION": "Application", "FILE_SYSTEM": "File system",
-      "CLOUD_SERVICE": "Cloud service", "THIRD_PARTY": "Third party", "PHYSICAL": "Physical",
+      "DATABASE": "Database",
+      "APPLICATION": "Application",
+      "FILE_SYSTEM": "File system",
+      "CLOUD_SERVICE": "Cloud service",
+      "THIRD_PARTY": "Third party",
+      "PHYSICAL": "Physical",
       "OTHER": "Other"
     },
     "dataSensitivity": {
-      "PUBLIC": "Public", "INTERNAL": "Internal", "CONFIDENTIAL": "Confidential",
-      "RESTRICTED": "Restricted", "SPECIAL_CATEGORY": "Special category"
+      "PUBLIC": "Public",
+      "INTERNAL": "Internal",
+      "CONFIDENTIAL": "Confidential",
+      "RESTRICTED": "Restricted",
+      "SPECIAL_CATEGORY": "Special category"
     },
     "notificationStatus": {
-      "PENDING": "Pending", "SENT": "Sent", "NOT_REQUIRED": "Not required",
-      "OVERDUE": "Overdue", "ACKNOWLEDGED": "Acknowledged"
+      "PENDING": "Pending",
+      "SENT": "Sent",
+      "NOT_REQUIRED": "Not required",
+      "OVERDUE": "Overdue",
+      "ACKNOWLEDGED": "Acknowledged"
     },
     "reviewType": {
-      "SECURITY": "Security", "PRIVACY": "Privacy", "COMPLIANCE": "Compliance",
-      "DUE_DILIGENCE": "Due diligence", "ANNUAL": "Annual", "OTHER": "Other"
+      "SECURITY": "Security",
+      "PRIVACY": "Privacy",
+      "COMPLIANCE": "Compliance",
+      "DUE_DILIGENCE": "Due diligence",
+      "ANNUAL": "Annual",
+      "OTHER": "Other"
     },
     "role": {
-      "OWNER": "Owner", "ADMIN": "Admin", "PRIVACY_OFFICER": "Privacy officer",
-      "MEMBER": "Member", "VIEWER": "Viewer"
+      "OWNER": "Owner",
+      "ADMIN": "Admin",
+      "PRIVACY_OFFICER": "Privacy officer",
+      "MEMBER": "Member",
+      "VIEWER": "Viewer"
     },
     "auditAction": {
-      "CREATE": "Created", "UPDATE": "Updated", "DELETE": "Deleted", "VIEW": "Viewed",
-      "SUBMIT": "Submitted", "SUBMIT_AND_APPROVE": "Submitted and approved",
-      "STATUS_CHANGED": "Status changed", "DEADLINE_EXTENDED": "Deadline extended",
-      "TASKS_GENERATED": "Tasks generated", "PII_REDACTED": "Personal data redacted",
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted",
+      "VIEW": "Viewed",
+      "SUBMIT": "Submitted",
+      "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "STATUS_CHANGED": "Status changed",
+      "DEADLINE_EXTENDED": "Deadline extended",
+      "TASKS_GENERATED": "Tasks generated",
+      "PII_REDACTED": "Personal data redacted",
       "GENERATE_DPA": "Data processing agreement generated",
       "UPDATE_COMPLIANCE": "Compliance updated",
       "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
@@ -2545,13 +2626,21 @@
       "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal"
     },
     "auditEntity": {
-      "Organization": "Organisation", "OrganizationMember": "Team member",
-      "OrganizationJurisdiction": "Jurisdiction", "OrganizationAiSettings": "AI settings",
-      "DataAsset": "Data asset", "ProcessingActivity": "Processing activity",
-      "DataFlow": "Data flow", "DataTransfer": "Transfer", "Vendor": "Vendor",
-      "VendorContract": "Vendor contract", "Assessment": "Assessment",
-      "DSARRequest": "Rights request", "Incident": "Incident",
-      "IncidentNotification": "Breach notification", "AISystem": "AI system"
+      "Organization": "Organisation",
+      "OrganizationMember": "Team member",
+      "OrganizationJurisdiction": "Jurisdiction",
+      "OrganizationAiSettings": "AI settings",
+      "DataAsset": "Data asset",
+      "ProcessingActivity": "Processing activity",
+      "DataFlow": "Data flow",
+      "DataTransfer": "Transfer",
+      "Vendor": "Vendor",
+      "VendorContract": "Vendor contract",
+      "Assessment": "Assessment",
+      "DSARRequest": "Rights request",
+      "Incident": "Incident",
+      "IncidentNotification": "Breach notification",
+      "AISystem": "AI system"
     }
   },
   "enableFeature": {
@@ -2784,15 +2873,42 @@
       "submitting": "Submitting...",
       "requiredMark": "*",
       "types": {
-        "ACCESS": { "label": "Access my data", "description": "Get a copy of the personal data held about you" },
-        "ERASURE": { "label": "Delete my data", "description": "Request deletion of your personal data" },
-        "RECTIFICATION": { "label": "Correct my data", "description": "Request correction of inaccurate personal data" },
-        "PORTABILITY": { "label": "Export my data", "description": "Receive your data in a portable format" },
-        "OBJECTION": { "label": "Object to processing", "description": "Object to how your data is processed" },
-        "RESTRICTION": { "label": "Restrict processing", "description": "Limit how your data is used" },
-        "AUTOMATED_DECISION": { "label": "Automated decisions", "description": "Request human review of automated decisions" },
-        "WITHDRAW_CONSENT": { "label": "Withdraw consent", "description": "Withdraw previously given consent" },
-        "OTHER": { "label": "Other request", "description": "A different data protection request" }
+        "ACCESS": {
+          "label": "Access my data",
+          "description": "Get a copy of the personal data held about you"
+        },
+        "ERASURE": {
+          "label": "Delete my data",
+          "description": "Request deletion of your personal data"
+        },
+        "RECTIFICATION": {
+          "label": "Correct my data",
+          "description": "Request correction of inaccurate personal data"
+        },
+        "PORTABILITY": {
+          "label": "Export my data",
+          "description": "Receive your data in a portable format"
+        },
+        "OBJECTION": {
+          "label": "Object to processing",
+          "description": "Object to how your data is processed"
+        },
+        "RESTRICTION": {
+          "label": "Restrict processing",
+          "description": "Limit how your data is used"
+        },
+        "AUTOMATED_DECISION": {
+          "label": "Automated decisions",
+          "description": "Request human review of automated decisions"
+        },
+        "WITHDRAW_CONSENT": {
+          "label": "Withdraw consent",
+          "description": "Withdraw previously given consent"
+        },
+        "OTHER": {
+          "label": "Other request",
+          "description": "A different data protection request"
+        }
       },
       "success": {
         "title": "Request Submitted",
@@ -4035,10 +4151,26 @@
         "description": "The dashboard provides a real-time snapshot of your privacy program.",
         "mockupTitle": "Dashboard Stats",
         "cards": {
-          "dataInventory": { "label": "Data Inventory", "value": "24", "sub": "8 activities" },
-          "openDsars": { "label": "Open DSARs", "value": "3", "sub": "All on track" },
-          "assessments": { "label": "Assessments", "value": "12", "sub": "2 pending review" },
-          "incidents": { "label": "Incidents", "value": "1", "sub": "0 critical" }
+          "dataInventory": {
+            "label": "Data Inventory",
+            "value": "24",
+            "sub": "8 activities"
+          },
+          "openDsars": {
+            "label": "Open DSARs",
+            "value": "3",
+            "sub": "All on track"
+          },
+          "assessments": {
+            "label": "Assessments",
+            "value": "12",
+            "sub": "2 pending review"
+          },
+          "incidents": {
+            "label": "Incidents",
+            "value": "1",
+            "sub": "0 critical"
+          }
         },
         "calloutTitle": "Stat cards are interactive",
         "calloutBody": "Click on any stat card to navigate directly to that module's list view."
@@ -4065,15 +4197,42 @@
         "title": "Navigation",
         "description": "The main navigation bar provides access to all modules.",
         "items": {
-          "dashboard": { "label": "Dashboard", "desc": "Overview stats, recent activity, quick actions" },
-          "dataInventory": { "label": "Data Inventory", "desc": "Assets, data elements, processing activities, flows" },
-          "dsar": { "label": "DSAR", "desc": "Subject access requests, SLA tracking, public portal" },
-          "assessments": { "label": "Assessments", "desc": "DPIA, PIA, TIA, LIA with templates & approvals" },
-          "incidents": { "label": "Incidents", "desc": "Breach tracking, DPA notifications, timelines" },
-          "vendors": { "label": "Vendors", "desc": "Contracts, questionnaires, risk tiers" },
-          "reports": { "label": "Reports", "desc": "Compliance posture score, trend tracking, board reports" },
-          "regulations": { "label": "Regulations", "desc": "40+ jurisdictions, applicability wizard, deadline config" },
-          "aiSystems": { "label": "AI Systems", "desc": "EU AI Act register, risk classification, governance" }
+          "dashboard": {
+            "label": "Dashboard",
+            "desc": "Overview stats, recent activity, quick actions"
+          },
+          "dataInventory": {
+            "label": "Data Inventory",
+            "desc": "Assets, data elements, processing activities, flows"
+          },
+          "dsar": {
+            "label": "DSAR",
+            "desc": "Subject access requests, SLA tracking, public portal"
+          },
+          "assessments": {
+            "label": "Assessments",
+            "desc": "DPIA, PIA, TIA, LIA with templates & approvals"
+          },
+          "incidents": {
+            "label": "Incidents",
+            "desc": "Breach tracking, DPA notifications, timelines"
+          },
+          "vendors": {
+            "label": "Vendors",
+            "desc": "Contracts, questionnaires, risk tiers"
+          },
+          "reports": {
+            "label": "Reports",
+            "desc": "Compliance posture score, trend tracking, board reports"
+          },
+          "regulations": {
+            "label": "Regulations",
+            "desc": "40+ jurisdictions, applicability wizard, deadline config"
+          },
+          "aiSystems": {
+            "label": "AI Systems",
+            "desc": "EU AI Act register, risk classification, governance"
+          }
         }
       },
       "roles": {
@@ -4203,12 +4362,30 @@
         "title": "Creating Assessments",
         "description": "Walk through the assessment creation workflow.",
         "steps": {
-          "select": { "title": "Select a template", "description": "Choose the assessment type that matches your need (LIA, DPIA, PIA, TIA, Vendor, or Custom)." },
-          "fill": { "title": "Fill in project details", "description": "Provide the assessment name, description, related processing activities, and data assets." },
-          "answer": { "title": "Answer assessment questions", "description": "Work through the template questions. Each section covers a different risk domain." },
-          "score": { "title": "Score risks", "description": "Rate the likelihood and impact of identified risks. The system calculates the overall risk level." },
-          "mitigate": { "title": "Add mitigations", "description": "For each identified risk, document mitigation measures and residual risk." },
-          "submit": { "title": "Submit for review", "description": "Move the assessment to PENDING_REVIEW status for approval by a Privacy Officer or Admin." }
+          "select": {
+            "title": "Select a template",
+            "description": "Choose the assessment type that matches your need (LIA, DPIA, PIA, TIA, Vendor, or Custom)."
+          },
+          "fill": {
+            "title": "Fill in project details",
+            "description": "Provide the assessment name, description, related processing activities, and data assets."
+          },
+          "answer": {
+            "title": "Answer assessment questions",
+            "description": "Work through the template questions. Each section covers a different risk domain."
+          },
+          "score": {
+            "title": "Score risks",
+            "description": "Rate the likelihood and impact of identified risks. The system calculates the overall risk level."
+          },
+          "mitigate": {
+            "title": "Add mitigations",
+            "description": "For each identified risk, document mitigation measures and residual risk."
+          },
+          "submit": {
+            "title": "Submit for review",
+            "description": "Move the assessment to PENDING_REVIEW status for approval by a Privacy Officer or Admin."
+          }
         }
       },
       "riskScoring": {
@@ -4262,12 +4439,30 @@
         },
         "reportedLabel": "Reported {date}",
         "steps": {
-          "report": { "title": "Report the incident", "description": "Navigate to Incidents and click 'Report Incident'. Provide a title, description, severity, and category." },
-          "assess": { "title": "Assess severity", "description": "Classify the severity (LOW, MEDIUM, HIGH, CRITICAL) based on data types affected, number of subjects, and potential harm." },
-          "assign": { "title": "Assign the response team", "description": "Add team members to the incident and assign response tasks." },
-          "investigate": { "title": "Investigate and contain", "description": "Document findings in the timeline. Update status as the incident progresses through INVESTIGATING → CONTAINED." },
-          "notify": { "title": "Notify if required", "description": "Determine if DPA notification is needed. If so, use the notification workflow (see below)." },
-          "resolve": { "title": "Resolve and close", "description": "Document root cause, remediation actions, and lessons learned. Move to RESOLVED → CLOSED." }
+          "report": {
+            "title": "Report the incident",
+            "description": "Navigate to Incidents and click 'Report Incident'. Provide a title, description, severity, and category."
+          },
+          "assess": {
+            "title": "Assess severity",
+            "description": "Classify the severity (LOW, MEDIUM, HIGH, CRITICAL) based on data types affected, number of subjects, and potential harm."
+          },
+          "assign": {
+            "title": "Assign the response team",
+            "description": "Add team members to the incident and assign response tasks."
+          },
+          "investigate": {
+            "title": "Investigate and contain",
+            "description": "Document findings in the timeline. Update status as the incident progresses through INVESTIGATING → CONTAINED."
+          },
+          "notify": {
+            "title": "Notify if required",
+            "description": "Determine if DPA notification is needed. If so, use the notification workflow (see below)."
+          },
+          "resolve": {
+            "title": "Resolve and close",
+            "description": "Document root cause, remediation actions, and lessons learned. Move to RESOLVED → CLOSED."
+          }
         }
       },
       "timeline": {
@@ -4339,12 +4534,30 @@
           "SUSPENDED": "SUSPENDED"
         },
         "steps": {
-          "navigate": { "title": "Navigate to Vendors", "description": "Click 'Vendors' in the main navigation bar." },
-          "click": { "title": "Click 'Add Vendor'", "description": "Open the vendor creation form." },
-          "details": { "title": "Enter vendor details", "description": "Provide the vendor name, category, description, contact information, and data processing details." },
-          "risk": { "title": "Set risk tier", "description": "Assign an initial risk tier (LOW, MEDIUM, HIGH, CRITICAL) based on the type and volume of data they process." },
-          "contract": { "title": "Upload contract", "description": "Attach the Data Processing Agreement (DPA) or other relevant contracts." },
-          "questionnaire": { "title": "Send questionnaire", "description": "Optionally send a due diligence questionnaire for the vendor to complete." }
+          "navigate": {
+            "title": "Navigate to Vendors",
+            "description": "Click 'Vendors' in the main navigation bar."
+          },
+          "click": {
+            "title": "Click 'Add Vendor'",
+            "description": "Open the vendor creation form."
+          },
+          "details": {
+            "title": "Enter vendor details",
+            "description": "Provide the vendor name, category, description, contact information, and data processing details."
+          },
+          "risk": {
+            "title": "Set risk tier",
+            "description": "Assign an initial risk tier (LOW, MEDIUM, HIGH, CRITICAL) based on the type and volume of data they process."
+          },
+          "contract": {
+            "title": "Upload contract",
+            "description": "Attach the Data Processing Agreement (DPA) or other relevant contracts."
+          },
+          "questionnaire": {
+            "title": "Send questionnaire",
+            "description": "Optionally send a due diligence questionnaire for the vendor to complete."
+          }
         }
       },
       "contracts": {
@@ -4398,11 +4611,26 @@
         "elementsLabel": "{count} data elements",
         "activitiesLabel": "{count} activities",
         "steps": {
-          "navigate": { "title": "Navigate to Data Inventory", "description": "Click 'Data Inventory' in the main navigation bar." },
-          "add": { "title": "Click 'Add Asset'", "description": "Use the button in the top-right to open the asset creation form." },
-          "details": { "title": "Fill in details", "description": "Enter the asset name, type (Database, Application, Cloud Service, etc.), description, and data owner." },
-          "link": { "title": "Link data elements", "description": "Add the personal data elements this asset stores (see Data Elements section)." },
-          "save": { "title": "Save the asset", "description": "The asset will appear in your inventory and can be linked to processing activities." }
+          "navigate": {
+            "title": "Navigate to Data Inventory",
+            "description": "Click 'Data Inventory' in the main navigation bar."
+          },
+          "add": {
+            "title": "Click 'Add Asset'",
+            "description": "Use the button in the top-right to open the asset creation form."
+          },
+          "details": {
+            "title": "Fill in details",
+            "description": "Enter the asset name, type (Database, Application, Cloud Service, etc.), description, and data owner."
+          },
+          "link": {
+            "title": "Link data elements",
+            "description": "Add the personal data elements this asset stores (see Data Elements section)."
+          },
+          "save": {
+            "title": "Save the asset",
+            "description": "The asset will appear in your inventory and can be linked to processing activities."
+          }
         }
       },
       "elements": {
@@ -4490,12 +4718,30 @@
         "title": "Task Management",
         "description": "Each DSAR can have multiple tasks assigned to different team members.",
         "steps": {
-          "verify": { "title": "Verify identity", "description": "Confirm the data subject's identity before processing. The system tracks identity verification status." },
-          "scope": { "title": "Assess scope", "description": "Determine which data assets and processing activities are relevant to the request." },
-          "assign": { "title": "Assign tasks", "description": "Create subtasks for each department or system that holds relevant data. Assign team members with deadlines." },
-          "collect": { "title": "Collect data", "description": "Each task assignee gathers and prepares their portion of the response." },
-          "review": { "title": "Review and respond", "description": "Review all collected data, compile the response, and send it to the data subject." },
-          "close": { "title": "Close the request", "description": "Mark the DSAR as completed. The system logs the completion date for compliance records." }
+          "verify": {
+            "title": "Verify identity",
+            "description": "Confirm the data subject's identity before processing. The system tracks identity verification status."
+          },
+          "scope": {
+            "title": "Assess scope",
+            "description": "Determine which data assets and processing activities are relevant to the request."
+          },
+          "assign": {
+            "title": "Assign tasks",
+            "description": "Create subtasks for each department or system that holds relevant data. Assign team members with deadlines."
+          },
+          "collect": {
+            "title": "Collect data",
+            "description": "Each task assignee gathers and prepares their portion of the response."
+          },
+          "review": {
+            "title": "Review and respond",
+            "description": "Review all collected data, compile the response, and send it to the data subject."
+          },
+          "close": {
+            "title": "Close the request",
+            "description": "Mark the DSAR as completed. The system logs the completion date for compliance records."
+          }
         }
       },
       "sla": {
@@ -4526,10 +4772,22 @@
         "settingsLabel": "Portal Settings",
         "settingsDesc": "Configure from Privacy > DSAR > Settings tab",
         "items": {
-          "autoAck": { "label": "Auto-acknowledgment", "desc": "Send confirmation email on submission" },
-          "identity": { "label": "Identity verification", "desc": "Require ID upload before processing" },
-          "types": { "label": "Request types", "desc": "Choose which rights to offer" },
-          "custom": { "label": "Custom fields", "desc": "Add organization-specific intake fields" }
+          "autoAck": {
+            "label": "Auto-acknowledgment",
+            "desc": "Send confirmation email on submission"
+          },
+          "identity": {
+            "label": "Identity verification",
+            "desc": "Require ID upload before processing"
+          },
+          "types": {
+            "label": "Request types",
+            "desc": "Choose which rights to offer"
+          },
+          "custom": {
+            "label": "Custom fields",
+            "desc": "Add organization-specific intake fields"
+          }
         }
       },
       "nav": {
@@ -4561,10 +4819,22 @@
         "intro": "When you navigate to the quickstart wizard, it checks if your account has a Vendor.Watch portfolio. If found, your vendors are pre-selected and ready to import — no manual searching needed.",
         "mockupTitle": "What gets created per vendor",
         "items": {
-          "asset": { "label": "Data Asset", "desc": "One asset per vendor, typed by category (e.g. Cloud Service, Application)" },
-          "elements": { "label": "Data Elements", "desc": "3–10 elements per asset — identifiers, behavioral data, financial data, etc." },
-          "activity": { "label": "Processing Activity", "desc": "One activity per vendor with purpose, legal basis, and data subjects" },
-          "transfers": { "label": "Cross-Border Transfers", "desc": "Transfer records for each non-EU data location with SCCs as safeguard" }
+          "asset": {
+            "label": "Data Asset",
+            "desc": "One asset per vendor, typed by category (e.g. Cloud Service, Application)"
+          },
+          "elements": {
+            "label": "Data Elements",
+            "desc": "3–10 elements per asset — identifiers, behavioral data, financial data, etc."
+          },
+          "activity": {
+            "label": "Processing Activity",
+            "desc": "One activity per vendor with purpose, legal basis, and data subjects"
+          },
+          "transfers": {
+            "label": "Cross-Border Transfers",
+            "desc": "Transfer records for each non-EU data location with SCCs as safeguard"
+          }
         },
         "tipTitle": "How many vendors you can import",
         "tipBody": "On the hosted pilot, the portfolio import is bounded only by the pilot limits (50 vendors). On your own instance, it takes up to 5 vendors from your Vendor.Watch portfolio, which matches Vendor.Watch's own free tier."
@@ -4615,10 +4885,22 @@
         "description": "What to do once your privacy program is bootstrapped.",
         "intro": "The quickstart gives you a solid foundation. After running it, you should:",
         "items": {
-          "review": { "label": "Review data elements", "desc": "Verify the auto-generated elements match your actual data processing and adjust retention periods" },
-          "legal": { "label": "Update legal bases", "desc": "Confirm that the suggested legal basis for each processing activity is correct for your jurisdiction" },
-          "vendors": { "label": "Add missing vendors", "desc": "Register any vendors not covered by the catalog or your portfolio" },
-          "assessments": { "label": "Run assessments", "desc": "Use the assessments module to conduct DPIAs for high-risk processing activities" }
+          "review": {
+            "label": "Review data elements",
+            "desc": "Verify the auto-generated elements match your actual data processing and adjust retention periods"
+          },
+          "legal": {
+            "label": "Update legal bases",
+            "desc": "Confirm that the suggested legal basis for each processing activity is correct for your jurisdiction"
+          },
+          "vendors": {
+            "label": "Add missing vendors",
+            "desc": "Register any vendors not covered by the catalog or your portfolio"
+          },
+          "assessments": {
+            "label": "Run assessments",
+            "desc": "Use the assessments module to conduct DPIAs for high-risk processing activities"
+          }
         }
       },
       "nav": {
@@ -4669,10 +4951,22 @@
         "title": "Registering AI Systems",
         "description": "Add AI systems to the governance register with structured metadata and risk classification.",
         "steps": {
-          "details": { "title": "Enter system details", "description": "Provide the AI system name, purpose, provider, model type, and deployment context. Include details about the data it processes and the decisions it influences." },
-          "classify": { "title": "Classify risk level", "description": "Select the risk level based on the EU AI Act classification. The system suggests a risk level based on the stated purpose and category, but you make the final determination." },
-          "document": { "title": "Document compliance measures", "description": "Record the compliance measures in place: human oversight mechanisms, transparency disclosures, training data documentation, and accuracy monitoring." },
-          "review": { "title": "Review and register", "description": "Review all details and register the AI system. It enters the governance register and becomes subject to ongoing compliance monitoring." }
+          "details": {
+            "title": "Enter system details",
+            "description": "Provide the AI system name, purpose, provider, model type, and deployment context. Include details about the data it processes and the decisions it influences."
+          },
+          "classify": {
+            "title": "Classify risk level",
+            "description": "Select the risk level based on the EU AI Act classification. The system suggests a risk level based on the stated purpose and category, but you make the final determination."
+          },
+          "document": {
+            "title": "Document compliance measures",
+            "description": "Record the compliance measures in place: human oversight mechanisms, transparency disclosures, training data documentation, and accuracy monitoring."
+          },
+          "review": {
+            "title": "Review and register",
+            "description": "Review all details and register the AI system. It enters the governance register and becomes subject to ongoing compliance monitoring."
+          }
         },
         "tipTitle": "Link to existing vendors",
         "tipBody": "When registering an AI system, you can link it to an existing vendor in your vendor management module. This connects the AI governance record to the vendor's risk profile, contract information, and DPA status."
@@ -4682,9 +4976,18 @@
         "description": "The system analyzes the AI system's stated purpose and category to suggest an appropriate risk level.",
         "mockupTitle": "Risk Suggestion Example",
         "examples": {
-          "recruitment": { "name": "Recruitment Screening Tool", "purpose": "Automated CV filtering and candidate ranking" },
-          "chatbot": { "name": "Customer Support Chatbot", "purpose": "Answer FAQs and route support tickets" },
-          "spam": { "name": "Email Spam Filter", "purpose": "Classify and filter unwanted emails" }
+          "recruitment": {
+            "name": "Recruitment Screening Tool",
+            "purpose": "Automated CV filtering and candidate ranking"
+          },
+          "chatbot": {
+            "name": "Customer Support Chatbot",
+            "purpose": "Answer FAQs and route support tickets"
+          },
+          "spam": {
+            "name": "Email Spam Filter",
+            "purpose": "Classify and filter unwanted emails"
+          }
         },
         "suggestedLabel": "Suggested:",
         "infoTitle": "Suggestion is a starting point",
@@ -4695,12 +4998,30 @@
         "description": "Each risk level carries specific compliance obligations under the EU AI Act. The register tracks which obligations apply and their fulfillment status.",
         "mockupTitle": "High Risk Obligations",
         "items": {
-          "risk": { "title": "Risk Management System", "description": "Establish and maintain a continuous risk management process" },
-          "data": { "title": "Data Governance", "description": "Ensure training, validation, and testing datasets meet quality criteria" },
-          "doc": { "title": "Technical Documentation", "description": "Maintain detailed documentation of the system design and development" },
-          "records": { "title": "Record-Keeping", "description": "Automatically log system events for traceability and auditability" },
-          "human": { "title": "Human Oversight", "description": "Design the system to allow effective human oversight during operation" },
-          "accuracy": { "title": "Accuracy & Robustness", "description": "Achieve and maintain appropriate levels of accuracy, robustness, and cybersecurity" }
+          "risk": {
+            "title": "Risk Management System",
+            "description": "Establish and maintain a continuous risk management process"
+          },
+          "data": {
+            "title": "Data Governance",
+            "description": "Ensure training, validation, and testing datasets meet quality criteria"
+          },
+          "doc": {
+            "title": "Technical Documentation",
+            "description": "Maintain detailed documentation of the system design and development"
+          },
+          "records": {
+            "title": "Record-Keeping",
+            "description": "Automatically log system events for traceability and auditability"
+          },
+          "human": {
+            "title": "Human Oversight",
+            "description": "Design the system to allow effective human oversight during operation"
+          },
+          "accuracy": {
+            "title": "Accuracy & Robustness",
+            "description": "Achieve and maintain appropriate levels of accuracy, robustness, and cybersecurity"
+          }
         },
         "transparencyTitle": "Limited risk transparency",
         "transparencyBody": "AI systems classified as LIMITED risk must clearly disclose to users that they are interacting with an AI system. This applies to chatbots, emotion recognition, and deepfake generation tools. The register tracks whether this transparency disclosure has been implemented.",
@@ -4711,9 +5032,18 @@
         "title": "Integration with Other Modules",
         "description": "AI governance records connect to other DPO Central modules for a comprehensive compliance view.",
         "items": {
-          "vendors": { "label": "Vendors", "desc": "Link AI systems to their providers for contract tracking, DPA status, and vendor risk monitoring." },
-          "assessments": { "label": "Assessments", "desc": "Trigger AI impact assessments directly from the register. Assessment results link back to the AI system record." },
-          "inventory": { "label": "Data Inventory", "desc": "Map training data sources to your data inventory. Track which data assets feed into each AI system." }
+          "vendors": {
+            "label": "Vendors",
+            "desc": "Link AI systems to their providers for contract tracking, DPA status, and vendor risk monitoring."
+          },
+          "assessments": {
+            "label": "Assessments",
+            "desc": "Trigger AI impact assessments directly from the register. Assessment results link back to the AI system record."
+          },
+          "inventory": {
+            "label": "Data Inventory",
+            "desc": "Map training data sources to your data inventory. Track which data assets feed into each AI system."
+          }
         }
       },
       "sentinel": {
@@ -4724,9 +5054,18 @@
         "exportTitle": "Export to AI Sentinel",
         "exportDesc": "Send your AI System records to AI Sentinel for deep governance management. Exported systems are linked with a deep link back to AI Sentinel for seamless navigation between apps.",
         "mockupTitle": "Integration Flow",
-        "stage1": { "title": "Vendor.Watch", "subtitle": "AI fields in catalog" },
-        "stage2": { "title": "DPO Central", "subtitle": "Lightweight AI register" },
-        "stage3": { "title": "AI Sentinel", "subtitle": "Deep AI governance" },
+        "stage1": {
+          "title": "Vendor.Watch",
+          "subtitle": "AI fields in catalog"
+        },
+        "stage2": {
+          "title": "DPO Central",
+          "subtitle": "Lightweight AI register"
+        },
+        "stage3": {
+          "title": "AI Sentinel",
+          "subtitle": "Deep AI governance"
+        },
         "configTitle": "Configuration required",
         "configBody": "The AI Sentinel integration requires the AI_SENTINEL_API_URL and AI_SENTINEL_API_KEY environment variables. When configured, you'll see the \"Send to AI Sentinel\" button on the AI Systems list page. Systems that have been exported show a linked badge and deep link on their detail page."
       },
@@ -4742,9 +5081,21 @@
         "title": "Transfer Compliance Overview",
         "description": "Post-Schrems II, international data transfers require careful compliance management. The Transfer Compliance Manager provides a centralized view of all cross-border data flows.",
         "stats": {
-          "adequacy": { "label": "Adequacy Status", "value": "11 countries", "subtitle": "Active adequacy decisions" },
-          "scc": { "label": "SCC Tracking", "value": "Active", "subtitle": "Monitored contracts" },
-          "tia": { "label": "TIA Status", "value": "Up to date", "subtitle": "Transfer impact assessments" }
+          "adequacy": {
+            "label": "Adequacy Status",
+            "value": "11 countries",
+            "subtitle": "Active adequacy decisions"
+          },
+          "scc": {
+            "label": "SCC Tracking",
+            "value": "Active",
+            "subtitle": "Monitored contracts"
+          },
+          "tia": {
+            "label": "TIA Status",
+            "value": "Up to date",
+            "subtitle": "Transfer impact assessments"
+          }
         }
       },
       "complianceStatus": {
@@ -4768,12 +5119,30 @@
         "title": "Schrems II Checklist",
         "description": "Follow the EDPB-recommended six-step framework for assessing international data transfers.",
         "steps": {
-          "know": { "title": "Know your transfers", "description": "Map all international data transfers in your data inventory. Identify the source, destination country, categories of data, and recipients." },
-          "tool": { "title": "Identify transfer tool", "description": "Determine the appropriate transfer mechanism: adequacy decision, Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs), or a derogation under Article 49." },
-          "assess": { "title": "Assess third country law", "description": "Evaluate whether the laws and practices of the destination country provide an essentially equivalent level of protection. Focus on surveillance powers and data access by public authorities." },
-          "supplementary": { "title": "Apply supplementary measures", "description": "If the third country assessment reveals gaps, identify and implement technical, contractual, or organizational supplementary measures to bridge the protection gap." },
-          "procedural": { "title": "Complete procedural steps", "description": "Finalize required formalities: execute SCCs, obtain authorization where needed, and document your transfer impact assessment (TIA)." },
-          "monitor": { "title": "Monitor developments", "description": "Continuously monitor legal and political developments in destination countries. Re-evaluate transfers when circumstances change." }
+          "know": {
+            "title": "Know your transfers",
+            "description": "Map all international data transfers in your data inventory. Identify the source, destination country, categories of data, and recipients."
+          },
+          "tool": {
+            "title": "Identify transfer tool",
+            "description": "Determine the appropriate transfer mechanism: adequacy decision, Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs), or a derogation under Article 49."
+          },
+          "assess": {
+            "title": "Assess third country law",
+            "description": "Evaluate whether the laws and practices of the destination country provide an essentially equivalent level of protection. Focus on surveillance powers and data access by public authorities."
+          },
+          "supplementary": {
+            "title": "Apply supplementary measures",
+            "description": "If the third country assessment reveals gaps, identify and implement technical, contractual, or organizational supplementary measures to bridge the protection gap."
+          },
+          "procedural": {
+            "title": "Complete procedural steps",
+            "description": "Finalize required formalities: execute SCCs, obtain authorization where needed, and document your transfer impact assessment (TIA)."
+          },
+          "monitor": {
+            "title": "Monitor developments",
+            "description": "Continuously monitor legal and political developments in destination countries. Re-evaluate transfers when circumstances change."
+          }
         },
         "warningTitle": "SCCs alone may not be sufficient",
         "warningBody": "The CJEU ruled in Schrems II that Standard Contractual Clauses must be supplemented with additional safeguards where the destination country's laws do not provide essentially equivalent protection. Always complete a Transfer Impact Assessment alongside your SCCs."
@@ -4801,9 +5170,18 @@
         "title": "Supplementary Measures",
         "description": "When a transfer mechanism alone does not provide sufficient protection, supplementary measures help bridge the gap.",
         "items": {
-          "technical": { "title": "Technical Measures", "desc": "End-to-end encryption, pseudonymization, key management under EU control, and strict access controls that prevent third-country authorities from accessing data in the clear." },
-          "contractual": { "title": "Contractual Measures", "desc": "Additional contractual clauses requiring the importer to notify of access requests, audit rights for the exporter, and commitments to challenge disproportionate requests." },
-          "organizational": { "title": "Organizational Measures", "desc": "Internal data protection policies, regular staff training, governance structures with clear accountability, and documented procedures for handling government access requests." }
+          "technical": {
+            "title": "Technical Measures",
+            "desc": "End-to-end encryption, pseudonymization, key management under EU control, and strict access controls that prevent third-country authorities from accessing data in the clear."
+          },
+          "contractual": {
+            "title": "Contractual Measures",
+            "desc": "Additional contractual clauses requiring the importer to notify of access requests, audit rights for the exporter, and commitments to challenge disproportionate requests."
+          },
+          "organizational": {
+            "title": "Organizational Measures",
+            "desc": "Internal data protection policies, regular staff training, governance structures with clear accountability, and documented procedures for handling government access requests."
+          }
         }
       },
       "sccTracking": {
@@ -4835,10 +5213,22 @@
         "title": "Applicability Wizard",
         "description": "Answer simple questions about your organization to determine which regulations apply.",
         "steps": {
-          "location": { "title": "Answer location questions", "description": "Provide details about where your customers, employees, and servers are located. The wizard covers key geographic and operational factors." },
-          "identify": { "title": "Identify applicable jurisdictions", "description": "The wizard analyzes your answers and identifies which privacy regulations apply to your organization based on jurisdictional reach." },
-          "review": { "title": "Review recommendations", "description": "Review the list of recommended regulations and choose which ones to apply to your organization. You can add or skip any recommendation." },
-          "configure": { "title": "Auto-configure deadlines", "description": "Once applied, the system automatically configures DSAR response deadlines and breach notification windows based on each regulation's requirements." }
+          "location": {
+            "title": "Answer location questions",
+            "description": "Provide details about where your customers, employees, and servers are located. The wizard covers key geographic and operational factors."
+          },
+          "identify": {
+            "title": "Identify applicable jurisdictions",
+            "description": "The wizard analyzes your answers and identifies which privacy regulations apply to your organization based on jurisdictional reach."
+          },
+          "review": {
+            "title": "Review recommendations",
+            "description": "Review the list of recommended regulations and choose which ones to apply to your organization. You can add or skip any recommendation."
+          },
+          "configure": {
+            "title": "Auto-configure deadlines",
+            "description": "Once applied, the system automatically configures DSAR response deadlines and breach notification windows based on each regulation's requirements."
+          }
         },
         "tipTitle": "Re-run when expanding",
         "tipBody": "Run the applicability wizard again whenever you expand into new markets, hire employees in new countries, or deploy infrastructure in new regions. New jurisdictions may become applicable as your footprint grows."
@@ -4846,10 +5236,22 @@
       "categories": {
         "title": "Regulation Categories",
         "items": {
-          "comprehensive": { "title": "Comprehensive", "desc": "Full privacy frameworks covering all aspects of data protection, such as GDPR, CCPA/CPRA, LGPD, and POPIA." },
-          "sectoral": { "title": "Sectoral", "desc": "Industry-specific regulations targeting particular sectors, such as HIPAA for healthcare and PCI DSS for payment data." },
-          "ai": { "title": "AI Governance", "desc": "AI-specific regulations and frameworks, such as the EU AI Act, addressing algorithmic transparency and automated decision-making." },
-          "emerging": { "title": "Emerging", "desc": "Newly enacted or proposed laws that are not yet fully enforced, helping you prepare for upcoming compliance requirements." }
+          "comprehensive": {
+            "title": "Comprehensive",
+            "desc": "Full privacy frameworks covering all aspects of data protection, such as GDPR, CCPA/CPRA, LGPD, and POPIA."
+          },
+          "sectoral": {
+            "title": "Sectoral",
+            "desc": "Industry-specific regulations targeting particular sectors, such as HIPAA for healthcare and PCI DSS for payment data."
+          },
+          "ai": {
+            "title": "AI Governance",
+            "desc": "AI-specific regulations and frameworks, such as the EU AI Act, addressing algorithmic transparency and automated decision-making."
+          },
+          "emerging": {
+            "title": "Emerging",
+            "desc": "Newly enacted or proposed laws that are not yet fully enforced, helping you prepare for upcoming compliance requirements."
+          }
         }
       },
       "managing": {
@@ -4869,9 +5271,21 @@
         "description": "Applied jurisdictions directly influence how DPO Central calculates deadlines and monitors compliance across your organization.",
         "mockupTitle": "Impact Overview",
         "stats": {
-          "dsar": { "label": "DSAR Deadlines", "value": "Auto-set", "subtitle": "Based on strictest jurisdiction" },
-          "breach": { "label": "Breach Notifications", "value": "Auto-set", "subtitle": "72h, expedient, or custom" },
-          "monitoring": { "label": "Compliance Monitoring", "value": "Active", "subtitle": "Continuous requirement tracking" }
+          "dsar": {
+            "label": "DSAR Deadlines",
+            "value": "Auto-set",
+            "subtitle": "Based on strictest jurisdiction"
+          },
+          "breach": {
+            "label": "Breach Notifications",
+            "value": "Auto-set",
+            "subtitle": "72h, expedient, or custom"
+          },
+          "monitoring": {
+            "label": "Compliance Monitoring",
+            "value": "Active",
+            "subtitle": "Continuous requirement tracking"
+          }
         },
         "noteTitle": "Jurisdictions are additive",
         "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if GDPR requires a 30-day DSAR response and LGPD requires 15 days, the system will enforce the 15-day deadline. This helps you meet every applicable regulation at once."
@@ -4909,11 +5323,31 @@
         "mockupTitle": "Module Scores",
         "exampleLabel": "e.g. {text}",
         "items": {
-          "inventory": { "module": "Data Inventory", "metric": "Assets with linked processing activities", "example": "85% of assets have at least one activity" },
-          "dsar": { "module": "DSAR", "metric": "On-time completion rate", "example": "92% of requests completed within SLA" },
-          "assessments": { "module": "Assessments", "metric": "Approved assessment rate", "example": "78% of assessments approved" },
-          "incidents": { "module": "Incidents", "metric": "Timely DPA notification rate", "example": "100% notified within 72 hours" },
-          "vendors": { "module": "Vendors", "metric": "Review coverage", "example": "70% of vendors reviewed within schedule" }
+          "inventory": {
+            "module": "Data Inventory",
+            "metric": "Assets with linked processing activities",
+            "example": "85% of assets have at least one activity"
+          },
+          "dsar": {
+            "module": "DSAR",
+            "metric": "On-time completion rate",
+            "example": "92% of requests completed within SLA"
+          },
+          "assessments": {
+            "module": "Assessments",
+            "metric": "Approved assessment rate",
+            "example": "78% of assessments approved"
+          },
+          "incidents": {
+            "module": "Incidents",
+            "metric": "Timely DPA notification rate",
+            "example": "100% notified within 72 hours"
+          },
+          "vendors": {
+            "module": "Vendors",
+            "metric": "Review coverage",
+            "example": "70% of vendors reviewed within schedule"
+          }
         }
       },
       "risk": {
@@ -4921,11 +5355,26 @@
         "description": "Actionable alerts highlight specific compliance gaps that need immediate attention.",
         "intro": "Risk indicators surface specific issues rather than abstract scores. They tell you exactly what needs fixing and link directly to the affected records:",
         "items": {
-          "dsar": { "label": "Overdue DSARs", "example": "e.g. \"3 DSARs past their statutory deadline\"" },
-          "vendors": { "label": "Unassessed high-risk vendors", "example": "e.g. \"2 HIGH-risk vendors without a completed assessment\"" },
-          "contracts": { "label": "Expired contracts", "example": "e.g. \"1 vendor DPA expired without renewal\"" },
-          "ropa": { "label": "Stale ROPA entries", "example": "e.g. \"5 processing activities not updated in 12+ months\"" },
-          "incidents": { "label": "Open critical incidents", "example": "e.g. \"1 CRITICAL incident open for more than 48 hours\"" }
+          "dsar": {
+            "label": "Overdue DSARs",
+            "example": "e.g. \"3 DSARs past their statutory deadline\""
+          },
+          "vendors": {
+            "label": "Unassessed high-risk vendors",
+            "example": "e.g. \"2 HIGH-risk vendors without a completed assessment\""
+          },
+          "contracts": {
+            "label": "Expired contracts",
+            "example": "e.g. \"1 vendor DPA expired without renewal\""
+          },
+          "ropa": {
+            "label": "Stale ROPA entries",
+            "example": "e.g. \"5 processing activities not updated in 12+ months\""
+          },
+          "incidents": {
+            "label": "Open critical incidents",
+            "example": "e.g. \"1 CRITICAL incident open for more than 48 hours\""
+          }
         },
         "warningTitle": "Critical indicators",
         "warningBody": "Indicators flagged as critical (overdue DSARs, open critical incidents, expired contracts) appear at the top of the compliance dashboard with a red badge. Address these first to avoid regulatory exposure."
@@ -4995,17 +5444,35 @@
         "title": "How It Works",
         "description": "The DPIA Auto-Fill Wizard cross-references your data inventory to pre-populate assessment responses, turning hours of manual work into minutes.",
         "items": {
-          "rule": { "label": "Rule-Based Auto-Fill", "desc": "Maps your processing activities, data elements, and transfer records directly to DPIA questions. Every answer is traceable back to your data inventory." },
-          "ai": { "label": "Optional AI Narrative", "desc": "When an LLM API key is configured, the wizard can generate natural-language risk narratives and mitigation suggestions based on your data context." }
+          "rule": {
+            "label": "Rule-Based Auto-Fill",
+            "desc": "Maps your processing activities, data elements, and transfer records directly to DPIA questions. Every answer is traceable back to your data inventory."
+          },
+          "ai": {
+            "label": "Optional AI Narrative",
+            "desc": "When an LLM API key is configured, the wizard can generate natural-language risk narratives and mitigation suggestions based on your data context."
+          }
         }
       },
       "steps": {
         "title": "Wizard Steps",
         "items": {
-          "select": { "title": "Select Processing Activity", "description": "Choose the processing activity you want to assess. Optionally link a vendor to include their data processing context." },
-          "preview": { "title": "Preview Data Context", "description": "Review the aggregated context: linked assets, data element counts, active transfers, and associated vendors. This is the data the wizard will draw from." },
-          "review": { "title": "Review & Edit Responses", "description": "Walk through the auto-filled responses section by section. Each answer shows a confidence badge so you know what to double-check. Edit any response before proceeding." },
-          "create": { "title": "Create Assessment", "description": "Finalize and create a draft DPIA or LIA with all pre-filled responses. The assessment enters DRAFT status, ready for further editing or submission for review." }
+          "select": {
+            "title": "Select Processing Activity",
+            "description": "Choose the processing activity you want to assess. Optionally link a vendor to include their data processing context."
+          },
+          "preview": {
+            "title": "Preview Data Context",
+            "description": "Review the aggregated context: linked assets, data element counts, active transfers, and associated vendors. This is the data the wizard will draw from."
+          },
+          "review": {
+            "title": "Review & Edit Responses",
+            "description": "Walk through the auto-filled responses section by section. Each answer shows a confidence badge so you know what to double-check. Edit any response before proceeding."
+          },
+          "create": {
+            "title": "Create Assessment",
+            "description": "Finalize and create a draft DPIA or LIA with all pre-filled responses. The assessment enters DRAFT status, ready for further editing or submission for review."
+          }
         }
       },
       "sources": {
@@ -5017,15 +5484,51 @@
         "columnSource": "Source Data",
         "columnConfidence": "Confidence",
         "rows": {
-          "processing": { "section": "Processing Description", "question": "Describe the processing operation", "source": "Activity purpose & description" },
-          "basis": { "section": "Legal Basis", "question": "What is the legal basis?", "source": "activity.legalBasis" },
-          "categories": { "section": "Data Categories", "question": "What categories of data are processed?", "source": "Linked data elements" },
-          "special": { "section": "Special Categories", "question": "Does processing involve special categories?", "source": "isSpecialCategory elements" },
-          "subjects": { "section": "Data Subjects", "question": "Who are the data subjects?", "source": "activity.dataSubjects" },
-          "retention": { "section": "Retention Period", "question": "How long is data retained?", "source": "Activity retention policy" },
-          "security": { "section": "Security Measures", "question": "What security measures are in place?", "source": "Vendor certifications" },
-          "transfers": { "section": "International Transfers", "question": "Are there cross-border transfers?", "source": "DataTransfer records" },
-          "risk": { "section": "Risk Assessment", "question": "What are the identified risks?", "source": "Multi-factor analysis" }
+          "processing": {
+            "section": "Processing Description",
+            "question": "Describe the processing operation",
+            "source": "Activity purpose & description"
+          },
+          "basis": {
+            "section": "Legal Basis",
+            "question": "What is the legal basis?",
+            "source": "activity.legalBasis"
+          },
+          "categories": {
+            "section": "Data Categories",
+            "question": "What categories of data are processed?",
+            "source": "Linked data elements"
+          },
+          "special": {
+            "section": "Special Categories",
+            "question": "Does processing involve special categories?",
+            "source": "isSpecialCategory elements"
+          },
+          "subjects": {
+            "section": "Data Subjects",
+            "question": "Who are the data subjects?",
+            "source": "activity.dataSubjects"
+          },
+          "retention": {
+            "section": "Retention Period",
+            "question": "How long is data retained?",
+            "source": "Activity retention policy"
+          },
+          "security": {
+            "section": "Security Measures",
+            "question": "What security measures are in place?",
+            "source": "Vendor certifications"
+          },
+          "transfers": {
+            "section": "International Transfers",
+            "question": "Are there cross-border transfers?",
+            "source": "DataTransfer records"
+          },
+          "risk": {
+            "section": "Risk Assessment",
+            "question": "What are the identified risks?",
+            "source": "Multi-factor analysis"
+          }
         }
       },
       "confidence": {
@@ -5219,42 +5722,108 @@
       },
       "quickstart": {
         "title": "Quick Start",
-        "step1": { "label": "Sign in", "desc": "Use your email magic link or Google account" },
-        "step2": { "label": "Set up your organization", "desc": "Create or join an organization and invite your team" },
-        "step3": { "label": "Build your data inventory", "desc": "Register data assets, elements, and processing activities" },
-        "step4": { "label": "Start managing privacy", "desc": "Handle DSARs, run assessments, and track incidents" }
+        "step1": {
+          "label": "Sign in",
+          "desc": "Use your email magic link or Google account"
+        },
+        "step2": {
+          "label": "Set up your organization",
+          "desc": "Create or join an organization and invite your team"
+        },
+        "step3": {
+          "label": "Build your data inventory",
+          "desc": "Register data assets, elements, and processing activities"
+        },
+        "step4": {
+          "label": "Start managing privacy",
+          "desc": "Handle DSARs, run assessments, and track incidents"
+        }
       },
       "roles": {
         "title": "User Roles",
         "intro": "DPO Central uses role-based access control. Each role inherits permissions from the roles below it.",
         "items": {
-          "Owner": { "role": "Owner", "desc": "Full control including billing, team management, and organization settings" },
-          "Admin": { "role": "Admin", "desc": "Manage users, configure modules, and access all privacy features" },
-          "PrivacyOfficer": { "role": "Privacy Officer", "desc": "Full access to all privacy modules, run assessments, manage incidents" },
-          "Member": { "role": "Member", "desc": "Create and edit records, submit DSARs, report incidents" },
-          "Viewer": { "role": "Viewer", "desc": "Read-only access to dashboards, reports, and records" }
+          "Owner": {
+            "role": "Owner",
+            "desc": "Full control including billing, team management, and organization settings"
+          },
+          "Admin": {
+            "role": "Admin",
+            "desc": "Manage users, configure modules, and access all privacy features"
+          },
+          "PrivacyOfficer": {
+            "role": "Privacy Officer",
+            "desc": "Full access to all privacy modules, run assessments, manage incidents"
+          },
+          "Member": {
+            "role": "Member",
+            "desc": "Create and edit records, submit DSARs, report incidents"
+          },
+          "Viewer": {
+            "role": "Viewer",
+            "desc": "Read-only access to dashboards, reports, and records"
+          }
         }
       },
       "modulesTitle": "Modules",
       "modules": {
-        "inventory": { "title": "Data Inventory", "description": "Track data assets, elements, processing activities, and cross-border transfers. Generate your Record of Processing Activities (ROPA) automatically." },
-        "dsar": { "title": "DSAR Management", "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal." },
-        "assessments": { "title": "Assessments", "description": "Conduct DPIAs, PIAs, LIAs, TIAs, and vendor risk assessments using configurable templates with approval workflows." },
-        "incidents": { "title": "Incident Management", "description": "Track privacy incidents, manage response timelines, coordinate DPA notifications, and assign response tasks." },
-        "vendors": { "title": "Vendor Management", "description": "Maintain your vendor register, track contracts, send questionnaires, and monitor third-party risk." }
+        "inventory": {
+          "title": "Data Inventory",
+          "description": "Track data assets, elements, processing activities, and cross-border transfers. Generate your Record of Processing Activities (ROPA) automatically."
+        },
+        "dsar": {
+          "title": "DSAR Management",
+          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal."
+        },
+        "assessments": {
+          "title": "Assessments",
+          "description": "Conduct DPIAs, PIAs, LIAs, TIAs, and vendor risk assessments using configurable templates with approval workflows."
+        },
+        "incidents": {
+          "title": "Incident Management",
+          "description": "Track privacy incidents, manage response timelines, coordinate DPA notifications, and assign response tasks."
+        },
+        "vendors": {
+          "title": "Vendor Management",
+          "description": "Maintain your vendor register, track contracts, send questionnaires, and monitor third-party risk."
+        }
       },
       "reports": {
         "title": "Reports & PDF Exports",
         "intro": "Export professionally formatted PDF reports across every module. Designed for regulators, auditors, board presentations, and internal governance reviews.",
         "items": {
-          "assessmentExport": { "name": "Assessment Export", "desc": "Individual DPIA/LIA detail with Q&A, risk scores, mitigations" },
-          "portfolio": { "name": "Assessment Portfolio", "desc": "Cross-assessment program status by type, risk, and completion" },
-          "dsar": { "name": "DSAR Performance", "desc": "Request volumes, SLA compliance, resolution trends (no PII)" },
-          "regulatory": { "name": "Regulatory Landscape", "desc": "Jurisdiction analysis with transfer exposure and penalty summary" },
-          "inventory": { "name": "Data Inventory", "desc": "Asset register with data elements, flows, and transfers" },
-          "ropa": { "name": "ROPA", "desc": "Record of Processing Activities per GDPR Article 30" },
-          "vendor": { "name": "Vendor Register", "desc": "Third-party inventory with risk tiers, contracts, and certifications" },
-          "breach": { "name": "Breach Register", "desc": "Incident history with notifications, timelines, and severity breakdown" }
+          "assessmentExport": {
+            "name": "Assessment Export",
+            "desc": "Individual DPIA/LIA detail with Q&A, risk scores, mitigations"
+          },
+          "portfolio": {
+            "name": "Assessment Portfolio",
+            "desc": "Cross-assessment program status by type, risk, and completion"
+          },
+          "dsar": {
+            "name": "DSAR Performance",
+            "desc": "Request volumes, SLA compliance, resolution trends (no PII)"
+          },
+          "regulatory": {
+            "name": "Regulatory Landscape",
+            "desc": "Jurisdiction analysis with transfer exposure and penalty summary"
+          },
+          "inventory": {
+            "name": "Data Inventory",
+            "desc": "Asset register with data elements, flows, and transfers"
+          },
+          "ropa": {
+            "name": "ROPA",
+            "desc": "Record of Processing Activities per GDPR Article 30"
+          },
+          "vendor": {
+            "name": "Vendor Register",
+            "desc": "Third-party inventory with risk tiers, contracts, and certifications"
+          },
+          "breach": {
+            "name": "Breach Register",
+            "desc": "Incident history with notifications, timelines, and severity breakdown"
+          }
         }
       },
       "licensing": {
@@ -5288,12 +5857,30 @@
         "title": "Data Assets",
         "intro": "Data assets represent the systems, applications, and databases that store or process personal data. Each asset records its type, owner, associated data elements, and processing activities.",
         "items": {
-          "DATABASE": { "example": "Customer Database", "desc": "Relational or NoSQL databases storing personal data" },
-          "APPLICATION": { "example": "CRM System", "desc": "Software applications that process user data" },
-          "FILE_SYSTEM": { "example": "HR File Share", "desc": "File storage systems containing personal records" },
-          "CLOUD_SERVICE": { "example": "Analytics Platform", "desc": "Third-party SaaS tools processing personal data" },
-          "API": { "example": "Payment Gateway", "desc": "API integrations transferring personal data" },
-          "PHYSICAL": { "example": "Paper Records Archive", "desc": "Physical storage of personal data documents" }
+          "DATABASE": {
+            "example": "Customer Database",
+            "desc": "Relational or NoSQL databases storing personal data"
+          },
+          "APPLICATION": {
+            "example": "CRM System",
+            "desc": "Software applications that process user data"
+          },
+          "FILE_SYSTEM": {
+            "example": "HR File Share",
+            "desc": "File storage systems containing personal records"
+          },
+          "CLOUD_SERVICE": {
+            "example": "Analytics Platform",
+            "desc": "Third-party SaaS tools processing personal data"
+          },
+          "API": {
+            "example": "Payment Gateway",
+            "desc": "API integrations transferring personal data"
+          },
+          "PHYSICAL": {
+            "example": "Paper Records Archive",
+            "desc": "Physical storage of personal data documents"
+          }
         }
       },
       "elements": {
@@ -5311,30 +5898,69 @@
         "title": "Data Flows",
         "intro": "Visualize how personal data moves through your organization using the interactive data flow diagram. Map source-to-destination transfers between assets, departments, and third parties.",
         "steps": {
-          "collection": { "label": "Collection", "description": "User submits data via web form" },
-          "processing": { "label": "Processing", "description": "CRM system stores and indexes" },
-          "analytics": { "label": "Analytics", "description": "Data warehouse for reporting" },
-          "archival": { "label": "Archival", "description": "Long-term encrypted storage" }
+          "collection": {
+            "label": "Collection",
+            "description": "User submits data via web form"
+          },
+          "processing": {
+            "label": "Processing",
+            "description": "CRM system stores and indexes"
+          },
+          "analytics": {
+            "label": "Analytics",
+            "description": "Data warehouse for reporting"
+          },
+          "archival": {
+            "label": "Archival",
+            "description": "Long-term encrypted storage"
+          }
         }
       },
       "transfers": {
         "title": "Cross-Border Transfers",
         "intro": "Track international data transfers with their legal mechanisms. Document Standard Contractual Clauses (SCCs), adequacy decisions, Binding Corporate Rules (BCRs), and other safeguards.",
         "items": {
-          "adequacy": { "mechanism": "Adequacy Decision", "desc": "EU-approved country-level adequacy" },
-          "sccs": { "mechanism": "Standard Contractual Clauses", "desc": "EU-approved contractual safeguards" },
-          "bcrs": { "mechanism": "Binding Corporate Rules", "desc": "Intra-group transfer framework" }
+          "adequacy": {
+            "mechanism": "Adequacy Decision",
+            "desc": "EU-approved country-level adequacy"
+          },
+          "sccs": {
+            "mechanism": "Standard Contractual Clauses",
+            "desc": "EU-approved contractual safeguards"
+          },
+          "bcrs": {
+            "mechanism": "Binding Corporate Rules",
+            "desc": "Intra-group transfer framework"
+          }
         }
       },
       "howTo": {
         "title": "How to Add a Data Asset",
         "actorDpo": "DPO",
         "steps": {
-          "navigate": { "title": "Navigate to Data Inventory", "description": "Open the Data Inventory module from the main navigation." },
-          "click": { "title": "Click Add Asset", "description": "Click the 'Add Asset' button in the top right corner of the assets list." },
-          "fill": { "title": "Fill in Asset Details", "description": "Enter the asset name, type, owner, description, and associated data elements.", "detail1": "Select the asset type (Database, Application, Cloud Service, etc.)", "detail2": "Assign a data owner from your organization members", "detail3": "Link relevant data elements to this asset" },
-          "link": { "title": "Link Processing Activities", "description": "Associate the asset with its processing activities and legal bases." },
-          "save": { "title": "Review and Save", "description": "Review all details and save. The asset will appear in your data inventory and data flow diagram." }
+          "navigate": {
+            "title": "Navigate to Data Inventory",
+            "description": "Open the Data Inventory module from the main navigation."
+          },
+          "click": {
+            "title": "Click Add Asset",
+            "description": "Click the 'Add Asset' button in the top right corner of the assets list."
+          },
+          "fill": {
+            "title": "Fill in Asset Details",
+            "description": "Enter the asset name, type, owner, description, and associated data elements.",
+            "detail1": "Select the asset type (Database, Application, Cloud Service, etc.)",
+            "detail2": "Assign a data owner from your organization members",
+            "detail3": "Link relevant data elements to this asset"
+          },
+          "link": {
+            "title": "Link Processing Activities",
+            "description": "Associate the asset with its processing activities and legal bases."
+          },
+          "save": {
+            "title": "Review and Save",
+            "description": "Review all details and save. The asset will appear in your data inventory and data flow diagram."
+          }
         }
       },
       "exports": {
@@ -5357,23 +5983,56 @@
         "title": "Request Lifecycle",
         "intro": "Every DSAR moves through a defined lifecycle with automatic SLA tracking. The system monitors deadlines and alerts your team when action is needed.",
         "steps": {
-          "submitted": { "label": "Submitted", "description": "Request received" },
-          "identity": { "label": "Identity Check", "description": "Verify data subject" },
-          "progress": { "label": "In Progress", "description": "Processing request" },
-          "review": { "label": "Review", "description": "QA before delivery" },
-          "completed": { "label": "Completed", "description": "Response delivered" }
+          "submitted": {
+            "label": "Submitted",
+            "description": "Request received"
+          },
+          "identity": {
+            "label": "Identity Check",
+            "description": "Verify data subject"
+          },
+          "progress": {
+            "label": "In Progress",
+            "description": "Processing request"
+          },
+          "review": {
+            "label": "Review",
+            "description": "QA before delivery"
+          },
+          "completed": {
+            "label": "Completed",
+            "description": "Response delivered"
+          }
         }
       },
       "privacy": {
         "title": "Privacy by Design",
         "intro": "DPO Central is designed so that facilitating DSARs does not create new privacy risks. We collect the minimum data needed, redact it automatically after the retention period, and never include individual PII in reports.",
         "items": {
-          "min": { "title": "Data Minimization", "desc": "The intake form collects only name, email, and request type. Phone and relationship are optional. Address is never collected via the portal." },
-          "consent": { "title": "Consent at Intake", "desc": "Data subjects must explicitly consent to processing before submitting. The privacy notice explains retention periods and redaction." },
-          "auto": { "title": "Auto-Redaction", "desc": "After the retention period (default 90 days post-completion), all PII is automatically replaced with 'REDACTED'. The anonymized audit trail is preserved." },
-          "pii": { "title": "PII-Free Reports", "desc": "The DSAR Performance Report contains only aggregated metrics — request volumes, SLA rates, type distributions. Zero individual data." },
-          "manual": { "title": "Manual Redaction & Deletion", "desc": "Admins can manually redact PII or hard-delete completed requests at any time, without waiting for the retention period." },
-          "audit": { "title": "Audit Trail Integrity", "desc": "Actions, timestamps, and staff IDs are preserved after redaction. Who did what and when remains traceable — only the data subject's PII is removed." }
+          "min": {
+            "title": "Data Minimization",
+            "desc": "The intake form collects only name, email, and request type. Phone and relationship are optional. Address is never collected via the portal."
+          },
+          "consent": {
+            "title": "Consent at Intake",
+            "desc": "Data subjects must explicitly consent to processing before submitting. The privacy notice explains retention periods and redaction."
+          },
+          "auto": {
+            "title": "Auto-Redaction",
+            "desc": "After the retention period (default 90 days post-completion), all PII is automatically replaced with 'REDACTED'. The anonymized audit trail is preserved."
+          },
+          "pii": {
+            "title": "PII-Free Reports",
+            "desc": "The DSAR Performance Report contains only aggregated metrics — request volumes, SLA rates, type distributions. Zero individual data."
+          },
+          "manual": {
+            "title": "Manual Redaction & Deletion",
+            "desc": "Admins can manually redact PII or hard-delete completed requests at any time, without waiting for the retention period."
+          },
+          "audit": {
+            "title": "Audit Trail Integrity",
+            "desc": "Actions, timestamps, and staff IDs are preserved after redaction. Who did what and when remains traceable — only the data subject's PII is removed."
+          }
         }
       },
       "types": {
@@ -5395,12 +6054,30 @@
         "urlExplain": "Share this URL in your privacy policy so data subjects can submit requests directly. The portal includes a consent checkbox and privacy notice explaining how their data will be handled.",
         "configLabel": "Portal Configuration",
         "settings": {
-          "title": { "setting": "Form title & description", "detail": "Customizable" },
-          "types": { "setting": "Enabled request types", "detail": "Select which rights to offer" },
-          "css": { "setting": "Custom CSS", "detail": "Match your brand" },
-          "thanks": { "setting": "Thank-you message", "detail": "Post-submission text" },
-          "retention": { "setting": "Retention period", "detail": "Default 90 days" },
-          "notice": { "setting": "Privacy notice link", "detail": "Link to your policy" }
+          "title": {
+            "setting": "Form title & description",
+            "detail": "Customizable"
+          },
+          "types": {
+            "setting": "Enabled request types",
+            "detail": "Select which rights to offer"
+          },
+          "css": {
+            "setting": "Custom CSS",
+            "detail": "Match your brand"
+          },
+          "thanks": {
+            "setting": "Thank-you message",
+            "detail": "Post-submission text"
+          },
+          "retention": {
+            "setting": "Retention period",
+            "detail": "Default 90 days"
+          },
+          "notice": {
+            "setting": "Privacy notice link",
+            "detail": "Link to your policy"
+          }
         }
       },
       "tasks": {
@@ -5408,31 +6085,70 @@
         "intro": "Break down each DSAR into actionable tasks and assign them to team members. Track progress, add notes, and ensure nothing falls through the cracks.",
         "exampleLabel": "Example Tasks for an Access Request",
         "items": {
-          "verify": { "task": "Verify identity of data subject", "assignee": "Privacy Officer" },
-          "crm": { "task": "Search CRM for subject records", "assignee": "IT Team" },
-          "email": { "task": "Search email archives", "assignee": "IT Team" },
-          "compile": { "task": "Compile and review data package", "assignee": "Privacy Officer" },
-          "redact": { "task": "Redact third-party data", "assignee": "Legal" },
-          "deliver": { "task": "Deliver response to data subject", "assignee": "Privacy Officer" }
+          "verify": {
+            "task": "Verify identity of data subject",
+            "assignee": "Privacy Officer"
+          },
+          "crm": {
+            "task": "Search CRM for subject records",
+            "assignee": "IT Team"
+          },
+          "email": {
+            "task": "Search email archives",
+            "assignee": "IT Team"
+          },
+          "compile": {
+            "task": "Compile and review data package",
+            "assignee": "Privacy Officer"
+          },
+          "redact": {
+            "task": "Redact third-party data",
+            "assignee": "Legal"
+          },
+          "deliver": {
+            "task": "Deliver response to data subject",
+            "assignee": "Privacy Officer"
+          }
         }
       },
       "sla": {
         "title": "SLA Tracking",
         "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework — GDPR (30 days), CCPA/CPRA (45 days), LGPD (15 days), and 40+ others.",
         "stats": {
-          "days": { "value": "15-45", "label": "days by jurisdiction" },
-          "auto": { "value": "Auto", "label": "deadline calculation" },
-          "alerts": { "value": "Alerts", "label": "approaching & overdue" }
+          "days": {
+            "value": "15-45",
+            "label": "days by jurisdiction"
+          },
+          "auto": {
+            "value": "Auto",
+            "label": "deadline calculation"
+          },
+          "alerts": {
+            "value": "Alerts",
+            "label": "approaching & overdue"
+          }
         }
       },
       "retention": {
         "title": "Data Retention & Auto-Redaction",
         "intro": "DPO Central automatically redacts personal data from completed DSAR records after the configured retention period. This ensures the platform does not become a risk vector for the organizations it serves.",
         "steps": {
-          "completed": { "label": "Request Completed", "description": "DSAR fulfilled" },
-          "period": { "label": "Retention Period", "description": "Default 90 days" },
-          "auto": { "label": "Auto-Redaction", "description": "PII replaced" },
-          "anon": { "label": "Anonymized Record", "description": "Stats preserved" }
+          "completed": {
+            "label": "Request Completed",
+            "description": "DSAR fulfilled"
+          },
+          "period": {
+            "label": "Retention Period",
+            "description": "Default 90 days"
+          },
+          "auto": {
+            "label": "Auto-Redaction",
+            "description": "PII replaced"
+          },
+          "anon": {
+            "label": "Anonymized Record",
+            "description": "Stats preserved"
+          }
         },
         "redactedTitle": "What gets redacted",
         "redactedItems": {
@@ -5454,12 +6170,30 @@
         "intro": "Export a DSAR Performance Report as a polished PDF for regulators, auditors, or board presentations. The report contains only aggregated metrics — no individual personal data.",
         "sectionsLabel": "Report Sections",
         "sections": {
-          "exec": { "section": "Executive Summary", "detail": "Total requests, on-time rate, avg resolution" },
-          "volume": { "section": "Volume by Type", "detail": "Access, Erasure, Portability breakdown" },
-          "status": { "section": "Status Distribution", "detail": "Open, completed, overdue counts" },
-          "sla": { "section": "SLA Compliance", "detail": "Per-jurisdiction deadline analysis" },
-          "trend": { "section": "Monthly Trend", "detail": "12-month received vs completed" },
-          "aging": { "section": "Aging Analysis", "detail": "Open requests by age band" }
+          "exec": {
+            "section": "Executive Summary",
+            "detail": "Total requests, on-time rate, avg resolution"
+          },
+          "volume": {
+            "section": "Volume by Type",
+            "detail": "Access, Erasure, Portability breakdown"
+          },
+          "status": {
+            "section": "Status Distribution",
+            "detail": "Open, completed, overdue counts"
+          },
+          "sla": {
+            "section": "SLA Compliance",
+            "detail": "Per-jurisdiction deadline analysis"
+          },
+          "trend": {
+            "section": "Monthly Trend",
+            "detail": "12-month received vs completed"
+          },
+          "aging": {
+            "section": "Aging Analysis",
+            "detail": "Open requests by age band"
+          }
         }
       },
       "workflow": {
@@ -5470,11 +6204,28 @@
           "team": "Team"
         },
         "steps": {
-          "receive": { "title": "Receive Request", "description": "A data subject submits a request through the public portal (with consent) or you create one manually in the dashboard." },
-          "verify": { "title": "Verify Identity", "description": "Confirm the identity of the data subject. Update the request status to reflect the verification outcome.", "detail1": "Request additional ID documents if needed", "detail2": "Mark identity as verified or rejected" },
-          "assign": { "title": "Create and Assign Tasks", "description": "Break the request into tasks and assign them to the relevant team members." },
-          "collect": { "title": "Collect and Review Data", "description": "Team members search systems, compile data, and upload findings. The privacy officer reviews for completeness." },
-          "deliver": { "title": "Deliver Response", "description": "Send the final response to the data subject and mark the request as completed. PII will be auto-redacted after the retention period." }
+          "receive": {
+            "title": "Receive Request",
+            "description": "A data subject submits a request through the public portal (with consent) or you create one manually in the dashboard."
+          },
+          "verify": {
+            "title": "Verify Identity",
+            "description": "Confirm the identity of the data subject. Update the request status to reflect the verification outcome.",
+            "detail1": "Request additional ID documents if needed",
+            "detail2": "Mark identity as verified or rejected"
+          },
+          "assign": {
+            "title": "Create and Assign Tasks",
+            "description": "Break the request into tasks and assign them to the relevant team members."
+          },
+          "collect": {
+            "title": "Collect and Review Data",
+            "description": "Team members search systems, compile data, and upload findings. The privacy officer reviews for completeness."
+          },
+          "deliver": {
+            "title": "Deliver Response",
+            "description": "Send the final response to the data subject and mark the request as completed. PII will be auto-redacted after the retention period."
+          }
         }
       }
     },
@@ -5495,20 +6246,44 @@
           "Premium": "Premium"
         },
         "items": {
-          "LIA": { "name": "Legitimate Interests Assessment", "desc": "Evaluate whether legitimate interests can be relied upon as a legal basis" },
-          "CUSTOM": { "name": "Custom Assessment", "desc": "A flexible template for a privacy review that none of the other types covers" },
-          "DPIA": { "name": "Data Protection Impact Assessment", "desc": "Required under GDPR Article 35 for high-risk processing activities" },
-          "TIA": { "name": "Transfer Impact Assessment", "desc": "Evaluate safeguards for international data transfers (Schrems II)" }
+          "LIA": {
+            "name": "Legitimate Interests Assessment",
+            "desc": "Evaluate whether legitimate interests can be relied upon as a legal basis"
+          },
+          "CUSTOM": {
+            "name": "Custom Assessment",
+            "desc": "A flexible template for a privacy review that none of the other types covers"
+          },
+          "DPIA": {
+            "name": "Data Protection Impact Assessment",
+            "desc": "Required under GDPR Article 35 for high-risk processing activities"
+          },
+          "TIA": {
+            "name": "Transfer Impact Assessment",
+            "desc": "Evaluate safeguards for international data transfers (Schrems II)"
+          }
         }
       },
       "approvals": {
         "title": "Approval Workflow",
         "intro": "Assessments move through a structured approval workflow. Each stage has clear ownership and the system tracks who approved what and when.",
         "steps": {
-          "draft": { "label": "Draft", "description": "Author creates assessment" },
-          "progress": { "label": "In Progress", "description": "Completing questions" },
-          "review": { "label": "Pending Review", "description": "Submitted for approval" },
-          "approved": { "label": "Approved", "description": "Assessment signed off" }
+          "draft": {
+            "label": "Draft",
+            "description": "Author creates assessment"
+          },
+          "progress": {
+            "label": "In Progress",
+            "description": "Completing questions"
+          },
+          "review": {
+            "label": "Pending Review",
+            "description": "Submitted for approval"
+          },
+          "approved": {
+            "label": "Approved",
+            "description": "Assessment signed off"
+          }
         }
       },
       "riskScoring": {
@@ -5540,14 +6315,42 @@
           "approver": "Approver"
         },
         "steps": {
-          "start": { "title": "Start a DPIA from the dashboard", "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen. The Assessments module reaches the same form, for every type the product offers." },
-          "create": { "title": "Name it and create it", "description": "Give the assessment a name. You may link it to a processing activity from your inventory and to a vendor. Both are optional and both feed the auto-fill.", "detail1": "A linked processing activity lets the app propose answers from your data inventory", "detail2": "A linked vendor brings in its certifications and privacy technologies" },
-          "frameworks": { "title": "Choose the frameworks", "description": "The first question asks which rules the assessment has to satisfy: the European ones, the Californian ones, or both. The answer decides which questions appear below and which requirements the report reports on.", "detail1": "European Union: Regulation (EU) 2016/679, Articles 35 and 36", "detail2": "California: 11 CCR sections 7150, 7152, 7155 and 7157" },
-          "european": { "title": "Work through the European steps", "description": "Processing description, scope and context, necessity and proportionality, consultation, risk identification, measures, and residual risk with the conclusion. The pills at the top of the page show how much of each step is answered." },
-          "california": { "title": "Answer the Californian steps", "description": "Shown only when California is chosen. First the activities that make a risk assessment necessary; if none of them applies, the product says so and claims no Californian requirement. Then the nine content items, the timetable, the submission and the executive attestation." },
-          "outstanding": { "title": "Clear what is outstanding", "description": "A panel above the assessment lists everything still missing, in plain words: the questions nobody has answered and the legal requirements nothing covers yet. Every item is a link that jumps to the step and the field that answers it." },
-          "approve": { "title": "Record mitigations and approve", "description": "Add mitigation measures for the risks you identified, each with an owner and a due date, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver approves the assessment, rejects it or returns it for changes. An approved assessment is locked and kept as a record." },
-          "export": { "title": "Export the report", "description": "Export is available at every stage and never refuses. While anything is outstanding the document is marked a draft on every page and lists what is missing on the first one." }
+          "start": {
+            "title": "Start a DPIA from the dashboard",
+            "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen. The Assessments module reaches the same form, for every type the product offers."
+          },
+          "create": {
+            "title": "Name it and create it",
+            "description": "Give the assessment a name. You may link it to a processing activity from your inventory and to a vendor. Both are optional and both feed the auto-fill.",
+            "detail1": "A linked processing activity lets the app propose answers from your data inventory",
+            "detail2": "A linked vendor brings in its certifications and privacy technologies"
+          },
+          "frameworks": {
+            "title": "Choose the frameworks",
+            "description": "The first question asks which rules the assessment has to satisfy: the European ones, the Californian ones, or both. The answer decides which questions appear below and which requirements the report reports on.",
+            "detail1": "European Union: Regulation (EU) 2016/679, Articles 35 and 36",
+            "detail2": "California: 11 CCR sections 7150, 7152, 7155 and 7157"
+          },
+          "european": {
+            "title": "Work through the European steps",
+            "description": "Processing description, scope and context, necessity and proportionality, consultation, risk identification, measures, and residual risk with the conclusion. The pills at the top of the page show how much of each step is answered."
+          },
+          "california": {
+            "title": "Answer the Californian steps",
+            "description": "Shown only when California is chosen. First the activities that make a risk assessment necessary; if none of them applies, the product says so and claims no Californian requirement. Then the nine content items, the timetable, the submission and the executive attestation."
+          },
+          "outstanding": {
+            "title": "Clear what is outstanding",
+            "description": "A panel above the assessment lists everything still missing, in plain words: the questions nobody has answered and the legal requirements nothing covers yet. Every item is a link that jumps to the step and the field that answers it."
+          },
+          "approve": {
+            "title": "Record mitigations and approve",
+            "description": "Add mitigation measures for the risks you identified, each with an owner and a due date, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver approves the assessment, rejects it or returns it for changes. An approved assessment is locked and kept as a record."
+          },
+          "export": {
+            "title": "Export the report",
+            "description": "Export is available at every stage and never refuses. While anything is outstanding the document is marked a draft on every page and lists what is missing on the first one."
+          }
         }
       },
       "conformance": {
@@ -5596,11 +6399,26 @@
         "title": "Incident Lifecycle",
         "intro": "Every incident follows a defined lifecycle. The system tracks status transitions and timestamps every change for compliance evidence.",
         "steps": {
-          "reported": { "label": "Reported", "description": "Incident identified" },
-          "investigating": { "label": "Investigating", "description": "Gathering facts" },
-          "containment": { "label": "Containment", "description": "Stopping the impact" },
-          "notification": { "label": "Notification", "description": "Alerting authorities" },
-          "resolved": { "label": "Resolved", "description": "Incident closed" }
+          "reported": {
+            "label": "Reported",
+            "description": "Incident identified"
+          },
+          "investigating": {
+            "label": "Investigating",
+            "description": "Gathering facts"
+          },
+          "containment": {
+            "label": "Containment",
+            "description": "Stopping the impact"
+          },
+          "notification": {
+            "label": "Notification",
+            "description": "Alerting authorities"
+          },
+          "resolved": {
+            "label": "Resolved",
+            "description": "Incident closed"
+          }
         }
       },
       "severity": {
@@ -5655,11 +6473,29 @@
           "dpo": "DPO"
         },
         "steps": {
-          "report": { "title": "Report the Incident", "description": "Navigate to the Incidents module and click 'Report Incident'. Provide initial details: title, description, severity, and affected systems." },
-          "triage": { "title": "Triage and Investigate", "description": "The privacy officer reviews the report, assigns a severity level, and begins the investigation.", "detail1": "Determine scope: what data was affected and how many subjects", "detail2": "Identify root cause and attack vector if applicable", "detail3": "Assess whether DPA notification is required" },
-          "contain": { "title": "Contain and Mitigate", "description": "Take immediate action to contain the incident and prevent further data loss." },
-          "notify": { "title": "Notify Authorities", "description": "If required, submit DPA notification within 72 hours. Notify affected data subjects if the breach poses a high risk to their rights." },
-          "resolve": { "title": "Resolve and Document", "description": "Once the incident is fully resolved, document lessons learned, update policies, and close the incident record." }
+          "report": {
+            "title": "Report the Incident",
+            "description": "Navigate to the Incidents module and click 'Report Incident'. Provide initial details: title, description, severity, and affected systems."
+          },
+          "triage": {
+            "title": "Triage and Investigate",
+            "description": "The privacy officer reviews the report, assigns a severity level, and begins the investigation.",
+            "detail1": "Determine scope: what data was affected and how many subjects",
+            "detail2": "Identify root cause and attack vector if applicable",
+            "detail3": "Assess whether DPA notification is required"
+          },
+          "contain": {
+            "title": "Contain and Mitigate",
+            "description": "Take immediate action to contain the incident and prevent further data loss."
+          },
+          "notify": {
+            "title": "Notify Authorities",
+            "description": "If required, submit DPA notification within 72 hours. Notify affected data subjects if the breach poses a high risk to their rights."
+          },
+          "resolve": {
+            "title": "Resolve and Document",
+            "description": "Once the incident is fully resolved, document lessons learned, update policies, and close the incident record."
+          }
         }
       },
       "exports": {
@@ -5670,47 +6506,47 @@
       }
     },
     "publicVendors": {
-        "dpa": {
-          "title": "Generating a DPA + Transfer Impact Assessment",
-          "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program — the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
-          "artifacts": {
-            "dpaTitle": "Data Processing Agreement (PDF)",
-            "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I–IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III–IV appear automatically when the processor is established outside the EEA/UK.",
-            "tiaTitle": "Standalone TIA (PDF)",
-            "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header — ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
-          },
-          "steps": {
-            "open": {
-              "title": "Open the vendor and choose “Produce DPA + TIA”",
-              "description": "On the vendor's detail page, open the Contracts tab and click “Produce DPA + TIA”. Available to Owners, Admins, and Privacy Officers."
-            },
-            "review": {
-              "title": "Review the pre-filled facts",
-              "description": "Every fact is proposed from your own data and shown for review — nothing goes into the document unseen. Notes explain where each value came from.",
-              "detail1": "Data categories come from the vendor's recorded data types; the processing purpose from activities naming the vendor as a recipient.",
-              "detail2": "Establishment means where the vendor is established — it is only pre-filled when your register is unambiguous.",
-              "detail3": "Choose the negotiated terms (breach window, sub-processor regime, audit rights, liability, governing law) and complete both parties' details."
-            },
-            "confirm": {
-              "title": "Confirm any flagged contradictions",
-              "description": "If your answers contradict each other — for example claiming pseudonymization while transferring directly identifying data — generation is blocked until you explicitly confirm each flagged item."
-            },
-            "generate": {
-              "title": "Generate the documents",
-              "description": "The DPA is stored against the vendor as a contract pending signature. Any remaining fill-in blanks are listed as warnings so you can resolve them before signature."
-            },
-            "download": {
-              "title": "Download and sign",
-              "description": "Download the DPA and TIA PDFs from the success screen or anytime from the vendor's Contracts tab. Once countersigned, update the contract status to Active."
-            }
-          },
-          "honesty": {
-            "title": "The generator never overstates your posture",
-            "desc": "Annex II lists only security measures confirmed against actual audit evidence — certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
-          },
-          "afterTitle": "After generation",
-          "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review — not legal advice."
+      "dpa": {
+        "title": "Generating a DPA + Transfer Impact Assessment",
+        "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program — the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
+        "artifacts": {
+          "dpaTitle": "Data Processing Agreement (PDF)",
+          "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I–IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III–IV appear automatically when the processor is established outside the EEA/UK.",
+          "tiaTitle": "Standalone TIA (PDF)",
+          "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header — ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
         },
+        "steps": {
+          "open": {
+            "title": "Open the vendor and choose “Produce DPA + TIA”",
+            "description": "On the vendor's detail page, open the Contracts tab and click “Produce DPA + TIA”. Available to Owners, Admins, and Privacy Officers."
+          },
+          "review": {
+            "title": "Review the pre-filled facts",
+            "description": "Every fact is proposed from your own data and shown for review — nothing goes into the document unseen. Notes explain where each value came from.",
+            "detail1": "Data categories come from the vendor's recorded data types; the processing purpose from activities naming the vendor as a recipient.",
+            "detail2": "Establishment means where the vendor is established — it is only pre-filled when your register is unambiguous.",
+            "detail3": "Choose the negotiated terms (breach window, sub-processor regime, audit rights, liability, governing law) and complete both parties' details."
+          },
+          "confirm": {
+            "title": "Confirm any flagged contradictions",
+            "description": "If your answers contradict each other — for example claiming pseudonymization while transferring directly identifying data — generation is blocked until you explicitly confirm each flagged item."
+          },
+          "generate": {
+            "title": "Generate the documents",
+            "description": "The DPA is stored against the vendor as a contract pending signature. Any remaining fill-in blanks are listed as warnings so you can resolve them before signature."
+          },
+          "download": {
+            "title": "Download and sign",
+            "description": "Download the DPA and TIA PDFs from the success screen or anytime from the vendor's Contracts tab. Once countersigned, update the contract status to Active."
+          }
+        },
+        "honesty": {
+          "title": "The generator never overstates your posture",
+          "desc": "Annex II lists only security measures confirmed against actual audit evidence — certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
+        },
+        "afterTitle": "After generation",
+        "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review — not legal advice."
+      },
       "metaTitle": "Vendor Management",
       "metaDescription": "Maintain your vendor register with contract tracking, privacy questionnaires, risk tiers, and periodic review workflows.",
       "ogTitle": "Vendor Management | DPO CENTRAL",
@@ -5721,10 +6557,22 @@
         "title": "Vendor Register",
         "intro": "Your vendor register is the central record of all third parties that process personal data on your behalf. Each vendor entry captures contact details, processing purposes, contract status, and risk tier.",
         "statuses": {
-          "ACTIVE": { "label": "ACTIVE", "desc": "Vendor is approved and actively processing data" },
-          "UNDER_REVIEW": { "label": "UNDER REVIEW", "desc": "Vendor is being evaluated or re-assessed" },
-          "SUSPENDED": { "label": "SUSPENDED", "desc": "Processing suspended pending issue resolution" },
-          "OFFBOARDED": { "label": "OFFBOARDED", "desc": "Vendor relationship terminated, data return/deletion confirmed" }
+          "ACTIVE": {
+            "label": "ACTIVE",
+            "desc": "Vendor is approved and actively processing data"
+          },
+          "UNDER_REVIEW": {
+            "label": "UNDER REVIEW",
+            "desc": "Vendor is being evaluated or re-assessed"
+          },
+          "SUSPENDED": {
+            "label": "SUSPENDED",
+            "desc": "Processing suspended pending issue resolution"
+          },
+          "OFFBOARDED": {
+            "label": "OFFBOARDED",
+            "desc": "Vendor relationship terminated, data return/deletion confirmed"
+          }
         }
       },
       "riskTiers": {
@@ -5747,10 +6595,22 @@
         "intro": "Track Data Processing Agreements (DPAs), Standard Contractual Clauses (SCCs), and other contractual documents for each vendor. Set renewal reminders and monitor expiration dates.",
         "label": "Key Contract Documents",
         "items": {
-          "dpa": { "doc": "Data Processing Agreement (DPA)", "purpose": "Defines processing terms under GDPR Article 28" },
-          "sccs": { "doc": "Standard Contractual Clauses (SCCs)", "purpose": "Safeguards for international data transfers" },
-          "sub": { "doc": "Sub-processor Agreement", "purpose": "Terms for the vendor's own sub-processors" },
-          "security": { "doc": "Security Addendum", "purpose": "Technical and organizational measures" }
+          "dpa": {
+            "doc": "Data Processing Agreement (DPA)",
+            "purpose": "Defines processing terms under GDPR Article 28"
+          },
+          "sccs": {
+            "doc": "Standard Contractual Clauses (SCCs)",
+            "purpose": "Safeguards for international data transfers"
+          },
+          "sub": {
+            "doc": "Sub-processor Agreement",
+            "purpose": "Terms for the vendor's own sub-processors"
+          },
+          "security": {
+            "doc": "Security Addendum",
+            "purpose": "Technical and organizational measures"
+          }
         }
       },
       "questionnaires": {
@@ -5772,11 +6632,26 @@
         "title": "Vendor Review Process",
         "intro": "The vendor review lifecycle from onboarding to ongoing monitoring.",
         "steps": {
-          "onboarding": { "label": "Onboarding", "description": "Initial assessment" },
-          "questionnaire": { "label": "Questionnaire", "description": "Privacy review" },
-          "contract": { "label": "Contract", "description": "DPA execution" },
-          "approved": { "label": "Approved", "description": "Active vendor" },
-          "periodic": { "label": "Periodic Review", "description": "Annual reassessment" }
+          "onboarding": {
+            "label": "Onboarding",
+            "description": "Initial assessment"
+          },
+          "questionnaire": {
+            "label": "Questionnaire",
+            "description": "Privacy review"
+          },
+          "contract": {
+            "label": "Contract",
+            "description": "DPA execution"
+          },
+          "approved": {
+            "label": "Approved",
+            "description": "Active vendor"
+          },
+          "periodic": {
+            "label": "Periodic Review",
+            "description": "Annual reassessment"
+          }
         }
       },
       "howTo": {
@@ -5787,11 +6662,29 @@
           "legal": "Legal"
         },
         "steps": {
-          "add": { "title": "Add Vendor to Register", "description": "Navigate to the Vendor Management module and click 'Add Vendor'. Enter the vendor name, contact details, and processing purpose." },
-          "send": { "title": "Send Questionnaire", "description": "Select a privacy questionnaire template and send it to the vendor contact. The system tracks response status and deadlines." },
-          "review": { "title": "Review Responses", "description": "Evaluate the vendor's questionnaire responses. Flag any areas of concern and assign a preliminary risk tier.", "detail1": "Check security certifications (ISO 27001, SOC 2, etc.)", "detail2": "Review sub-processor arrangements", "detail3": "Evaluate data transfer mechanisms" },
-          "execute": { "title": "Execute Contracts", "description": "Upload and track the Data Processing Agreement (DPA) and any additional contractual documents." },
-          "approve": { "title": "Approve and Monitor", "description": "Approve the vendor for active use. Set up periodic review reminders based on the vendor's risk tier." }
+          "add": {
+            "title": "Add Vendor to Register",
+            "description": "Navigate to the Vendor Management module and click 'Add Vendor'. Enter the vendor name, contact details, and processing purpose."
+          },
+          "send": {
+            "title": "Send Questionnaire",
+            "description": "Select a privacy questionnaire template and send it to the vendor contact. The system tracks response status and deadlines."
+          },
+          "review": {
+            "title": "Review Responses",
+            "description": "Evaluate the vendor's questionnaire responses. Flag any areas of concern and assign a preliminary risk tier.",
+            "detail1": "Check security certifications (ISO 27001, SOC 2, etc.)",
+            "detail2": "Review sub-processor arrangements",
+            "detail3": "Evaluate data transfer mechanisms"
+          },
+          "execute": {
+            "title": "Execute Contracts",
+            "description": "Upload and track the Data Processing Agreement (DPA) and any additional contractual documents."
+          },
+          "approve": {
+            "title": "Approve and Monitor",
+            "description": "Approve the vendor for active use. Set up periodic review reminders based on the vendor's risk tier."
+          }
         }
       },
       "exports": {
@@ -5855,6 +6748,22 @@
         "lia4": {
           "title": "Safeguards",
           "description": "Document safeguards to protect data subjects"
+        },
+        "liav2_s1": {
+          "title": "Purpose test",
+          "description": "Identify the legitimate interest being pursued."
+        },
+        "liav2_s2": {
+          "title": "Necessity test",
+          "description": "Assess whether the processing is necessary for that interest."
+        },
+        "liav2_s3": {
+          "title": "Balancing test",
+          "description": "Weigh the interest against the individual's rights and freedoms."
+        },
+        "liav2_s4": {
+          "title": "Safeguards and outcome",
+          "description": "Record the safeguards that protect data subjects and the conclusion."
         }
       },
       "question": {
@@ -5934,6 +6843,120 @@
         },
         "lia4_2": {
           "text": "Have you provided clear privacy information about this processing?"
+        },
+        "liav2_1_1": {
+          "text": "Whose legitimate interest is being pursued?",
+          "helpText": "The interest may be the controller's or a third party's. Say whose it is, because the balancing test weighs it against the individual's rights. Example: \"Our own interest in preventing fraud.\" Source: GDPR Art. 6(1)(f).",
+          "options": [
+            "Our own interest",
+            "A third party's interest",
+            "Both ours and a third party's"
+          ]
+        },
+        "liav2_1_2": {
+          "text": "Describe the legitimate interest precisely.",
+          "helpText": "Name a specific interest, not just \"business purposes\". A clearly articulated, real and present interest is the first thing the test requires. Example: \"Detecting fraudulent transactions to protect customers and the business.\" Source: GDPR Art. 6(1)(f) and Recital 47."
+        },
+        "liav2_1_3": {
+          "text": "Is the interest lawful, clearly articulated and real (not speculative)?",
+          "helpText": "An interest can only be relied on if it is lawful, precise enough to weigh, and a real interest rather than a hypothetical one. Example: \"Yes: fraud prevention is lawful, specific and ongoing.\" Source: GDPR Art. 6(1)(f); EDPB guidance on legitimate interest.",
+          "options": [
+            "Yes, on all three",
+            "Partly",
+            "No"
+          ]
+        },
+        "liav2_2_1": {
+          "text": "Is the processing necessary to achieve the interest?",
+          "helpText": "\"Necessary\" means the processing is a targeted and proportionate way to meet the interest, not merely useful. If it is only convenient, legitimate interest is not the right basis. Example: \"Reasonably necessary: fraud scoring needs the transaction data.\" Source: GDPR Art. 6(1)(f).",
+          "options": [
+            "Essential",
+            "Reasonably necessary",
+            "Convenient but not necessary",
+            "Not necessary"
+          ]
+        },
+        "liav2_2_2": {
+          "text": "Could a less intrusive means achieve the same result?",
+          "helpText": "If a less intrusive way exists that is reasonably effective, you should use it instead. Example: \"No: aggregated data would miss the individual fraud patterns.\" Source: GDPR Art. 6(1)(f); principle of data minimisation, Art. 5(1)(c).",
+          "options": [
+            "No, this is the least intrusive means",
+            "A less intrusive means exists but is far less effective",
+            "A less intrusive means is available"
+          ]
+        },
+        "liav2_2_3": {
+          "text": "Is the data limited to what the interest requires (data minimisation)?",
+          "helpText": "Only the data genuinely needed for the interest should be processed. Example: \"Yes: we use the transaction and device data, not the full customer profile.\" Source: GDPR Art. 5(1)(c)."
+        },
+        "liav2_3_1": {
+          "text": "What is the nature of the data?",
+          "helpText": "The more sensitive the data, the heavier it weighs against the interest. Special category and criminal-offence data need a separate condition and rarely sit under legitimate interest alone. Example: \"No special category data.\" Source: GDPR Arts. 9 and 10.",
+          "options": [
+            "No special category or criminal-offence data",
+            "Sensitive but not special category",
+            "Includes special category or criminal-offence data"
+          ]
+        },
+        "liav2_3_2": {
+          "text": "Would data subjects reasonably expect this processing?",
+          "helpText": "Reasonable expectations turn on the relationship and how the data was collected. The less expected, the harder the interest is to justify. Example: \"Clearly expected: customers expect fraud checks on payments.\" Source: GDPR Recital 47.",
+          "options": [
+            "Clearly expected",
+            "Probably expected",
+            "Possibly unexpected",
+            "Would not expect it"
+          ]
+        },
+        "liav2_3_3": {
+          "text": "What is the likely impact on the individual?",
+          "helpText": "Consider the effect on the person, including any decision made about them. A significant negative impact usually tips the balance towards their rights. Example: \"Minor: a flagged payment may be delayed briefly.\" Source: GDPR Art. 6(1)(f).",
+          "options": [
+            "Positive or neutral",
+            "Minor negative",
+            "Moderate negative",
+            "Significant negative"
+          ]
+        },
+        "liav2_3_4": {
+          "text": "Are children or other vulnerable people affected?",
+          "helpText": "Children and vulnerable people warrant extra weight on their side of the balance. Example: \"No: the service is for account holders aged 18 and over.\" Source: GDPR Recital 38; Art. 6(1)(f)."
+        },
+        "liav2_3_5": {
+          "text": "What is the overall balance?",
+          "helpText": "State the conclusion of the balance, taking the safeguards below into account. Where rights prevail, choose another lawful basis. Example: \"Balanced; the right to object and data minimisation are decisive.\" Source: GDPR Art. 6(1)(f).",
+          "options": [
+            "The interest prevails",
+            "Balanced; safeguards are decisive",
+            "The individual's rights prevail (do not rely on legitimate interest)"
+          ]
+        },
+        "liav2_4_1": {
+          "text": "Which safeguards protect data subjects?",
+          "helpText": "Safeguards can tip a finely balanced case in favour of the interest. List the ones actually in place. Example: \"Right to object honoured, retention limits, pseudonymisation.\" Source: GDPR Arts. 21 and 5(1); Recital 47.",
+          "options": [
+            "The right to object is honoured",
+            "Data minimisation",
+            "Retention limits",
+            "Access controls",
+            "Pseudonymisation",
+            "Transparency in the privacy notice",
+            "Regular review"
+          ]
+        },
+        "liav2_4_2": {
+          "text": "Have you told individuals about this processing and their right to object?",
+          "helpText": "Individuals must be told, in the privacy notice, that you rely on legitimate interest and that they can object. Example: \"Yes: the privacy notice names the interest and explains how to object.\" Source: GDPR Arts. 13(1)(d), 14(2)(b) and 21."
+        },
+        "liav2_4_3": {
+          "text": "Conclusion and any conditions.",
+          "helpText": "Summarise the outcome and any conditions that must hold for the processing to remain justified. Example: \"May proceed while the right to object is honoured and retention stays at 12 months.\" Source: GDPR Art. 6(1)(f)."
+        }
+      },
+      "template": {
+        "system-lia-template-v2": {
+          "name": "Legitimate Interest Assessment",
+          "description": "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read. This template is informational, not legal advice; verify with qualified counsel."
         }
       }
     },
@@ -5950,6 +6973,18 @@
         "custom3": {
           "title": "Mitigations",
           "description": "Document mitigations and recommendations"
+        },
+        "customv2_s1": {
+          "title": "Overview",
+          "description": "Describe the scope and purpose of this assessment."
+        },
+        "customv2_s2": {
+          "title": "Risk evaluation",
+          "description": "Identify the key risks and rate them."
+        },
+        "customv2_s3": {
+          "title": "Mitigations and recommendations",
+          "description": "Record the mitigations and the residual position."
         }
       },
       "question": {
@@ -5966,7 +7001,12 @@
         },
         "custom2_2": {
           "text": "What is the overall risk level?",
-          "options": ["Low", "Medium", "High", "Critical"]
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
         },
         "custom2_3": {
           "text": "Are there any legal or regulatory concerns?"
@@ -5982,6 +7022,48 @@
             "Needs further review",
             "Not acceptable"
           ]
+        },
+        "customv2_1_1": {
+          "text": "What is the purpose of this assessment?",
+          "helpText": "Say what you are evaluating and why, so the reader knows the scope. Example: \"Reviewing a new marketing analytics tool before launch.\" Source: GDPR Art. 24 (accountability)."
+        },
+        "customv2_1_2": {
+          "text": "What is the scope of this assessment?",
+          "helpText": "Define the systems, processes or data flows in scope, and anything left out. Example: \"The web analytics pipeline; excludes the CRM.\" Source: GDPR Art. 24."
+        },
+        "customv2_2_1": {
+          "text": "What are the key risks identified?",
+          "helpText": "Name the concrete risks to individuals or to compliance, not generic ones. Example: \"Tracking without consent; over-collection of behavioural data.\" Source: GDPR Art. 24."
+        },
+        "customv2_2_2": {
+          "text": "What is the overall risk level?",
+          "helpText": "Give a single overall rating for the risks above, before mitigation. Example: \"Medium.\" Source: GDPR Art. 24.",
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        "customv2_3_1": {
+          "text": "What mitigations are in place or recommended?",
+          "helpText": "List the measures that reduce the risks and who owns them. Example: \"Consent banner before any tracking; retention capped at 14 months.\" Source: GDPR Art. 24."
+        },
+        "customv2_3_2": {
+          "text": "Is the residual risk acceptable?",
+          "helpText": "State whether the risk that remains after mitigation is acceptable, and under what conditions. Example: \"Acceptable with conditions: launch after the consent banner is live.\" Source: GDPR Art. 24.",
+          "options": [
+            "Yes, fully acceptable",
+            "Acceptable with conditions",
+            "Needs further review",
+            "Not acceptable"
+          ]
+        }
+      },
+      "template": {
+        "system-custom-template-v2": {
+          "name": "Custom Assessment",
+          "description": "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale. Informational, not legal advice; verify with qualified counsel."
         }
       }
     },
@@ -6006,6 +7088,26 @@
         "tia5": {
           "title": "Ongoing Monitoring",
           "description": "Define how the transfer will be monitored and when this assessment should be reviewed"
+        },
+        "tiav2_s1": {
+          "title": "The transfer",
+          "description": "Describe the transfer, its tool, the data and the parties."
+        },
+        "tiav2_s2": {
+          "title": "Destination laws and practices",
+          "description": "Assess whether the destination gives essentially equivalent protection."
+        },
+        "tiav2_s3": {
+          "title": "Supplementary measures",
+          "description": "Identify measures that supplement the transfer tool."
+        },
+        "tiav2_s4": {
+          "title": "Risk and conclusion",
+          "description": "Weigh the residual risk and decide whether the transfer can proceed."
+        },
+        "tiav2_s5": {
+          "title": "Re-evaluation",
+          "description": "Define how the transfer is monitored and when it is reviewed."
         }
       },
       "question": {
@@ -6165,6 +7267,191 @@
         "tia5_3": {
           "text": "When is the next scheduled review?",
           "helpText": "Provide a specific date or timeframe (e.g., 'within 12 months' or '2027-04-01')."
+        },
+        "tiav2_1_1": {
+          "text": "Which transfer tool are you relying on?",
+          "helpText": "The transfer tool is the legal basis for sending the data abroad. Where an adequacy decision covers the destination, no supplementary measures are needed. Example: \"Standard Contractual Clauses.\" Source: GDPR Arts. 45 to 49.",
+          "options": [
+            "Adequacy decision (Art. 45)",
+            "Standard Contractual Clauses (Art. 46)",
+            "Binding Corporate Rules (Art. 47)",
+            "Derogation for a specific situation (Art. 49)",
+            "Other Article 46 safeguard"
+          ]
+        },
+        "tiav2_1_2": {
+          "text": "Which SCC module applies?",
+          "helpText": "The 2021 Standard Contractual Clauses have four modules for the roles of the exporter and importer. Pick the one that matches. Example: \"Module 2: we are the controller, the importer is our processor.\" Source: Commission Implementing Decision (EU) 2021/914.",
+          "options": [
+            "Module 1: controller to controller",
+            "Module 2: controller to processor",
+            "Module 3: processor to processor",
+            "Module 4: processor to controller"
+          ]
+        },
+        "tiav2_1_3": {
+          "text": "What categories of personal data are transferred?",
+          "helpText": "The sensitivity and volume of the data drive the risk of the transfer. Name every category, because special category and criminal-offence data raise the bar. Example: \"Contact details, identifiers, behavioural data.\" Source: EDPB Recommendations 01/2020, step 1.",
+          "options": [
+            "Contact details",
+            "Identifiers",
+            "Financial data",
+            "Behavioural or usage data",
+            "Location data",
+            "Special category data",
+            "Criminal-offence data"
+          ]
+        },
+        "tiav2_1_4": {
+          "text": "Who is the exporter and who is the importer, and in which countries?",
+          "helpText": "Name the organisations, their roles (controller or processor) and the countries of establishment, so the transfer is fully mapped. Example: \"We (controller, Spain) to our hosting provider (processor, United States).\" Source: EDPB Recommendations 01/2020, step 1."
+        },
+        "tiav2_1_5": {
+          "text": "Is the data onward-transferred to a further third country?",
+          "helpText": "An onward transfer to a further country extends the chain of risk and must itself be covered. Example: \"Yes: the importer uses a sub-processor in a third country.\" Source: EDPB Recommendations 01/2020."
+        },
+        "tiav2_2_1": {
+          "text": "Does the destination country have an EU adequacy decision?",
+          "helpText": "Adequacy means the Commission has found the country's protection essentially equivalent. Without it, you must assess the laws and practices yourself. Example: \"No adequacy decision.\" Source: GDPR Art. 45.",
+          "options": [
+            "Yes, full adequacy",
+            "Yes, partial adequacy",
+            "No adequacy decision",
+            "Adequacy under review or challenged"
+          ]
+        },
+        "tiav2_2_2": {
+          "text": "Does the destination's law allow disproportionate government access to data?",
+          "helpText": "The core Schrems II question: can public authorities reach the data in ways that would not be acceptable in the EU? Name the laws. Example: \"Broad surveillance powers: FISA Section 702 and EO 12333.\" Source: EDPB Recommendations 01/2020, step 3.",
+          "options": [
+            "No known access legislation",
+            "Access exists but with effective oversight and safeguards",
+            "Broad surveillance powers with limited oversight",
+            "Mass surveillance or no independent judicial oversight"
+          ]
+        },
+        "tiav2_2_3": {
+          "text": "Is the importer subject to government access requests in practice?",
+          "helpText": "Law on the books matters less if it is not applied to this importer; but a real risk in the sector counts against the transfer. Example: \"Possible: cloud providers are within scope of the access law.\" Source: EDPB Recommendations 01/2020, step 3.",
+          "options": [
+            "No: never received such a request",
+            "Possible: operates in a sector that may be targeted",
+            "Yes: transparency reports confirm requests",
+            "Unknown"
+          ]
+        },
+        "tiav2_2_4": {
+          "text": "Are effective legal remedies available to EU data subjects there?",
+          "helpText": "Essentially equivalent protection includes a real way for individuals to challenge access to their data. Example: \"Partial: an ombudsperson mechanism but no court review.\" Source: EDPB Recommendations 01/2020, step 3; GDPR Art. 47 of the Charter.",
+          "options": [
+            "Yes: independent judicial review",
+            "Partial: administrative remedies only",
+            "No effective remedies",
+            "Unknown"
+          ]
+        },
+        "tiav2_2_5": {
+          "text": "Describe the relevant laws and government access practices.",
+          "helpText": "Cite specific legislation and any public government-access or transparency reports. Example: \"FISA Section 702 permits access to data held by electronic communication service providers; the importer's transparency report shows N requests.\" Source: EDPB Recommendations 01/2020, step 3."
+        },
+        "tiav2_3_1": {
+          "text": "Which technical measures are in place?",
+          "helpText": "Effective encryption with keys held outside the destination is the strongest technical safeguard against government access. Example: \"Encryption at rest with EU-held keys and pseudonymisation.\" Source: EDPB Recommendations 01/2020, Annex 2.",
+          "options": [
+            "Encryption at rest, importer cannot access the keys",
+            "Encryption in transit (TLS 1.2 or higher)",
+            "End-to-end encryption, exporter-held keys only",
+            "Pseudonymisation before transfer",
+            "Anonymisation or aggregation before transfer",
+            "Split processing across parties",
+            "None"
+          ]
+        },
+        "tiav2_3_2": {
+          "text": "Which contractual measures supplement the transfer tool?",
+          "helpText": "Contract terms bind the importer to resist and report access and to let the exporter act. Example: \"Duty to challenge and to notify, plus a suspension clause.\" Source: EDPB Recommendations 01/2020, Annex 2; SCC clause 15.",
+          "options": [
+            "Duty to challenge government access requests",
+            "Duty to notify the exporter of access (where lawful)",
+            "Transparency reporting obligation",
+            "No onward transfer without prior authorisation",
+            "Audit rights for the exporter",
+            "Data localisation obligation",
+            "Suspension or termination if the law changes",
+            "None"
+          ]
+        },
+        "tiav2_3_3": {
+          "text": "Which organisational measures are in place?",
+          "helpText": "Organisational measures back up the technical and contractual ones with people and procedures. Example: \"A documented access-request policy and annual ISO 27001 certification.\" Source: EDPB Recommendations 01/2020, Annex 2.",
+          "options": [
+            "Internal policy for responding to access requests",
+            "Staff training on data protection",
+            "A designated privacy or compliance team at the importer",
+            "Recognised certifications (ISO 27001, SOC 2)",
+            "Incident response plan covering access scenarios",
+            "None"
+          ]
+        },
+        "tiav2_3_4": {
+          "text": "Are the measures effective against the identified risks? Explain.",
+          "helpText": "Explain why the measures together do, or do not, bring the protection up to an essentially equivalent level. If the importer must access the data in the clear, encryption may not help against an access order. Example: \"Effective: data is pseudonymised and keys stay in the EU.\" Source: EDPB Recommendations 01/2020, step 4."
+        },
+        "tiav2_4_1": {
+          "text": "How likely is government access to the transferred data?",
+          "helpText": "Combine the destination's laws and practices with the data type and the safeguards. Example: \"Low: pseudonymised data, keys in the EU, sector not routinely targeted.\" Source: EDPB Recommendations 01/2020, step 3.",
+          "options": [
+            "Negligible",
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "tiav2_4_2": {
+          "text": "How severe would the impact on data subjects be if accessed?",
+          "helpText": "Weigh the harm to individuals if their data were accessed, given its sensitivity. Example: \"Medium: identifiable contact and usage data.\" Source: EDPB Recommendations 01/2020, step 3.",
+          "options": [
+            "Negligible",
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "tiav2_4_3": {
+          "text": "Can the transfer proceed?",
+          "helpText": "The overall conclusion of the assessment. Where the risk cannot be brought down, the transfer should not proceed on this tool. Example: \"Yes, with conditions: implement EU-held keys first.\" Source: EDPB Recommendations 01/2020, step 6.",
+          "options": [
+            "Yes: essentially equivalent protection",
+            "Yes, with conditions",
+            "No: residual risk too high, suspend or find another route"
+          ]
+        },
+        "tiav2_4_4": {
+          "text": "If conditions are required, describe them.",
+          "helpText": "List the specific actions that must be completed before or during the transfer. Example: \"Move key management to the EU; add a suspension clause to the contract.\" Source: EDPB Recommendations 01/2020, step 6."
+        },
+        "tiav2_5_1": {
+          "text": "Which events should trigger a re-assessment?",
+          "helpText": "A transfer assessment is not one-off: name the events that reopen it. Example: \"New access legislation; any access request; a 12-month review.\" Source: EDPB Recommendations 01/2020, step 6.",
+          "options": [
+            "New legislation or executive order in the destination",
+            "Adequacy decision revoked or challenged",
+            "The importer receives a government access request",
+            "Change in data categories or volume",
+            "Change of sub-processor or onward transfer",
+            "Periodic review (at least every 12 months)",
+            "Supervisory authority guidance or enforcement"
+          ]
+        },
+        "tiav2_5_2": {
+          "text": "When is the next scheduled review?",
+          "helpText": "Give a specific date, in the form YYYY-MM-DD. Example: \"2027-04-01.\" Source: EDPB Recommendations 01/2020, step 6."
+        }
+      },
+      "template": {
+        "system-tia-template-v2": {
+          "name": "Transfer Impact Assessment",
+          "description": "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers. Informational, not legal advice; verify with qualified counsel."
         }
       }
     },
@@ -6819,7 +8106,12 @@
         },
         "q7_1": {
           "text": "Overall residual risk level after mitigations",
-          "options": ["Low", "Medium", "High", "Critical"]
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
         },
         "q7_2": {
           "text": "Is prior consultation with the supervisory authority required? (Art. 36)",
@@ -6832,6 +8124,169 @@
         "q7_3": {
           "text": "DPO advice and recommendation",
           "helpText": "Record the DPO's formal advice: whether the processing may proceed, any conditions, and the recommended review date."
+        }
+      }
+    },
+    "pia": {
+      "template": {
+        "system-pia-template-v2": {
+          "name": "Privacy Impact Assessment",
+          "description": "A broad privacy review of a processing activity: the data, the purposes, the lawful basis, retention, recipients, the rights of individuals and security, with structured answers. Informational, not legal advice; verify with qualified counsel."
+        }
+      },
+      "section": {
+        "piav2_s1": {
+          "title": "The processing",
+          "description": "Describe what is processed, why and about whom."
+        },
+        "piav2_s2": {
+          "title": "Lawful basis and retention",
+          "description": "Record the lawful basis and how long the data is kept."
+        },
+        "piav2_s3": {
+          "title": "Recipients and transfers",
+          "description": "Record who receives the data and any transfer abroad."
+        },
+        "piav2_s4": {
+          "title": "Rights and transparency",
+          "description": "Record how individuals are informed and how their rights are met."
+        },
+        "piav2_s5": {
+          "title": "Security and outcome",
+          "description": "Record the security measures and the overall privacy risk."
+        }
+      },
+      "question": {
+        "piav2_1_1": {
+          "text": "What is the purpose of the processing?",
+          "helpText": "State the specific, explicit purpose, which every later question is measured against. Example: \"Managing customer orders and after-sales support.\" Source: GDPR Art. 5(1)(b)."
+        },
+        "piav2_1_2": {
+          "text": "What categories of personal data are processed?",
+          "helpText": "List every category, because the categories drive the risk and the obligations. Example: \"Contact details, identifiers, financial data.\" Source: GDPR Art. 30(1)(c).",
+          "options": [
+            "Contact details",
+            "Identifiers",
+            "Financial data",
+            "Behavioural or usage data",
+            "Location data",
+            "Special category data",
+            "Criminal-offence data"
+          ]
+        },
+        "piav2_1_3": {
+          "text": "Does the processing involve special category or criminal-offence data?",
+          "helpText": "Special category data (Art. 9) and criminal-offence data (Art. 10) need a specific condition beyond the lawful basis. Example: \"No.\" Source: GDPR Arts. 9 and 10."
+        },
+        "piav2_1_4": {
+          "text": "Which Article 9(2) or Article 10 condition applies?",
+          "helpText": "Name the specific condition that permits the special category or criminal-offence data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10."
+        },
+        "piav2_1_5": {
+          "text": "Who are the data subjects?",
+          "helpText": "Name the groups whose data is processed. Children and vulnerable people call for extra care. Example: \"Customers and website users.\" Source: GDPR Art. 30(1)(c); Recital 38.",
+          "options": [
+            "Customers",
+            "Employees",
+            "Job applicants",
+            "Suppliers or contacts",
+            "Website or app users",
+            "Children",
+            "Other vulnerable people"
+          ]
+        },
+        "piav2_2_1": {
+          "text": "What is the lawful basis for the processing?",
+          "helpText": "Every processing needs one of the six lawful bases, chosen before processing begins. Legitimate interest also needs a balancing test (the LIA template). Example: \"Contract.\" Source: GDPR Art. 6(1).",
+          "options": [
+            "Consent (Art. 6(1)(a))",
+            "Contract (Art. 6(1)(b))",
+            "Legal obligation (Art. 6(1)(c))",
+            "Vital interests (Art. 6(1)(d))",
+            "Public task (Art. 6(1)(e))",
+            "Legitimate interests (Art. 6(1)(f))"
+          ]
+        },
+        "piav2_2_2": {
+          "text": "How long is the data kept, and from when?",
+          "helpText": "State a retention period and its starting point, not \"as long as necessary\". Example: \"6 years from the end of the contract, for tax law.\" Source: GDPR Art. 5(1)(e)."
+        },
+        "piav2_2_3": {
+          "text": "Is the retention period justified and enforced?",
+          "helpText": "The period must be justified by the purpose or a legal duty, and the data actually deleted or anonymised at the end. Example: \"Yes: annual deletion job removes expired records.\" Source: GDPR Art. 5(1)(e)."
+        },
+        "piav2_3_1": {
+          "text": "Who receives the data?",
+          "helpText": "Name every category of recipient, because each adds obligations and risk. Example: \"Internal teams and a hosting processor.\" Source: GDPR Art. 30(1)(d).",
+          "options": [
+            "Internal teams only",
+            "Processors acting on our behalf",
+            "Joint controllers",
+            "Other controllers",
+            "Public authorities"
+          ]
+        },
+        "piav2_3_2": {
+          "text": "Is every processor bound by a written data processing agreement (Art. 28)?",
+          "helpText": "A processor may only act under a contract with the terms Article 28 requires. Example: \"Yes: a signed DPA is in place with each processor.\" Source: GDPR Art. 28(3)."
+        },
+        "piav2_3_3": {
+          "text": "Is any data transferred outside the EU or EEA?",
+          "helpText": "A transfer to a third country needs a transfer tool and, outside adequacy, a Transfer Impact Assessment (the TIA template). Example: \"Yes: our hosting provider is in the United States.\" Source: GDPR Arts. 44 to 49."
+        },
+        "piav2_3_4": {
+          "text": "Which transfer tool covers it, and is a TIA in place?",
+          "helpText": "Name the transfer tool and whether a Transfer Impact Assessment has been done. Example: \"Standard Contractual Clauses; TIA completed 2026-05.\" Source: GDPR Arts. 46 and 44."
+        },
+        "piav2_4_1": {
+          "text": "Have individuals been given the privacy information required by Articles 13-14?",
+          "helpText": "People must be told who processes their data, why, on what basis, for how long and what rights they have. Example: \"Yes: a layered privacy notice at the point of collection.\" Source: GDPR Arts. 13 and 14."
+        },
+        "piav2_4_2": {
+          "text": "Which data subject rights are supported?",
+          "helpText": "You must be able to honour the rights that apply to your basis and processing. Example: \"Access, rectification, erasure and objection.\" Source: GDPR Arts. 15 to 22.",
+          "options": [
+            "Access (Art. 15)",
+            "Rectification (Art. 16)",
+            "Erasure (Art. 17)",
+            "Restriction (Art. 18)",
+            "Portability (Art. 20)",
+            "Objection (Art. 21)"
+          ]
+        },
+        "piav2_4_3": {
+          "text": "Is there solely automated decision-making with legal or similarly significant effects?",
+          "helpText": "Decisions made solely by automated means with a legal or similarly significant effect are restricted and need specific safeguards. Example: \"No: a person reviews every decision.\" Source: GDPR Art. 22."
+        },
+        "piav2_4_4": {
+          "text": "What safeguards apply to the automated decision-making?",
+          "helpText": "Describe the lawful ground and the safeguards: the right to human intervention, to express a view and to contest the decision. Example: \"Explicit consent; the person can request a human review.\" Source: GDPR Art. 22(3)."
+        },
+        "piav2_5_1": {
+          "text": "Which security measures protect the data (Art. 32)?",
+          "helpText": "Measures must be appropriate to the risk, covering confidentiality, integrity, availability and resilience. Example: \"Encryption, access controls, backups and logging.\" Source: GDPR Art. 32.",
+          "options": [
+            "Encryption",
+            "Pseudonymisation",
+            "Access controls",
+            "Logging and monitoring",
+            "Backups and recovery",
+            "Staff training",
+            "Regular testing of measures"
+          ]
+        },
+        "piav2_5_2": {
+          "text": "What is the overall privacy risk after these measures?",
+          "helpText": "Give the residual risk once the measures are in place. A high residual risk points to a full DPIA and possibly prior consultation. Example: \"Low.\" Source: GDPR Arts. 35 and 36.",
+          "options": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "piav2_5_3": {
+          "text": "What residual actions or recommendations remain?",
+          "helpText": "Note any follow-up needed to reduce the risk further or to keep the assessment current. Example: \"Schedule a DPIA if profiling is added.\" Source: GDPR Art. 35(1)."
         }
       }
     }

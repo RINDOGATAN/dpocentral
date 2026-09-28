@@ -78,6 +78,8 @@ export async function createAssessmentFromActivity(
     where: {
       type: assessmentType,
       isActive: true,
+      // Never auto-create against a template retired by a newer version.
+      supersededAt: null,
       OR: [
         { isSystem: true },
         { organizationId },

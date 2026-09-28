@@ -119,7 +119,8 @@ describe("planTemplateRemoval", () => {
     const plan = await planTemplateRemoval(p as never, ORG);
 
     expect(plan.removeIds.processingActivities).toEqual(["paA"]);
-    expect(plan.processingActivities).toEqual({ remove: 1, keep: 1 }); // paD kept
+    // paD kept (submitted assessment) + paB kept (a person confirmed it).
+    expect(plan.processingActivities).toEqual({ remove: 1, keep: 2 });
 
     expect(plan.removeIds.vendors).toEqual(["venA"]);
     expect(plan.vendors).toEqual({ remove: 1, keep: 3 }); // venB, venC, venD kept
@@ -157,6 +158,10 @@ describe("backfilled rows are never removal candidates", () => {
     const plan = await planTemplateRemoval(p as never, ORG);
     expect(plan.removeIds.vendors).toEqual(["fresh"]);
     expect(plan.totalRemove).toBe(1);
+    // The confirmed template rows (backfilled + editedSince) are counted as kept,
+    // not left out of the tally.
+    expect(plan.vendors.keep).toBe(2);
+    expect(plan.totalKeep).toBe(2);
   });
 });
 
