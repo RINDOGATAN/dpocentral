@@ -7058,6 +7058,30 @@
       "reopen": "Reopen it any time from the help button."
     }
   },
+  "portfolio": {
+    "title": "All clients",
+    "subtitle": "{count, plural, one {# organisation} other {# organisations}} you manage",
+    "tiles": {
+      "requestsDue": "Requests due",
+      "openIncidents": "Open incidents",
+      "needAttention": "Need attention",
+      "clients": "Clients"
+    },
+    "stages": "Stages",
+    "nextStep": "Next step",
+    "allDone": "Every step done",
+    "plan": "Plan",
+    "requestsDue": "{count, plural, one {# request due} other {# requests due}}",
+    "requestsDueNone": "No requests due",
+    "openIncidents": "{count, plural, one {# open incident} other {# open incidents}}",
+    "openIncidentsNone": "No open incidents",
+    "lastActivity": "Last activity: {when}",
+    "noActivity": "No activity yet",
+    "empty": {
+      "title": "No client organisations yet",
+      "body": "Organisations you are a member of will appear here."
+    }
+  },
   "errorPage": {
     "title": "Something went wrong",
     "body": "This page could not be shown. Your saved records are not affected.",

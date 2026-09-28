@@ -7058,6 +7058,30 @@
       "reopen": "Vuelve a abrirlo cuando quieras desde el botón de ayuda."
     }
   },
+  "portfolio": {
+    "title": "Todos los clientes",
+    "subtitle": "{count, plural, one {# organización} other {# organizaciones}} que gestionas",
+    "tiles": {
+      "requestsDue": "Solicitudes por vencer",
+      "openIncidents": "Incidentes abiertos",
+      "needAttention": "Requieren atención",
+      "clients": "Clientes"
+    },
+    "stages": "Etapas",
+    "nextStep": "Siguiente paso",
+    "allDone": "Todos los pasos completados",
+    "plan": "Plan",
+    "requestsDue": "{count, plural, one {# solicitud por vencer} other {# solicitudes por vencer}}",
+    "requestsDueNone": "Sin solicitudes por vencer",
+    "openIncidents": "{count, plural, one {# incidente abierto} other {# incidentes abiertos}}",
+    "openIncidentsNone": "Sin incidentes abiertos",
+    "lastActivity": "Última actividad: {when}",
+    "noActivity": "Aún sin actividad",
+    "empty": {
+      "title": "Aún no hay organizaciones cliente",
+      "body": "Las organizaciones de las que eres miembro aparecerán aquí."
+    }
+  },
   "errorPage": {
     "title": "Algo ha fallado",
     "body": "No se ha podido mostrar esta página. Tus registros guardados no se ven afectados.",
