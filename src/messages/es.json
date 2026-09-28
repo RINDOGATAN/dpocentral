@@ -2443,6 +2443,27 @@
     "role": {
       "OWNER": "Propietario", "ADMIN": "Administrador", "PRIVACY_OFFICER": "Responsable de privacidad",
       "MEMBER": "Miembro", "VIEWER": "Lector"
+    },
+    "auditAction": {
+      "CREATE": "Creado", "UPDATE": "Actualizado", "DELETE": "Eliminado", "VIEW": "Consultado",
+      "SUBMIT": "Enviado", "SUBMIT_AND_APPROVE": "Enviado y aprobado",
+      "STATUS_CHANGED": "Estado cambiado", "DEADLINE_EXTENDED": "Plazo ampliado",
+      "TASKS_GENERATED": "Tareas generadas", "PII_REDACTED": "Datos personales suprimidos",
+      "GENERATE_DPA": "Contrato de encargo de tratamiento generado",
+      "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
+      "REQUEST_CREATED": "Solicitud creada",
+      "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal"
+    },
+    "auditEntity": {
+      "Organization": "Organización", "OrganizationMember": "Miembro del equipo",
+      "OrganizationJurisdiction": "Jurisdicción", "OrganizationAiSettings": "Ajustes de IA",
+      "DataAsset": "Activo de datos", "ProcessingActivity": "Actividad de tratamiento",
+      "DataFlow": "Flujo de datos", "DataTransfer": "Transferencia", "Vendor": "Proveedor",
+      "VendorContract": "Contrato de proveedor", "Assessment": "Evaluación",
+      "DSARRequest": "Solicitud de derechos", "Incident": "Incidente",
+      "IncidentNotification": "Notificación de brecha", "AISystem": "Sistema de IA"
     }
   },
   "enableFeature": {
@@ -2937,7 +2958,7 @@
   },
   "deploymentCta": {
     "heading": "Ayuda técnica para empezar",
-    "body": "Y formación puntual específica por módulo (gratis).",
+    "body": "Además, sesiones de formación breves y gratuitas sobre las partes del producto que utilizas.",
     "findExpert": "Buscar experto",
     "dismiss": "Cerrar"
   },

@@ -422,7 +422,9 @@ export default function PrivacyDashboardPage() {
                     <Clock className="h-3 w-3" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm truncate">{activity.action} - {activity.entityType}</p>
+                    <p className="text-xs sm:text-sm truncate">
+                      {enumLabel("auditAction", activity.action)} · {enumLabel("auditEntity", activity.entityType)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {new Date(activity.createdAt).toLocaleString()}
                     </p>

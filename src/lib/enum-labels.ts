@@ -38,7 +38,13 @@ export type EnumKind =
   | "dataSensitivity"
   | "notificationStatus"
   | "reviewType"
-  | "role";
+  | "role"
+  // The audit trail's action verbs (CREATE, UPDATE, …) and entity names
+  // (Organization, DataAsset, …), shown on the dashboard's recent activity.
+  // Entity names are model names, not SCREAMING_SNAKE, so the de-snake fallback
+  // would mangle "AISystem"/"DSARRequest": every current value has a label.
+  | "auditAction"
+  | "auditEntity";
 
 /** De-snake a raw enum value to a readable label of last resort. */
 export function desnake(value: string): string {

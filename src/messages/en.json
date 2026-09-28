@@ -2443,6 +2443,27 @@
     "role": {
       "OWNER": "Owner", "ADMIN": "Admin", "PRIVACY_OFFICER": "Privacy officer",
       "MEMBER": "Member", "VIEWER": "Viewer"
+    },
+    "auditAction": {
+      "CREATE": "Created", "UPDATE": "Updated", "DELETE": "Deleted", "VIEW": "Viewed",
+      "SUBMIT": "Submitted", "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "STATUS_CHANGED": "Status changed", "DEADLINE_EXTENDED": "Deadline extended",
+      "TASKS_GENERATED": "Tasks generated", "PII_REDACTED": "Personal data redacted",
+      "GENERATE_DPA": "Data processing agreement generated",
+      "UPDATE_COMPLIANCE": "Compliance updated",
+      "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
+      "REQUEST_CREATED": "Request created",
+      "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal"
+    },
+    "auditEntity": {
+      "Organization": "Organisation", "OrganizationMember": "Team member",
+      "OrganizationJurisdiction": "Jurisdiction", "OrganizationAiSettings": "AI settings",
+      "DataAsset": "Data asset", "ProcessingActivity": "Processing activity",
+      "DataFlow": "Data flow", "DataTransfer": "Transfer", "Vendor": "Vendor",
+      "VendorContract": "Vendor contract", "Assessment": "Assessment",
+      "DSARRequest": "Rights request", "Incident": "Incident",
+      "IncidentNotification": "Breach notification", "AISystem": "AI system"
     }
   },
   "enableFeature": {
@@ -2937,7 +2958,7 @@
   },
   "deploymentCta": {
     "heading": "Technical help getting started",
-    "body": "And ad hoc, module-specific training (free).",
+    "body": "Plus free, short training sessions on the parts of the product you use.",
     "findExpert": "Find Expert",
     "dismiss": "Dismiss"
   },
