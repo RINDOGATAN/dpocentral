@@ -360,6 +360,41 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
     await expect(page.getByRole("button", { name: /account/i })).toBeVisible();
   });
 
+  // The top bar must not overflow on a narrow phone: the "?" help button that
+  // stage 2 added had pushed Account off the right edge, so a phone user could
+  // not sign out. Measured directly at 360 and 390 px in both skins.
+  await step("the top bar fits the phone at 360 and 390 px", async () => {
+    const original = page.viewportSize();
+    const bars: Array<{ skin: string; control: RegExp }> = [
+      { skin: "guided", control: /account/i },
+      { skin: "classic", control: /sign out/i },
+    ];
+    try {
+      for (const width of [360, 390]) {
+        for (const { skin, control } of bars) {
+          await page.setViewportSize({ width, height: 844 });
+          await page.goto(`/privacy?skin=${skin}`);
+          const button = page.getByRole("button", { name: control }).first();
+          await expect(button).toBeVisible();
+          const header = page.locator("header").first();
+          const { scrollWidth, clientWidth } = await header.evaluate((el) => ({
+            scrollWidth: el.scrollWidth,
+            clientWidth: el.clientWidth,
+          }));
+          expect(scrollWidth, `${skin} header overflows at ${width} px`).toBeLessThanOrEqual(clientWidth);
+          const box = await button.boundingBox();
+          expect(box, `${skin} control has no box at ${width} px`).not.toBeNull();
+          expect(box!.x, `${skin} control off the left at ${width} px`).toBeGreaterThanOrEqual(0);
+          expect(box!.x + box!.width, `${skin} control off the right at ${width} px`).toBeLessThanOrEqual(width);
+        }
+      }
+    } finally {
+      // Leave the walk where it expects to be: Guided, at the walk's viewport.
+      if (original) await page.setViewportSize(original);
+      await page.goto("/privacy?skin=guided");
+    }
+  });
+
   await step("sign-out through the guided account menu", async () => {
     await page.goto("/privacy");
     // Guided keeps sign-out in the account menu.

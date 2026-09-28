@@ -46,6 +46,7 @@ import {
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { useOrganization } from "@/lib/organization-context";
 import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { StatusMark } from "@/components/ui/status-chip";
@@ -90,6 +91,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const tp = useTranslations("pages.dsarDetail");
   const tList = useTranslations("pages.dsar");
   const tCommon = useTranslations("common");
+  const { label: enumLabel } = useEnumLabels();
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
@@ -652,7 +654,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                     <div key={entry.id} className="flex items-start gap-3 p-3 border">
                       <Clock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                       <div className="min-w-0">
-                        <p className="font-medium text-sm">{entry.action.replace("_", " ")}</p>
+                        <p className="font-medium text-sm">{enumLabel("auditAction", entry.action)}</p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(entry.createdAt).toLocaleString()}
                         </p>

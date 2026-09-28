@@ -86,6 +86,61 @@ export const regulationsRouter = createTRPCRouter({
       };
     }),
 
+  // The posture applicability check (src/config/applicability.ts): the stored
+  // answers plus the jurisdictions the organisation already declares. Read-only.
+  getApplicability: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const { readApplicabilityAnswers } = await import("@/config/applicability");
+      const [organization, orgJurisdictions] = await Promise.all([
+        ctx.prisma.organization.findUnique({
+          where: { id: ctx.organization.id },
+          select: { settings: true },
+        }),
+        ctx.prisma.organizationJurisdiction.findMany({
+          where: { organizationId: ctx.organization.id },
+          include: { jurisdiction: { select: { code: true } } },
+        }),
+      ]);
+      const settings =
+        organization?.settings && typeof organization.settings === "object" && !Array.isArray(organization.settings)
+          ? (organization.settings as Record<string, unknown>)
+          : {};
+      return {
+        answers: readApplicabilityAnswers(settings.applicability),
+        jurisdictionCodes: orgJurisdictions.map((oj) => oj.jurisdiction.code),
+      };
+    }),
+
+  // Save the posture answers under Organization.settings.applicability, merged
+  // so no other setting is lost. Writer role (never a viewer).
+  setApplicability: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        answers: z.record(z.string(), z.enum(["YES", "NO", "UNSURE"])),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { readApplicabilityAnswers, APPLICABILITY_VERSION } = await import("@/config/applicability");
+      const organization = await ctx.prisma.organization.findUnique({
+        where: { id: ctx.organization.id },
+        select: { settings: true },
+      });
+      const settings =
+        organization?.settings && typeof organization.settings === "object" && !Array.isArray(organization.settings)
+          ? (organization.settings as Record<string, unknown>)
+          : {};
+      const answers = readApplicabilityAnswers(input.answers);
+      await ctx.prisma.organization.update({
+        where: { id: ctx.organization.id },
+        data: {
+          settings: { ...settings, applicability: { ...answers, version: APPLICABILITY_VERSION } },
+        },
+      });
+      return { answers };
+    }),
+
   // Apply a jurisdiction to the organization
   applyJurisdiction: writerProcedure
     .input(

@@ -7,16 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Bot,
   ArrowLeft,
-  Edit3,
   Shield,
   AlertTriangle,
   Building2,
@@ -45,7 +37,6 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   const t = useTranslations("pages.aiSystemDetail");
   const tList = useTranslations("pages.aiSystems");
 
-  const utils = trpc.useUtils();
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
     { organizationId: orgId, id },
     { enabled: !!orgId && !!id }
@@ -62,13 +53,6 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
         !!system?.aiSentinelSystemId,
     }
   );
-
-  const updateStatus = trpc.aiGovernance.update.useMutation({
-    onSuccess: () => {
-      utils.aiGovernance.getById.invalidate({ organizationId: orgId, id });
-      utils.aiGovernance.list.invalidate();
-    },
-  });
 
   if (isLoading) {
     return (
@@ -112,6 +96,9 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>
                 {tList(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
               </StatusChip>
+              <Badge variant="outline">
+                {tList(`status.${system.status}` as `status.DRAFT` | `status.REGISTERED` | `status.UNDER_REVIEW` | `status.COMPLIANT` | `status.NON_COMPLIANT` | `status.DECOMMISSIONED`)}
+              </Badge>
               {system.aiSentinelSystemId && (
                 <Badge variant="outline" className={toneBorder("info")}>
                   <Shield className={`w-3 h-3 mr-1 ${toneMark("info")}`} /> {t("linked")}
@@ -119,31 +106,6 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
               )}
             </div>
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link href={`/privacy/ai-systems/${id}/edit`}>
-            <Button variant="outline" size="sm">
-              <Edit3 className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
-          </Link>
-          <Select
-            value={system.status}
-            onValueChange={(v) => updateStatus.mutate({ organizationId: orgId, id, status: v as any })}
-            disabled={updateStatus.isPending}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="DRAFT">{tList("status.DRAFT")}</SelectItem>
-              <SelectItem value="REGISTERED">{tList("status.REGISTERED")}</SelectItem>
-              <SelectItem value="UNDER_REVIEW">{tList("status.UNDER_REVIEW")}</SelectItem>
-              <SelectItem value="COMPLIANT">{tList("status.COMPLIANT")}</SelectItem>
-              <SelectItem value="NON_COMPLIANT">{tList("status.NON_COMPLIANT")}</SelectItem>
-              <SelectItem value="DECOMMISSIONED">{tList("status.DECOMMISSIONED")}</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 

@@ -332,94 +332,26 @@ describe("vendor.scheduleReview cross-organisation reviewer", () => {
 // AI GOVERNANCE
 // ============================================================
 
-describe("aiGovernance.create cross-organisation vendor", () => {
-  it("refuses a vendor that belongs to another organisation", async () => {
+// AI systems are read-only in DPO Central (stage 2b): create and update now
+// reject read-only, so the cross-organisation vendor checks they used to run
+// are gone. The read-only rule itself is covered in
+// tests/ai-systems-read-only.test.ts; here we only confirm nothing is written.
+describe("aiGovernance is read-only (no cross-organisation write to reach)", () => {
+  it("refuses to register an AI system, before any vendor check or write", async () => {
     const caller = aiCaller();
-    mocks.prisma.vendor.count.mockResolvedValue(0);
-
     await expect(
-      caller.create({
-        organizationId: "org-a",
-        name: "Scoring model",
-        vendorId: "vendor-in-org-b",
-      })
-    ).rejects.toMatchObject({ code: "NOT_FOUND" });
-
-    expect(mocks.prisma.vendor.count).toHaveBeenCalledWith({
-      where: { id: { in: ["vendor-in-org-b"] }, organizationId: "org-a" },
-    });
+      caller.create({ organizationId: "org-a", name: "Scoring model", vendorId: "vendor-a" })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mocks.prisma.vendor.count).not.toHaveBeenCalled();
     expect(mocks.prisma.aISystem.create).not.toHaveBeenCalled();
   });
 
-  it("registers the system when the vendor belongs to the organisation", async () => {
+  it("refuses to update an AI system, before any vendor check or write", async () => {
     const caller = aiCaller();
-    mocks.prisma.vendor.count.mockResolvedValue(1);
-    mocks.prisma.aISystem.create.mockResolvedValue({ id: "system-1" });
-
-    const result = await caller.create({
-      organizationId: "org-a",
-      name: "Scoring model",
-      vendorId: "vendor-a",
-    });
-
-    expect(result).toMatchObject({ id: "system-1" });
-    expect(mocks.prisma.aISystem.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          organizationId: "org-a",
-          vendorId: "vendor-a",
-        }),
-      })
-    );
-  });
-});
-
-describe("aiGovernance.update cross-organisation vendor", () => {
-  it("refuses a vendor that belongs to another organisation", async () => {
-    const caller = aiCaller();
-    mocks.prisma.vendor.count.mockResolvedValue(0);
-
     await expect(
-      caller.update({
-        organizationId: "org-a",
-        id: "system-a",
-        vendorId: "vendor-in-org-b",
-      })
-    ).rejects.toMatchObject({ code: "NOT_FOUND" });
-
-    expect(mocks.prisma.vendor.count).toHaveBeenCalledWith({
-      where: { id: { in: ["vendor-in-org-b"] }, organizationId: "org-a" },
-    });
-    expect(mocks.prisma.aISystem.update).not.toHaveBeenCalled();
-  });
-
-  it("updates the system when the vendor belongs to the organisation", async () => {
-    const caller = aiCaller();
-    mocks.prisma.vendor.count.mockResolvedValue(1);
-    mocks.prisma.aISystem.update.mockResolvedValue({ id: "system-a" });
-
-    const result = await caller.update({
-      organizationId: "org-a",
-      id: "system-a",
-      vendorId: "vendor-a",
-    });
-
-    expect(result).toMatchObject({ id: "system-a" });
-    expect(mocks.prisma.aISystem.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { id: "system-a" },
-        data: expect.objectContaining({ vendorId: "vendor-a" }),
-      })
-    );
-  });
-
-  it("still lets the vendor link be cleared, without counting", async () => {
-    const caller = aiCaller();
-    mocks.prisma.aISystem.update.mockResolvedValue({ id: "system-a" });
-
-    await caller.update({ organizationId: "org-a", id: "system-a", vendorId: null });
-
+      caller.update({ organizationId: "org-a", id: "system-a", vendorId: "vendor-a" })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mocks.prisma.vendor.count).not.toHaveBeenCalled();
-    expect(mocks.prisma.aISystem.update).toHaveBeenCalled();
+    expect(mocks.prisma.aISystem.update).not.toHaveBeenCalled();
   });
 });

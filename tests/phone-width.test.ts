@@ -363,6 +363,41 @@ describe("no sideways scrolling at phone width, signed in", () => {
     expect(row).toContain("flex-wrap");
   });
 
+  /**
+   * The signed-in top bar has a fixed set of controls that must all stay on
+   * one line at 360 px: the menu, the brand, "?", the language switch and
+   * Account (Guided) or sign-out (Classic). What overflows first is the widest
+   * text, so on a phone the brand name hides to its logo mark and the language
+   * switch shrinks to a two-letter code. The rendered proof is the e2e smoke
+   * walk (e2e/smoke.spec.ts, "the top bar fits the phone at 360 and 390 px");
+   * this scan refuses the regression that would put the text back.
+   */
+  it("compacts the top bar so nothing overflows the phone", () => {
+    const guided = readFileSync("src/components/guided/guided-layout.tsx", "utf8");
+    const classic = readFileSync("src/components/dashboard-shell.tsx", "utf8");
+    const lang = readFileSync("src/components/ui/language-switcher.tsx", "utf8");
+
+    // The brand name hides below `sm` in both top bars (the logo mark stays).
+    expect(guided, "Guided brand name must hide below sm")
+      .toContain('nameClassName="hidden sm:inline"');
+    expect(classic, "Classic brand name must hide below sm")
+      .toMatch(/className="hidden sm:inline"[^>]*>\{brand\.nameUppercase\}/);
+
+    // The language switch shows a short code below `sm` and the full name from
+    // `sm`, and stays labelled for screen readers.
+    expect(lang).toContain("localeShortNames");
+    expect(lang).toMatch(/className="hidden sm:inline"[^>]*>\{localeNames\[locale\]\}/);
+    expect(lang).toMatch(/className="sm:hidden"[^>]*>\{localeShortNames\[locale\]\}/);
+    expect(lang).toContain("aria-label={localeNames[locale]}");
+
+    // "?" and Account are always on the bar in Guided (never hidden), so a
+    // phone user can always open help and sign out.
+    const header = guided.slice(guided.indexOf("<header"), guided.indexOf("</header>"));
+    expect(header).toContain("<PageHelpButton />");
+    expect(header).toContain("<AccountMenu");
+    expect(header).not.toMatch(/<PageHelpButton[^>]*className="[^"]*hidden/);
+  });
+
   /** The hosted pilot banner wraps its sentence and keeps its dismiss control. */
   it("keeps the pilot banner inside the viewport", () => {
     const banner = readFileSync("src/components/pilot/hosted-pilot.tsx", "utf8");

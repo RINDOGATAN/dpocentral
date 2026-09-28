@@ -50,6 +50,7 @@ import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
 import { NextStepCard } from "@/components/guided/next-step-card";
+import { FirstRunCard } from "@/components/help/first-run-card";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -155,7 +156,9 @@ export default function PrivacyDashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Guided only: the first step on the path that is not done. One card. */}
+      {/* Guided only: the one-minute introduction on the first visit (dismissed
+          per browser), then the first step on the path that is not done. */}
+      {skin === "guided" && <FirstRunCard />}
       {skin === "guided" && <NextStepCard waitForFresh={fromQuickstart} />}
 
       {/* Header */}
@@ -422,7 +425,9 @@ export default function PrivacyDashboardPage() {
                     <Clock className="h-3 w-3" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm truncate">{activity.action} - {activity.entityType}</p>
+                    <p className="text-xs sm:text-sm truncate">
+                      {enumLabel("auditAction", activity.action)} · {enumLabel("auditEntity", activity.entityType)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {new Date(activity.createdAt).toLocaleString()}
                     </p>

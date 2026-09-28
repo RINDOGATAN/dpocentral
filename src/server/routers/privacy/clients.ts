@@ -3,8 +3,15 @@
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { logger } from "@/lib/logger";
+import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
+import { evaluatePath, type PathStatuses } from "@/components/guided/path";
+import { loadPathCounts } from "@/server/services/program/path-counts";
+import { loadPlanStart } from "@/server/services/program/plan-start";
 
 const MAX_CLIENT_ORGS = 50;
+
+/** A request is "due soon" when its deadline is within the next week. */
+const DUE_SOON_DAYS = 7;
 
 export const clientsRouter = createTRPCRouter({
   listClients: protectedProcedure.query(async ({ ctx }) => {
@@ -29,15 +36,25 @@ export const clientsRouter = createTRPCRouter({
           role: membership.role,
         };
 
+        const now = new Date();
+        const dueSoonCutoff = new Date(now.getTime() + DUE_SOON_DAYS * 24 * 60 * 60 * 1000);
+        const emptySteps: PathStatuses = {};
+
         try {
+          // The six-stage rings, the next step and the plan all read the same
+          // path counts the Guided menu reads, so a client's row in the
+          // portfolio can never disagree with its own dashboard.
           const [
+            counts,
             openDsars,
             overdueDsars,
+            dueSoonDsars,
             pendingAssessments,
             openIncidents,
             activeVendors,
             lastLog,
           ] = await Promise.all([
+            loadPathCounts(ctx.prisma, orgId),
             ctx.prisma.dSARRequest.count({
               where: {
                 organizationId: orgId,
@@ -48,7 +65,14 @@ export const clientsRouter = createTRPCRouter({
               where: {
                 organizationId: orgId,
                 status: { notIn: ["COMPLETED", "REJECTED"] },
-                dueDate: { lt: new Date() },
+                dueDate: { lt: now },
+              },
+            }),
+            ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: orgId,
+                status: { notIn: ["COMPLETED", "REJECTED"] },
+                dueDate: { gte: now, lt: dueSoonCutoff },
               },
             }),
             ctx.prisma.assessment.count({
@@ -76,22 +100,31 @@ export const clientsRouter = createTRPCRouter({
             }),
           ]);
 
+          const steps = evaluatePath(DPO_CENTRAL_PATH, counts);
+          const planStart = await loadPlanStart(ctx.prisma, orgId, steps.quickstart === "done");
+
           return {
             ...base,
+            steps,
+            planStart: planStart?.toISOString() ?? null,
             openDsars,
             overdueDsars,
+            dueSoonDsars,
             pendingAssessments,
             openIncidents,
             activeVendors,
             lastActivity: lastLog?.createdAt ?? null,
-            needsAttention: overdueDsars > 0 || openIncidents > 0,
+            needsAttention: overdueDsars > 0 || dueSoonDsars > 0 || openIncidents > 0,
           };
         } catch (error) {
           logger.error("Failed to fetch stats for org", error, { orgId });
           return {
             ...base,
+            steps: emptySteps,
+            planStart: null,
             openDsars: 0,
             overdueDsars: 0,
+            dueSoonDsars: 0,
             pendingAssessments: 0,
             openIncidents: 0,
             activeVendors: 0,

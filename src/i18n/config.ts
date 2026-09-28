@@ -20,6 +20,12 @@ export const localeNames: Record<Locale, string> = {
   es: "Español",
 };
 
+/** Two-letter codes for the compact language control on a narrow phone. */
+export const localeShortNames: Record<Locale, string> = {
+  en: "EN",
+  es: "ES",
+};
+
 export function isValidLocale(locale: string): locale is Locale {
   return locales.includes(locale as Locale);
 }

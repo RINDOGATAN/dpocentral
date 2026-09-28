@@ -52,6 +52,13 @@ import { useOrganization } from "@/lib/organization-context";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
+import { ApplicabilityQuestions, ApplicabilityResult } from "@/components/privacy/applicability-check";
+import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
+import {
+  EMPTY_APPLICABILITY_ANSWERS,
+  hasAnyApplicabilityAnswer,
+  type ApplicabilityAnswers,
+} from "@/config/applicability";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
@@ -72,7 +79,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
 // TYPES
 // ============================================================
 
-type WizardStep = "welcome" | "choose" | "vendors" | "industry" | "review" | "success";
+type WizardStep = "applies" | "welcome" | "choose" | "vendors" | "industry" | "review" | "success";
 
 // ============================================================
 // PAGE COMPONENT
@@ -89,13 +96,23 @@ export default function QuickstartPage() {
   const tQs = useTranslations("quickstart");
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
+  const tct = useTranslations("clientTemplate");
   const { label: enumLabel } = useEnumLabels();
+
+  // "Start from another client" — copy a programme from one of the user's other
+  // clients into the one open now, as drafts (directive stage 2b).
+  const [copyDialogOpen, setCopyDialogOpen] = useState(false);
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
 
-  // Wizard state — start at "welcome" if from VW, otherwise "choose"
-  const [step, setStep] = useState<WizardStep>(fromVendorWatch ? "welcome" : "choose");
+  // Wizard state — "What applies" is always the first step (directive stage 2b);
+  // from there the person moves on to the Vendor.Watch welcome (if they came
+  // with a portfolio) or straight to choosing a path.
+  const [step, setStep] = useState<WizardStep>("applies");
+  // The posture answers for the "What applies" step. `null` until the stored
+  // answers load; then the person's edits live here.
+  const [applicabilityAnswers, setApplicabilityAnswers] = useState<ApplicabilityAnswers | null>(null);
   // The programme's name, asked first and prefilled with the organisation's
   // name. Carried on the result screen and saved to the organisation so
   // exports can name the programme. `null` means "untouched": show the org
@@ -161,12 +178,27 @@ export default function QuickstartPage() {
     }
   }, [portfolio, portfolioInitialized]);
 
-  // If user came from VW but has no portfolio, fall through to normal choose step
+  // If user came from VW but has no portfolio, the welcome screen has nothing
+  // to show: skip it. Only ever rewrites the welcome step, never the "What
+  // applies" first step the person may still be on.
   useEffect(() => {
     if (fromVendorWatch && !portfolioLoading && portfolio && !portfolio.hasPortfolio) {
-      setStep("choose");
+      setStep((s) => (s === "welcome" ? "choose" : s));
     }
   }, [fromVendorWatch, portfolioLoading, portfolio]);
+
+  // The stored posture answers and the jurisdictions the organisation already
+  // declares, for the "What applies" step (read-only jurisdictions here; they
+  // are set on the regulations page).
+  const { data: applicabilityData } = trpc.regulations.getApplicability.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId }
+  );
+  const setApplicabilityMutation = trpc.regulations.setApplicability.useMutation();
+  // The person's edits win; until they touch anything, show the stored answers
+  // (or all "not sure yet" before they load). Mirrors the Settings card.
+  const applicabilityValue =
+    applicabilityAnswers ?? applicabilityData?.answers ?? EMPTY_APPLICABILITY_ANSWERS;
 
   const { data: catalogAccess } = trpc.vendor.hasVendorCatalogAccess.useQuery(
     { organizationId: orgId },
@@ -228,6 +260,21 @@ export default function QuickstartPage() {
   const removeVendorSlug = (slug: string) => {
     setSelectedSlugs((prev) => prev.filter((s) => s !== slug));
   };
+
+  // After "What applies": the Vendor.Watch welcome if a portfolio is (or may
+  // be) waiting, otherwise straight to choosing a path.
+  const afterApplies = (): WizardStep =>
+    fromVendorWatch && portfolio?.hasPortfolio !== false ? "welcome" : "choose";
+
+  const handleProceedFromApplies = () => {
+    // Save only real answers; all "not sure yet" is the same as skipping.
+    if (hasAnyApplicabilityAnswer(applicabilityValue)) {
+      setApplicabilityMutation.mutate({ organizationId: orgId, answers: applicabilityValue });
+    }
+    setStep(afterApplies());
+  };
+
+  const skipApplies = () => setStep(afterApplies());
 
   const handleProceedFromChoose = () => {
     if (useVendors && !useIndustry) setStep("vendors");
@@ -312,6 +359,7 @@ export default function QuickstartPage() {
       {step !== "welcome" && (
         <div className="flex items-center gap-2 text-sm flex-wrap">
           {[
+            { key: "applies", label: tp("steps.applies") },
             ...(!fromVendorWatch
               ? [{ key: "choose", label: tp("steps.choose") }]
               : []),
@@ -351,7 +399,7 @@ export default function QuickstartPage() {
       )}
 
       {/* Programme name — asked first, prefilled with the organisation's name */}
-      {(step === "choose" || step === "welcome") && (
+      {(step === "applies" || step === "choose" || step === "welcome") && (
         <Card>
           <CardContent className="p-4 space-y-1.5">
             <Label htmlFor="quickstart-program-name">{tp("programName.label")}</Label>
@@ -364,6 +412,42 @@ export default function QuickstartPage() {
             <p className="text-xs text-muted-foreground">{tp("programName.help")}</p>
           </CardContent>
         </Card>
+      )}
+
+      {/* ════════════════════════════════════════════════
+          STEP 1: What applies — the applicability check
+          ════════════════════════════════════════════════ */}
+      {step === "applies" && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{tp("applies.title")}</CardTitle>
+              <CardDescription>{tp("applies.intro")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <ApplicabilityQuestions
+                answers={applicabilityValue}
+                onChange={setApplicabilityAnswers}
+                idPrefix="quickstart-applicability"
+              />
+              <div className="rounded-lg border border-border p-4">
+                <ApplicabilityResult
+                  jurisdictionCodes={applicabilityData?.jurisdictionCodes ?? []}
+                  answers={applicabilityValue}
+                />
+              </div>
+            </CardContent>
+          </Card>
+          <div className="flex items-center justify-between gap-3">
+            <Button variant="ghost" onClick={skipApplies}>
+              {tp("applies.skip")}
+            </Button>
+            <Button onClick={handleProceedFromApplies}>
+              {tp("applies.continue")}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </div>
       )}
 
       {/* ════════════════════════════════════════════════
@@ -645,6 +729,24 @@ export default function QuickstartPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Start from another client — a consultant's shortcut, opens the
+              copy dialog rather than advancing the wizard. */}
+          <Card
+            className="cursor-pointer transition-all hover:border-primary/50"
+            onClick={() => setCopyDialogOpen(true)}
+          >
+            <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+              <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                <Building2 className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm sm:text-base">{tct("titleCurrent")}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{tct("cardHint")}</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-primary shrink-0" />
+            </CardContent>
+          </Card>
 
           <DeploymentExpertCta />
 
@@ -1425,6 +1527,12 @@ export default function QuickstartPage() {
         </div>
         );
       })()}
+
+      <CopyFromClientDialog
+        open={copyDialogOpen}
+        onOpenChange={setCopyDialogOpen}
+        mode={{ kind: "current" }}
+      />
     </div>
   );
 }

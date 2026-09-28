@@ -52,6 +52,21 @@ const tocSections: TocSection[] = [
     ],
   },
   {
+    href: "/privacy/docs/guides/controller-or-processor",
+    label: "Guide: Controller or processor?",
+    icon: Building2,
+  },
+  {
+    href: "/privacy/docs/guides/do-i-need-a-dpo",
+    label: "Guide: Do I need a DPO?",
+    icon: FileText,
+  },
+  {
+    href: "/privacy/docs/guides/when-is-a-dpia-required",
+    label: "Guide: When is a DPIA required?",
+    icon: ClipboardCheck,
+  },
+  {
     href: "/privacy/docs/quickstart",
     label: "Quickstart",
     icon: Zap,

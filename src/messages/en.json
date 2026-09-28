@@ -1,4 +1,62 @@
 {
+  "clientTemplate": {
+    "titleCurrent": "Start from another client",
+    "titleNew": "Start a new client from this one",
+    "cardHint": "Copy the data inventory, processing activities, vendors and templates from one of your other clients, as drafts.",
+    "descriptionCurrent": "Copy a programme from one of your other clients into this one, as drafts. The other client's full name is replaced with this client's. Anything else that may point back to it is listed below for you to review before copying.",
+    "descriptionNew": "Create a new client and copy this client's programme into it, as drafts. {source}'s full name is replaced with the new client's. Anything else that may point back to it is listed below for you to review before copying.",
+    "sourceLabel": "Copy from",
+    "sourcePlaceholder": "Choose a client",
+    "sourceHint": "You can copy from clients where you are an owner or an admin.",
+    "noSources": "You are not an owner or an admin of any other client to copy from.",
+    "loading": "Loading",
+    "newNameLabel": "New client's name",
+    "newNamePlaceholder": "e.g. Bluefield Partners",
+    "partsLegend": "What to copy",
+    "needsPart": "Needs {part}",
+    "skipped": "({count} already here, left alone)",
+    "dsarIntakeEdited": "This client's own request form has been set up, so it is left as it is.",
+    "neverCopied": "Never copied: rights requests, incidents, assessments and their evidence, contracts, the audit trail, members, licences and AI systems.",
+    "flagsTitle": "{count, plural, one {# item still points at the other client} other {# items still point at the other client}}",
+    "flagsHint": "The other client's full name was replaced. These are short forms, web or e-mail addresses that only a person can judge. Review them, then confirm.",
+    "moreFlags": "and {count} more",
+    "flagsAcknowledge": "I have reviewed the items above",
+    "summary": "{count, plural, one {# record will be copied} other {# records will be copied}}",
+    "submitCurrent": "Copy into this client",
+    "submitNew": "Create and copy",
+    "done": "Copied as drafts",
+    "failed": "The copy could not be completed",
+    "resultSummary": "Copied into {client} as drafts.",
+    "resultStarted": "Each copied record is marked as a template copy until someone reviews it here.",
+    "resultFlaggedTitle": "Review these for a mention of the other client",
+    "openClient": "Open {client}",
+    "parts": {
+      "jurisdictions": {
+        "label": "Jurisdictions",
+        "hint": "The laws this client operates under (only into a client that has declared none)."
+      },
+      "dataAssets": {
+        "label": "Data inventory",
+        "hint": "Systems and the data elements recorded in them."
+      },
+      "processingActivities": {
+        "label": "Processing activities",
+        "hint": "Records of processing, brought in as drafts."
+      },
+      "vendors": {
+        "label": "Vendors",
+        "hint": "The vendor register entries, without contracts, contacts or scores."
+      },
+      "assessmentTemplates": {
+        "label": "Assessment templates",
+        "hint": "Your own questionnaires and custom questions."
+      },
+      "dsarIntake": {
+        "label": "DSAR intake form",
+        "hint": "The public request form's wording and options, kept off until reviewed."
+      }
+    }
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",
@@ -1397,7 +1455,14 @@
         "help": "This names your privacy programme across the dashboard, the result screen and your exports. It starts as your organisation's name; change it if your programme goes by something else.",
         "placeholder": "e.g. Acme Privacy Programme"
       },
+      "applies": {
+        "title": "What applies to you",
+        "intro": "A few short questions about how you handle personal data. Together with the laws you operate under, they show what is likely to apply and what is worth checking. You can skip this now and set it later in Settings.",
+        "skip": "Not sure yet — skip",
+        "continue": "Save and continue"
+      },
       "steps": {
+        "applies": "What applies",
         "choose": "Choose Path",
         "vendors": "Select Vendors",
         "yourVendors": "Your Vendors",
@@ -1655,7 +1720,7 @@
     },
     "aiSystems": {
       "title": "AI Governance Register",
-      "subtitle": "Register and classify AI systems per the EU AI Act",
+      "subtitle": "The AI systems that use personal data, for complete privacy records. Their governance is done in AI Sentinel.",
       "register": "Register AI System",
       "search": "Search AI systems...",
       "filter": {
@@ -1692,8 +1757,13 @@
         "category": "Category: {value}"
       },
       "empty": {
-        "title": "No AI systems registered",
-        "subtitle": "Start by registering AI systems your organization uses or deploys"
+        "title": "No AI systems yet",
+        "subtitle": "AI systems appear here when you add vendors that use personal data, so your privacy records are complete. Their governance is done in AI Sentinel."
+      },
+      "readOnly": {
+        "title": "AI systems are managed in AI Sentinel",
+        "body": "You cannot add or edit an AI system here. This register lists the systems that use personal data so your privacy records stay complete; their governance is done in AI Sentinel.",
+        "back": "Back to AI systems"
       },
       "sentinel": {
         "send": "Send to AI Sentinel",
@@ -1703,7 +1773,12 @@
         "allSynced": "All systems are already synced. Re-sending will push the latest state.",
         "alreadySynced": "Already synced",
         "sending": "Sending…",
-        "sendCount": "Send {count, plural, one {# system} other {# systems}}"
+        "sendCount": "Send {count, plural, one {# system} other {# systems}}",
+        "governNote": {
+          "title": "AI governance happens in AI Sentinel",
+          "body": "This register lists the AI systems that use personal data, so your privacy records are complete. To classify a system's risk, run oversight or a conformity assessment, govern it in AI Sentinel.",
+          "open": "Open AI Sentinel"
+        }
       }
     },
     "incidents": {
@@ -2443,6 +2518,27 @@
     "role": {
       "OWNER": "Owner", "ADMIN": "Admin", "PRIVACY_OFFICER": "Privacy officer",
       "MEMBER": "Member", "VIEWER": "Viewer"
+    },
+    "auditAction": {
+      "CREATE": "Created", "UPDATE": "Updated", "DELETE": "Deleted", "VIEW": "Viewed",
+      "SUBMIT": "Submitted", "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "STATUS_CHANGED": "Status changed", "DEADLINE_EXTENDED": "Deadline extended",
+      "TASKS_GENERATED": "Tasks generated", "PII_REDACTED": "Personal data redacted",
+      "GENERATE_DPA": "Data processing agreement generated",
+      "UPDATE_COMPLIANCE": "Compliance updated",
+      "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
+      "REQUEST_CREATED": "Request created",
+      "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal"
+    },
+    "auditEntity": {
+      "Organization": "Organisation", "OrganizationMember": "Team member",
+      "OrganizationJurisdiction": "Jurisdiction", "OrganizationAiSettings": "AI settings",
+      "DataAsset": "Data asset", "ProcessingActivity": "Processing activity",
+      "DataFlow": "Data flow", "DataTransfer": "Transfer", "Vendor": "Vendor",
+      "VendorContract": "Vendor contract", "Assessment": "Assessment",
+      "DSARRequest": "Rights request", "Incident": "Incident",
+      "IncidentNotification": "Breach notification", "AISystem": "AI system"
     }
   },
   "enableFeature": {
@@ -2937,7 +3033,7 @@
   },
   "deploymentCta": {
     "heading": "Technical help getting started",
-    "body": "And ad hoc, module-specific training (free).",
+    "body": "Plus free, short training sessions on the parts of the product you use.",
     "findExpert": "Find Expert",
     "dismiss": "Dismiss"
   },
@@ -7001,6 +7097,132 @@
       "changed": "Layout changed.",
       "useGuided": "Use the guided layout",
       "useClassic": "Use the classic layout"
+    }
+  },
+  "help": {
+    "open": "Help for this page",
+    "subtitle": "What this page is for, and where to read more.",
+    "purpose": "What this is for",
+    "firstStep": "What to do first",
+    "terms": "Terms on this page",
+    "guides": "Short guides",
+    "learnMore": "Read more",
+    "officialText": "The words of the law",
+    "keyTerms": "Key terms",
+    "termMeaningOf": "What does \"{term}\" mean?",
+    "exampleLead": "For example:",
+    "guideRole": "Controller or processor?",
+    "guideDpo": "Do I need a DPO?",
+    "guideDpia": "When is a DPIA required?",
+    "firstRun": {
+      "title": "How DPO Central works",
+      "intro": "One minute on how it works. You can reopen this any time from the help button in the top bar.",
+      "step1": "Set up: say where you operate and what you do, and DPO Central works out which laws apply.",
+      "step2": "Know your data: record the personal data you hold, your vendors, and how you process it.",
+      "step3": "Keep it current: run the assessments each law expects, answer rights requests on time, and log any breach.",
+      "promise": "One privacy programme: the records, assessments and requests each law expects, kept in one place.",
+      "clientsLine": "Working for several clients?",
+      "clientsLink": "All clients shows where each one stands.",
+      "guidesTitle": "Start with a short guide",
+      "dismiss": "Got it",
+      "reopen": "Reopen it any time from the help button."
+    }
+  },
+  "portfolio": {
+    "title": "All clients",
+    "subtitle": "{count, plural, one {# organisation} other {# organisations}} you manage",
+    "tiles": {
+      "requestsDue": "Requests due",
+      "openIncidents": "Open incidents",
+      "needAttention": "Need attention",
+      "clients": "Clients"
+    },
+    "stages": "Stages",
+    "nextStep": "Next step",
+    "allDone": "Every step done",
+    "plan": "Plan",
+    "requestsDue": "{count, plural, one {# request due} other {# requests due}}",
+    "requestsDueNone": "No requests due",
+    "openIncidents": "{count, plural, one {# open incident} other {# open incidents}}",
+    "openIncidentsNone": "No open incidents",
+    "lastActivity": "Last activity: {when}",
+    "noActivity": "No activity yet",
+    "empty": {
+      "title": "No client organisations yet",
+      "body": "Organisations you are a member of will appear here."
+    }
+  },
+  "applicability": {
+    "cardTitle": "What applies to you",
+    "cardDescription": "A few plain questions about how you use personal data. With the jurisdictions you operate in, they show which laws and duties apply. Everything stays editable.",
+    "intro": "Answer what you can. \"Not sure yet\" is fine: it shows as worth checking, never as settled.",
+    "roleTitle": "Your role",
+    "saved": "Saved.",
+    "answer": {
+      "YES": "Yes",
+      "NO": "No",
+      "UNSURE": "Not sure yet"
+    },
+    "questions": {
+      "actAsController": {
+        "label": "Do you decide why and how personal data is used?",
+        "hint": "If so, you are a controller for that data and carry the main duties."
+      },
+      "actAsProcessor": {
+        "label": "Do you process personal data for other organisations on their instructions?",
+        "hint": "If so, you are a processor for that data, bound by a written contract."
+      },
+      "largeVolume": {
+        "label": "Are you a large business by revenue or by the number of people whose data you handle?",
+        "hint": "For example the CCPA's thresholds: high annual revenue, or the data of 100,000+ consumers."
+      },
+      "sensitiveData": {
+        "label": "Do you process special category data, such as health, race, religion or biometric data?",
+        "hint": "This data carries extra duties under the GDPR (Art. 9)."
+      },
+      "children": {
+        "label": "Do you process children's personal data?",
+        "hint": "Children's data raises the bar for consent, notices and impact assessments."
+      },
+      "largeScaleMonitoring": {
+        "label": "Do you monitor people regularly and systematically on a large scale?",
+        "hint": "For example tracking online behaviour, profiling, or wide video surveillance."
+      },
+      "publicAuthority": {
+        "label": "Are you a public authority or body?",
+        "hint": "Public authorities must appoint a data protection officer."
+      }
+    },
+    "appliesTitle": "These apply to you",
+    "appliesEmpty": "Nothing applies yet from your answers. Add where you operate, or answer more questions.",
+    "checkTitle": "Worth checking",
+    "whyLabel": "Why",
+    "noJurisdictions": "Add where you operate on the What applies page, so the laws that depend on a place can be shown.",
+    "editableNote": "This is guidance, not legal advice, and the mapping is still under review. You can change your answers at any time.",
+    "items": {
+      "gdpr": "GDPR (EU)",
+      "ukGdpr": "UK GDPR",
+      "processorDuties": "Processor duties (GDPR Art. 28)",
+      "dpoRequired": "A data protection officer may be required (Art. 37)",
+      "dpiaLikely": "A data protection impact assessment is likely (Art. 35)",
+      "ccpa": "CCPA/CPRA (California)",
+      "usStates": "US state privacy laws"
+    },
+    "reasons": {
+      "operatesEu": "You operate in the EU.",
+      "operatesUk": "You operate in the UK.",
+      "operatesCalifornia": "You operate in California.",
+      "operatesUsStates": "You operate in US states with privacy laws.",
+      "controller": "You are a controller.",
+      "processor": "You are a processor.",
+      "roleUnsure": "Your role is not settled yet.",
+      "publicAuthority": "You are a public authority.",
+      "largeScaleMonitoring": "You monitor people on a large scale.",
+      "sensitiveData": "You process special category data.",
+      "children": "You process children's data.",
+      "largeVolume": "You meet a large-business threshold.",
+      "thresholds": "The exact thresholds decide.",
+      "answerUnsure": "An answer is not settled yet."
     }
   },
   "errorPage": {

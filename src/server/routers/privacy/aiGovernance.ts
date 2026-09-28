@@ -13,7 +13,24 @@ import {
   getAiSentinelSystemStatus,
 } from "../../services/ai-sentinel/client";
 import type { DPCSystemPayload } from "../../services/ai-sentinel/types";
-import { assertIdsInOrg } from "../../org-ownership";
+
+/**
+ * AI systems are read-only in DPO Central (the owner's decision, 27 Sep 2026:
+ * "show AI systems read-only with 'Govern this in AI Sentinel'"). Their
+ * governance — risk classification, oversight, conformity — lives in AI
+ * Sentinel. The list and details stay readable, the register is filled from
+ * vendor onboarding so the privacy records are complete, and systems can still
+ * be pushed TO AI Sentinel (exportToAiSentinel, the cross-app bridge that
+ * carries governance there). What is refused here is authoring an AI system by
+ * hand: create, update and delete reject with a plain message pointing to AI
+ * Sentinel. No record is deleted and the schema is unchanged.
+ */
+const AI_SYSTEMS_READ_ONLY_MESSAGE =
+  "AI systems are read-only in DPO Central. Govern them in AI Sentinel.";
+
+function assertAiSystemsReadOnly(): never {
+  throw new TRPCError({ code: "FORBIDDEN", message: AI_SYSTEMS_READ_ONLY_MESSAGE });
+}
 
 export const aiGovernanceRouter = createTRPCRouter({
   // ============================================================
@@ -111,43 +128,8 @@ export const aiGovernanceRouter = createTRPCRouter({
         technicalDocUrl: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // The linked vendor must belong to this organisation
-      await assertIdsInOrg(ctx.prisma.vendor, [input.vendorId], { organizationId: ctx.organization.id }, "Vendor");
-
-      const system = await ctx.prisma.aISystem.create({
-        data: {
-          organizationId: ctx.organization.id,
-          name: input.name,
-          description: input.description,
-          purpose: input.purpose,
-          riskLevel: input.riskLevel,
-          category: input.category,
-          vendorId: input.vendorId,
-          modelType: input.modelType,
-          provider: input.provider,
-          deployer: input.deployer,
-          trainingDataSources: input.trainingDataSources,
-          humanOversight: input.humanOversight,
-          transparencyMeasures: input.transparencyMeasures,
-          technicalDocUrl: input.technicalDocUrl,
-          status: AISystemStatus.DRAFT,
-        },
-      });
-
-      await ctx.prisma.auditLog.create({
-        data: {
-          organizationId: ctx.organization.id,
-          userId: ctx.session.user.id,
-          entityType: "AISystem",
-          entityId: system.id,
-          action: "CREATE",
-          changes: input,
-        },
-      });
-
-      return system;
-    }),
+    // Read-only: authoring an AI system by hand is refused; govern in AI Sentinel.
+    .mutation(() => assertAiSystemsReadOnly()),
 
   // Update AI system
   update: writerProcedure
@@ -171,72 +153,13 @@ export const aiGovernanceRouter = createTRPCRouter({
         technicalDocUrl: z.string().optional().nullable(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const { id, organizationId, ...data } = input;
+    // Read-only: editing an AI system is refused; govern in AI Sentinel.
+    .mutation(() => assertAiSystemsReadOnly()),
 
-      const existing = await ctx.prisma.aISystem.findFirst({
-        where: { id, organizationId: ctx.organization.id },
-      });
-
-      if (!existing) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "AI system not found",
-        });
-      }
-
-      // A newly linked vendor must belong to this organisation
-      await assertIdsInOrg(ctx.prisma.vendor, [input.vendorId], { organizationId: ctx.organization.id }, "Vendor");
-
-      const updated = await ctx.prisma.aISystem.update({
-        where: { id },
-        data,
-      });
-
-      await ctx.prisma.auditLog.create({
-        data: {
-          organizationId: ctx.organization.id,
-          userId: ctx.session.user.id,
-          entityType: "AISystem",
-          entityId: id,
-          action: "UPDATE",
-          changes: data,
-        },
-      });
-
-      return updated;
-    }),
-
-  // Delete AI system
+  // Delete AI system — read-only: refused; nothing is ever deleted here.
   delete: officerProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.prisma.aISystem.findFirst({
-        where: { id: input.id, organizationId: ctx.organization.id },
-      });
-
-      if (!existing) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "AI system not found",
-        });
-      }
-
-      await ctx.prisma.aISystem.delete({ where: { id: input.id } });
-
-      await ctx.prisma.auditLog.create({
-        data: {
-          organizationId: ctx.organization.id,
-          userId: ctx.session.user.id,
-          entityType: "AISystem",
-          entityId: input.id,
-          action: "DELETE",
-          changes: { name: existing.name },
-        },
-      });
-
-      return { success: true };
-    }),
+    .mutation(() => assertAiSystemsReadOnly()),
 
   // Suggest risk level based on purpose/category
   suggestRiskLevel: organizationProcedure

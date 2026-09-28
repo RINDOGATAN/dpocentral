@@ -20,7 +20,7 @@ import es from "../src/messages/es.json";
 // inside, e.g. `{t(...)}` or `{enumLabel(...)}`), and ternary/fallbacks, which
 // already resolve to a label.
 const VERBATIM_ENUM_RENDER =
-  /(?<![=$])\{\s*[A-Za-z_$][\w$]*\.(?:type|status|severity|riskTier|riskLevel|mechanism|legalBasis|requestType)(?:\.replace\([^)]*\))?\s*\}/g;
+  /(?<![=$])\{\s*[A-Za-z_$][\w$]*\.(?:type|status|severity|riskTier|riskLevel|mechanism|legalBasis|requestType|action|entityType)(?:\.replace\([^)]*\))?\s*\}/g;
 
 // The live data components (list + detail) whose enums must all route through a
 // label. Curated: the docs/* pages render hardcoded demo data, and a couple of
@@ -79,6 +79,19 @@ const MEMBERS: Record<string, string[]> = {
   dataAssetType: ["DATABASE", "APPLICATION", "FILE_SYSTEM", "CLOUD_SERVICE", "THIRD_PARTY", "PHYSICAL", "OTHER"],
   dataSensitivity: ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED", "SPECIAL_CATEGORY"],
   role: ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"],
+  // The audit trail's verbs and entity names, shown on the dashboard's recent
+  // activity. Entity names are model names, so a missing key would de-snake to
+  // a mangled "Aisystem"/"Dsarrequest"; every current value must carry a label.
+  auditAction: [
+    "CREATE", "UPDATE", "DELETE", "VIEW", "SUBMIT", "SUBMIT_AND_APPROVE", "STATUS_CHANGED",
+    "DEADLINE_EXTENDED", "TASKS_GENERATED", "PII_REDACTED", "GENERATE_DPA", "UPDATE_COMPLIANCE",
+    "EXPORT_TO_AI_SENTINEL", "REQUEST_CREATED", "REQUEST_SUBMITTED_PUBLIC", "REQUEST_WITHDRAWN_PUBLIC",
+  ],
+  auditEntity: [
+    "Organization", "OrganizationMember", "OrganizationJurisdiction", "OrganizationAiSettings",
+    "DataAsset", "ProcessingActivity", "DataFlow", "DataTransfer", "Vendor", "VendorContract",
+    "Assessment", "DSARRequest", "Incident", "IncidentNotification", "AISystem",
+  ],
 };
 
 describe("every on-screen enum member has a localised label in both locales", () => {

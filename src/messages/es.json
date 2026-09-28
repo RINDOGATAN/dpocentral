@@ -1,4 +1,62 @@
 {
+  "clientTemplate": {
+    "titleCurrent": "Empezar desde otro cliente",
+    "titleNew": "Crear un cliente nuevo a partir de este",
+    "cardHint": "Copia el inventario de datos, las actividades de tratamiento, los proveedores y las plantillas de otro de tus clientes, como borradores.",
+    "descriptionCurrent": "Copia un programa de otro de tus clientes a este, como borradores. El nombre completo del otro cliente se sustituye por el de este. Cualquier otro dato que pueda remitir a él se enumera abajo para que lo revises antes de copiar.",
+    "descriptionNew": "Crea un cliente nuevo y copia en él el programa de este cliente, como borradores. El nombre completo de {source} se sustituye por el del cliente nuevo. Cualquier otro dato que pueda remitir a él se enumera abajo para que lo revises antes de copiar.",
+    "sourceLabel": "Copiar de",
+    "sourcePlaceholder": "Elige un cliente",
+    "sourceHint": "Puedes copiar de clientes en los que seas propietario o administrador.",
+    "noSources": "No eres propietario ni administrador de ningún otro cliente del que copiar.",
+    "loading": "Cargando",
+    "newNameLabel": "Nombre del cliente nuevo",
+    "newNamePlaceholder": "p. ej. Bluefield Partners",
+    "partsLegend": "Qué copiar",
+    "needsPart": "Necesita {part}",
+    "skipped": "({count} ya presentes, sin tocar)",
+    "dsarIntakeEdited": "El formulario de solicitudes propio de este cliente ya está configurado, así que se deja como está.",
+    "neverCopied": "Nunca se copia: solicitudes de derechos, incidentes, evaluaciones y sus pruebas, contratos, la traza de auditoría, miembros, licencias ni sistemas de IA.",
+    "flagsTitle": "{count, plural, one {# elemento aún apunta al otro cliente} other {# elementos aún apuntan al otro cliente}}",
+    "flagsHint": "El nombre completo del otro cliente se ha sustituido. Estos son formas abreviadas, direcciones web o de correo que solo una persona puede juzgar. Revísalos y luego confirma.",
+    "moreFlags": "y {count} más",
+    "flagsAcknowledge": "He revisado los elementos anteriores",
+    "summary": "{count, plural, one {Se copiará # registro} other {Se copiarán # registros}}",
+    "submitCurrent": "Copiar a este cliente",
+    "submitNew": "Crear y copiar",
+    "done": "Copiado como borradores",
+    "failed": "No se pudo completar la copia",
+    "resultSummary": "Copiado a {client} como borradores.",
+    "resultStarted": "Cada registro copiado queda marcado como copia de plantilla hasta que alguien lo revise aquí.",
+    "resultFlaggedTitle": "Revisa estos por si mencionan al otro cliente",
+    "openClient": "Abrir {client}",
+    "parts": {
+      "jurisdictions": {
+        "label": "Jurisdicciones",
+        "hint": "Las leyes bajo las que opera este cliente (solo a un cliente que no haya declarado ninguna)."
+      },
+      "dataAssets": {
+        "label": "Inventario de datos",
+        "hint": "Sistemas y los elementos de datos registrados en ellos."
+      },
+      "processingActivities": {
+        "label": "Actividades de tratamiento",
+        "hint": "Registros de tratamiento, traídos como borradores."
+      },
+      "vendors": {
+        "label": "Proveedores",
+        "hint": "Las entradas del registro de proveedores, sin contratos, contactos ni puntuaciones."
+      },
+      "assessmentTemplates": {
+        "label": "Plantillas de evaluación",
+        "hint": "Tus propios cuestionarios y preguntas personalizadas."
+      },
+      "dsarIntake": {
+        "label": "Formulario de solicitudes",
+        "hint": "El texto y las opciones del formulario público de solicitudes, desactivado hasta que se revise."
+      }
+    }
+  },
   "common": {
     "loading": "Cargando...",
     "save": "Guardar",
@@ -1397,7 +1455,14 @@
         "help": "Este nombre identifica tu programa de privacidad en el panel, en la pantalla de resultados y en tus exportaciones. Comienza con el nombre de tu organización; cámbialo si tu programa se conoce por otro nombre.",
         "placeholder": "p. ej. Programa de privacidad de Acme"
       },
+      "applies": {
+        "title": "Qué te aplica",
+        "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
+        "skip": "Aún no lo sé — omitir",
+        "continue": "Guardar y continuar"
+      },
       "steps": {
+        "applies": "Qué aplica",
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
         "yourVendors": "Tus proveedores",
@@ -1655,7 +1720,7 @@
     },
     "aiSystems": {
       "title": "Registro de gobernanza de IA",
-      "subtitle": "Registra y clasifica los sistemas de IA conforme al Reglamento de IA de la UE",
+      "subtitle": "Los sistemas de IA que usan datos personales, para un registro de privacidad completo. Su gobernanza se realiza en AI Sentinel.",
       "register": "Registrar sistema de IA",
       "search": "Buscar sistemas de IA...",
       "filter": {
@@ -1692,8 +1757,13 @@
         "category": "Categoría: {value}"
       },
       "empty": {
-        "title": "No hay sistemas de IA registrados",
-        "subtitle": "Comienza registrando los sistemas de IA que tu organización usa o despliega"
+        "title": "Aún no hay sistemas de IA",
+        "subtitle": "Los sistemas de IA aparecen aquí cuando añades proveedores que usan datos personales, para que tus registros de privacidad estén completos. Su gobernanza se hace en AI Sentinel."
+      },
+      "readOnly": {
+        "title": "Los sistemas de IA se gestionan en AI Sentinel",
+        "body": "Aquí no puedes añadir ni editar un sistema de IA. Este registro enumera los sistemas que usan datos personales para que tus registros de privacidad estén completos; su gobernanza se hace en AI Sentinel.",
+        "back": "Volver a sistemas de IA"
       },
       "sentinel": {
         "send": "Enviar a AI Sentinel",
@@ -1703,7 +1773,12 @@
         "allSynced": "Todos los sistemas ya están sincronizados. Reenviarlos actualizará su estado más reciente.",
         "alreadySynced": "Ya sincronizado",
         "sending": "Enviando…",
-        "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}"
+        "sendCount": "Enviar {count, plural, one {# sistema} other {# sistemas}}",
+        "governNote": {
+          "title": "La gobernanza de la IA se hace en AI Sentinel",
+          "body": "Este registro enumera los sistemas de IA que usan datos personales, para que tus registros de privacidad estén completos. Para clasificar el riesgo de un sistema, aplicar supervisión o realizar una evaluación de la conformidad, gobiérnalo en AI Sentinel.",
+          "open": "Abrir AI Sentinel"
+        }
       }
     },
     "incidents": {
@@ -2443,6 +2518,27 @@
     "role": {
       "OWNER": "Propietario", "ADMIN": "Administrador", "PRIVACY_OFFICER": "Responsable de privacidad",
       "MEMBER": "Miembro", "VIEWER": "Lector"
+    },
+    "auditAction": {
+      "CREATE": "Creado", "UPDATE": "Actualizado", "DELETE": "Eliminado", "VIEW": "Consultado",
+      "SUBMIT": "Enviado", "SUBMIT_AND_APPROVE": "Enviado y aprobado",
+      "STATUS_CHANGED": "Estado cambiado", "DEADLINE_EXTENDED": "Plazo ampliado",
+      "TASKS_GENERATED": "Tareas generadas", "PII_REDACTED": "Datos personales suprimidos",
+      "GENERATE_DPA": "Contrato de encargo de tratamiento generado",
+      "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
+      "REQUEST_CREATED": "Solicitud creada",
+      "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal"
+    },
+    "auditEntity": {
+      "Organization": "Organización", "OrganizationMember": "Miembro del equipo",
+      "OrganizationJurisdiction": "Jurisdicción", "OrganizationAiSettings": "Ajustes de IA",
+      "DataAsset": "Activo de datos", "ProcessingActivity": "Actividad de tratamiento",
+      "DataFlow": "Flujo de datos", "DataTransfer": "Transferencia", "Vendor": "Proveedor",
+      "VendorContract": "Contrato de proveedor", "Assessment": "Evaluación",
+      "DSARRequest": "Solicitud de derechos", "Incident": "Incidente",
+      "IncidentNotification": "Notificación de brecha", "AISystem": "Sistema de IA"
     }
   },
   "enableFeature": {
@@ -2937,7 +3033,7 @@
   },
   "deploymentCta": {
     "heading": "Ayuda técnica para empezar",
-    "body": "Y formación puntual específica por módulo (gratis).",
+    "body": "Además, sesiones de formación breves y gratuitas sobre las partes del producto que utilizas.",
     "findExpert": "Buscar experto",
     "dismiss": "Cerrar"
   },
@@ -7001,6 +7097,132 @@
       "changed": "Diseño cambiado.",
       "useGuided": "Usar el diseño guiado",
       "useClassic": "Usar el diseño clásico"
+    }
+  },
+  "help": {
+    "open": "Ayuda de esta página",
+    "subtitle": "Para qué sirve esta página y dónde leer más.",
+    "purpose": "Para qué sirve",
+    "firstStep": "Qué hacer primero",
+    "terms": "Términos de esta página",
+    "guides": "Guías breves",
+    "learnMore": "Leer más",
+    "officialText": "El texto de la ley",
+    "keyTerms": "Términos clave",
+    "termMeaningOf": "¿Qué significa «{term}»?",
+    "exampleLead": "Por ejemplo:",
+    "guideRole": "¿Responsable o encargado?",
+    "guideDpo": "¿Necesito un DPD?",
+    "guideDpia": "¿Cuándo se exige una EIPD?",
+    "firstRun": {
+      "title": "Cómo funciona DPO Central",
+      "intro": "Un minuto sobre cómo funciona. Puedes volver a abrirlo cuando quieras desde el botón de ayuda de la barra superior.",
+      "step1": "Configura: indica dónde operas y a qué te dedicas, y DPO Central determina qué leyes aplican.",
+      "step2": "Conoce tus datos: registra los datos personales que tienes, tus proveedores y cómo los tratas.",
+      "step3": "Mantenlo al día: realiza las evaluaciones que exige cada ley, responde a las solicitudes de derechos a tiempo y registra cualquier brecha.",
+      "promise": "Un único programa de privacidad: los registros, las evaluaciones y las solicitudes que espera cada ley, en un solo lugar.",
+      "clientsLine": "¿Trabajas para varios clientes?",
+      "clientsLink": "Todos los clientes muestra dónde está cada uno.",
+      "guidesTitle": "Empieza por una guía breve",
+      "dismiss": "Entendido",
+      "reopen": "Vuelve a abrirlo cuando quieras desde el botón de ayuda."
+    }
+  },
+  "portfolio": {
+    "title": "Todos los clientes",
+    "subtitle": "{count, plural, one {# organización} other {# organizaciones}} que gestionas",
+    "tiles": {
+      "requestsDue": "Solicitudes por vencer",
+      "openIncidents": "Incidentes abiertos",
+      "needAttention": "Requieren atención",
+      "clients": "Clientes"
+    },
+    "stages": "Etapas",
+    "nextStep": "Siguiente paso",
+    "allDone": "Todos los pasos completados",
+    "plan": "Plan",
+    "requestsDue": "{count, plural, one {# solicitud por vencer} other {# solicitudes por vencer}}",
+    "requestsDueNone": "Sin solicitudes por vencer",
+    "openIncidents": "{count, plural, one {# incidente abierto} other {# incidentes abiertos}}",
+    "openIncidentsNone": "Sin incidentes abiertos",
+    "lastActivity": "Última actividad: {when}",
+    "noActivity": "Aún sin actividad",
+    "empty": {
+      "title": "Aún no hay organizaciones cliente",
+      "body": "Las organizaciones de las que eres miembro aparecerán aquí."
+    }
+  },
+  "applicability": {
+    "cardTitle": "Qué te aplica",
+    "cardDescription": "Unas preguntas sencillas sobre cómo usas los datos personales. Junto con las jurisdicciones en las que operas, muestran qué leyes y obligaciones te aplican. Todo sigue siendo editable.",
+    "intro": "Responde lo que puedas. «Aún no lo sé» es válido: aparece como algo por comprobar, nunca como algo resuelto.",
+    "roleTitle": "Tu papel",
+    "saved": "Guardado.",
+    "answer": {
+      "YES": "Sí",
+      "NO": "No",
+      "UNSURE": "Aún no lo sé"
+    },
+    "questions": {
+      "actAsController": {
+        "label": "¿Decides por qué y cómo se usan los datos personales?",
+        "hint": "Si es así, eres responsable de esos datos y asumes las obligaciones principales."
+      },
+      "actAsProcessor": {
+        "label": "¿Tratas datos personales para otras organizaciones siguiendo sus instrucciones?",
+        "hint": "Si es así, eres encargado de esos datos, vinculado por un contrato escrito."
+      },
+      "largeVolume": {
+        "label": "¿Eres una empresa grande por facturación o por el número de personas cuyos datos tratas?",
+        "hint": "Por ejemplo, los umbrales de la CCPA: facturación anual alta o los datos de más de 100.000 consumidores."
+      },
+      "sensitiveData": {
+        "label": "¿Tratas categorías especiales de datos, como salud, origen, religión o datos biométricos?",
+        "hint": "Estos datos conllevan obligaciones adicionales en el RGPD (art. 9)."
+      },
+      "children": {
+        "label": "¿Tratas datos personales de menores?",
+        "hint": "Los datos de menores elevan el listón del consentimiento, los avisos y las evaluaciones de impacto."
+      },
+      "largeScaleMonitoring": {
+        "label": "¿Observas a las personas de forma habitual y sistemática a gran escala?",
+        "hint": "Por ejemplo, seguimiento del comportamiento en línea, elaboración de perfiles o videovigilancia amplia."
+      },
+      "publicAuthority": {
+        "label": "¿Eres una autoridad u organismo público?",
+        "hint": "Las autoridades públicas deben designar un delegado de protección de datos."
+      }
+    },
+    "appliesTitle": "Esto te aplica",
+    "appliesEmpty": "De momento tus respuestas no activan nada. Añade dónde operas o responde más preguntas.",
+    "checkTitle": "Conviene comprobar",
+    "whyLabel": "Por qué",
+    "noJurisdictions": "Añade dónde operas en la página Qué aplica, para poder mostrar las leyes que dependen del lugar.",
+    "editableNote": "Esto es orientación, no asesoramiento legal, y la correspondencia aún está en revisión. Puedes cambiar tus respuestas cuando quieras.",
+    "items": {
+      "gdpr": "RGPD (UE)",
+      "ukGdpr": "RGPD del Reino Unido",
+      "processorDuties": "Obligaciones del encargado (RGPD art. 28)",
+      "dpoRequired": "Puede exigirse un delegado de protección de datos (art. 37)",
+      "dpiaLikely": "Es probable que se necesite una evaluación de impacto (art. 35)",
+      "ccpa": "CCPA/CPRA (California)",
+      "usStates": "Leyes de privacidad de estados de EE. UU."
+    },
+    "reasons": {
+      "operatesEu": "Operas en la UE.",
+      "operatesUk": "Operas en el Reino Unido.",
+      "operatesCalifornia": "Operas en California.",
+      "operatesUsStates": "Operas en estados de EE. UU. con leyes de privacidad.",
+      "controller": "Eres responsable del tratamiento.",
+      "processor": "Eres encargado del tratamiento.",
+      "roleUnsure": "Tu papel aún no está definido.",
+      "publicAuthority": "Eres una autoridad pública.",
+      "largeScaleMonitoring": "Observas a las personas a gran escala.",
+      "sensitiveData": "Tratas categorías especiales de datos.",
+      "children": "Tratas datos de menores.",
+      "largeVolume": "Alcanzas un umbral de empresa grande.",
+      "thresholds": "Lo deciden los umbrales concretos.",
+      "answerUnsure": "Una respuesta aún no está definida."
     }
   },
   "errorPage": {

@@ -27,7 +27,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Bot,
   Search,
-  Plus,
   Loader2,
   AlertTriangle,
   CheckCircle2,
@@ -231,15 +230,31 @@ export default function AISystemsPage() {
               </DialogContent>
             </Dialog>
           )}
-          <Button asChild>
-            <Link href="/privacy/ai-systems/register">
-              <Plus className="w-4 h-4 mr-2" />
-              {tp("register")}
-            </Link>
-          </Button>
           </>
         }
       />
+
+      {/* AI governance is done in AI Sentinel, not here. This register keeps the
+          privacy record complete and links across to govern a system. */}
+      <div className="flex flex-col gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3 min-w-0">
+          <Shield className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium">{tp("sentinel.governNote.title")}</p>
+            <p className="text-xs text-muted-foreground">{tp("sentinel.governNote.body")}</p>
+          </div>
+        </div>
+        <Button variant="outline" size="sm" asChild className="shrink-0 self-start sm:self-auto">
+          <a
+            href={`${process.env.NEXT_PUBLIC_AI_SENTINEL_URL || "https://aisentinel.todo.law"}/governance/ai-registry`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {tp("sentinel.governNote.open")}
+            <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </Button>
+      </div>
 
       {/* Stats */}
       {stats && stats.total > 0 && (
@@ -337,13 +352,18 @@ export default function AISystemsPage() {
           <CardContent className="py-12 text-center">
             <Bot className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="font-medium mb-2">{tp("empty.title")}</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
               {tp("empty.subtitle")}
             </p>
-            <Button asChild>
-              <Link href="/privacy/ai-systems/register">
-                <Plus className="w-4 h-4 mr-2" /> {tp("register")}
-              </Link>
+            <Button variant="outline" asChild>
+              <a
+                href={`${process.env.NEXT_PUBLIC_AI_SENTINEL_URL || "https://aisentinel.todo.law"}/governance/ai-registry`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tp("sentinel.governNote.open")}
+                <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+              </a>
             </Button>
           </CardContent>
         </Card>
