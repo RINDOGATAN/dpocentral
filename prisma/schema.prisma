@@ -267,6 +267,15 @@ enum DataSensitivity {
   SPECIAL_CATEGORY
 }
 
+// How a record came to exist. USER_ENTERED (a person made it, the safe default
+// for every pre-existing row) or AUTO_TEMPLATE (the quick start or an industry
+// template created it). "Remove all template items" only touches AUTO_TEMPLATE
+// rows a person has not confirmed. See src/server/services/template-items/.
+enum Provenance {
+  USER_ENTERED
+  AUTO_TEMPLATE
+}
+
 model DataAsset {
   id             String        @id @default(cuid())
   organizationId String
@@ -279,6 +288,12 @@ model DataAsset {
   vendor         String? // If third-party hosted
   isProduction   Boolean       @default(true)
   metadata       Json? // Additional custom fields
+  // Provenance quad: how the row was created, and who (if anyone) has taken it
+  // over. Defaults keep every pre-existing row USER_ENTERED and unconfirmed.
+  provenance     Provenance    @default(USER_ENTERED)
+  sourceRef      String? // e.g. the template id that created it
+  confirmedBy    String? // user id of the first person to edit it
+  confirmedAt    DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -365,6 +380,10 @@ model ProcessingActivity {
   lastReviewedAt          DateTime?
   nextReviewAt            DateTime?
   metadata                Json?
+  provenance              Provenance     @default(USER_ENTERED)
+  sourceRef               String?
+  confirmedBy             String?
+  confirmedAt             DateTime?
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
 
@@ -669,6 +688,10 @@ model AssessmentTemplate {
   scoringLogic   Json? // Risk scoring configuration
   isSystem       Boolean        @default(false) // System-provided template
   isActive       Boolean        @default(true)
+  // Set when a newer version of this template supersedes it. A superseded
+  // system template is no longer offered for NEW assessments, but assessments
+  // already using it keep it (and its questions and answers) untouched.
+  supersededAt   DateTime?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
@@ -1086,9 +1109,13 @@ model Vendor {
   lastAssessedAt DateTime?
   nextReviewAt   DateTime?
 
-  metadata  Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  metadata    Json?
+  provenance  Provenance @default(USER_ENTERED)
+  sourceRef   String?
+  confirmedBy String?
+  confirmedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   organization           Organization                  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   contracts              VendorContract[]

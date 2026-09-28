@@ -1972,6 +1972,18 @@
     "settings": {
       "title": "Configuración",
       "subtitle": "Gestiona tu cuenta, organización y equipo.",
+      "templateItems": {
+        "title": "Eliminar todos los elementos de plantilla",
+        "lead": "El inicio rápido y las plantillas sectoriales crean proveedores, activos de datos y actividades de tratamiento de ejemplo para empezar. Esto elimina, en un solo paso, los que nadie ha editado. Se conserva todo lo que hayas abierto y modificado.",
+        "count": "Se eliminarían {remove} elementos y se conservarían {keep}.",
+        "vendors": "proveedores",
+        "dataAssets": "activos de datos",
+        "processingActivities": "actividades de tratamiento",
+        "button": "Eliminar todos los elementos de plantilla",
+        "confirm": "Sí, eliminar {count}",
+        "cancel": "Cancelar",
+        "removed": "Se han eliminado {count} elementos de plantilla"
+      },
       "profile": {
         "title": "Perfil",
         "description": "Tu información de cuenta",

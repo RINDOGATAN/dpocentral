@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
+import { markConfirmed } from "@/server/services/template-items/mark";
 import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
@@ -284,6 +285,14 @@ export const dataInventoryRouter = createTRPCRouter({
           message: "Data asset not found",
         });
       }
+
+      // A person has taken ownership: a template item they edit is kept.
+      await markConfirmed(ctx.prisma, {
+        model: "dataAsset",
+        id,
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+      });
 
       await ctx.prisma.auditLog.create({
         data: {
@@ -689,6 +698,14 @@ export const dataInventoryRouter = createTRPCRouter({
           message: "Processing activity not found",
         });
       }
+
+      // A person has taken ownership: a template item they edit is kept.
+      await markConfirmed(ctx.prisma, {
+        model: "processingActivity",
+        id,
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+      });
 
       await ctx.prisma.auditLog.create({
         data: {

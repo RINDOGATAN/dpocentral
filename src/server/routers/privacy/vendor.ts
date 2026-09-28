@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
+import { markConfirmed } from "@/server/services/template-items/mark";
 import { TRPCError } from "@trpc/server";
 import {
   assembleDpa,
@@ -237,6 +238,14 @@ export const vendorRouter = createTRPCRouter({
           message: "Vendor not found",
         });
       }
+
+      // A person has taken ownership: a template item they edit is kept.
+      await markConfirmed(ctx.prisma, {
+        model: "vendor",
+        id,
+        organizationId: ctx.organization.id,
+        userId: ctx.session.user.id,
+      });
 
       await ctx.prisma.auditLog.create({
         data: {

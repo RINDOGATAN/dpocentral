@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ApplicabilityCard } from "@/components/privacy/applicability-check";
+import { TemplateItemsCard } from "@/components/privacy/template-items-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -525,6 +526,9 @@ export default function SettingsPage() {
 
       {/* AI assistance (per-org posture, off by default) */}
       {org && <AiPostureCard organizationId={orgId} isAdmin={isAdmin} />}
+
+      {/* Remove the unedited quick-start / template records in one step. */}
+      {orgId && <TemplateItemsCard organizationId={orgId} canManage={isAdmin} />}
 
       <DeploymentExpertCta />
 
