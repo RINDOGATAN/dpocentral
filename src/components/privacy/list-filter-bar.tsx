@@ -208,7 +208,7 @@ function SavedViews({
   const t = useTranslations("views");
   const utils = trpc.useUtils();
   const listInput = { organizationId, list: def.key };
-  const { data: views } = trpc.savedView.list.useQuery(listInput);
+  const { data: views } = trpc.savedView.list.useQuery(listInput, { enabled: !!organizationId });
   const create = trpc.savedView.create.useMutation({
     onSuccess: () => {
       void utils.savedView.list.invalidate(listInput);
