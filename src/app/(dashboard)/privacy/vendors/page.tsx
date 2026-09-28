@@ -6,13 +6,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2,
   Plus,
-  Search,
   FileText,
   Clock,
   Database,
@@ -31,7 +28,6 @@ import {
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { useDebounce } from "@/hooks/use-debounce";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages";
 import { features } from "@/config/features";
@@ -40,8 +36,9 @@ import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
-import { SortControl } from "@/components/privacy/sort-control";
-import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { ListFilterBar } from "@/components/privacy/list-filter-bar";
+import { useListFilters } from "@/lib/use-list-filters";
+import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
 import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
@@ -61,10 +58,7 @@ const statusColors: Record<string, string> = {
 
 export default function VendorsPage() {
   const t = useTranslations("pages.vendors");
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebounce(searchQuery);
-  const [activeTab, setActiveTab] = useState("all");
-  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
+  const { def, filters, setFilter, applyAll, clearAll } = useListFilters("vendors");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
 
@@ -75,7 +69,7 @@ export default function VendorsPage() {
     fetchNextPage,
     isFetchingNextPage,
   } = trpc.vendor.list.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    { organizationId: organization?.id ?? "", search: filters.q || undefined, limit: 100 },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -111,20 +105,13 @@ export default function VendorsPage() {
     pendingReview: byStatus?.UNDER_REVIEW ?? 0,
   };
 
-  const filteredVendors = (() => {
-    switch (activeTab) {
-      case "active":
-        return vendors.filter((v) => v.status === "ACTIVE");
-      case "review":
-        return vendors.filter((v) => v.status === "UNDER_REVIEW");
-      case "high-risk":
-        return vendors.filter((v) => v.riskTier === "HIGH" || v.riskTier === "CRITICAL");
-      default:
-        return vendors;
-    }
-  })();
+  const filteredVendors = vendors.filter(
+    (v) =>
+      (!filters.status || v.status === filters.status) &&
+      (!filters.riskTier || v.riskTier === filters.riskTier),
+  );
 
-  const sortedVendors = sortByListSort(filteredVendors, sort, {
+  const sortedVendors = sortByListSort(filteredVendors, filters.sort ?? DEFAULT_LIST_SORT, {
     date: (v) => v.createdAt,
     name: (v) => v.name,
   });
@@ -269,29 +256,15 @@ export default function VendorsPage() {
         </Card>
       )}
 
-      {/* Search + sort */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("search")}
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <SortControl value={sort} onChange={setSort} />
-      </div>
-
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
-          <TabsTrigger value="active">{t("tabs.active")}</TabsTrigger>
-          <TabsTrigger value="review">{t("tabs.review")}</TabsTrigger>
-          <TabsTrigger value="high-risk">{t("tabs.highRisk")}</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Filters, search, sort and saved views (all in the URL) */}
+      <ListFilterBar
+        def={def}
+        organizationId={organization?.id ?? ""}
+        filters={filters}
+        setFilter={setFilter}
+        applyAll={applyAll}
+        clearAll={clearAll}
+      />
 
       {/* Vendor List */}
       {isLoading ? (
@@ -353,7 +326,7 @@ export default function VendorsPage() {
             </Link>
           ))}
         </div>
-      ) : activeTab === "all" ? (
+      ) : !filters.status && !filters.riskTier && !filters.q ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -371,11 +344,7 @@ export default function VendorsPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>
-              {activeTab === "active" && t("emptyActive")}
-              {activeTab === "review" && t("emptyReview")}
-              {activeTab === "high-risk" && t("emptyHighRisk")}
-            </p>
+            <p>{t("emptyFiltered")}</p>
           </CardContent>
         </Card>
       )}

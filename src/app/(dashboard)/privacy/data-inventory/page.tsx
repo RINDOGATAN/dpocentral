@@ -29,13 +29,11 @@ import {
 import {
   Database,
   Plus,
-  Search,
   Server,
   Cloud,
   Building2,
   FileSpreadsheet,
   ArrowRight,
-  Filter,
   Loader2,
   Lock,
   Download,
@@ -52,11 +50,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { useDebounce } from "@/hooks/use-debounce";
 import { useTranslations } from "next-intl";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { SortControl } from "@/components/privacy/sort-control";
-import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { ListFilterBar } from "@/components/privacy/list-filter-bar";
+import { useListFilters } from "@/lib/use-list-filters";
+import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
 import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
@@ -118,9 +116,7 @@ export default function DataInventoryPage() {
   // Asset type labels live with the create-asset form; reuse them rather than
   // rendering the raw enum, which showed as English on the Spanish UI.
   const tAssetType = useTranslations("pages.newAsset.assetType");
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebounce(searchQuery);
-  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
+  const { def, filters, setFilter, applyAll, clearAll } = useListFilters("data-inventory");
   const { organization } = useOrganization();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -144,7 +140,12 @@ export default function DataInventoryPage() {
     fetchNextPage: fetchMoreAssets,
     isFetchingNextPage: fetchingMoreAssets,
   } = trpc.dataInventory.listAssets.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 50 },
+    {
+      organizationId: organization?.id ?? "",
+      search: filters.q || undefined,
+      department: filters.dept || undefined,
+      limit: 50,
+    },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -158,7 +159,12 @@ export default function DataInventoryPage() {
     fetchNextPage: fetchMoreActivities,
     isFetchingNextPage: fetchingMoreActivities,
   } = trpc.dataInventory.listActivities.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 50 },
+    {
+      organizationId: organization?.id ?? "",
+      search: filters.q || undefined,
+      department: filters.dept || undefined,
+      limit: 50,
+    },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -195,14 +201,15 @@ export default function DataInventoryPage() {
     },
   });
 
+  const rawAssets = assetsPages?.pages.flatMap((p) => p.assets) ?? [];
   const dataAssets = sortByListSort(
-    assetsPages?.pages.flatMap((p) => p.assets) ?? [],
-    sort,
+    filters.assetType ? rawAssets.filter((a) => a.type === filters.assetType) : rawAssets,
+    filters.sort ?? DEFAULT_LIST_SORT,
     { date: (a) => a.createdAt, name: (a) => a.name },
   );
   const processingActivities = sortByListSort(
     activitiesPages?.pages.flatMap((p) => p.activities) ?? [],
-    sort,
+    filters.sort ?? DEFAULT_LIST_SORT,
     { date: (a) => a.createdAt, name: (a) => a.name },
   );
 
@@ -255,26 +262,15 @@ export default function DataInventoryPage() {
         }
       />
 
-      {/* Search and Filters */}
-      <div className="flex flex-wrap gap-2 sm:gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("search")}
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <SortControl value={sort} onChange={setSort} />
-        <Button variant="outline" size="icon" aria-label={t("filters")} className="shrink-0 sm:hidden">
-          <Filter className="w-4 h-4" />
-        </Button>
-        <Button variant="outline" className="shrink-0 hidden sm:flex">
-          <Filter className="w-4 h-4 mr-2" />
-          {t("filters")}
-        </Button>
-      </div>
+      {/* Filters, search, sort, department and saved views (all in the URL) */}
+      <ListFilterBar
+        def={def}
+        organizationId={organization?.id ?? ""}
+        filters={filters}
+        setFilter={setFilter}
+        applyAll={applyAll}
+        clearAll={clearAll}
+      />
 
       {/* Tabs */}
       <Tabs defaultValue="assets">

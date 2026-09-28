@@ -30,6 +30,10 @@ export function isListKey(value: unknown): value is ListKey {
   return typeof value === "string" && (LIST_KEYS as readonly string[]).includes(value);
 }
 
+/// The `dept` value the department filter uses for "no department assigned".
+/// Shared with the server scope service, so the filter and the query agree.
+export const UNASSIGNED_DEPARTMENT = "unassigned";
+
 /// One select filter on a list: its URL parameter and filter key, the enum
 /// group its option labels come from (or none, to de-snake), and the values it
 /// accepts. A value outside `options` is dropped on parse.

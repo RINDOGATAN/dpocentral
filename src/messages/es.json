@@ -1838,7 +1838,8 @@
       },
       "emptyOpen": "No hay incidentes abiertos",
       "emptyCritical": "No hay incidentes críticos",
-      "emptyClosed": "No hay incidentes cerrados"
+      "emptyClosed": "No hay incidentes cerrados",
+      "emptyFiltered": "Ningún incidente coincide con estos filtros"
     },
     "vendors": {
       "title": "Gestión de proveedores",
@@ -1899,7 +1900,8 @@
       },
       "emptyActive": "No hay proveedores activos",
       "emptyReview": "No hay proveedores en revisión",
-      "emptyHighRisk": "No hay proveedores de riesgo alto"
+      "emptyHighRisk": "No hay proveedores de riesgo alto",
+      "emptyFiltered": "Ningún proveedor coincide con estos filtros"
     },
     "assessments": {
       "title": "Evaluaciones",
@@ -1957,6 +1959,7 @@
       "emptyDpia": "No hay evaluaciones DPIA",
       "emptyVendor": "No hay evaluaciones de proveedores",
       "emptyTia": "No hay evaluaciones TIA",
+      "emptyFiltered": "Ninguna evaluación coincide con estos filtros",
       "quickStart": {
         "title": "Plantillas de inicio rápido",
         "subtitle": "Inicia una nueva evaluación desde una plantilla",
@@ -2099,6 +2102,7 @@
       "emptyOpen": "No hay solicitudes abiertas",
       "emptyOverdue": "No hay solicitudes vencidas",
       "emptyCompleted": "No hay solicitudes completadas",
+      "emptyFiltered": "Ninguna solicitud coincide con estos filtros",
       "publicPortal": {
         "title": "Portal público de recepción",
         "subtitle": "Comparte este enlace con los interesados",
@@ -8525,6 +8529,8 @@
       }
     },
     "library": {
+      "needsAction": "Requiere acción",
+      "incomplete": "Incompletos",
       "reports": "Informes",
       "experts": "Buscar un experto",
       "clients": "Todos los clientes",
@@ -8704,5 +8710,95 @@
     "reference": "Referencia: {reference}",
     "referenceHelp": "Si vuelve a ocurrir, notifícalo indicando esta referencia.",
     "help": "Cómo notificar un problema"
+  },
+  "views": {
+    "filter": {
+      "any": "Cualquiera",
+      "unassigned": "Sin departamento",
+      "department": "Departamento",
+      "assetType": "Tipo",
+      "status": "Estado",
+      "riskTier": "Riesgo",
+      "type": "Tipo",
+      "severity": "Gravedad",
+      "clear": "Limpiar ({count})"
+    },
+    "saved": {
+      "label": "Vistas guardadas",
+      "save": "Guardar vista",
+      "created": "Vista guardada",
+      "remove": "Quitar {name}",
+      "dialogTitle": "Guardar esta vista",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "p. ej. Proveedores de alto riesgo",
+      "cancel": "Cancelar",
+      "confirm": "Guardar"
+    },
+    "departmentSwitch": {
+      "label": "Para mi departamento",
+      "wholeOrg": "Toda la organización"
+    },
+    "needsAction": {
+      "title": "Requiere acción",
+      "subtitle": "Todo lo que está pendiente, en un solo lugar.",
+      "empty": "Ahora mismo no hay nada pendiente.",
+      "deptNote": "Se muestra un departamento. Los elementos de toda la organización están en la lista completa.",
+      "kind": {
+        "review-due": "Revisiones pendientes",
+        "dsar-due": "Solicitudes de derechos por vencer",
+        "breach-window": "Brechas por notificar",
+        "assessment-approval": "Evaluaciones por aprobar"
+      },
+      "hint": {
+        "review-due": "Registros de tratamiento cuya fecha de revisión ha pasado.",
+        "dsar-due": "Solicitudes abiertas cerca o pasado su plazo.",
+        "breach-window": "Brechas abiertas que deben notificarse.",
+        "assessment-approval": "Evaluaciones enviadas para revisión o aprobación."
+      }
+    },
+    "incomplete": {
+      "title": "Registros incompletos",
+      "subtitle": "Registros de tratamiento a los que les falta un dato que exige un registro de actividades.",
+      "empty": "Todos los registros están completos.",
+      "missingCount": "{count, plural, one {falta # dato} other {faltan # datos}}"
+    },
+    "field": {
+      "dataSubjects": "Interesados",
+      "categories": "Categorías de datos",
+      "recipients": "Destinatarios",
+      "retention": "Plazo de conservación"
+    }
+  },
+  "departments": {
+    "title": "Departamentos",
+    "description": "Agrupa los registros y sistemas por departamento, asigna un responsable a cada uno y limita quién ve qué.",
+    "empty": "Aún no hay departamentos.",
+    "counts": "{records} registros · {systems} sistemas · {members} miembros",
+    "ownedBy": "a cargo de {name}",
+    "edit": "Editar departamento",
+    "delete": "Eliminar departamento",
+    "addLabel": "Añadir un departamento",
+    "namePlaceholder": "Nombre del departamento",
+    "parent": "Departamento superior",
+    "owner": "Responsable",
+    "noParent": "Sin departamento superior",
+    "noOwner": "Sin responsable",
+    "add": "Añadir",
+    "created": "Departamento creado",
+    "updated": "Departamento actualizado",
+    "deleted": "Departamento eliminado",
+    "deleteTitle": "¿Eliminar este departamento?",
+    "deleteConfirm": "Los registros de «{name}» conservan sus datos y pierden el departamento. Esto no se puede deshacer.",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "name": "Nombre",
+    "editTitle": "Editar departamento",
+    "access": {
+      "title": "Acceso de los miembros",
+      "description": "Limita a un miembro a uno o varios departamentos. Sin límite significa toda la organización.",
+      "wholeOrg": "Toda la organización",
+      "limited": "{count, plural, one {# departamento} other {# departamentos}}",
+      "saved": "Acceso actualizado"
+    }
   }
 }

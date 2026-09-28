@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ApplicabilityCard } from "@/components/privacy/applicability-check";
 import { TemplateItemsCard } from "@/components/privacy/template-items-card";
+import { DepartmentsCard } from "@/components/privacy/departments-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -523,6 +524,10 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Departments (business units): create them, assign owners and limit
+          members. Management is OWNER/ADMIN, enforced server-side. */}
+      {orgId && isAdmin && <DepartmentsCard organizationId={orgId} />}
 
       {/* AI assistance (per-org posture, off by default) */}
       {org && <AiPostureCard organizationId={orgId} isAdmin={isAdmin} />}

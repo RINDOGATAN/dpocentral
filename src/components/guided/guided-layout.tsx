@@ -52,6 +52,7 @@ import { cn } from "@/lib/utils";
 import { DPO_CENTRAL_PATH } from "./path-config";
 import { currentStepId, nextStep, overallProgress } from "./path";
 import { PathMenu } from "./path-menu";
+import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
 import { ProgressBar } from "./progress-ring";
 import { usePlanState, useProgramPath, useProgramPathRefresh } from "./use-program-path";
@@ -165,6 +166,7 @@ export function GuidedLayout({
           </SheetHeader>
           <div className="px-3 pb-6 flex flex-col gap-4">
             <OrganizationBlock onNavigate={() => setSheetOpen(false)} />
+            <DepartmentSwitch />
             <PathMenu {...menuProps} variant="sheet" onNavigate={() => setSheetOpen(false)} />
             <Button
               variant="ghost"
@@ -196,6 +198,11 @@ export function GuidedLayout({
               )}
             >
               {!collapsed && <OrganizationBlock />}
+              {!collapsed && (
+                <div className="mt-3">
+                  <DepartmentSwitch />
+                </div>
+              )}
               <div className={collapsed ? "" : "mt-4"}>
                 <PathMenu {...menuProps} variant="sidebar" collapsed={collapsed} />
               </div>

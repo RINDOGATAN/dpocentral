@@ -2,17 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertTriangle,
   Plus,
-  Search,
   Clock,
   AlertCircle,
   Download,
@@ -28,11 +25,11 @@ import {
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import { useDebounce } from "@/hooks/use-debounce";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations } from "next-intl";
-import { SortControl } from "@/components/privacy/sort-control";
-import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { ListFilterBar } from "@/components/privacy/list-filter-bar";
+import { useListFilters } from "@/lib/use-list-filters";
+import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
@@ -50,14 +47,9 @@ const statusColors: Record<string, string> = {
   FALSE_POSITIVE: "border-muted-foreground text-muted-foreground",
 };
 
-const OPEN_STATUSES = ["REPORTED", "INVESTIGATING", "CONTAINED", "ERADICATED", "RECOVERING"];
-
 export default function IncidentsPage() {
   const t = useTranslations("pages.incidents");
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebounce(searchQuery);
-  const [activeTab, setActiveTab] = useState("all");
-  const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
+  const { def, filters, setFilter, applyAll, clearAll } = useListFilters("incidents");
   const { organization } = useOrganization();
 
   const {
@@ -67,7 +59,7 @@ export default function IncidentsPage() {
     fetchNextPage,
     isFetchingNextPage,
   } = trpc.incident.list.useInfiniteQuery(
-    { organizationId: organization?.id ?? "", search: debouncedSearch || undefined, limit: 100 },
+    { organizationId: organization?.id ?? "", search: filters.q || undefined, limit: 100 },
     {
       enabled: !!organization?.id,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -94,23 +86,19 @@ export default function IncidentsPage() {
     pendingNotification: statsData?.overdueNotifications ?? 0,
   };
 
-  const filteredIncidents = (() => {
-    switch (activeTab) {
-      case "open":
-        return incidents.filter((i) => OPEN_STATUSES.includes(i.status));
-      case "critical":
-        return incidents.filter((i) => i.severity === "CRITICAL");
-      case "closed":
-        return incidents.filter((i) => i.status === "CLOSED" || i.status === "FALSE_POSITIVE");
-      default:
-        return incidents;
-    }
-  })();
+  const filteredIncidents = incidents.filter(
+    (i) =>
+      (!filters.status || i.status === filters.status) &&
+      (!filters.severity || i.severity === filters.severity) &&
+      (!filters.type || i.type === filters.type),
+  );
 
-  const sortedIncidents = sortByListSort(filteredIncidents, sort, {
+  const sortedIncidents = sortByListSort(filteredIncidents, filters.sort ?? DEFAULT_LIST_SORT, {
     date: (i) => i.createdAt,
     name: (i) => i.title,
   });
+
+  const noFilters = !filters.q && !filters.status && !filters.severity && !filters.type;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -181,29 +169,15 @@ export default function IncidentsPage() {
         </Card>
       </div>
 
-      {/* Search + sort */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("search")}
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <SortControl value={sort} onChange={setSort} />
-      </div>
-
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          <TabsTrigger value="all">{t("tabs.all")}</TabsTrigger>
-          <TabsTrigger value="open">{t("tabs.open")}</TabsTrigger>
-          <TabsTrigger value="critical">{t("tabs.critical")}</TabsTrigger>
-          <TabsTrigger value="closed">{t("tabs.closed")}</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Filters, search, sort and saved views (all in the URL) */}
+      <ListFilterBar
+        def={def}
+        organizationId={organization?.id ?? ""}
+        filters={filters}
+        setFilter={setFilter}
+        applyAll={applyAll}
+        clearAll={clearAll}
+      />
 
       {/* Incident List */}
       {isLoading ? (
@@ -292,7 +266,7 @@ export default function IncidentsPage() {
             </Link>
           ))}
         </div>
-      ) : activeTab === "all" ? (
+      ) : noFilters ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -310,11 +284,7 @@ export default function IncidentsPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>
-              {activeTab === "open" && t("emptyOpen")}
-              {activeTab === "critical" && t("emptyCritical")}
-              {activeTab === "closed" && t("emptyClosed")}
-            </p>
+            <p>{t("emptyFiltered")}</p>
           </CardContent>
         </Card>
       )}

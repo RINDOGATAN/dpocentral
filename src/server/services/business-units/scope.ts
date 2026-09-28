@@ -12,15 +12,15 @@
 // (scope.test.ts); the loader is thin plumbing over it.
 
 import type { Db } from "@/lib/prisma";
+import { UNASSIGNED_DEPARTMENT } from "@/lib/list-views";
+
+export { UNASSIGNED_DEPARTMENT };
 
 /// The whole organisation (a member with no department limit), or a fixed set of
 /// department ids. An empty id list is still a limit: it matches nothing, which
 /// is the honest result for a member limited to departments that were all
 /// deleted — never a silent fall-back to the whole organisation.
 export type BusinessUnitScope = { all: true } | { all: false; businessUnitIds: string[] };
-
-/// The `businessUnitId` value the "no department assigned" filter uses.
-export const UNASSIGNED_DEPARTMENT = "unassigned";
 
 /// The extra condition this scope imposes on a model that carries a
 /// `businessUnitId` (DataAsset, ProcessingActivity), or null when it imposes

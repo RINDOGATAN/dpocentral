@@ -33,6 +33,7 @@ import {
   History,
   KeyRound,
   LifeBuoy,
+  ListChecks,
   Megaphone,
   Rocket,
   Scale,
@@ -284,6 +285,9 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
   // deliberately NOT repeated here under "Library and tools".
   // "Library and tools": every Classic entry that is not a step, once.
   library: ({ stripeEnabled }) => [
+    // The two ready lists (stage 4): what is waiting, and what is unfinished.
+    { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },
+    { id: "incomplete", href: "/privacy/incomplete", icon: ClipboardList },
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
     { id: "experts", href: "/privacy/experts", icon: Search },
     { id: "skills", href: "/privacy/skills", icon: KeyRound },
