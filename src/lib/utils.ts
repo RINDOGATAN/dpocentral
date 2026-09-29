@@ -28,6 +28,32 @@ export function formatDateTime(date: Date | string | null | undefined): string {
   });
 }
 
+/**
+ * The interface's language, as the tag its dates are written in: English
+ * reads as British English, like the rest of the interface ("Organisation",
+ * "programme"); Spanish as Castilian.
+ */
+export const DATE_LOCALE: Record<string, string> = { en: "en-GB", es: "es-ES" };
+
+/**
+ * A date and time in the interface's language: one format per language, to
+ * the minute ("28 Sept 2026, 11:34" / "28 sept 2026, 11:34").
+ */
+export function formatDateTimeIn(
+  date: Date | string,
+  locale: string,
+  timeZone?: string
+): string {
+  return new Date(date).toLocaleString(DATE_LOCALE[locale] ?? DATE_LOCALE.en, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
+  });
+}
+
 export function formatRelativeTime(date: Date | string | null | undefined): string {
   if (!date) return "N/A";
   const now = new Date();

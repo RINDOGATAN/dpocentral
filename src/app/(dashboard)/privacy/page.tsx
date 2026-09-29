@@ -45,7 +45,8 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDateTimeIn } from "@/lib/utils";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
@@ -61,6 +62,7 @@ export default function PrivacyDashboardPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.dashboard");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const { skin } = useSkin();
@@ -447,7 +449,7 @@ export default function PrivacyDashboardPage() {
                       {enumLabel("auditAction", activity.action)} · {enumLabel("auditEntity", activity.entityType)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(activity.createdAt).toLocaleString()}
+                      {formatDateTimeIn(activity.createdAt, locale)}
                     </p>
                   </div>
                 </div>
