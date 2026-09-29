@@ -169,6 +169,8 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
         {
           id: "ropa",
           href: "/privacy/data-inventory/processing-activities",
+          // An activity's own page (and its edit page) is this step, not 3.1.
+          alsoAt: ["/privacy/data-inventory/activities"],
           icon: ClipboardList,
           rule: "Done when at least one processing activity (record of processing) is recorded. Started when a data asset exists without one.",
           status: (c) =>

@@ -41,6 +41,13 @@ export interface PathStep<C> {
   id: string;
   /** The existing page the step opens. Null only for a step that is coming. */
   href: string | null;
+  /**
+   * Other places that belong to this step though they sit under another
+   * step's path: a processing activity's own page lives at
+   * /privacy/data-inventory/activities/<id>, under the assets step's prefix,
+   * yet it is step 3.2. Matched like `href`, and the longest match wins.
+   */
+  alsoAt?: string[];
   icon: LucideIcon;
   /** The "done" rule in plain words, for the next person to change it. */
   rule: string;
@@ -218,9 +225,12 @@ export function currentStepId<C>(
   let best: { id: string; score: number } | null = null;
   for (const stage of config.stages) {
     for (const step of stage.steps) {
-      if (!step.href || !matches(pathname, search, step.href)) continue;
-      const score = hrefQuery(step.href).length * 10_000 + hrefPath(step.href).length;
-      if (!best || score > best.score) best = { id: step.id, score };
+      if (!step.href) continue;
+      for (const href of [step.href, ...(step.alsoAt ?? [])]) {
+        if (!matches(pathname, search, href)) continue;
+        const score = hrefQuery(href).length * 10_000 + hrefPath(href).length;
+        if (!best || score > best.score) best = { id: step.id, score };
+      }
     }
   }
   return best?.id ?? null;

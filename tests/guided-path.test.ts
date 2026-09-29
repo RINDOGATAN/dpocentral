@@ -383,6 +383,13 @@ describe("the current page", () => {
     expect(currentStepId(PATH, "/privacy/data-inventory/processing-activities")).toBe("ropa");
   });
 
+  it("gives a record's own page the step of its record type (3.2 on an activity)", () => {
+    expect(currentStepId(PATH, "/privacy/data-inventory/asset-1")).toBe("dataInventory");
+    expect(currentStepId(PATH, "/privacy/data-inventory/activities/act-1")).toBe("ropa");
+    expect(currentStepId(PATH, "/privacy/data-inventory/activities/act-1/edit")).toBe("ropa");
+    expect(stepAndFollowing(PATH, currentStepId(PATH, "/privacy/data-inventory/activities/act-1"))?.current.number).toBe("3.2");
+  });
+
   it("does not claim the dashboard or a library page as a step", () => {
     expect(currentStepId(PATH, "/privacy")).toBeNull();
     expect(currentStepId(PATH, "/privacy/settings")).toBeNull();

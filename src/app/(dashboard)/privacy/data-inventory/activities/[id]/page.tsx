@@ -34,6 +34,8 @@ import { useTranslations } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { RecordHeader } from "@/components/privacy/record-header";
+import { TemplateBadge } from "@/components/privacy/template-badge";
 
 const legalBasisLabels: Record<string, string> = {
   CONSENT: "Consent",
@@ -49,6 +51,7 @@ export default function ActivityDetailPage() {
   const id = params.id as string;
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const tp = useTranslations("pages.activityDetail");
   const { label: enumLabel } = useEnumLabels();
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
@@ -191,12 +194,12 @@ export default function ActivityDetailPage() {
         <Link href="/privacy/data-inventory">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Data Inventory
+            {tp("backToInventory")}
           </Button>
         </Link>
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
-            Processing activity not found
+            {tp("notFound")}
           </CardContent>
         </Card>
       </div>
@@ -209,31 +212,29 @@ export default function ActivityDetailPage() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/privacy/data-inventory?tab=activities">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Activities
-          </Button>
-        </Link>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-xl sm:text-2xl font-semibold truncate">{activity.name}</h1>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
+      <RecordHeader
+        back={{ href: "/privacy/data-inventory/processing-activities", label: tp("back") }}
+        icon={FileText}
+        title={activity.name}
+        badges={
+          <>
             <Badge variant="outline">
               <Scale className="w-3 h-3 mr-1" />
               {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
             </Badge>
-            {!activity.isActive && <Badge variant="secondary">Inactive</Badge>}
-          </div>
-        </div>
-        <Link href={`/privacy/data-inventory/activities/${activity.id}/edit`} className="shrink-0">
-          <Button variant="outline" size="sm">
-            <Edit className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
-        </Link>
-      </div>
+            {!activity.isActive && <Badge variant="secondary">{tp("inactive")}</Badge>}
+            <TemplateBadge metadata={activity.metadata} className="text-xs" />
+          </>
+        }
+        actions={
+          <Link href={`/privacy/data-inventory/activities/${activity.id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Edit className="w-4 h-4 mr-2" />
+              {tp("edit")}
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Purpose & Description */}
       <Card>

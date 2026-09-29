@@ -934,6 +934,13 @@
         "dueDateLabel": "Fecha límite"
       }
     },
+    "activityDetail": {
+      "back": "Actividades de tratamiento",
+      "backToInventory": "Volver al inventario de datos",
+      "notFound": "No se ha encontrado la actividad de tratamiento",
+      "inactive": "Inactiva",
+      "edit": "Editar"
+    },
     "assetDetail": {
       "notFound": "Activo no encontrado",
       "back": "Volver al inventario",

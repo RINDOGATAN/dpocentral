@@ -934,6 +934,13 @@
         "dueDateLabel": "Due Date"
       }
     },
+    "activityDetail": {
+      "back": "Processing activities",
+      "backToInventory": "Back to Data Inventory",
+      "notFound": "Processing activity not found",
+      "inactive": "Inactive",
+      "edit": "Edit"
+    },
     "assetDetail": {
       "notFound": "Asset not found",
       "back": "Back to Inventory",
