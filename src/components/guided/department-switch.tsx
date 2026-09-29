@@ -5,10 +5,13 @@
 // "For my department": a switch at the top of the menu, shown only when the
 // organisation has departments. It sets the department the dashboard and the
 // ready lists read their counts for. A department-limited member is offered only
-// their own departments; "Whole organisation" leaves the server to narrow to
-// whatever they may see.
+// their own departments, with one of them always chosen: never "Whole
+// organisation" (src/lib/department-limit.ts). The server narrows to the
+// member's departments whatever is chosen.
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { departmentSwitchState } from "@/lib/department-limit";
 import { Building2 } from "lucide-react";
 import {
   Select,
@@ -33,23 +36,39 @@ export function DepartmentSwitch() {
   );
   const { departmentId, setDepartmentId } = useDepartmentScope(orgId || undefined);
 
-  const mine = data?.myBusinessUnitIds ?? null;
-  const departments = (data?.departments ?? []).filter((d) => !mine || mine.includes(d.id));
-  if (departments.length === 0) return null;
+  const state = data
+    ? departmentSwitchState({
+        departments: data.departments,
+        myBusinessUnitIds: data.myBusinessUnitIds,
+        stored: departmentId,
+      })
+    : null;
+
+  // A limited member always has one of their departments chosen: store it, so
+  // the pages that read the choice narrow to it as the selector says.
+  const chosen = state?.value ?? null;
+  const limited = state ? !state.offerWholeOrganisation : false;
+  useEffect(() => {
+    if (limited && chosen && chosen !== departmentId) setDepartmentId(chosen);
+  }, [limited, chosen, departmentId, setDepartmentId]);
+
+  if (!state) return null;
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1" data-testid="department-switch">
       <span className="flex items-center gap-1 text-xs text-muted-foreground">
         <Building2 className="h-3.5 w-3.5" aria-hidden="true" />
         {t("departmentSwitch.label")}
       </span>
-      <Select value={departmentId ?? ALL} onValueChange={(v) => setDepartmentId(v === ALL ? null : v)}>
+      <Select value={state.value ?? ALL} onValueChange={(v) => setDepartmentId(v === ALL ? null : v)}>
         <SelectTrigger className="h-9 w-full" aria-label={t("departmentSwitch.label")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={ALL}>{t("departmentSwitch.wholeOrg")}</SelectItem>
-          {departments.map((d) => (
+          {state.offerWholeOrganisation && (
+            <SelectItem value={ALL}>{t("departmentSwitch.wholeOrg")}</SelectItem>
+          )}
+          {state.choices.map((d) => (
             <SelectItem key={d.id} value={d.id}>
               {d.name}
             </SelectItem>

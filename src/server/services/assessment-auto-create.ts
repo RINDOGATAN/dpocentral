@@ -12,8 +12,10 @@ import type { Prisma } from "@prisma/client";
 import { AssessmentStatus, AssessmentType } from "@prisma/client";
 import {
   checkAssessmentEntitlement,
+  isDpiaPilotTier,
   isPremiumAssessmentType,
 } from "../services/licensing/entitlement";
+import { countDpiaCreated, PILOT_DPIA_LIMIT } from "./pilot/caps";
 
 interface AutoCreateParams {
   tx: Prisma.TransactionClient;
@@ -51,8 +53,18 @@ export async function createAssessmentFromActivity(
     reason,
   } = params;
 
-  // Check entitlement for premium assessment types
-  if (isPremiumAssessmentType(assessmentType)) {
+  // The DPIA needs no licence on the pilot tier, but it counts against the
+  // two free ones there; with none left, fall back to LIA as before.
+  if (assessmentType === "DPIA" && (await isDpiaPilotTier(organizationId))) {
+    const used = await countDpiaCreated(tx, organizationId);
+    if (used >= PILOT_DPIA_LIMIT) {
+      return createAssessmentFromActivity({
+        ...params,
+        assessmentType: "LIA",
+        reason: `${reason} (LIA fallback: the pilot tier's free DPIAs are used)`,
+      });
+    }
+  } else if (isPremiumAssessmentType(assessmentType)) {
     const entitlement = await checkAssessmentEntitlement(
       organizationId,
       assessmentType
@@ -150,6 +162,8 @@ export async function createAssessmentFromActivity(
       action: "AUTO_CREATE",
       changes: {
         type: assessmentType,
+        // Read by the pilot tier's DPIA count (services/pilot/caps.ts).
+        templateType: assessmentType,
         vendorId,
         processingActivityId,
         reason,

@@ -33,6 +33,7 @@ import {
 } from "../../services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 
 // Capped resources a quickstart batch can add.
 const PILOT_BATCH_RESOURCES: PilotResource[] = [
@@ -472,6 +473,20 @@ export const quickstartRouter = createTRPCRouter({
       const pilotLang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       const skipAssets = new Set(input.skipAssetNames);
       const skipActivities = new Set(input.skipActivityNames);
+
+      // The quick start sets up the whole organisation, so a member limited to
+      // departments may not run it (src/lib/department-limit.ts); the screens
+      // do not offer it to them either.
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      if (!scope.all) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            pilotLang === "es"
+              ? "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Pide a un administrador que lo ejecute."
+              : "The quick start sets up the whole organization, and your access is limited to your department. Ask an administrator to run it.",
+        });
+      }
 
       // Validate at least one path is selected
       if (input.vendorSlugs.length === 0 && !input.industryId) {

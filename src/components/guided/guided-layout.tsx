@@ -49,8 +49,9 @@ import { signOutOfSuite } from "@/lib/sign-out";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
+import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
-import { currentStepId, nextStep, overallProgress } from "./path";
+import { currentStepId, nextStep, overallProgress, withoutOrgWideSteps } from "./path";
 import { PathMenu } from "./path-menu";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
@@ -60,6 +61,8 @@ import { planDayText } from "./plan-text";
 import { useSkin } from "./skin-context";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
+/** The path a department-limited member sees: no quick start. */
+const LIMITED_PATH = withoutOrgWideSteps(DPO_CENTRAL_PATH);
 const ALL_CLIENTS_HREF = "/privacy/clients";
 
 const BRAND_STYLE = { fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 } as const;
@@ -96,6 +99,9 @@ export function GuidedLayout({
   const plan = usePlanState();
   const { organization } = useOrganization();
   const { isProfessional } = useUserType();
+  // A member limited to departments sees neither the quick start nor the
+  // organisation-wide progress (src/lib/department-limit.ts).
+  const { limited, orgWide } = useMemberScope();
   useProgramPathRefresh();
   const [collapsed, setCollapsedState] = useState(initialCollapsed);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -106,15 +112,16 @@ export function GuidedLayout({
   };
 
   const menuProps = {
-    config: DPO_CENTRAL_PATH,
-    statuses,
+    config: limited ? LIMITED_PATH : DPO_CENTRAL_PATH,
+    statuses: limited === null ? null : statuses,
     pathname,
     search,
     stripeEnabled: features.stripeEnabled,
     clientMode: isProfessional,
     t,
     overview: OVERVIEW,
-    planLine: planDayText(plan, t),
+    planLine: orgWide ? planDayText(plan, t) : null,
+    showProgress: !limited,
   };
 
   return (
@@ -155,7 +162,7 @@ export function GuidedLayout({
         </div>
       </header>
 
-      <PhoneStageBar statuses={statuses} onOpen={() => setSheetOpen(true)} />
+      <PhoneStageBar statuses={statuses} showProgress={!limited} onOpen={() => setSheetOpen(true)} />
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetContent side="left" className="w-[300px] sm:w-[340px] overflow-y-auto">
@@ -240,7 +247,9 @@ export function GuidedLayout({
             <StepBand
               key={`${organization?.id ?? ""}:${pathname}?${search}`}
               stepId={stepId}
-              statuses={statuses}
+              // No "stage complete" for a limited member: that is the whole
+              // organisation's progress.
+              statuses={orgWide ? statuses : null}
             />
             {children}
           </main>
@@ -372,17 +381,22 @@ function AccountMenu({ onFeedback }: { onFeedback: () => void }) {
  */
 function PhoneStageBar({
   statuses,
+  showProgress,
   onOpen,
 }: {
   statuses: ReturnType<typeof useProgramPath>;
+  /** False for a department-limited member: the menu, without the organisation's progress. */
+  showProgress: boolean;
   onOpen: () => void;
 }) {
   const t = useTranslations("guided");
   const total = DPO_CENTRAL_PATH.stages.length;
-  const next = statuses ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
-  const overall = statuses ? overallProgress(DPO_CENTRAL_PATH, statuses) : null;
+  const next = statuses && showProgress ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
+  const overall = statuses && showProgress ? overallProgress(DPO_CENTRAL_PATH, statuses) : null;
 
-  const label = !statuses
+  const label = !showProgress
+    ? t("navLabel")
+    : !statuses
     ? t("loading")
     : next
       ? t("phoneBar", {
@@ -400,12 +414,12 @@ function PhoneStageBar({
       className="lg:hidden sticky top-14 z-40 flex min-h-11 w-full flex-col justify-center gap-1.5 border-b border-border bg-background/95 px-4 sm:px-6 py-2 text-left backdrop-blur supports-[backdrop-filter]:bg-background/60 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
     >
       <span className="flex items-center justify-between gap-2 text-xs">
-        <span className={cn("min-w-0 truncate", statuses ? "text-foreground" : "text-muted-foreground")}>
+        <span className={cn("min-w-0 truncate", statuses || !showProgress ? "text-foreground" : "text-muted-foreground")}>
           {label}
         </span>
         <ChevronDown className="size-3.5 shrink-0 -rotate-90 text-muted-foreground" aria-hidden="true" />
       </span>
-      <ProgressBar value={overall?.done ?? null} total={overall?.total ?? 0} />
+      {showProgress && <ProgressBar value={overall?.done ?? null} total={overall?.total ?? 0} />}
     </button>
   );
 }

@@ -305,9 +305,11 @@
       "missingTemplateBody": "These answers are written against the questions of the standard DPIA template. Without it the wizard would write them against another template's questions, so it stops here. Install or seed the standard DPIA template and start again."
     },
     "trialAssessments": {
-      "remaining": "{remaining} of {limit} impact assessments are included in the trial and still to use.",
-      "usedUp": "All {limit} impact assessments included in the trial have been created. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit.",
-      "keepGoing": "Keep going on your own instance"
+      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per organisation on the pilot tier",
+      "freeBadge": "Free for a limited time",
+      "remaining": "This organization has {remaining} of the {limit} free DPIAs left.",
+      "usedUp": "This organization has created its {limit} free DPIAs. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan.",
+      "seePlans": "See the plans"
     },
     "assessmentTemplates": {
       "title": "Assessment templates",
@@ -1458,6 +1460,9 @@
     },
     "quickstart": {
       "back": "Dashboard",
+      "limitedTitle": "The quick start is for the whole organization",
+      "limitedBody": "The quick start sets up the whole organization, and your access is limited to your department. An administrator can run it.",
+      "limitedBack": "Back to the overview",
       "title": "Privacy Program Quickstart",
       "subtitle": "Get a head start on your privacy program",
       "programName": {
@@ -2329,6 +2334,7 @@
     "localSignInTitle": "Local sign-in",
     "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere).",
     "signedOut": "You have been signed out. Sign in again to continue.",
+    "noSignInMethod": "No sign-in method is set up on this server. The administrator can turn on local sign-in, an e-mail key or Google sign-in.",
     "error": {
       "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
       "OAuthCallback": "Google sign-in failed. Please try again.",
@@ -5730,7 +5736,7 @@
         "title": "Hosted pilot",
         "intro": "The hosted service is there to try the product. It is free, and it is not meant for real client matter. An instance of your own carries none of the limits below.",
         "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
-        "assessments": "An organization may create {assessments} impact assessments. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
+        "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "An organization can hold up to:",
         "oneOrganization": "An account belongs to one organization.",

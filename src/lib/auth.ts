@@ -15,6 +15,7 @@ import { emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
+import { emailConfigured, googleConfigured } from "@/lib/sign-in-methods";
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -103,11 +104,13 @@ export const authOptions: NextAuthOptions = {
         ]
       : []),
     // Production providers
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    // Registered by the same rules the sign-in page shows them by
+    // (src/lib/sign-in-methods.ts).
+    ...(googleConfigured()
       ? [
           GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             authorization: {
               params: {
                 prompt: "select_account",
@@ -118,7 +121,7 @@ export const authOptions: NextAuthOptions = {
           }),
         ]
       : []),
-    ...(process.env.RESEND_API_KEY && resend
+    ...(emailConfigured() && resend
       ? [
           EmailProvider({
             from: emailFrom(),

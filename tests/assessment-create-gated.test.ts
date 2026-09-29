@@ -53,7 +53,7 @@ const ROOT = path.resolve(__dirname, "..");
 const read = (p: string) => readFileSync(path.join(ROOT, p), "utf8");
 
 const ORG = { id: "org-1", name: "Org", slug: "org", pilotStartedAt: null };
-const DPIA_TEMPLATE = { id: "system-dpia-template", type: "DPIA", organizationId: null };
+const PIA_TEMPLATE = { id: "system-pia-template", type: "PIA", organizationId: null };
 const LIA_TEMPLATE = { id: "system-lia-template", type: "LIA", organizationId: null };
 
 const create = (templateId: string) =>
@@ -85,12 +85,14 @@ afterEach(() => {
 });
 
 describe("assessment.create on a gated type", () => {
+  // Since 29 September 2026 the DPIA is not gated here (two are free on the
+  // pilot tier, tests/hosted-open-gates.test.ts); the PIA still is.
   it("answers FORBIDDEN with the reason, and creates nothing", async () => {
-    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(DPIA_TEMPLATE);
-    const err = await create(DPIA_TEMPLATE.id).catch((e) => e);
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(PIA_TEMPLATE);
+    const err = await create(PIA_TEMPLATE.id).catch((e) => e);
     expect(err).toBeInstanceOf(TRPCError);
     expect(err.code).toBe("FORBIDDEN");
-    expect(err.message).toMatch(/^DPIA assessments require a premium license\. \S/);
+    expect(err.message).toMatch(/^PIA assessments require a premium license\. \S/);
     expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
     expect(mocks.prisma.auditLog.create).not.toHaveBeenCalled();
   });

@@ -43,7 +43,7 @@ vi.mock("@/components/dashboard-shell", () => ({
 
 import { PilotShell } from "@/components/pilot/pilot-shell";
 import DashboardLayout from "@/app/(dashboard)/layout";
-import SignInPage from "@/app/(auth)/sign-in/page";
+import { SignInForm } from "@/app/(auth)/sign-in/sign-in-form";
 
 function render(locale: "en" | "es", node: ReactElement) {
   return renderToStaticMarkup(
@@ -120,7 +120,10 @@ describe("hosted pilot banner: public pages", () => {
   it("is absent from the sign-in screen, which keeps its quiet pilot sentence", () => {
     hosted();
     for (const locale of ["en", "es"] as const) {
-      const html = render(locale, createElement(SignInPage));
+      const html = render(
+        locale,
+        createElement(SignInForm, { methods: { local: false, email: true, google: true } }),
+      );
       expect(html).not.toContain("hosted-pilot-banner");
       expect(html).not.toContain(locale === "en" ? "Hosted pilot notice" : es.pilot.bannerLabel);
       expect(html).toContain('data-testid="hosted-pilot-sentence"');

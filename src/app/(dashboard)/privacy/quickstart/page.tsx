@@ -62,6 +62,8 @@ import {
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
+import { useMemberScope } from "@/lib/use-member-scope";
+import { StatusNote } from "@/components/ui/status-note";
 
 // ============================================================
 // ICON MAP
@@ -98,6 +100,9 @@ export default function QuickstartPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
   const tct = useTranslations("clientTemplate");
+  // Not offered to a member limited to departments (src/lib/department-limit.ts);
+  // the server refuses quickstart.execute to them as well.
+  const { limited } = useMemberScope();
   const { label: enumLabel } = useEnumLabels();
 
   // "Start from another client" — copy a programme from one of the user's other
@@ -357,6 +362,21 @@ export default function QuickstartPage() {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (limited) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <StatusNote tone="info" title={tp("limitedTitle")} data-testid="quickstart-limited">
+          <p>{tp("limitedBody")}</p>
+          <p>
+            <Link href="/privacy" className="underline underline-offset-4">
+              {tp("limitedBack")}
+            </Link>
+          </p>
+        </StatusNote>
       </div>
     );
   }

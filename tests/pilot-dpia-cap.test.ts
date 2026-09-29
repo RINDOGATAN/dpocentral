@@ -2,14 +2,16 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The hosted trial includes three impact assessments per organisation.
+ * The pilot tier includes two DPIAs per organisation, free for a limited time
+ * (the owner's decision of 29 September 2026; it was three).
  *
- * The third is created like any other; the fourth is refused with a message
- * that says what the trial includes, that deleting one does not free a place,
- * and where to ask for a deployment of their own. The count is of impact
- * assessments created, so it is read from the audit log as well as from the
- * assessments the organisation still holds. Nothing already created is
- * blocked, and the self-hosted kit is not capped at all.
+ * The second is created like any other; the third is refused on the server
+ * with a message that says so plainly, that deleting one does not free a
+ * place, and points to the plans page (no price). The count is of DPIAs
+ * created, so it is read from the audit log as well as from the assessments
+ * the organisation still holds. Nothing already created is blocked, and the
+ * self-hosted kit is not capped at all. The Stripe-on pilot tier is tested in
+ * tests/hosted-open-gates.test.ts ("creating a premium assessment").
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
@@ -57,12 +59,12 @@ import es from "@/messages/es.json";
 import {
   countDpiaCreated,
   dpiaCapMessage,
-  hostedDpiaQuota,
-  HOSTED_DPIA_LIMIT,
+  pilotDpiaQuota,
+  PILOT_DPIA_LIMIT,
   PILOT_LIMIT_REACHED,
   recordPilotLimitReached,
 } from "@/server/services/pilot/caps";
-import { MANAGED_URL, managedUrl } from "@/lib/hosted";
+import { isHostedDeployment, PLANS_URL, plansUrl } from "@/lib/hosted";
 import { callerFor, sessionFor } from "./helpers";
 
 const ORG = { id: "org-1", name: "Org", slug: "org", pilotStartedAt: null };
@@ -112,61 +114,67 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("impact assessments on the hosted trial", () => {
-  it("creates the third", async () => {
-    hosted();
-    created(HOSTED_DPIA_LIMIT - 1);
-    await expect(createDpia()).resolves.toMatchObject({ id: "asm-1" });
-    expect(mocks.prisma.assessment.create).toHaveBeenCalled();
+describe("DPIAs on the hosted pilot tier", () => {
+  it("the limit is two", () => {
+    expect(PILOT_DPIA_LIMIT).toBe(2);
   });
 
-  it("refuses the fourth", async () => {
+  it("creates the first and the second", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT);
-    await expect(createDpia()).rejects.toThrow(/impact assessments/);
+    created(0);
+    await expect(createDpia()).resolves.toMatchObject({ id: "asm-1" });
+    created(1);
+    await expect(createDpia()).resolves.toMatchObject({ id: "asm-1" });
+    expect(mocks.prisma.assessment.create).toHaveBeenCalledTimes(2);
+  });
+
+  it("refuses the third attempt on the server, plainly, pointing to the plans page", async () => {
+    hosted();
+    created(2);
+    await expect(createDpia()).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      message: expect.stringContaining("See the plans: https://www.todo.law/pricing"),
+    });
+    await expect(createDpia()).rejects.toThrow(/already created the 2 DPIAs/);
     expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
   });
 
-  it("carries one link, to keep going on the managed service, in both languages", () => {
-    expect(dpiaCapMessage("en")).toContain(
-      "Keep going on your own instance: https://www.todo.law/contact/managed"
-    );
-    expect(dpiaCapMessage("es")).toContain(
-      "Sigue en tu propia instancia: https://www.todo.law/es/contact/managed"
-    );
+  it("carries one link, to the plans page, in both languages, and no price", () => {
+    expect(dpiaCapMessage("en")).toContain("See the plans: https://www.todo.law/pricing");
+    expect(dpiaCapMessage("es")).toContain("Consulta los planes: https://www.todo.law/es/precios");
     for (const locale of ["en", "es"] as const) {
       const message = dpiaCapMessage(locale);
       expect(message.match(/https?:\/\//g)).toHaveLength(1);
-      expect(message).toContain(String(HOSTED_DPIA_LIMIT));
+      expect(message).toContain(String(PILOT_DPIA_LIMIT));
       // No price and no sales language.
       expect(message).not.toMatch(/[€$]|EUR|USD|upgrade|mejora|oferta/i);
     }
   });
 
-  it("the new-assessment screen links to the managed service, with its Spanish twin", () => {
-    expect(en.pages.trialAssessments.keepGoing).toBe("Keep going on your own instance");
-    expect(es.pages.trialAssessments.keepGoing).toBe("Sigue en tu propia instancia");
-    expect(managedUrl("en")).toBe(MANAGED_URL.en);
-    expect(managedUrl("es")).toBe("https://www.todo.law/es/contact/managed");
-    expect(managedUrl("es-ES")).toBe(MANAGED_URL.es);
-    expect(managedUrl(undefined)).toBe("https://www.todo.law/contact/managed");
-    const page = readFileSync(
-      path.resolve(__dirname, "../src/app/(dashboard)/privacy/assessments/new/page.tsx"),
-      "utf8"
-    );
-    expect(page).toContain("href={managedUrl(locale)}");
-    expect(page).toContain('tTrial("keepGoing")');
+  it("the screens say the owner's sentence, in both languages, and link to the plans page", () => {
+    expect(en.pages.trialAssessments.freeNote).toMatch(/^Free for a limited time: /);
+    expect(es.pages.trialAssessments.freeNote).toMatch(/^Gratis por tiempo limitado: /);
+    expect(en.pages.trialAssessments.seePlans).toBe("See the plans");
+    expect(es.pages.trialAssessments.seePlans).toBe("Consulta los planes");
+    expect(plansUrl("en")).toBe(PLANS_URL.en);
+    expect(plansUrl("es-ES")).toBe("https://www.todo.law/es/precios");
+    expect(plansUrl(undefined)).toBe("https://www.todo.law/pricing");
+    const read = (p: string) => readFileSync(path.resolve(__dirname, "..", p), "utf8");
+    const note = read("src/components/pilot/dpia-free-note.tsx");
+    expect(note).toContain("href={plansUrl(locale)}");
+    // The type card, the form, and the quick action all carry the note.
+    const form = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
+    expect(form.match(/<DpiaFreeNote/g)?.length).toBe(2);
+    expect(read("src/app/(dashboard)/privacy/page.tsx")).toContain("<DpiaFreeNote");
   });
 
   it("the refusal comes through the tRPC error with the link, in Spanish too", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT);
+    created(PILOT_DPIA_LIMIT);
     const spanish = callerFor(assessmentRouter, sessionFor("user-1"), { locale: "es" });
     await expect(
       spanish.create({ organizationId: ORG.id, templateId: DPIA_TEMPLATE.id, name: "Fidelización" })
-    ).rejects.toThrow(
-      "Sigue en tu propia instancia: https://www.todo.law/es/contact/managed"
-    );
+    ).rejects.toThrow("Consulta los planes: https://www.todo.law/es/precios");
   });
 
   it("says that deleting does not free a place", () => {
@@ -176,22 +184,22 @@ describe("impact assessments on the hosted trial", () => {
 
   it("does not let a deletion free a place", async () => {
     hosted();
-    // Three created, none still held: the audit log still counts them.
-    created(HOSTED_DPIA_LIMIT);
+    // Two created, none still held: the audit log still counts them.
+    created(PILOT_DPIA_LIMIT);
     held(0);
-    expect(await countDpiaCreated(mocks.prisma as never, ORG.id)).toBe(HOSTED_DPIA_LIMIT);
+    expect(await countDpiaCreated(mocks.prisma as never, ORG.id)).toBe(PILOT_DPIA_LIMIT);
     await expect(createDpia()).rejects.toThrow();
   });
 
   it("counts an assessment the audit log never recorded a type for", async () => {
     created(0);
-    held(HOSTED_DPIA_LIMIT);
-    expect(await countDpiaCreated(mocks.prisma as never, ORG.id)).toBe(HOSTED_DPIA_LIMIT);
+    held(PILOT_DPIA_LIMIT);
+    expect(await countDpiaCreated(mocks.prisma as never, ORG.id)).toBe(PILOT_DPIA_LIMIT);
   });
 
   it("counts only impact assessments: another type is not capped", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT);
+    created(PILOT_DPIA_LIMIT);
     mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(LIA_TEMPLATE);
     mocks.prisma.assessment.create.mockResolvedValue({ id: "asm-2", template: LIA_TEMPLATE });
     await expect(
@@ -214,34 +222,34 @@ describe("impact assessments on the hosted trial", () => {
 
   it("does not apply off the hosted service", async () => {
     kit();
-    created(HOSTED_DPIA_LIMIT + 5);
+    created(PILOT_DPIA_LIMIT + 5);
     await expect(createDpia()).resolves.toMatchObject({ id: "asm-1" });
-    expect(await hostedDpiaQuota(mocks.prisma as never, ORG.id)).toEqual({ capped: false });
+    expect(await pilotDpiaQuota(mocks.prisma as never, ORG.id, isHostedDeployment())).toEqual({ capped: false });
   });
 
   it("reports what is left, for the screen to show", async () => {
     hosted();
     created(1);
-    expect(await hostedDpiaQuota(mocks.prisma as never, ORG.id)).toEqual({
+    expect(await pilotDpiaQuota(mocks.prisma as never, ORG.id, isHostedDeployment())).toEqual({
       capped: true,
-      limit: HOSTED_DPIA_LIMIT,
+      limit: PILOT_DPIA_LIMIT,
       used: 1,
-      remaining: HOSTED_DPIA_LIMIT - 1,
+      remaining: PILOT_DPIA_LIMIT - 1,
     });
   });
 
   it("never reports a negative number left", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT + 2);
-    expect(await hostedDpiaQuota(mocks.prisma as never, ORG.id)).toMatchObject({ remaining: 0 });
+    created(PILOT_DPIA_LIMIT + 2);
+    expect(await pilotDpiaQuota(mocks.prisma as never, ORG.id, isHostedDeployment())).toMatchObject({ remaining: 0 });
   });
 });
 
 describe("a firm at the limit can still read and export everything", () => {
   it("lists and opens its assessments", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT);
-    held(HOSTED_DPIA_LIMIT);
+    created(PILOT_DPIA_LIMIT);
+    held(PILOT_DPIA_LIMIT);
     mocks.prisma.assessment.findMany.mockResolvedValue([{ id: "asm-1" }]);
     mocks.prisma.assessment.findFirst.mockResolvedValue({
       id: "asm-1",
@@ -303,8 +311,8 @@ describe("reaching the limit is recorded, as a count", () => {
   it("writes the agreed row when the limit refuses an action", async () => {
     hosted();
     const limitRows = auditTable();
-    created(HOSTED_DPIA_LIMIT);
-    await expect(createDpia()).rejects.toThrow(/impact assessments/);
+    created(PILOT_DPIA_LIMIT);
+    await expect(createDpia()).rejects.toThrow(/DPIAs/);
 
     expect(limitRows()).toHaveLength(1);
     const row = limitRows()[0];
@@ -346,18 +354,18 @@ describe("reaching the limit is recorded, as a count", () => {
   it("four refused attempts the same day leave one row", async () => {
     hosted();
     const limitRows = auditTable();
-    created(HOSTED_DPIA_LIMIT);
+    created(PILOT_DPIA_LIMIT);
     for (let i = 0; i < 4; i++) await expect(createDpia()).rejects.toThrow();
     expect(limitRows()).toHaveLength(1);
   });
 
   it("a failure to write the row does not block the refusal", async () => {
     hosted();
-    created(HOSTED_DPIA_LIMIT);
+    created(PILOT_DPIA_LIMIT);
     mocks.prisma.auditLog.create.mockRejectedValue(new Error("database unavailable"));
     await expect(createDpia()).rejects.toMatchObject({
       code: "FORBIDDEN",
-      message: expect.stringContaining("Keep going on your own instance"),
+      message: expect.stringContaining("See the plans"),
     });
     expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
   });
@@ -365,10 +373,10 @@ describe("reaching the limit is recorded, as a count", () => {
   it("writes nothing below the limit, and nothing on the kit", async () => {
     const limitRows = auditTable();
     hosted();
-    created(HOSTED_DPIA_LIMIT - 1);
+    created(PILOT_DPIA_LIMIT - 1);
     await createDpia();
     kit();
-    created(HOSTED_DPIA_LIMIT + 5);
+    created(PILOT_DPIA_LIMIT + 5);
     await createDpia();
     expect(limitRows()).toHaveLength(0);
   });

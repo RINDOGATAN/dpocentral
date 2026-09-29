@@ -305,9 +305,11 @@
       "missingTemplateBody": "Estas respuestas se escriben contra las preguntas de la plantilla de DPIA estándar. Sin ella, el asistente las escribiría contra las preguntas de otra plantilla, así que se detiene aquí. Instala o siembra la plantilla de DPIA estándar y vuelve a empezar."
     },
     "trialAssessments": {
-      "remaining": "El piloto incluye {limit} evaluaciones de impacto y quedan {remaining} por usar.",
-      "usedUp": "Ya se han creado las {limit} evaluaciones de impacto que incluye el piloto. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite.",
-      "keepGoing": "Sigue en tu propia instancia"
+      "freeNote": "Gratis por tiempo limitado: {limit, plural, =2 {dos} other {#}} DPIA por organización en el nivel piloto",
+      "freeBadge": "Gratis por tiempo limitado",
+      "remaining": "A esta organización le quedan {remaining} de las {limit} DPIA gratuitas.",
+      "usedUp": "Esta organización ya ha creado sus {limit} DPIA gratuitas. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan.",
+      "seePlans": "Consulta los planes"
     },
     "assessmentTemplates": {
       "title": "Plantillas de evaluación",
@@ -1458,6 +1460,9 @@
     },
     "quickstart": {
       "back": "Panel",
+      "limitedTitle": "El inicio rápido es para toda la organización",
+      "limitedBody": "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Un administrador puede ejecutarlo.",
+      "limitedBack": "Volver a la vista general",
       "title": "Asistente del programa de privacidad",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
       "programName": {
@@ -2329,6 +2334,7 @@
     "localSignInTitle": "Acceso local",
     "localSignInBody": "Tu cuenta vive en este ordenador. Introduce tu correo para abrirla: no se envía nada a ningún sitio.",
     "signedOut": "Has cerrado la sesión. Vuelve a entrar para continuar.",
+    "noSignInMethod": "Este servidor no tiene ningún método de acceso configurado. El administrador puede activar el acceso local, una clave de correo o el acceso con Google.",
     "error": {
       "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
       "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
@@ -5730,7 +5736,7 @@
         "title": "Piloto alojado",
         "intro": "El servicio alojado sirve para probar el producto. Es gratuito y no está pensado para asuntos reales de clientes. Una instancia propia no tiene ninguno de los límites siguientes.",
         "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
-        "assessments": "Cada organización puede crear {assessments} evaluaciones de impacto. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
+        "assessments": "Por tiempo limitado, cada organización puede crear {assessments} DPIA gratuitas. Se cuentan las DPIA creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Una organización puede tener como máximo:",
         "oneOrganization": "Una cuenta pertenece a una sola organización.",

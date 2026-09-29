@@ -69,6 +69,25 @@ export interface PathStep<C> {
    * stage's progress and never offered as the next step.
    */
   optional?: boolean;
+  /**
+   * Acts on the whole organisation (the quick start): not shown to a member
+   * limited to departments (src/lib/department-limit.ts).
+   */
+  orgWide?: boolean;
+}
+
+/**
+ * The path as a department-limited member sees it: the organisation-wide steps
+ * removed, and a stage left with no step removed with them. The library is
+ * unchanged.
+ */
+export function withoutOrgWideSteps<C>(config: PathConfig<C>): PathConfig<C> {
+  return {
+    ...config,
+    stages: config.stages
+      .map((stage) => ({ ...stage, steps: stage.steps.filter((s) => !s.orgWide) }))
+      .filter((stage) => stage.steps.length > 0),
+  };
 }
 
 export interface PathStage<C> {

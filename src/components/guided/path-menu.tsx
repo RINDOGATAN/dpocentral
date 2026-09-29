@@ -58,6 +58,12 @@ interface PathMenuProps<C> {
    * its plan ("Day 12 of 90"). Nothing when null.
    */
   planLine?: string | null;
+  /**
+   * False for a member limited to departments: the figures are the whole
+   * organisation's, so the overall progress, each stage's count and each
+   * step's state are not shown (src/lib/department-limit.ts).
+   */
+  showProgress?: boolean;
 }
 
 /**
@@ -91,10 +97,11 @@ export function PathMenu<C>({
   t,
   overview,
   planLine = null,
+  showProgress = true,
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode });
   const currentStep = currentStepId(config, pathname, search);
-  const percent = statuses ? overallPercent(config, statuses) : null;
+  const percent = statuses && showProgress ? overallPercent(config, statuses) : null;
   const onOverview = pathname === overview.href;
   const currentStage = stageOfStep(config, currentStep);
   const openStage = stageOpenByDefault(config, currentStep, statuses, onOverview);
@@ -126,12 +133,14 @@ export function PathMenu<C>({
   if (collapsed && !sheet) {
     return (
       <nav aria-label={t("navLabel")} className="flex flex-col items-center gap-1 py-2">
+        {showProgress && (
         <span
           className="text-[11px] font-semibold tabular-nums text-primary"
           title={percent === null ? t("loading") : t("overall", { percent })}
         >
           {percent === null ? " " : `${percent}%`}
         </span>
+        )}
         <IconLink
           href={overview.href}
           icon={overview.icon}
@@ -141,7 +150,7 @@ export function PathMenu<C>({
         />
         <div className="my-1 h-px w-8 bg-border" />
         {config.stages.map((stage, index) => {
-          const progress = statuses ? stageProgress(stage, statuses) : null;
+          const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const href = stageTarget(stage, statuses);
           const label = `${t("stageNumber", { number: index + 1 })}: ${t(`stages.${stage.id}`)}${
             progress
@@ -198,6 +207,7 @@ export function PathMenu<C>({
     <nav aria-label={t("navLabel")} className="flex flex-col gap-1">
       {/* The whole program at a glance: always one line and a bar tall, so
           nothing moves when the figure arrives. */}
+      {showProgress && (
       <div className="px-3 pb-2 flex flex-col gap-1.5" aria-busy={percent === null}>
         <span className="flex items-baseline justify-between gap-2 text-sm">
           <span className="font-medium text-foreground">{t("overallLabel")}</span>
@@ -217,6 +227,7 @@ export function PathMenu<C>({
           <span className="text-xs text-muted-foreground tabular-nums">{planLine}</span>
         )}
       </div>
+      )}
       <Link
         href={overview.href}
         onClick={onNavigate}
@@ -233,7 +244,7 @@ export function PathMenu<C>({
       <ol className="flex flex-col gap-0.5">
         {config.stages.map((stage, index) => {
           const open = isOpen(stage);
-          const progress = statuses ? stageProgress(stage, statuses) : null;
+          const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const panelId = `path-stage-${variant}-${stage.id}`;
           const holdsCurrent = stage.id === currentStage?.id;
           const shownSteps = stage.steps.filter((step) => isShown(step, statuses));
@@ -246,6 +257,7 @@ export function PathMenu<C>({
                   <StepRow
                     step={step}
                     status={statuses ? statuses[step.id] ?? "todo" : null}
+                    showProgress={showProgress}
                     current={step.id === currentStep}
                     className={itemBase}
                     idle={itemIdle}
@@ -282,6 +294,7 @@ export function PathMenu<C>({
                   {t(`stages.${stage.id}`)}
                 </span>
                 {/* Always one line tall, filled or not, so nothing moves when progress arrives. */}
+                {showProgress && (
                 <span className="truncate text-xs text-muted-foreground tabular-nums">
                   {progress ? (
                     progress.state === "coming" ? (
@@ -298,6 +311,7 @@ export function PathMenu<C>({
                     </>
                   )}
                 </span>
+                )}
               </span>
             </>
           );
@@ -370,6 +384,7 @@ export function PathMenu<C>({
 function StepRow<C>({
   step,
   status,
+  showProgress = true,
   current,
   className,
   idle,
@@ -379,6 +394,8 @@ function StepRow<C>({
 }: {
   step: PathStep<C>;
   status: StepStatus | null;
+  /** False: a plain mark, no state (the state is the whole organisation's). */
+  showProgress?: boolean;
   current: boolean;
   className: string;
   idle: string;
@@ -405,7 +422,11 @@ function StepRow<C>({
       aria-current={current ? "page" : undefined}
       className={cn(className, current ? active : idle)}
     >
-      <StepMark status={status} optional={!!step.optional} t={t} />
+      {showProgress ? (
+        <StepMark status={status} optional={!!step.optional} t={t} />
+      ) : (
+        <step.icon className="size-3.5 shrink-0" aria-hidden="true" />
+      )}
       <span className={WRAP_LABEL}>{label}</span>
     </Link>
   );

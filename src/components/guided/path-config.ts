@@ -111,6 +111,8 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
           id: "quickstart",
           href: "/privacy/quickstart",
           icon: Sparkles,
+          // Sets up the whole organisation: not shown to a department-limited member.
+          orgWide: true,
           rule: "Done when the quick start has been completed once, or when the work it would do already exists (at least one data asset and one vendor). Started when a data asset, a vendor or a processing activity exists.",
           status: (c) =>
             c.quickstartCompleted || (c.dataAssets > 0 && c.vendors > 0)

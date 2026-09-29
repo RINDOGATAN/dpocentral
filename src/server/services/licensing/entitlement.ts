@@ -135,6 +135,24 @@ export async function checkAssessmentEntitlement(
 }
 
 /**
+ * Whether the organisation is on the pilot tier for DPIAs, where two DPIAs
+ * are free for a limited time (PILOT_DPIA_LIMIT in services/pilot/caps.ts):
+ *  - the hosted service: always;
+ *  - a build that sells licences (Stripe on): an organisation without an
+ *    active DPIA licence (a licensed one is not capped);
+ *  - the self-hosted kit (Stripe off): never, the kit is never capped.
+ * A DPIA is therefore never refused for want of a licence: an organisation
+ * with none gets the two free ones, and the premium gate stays for the other
+ * types and features it covers.
+ */
+export async function isDpiaPilotTier(organizationId: string): Promise<boolean> {
+  if (isHostedDeployment()) return true;
+  if (!features.stripeEnabled) return false;
+  const result = await checkAssessmentEntitlement(organizationId, "DPIA");
+  return !result.entitled;
+}
+
+/**
  * Get all entitlements for an organization
  */
 export async function getOrganizationEntitlements(organizationId: string) {
@@ -186,8 +204,14 @@ export async function getEntitledAssessmentTypes(
   }
 
   // Premium types: offered only if BOTH the template exists AND entitled.
+  // The DPIA is the exception: without a licence it is offered on the pilot
+  // tier (two free, see isDpiaPilotTier), so its template is enough.
   for (const assessmentType of PREMIUM_ASSESSMENT_TYPES) {
     if (!hasTemplate.has(assessmentType)) continue;
+    if (assessmentType === "DPIA") {
+      entitledTypes.push(assessmentType);
+      continue;
+    }
     const result = await checkAssessmentEntitlement(organizationId, assessmentType);
     if (result.entitled) {
       entitledTypes.push(assessmentType);

@@ -15,8 +15,8 @@ import {
 import { getLocale, getTranslations } from "next-intl/server";
 import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
 import {
-  HOSTED_DPIA_LIMIT,
   PILOT_DAYS,
+  PILOT_DPIA_LIMIT,
   PILOT_LIMITS,
   RESOURCE_LABELS,
   pilotLocale,
@@ -84,7 +84,7 @@ export default async function DocsOverviewPage() {
         <div className="space-y-3 text-sm text-muted-foreground">
           <p>{t("hostedPilot.intro")}</p>
           <p>{t("hostedPilot.window", { days: PILOT_DAYS })}</p>
-          <p>{t("hostedPilot.assessments", { assessments: HOSTED_DPIA_LIMIT })}</p>
+          <p>{t("hostedPilot.assessments", { assessments: PILOT_DPIA_LIMIT })}</p>
           <div>
             <p className="font-medium text-foreground">{t("hostedPilot.ceilingsTitle")}</p>
             <p className="mt-1">{t("hostedPilot.ceilingsIntro")}</p>

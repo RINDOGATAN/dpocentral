@@ -417,9 +417,54 @@ describe("creating a premium assessment", () => {
     await expect(create()).resolves.toMatchObject({ id: "a-1" });
   });
 
-  it("is refused where Stripe is on outside the pilot and no licence exists", async () => {
+  // Stripe on outside the hosted pilot, no licence: the organisation is on the
+  // pilot tier for DPIAs (two free for a limited time, owner's decision of 29
+  // September 2026). The premium gate stays for the other types.
+  it("a DPIA is allowed where Stripe is on and no licence exists, up to two", async () => {
     kit();
-    await expect(create()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);
+    mocks.prisma.auditLog.count.mockResolvedValue(1);
+    await expect(create()).resolves.toMatchObject({ id: "a-1" });
+  });
+
+  it("the third DPIA is refused there, on the server, pointing to the plans page", async () => {
+    kit();
+    mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);
+    mocks.prisma.auditLog.count.mockResolvedValue(2);
+    await expect(create()).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      message: expect.stringContaining("https://www.todo.law/pricing"),
+    });
+    expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
+    mocks.prisma.auditLog.count.mockResolvedValue(0);
+  });
+
+  it("a licensed organisation is not capped", async () => {
+    kit();
+    mocks.prisma.skillPackage.findFirst.mockResolvedValue({ id: "pkg-dpia" });
+    mocks.prisma.customerOrganization.findFirst.mockResolvedValue({
+      customer: {
+        entitlements: [{ id: "e-1", status: "ACTIVE", expiresAt: null, licenseType: "PERPETUAL" }],
+      },
+    });
+    mocks.prisma.auditLog.count.mockResolvedValue(9);
+    await expect(create()).resolves.toMatchObject({ id: "a-1" });
+    mocks.prisma.auditLog.count.mockResolvedValue(0);
+    mocks.prisma.customerOrganization.findFirst.mockResolvedValue(null);
+  });
+
+  it("another premium type is still refused where Stripe is on and no licence exists", async () => {
+    kit();
+    const pia = { id: "system-pia-template", type: "PIA", organizationId: null, isSystem: true };
+    mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(pia);
+    mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);
+    await expect(
+      callerFor(assessmentRouter, sessionFor("user-1")).create({
+        organizationId: "org-1",
+        templateId: pia.id,
+        name: "PIA",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN", message: expect.stringMatching(/premium license/) });
     expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
   });
 });
