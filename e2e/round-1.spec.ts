@@ -7,9 +7,9 @@
  * - Sign-out: /api/auth/signout shows our own page, which signs out.
  * - All clients: a client card is reached with the keyboard, by name.
  * - A gated assessment type (only where one is gated: a build with
- *   NEXT_PUBLIC_STRIPE_ENABLED=true outside the hosted pilot, and a DPIA
- *   template installed): the home labels "Start a DPIA", the form says so,
- *   and a refusal shows the server's sentence and keeps what was typed.
+ *   NEXT_PUBLIC_STRIPE_ENABLED=true outside the hosted pilot, and a PIA
+ *   template installed): a refusal shows the server's sentence and keeps
+ *   what was typed.
  *
  * Desktop project only (phone-width.spec.ts covers 390 px).
  */
@@ -54,16 +54,16 @@ test("a client card is reached with the keyboard, by its name", async ({ page })
   await page.waitForURL(/\/privacy(\?|$|\/)/);
 });
 
-test("a gated type is labelled, and its refusal is shown with the form kept", async ({ page }) => {
+// Since polish round 2 the DPIA is on the pilot tier (two free, see
+// round-2.spec.ts), so the gated type seen here is the PIA. The PIA is listed
+// as "coming soon" (COMING_SOON_SKILL_IDS), which the form does not label as
+// gated; the server still refuses it, and that refusal is what is seen here.
+test("a gated type's refusal is shown with the form kept", async ({ page }) => {
   test.skip(process.env.NEXT_PUBLIC_STRIPE_ENABLED !== "true", "no type is gated in this posture");
   await signInWithClient(page, "gated");
 
-  await page.goto("/privacy");
-  await expect(page.getByTestId("quick-action-dpia-gated")).toBeVisible();
-
-  await page.goto("/privacy/assessments/new?type=DPIA");
-  await expect(page.getByTestId("assessment-type-gated")).toBeVisible();
-  const name = `Gated DPIA ${stamp}`;
+  await page.goto("/privacy/assessments/new?type=PIA");
+  const name = `Gated PIA ${stamp}`;
   await page.locator("form #name").fill(name);
   await page.locator("form #description").fill("Kept after the refusal");
   await page.locator("form button[type=submit]").click();
@@ -71,7 +71,7 @@ test("a gated type is labelled, and its refusal is shown with the form kept", as
   const alert = page.getByTestId("assessment-create-error");
   await expect(alert).toBeVisible();
   await expect(alert).toHaveAttribute("role", "alert");
-  await expect(alert).toContainText("DPIA assessments require a premium license");
+  await expect(alert).toContainText("PIA assessments require a premium license");
   await expect(page).toHaveURL(/\/privacy\/assessments\/new/);
   await expect(page.locator("form #name")).toHaveValue(name);
   await expect(page.locator("form #description")).toHaveValue("Kept after the refusal");
