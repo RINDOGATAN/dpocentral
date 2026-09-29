@@ -1582,6 +1582,8 @@
         "createdListVendors": "Vendors",
         "createdListAssets": "Data assets",
         "createdListActivities": "Processing activities",
+        "createdListFlows": "Data flows",
+        "createdListActivities": "Processing activities",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program has been bootstrapped. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",

@@ -138,7 +138,22 @@ export default function QuickstartPage() {
   const [skipActivityNames, setSkipActivityNames] = useState<string[]>([]);
 
   // Result data from execute mutation
-  const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number; aiSystems?: number } | null>(null);
+  type CreatedRecord = { id: string; name: string };
+  const [executionResult, setExecutionResult] = useState<{
+    assets: number;
+    activities: number;
+    vendors: number;
+    elements: number;
+    flows: number;
+    transfers: number;
+    aiSystems?: number;
+    created?: {
+      vendors: CreatedRecord[];
+      assets: CreatedRecord[];
+      activities: CreatedRecord[];
+      flows: (CreatedRecord & { sourceAssetId: string })[];
+    };
+  } | null>(null);
 
   // Mark quickstart as seen (1 year) so the dashboard's first-visit
   // auto-redirect (/privacy → /privacy/quickstart for empty orgs) fires only
@@ -1420,48 +1435,65 @@ export default function QuickstartPage() {
             </CardContent>
           </Card>
 
-          {/* What was created — the named records, each list sorted newest-first
-              so these sit at the top of the list its card links to. */}
-          {!nothingCreated && (() => {
-            const createdVendors = useVendors && vendorPreview
-              ? vendorPreview.previews
-                  .filter((p) => !vendorPreview.existingVendorNames.includes(p.vendorName))
-                  .map((p) => p.vendorName)
-              : [];
-            const createdAssets = useIndustry && industryPreview
-              ? industryPreview.assets.filter((a) => !a.alreadyExists).map((a) => a.name)
-              : [];
-            if (createdVendors.length === 0 && createdAssets.length === 0) return null;
+          {/* What was created: every record the server made, by name, each
+              linked to its own page. A data flow has no page of its own, so
+              it opens the flows tab of the asset it starts from. */}
+          {!nothingCreated && executionResult?.created && (() => {
+            const created = executionResult.created;
+            const groups: { key: string; title: string; items: { id: string; name: string; href: string }[] }[] = [
+              {
+                key: "vendors",
+                title: tp("success.createdListVendors"),
+                items: created.vendors.map((v) => ({ ...v, href: `/privacy/vendors/${v.id}` })),
+              },
+              {
+                key: "assets",
+                title: tp("success.createdListAssets"),
+                items: created.assets.map((a) => ({ ...a, href: `/privacy/data-inventory/${a.id}` })),
+              },
+              {
+                key: "activities",
+                title: tp("success.createdListActivities"),
+                items: created.activities.map((a) => ({
+                  ...a,
+                  href: `/privacy/data-inventory/activities/${a.id}`,
+                })),
+              },
+              {
+                key: "flows",
+                title: tp("success.createdListFlows"),
+                items: created.flows.map((f) => ({
+                  ...f,
+                  href: `/privacy/data-inventory/${f.sourceAssetId}?tab=flows`,
+                })),
+              },
+            ].filter((g) => g.items.length > 0);
+            if (groups.length === 0) return null;
             return (
-              <Card>
+              <Card data-testid="quickstart-created">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{tp("success.createdListTitle")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {createdVendors.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListVendors")}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {createdVendors.map((name) => (
-                          <Link key={name} href={`/privacy/vendors?search=${encodeURIComponent(name)}`}>
-                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
-                          </Link>
+                  {groups.map((g) => (
+                    <div key={g.key}>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
+                        {g.title} ({g.items.length})
+                      </p>
+                      <ul className="flex flex-wrap gap-1.5">
+                        {g.items.map((item) => (
+                          <li key={item.id}>
+                            <Link
+                              href={item.href}
+                              className="inline-block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                              <Badge variant="outline" className="hover:border-primary/50">{item.name}</Badge>
+                            </Link>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
-                  )}
-                  {createdAssets.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListAssets")}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {createdAssets.map((name) => (
-                          <Link key={name} href={`/privacy/data-inventory?search=${encodeURIComponent(name)}`}>
-                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  ))}
                 </CardContent>
               </Card>
             );
@@ -1481,7 +1513,7 @@ export default function QuickstartPage() {
                 </CardContent>
               </Card>
             </Link>
-            <Link href="/privacy/processing-activities">
+            <Link href="/privacy/data-inventory/processing-activities">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardContent className="p-4 flex items-center gap-3">
                   <FileText className="w-5 h-5 text-primary shrink-0" />

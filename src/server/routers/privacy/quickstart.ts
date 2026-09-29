@@ -589,6 +589,15 @@ export const quickstartRouter = createTRPCRouter({
           aiSystems: 0,
         };
 
+        // Every record made, named, so the result screen can link each one to
+        // its own page (a flow has no page: it links to its source asset).
+        const created = {
+          vendors: [] as { id: string; name: string }[],
+          assets: [] as { id: string; name: string }[],
+          activities: [] as { id: string; name: string }[],
+          flows: [] as { id: string; name: string; sourceAssetId: string }[],
+        };
+
         // Track high-risk vendors for auto-assessment creation
         const highRiskVendors: {
           vendorId: string;
@@ -648,6 +657,7 @@ export const quickstartRouter = createTRPCRouter({
             },
           });
           counts.vendors++;
+          created.vendors.push({ id: vendor.id, name: vendor.name });
           auditEntries.push({
             entityType: "Vendor",
             entityId: vendor.id,
@@ -697,6 +707,7 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.assets++;
+            created.assets.push({ id: asset.id, name: asset.name });
             assetNameToId.set(assetName, asset.id);
             existingAssetNames.add(assetName);
             auditEntries.push({
@@ -747,6 +758,7 @@ export const quickstartRouter = createTRPCRouter({
                 },
               });
               counts.activities++;
+              created.activities.push({ id: activity.id, name: activity.name });
               existingActivityNames.add(activityName);
               auditEntries.push({
                 entityType: "ProcessingActivity",
@@ -847,6 +859,7 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.assets++;
+            created.assets.push({ id: internalAsset.id, name: internalAsset.name });
             assetNameToId.set(internalAssetName, internalAsset.id);
             auditEntries.push({
               entityType: "DataAsset",
@@ -858,7 +871,7 @@ export const quickstartRouter = createTRPCRouter({
 
           // Create outbound (internal → vendor) and, where applicable, return (vendor → internal) flows
           for (const vaf of vendorAssetFlows) {
-            await tx.dataFlow.create({
+            const outbound = await tx.dataFlow.create({
               data: {
                 organizationId: orgId,
                 name: `Data flow to ${vaf.vendorName}`,
@@ -871,9 +884,10 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.flows++;
+            created.flows.push({ id: outbound.id, name: outbound.name, sourceAssetId: outbound.sourceAssetId });
 
             if (vaf.returnFlow) {
-              await tx.dataFlow.create({
+              const inbound = await tx.dataFlow.create({
                 data: {
                   organizationId: orgId,
                   name: `Data flow from ${vaf.vendorName}`,
@@ -886,6 +900,7 @@ export const quickstartRouter = createTRPCRouter({
                 },
               });
               counts.flows++;
+              created.flows.push({ id: inbound.id, name: inbound.name, sourceAssetId: inbound.sourceAssetId });
             }
           }
         }
@@ -945,6 +960,7 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.assets++;
+            created.assets.push({ id: asset.id, name: asset.name });
             assetNameToId.set(templateAsset.name, asset.id);
             existingAssetNames.add(templateAsset.name);
             auditEntries.push({
@@ -1002,6 +1018,7 @@ export const quickstartRouter = createTRPCRouter({
               },
             });
             counts.activities++;
+            created.activities.push({ id: activity.id, name: activity.name });
             existingActivityNames.add(templateActivity.name);
             auditEntries.push({
               entityType: "ProcessingActivity",
@@ -1032,7 +1049,7 @@ export const quickstartRouter = createTRPCRouter({
             const sourceId = assetNameToId.get(templateFlow.sourceAssetName);
             const destId = assetNameToId.get(templateFlow.destAssetName);
             if (sourceId && destId) {
-              await tx.dataFlow.create({
+              const flow = await tx.dataFlow.create({
                 data: {
                   organizationId: orgId,
                   name: templateFlow.name,
@@ -1045,9 +1062,10 @@ export const quickstartRouter = createTRPCRouter({
                 },
               });
               counts.flows++;
+              created.flows.push({ id: flow.id, name: flow.name, sourceAssetId: flow.sourceAssetId });
 
               if (templateFlow.returnFlow) {
-                await tx.dataFlow.create({
+                const back = await tx.dataFlow.create({
                   data: {
                     organizationId: orgId,
                     name: `${templateFlow.destAssetName} to ${templateFlow.sourceAssetName}`,
@@ -1061,6 +1079,7 @@ export const quickstartRouter = createTRPCRouter({
                   },
                 });
                 counts.flows++;
+                created.flows.push({ id: back.id, name: back.name, sourceAssetId: back.sourceAssetId });
               }
             }
           }
@@ -1087,7 +1106,7 @@ export const quickstartRouter = createTRPCRouter({
           await assertPilotCapacity(tx, orgId, resource, 0, pilotLang);
         }
 
-        return counts;
+        return { ...counts, created };
       }, { timeout: 30000 });
 
       // Create AI systems outside the transaction — gracefully skip if table missing

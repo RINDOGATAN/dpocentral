@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,6 +95,8 @@ export default function DataAssetDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const tabParam = useSearchParams().get("tab");
+  const initialTab = tabParam === "activities" || tabParam === "flows" ? tabParam : "elements";
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tConfirm = useTranslations("confirms");
@@ -420,7 +422,8 @@ export default function DataAssetDetailPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="elements">
+      {/* ?tab=flows opens the flows (the quick start links each flow here). */}
+      <Tabs defaultValue={initialTab}>
         <TabsList>
           <TabsTrigger value="elements">{tp("tabs.elements")}</TabsTrigger>
           <TabsTrigger value="activities">{tp("tabs.activities")}</TabsTrigger>

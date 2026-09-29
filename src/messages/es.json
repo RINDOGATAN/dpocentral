@@ -1582,6 +1582,8 @@
         "createdListVendors": "Proveedores",
         "createdListAssets": "Activos de datos",
         "createdListActivities": "Actividades de tratamiento",
+        "createdListFlows": "Flujos de datos",
+        "createdListActivities": "Actividades de tratamiento",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
         "cardDataInventory": "Inventario de datos",
