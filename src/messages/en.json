@@ -206,6 +206,7 @@
       "premiumSkill": "Premium skill",
       "premiumSkillHint": "Available as a downloadable skill on the todo.law marketplace.",
       "typeCardLockedLabel": "{name} (premium skill, not enabled for this organisation)",
+      "notCreated": "The assessment was not created",
       "typeGatedNotice": "{name} is a premium skill and is not enabled for this organisation yet. If creation is refused, the reason is shown below the form.",
       "selectTemplate": "Select Template",
       "selectTemplateSubtitle": "Multiple templates available for {name}",

@@ -206,6 +206,7 @@
       "premiumSkill": "Skill premium",
       "premiumSkillHint": "Disponible como skill descargable en el marketplace de todo.law.",
       "typeCardLockedLabel": "{name} (skill premium, no activada para esta organización)",
+      "notCreated": "No se ha creado la evaluación",
       "typeGatedNotice": "{name} es una skill premium y aún no está activada para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
       "selectTemplate": "Selecciona una plantilla",
       "selectTemplateSubtitle": "Hay varias plantillas disponibles para {name}",

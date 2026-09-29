@@ -45,6 +45,7 @@ import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } fro
 import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
 import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
+import { StatusNote } from "@/components/ui/status-note";
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
@@ -461,13 +462,9 @@ export default function NewAssessmentPage() {
                   its lock were skipped, so say here that the type is gated.
                   The server remains the judge; its answer shows below. */}
               {entitledData && isTypeLocked(selectedType) && (
-                <p
-                  className="flex items-start gap-2 rounded-md border border-amber-500/50 bg-amber-500/10 p-3 text-sm"
-                  data-testid="assessment-type-gated"
-                >
-                  <Lock className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
-                  <span>{tp("typeGatedNotice", { name: typeName(selectedType) })}</span>
-                </p>
+                <StatusNote tone="warning" title={tp("premiumSkill")} data-testid="assessment-type-gated">
+                  <p>{tp("typeGatedNotice", { name: typeName(selectedType) })}</p>
+                </StatusNote>
               )}
               <div className="space-y-2">
                 <Label htmlFor="name">{tp("name")}</Label>
@@ -538,13 +535,14 @@ export default function NewAssessmentPage() {
           </Card>
 
           {createAssessment.error && (
-            <div
+            <StatusNote
+              tone="danger"
               role="alert"
-              className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+              title={tp("notCreated")}
               data-testid="assessment-create-error"
             >
-              {tp("errorPrefix", { message: createAssessment.error.message })}
-            </div>
+              <p>{createAssessment.error.message}</p>
+            </StatusNote>
           )}
 
           <div className="flex justify-end gap-4">
