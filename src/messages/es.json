@@ -1460,6 +1460,9 @@
     },
     "quickstart": {
       "back": "Panel",
+      "limitedTitle": "El inicio rápido es para toda la organización",
+      "limitedBody": "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Un administrador puede ejecutarlo.",
+      "limitedBack": "Volver a la vista general",
       "title": "Asistente del programa de privacidad",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
       "programName": {

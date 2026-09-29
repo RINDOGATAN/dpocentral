@@ -56,6 +56,7 @@ import { FirstRunCard } from "@/components/help/first-run-card";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
+import { useMemberScope } from "@/lib/use-member-scope";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -123,8 +124,13 @@ export default function PrivacyDashboardPage() {
     (stats?.activeVendors ?? 0) === 0;
   const fromQuickstart = searchParams.get("from") === "quickstart";
 
+  // A member limited to departments does not see the quick start, the
+  // organisation-wide progress or the organisation-wide actions
+  // (src/lib/department-limit.ts). Shown only once known not to be limited.
+  const { orgWide } = useMemberScope();
+
   useEffect(() => {
-    if (!isEmptyOrg || fromQuickstart) return;
+    if (!orgWide || !isEmptyOrg || fromQuickstart) return;
     // First visit only: once quickstart has been shown it sets a cookie
     // (see quickstart/page.tsx), so an empty org can still navigate to the
     // dashboard without being bounced back in a loop.
@@ -133,7 +139,7 @@ export default function PrivacyDashboardPage() {
       .includes("dpo_quickstart_seen=1");
     if (quickstartSeen) return;
     router.replace("/privacy/quickstart");
-  }, [isEmptyOrg, fromQuickstart, router]);
+  }, [orgWide, isEmptyOrg, fromQuickstart, router]);
 
   // The "Start a DPIA" quick action says when the type is gated, by the same
   // rule as the type grid on the new-assessment page.
@@ -149,7 +155,7 @@ export default function PrivacyDashboardPage() {
   // Read only by the Classic quick start card below; Guided never asks.
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && showQuickstart === true && skin !== "guided" }
+    { enabled: !!organization?.id && showQuickstart === true && skin !== "guided" && orgWide }
   );
 
   if (isLoading) {
@@ -177,7 +183,7 @@ export default function PrivacyDashboardPage() {
       {/* Guided only: the one-minute introduction on the first visit (dismissed
           per browser), then the first step on the path that is not done. */}
       {skin === "guided" && <FirstRunCard />}
-      {skin === "guided" && <NextStepCard waitForFresh={fromQuickstart} />}
+      {skin === "guided" && orgWide && <NextStepCard waitForFresh={fromQuickstart} />}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
@@ -188,6 +194,8 @@ export default function PrivacyDashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {/* The whole programme's report: an organisation-wide action. */}
+          {orgWide && (
           <Button
             size="sm"
             className="gap-2"
@@ -203,6 +211,7 @@ export default function PrivacyDashboardPage() {
             <span className="hidden sm:inline">{tp("exportReport")}</span>
             <span className="sm:hidden">{tp("exportReportShort")}</span>
           </Button>
+          )}
         {/* One client switcher: Guided carries it in the left menu (the client
             switcher block), so the page-header switch is Classic-only. */}
         {skin !== "guided" && (
@@ -241,7 +250,7 @@ export default function PrivacyDashboardPage() {
       {/* Quickstart Card — shown when org has few records. Guided leads to the
           quick start through the one "Next step" card above, so this second
           call to action is Classic-only: one card at the top. */}
-      {skin !== "guided" && showQuickstart &&
+      {skin !== "guided" && showQuickstart && orgWide &&
         (portfolio?.hasPortfolio ? (
           /* VW portfolio detected — show tailored card */
           <Card className="border-primary/50 bg-primary/5">
@@ -517,12 +526,14 @@ export default function PrivacyDashboardPage() {
                 <span className="truncate">{tp("quickActions.addVendor")}</span>
               </Button>
             </Link>
+            {orgWide && (
             <Link href="/privacy/quickstart">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Sparkles className="w-4 h-4 mr-2 shrink-0" />
                 <span className="truncate">{tp("quickActions.quickstart")}</span>
               </Button>
             </Link>
+            )}
           </CardContent>
         </Card>
 

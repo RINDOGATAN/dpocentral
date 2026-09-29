@@ -33,6 +33,7 @@ const mocks = vi.hoisted(() => ({
     dataTransfer: { createMany: vi.fn() },
     auditLog: { create: vi.fn(), createMany: vi.fn() },
     organization: { findUnique: vi.fn(), update: vi.fn() },
+    businessUnitMember: { findMany: vi.fn().mockResolvedValue([]) },
     $transaction: vi.fn(),
   },
 }));

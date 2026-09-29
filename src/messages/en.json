@@ -1460,6 +1460,9 @@
     },
     "quickstart": {
       "back": "Dashboard",
+      "limitedTitle": "The quick start is for the whole organization",
+      "limitedBody": "The quick start sets up the whole organization, and your access is limited to your department. An administrator can run it.",
+      "limitedBack": "Back to the overview",
       "title": "Privacy Program Quickstart",
       "subtitle": "Get a head start on your privacy program",
       "programName": {

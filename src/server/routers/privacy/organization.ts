@@ -21,6 +21,10 @@ import {
   pilotLocale,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import {
+  departmentScopeConditions,
+  loadBusinessUnitScope,
+} from "@/server/services/business-units/scope";
 
 /**
  * A free organisation slug close to the one asked for. The slug is the
@@ -640,6 +644,13 @@ export const organizationRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const now = new Date();
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      // The inventory counts follow the member's department limit, like the
+      // inventory lists: a limited member is shown their department's figures,
+      // not the whole organisation's.
+      const deptConditions = departmentScopeConditions(
+        await loadBusinessUnitScope(ctx.prisma, ctx.membership.id),
+      );
+      const deptWhere = deptConditions.length > 0 ? { AND: deptConditions as never } : {};
 
       const [
         totalAssets,
@@ -652,10 +663,10 @@ export const organizationRouter = createTRPCRouter({
         recentAuditLogs,
       ] = await Promise.all([
         ctx.prisma.dataAsset.count({
-          where: { organizationId: ctx.organization.id },
+          where: { organizationId: ctx.organization.id, ...deptWhere },
         }),
         ctx.prisma.processingActivity.count({
-          where: { organizationId: ctx.organization.id, isActive: true },
+          where: { organizationId: ctx.organization.id, isActive: true, ...deptWhere },
         }),
         ctx.prisma.dSARRequest.count({
           where: {
