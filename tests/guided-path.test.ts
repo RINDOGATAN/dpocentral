@@ -21,6 +21,7 @@ import {
   overallPercent,
   overallProgress,
   stageOfStep,
+  stageExpandable,
   stageOpenByDefault,
   stageProgress,
   stageToCelebrate,
@@ -381,6 +382,15 @@ describe("the current page", () => {
     expect(currentStepId(PATH, "/privacy/vendors/abc")).toBe("vendors");
     expect(currentStepId(PATH, "/privacy/data-inventory")).toBe("dataInventory");
     expect(currentStepId(PATH, "/privacy/data-inventory/processing-activities")).toBe("ropa");
+  });
+
+  it("offers no expand control on a stage with nothing to open (stage 2 stays Coming)", () => {
+    const people = PATH.stages.find((s) => s.id === "people")!;
+    const inventory = PATH.stages.find((s) => s.id === "inventory")!;
+    expect(people.steps.every((s) => s.coming)).toBe(true);
+    expect(stageExpandable(people, null)).toBe(false);
+    expect(stageExpandable(inventory, null)).toBe(true);
+    expect(stageExpandable({ ...inventory, steps: [] }, null)).toBe(false);
   });
 
   it("gives a record's own page the step of its record type (3.2 on an activity)", () => {

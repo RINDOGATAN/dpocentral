@@ -22,6 +22,7 @@ import {
   currentStepId,
   isCounted,
   isShown,
+  stageExpandable,
   overallPercent,
   stageOfStep,
   stageOpenByDefault,
@@ -235,6 +236,79 @@ export function PathMenu<C>({
           const progress = statuses ? stageProgress(stage, statuses) : null;
           const panelId = `path-stage-${variant}-${stage.id}`;
           const holdsCurrent = stage.id === currentStage?.id;
+          const shownSteps = stage.steps.filter((step) => isShown(step, statuses));
+          // Nothing to open: no chevron, and the row is plain text.
+          const expandable = stageExpandable(stage, statuses);
+          const stepList = (
+            <ul className="min-h-0 overflow-hidden flex flex-col gap-0.5 pl-5">
+              {shownSteps.map((step) => (
+                <li key={step.id} className="border-l border-border pl-2 first:mt-0.5 last:mb-1">
+                  <StepRow
+                    step={step}
+                    status={statuses ? statuses[step.id] ?? "todo" : null}
+                    current={step.id === currentStep}
+                    className={itemBase}
+                    idle={itemIdle}
+                    active={itemActive}
+                    onNavigate={onNavigate}
+                    t={t}
+                  />
+                </li>
+              ))}
+            </ul>
+          );
+          const rowClass = cn(
+            "flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left",
+            sheet ? "min-h-12" : "min-h-11",
+          );
+          const rowContent = (
+            <>
+              <ProgressRing
+                value={progress?.done ?? null}
+                total={progress?.total ?? 0}
+                complete={progress?.state === "done"}
+              >
+                {index + 1}
+              </ProgressRing>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span
+                  className={cn(
+                    WRAP_LABEL,
+                    "font-medium",
+                    sheet ? "text-base" : "text-sm",
+                    holdsCurrent ? "text-primary" : "text-foreground",
+                  )}
+                >
+                  {t(`stages.${stage.id}`)}
+                </span>
+                {/* Always one line tall, filled or not, so nothing moves when progress arrives. */}
+                <span className="truncate text-xs text-muted-foreground tabular-nums">
+                  {progress ? (
+                    progress.state === "coming" ? (
+                      t("stageState.coming")
+                    ) : (
+                      `${t("stageProgress", { done: progress.done, total: progress.total })} · ${t(
+                        `stageState.${progress.state}`,
+                      )}`
+                    )
+                  ) : (
+                    <>
+                      <span aria-hidden="true">&nbsp;</span>
+                      <span className="sr-only">{t("loading")}</span>
+                    </>
+                  )}
+                </span>
+              </span>
+            </>
+          );
+          if (!expandable) {
+            return (
+              <li key={stage.id} data-stage-static={stage.id}>
+                <div className={rowClass}>{rowContent}</div>
+                {shownSteps.length > 0 && stepList}
+              </li>
+            );
+          }
           return (
             <li key={stage.id}>
               <button
@@ -242,48 +316,9 @@ export function PathMenu<C>({
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => toggle(stage)}
-                className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left motion-safe:transition-colors hover:bg-secondary",
-                  sheet ? "min-h-12" : "min-h-11",
-                  FOCUS,
-                )}
+                className={cn(rowClass, "motion-safe:transition-colors hover:bg-secondary", FOCUS)}
               >
-                <ProgressRing
-                  value={progress?.done ?? null}
-                  total={progress?.total ?? 0}
-                  complete={progress?.state === "done"}
-                >
-                  {index + 1}
-                </ProgressRing>
-                <span className="flex min-w-0 flex-1 flex-col">
-                  <span
-                    className={cn(
-                      WRAP_LABEL,
-                      "font-medium",
-                      sheet ? "text-base" : "text-sm",
-                      holdsCurrent ? "text-primary" : "text-foreground",
-                    )}
-                  >
-                    {t(`stages.${stage.id}`)}
-                  </span>
-                  {/* Always one line tall, filled or not, so nothing moves when progress arrives. */}
-                  <span className="truncate text-xs text-muted-foreground tabular-nums">
-                    {progress ? (
-                      progress.state === "coming" ? (
-                        t("stageState.coming")
-                      ) : (
-                        `${t("stageProgress", { done: progress.done, total: progress.total })} · ${t(
-                          `stageState.${progress.state}`,
-                        )}`
-                      )
-                    ) : (
-                      <>
-                        <span aria-hidden="true">&nbsp;</span>
-                        <span className="sr-only">{t("loading")}</span>
-                      </>
-                    )}
-                  </span>
-                </span>
+                {rowContent}
                 <ChevronDown
                   aria-hidden="true"
                   className={cn(
@@ -300,22 +335,7 @@ export function PathMenu<C>({
                   open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
                 )}
               >
-                <ul className="min-h-0 overflow-hidden flex flex-col gap-0.5 pl-5">
-                  {stage.steps.filter((step) => isShown(step, statuses)).map((step) => (
-                    <li key={step.id} className="border-l border-border pl-2 first:mt-0.5 last:mb-1">
-                      <StepRow
-                        step={step}
-                        status={statuses ? statuses[step.id] ?? "todo" : null}
-                        current={step.id === currentStep}
-                        className={itemBase}
-                        idle={itemIdle}
-                        active={itemActive}
-                        onNavigate={onNavigate}
-                        t={t}
-                      />
-                    </li>
-                  ))}
-                </ul>
+                {stepList}
               </div>
             </li>
           );

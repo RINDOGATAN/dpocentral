@@ -122,6 +122,15 @@ export function isShown<C>(step: PathStep<C>, statuses: PathStatuses | null): bo
   return status !== undefined && status !== "hidden";
 }
 
+/**
+ * Whether a stage opens and closes in the menu: only when it holds a step a
+ * person can open. A stage with no step shown, or with only steps that are
+ * coming, has no expand control; its coming steps are listed as they are.
+ */
+export function stageExpandable<C>(stage: PathStage<C>, statuses: PathStatuses | null): boolean {
+  return stage.steps.some((step) => isShown(step, statuses) && !!step.href && !step.coming);
+}
+
 export interface StageProgress {
   done: number;
   total: number;
