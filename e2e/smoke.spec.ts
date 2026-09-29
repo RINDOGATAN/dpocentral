@@ -304,7 +304,7 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
   const assessmentName = `Smoke assessment ${stamp}`;
   await step("assessment: create", async () => {
     await page.goto("/privacy/assessments/new");
-    await page.getByRole("heading", { name: /legitimate interest assessment/i }).click();
+    await page.getByRole("button", { name: /legitimate interest assessment/i }).click();
     await page.locator("form #name").fill(assessmentName);
     await page.locator("form button[type=submit]").click();
     await page.waitForURL(/\/privacy\/assessments\/(?!new$)[^/]+$/);

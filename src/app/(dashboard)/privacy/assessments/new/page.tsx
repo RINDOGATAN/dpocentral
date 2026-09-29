@@ -44,6 +44,7 @@ import { managedUrl } from "@/lib/hosted";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
+import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
@@ -277,25 +278,16 @@ export default function NewAssessmentPage() {
                 return (
                   <Card
                     key={at.type}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={
-                      isLocked
-                        ? tp("typeCardLockedLabel", { name: typeName(at.type) })
-                        : typeName(at.type)
-                    }
-                    className={`transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`transition-all ${CARD_BUTTON_FOCUS} ${
                       isLocked
                         ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
                         : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
-                    onClick={() => handleTypeSelect(at.type)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleTypeSelect(at.type);
-                      }
-                    }}
+                    {...cardButton(() => handleTypeSelect(at.type), {
+                      label: isLocked
+                        ? tp("typeCardLockedLabel", { name: typeName(at.type) })
+                        : typeName(at.type),
+                    })}
                   >
                     <CardContent className="pt-5 pb-4">
                       <div className="flex items-start justify-between mb-3">
@@ -382,12 +374,15 @@ export default function NewAssessmentPage() {
               {templates.map((template) => (
                 <Card
                   key={template.id}
-                  className={`cursor-pointer transition-colors ${
+                  className={`cursor-pointer transition-colors ${CARD_BUTTON_FOCUS} ${
                     effectiveTemplateId === template.id
                       ? "border-primary bg-primary/5"
                       : "hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedTemplateId(template.id)}
+                  {...cardButton(() => setSelectedTemplateId(template.id), {
+                    label: templateMeta(template).name,
+                    pressed: effectiveTemplateId === template.id,
+                  })}
                 >
                   <CardContent className="pt-4">
                     <div className="flex items-start justify-between mb-2">

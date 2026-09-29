@@ -61,6 +61,7 @@ import {
 } from "@/config/applicability";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
+import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
 
 // ============================================================
 // ICON MAP
@@ -646,12 +647,15 @@ export default function QuickstartPage() {
 
           {/* Recommended: one-click complete setup */}
           <Card
-            className="cursor-pointer border-primary/50 bg-primary/5 hover:border-primary transition-all"
-            onClick={() => {
-              setUseVendors(true);
-              setUseIndustry(true);
-              setStep("vendors");
-            }}
+            className={`cursor-pointer border-primary/50 bg-primary/5 hover:border-primary transition-all ${CARD_BUTTON_FOCUS}`}
+            {...cardButton(
+              () => {
+                setUseVendors(true);
+                setUseIndustry(true);
+                setStep("vendors");
+              },
+              { label: tQs("recommended") }
+            )}
           >
             <CardContent className="p-4 sm:p-6 flex items-center gap-4">
               <div className="p-3 rounded-lg bg-primary/10 shrink-0">
@@ -686,12 +690,15 @@ export default function QuickstartPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Vendor Import Card */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                 useVendors
                   ? "border-primary ring-2 ring-primary/20"
                   : "hover:border-primary/50"
               }`}
-              onClick={() => setUseVendors(!useVendors)}
+              {...cardButton(() => setUseVendors(!useVendors), {
+                label: tp("choose.vendorCardTitle"),
+                pressed: useVendors,
+              })}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -721,12 +728,15 @@ export default function QuickstartPage() {
 
             {/* Industry Template Card */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                 useIndustry
                   ? "border-primary ring-2 ring-primary/20"
                   : "hover:border-primary/50"
               }`}
-              onClick={() => setUseIndustry(!useIndustry)}
+              {...cardButton(() => setUseIndustry(!useIndustry), {
+                label: tp("choose.industryCardTitle"),
+                pressed: useIndustry,
+              })}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -754,8 +764,8 @@ export default function QuickstartPage() {
           {/* Start from another client — a consultant's shortcut, opens the
               copy dialog rather than advancing the wizard. */}
           <Card
-            className="cursor-pointer transition-all hover:border-primary/50"
-            onClick={() => setCopyDialogOpen(true)}
+            className={`cursor-pointer transition-all hover:border-primary/50 ${CARD_BUTTON_FOCUS}`}
+            {...cardButton(() => setCopyDialogOpen(true), { label: tct("titleCurrent") })}
           >
             <CardContent className="p-4 sm:p-5 flex items-center gap-4">
               <div className="p-3 rounded-lg bg-primary/10 shrink-0">
@@ -1040,12 +1050,12 @@ export default function QuickstartPage() {
               return (
                 <Card
                   key={t.id}
-                  className={`cursor-pointer transition-all ${
+                  className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                     isSelected
                       ? "border-primary ring-2 ring-primary/20"
                       : "hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedIndustryId(t.id)}
+                  {...cardButton(() => setSelectedIndustryId(t.id), { label: t.name, pressed: isSelected })}
                 >
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
