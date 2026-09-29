@@ -143,9 +143,10 @@ export default function PrivacyDashboardPage() {
     !!entitled &&
     isAssessmentTypeLocked({ type: "DPIA", entitledTypes: entitled.entitledTypes, hosted });
 
+  // Read only by the Classic quick start card below; Guided never asks.
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && showQuickstart === true }
+    { enabled: !!organization?.id && showQuickstart === true && skin !== "guided" }
   );
 
   if (isLoading) {
@@ -314,8 +315,11 @@ export default function PrivacyDashboardPage() {
             <Database className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.dataAssets}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            {/* Two lines, each with its noun: the assets, then the activities. */}
+            <div className="text-xl sm:text-2xl font-bold text-foreground" data-testid="kpi-assets">
+              {tp("stats.assetsCount", { count: dashboardStats.dataAssets })}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1" data-testid="kpi-activities">
               {tp("stats.activitiesCount", { count: dashboardStats.processingActivities })}
             </p>
           </CardContent>

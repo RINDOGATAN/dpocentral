@@ -2226,6 +2226,7 @@
       "quickstartCta": "Get Started",
       "stats": {
         "dataInventory": "Data Inventory",
+        "assetsCount": "{count, plural, one {# asset} other {# assets}}",
         "activitiesCount": "{count, plural, one {# activity} other {# activities}}",
         "openDsars": "Open DSARs",
         "overdueCount": "{count} overdue",

@@ -229,9 +229,15 @@ export default function QuickstartPage() {
       { enabled: !!orgId && !!selectedIndustryId }
     );
 
+  const utils = trpc.useUtils();
   const executeMutation = trpc.quickstart.execute.useMutation({
     onSuccess: (data) => {
       setExecutionResult(data);
+      // The home's counts and the lists were read before the build: read them
+      // again, so the Data Inventory card shows the activities just created.
+      void utils.organization.getDashboardStats.invalidate();
+      void utils.dataInventory.invalidate();
+      void utils.vendor.invalidate();
       const total = data.assets + data.activities + data.vendors;
       if (total === 0) {
         toast.info(t("quickstart.noNewRecords"));
