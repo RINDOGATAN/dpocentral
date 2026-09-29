@@ -299,6 +299,9 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/sign-in",
+    // GET /api/auth/signout lands on our own confirmation, not the library's
+    // unstyled default; the account menu signs out directly.
+    signOut: "/sign-out",
     verifyRequest: "/verify-request",
     error: "/auth-error",
   },

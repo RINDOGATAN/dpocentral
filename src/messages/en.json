@@ -2333,6 +2333,13 @@
     },
     "verifyRequestPage": {
       "body": "A sign-in link has been sent to your email address. Click the link to sign in."
+    },
+    "signOutPage": {
+      "title": "Sign out",
+      "body": "You will be signed out of DPO Central and of the other suite applications open in this browser.",
+      "confirm": "Sign out",
+      "leaving": "Signing out…",
+      "cancel": "Stay signed in"
     }
   },
   "nav": {

@@ -2333,6 +2333,13 @@
     },
     "verifyRequestPage": {
       "body": "Se ha enviado un enlace de inicio de sesión a tu correo. Haz clic en el enlace para continuar."
+    },
+    "signOutPage": {
+      "title": "Cerrar sesión",
+      "body": "Se cerrará tu sesión en DPO Central y en las demás aplicaciones de la suite abiertas en este navegador.",
+      "confirm": "Cerrar sesión",
+      "leaving": "Cerrando sesión…",
+      "cancel": "Seguir con la sesión iniciada"
     }
   },
   "nav": {
