@@ -1458,7 +1458,7 @@
       "applies": {
         "title": "What applies to you",
         "intro": "A few short questions about how you handle personal data. Together with the laws you operate under, they show what is likely to apply and what is worth checking. You can skip this now and set it later in Settings.",
-        "skip": "Not sure yet — skip",
+        "skip": "Not sure yet: skip",
         "continue": "Save and continue"
       },
       "steps": {
@@ -1866,13 +1866,13 @@
       "catalog": {
         "title": "Vendor Catalog",
         "subtitle": "Search a starter catalog of common MarTech, AI, and SaaS processors",
-        "lockedSubtitle": "Get access to a starter catalog of common processors to speed up vendor intake — entries are not audited; assess each vendor before relying on catalog data",
+        "lockedSubtitle": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited: assess each vendor before relying on catalog data",
         "active": "Active",
         "addFromCatalog": "Add from Catalog",
         "perMonth": "/mo",
         "enable": "Enable",
         "contactUs": "Contact Us",
-        "modalDescription": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited — assess each vendor before relying on catalog data."
+        "modalDescription": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited: assess each vendor before relying on catalog data."
       },
       "card": {
         "noCategories": "No categories",
@@ -2314,7 +2314,7 @@
     "unexpectedError": "An unexpected error occurred.",
     "devSignInFailed": "Dev sign-in failed.",
     "localSignInTitle": "Local sign-in",
-    "localSignInBody": "Your account lives on this computer. Enter your email to open it — nothing is sent anywhere.",
+    "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere).",
     "signedOut": "You have been signed out. Sign in again to continue.",
     "error": {
       "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",

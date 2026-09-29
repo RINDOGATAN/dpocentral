@@ -56,7 +56,7 @@
     "developmentMode": "Entwicklungsmodus",
     "devSignIn": "Dev-Anmeldung (Sofort)",
     "localSignInTitle": "Local sign-in",
-    "localSignInBody": "Your account lives on this computer. Enter your email to open it — nothing is sent anywhere."
+    "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere)."
   },
   "nav": {
     "dashboard": "Dashboard",
