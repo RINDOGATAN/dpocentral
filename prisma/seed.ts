@@ -983,6 +983,61 @@ async function main() {
     },
   });
 
+  // One vendor from the vendor catalogue, with the AI system the quick start
+  // would have registered for it, so the AI-system details (ISO 42001, the
+  // declared models) can be checked on a demo instance. The Vendor table has
+  // no catalogue column, so the slug rides in its metadata, and on the AI
+  // system's catalogSlug as the quick start writes it. Figures copied from
+  // vendors/catalog-snapshot.json ("openai").
+  const openaiVendor = await prisma.vendor.upsert({
+    where: { id: "demo-vendor-openai" },
+    update: {},
+    create: {
+      id: "demo-vendor-openai",
+      organizationId: demoOrg.id,
+      name: "OpenAI",
+      description:
+        "OpenAI is an AI research and deployment company that builds and operates large language models including GPT-4 and the ChatGPT platform.",
+      website: "https://openai.com",
+      status: "ACTIVE",
+      riskTier: "MEDIUM",
+      categories: ["AI & Machine Learning"],
+      dataProcessed: ["IDENTIFIERS", "BEHAVIORAL"],
+      countries: ["US"],
+      certifications: ["SOC 2", "ISO 27001", "ISO 42001", "CSA STAR"],
+      metadata: { source: "demo-seed", catalogSlug: "openai" },
+    },
+  });
+
+  await prisma.aISystem.upsert({
+    where: { id: "demo-ai-openai" },
+    update: {},
+    create: {
+      id: "demo-ai-openai",
+      organizationId: demoOrg.id,
+      vendorId: openaiVendor.id,
+      name: "OpenAI",
+      description: "Large language models used for drafting and summarising customer support replies.",
+      purpose: "Drafting customer support replies for human review",
+      riskLevel: "LIMITED",
+      category: "AI & Machine Learning",
+      modelType: "LLM",
+      provider: "OpenAI",
+      iso42001Certified: true,
+      aiModels: [
+        { name: "GPT-4o", type: "LLM", source: "vendor-declared" },
+        { name: "GPT-4.1", type: "LLM", source: "vendor-declared" },
+        { name: "o3", type: "LLM", source: "vendor-declared" },
+        { name: "o4-mini", type: "LLM", source: "vendor-declared" },
+        { name: "DALL-E 3", type: "Image Generation", source: "vendor-declared" },
+        { name: "Whisper", type: "Speech/Audio", source: "vendor-declared" },
+        { name: "text-embedding-3-large", type: "Embedding", source: "vendor-declared" },
+      ],
+      catalogSlug: "openai",
+      status: "DRAFT",
+    },
+  });
+
   // Add vendor contracts
   await prisma.vendorContract.upsert({
     where: { id: "demo-contract-aws-dpa" },

@@ -61,6 +61,7 @@ import {
 } from "@/config/applicability";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
+import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
 
 // ============================================================
 // ICON MAP
@@ -138,7 +139,22 @@ export default function QuickstartPage() {
   const [skipActivityNames, setSkipActivityNames] = useState<string[]>([]);
 
   // Result data from execute mutation
-  const [executionResult, setExecutionResult] = useState<{ assets: number; activities: number; vendors: number; elements: number; flows: number; transfers: number; aiSystems?: number } | null>(null);
+  type CreatedRecord = { id: string; name: string };
+  const [executionResult, setExecutionResult] = useState<{
+    assets: number;
+    activities: number;
+    vendors: number;
+    elements: number;
+    flows: number;
+    transfers: number;
+    aiSystems?: number;
+    created?: {
+      vendors: CreatedRecord[];
+      assets: CreatedRecord[];
+      activities: CreatedRecord[];
+      flows: (CreatedRecord & { sourceAssetId: string })[];
+    };
+  } | null>(null);
 
   // Mark quickstart as seen (1 year) so the dashboard's first-visit
   // auto-redirect (/privacy → /privacy/quickstart for empty orgs) fires only
@@ -229,9 +245,15 @@ export default function QuickstartPage() {
       { enabled: !!orgId && !!selectedIndustryId }
     );
 
+  const utils = trpc.useUtils();
   const executeMutation = trpc.quickstart.execute.useMutation({
     onSuccess: (data) => {
       setExecutionResult(data);
+      // The home's counts and the lists were read before the build: read them
+      // again, so the Data Inventory card shows the activities just created.
+      void utils.organization.getDashboardStats.invalidate();
+      void utils.dataInventory.invalidate();
+      void utils.vendor.invalidate();
       const total = data.assets + data.activities + data.vendors;
       if (total === 0) {
         toast.info(t("quickstart.noNewRecords"));
@@ -625,12 +647,15 @@ export default function QuickstartPage() {
 
           {/* Recommended: one-click complete setup */}
           <Card
-            className="cursor-pointer border-primary/50 bg-primary/5 hover:border-primary transition-all"
-            onClick={() => {
-              setUseVendors(true);
-              setUseIndustry(true);
-              setStep("vendors");
-            }}
+            className={`cursor-pointer border-primary/50 bg-primary/5 hover:border-primary transition-all ${CARD_BUTTON_FOCUS}`}
+            {...cardButton(
+              () => {
+                setUseVendors(true);
+                setUseIndustry(true);
+                setStep("vendors");
+              },
+              { label: tQs("recommended") }
+            )}
           >
             <CardContent className="p-4 sm:p-6 flex items-center gap-4">
               <div className="p-3 rounded-lg bg-primary/10 shrink-0">
@@ -665,12 +690,15 @@ export default function QuickstartPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Vendor Import Card */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                 useVendors
                   ? "border-primary ring-2 ring-primary/20"
                   : "hover:border-primary/50"
               }`}
-              onClick={() => setUseVendors(!useVendors)}
+              {...cardButton(() => setUseVendors(!useVendors), {
+                label: tp("choose.vendorCardTitle"),
+                pressed: useVendors,
+              })}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -700,12 +728,15 @@ export default function QuickstartPage() {
 
             {/* Industry Template Card */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                 useIndustry
                   ? "border-primary ring-2 ring-primary/20"
                   : "hover:border-primary/50"
               }`}
-              onClick={() => setUseIndustry(!useIndustry)}
+              {...cardButton(() => setUseIndustry(!useIndustry), {
+                label: tp("choose.industryCardTitle"),
+                pressed: useIndustry,
+              })}
             >
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -733,8 +764,8 @@ export default function QuickstartPage() {
           {/* Start from another client — a consultant's shortcut, opens the
               copy dialog rather than advancing the wizard. */}
           <Card
-            className="cursor-pointer transition-all hover:border-primary/50"
-            onClick={() => setCopyDialogOpen(true)}
+            className={`cursor-pointer transition-all hover:border-primary/50 ${CARD_BUTTON_FOCUS}`}
+            {...cardButton(() => setCopyDialogOpen(true), { label: tct("titleCurrent") })}
           >
             <CardContent className="p-4 sm:p-5 flex items-center gap-4">
               <div className="p-3 rounded-lg bg-primary/10 shrink-0">
@@ -1019,12 +1050,12 @@ export default function QuickstartPage() {
               return (
                 <Card
                   key={t.id}
-                  className={`cursor-pointer transition-all ${
+                  className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                     isSelected
                       ? "border-primary ring-2 ring-primary/20"
                       : "hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedIndustryId(t.id)}
+                  {...cardButton(() => setSelectedIndustryId(t.id), { label: t.name, pressed: isSelected })}
                 >
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
@@ -1414,48 +1445,65 @@ export default function QuickstartPage() {
             </CardContent>
           </Card>
 
-          {/* What was created — the named records, each list sorted newest-first
-              so these sit at the top of the list its card links to. */}
-          {!nothingCreated && (() => {
-            const createdVendors = useVendors && vendorPreview
-              ? vendorPreview.previews
-                  .filter((p) => !vendorPreview.existingVendorNames.includes(p.vendorName))
-                  .map((p) => p.vendorName)
-              : [];
-            const createdAssets = useIndustry && industryPreview
-              ? industryPreview.assets.filter((a) => !a.alreadyExists).map((a) => a.name)
-              : [];
-            if (createdVendors.length === 0 && createdAssets.length === 0) return null;
+          {/* What was created: every record the server made, by name, each
+              linked to its own page. A data flow has no page of its own, so
+              it opens the flows tab of the asset it starts from. */}
+          {!nothingCreated && executionResult?.created && (() => {
+            const created = executionResult.created;
+            const groups: { key: string; title: string; items: { id: string; name: string; href: string }[] }[] = [
+              {
+                key: "vendors",
+                title: tp("success.createdListVendors"),
+                items: created.vendors.map((v) => ({ ...v, href: `/privacy/vendors/${v.id}` })),
+              },
+              {
+                key: "assets",
+                title: tp("success.createdListAssets"),
+                items: created.assets.map((a) => ({ ...a, href: `/privacy/data-inventory/${a.id}` })),
+              },
+              {
+                key: "activities",
+                title: tp("success.createdListActivities"),
+                items: created.activities.map((a) => ({
+                  ...a,
+                  href: `/privacy/data-inventory/activities/${a.id}`,
+                })),
+              },
+              {
+                key: "flows",
+                title: tp("success.createdListFlows"),
+                items: created.flows.map((f) => ({
+                  ...f,
+                  href: `/privacy/data-inventory/${f.sourceAssetId}?tab=flows`,
+                })),
+              },
+            ].filter((g) => g.items.length > 0);
+            if (groups.length === 0) return null;
             return (
-              <Card>
+              <Card data-testid="quickstart-created">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{tp("success.createdListTitle")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {createdVendors.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListVendors")}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {createdVendors.map((name) => (
-                          <Link key={name} href={`/privacy/vendors?search=${encodeURIComponent(name)}`}>
-                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
-                          </Link>
+                  {groups.map((g) => (
+                    <div key={g.key}>
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
+                        {g.title} ({g.items.length})
+                      </p>
+                      <ul className="flex flex-wrap gap-1.5">
+                        {g.items.map((item) => (
+                          <li key={item.id}>
+                            <Link
+                              href={item.href}
+                              className="inline-block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                              <Badge variant="outline" className="hover:border-primary/50">{item.name}</Badge>
+                            </Link>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
-                  )}
-                  {createdAssets.length > 0 && (
-                    <div>
-                      <p className="text-xs font-medium text-muted-foreground mb-1">{tp("success.createdListAssets")}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {createdAssets.map((name) => (
-                          <Link key={name} href={`/privacy/data-inventory?search=${encodeURIComponent(name)}`}>
-                            <Badge variant="outline" className="hover:border-primary/50">{name}</Badge>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  ))}
                 </CardContent>
               </Card>
             );
@@ -1475,7 +1523,7 @@ export default function QuickstartPage() {
                 </CardContent>
               </Card>
             </Link>
-            <Link href="/privacy/processing-activities">
+            <Link href="/privacy/data-inventory/processing-activities">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardContent className="p-4 flex items-center gap-3">
                   <FileText className="w-5 h-5 text-primary shrink-0" />

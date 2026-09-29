@@ -205,6 +205,9 @@
       "contactToEnable": "Contacta con {name} para activarlo",
       "premiumSkill": "Skill premium",
       "premiumSkillHint": "Disponible como skill descargable en el marketplace de todo.law.",
+      "typeCardLockedLabel": "{name} (skill premium, no activada para esta organización)",
+      "notCreated": "No se ha creado la evaluación",
+      "typeGatedNotice": "{name} es una skill premium y aún no está activada para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
       "selectTemplate": "Selecciona una plantilla",
       "selectTemplateSubtitle": "Hay varias plantillas disponibles para {name}",
       "changeType": "Cambiar tipo",
@@ -932,6 +935,13 @@
         "dueDateLabel": "Fecha límite"
       }
     },
+    "activityDetail": {
+      "back": "Actividades de tratamiento",
+      "backToInventory": "Volver al inventario de datos",
+      "notFound": "No se ha encontrado la actividad de tratamiento",
+      "inactive": "Inactiva",
+      "edit": "Editar"
+    },
     "assetDetail": {
       "notFound": "Activo no encontrado",
       "back": "Volver al inventario",
@@ -1458,7 +1468,7 @@
       "applies": {
         "title": "Qué te aplica",
         "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
-        "skip": "Aún no lo sé — omitir",
+        "skip": "Aún no lo sé: omitir",
         "continue": "Guardar y continuar"
       },
       "steps": {
@@ -1579,6 +1589,8 @@
         "createdListTitle": "Qué se ha creado",
         "createdListVendors": "Proveedores",
         "createdListAssets": "Activos de datos",
+        "createdListActivities": "Actividades de tratamiento",
+        "createdListFlows": "Flujos de datos",
         "createdListActivities": "Actividades de tratamiento",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
@@ -1866,13 +1878,13 @@
       "catalog": {
         "title": "Catálogo de proveedores",
         "subtitle": "Busca en un catálogo inicial de encargados habituales de MarTech, IA y SaaS",
-        "lockedSubtitle": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores — las entradas no están auditadas; evalúa cada proveedor antes de confiar en los datos del catálogo",
+        "lockedSubtitle": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas: evalúa cada proveedor antes de confiar en los datos del catálogo",
         "active": "Activo",
         "addFromCatalog": "Añadir desde el catálogo",
         "perMonth": "/mes",
         "enable": "Activar",
         "contactUs": "Contáctanos",
-        "modalDescription": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas — evalúa cada proveedor antes de confiar en los datos del catálogo."
+        "modalDescription": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas: evalúa cada proveedor antes de confiar en los datos del catálogo."
       },
       "card": {
         "noCategories": "Sin categorías",
@@ -2224,6 +2236,7 @@
       "quickstartCta": "Comenzar",
       "stats": {
         "dataInventory": "Inventario de datos",
+        "assetsCount": "{count, plural, one {# activo} other {# activos}}",
         "activitiesCount": "{count, plural, one {# actividad} other {# actividades}}",
         "openDsars": "DSAR abiertas",
         "overdueCount": "{count} vencidas",
@@ -2252,7 +2265,7 @@
         "subtitle": "Tareas habituales",
         "addAsset": "Añadir activo de datos",
         "newDpia": "Empezar una DPIA",
-        "newDsar": "Nueva DSAR",
+        "premium": "Skill premium",        "newDsar": "Nueva DSAR",
         "reportIncident": "Notificar incidente",
         "addVendor": "Añadir proveedor",
         "quickstart": "Asistente Quickstart"
@@ -2333,6 +2346,13 @@
     },
     "verifyRequestPage": {
       "body": "Se ha enviado un enlace de inicio de sesión a tu correo. Haz clic en el enlace para continuar."
+    },
+    "signOutPage": {
+      "title": "Cerrar sesión",
+      "body": "Se cerrará tu sesión en DPO Central y en las demás aplicaciones de la suite abiertas en este navegador.",
+      "confirm": "Cerrar sesión",
+      "leaving": "Cerrando sesión…",
+      "cancel": "Seguir con la sesión iniciada"
     }
   },
   "nav": {

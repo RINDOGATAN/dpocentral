@@ -24,6 +24,7 @@ import {
   Plus,
   Check,
   Download,
+  Lock,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -44,13 +45,16 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDateTimeIn } from "@/lib/utils";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
 import { NextStepCard } from "@/components/guided/next-step-card";
 import { FirstRunCard } from "@/components/help/first-run-card";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -58,6 +62,7 @@ export default function PrivacyDashboardPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.dashboard");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const { skin } = useSkin();
@@ -129,9 +134,21 @@ export default function PrivacyDashboardPage() {
     router.replace("/privacy/quickstart");
   }, [isEmptyOrg, fromQuickstart, router]);
 
+  // The "Start a DPIA" quick action says when the type is gated, by the same
+  // rule as the type grid on the new-assessment page.
+  const hosted = useHostedPilot();
+  const { data: entitled } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const dpiaGated =
+    !!entitled &&
+    isAssessmentTypeLocked({ type: "DPIA", entitledTypes: entitled.entitledTypes, hosted });
+
+  // Read only by the Classic quick start card below; Guided never asks.
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id && showQuickstart === true }
+    { enabled: !!organization?.id && showQuickstart === true && skin !== "guided" }
   );
 
   if (isLoading) {
@@ -300,8 +317,11 @@ export default function PrivacyDashboardPage() {
             <Database className="h-4 w-4 text-muted-foreground hidden sm:block" />
           </CardHeader>
           <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-            <div className="text-xl sm:text-2xl font-bold text-foreground">{dashboardStats.dataAssets}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            {/* Two lines, each with its noun: the assets, then the activities. */}
+            <div className="text-xl sm:text-2xl font-bold text-foreground" data-testid="kpi-assets">
+              {tp("stats.assetsCount", { count: dashboardStats.dataAssets })}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1" data-testid="kpi-activities">
               {tp("stats.activitiesCount", { count: dashboardStats.processingActivities })}
             </p>
           </CardContent>
@@ -429,7 +449,7 @@ export default function PrivacyDashboardPage() {
                       {enumLabel("auditAction", activity.action)} · {enumLabel("auditEntity", activity.entityType)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(activity.createdAt).toLocaleString()}
+                      {formatDateTimeIn(activity.createdAt, locale)}
                     </p>
                   </div>
                 </div>
@@ -449,10 +469,22 @@ export default function PrivacyDashboardPage() {
           <CardContent className="grid gap-2 grid-cols-1 sm:grid-cols-2 p-4 pt-0 sm:p-6 sm:pt-0">
             {/* Two clicks to a new DPIA: here, then Create. The type is
                 pre-selected, so the form opens straight on the details. */}
+            {/* A gated type is labelled, not hidden (the owner decides later
+                whether it is offered); the form repeats the label. */}
             <Link href="/privacy/assessments/new?type=DPIA">
               <Button variant="outline" className="w-full justify-start h-11">
                 <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
                 <span className="truncate">{tp("quickActions.newDpia")}</span>
+                {dpiaGated && (
+                  <Badge
+                    variant="secondary"
+                    className="ml-auto shrink-0 bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
+                    data-testid="quick-action-dpia-gated"
+                  >
+                    <Lock className="w-3 h-3 mr-1" aria-hidden="true" />
+                    {tp("quickActions.premium")}
+                  </Badge>
+                )}
               </Button>
             </Link>
             <Link href="/privacy/data-inventory/new">

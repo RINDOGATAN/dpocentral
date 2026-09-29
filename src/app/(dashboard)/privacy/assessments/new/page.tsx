@@ -44,6 +44,8 @@ import { managedUrl } from "@/lib/hosted";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
+import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
+import { StatusNote } from "@/components/ui/status-note";
 
 const ASSESSMENT_TYPES: Array<{
   type: "LIA" | "CUSTOM" | "DPIA" | "PIA" | "TIA" | "VENDOR";
@@ -161,6 +163,8 @@ export default function NewAssessmentPage() {
       utils.assessment.list.invalidate();
       router.push(`/privacy/assessments/${data.id}`);
     },
+    // A refusal keeps everything typed: the form stays as it was, and the
+    // server's own sentence is shown under it (and in a toast).
     onError: (error) => {
       toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
@@ -275,12 +279,16 @@ export default function NewAssessmentPage() {
                 return (
                   <Card
                     key={at.type}
-                    className={`transition-all ${
+                    className={`transition-all ${CARD_BUTTON_FOCUS} ${
                       isLocked
                         ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
                         : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
-                    onClick={() => handleTypeSelect(at.type)}
+                    {...cardButton(() => handleTypeSelect(at.type), {
+                      label: isLocked
+                        ? tp("typeCardLockedLabel", { name: typeName(at.type) })
+                        : typeName(at.type),
+                    })}
                   >
                     <CardContent className="pt-5 pb-4">
                       <div className="flex items-start justify-between mb-3">
@@ -357,7 +365,7 @@ export default function NewAssessmentPage() {
                   {tp("selectTemplateSubtitle", { name: typeName(selectedType) })}
                 </CardDescription>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
                 {tp("changeType")}
               </Button>
             </div>
@@ -367,12 +375,15 @@ export default function NewAssessmentPage() {
               {templates.map((template) => (
                 <Card
                   key={template.id}
-                  className={`cursor-pointer transition-colors ${
+                  className={`cursor-pointer transition-colors ${CARD_BUTTON_FOCUS} ${
                     effectiveTemplateId === template.id
                       ? "border-primary bg-primary/5"
                       : "hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedTemplateId(template.id)}
+                  {...cardButton(() => setSelectedTemplateId(template.id), {
+                    label: templateMeta(template).name,
+                    pressed: effectiveTemplateId === template.id,
+                  })}
                 >
                   <CardContent className="pt-4">
                     <div className="flex items-start justify-between mb-2">
@@ -440,12 +451,21 @@ export default function NewAssessmentPage() {
                       : tp("subtitleCreating", { name: typeName(selectedType) })}
                   </CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+                {/* type="button": inside the form, a bare button submits it. */}
+                <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
                   {tp("changeType")}
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Reached straight from a link (?type=DPIA): the type grid and
+                  its lock were skipped, so say here that the type is gated.
+                  The server remains the judge; its answer shows below. */}
+              {entitledData && isTypeLocked(selectedType) && (
+                <StatusNote tone="warning" title={tp("premiumSkill")} data-testid="assessment-type-gated">
+                  <p>{tp("typeGatedNotice", { name: typeName(selectedType) })}</p>
+                </StatusNote>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="name">{tp("name")}</Label>
                 <Input
@@ -515,9 +535,14 @@ export default function NewAssessmentPage() {
           </Card>
 
           {createAssessment.error && (
-            <div className="text-sm text-destructive">
-              {tp("errorPrefix", { message: createAssessment.error.message })}
-            </div>
+            <StatusNote
+              tone="danger"
+              role="alert"
+              title={tp("notCreated")}
+              data-testid="assessment-create-error"
+            >
+              <p>{createAssessment.error.message}</p>
+            </StatusNote>
           )}
 
           <div className="flex justify-end gap-4">

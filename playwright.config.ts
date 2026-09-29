@@ -54,6 +54,11 @@ export default defineConfig({
   ],
   webServer: {
     command: `npx next start --port ${port}`,
+    // The specs sign in several new people from one address within a
+    // minute, which the per-address auth limiters (src/lib/rate-limit.ts)
+    // rightly refuse. The test server alone gets ceilings that fit the walk;
+    // the limiters themselves stay on.
+    env: { RATE_LIMIT_AUTH: "600/60", RATE_LIMIT_SIGNIN: "120/60" },
     url: `${baseURL}/api/health`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

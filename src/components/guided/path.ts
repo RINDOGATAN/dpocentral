@@ -41,6 +41,13 @@ export interface PathStep<C> {
   id: string;
   /** The existing page the step opens. Null only for a step that is coming. */
   href: string | null;
+  /**
+   * Other places that belong to this step though they sit under another
+   * step's path: a processing activity's own page lives at
+   * /privacy/data-inventory/activities/<id>, under the assets step's prefix,
+   * yet it is step 3.2. Matched like `href`, and the longest match wins.
+   */
+  alsoAt?: string[];
   icon: LucideIcon;
   /** The "done" rule in plain words, for the next person to change it. */
   rule: string;
@@ -113,6 +120,15 @@ export function isShown<C>(step: PathStep<C>, statuses: PathStatuses | null): bo
   if (!statuses) return false;
   const status = statuses[step.id];
   return status !== undefined && status !== "hidden";
+}
+
+/**
+ * Whether a stage opens and closes in the menu: only when it holds a step a
+ * person can open. A stage with no step shown, or with only steps that are
+ * coming, has no expand control; its coming steps are listed as they are.
+ */
+export function stageExpandable<C>(stage: PathStage<C>, statuses: PathStatuses | null): boolean {
+  return stage.steps.some((step) => isShown(step, statuses) && !!step.href && !step.coming);
 }
 
 export interface StageProgress {
@@ -218,9 +234,12 @@ export function currentStepId<C>(
   let best: { id: string; score: number } | null = null;
   for (const stage of config.stages) {
     for (const step of stage.steps) {
-      if (!step.href || !matches(pathname, search, step.href)) continue;
-      const score = hrefQuery(step.href).length * 10_000 + hrefPath(step.href).length;
-      if (!best || score > best.score) best = { id: step.id, score };
+      if (!step.href) continue;
+      for (const href of [step.href, ...(step.alsoAt ?? [])]) {
+        if (!matches(pathname, search, href)) continue;
+        const score = hrefQuery(href).length * 10_000 + hrefPath(href).length;
+        if (!best || score > best.score) best = { id: step.id, score };
+      }
     }
   }
   return best?.id ?? null;

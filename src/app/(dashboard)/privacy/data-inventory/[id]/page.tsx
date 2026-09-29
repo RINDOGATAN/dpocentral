@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,6 +55,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { RecordHeader } from "@/components/privacy/record-header";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { toneForSensitivity } from "@/config/status-tone";
 
@@ -95,6 +96,8 @@ export default function DataAssetDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const tabParam = useSearchParams().get("tab");
+  const initialTab = tabParam === "activities" || tabParam === "flows" ? tabParam : "elements";
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tConfirm = useTranslations("confirms");
@@ -325,49 +328,40 @@ export default function DataAssetDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/privacy/data-inventory">
-            <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
-              <ArrowLeft className="w-4 h-4" />
+      <RecordHeader
+        back={{ href: "/privacy/data-inventory", label: tp("back") }}
+        icon={Server}
+        title={asset.name}
+        badges={
+          <>
+            <Badge variant="outline">{enumLabel("dataAssetType", asset.type)}</Badge>
+            {asset.isProduction && (
+              <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
+            )}
+            <TemplateBadge metadata={asset.metadata} className="text-xs" />
+          </>
+        }
+        actions={
+          <>
+            <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
+              <Button variant="outline" size="sm">
+                <Edit className="w-4 h-4 mr-2" />
+                {tp("edit")}
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive"
+              onClick={handleDelete}
+              disabled={deleteAsset.isPending}
+            >
+              {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              {tp("delete")}
             </Button>
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary/10 flex items-center justify-center">
-              <Server className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-semibold">{asset.name}</h1>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline">{enumLabel("dataAssetType", asset.type)}</Badge>
-                {asset.isProduction && (
-                  <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
-                )}
-                <TemplateBadge metadata={asset.metadata} className="text-xs" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
-            <Button variant="outline" size="sm">
-              <Edit className="w-4 h-4 mr-2" />
-              {tp("edit")}
-            </Button>
-          </Link>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-destructive"
-            onClick={handleDelete}
-            disabled={deleteAsset.isPending}
-          >
-            {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-            {tp("delete")}
-          </Button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Overview */}
       <div className="grid gap-6 md:grid-cols-3">
@@ -420,7 +414,8 @@ export default function DataAssetDetailPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="elements">
+      {/* ?tab=flows opens the flows (the quick start links each flow here). */}
+      <Tabs defaultValue={initialTab}>
         <TabsList>
           <TabsTrigger value="elements">{tp("tabs.elements")}</TabsTrigger>
           <TabsTrigger value="activities">{tp("tabs.activities")}</TabsTrigger>
