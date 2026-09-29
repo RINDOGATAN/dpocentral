@@ -24,6 +24,7 @@ import {
   Plus,
   Check,
   Download,
+  Lock,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -51,6 +52,8 @@ import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
 import { NextStepCard } from "@/components/guided/next-step-card";
 import { FirstRunCard } from "@/components/help/first-run-card";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -128,6 +131,17 @@ export default function PrivacyDashboardPage() {
     if (quickstartSeen) return;
     router.replace("/privacy/quickstart");
   }, [isEmptyOrg, fromQuickstart, router]);
+
+  // The "Start a DPIA" quick action says when the type is gated, by the same
+  // rule as the type grid on the new-assessment page.
+  const hosted = useHostedPilot();
+  const { data: entitled } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const dpiaGated =
+    !!entitled &&
+    isAssessmentTypeLocked({ type: "DPIA", entitledTypes: entitled.entitledTypes, hosted });
 
   const { data: portfolio } = trpc.quickstart.getPortfolio.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -449,10 +463,22 @@ export default function PrivacyDashboardPage() {
           <CardContent className="grid gap-2 grid-cols-1 sm:grid-cols-2 p-4 pt-0 sm:p-6 sm:pt-0">
             {/* Two clicks to a new DPIA: here, then Create. The type is
                 pre-selected, so the form opens straight on the details. */}
+            {/* A gated type is labelled, not hidden (the owner decides later
+                whether it is offered); the form repeats the label. */}
             <Link href="/privacy/assessments/new?type=DPIA">
               <Button variant="outline" className="w-full justify-start h-11">
                 <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
                 <span className="truncate">{tp("quickActions.newDpia")}</span>
+                {dpiaGated && (
+                  <Badge
+                    variant="secondary"
+                    className="ml-auto shrink-0 bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
+                    data-testid="quick-action-dpia-gated"
+                  >
+                    <Lock className="w-3 h-3 mr-1" aria-hidden="true" />
+                    {tp("quickActions.premium")}
+                  </Badge>
+                )}
               </Button>
             </Link>
             <Link href="/privacy/data-inventory/new">

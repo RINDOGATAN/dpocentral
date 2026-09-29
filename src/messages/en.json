@@ -205,6 +205,8 @@
       "contactToEnable": "Contact {name} to enable",
       "premiumSkill": "Premium skill",
       "premiumSkillHint": "Available as a downloadable skill on the todo.law marketplace.",
+      "typeCardLockedLabel": "{name} (premium skill, not enabled for this organisation)",
+      "typeGatedNotice": "{name} is a premium skill and is not enabled for this organisation yet. If creation is refused, the reason is shown below the form.",
       "selectTemplate": "Select Template",
       "selectTemplateSubtitle": "Multiple templates available for {name}",
       "changeType": "Change type",
@@ -2252,7 +2254,7 @@
         "subtitle": "Common tasks",
         "addAsset": "Add Data Asset",
         "newDpia": "Start a DPIA",
-        "newDsar": "New DSAR",
+        "premium": "Premium skill",        "newDsar": "New DSAR",
         "reportIncident": "Report Incident",
         "addVendor": "Add Vendor",
         "quickstart": "Quickstart Wizard"

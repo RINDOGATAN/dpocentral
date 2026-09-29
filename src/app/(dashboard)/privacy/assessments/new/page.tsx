@@ -161,6 +161,8 @@ export default function NewAssessmentPage() {
       utils.assessment.list.invalidate();
       router.push(`/privacy/assessments/${data.id}`);
     },
+    // A refusal keeps everything typed: the form stays as it was, and the
+    // server's own sentence is shown under it (and in a toast).
     onError: (error) => {
       toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
@@ -275,12 +277,25 @@ export default function NewAssessmentPage() {
                 return (
                   <Card
                     key={at.type}
-                    className={`transition-all ${
+                    role="button"
+                    tabIndex={0}
+                    aria-label={
+                      isLocked
+                        ? tp("typeCardLockedLabel", { name: typeName(at.type) })
+                        : typeName(at.type)
+                    }
+                    className={`transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       isLocked
                         ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
                         : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
                     onClick={() => handleTypeSelect(at.type)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleTypeSelect(at.type);
+                      }
+                    }}
                   >
                     <CardContent className="pt-5 pb-4">
                       <div className="flex items-start justify-between mb-3">
@@ -357,7 +372,7 @@ export default function NewAssessmentPage() {
                   {tp("selectTemplateSubtitle", { name: typeName(selectedType) })}
                 </CardDescription>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
                 {tp("changeType")}
               </Button>
             </div>
@@ -440,12 +455,25 @@ export default function NewAssessmentPage() {
                       : tp("subtitleCreating", { name: typeName(selectedType) })}
                   </CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
+                {/* type="button": inside the form, a bare button submits it. */}
+                <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedType(null)}>
                   {tp("changeType")}
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Reached straight from a link (?type=DPIA): the type grid and
+                  its lock were skipped, so say here that the type is gated.
+                  The server remains the judge; its answer shows below. */}
+              {entitledData && isTypeLocked(selectedType) && (
+                <p
+                  className="flex items-start gap-2 rounded-md border border-amber-500/50 bg-amber-500/10 p-3 text-sm"
+                  data-testid="assessment-type-gated"
+                >
+                  <Lock className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
+                  <span>{tp("typeGatedNotice", { name: typeName(selectedType) })}</span>
+                </p>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="name">{tp("name")}</Label>
                 <Input
@@ -515,7 +543,11 @@ export default function NewAssessmentPage() {
           </Card>
 
           {createAssessment.error && (
-            <div className="text-sm text-destructive">
+            <div
+              role="alert"
+              className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+              data-testid="assessment-create-error"
+            >
               {tp("errorPrefix", { message: createAssessment.error.message })}
             </div>
           )}

@@ -205,6 +205,8 @@
       "contactToEnable": "Contacta con {name} para activarlo",
       "premiumSkill": "Skill premium",
       "premiumSkillHint": "Disponible como skill descargable en el marketplace de todo.law.",
+      "typeCardLockedLabel": "{name} (skill premium, no activada para esta organización)",
+      "typeGatedNotice": "{name} es una skill premium y aún no está activada para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
       "selectTemplate": "Selecciona una plantilla",
       "selectTemplateSubtitle": "Hay varias plantillas disponibles para {name}",
       "changeType": "Cambiar tipo",
@@ -2252,7 +2254,7 @@
         "subtitle": "Tareas habituales",
         "addAsset": "Añadir activo de datos",
         "newDpia": "Empezar una DPIA",
-        "newDsar": "Nueva DSAR",
+        "premium": "Skill premium",        "newDsar": "Nueva DSAR",
         "reportIncident": "Notificar incidente",
         "addVendor": "Añadir proveedor",
         "quickstart": "Asistente Quickstart"
