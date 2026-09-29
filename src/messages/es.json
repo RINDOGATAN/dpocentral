@@ -2334,6 +2334,7 @@
     "localSignInTitle": "Acceso local",
     "localSignInBody": "Tu cuenta vive en este ordenador. Introduce tu correo para abrirla: no se envía nada a ningún sitio.",
     "signedOut": "Has cerrado la sesión. Vuelve a entrar para continuar.",
+    "noSignInMethod": "Este servidor no tiene ningún método de acceso configurado. El administrador puede activar el acceso local, una clave de correo o el acceso con Google.",
     "error": {
       "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
       "OAuthCallback": "Error al iniciar sesión con Google. Inténtalo de nuevo.",

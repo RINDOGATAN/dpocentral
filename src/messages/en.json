@@ -2334,6 +2334,7 @@
     "localSignInTitle": "Local sign-in",
     "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere).",
     "signedOut": "You have been signed out. Sign in again to continue.",
+    "noSignInMethod": "No sign-in method is set up on this server. The administrator can turn on local sign-in, an e-mail key or Google sign-in.",
     "error": {
       "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
       "OAuthCallback": "Google sign-in failed. Please try again.",
