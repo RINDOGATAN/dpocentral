@@ -14,7 +14,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  Lock,
   Download,
 } from "lucide-react";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
@@ -23,15 +22,13 @@ import { useOrganization } from "@/lib/organization-context";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { features } from "@/config/features";
 import { useTranslations } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { PageHeader } from "@/components/privacy/page-header";
-import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { sellingEnabled } from "@/lib/premium-gate";
+import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
 
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
@@ -51,7 +48,6 @@ export default function AssessmentsPage() {
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("assessments");
   const { label: enumLabel } = useEnumLabels();
   const { organization } = useOrganization();
-  const hosted = useHostedPilot();
 
   const { data: assessmentsData, isLoading } = trpc.assessment.list.useQuery(
     { organizationId: organization?.id ?? "", search: filters.q || undefined },
@@ -299,27 +295,21 @@ export default function AssessmentsPage() {
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             {[
-              { type: "LIA", nameKey: "lia", premium: false },
-              { type: "CUSTOM", nameKey: "custom", premium: false },
-              // DPIA is premium only where something is sold: never on the
-              // hosted pilot, and not on self-host (Stripe off) — see
-              // allFeaturesFree in server/services/licensing/entitlement.ts
-              // — so a lock badge there would be false.
-              { type: "DPIA", nameKey: "dpia", premium: sellingEnabled(features.stripeEnabled, hosted) },
+              { type: "LIA", nameKey: "lia" },
+              { type: "CUSTOM", nameKey: "custom" },
+              // The DPIA is never locked: without a licence it is on the pilot
+              // tier (two free for a limited time, said under the card; see
+              // isDpiaPilotTier in server/services/licensing/entitlement.ts).
+              { type: "DPIA", nameKey: "dpia" },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
                 <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                   <CardContent className="pt-4">
                     <div className="flex items-center justify-between mb-2">
                       <Badge variant="outline">{enumLabel("assessmentType", item.type)}</Badge>
-                      {item.premium && (
-                        <Badge variant="secondary" className="gap-1">
-                          <Lock className="w-3 h-3" />
-                          {t("quickStart.premium")}
-                        </Badge>
-                      )}
                     </div>
                     <h4 className="font-medium">{t(`quickStart.${item.nameKey}` as `quickStart.lia` | `quickStart.custom` | `quickStart.dpia`)}</h4>
+                    {item.type === "DPIA" && <DpiaFreeNote className="mt-1" />}
                     <p className="text-xs text-muted-foreground mt-1">
                       {templates.find((tpl) => tpl.type === item.type)
                         ? t("quickStart.sectionsCount", { count: (templates.find((tpl) => tpl.type === item.type)!.sections as any[])?.length || 0 })

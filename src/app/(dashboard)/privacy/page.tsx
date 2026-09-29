@@ -55,6 +55,7 @@ import { NextStepCard } from "@/components/guided/next-step-card";
 import { FirstRunCard } from "@/components/help/first-run-card";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
+import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -471,22 +472,27 @@ export default function PrivacyDashboardPage() {
                 pre-selected, so the form opens straight on the details. */}
             {/* A gated type is labelled, not hidden (the owner decides later
                 whether it is offered); the form repeats the label. */}
-            <Link href="/privacy/assessments/new?type=DPIA">
-              <Button variant="outline" className="w-full justify-start h-11">
-                <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.newDpia")}</span>
-                {dpiaGated && (
-                  <Badge
-                    variant="secondary"
-                    className="ml-auto shrink-0 bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
-                    data-testid="quick-action-dpia-gated"
-                  >
-                    <Lock className="w-3 h-3 mr-1" aria-hidden="true" />
-                    {tp("quickActions.premium")}
-                  </Badge>
-                )}
-              </Button>
-            </Link>
+            {/* On the pilot tier the action says the two DPIAs are free for a
+                limited time (the server count; nothing off the pilot tier). */}
+            <div>
+              <Link href="/privacy/assessments/new?type=DPIA">
+                <Button variant="outline" className="w-full justify-start h-11">
+                  <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
+                  <span className="truncate">{tp("quickActions.newDpia")}</span>
+                  {dpiaGated && (
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto shrink-0 bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
+                      data-testid="quick-action-dpia-gated"
+                    >
+                      <Lock className="w-3 h-3 mr-1" aria-hidden="true" />
+                      {tp("quickActions.premium")}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
+              <DpiaFreeNote className="mt-1 px-1" />
+            </div>
             <Link href="/privacy/data-inventory/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <Database className="w-4 h-4 mr-2 shrink-0" />

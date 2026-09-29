@@ -6,8 +6,8 @@ import type { Prisma } from "@prisma/client";
 import { brand } from "@/config/brand";
 import {
   isHostedDeployment,
-  MANAGED_URL,
   PILOT_EXPORT_PATH,
+  PLANS_URL,
   RUN_YOUR_OWN_URL,
 } from "@/lib/hosted";
 
@@ -192,14 +192,18 @@ export function pilotMessage(
     : `You have reached the pilot limit of ${limit} ${label}. To continue, run your own instance (${run}) or export your records (${exp}).`;
 }
 
-// ── Impact assessments on the trial ──────────────────────────────────────
+// ── Impact assessments on the pilot tier ─────────────────────────────────
 
 /**
- * Impact assessments (type DPIA) an organisation may create on the hosted
- * trial. The overall records ceiling (PILOT_LIMITS.assessments) still
- * applies; this narrower rule bites first.
+ * Impact assessments (type DPIA) an organisation on the pilot tier may create:
+ * free for a limited time, two per organisation (the owner's decision of 29
+ * September 2026, which replaced the earlier three). The pilot tier is the
+ * hosted service, and, on a build that sells licences, any organisation with
+ * no DPIA licence (isDpiaPilotTier in services/licensing/entitlement.ts). The
+ * overall records ceiling (PILOT_LIMITS.assessments) still applies on the
+ * hosted service; this narrower rule bites first.
  */
-export const HOSTED_DPIA_LIMIT = 3;
+export const PILOT_DPIA_LIMIT = 2;
 
 /**
  * The count is of impact assessments CREATED, not of the ones still there:
@@ -223,7 +227,9 @@ export async function countDpiaCreated(
       where: {
         organizationId,
         entityType: "Assessment",
-        action: "CREATE",
+        // AUTO_CREATE: a draft made from a processing activity or a vendor
+        // import (services/assessment-auto-create.ts).
+        action: { in: ["CREATE", "AUTO_CREATE"] },
         changes: { path: ["templateType"], equals: "DPIA" },
       },
     }),
@@ -238,39 +244,42 @@ export type DpiaQuota =
   | { capped: false }
   | { capped: true; limit: number; used: number; remaining: number };
 
-/** What the new-assessment screen shows. Uncapped off the hosted trial. */
-export async function hostedDpiaQuota(
+/**
+ * What the screens show (the type card, the quick action, the form).
+ * Uncapped off the pilot tier: the self-hosted kit, or a licensed organisation.
+ */
+export async function pilotDpiaQuota(
   db: DpiaCountDb,
-  organizationId: string
+  organizationId: string,
+  pilotTier: boolean
 ): Promise<DpiaQuota> {
-  if (!isHostedDeployment()) return { capped: false };
+  if (!pilotTier) return { capped: false };
   const used = await countDpiaCreated(db, organizationId);
   return {
     capped: true,
-    limit: HOSTED_DPIA_LIMIT,
+    limit: PILOT_DPIA_LIMIT,
     used,
-    remaining: Math.max(0, HOSTED_DPIA_LIMIT - used),
+    remaining: Math.max(0, PILOT_DPIA_LIMIT - used),
   };
 }
 
 /** The one link in the limit message, in the reader's language. */
-export const KEEP_GOING_LABEL: Record<Locale, string> = {
-  en: "Keep going on your own instance",
-  es: "Sigue en tu propia instancia",
+export const SEE_PLANS_LABEL: Record<Locale, string> = {
+  en: "See the plans",
+  es: "Consulta los planes",
 };
 
 /**
- * What a firm is told when the trial's impact assessments are used up: what
- * the trial includes, that deleting does not free a place, and one link to
- * keep going on an instance of their own (the managed service). No price, and
- * nothing already created is touched: editing, submitting, approving and
- * exporting stay open.
+ * What a firm is told when the two free DPIAs are used up: that the pilot
+ * tier includes two for a limited time, that deleting does not free a place,
+ * and one link, to the plans page. No price, and nothing already created is
+ * touched: editing, submitting, approving and exporting stay open.
  */
 export function dpiaCapMessage(locale: Locale): string {
-  const keepGoing = `${KEEP_GOING_LABEL[locale]}: ${MANAGED_URL[locale]}`;
+  const plans = `${SEE_PLANS_LABEL[locale]}: ${PLANS_URL[locale]}`;
   return locale === "es"
-    ? `El piloto incluye ${HOSTED_DPIA_LIMIT} evaluaciones de impacto y esta organización ya las ha usado todas. Se cuentan las evaluaciones creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Un despliegue propio, alojado o en tus instalaciones, no tiene este límite. ${keepGoing}`
-    : `The trial includes ${HOSTED_DPIA_LIMIT} impact assessments, and this organization has used all of them. The count is of the assessments created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. A deployment of your own, hosted or on your premises, has no such limit. ${keepGoing}`;
+    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} DPIA gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las DPIA creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
+    : `This organization has already created the ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time, so another cannot be created. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
 }
 
 // ── A pilot limit reached: one audit row, read as a count ───────────────
@@ -325,17 +334,19 @@ export async function recordPilotLimitReached(
 }
 
 /**
- * Throws FORBIDDEN on the hosted trial once the allowance is used up, after
- * recording that the organisation reached the limit.
+ * Throws FORBIDDEN on the pilot tier once the two free DPIAs are used up,
+ * after recording that the organisation reached the limit. The count is read
+ * on the server at each creation; the screens only repeat it.
  */
-export async function assertHostedDpiaQuota(
+export async function assertPilotDpiaQuota(
   db: DpiaCountDb & PilotLimitAuditDb,
   organizationId: string,
+  pilotTier: boolean,
   locale: Locale = "en"
 ): Promise<void> {
-  if (!isHostedDeployment()) return;
+  if (!pilotTier) return;
   const used = await countDpiaCreated(db, organizationId);
-  if (used >= HOSTED_DPIA_LIMIT) {
+  if (used >= PILOT_DPIA_LIMIT) {
     await recordPilotLimitReached(db, organizationId, "impact_assessments");
     throw new TRPCError({ code: "FORBIDDEN", message: dpiaCapMessage(locale) });
   }

@@ -39,6 +39,20 @@ export function managedUrl(locale: string | undefined): string {
   return locale?.toLowerCase().startsWith("es") ? MANAGED_URL.es : MANAGED_URL.en;
 }
 
+/**
+ * The storefront's plans page, in the reader's language. Where a firm that
+ * has used the pilot tier's free DPIAs is sent; the page states the prices,
+ * the app never does.
+ */
+export const PLANS_URL = {
+  en: "https://www.todo.law/pricing",
+  es: "https://www.todo.law/es/precios",
+} as const;
+
+export function plansUrl(locale: string | undefined): string {
+  return locale?.toLowerCase().startsWith("es") ? PLANS_URL.es : PLANS_URL.en;
+}
+
 /** In-app anchor of the pilot card, which lists every export. */
 export const PILOT_EXPORT_PATH = "/privacy/settings#pilot-export";
 

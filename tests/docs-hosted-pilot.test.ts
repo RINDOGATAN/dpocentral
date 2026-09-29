@@ -17,7 +17,7 @@ import path from "node:path";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 import { PILOT_DOCS_PATH } from "@/lib/hosted";
-import { HOSTED_DPIA_LIMIT, PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
+import { PILOT_DPIA_LIMIT, PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
 
 type Section = {
   title: string;
@@ -91,13 +91,13 @@ describe("the hosted pilot documentation", () => {
 
   it("takes its figures from the pilot configuration", () => {
     expect(PAGE).toContain("PILOT_DAYS");
-    expect(PAGE).toContain("HOSTED_DPIA_LIMIT");
+    expect(PAGE).toContain("PILOT_DPIA_LIMIT");
     expect(PAGE).toContain("PILOT_LIMITS");
     expect(PAGE).toContain("RESOURCE_LABELS");
     // Nothing in the copy hard-codes a figure the configuration owns.
     for (const s of [section(en), section(es)]) {
       expect(s.window).not.toContain(String(PILOT_DAYS));
-      expect(s.assessments).not.toContain(String(HOSTED_DPIA_LIMIT));
+      expect(s.assessments).not.toContain(String(PILOT_DPIA_LIMIT));
       expect(s.ceilingsIntro).not.toMatch(/\d/);
     }
     expect(Object.keys(PILOT_LIMITS).length).toBeGreaterThan(5);

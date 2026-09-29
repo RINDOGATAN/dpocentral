@@ -31,7 +31,7 @@ import {
   Settings2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -40,7 +40,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { managedUrl } from "@/lib/hosted";
+import { DpiaFreeNote, useDpiaQuota } from "@/components/pilot/dpia-free-note";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
 import { resolveAutoTemplateId } from "@/lib/assessment-template";
 import { useTemplateMeta } from "@/lib/template-i18n";
@@ -70,7 +70,6 @@ export default function NewAssessmentPage() {
   const tp = useTranslations("pages.newAssessment");
   const tTrial = useTranslations("pages.trialAssessments");
   const tCommon = useTranslations("common");
-  const locale = useLocale();
   const typeName = (type: string | null | undefined) =>
     type
       ? tp(`type.${type}` as `type.LIA` | `type.CUSTOM` | `type.DPIA` | `type.PIA` | `type.TIA` | `type.VENDOR`)
@@ -105,12 +104,8 @@ export default function NewAssessmentPage() {
 
   const entitledTypes = entitledData?.entitledTypes ?? [];
 
-  // The hosted trial includes three impact assessments. Off the hosted
-  // service this reports no cap and nothing is shown.
-  const { data: dpiaQuota } = trpc.assessment.dpiaQuota.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
-  );
+  // The pilot tier's two free DPIAs (null off the pilot tier: nothing shown).
+  const dpiaQuota = useDpiaQuota();
 
   // Load templates filtered by selected type
   const { data: templates, isLoading: templatesLoading } = trpc.assessment.listTemplates.useQuery(
@@ -169,7 +164,9 @@ export default function NewAssessmentPage() {
       toast.error(error.message || t("generic.somethingWentWrong"));
       setIsSubmitting(false);
 
-      if (error.data?.code === "FORBIDDEN" && !hosted) {
+      // The DPIA is not sold from here: its refusal is the pilot tier's
+      // limit, and the sentence already carries the link to the plans page.
+      if (error.data?.code === "FORBIDDEN" && !hosted && selectedType !== "DPIA") {
         setUpgradeFeatureName(typeName(selectedType));
         setUpgradeSkillKey(selectedType ?? "");
         setUpgradeModalOpen(true);
@@ -240,26 +237,6 @@ export default function NewAssessmentPage() {
         </div>
       </div>
 
-      {/* What the trial includes: a plain line, before anyone starts. */}
-      {dpiaQuota?.capped && (
-        <p className="text-sm text-muted-foreground">
-          {dpiaQuota.remaining > 0
-            ? tTrial("remaining", { remaining: dpiaQuota.remaining, limit: dpiaQuota.limit })
-            : tTrial("usedUp", { limit: dpiaQuota.limit })}{" "}
-          {dpiaQuota.remaining === 0 && (
-            <a
-              href={managedUrl(locale)}
-              target="_blank"
-              rel="noreferrer"
-              className="underline underline-offset-4"
-              data-testid="pilot-limit-keep-going"
-            >
-              {tTrial("keepGoing")}
-            </a>
-          )}
-        </p>
-      )}
-
       {/* Step 1: Type Selection */}
       {!selectedType && (
         <Card>
@@ -271,8 +248,10 @@ export default function NewAssessmentPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {offeredTypes.map((at) => {
                 const Icon = at.icon;
-                // On the hosted pilot no card carries a premium mark.
-                const isPremium = isPremiumTypeKey(at.type) && !hosted;
+                // On the hosted pilot no card carries a premium mark, and on
+                // the pilot tier the DPIA carries its own free mark instead.
+                const pilotDpia = at.type === "DPIA" && !!dpiaQuota;
+                const isPremium = isPremiumTypeKey(at.type) && !hosted && !pilotDpia;
                 const isEntitled = isTypeEntitled(at.type);
                 const isLocked = isTypeLocked(at.type);
 
@@ -306,7 +285,14 @@ export default function NewAssessmentPage() {
                           )}
                         </div>
                         <div className="flex gap-1.5">
-                          {isPremium ? (
+                          {pilotDpia ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
+                            >
+                              {tTrial("freeBadge")}
+                            </Badge>
+                          ) : isPremium ? (
                             isEntitled ? (
                               <Badge
                                 variant="secondary"
@@ -336,6 +322,7 @@ export default function NewAssessmentPage() {
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                         {tp(`type.${at.type}_desc` as `type.LIA_desc` | `type.CUSTOM_desc` | `type.DPIA_desc` | `type.PIA_desc` | `type.TIA_desc` | `type.VENDOR_desc`)}
                       </p>
+                      {pilotDpia && <DpiaFreeNote detail withLink={false} className="mt-2" />}
                       {isLocked && (
                         <p className="text-xs text-muted-foreground mt-2 font-medium">
                           {!features.stripeEnabled
@@ -464,6 +451,11 @@ export default function NewAssessmentPage() {
               {entitledData && isTypeLocked(selectedType) && (
                 <StatusNote tone="warning" title={tp("premiumSkill")} data-testid="assessment-type-gated">
                   <p>{tp("typeGatedNotice", { name: typeName(selectedType) })}</p>
+                </StatusNote>
+              )}
+              {selectedType === "DPIA" && dpiaQuota && (
+                <StatusNote tone="info" data-testid="dpia-form-free-note">
+                  <DpiaFreeNote detail className="text-sm text-foreground" />
                 </StatusNote>
               )}
               <div className="space-y-2">

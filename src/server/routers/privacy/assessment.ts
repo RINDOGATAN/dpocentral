@@ -9,6 +9,7 @@ import {
   checkAssessmentEntitlement,
   isPremiumAssessmentType,
   getEntitledAssessmentTypes,
+  isDpiaPilotTier,
 } from "../../services/licensing/entitlement";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
@@ -19,8 +20,8 @@ import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { ensureHostedTemplates } from "../../services/pilot/hosted-templates";
 import {
-  assertHostedDpiaQuota,
-  hostedDpiaQuota,
+  assertPilotDpiaQuota,
+  pilotDpiaQuota,
   pilotLocale,
 } from "../../services/pilot/caps";
 import {
@@ -356,19 +357,19 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
-      // The hosted trial includes three impact assessments per organisation.
-      // Everything already created stays fully usable; only creating a fourth
-      // is refused. A no-op on the kit.
+      // The pilot tier includes two DPIAs per organisation, free for a limited
+      // time. Everything already created stays fully usable; only creating a
+      // third is refused. A no-op on the kit and for a licensed organisation.
+      // The DPIA needs no licence beyond that: the premium check below is for
+      // the other premium types.
       if (template.type === AssessmentType.DPIA) {
-        await assertHostedDpiaQuota(
+        await assertPilotDpiaQuota(
           ctx.prisma,
           ctx.organization.id,
+          await isDpiaPilotTier(ctx.organization.id),
           pilotLocale(localeFromCookieGetter(ctx.getCookie))
         );
-      }
-
-      // Check entitlement for premium assessment types
-      if (isPremiumAssessmentType(template.type)) {
+      } else if (isPremiumAssessmentType(template.type)) {
         const entitlementResult = await checkAssessmentEntitlement(
           ctx.organization.id,
           template.type
@@ -1186,11 +1187,13 @@ export const assessmentRouter = createTRPCRouter({
       };
     }),
 
-  // How many impact assessments the hosted trial still includes. Off the
-  // hosted service it reports no cap at all.
+  // How many of the pilot tier's free DPIAs are left. Off the pilot tier (the
+  // kit, or a licensed organisation) it reports no cap at all.
   dpiaQuota: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx }) => hostedDpiaQuota(ctx.prisma, ctx.organization.id)),
+    .query(async ({ ctx }) =>
+      pilotDpiaQuota(ctx.prisma, ctx.organization.id, await isDpiaPilotTier(ctx.organization.id))
+    ),
 
   // Get entitled assessment types for the current organization
   getEntitledTypes: organizationProcedure
