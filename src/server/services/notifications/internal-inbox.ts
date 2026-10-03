@@ -29,7 +29,7 @@ import { emailFrom } from "@/config/brand";
 import { logger } from "@/lib/logger";
 
 /** Where things go when neither CONTACT_EMAIL nor ADMIN_EMAILS is set. */
-export const DEFAULT_INTERNAL_INBOX = "info@todo.law";
+export const DEFAULT_INTERNAL_INBOX = "hello@rindogatan.com";
 
 function addressList(value: string | undefined): string[] {
   return (value ?? "")

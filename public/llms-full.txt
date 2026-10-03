@@ -182,4 +182,4 @@ instance: https://www.todo.law/run
 - Privacy Policy: https://todo.law/privacy
 - Terms of Service: https://todo.law/terms
 - Source Code: https://github.com/RINDOGATAN/dpocentral
-- Contact: hello@todo.law
+- Contact: hello@rindogatan.com
