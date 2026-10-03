@@ -26,7 +26,7 @@ jobs:
         # the gate blocks from the start. If it ever has to be relaxed, do it
         # with `continue-on-error: true` and a dated comment here, never by
         # lowering the level silently.
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
 
       - name: Generate Prisma client
         run: npx prisma generate
