@@ -20,12 +20,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Dependency audit (fails on high or critical advisories)
+      - name: Dependency audit, production (fails on high or critical advisories)
         # Safeguard check 6. Clean at the high threshold on 2026-09-14 (three
         # moderate advisories open, listed in SECURITY.md "Known gaps"), so
         # the gate blocks from the start. If it ever has to be relaxed, do it
         # with `continue-on-error: true` and a dated comment here, never by
         # lowering the level silently.
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Dependency audit, development tools (soft)
+        # 2026-10-05: split from the gate above. The remaining high advisories
+        # are in development tools only (braces via eslint-config-next, with no
+        # fixed release published for any version; @vitest/mocker via vitest),
+        # never shipped to production. Production stays a hard gate at high.
+        # Remove `continue-on-error` when a fixed braces release exists.
+        continue-on-error: true
         run: npm audit --audit-level=high
 
       - name: Generate Prisma client
