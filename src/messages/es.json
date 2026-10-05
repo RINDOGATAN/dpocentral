@@ -1168,7 +1168,7 @@
         "produce": "Generar DPA + TIA",
         "openTia": "TIA",
         "title": "Generar DPA + Evaluación de Impacto de la Transferencia",
-        "subtitle": "Revise cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El DPA (Anexos I–IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de sus respuestas confirmadas.",
+        "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El DPA (Anexos I–IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de tus respuestas confirmadas.",
         "loading": "Mapeando los datos del proveedor…",
         "notesTitle": "Cómo se precargaron estos datos",
         "sectionAgreement": "Acuerdo y partes",
@@ -1182,7 +1182,7 @@
           "ENGLAND_WALES": "Inglaterra y Gales",
           "CALIFORNIA": "California (EE. UU.)"
         },
-        "controllerName": "Responsable (su organización)",
+        "controllerName": "Responsable (tu organización)",
         "controllerAddress": "Dirección del Responsable",
         "processorName": "Encargado (proveedor)",
         "processorAddress": "Dirección del Encargado",
@@ -1191,10 +1191,10 @@
         "sectionFacts": "Datos del tratamiento",
         "sectionTerms": "Términos negociados",
         "selectPlaceholder": "Seleccionar…",
-        "issuesTitle": "Estas respuestas se contradicen — confirme antes de generar",
+        "issuesTitle": "Estas respuestas se contradicen: confírmalas antes de generar",
         "confirmIssue": "Confirmo que es exacto.",
         "warningsTitle": "Revisar antes de firmar",
-        "successBody": "El DPA se ha generado y guardado como contrato pendiente de firma de este proveedor. Descargue los documentos abajo — seguirán disponibles en la lista de contratos.",
+        "successBody": "El DPA se ha generado y guardado como contrato pendiente de firma de este proveedor. Descarga los documentos abajo: seguirán disponibles en la lista de contratos.",
         "downloadDpa": "Descargar DPA (PDF)",
         "downloadTia": "Descargar TIA (PDF)",
         "generate": "Generar documentos",
@@ -6538,7 +6538,7 @@
     "publicVendors": {
       "dpa": {
         "title": "Generar un DPA + Evaluación de Impacto de la Transferencia",
-        "intro": "DPO Central puede producir un Acuerdo de Encargo de Tratamiento listo para firmar y una Evaluación de Impacto de la Transferencia independiente para cualquier proveedor, a partir de su propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o español.",
+        "intro": "DPO Central puede producir un Acuerdo de Encargo de Tratamiento listo para firmar y una Evaluación de Impacto de la Transferencia independiente para cualquier proveedor, a partir de tu propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o español.",
         "artifacts": {
           "dpaTitle": "Acuerdo de Encargo de Tratamiento (PDF)",
           "dpaDesc": "Acuerdo responsable-encargado conforme al artículo 28 con términos negociados y Anexos I–IV: descripción del tratamiento, medidas técnicas y organizativas (TOMs), incorporación de las Cláusulas Contractuales Tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la Evaluación de Impacto de la Transferencia. Los Anexos III–IV aparecen automáticamente cuando el encargado está establecido fuera del EEE/Reino Unido.",
@@ -6547,27 +6547,27 @@
         },
         "steps": {
           "open": {
-            "title": "Abra el proveedor y elija «Generar DPA + TIA»",
-            "description": "En la página de detalle del proveedor, abra la pestaña Contratos y pulse «Generar DPA + TIA». Disponible para Propietarios, Administradores y Delegados de Privacidad."
+            "title": "Abre el proveedor y elige «Generar DPA + TIA»",
+            "description": "En la página de detalle del proveedor, abre la pestaña Contratos y pulsa «Generar DPA + TIA». Disponible para Propietarios, Administradores y Delegados de Privacidad."
           },
           "review": {
-            "title": "Revise los datos precargados",
-            "description": "Cada dato se propone a partir de su propia información y se muestra para revisión: nada entra en el documento sin ser visto. Las notas explican de dónde procede cada valor.",
+            "title": "Revisa los datos precargados",
+            "description": "Cada dato se propone a partir de tu propia información y se muestra para revisión: nada entra en el documento sin ser visto. Las notas explican de dónde procede cada valor.",
             "detail1": "Las categorías de datos provienen de los tipos de datos registrados del proveedor; la finalidad del tratamiento, de las actividades que lo nombran como destinatario.",
             "detail2": "El establecimiento es donde el proveedor está establecido — solo se precarga cuando su registro es inequívoco.",
-            "detail3": "Elija los términos negociados (plazo de notificación de violaciones, régimen de subencargados, derechos de auditoría, responsabilidad, ley aplicable) y complete los datos de ambas partes."
+            "detail3": "Elige los términos negociados (plazo de notificación de violaciones, régimen de subencargados, derechos de auditoría, responsabilidad, ley aplicable) y completa los datos de ambas partes."
           },
           "confirm": {
-            "title": "Confirme las contradicciones señaladas",
-            "description": "Si sus respuestas se contradicen — por ejemplo, declarar seudonimización mientras se transfieren datos directamente identificativos — la generación se bloquea hasta que confirme explícitamente cada punto señalado."
+            "title": "Confirma las contradicciones señaladas",
+            "description": "Si tus respuestas se contradicen (por ejemplo, declarar seudonimización mientras se transfieren datos directamente identificativos), la generación se bloquea hasta que confirmes explícitamente cada punto señalado."
           },
           "generate": {
-            "title": "Genere los documentos",
-            "description": "El DPA se guarda como contrato del proveedor pendiente de firma. Los espacios en blanco pendientes se listan como avisos para que pueda resolverlos antes de la firma."
+            "title": "Genera los documentos",
+            "description": "El DPA se guarda como contrato del proveedor pendiente de firma. Los espacios en blanco pendientes se listan como avisos para que puedas resolverlos antes de la firma."
           },
           "download": {
-            "title": "Descargue y firme",
-            "description": "Descargue los PDF del DPA y la TIA desde la pantalla de éxito o en cualquier momento desde la pestaña Contratos del proveedor. Una vez contrafirmado, actualice el estado del contrato a Activo."
+            "title": "Descarga y firma",
+            "description": "Descarga los PDF del DPA y la TIA desde la pantalla de éxito o en cualquier momento desde la pestaña Contratos del proveedor. Una vez contrafirmado, actualiza el estado del contrato a Activo."
           }
         },
         "honesty": {
@@ -8430,7 +8430,7 @@
   "guided": {
     "loading": "Cargando",
     "overview": "Resumen",
-    "overallLabel": "Su programa",
+    "overallLabel": "Tu programa",
     "overall": "{percent}% completado",
     "navLabel": "Ruta del programa de privacidad",
     "pathTitle": "La ruta",
@@ -8462,96 +8462,96 @@
     "stages": {
       "setup": "Puesta en marcha",
       "people": "Políticas y personas",
-      "inventory": "Conozca sus datos",
-      "assess": "Evalúe el riesgo",
+      "inventory": "Conoce tus datos",
+      "assess": "Evalúa el riesgo",
       "rights": "Derechos y transparencia",
-      "respond": "Responda y mejore"
+      "respond": "Responde y mejora"
     },
     "steps": {
       "quickstart": {
         "label": "Inicio rápido",
-        "why": "Ponga en marcha su programa en unos minutos: jurisdicciones, una plantilla sectorial y proveedores del catálogo.",
-        "do": "Use el inicio rápido para configurar jurisdicciones, una plantilla y sus primeros proveedores."
+        "why": "Pon en marcha tu programa en unos minutos: jurisdicciones, una plantilla sectorial y proveedores del catálogo.",
+        "do": "Usa el inicio rápido para configurar jurisdicciones, una plantilla y tus primeros proveedores."
       },
       "applies": {
-        "label": "Qué le aplica",
-        "why": "Indique dónde opera y qué leyes le aplican, para acotar el resto del programa a su caso.",
-        "do": "Declare las jurisdicciones y las leyes que aplican a su organización."
+        "label": "Qué te aplica",
+        "why": "Indica dónde operas y qué leyes te aplican, para acotar el resto del programa a tu caso.",
+        "do": "Declara las jurisdicciones y las leyes que aplican a tu organización."
       },
       "privacyPolicy": {
         "label": "Política de privacidad y avisos",
-        "why": "Publique los avisos que informan a las personas de cómo se usan sus datos.",
-        "do": "Registre su política de privacidad y los avisos que da a los interesados."
+        "why": "Publica los avisos que informan a las personas de cómo se usan sus datos.",
+        "do": "Registra tu política de privacidad y los avisos que das a los interesados."
       },
       "dpoAppointed": {
         "label": "DPD y funciones",
-        "why": "Designe a un responsable de protección de datos y defina quién hace qué.",
-        "do": "Designe a un DPD o responsable de privacidad y registre las funciones."
+        "why": "Designa a un responsable de protección de datos y define quién hace qué.",
+        "do": "Designa a un DPD o responsable de privacidad y registra las funciones."
       },
       "training": {
         "label": "Formación del personal",
-        "why": "Forme a las personas que tratan datos personales.",
-        "do": "Registre la formación en privacidad que ha completado su personal."
+        "why": "Forma a las personas que tratan datos personales.",
+        "do": "Registra la formación en privacidad que ha completado tu personal."
       },
       "dataInventory": {
         "label": "Inventario de datos",
-        "why": "Sepa qué datos personales tiene y dónde residen.",
-        "do": "Registre sus activos de datos: los sistemas y almacenes con datos personales."
+        "why": "Averigua qué datos personales tienes y dónde residen.",
+        "do": "Registra tus activos de datos: los sistemas y almacenes con datos personales."
       },
       "ropa": {
         "label": "Registro de actividades",
-        "why": "Mantenga el registro del artículo 30 sobre cómo trata datos personales.",
-        "do": "Registre cada actividad de tratamiento: su fin, base jurídica y datos."
+        "why": "Mantén el registro del artículo 30 sobre cómo tratas datos personales.",
+        "do": "Registra cada actividad de tratamiento: su fin, base jurídica y datos."
       },
       "vendors": {
         "label": "Proveedores y encargados",
-        "why": "Controle los proveedores que tratan datos personales por usted.",
-        "do": "Añada los proveedores que tratan datos personales, desde el catálogo."
+        "why": "Controla los proveedores que tratan datos personales por ti.",
+        "do": "Añade los proveedores que tratan datos personales, desde el catálogo."
       },
       "aiSystems": {
         "label": "Sistemas de IA",
-        "why": "Vea los sistemas de IA que usan datos personales; gobiérnelos en AI Sentinel.",
-        "do": "Revise los sistemas de IA que usan datos personales, gobernados en AI Sentinel."
+        "why": "Consulta los sistemas de IA que usan datos personales; gobiérnalos en AI Sentinel.",
+        "do": "Revisa los sistemas de IA que usan datos personales, gobernados en AI Sentinel."
       },
       "assessments": {
         "label": "Evaluaciones",
-        "why": "Analice el riesgo y realice una EIPD cuando el tratamiento sea de alto riesgo.",
-        "do": "Analice su tratamiento y realice una EIPD cuando el riesgo sea alto."
+        "why": "Analiza el riesgo y realiza una EIPD cuando el tratamiento sea de alto riesgo.",
+        "do": "Analiza tu tratamiento y realiza una EIPD cuando el riesgo sea alto."
       },
       "transfers": {
         "label": "Transferencias",
-        "why": "Registre las transferencias internacionales y la garantía en que se apoya cada una.",
-        "do": "Registre cada transferencia internacional y su mecanismo de transferencia."
+        "why": "Registra las transferencias internacionales y la garantía en que se apoya cada una.",
+        "do": "Registra cada transferencia internacional y su mecanismo de transferencia."
       },
       "vendorDueDiligence": {
         "label": "Diligencia debida de proveedores",
-        "why": "Evalúe a cada proveedor que trata datos personales por usted.",
-        "do": "Complete una evaluación de diligencia debida para cada proveedor."
+        "why": "Evalúa a cada proveedor que trata datos personales por ti.",
+        "do": "Completa una evaluación de diligencia debida para cada proveedor."
       },
       "lia": {
         "label": "Evaluación de interés legítimo",
-        "why": "Pondere sus intereses frente a los derechos de las personas cuando se apoye en ellos.",
-        "do": "Realice una evaluación de interés legítimo cuando esa sea su base jurídica."
+        "why": "Pondera tus intereses frente a los derechos de las personas cuando te apoyes en ellos.",
+        "do": "Realiza una evaluación de interés legítimo cuando esa sea tu base jurídica."
       },
       "dsar": {
         "label": "Solicitudes de derechos",
-        "why": "Reciba y responda las solicitudes de los interesados dentro del plazo.",
-        "do": "Configure el formulario de recepción y responda las solicitudes a tiempo."
+        "why": "Recibe y responde las solicitudes de los interesados dentro del plazo.",
+        "do": "Configura el formulario de recepción y responde las solicitudes a tiempo."
       },
       "notices": {
         "label": "Avisos y consentimiento",
-        "why": "Conserve los avisos y los registros de consentimiento que se deben a las personas.",
-        "do": "Registre los avisos y el consentimiento en los que se apoya."
+        "why": "Conserva los avisos y los registros de consentimiento que se deben a las personas.",
+        "do": "Registra los avisos y el consentimiento en los que te apoyas."
       },
       "incidents": {
         "label": "Registro de brechas",
-        "why": "Registre los incidentes y controle el plazo de 72 horas.",
-        "do": "Registre los incidentes en el registro y vigile el plazo de 72 horas."
+        "why": "Registra los incidentes y controla el plazo de 72 horas.",
+        "do": "Registra los incidentes en el registro y vigila el plazo de 72 horas."
       },
       "audits": {
         "label": "Auditorías e informes",
-        "why": "Revise el programa e informe a la dirección.",
-        "do": "Registre auditorías, revisiones e informes a la dirección."
+        "why": "Revisa el programa e informa a la dirección.",
+        "do": "Registra auditorías, revisiones e informes a la dirección."
       }
     },
     "library": {
@@ -8569,8 +8569,8 @@
       "title": "Siguiente paso",
       "stage": "Fase {number}: {stage}",
       "button": "Ir a {step}",
-      "allDoneTitle": "Su programa está en marcha",
-      "allDoneBody": "Todos los pasos de la ruta están hechos. Mantenga sus registros al día y revíselos con regularidad.",
+      "allDoneTitle": "Tu programa está en marcha",
+      "allDoneBody": "Todos los pasos de la ruta están hechos. Mantén tus registros al día y revísalos con regularidad.",
       "allDoneButton": "Volver al resumen"
     },
     "band": {
@@ -8591,7 +8591,7 @@
     },
     "layout": {
       "title": "Diseño",
-      "description": "Elija cómo se organiza el panel. Es una preferencia para este navegador.",
+      "description": "Elige cómo se organiza el panel. Es una preferencia para este navegador.",
       "guided": "Guiado",
       "classic": "Clásico (se retirará)",
       "changed": "Diseño cambiado.",
