@@ -132,7 +132,7 @@ function inferEstablishment(
     const countries = vendor.countries.join(", ");
     notes.push({
       en: `Establishment ${regions[0]} inferred from the vendor's recorded countries (${countries}); confirm it is where the vendor is established, not merely where data is stored.`,
-      es: `Establecimiento ${regions[0]} inferido de los países registrados del proveedor (${countries}); confirme que es donde el proveedor está establecido, no solo donde se almacenan los datos.`,
+      es: `Establecimiento ${regions[0]} inferido de los países registrados del proveedor (${countries}); confirma que es donde el proveedor está establecido, no solo donde se almacenan los datos.`,
     });
     return regions[0]!;
   }
@@ -233,7 +233,7 @@ export function mapVendorToDpaInputs(input: MapperInput): MappedDpaInputs {
     const names = linked.map((a) => a.name).join(", ");
     notes.push({
       en: `Processing purpose drawn from ${linked.length} processing ${linked.length === 1 ? "activity" : "activities"} naming this vendor as a recipient: ${names}. Verify each one really covers this vendor.`,
-      es: `Finalidad del tratamiento extraída de ${linked.length} ${linked.length === 1 ? "actividad" : "actividades"} de tratamiento que nombran a este proveedor como destinatario: ${names}. Verifique que cada una corresponde realmente a este proveedor.`,
+      es: `Finalidad del tratamiento extraída de ${linked.length} ${linked.length === 1 ? "actividad" : "actividades"} de tratamiento que nombran a este proveedor como destinatario: ${names}. Verifica que cada una corresponde realmente a este proveedor.`,
     });
   }
 
@@ -268,7 +268,7 @@ export function mapVendorToDpaInputs(input: MapperInput): MappedDpaInputs {
         breachHistory.length > 160 ? `${breachHistory.slice(0, 160)}…` : breachHistory;
       notes.push({
         en: `The vendor's questionnaire contains an incident-related answer: "${quoted}". Review it and set the breach-history declaration yourself — it is not classified automatically.`,
-        es: `El cuestionario del proveedor contiene una respuesta sobre incidentes: «${quoted}». Revísela y fije usted la declaración de historial de violaciones — no se clasifica automáticamente.`,
+        es: `El cuestionario del proveedor contiene una respuesta sobre incidentes: «${quoted}». Revísala y fija tú la declaración de historial de violaciones: no se clasifica automáticamente.`,
       });
     }
     const transferMechanisms = Array.isArray(answers.dt3)
@@ -280,7 +280,7 @@ export function mapVendorToDpaInputs(input: MapperInput): MappedDpaInputs {
       facts["processor-dpf-certified"] = "yes";
       notes.push({
         en: "DPF certification taken from the vendor's questionnaire answer (dt3); verify the active registration at dataprivacyframework.gov.",
-        es: "Certificación DPF tomada de la respuesta del cuestionario del proveedor (dt3); verifique el registro activo en dataprivacyframework.gov.",
+        es: "Certificación DPF tomada de la respuesta del cuestionario del proveedor (dt3); verifica el registro activo en dataprivacyframework.gov.",
       });
     }
   }

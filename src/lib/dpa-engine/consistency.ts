@@ -37,7 +37,7 @@ export function checkFactConsistency(facts: DpaFacts): ConsistencyIssue[] {
       code: "pseudonymization-identifying-data",
       message: {
         en: "Pseudonymization is claimed as a supplementary measure while directly identifying data categories (contact, identification, financial or credential data) are transferred. Confirm this claim is accurate before generating.",
-        es: "Se declara la seudonimización como medida suplementaria mientras se transfieren categorías de datos directamente identificativas (contacto, identificación, financieros o credenciales). Confirme que la declaración es exacta antes de generar.",
+        es: "Se declara la seudonimización como medida suplementaria mientras se transfieren categorías de datos directamente identificativas (contacto, identificación, financieros o credenciales). Confirma que la declaración es exacta antes de generar.",
       },
     });
   }
@@ -51,7 +51,7 @@ export function checkFactConsistency(facts: DpaFacts): ConsistencyIssue[] {
       code: "eu-residency-noneea-processor",
       message: {
         en: "EEA data residency is claimed for a processor established outside the EEA/UK. Confirm the claim; note it will surface in Annex I's processing description automatically.",
-        es: "Se declara residencia de datos en el EEE para un encargado establecido fuera del EEE/Reino Unido. Confirme la declaración; se reflejará automáticamente en la descripción del tratamiento del Anexo I.",
+        es: "Se declara residencia de datos en el EEE para un encargado establecido fuera del EEE/Reino Unido. Confirma la declaración; se reflejará automáticamente en la descripción del tratamiento del Anexo I.",
       },
     });
   }
