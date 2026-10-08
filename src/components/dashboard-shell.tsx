@@ -129,8 +129,11 @@ export function DashboardShell({
     );
   }
 
-  // Step 1: Combined onboarding — persona + org in one screen
-  if (needsOnboarding) {
+  // Step 1: Combined onboarding — persona + org in one screen. Only for a
+  // person who belongs to no organisation yet: a colleague who was added as a
+  // member (or joined by email domain) has no persona of their own and must
+  // land in that organisation, never on a screen that creates a second one.
+  if (needsOnboarding && organizations.length === 0) {
     return <OnboardingWelcome />;
   }
 

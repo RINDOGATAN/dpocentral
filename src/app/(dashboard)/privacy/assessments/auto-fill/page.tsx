@@ -37,6 +37,9 @@ import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palett
 
 type WizardStep = "select" | "preview" | "review" | "create";
 
+/** The "no vendor" option's value (Radix Select forbids an empty one). */
+const NO_VENDOR = "__none__";
+
 export default function DpiaAutoFillPage() {
   const router = useRouter();
   const { organization } = useOrganization();
@@ -255,12 +258,17 @@ export default function DpiaAutoFillPage() {
 
             <div>
               <label className="text-sm font-medium mb-2 block">{tAutoFill("vendorLabel")}</label>
-              <Select value={selectedVendorId} onValueChange={setSelectedVendorId}>
+              {/* Radix refuses an item whose value is "" (the page used to fail
+                  on load), so "none" is a sentinel mapped back to "". */}
+              <Select
+                value={selectedVendorId}
+                onValueChange={(v) => setSelectedVendorId(v === NO_VENDOR ? "" : v)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder={tAutoFill("vendorPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">{tAutoFill("none")}</SelectItem>
+                  <SelectItem value={NO_VENDOR}>{tAutoFill("none")}</SelectItem>
                   {vendors?.vendors?.map((v: { id: string; name: string }) => (
                     <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
                   ))}

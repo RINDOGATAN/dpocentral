@@ -244,27 +244,42 @@ export default function DSARSettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              {dsarTypeValues.map((type) => (
-                <div
-                  key={type}
-                  className={`p-4 border cursor-pointer transition-colors ${
-                    formData.enabledTypes.includes(type)
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                  onClick={() => toggleType(type)}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{tTypes(type)}</span>
-                    <Switch
-                      checked={formData.enabledTypes.includes(type)}
-                      onCheckedChange={() => toggleType(type)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">{tDesc(type)}</p>
-                </div>
-              ))}
+              {/* Each card is one native switch. A Radix Switch per card,
+                  inside this form, looped on load ("Maximum update depth
+                  exceeded") and took the whole page down. */}
+              {dsarTypeValues.map((type) => {
+                const on = formData.enabledTypes.includes(type);
+                return (
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={on}
+                    key={type}
+                    data-testid={`dsar-type-${type}`}
+                    className={`w-full text-left p-4 border cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                      on ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+                    }`}
+                    onClick={() => toggleType(type)}
+                  >
+                    <span className="flex items-center justify-between gap-3">
+                      <span className="font-medium">{tTypes(type)}</span>
+                      <span
+                        aria-hidden="true"
+                        className={`inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent transition-colors ${
+                          on ? "bg-primary" : "bg-input dark:bg-input/80"
+                        }`}
+                      >
+                        <span
+                          className={`block size-4 rounded-full transition-transform ${
+                            on ? "translate-x-[calc(100%-2px)] bg-background dark:bg-primary-foreground" : "translate-x-0 bg-background dark:bg-foreground"
+                          }`}
+                        />
+                      </span>
+                    </span>
+                    <span className="block text-sm text-muted-foreground mt-1">{tDesc(type)}</span>
+                  </button>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
