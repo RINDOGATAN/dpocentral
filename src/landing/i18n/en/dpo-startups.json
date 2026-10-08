@@ -1,4 +1,6 @@
 {
+  "header.menuOpen": "Open the menu",
+  "header.menuClose": "Close the menu",
   "header.badge": "DPO Central",
   "header.cta": "Sign In",
   "hero.badge": "Privacy Program Management",

@@ -113,7 +113,7 @@
         "dpa": "DPA",
         "trustCenter": "Trust Center",
         "autoFilled": "Form fields have been auto-filled from catalog data. Review and edit as needed.",
-        "searchPlaceholder": "Search vendors (e.g., Google Analytics, Mailchimp, HubSpot)...",
+        "searchPlaceholder": "Search for a vendor",
         "searching": "Searching catalog...",
         "noResults": "No vendors found for \"{query}\"",
         "noResultsHint": "Try a different search term or add manually below",
@@ -1562,7 +1562,7 @@
         "subtitle": "Search the vendor catalog and select the tools your organization uses.",
         "back": "Back",
         "selectedSuffix": "{count} selected",
-        "searchPlaceholder": "Search vendors (e.g., Google Analytics, Salesforce, Stripe...)",
+        "searchPlaceholder": "Search for a vendor",
         "searching": "Searching...",
         "noResults": "No vendors found for \"{query}\"",
         "verified": "Verified",
@@ -2084,10 +2084,10 @@
       },
       "members": {
         "title": "Team Members",
-        "descriptionAdmin": "Invite teammates to collaborate on your privacy program.",
+        "descriptionAdmin": "Add teammates to collaborate on your privacy program.",
         "descriptionViewer": "Only owners and admins can manage members.",
-        "inviteLabel": "Invite a teammate",
-        "inviteHelp": "Enter their work email and choose a role. They receive an invitation to join this organization.",
+        "inviteLabel": "Add a teammate",
+        "inviteHelp": "Add a colleague who has already signed in to DPO Central once with this email address, and choose a role. No invitation email is sent.",
         "inviteEmailPlaceholder": "teammate@example.com",
         "add": "Add",
         "added": "Member added",
@@ -2096,7 +2096,7 @@
         "you": "(you)",
         "removeAria": "Remove member",
         "removeConfirmTitle": "Remove {name}?",
-        "removeConfirmDescription": "They will lose access to this organization immediately. You can re-invite them later.",
+        "removeConfirmDescription": "They will lose access to this organization immediately. You can add them again later.",
         "removeConfirm": "Remove",
         "rolesLegend": "Roles: OWNER (full control) · ADMIN (manage modules and members) · PRIVACY_OFFICER (manage records) · MEMBER (create and edit) · VIEWER (read only)"
       }
@@ -2910,6 +2910,7 @@
     "serviceBy": "{brandName} is a {companyName} service.",
     "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs.",
     "userGuide": "User Guide",
+    "sourceAndLicence": "Source & licence",
     "billing": "Billing",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
@@ -4975,12 +4976,12 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "description": "DPO Central automatically tracks SLA deadlines and alerts you before they expire.",
+        "description": "DPO Central automatically tracks SLA deadlines and flags requests that are close to their deadline.",
         "mockupTitle": "SLA Progress Indicators",
         "overdueLabel": "Overdue",
         "daysRemaining": "{count} days remaining",
         "warningTitle": "SLA Deadlines",
-        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). The system sends email notifications at 7 days, 3 days, and 1 day before the deadline."
+        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). Requests due within 7 days are flagged as at risk, and overdue requests are flagged as overdue. No reminder emails are sent."
       },
       "portal": {
         "title": "Public Portal",
@@ -5531,7 +5532,7 @@
           "NotApplied": "Not Applied"
         },
         "infoTitle": "Primary jurisdiction",
-        "infoBody": "Setting a primary jurisdiction determines the default DSAR response deadline and breach notification window used across your organization. Other applied jurisdictions are tracked alongside, and the strictest deadline always takes precedence when multiple jurisdictions overlap."
+        "infoBody": "Setting a primary jurisdiction determines the default DSAR response deadline and breach notification window used across your organization. Other applied jurisdictions are tracked alongside. New requests take the deadline of your primary jurisdiction; the regulatory landscape report shows which law is strictest."
       },
       "impact": {
         "title": "System Impact",
@@ -5541,7 +5542,7 @@
           "dsar": {
             "label": "DSAR Deadlines",
             "value": "Auto-set",
-            "subtitle": "Based on strictest jurisdiction"
+            "subtitle": "Based on your primary jurisdiction"
           },
           "breach": {
             "label": "Breach Notifications",
@@ -5554,8 +5555,8 @@
             "subtitle": "Continuous requirement tracking"
           }
         },
-        "noteTitle": "Jurisdictions are additive",
-        "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if the GDPR gives one month to answer a DSAR and the LGPD gives 15 days, the system will enforce the 15-day deadline. This helps you meet every applicable regulation at once."
+        "noteTitle": "Primary jurisdiction sets the deadline",
+        "noteBody": "New requests take the deadline of your organization's primary jurisdiction. When several jurisdictions apply, the system does not switch to the strictest one on its own: the regulatory landscape report compares them and shows which law is strictest. For example, if the GDPR gives one month to answer a DSAR and the LGPD gives 15 days, the report shows the 15-day deadline, and you can make the stricter jurisdiction your primary one."
       },
       "nav": {
         "previous": "Transfer Compliance",
@@ -6963,6 +6964,7 @@
     },
     "shell": {
       "userGuide": "User Guide",
+    "sourceAndLicence": "Source & licence",
       "menu": "Documentation Menu"
     },
     "mockup": {
