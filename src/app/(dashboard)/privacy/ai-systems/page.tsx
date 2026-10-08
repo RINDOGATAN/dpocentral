@@ -386,7 +386,7 @@ export default function AISystemsPage() {
                           </StatusChip>
                         )}
                         {system.aiSentinelSystemId && (
-                          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground" title="Synced with AI Sentinel">
+                          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground" title={tp("syncedWithSentinel")}>
                             <Shield className={`w-3 h-3 ${toneMark("info")}`} />
                             AIS
                           </span>

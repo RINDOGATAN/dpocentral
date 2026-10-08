@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -26,6 +26,7 @@ import { DSARStatus, DSARType } from "@prisma/client";
 import { StatusNote } from "@/components/ui/status-note";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 const TIMELINE_STEP_KEYS: { key: DSARStatus; tKey: string }[] = [
   { key: "SUBMITTED", tKey: "submitted" },
   { key: "IDENTITY_VERIFIED", tKey: "identityVerified" },
@@ -58,6 +59,7 @@ export default function DSARStatusPage() {
   const params = useParams();
   const token = params.token as string;
   const t = useTranslations("dsarPublic.status");
+  const locale = useLocale();
 
   const utils = trpc.useUtils();
   const { data: request, isLoading, error } = trpc.dsar.checkStatus.useQuery(
@@ -203,7 +205,7 @@ export default function DSARStatusPage() {
                 <span className="text-sm">{t("expectedCompletion")}</span>
               </div>
               <div className="text-right">
-                <p className="font-medium">{dueDate.toLocaleDateString()}</p>
+                <p className="font-medium">{formatDateIn(dueDate, locale)}</p>
                 <p className={`text-xs ${pastDue ? "text-foreground font-medium" : "text-muted-foreground"}`}>
                   {isDone
                     ? t("completedLabel")
@@ -239,7 +241,7 @@ export default function DSARStatusPage() {
               {request.responseExpiresAt && (
                 <p className="text-xs text-muted-foreground">
                   {t("download.expiresOn", {
-                    date: new Date(request.responseExpiresAt).toLocaleDateString(),
+                    date: formatDateIn(new Date(request.responseExpiresAt), locale),
                   })}
                 </p>
               )}
@@ -254,22 +256,22 @@ export default function DSARStatusPage() {
           <CardContent className="space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{t("requestReceived")}</span>
-              <span>{new Date(request.receivedAt).toLocaleDateString()}</span>
+              <span>{formatDateIn(new Date(request.receivedAt), locale)}</span>
             </div>
             {request.acknowledgedAt && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{t("acknowledged")}</span>
-                <span>{new Date(request.acknowledgedAt).toLocaleDateString()}</span>
+                <span>{formatDateIn(new Date(request.acknowledgedAt), locale)}</span>
               </div>
             )}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">{t("expectedCompletion")}</span>
-              <span>{dueDate.toLocaleDateString()}</span>
+              <span>{formatDateIn(dueDate, locale)}</span>
             </div>
             {request.completedAt && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{t("completedDate")}</span>
-                <span>{new Date(request.completedAt).toLocaleDateString()}</span>
+                <span>{formatDateIn(new Date(request.completedAt), locale)}</span>
               </div>
             )}
           </CardContent>

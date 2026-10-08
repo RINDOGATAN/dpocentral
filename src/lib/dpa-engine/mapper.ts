@@ -268,7 +268,7 @@ export function mapVendorToDpaInputs(input: MapperInput): MappedDpaInputs {
         breachHistory.length > 160 ? `${breachHistory.slice(0, 160)}…` : breachHistory;
       notes.push({
         en: `The vendor's questionnaire contains an incident-related answer: "${quoted}". Review it and set the breach-history declaration yourself — it is not classified automatically.`,
-        es: `El cuestionario del proveedor contiene una respuesta sobre incidentes: «${quoted}». Revísala y fija tú la declaración de historial de violaciones: no se clasifica automáticamente.`,
+        es: `El cuestionario del proveedor contiene una respuesta sobre incidentes: «${quoted}». Revísala y fija tú la declaración de historial de brechas de seguridad: no se clasifica automáticamente.`,
       });
     }
     const transferMechanisms = Array.isArray(answers.dt3)

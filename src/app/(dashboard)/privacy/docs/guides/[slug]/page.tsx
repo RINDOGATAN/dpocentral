@@ -26,7 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!guide) return {};
   const locale = ((await getLocale()) === "es" ? "es" : "en") as ContentLocale;
   return {
-    title: `${guide.title[locale]} — DPO Central`,
+    // The root layout's title template adds the brand.
+    title: guide.title[locale],
     description: guide.lead[locale],
   };
 }

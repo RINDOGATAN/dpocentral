@@ -135,12 +135,12 @@ export const GLOSSARY: GlossaryTerm[] = [
     label: L("rights request", "solicitud de derechos"),
     meaning: L(
       "A request from a person to use a data protection right, such as access, correction or erasure; the GDPR sets a one-month deadline to answer (Arts. 12 and 15 to 22). Also called a DSAR.",
-      "Una solicitud de una persona para ejercer un derecho de protección de datos, como acceso, rectificación o supresión; el RGPD fija un plazo de un mes para responder (arts. 12 y 15 a 22). También llamada DSAR.",
+      "Una solicitud de una persona para ejercer un derecho de protección de datos, como acceso, rectificación o supresión; el RGPD fija un plazo de un mes para responder (arts. 12 y 15 a 22). En inglés se conoce como DSAR.",
     ),
   },
   {
     id: "breach",
-    label: L("personal data breach", "violación de la seguridad de los datos"),
+    label: L("personal data breach", "brecha de seguridad de los datos personales"),
     meaning: L(
       "A breach of security leading to the loss, unauthorised disclosure of, or access to personal data, whether by accident or an attack (GDPR Art. 4).",
       "Una violación de la seguridad que ocasiona la pérdida, la comunicación no autorizada o el acceso a datos personales, ya sea por accidente o por un ataque (RGPD art. 4).",
@@ -151,7 +151,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     label: L("72 hours", "72 horas"),
     meaning: L(
       "The deadline to notify the supervisory authority of a personal data breach: without undue delay and, where feasible, within 72 hours of becoming aware (GDPR Art. 33).",
-      "El plazo para notificar a la autoridad de control una violación de datos: sin dilación indebida y, de ser posible, en un plazo de 72 horas desde que se tiene constancia (RGPD art. 33).",
+      "El plazo para notificar a la autoridad de control una brecha de seguridad de los datos personales: sin dilación indebida y, de ser posible, en un plazo de 72 horas desde que se tiene constancia (RGPD art. 33).",
     ),
   },
   {

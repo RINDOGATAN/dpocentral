@@ -49,7 +49,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
@@ -59,6 +59,7 @@ import { RecordHeader } from "@/components/privacy/record-header";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { toneForSensitivity } from "@/config/status-tone";
 
+import { formatDateIn } from "@/lib/utils";
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
   { loading: () => <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div> }
@@ -100,6 +101,7 @@ export default function DataAssetDetailPage() {
   const initialTab = tabParam === "activities" || tabParam === "flows" ? tabParam : "elements";
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const locale = useLocale();
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
   const tp = useTranslations("pages.assetDetail");
@@ -407,7 +409,7 @@ export default function DataAssetDetailPage() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">{tp("stats.lastUpdated")}</p>
-              <p className="font-medium">{new Date(asset.updatedAt).toLocaleDateString()}</p>
+              <p className="font-medium">{formatDateIn(new Date(asset.updatedAt), locale)}</p>
             </div>
           </CardContent>
         </Card>

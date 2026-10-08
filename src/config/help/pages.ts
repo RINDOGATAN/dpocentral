@@ -127,7 +127,7 @@ export const PAGE_HELP: PageHelp[] = [
     title: L("Assessments", "Evaluaciones"),
     purpose: L(
       "Where you screen processing for risk and carry out the assessments a law expects: a DPIA for high-risk processing, a legitimate interests assessment, a transfer impact assessment. Each finished assessment is evidence you can show a regulator.",
-      "Donde analizas el riesgo del tratamiento y realizas las evaluaciones que espera la ley: una EIPD para el tratamiento de alto riesgo, un juicio de ponderación del interés legítimo, una evaluación de impacto de la transferencia. Cada evaluación terminada es una prueba que puedes mostrar a un organismo.",
+      "Donde analizas el riesgo del tratamiento y realizas las evaluaciones que espera la ley: una EIPD para el tratamiento de alto riesgo, un juicio de ponderación del interés legítimo, una evaluación de impacto de la transferencia. Cada evaluación terminada es una prueba que puedes mostrar a una autoridad de control.",
     ),
     firstStep: L(
       "Screen a processing activity first; where the risk is high, start a DPIA from the screening.",
@@ -149,7 +149,7 @@ export const PAGE_HELP: PageHelp[] = [
     ),
     firstStep: L(
       "Record each cross-border transfer and the mechanism it relies on (adequacy, SCCs, or a derogation).",
-      "Registra cada transferencia transfronteriza y el mecanismo en el que se apoya (adecuación, cláusulas tipo o una excepción).",
+      "Registra cada transferencia internacional y el mecanismo en el que se apoya (adecuación, cláusulas tipo o una excepción).",
     ),
     terms: ["tia", "sccs", "adequacy"],
     docs: [DOC("/privacy/docs/transfer-compliance", "Transfers and safeguards", "Transferencias y garantías")],
@@ -175,7 +175,7 @@ export const PAGE_HELP: PageHelp[] = [
     title: L("Breach register", "Registro de brechas"),
     purpose: L(
       "The log of personal data breaches, with the 72-hour clock the GDPR puts on notifying the supervisory authority. A breach that poses a risk to people must be notified without undue delay.",
-      "El registro de las violaciones de seguridad de los datos personales, con el plazo de 72 horas que el RGPD marca para notificar a la autoridad de control. Una violación que suponga un riesgo para las personas debe notificarse sin dilación indebida.",
+      "El registro de las brechas de seguridad de los datos personales, con el plazo de 72 horas que el RGPD marca para notificar a la autoridad de control. Una brecha que suponga un riesgo para las personas debe notificarse sin dilación indebida.",
     ),
     firstStep: L(
       "Record a breach as soon as it is known; the timeline and the 72-hour clock start from that moment.",

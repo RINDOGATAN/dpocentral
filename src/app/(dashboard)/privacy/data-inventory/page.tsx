@@ -430,7 +430,7 @@ export default function DataInventoryPage() {
                     disabled={fetchingMoreActivities}
                   >
                     {fetchingMoreActivities && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Load More
+                    {t("loadMore")}
                   </Button>
                 </div>
               )}

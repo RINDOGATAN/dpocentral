@@ -17,19 +17,20 @@ const personas = [
   {
     type: "BUSINESS_OWNER" as UserType,
     icon: Building2,
-    title: "Business Owner",
-    description: "I need privacy compliance for my organization",
+    titleKey: "businessOwner",
+    descriptionKey: "persona.businessOwnerDesc",
   },
   {
     type: "PRIVACY_PROFESSIONAL" as UserType,
     icon: Briefcase,
-    title: "Privacy Professional",
-    description: "A law firm, a consultancy, or another adviser managing privacy for several organizations",
+    titleKey: "privacyProfessional",
+    descriptionKey: "persona.privacyProfessionalDesc",
   },
 ] as const;
 
 export function PersonaSelector() {
   const t = useTranslations("toasts");
+  const tOnb = useTranslations("onboarding");
   const [selected, setSelected] = useState<UserType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { refreshSession } = useUserType();
@@ -61,9 +62,9 @@ export function PersonaSelector() {
             <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
             <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </div>
-          <h1 className="text-xl font-semibold">How will you use {brand.nameUppercase}?</h1>
+          <h1 className="text-xl font-semibold">{tOnb("howWillYouUse", { brandName: brand.nameUppercase })}</h1>
           <p className="text-sm text-muted-foreground">
-            This helps us tailor your experience. You can change this later in settings.
+            {tOnb("persona.tailorHint")}
           </p>
         </div>
 
@@ -90,8 +91,8 @@ export function PersonaSelector() {
                     <Icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="font-medium">{persona.title}</p>
-                    <p className="text-sm text-muted-foreground">{persona.description}</p>
+                    <p className="font-medium">{tOnb(persona.titleKey)}</p>
+                    <p className="text-sm text-muted-foreground">{tOnb(persona.descriptionKey)}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -107,10 +108,10 @@ export function PersonaSelector() {
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Setting up...
+              {tOnb("settingUp")}
             </>
           ) : (
-            "Continue"
+            tOnb("persona.continue")
           )}
         </Button>
       </div>

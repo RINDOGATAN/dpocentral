@@ -5,7 +5,7 @@
   "hero.title.prefix": "Privacy compliance ",
   "hero.title.accent": "without spreadsheets.",
   "hero.title.suffix": "",
-  "hero.subtitle": "Data inventory, DSARs, incidents, assessments, and vendor management — all in one open platform designed for startups that need to stand up a privacy program fast.",
+  "hero.subtitle": "Data inventory, DSARs, incidents, assessments, and vendor management, all in one open platform designed for startups that need to stand up a privacy program fast.",
   "hero.cta": "Get Started Free",
   "hero.login": "Already have an account? Log in",
   "hero.platform_url": "https://dpocentral.todo.law",
@@ -36,7 +36,7 @@
   "workflow.s2.title": "Set up your DSAR portal",
   "workflow.s2.desc": "Give data subjects a self-service portal to exercise their rights.",
   "workflow.s3.title": "Run your assessments",
-  "workflow.s3.desc": "DPIAs, LIAs, TIAs — guided questionnaires with risk scoring.",
+  "workflow.s3.desc": "DPIAs, LIAs, TIAs: guided questionnaires with risk scoring.",
   "workflow.s4.title": "Monitor & respond",
   "workflow.s4.desc": "Track incidents, manage vendors, and stay audit-ready at all times.",
 

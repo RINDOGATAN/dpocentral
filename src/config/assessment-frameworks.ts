@@ -324,7 +324,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
     citation: { en: "11 CCR 7157", es: "11 CCR 7157" },
     label: {
       en: "Submission to the agency by 1 April 2028, the executive attestation, and the duty to provide the full assessment within 30 days of a request",
-      es: "Presentación a la agencia antes del 1 de abril de 2028, la certificación de un directivo y el deber de facilitar la evaluación completa en un plazo de 30 días desde la solicitud",
+      es: "Presentación a la agencia a más tardar el 1 de abril de 2028, la certificación de un directivo y el deber de facilitar la evaluación completa en un plazo de 30 días desde la solicitud",
     },
     questionIds: ["q9_3", "q9_4", "q9_5"],
   },

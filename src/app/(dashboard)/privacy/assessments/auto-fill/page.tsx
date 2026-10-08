@@ -132,8 +132,11 @@ export default function DpiaAutoFillPage() {
       const assessment = await createAssessment.mutateAsync({
         organizationId: orgId,
         templateId: template.id,
-        name: `DPIA — ${autoFill.activityName}${autoFill.vendorName ? ` (${autoFill.vendorName})` : ""}`,
-        description: "Auto-filled from processing activity data",
+        // Created in the reader's language, like the quick start's records.
+        name: autoFill.vendorName
+          ? tAutoFill("recordNameWithVendor", { activity: autoFill.activityName, vendor: autoFill.vendorName })
+          : tAutoFill("recordName", { activity: autoFill.activityName }),
+        description: tAutoFill("recordDescription"),
         processingActivityId: selectedActivityId,
         vendorId: selectedVendorId || undefined,
       });

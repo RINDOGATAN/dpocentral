@@ -30,11 +30,12 @@ import {
 } from "@/components/ui/select";
 import { AlertTriangle, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { features } from "@/config/features";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 type Posture = "off" | "local_gateway" | "cloud_eu" | "cloud_us";
 
 // Product decision (2026-07-17, mirrors AI Sentinel #19): the picker offers a
@@ -53,6 +54,7 @@ interface AiPostureCardProps {
 
 export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
   const t = useTranslations("ai");
+  const locale = useLocale();
   const utils = trpc.useUtils();
 
   const { data: status } = trpc.ai.getStatus.useQuery(
@@ -156,7 +158,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
           <p className="text-xs text-muted-foreground">
             {t("postureCard.acknowledgedBy", {
               name: status.acknowledgedBy.name || status.acknowledgedBy.email || "—",
-              date: new Date(status.acknowledgedAt).toLocaleDateString(),
+              date: formatDateIn(new Date(status.acknowledgedAt), locale),
             })}
           </p>
         )}

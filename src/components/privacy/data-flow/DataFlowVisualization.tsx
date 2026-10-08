@@ -392,7 +392,7 @@ export function DataFlowVisualization({
           <p className="text-sm mb-4">{tFlow("empty.noAssetsBody")}</p>
           <Button onClick={() => router.push("/privacy/data-inventory/new")}>
             <Plus className="w-4 h-4 mr-2" />
-            Add Asset
+            {tFlow("actions.addAsset")}
           </Button>
         </CardContent>
       </Card>
@@ -409,7 +409,7 @@ export function DataFlowVisualization({
           <p className="text-sm mb-4">{tFlow("empty.noFlowsBody")}</p>
           <Button onClick={() => setIsCreateFlowOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            Create Flow
+            {tFlow("sheet.createFlow")}
           </Button>
           <CreateFlowSheet
             isOpen={isCreateFlowOpen}
@@ -434,7 +434,7 @@ export function DataFlowVisualization({
           <p className="text-sm mb-4">{tFlow("empty.noAssetFlowsBody")}</p>
           <Button onClick={() => setIsCreateFlowOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            Create Flow
+            {tFlow("sheet.createFlow")}
           </Button>
           <CreateFlowSheet
             isOpen={isCreateFlowOpen}
@@ -513,7 +513,7 @@ export function DataFlowVisualization({
                 onClick={() => setIsCreateFlowOpen(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Flow
+                {tFlow("actions.addFlow")}
               </Button>
             </Panel>
 

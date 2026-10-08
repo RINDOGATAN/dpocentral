@@ -674,7 +674,7 @@ function NewVendorPageContent() {
                     <div className="flex gap-2">
                       <Input value={formData.privacyPolicyUrl} readOnly className="bg-muted" />
                       <a href={formData.privacyPolicyUrl} target="_blank" rel="noopener noreferrer">
-                        <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
+                        <Button type="button" variant="outline" size="icon" aria-label={tp("openInNewTab")}>
                           <ExternalLink className="w-4 h-4" />
                         </Button>
                       </a>
@@ -687,7 +687,7 @@ function NewVendorPageContent() {
                     <div className="flex gap-2">
                       <Input value={formData.dpaUrl} readOnly className="bg-muted" />
                       <a href={formData.dpaUrl} target="_blank" rel="noopener noreferrer">
-                        <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
+                        <Button type="button" variant="outline" size="icon" aria-label={tp("openInNewTab")}>
                           <ExternalLink className="w-4 h-4" />
                         </Button>
                       </a>
@@ -702,7 +702,7 @@ function NewVendorPageContent() {
                   <div className="flex gap-2">
                     <Input value={formData.trustCenterUrl} readOnly className="bg-muted" />
                     <a href={formData.trustCenterUrl} target="_blank" rel="noopener noreferrer">
-                      <Button type="button" variant="outline" size="icon" aria-label="Open in new tab">
+                      <Button type="button" variant="outline" size="icon" aria-label={tp("openInNewTab")}>
                         <ExternalLink className="w-4 h-4" />
                       </Button>
                     </a>

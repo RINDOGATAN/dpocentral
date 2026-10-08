@@ -128,10 +128,10 @@ const liaV2: V2Template = {
   supersedes: "system-lia-template",
   type: "LIA" as AssessmentType,
   version: "2.0",
-  name: L("Legitimate Interest Assessment", "Evaluación de interés legítimo"),
+  name: L("Legitimate Interest Assessment", "Evaluación del interés legítimo"),
   description: L(
     "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read. This template is informational, not legal advice; verify with qualified counsel.",
-    "La prueba en tres partes del interés legítimo del artículo 6(1)(f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que un regulador puede leer. Esta plantilla es informativa, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
+    "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer. Esta plantilla es informativa y no constituye asesoramiento jurídico; verifícala con un profesional cualificado.",
   ),
   sections: [
     {
@@ -150,7 +150,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "The interest may be the controller's or a third party's. Say whose it is, because the balancing test weighs it against the individual's rights. Example: \"Our own interest in preventing fraud.\" Source: GDPR Art. 6(1)(f).",
-            "El interés puede ser del responsable o de un tercero. Indica de quién es, porque la ponderación lo contrapone a los derechos del interesado. Ejemplo: «Nuestro propio interés en prevenir el fraude». Fuente: RGPD, art. 6(1)(f).",
+            "El interés puede ser del responsable del tratamiento o de un tercero. Indica de quién es, porque la ponderación lo contrapone a los derechos del interesado. Ejemplo: «Nuestro propio interés en prevenir el fraude». Fuente: RGPD, art. 6.1.f).",
           ),
         },
         {
@@ -159,7 +159,7 @@ const liaV2: V2Template = {
           text: L("Describe the legitimate interest precisely.", "Describe con precisión el interés legítimo."),
           help: L(
             "Name a specific interest, not just \"business purposes\". A clearly articulated, real and present interest is the first thing the test requires. Example: \"Detecting fraudulent transactions to protect customers and the business.\" Source: GDPR Art. 6(1)(f) and Recital 47.",
-            "Nombra un interés concreto, no solo «fines empresariales». Un interés claramente definido, real y presente es lo primero que exige la prueba. Ejemplo: «Detectar transacciones fraudulentas para proteger a los clientes y a la empresa». Fuente: RGPD, art. 6(1)(f) y considerando 47.",
+            "Nombra un interés concreto, no solo «fines empresariales». Un interés claramente definido, real y presente es lo primero que exige la prueba. Ejemplo: «Detectar transacciones fraudulentas para proteger a los clientes y a la empresa». Fuente: RGPD, art. 6.1.f) y considerando 47.",
           ),
         },
         {
@@ -173,7 +173,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "An interest can only be relied on if it is lawful, precise enough to weigh, and a real interest rather than a hypothetical one. Example: \"Yes: fraud prevention is lawful, specific and ongoing.\" Source: GDPR Art. 6(1)(f); EDPB guidance on legitimate interest.",
-            "Solo puede invocarse un interés si es lícito, lo bastante preciso para poder ponderarlo y real, no hipotético. Ejemplo: «Sí: la prevención del fraude es lícita, específica y continua». Fuente: RGPD, art. 6(1)(f); directrices del CEPD sobre el interés legítimo.",
+            "Solo puede invocarse un interés si es lícito, lo bastante preciso para poder ponderarlo y real, no hipotético. Ejemplo: «Sí: la prevención del fraude es lícita, específica y continua». Fuente: RGPD, art. 6.1.f); directrices del CEPD sobre el interés legítimo.",
           ),
         },
       ],
@@ -195,7 +195,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "\"Necessary\" means the processing is a targeted and proportionate way to meet the interest, not merely useful. If it is only convenient, legitimate interest is not the right basis. Example: \"Reasonably necessary: fraud scoring needs the transaction data.\" Source: GDPR Art. 6(1)(f).",
-            "«Necesario» significa que el tratamiento es una forma específica y proporcionada de satisfacer el interés, no solo útil. Si es meramente conveniente, el interés legítimo no es la base adecuada. Ejemplo: «Razonablemente necesario: la puntuación de fraude requiere los datos de la transacción». Fuente: RGPD, art. 6(1)(f).",
+            "«Necesario» significa que el tratamiento es una forma específica y proporcionada de satisfacer el interés, no solo útil. Si es meramente conveniente, el interés legítimo no es la base jurídica adecuada. Ejemplo: «Razonablemente necesario: la puntuación de fraude requiere los datos de la transacción». Fuente: RGPD, art. 6.1.f).",
           ),
         },
         {
@@ -209,7 +209,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "If a less intrusive way exists that is reasonably effective, you should use it instead. Example: \"No: aggregated data would miss the individual fraud patterns.\" Source: GDPR Art. 6(1)(f); principle of data minimisation, Art. 5(1)(c).",
-            "Si existe una forma menos intrusiva y razonablemente eficaz, debes usarla en su lugar. Ejemplo: «No: los datos agregados no detectarían los patrones de fraude individuales». Fuente: RGPD, art. 6(1)(f); principio de minimización de datos, art. 5(1)(c).",
+            "Si existe una forma menos intrusiva y razonablemente eficaz, debes usarla en su lugar. Ejemplo: «No: los datos agregados no detectarían los patrones de fraude individuales». Fuente: RGPD, art. 6.1.f); principio de minimización de datos, art. 5.1.c).",
           ),
         },
         {
@@ -218,7 +218,7 @@ const liaV2: V2Template = {
           text: L("Is the data limited to what the interest requires (data minimisation)?", "¿Se limitan los datos a lo que exige el interés (minimización de datos)?"),
           help: L(
             "Only the data genuinely needed for the interest should be processed. Example: \"Yes: we use the transaction and device data, not the full customer profile.\" Source: GDPR Art. 5(1)(c).",
-            "Solo deben tratarse los datos realmente necesarios para el interés. Ejemplo: «Sí: usamos los datos de la transacción y del dispositivo, no el perfil completo del cliente». Fuente: RGPD, art. 5(1)(c).",
+            "Solo deben tratarse los datos realmente necesarios para el interés. Ejemplo: «Sí: usamos los datos de la transacción y del dispositivo, no el perfil completo del cliente». Fuente: RGPD, art. 5.1.c).",
           ),
         },
       ],
@@ -233,13 +233,13 @@ const liaV2: V2Template = {
           type: "select",
           text: L("What is the nature of the data?", "¿Cuál es la naturaleza de los datos?"),
           options: [
-            L("No special category or criminal-offence data", "Sin datos de categoría especial ni penales"),
-            L("Sensitive but not special category", "Sensibles pero no de categoría especial"),
-            L("Includes special category or criminal-offence data", "Incluye datos de categoría especial o penales"),
+            L("No special category or criminal-offence data", "Sin datos de categorías especiales ni penales"),
+            L("Sensitive but not special category", "Sensibles, pero no de categorías especiales"),
+            L("Includes special category or criminal-offence data", "Incluye datos de categorías especiales o penales"),
           ],
           help: L(
             "The more sensitive the data, the heavier it weighs against the interest. Special category and criminal-offence data need a separate condition and rarely sit under legitimate interest alone. Example: \"No special category data.\" Source: GDPR Arts. 9 and 10.",
-            "Cuanto más sensibles sean los datos, más pesan frente al interés. Los datos de categoría especial y penales requieren una condición aparte y rara vez se amparan solo en el interés legítimo. Ejemplo: «Sin datos de categoría especial». Fuente: RGPD, arts. 9 y 10.",
+            "Cuanto más sensibles sean los datos, más pesan frente al interés. Los datos de categorías especiales y los relativos a condenas e infracciones penales requieren una condición aparte y rara vez se amparan solo en el interés legítimo. Ejemplo: «Sin datos de categorías especiales». Fuente: RGPD, arts. 9 y 10.",
           ),
         },
         {
@@ -269,7 +269,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "Consider the effect on the person, including any decision made about them. A significant negative impact usually tips the balance towards their rights. Example: \"Minor: a flagged payment may be delayed briefly.\" Source: GDPR Art. 6(1)(f).",
-            "Considera el efecto sobre la persona, incluida cualquier decisión que se tome sobre ella. Un impacto negativo significativo suele inclinar la balanza hacia sus derechos. Ejemplo: «Leve: un pago marcado puede retrasarse un momento». Fuente: RGPD, art. 6(1)(f).",
+            "Considera el efecto sobre la persona, incluida cualquier decisión que se tome sobre ella. Un impacto negativo significativo suele inclinar la balanza hacia sus derechos. Ejemplo: «Leve: un pago marcado puede retrasarse un momento». Fuente: RGPD, art. 6.1.f).",
           ),
         },
         {
@@ -278,7 +278,7 @@ const liaV2: V2Template = {
           text: L("Are children or other vulnerable people affected?", "¿Se ven afectados menores u otras personas vulnerables?"),
           help: L(
             "Children and vulnerable people warrant extra weight on their side of the balance. Example: \"No: the service is for account holders aged 18 and over.\" Source: GDPR Recital 38; Art. 6(1)(f).",
-            "Los menores y las personas vulnerables merecen un peso adicional en su lado de la balanza. Ejemplo: «No: el servicio es para titulares mayores de 18 años». Fuente: RGPD, considerando 38; art. 6(1)(f).",
+            "Los menores y las personas vulnerables merecen un peso adicional en su lado de la balanza. Ejemplo: «No: el servicio es para titulares de cuentas mayores de 18 años». Fuente: RGPD, considerando 38; art. 6.1.f).",
           ),
         },
         {
@@ -292,7 +292,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "State the conclusion of the balance, taking the safeguards below into account. Where rights prevail, choose another lawful basis. Example: \"Balanced; the right to object and data minimisation are decisive.\" Source: GDPR Art. 6(1)(f).",
-            "Indica la conclusión de la ponderación, teniendo en cuenta las salvaguardas siguientes. Si prevalecen los derechos, elige otra base jurídica. Ejemplo: «Equilibrado; el derecho de oposición y la minimización de datos son decisivos». Fuente: RGPD, art. 6(1)(f).",
+            "Indica la conclusión de la ponderación, teniendo en cuenta las salvaguardas siguientes. Si prevalecen los derechos, elige otra base jurídica. Ejemplo: «Equilibrado; el derecho de oposición y la minimización de datos son decisivos». Fuente: RGPD, art. 6.1.f).",
           ),
         },
       ],
@@ -317,7 +317,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "Safeguards can tip a finely balanced case in favour of the interest. List the ones actually in place. Example: \"Right to object honoured, retention limits, pseudonymisation.\" Source: GDPR Arts. 21 and 5(1); Recital 47.",
-            "Las salvaguardas pueden inclinar un caso ajustado a favor del interés. Enumera las que realmente existen. Ejemplo: «Se atiende el derecho de oposición, límites de conservación, seudonimización». Fuente: RGPD, arts. 21 y 5(1); considerando 47.",
+            "Las salvaguardas pueden inclinar un caso ajustado a favor del interés. Enumera las que realmente existen. Ejemplo: «Se atiende el derecho de oposición, límites de conservación, seudonimización». Fuente: RGPD, arts. 21 y 5.1; considerando 47.",
           ),
         },
         {
@@ -326,7 +326,7 @@ const liaV2: V2Template = {
           text: L("Have you told individuals about this processing and their right to object?", "¿Has informado a los interesados de este tratamiento y de su derecho de oposición?"),
           help: L(
             "Individuals must be told, in the privacy notice, that you rely on legitimate interest and that they can object. Example: \"Yes: the privacy notice names the interest and explains how to object.\" Source: GDPR Arts. 13(1)(d), 14(2)(b) and 21.",
-            "Debe informarse a los interesados, en la información sobre privacidad, de que te basas en el interés legítimo y de que pueden oponerse. Ejemplo: «Sí: la información sobre privacidad nombra el interés y explica cómo oponerse». Fuente: RGPD, arts. 13(1)(d), 14(2)(b) y 21.",
+            "Debe informarse a los interesados, en la información sobre privacidad, de que te basas en el interés legítimo y de que pueden oponerse. Ejemplo: «Sí: la información sobre privacidad nombra el interés y explica cómo oponerse». Fuente: RGPD, arts. 13.1.d), 14.2.b) y 21.",
           ),
         },
         {
@@ -336,7 +336,7 @@ const liaV2: V2Template = {
           text: L("Conclusion and any conditions.", "Conclusión y condiciones, si las hay."),
           help: L(
             "Summarise the outcome and any conditions that must hold for the processing to remain justified. Example: \"May proceed while the right to object is honoured and retention stays at 12 months.\" Source: GDPR Art. 6(1)(f).",
-            "Resume el resultado y las condiciones que deben cumplirse para que el tratamiento siga justificado. Ejemplo: «Puede continuar mientras se atienda el derecho de oposición y la conservación se mantenga en 12 meses». Fuente: RGPD, art. 6(1)(f).",
+            "Resume el resultado y las condiciones que deben cumplirse para que el tratamiento siga justificado. Ejemplo: «Puede continuar mientras se atienda el derecho de oposición y la conservación se mantenga en 12 meses». Fuente: RGPD, art. 6.1.f).",
           ),
         },
       ],
@@ -353,7 +353,7 @@ const tiaV2: V2Template = {
   supersedes: "system-tia-template",
   type: "TIA" as AssessmentType,
   version: "2.0",
-  name: L("Transfer Impact Assessment", "Evaluación de impacto de la transferencia"),
+  name: L("Transfer Impact Assessment", "Evaluación de impacto de las transferencias (TIA)"),
   description: L(
     "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers. Informational, not legal advice; verify with qualified counsel.",
     "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
@@ -384,7 +384,7 @@ const tiaV2: V2Template = {
           id: "tiav2_1_2",
           type: "select",
           showIf: whenAnyOf("tiav2_1_1", ["Standard Contractual Clauses (Art. 46)"]),
-          text: L("Which SCC module applies?", "¿Qué módulo de las CCT aplica?"),
+          text: L("Which SCC module applies?", "¿Qué módulo de las CCT se aplica?"),
           options: [
             L("Module 1: controller to controller", "Módulo 1: de responsable a responsable"),
             L("Module 2: controller to processor", "Módulo 2: de responsable a encargado"),
@@ -406,7 +406,7 @@ const tiaV2: V2Template = {
             L("Financial data", "Datos financieros"),
             L("Behavioural or usage data", "Datos de comportamiento o de uso"),
             L("Location data", "Datos de localización"),
-            L("Special category data", "Datos de categoría especial"),
+            L("Special category data", "Categorías especiales de datos"),
             L("Criminal-offence data", "Datos penales"),
           ],
           help: L(
@@ -460,13 +460,13 @@ const tiaV2: V2Template = {
           text: L("Does the destination's law allow disproportionate government access to data?", "¿Permite la legislación del destino un acceso gubernamental desproporcionado a los datos?"),
           options: [
             L("No known access legislation", "Sin legislación de acceso conocida"),
-            L("Access exists but with effective oversight and safeguards", "Existe acceso pero con supervisión y garantías efectivas"),
+            L("Access exists but with effective oversight and safeguards", "Existe acceso, pero con supervisión y garantías efectivas"),
             L("Broad surveillance powers with limited oversight", "Amplios poderes de vigilancia con escasa supervisión"),
             L("Mass surveillance or no independent judicial oversight", "Vigilancia masiva o sin supervisión judicial independiente"),
           ],
           help: L(
             "The core Schrems II question: can public authorities reach the data in ways that would not be acceptable in the EU? Name the laws. Example: \"Broad surveillance powers: FISA Section 702 and EO 12333.\" Source: EDPB Recommendations 01/2020, step 3.",
-            "La cuestión central de Schrems II: ¿pueden las autoridades públicas acceder a los datos de formas que no serían aceptables en la UE? Nombra las leyes. Ejemplo: «Amplios poderes de vigilancia: la Sección 702 de FISA y la EO 12333». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
+            "La cuestión central de Schrems II: ¿pueden las autoridades públicas acceder a los datos de formas que no serían aceptables en la UE? Nombra las leyes. Ejemplo: «Amplios poderes de vigilancia: la sección 702 de la FISA y la Orden Ejecutiva 12333». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
           ),
         },
         {
@@ -505,7 +505,7 @@ const tiaV2: V2Template = {
           text: L("Describe the relevant laws and government access practices.", "Describe las leyes pertinentes y las prácticas de acceso gubernamental."),
           help: L(
             "Cite specific legislation and any public government-access or transparency reports. Example: \"FISA Section 702 permits access to data held by electronic communication service providers; the importer's transparency report shows N requests.\" Source: EDPB Recommendations 01/2020, step 3.",
-            "Cita legislación específica y cualquier informe público de acceso gubernamental o de transparencia. Ejemplo: «La Sección 702 de FISA permite el acceso a datos en poder de proveedores de servicios de comunicaciones electrónicas; el informe de transparencia del importador muestra N solicitudes». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
+            "Cita la legislación concreta y cualquier informe público de acceso gubernamental o de transparencia. Ejemplo: «La sección 702 de la FISA permite el acceso a datos en poder de proveedores de servicios de comunicaciones electrónicas; el informe de transparencia del importador muestra N solicitudes». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
           ),
         },
       ],
@@ -530,7 +530,7 @@ const tiaV2: V2Template = {
           ],
           help: L(
             "Effective encryption with keys held outside the destination is the strongest technical safeguard against government access. Example: \"Encryption at rest with EU-held keys and pseudonymisation.\" Source: EDPB Recommendations 01/2020, Annex 2.",
-            "El cifrado efectivo con claves fuera del destino es la salvaguarda técnica más fuerte frente al acceso gubernamental. Ejemplo: «Cifrado en reposo con claves en la UE y seudonimización». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2.",
+            "El cifrado efectivo con claves custodiadas fuera del destino es la garantía técnica más sólida frente al acceso gubernamental. Ejemplo: «Cifrado en reposo con claves custodiadas en la UE y seudonimización». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2.",
           ),
         },
         {
@@ -540,11 +540,11 @@ const tiaV2: V2Template = {
           options: [
             L("Duty to challenge government access requests", "Obligación de impugnar las solicitudes de acceso gubernamental"),
             L("Duty to notify the exporter of access (where lawful)", "Obligación de notificar al exportador el acceso (cuando sea lícito)"),
-            L("Transparency reporting obligation", "Obligación de informar de transparencia"),
-            L("No onward transfer without prior authorisation", "Sin transferencias ulteriores sin autorización previa"),
+            L("Transparency reporting obligation", "Obligación de publicar informes de transparencia"),
+            L("No onward transfer without prior authorisation", "Prohibición de transferencias ulteriores sin autorización previa"),
             L("Audit rights for the exporter", "Derechos de auditoría del exportador"),
             L("Data localisation obligation", "Obligación de localización de datos"),
-            L("Suspension or termination if the law changes", "Suspensión o terminación si cambia la ley"),
+            L("Suspension or termination if the law changes", "Suspensión o resolución si cambia la ley"),
             L("None", "Ninguna"),
           ],
           help: L(
@@ -597,7 +597,7 @@ const tiaV2: V2Template = {
           ],
           help: L(
             "Combine the destination's laws and practices with the data type and the safeguards. Example: \"Low: pseudonymised data, keys in the EU, sector not routinely targeted.\" Source: EDPB Recommendations 01/2020, step 3.",
-            "Combina las leyes y prácticas del destino con el tipo de datos y las salvaguardas. Ejemplo: «Baja: datos seudonimizados, claves en la UE, sector no habitualmente objetivo». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
+            "Combina las leyes y prácticas del destino con el tipo de datos y las garantías. Ejemplo: «Baja: datos seudonimizados, claves en la UE, sector no habitualmente objetivo». Fuente: Recomendaciones 01/2020 del CEPD, paso 3.",
           ),
         },
         {
@@ -670,7 +670,7 @@ const tiaV2: V2Template = {
           text: L("When is the next scheduled review?", "¿Cuándo está prevista la próxima revisión?"),
           help: L(
             "Give a specific date, in the form YYYY-MM-DD. Example: \"2027-04-01.\" Source: EDPB Recommendations 01/2020, step 6.",
-            "Indica una fecha concreta, con el formato AAAA-MM-DD. Ejemplo: «2027-04-01». Fuente: Recomendaciones 01/2020 del CEPD, paso 6.",
+            "Indica una fecha concreta, con el formato DD/MM/AAAA. Ejemplo: «01/04/2027». Fuente: Recomendaciones 01/2020 del CEPD, paso 6.",
           ),
         },
       ],
@@ -721,7 +721,7 @@ const piaV2: V2Template = {
             L("Financial data", "Datos financieros"),
             L("Behavioural or usage data", "Datos de comportamiento o de uso"),
             L("Location data", "Datos de localización"),
-            L("Special category data", "Datos de categoría especial"),
+            L("Special category data", "Categorías especiales de datos"),
             L("Criminal-offence data", "Datos penales"),
           ],
           help: L(
@@ -732,10 +732,10 @@ const piaV2: V2Template = {
         {
           id: "piav2_1_3",
           type: "boolean",
-          text: L("Does the processing involve special category or criminal-offence data?", "¿Implica el tratamiento datos de categoría especial o penales?"),
+          text: L("Does the processing involve special category or criminal-offence data?", "¿Implica el tratamiento categorías especiales de datos o datos penales?"),
           help: L(
             "Special category data (Art. 9) and criminal-offence data (Art. 10) need a specific condition beyond the lawful basis. Example: \"No.\" Source: GDPR Arts. 9 and 10.",
-            "Los datos de categoría especial (art. 9) y los penales (art. 10) requieren una condición específica más allá de la base jurídica. Ejemplo: «No». Fuente: RGPD, arts. 9 y 10.",
+            "Las categorías especiales de datos (art. 9) y los datos penales (art. 10) requieren una condición específica más allá de la base jurídica. Ejemplo: «No». Fuente: RGPD, arts. 9 y 10.",
           ),
         },
         {
@@ -743,10 +743,10 @@ const piaV2: V2Template = {
           type: "textarea",
           required: false,
           showIf: whenYes("piav2_1_3"),
-          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9(2) o del artículo 10 aplica?"),
+          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9(2) o del artículo 10 se aplica?"),
           help: L(
             "Name the specific condition that permits the special category or criminal-offence data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10.",
-            "Nombra la condición específica que permite los datos de categoría especial o penales. Ejemplo: «Consentimiento explícito (art. 9(2)(a))». Fuente: RGPD, arts. 9(2) y 10.",
+            "Nombra la condición específica que permite tratar las categorías especiales de datos o los datos penales. Ejemplo: «Consentimiento explícito (art. 9(2)(a))». Fuente: RGPD, arts. 9(2) y 10.",
           ),
         },
         {
@@ -788,7 +788,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Every processing needs one of the six lawful bases, chosen before processing begins. Legitimate interest also needs a balancing test (the LIA template). Example: \"Contract.\" Source: GDPR Art. 6(1).",
-            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla de EIL). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
+            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
           ),
         },
         {
@@ -847,7 +847,7 @@ const piaV2: V2Template = {
           text: L("Is any data transferred outside the EU or EEA?", "¿Se transfieren datos fuera de la UE o del EEE?"),
           help: L(
             "A transfer to a third country needs a transfer tool and, outside adequacy, a Transfer Impact Assessment (the TIA template). Example: \"Yes: our hosting provider is in the United States.\" Source: GDPR Arts. 44 to 49.",
-            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de la transferencia (la plantilla de EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
+            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla TIA). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
           ),
         },
         {
@@ -855,10 +855,10 @@ const piaV2: V2Template = {
           type: "text",
           required: false,
           showIf: whenYes("piav2_3_3"),
-          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y hay una EIT hecha?"),
+          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y se ha hecho una TIA?"),
           help: L(
             "Name the transfer tool and whether a Transfer Impact Assessment has been done. Example: \"Standard Contractual Clauses; TIA completed 2026-05.\" Source: GDPR Arts. 46 and 44.",
-            "Nombra el instrumento de transferencia y si se ha hecho una evaluación de impacto de la transferencia. Ejemplo: «Cláusulas contractuales tipo; EIT completada en 2026-05». Fuente: RGPD, arts. 46 y 44.",
+            "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; TIA completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44.",
           ),
         },
       ],
@@ -897,10 +897,10 @@ const piaV2: V2Template = {
         {
           id: "piav2_4_3",
           type: "boolean",
-          text: L("Is there solely automated decision-making with legal or similarly significant effects?", "¿Existen decisiones basadas únicamente en el tratamiento automatizado con efectos jurídicos o similares?"),
+          text: L("Is there solely automated decision-making with legal or similarly significant effects?", "¿Existen decisiones basadas únicamente en el tratamiento automatizado con efectos jurídicos o efectos significativos similares?"),
           help: L(
             "Decisions made solely by automated means with a legal or similarly significant effect are restricted and need specific safeguards. Example: \"No: a person reviews every decision.\" Source: GDPR Art. 22.",
-            "Las decisiones tomadas únicamente por medios automatizados con un efecto jurídico o similar están restringidas y necesitan garantías específicas. Ejemplo: «No: una persona revisa cada decisión». Fuente: RGPD, art. 22.",
+            "Las decisiones tomadas únicamente por medios automatizados con un efecto jurídico o un efecto significativo similar están restringidas y necesitan garantías específicas. Ejemplo: «No: una persona revisa cada decisión». Fuente: RGPD, art. 22.",
           ),
         },
         {
@@ -911,7 +911,7 @@ const piaV2: V2Template = {
           text: L("What safeguards apply to the automated decision-making?", "¿Qué garantías se aplican a esas decisiones automatizadas?"),
           help: L(
             "Describe the lawful ground and the safeguards: the right to human intervention, to express a view and to contest the decision. Example: \"Explicit consent; the person can request a human review.\" Source: GDPR Art. 22(3).",
-            "Describe la base lícita y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22(3).",
+            "Describe la base jurídica y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22(3).",
           ),
         },
       ],
@@ -991,7 +991,7 @@ const customV2: V2Template = {
         {
           id: "customv2_1_1",
           type: "textarea",
-          text: L("What is the purpose of this assessment?", "¿Cuál es el propósito de esta evaluación?"),
+          text: L("What is the purpose of this assessment?", "¿Cuál es la finalidad de esta evaluación?"),
           help: L(
             "Say what you are evaluating and why, so the reader knows the scope. Example: \"Reviewing a new marketing analytics tool before launch.\" Source: GDPR Art. 24 (accountability).",
             "Di qué estás evaluando y por qué, para que el lector conozca el alcance. Ejemplo: «Revisar una nueva herramienta de analítica de marketing antes de su lanzamiento». Fuente: RGPD, art. 24 (responsabilidad proactiva).",
@@ -1060,7 +1060,7 @@ const customV2: V2Template = {
           options: [
             L("Yes, fully acceptable", "Sí, plenamente aceptable"),
             L("Acceptable with conditions", "Aceptable con condiciones"),
-            L("Needs further review", "Necesita más revisión"),
+            L("Needs further review", "Requiere revisión adicional"),
             L("Not acceptable", "No aceptable"),
           ],
           help: L(

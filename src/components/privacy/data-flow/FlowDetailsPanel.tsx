@@ -31,6 +31,7 @@ import {
   Box,
 } from "lucide-react";
 import type { FlowData } from "./useDataFlowGraph";
+import { FREQUENCY_LABEL_KEYS } from "./CreateFlowSheet";
 
 const assetTypeIcons: Record<string, typeof Database> = {
   DATABASE: Server,
@@ -60,6 +61,8 @@ export function FlowDetailsPanel({
   onDelete,
 }: FlowDetailsPanelProps) {
   const tCategory = useTranslations("enums.dataCategory");
+  const tFlow = useTranslations("dataFlow");
+  const tCommon = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
   if (!flow) return null;
 
@@ -75,19 +78,19 @@ export function FlowDetailsPanel({
             {flow.isAutomated && (
               <Badge variant="outline" className="ml-2">
                 <Zap className="w-3 h-3 mr-1" />
-                Automated
+                {tFlow("details.automated")}
               </Badge>
             )}
           </SheetTitle>
           <SheetDescription>
-            {flow.description || "No description provided"}
+            {flow.description || tFlow("details.noDescription")}
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
           {/* Flow Direction */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">Data Flow Direction</h4>
+            <h4 className="text-sm font-medium">{tFlow("details.direction")}</h4>
             <div className="flex items-center gap-3 p-3 bg-muted/50">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <div className="w-8 h-8 bg-primary/10 flex items-center justify-center shrink-0">
@@ -115,7 +118,7 @@ export function FlowDetailsPanel({
 
           {/* Data Categories */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">Data Categories</h4>
+            <h4 className="text-sm font-medium">{tFlow("sheet.categories")}</h4>
             {flow.dataCategories && flow.dataCategories.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {flow.dataCategories.map((category) => (
@@ -125,7 +128,7 @@ export function FlowDetailsPanel({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No categories specified</p>
+              <p className="text-sm text-muted-foreground">{tFlow("details.noCategories")}</p>
             )}
           </div>
 
@@ -133,14 +136,18 @@ export function FlowDetailsPanel({
 
           {/* Metadata */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">Flow Details</h4>
+            <h4 className="text-sm font-medium">{tFlow("details.title")}</h4>
             <div className="grid gap-3">
               {flow.frequency && (
                 <div className="flex items-center gap-3">
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Frequency</p>
-                    <p className="text-sm font-medium">{flow.frequency}</p>
+                    <p className="text-sm text-muted-foreground">{tFlow("sheet.frequency")}</p>
+                    <p className="text-sm font-medium">
+                      {FREQUENCY_LABEL_KEYS[flow.frequency]
+                        ? tFlow(`frequencyOptions.${FREQUENCY_LABEL_KEYS[flow.frequency]}`)
+                        : flow.frequency}
+                    </p>
                   </div>
                 </div>
               )}
@@ -148,7 +155,7 @@ export function FlowDetailsPanel({
                 <div className="flex items-center gap-3">
                   <Database className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Volume</p>
+                    <p className="text-sm text-muted-foreground">{tFlow("details.volume")}</p>
                     <p className="text-sm font-medium">{flow.volume}</p>
                   </div>
                 </div>
@@ -157,13 +164,13 @@ export function FlowDetailsPanel({
                 <div className="flex items-center gap-3">
                   <Lock className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Encryption</p>
+                    <p className="text-sm text-muted-foreground">{tFlow("details.encryption")}</p>
                     <p className="text-sm font-medium">{flow.encryptionMethod}</p>
                   </div>
                 </div>
               )}
               {!flow.frequency && !flow.volume && !flow.encryptionMethod && (
-                <p className="text-sm text-muted-foreground">No additional details</p>
+                <p className="text-sm text-muted-foreground">{tFlow("details.noDetails")}</p>
               )}
             </div>
           </div>
@@ -177,13 +184,13 @@ export function FlowDetailsPanel({
               onClick={() => onDelete(flow)}
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Delete
+              {tCommon("delete")}
             </Button>
           )}
           {onEdit && (
             <Button variant="outline" onClick={() => onEdit(flow)}>
               <Edit className="w-4 h-4 mr-2" />
-              Edit
+              {tCommon("edit")}
             </Button>
           )}
         </SheetFooter>

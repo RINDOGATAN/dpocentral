@@ -27,7 +27,7 @@ export const NAME_PLACEHOLDER = "[_________________]";
 const GOVERNING_LAW_DISPLAY: Record<string, Record<DpaLang, string>> = {
   CALIFORNIA: {
     en: "State of California, United States of America",
-    es: "Estado de California, EE.UU.",
+    es: "Estado de California, Estados Unidos de América",
   },
   ENGLAND_WALES: {
     en: "England and Wales, United Kingdom",
