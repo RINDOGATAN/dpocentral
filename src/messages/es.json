@@ -5431,7 +5431,45 @@
         "description": "Explora más de 40 normas de privacidad de todo el mundo, organizadas por región y categoría.",
         "mockupTitle": "Tarjetas de jurisdicción",
         "dsarLabel": "Plazo de solicitudes de derechos:",
-        "breachLabel": "Notificación de brecha:"
+        "breachLabel": "Notificación de brecha:",
+        "cards": {
+          "GDPR": {
+            "region": "Unión Europea",
+            "dsar": "1 mes (+2 en caso necesario)",
+            "breach": "72 horas",
+            "name": "RGPD"
+          },
+          "CCPA": {
+            "region": "California",
+            "dsar": "45 días (+45 en caso necesario)",
+            "breach": "Sin demora indebida",
+            "name": "CCPA/CPRA"
+          },
+          "LGPD": {
+            "region": "Brasil",
+            "dsar": "15 días",
+            "breach": "3 días hábiles",
+            "name": "LGPD"
+          },
+          "PIPL": {
+            "region": "China",
+            "dsar": "En tiempo oportuno (sin plazo fijo)",
+            "breach": "De inmediato",
+            "name": "PIPL"
+          },
+          "POPIA": {
+            "region": "Sudáfrica",
+            "dsar": "30 días",
+            "breach": "Lo antes posible",
+            "name": "POPIA"
+          },
+          "AIACT": {
+            "region": "Unión Europea",
+            "dsar": "No aplica",
+            "breach": "Incidentes graves: 15 días (art. 73)",
+            "name": "Reglamento de IA"
+          }
+        }
       },
       "applicability": {
         "title": "Asistente de aplicabilidad",

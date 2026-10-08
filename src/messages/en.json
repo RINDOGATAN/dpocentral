@@ -5431,7 +5431,45 @@
         "description": "Browse 40+ privacy regulations from around the world, organized by region and category.",
         "mockupTitle": "Jurisdiction Cards",
         "dsarLabel": "DSAR deadline:",
-        "breachLabel": "Breach notification:"
+        "breachLabel": "Breach notification:",
+        "cards": {
+          "GDPR": {
+            "region": "European Union",
+            "dsar": "1 month (+2 where necessary)",
+            "breach": "72 hours",
+            "name": "GDPR"
+          },
+          "CCPA": {
+            "region": "California",
+            "dsar": "45 days (+45 where necessary)",
+            "breach": "Expedient",
+            "name": "CCPA/CPRA"
+          },
+          "LGPD": {
+            "region": "Brazil",
+            "dsar": "15 days",
+            "breach": "3 business days",
+            "name": "LGPD"
+          },
+          "PIPL": {
+            "region": "China",
+            "dsar": "Timely (no fixed deadline)",
+            "breach": "Immediately",
+            "name": "PIPL"
+          },
+          "POPIA": {
+            "region": "South Africa",
+            "dsar": "30 days",
+            "breach": "As soon as possible",
+            "name": "POPIA"
+          },
+          "AIACT": {
+            "region": "European Union",
+            "dsar": "N/A",
+            "breach": "Serious incidents: 15 days (Art. 73)",
+            "name": "EU AI Act"
+          }
+        }
       },
       "applicability": {
         "title": "Applicability Wizard",

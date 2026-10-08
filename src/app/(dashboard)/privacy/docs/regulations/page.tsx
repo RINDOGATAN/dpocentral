@@ -12,13 +12,13 @@ import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 
 const jurisdictions = [
-  { name: "GDPR", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "30 days", breach: "72 hours" },
-  { name: "CCPA/CPRA", region: "California", regionColor: "bg-yellow-100 text-yellow-800 border-transparent", dsar: "45 days", breach: "Expedient" },
-  { name: "LGPD", region: "Brazil", regionColor: "bg-green-100 text-green-800 border-transparent", dsar: "15 days", breach: "3 business days" },
-  { name: "PIPL", region: "China", regionColor: "bg-red-100 text-red-800 border-transparent", dsar: "Timely (no fixed deadline)", breach: "Immediately" },
-  { name: "POPIA", region: "South Africa", regionColor: "bg-purple-100 text-purple-800 border-transparent", dsar: "30 days", breach: "As soon as possible" },
-  { name: "EU AI Act", region: "European Union", regionColor: "bg-blue-100 text-blue-800 border-transparent", dsar: "N/A", breach: "Serious incidents: 15 days (Art. 73)" },
-];
+  { key: "GDPR", regionColor: "bg-blue-100 text-blue-800 border-transparent" },
+  { key: "CCPA", regionColor: "bg-yellow-100 text-yellow-800 border-transparent" },
+  { key: "LGPD", regionColor: "bg-green-100 text-green-800 border-transparent" },
+  { key: "PIPL", regionColor: "bg-red-100 text-red-800 border-transparent" },
+  { key: "POPIA", regionColor: "bg-purple-100 text-purple-800 border-transparent" },
+  { key: "AIACT", regionColor: "bg-blue-100 text-blue-800 border-transparent" },
+] as const;
 
 export default async function DocsRegulationsPage() {
   const t = await getTranslations("docs.regulations");
@@ -54,21 +54,21 @@ export default async function DocsRegulationsPage() {
         <FeatureMockup title={t("catalog.mockupTitle")}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {jurisdictions.map((j) => (
-              <div key={j.name} className="flex items-start gap-3 rounded-lg border p-3">
+              <div key={j.key} className="flex items-start gap-3 rounded-lg border p-3">
                 <div className="rounded-md bg-primary/10 p-2">
                   <Scale className="h-4 w-4 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-sm">{j.name}</p>
-                    <Badge variant="outline" className={`text-[10px] ${j.regionColor}`}>{j.region}</Badge>
+                    <p className="font-medium text-sm">{t(`catalog.cards.${j.key}.name`)}</p>
+                    <Badge variant="outline" className={`text-[10px] ${j.regionColor}`}>{t(`catalog.cards.${j.key}.region`)}</Badge>
                   </div>
                   <div className="mt-1.5 space-y-0.5">
                     <p className="text-xs text-muted-foreground">
-                      {t("catalog.dsarLabel")} <span className="font-medium text-foreground">{j.dsar}</span>
+                      {t("catalog.dsarLabel")} <span className="font-medium text-foreground">{t(`catalog.cards.${j.key}.dsar`)}</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {t("catalog.breachLabel")} <span className="font-medium text-foreground">{j.breach}</span>
+                      {t("catalog.breachLabel")} <span className="font-medium text-foreground">{t(`catalog.cards.${j.key}.breach`)}</span>
                     </p>
                   </div>
                 </div>
