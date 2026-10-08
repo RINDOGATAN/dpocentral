@@ -708,7 +708,7 @@ const piaV2: V2Template = {
           text: L("What is the purpose of the processing?", "¿Cuál es la finalidad del tratamiento?"),
           help: L(
             "State the specific, explicit purpose, which every later question is measured against. Example: \"Managing customer orders and after-sales support.\" Source: GDPR Art. 5(1)(b).",
-            "Indica la finalidad específica y explícita, con la que se contrasta cada pregunta posterior. Ejemplo: «Gestionar los pedidos de los clientes y la atención posventa». Fuente: RGPD, art. 5(1)(b).",
+            "Indica la finalidad específica y explícita, con la que se contrasta cada pregunta posterior. Ejemplo: «Gestionar los pedidos de los clientes y la atención posventa». Fuente: RGPD, art. 5.1.b).",
           ),
         },
         {
@@ -726,7 +726,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "List every category, because the categories drive the risk and the obligations. Example: \"Contact details, identifiers, financial data.\" Source: GDPR Art. 30(1)(c).",
-            "Enumera cada categoría, porque las categorías determinan el riesgo y las obligaciones. Ejemplo: «Datos de contacto, identificadores, datos financieros». Fuente: RGPD, art. 30(1)(c).",
+            "Enumera cada categoría, porque las categorías determinan el riesgo y las obligaciones. Ejemplo: «Datos de contacto, identificadores, datos financieros». Fuente: RGPD, art. 30.1.c).",
           ),
         },
         {
@@ -743,10 +743,10 @@ const piaV2: V2Template = {
           type: "textarea",
           required: false,
           showIf: whenYes("piav2_1_3"),
-          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9(2) o del artículo 10 se aplica?"),
+          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9.2 o del artículo 10 se aplica?"),
           help: L(
             "Name the specific condition that permits the special category or criminal-offence data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10.",
-            "Nombra la condición específica que permite tratar las categorías especiales de datos o los datos penales. Ejemplo: «Consentimiento explícito (art. 9(2)(a))». Fuente: RGPD, arts. 9(2) y 10.",
+            "Nombra la condición específica que permite tratar las categorías especiales de datos o los datos penales. Ejemplo: «Consentimiento explícito (art. 9.2.a))». Fuente: RGPD, arts. 9.2 y 10.",
           ),
         },
         {
@@ -764,7 +764,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Name the groups whose data is processed. Children and vulnerable people call for extra care. Example: \"Customers and website users.\" Source: GDPR Art. 30(1)(c); Recital 38.",
-            "Nombra los grupos cuyos datos se tratan. Los menores y las personas vulnerables exigen un cuidado adicional. Ejemplo: «Clientes y usuarios de la web». Fuente: RGPD, art. 30(1)(c); considerando 38.",
+            "Nombra los grupos cuyos datos se tratan. Los menores y las personas vulnerables exigen un cuidado adicional. Ejemplo: «Clientes y usuarios de la web». Fuente: RGPD, art. 30.1.c); considerando 38.",
           ),
         },
       ],
@@ -779,16 +779,16 @@ const piaV2: V2Template = {
           type: "select",
           text: L("What is the lawful basis for the processing?", "¿Cuál es la base jurídica del tratamiento?"),
           options: [
-            L("Consent (Art. 6(1)(a))", "Consentimiento (art. 6(1)(a))"),
-            L("Contract (Art. 6(1)(b))", "Contrato (art. 6(1)(b))"),
-            L("Legal obligation (Art. 6(1)(c))", "Obligación legal (art. 6(1)(c))"),
-            L("Vital interests (Art. 6(1)(d))", "Intereses vitales (art. 6(1)(d))"),
-            L("Public task (Art. 6(1)(e))", "Misión de interés público (art. 6(1)(e))"),
-            L("Legitimate interests (Art. 6(1)(f))", "Interés legítimo (art. 6(1)(f))"),
+            L("Consent (Art. 6(1)(a))", "Consentimiento (art. 6.1.a))"),
+            L("Contract (Art. 6(1)(b))", "Contrato (art. 6.1.b))"),
+            L("Legal obligation (Art. 6(1)(c))", "Obligación legal (art. 6.1.c))"),
+            L("Vital interests (Art. 6(1)(d))", "Intereses vitales (art. 6.1.d))"),
+            L("Public task (Art. 6(1)(e))", "Misión de interés público (art. 6.1.e))"),
+            L("Legitimate interests (Art. 6(1)(f))", "Interés legítimo (art. 6.1.f))"),
           ],
           help: L(
             "Every processing needs one of the six lawful bases, chosen before processing begins. Legitimate interest also needs a balancing test (the LIA template). Example: \"Contract.\" Source: GDPR Art. 6(1).",
-            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
+            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
           ),
         },
         {
@@ -797,7 +797,7 @@ const piaV2: V2Template = {
           text: L("How long is the data kept, and from when?", "¿Cuánto tiempo se conservan los datos y desde cuándo?"),
           help: L(
             "State a retention period and its starting point, not \"as long as necessary\". Example: \"6 years from the end of the contract, for tax law.\" Source: GDPR Art. 5(1)(e).",
-            "Indica un plazo de conservación y su punto de partida, no «el tiempo necesario». Ejemplo: «6 años desde el fin del contrato, por la normativa fiscal». Fuente: RGPD, art. 5(1)(e).",
+            "Indica un plazo de conservación y su punto de partida, no «el tiempo necesario». Ejemplo: «6 años desde el fin del contrato, por la normativa fiscal». Fuente: RGPD, art. 5.1.e).",
           ),
         },
         {
@@ -806,7 +806,7 @@ const piaV2: V2Template = {
           text: L("Is the retention period justified and enforced?", "¿Está justificado y se aplica el plazo de conservación?"),
           help: L(
             "The period must be justified by the purpose or a legal duty, and the data actually deleted or anonymised at the end. Example: \"Yes: annual deletion job removes expired records.\" Source: GDPR Art. 5(1)(e).",
-            "El plazo debe estar justificado por la finalidad o un deber legal, y los datos deben eliminarse o anonimizarse de verdad al final. Ejemplo: «Sí: una tarea anual de borrado elimina los registros caducados». Fuente: RGPD, art. 5(1)(e).",
+            "El plazo debe estar justificado por la finalidad o un deber legal, y los datos deben eliminarse o anonimizarse de verdad al final. Ejemplo: «Sí: una tarea anual de borrado elimina los registros caducados». Fuente: RGPD, art. 5.1.e).",
           ),
         },
       ],
@@ -829,7 +829,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Name every category of recipient, because each adds obligations and risk. Example: \"Internal teams and a hosting processor.\" Source: GDPR Art. 30(1)(d).",
-            "Nombra cada categoría de destinatario, porque cada una añade obligaciones y riesgo. Ejemplo: «Equipos internos y un encargado de alojamiento». Fuente: RGPD, art. 30(1)(d).",
+            "Nombra cada categoría de destinatario, porque cada una añade obligaciones y riesgo. Ejemplo: «Equipos internos y un encargado de alojamiento». Fuente: RGPD, art. 30.1.d).",
           ),
         },
         {
@@ -838,7 +838,7 @@ const piaV2: V2Template = {
           text: L("Is every processor bound by a written data processing agreement (Art. 28)?", "¿Está cada encargado vinculado por un contrato de tratamiento por escrito (art. 28)?"),
           help: L(
             "A processor may only act under a contract with the terms Article 28 requires. Example: \"Yes: a signed DPA is in place with each processor.\" Source: GDPR Art. 28(3).",
-            "Un encargado solo puede actuar bajo un contrato con las cláusulas que exige el artículo 28. Ejemplo: «Sí: hay un contrato de encargo firmado con cada encargado». Fuente: RGPD, art. 28(3).",
+            "Un encargado solo puede actuar bajo un contrato con las cláusulas que exige el artículo 28. Ejemplo: «Sí: hay un contrato de encargo firmado con cada encargado». Fuente: RGPD, art. 28.3.",
           ),
         },
         {
@@ -911,7 +911,7 @@ const piaV2: V2Template = {
           text: L("What safeguards apply to the automated decision-making?", "¿Qué garantías se aplican a esas decisiones automatizadas?"),
           help: L(
             "Describe the lawful ground and the safeguards: the right to human intervention, to express a view and to contest the decision. Example: \"Explicit consent; the person can request a human review.\" Source: GDPR Art. 22(3).",
-            "Describe la base jurídica y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22(3).",
+            "Describe la base jurídica y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22.3.",
           ),
         },
       ],
@@ -960,7 +960,7 @@ const piaV2: V2Template = {
           text: L("What residual actions or recommendations remain?", "¿Qué acciones residuales o recomendaciones quedan?"),
           help: L(
             "Note any follow-up needed to reduce the risk further or to keep the assessment current. Example: \"Schedule a DPIA if profiling is added.\" Source: GDPR Art. 35(1).",
-            "Anota cualquier seguimiento necesario para reducir más el riesgo o mantener la evaluación al día. Ejemplo: «Programar una EIPD si se añade la elaboración de perfiles». Fuente: RGPD, art. 35(1).",
+            "Anota cualquier seguimiento necesario para reducir más el riesgo o mantener la evaluación al día. Ejemplo: «Programar una EIPD si se añade la elaboración de perfiles». Fuente: RGPD, art. 35.1.",
           ),
         },
       ],
