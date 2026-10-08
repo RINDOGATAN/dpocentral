@@ -25,10 +25,21 @@ export interface JurisdictionCoreData {
   name: string;
   shortName: string;
   region: string;
-  /** Days to respond to a data subject access request. */
+  /**
+   * Days to respond to a data subject access request. For a law that states
+   * its period in months (see dsarDeadlineMonths) this is only the nearest
+   * whole-day figure kept for day-based summaries; due dates use the months.
+   */
   dsarDeadlineDays: number;
   /** Additional extension days available, if any. */
   dsarExtensionDays?: number;
+  /**
+   * Set when the law states the answer period in calendar months ("one
+   * month of receipt"). Takes precedence over dsarDeadlineDays for due dates.
+   */
+  dsarDeadlineMonths?: number;
+  /** Extension in calendar months; takes precedence over dsarExtensionDays. */
+  dsarExtensionMonths?: number;
   /** Hours to notify the regulator of a breach; 0 = no fixed statutory clock. */
   breachNotificationHours: number;
   /** Supervisory authority / regulator name. */
@@ -43,6 +54,9 @@ export const JURISDICTION_CORE_DATA: JurisdictionCoreData[] = [
     region: "EU",
     dsarDeadlineDays: 30,
     dsarExtensionDays: 60,
+    // Art. 12(3): one month of receipt, extendable by two further months.
+    dsarDeadlineMonths: 1,
+    dsarExtensionMonths: 2,
     breachNotificationHours: 72,
     dpaName: "Lead supervisory authority (EDPB member)",
   },
@@ -53,6 +67,9 @@ export const JURISDICTION_CORE_DATA: JurisdictionCoreData[] = [
     region: "UK",
     dsarDeadlineDays: 30,
     dsarExtensionDays: 60,
+    // Art. 12(3): one month of receipt, extendable by two further months.
+    dsarDeadlineMonths: 1,
+    dsarExtensionMonths: 2,
     breachNotificationHours: 72,
     dpaName: "Information Commissioner's Office (ICO)",
   },

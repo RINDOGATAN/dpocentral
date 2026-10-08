@@ -6,15 +6,22 @@ import { createTRPCRouter, publicProcedure, organizationProcedure, officerProced
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
+import { daysUntilDue as daysLeft, dsarExtendedDueDate, dsarSlaStatus } from "@/lib/dsar-deadline";
+import { calculateDSARDueDate, dsarDeadlineRuleFor } from "@/server/services/privacy/slaCalculator";
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
 import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 
-// SLA Calculator service
-function calculateDueDate(receivedAt: Date, jurisdictionDeadlineDays: number): Date {
-  return addDays(receivedAt, jurisdictionDeadlineDays);
+// SLA rule of the organisation's primary jurisdiction: calendar months where
+// the law says months (GDPR art. 12(3): one month), days otherwise. Applies to
+// requests created and extensions applied from now on; stored due dates of
+// existing requests are never rewritten.
+function primaryDsarRule(
+  primary: { jurisdiction: { code: string; dsarDeadlineDays: number } } | null | undefined
+) {
+  return dsarDeadlineRuleFor(primary?.jurisdiction.code, primary?.jurisdiction.dsarDeadlineDays);
 }
 
 export const dsarRouter = createTRPCRouter({
@@ -76,12 +83,8 @@ export const dsarRouter = createTRPCRouter({
 
       // Add SLA status to each request
       const requestsWithSLA = requests.map((req) => {
-        const daysUntilDue = Math.ceil(
-          (req.dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        let slaStatus: "on_track" | "at_risk" | "overdue" = "on_track";
-        if (daysUntilDue < 0) slaStatus = "overdue";
-        else if (daysUntilDue <= 7) slaStatus = "at_risk";
+        const daysUntilDue = daysLeft(req.dueDate, now);
+        const slaStatus = dsarSlaStatus(req.dueDate, now);
 
         return { ...req, daysUntilDue, slaStatus };
       });
@@ -129,10 +132,7 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      const now = new Date();
-      const daysUntilDue = Math.ceil(
-        (request.dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-      );
+      const daysUntilDue = daysLeft(request.dueDate);
 
       return { ...request, daysUntilDue };
     }),
@@ -164,10 +164,9 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      // Default to GDPR 30 days if no jurisdiction set
-      const deadlineDays = orgJurisdiction?.jurisdiction.dsarDeadlineDays ?? 30;
+      // Defaults to the GDPR rule (one month) if no jurisdiction is set
       const receivedAt = new Date();
-      const dueDate = calculateDueDate(receivedAt, deadlineDays);
+      const dueDate = calculateDSARDueDate(receivedAt, primaryDsarRule(orgJurisdiction));
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {
@@ -270,7 +269,10 @@ export const dsarRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         id: z.string(),
-        extensionDays: z.number().min(1).max(90),
+        // Omitted: apply the extension the primary jurisdiction's law allows
+        // (GDPR: two further months, counted with the first month from
+        // receipt). Given: add that many days to the current due date.
+        extensionDays: z.number().min(1).max(90).optional(),
         reason: z.string().min(1),
       })
     )
@@ -286,7 +288,29 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      const newDueDate = addDays(request.dueDate, input.extensionDays);
+      let newDueDate: Date;
+      if (input.extensionDays !== undefined) {
+        newDueDate = addDays(request.dueDate, input.extensionDays);
+      } else {
+        const primary = await ctx.prisma.organizationJurisdiction.findFirst({
+          where: { organizationId: ctx.organization.id, isPrimary: true },
+          include: { jurisdiction: true },
+        });
+        const statutory = dsarExtendedDueDate(request.receivedAt, request.dueDate, primaryDsarRule(primary));
+        if (!statutory) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days",
+          });
+        }
+        if (statutory.getTime() <= request.dueDate.getTime()) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The deadline already runs to the longest period the law allows",
+          });
+        }
+        newDueDate = statutory;
+      }
 
       const updated = await ctx.prisma.dSARRequest.update({
         where: { id: input.id },
@@ -306,6 +330,7 @@ export const dsarRouter = createTRPCRouter({
             originalDue: request.dueDate,
             newDue: newDueDate,
             extensionDays: input.extensionDays,
+            statutoryExtension: input.extensionDays === undefined,
             reason: input.reason,
           },
         },
@@ -691,9 +716,8 @@ export const dsarRouter = createTRPCRouter({
       assertPilotWritable(org, pilotLang);
       await assertPilotCapacity(ctx.prisma, org.id, "dsarRequests", 1, pilotLang);
 
-      const deadlineDays = org.jurisdictions[0]?.jurisdiction.dsarDeadlineDays ?? 30;
       const receivedAt = new Date();
-      const dueDate = calculateDueDate(receivedAt, deadlineDays);
+      const dueDate = calculateDSARDueDate(receivedAt, primaryDsarRule(org.jurisdictions[0]));
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {

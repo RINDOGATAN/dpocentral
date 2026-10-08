@@ -17,6 +17,7 @@ import {
 } from "./pdf-styles";
 import { Page } from "@react-pdf/renderer";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { earliestDsarDeadline, type DsarDeadlineRule } from "@/lib/dsar-deadline";
 
 // ── Types ────────────────────────────────────────────────
 
@@ -26,6 +27,8 @@ export interface AppliedJurisdiction {
   region: string;
   country: string;
   dsarDeadlineDays: number;
+  /** Set when the law states the period in calendar months (GDPR: 1). */
+  dsarDeadlineMonths?: number | null;
   breachNotificationHours: number;
   keyRequirements: string[];
   penalties: string;
@@ -102,6 +105,21 @@ function regionLabel(region: string): string {
 
 function categoryLabel(cat: string, tr: PdfT): string {
   return tr(`category.${cat}`);
+}
+
+function dsarRule(j: AppliedJurisdiction): DsarDeadlineRule {
+  return {
+    deadline: j.dsarDeadlineMonths
+      ? { amount: j.dsarDeadlineMonths, unit: "months" }
+      : { amount: j.dsarDeadlineDays, unit: "days" },
+    extension: null,
+  };
+}
+
+function formatDsarDeadline(j: AppliedJurisdiction, tr: PdfT): string {
+  return j.dsarDeadlineMonths
+    ? tr("slaMonths", { months: j.dsarDeadlineMonths })
+    : tr("slaDays", { days: j.dsarDeadlineDays });
 }
 
 function formatHours(hours: number, tr: PdfT): string {
@@ -206,6 +224,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
       "The following {count} regulatory frameworks have been identified as applicable to {org}. Deadlines shown represent the strictest requirements; where multiple jurisdictions overlap, the shortest deadline should prevail.",
     supervisoryAuthority: "Supervisory Authority: {name}",
     slaDays: "{days} days",
+    slaMonths: "{months} month(s)",
     consolidatedDesc:
       "The following requirements are aggregated from all {count} applied frameworks. Requirements that appear across multiple frameworks indicate areas of regulatory convergence and should be prioritized.",
     frameworksList: "Frameworks: {codes} ({count} frameworks)",
@@ -244,9 +263,10 @@ export function RegulatoryLandscapeReport({
 
   // Strictest deadlines — null when no frameworks are applied, so the
   // stat cards render "—" instead of a misleading hardcoded default.
-  const strictestDsar = jurisdictions.length > 0
-    ? Math.min(...jurisdictions.map((j) => j.dsarDeadlineDays))
-    : null;
+  // Compared as due dates from today, since one month and 30 days are not
+  // the same period.
+  const strictest = earliestDsarDeadline(new Date(), jurisdictions.map(dsarRule));
+  const strictestDsar = strictest ? formatDsarDeadline(jurisdictions[strictest.index], tr) : null;
   const strictestBreach = jurisdictions.filter((j) => j.breachNotificationHours > 0);
   const strictestBreachHours = strictestBreach.length > 0
     ? Math.min(...strictestBreach.map((j) => j.breachNotificationHours))
@@ -284,7 +304,7 @@ export function RegulatoryLandscapeReport({
           <StatCard value={jurisdictions.length} label={tr("stats.appliedFrameworks")} />
           <StatCard value={`${data.complianceScore}%`} label={tr("stats.complianceScore")} />
           <StatCard
-            value={strictestDsar != null ? `${strictestDsar}d` : "—"}
+            value={strictestDsar ?? "—"}
             label={tr("stats.strictestDsar")}
           />
           <StatCard
@@ -355,7 +375,7 @@ export function RegulatoryLandscapeReport({
             j.name,
             regionLabel(j.region),
             categoryLabel(j.category, tr),
-            `${j.dsarDeadlineDays}d`,
+            formatDsarDeadline(j, tr),
             j.breachNotificationHours > 0
               ? `${j.breachNotificationHours}h`
               : tr("stats.notAvailable"),
@@ -419,7 +439,7 @@ export function RegulatoryLandscapeReport({
           colWidths={[3, 1.5, 2]}
           rows={jurisdictions.map((j) => [
             j.name,
-            tr("slaDays", { days: j.dsarDeadlineDays }),
+            formatDsarDeadline(j, tr),
             data.moduleStats.dsarAvgDays > 0 && data.moduleStats.dsarAvgDays <= j.dsarDeadlineDays
               ? tr("statusMeeting")
               : data.moduleStats.dsarAvgDays > j.dsarDeadlineDays

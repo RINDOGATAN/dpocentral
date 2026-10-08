@@ -1740,8 +1740,10 @@
         "applied": "Aplicada",
         "primary": "Principal",
         "dsarShort": "Derechos: {days} d",
+        "dsarShortMonths": "Derechos: {months, plural, one {# mes} other {# meses}}",
         "breachShort": "Brecha: {hours} h",
         "appliedSummary": "{region} | Derechos: {days, plural, one {# día} other {# días}} | Brecha: {hours} h",
+        "appliedSummaryMonths": "{region} | Derechos: {months, plural, one {# mes} other {# meses}} | Brecha: {hours} h",
         "moreItems": "+{count} más",
         "apply": "Aplicar"
       },
@@ -4136,6 +4138,7 @@
         "status": "Estado"
       },
       "slaDays": "{days} días",
+      "slaMonths": "{months, plural, one {# mes} other {# meses}}",
       "statusMeeting": "Cumpliendo el plazo",
       "statusAtRisk": "En riesgo",
       "statusNoData": "Sin datos todavía",
@@ -4198,6 +4201,7 @@
         "primaryJurisdictionNotSet": "Sin definir",
         "defaultDeadline": "Plazo por defecto",
         "defaultDeadlineDays": "{count} días",
+        "defaultDeadlineMonths": "{count, plural, one {# mes} other {# meses}}",
         "totalRequests": "Solicitudes totales",
         "completed": "Completadas",
         "currentlyOpen": "Abiertas actualmente",
@@ -4230,6 +4234,7 @@
         "status": "Estado"
       },
       "slaDays": "{days} días",
+      "slaMonths": "{months, plural, one {# mes} other {# meses}}",
       "monthlyTrend": "Tendencia mensual",
       "monthlyTrendDesc": "Volumen de solicitudes y tasa de finalización en los últimos 12 meses. El seguimiento de tendencias ayuda a anticipar necesidades de recursos e identificar patrones estacionales.",
       "monthlyColumns": {
