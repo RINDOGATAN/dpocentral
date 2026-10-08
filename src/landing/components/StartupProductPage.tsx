@@ -35,6 +35,8 @@ interface StartupProductPageProps {
   valueProps: ValueProp[];
   socialProofs: string[];
   heroVideo: string;
+  /** A still frame of the video, shown before it plays and instead of it on phones. */
+  heroPoster?: string;
   accentGradient?: string;
   callbackUrl: string;
 }
@@ -65,6 +67,7 @@ const StartupProductPage = ({
   valueProps,
   socialProofs,
   heroVideo,
+  heroPoster,
   accentGradient = "from-accent/20 to-accent/5",
   callbackUrl,
 }: StartupProductPageProps) => {
@@ -86,10 +89,23 @@ const StartupProductPage = ({
       .catch(() => {});
   }, []);
 
+  // The hero video (several MB) loads only on a wide screen, and never with
+  // reduced motion or a data saver asked for; everywhere else the poster
+  // frame stands in for it.
+  const [playVideo, setPlayVideo] = useState(false);
+  useEffect(() => {
+    const wide = window.matchMedia("(min-width: 768px)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = Boolean(
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData
+    );
+    setPlayVideo(wide && !reduced && !saveData);
+  }, []);
+
   // Robust autoplay with interaction fallback
   useEffect(() => {
     const vid = videoRef.current;
-    if (!vid) return;
+    if (!vid || !playVideo) return;
     const tryPlay = () => {
       vid.play().catch(() => {
         const handler = () => {
@@ -103,7 +119,7 @@ const StartupProductPage = ({
     };
     if (vid.readyState >= 3) tryPlay();
     else vid.addEventListener("canplay", tryPlay, { once: true });
-  }, []);
+  }, [playVideo]);
 
   const sendMagicLink = async (email: string): Promise<boolean> => {
     const providerId = emailProviderRef.current;
@@ -186,13 +202,15 @@ const StartupProductPage = ({
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
-            autoPlay
+            autoPlay={playVideo}
             loop
             muted
             playsInline
-            preload="auto"
+            preload={playVideo ? "metadata" : "none"}
+            poster={heroPoster}
+            aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
-            src={heroVideo}
+            src={playVideo ? heroVideo : undefined}
           />
           <div className="absolute inset-0 bg-black/55" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/30" />

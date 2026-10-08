@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Database, UserCheck, AlertTriangle, Package } from "lucide-react";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
@@ -24,16 +25,25 @@ function detectLocale(): "en" | "es" {
 export default function LandingPage() {
   const [locale, setLocale] = useState<"en" | "es">("en");
 
+  const router = useRouter();
+
   useEffect(() => {
     cleanUpLocaleCookies();
-    setLocale(detectLocale());
+    const detected = detectLocale();
+    setLocale(detected);
+    // `?lang=` can differ from the cookie the server rendered with.
+    document.documentElement.lang = detected;
   }, []);
 
   const toggleLocale = useCallback(() => {
     const next = locale === "en" ? "es" : "en";
     writeLocaleCookie(next);
     setLocale(next);
-  }, [locale]);
+    // The page text switches at once; <html lang> now, and the tab title
+    // (generated on the server from the cookie) with a refresh of the route.
+    document.documentElement.lang = next;
+    router.refresh();
+  }, [locale, router]);
 
   const dict = locale === "es" ? es : en;
   const authDict = locale === "es" ? authEs : authEn;
@@ -103,6 +113,7 @@ export default function LandingPage() {
         valueProps={valueProps}
         socialProofs={socialProofs}
         heroVideo="/hero-dpo-bg.mp4"
+        heroPoster="/hero-dpo-poster.jpg"
         callbackUrl="/privacy"
       />
       <StartupsFooter t={t} />
