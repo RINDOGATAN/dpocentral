@@ -13,6 +13,7 @@ import { sanitizeStrings } from "@/lib/sanitize";
 import { formatUserError, isTransientDbMessage, TRANSIENT_MESSAGE } from "@/lib/format-error";
 import { invalidInputMessage, newErrorReference, unexpectedFailureMessage } from "@/lib/error-reference";
 import { logger } from "@/lib/logger";
+import { localizeServerMessage } from "@/lib/server-error-messages";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import {
   assertPilotCapacity,
@@ -79,6 +80,8 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         message = formatUserError(error, "An unexpected error occurred. Please try again.");
       }
     }
+    // Refusals are written in English; the reader gets them in their language.
+    message = localizeServerMessage(message, locale());
     // tRPC adds the stack whenever NODE_ENV is not "production" (a mis-set
     // self-host included): only a developer's machine gets it.
     const { stack, ...rest } = shape.data;

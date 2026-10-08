@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertEngagementStatus } from "@prisma/client";
 import { toneChip, toneMark } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 const PAGE_SIZE = 20;
 
 export default function ExpertsPage() {
@@ -352,6 +353,7 @@ const STATUS_TONE: Record<ExpertEngagementStatus, string> = {
 
 function EngagementHistory({ orgId }: { orgId: string }) {
   const tEng = useTranslations("experts.engagements");
+  const locale = useLocale();
   const utils = trpc.useUtils();
   const { data: engagements, isLoading } = trpc.experts.listEngagements.useQuery(
     { organizationId: orgId },
@@ -408,7 +410,7 @@ function EngagementHistory({ orgId }: { orgId: string }) {
                     <Clock className="w-3 h-3" />
                     {tEng("contactedBy", {
                       name: eng.contactedBy.name || eng.contactedBy.email,
-                      date: new Date(eng.contactedAt).toLocaleDateString(),
+                      date: formatDateIn(new Date(eng.contactedAt), locale),
                     })}
                   </p>
                 </div>

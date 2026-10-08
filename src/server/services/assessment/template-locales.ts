@@ -14,6 +14,7 @@ import es from "@/messages/es.json";
 import { locales, type Locale } from "@/i18n/config";
 import { answerValues } from "@/lib/assessment-conditions";
 import {
+  legacySections,
   localizeValues,
   objectLookup,
   translateSections,
@@ -34,12 +35,18 @@ export function sectionsForLocale<S extends RawSection>(
   return translateSections(type, sections, objectLookup(TEMPLATE_BUNDLES[locale]));
 }
 
-/** The template's sections in every supported language (for answer matching). */
+/**
+ * The template's sections in every supported language, plus earlier wordings
+ * of their option lists (for answer matching).
+ */
 export function allLocalizedSections<S extends RawSection>(
   type: string,
   sections: ReadonlyArray<S>
 ): S[][] {
-  return locales.map((locale) => sectionsForLocale(type, sections, locale));
+  return [
+    ...locales.map((locale) => sectionsForLocale(type, sections, locale)),
+    ...legacySections(type, sections),
+  ];
 }
 
 type OptionQuestion = { id: string; type?: unknown; options?: string[] };

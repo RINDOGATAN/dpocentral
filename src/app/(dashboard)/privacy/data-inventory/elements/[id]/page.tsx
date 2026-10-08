@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,52 +12,30 @@ import { ArrowLeft, ArrowRight, Database, Edit, Loader2, Server, Workflow } from
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useEnumLabels } from "@/lib/enum-labels";
-import type { DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
+import type { DataCategory, DataSensitivity } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneForSensitivity } from "@/config/status-tone";
 
 // Sensitivity goes through the shared tones: toneForSensitivity.
 
-const categoryLabels: Record<DataCategory, string> = {
-  IDENTIFIERS: "Identifiers",
-  DEMOGRAPHICS: "Demographics",
-  FINANCIAL: "Financial",
-  HEALTH: "Health",
-  BIOMETRIC: "Biometric",
-  LOCATION: "Location",
-  BEHAVIORAL: "Behavioral",
-  EMPLOYMENT: "Employment",
-  EDUCATION: "Education",
-  POLITICAL: "Political",
-  RELIGIOUS: "Religious",
-  GENETIC: "Genetic",
-  SEXUAL_ORIENTATION: "Sexual Orientation",
-  CRIMINAL: "Criminal",
-  OTHER: "Other",
-};
-
-const sensitivityLabels: Record<DataSensitivity, string> = {
-  PUBLIC: "Public",
-  INTERNAL: "Internal",
-  CONFIDENTIAL: "Confidential",
-  RESTRICTED: "Restricted",
-  SPECIAL_CATEGORY: "Special Category",
-};
-
-const legalBasisLabels: Record<string, string> = {
-  CONSENT: "Consent",
-  CONTRACT: "Contract",
-  LEGAL_OBLIGATION: "Legal Obligation",
-  VITAL_INTERESTS: "Vital Interests",
-  PUBLIC_TASK: "Public Task",
-  LEGITIMATE_INTERESTS: "Legitimate Interests",
-};
+const LEGAL_BASES = new Set([
+  "CONSENT",
+  "CONTRACT",
+  "LEGAL_OBLIGATION",
+  "VITAL_INTERESTS",
+  "PUBLIC_TASK",
+  "LEGITIMATE_INTERESTS",
+]);
 
 export default function DataElementDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { organization } = useOrganization();
   const { label: enumLabel } = useEnumLabels();
+  const t = useTranslations("pages.elementDetail");
+  const tAsset = useTranslations("pages.assetDetail");
+  const tBasis = useTranslations("pages.dataInventory.legalBasis");
+  const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
 
   const { data: element, isLoading } = trpc.dataInventory.getElement.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -75,12 +54,12 @@ export default function DataElementDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
         <Database className="w-12 h-12 mb-4 opacity-50" />
-        <p className="font-medium">Data element not found</p>
-        <p className="text-sm mb-4">It may have been deleted or you may not have access.</p>
+        <p className="font-medium">{t("notFound")}</p>
+        <p className="text-sm mb-4">{t("notFoundBody")}</p>
         <Link href="/privacy/data-inventory">
           <Button variant="outline" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Data Inventory
+            {t("backToInventory")}
           </Button>
         </Link>
       </div>
@@ -91,7 +70,7 @@ export default function DataElementDetailPage() {
     <div className="space-y-6">
       <div className="flex items-start gap-3 sm:gap-4">
         <Link href={`/privacy/data-inventory/${element.dataAsset.id}`}>
-          <Button variant="ghost" size="icon" aria-label="Back" className="shrink-0 mt-1">
+          <Button variant="ghost" size="icon" aria-label={t("back")} className="shrink-0 mt-1">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
@@ -102,19 +81,19 @@ export default function DataElementDetailPage() {
           <div className="min-w-0 flex-1">
             <h1 className="text-xl sm:text-2xl font-semibold font-mono truncate">{element.name}</h1>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
-              <Badge variant="outline">{categoryLabels[element.category as DataCategory]}</Badge>
+              <Badge variant="outline">{tAsset(`category.${element.category as DataCategory}`)}</Badge>
               <StatusChip tone={toneForSensitivity(element.sensitivity as string)}>
-                {sensitivityLabels[element.sensitivity as DataSensitivity]}
+                {tAsset(`sensitivity.${element.sensitivity as DataSensitivity}`)}
               </StatusChip>
-              {element.isPersonalData && <Badge variant="outline">Personal Data</Badge>}
-              {element.isSpecialCategory && <Badge variant="destructive">Special Category</Badge>}
+              {element.isPersonalData && <Badge variant="outline">{t("personalData")}</Badge>}
+              {element.isSpecialCategory && <Badge variant="destructive">{t("specialCategory")}</Badge>}
             </div>
           </div>
         </div>
         <Link href={`/privacy/data-inventory/elements/${element.id}/edit`} className="shrink-0">
           <Button variant="outline" size="sm">
             <Edit className="w-4 h-4 mr-2" />
-            Edit
+            {t("edit")}
           </Button>
         </Link>
       </div>
@@ -122,22 +101,22 @@ export default function DataElementDetailPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle>{t("overview")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              {element.description || "No description provided"}
+              {element.description || t("noDescription")}
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <p className="text-sm text-muted-foreground">Retention</p>
+                <p className="text-sm text-muted-foreground">{t("retention")}</p>
                 <p className="font-medium">
-                  {element.retentionDays ? `${element.retentionDays} days` : "Not specified"}
+                  {element.retentionDays ? t("retentionDays", { days: element.retentionDays }) : t("notSpecified")}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Legal Basis</p>
-                <p className="font-medium">{element.legalBasis || "Not specified"}</p>
+                <p className="text-sm text-muted-foreground">{t("legalBasis")}</p>
+                <p className="font-medium">{element.legalBasis ? basisLabel(element.legalBasis) : t("notSpecified")}</p>
               </div>
             </div>
           </CardContent>
@@ -145,7 +124,7 @@ export default function DataElementDetailPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Parent Asset</CardTitle>
+            <CardTitle>{t("parentAsset")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Link
@@ -159,7 +138,7 @@ export default function DataElementDetailPage() {
                     <p className="font-medium">{element.dataAsset.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {enumLabel("dataAssetType", element.dataAsset.type)}
-                      {element.dataAsset.vendor ? ` — ${element.dataAsset.vendor}` : ""}
+                      {element.dataAsset.vendor ? ` · ${element.dataAsset.vendor}` : ""}
                     </p>
                   </div>
                 </div>
@@ -172,10 +151,8 @@ export default function DataElementDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Linked Processing Activities</CardTitle>
-          <CardDescription>
-            Activities that explicitly process this data element
-          </CardDescription>
+          <CardTitle>{t("linkedTitle")}</CardTitle>
+          <CardDescription>{t("linkedDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           {element.linkedActivities.length > 0 ? (
@@ -192,14 +169,14 @@ export default function DataElementDetailPage() {
                       <div>
                         <p className="font-medium">{activity.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
-                          {activity.purpose && ` — ${activity.purpose}`}
+                          {basisLabel(activity.legalBasis)}
+                          {activity.purpose && ` · ${activity.purpose}`}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {!activity.isActive && (
-                        <Badge variant="outline" className="text-xs">Inactive</Badge>
+                        <Badge variant="outline" className="text-xs">{t("inactive")}</Badge>
                       )}
                       <ArrowRight className="w-4 h-4 text-muted-foreground" />
                     </div>
@@ -210,10 +187,8 @@ export default function DataElementDetailPage() {
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <Workflow className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No processing activities linked to this element</p>
-              <p className="text-sm">
-                Open the parent asset and use &ldquo;Manage Activities&rdquo; to link one
-              </p>
+              <p>{t("noLinked")}</p>
+              <p className="text-sm">{t("noLinkedHint")}</p>
             </div>
           )}
         </CardContent>

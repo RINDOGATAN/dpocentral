@@ -13,10 +13,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const SUPPORT_EMAIL = "support@rindogatan.com";
+
 // Appropriate Legal Notices (AGPL-3.0 §5(d)) and the offer of Corresponding
-// Source (AGPL-3.0 §13). Static server component — no data fetching, no auth,
-// no client hooks.
-export default function LicensesPage() {
+// Source (AGPL-3.0 §13). Static server component: no data fetching, no auth,
+// no client hooks. The notices are shown in the reader's language; the
+// licence itself (the LICENSE file) is the English original.
+export default async function LicensesPage() {
+  const t = await getTranslations("licenses");
   const SOURCE =
     process.env.NEXT_PUBLIC_SOURCE_URL ||
     "https://github.com/RINDOGATAN/dpocentral";
@@ -31,53 +35,39 @@ export default function LicensesPage() {
   return (
     <main className="max-w-2xl mx-auto px-6 py-12 space-y-8">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold text-foreground">
-          Licence &amp; source
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Legal notices for this program, as required by the GNU Affero General
-          Public License.
-        </p>
+        <h1 className="text-2xl font-semibold text-foreground">{t("heading")}</h1>
+        <p className="text-sm text-muted-foreground">{t("intro")}</p>
       </header>
 
       <section className="space-y-3 text-sm leading-relaxed text-foreground">
         <p>DPO Central</p>
         <p>Copyright (C) 2025-2026 Rindogatan LLC</p>
-        <p>
-          Licensed under the GNU Affero General Public License, version 3 or
-          later (AGPL-3.0-or-later).
-        </p>
-        <p className="font-medium">
-          This program comes with ABSOLUTELY NO WARRANTY.
-        </p>
+        <p>{t("licensed")}</p>
+        <p className="font-medium">{t("noWarranty")}</p>
         <p className="text-muted-foreground">
-          This is free software, and you are welcome to redistribute it under
-          the conditions of the AGPL-3.0-or-later. See the full licence text in
-          the{" "}
-          {SOURCE_PUBLIC ? (
-            <a
-              href={`${SOURCE}/blob/main/LICENSE`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground"
-            >
-              LICENSE
-            </a>
-          ) : (
-            <span className="font-medium text-foreground">LICENSE</span>
-          )}{" "}
-          file distributed with the source.
+          {t.rich("freeSoftware", {
+            file: (chunks) =>
+              SOURCE_PUBLIC ? (
+                <a
+                  href={`${SOURCE}/blob/main/LICENSE`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground"
+                >
+                  {chunks}
+                </a>
+              ) : (
+                <span className="font-medium text-foreground">{chunks}</span>
+              ),
+          })}
         </p>
       </section>
 
       <section className="space-y-3 text-sm leading-relaxed text-foreground">
-        <h2 className="text-lg font-semibold">Complete corresponding source code</h2>
+        <h2 className="text-lg font-semibold">{t("sourceTitle")}</h2>
         {SOURCE_PUBLIC ? (
           <>
-            <p>
-              In accordance with AGPL-3.0 section 13, the complete corresponding
-              source code for this running instance is available at:
-            </p>
+            <p>{t("sourcePublic")}</p>
             <p>
               <a
                 href={sourceUrl}
@@ -91,34 +81,35 @@ export default function LicensesPage() {
           </>
         ) : (
           <p>
-            In accordance with AGPL-3.0 section 13, the complete corresponding
-            source code for the version running here
-            {COMMIT ? ` (commit ${COMMIT})` : ""} is available to you at no
-            charge. The public source repository is being finalised; until it is
-            published, request the corresponding source by emailing{" "}
-            <a
-              href="mailto:support@rindogatan.com?subject=AGPL%20corresponding%20source%20request"
-              className="underline hover:text-foreground"
-            >
-              support@rindogatan.com
-            </a>{" "}
-            and we will provide it.
+            {t.rich("sourceOnRequest", {
+              commit: COMMIT ? t("commit", { commit: COMMIT }) : "",
+              email: SUPPORT_EMAIL,
+              mail: (chunks) => (
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}?subject=AGPL%20corresponding%20source%20request`}
+                  className="underline hover:text-foreground"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
           </p>
         )}
       </section>
 
       <section className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-        <h2 className="text-lg font-semibold text-foreground">Premium skills</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("premiumTitle")}</h2>
         <p>
-          Certain premium skills and add-ons are separately licensed and are{" "}
-          <span className="font-medium text-foreground">not</span> covered by the
-          AGPL. They are not part of the corresponding source offered above.
+          {t.rich("premiumBody", {
+            b: (chunks) => <span className="font-medium text-foreground">{chunks}</span>,
+          })}
         </p>
       </section>
 
       <footer className="pt-4 border-t border-border text-sm">
         <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-          &larr; Back to DPO Central
+          <span aria-hidden>&larr; </span>
+          {t("back")}
         </Link>
       </footer>
     </main>

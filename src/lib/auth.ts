@@ -16,6 +16,32 @@ import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
 import { emailConfigured, googleConfigured } from "@/lib/sign-in-methods";
+import { getCookieLocale } from "@/i18n/server-locale";
+import { defaultLocale, type Locale } from "@/i18n/config";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
+
+/**
+ * The sign-in e-mail goes out in the language the visitor chose on the
+ * sign-in page (the locale cookie travels with the request that asks for the
+ * link). Outside a request, or with no cookie, it falls back to the default.
+ */
+const SIGN_IN_EMAIL_MESSAGES: Record<Locale, typeof enMessages> = {
+  en: enMessages,
+  es: esMessages as typeof enMessages,
+};
+
+async function signInEmailLocale(): Promise<Locale> {
+  try {
+    return (await getCookieLocale()) ?? defaultLocale;
+  } catch {
+    return defaultLocale;
+  }
+}
+
+function fillBrand(template: string, brandName: string): string {
+  return template.replace(/\{brand\}/g, brandName);
+}
 
 // Only initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -126,21 +152,27 @@ export const authOptions: NextAuthOptions = {
           EmailProvider({
             from: emailFrom(),
             sendVerificationRequest: async ({ identifier: email, url }) => {
+              const messages = SIGN_IN_EMAIL_MESSAGES[await signInEmailLocale()];
+              const copy = messages.auth.signInEmail;
+              // A tagline set by the deployment is shown as written; the
+              // default one is translated.
+              const tagline =
+                brand.tagline === enMessages.metadata.tagline ? messages.metadata.tagline : brand.tagline;
               try {
                 await resend!.emails.send({
                   from: emailFrom(),
                   to: email,
-                  subject: `Sign in to ${brand.name}`,
+                  subject: fillBrand(copy.subject, brand.name),
                   html: `
                     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
                       <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">
                         <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">${brand.name}</span>
-                        <span style="font-size: 13px; color: ${brand.colors.mutedForeground}; margin-left: 10px;">${brand.tagline}</span>
+                        <span style="font-size: 13px; color: ${brand.colors.mutedForeground}; margin-left: 10px;">${tagline}</span>
                       </div>
                       <div style="padding: 32px 24px;">
-                        <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">Click the button below to sign in to your ${brand.name} account:</p>
-                        <a href="${url}" style="display: inline-block; background: ${brand.colors.primary}; color: ${brand.colors.primaryForeground}; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">Sign in to ${brand.name}</a>
-                        <p style="color: ${brand.colors.mutedForeground}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">If you didn\u2019t request this email, you can safely ignore it.</p>
+                        <p style="color: ${brand.colors.foreground}; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">${fillBrand(copy.body, brand.name)}</p>
+                        <a href="${url}" style="display: inline-block; background: ${brand.colors.primary}; color: ${brand.colors.primaryForeground}; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">${fillBrand(copy.button, brand.name)}</a>
+                        <p style="color: ${brand.colors.mutedForeground}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">${copy.ignore}</p>
                       </div>
                       <div style="padding: 16px 24px; border-top: 1px solid ${brand.colors.border};">
                         <p style="color: #666666; font-size: 11px; margin: 0;">${emailFooterHtml()}</p>

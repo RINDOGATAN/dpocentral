@@ -99,7 +99,7 @@ export const GUIDES: Guide[] = [
         heading: L("Why it matters here", "Por qué importa aquí"),
         intro: L(
           "Your role decides which records DPO Central expects of you. A controller keeps the record of processing, answers rights requests, and reports breaches. A processor keeps a lighter record and supports its controller. If you act as both, keep the two apart: record the processing you control, and note where you are only a processor for a client.",
-          "Tu papel decide qué registros espera de ti DPO Central. Un responsable mantiene el registro de actividades de tratamiento, responde a las solicitudes de derechos y notifica las violaciones de seguridad. Un encargado mantiene un registro más ligero y da apoyo a su responsable. Si actúas como ambos, mantén los dos separados: registra el tratamiento que controlas e indica dónde eres solo un encargado para un cliente.",
+          "Tu papel decide qué registros espera de ti DPO Central. Un responsable mantiene el registro de actividades de tratamiento, responde a las solicitudes de derechos y notifica las brechas de seguridad. Un encargado mantiene un registro más ligero y da apoyo a su responsable. Si actúas como ambos, mantén los dos separados: registra el tratamiento que controlas e indica dónde eres solo un encargado para un cliente.",
         ),
       },
     ],

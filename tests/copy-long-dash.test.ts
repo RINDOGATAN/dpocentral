@@ -16,7 +16,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import path from "path";
 
 const ROOT = path.resolve(__dirname, "..");
@@ -60,6 +60,20 @@ describe("copy: no long dash in the message bundles", () => {
       expect(cleaned, `remove these keys from tests/fixtures/long-dash-baseline.json`).toEqual([]);
     });
   }
+
+  it("the landing site's bundles carry no long dash in any language", () => {
+    const found: string[] = [];
+    for (const locale of ["en", "es"]) {
+      const dir = path.join(ROOT, "src/landing/i18n", locale);
+      for (const file of readdirSync(dir).filter((f) => f.endsWith(".json"))) {
+        const bundle = JSON.parse(readFileSync(path.join(dir, file), "utf8"));
+        for (const [key, text] of stringLeaves(bundle)) {
+          if (text.includes(LONG_DASH)) found.push(`${locale}/${file}: ${key}`);
+        }
+      }
+    }
+    expect(found).toEqual([]);
+  });
 
   it("the three strings found in the September browser round stay clean", () => {
     const fixed = [/quickstart\.applies\.skip$/, /lockedSubtitle$/, /modalDescription$/, /localSignInBody$/];

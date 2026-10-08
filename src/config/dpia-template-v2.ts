@@ -77,7 +77,7 @@ const SCOPE_SECTION: BiSection = {
   title: { en: "Scope of this assessment", es: "Alcance de esta evaluación" },
   description: {
     en: "Choose the frameworks this assessment has to satisfy. The choice decides which questions are asked below and which requirements the report reports on.",
-    es: "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y sobre qué requisitos informa el informe.",
+    es: "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y qué requisitos recoge el informe.",
   },
   questions: [
     {
@@ -204,7 +204,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
       required: true,
       text: {
         en: "Safeguards planned to address the negative impacts",
-        es: "Salvaguardas previstas para afrontar los efectos negativos",
+        es: "Garantías previstas para afrontar los efectos negativos",
       },
       help: {
         en: "Source: 11 CCR 7152(a)(6).",
@@ -221,7 +221,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
       },
       help: {
         en: "Weigh the negative impacts, as mitigated by the safeguards, against the benefits. Source: 11 CCR 7152(a)(7).",
-        es: "Pondera los efectos negativos, ya mitigados por las salvaguardas, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
+        es: "Pondera los efectos negativos, ya mitigados por las garantías, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
       },
       options: {
         en: [
@@ -230,7 +230,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
           "Not decided yet",
         ],
         es: [
-          "Sí: los beneficios superan a los efectos negativos una vez aplicadas las salvaguardas",
+          "Sí: los beneficios superan a los efectos negativos una vez aplicadas las garantías",
           "No: los efectos negativos superan a los beneficios",
           "Aún sin decidir",
         ],
@@ -374,11 +374,11 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
 const TEMPLATE_META: { name: BiText; description: BiText } = {
   name: {
     en: "Data Protection Impact Assessment (generic)",
-    es: "Evaluación de impacto en la protección de datos (genérica)",
+    es: "Evaluación de impacto relativa a la protección de datos (genérica)",
   },
   description: {
     en: "A DPIA that follows the framework you choose at the start: the European rules, the Californian risk assessment rules, or both.",
-    es: "Una evaluación que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas.",
+    es: "Una EIPD que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas.",
   },
 };
 

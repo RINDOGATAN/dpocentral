@@ -44,7 +44,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { useOrganization } from "@/lib/organization-context";
@@ -52,6 +52,7 @@ import { DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/clie
 import { StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneChip } from "@/config/status-palette";
 
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-muted-foreground text-muted-foreground",
   IDENTITY_PENDING: "border-muted-foreground text-muted-foreground",
@@ -88,6 +89,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const locale = useLocale();
   const tp = useTranslations("pages.dsarDetail");
   const tList = useTranslations("pages.dsar");
   const tCommon = useTranslations("common");
@@ -357,7 +359,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              {isCompleted ? tp("sla.closed") : tp("sla.due")}: {new Date(request.dueDate).toLocaleDateString()}
+              {isCompleted ? tp("sla.closed") : tp("sla.due")}: {formatDateIn(new Date(request.dueDate), locale)}
             </p>
           </CardContent>
         </Card>
@@ -623,7 +625,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                           </Badge>
                         </div>
                         <span className="text-xs text-muted-foreground">
-                          {new Date(comm.sentAt).toLocaleString()}
+                          {formatDateTimeIn(new Date(comm.sentAt), locale)}
                         </span>
                       </div>
                       {comm.subject && (
@@ -658,7 +660,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                       <div className="min-w-0">
                         <p className="font-medium text-sm">{enumLabel("auditAction", entry.action)}</p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(entry.createdAt).toLocaleString()}
+                          {formatDateTimeIn(new Date(entry.createdAt), locale)}
                         </p>
                       </div>
                     </div>

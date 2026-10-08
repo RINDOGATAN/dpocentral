@@ -25,6 +25,7 @@ import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
 import { StatusNote } from "@/components/ui/status-note";
+import { useTranslations } from "next-intl";
 
 interface EnableMultipleFeaturesModalProps {
   open: boolean;
@@ -41,6 +42,9 @@ export function EnableMultipleFeaturesModal({
 }: EnableMultipleFeaturesModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("enableFeature");
+  const tCommon = useTranslations("common");
+  const tPremium = useTranslations("premium");
 
   if (!open || !skills.length) return null;
 
@@ -61,7 +65,7 @@ export function EnableMultipleFeaturesModal({
             <div className="flex items-start justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                Enable {skills.length} Features
+                {t("multiTitle", { count: skills.length })}
               </CardTitle>
               <Button
                 variant="ghost"
@@ -73,7 +77,7 @@ export function EnableMultipleFeaturesModal({
               </Button>
             </div>
             <CardDescription>
-              Contact us to enable these features for your organization.
+              {t("multiContactBody")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -85,7 +89,7 @@ export function EnableMultipleFeaturesModal({
           </CardContent>
           <CardFooter className="flex justify-end gap-3">
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              {tCommon("cancel")}
             </Button>
             <Button asChild>
               <a
@@ -96,7 +100,7 @@ export function EnableMultipleFeaturesModal({
                 )}`}
               >
                 <Mail className="mr-2 h-4 w-4" />
-                Contact Us
+                {tPremium("contactUs")}
               </a>
             </Button>
           </CardFooter>
@@ -122,14 +126,14 @@ export function EnableMultipleFeaturesModal({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create checkout session");
+        throw new Error(data.error || t("multiCheckoutFailed"));
       }
 
       if (data.url) {
         window.location.href = data.url;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : t("multiSomethingWrong"));
       setIsLoading(false);
     }
   };
@@ -146,7 +150,7 @@ export function EnableMultipleFeaturesModal({
           <div className="flex items-start justify-between">
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              Enable {skills.length} Features
+              {t("multiTitle", { count: skills.length })}
             </CardTitle>
             <Button
               variant="ghost"
@@ -158,7 +162,7 @@ export function EnableMultipleFeaturesModal({
             </Button>
           </div>
           <CardDescription>
-            Add these features to your organization.
+            {t("multiBody")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -170,7 +174,7 @@ export function EnableMultipleFeaturesModal({
 
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium">
-              {formatPrice(total)}/month &mdash; cancel anytime
+              {t("price", { price: formatPrice(total) })}
             </p>
           </div>
 
@@ -182,16 +186,16 @@ export function EnableMultipleFeaturesModal({
         </CardContent>
         <CardFooter className="flex justify-end gap-3">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            Cancel
+            {tCommon("cancel")}
           </Button>
           <Button onClick={handleEnable} disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Redirecting to payment...
+                {t("multiRedirecting")}
               </>
             ) : (
-              `Enable ${skills.length} Features`
+              t("multiTitle", { count: skills.length })
             )}
           </Button>
         </CardFooter>

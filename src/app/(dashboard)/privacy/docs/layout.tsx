@@ -13,16 +13,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { TocSidebar } from "@/components/docs/toc-sidebar";
+import { useTranslations } from "next-intl";
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const t = useTranslations("docs.shell");
 
   return (
     <div className="flex gap-8">
       {/* Desktop sidebar */}
       <aside className="hidden lg:block w-60 shrink-0">
         <div className="sticky top-20">
-          <h3 className="font-semibold text-sm mb-3 px-2">User Guide</h3>
+          <h3 className="font-semibold text-sm mb-3 px-2">{t("userGuide")}</h3>
           <TocSidebar />
         </div>
       </aside>
@@ -35,12 +37,12 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             <SheetTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
                 <Menu className="h-4 w-4" />
-                Documentation Menu
+                {t("menu")}
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px]">
               <SheetHeader>
-                <SheetTitle>User Guide</SheetTitle>
+                <SheetTitle>{t("userGuide")}</SheetTitle>
               </SheetHeader>
               <div className="mt-4" onClick={() => setSidebarOpen(false)}>
                 <TocSidebar />

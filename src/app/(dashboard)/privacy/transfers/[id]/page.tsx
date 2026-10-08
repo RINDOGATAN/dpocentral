@@ -23,10 +23,11 @@ import {
   ClipboardCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
+import { formatDateIn } from "@/lib/utils";
 
 const statusColors: Record<string, string> = {
   COMPLIANT: "border-primary text-primary bg-primary/5",
@@ -53,6 +54,7 @@ export default function TransferDetailPage() {
   const t = useTranslations("pages.transfers.detail");
   const tStatus = useTranslations("pages.transfers.status_option");
   const tToasts = useTranslations("toasts");
+  const locale = useLocale();
 
   const utils = trpc.useUtils();
 
@@ -317,7 +319,7 @@ export default function TransferDetailPage() {
             <div className="text-sm">
               <span className="font-medium">
                 {t("sccExpires", {
-                  date: new Date(transfer.sccExpiryDate).toLocaleDateString(),
+                  date: formatDateIn(new Date(transfer.sccExpiryDate), locale),
                 })}
               </span>{" "}
               {(() => {

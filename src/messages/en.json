@@ -188,7 +188,8 @@
         "LOCATION": "Location",
         "BEHAVIORAL": "Behavioral",
         "EMPLOYMENT": "Employment"
-      }
+      },
+      "openInNewTab": "Open in new tab"
     },
     "newAssessment": {
       "title": "New Assessment",
@@ -302,7 +303,10 @@
       "creating": "Creating the assessment and saving the answers",
       "create": "Create and open the assessment",
       "missingTemplateTitle": "The standard DPIA template is not there",
-      "missingTemplateBody": "These answers are written against the questions of the standard DPIA template. Without it the wizard would write them against another template's questions, so it stops here. Install or seed the standard DPIA template and start again."
+      "missingTemplateBody": "These answers are written against the questions of the standard DPIA template. Without it the wizard would write them against another template's questions, so it stops here. Install or seed the standard DPIA template and start again.",
+      "recordName": "DPIA: {activity}",
+      "recordNameWithVendor": "DPIA: {activity} ({vendor})",
+      "recordDescription": "Auto-filled from processing activity data"
     },
     "trialAssessments": {
       "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per organisation on the pilot tier",
@@ -935,6 +939,12 @@
         "ownerLabel": "Owner",
         "ownerPlaceholder": "Person responsible",
         "dueDateLabel": "Due Date"
+      },
+      "repeatItem": "Item",
+      "petSuggestion": {
+        "title": "Implement {pet}",
+        "vendorDescription": "Address {risk} risk ({ref}). {vendor} implements this technology.",
+        "description": "Address {risk} risk ({ref}). Consider implementing {pet} as a technical safeguard."
       }
     },
     "activityDetail": {
@@ -942,7 +952,36 @@
       "backToInventory": "Back to Data Inventory",
       "notFound": "Processing activity not found",
       "inactive": "Inactive",
-      "edit": "Edit"
+      "edit": "Edit",
+      "purpose": "Purpose",
+      "description": "Description",
+      "legalBasisDetail": "Legal Basis Detail",
+      "dataSubjects": "Data Subjects",
+      "noDataSubjects": "No data subjects specified",
+      "dataCategories": "Data Categories",
+      "noCategories": "No categories specified",
+      "retentionPeriod": "Retention Period",
+      "automatedDecisionMaking": "Automated Decision-Making",
+      "recipients": "Recipients",
+      "linkedAssets": "Linked Data Assets ({count})",
+      "generateFlows": "Generate Flows",
+      "manageAssets": "Manage Assets",
+      "elementCount": "{count, plural, one {# element} other {# elements}}",
+      "elementCountOf": "{count}/{total} elements",
+      "notLinked": "+{count} not linked",
+      "noLinkedAssets": "No data assets linked to this activity",
+      "transfers": "Data Transfers ({count})",
+      "assessments": "Assessments ({count})",
+      "linkDialog": {
+        "title": "Link Data Assets",
+        "description": "Select which data assets and elements are processed by this activity.",
+        "assetMeta": "{type}: {count, plural, one {# element} other {# elements}}",
+        "hide": "Hide",
+        "elements": "Elements",
+        "allElements": "All elements",
+        "noAssets": "No data assets in this organization yet",
+        "selected": "{count, plural, one {# asset selected} other {# assets selected}}"
+      }
     },
     "assetDetail": {
       "notFound": "Asset not found",
@@ -1596,7 +1635,6 @@
         "createdListAssets": "Data assets",
         "createdListActivities": "Processing activities",
         "createdListFlows": "Data flows",
-        "createdListActivities": "Processing activities",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program has been bootstrapped. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
@@ -1796,7 +1834,8 @@
           "body": "This register lists the AI systems that use personal data, so your privacy records are complete. To classify a system's risk, run oversight or a conformity assessment, govern it in AI Sentinel.",
           "open": "Open AI Sentinel"
         }
-      }
+      },
+      "syncedWithSentinel": "Synced with AI Sentinel"
     },
     "incidents": {
       "title": "Incident Management",
@@ -2270,7 +2309,8 @@
         "subtitle": "Common tasks",
         "addAsset": "Add Data Asset",
         "newDpia": "Start a DPIA",
-        "premium": "Premium skill",        "newDsar": "New DSAR",
+        "premium": "Premium skill",
+        "newDsar": "New DSAR",
         "reportIncident": "Report Incident",
         "addVendor": "Add Vendor",
         "quickstart": "Quickstart Wizard"
@@ -2288,6 +2328,104 @@
         "creating": "Creating...",
         "create": "Create"
       }
+    },
+    "processingActivities": {
+      "back": "Back",
+      "title": "Processing Activities",
+      "subtitle": "Record of Processing Activities (ROPA) for GDPR compliance",
+      "exportRopa": "Export ROPA",
+      "downloadPdf": "Download as PDF",
+      "downloadCsv": "Download as CSV",
+      "downloadJson": "Download as JSON",
+      "perMonth": "{price}/mo",
+      "addActivity": "Add Activity",
+      "stats": {
+        "total": "Total Activities",
+        "active": "Active",
+        "consent": "Consent-Based",
+        "transfers": "With Transfers"
+      },
+      "searchPlaceholder": "Search activities...",
+      "inactive": "Inactive",
+      "assetsCount": "{count} data assets",
+      "subjectTypesCount": "{count} subject types",
+      "categoriesCount": "{count} data categories",
+      "dataSubjects": "Data Subjects",
+      "empty": {
+        "title": "No processing activities found",
+        "body": "Document your data processing activities for ROPA compliance"
+      },
+      "about": {
+        "title": "About ROPA",
+        "description": "Record of Processing Activities requirements under GDPR Article 30",
+        "requiredTitle": "Required Information",
+        "required": {
+          "controller": "Name and contact details of controller",
+          "purposes": "Purposes of processing",
+          "categories": "Categories of data subjects and personal data",
+          "recipients": "Categories of recipients",
+          "transfers": "Transfers to third countries",
+          "retention": "Retention periods",
+          "security": "Security measures"
+        },
+        "whenTitle": "When ROPA is Required",
+        "when": {
+          "employees": "Organizations with 250+ employees",
+          "risk": "Processing likely to result in risk to rights",
+          "notOccasional": "Processing is not occasional",
+          "specialCategory": "Processing includes special category data",
+          "criminal": "Processing includes criminal conviction data"
+        }
+      },
+      "skillName": "ROPA Export",
+      "csv": {
+        "name": "Activity Name",
+        "description": "Description",
+        "purpose": "Purpose",
+        "legalBasis": "Legal Basis",
+        "legalBasisDetail": "Legal Basis Detail",
+        "dataSubjects": "Data Subjects",
+        "dataCategories": "Data Categories",
+        "recipients": "Recipients",
+        "retention": "Retention Period",
+        "systems": "Systems",
+        "transfers": "International Transfers",
+        "lastReviewed": "Last Reviewed",
+        "fileName": "ROPA"
+      }
+    },
+    "elementDetail": {
+      "notFound": "Data element not found",
+      "notFoundBody": "It may have been deleted or you may not have access.",
+      "backToInventory": "Back to Data Inventory",
+      "back": "Back",
+      "personalData": "Personal Data",
+      "specialCategory": "Special Category",
+      "edit": "Edit",
+      "overview": "Overview",
+      "noDescription": "No description provided",
+      "retention": "Retention",
+      "retentionDays": "{days} days",
+      "notSpecified": "Not specified",
+      "legalBasis": "Legal Basis",
+      "parentAsset": "Parent Asset",
+      "linkedTitle": "Linked Processing Activities",
+      "linkedDescription": "Activities that explicitly process this data element",
+      "inactive": "Inactive",
+      "noLinked": "No processing activities linked to this element",
+      "noLinkedHint": "Open the parent asset and use “Manage Activities” to link one"
+    },
+    "regulationsWizard": {
+      "title": "Applicability Wizard",
+      "subtitle": "Answer questions about your organization to determine which regulations apply",
+      "answerFirst": "Answer at least one question to see applicable jurisdictions",
+      "check": "Check Applicability",
+      "resultsTitle": "Applicable Regulations",
+      "resultsCount": "Based on your answers, {count} regulation(s) may apply",
+      "noneFound": "No additional regulations identified. You may want to review the full catalog.",
+      "revise": "Revise Answers",
+      "applying": "Applying...",
+      "applyAll": "Apply All"
     }
   },
   "confirms": {
@@ -2359,6 +2497,12 @@
       "confirm": "Sign out",
       "leaving": "Signing out…",
       "cancel": "Stay signed in"
+    },
+    "signInEmail": {
+      "subject": "Sign in to {brand}",
+      "body": "Click the button below to sign in to your {brand} account:",
+      "button": "Sign in to {brand}",
+      "ignore": "If you didn’t request this email, you can safely ignore it."
     }
   },
   "nav": {
@@ -2423,7 +2567,12 @@
       "volumePlaceholder": "e.g., ~10,000 records/day",
       "encryption": "Encryption Method",
       "encryptionPlaceholder": "e.g., TLS 1.3, AES-256",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "automated": "Automated Transfer",
+      "saving": "Saving…",
+      "creating": "Creating…",
+      "saveChanges": "Save Changes",
+      "createFlow": "Create Flow"
     },
     "empty": {
       "loading": "Loading data flow visualisation…",
@@ -2433,6 +2582,29 @@
       "noFlowsBody": "Create flows to visualise how data moves between systems",
       "noAssetFlowsTitle": "No data flows connected to this asset",
       "noAssetFlowsBody": "Create a flow to connect this asset to other systems"
+    },
+    "actions": {
+      "addAsset": "Add Asset",
+      "addFlow": "Add Flow"
+    },
+    "frequencyOptions": {
+      "realTime": "Real-time",
+      "hourly": "Hourly",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "onDemand": "On-demand",
+      "batch": "Batch"
+    },
+    "details": {
+      "automated": "Automated",
+      "noDescription": "No description provided",
+      "direction": "Data Flow Direction",
+      "noCategories": "No categories specified",
+      "title": "Flow Details",
+      "volume": "Volume",
+      "encryption": "Encryption",
+      "noDetails": "No additional details"
     }
   },
   "metadata": {
@@ -2440,13 +2612,20 @@
     "description": "GDPR-ready data inventory, DSAR management, assessments, incident tracking, and vendor management in one platform.",
     "security": {
       "title": "Data Security",
-      "description": "How DPO Central protects your data — 10 security layers covering authentication, RBAC, input validation, transport security, audit logging, and infrastructure.",
+      "description": "How DPO Central protects your data: 10 security layers covering authentication, RBAC, input validation, transport security, audit logging, and infrastructure.",
       "ogTitle": "Data Security | DPO CENTRAL",
       "ogDescription": "10 security layers: zero-knowledge auth, 5-tier RBAC, rate limiting, TLS + HSTS, audit logging, edge deployment."
     },
     "licenses": {
       "title": "Licence & source",
       "description": "DPO Central is open source under AGPL-3.0. Read the licence and get the complete corresponding source."
+    },
+    "pageTitles": {
+      "signIn": "Sign in",
+      "authError": "Sign-in problem",
+      "verifyRequest": "Check your email",
+      "signOut": "Sign out",
+      "notFound": "Page not found"
     }
   },
   "enums": {
@@ -2684,7 +2863,13 @@
     "installOnSkills": "Install on Skills page",
     "getOnMarketplace": "Get it on the marketplace",
     "errorCheckout": "Couldn't start checkout. Please try again.",
-    "errorGeneric": "Something went wrong. Please try again."
+    "errorGeneric": "Something went wrong. Please try again.",
+    "multiTitle": "Enable {count} Features",
+    "multiContactBody": "Contact us to enable these features for your organization.",
+    "multiBody": "Add these features to your organization.",
+    "multiRedirecting": "Redirecting to payment...",
+    "multiCheckoutFailed": "Failed to create checkout session",
+    "multiSomethingWrong": "Something went wrong"
   },
   "skills": {
     "title": "Skills",
@@ -2742,7 +2927,13 @@
     "orgName": "Organisation Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "getStarted": "Get Started",
-    "settingUp": "Setting up..."
+    "settingUp": "Setting up...",
+    "persona": {
+      "businessOwnerDesc": "I need privacy compliance for my organization",
+      "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
+      "tailorHint": "This helps us tailor your experience. You can change this later in settings.",
+      "continue": "Continue"
+    }
   },
   "organization": {
     "welcome": "Welcome to {brandName}",
@@ -3084,7 +3275,10 @@
     "upgradeRequired": "This feature requires a premium license.",
     "contactUs": "Contact Us",
     "upgradeNow": "Upgrade Now",
-    "premiumSuite": "This assessment type is part of the {brandName} premium suite. Upgrade your plan to access advanced privacy assessment tools."
+    "premiumSuite": "This assessment type is part of the {brandName} premium suite. Upgrade your plan to access advanced privacy assessment tools.",
+    "addOnMessage": "{feature} is available as an add-on for {price}/month.",
+    "addOnFeature": "Add-on Feature",
+    "addOnBody": "Enable this feature for your organization for {price}/month. Cancel anytime."
   },
   "expertCta": {
     "findExpert": "Find Expert",
@@ -3199,7 +3393,7 @@
   "security": {
     "badge": "Defense in Depth",
     "title": "Data Security",
-    "subtitle": "DPO Central is built with defense-in-depth across every layer. As a privacy management platform handling assessment results, incident records, vendor contracts, and data subject requests, security is a foundational requirement — not an afterthought.",
+    "subtitle": "DPO Central is built with defense-in-depth across every layer. As a privacy management platform handling assessment results, incident records, vendor contracts, and data subject requests, security is a foundational requirement, not an afterthought.",
     "stats": {
       "layers": "Security Layers",
       "headers": "HTTP Headers",
@@ -3239,16 +3433,16 @@
     },
     "items": {
       "auth1": "Multi-provider sign-in via Google OAuth and email magic links",
-      "auth2": "Stateless JWT sessions — no server-side session state to compromise",
+      "auth2": "Stateless JWT sessions: no server-side session state to compromise",
       "auth3": "OAuth tokens are never persisted to the database",
-      "auth4": "Account isolation — each sign-in method is kept separate",
+      "auth4": "Account isolation: each sign-in method is kept separate",
       "auth5": "Cross-app SSO via secure, scoped session cookies",
       "authHighlight": "No passwords are stored. Authentication is delegated to trusted identity providers or cryptographically signed magic links.",
-      "authz1": "Strict multi-tenancy — every query is scoped to your organization",
+      "authz1": "Strict multi-tenancy: every query is scoped to your organization",
       "authz2": "Five-tier role hierarchy: Owner, Admin, Privacy Officer, Member, Viewer",
       "authz3": "Role-based enforcement on all create, update, and delete operations",
       "authz4": "Destructive actions restricted to Admins and Owners only",
-      "authz5": "No raw SQL — all access via parameterized ORM queries",
+      "authz5": "No raw SQL: all access via parameterized ORM queries",
       "authzHighlight": "All database access uses parameterized ORM queries. SQL injection is structurally prevented, not just mitigated.",
       "input1": "Schema validation on every API endpoint",
       "input2": "HTML sanitization on all public-facing inputs",
@@ -5727,7 +5921,7 @@
     },
     "publicOverview": {
       "metaTitle": "Documentation",
-      "metaDescription": "DPO Central documentation — quick start guide, user roles, and module overview for data inventory, DSAR, assessments, incidents, and vendor management.",
+      "metaDescription": "DPO Central documentation: quick start guide, user roles, and module overview for data inventory, DSAR, assessments, incidents, and vendor management.",
       "ogTitle": "Documentation | DPO CENTRAL",
       "ogDescription": "Quick start guide, user roles, and module overview for GDPR privacy management.",
       "heroTitle": "DPO Central",
@@ -5880,7 +6074,7 @@
       "metaTitle": "Data Inventory & ROPA",
       "metaDescription": "Track data assets, elements, processing activities, and cross-border transfers. Generate your GDPR Record of Processing Activities (ROPA) automatically.",
       "ogTitle": "Data Inventory & ROPA | DPO CENTRAL",
-      "ogDescription": "Map your data landscape — assets, elements, processing activities, data flows, and cross-border transfers with automatic ROPA generation.",
+      "ogDescription": "Map your data landscape: assets, elements, processing activities, data flows, and cross-border transfers with automatic ROPA generation.",
       "title": "Data Inventory",
       "subtitle": "Map your organization's data landscape. Track every asset, data element, processing activity, and cross-border transfer to maintain a complete Record of Processing Activities (ROPA).",
       "assets": {
@@ -5999,16 +6193,16 @@
         "inventoryTitle": "Data Inventory Report",
         "inventoryDesc": "Complete asset inventory with data elements per asset (category, sensitivity, retention), data flows between systems, and international transfer details with safeguard mechanisms.",
         "ropaTitle": "ROPA Export",
-        "ropaDesc": "Record of Processing Activities per GDPR Article 30 — processing purpose, legal basis, data subjects, recipients, retention, linked systems, and international transfers per activity."
+        "ropaDesc": "Record of Processing Activities per GDPR Article 30: processing purpose, legal basis, data subjects, recipients, retention, linked systems, and international transfers per activity."
       }
     },
     "publicDsar": {
       "metaTitle": "DSAR Management",
       "metaDescription": "Handle data subject access requests end-to-end with SLA tracking, task management, privacy-by-design data handling, and a public intake portal. Supports all GDPR rights (Art. 15-21).",
       "ogTitle": "DSAR Management | DPO CENTRAL",
-      "ogDescription": "End-to-end DSAR lifecycle — privacy-by-design intake, identity verification, SLA tracking, auto-redaction, and performance reporting.",
+      "ogDescription": "End-to-end DSAR lifecycle: privacy-by-design intake, identity verification, SLA tracking, auto-redaction, and performance reporting.",
       "title": "DSAR Management",
-      "subtitle": "Handle data subject access requests from submission to completion. Track SLA deadlines, assign tasks to your team, and provide a public portal for data subjects to submit requests — all with privacy-by-design data handling and automatic PII redaction.",
+      "subtitle": "Handle data subject access requests from submission to completion. Track SLA deadlines, assign tasks to your team, and provide a public portal for data subjects to submit requests, all with privacy-by-design data handling and automatic PII redaction.",
       "lifecycle": {
         "title": "Request Lifecycle",
         "intro": "Every DSAR moves through a defined lifecycle with automatic SLA tracking. The system monitors deadlines and alerts your team when action is needed.",
@@ -6053,7 +6247,7 @@
           },
           "pii": {
             "title": "PII-Free Reports",
-            "desc": "The DSAR Performance Report contains only aggregated metrics — request volumes, SLA rates, type distributions. Zero individual data."
+            "desc": "The DSAR Performance Report contains only aggregated metrics: request volumes, SLA rates, type distributions. Zero individual data."
           },
           "manual": {
             "title": "Manual Redaction & Deletion",
@@ -6061,7 +6255,7 @@
           },
           "audit": {
             "title": "Audit Trail Integrity",
-            "desc": "Actions, timestamps, and staff IDs are preserved after redaction. Who did what and when remains traceable — only the data subject's PII is removed."
+            "desc": "Actions, timestamps, and staff IDs are preserved after redaction. Who did what and when remains traceable; only the data subject's PII is removed."
           }
         }
       },
@@ -6070,7 +6264,7 @@
         "intro": "DPO Central supports all GDPR data subject rights as request types.",
         "items": {
           "ACCESS": "Right to access personal data held by the organization (Art. 15)",
-          "ERASURE": "Right to be forgotten — deletion of personal data (Art. 17)",
+          "ERASURE": "Right to be forgotten: deletion of personal data (Art. 17)",
           "RECTIFICATION": "Right to correct inaccurate personal data (Art. 16)",
           "PORTABILITY": "Right to receive data in a machine-readable format (Art. 20)",
           "OBJECTION": "Right to object to processing of personal data (Art. 21)",
@@ -6143,7 +6337,7 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework — GDPR (30 days), CCPA/CPRA (45 days), LGPD (15 days), and 40+ others.",
+        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework: GDPR (30 days), CCPA/CPRA (45 days), LGPD (15 days), and 40+ others.",
         "stats": {
           "days": {
             "value": "15-45",
@@ -6197,7 +6391,7 @@
       },
       "reporting": {
         "title": "Performance Report (PDF Export)",
-        "intro": "Export a DSAR Performance Report as a polished PDF for regulators, auditors, or board presentations. The report contains only aggregated metrics — no individual personal data.",
+        "intro": "Export a DSAR Performance Report as a polished PDF for regulators, auditors, or board presentations. The report contains only aggregated metrics: no individual personal data.",
         "sectionsLabel": "Report Sections",
         "sections": {
           "exec": {
@@ -6538,12 +6732,12 @@
     "publicVendors": {
       "dpa": {
         "title": "Generating a DPA + Transfer Impact Assessment",
-        "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program — the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
+        "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program: the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
         "artifacts": {
           "dpaTitle": "Data Processing Agreement (PDF)",
           "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I–IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III–IV appear automatically when the processor is established outside the EEA/UK.",
           "tiaTitle": "Standalone TIA (PDF)",
-          "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header — ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
+          "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header, ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
         },
         "steps": {
           "open": {
@@ -6552,14 +6746,14 @@
           },
           "review": {
             "title": "Review the pre-filled facts",
-            "description": "Every fact is proposed from your own data and shown for review — nothing goes into the document unseen. Notes explain where each value came from.",
+            "description": "Every fact is proposed from your own data and shown for review: nothing goes into the document unseen. Notes explain where each value came from.",
             "detail1": "Data categories come from the vendor's recorded data types; the processing purpose from activities naming the vendor as a recipient.",
-            "detail2": "Establishment means where the vendor is established — it is only pre-filled when your register is unambiguous.",
+            "detail2": "Establishment means where the vendor is established; it is only pre-filled when your register is unambiguous.",
             "detail3": "Choose the negotiated terms (breach window, sub-processor regime, audit rights, liability, governing law) and complete both parties' details."
           },
           "confirm": {
             "title": "Confirm any flagged contradictions",
-            "description": "If your answers contradict each other — for example claiming pseudonymization while transferring directly identifying data — generation is blocked until you explicitly confirm each flagged item."
+            "description": "If your answers contradict each other (for example, claiming pseudonymization while transferring directly identifying data), generation is blocked until you explicitly confirm each flagged item."
           },
           "generate": {
             "title": "Generate the documents",
@@ -6572,10 +6766,10 @@
         },
         "honesty": {
           "title": "The generator never overstates your posture",
-          "desc": "Annex II lists only security measures confirmed against actual audit evidence — certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
+          "desc": "Annex II lists only security measures confirmed against actual audit evidence: certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
         },
         "afterTitle": "After generation",
-        "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review — not legal advice."
+        "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review, not legal advice."
       },
       "metaTitle": "Vendor Management",
       "metaDescription": "Maintain your vendor register with contract tracking, privacy questionnaires, risk tiers, and periodic review workflows.",
@@ -6723,6 +6917,13 @@
         "registerTitle": "Vendor Register Report",
         "registerDesc": "Complete vendor inventory with risk tiers, certifications, data categories processed, countries of operation, contract/DPA status, and review schedules. Includes summary statistics and per-vendor detail cards."
       }
+    },
+    "shell": {
+      "userGuide": "User Guide",
+      "menu": "Documentation Menu"
+    },
+    "mockup": {
+      "uiPreview": "UI Preview"
     }
   },
   "healthAdtechReport": {
@@ -8826,5 +9027,135 @@
       "limited": "{count, plural, one {# department} other {# departments}}",
       "saved": "Access updated"
     }
+  },
+  "serverErrors": {
+    "exact": {
+      "aCustomerWithThisEmailAlreadyExists": "A customer with this email already exists",
+      "aDepartmentCannotBeItsOwnParent": "A department cannot be its own parent.",
+      "aiSentinelIntegrationIsNotConfigured": "AI Sentinel integration is not configured",
+      "aiSystemNotFound": "AI system not found",
+      "aiSystemsAreReadOnlyInDpoCentral": "AI systems are read-only in DPO Central. Govern them in AI Sentinel.",
+      "alreadyRedacted": "Already redacted",
+      "anOrganizationWithThisSlugAlreadyExists": "An organization with this slug already exists",
+      "approvalNotFound": "Approval not found",
+      "approverMustBeAMemberOfTheOrganization": "Approver must be a member of the organization",
+      "assessmentNotFound": "Assessment not found",
+      "assessmentTemplateIsMissingItMayHaveBeen": "Assessment template is missing: it may have been deleted",
+      "cannotChangeTheRoleOfTheLastOwner": "Cannot change the role of the last owner of an organization",
+      "cannotModifyAnApprovedAssessment": "Cannot modify an approved assessment",
+      "cannotRemoveTheLastOwnerOfAnOrganization": "Cannot remove the last owner of an organization",
+      "chooseADifferentClientAsTheSource": "Choose a different client as the source",
+      "contractNotFound": "Contract not found",
+      "customerNotFound": "Customer not found",
+      "dsarRequestNotFound": "DSAR request not found",
+      "dataAssetNotFound": "Data asset not found",
+      "dataElementNotFound": "Data element not found",
+      "dataFlowNotFound": "Data flow not found",
+      "dataTransferNotFound": "Data transfer not found",
+      "departmentNotFound": "Department not found",
+      "departmentsNestOneLevelOnly": "Departments nest one level only.",
+      "engagementNotFound": "Engagement not found",
+      "entitlementNotFoundOrAlreadyInactive": "Entitlement not found or already inactive",
+      "failedToSendTestMessageToSlackPlease": "Failed to send test message to Slack. Please verify the webhook URL.",
+      "generationNotFound": "Generation not found",
+      "incidentNotFound": "Incident not found",
+      "industryTemplateNotFound": "Industry template not found",
+      "intakeFormNotAvailableForThisOrganization": "Intake form not available for this organization",
+      "jurisdictionNotFoundInCatalog": "Jurisdiction not found in catalog",
+      "jurisdictionNotFound": "Jurisdiction not found",
+      "memberNotFoundInThisOrganization": "Member not found in this organization",
+      "memberNotFound": "Member not found",
+      "mitigationNotFound": "Mitigation not found",
+      "noAiSystemsFoundToExport": "No AI systems found to export",
+      "noSlackWebhookUrlConfiguredPleaseSaveA": "No Slack webhook URL configured. Please save a webhook URL first.",
+      "noBillingCustomerFoundForThisOrganization": "No billing customer found for this organization",
+      "noComplianceDataToSnapshotYetAddData": "No compliance data to snapshot yet. Add data assets, assessments, DSARs, incidents or vendors first.",
+      "noUserFoundWithThisEmailTheyMust": "No user found with this email. They must sign up first.",
+      "notificationNotFound": "Notification not found",
+      "onlyAnOwnerOrAnAdminOfBoth": "Only an owner or an admin of both organizations can copy a template",
+      "onlyCompletedOrCancelledRequestsCanBeDeleted": "Only completed or cancelled requests can be deleted",
+      "onlyCompletedCancelledOrRejectedRequestsCanBe": "Only completed, cancelled, or rejected requests can be redacted",
+      "onlyOwnersAndAdminsCanManageDepartments": "Only owners and admins can manage departments.",
+      "onlyOwnersCanChangeMemberRoles": "Only owners can change member roles",
+      "organizationIdIsRequired": "Organization ID is required",
+      "organizationNotFound": "Organization not found",
+      "organizationOrIntakeFormNotFound": "Organization or intake form not found",
+      "platformAdminAccessRequired": "Platform admin access required",
+      "processingActivityNotFound": "Processing activity not found",
+      "publicEmailDomainsEGGmailComCannot": "Public email domains (e.g. gmail.com) cannot be used as organization domains",
+      "ropaExportRequiresAPremiumSubscriptionEnableThis": "ROPA Export requires a premium subscription. Enable this add-on to export your Record of Processing Activities.",
+      "requestNotFound": "Request not found",
+      "reviewNotFound": "Review not found",
+      "savedViewNotFound": "Saved view not found",
+      "selectAtLeastOneVendorToImportOr": "Select at least one vendor to import or an industry template",
+      "skillPackageHasNoStripePriceConfigured": "Skill package has no Stripe price configured",
+      "someCopiedTextStillPointsAtTheOther": "Some copied text still points at the other client. Review the list before copying.",
+      "someVendorSlugsAreNotInYourVendor": "Some vendor slugs are not in your Vendor.Watch portfolio.",
+      "submitApproveIsOnlyAvailableForSingleUser": "Submit & Approve is only available for single-user organizations. Use the standard submit flow instead.",
+      "tiaTemplateNotAvailableRunTheTemplateSeed": "TIA template not available. Run the template seed script first.",
+      "taskNotFound": "Task not found",
+      "templateNotFoundOrNotAccessible": "Template not found or not accessible",
+      "templateNotFound": "Template not found",
+      "thisEntitlementWasNotPurchasedViaStripeAnd": "This entitlement was not purchased via Stripe and cannot be self-cancelled",
+      "thisOrganisationCouldNotBeCreatedPleaseTry": "This organisation could not be created. Please try again with a slightly different name.",
+      "thisRequestIsAlreadyFinalisedAndCannotBe": "This request is already finalised and cannot be withdrawn.",
+      "thisUserIsAlreadyAMemberOfThe": "This user is already a member of the organization",
+      "transferNotFound": "Transfer not found",
+      "unknownDepartmentInTheList": "Unknown department in the list.",
+      "unknownDepartment": "Unknown department.",
+      "unknownOwner": "Unknown owner.",
+      "unknownParentDepartment": "Unknown parent department.",
+      "userNotFound": "User not found",
+      "vendorNotFoundInCatalog": "Vendor not found in catalog",
+      "vendorNotFound": "Vendor not found",
+      "youAreNotTheAssignedApprover": "You are not the assigned approver",
+      "youDoNotHaveAccessToThisOrganization": "You do not have access to this organization",
+      "youDoNotHavePermissionToAddMembers": "You do not have permission to add members",
+      "youDoNotHavePermissionToManageJurisdictions": "You do not have permission to manage jurisdictions",
+      "youDoNotHavePermissionToPerformThis": "You do not have permission to perform this action",
+      "youDoNotHavePermissionToRemoveMembers": "You do not have permission to remove members",
+      "youDoNotHavePermissionToRemoveTemplate": "You do not have permission to remove template items",
+      "youDoNotHavePermissionToUpdateThis": "You do not have permission to update this organization",
+      "youHaveReachedTheMaximumNumberOfSaved": "You have reached the maximum number of saved views.",
+      "yourAccountHasNoEmailAddress": "Your account has no email address",
+      "yourRequestCouldNotBeRecordedOrDelivered": "Your request could not be recorded or delivered. Please try again, or write to us directly.",
+      "assigneeNotFound": "Assignee not found",
+      "reviewerNotFound": "Reviewer not found",
+      "activationFailed": "Activation failed",
+      "installFailed": "Install failed",
+      "activationNotFound": "Activation not found",
+      "anUnexpectedErrorOccurredPleaseTryAgain": "An unexpected error occurred. Please try again.",
+      "weReReconnectingToTheServicePleaseTry": "We're reconnecting to the service. Please try again in a moment."
+    },
+    "pattern": {
+      "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",
+      "freeSlotsQuickstart": "You can import up to 5 vendors for free during quickstart. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",
+      "premiumUpgrade": "{type} assessments require a premium license. Upgrade your plan to access this feature.",
+      "premiumContact": "{type} assessments require a premium license. Contact {company} to enable this feature.",
+      "stillToAnswer": "Still to answer ({count}): {list}",
+      "andMore": "{shown}; and {rest} more",
+      "unconfirmedIssues": "Unconfirmed consistency issues: {codes}"
+    }
+  },
+  "licenses": {
+    "heading": "Licence & source",
+    "intro": "Legal notices for this program, as required by the GNU Affero General Public License.",
+    "licensed": "Licensed under the GNU Affero General Public License, version 3 or later (AGPL-3.0-or-later).",
+    "noWarranty": "This program comes with ABSOLUTELY NO WARRANTY.",
+    "freeSoftware": "This is free software, and you are welcome to redistribute it under the conditions of the AGPL-3.0-or-later. See the full licence text in the <file>LICENSE</file> file distributed with the source.",
+    "sourceTitle": "Complete corresponding source code",
+    "sourcePublic": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for this running instance is available at:",
+    "sourceOnRequest": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for the version running here{commit} is available to you at no charge. The public source repository is being finalised; until it is published, request the corresponding source by emailing <mail>{email}</mail> and we will provide it.",
+    "commit": " (commit {commit})",
+    "premiumTitle": "Premium skills",
+    "premiumBody": "Certain premium skills and add-ons are separately licensed and are <b>not</b> covered by the AGPL. They are not part of the corresponding source offered above.",
+    "back": "Back to DPO Central"
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "This page could not be found",
+    "body": "The address may be mistyped, or the page may have moved. Your saved records are not affected.",
+    "home": "Go to the home page",
+    "dashboard": "Go to your dashboard"
   }
 }

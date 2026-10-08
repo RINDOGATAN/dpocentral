@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,15 +32,16 @@ import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { formatPrice } from "@/lib/currency";
+import { formatDateIn } from "@/lib/utils";
 
-const legalBasisLabels: Record<string, string> = {
-  CONSENT: "Consent",
-  CONTRACT: "Contract",
-  LEGAL_OBLIGATION: "Legal Obligation",
-  VITAL_INTERESTS: "Vital Interests",
-  PUBLIC_TASK: "Public Task",
-  LEGITIMATE_INTERESTS: "Legitimate Interests",
-};
+const LEGAL_BASES = new Set([
+  "CONSENT",
+  "CONTRACT",
+  "LEGAL_OBLIGATION",
+  "VITAL_INTERESTS",
+  "PUBLIC_TASK",
+  "LEGITIMATE_INTERESTS",
+]);
 
 const legalBasisColors: Record<string, string> = {
   CONSENT: "border-primary text-primary",
@@ -67,6 +69,10 @@ export default function ProcessingActivitiesPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
+  const t = useTranslations("pages.processingActivities");
+  const tBasis = useTranslations("pages.dataInventory.legalBasis");
+  const locale = useLocale();
+  const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -100,10 +106,10 @@ export default function ProcessingActivitiesPage() {
 
       if (format === "csv") {
         const headers = [
-          "Activity Name", "Description", "Purpose", "Legal Basis",
-          "Legal Basis Detail", "Data Subjects", "Data Categories",
-          "Recipients", "Retention Period", "Systems",
-          "International Transfers", "Last Reviewed",
+          t("csv.name"), t("csv.description"), t("csv.purpose"), t("csv.legalBasis"),
+          t("csv.legalBasisDetail"), t("csv.dataSubjects"), t("csv.dataCategories"),
+          t("csv.recipients"), t("csv.retention"), t("csv.systems"),
+          t("csv.transfers"), t("csv.lastReviewed"),
         ];
         const rows = data.map((entry) => [
           entry.name,
@@ -117,7 +123,7 @@ export default function ProcessingActivitiesPage() {
           entry.retentionPeriod ?? "",
           entry.systems.map((s) => s.name).join("; "),
           entry.transfers.map((t) => `${t.destination} (${t.mechanism})`).join("; "),
-          entry.lastReviewed ? new Date(entry.lastReviewed).toLocaleDateString() : "",
+          entry.lastReviewed ? formatDateIn(entry.lastReviewed, locale) : "",
         ]);
         content = [
           headers.map(escapeCSV).join(","),
@@ -134,7 +140,7 @@ export default function ProcessingActivitiesPage() {
       const a = document.createElement("a");
       const date = new Date().toISOString().slice(0, 10);
       a.href = url;
-      a.download = `ROPA-${organization?.name ?? "export"}-${date}.${ext}`;
+      a.download = `${t("csv.fileName")}-${organization?.name ?? "export"}-${date}.${ext}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -156,15 +162,13 @@ export default function ProcessingActivitiesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <Link href="/privacy/data-inventory" className="shrink-0">
-            <Button variant="ghost" size="icon" aria-label="Back">
+            <Button variant="ghost" size="icon" aria-label={t("back")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold">Processing Activities</h1>
-            <p className="text-muted-foreground">
-              Record of Processing Activities (ROPA) for GDPR compliance
-            </p>
+            <h1 className="text-2xl font-semibold">{t("title")}</h1>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -177,34 +181,34 @@ export default function ProcessingActivitiesPage() {
                   ) : (
                     <Download className="w-4 h-4 mr-2" />
                   )}
-                  Export ROPA
+                  {t("exportRopa")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => window.open(`/api/export/ropa?organizationId=${organization?.id}`, "_blank")}>
                   <FileText className="w-4 h-4 mr-2" />
-                  Download as PDF
+                  {t("downloadPdf")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport("csv")}>
                   <FileSpreadsheet className="w-4 h-4 mr-2" />
-                  Download as CSV
+                  {t("downloadCsv")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport("json")}>
                   <FileText className="w-4 h-4 mr-2" />
-                  Download as JSON
+                  {t("downloadJson")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Button variant="outline" onClick={() => setUpgradeModalOpen(true)}>
               <Lock className="w-4 h-4 mr-2 text-amber-500" />
-              Export ROPA
-              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{formatPrice(9)}/mo</Badge>
+              {t("exportRopa")}
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{t("perMonth", { price: formatPrice(9) })}</Badge>
             </Button>
           )}
           <Button>
             <Plus className="w-4 h-4 mr-2" />
-            Add Activity
+            {t("addActivity")}
           </Button>
         </div>
       </div>
@@ -214,7 +218,7 @@ export default function ProcessingActivitiesPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-primary">{activities.length}</div>
-            <p className="text-sm text-muted-foreground">Total Activities</p>
+            <p className="text-sm text-muted-foreground">{t("stats.total")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -222,7 +226,7 @@ export default function ProcessingActivitiesPage() {
             <div className="text-2xl font-bold text-primary">
               {activities.filter((a) => a.isActive).length}
             </div>
-            <p className="text-sm text-muted-foreground">Active</p>
+            <p className="text-sm text-muted-foreground">{t("stats.active")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -230,7 +234,7 @@ export default function ProcessingActivitiesPage() {
             <div className="text-2xl font-bold text-primary">
               {activities.filter((a) => a.legalBasis === "CONSENT").length}
             </div>
-            <p className="text-sm text-muted-foreground">Consent-Based</p>
+            <p className="text-sm text-muted-foreground">{t("stats.consent")}</p>
           </CardContent>
         </Card>
         <Card>
@@ -238,7 +242,7 @@ export default function ProcessingActivitiesPage() {
             <div className="text-2xl font-bold text-primary">
               {activities.filter((a) => a._count?.transfers && a._count.transfers > 0).length}
             </div>
-            <p className="text-sm text-muted-foreground">With Transfers</p>
+            <p className="text-sm text-muted-foreground">{t("stats.transfers")}</p>
           </CardContent>
         </Card>
       </div>
@@ -248,7 +252,7 @@ export default function ProcessingActivitiesPage() {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search activities..."
+            placeholder={t("searchPlaceholder")}
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -282,19 +286,19 @@ export default function ProcessingActivitiesPage() {
                           className={legalBasisColors[activity.legalBasis] || ""}
                         >
                           <Scale className="w-3 h-3 mr-1" />
-                          {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
+                          {basisLabel(activity.legalBasis)}
                         </Badge>
                         {!activity.isActive && (
-                          <Badge variant="secondary">Inactive</Badge>
+                          <Badge variant="secondary">{t("inactive")}</Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
                         {activity.purpose}
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        <span>{activity.assets?.length ?? 0} data assets</span>
-                        <span>{(activity.dataSubjects as string[])?.length ?? 0} subject types</span>
-                        <span>{(activity.categories as string[])?.length ?? 0} data categories</span>
+                        <span>{t("assetsCount", { count: activity.assets?.length ?? 0 })}</span>
+                        <span>{t("subjectTypesCount", { count: (activity.dataSubjects as string[])?.length ?? 0 })}</span>
+                        <span>{t("categoriesCount", { count: (activity.categories as string[])?.length ?? 0 })}</span>
                         {activity.retentionPeriod && (
                           <span>
                             <Clock className="inline w-3 h-3 mr-1" />
@@ -306,7 +310,7 @@ export default function ProcessingActivitiesPage() {
 
                     {/* Data Subjects */}
                     <div className="hidden md:block">
-                      <p className="text-xs text-muted-foreground mb-1">Data Subjects</p>
+                      <p className="text-xs text-muted-foreground mb-1">{t("dataSubjects")}</p>
                       <div className="flex flex-wrap gap-1">
                         {(activity.dataSubjects as string[])?.slice(0, 3).map((subject) => (
                           <Badge key={subject} variant="outline" className="text-xs">
@@ -330,13 +334,11 @@ export default function ProcessingActivitiesPage() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No processing activities found</p>
-            <p className="text-sm mb-4">
-              Document your data processing activities for ROPA compliance
-            </p>
+            <p>{t("empty.title")}</p>
+            <p className="text-sm mb-4">{t("empty.body")}</p>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              Add Activity
+              {t("addActivity")}
             </Button>
           </CardContent>
         </Card>
@@ -345,33 +347,31 @@ export default function ProcessingActivitiesPage() {
       {/* ROPA Info */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">About ROPA</CardTitle>
-          <CardDescription>
-            Record of Processing Activities requirements under GDPR Article 30
-          </CardDescription>
+          <CardTitle className="text-base">{t("about.title")}</CardTitle>
+          <CardDescription>{t("about.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 text-sm">
             <div>
-              <h4 className="font-medium mb-2">Required Information</h4>
+              <h4 className="font-medium mb-2">{t("about.requiredTitle")}</h4>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>Name and contact details of controller</li>
-                <li>Purposes of processing</li>
-                <li>Categories of data subjects and personal data</li>
-                <li>Categories of recipients</li>
-                <li>Transfers to third countries</li>
-                <li>Retention periods</li>
-                <li>Security measures</li>
+                <li>{t("about.required.controller")}</li>
+                <li>{t("about.required.purposes")}</li>
+                <li>{t("about.required.categories")}</li>
+                <li>{t("about.required.recipients")}</li>
+                <li>{t("about.required.transfers")}</li>
+                <li>{t("about.required.retention")}</li>
+                <li>{t("about.required.security")}</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">When ROPA is Required</h4>
+              <h4 className="font-medium mb-2">{t("about.whenTitle")}</h4>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>Organizations with 250+ employees</li>
-                <li>Processing likely to result in risk to rights</li>
-                <li>Processing is not occasional</li>
-                <li>Processing includes special category data</li>
-                <li>Processing includes criminal conviction data</li>
+                <li>{t("about.when.employees")}</li>
+                <li>{t("about.when.risk")}</li>
+                <li>{t("about.when.notOccasional")}</li>
+                <li>{t("about.when.specialCategory")}</li>
+                <li>{t("about.when.criminal")}</li>
               </ul>
             </div>
           </div>
@@ -384,7 +384,7 @@ export default function ProcessingActivitiesPage() {
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}
         skillPackageId="skill-ropa-export"
-        skillName="ROPA Export"
+        skillName={t("skillName")}
       />
     </div>
   );

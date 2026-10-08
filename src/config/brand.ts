@@ -19,6 +19,8 @@ export interface BrandConfig {
   name: string;
   nameUppercase: string;
   tagline: string;
+  /** True when the deployment set its own tagline: shown as written, never translated. */
+  customTagline?: boolean;
   description: string;
 
   // Company/Provider info
@@ -141,6 +143,7 @@ export function getBrandConfig(): BrandConfig {
       process.env.NEXT_PUBLIC_BRAND_NAME_UPPER ||
       (brandName ? brandName.toUpperCase() : defaultBrand.nameUppercase),
     tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || defaultBrand.tagline,
+    customTagline: !!process.env.NEXT_PUBLIC_BRAND_TAGLINE,
     description:
       process.env.NEXT_PUBLIC_BRAND_DESCRIPTION || defaultBrand.description,
     companyName:

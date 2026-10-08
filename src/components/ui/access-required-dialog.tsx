@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { formatPrice } from "@/lib/currency";
+import { useTranslations } from "next-intl";
 
 interface AccessRequiredDialogProps {
   open: boolean;
@@ -24,9 +25,12 @@ export function AccessRequiredDialog({
   message,
   onUpgrade,
 }: AccessRequiredDialogProps) {
+  const t = useTranslations("premium");
+  const tCommon = useTranslations("common");
+  const tEnable = useTranslations("enableFeature");
   if (!open) return null;
 
-  const defaultMessage = `${featureName} is available as an add-on for ${formatPrice(9)}/month.`;
+  const defaultMessage = t("addOnMessage", { feature: featureName, price: formatPrice(9) });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -45,7 +49,7 @@ export function AccessRequiredDialog({
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
                 <AlertTriangle className="h-5 w-5 text-amber-600" />
               </div>
-              <CardTitle className="text-lg">Access Required</CardTitle>
+              <CardTitle className="text-lg">{t("accessRequired")}</CardTitle>
             </div>
             <Button
               variant="ghost"
@@ -54,7 +58,7 @@ export function AccessRequiredDialog({
               onClick={onClose}
             >
               <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{tCommon("close")}</span>
             </Button>
           </div>
         </CardHeader>
@@ -65,26 +69,26 @@ export function AccessRequiredDialog({
           </CardDescription>
 
           <div className="mt-4 rounded-lg bg-muted p-4">
-            <p className="text-sm font-medium">Add-on Feature</p>
+            <p className="text-sm font-medium">{t("addOnFeature")}</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Enable this feature for your organization for {formatPrice(9)}/month. Cancel anytime.
+              {t("addOnBody", { price: formatPrice(9) })}
             </p>
           </div>
         </CardContent>
 
         <CardFooter className="flex justify-end gap-3 pt-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            {tCommon("cancel")}
           </Button>
           {features.selfServiceUpgrade && onUpgrade ? (
             <Button onClick={onUpgrade}>
-              Enable Feature
+              {tEnable("confirm")}
             </Button>
           ) : (
             <Button asChild>
               <a href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(brand.name + ' - Enable ' + featureName)}`}>
                 <Mail className="mr-2 h-4 w-4" />
-                Contact Us
+                {t("contactUs")}
               </a>
             </Button>
           )}

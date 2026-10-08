@@ -80,6 +80,17 @@ const frequencyOptions = [
   "Batch",
 ];
 
+/** Stored frequency values (English) and the message key that labels each. */
+export const FREQUENCY_LABEL_KEYS: Record<string, string> = {
+  "Real-time": "realTime",
+  Hourly: "hourly",
+  Daily: "daily",
+  Weekly: "weekly",
+  Monthly: "monthly",
+  "On-demand": "onDemand",
+  Batch: "batch",
+};
+
 interface CreateFlowSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -130,6 +141,7 @@ export function CreateFlowSheet({
   initialData,
 }: CreateFlowSheetProps) {
   const tSheet = useTranslations("dataFlow.sheet");
+  const tFlow = useTranslations("dataFlow");
   const tCategory = useTranslations("enums.dataCategory");
   const { label: enumLabel } = useEnumLabels();
   const [form, setForm] = useState<CreateFlowData>(
@@ -295,7 +307,7 @@ export function CreateFlowSheet({
               <SelectContent>
                 {frequencyOptions.map((freq) => (
                   <SelectItem key={freq} value={freq}>
-                    {freq}
+                    {tFlow(`frequencyOptions.${FREQUENCY_LABEL_KEYS[freq]}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -327,7 +339,7 @@ export function CreateFlowSheet({
           {/* Is Automated */}
           <div className="flex items-center justify-between">
             <Label htmlFor="is-automated" className="text-sm">
-              Automated Transfer
+              {tSheet("automated")}
             </Label>
             <Switch
               id="is-automated"
@@ -358,12 +370,12 @@ export function CreateFlowSheet({
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {mode === "edit" ? "Saving…" : "Creating…"}
+                  {mode === "edit" ? tSheet("saving") : tSheet("creating")}
                 </>
               ) : mode === "edit" ? (
-                "Save Changes"
+                tSheet("saveChanges")
               ) : (
-                "Create Flow"
+                tSheet("createFlow")
               )}
             </Button>
           </SheetFooter>

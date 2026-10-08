@@ -23,6 +23,7 @@ import type { SignInMethods } from "@/lib/sign-in-methods";
 export function SignInForm({ methods }: { methods: SignInMethods }) {
   const isDev = methods.local;
   const t = useTranslations("auth");
+  const tMeta = useTranslations("metadata");
   const hostedPilot = useHostedPilot();
   const [email, setEmail] = useState("");
   const [devEmail, setDevEmail] = useState("");
@@ -138,7 +139,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
         <div className="text-center mb-8">
           <h1 className="text-3xl mb-4 text-white uppercase tracking-wide" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</h1>
           <p className="text-muted-foreground text-sm">
-            {brand.tagline}
+            {brand.customTagline ? brand.tagline : tMeta("tagline")}
           </p>
           {signedOut && (
             <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
