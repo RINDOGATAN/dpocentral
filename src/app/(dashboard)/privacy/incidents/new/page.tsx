@@ -151,8 +151,8 @@ export default function NewIncidentPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/privacy/incidents">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="w-4 h-4" />
+          <Button variant="ghost" size="icon" aria-label={tCommon("back")}>
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           </Button>
         </Link>
         <div>
