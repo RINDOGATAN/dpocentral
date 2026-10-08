@@ -9,6 +9,8 @@
  *
  *   - a key present in the English bundle and missing from the Spanish one;
  *   - an "usted" form ("usted", "ustedes", "Ud.", "Uds.", "Vd.", "Vds.");
+ *   - a plural "vosotros" address ("vuestra organización", "podéis");
+ *   - "Términos de(l) servicio/uso": the product says «Condiciones»;
  *   - a long dash (U+2014): use a colon, a comma or parentheses instead;
  *   - a short list of Latin American terms that read as foreign in Spain.
  *
@@ -50,6 +52,12 @@ const BUNDLES: Array<{ name: string; es: string; en: string }> = [
 /** Formal address: the product always says "tú". */
 const USTED = /\b(usted(es)?|Uds?\.|Vds?\.)(?=\s|$|[,.;:)])/i;
 
+/** Plural second person: the reader is always one "tú", never "vosotros". */
+const VOSOTROS = /\b(vosotr[oa]s|vuestr[oa]s?|descubrís|abráis|poneos|os rogamos|podéis|tenéis|necesitáis|queréis|habéis)\b/i;
+
+/** One wording for the service terms everywhere. */
+const TERMS = /\bTérminos (de|del) (servicio|uso)\b/i;
+
 /** Latin American vocabulary, whole word forms only. */
 const LATAM: Array<{ term: string; pattern: RegExp }> = [
   { term: "computadora / computador", pattern: /\bcomputador(a|as|es)?\b/i },
@@ -81,6 +89,14 @@ describe("Spanish copy", () => {
 
     it(`${bundle.name} addresses the reader as tú, never usted`, () => {
       expect(es.filter(([, t]) => USTED.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
+    it(`${bundle.name} addresses one reader, never vosotros`, () => {
+      expect(es.filter(([, t]) => VOSOTROS.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
+    it(`${bundle.name} names the service terms «Condiciones»`, () => {
+      expect(es.filter(([, t]) => TERMS.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
     });
 
     it(`${bundle.name} carries no long dash`, () => {

@@ -36,7 +36,7 @@ import {
   CalendarClock,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { SortControl } from "@/components/privacy/sort-control";
@@ -44,6 +44,7 @@ import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sor
 import { PageHeader } from "@/components/privacy/page-header";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 const MECHANISM_KEYS = [
   "ADEQUACY_DECISION", "STANDARD_CONTRACTUAL_CLAUSES", "BINDING_CORPORATE_RULES",
   "DEROGATION", "CERTIFICATION", "CODE_OF_CONDUCT", "OTHER",
@@ -62,6 +63,7 @@ export default function TransfersListPage() {
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const t = useTranslations("pages.dataInventory.transferDialog");
+  const locale = useLocale();
   const tMech = useTranslations("pages.dataInventory.mechanism");
   const tCommon = useTranslations("common");
   const tList = useTranslations("pages.transfers.list");
@@ -255,7 +257,7 @@ export default function TransfersListPage() {
                           {transfer.sccExpiryDate && (
                             <Badge variant="outline" className="text-xs">
                               {tList("sccExpires", {
-                                date: new Date(transfer.sccExpiryDate).toLocaleDateString(),
+                                date: formatDateIn(new Date(transfer.sccExpiryDate), locale),
                               })}
                             </Badge>
                           )}

@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { Monitor } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface FeatureMockupProps {
   title: string;
@@ -10,12 +11,13 @@ interface FeatureMockupProps {
 }
 
 export function FeatureMockup({ title, description, children }: FeatureMockupProps) {
+  const t = useTranslations("docs.mockup");
   return (
     <div className="rounded-xl border bg-background overflow-hidden">
       <div className="flex items-center gap-2 border-b px-4 py-2 bg-muted/30">
         <Monitor className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="text-xs font-medium text-muted-foreground">UI Preview</span>
-        <span className="text-xs text-muted-foreground">—</span>
+        <span className="text-xs font-medium text-muted-foreground">{t("uiPreview")}</span>
+        <span className="text-xs text-muted-foreground" aria-hidden="true">·</span>
         <span className="text-xs text-muted-foreground">{title}</span>
       </div>
       {description && (

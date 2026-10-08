@@ -35,7 +35,7 @@ import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
@@ -45,6 +45,7 @@ import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForRiskTier } from "@/config/status-tone";
 
+import { formatDateIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
@@ -58,6 +59,7 @@ const statusColors: Record<string, string> = {
 
 export default function VendorsPage() {
   const t = useTranslations("pages.vendors");
+  const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("vendors");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
@@ -318,7 +320,7 @@ export default function VendorsPage() {
                   <div className="flex justify-between text-xs text-muted-foreground pt-2 border-t border-border">
                     <span>
                       <Clock className="inline w-3 h-3 mr-1" />
-                      {t("card.added", { date: new Date(vendor.createdAt).toLocaleDateString() })}
+                      {t("card.added", { date: formatDateIn(new Date(vendor.createdAt), locale) })}
                     </span>
                   </div>
                 </CardContent>

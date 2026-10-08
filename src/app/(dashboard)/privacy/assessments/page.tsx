@@ -22,7 +22,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
@@ -30,6 +30,7 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { PageHeader } from "@/components/privacy/page-header";
 import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
 
+import { formatDateIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
   IN_PROGRESS: "border-primary text-primary",
@@ -45,6 +46,7 @@ const statusColors: Record<string, string> = {
 
 export default function AssessmentsPage() {
   const t = useTranslations("pages.assessments");
+  const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("assessments");
   const { label: enumLabel } = useEnumLabels();
   const { organization } = useOrganization();
@@ -203,7 +205,7 @@ export default function AssessmentsPage() {
                       <span>{t("card.responsesShort", { count: assessment._count?.responses ?? 0 })}</span>
                       <span>
                         <Clock className="inline h-3 w-3 mr-1" />
-                        {new Date(assessment.createdAt).toLocaleDateString()}
+                        {formatDateIn(new Date(assessment.createdAt), locale)}
                       </span>
                     </div>
                   </div>
@@ -252,7 +254,7 @@ export default function AssessmentsPage() {
                     <div className="text-right shrink-0">
                       <p className="text-sm text-muted-foreground">
                         <Clock className="inline w-3 h-3 mr-1" />
-                        {new Date(assessment.createdAt).toLocaleDateString()}
+                        {formatDateIn(new Date(assessment.createdAt), locale)}
                       </p>
                     </div>
                   </div>

@@ -82,6 +82,7 @@ export function DashboardShell({
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
 
   // Primary nav: always visible in the top bar
   const primaryNavItems = [
@@ -124,7 +125,7 @@ export function DashboardShell({
   if (orgLoading || userTypeLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{tCommon("loading")}</div>
       </div>
     );
   }

@@ -23,7 +23,7 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
@@ -31,6 +31,7 @@ import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneMark } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-primary text-primary",
   IDENTITY_PENDING: "border-muted-foreground text-muted-foreground",
@@ -46,6 +47,7 @@ const isPortalComingSoon = COMING_SOON_SKILL_IDS.has(SKILL_PACKAGE_IDS.DSAR_PORT
 
 export default function DSARPage() {
   const t = useTranslations("pages.dsar");
+  const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("dsar");
   const { organization } = useOrganization();
 
@@ -219,7 +221,7 @@ export default function DSARPage() {
                       {request.status === "COMPLETED" || request.status === "REJECTED" ? (
                         <span>
                           <Clock className="inline h-3 w-3 mr-1" />
-                          {new Date(request.dueDate).toLocaleDateString()}
+                          {formatDateIn(new Date(request.dueDate), locale)}
                         </span>
                       ) : (
                         <span className={request.slaStatus === "overdue" ? "font-medium" : ""}>
@@ -288,7 +290,7 @@ export default function DSARPage() {
                             {request.status === "COMPLETED" ? t("card.completed") : t("card.rejected")}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {request.dueDate ? new Date(request.dueDate).toLocaleDateString() : t("card.naDate")}
+                            {request.dueDate ? formatDateIn(new Date(request.dueDate), locale) : t("card.naDate")}
                           </p>
                         </>
                       ) : (
@@ -307,7 +309,7 @@ export default function DSARPage() {
                             }
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {t("card.due", { date: request.dueDate ? new Date(request.dueDate).toLocaleDateString() : t("card.naDate") })}
+                            {t("card.due", { date: request.dueDate ? formatDateIn(new Date(request.dueDate), locale) : t("card.naDate") })}
                           </p>
                         </>
                       )}

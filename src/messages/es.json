@@ -188,7 +188,8 @@
         "LOCATION": "Ubicación",
         "BEHAVIORAL": "Comportamiento",
         "EMPLOYMENT": "Empleo"
-      }
+      },
+      "openInNewTab": "Abrir en una nueva pestaña"
     },
     "newAssessment": {
       "title": "Nueva evaluación",
@@ -302,7 +303,10 @@
       "creating": "Creando la evaluación y guardando las respuestas",
       "create": "Crear y abrir la evaluación",
       "missingTemplateTitle": "Falta la plantilla estándar de EIPD",
-      "missingTemplateBody": "Estas respuestas se redactan para las preguntas de la plantilla estándar de EIPD. Sin ella, el asistente las redactaría para las preguntas de otra plantilla, así que se detiene aquí. Instala o carga la plantilla estándar de EIPD y vuelve a empezar."
+      "missingTemplateBody": "Estas respuestas se redactan para las preguntas de la plantilla estándar de EIPD. Sin ella, el asistente las redactaría para las preguntas de otra plantilla, así que se detiene aquí. Instala o carga la plantilla estándar de EIPD y vuelve a empezar.",
+      "recordName": "EIPD: {activity}",
+      "recordNameWithVendor": "EIPD: {activity} ({vendor})",
+      "recordDescription": "Redactada automáticamente a partir de los datos de la actividad de tratamiento"
     },
     "trialAssessments": {
       "freeNote": "Gratis por tiempo limitado: {limit, plural, =2 {dos} other {#}} EIPD por organización en el nivel piloto",
@@ -935,6 +939,12 @@
         "ownerLabel": "Responsable",
         "ownerPlaceholder": "Persona responsable",
         "dueDateLabel": "Fecha límite"
+      },
+      "repeatItem": "Elemento",
+      "petSuggestion": {
+        "title": "Implantar {pet}",
+        "vendorDescription": "Tratar el riesgo de {risk} ({ref}). {vendor} aplica esta tecnología.",
+        "description": "Tratar el riesgo de {risk} ({ref}). Valora implantar {pet} como garantía técnica."
       }
     },
     "activityDetail": {
@@ -942,7 +952,36 @@
       "backToInventory": "Volver al inventario de datos",
       "notFound": "No se ha encontrado la actividad de tratamiento",
       "inactive": "Inactiva",
-      "edit": "Editar"
+      "edit": "Editar",
+      "purpose": "Finalidad",
+      "description": "Descripción",
+      "legalBasisDetail": "Detalle de la base jurídica",
+      "dataSubjects": "Interesados",
+      "noDataSubjects": "No se han indicado interesados",
+      "dataCategories": "Categorías de datos",
+      "noCategories": "No se han indicado categorías",
+      "retentionPeriod": "Plazo de conservación",
+      "automatedDecisionMaking": "Decisiones automatizadas",
+      "recipients": "Destinatarios",
+      "linkedAssets": "Activos de datos vinculados ({count})",
+      "generateFlows": "Generar flujos",
+      "manageAssets": "Gestionar activos",
+      "elementCount": "{count, plural, one {# elemento} other {# elementos}}",
+      "elementCountOf": "{count}/{total} elementos",
+      "notLinked": "+{count} sin vincular",
+      "noLinkedAssets": "No hay activos de datos vinculados a esta actividad",
+      "transfers": "Transferencias de datos ({count})",
+      "assessments": "Evaluaciones ({count})",
+      "linkDialog": {
+        "title": "Vincular activos de datos",
+        "description": "Selecciona qué activos y elementos de datos trata esta actividad.",
+        "assetMeta": "{type}: {count, plural, one {# elemento} other {# elementos}}",
+        "hide": "Ocultar",
+        "elements": "Elementos",
+        "allElements": "Todos los elementos",
+        "noAssets": "Todavía no hay activos de datos en esta organización",
+        "selected": "{count, plural, one {# activo seleccionado} other {# activos seleccionados}}"
+      }
     },
     "assetDetail": {
       "notFound": "Activo no encontrado",
@@ -1795,7 +1834,8 @@
           "body": "Este registro enumera los sistemas de IA que usan datos personales, para que tus registros de privacidad estén completos. Para clasificar el riesgo de un sistema, aplicar supervisión o realizar una evaluación de la conformidad, gobiérnalo en AI Sentinel.",
           "open": "Abrir AI Sentinel"
         }
-      }
+      },
+      "syncedWithSentinel": "Sincronizado con AI Sentinel"
     },
     "incidents": {
       "title": "Gestión de incidentes",
@@ -2374,6 +2414,18 @@
       "inactive": "Inactiva",
       "noLinked": "No hay actividades de tratamiento vinculadas a este elemento",
       "noLinkedHint": "Abre el activo principal y usa «Gestionar actividades» para vincular una"
+    },
+    "regulationsWizard": {
+      "title": "Asistente de aplicabilidad",
+      "subtitle": "Responde a unas preguntas sobre tu organización para saber qué normas se le aplican",
+      "answerFirst": "Responde al menos a una pregunta para ver las jurisdicciones aplicables",
+      "check": "Comprobar aplicabilidad",
+      "resultsTitle": "Normativa aplicable",
+      "resultsCount": "Según tus respuestas, {count, plural, one {puede aplicarse # norma} other {pueden aplicarse # normas}}",
+      "noneFound": "No se han identificado más normas. Puedes revisar el catálogo completo.",
+      "revise": "Revisar respuestas",
+      "applying": "Aplicando...",
+      "applyAll": "Aplicar todas"
     }
   },
   "confirms": {
@@ -2406,12 +2458,12 @@
     "sendingLink": "Enviando...",
     "signingIn": "Iniciando sesión...",
     "bySigningIn": "Al iniciar sesión, aceptas nuestros",
-    "termsOfUse": "Términos de uso",
+    "termsOfUse": "Condiciones de uso",
     "and": "y",
     "privacyPolicy": "Política de privacidad",
     "developmentMode": "Modo de desarrollo",
     "devSignIn": "Acceso de desarrollo (inmediato)",
-    "termsOfService": "Términos del servicio",
+    "termsOfService": "Condiciones del servicio",
     "emailPlaceholder": "nombre@empresa.com",
     "devEmailPlaceholder": "dev@example.com",
     "failedToSendLink": "No se ha podido enviar el enlace mágico. Inténtalo de nuevo.",
@@ -2515,7 +2567,12 @@
       "volumePlaceholder": "p. ej., ~10.000 registros/día",
       "encryption": "Método de cifrado",
       "encryptionPlaceholder": "p. ej., TLS 1.3, AES-256",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "automated": "Transferencia automatizada",
+      "saving": "Guardando…",
+      "creating": "Creando…",
+      "saveChanges": "Guardar cambios",
+      "createFlow": "Crear flujo"
     },
     "empty": {
       "loading": "Cargando la visualización de flujos de datos…",
@@ -2525,6 +2582,29 @@
       "noFlowsBody": "Crea flujos para visualizar cómo se mueven los datos entre sistemas",
       "noAssetFlowsTitle": "No hay flujos de datos conectados a este activo",
       "noAssetFlowsBody": "Crea un flujo para conectar este activo con otros sistemas"
+    },
+    "actions": {
+      "addAsset": "Añadir activo",
+      "addFlow": "Añadir flujo"
+    },
+    "frequencyOptions": {
+      "realTime": "En tiempo real",
+      "hourly": "Cada hora",
+      "daily": "Diaria",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "onDemand": "Bajo demanda",
+      "batch": "Por lotes"
+    },
+    "details": {
+      "automated": "Automatizado",
+      "noDescription": "Sin descripción",
+      "direction": "Dirección del flujo de datos",
+      "noCategories": "No se han indicado categorías",
+      "title": "Detalles del flujo",
+      "volume": "Volumen",
+      "encryption": "Cifrado",
+      "noDetails": "Sin más detalles"
     }
   },
   "metadata": {
@@ -2539,6 +2619,13 @@
     "licenses": {
       "title": "Licencia y código fuente",
       "description": "DPO Central es de código abierto bajo la licencia AGPL-3.0. Consulta la licencia y obtén el código fuente completo correspondiente."
+    },
+    "pageTitles": {
+      "signIn": "Iniciar sesión",
+      "authError": "Problema al iniciar sesión",
+      "verifyRequest": "Revisa tu correo electrónico",
+      "signOut": "Cerrar sesión",
+      "notFound": "Página no encontrada"
     }
   },
   "enums": {
@@ -2776,7 +2863,13 @@
     "installOnSkills": "Instalar en la página de Skills",
     "getOnMarketplace": "Conseguirla en el marketplace",
     "errorCheckout": "No se pudo iniciar el pago. Inténtalo de nuevo.",
-    "errorGeneric": "Algo ha salido mal. Inténtalo de nuevo."
+    "errorGeneric": "Algo ha salido mal. Inténtalo de nuevo.",
+    "multiTitle": "{count, plural, one {Activar # función} other {Activar # funciones}}",
+    "multiContactBody": "Ponte en contacto con nosotros para activar estas funciones en tu organización.",
+    "multiBody": "Añade estas funciones a tu organización.",
+    "multiRedirecting": "Redirigiendo al pago...",
+    "multiCheckoutFailed": "No se ha podido iniciar el pago",
+    "multiSomethingWrong": "Algo ha salido mal"
   },
   "skills": {
     "title": "Skills",
@@ -2816,7 +2909,7 @@
     "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
     "userGuide": "Guía de usuario",
     "billing": "Facturación",
-    "termsOfService": "Términos de servicio",
+    "termsOfService": "Condiciones del servicio",
     "privacyPolicy": "Política de privacidad",
     "dataSecurity": "Seguridad de los datos",
     "docs": "Documentación",
@@ -2834,7 +2927,13 @@
     "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "p. ej., Acme Corporation",
     "getStarted": "Comenzar",
-    "settingUp": "Configurando..."
+    "settingUp": "Configurando...",
+    "persona": {
+      "businessOwnerDesc": "Necesito cumplir la normativa de protección de datos en mi organización",
+      "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
+      "tailorHint": "Así adaptamos la aplicación a lo que necesitas. Puedes cambiarlo más adelante en la configuración.",
+      "continue": "Continuar"
+    }
   },
   "organization": {
     "welcome": "Te damos la bienvenida a {brandName}",
@@ -2971,7 +3070,7 @@
         "name": "Nombre completo",
         "namePlaceholder": "Ana García",
         "email": "Correo electrónico",
-        "emailPlaceholder": "tu@ejemplo.com",
+        "emailPlaceholder": "nombre@ejemplo.com",
         "phone": "Teléfono",
         "phonePlaceholder": "+34 612 345 678",
         "relationshipLabel": "Relación",
@@ -3176,7 +3275,10 @@
     "upgradeRequired": "Esta función requiere una licencia premium.",
     "contactUs": "Contacta con nosotros",
     "upgradeNow": "Actualizar ahora",
-    "premiumSuite": "Este tipo de evaluación forma parte de la suite premium de {brandName}. Actualiza tu plan para acceder a herramientas avanzadas de evaluación de privacidad."
+    "premiumSuite": "Este tipo de evaluación forma parte de la suite premium de {brandName}. Actualiza tu plan para acceder a herramientas avanzadas de evaluación de privacidad.",
+    "addOnMessage": "{feature} está disponible como complemento por {price}/mes.",
+    "addOnFeature": "Función complementaria",
+    "addOnBody": "Activa esta función para tu organización por {price}/mes. Cancela cuando quieras."
   },
   "expertCta": {
     "findExpert": "Buscar experto",
@@ -6815,6 +6917,13 @@
         "registerTitle": "Informe de registro de proveedores",
         "registerDesc": "Inventario completo de proveedores con niveles de riesgo, certificaciones, categorías de datos tratados, países en los que operan, estado del contrato o del DPA y calendario de revisiones. Incluye estadísticas resumidas y tarjetas de detalle por proveedor."
       }
+    },
+    "shell": {
+      "userGuide": "Guía de usuario",
+      "menu": "Menú de la documentación"
+    },
+    "mockup": {
+      "uiPreview": "Vista previa de la interfaz"
     }
   },
   "healthAdtechReport": {
@@ -9027,5 +9136,26 @@
       "andMore": "{shown}; y {rest} más",
       "unconfirmedIssues": "Incoherencias sin confirmar: {codes}"
     }
+  },
+  "licenses": {
+    "heading": "Licencia y código fuente",
+    "intro": "Avisos legales de este programa, tal como exige la GNU Affero General Public License.",
+    "licensed": "Distribuido con la GNU Affero General Public License, versión 3 o posterior (AGPL-3.0-or-later).",
+    "noWarranty": "Este programa se ofrece SIN NINGUNA GARANTÍA.",
+    "freeSoftware": "Es software libre y puedes redistribuirlo en las condiciones de la AGPL-3.0-or-later. Consulta el texto completo de la licencia en el archivo <file>LICENSE</file> que se distribuye con el código fuente.",
+    "sourceTitle": "Código fuente correspondiente completo",
+    "sourcePublic": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de esta instancia está disponible en:",
+    "sourceOnRequest": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de la versión que se ejecuta aquí{commit} está a tu disposición sin coste. El repositorio público se está ultimando; hasta que se publique, solicita el código fuente correspondiente escribiendo a <mail>{email}</mail> y te lo facilitaremos.",
+    "commit": " (commit {commit})",
+    "premiumTitle": "Skills premium",
+    "premiumBody": "Algunas skills y complementos premium tienen una licencia propia y <b>no</b> están cubiertos por la AGPL. No forman parte del código fuente correspondiente ofrecido arriba.",
+    "back": "Volver a DPO Central"
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "No se ha encontrado esta página",
+    "body": "Puede que la dirección esté mal escrita o que la página se haya movido. Tus registros guardados no se ven afectados.",
+    "home": "Ir a la página de inicio",
+    "dashboard": "Ir a tu panel"
   }
 }

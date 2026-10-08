@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import { IncidentStatus, TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -53,6 +53,7 @@ import { features } from "@/config/features";
 import { formatIncidentRef } from "@/lib/incident-ref";
 import { parseDateInput } from "@/lib/date-input";
 
+import { formatDateIn, formatDateTimeIn, formatNumberIn } from "@/lib/utils";
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
   MEDIUM: "border-muted-foreground text-muted-foreground",
@@ -96,6 +97,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const locale = useLocale();
   const tp = useTranslations("pages.incidentDetail");
   const tList = useTranslations("pages.incidents");
   const tCommon = useTranslations("common");
@@ -308,8 +310,8 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                   {deadline && (
                     <p className={`text-sm ${pastDue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
                       {pastDue
-                        ? tp("notifBanner.overdue", { date: deadline.toLocaleString() })
-                        : tp("notifBanner.deadline", { date: deadline.toLocaleString() })}
+                        ? tp("notifBanner.overdue", { date: formatDateTimeIn(deadline, locale) })
+                        : tp("notifBanner.deadline", { date: formatDateTimeIn(deadline, locale) })}
                     </p>
                   )}
                 </div>
@@ -331,7 +333,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <span className="text-sm">{tp("stats.discovered")}</span>
             </div>
             <p className="font-medium">
-              {new Date(incident.discoveredAt).toLocaleDateString()}
+              {formatDateIn(new Date(incident.discoveredAt), locale)}
             </p>
           </CardContent>
         </Card>
@@ -342,7 +344,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <span className="text-sm">{tp("stats.affectedRecords")}</span>
             </div>
             <p className="font-medium text-xl">
-              {incident.affectedRecords?.toLocaleString() ?? tp("stats.unknown")}
+              {(incident.affectedRecords != null ? formatNumberIn(incident.affectedRecords, locale) : null) ?? tp("stats.unknown")}
             </p>
           </CardContent>
         </Card>
@@ -490,7 +492,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         </p>
                         <p className="text-xs text-muted-foreground mt-2">
                           <Clock className="inline w-3 h-3 mr-1" />
-                          {new Date(entry.timestamp).toLocaleString()}
+                          {formatDateTimeIn(new Date(entry.timestamp), locale)}
                           {entry.createdBy && tp("timeline.createdBy", { name: entry.createdBy.name ?? "" })}
                         </p>
                       </div>
@@ -593,7 +595,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                             {pastDue && <Badge variant="destructive">{tp("notifications.overdue")}</Badge>}
                           </div>
                           <p className={`text-sm mt-1 ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>
-                            {tp("notifications.due", { date: deadline.toLocaleString() })}
+                            {tp("notifications.due", { date: formatDateTimeIn(deadline, locale) })}
                           </p>
                         </div>
                         {editingNotifId !== notification.id && (

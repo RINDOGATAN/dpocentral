@@ -19,9 +19,13 @@ import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { toneMark } from "@/config/status-palette";
+import { useTranslations } from "next-intl";
 
 export default function RegulationsWizardPage() {
   const router = useRouter();
+  const tw = useTranslations("pages.regulationsWizard");
+  const tc = useTranslations("common");
+  const tcard = useTranslations("pages.regulations.card");
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
@@ -61,10 +65,10 @@ export default function RegulationsWizardPage() {
       <div>
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <Globe className="w-6 h-6" />
-          Applicability Wizard
+          {tw("title")}
         </h1>
         <p className="text-muted-foreground">
-          Answer questions about your organization to determine which regulations apply
+          {tw("subtitle")}
         </p>
       </div>
 
@@ -90,14 +94,14 @@ export default function RegulationsWizardPage() {
                           variant={answers[q.id] === true ? "default" : "outline"}
                           onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: true }))}
                         >
-                          Yes
+                          {tc("yes")}
                         </Button>
                         <Button
                           size="sm"
                           variant={answers[q.id] === false ? "default" : "outline"}
                           onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: false }))}
                         >
-                          No
+                          {tc("no")}
                         </Button>
                       </div>
                     </div>
@@ -107,18 +111,18 @@ export default function RegulationsWizardPage() {
 
               <div className="flex justify-between pt-4">
                 <Button variant="outline" onClick={() => router.push("/privacy/regulations")}>
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                  <ArrowLeft className="w-4 h-4 mr-2" /> {tc("back")}
                 </Button>
                 <Button
                   onClick={() => setStep("results")}
                   disabled={Object.keys(answers).length === 0}
                   title={
                     Object.keys(answers).length === 0
-                      ? "Answer at least one question to see applicable jurisdictions"
+                      ? tw("answerFirst")
                       : undefined
                   }
                 >
-                  Check Applicability <ArrowRight className="w-4 h-4 ml-2" />
+                  {tw("check")} <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </div>
@@ -132,10 +136,10 @@ export default function RegulationsWizardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Scale className="w-5 h-5" />
-                Applicable Regulations
+                {tw("resultsTitle")}
               </CardTitle>
               <CardDescription>
-                Based on your answers, {results?.applicableJurisdictions.length ?? 0} regulation(s) may apply
+                {tw("resultsCount", { count: results?.applicableJurisdictions.length ?? 0 })}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -145,7 +149,7 @@ export default function RegulationsWizardPage() {
               <CardContent className="py-8 text-center">
                 <CheckCircle2 className={`w-12 h-12 mx-auto mb-4 ${toneMark("success")}`} />
                 <p className="text-muted-foreground">
-                  No additional regulations identified. You may want to review the full catalog.
+                  {tw("noneFound")}
                 </p>
               </CardContent>
             </Card>
@@ -163,8 +167,8 @@ export default function RegulationsWizardPage() {
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">{j.description}</p>
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                            <span>DSAR: {j.dsarDeadlineDays}d</span>
-                            <span>Breach: {j.breachNotificationHours}h</span>
+                            <span>{tcard("dsarShort", { days: j.dsarDeadlineDays })}</span>
+                            <span>{tcard("breachShort", { hours: j.breachNotificationHours })}</span>
                             <span className="text-foreground">{j.penalties}</span>
                           </div>
                         </div>
@@ -177,13 +181,13 @@ export default function RegulationsWizardPage() {
 
               <div className="flex justify-between pt-4">
                 <Button variant="outline" onClick={() => setStep("questions")}>
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Revise Answers
+                  <ArrowLeft className="w-4 h-4 mr-2" /> {tw("revise")}
                 </Button>
                 <Button onClick={handleApplyAll} disabled={applying}>
                   {applying ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Applying...</>
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {tw("applying")}</>
                   ) : (
-                    <><CheckCircle2 className="w-4 h-4 mr-2" /> Apply All</>
+                    <><CheckCircle2 className="w-4 h-4 mr-2" /> {tw("applyAll")}</>
                   )}
                 </Button>
               </div>

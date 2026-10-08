@@ -26,7 +26,7 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
@@ -34,6 +34,7 @@ import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 
+import { formatDateIn, formatNumberIn } from "@/lib/utils";
 // Severity goes through the shared tones. The old map printed CRITICAL as
 // white on mid grey, 2.59 to 1, and told the four levels apart by weight alone.
 
@@ -49,6 +50,7 @@ const statusColors: Record<string, string> = {
 
 export default function IncidentsPage() {
   const t = useTranslations("pages.incidents");
+  const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("incidents");
   const { organization } = useOrganization();
 
@@ -209,7 +211,7 @@ export default function IncidentsPage() {
                       <span>{t("card.recordsShort", { count: incident.affectedRecords ?? 0 })}</span>
                       <span>
                         <Clock className="inline h-3 w-3 mr-1" />
-                        {new Date(incident.discoveredAt).toLocaleDateString()}
+                        {formatDateIn(new Date(incident.discoveredAt), locale)}
                       </span>
                     </div>
                   </div>
@@ -249,7 +251,7 @@ export default function IncidentsPage() {
 
                     <div className="text-center shrink-0">
                       <p className="text-lg font-semibold text-primary">
-                        {incident.affectedRecords?.toLocaleString() ?? 0}
+                        {(incident.affectedRecords != null ? formatNumberIn(incident.affectedRecords, locale) : null) ?? 0}
                       </p>
                       <p className="text-xs text-muted-foreground">{t("card.records")}</p>
                     </div>
@@ -257,7 +259,7 @@ export default function IncidentsPage() {
                     <div className="text-right shrink-0">
                       <p className="text-sm text-muted-foreground">
                         <Clock className="inline w-3 h-3 mr-1" />
-                        {new Date(incident.discoveredAt).toLocaleDateString()}
+                        {formatDateIn(new Date(incident.discoveredAt), locale)}
                       </p>
                     </div>
                   </div>

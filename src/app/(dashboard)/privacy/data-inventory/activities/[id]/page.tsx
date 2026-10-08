@@ -37,21 +37,13 @@ import { useOrganization } from "@/lib/organization-context";
 import { RecordHeader } from "@/components/privacy/record-header";
 import { TemplateBadge } from "@/components/privacy/template-badge";
 
-const legalBasisLabels: Record<string, string> = {
-  CONSENT: "Consent",
-  CONTRACT: "Contract",
-  LEGAL_OBLIGATION: "Legal Obligation",
-  VITAL_INTERESTS: "Vital Interests",
-  PUBLIC_TASK: "Public Task",
-  LEGITIMATE_INTERESTS: "Legitimate Interests",
-};
-
 export default function ActivityDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.activityDetail");
+  const tc = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedAssetIds, setSelectedAssetIds] = useState<string[]>([]);
@@ -220,7 +212,7 @@ export default function ActivityDetailPage() {
           <>
             <Badge variant="outline">
               <Scale className="w-3 h-3 mr-1" />
-              {legalBasisLabels[activity.legalBasis] || activity.legalBasis}
+              {enumLabel("legalBasis", activity.legalBasis)}
             </Badge>
             {!activity.isActive && <Badge variant="secondary">{tp("inactive")}</Badge>}
             <TemplateBadge metadata={activity.metadata} className="text-xs" />
@@ -241,20 +233,20 @@ export default function ActivityDetailPage() {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            Purpose
+            {tp("purpose")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm">{activity.purpose}</p>
           {activity.description && (
             <div>
-              <p className="text-xs text-muted-foreground font-medium mb-1">Description</p>
+              <p className="text-xs text-muted-foreground font-medium mb-1">{tp("description")}</p>
               <p className="text-sm text-muted-foreground">{activity.description}</p>
             </div>
           )}
           {activity.legalBasisDetail && (
             <div>
-              <p className="text-xs text-muted-foreground font-medium mb-1">Legal Basis Detail</p>
+              <p className="text-xs text-muted-foreground font-medium mb-1">{tp("legalBasisDetail")}</p>
               <p className="text-sm text-muted-foreground">{activity.legalBasisDetail}</p>
             </div>
           )}
@@ -267,7 +259,7 @@ export default function ActivityDetailPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Users className="w-4 h-4" />
-              Data Subjects
+              {tp("dataSubjects")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -280,7 +272,7 @@ export default function ActivityDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No data subjects specified</p>
+              <p className="text-sm text-muted-foreground">{tp("noDataSubjects")}</p>
             )}
           </CardContent>
         </Card>
@@ -289,7 +281,7 @@ export default function ActivityDetailPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Database className="w-4 h-4" />
-              Data Categories
+              {tp("dataCategories")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -302,7 +294,7 @@ export default function ActivityDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No categories specified</p>
+              <p className="text-sm text-muted-foreground">{tp("noCategories")}</p>
             )}
           </CardContent>
         </Card>
@@ -317,15 +309,15 @@ export default function ActivityDetailPage() {
                 <div>
                   <p className="text-xs text-muted-foreground font-medium mb-1 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    Retention Period
+                    {tp("retentionPeriod")}
                   </p>
                   <p className="text-sm">{activity.retentionPeriod}</p>
                 </div>
               )}
               {activity.automatedDecisionMaking && (
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1">Automated Decision-Making</p>
-                  <p className="text-sm">{activity.automatedDecisionDetail || "Yes"}</p>
+                  <p className="text-xs text-muted-foreground font-medium mb-1">{tp("automatedDecisionMaking")}</p>
+                  <p className="text-sm">{activity.automatedDecisionDetail || tc("yes")}</p>
                 </div>
               )}
             </div>
@@ -337,7 +329,7 @@ export default function ActivityDetailPage() {
       {recipients.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Recipients</CardTitle>
+            <CardTitle className="text-base">{tp("recipients")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -357,7 +349,7 @@ export default function ActivityDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <CardTitle className="text-base flex items-center gap-2">
               <Database className="w-4 h-4" />
-              Linked Data Assets ({activity.assets?.length ?? 0})
+              {tp("linkedAssets", { count: activity.assets?.length ?? 0 })}
             </CardTitle>
             <div className="flex gap-2">
               {(activity.assets?.length ?? 0) >= 2 && (
@@ -375,12 +367,12 @@ export default function ActivityDetailPage() {
                   {regenerateFlows.isPending ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   ) : null}
-                  Generate Flows
+                  {tp("generateFlows")}
                 </Button>
               )}
               <Button variant="outline" size="sm" onClick={openLinkDialog}>
                 <Plus className="w-4 h-4 mr-2" />
-                Manage Assets
+                {tp("manageAssets")}
               </Button>
             </div>
           </div>
@@ -403,13 +395,14 @@ export default function ActivityDetailPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{link.dataAsset.name}</p>
                           <p className="text-xs text-muted-foreground">
-                            {link.dataAsset.type?.replace("_", " ")}
-                            {link.purpose && ` — ${link.purpose}`}
+                            {enumLabel("dataAssetType", link.dataAsset.type)}
+                            {link.purpose && `: ${link.purpose}`}
                           </p>
                         </div>
                         <Badge variant="outline" className="text-xs shrink-0">
-                          {effectiveElements.length}
-                          {isFiltered ? `/${allElements.length}` : ""} element{effectiveElements.length !== 1 ? "s" : ""}
+                          {isFiltered
+                            ? tp("elementCountOf", { count: effectiveElements.length, total: allElements.length })
+                            : tp("elementCount", { count: effectiveElements.length })}
                         </Badge>
                       </div>
                     </Link>
@@ -428,7 +421,7 @@ export default function ActivityDetailPage() {
                         ))}
                         {isFiltered && (
                           <span className="text-xs text-muted-foreground self-center">
-                            +{allElements.length - effectiveElements.length} not linked
+                            {tp("notLinked", { count: allElements.length - effectiveElements.length })}
                           </span>
                         )}
                       </div>
@@ -438,7 +431,7 @@ export default function ActivityDetailPage() {
               })}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground text-center py-4">No data assets linked to this activity</p>
+            <p className="text-sm text-muted-foreground text-center py-4">{tp("noLinkedAssets")}</p>
           )}
         </CardContent>
       </Card>
@@ -449,7 +442,7 @@ export default function ActivityDetailPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <ArrowRightLeft className="w-4 h-4" />
-              Data Transfers ({activity.transfers.length})
+              {tp("transfers", { count: activity.transfers.length })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -481,7 +474,7 @@ export default function ActivityDetailPage() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <ClipboardCheck className="w-4 h-4" />
-              Assessments ({activity.assessments.length})
+              {tp("assessments", { count: activity.assessments.length })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -514,9 +507,9 @@ export default function ActivityDetailPage() {
       <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
         <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle>Link Data Assets</DialogTitle>
+            <DialogTitle>{tp("linkDialog.title")}</DialogTitle>
             <DialogDescription>
-              Select which data assets and elements are processed by this activity.
+              {tp("linkDialog.description")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
@@ -540,7 +533,7 @@ export default function ActivityDetailPage() {
                       >
                         <p className="text-sm font-medium truncate">{asset.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {asset.type?.replace("_", " ")} — {asset._count?.dataElements ?? 0} elements
+                          {tp("linkDialog.assetMeta", { type: enumLabel("dataAssetType", asset.type), count: asset._count?.dataElements ?? 0 })}
                         </p>
                       </label>
                       {isSelected && elements.length > 0 && (
@@ -556,7 +549,7 @@ export default function ActivityDetailPage() {
                             })
                           }
                         >
-                          {isExpanded ? "Hide" : "Elements"}
+                          {isExpanded ? tp("linkDialog.hide") : tp("linkDialog.elements")}
                         </Button>
                       )}
                     </div>
@@ -568,7 +561,7 @@ export default function ActivityDetailPage() {
                             onCheckedChange={() => toggleAllElements(asset.id)}
                           />
                           <span className="text-xs font-medium text-muted-foreground">
-                            All elements
+                            {tp("linkDialog.allElements")}
                           </span>
                         </label>
                         {elements.map((el: any) => {
@@ -599,17 +592,17 @@ export default function ActivityDetailPage() {
               })
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No data assets in this organization yet
+                {tp("linkDialog.noAssets")}
               </p>
             )}
           </div>
           <div className="flex justify-between items-center pt-4 border-t">
             <p className="text-xs text-muted-foreground">
-              {selectedAssetIds.length} asset{selectedAssetIds.length !== 1 ? "s" : ""} selected
+              {tp("linkDialog.selected", { count: selectedAssetIds.length })}
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setLinkDialogOpen(false)}>
-                Cancel
+                {tc("cancel")}
               </Button>
               <Button
                 onClick={() =>
@@ -625,7 +618,7 @@ export default function ActivityDetailPage() {
                 disabled={linkAssets.isPending}
               >
                 {linkAssets.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                Save
+                {tc("save")}
               </Button>
             </div>
           </div>

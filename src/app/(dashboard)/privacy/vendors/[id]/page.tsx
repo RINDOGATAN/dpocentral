@@ -44,7 +44,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ProduceDpaDialog } from "./produce-dpa-dialog";
@@ -54,6 +54,7 @@ import { TemplateBadge } from "@/components/privacy/template-badge";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { toneChip } from "@/config/status-palette";
 
+import { formatDateIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
@@ -74,6 +75,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const router = useRouter();
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const locale = useLocale();
   const tp = useTranslations("pages.vendorDetail");
   const tList = useTranslations("pages.vendors");
 
@@ -177,7 +179,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
 
   const completeReview = trpc.vendor.completeReview.useMutation({
     onSuccess: () => {
-      toast.success("Review marked complete");
+      toast.success(t("vendor.reviewCompleted"));
       utils.vendor.getById.invalidate();
     },
     onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
@@ -312,7 +314,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <Clock className="w-4 h-4" />
               <span className="text-sm">{tp("info.added")}</span>
             </div>
-            <p className="font-medium">{new Date(vendor.createdAt).toLocaleDateString()}</p>
+            <p className="font-medium">{formatDateIn(new Date(vendor.createdAt), locale)}</p>
           </CardContent>
         </Card>
       </div>
@@ -450,8 +452,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                         <p className="text-sm text-muted-foreground mt-1">
                           {contract.startDate && (
                             <>
-                              {tp("contracts.start", { date: new Date(contract.startDate).toLocaleDateString() })}
-                              {contract.endDate && tp("contracts.endSuffix", { date: new Date(contract.endDate).toLocaleDateString() })}
+                              {tp("contracts.start", { date: formatDateIn(new Date(contract.startDate), locale) })}
+                              {contract.endDate && tp("contracts.endSuffix", { date: formatDateIn(new Date(contract.endDate), locale) })}
                             </>
                           )}
                         </p>
@@ -534,7 +536,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                             {tp("assessments.risk", { level: a.riskLevel })}
                           </Badge>
                         )}
-                        <span>{tp("assessments.created", { date: new Date(a.createdAt).toLocaleDateString() })}</span>
+                        <span>{tp("assessments.created", { date: formatDateIn(new Date(a.createdAt), locale) })}</span>
                       </div>
                     </div>
                     <ExternalLink className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -596,8 +598,8 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                           {review.reviewer?.name ?? review.reviewer?.email ?? tp("reviews.unassigned")}
                           {" · "}
                           {isComplete
-                            ? tp("reviews.completedOn", { date: new Date(review.completedAt!).toLocaleDateString() })
-                            : tp("reviews.scheduledFor", { date: new Date(review.scheduledAt).toLocaleDateString() })}
+                            ? tp("reviews.completedOn", { date: formatDateIn(new Date(review.completedAt!), locale) })
+                            : tp("reviews.scheduledFor", { date: formatDateIn(new Date(review.scheduledAt), locale) })}
                         </p>
                         {review.findings && (
                           <p className="text-sm mt-2 text-muted-foreground">{review.findings}</p>

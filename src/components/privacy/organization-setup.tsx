@@ -11,9 +11,11 @@ import { Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { brand } from "@/config/brand";
+import { useTranslations } from "next-intl";
 
 
 export function OrganizationSetup() {
+  const t = useTranslations("organization");
   const [name, setName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setOrganization, refetchOrganizations } = useOrganization();
@@ -56,18 +58,18 @@ export function OrganizationSetup() {
             <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
             <span className="text-muted-foreground" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </div>
-          <CardTitle>Welcome to {brand.nameUppercase}</CardTitle>
+          <CardTitle>{t("welcome", { brandName: brand.nameUppercase })}</CardTitle>
           <CardDescription>
-            Create your organization to get started with privacy management
+            {t("createOrg")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="org-name">Organization Name</Label>
+              <Label htmlFor="org-name">{t("orgName")}</Label>
               <Input
                 id="org-name"
-                placeholder="e.g., Acme Corporation"
+                placeholder={t("orgNamePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -77,10 +79,10 @@ export function OrganizationSetup() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
+                  {t("creating")}
                 </>
               ) : (
-                "Create Organization"
+                t("createOrganization")
               )}
             </Button>
           </form>

@@ -6,7 +6,7 @@ import { use, useState, useCallback, useRef, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { useTranslatedSections } from "@/lib/template-i18n";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -76,6 +76,7 @@ import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summ
 import { CompletenessPanel } from "@/components/assessments/completeness-panel";
 import { assessmentCompleteness } from "@/lib/assessment-completeness";
 
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
   IN_PROGRESS: "border-primary text-primary",
@@ -129,6 +130,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const tp = useTranslations("pages.assessmentDetail");
   const tList = useTranslations("pages.assessments");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const tAi = useTranslations("ai");
   const [editingQuestion, setEditingQuestion] = useState<string | null>(null);
@@ -442,19 +444,20 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     if (!organization?.id) return;
     const vName = suggestions?.vendorName;
     const isVendorPet = suggestions?.vendorPets.includes(pet);
+    // The mitigation is created in the reader's language.
     const description = isVendorPet
-      ? `Address ${riskLabel} risk (${gdprRef}). ${vName} implements this technology.`
-      : `Address ${riskLabel} risk (${gdprRef}). Consider implementing ${pet} as a technical safeguard.`;
+      ? tp("petSuggestion.vendorDescription", { risk: riskLabel, ref: gdprRef, vendor: vName ?? "" })
+      : tp("petSuggestion.description", { risk: riskLabel, ref: gdprRef, pet });
 
     addMitigation.mutate({
       organizationId: organization.id,
       assessmentId: id,
       riskId: "pet_suggestion",
-      title: `Implement ${pet}`,
+      title: tp("petSuggestion.title", { pet }),
       description,
       priority: 2,
     });
-  }, [organization?.id, id, suggestions?.vendorName, suggestions?.vendorPets, addMitigation]);
+  }, [organization?.id, id, suggestions?.vendorName, suggestions?.vendorPets, addMitigation, tp]);
 
   const openUpdateDialog = useCallback((mitigation: any) => {
     setEditingMitigation(mitigation);
@@ -561,7 +564,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       const extras = (extraInstances[section.id] ?? []).filter((i) => !seen.includes(i));
       let instances = [...seen, ...extras];
       if (instances.length === 0) instances = ["r0"];
-      const itemLabel: string = section.itemLabel || "Item";
+      const itemLabel: string = section.itemLabel || tp("repeatItem");
       instances.forEach((instId, i) => {
         out.push({
           ...section,
@@ -588,7 +591,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       });
     }
     return out;
-  }, [sections, assessment?.responses, extraInstances]);
+  }, [sections, assessment?.responses, extraInstances, tp]);
 
   const addInstance = useCallback((groupId: string) => {
     const instId = Math.random().toString(36).slice(2, 9);
@@ -1440,7 +1443,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   onClick={() => { setAddMitigationTab(hasSuggestions ? "suggested" : "manual"); setAddMitigationOpen(true); }}
                 >
                   <Plus className="w-4 h-4 mr-1" />
-                  Add Mitigation
+                  {tp("mitigations.add")}
                 </Button>
               </CardContent>
             </Card>
@@ -1474,7 +1477,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       <div className="flex items-center gap-2">
                         {approval.decidedAt && (
                           <span className="text-sm text-muted-foreground">
-                            {new Date(approval.decidedAt).toLocaleDateString()}
+                            {formatDateIn(new Date(approval.decidedAt), locale)}
                           </span>
                         )}
                         {approval.status === "PENDING" && approval.approver?.id === currentUserId && (
@@ -1538,7 +1541,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                     onClick={() => setApprovalDialogOpen(true)}
                   >
                     <UserCheck className="w-4 h-4 mr-1" />
-                    Request Approval
+                    {tp("approvals.request")}
                   </Button>
                 )}
               </CardContent>
@@ -1560,7 +1563,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                         </p>
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        {new Date(version.createdAt).toLocaleString()}
+                        {formatDateTimeIn(new Date(version.createdAt), locale)}
                       </span>
                     </div>
                   </CardContent>
