@@ -266,7 +266,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <Link href={`/privacy/incidents/${id}/edit`}>
             <Button variant="outline">
               <Edit className="w-4 h-4 mr-2" />
-              Edit
+              {tCommon("edit")}
             </Button>
           </Link>
           {incident.status !== "CLOSED" && incident.status !== "FALSE_POSITIVE" && (

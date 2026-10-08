@@ -384,14 +384,16 @@ export default function QuickstartPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/privacy?from=quickstart">
+      {/* On a phone the way back sits above the title, which keeps the
+          full width (beside it, the Spanish title ran three lines deep). */}
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
+        <Link href="/privacy?from=quickstart" className="-ml-3 sm:ml-0">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             {tp("back")}
           </Button>
         </Link>
-        <div>
+        <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-semibold">{tp("title")}</h1>
           <p className="text-sm text-muted-foreground">{tp("subtitle")}</p>
         </div>
@@ -682,11 +684,11 @@ export default function QuickstartPage() {
                 <Sparkles className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-sm sm:text-base">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <h3 className="font-semibold text-sm sm:text-base min-w-0">
                     {tQs("recommended")}
                   </h3>
-                  <Badge variant="outline" className="text-primary border-primary/50">
+                  <Badge variant="outline" className="text-primary border-primary/50 shrink-0">
                     {tp("choose.best")}
                   </Badge>
                 </div>
