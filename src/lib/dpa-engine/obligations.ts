@@ -81,7 +81,7 @@ export function deriveObligations(input: AssembleInput): DerivedObligation[] {
       firstDue: addMonths(effective, 12),
       label: {
         en: "Re-evaluate the Transfer Impact Assessment (Annex IV) and refresh the importer's declarations",
-        es: "Reevaluar la Evaluación de Impacto de la Transferencia (Anexo IV) y renovar las declaraciones del importador",
+        es: "Reevaluar la evaluación de impacto de las transferencias (Anexo IV) y renovar las declaraciones del importador",
       },
     });
   }
@@ -124,7 +124,7 @@ export function deriveObligations(input: AssembleInput): DerivedObligation[] {
       firstDue: addMonths(effective, 1),
       label: {
         en: "Verify the Processor's monthly vulnerability scans",
-        es: "Verificar los escaneos mensuales de vulnerabilidades del Encargado",
+        es: "Verificar los análisis mensuales de vulnerabilidades del Encargado",
       },
     });
     obligations.push({
@@ -157,7 +157,7 @@ export function deriveObligations(input: AssembleInput): DerivedObligation[] {
       cadence: "ON_EVENT",
       label: {
         en: `Personal-data-breach notification window: ${breach.en}`,
-        es: `Plazo de notificación de violaciones de datos: ${breach.es}`,
+        es: `Plazo de notificación de brechas de seguridad: ${breach.es}`,
       },
     });
   }

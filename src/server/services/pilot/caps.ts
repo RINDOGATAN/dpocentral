@@ -151,10 +151,10 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
   dataTransfers: { en: "transfers", es: "transferencias" },
   vendors: { en: "vendors", es: "proveedores" },
   vendorContracts: { en: "vendor contracts", es: "contratos con proveedores" },
-  dsarRequests: { en: "data subject requests", es: "solicitudes de interesados" },
+  dsarRequests: { en: "data subject requests", es: "solicitudes de ejercicio de derechos" },
   assessments: { en: "assessments", es: "evaluaciones" },
   assessmentTemplates: { en: "assessment templates", es: "plantillas de evaluación" },
-  incidents: { en: "incidents", es: "incidentes" },
+  incidents: { en: "incidents", es: "incidencias" },
   aiSystems: { en: "AI systems", es: "sistemas de IA" },
   members: { en: "members", es: "miembros" },
 };
@@ -278,7 +278,7 @@ export const SEE_PLANS_LABEL: Record<Locale, string> = {
 export function dpiaCapMessage(locale: Locale): string {
   const plans = `${SEE_PLANS_LABEL[locale]}: ${PLANS_URL[locale]}`;
   return locale === "es"
-    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} DPIA gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las DPIA creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
+    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
     : `This organization has already created the ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time, so another cannot be created. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
 }
 

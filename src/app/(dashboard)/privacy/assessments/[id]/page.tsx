@@ -71,7 +71,7 @@ import {
   withoutHidden,
 } from "@/lib/assessment-conditions";
 import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
-import { localizeValues } from "@/lib/template-i18n-core";
+import { legacyOptionLists, legacySections, localizeValues } from "@/lib/template-i18n-core";
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 import { CompletenessPanel } from "@/components/assessments/completeness-panel";
 import { assessmentCompleteness } from "@/lib/assessment-completeness";
@@ -495,10 +495,10 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     const hidden = hiddenByConditions(
       rawSections,
       answerMapFrom(assessment?.responses),
-      [translatedSections]
+      [translatedSections, ...legacySections(template?.type, rawSections)]
     );
     return withoutHidden(translatedSections, hidden);
-  }, [conditional, rawSections, translatedSections, assessment?.responses]);
+  }, [conditional, rawSections, translatedSections, assessment?.responses, template?.type]);
 
   // ── Optional AI risk-narrative target ──
   // The AI draft is a DPIA/PIA/TIA *risk narrative*; it only makes sense in
@@ -745,8 +745,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   }, [rawSections]);
   const shownValues = useCallback(
     (question: any, values: string[]) =>
-      localizeValues(values, storedOptions.get(String(question.id).split("::")[0]), question.options),
-    [storedOptions]
+      localizeValues(
+        values,
+        storedOptions.get(String(question.id).split("::")[0]),
+        question.options,
+        legacyOptionLists(template?.type, String(question.id).split("::")[0])
+      ),
+    [storedOptions, template?.type]
   );
 
   const vendorPets = suggestions?.vendorPets ?? [];

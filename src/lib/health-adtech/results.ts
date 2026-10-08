@@ -165,14 +165,14 @@ const PRIMARY = (en: string, es: string) =>
     `Primary source (checked ${SOURCES_CHECKED_LABEL.en}): ${en}`,
     `Fuente primaria (comprobada el ${SOURCES_CHECKED_LABEL.es}): ${es}`
   );
-const DPIA_TEMPLATE = bi("DPO Central DPIA template", "Plantilla de DPIA de DPO Central");
+const DPIA_TEMPLATE = bi("DPO Central DPIA template", "Plantilla de EIPD de DPO Central");
 const REPORT_ART35_7 = bi(
   "GDPR Art. 35(7), DPO Central assessment report",
-  "Art. 35(7) del RGPD, informe de evaluación de DPO Central"
+  "Art. 35.7 del RGPD, informe de evaluación de DPO Central"
 );
 const AUTO_FILL_ART9 = bi(
   "DPO Central DPIA auto-fill rules (Art. 9(2))",
-  "Reglas de autocompletado de DPIA de DPO Central (art. 9(2))"
+  "Reglas de autocompletado de EIPD de DPO Central (art. 9.2)"
 );
 
 const ob = (text: BiText, source: BiText, toVerify = false): Obligation => ({ text, source, toVerify });
@@ -181,7 +181,7 @@ const GDPR_OBLIGATIONS = (catalogueEntry: string): Obligation[] => [
   ob(
     bi(
       "Carry out a DPIA before processing likely to result in a high risk (Art. 35), with the Art. 35(7) content",
-      "Realizar una EIPD antes de un tratamiento que probablemente entrañe un alto riesgo (art. 35), con el contenido del art. 35(7)"
+      "Realizar una EIPD antes de un tratamiento que probablemente entrañe un alto riesgo (art. 35), con el contenido del art. 35.7"
     ),
     bi(
       `${CATALOGUE(catalogueEntry).en}; ${REPORT_ART35_7.en}`,
@@ -191,7 +191,7 @@ const GDPR_OBLIGATIONS = (catalogueEntry: string): Obligation[] => [
   ob(
     bi(
       "Identify an Art. 9(2) condition for health data (special category data)",
-      "Identificar una condición del art. 9(2) para los datos de salud (categoría especial)"
+      "Identificar una condición del art. 9.2 para los datos de salud (categoría especial)"
     ),
     AUTO_FILL_ART9
   ),
@@ -275,7 +275,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
   EU: {
     consentModel: bi(
       "Opt-in: explicit consent (Art. 9(2)(a)) is usually the only condition for health data used in advertising",
-      "Consentimiento previo: el consentimiento explícito (art. 9(2)(a)) suele ser la única condición para usar datos de salud en publicidad"
+      "Consentimiento previo: el consentimiento explícito (art. 9.2.a) suele ser la única condición para usar datos de salud en publicidad"
     ),
     consentToVerify: false,
     obligations: GDPR_OBLIGATIONS("GDPR"),
@@ -283,7 +283,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
   UK: {
     consentModel: bi(
       "Opt-in: explicit consent (UK GDPR Art. 9(2)(a)) is usually the only condition for health data used in advertising",
-      "Consentimiento previo: el consentimiento explícito (art. 9(2)(a) del RGPD del Reino Unido) suele ser la única condición para usar datos de salud en publicidad"
+      "Consentimiento previo: el consentimiento explícito (art. 9.2.a del RGPD del Reino Unido) suele ser la única condición para usar datos de salud en publicidad"
     ),
     consentToVerify: false,
     obligations: GDPR_OBLIGATIONS("UK GDPR"),
@@ -312,7 +312,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
       ob(
         bi(
           "Timetable: assess before the processing starts; processing begun before 2026 assessed by 31 December 2027; review every three years and within 45 days of a material change; keep every version five years; summary information submitted by 1 April 2028; the full report within 30 days of a request",
-          "Calendario: evaluar antes de iniciar el tratamiento; el iniciado antes de 2026, evaluado a más tardar el 31 de diciembre de 2027; revisión cada tres años y en 45 días tras un cambio material; conservar cada versión cinco años; información resumida presentada a más tardar el 1 de abril de 2028; el informe completo en 30 días desde el requerimiento"
+          "Calendario: evaluar antes de iniciar el tratamiento; el iniciado antes de 2026, evaluado a más tardar el 31 de diciembre de 2027; revisión cada tres años y en un plazo de 45 días tras un cambio sustancial; conservar cada versión cinco años; información resumida presentada a más tardar el 1 de abril de 2028; el informe completo en un plazo de 30 días desde el requerimiento"
         ),
         PRIMARY("11 CCR 7155, 7157(a), 7157(e)", "11 CCR 7155, 7157(a), 7157(e)")
       ),
@@ -470,7 +470,7 @@ function findingsFor(
     if (yesNo(answers, "hd8_4") === true)
       out.push(f("blocking", "A sale of sensitive data is prohibited in Maryland.", "La venta de datos sensibles está prohibida en Maryland."));
     if (mitigation === 0)
-      out.push(f("note", "Nationwide consent does not permit a sale of sensitive data in Maryland (Com. Law 14-4607(a)(2)).", "El consentimiento en todo el país no permite vender datos sensibles en Maryland (Com. Law 14-4607(a)(2))."));
+      out.push(f("note", "Nationwide consent does not permit a sale of sensitive data in Maryland (Com. Law 14-4607(a)(2)).", "El consentimiento recabado a escala nacional no permite vender datos sensibles en Maryland (Com. Law 14-4607(a)(2))."));
   }
 
   if (["MD", "CT", "CO", "VA", "TX", "OR", "US_OTHER"].includes(code)) {
@@ -497,7 +497,7 @@ function findingsFor(
     if (context.residualHigh && yesNo(answers, PRIOR_CONSULTATION_QUESTION_ID) === false)
       out.push(f("gap", "The answer on prior consultation conflicts with the residual risk.", "La respuesta sobre la consulta previa no concuerda con el riesgo residual."));
     if (optionIndex(answers, "hd2_4") === 1 && (context.band === "HIGH" || context.band === "VERY_HIGH"))
-      out.push(f("gap", "Legitimate interest cannot support health data: an Art. 9(2) condition is needed.", "El interés legítimo no ampara datos de salud: se necesita una condición del art. 9(2)."));
+      out.push(f("gap", "Legitimate interest cannot support health data: an Art. 9(2) condition is needed.", "El interés legítimo no ampara datos de salud: se necesita una condición del art. 9.2."));
     if (yesNo(answers, "hd8_10") === false)
       out.push(f("gap", "The data protection officer's advice is not recorded.", "No consta el asesoramiento del delegado de protección de datos."));
   }

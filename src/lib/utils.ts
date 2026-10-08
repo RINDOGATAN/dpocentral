@@ -54,6 +54,24 @@ export function formatDateTimeIn(
   });
 }
 
+/**
+ * A date in the interface's language, as numbers, day first
+ * ("28/09/2026" in both languages). Use instead of a bare
+ * toLocaleDateString(), which follows the browser and not the interface.
+ */
+export function formatDateIn(date: Date | string, locale: string): string {
+  return new Date(date).toLocaleDateString(DATE_LOCALE[locale] ?? DATE_LOCALE.en, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+}
+
+/** A whole number in the interface's language ("1,234" / "1234", "12.345"). */
+export function formatNumberIn(value: number, locale: string): string {
+  return value.toLocaleString(DATE_LOCALE[locale] ?? DATE_LOCALE.en);
+}
+
 export function formatRelativeTime(date: Date | string | null | undefined): string {
   if (!date) return "N/A";
   const now = new Date();

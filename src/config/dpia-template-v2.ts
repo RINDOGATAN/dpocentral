@@ -77,7 +77,7 @@ const SCOPE_SECTION: BiSection = {
   title: { en: "Scope of this assessment", es: "Alcance de esta evaluación" },
   description: {
     en: "Choose the frameworks this assessment has to satisfy. The choice decides which questions are asked below and which requirements the report reports on.",
-    es: "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y sobre qué requisitos informa el informe.",
+    es: "Elige los marcos que debe satisfacer esta evaluación. La elección determina qué preguntas se plantean a continuación y qué requisitos recoge el informe.",
   },
   questions: [
     {
@@ -321,7 +321,7 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
       required: true,
       text: {
         en: "Submission to the California Privacy Protection Agency by 1 April 2028",
-        es: "Presentación a la Agencia de Protección de la Privacidad de California antes del 1 de abril de 2028",
+        es: "Presentación a la Agencia de Protección de la Privacidad de California a más tardar el 1 de abril de 2028",
       },
       help: {
         en: "Source: 11 CCR 7157(a).",
@@ -374,11 +374,11 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
 const TEMPLATE_META: { name: BiText; description: BiText } = {
   name: {
     en: "Data Protection Impact Assessment (generic)",
-    es: "Evaluación de impacto en la protección de datos (genérica)",
+    es: "Evaluación de impacto relativa a la protección de datos (genérica)",
   },
   description: {
     en: "A DPIA that follows the framework you choose at the start: the European rules, the Californian risk assessment rules, or both.",
-    es: "Una evaluación que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas.",
+    es: "Una EIPD que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas.",
   },
 };
 

@@ -117,11 +117,11 @@ const SRC_CATALOGUE = (entry: string) =>
   );
 const SRC_DPIA_TEMPLATE = src(
   "DPO Central DPIA template (GDPR Art. 35 and Art. 36 questions)",
-  "plantilla de DPIA de DPO Central (preguntas sobre los arts. 35 y 36 del RGPD)"
+  "plantilla de EIPD de DPO Central (preguntas sobre los arts. 35 y 36 del RGPD)"
 );
 const SRC_ART35_3 = src(
   "GDPR Art. 35(3)(a) to (c), as used in the DPO Central risk mappings and DPIA template",
-  "art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de DPIA de DPO Central"
+  "art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de EIPD de DPO Central"
 );
 
 // ── Jurisdictions (question hd1_1) ───────────────────────────────────────
@@ -432,7 +432,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           },
           src(
             "DPO Central DPIA auto-fill rules (Art. 9(2)) and DPIA template (Art. 6 bases)",
-            "reglas de autocompletado y plantilla de DPIA de DPO Central (condiciones del art. 9(2) y bases del art. 6)"
+            "reglas de autocompletado y plantilla de EIPD de DPO Central (condiciones del art. 9(2) y bases del art. 6)"
           )
         ),
         options: {
@@ -901,7 +901,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         help: join(
           {
             en: "This geofencing is prohibited: within 2,000 feet of in-person health care in Washington, within 1,750 feet of a medical facility in Nevada. A Yes is reported as a breach to resolve.",
-            es: "Esta geovalla está prohibida: a menos de 2.000 pies de asistencia sanitaria presencial en Washington y a menos de 1.750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse.",
+            es: "Esta geovalla está prohibida: a menos de 2000 pies de un lugar de asistencia sanitaria presencial en Washington y a menos de 1750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse.",
           },
           SRC_WA_NV_GEOFENCE
         ),
@@ -998,7 +998,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           SRC_CATALOGUE("CTDPA, CPA, VCDPA, TDPSA and OCPA (right to opt out)"),
           {
             en: "The exact scope of the opt-out in each state [to verify].",
-            es: "El alcance exacto del derecho en cada estado [por verificar].",
+            es: "El alcance exacto del derecho de exclusión en cada estado [por verificar].",
           }
         ),
       },
@@ -1013,7 +1013,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         },
         help: src(
           "DPO Central DPIA template (consultation section)",
-          "plantilla de DPIA de DPO Central (sección de consulta)"
+          "plantilla de EIPD de DPO Central (sección de consulta)"
         ),
       },
     ],

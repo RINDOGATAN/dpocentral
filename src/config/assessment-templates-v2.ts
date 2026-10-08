@@ -131,7 +131,7 @@ const liaV2: V2Template = {
   name: L("Legitimate Interest Assessment", "Evaluación de interés legítimo"),
   description: L(
     "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read. This template is informational, not legal advice; verify with qualified counsel.",
-    "La prueba en tres partes del interés legítimo del artículo 6(1)(f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que un regulador puede leer. Esta plantilla es informativa, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
+    "La prueba en tres partes del interés legítimo del artículo 6(1)(f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer. Esta plantilla es informativa, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
   ),
   sections: [
     {
@@ -278,7 +278,7 @@ const liaV2: V2Template = {
           text: L("Are children or other vulnerable people affected?", "¿Se ven afectados menores u otras personas vulnerables?"),
           help: L(
             "Children and vulnerable people warrant extra weight on their side of the balance. Example: \"No: the service is for account holders aged 18 and over.\" Source: GDPR Recital 38; Art. 6(1)(f).",
-            "Los menores y las personas vulnerables merecen un peso adicional en su lado de la balanza. Ejemplo: «No: el servicio es para titulares mayores de 18 años». Fuente: RGPD, considerando 38; art. 6(1)(f).",
+            "Los menores y las personas vulnerables merecen un peso adicional en su lado de la balanza. Ejemplo: «No: el servicio es para titulares de cuentas mayores de 18 años». Fuente: RGPD, considerando 38; art. 6(1)(f).",
           ),
         },
         {
@@ -384,7 +384,7 @@ const tiaV2: V2Template = {
           id: "tiav2_1_2",
           type: "select",
           showIf: whenAnyOf("tiav2_1_1", ["Standard Contractual Clauses (Art. 46)"]),
-          text: L("Which SCC module applies?", "¿Qué módulo de las CCT aplica?"),
+          text: L("Which SCC module applies?", "¿Qué módulo de las CCT se aplica?"),
           options: [
             L("Module 1: controller to controller", "Módulo 1: de responsable a responsable"),
             L("Module 2: controller to processor", "Módulo 2: de responsable a encargado"),
@@ -420,7 +420,7 @@ const tiaV2: V2Template = {
           text: L("Who is the exporter and who is the importer, and in which countries?", "¿Quién es el exportador y quién el importador, y en qué países?"),
           help: L(
             "Name the organisations, their roles (controller or processor) and the countries of establishment, so the transfer is fully mapped. Example: \"We (controller, Spain) to our hosting provider (processor, United States).\" Source: EDPB Recommendations 01/2020, step 1.",
-            "Nombra las organizaciones, sus papeles (responsable o encargado) y los países de establecimiento, para mapear la transferencia por completo. Ejemplo: «Nosotros (responsable, España) a nuestro proveedor de alojamiento (encargado, Estados Unidos)». Fuente: Recomendaciones 01/2020 del CEPD, paso 1.",
+            "Nombra las organizaciones, sus papeles (responsable o encargado) y los países de establecimiento, para que la transferencia quede trazada por completo. Ejemplo: «Nosotros (responsable, España) a nuestro proveedor de alojamiento (encargado, Estados Unidos)». Fuente: Recomendaciones 01/2020 del CEPD, paso 1.",
           ),
         },
         {
@@ -496,7 +496,7 @@ const tiaV2: V2Template = {
           ],
           help: L(
             "Essentially equivalent protection includes a real way for individuals to challenge access to their data. Example: \"Partial: an ombudsperson mechanism but no court review.\" Source: EDPB Recommendations 01/2020, step 3; GDPR Art. 47 of the Charter.",
-            "La protección esencialmente equivalente incluye una vía real para que los interesados impugnen el acceso a sus datos. Ejemplo: «Parcial: un mecanismo de defensor pero sin revisión judicial». Fuente: Recomendaciones 01/2020 del CEPD, paso 3; art. 47 de la Carta.",
+            "La protección esencialmente equivalente incluye una vía real para que los interesados impugnen el acceso a sus datos. Ejemplo: «Parcial: un mecanismo de mediación (ombudsperson), pero sin revisión judicial». Fuente: Recomendaciones 01/2020 del CEPD, paso 3; art. 47 de la Carta.",
           ),
         },
         {
@@ -549,7 +549,7 @@ const tiaV2: V2Template = {
           ],
           help: L(
             "Contract terms bind the importer to resist and report access and to let the exporter act. Example: \"Duty to challenge and to notify, plus a suspension clause.\" Source: EDPB Recommendations 01/2020, Annex 2; SCC clause 15.",
-            "Las cláusulas contractuales obligan al importador a resistir e informar del acceso y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las CCT.",
+            "Las cláusulas contractuales obligan al importador a oponerse al acceso e informar de él, y a permitir que el exportador actúe. Ejemplo: «Obligación de impugnar y de notificar, más una cláusula de suspensión». Fuente: Recomendaciones 01/2020 del CEPD, anexo 2; cláusula 15 de las CCT.",
           ),
         },
         {
@@ -743,7 +743,7 @@ const piaV2: V2Template = {
           type: "textarea",
           required: false,
           showIf: whenYes("piav2_1_3"),
-          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9(2) o del artículo 10 aplica?"),
+          text: L("Which Article 9(2) or Article 10 condition applies?", "¿Qué condición del artículo 9(2) o del artículo 10 se aplica?"),
           help: L(
             "Name the specific condition that permits the special category or criminal-offence data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10.",
             "Nombra la condición específica que permite los datos de categoría especial o penales. Ejemplo: «Consentimiento explícito (art. 9(2)(a))». Fuente: RGPD, arts. 9(2) y 10.",
@@ -788,7 +788,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Every processing needs one of the six lawful bases, chosen before processing begins. Legitimate interest also needs a balancing test (the LIA template). Example: \"Contract.\" Source: GDPR Art. 6(1).",
-            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla de EIL). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
+            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla de LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
           ),
         },
         {
@@ -847,7 +847,7 @@ const piaV2: V2Template = {
           text: L("Is any data transferred outside the EU or EEA?", "¿Se transfieren datos fuera de la UE o del EEE?"),
           help: L(
             "A transfer to a third country needs a transfer tool and, outside adequacy, a Transfer Impact Assessment (the TIA template). Example: \"Yes: our hosting provider is in the United States.\" Source: GDPR Arts. 44 to 49.",
-            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de la transferencia (la plantilla de EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
+            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de la transferencia (la plantilla de TIA). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
           ),
         },
         {
@@ -855,10 +855,10 @@ const piaV2: V2Template = {
           type: "text",
           required: false,
           showIf: whenYes("piav2_3_3"),
-          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y hay una EIT hecha?"),
+          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y se ha hecho una TIA?"),
           help: L(
             "Name the transfer tool and whether a Transfer Impact Assessment has been done. Example: \"Standard Contractual Clauses; TIA completed 2026-05.\" Source: GDPR Arts. 46 and 44.",
-            "Nombra el instrumento de transferencia y si se ha hecho una evaluación de impacto de la transferencia. Ejemplo: «Cláusulas contractuales tipo; EIT completada en 2026-05». Fuente: RGPD, arts. 46 y 44.",
+            "Nombra el instrumento de transferencia y si se ha hecho una evaluación de impacto de la transferencia. Ejemplo: «Cláusulas contractuales tipo; TIA completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44.",
           ),
         },
       ],
@@ -897,10 +897,10 @@ const piaV2: V2Template = {
         {
           id: "piav2_4_3",
           type: "boolean",
-          text: L("Is there solely automated decision-making with legal or similarly significant effects?", "¿Existen decisiones basadas únicamente en el tratamiento automatizado con efectos jurídicos o similares?"),
+          text: L("Is there solely automated decision-making with legal or similarly significant effects?", "¿Existen decisiones basadas únicamente en el tratamiento automatizado que produzcan efectos jurídicos o afecten significativamente de modo similar?"),
           help: L(
             "Decisions made solely by automated means with a legal or similarly significant effect are restricted and need specific safeguards. Example: \"No: a person reviews every decision.\" Source: GDPR Art. 22.",
-            "Las decisiones tomadas únicamente por medios automatizados con un efecto jurídico o similar están restringidas y necesitan garantías específicas. Ejemplo: «No: una persona revisa cada decisión». Fuente: RGPD, art. 22.",
+            "Las decisiones tomadas únicamente por medios automatizados que producen efectos jurídicos o afectan significativamente de modo similar están restringidas y necesitan garantías específicas. Ejemplo: «No: una persona revisa cada decisión». Fuente: RGPD, art. 22.",
           ),
         },
         {
@@ -936,7 +936,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Measures must be appropriate to the risk, covering confidentiality, integrity, availability and resilience. Example: \"Encryption, access controls, backups and logging.\" Source: GDPR Art. 32.",
-            "Las medidas deben ser adecuadas al riesgo y cubrir la confidencialidad, integridad, disponibilidad y resiliencia. Ejemplo: «Cifrado, controles de acceso, copias de seguridad y registro». Fuente: RGPD, art. 32.",
+            "Las medidas deben ser adecuadas al riesgo y cubrir la confidencialidad, integridad, disponibilidad y resiliencia. Ejemplo: «Cifrado, controles de acceso, copias de seguridad y registro de eventos». Fuente: RGPD, art. 32.",
           ),
         },
         {

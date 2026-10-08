@@ -124,7 +124,7 @@ export const OFFICIAL_LINKS = {
   } as OfficialLink,
   nistPf: {
     href: "https://www.nist.gov/privacy-framework",
-    label: L("NIST Privacy Framework", "Marco de Privacidad del NIST"),
+    label: L("NIST Privacy Framework", "Marco de privacidad del NIST"),
   } as OfficialLink,
 } as const;
 

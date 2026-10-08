@@ -13,6 +13,8 @@
  * by position.
  */
 
+import optionHistory from "@/config/template-option-history.json";
+
 export type TemplateLookup = (key: string) => unknown;
 
 type RawQuestion = {
@@ -115,4 +117,45 @@ export function objectLookup(tree: unknown): TemplateLookup {
     }
     return node;
   };
+}
+
+/**
+ * Earlier wordings of translated option lists, keyed like the bundle
+ * (`<type>.question.<questionId>.options`), each holding the lists that key
+ * carried before, oldest first. A choice is saved as the option text shown at
+ * the time, so an answer saved in Spanish before a wording fix must still
+ * match its option by position (src/config/template-option-history.json).
+ */
+const OPTION_HISTORY: Record<string, string[][]> = Object.assign(
+  {},
+  ...Object.values(optionHistory as Record<string, Record<string, string[][]>>)
+);
+
+/** The earlier option lists of one question, in any language. */
+export function legacyOptionLists(
+  type: string | null | undefined,
+  questionId: string
+): string[][] {
+  return OPTION_HISTORY[`${templateNamespace(type)}.question.${questionId}.options`] ?? [];
+}
+
+/**
+ * The template's sections once per earlier wording of its option lists, for
+ * answer matching only (conditions, progress, export). Questions with no
+ * history keep their stored options.
+ */
+export function legacySections<S extends RawSection>(
+  type: string | null | undefined,
+  sections: ReadonlyArray<S>
+): S[][] {
+  const ns = templateNamespace(type);
+  const versions = Math.max(
+    0,
+    ...Object.entries(OPTION_HISTORY)
+      .filter(([key]) => key.startsWith(`${ns}.question.`))
+      .map(([, lists]) => lists.length)
+  );
+  return Array.from({ length: versions }, (_, v) =>
+    translateSections(type, sections, (key) => OPTION_HISTORY[key]?.[v])
+  );
 }
