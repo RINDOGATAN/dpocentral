@@ -12,7 +12,13 @@
  *   - a plural "vosotros" address ("vuestra organización", "podéis");
  *   - "Términos de(l) servicio/uso": the product says «Condiciones»;
  *   - a long dash (U+2014): use a colon, a comma or parentheses instead;
- *   - a short list of Latin American terms that read as foreign in Spain.
+ *   - a short list of Latin American terms that read as foreign in Spain;
+ *   - "Skills" or "marketplace": the Spanish UI says «Módulos» and
+ *     «catálogo de módulos» (the {skill} placeholder and the .skill file
+ *     extension are not words and pass);
+ *   - "retención": data retention in the RGPD sense is «conservación»;
+ *   - an English-style article citation ("art. 6(1)(f)"): Spanish writes
+ *     "art. 6.1.f)", "art. 32.1 del RGPD", "arts. 13 y 14".
  *
  * The Latin American list is deliberately narrow and matches whole word
  * forms only, so valid Castilian words are not caught ("datos agregados",
@@ -73,6 +79,15 @@ const LATAM: Array<{ term: string; pattern: RegExp }> = [
   { term: "ahorita", pattern: /\bahorita\b/i },
 ];
 
+/** «Módulos» and «catálogo de módulos», never the English product words. */
+const SKILLS = /(?<![.{\w])skills?\b(?!\})|\bmarketplace\b/i;
+
+/** Data retention is «conservación» (RGPD art. 5.1.e). */
+const RETENCION = /\bretenci[oó]n(es)?\b/i;
+
+/** Article citations in Spanish style: "art. 6.1.f)", never "art. 6(1)(f)". */
+const PAREN_CITATION = /\b(arts?\.|art[ií]culos?)\s?\d+\(\d+\)|\(\d+\)\([a-z]\)/i;
+
 describe("Spanish copy", () => {
   it("scans the app bundle and the landing bundles", () => {
     expect(BUNDLES.length).toBeGreaterThan(1);
@@ -103,6 +118,18 @@ describe("Spanish copy", () => {
       expect(es.filter(([, t]) => t.includes("—")).map(([k]) => k)).toEqual([]);
     });
 
+    it(`${bundle.name} says «Módulos», never "Skills" or "marketplace"`, () => {
+      expect(es.filter(([, t]) => SKILLS.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
+    it(`${bundle.name} says «conservación», never "retención"`, () => {
+      expect(es.filter(([, t]) => RETENCION.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
+    it(`${bundle.name} cites articles in the Spanish style`, () => {
+      expect(es.filter(([, t]) => PAREN_CITATION.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
     it(`${bundle.name} uses no Latin American vocabulary`, () => {
       const found = es.flatMap(([k, t]) =>
         LATAM.filter(({ pattern }) => pattern.test(t)).map(({ term }) => `${k}: ${term}`)
@@ -122,5 +149,16 @@ describe("Spanish copy", () => {
     expect(hit("Datos agregados por región")).toBe(false);
     expect(hit("Ingresos anuales")).toBe(false);
     expect(hit("Alta presión regulatoria")).toBe(false);
+    expect(SKILLS.test("Explorar el marketplace")).toBe(true);
+    expect(SKILLS.test("Página de Skills")).toBe(true);
+    expect(SKILLS.test("Activar {skill}")).toBe(false);
+    expect(SKILLS.test("Elegir archivo .skill")).toBe(false);
+    expect(RETENCION.test("Periodo de retención")).toBe(true);
+    expect(RETENCION.test("Plazo de conservación")).toBe(false);
+    expect(PAREN_CITATION.test("Interés legítimo (art. 6(1)(f))")).toBe(true);
+    expect(PAREN_CITATION.test("condición del artículo 9(2)")).toBe(true);
+    expect(PAREN_CITATION.test("Interés legítimo (art. 6.1.f))")).toBe(false);
+    expect(PAREN_CITATION.test("art. 32.1 del RGPD; arts. 13 y 14")).toBe(false);
+    expect(PAREN_CITATION.test("11 CCR 7152(a)(1) a (3)")).toBe(false);
   });
 });

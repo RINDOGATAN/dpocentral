@@ -36,11 +36,13 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { toneMark } from "@/config/status-palette";
 
 export default function RegulationsPage() {
   const t = useTranslations("pages.regulations");
+  const locale = useLocale();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const [search, setSearch] = useState("");
@@ -68,6 +70,9 @@ export default function RegulationsPage() {
   const statusByJurisdiction = new Map(
     (status?.jurisdictions ?? []).map((j) => [j.jurisdictionId, j])
   );
+
+  const catalogItems = (catalog?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
+  const appliedItems = (applied?.jurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
 
   const utils = trpc.useUtils();
 
@@ -159,7 +164,7 @@ export default function RegulationsPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {catalog?.jurisdictions.map((j) => (
+              {catalogItems.map((j) => (
                 <Card key={j.code} className={j.isApplied ? "border-primary" : ""}>
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
@@ -168,7 +173,7 @@ export default function RegulationsPage() {
                         <CardDescription className="text-xs mt-1">{j.name}</CardDescription>
                       </div>
                       <div className="flex gap-1">
-                        <Badge variant="outline" className="text-xs">{j.region}</Badge>
+                        <Badge variant="outline" className="text-xs">{j.regionLabel}</Badge>
                         {j.isApplied && (
                           <Badge className="text-xs bg-primary">{t("card.applied")}</Badge>
                         )}
@@ -247,7 +252,7 @@ export default function RegulationsPage() {
             </Card>
           ) : (
             <div className="space-y-3">
-              {applied?.jurisdictions.map((j) => {
+              {appliedItems.map((j) => {
                 const reqStatus = statusByJurisdiction.get(j.jurisdictionId);
                 return (
                   <Card key={j.id}>
@@ -261,7 +266,7 @@ export default function RegulationsPage() {
                               {j.isPrimary && <Badge className="text-[10px]">{t("card.primary")}</Badge>}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {t("card.appliedSummary", { region: j.region, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
+                              {t("card.appliedSummary", { region: j.regionLabel, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
                             </div>
                           </div>
                         </div>

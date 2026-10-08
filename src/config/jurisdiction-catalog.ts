@@ -15,6 +15,8 @@
  * the shared source of truth used by prisma/seed.ts and the SLA calculator.
  */
 
+import { APPLICABILITY_QUESTIONS_ES, JURISDICTION_CATALOG_ES } from "./jurisdiction-catalog-es";
+
 // ============================================================
 // TYPES
 // ============================================================
@@ -1412,4 +1414,52 @@ export function getApplicableJurisdictions(
   }
 
   return JURISDICTION_CATALOG.filter((j) => applicableCodes.has(j.code));
+}
+
+// ============================================================
+// LOCALE-AWARE LOOKUP
+// ============================================================
+
+/**
+ * The entry in the reader's language: Spanish text from
+ * src/config/jurisdiction-catalog-es.ts, English (the catalog itself)
+ * otherwise. Codes, regions, numbers and category never change, so filtering
+ * and matching keep working on the English catalog. `regionLabel` is what to
+ * show for the region: the code in English, a name in Spanish.
+ */
+export function localizeJurisdiction<T extends Pick<JurisdictionEntry, "code" | "region"> & Partial<JurisdictionEntry>>(
+  entry: T,
+  locale: string | null | undefined
+): T & { regionLabel: string } {
+  const es = locale === "es" ? JURISDICTION_CATALOG_ES[entry.code] : undefined;
+  if (!es) return { ...entry, regionLabel: entry.region };
+  return {
+    ...entry,
+    ...(entry.name !== undefined ? { name: es.name ?? entry.name } : {}),
+    ...(entry.shortName !== undefined ? { shortName: es.shortName ?? entry.shortName } : {}),
+    ...(entry.description !== undefined ? { description: es.description } : {}),
+    ...(entry.keyRequirements !== undefined ? { keyRequirements: es.keyRequirements } : {}),
+    ...(entry.applicabilityCriteria !== undefined ? { applicabilityCriteria: es.applicabilityCriteria } : {}),
+    ...(entry.penalties !== undefined ? { penalties: es.penalties } : {}),
+    ...(entry.dpaName !== undefined ? { dpaName: es.dpaName ?? entry.dpaName } : {}),
+    regionLabel: es.regionLabel,
+  };
+}
+
+/** A wizard question in the reader's language. */
+export function localizeQuestion<T extends Pick<ApplicabilityQuestion, "id" | "question" | "helpText">>(
+  question: T,
+  locale: string | null | undefined
+): T {
+  const es = locale === "es" ? APPLICABILITY_QUESTIONS_ES[question.id] : undefined;
+  return es ? { ...question, question: es.question, helpText: es.helpText } : question;
+}
+
+/** Every text of an entry in both languages, for search. */
+export function jurisdictionSearchText(entry: JurisdictionEntry): string {
+  const es = JURISDICTION_CATALOG_ES[entry.code];
+  return [entry.name, entry.shortName, entry.code, entry.region, es?.name, es?.shortName, es?.regionLabel]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }

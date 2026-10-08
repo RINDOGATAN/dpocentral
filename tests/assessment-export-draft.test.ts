@@ -142,7 +142,7 @@ describe("an unfinished assessment still exports", () => {
       expect(text).toContain(labels.draftQuestions);
       expect(text).toContain(labels.draftRequirements);
       // The first outstanding requirement, by its primary citation.
-      expect(text).toContain(lang === "es" ? "art. 35(7)(a)" : "Art. 35(7)(a)");
+      expect(text).toContain(lang === "es" ? "art. 35.7.a)" : "Art. 35(7)(a)");
       expect(text).toContain("11 CCR 7150(b)");
     });
 

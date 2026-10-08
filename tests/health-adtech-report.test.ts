@@ -240,7 +240,8 @@ describe("the age of the sources", () => {
     for (const text of [HEALTH_ADTECH_DESCRIPTION.en, HEALTH_ADTECH_DESCRIPTION.es]) {
       expect(text.match(/\.\s/g) ?? []).toHaveLength(0);
       expect(text).toContain("11 CCR 7152(a)");
-      expect(text).toMatch(/35\(7\)/);
+      // "35(7)" in English, "35.7" in the Spanish citation style.
+      expect(text).toMatch(/35(\(7\)|\.7)/);
       expect(text).not.toMatch(/[—–]/);
     }
     expect(HEALTH_ADTECH_DESCRIPTION.es).not.toMatch(/\busted(es)?\b/i);
