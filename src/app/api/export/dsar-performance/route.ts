@@ -14,6 +14,7 @@ import {
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
+import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 
 export async function GET(request: NextRequest) {
   const token = await getSessionToken(request);
@@ -58,10 +59,13 @@ export async function GET(request: NextRequest) {
   // ── Primary jurisdiction ───────────────────────────────
   const primaryJurisdiction = await prisma.organizationJurisdiction.findFirst({
     where: { organizationId, isPrimary: true },
-    include: { jurisdiction: { select: { name: true, dsarDeadlineDays: true } } },
+    include: { jurisdiction: { select: { name: true, code: true, dsarDeadlineDays: true } } },
   });
   const primaryName = primaryJurisdiction?.jurisdiction.name ?? null;
   const primaryDeadlineDays = primaryJurisdiction?.jurisdiction.dsarDeadlineDays ?? 30;
+  const primaryDeadlineMonths = primaryJurisdiction
+    ? dsarMonths(primaryJurisdiction.jurisdiction.code, primaryJurisdiction.jurisdiction.dsarDeadlineDays)
+    : 1; // no jurisdiction set: the GDPR rule, one month
 
   // ── All DSARs (no PII — only status, type, dates) ─────
   const allDsars = await prisma.dSARRequest.findMany({
@@ -145,11 +149,12 @@ export async function GET(request: NextRequest) {
   // ── Jurisdiction SLA ───────────────────────────────────
   const orgJurisdictions = await prisma.organizationJurisdiction.findMany({
     where: { organizationId },
-    include: { jurisdiction: { select: { name: true, dsarDeadlineDays: true } } },
+    include: { jurisdiction: { select: { name: true, code: true, dsarDeadlineDays: true } } },
   });
   const jurisdictionSLA = orgJurisdictions.map((oj) => ({
     name: oj.jurisdiction.name,
     deadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,
+    deadlineMonths: dsarMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays),
     status:
       avgResolutionDays > 0 && avgResolutionDays <= (oj.jurisdiction.dsarDeadlineDays ?? 30)
         ? "Meeting"
@@ -202,6 +207,7 @@ export async function GET(request: NextRequest) {
     generatedAt: fmtDate(new Date()),
     primaryJurisdiction: primaryName,
     primaryDeadlineDays,
+    primaryDeadlineMonths,
     stats: {
       total,
       completed,

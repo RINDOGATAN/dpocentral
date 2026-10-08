@@ -29,6 +29,13 @@ export interface JurisdictionEntry {
   country: string;
   effectiveDate: string;
   dsarDeadlineDays: number;
+  /**
+   * Set when the law states the answer period in calendar months. Due dates
+   * then use months, and dsarDeadlineDays is only the nearest day figure.
+   */
+  dsarDeadlineMonths?: number;
+  /** Extension the law allows, in calendar months. */
+  dsarExtensionMonths?: number;
   breachNotificationHours: number;
   description: string;
   keyRequirements: string[];
@@ -62,6 +69,8 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "EU",
     effectiveDate: "2018-05-25",
     dsarDeadlineDays: 30,
+    dsarDeadlineMonths: 1, // Art. 12(3): one month of receipt
+    dsarExtensionMonths: 2, // "by two further months where necessary"
     breachNotificationHours: 72,
     description:
       "The EU's comprehensive data protection regulation governing the processing of personal data of individuals within the European Economic Area.",
@@ -92,6 +101,8 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     country: "GB",
     effectiveDate: "2021-01-01",
     dsarDeadlineDays: 30,
+    dsarDeadlineMonths: 1, // Art. 12(3): one month of receipt
+    dsarExtensionMonths: 2, // "by two further months where necessary"
     breachNotificationHours: 72,
     description:
       "The UK's retained version of the GDPR, applicable after Brexit, governing personal data processing in the United Kingdom.",

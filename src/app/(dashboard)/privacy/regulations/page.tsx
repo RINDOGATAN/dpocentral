@@ -186,7 +186,9 @@ export default function RegulationsPage() {
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {t("card.dsarShort", { days: j.dsarDeadlineDays })}
+                        {j.dsarDeadlineMonths
+                          ? t("card.dsarShortMonths", { months: j.dsarDeadlineMonths })
+                          : t("card.dsarShort", { days: j.dsarDeadlineDays })}
                       </span>
                       <span className="flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
@@ -266,7 +268,9 @@ export default function RegulationsPage() {
                               {j.isPrimary && <Badge className="text-[10px]">{t("card.primary")}</Badge>}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {t("card.appliedSummary", { region: j.regionLabel, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
+                              {j.dsarDeadlineMonths
+                                ? t("card.appliedSummaryMonths", { region: j.regionLabel, months: j.dsarDeadlineMonths, hours: j.breachNotificationHours })
+                                : t("card.appliedSummary", { region: j.regionLabel, days: j.dsarDeadlineDays, hours: j.breachNotificationHours })}
                             </div>
                           </div>
                         </div>

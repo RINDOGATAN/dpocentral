@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
+import { dsarDeadlineMonths } from "@/server/services/privacy/slaCalculator";
 
 export const regulationsRouter = createTRPCRouter({
   // List all available jurisdictions from the catalog
@@ -251,6 +252,8 @@ export const regulationsRouter = createTRPCRouter({
           name: oj.jurisdiction.name,
           region: oj.jurisdiction.region,
           dsarDeadlineDays: oj.jurisdiction.dsarDeadlineDays,
+          // Set when the law states the period in calendar months (GDPR: 1)
+          dsarDeadlineMonths: dsarDeadlineMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays) ?? undefined,
           breachNotificationHours: oj.jurisdiction.breachNotificationHours,
           isPrimary: oj.isPrimary,
           createdAt: oj.createdAt,

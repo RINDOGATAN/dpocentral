@@ -24,6 +24,8 @@ export interface DSARPerformanceData {
   generatedAt: string;
   primaryJurisdiction: string | null;
   primaryDeadlineDays: number;
+  /** Set when the primary law states the period in calendar months. */
+  primaryDeadlineMonths?: number | null;
 
   stats: {
     total: number;
@@ -43,6 +45,7 @@ export interface DSARPerformanceData {
   jurisdictionSLA: {
     name: string;
     deadlineDays: number;
+    deadlineMonths?: number | null;
     status: string; // "Meeting" | "At risk" | "No data"
   }[];
 
@@ -85,6 +88,8 @@ const EN_FALLBACK: Record<string, string> = {
   "meta.primaryJurisdictionNotSet": "Not set",
   "meta.defaultDeadline": "Default Deadline",
   "meta.defaultDeadlineDays": "{count} days",
+  "meta.defaultDeadlineMonths": "{count} month(s)",
+  slaMonths: "{months} month(s)",
   "meta.totalRequests": "Total Requests",
   "meta.completed": "Completed",
   "meta.currentlyOpen": "Currently Open",
@@ -212,7 +217,9 @@ export function DSARPerformanceReport({
             },
             {
               label: tr("meta.defaultDeadline"),
-              value: tr("meta.defaultDeadlineDays", { count: data.primaryDeadlineDays }),
+              value: data.primaryDeadlineMonths
+                ? tr("meta.defaultDeadlineMonths", { count: data.primaryDeadlineMonths })
+                : tr("meta.defaultDeadlineDays", { count: data.primaryDeadlineDays }),
             },
             { label: tr("meta.totalRequests"), value: String(stats.total) },
             { label: tr("meta.completed"), value: String(stats.completed) },
@@ -281,7 +288,9 @@ export function DSARPerformanceReport({
             colWidths={[3, 1.2, 1.5, 1.5]}
             rows={data.jurisdictionSLA.map((j) => [
               j.name,
-              tr("slaDays", { days: j.deadlineDays }),
+              j.deadlineMonths
+                ? tr("slaMonths", { months: j.deadlineMonths })
+                : tr("slaDays", { days: j.deadlineDays }),
               stats.avgResolutionDays > 0
                 ? tr("slaDays", { days: stats.avgResolutionDays })
                 : tr("stats.notAvailable"),

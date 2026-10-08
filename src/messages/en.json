@@ -1740,8 +1740,10 @@
         "applied": "Applied",
         "primary": "Primary",
         "dsarShort": "DSAR: {days}d",
+        "dsarShortMonths": "DSAR: {months, plural, one {# month} other {# months}}",
         "breachShort": "Breach: {hours}h",
         "appliedSummary": "{region} | DSAR: {days, plural, one {# day} other {# days}} | Breach: {hours}h",
+        "appliedSummaryMonths": "{region} | DSAR: {months, plural, one {# month} other {# months}} | Breach: {hours}h",
         "moreItems": "+{count} more",
         "apply": "Apply"
       },
@@ -4136,6 +4138,7 @@
         "status": "Status"
       },
       "slaDays": "{days} days",
+      "slaMonths": "{months, plural, one {# month} other {# months}}",
       "statusMeeting": "Meeting deadline",
       "statusAtRisk": "At risk",
       "statusNoData": "No data yet",
@@ -4198,6 +4201,7 @@
         "primaryJurisdictionNotSet": "Not set",
         "defaultDeadline": "Default Deadline",
         "defaultDeadlineDays": "{count} days",
+        "defaultDeadlineMonths": "{count, plural, one {# month} other {# months}}",
         "totalRequests": "Total Requests",
         "completed": "Completed",
         "currentlyOpen": "Currently Open",
@@ -4230,6 +4234,7 @@
         "status": "Status"
       },
       "slaDays": "{days} days",
+      "slaMonths": "{months, plural, one {# month} other {# months}}",
       "monthlyTrend": "Monthly Trend",
       "monthlyTrendDesc": "Request volume and completion rate over the last 12 months. Monitoring trends helps anticipate resource needs and identify seasonal patterns.",
       "monthlyColumns": {

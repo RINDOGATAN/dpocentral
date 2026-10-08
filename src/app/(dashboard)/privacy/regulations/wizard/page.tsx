@@ -171,7 +171,11 @@ export default function RegulationsWizardPage() {
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">{j.description}</p>
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                            <span>{tcard("dsarShort", { days: j.dsarDeadlineDays })}</span>
+                            <span>
+                              {j.dsarDeadlineMonths
+                                ? tcard("dsarShortMonths", { months: j.dsarDeadlineMonths })
+                                : tcard("dsarShort", { days: j.dsarDeadlineDays })}
+                            </span>
                             <span>{tcard("breachShort", { hours: j.breachNotificationHours })}</span>
                             <span className="text-foreground">{j.penalties}</span>
                           </div>

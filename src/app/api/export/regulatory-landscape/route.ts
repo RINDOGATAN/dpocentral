@@ -19,6 +19,7 @@ import { EU_ADEQUATE_COUNTRIES } from "@/config/vendor-data-mappings";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
+import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 
 export async function GET(request: NextRequest) {
   const token = await getSessionToken(request);
@@ -81,6 +82,7 @@ export async function GET(request: NextRequest) {
       region: catalogEntry?.region ?? oj.jurisdiction.region ?? "",
       country: catalogEntry?.country ?? "",
       dsarDeadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,
+      dsarDeadlineMonths: dsarMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays),
       breachNotificationHours: oj.jurisdiction.breachNotificationHours ?? 72,
       keyRequirements: (catalogEntry?.keyRequirements as string[]) ?? [],
       penalties: catalogEntry?.penalties ?? "Not specified",
