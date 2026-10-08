@@ -143,7 +143,7 @@ export default function ClientsPage() {
       </div>
 
       {clients && clients.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {clients.map((client) => {
             const statuses = client.steps as PathStatuses;
             const next = nextStep(DPO_CENTRAL_PATH, statuses);
@@ -153,13 +153,13 @@ export default function ClientsPage() {
             return (
               <Card
                 key={client.organizationId}
-                className="relative hover:border-primary/50 transition-colors cursor-pointer"
+                className="relative min-w-0 hover:border-primary/50 transition-colors cursor-pointer"
               >
                 <CardContent className="p-4 sm:p-5 space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <Building2 className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
-                      <h3 className="font-semibold text-sm sm:text-base truncate">
+                      <h3 className="font-semibold text-sm sm:text-base truncate min-w-0">
                         {/* The client's name is the card's one button; its
                             ::after covers the card, so a click anywhere opens
                             the client, and Tab reaches it by name. The menu
@@ -167,7 +167,7 @@ export default function ClientsPage() {
                         <button
                           type="button"
                           onClick={() => handleClientClick(client)}
-                          className="truncate text-left focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-ring"
+                          className="block max-w-full truncate text-left focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-ring"
                         >
                           {client.organizationName}
                         </button>

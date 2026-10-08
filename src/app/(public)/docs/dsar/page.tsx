@@ -156,9 +156,9 @@ export default async function DSARPage() {
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("portal.configLabel")}</p>
           <div className="space-y-2">
             {portalSettings.map((key) => (
-              <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+              <div key={key} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 p-2 rounded-lg bg-background/50 border border-border/50">
                 <span className="text-sm text-foreground">{t(`portal.settings.${key}.setting`)}</span>
-                <span className="text-xs text-muted-foreground shrink-0 ml-3">{t(`portal.settings.${key}.detail`)}</span>
+                <span className="text-xs text-muted-foreground min-w-0 sm:text-right">{t(`portal.settings.${key}.detail`)}</span>
               </div>
             ))}
           </div>
@@ -174,9 +174,9 @@ export default async function DSARPage() {
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("tasks.exampleLabel")}</p>
           <div className="space-y-2">
             {taskItems.map((key) => (
-              <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+              <div key={key} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 p-2 rounded-lg bg-background/50 border border-border/50">
                 <span className="text-sm text-foreground">{t(`tasks.items.${key}.task`)}</span>
-                <span className="text-xs text-muted-foreground shrink-0 ml-3">{t(`tasks.items.${key}.assignee`)}</span>
+                <span className="text-xs text-muted-foreground min-w-0 sm:text-right">{t(`tasks.items.${key}.assignee`)}</span>
               </div>
             ))}
           </div>
@@ -246,9 +246,9 @@ export default async function DSARPage() {
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("reporting.sectionsLabel")}</p>
           <div className="space-y-2">
             {reportingSections.map((key) => (
-              <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/50">
+              <div key={key} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 p-2 rounded-lg bg-background/50 border border-border/50">
                 <span className="text-sm text-foreground">{t(`reporting.sections.${key}.section`)}</span>
-                <span className="text-xs text-muted-foreground shrink-0 ml-3">{t(`reporting.sections.${key}.detail`)}</span>
+                <span className="text-xs text-muted-foreground min-w-0 sm:text-right">{t(`reporting.sections.${key}.detail`)}</span>
               </div>
             ))}
           </div>
