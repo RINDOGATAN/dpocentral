@@ -19,13 +19,16 @@ import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { toneMark } from "@/config/status-palette";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { localizeJurisdiction, localizeQuestion } from "@/config/jurisdiction-catalog";
 
 export default function RegulationsWizardPage() {
   const router = useRouter();
   const tw = useTranslations("pages.regulationsWizard");
   const tc = useTranslations("common");
   const tcard = useTranslations("pages.regulations.card");
+  const tcat = useTranslations("pages.regulations.category");
+  const locale = useLocale();
   const { organization } = useOrganization();
   const orgId = organization?.id ?? "";
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
@@ -58,7 +61,8 @@ export default function RegulationsWizardPage() {
     router.push("/privacy/regulations");
   };
 
-  const questions = questionData?.questions ?? [];
+  const questions = (questionData?.questions ?? []).map((q) => localizeQuestion(q, locale));
+  const applicable = (results?.applicableJurisdictions ?? []).map((j) => localizeJurisdiction(j, locale));
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -156,14 +160,14 @@ export default function RegulationsWizardPage() {
           ) : (
             <>
               <div className="space-y-3">
-                {results?.applicableJurisdictions.map((j) => (
+                {applicable.map((j) => (
                   <Card key={j.code}>
                     <CardContent className="py-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="font-medium flex items-center gap-2">
                             {j.shortName}
-                            <Badge variant="outline" className="text-xs">{j.region}</Badge>
+                            <Badge variant="outline" className="text-xs">{j.regionLabel}</Badge>
                           </div>
                           <p className="text-xs text-muted-foreground mt-1">{j.description}</p>
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
@@ -172,7 +176,7 @@ export default function RegulationsWizardPage() {
                             <span className="text-foreground">{j.penalties}</span>
                           </div>
                         </div>
-                        <Badge className="shrink-0">{j.category}</Badge>
+                        <Badge className="shrink-0">{tcat(j.category)}</Badge>
                       </div>
                     </CardContent>
                   </Card>

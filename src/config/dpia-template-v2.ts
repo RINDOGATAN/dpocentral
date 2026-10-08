@@ -111,7 +111,7 @@ const EXTRA_QUESTIONS: Record<string, BiQuestion[]> = {
       },
       help: {
         en: "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9).",
-        es: "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35(9).",
+        es: "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9.",
       },
     },
   ],
@@ -127,7 +127,7 @@ const EXTRA_QUESTIONS: Record<string, BiQuestion[]> = {
       },
       help: {
         en: "Give a review date and name the changes that require an earlier review, such as a new purpose, a new recipient or a new technology. Source: Regulation (EU) 2016/679, Article 35(11).",
-        es: "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35(11).",
+        es: "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35.11.",
       },
     },
   ],

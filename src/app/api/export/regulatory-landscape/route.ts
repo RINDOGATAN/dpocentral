@@ -14,7 +14,7 @@ import {
   type TransferExposure,
   type VendorExposure,
 } from "@/server/services/export/regulatory-landscape-report";
-import { JURISDICTION_CATALOG } from "@/config/jurisdiction-catalog";
+import { JURISDICTION_CATALOG, localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { EU_ADEQUATE_COUNTRIES } from "@/config/vendor-data-mappings";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
@@ -71,12 +71,13 @@ export async function GET(request: NextRequest) {
   const adequateSet = new Set(EU_ADEQUATE_COUNTRIES);
 
   const jurisdictions: AppliedJurisdiction[] = orgJurisdictions.map((oj) => {
-    const catalogEntry = JURISDICTION_CATALOG.find(
+    const found = JURISDICTION_CATALOG.find(
       (c) => c.code === oj.jurisdiction.code
     );
+    const catalogEntry = found ? localizeJurisdiction(found, resolvedLocale) : undefined;
     return {
       code: oj.jurisdiction.code,
-      name: oj.jurisdiction.name,
+      name: catalogEntry?.name ?? oj.jurisdiction.name,
       region: catalogEntry?.region ?? oj.jurisdiction.region ?? "",
       country: catalogEntry?.country ?? "",
       dsarDeadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,

@@ -204,11 +204,11 @@
       "included": "Incluido",
       "clickToEnable": "Pulsa para activar",
       "contactToEnable": "Contacta con {name} para activarlo",
-      "premiumSkill": "Skill premium",
-      "premiumSkillHint": "Disponible como skill descargable en el marketplace de todo.law.",
-      "typeCardLockedLabel": "{name} (skill premium, no activada para esta organización)",
+      "premiumSkill": "Módulo premium",
+      "premiumSkillHint": "Disponible como módulo descargable en el catálogo de módulos de todo.law.",
+      "typeCardLockedLabel": "{name} (módulo premium, no activado para esta organización)",
       "notCreated": "No se ha creado la evaluación",
-      "typeGatedNotice": "{name} es una skill premium y aún no está activada para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
+      "typeGatedNotice": "{name} es un módulo premium y aún no está activado para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
       "selectTemplate": "Selecciona una plantilla",
       "selectTemplateSubtitle": "Hay varias plantillas disponibles para {name}",
       "changeType": "Cambiar tipo",
@@ -254,7 +254,7 @@
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "La plantilla de EIPD no está instalada",
-      "licenceNoticeBody": "Para crear la EIPD, instala la skill de EIPD desde la página Skills con tu licencia.",
+      "licenceNoticeBody": "Para crear la EIPD, instala el módulo de EIPD desde la página Módulos con tu licencia.",
       "title": "Redactar una EIPD automáticamente",
       "subtitle": "Redacta una EIPD a partir de la actividad de tratamiento que ya tienes registrada",
       "step": {
@@ -479,7 +479,7 @@
       "category": "Categoría",
       "description": "Descripción",
       "sensitivity": "Sensibilidad",
-      "retentionDays": "Retención (días)",
+      "retentionDays": "Conservación (días)",
       "legalBasis": "Base jurídica",
       "notSpecified": "No especificada",
       "personalDataToggle": "Este elemento contiene datos personales",
@@ -538,11 +538,11 @@
       "recipients": "Destinatarios",
       "recipientsHelp": "Categorías de destinatarios internos o externos con quienes se comparten los datos.",
       "recipientsPlaceholder": "p. ej., equipo de marketing, auditores, proveedor de pagos",
-      "retentionAndAutomation": "Retención y automatización",
+      "retentionAndAutomation": "Conservación y automatización",
       "retentionAndAutomationSubtitle": "Cuánto tiempo se conservan los datos y si las decisiones están automatizadas",
-      "retentionPeriod": "Periodo de retención (descripción)",
+      "retentionPeriod": "Plazo de conservación (descripción)",
       "retentionPeriodPlaceholder": "p. ej., 7 años tras el fin del contrato",
-      "retentionDays": "Retención (días)",
+      "retentionDays": "Conservación (días)",
       "automatedDecisionMaking": "Implica decisiones automatizadas (art. 22 RGPD)",
       "automatedDecisionDetail": "Detalles de la decisión automatizada",
       "automatedDecisionDetailPlaceholder": "Lógica aplicada, importancia, consecuencias para los interesados...",
@@ -1207,7 +1207,7 @@
         "produce": "Generar DPA + TIA",
         "openTia": "TIA",
         "title": "Generar DPA + evaluación de impacto de las transferencias",
-        "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El DPA (anexos I a IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de tus respuestas confirmadas.",
+        "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El contrato de encargo del tratamiento (anexos I a IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de tus respuestas confirmadas.",
         "loading": "Analizando los datos del proveedor…",
         "notesTitle": "Cómo se precargaron estos datos",
         "sectionAgreement": "Acuerdo y partes",
@@ -1233,7 +1233,7 @@
         "issuesTitle": "Estas respuestas se contradicen: confírmalas antes de generar",
         "confirmIssue": "Confirmo que es exacto.",
         "warningsTitle": "Revisar antes de firmar",
-        "successBody": "El DPA se ha generado y guardado como contrato pendiente de firma de este proveedor. Descarga los documentos abajo: seguirán disponibles en la lista de contratos.",
+        "successBody": "El contrato de encargo del tratamiento se ha generado y se ha guardado en este proveedor, pendiente de firma. Descarga los documentos abajo: seguirán disponibles en la lista de contratos.",
         "downloadDpa": "Descargar DPA (PDF)",
         "downloadTia": "Descargar TIA (PDF)",
         "generate": "Generar documentos",
@@ -1318,7 +1318,7 @@
       },
       "contractDialog": {
         "title": "Añadir contrato",
-        "subtitle": "Registra un contrato, DPA o CCT para este proveedor.",
+        "subtitle": "Registra un contrato, un contrato de encargo del tratamiento o unas CCT para este proveedor.",
         "nameLabel": "Nombre *",
         "namePlaceholder": "p. ej., Contrato marco de servicios 2026",
         "typeLabel": "Tipo *",
@@ -2309,7 +2309,7 @@
         "subtitle": "Tareas habituales",
         "addAsset": "Añadir activo de datos",
         "newDpia": "Empezar una EIPD",
-        "premium": "Skill premium",
+        "premium": "Módulo premium",
         "newDsar": "Nueva solicitud",
         "reportIncident": "Registrar incidente",
         "addVendor": "Añadir proveedor",
@@ -2522,7 +2522,7 @@
     "regulations": "Normativa",
     "aiSystems": "Sistemas de IA",
     "transfers": "Transferencias",
-    "skills": "Skills",
+    "skills": "Módulos",
     "more": "Más",
     "newOrganization": "Nueva organización"
   },
@@ -2859,9 +2859,9 @@
     "cancel": "Cancelar",
     "confirm": "Activar función",
     "redirecting": "Redirigiendo…",
-    "marketplaceBody": "{skill} es una skill premium del marketplace de todo.law. Cómprala allí y después instala el archivo .skill descargado en tu página de Skills para activarla en tu organización.",
-    "installOnSkills": "Instalar en la página de Skills",
-    "getOnMarketplace": "Conseguirla en el marketplace",
+    "marketplaceBody": "{skill} es un módulo premium del catálogo de módulos de todo.law. Cómpralo allí y después instala el archivo .skill descargado en tu página Módulos para activarlo en tu organización.",
+    "installOnSkills": "Instalar en la página Módulos",
+    "getOnMarketplace": "Conseguirlo en el catálogo de módulos",
     "errorCheckout": "No se pudo iniciar el pago. Inténtalo de nuevo.",
     "errorGeneric": "Algo ha salido mal. Inténtalo de nuevo.",
     "multiTitle": "{count, plural, one {Activar # función} other {Activar # funciones}}",
@@ -2872,32 +2872,32 @@
     "multiSomethingWrong": "Algo ha salido mal"
   },
   "skills": {
-    "title": "Skills",
-    "subtitle": "Skills premium compradas en TODO.LAW. Sube el archivo de licencia de tu correo de confirmación para activarlas en esta organización: se verifica localmente, sin necesidad de conexión.",
+    "title": "Módulos",
+    "subtitle": "Módulos premium comprados en TODO.LAW. Sube el archivo de licencia de tu correo de confirmación para activarlos en esta organización: se verifica localmente, sin necesidad de conexión.",
     "activateTitle": "Activar con un archivo de licencia",
-    "activateHint": "Elige el archivo .license.json que recibiste tras la compra. Solo los propietarios y administradores de la organización pueden activarlas.",
+    "activateHint": "Elige el archivo .license.json que recibiste tras la compra. Solo los propietarios y administradores de la organización pueden activarlos.",
     "chooseFile": "Elegir archivo de licencia",
-    "activate": "Activar skill",
+    "activate": "Activar módulo",
     "activating": "Activando…",
     "badFile": "Ese archivo no es una licencia válida. Usa el .license.json de tu correo de compra.",
-    "installTitle": "Instalar un paquete de skill",
-    "installHint": "Elige el paquete .skill que descargaste del marketplace de todo.law. Añade el contenido premium de evaluación (por ejemplo, la EIPD) a esta instalación. Solo los propietarios y administradores de la organización pueden instalar paquetes.",
+    "installTitle": "Instalar un paquete de módulo",
+    "installHint": "Elige el paquete .skill que descargaste del catálogo de módulos de todo.law. Añade el contenido premium de evaluación (por ejemplo, la EIPD) a esta instalación. Solo los propietarios y administradores de la organización pueden instalar paquetes.",
     "chooseSkillFile": "Elegir archivo .skill",
     "installAction": "Instalar",
     "installing": "Instalando…",
-    "skillInstalled": "Skill {type} instalada.",
-    "badSkillFile": "No se pudo leer ese archivo. Usa el paquete .skill del marketplace.",
-    "activated": "{name} activada.",
-    "packagesTitle": "Skills disponibles",
-    "packagesNone": "No hay paquetes de skills instalados.",
-    "getIt": "Consíguela",
+    "skillInstalled": "Módulo {type} instalado.",
+    "badSkillFile": "No se pudo leer ese archivo. Usa el paquete .skill del catálogo de módulos.",
+    "activated": "{name} activado.",
+    "packagesTitle": "Módulos disponibles",
+    "packagesNone": "No hay paquetes de módulos instalados.",
+    "getIt": "Consíguelo",
     "premiumBadge": "Premium",
-    "statusInstalled": "Instalada",
-    "statusIncluded": "Incluida",
-    "browseMarketplace": "Explorar el marketplace",
+    "statusInstalled": "Instalado",
+    "statusIncluded": "Incluido",
+    "browseMarketplace": "Explorar el catálogo de módulos",
     "loading": "Cargando…",
-    "statusActive": "Activa",
-    "statusLocked": "Bloqueada",
+    "statusActive": "Activo",
+    "statusLocked": "Bloqueado",
     "statusComingSoon": "Próximamente",
     "expires": "Caduca el {date}",
     "perpetual": "Licencia perpetua",
@@ -3030,11 +3030,11 @@
       "RESTRICTION": "Limitar el tratamiento de los datos"
     },
     "complianceCard": {
-      "title": "Cumplimiento y retención",
+      "title": "Cumplimiento y conservación",
       "description": "Enlaza tu aviso de privacidad y configura cuánto tiempo se conservan los datos personales",
       "privacyNoticeUrl": "URL del aviso de privacidad",
       "privacyNoticeUrlHint": "URL pública del aviso de privacidad de tu organización. Se muestra al solicitante en el formulario.",
-      "retentionDays": "Periodo de retención (días)",
+      "retentionDays": "Plazo de conservación (días)",
       "retentionDaysHint": "Días que transcurren desde que se completa una solicitud hasta que se ocultan automáticamente los datos personales. Valor predeterminado: 90."
     },
     "cssCard": {
@@ -3740,7 +3740,7 @@
       "vendors": {
         "sectionNumber": "Sección 04",
         "title": "Proveedores y encargados",
-        "lead": "Todos los encargados y subencargados sujetos a las obligaciones del artículo 28. Se resume la categorización de riesgo y el estado del DPA; el registro completo figura a continuación por categoría.",
+        "lead": "Todos los encargados y subencargados sujetos a las obligaciones del artículo 28. Se resume la categorización de riesgo y el estado del contrato de encargo del tratamiento; el registro completo figura a continuación por categoría.",
         "criticalityDistribution": "Distribución por criticidad",
         "coverage": "Cobertura",
         "coverageDpa": "DPA en vigor",
@@ -4340,7 +4340,7 @@
       "coverageCertified": "Certificados",
       "certificationsTop": "Certificaciones más frecuentes",
       "directory": "Directorio",
-      "directoryLead": "Todos los proveedores agrupados por categoría principal. El nivel de riesgo y el estado del DPA se muestran en línea; las certificaciones aparecen como etiquetas.",
+      "directoryLead": "Todos los proveedores agrupados por categoría principal. El nivel de riesgo y el estado del contrato de encargo del tratamiento se muestran en línea; las certificaciones aparecen como etiquetas.",
       "columns": {
         "vendor": "Proveedor",
         "status": "Estado",
@@ -4884,7 +4884,7 @@
         },
         "assetsLabel": "2 activos",
         "elementsLabel": "3 elementos de datos",
-        "retentionLabel": "Retención: 3 años",
+        "retentionLabel": "Conservación: 3 años",
         "calloutTitle": "Base jurídica",
         "calloutBody": "Cada actividad de tratamiento debe tener una base jurídica documentada: consentimiento, contrato, obligación legal, intereses vitales, misión realizada en interés público o interés legítimo."
       },
@@ -4975,7 +4975,7 @@
         "overdueLabel": "Vencida",
         "daysRemaining": "{count} días restantes",
         "warningTitle": "Plazos de respuesta",
-        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos en un plazo de 30 días naturales (ampliable a 90 días en solicitudes complejas). El sistema envía notificaciones por correo electrónico 7, 3 y 1 día antes del vencimiento."
+        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). El sistema envía notificaciones por correo electrónico 7, 3 y 1 día antes del vencimiento."
       },
       "portal": {
         "title": "Portal público",
@@ -5193,7 +5193,7 @@
           }
         },
         "tipTitle": "Vincula con proveedores existentes",
-        "tipBody": "Al registrar un sistema de IA, puedes vincularlo a un proveedor existente en tu módulo de gestión de proveedores. Esto conecta el registro de gobernanza de IA con el perfil de riesgo del proveedor, la información contractual y el estado del DPA."
+        "tipBody": "Al registrar un sistema de IA, puedes vincularlo a un proveedor existente en tu módulo de gestión de proveedores. Esto conecta el registro de gobernanza de IA con el perfil de riesgo del proveedor, la información contractual y el estado del contrato de encargo del tratamiento."
       },
       "suggestion": {
         "title": "Sugerencia automática de riesgo",
@@ -5258,7 +5258,7 @@
         "items": {
           "vendors": {
             "label": "Proveedores",
-            "desc": "Vincula los sistemas de IA con sus proveedores para el seguimiento de contratos, estado del DPA y monitorización de riesgo de proveedor."
+            "desc": "Vincula los sistemas de IA con sus proveedores para el seguimiento de contratos, el estado del contrato de encargo del tratamiento y la monitorización de riesgo de proveedor."
           },
           "assessments": {
             "label": "Evaluaciones",
@@ -5431,7 +5431,45 @@
         "description": "Explora más de 40 normas de privacidad de todo el mundo, organizadas por región y categoría.",
         "mockupTitle": "Tarjetas de jurisdicción",
         "dsarLabel": "Plazo de solicitudes de derechos:",
-        "breachLabel": "Notificación de brecha:"
+        "breachLabel": "Notificación de brecha:",
+        "cards": {
+          "GDPR": {
+            "region": "Unión Europea",
+            "dsar": "1 mes (+2 en caso necesario)",
+            "breach": "72 horas",
+            "name": "RGPD"
+          },
+          "CCPA": {
+            "region": "California",
+            "dsar": "45 días (+45 en caso necesario)",
+            "breach": "Sin demora indebida",
+            "name": "CCPA/CPRA"
+          },
+          "LGPD": {
+            "region": "Brasil",
+            "dsar": "15 días",
+            "breach": "3 días hábiles",
+            "name": "LGPD"
+          },
+          "PIPL": {
+            "region": "China",
+            "dsar": "En tiempo oportuno (sin plazo fijo)",
+            "breach": "De inmediato",
+            "name": "PIPL"
+          },
+          "POPIA": {
+            "region": "Sudáfrica",
+            "dsar": "30 días",
+            "breach": "Lo antes posible",
+            "name": "POPIA"
+          },
+          "AIACT": {
+            "region": "Unión Europea",
+            "dsar": "No aplica",
+            "breach": "Incidentes graves: 15 días (art. 73)",
+            "name": "Reglamento de IA"
+          }
+        }
       },
       "applicability": {
         "title": "Asistente de aplicabilidad",
@@ -5512,7 +5550,7 @@
           }
         },
         "noteTitle": "Las jurisdicciones son acumulativas",
-        "noteBody": "Cuando varias jurisdicciones se aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD exige responder a una solicitud de derechos en 30 días y la LGPD en 15, el sistema aplicará el plazo de 15 días. Así te ayuda a cumplir todas las normas aplicables a la vez."
+        "noteBody": "Cuando varias jurisdicciones se aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD da un mes para responder a una solicitud de derechos y la LGPD da 15 días, el sistema aplicará el plazo de 15 días. Así te ayuda a cumplir todas las normas aplicables a la vez."
       },
       "nav": {
         "previous": "Cumplimiento de transferencias",
@@ -5882,7 +5920,7 @@
           "security": "Controles de seguridad y certificaciones (ISO 27001, SOC 2)",
           "sub": "Gestión de subencargados del tratamiento",
           "incident": "Respuesta a incidentes y capacidades de notificación de brechas",
-          "retention": "Prácticas de retención y eliminación de datos",
+          "retention": "Prácticas de conservación y eliminación de datos",
           "transfer": "Mecanismos de transferencia internacional"
         },
         "tipTitle": "Combina con cuestionarios",
@@ -5905,7 +5943,7 @@
           "certs": "Certificaciones cuando estén publicadas",
           "details": "Detalles del tratamiento de datos",
           "sub": "Enlaces a las políticas de privacidad",
-          "dpa": "Enlaces a DPA cuando estén publicados",
+          "dpa": "Enlaces a los contratos de encargo del tratamiento cuando estén publicados",
           "import": "Importación con un clic a tu inventario"
         },
         "infoTitle": "Habilitar Catálogo de proveedores",
@@ -6191,7 +6229,7 @@
         "title": "Exportaciones PDF",
         "intro": "Exporta tu inventario de datos y tu RAT como PDF con formato profesional para reguladores, auditores o revisiones internas de gobernanza.",
         "inventoryTitle": "Informe de inventario de datos",
-        "inventoryDesc": "Inventario completo de activos con elementos de datos por activo (categoría, sensibilidad, retención), flujos de datos entre sistemas y detalles de transferencias internacionales con sus mecanismos de salvaguarda.",
+        "inventoryDesc": "Inventario completo de activos con elementos de datos por activo (categoría, sensibilidad, conservación), flujos de datos entre sistemas y detalles de transferencias internacionales con sus mecanismos de salvaguarda.",
         "ropaTitle": "Exportación del RAT",
         "ropaDesc": "Registro de actividades de tratamiento conforme al artículo 30 del RGPD: finalidad del tratamiento, base jurídica, interesados, destinatarios, conservación, sistemas vinculados y transferencias internacionales por actividad."
       }
@@ -6337,7 +6375,7 @@
       },
       "sla": {
         "title": "Seguimiento de plazos",
-        "intro": "El sistema calcula automáticamente los plazos de respuesta según las jurisdicciones aplicadas. Los plazos dependen de cada marco: RGPD (30 días), CCPA/CPRA (45 días), LGPD (15 días) y más de 40 marcos más.",
+        "intro": "El sistema calcula automáticamente los plazos de respuesta según las jurisdicciones aplicadas. Los plazos dependen de cada marco: RGPD (un mes, prorrogable otros dos meses en caso necesario), CCPA/CPRA (45 días, prorrogables una vez otros 45 días cuando sea razonablemente necesario), LGPD (15 días) y más de 40 marcos más.",
         "stats": {
           "days": {
             "value": "15-45",
@@ -6757,11 +6795,11 @@
           },
           "generate": {
             "title": "Genera los documentos",
-            "description": "El DPA se guarda en el proveedor como contrato pendiente de firma. Los espacios en blanco que queden se muestran como avisos para que puedas resolverlos antes de la firma."
+            "description": "El contrato de encargo del tratamiento se guarda en el proveedor, pendiente de firma. Los espacios en blanco que queden se muestran como avisos para que puedas resolverlos antes de la firma."
           },
           "download": {
             "title": "Descarga y firma",
-            "description": "Descarga los PDF del DPA y de la TIA desde la pantalla de confirmación o en cualquier momento desde la pestaña Contratos del proveedor. Cuando esté firmado por ambas partes, cambia el estado del contrato a Activo."
+            "description": "Descarga los PDF del contrato de encargo del tratamiento y de la TIA desde la pantalla de confirmación o en cualquier momento desde la pestaña Contratos del proveedor. Cuando esté firmado por ambas partes, cambia el estado del contrato a Activo."
           }
         },
         "honesty": {
@@ -6769,7 +6807,7 @@
           "desc": "El anexo II solo enumera medidas de seguridad confirmadas con pruebas reales de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la TIA, no las garantías sobre las MTO. Las declaraciones del importador (solicitudes de las autoridades públicas, historial de brechas) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la TIA documenta un riesgo residual salvo que exista al menos una medida complementaria técnica."
         },
         "afterTitle": "Tras la generación",
-        "afterDesc": "El DPA generado implica un calendario de cumplimiento: la reevaluación de la TIA a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
+        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la TIA a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
       },
       "metaTitle": "Gestión de proveedores",
       "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, cuestionarios de privacidad, niveles de riesgo y flujos de revisión periódica.",
@@ -6915,7 +6953,7 @@
         "title": "Exportaciones PDF",
         "intro": "Exporta tu registro de proveedores como un PDF con formato para auditorías, revisiones de diligencia debida o presentaciones ante las autoridades.",
         "registerTitle": "Informe de registro de proveedores",
-        "registerDesc": "Inventario completo de proveedores con niveles de riesgo, certificaciones, categorías de datos tratados, países en los que operan, estado del contrato o del DPA y calendario de revisiones. Incluye estadísticas resumidas y tarjetas de detalle por proveedor."
+        "registerDesc": "Inventario completo de proveedores con niveles de riesgo, certificaciones, categorías de datos tratados, países en los que operan, estado de los contratos (incluido el de encargo del tratamiento) y calendario de revisiones. Incluye estadísticas resumidas y tarjetas de detalle por proveedor."
       }
     },
     "shell": {
@@ -7694,7 +7732,7 @@
         },
         "system-dpia-health-adtech-template": {
           "name": "Datos de salud en publicidad",
-          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35(7) del RGPD."
+          "description": "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35.7 del RGPD."
         }
       },
       "section": {
@@ -7871,11 +7909,11 @@
         },
         "q4_3": {
           "text": "La opinión de los interesados o de sus representantes, o el motivo por el que no se ha recabado",
-          "helpText": "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35(9)."
+          "helpText": "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9."
         },
         "q7_4": {
           "text": "Cuándo se revisará esta evaluación y qué cambio del riesgo adelanta la revisión",
-          "helpText": "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35(11)."
+          "helpText": "Indica una fecha de revisión y nombra los cambios que obligan a revisarla antes, como una nueva finalidad, un nuevo destinatario o una tecnología nueva. Fuente: Reglamento (UE) 2016/679, artículo 35.11."
         },
         "hd1_1": {
           "text": "¿Qué jurisdicciones se aplican a este tratamiento?",
@@ -7909,12 +7947,12 @@
           ]
         },
         "hd1_3": {
-          "text": "¿Qué supuestos del artículo 35(3) del RGPD se aplican?",
-          "helpText": "Cualquier supuesto obliga a realizar una EIPD antes de iniciar el tratamiento. Fuente: art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de EIPD de DPO Central.",
+          "text": "¿Qué supuestos del artículo 35.3 del RGPD se aplican?",
+          "helpText": "Cualquier supuesto obliga a realizar una EIPD antes de iniciar el tratamiento. Fuente: art. 35.3.a) a c) del RGPD, según las tablas de riesgo y la plantilla de EIPD de DPO Central.",
           "options": [
-            "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35(3)(a))",
-            "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35(3)(b))",
-            "Observación sistemática a gran escala de una zona de acceso público (art. 35(3)(c))",
+            "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35.3.a))",
+            "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35.3.b))",
+            "Observación sistemática a gran escala de una zona de acceso público (art. 35.3.c))",
             "Ninguno, pero el tratamiento sigue siendo probablemente de alto riesgo",
             "Ninguno de ellos"
           ]
@@ -7940,32 +7978,32 @@
         },
         "hd2_1": {
           "text": "¿Cuál es la finalidad empresarial concreta del tratamiento?",
-          "helpText": "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing». Fuente: 11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (comprobado el 16 de septiembre de 2026)."
+          "helpText": "Indica la campaña, la medición o el uso de audiencias; evita fórmulas generales como «marketing». Fuente: 11 CCR 7152(a)(1) a (3); art. 35.7.a) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd2_2": {
           "text": "¿Por qué es necesaria cada categoría de datos para esa finalidad y qué alternativas menos intrusivas has valorado?",
-          "helpText": "Fuente: art. 35(7)(b) del RGPD (comprobado el 16 de septiembre de 2026)."
+          "helpText": "Fuente: art. 35.7.b) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd2_3": {
           "text": "¿Qué medidas de minimización de datos se aplican (campos excluidos, parámetros eliminados, agregación)?",
           "helpText": "Maryland limita la recogida a lo razonablemente necesario. Fuente: catálogo de jurisdicciones de DPO Central, ficha MODPA."
         },
         "hd2_4": {
-          "text": "¿En qué base jurídica del RGPD y, para los datos de salud, en qué condición del artículo 9(2) te basas?",
-          "helpText": "Debe identificarse una condición del artículo 9(2) para cada categoría especial. Para los datos de salud usados en publicidad, el consentimiento explícito suele ser la única condición disponible [por verificar]. El interés legítimo solo puede amparar datos que no sean de categoría especial. Fuente: reglas de autocompletado y plantilla de EIPD de DPO Central (condiciones del art. 9(2) y bases del art. 6).",
+          "text": "¿En qué base jurídica del RGPD y, para los datos de salud, en qué condición del artículo 9.2 te basas?",
+          "helpText": "Debe identificarse una condición del artículo 9.2 para cada categoría especial. Para los datos de salud usados en publicidad, el consentimiento explícito suele ser la única condición disponible [por verificar]. El interés legítimo solo puede amparar datos que no sean de categoría especial. Fuente: reglas de autocompletado y plantilla de EIPD de DPO Central (condiciones del art. 9.2 y bases del art. 6).",
           "options": [
-            "Consentimiento (art. 6(1)(a)) y consentimiento explícito (art. 9(2)(a))",
-            "Interés legítimo (art. 6(1)(f)), sin datos de categoría especial",
+            "Consentimiento (art. 6.1.a)) y consentimiento explícito (art. 9.2.a))",
+            "Interés legítimo (art. 6.1.f)), sin datos de categoría especial",
             "Otra base (explícala en las notas)"
           ]
         },
         "hd2_5": {
           "text": "Si te basas en el interés legítimo, resume la ponderación.",
-          "helpText": "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una LIA completa. Fuente: art. 6(1)(f) del RGPD, plantilla de LIA de DPO Central."
+          "helpText": "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una LIA completa. Fuente: art. 6.1.f) del RGPD, plantilla de LIA de DPO Central."
         },
         "hd3_1": {
           "text": "¿De qué fuentes proceden los datos (sitios web, aplicaciones, páginas, socios)?",
-          "helpText": "Fuente: 11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (comprobado el 16 de septiembre de 2026)."
+          "helpText": "Fuente: 11 CCR 7152(a)(1) a (3); art. 35.7.a) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd3_2": {
           "text": "¿Cómo se recogen los datos?",
@@ -8008,7 +8046,7 @@
         },
         "hd5_1": {
           "text": "¿Qué impactos negativos podría causar el tratamiento?",
-          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (comprobado el 16 de septiembre de 2026).",
+          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35.7.c) del RGPD (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Acceso o comunicación no autorizados",
             "Discriminación",
@@ -8022,7 +8060,7 @@
         },
         "hd5_2": {
           "text": "Para cada impacto seleccionado, describe cómo podría producirse, su probabilidad y su gravedad.",
-          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (comprobado el 16 de septiembre de 2026)."
+          "helpText": "Fuente: 11 CCR 7152(a)(5); art. 35.7.c) del RGPD (comprobado el 16 de septiembre de 2026)."
         },
         "hd6_1": {
           "text": "Factor 1, fuente: ¿de dónde proceden los datos?",
@@ -8075,7 +8113,7 @@
         },
         "hd7_1": {
           "text": "¿Qué vía principal de mitigación eliges?",
-          "helpText": "Fuente: 11 CCR 7152(a)(6); art. 35(7)(d) del RGPD (comprobado el 16 de septiembre de 2026).",
+          "helpText": "Fuente: 11 CCR 7152(a)(6); art. 35.7.d) del RGPD (comprobado el 16 de septiembre de 2026).",
           "options": [
             "Obtener consentimiento expreso (opt-in) en todo el país",
             "Suprimir los datos relacionados con la salud de los consumidores de estados con consentimiento expreso",
@@ -8189,12 +8227,12 @@
         "q1_3": {
           "text": "¿Cuál es la base jurídica del tratamiento?",
           "options": [
-            "Consentimiento (art. 6(1)(a))",
-            "Contrato (art. 6(1)(b))",
-            "Obligación legal (art. 6(1)(c))",
-            "Intereses vitales (art. 6(1)(d))",
-            "Misión de interés público (art. 6(1)(e))",
-            "Interés legítimo (art. 6(1)(f))"
+            "Consentimiento (art. 6.1.a))",
+            "Contrato (art. 6.1.b))",
+            "Obligación legal (art. 6.1.c))",
+            "Intereses vitales (art. 6.1.d))",
+            "Misión de interés público (art. 6.1.e))",
+            "Interés legítimo (art. 6.1.f))"
           ]
         },
         "q1_4": {
@@ -8390,11 +8428,11 @@
       "question": {
         "piav2_1_1": {
           "text": "¿Cuál es la finalidad del tratamiento?",
-          "helpText": "Indica la finalidad específica y explícita, con la que se contrasta cada pregunta posterior. Ejemplo: «Gestionar los pedidos de los clientes y la atención posventa». Fuente: RGPD, art. 5(1)(b)."
+          "helpText": "Indica la finalidad específica y explícita, con la que se contrasta cada pregunta posterior. Ejemplo: «Gestionar los pedidos de los clientes y la atención posventa». Fuente: RGPD, art. 5.1.b)."
         },
         "piav2_1_2": {
           "text": "¿Qué categorías de datos personales se tratan?",
-          "helpText": "Enumera cada categoría, porque las categorías determinan el riesgo y las obligaciones. Ejemplo: «Datos de contacto, identificadores, datos financieros». Fuente: RGPD, art. 30(1)(c).",
+          "helpText": "Enumera cada categoría, porque las categorías determinan el riesgo y las obligaciones. Ejemplo: «Datos de contacto, identificadores, datos financieros». Fuente: RGPD, art. 30.1.c).",
           "options": [
             "Datos de contacto",
             "Identificadores",
@@ -8410,12 +8448,12 @@
           "helpText": "Las categorías especiales de datos (art. 9) y los datos penales (art. 10) requieren una condición específica más allá de la base jurídica. Ejemplo: «No». Fuente: RGPD, arts. 9 y 10."
         },
         "piav2_1_4": {
-          "text": "¿Qué condición del artículo 9(2) o del artículo 10 se aplica?",
-          "helpText": "Nombra la condición específica que permite tratar las categorías especiales de datos o los datos penales. Ejemplo: «Consentimiento explícito (art. 9(2)(a))». Fuente: RGPD, arts. 9(2) y 10."
+          "text": "¿Qué condición del artículo 9.2 o del artículo 10 se aplica?",
+          "helpText": "Nombra la condición específica que permite tratar las categorías especiales de datos o los datos penales. Ejemplo: «Consentimiento explícito (art. 9.2.a))». Fuente: RGPD, arts. 9.2 y 10."
         },
         "piav2_1_5": {
           "text": "¿Quiénes son los interesados?",
-          "helpText": "Nombra los grupos cuyos datos se tratan. Los menores y las personas vulnerables exigen un cuidado adicional. Ejemplo: «Clientes y usuarios de la web». Fuente: RGPD, art. 30(1)(c); considerando 38.",
+          "helpText": "Nombra los grupos cuyos datos se tratan. Los menores y las personas vulnerables exigen un cuidado adicional. Ejemplo: «Clientes y usuarios de la web». Fuente: RGPD, art. 30.1.c); considerando 38.",
           "options": [
             "Clientes",
             "Empleados",
@@ -8428,27 +8466,27 @@
         },
         "piav2_2_1": {
           "text": "¿Cuál es la base jurídica del tratamiento?",
-          "helpText": "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6(1).",
+          "helpText": "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
           "options": [
-            "Consentimiento (art. 6(1)(a))",
-            "Contrato (art. 6(1)(b))",
-            "Obligación legal (art. 6(1)(c))",
-            "Intereses vitales (art. 6(1)(d))",
-            "Misión de interés público (art. 6(1)(e))",
-            "Interés legítimo (art. 6(1)(f))"
+            "Consentimiento (art. 6.1.a))",
+            "Contrato (art. 6.1.b))",
+            "Obligación legal (art. 6.1.c))",
+            "Intereses vitales (art. 6.1.d))",
+            "Misión de interés público (art. 6.1.e))",
+            "Interés legítimo (art. 6.1.f))"
           ]
         },
         "piav2_2_2": {
           "text": "¿Cuánto tiempo se conservan los datos y desde cuándo?",
-          "helpText": "Indica un plazo de conservación y su punto de partida, no «el tiempo necesario». Ejemplo: «6 años desde el fin del contrato, por la normativa fiscal». Fuente: RGPD, art. 5(1)(e)."
+          "helpText": "Indica un plazo de conservación y su punto de partida, no «el tiempo necesario». Ejemplo: «6 años desde el fin del contrato, por la normativa fiscal». Fuente: RGPD, art. 5.1.e)."
         },
         "piav2_2_3": {
           "text": "¿Está justificado y se aplica el plazo de conservación?",
-          "helpText": "El plazo debe estar justificado por la finalidad o un deber legal, y los datos deben eliminarse o anonimizarse de verdad al final. Ejemplo: «Sí: una tarea anual de borrado elimina los registros caducados». Fuente: RGPD, art. 5(1)(e)."
+          "helpText": "El plazo debe estar justificado por la finalidad o un deber legal, y los datos deben eliminarse o anonimizarse de verdad al final. Ejemplo: «Sí: una tarea anual de borrado elimina los registros caducados». Fuente: RGPD, art. 5.1.e)."
         },
         "piav2_3_1": {
           "text": "¿Quién recibe los datos?",
-          "helpText": "Nombra cada categoría de destinatario, porque cada una añade obligaciones y riesgo. Ejemplo: «Equipos internos y un encargado de alojamiento». Fuente: RGPD, art. 30(1)(d).",
+          "helpText": "Nombra cada categoría de destinatario, porque cada una añade obligaciones y riesgo. Ejemplo: «Equipos internos y un encargado de alojamiento». Fuente: RGPD, art. 30.1.d).",
           "options": [
             "Solo equipos internos",
             "Encargados que actúan por cuenta nuestra",
@@ -8459,7 +8497,7 @@
         },
         "piav2_3_2": {
           "text": "¿Está cada encargado vinculado por un contrato de tratamiento por escrito (art. 28)?",
-          "helpText": "Un encargado solo puede actuar bajo un contrato con las cláusulas que exige el artículo 28. Ejemplo: «Sí: hay un contrato de encargo firmado con cada encargado». Fuente: RGPD, art. 28(3)."
+          "helpText": "Un encargado solo puede actuar bajo un contrato con las cláusulas que exige el artículo 28. Ejemplo: «Sí: hay un contrato de encargo firmado con cada encargado». Fuente: RGPD, art. 28.3."
         },
         "piav2_3_3": {
           "text": "¿Se transfieren datos fuera de la UE o del EEE?",
@@ -8491,7 +8529,7 @@
         },
         "piav2_4_4": {
           "text": "¿Qué garantías se aplican a esas decisiones automatizadas?",
-          "helpText": "Describe la base jurídica y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22(3)."
+          "helpText": "Describe la base jurídica y las garantías: el derecho a la intervención humana, a expresar su punto de vista y a impugnar la decisión. Ejemplo: «Consentimiento explícito; la persona puede solicitar una revisión humana». Fuente: RGPD, art. 22.3."
         },
         "piav2_5_1": {
           "text": "¿Qué medidas de seguridad protegen los datos (art. 32)?",
@@ -8517,7 +8555,7 @@
         },
         "piav2_5_3": {
           "text": "¿Qué acciones residuales o recomendaciones quedan?",
-          "helpText": "Anota cualquier seguimiento necesario para reducir más el riesgo o mantener la evaluación al día. Ejemplo: «Programar una EIPD si se añade la elaboración de perfiles». Fuente: RGPD, art. 35(1)."
+          "helpText": "Anota cualquier seguimiento necesario para reducir más el riesgo o mantener la evaluación al día. Ejemplo: «Programar una EIPD si se añade la elaboración de perfiles». Fuente: RGPD, art. 35.1."
         }
       }
     }
@@ -9088,7 +9126,7 @@
       "reviewNotFound": "No se ha encontrado la revisión.",
       "savedViewNotFound": "No se ha encontrado la vista guardada.",
       "selectAtLeastOneVendorToImportOr": "Selecciona al menos un proveedor que importar o una plantilla del sector.",
-      "skillPackageHasNoStripePriceConfigured": "El paquete de skills no tiene ningún precio de Stripe configurado.",
+      "skillPackageHasNoStripePriceConfigured": "El paquete de módulos no tiene ningún precio de Stripe configurado.",
       "someCopiedTextStillPointsAtTheOther": "Parte del texto copiado sigue haciendo referencia al otro cliente. Revisa la lista antes de copiar.",
       "someVendorSlugsAreNotInYourVendor": "Algunos proveedores no están en tu cartera de Vendor.Watch.",
       "submitApproveIsOnlyAvailableForSingleUser": "«Enviar y aprobar» solo está disponible en organizaciones de un único usuario. Usa en su lugar el envío habitual.",
@@ -9147,8 +9185,8 @@
     "sourcePublic": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de esta instancia está disponible en:",
     "sourceOnRequest": "De conformidad con la sección 13 de la AGPL-3.0, el código fuente correspondiente completo de la versión que se ejecuta aquí{commit} está a tu disposición sin coste. El repositorio público se está ultimando; hasta que se publique, solicita el código fuente correspondiente escribiendo a <mail>{email}</mail> y te lo facilitaremos.",
     "commit": " (commit {commit})",
-    "premiumTitle": "Skills premium",
-    "premiumBody": "Algunas skills y complementos premium tienen una licencia propia y <b>no</b> están cubiertos por la AGPL. No forman parte del código fuente correspondiente ofrecido arriba.",
+    "premiumTitle": "Módulos premium",
+    "premiumBody": "Algunos módulos y complementos premium tienen una licencia propia y <b>no</b> están cubiertos por la AGPL. No forman parte del código fuente correspondiente ofrecido arriba.",
     "back": "Volver a DPO Central"
   },
   "notFound": {
