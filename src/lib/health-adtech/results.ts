@@ -34,6 +34,7 @@ import {
   type JurisdictionCode,
 } from "@/config/health-adtech-template";
 import { answerMapFrom, answerValues, type AnswerMap } from "@/lib/assessment-conditions";
+import { legacyOptionLists } from "@/lib/template-i18n-core";
 
 export type Lang = "en" | "es";
 
@@ -100,6 +101,11 @@ function optionIndexes(answers: AnswerMap, questionId: string): number[] {
   for (const v of answerValues(answers[questionId])) {
     let i = q.options.en.indexOf(v);
     if (i < 0) i = q.options.es.indexOf(v);
+    // An answer saved under an earlier Spanish wording of the options.
+    for (const list of i < 0 ? legacyOptionLists("dpia", questionId) : []) {
+      i = list.indexOf(v);
+      if (i >= 0) break;
+    }
     if (i >= 0 && !out.includes(i)) out.push(i);
   }
   return out;

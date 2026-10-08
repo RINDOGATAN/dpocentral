@@ -337,7 +337,7 @@
       "aboutLiaBody": "La ponderación que hay que hacer antes de basarse en el interés legítimo como base jurídica."
     },
     "newIncident": {
-      "title": "Notificar incidente",
+      "title": "Registrar incidente",
       "subtitle": "Documenta un incidente de seguridad o una brecha de seguridad de los datos personales",
       "highSeverityTitle": "Gravedad alta o crítica seleccionada",
       "highSeverityBody": "Este incidente puede requerir notificación a la autoridad de control en un plazo de 72 horas (RGPD) u otros plazos.",
@@ -372,7 +372,7 @@
       "jurisdictionPlaceholder": "Selecciona la jurisdicción",
       "errorPrefix": "Error: {message}",
       "reporting": "Notificando...",
-      "submit": "Notificar incidente",
+      "submit": "Registrar incidente",
       "incidentType": {
         "DATA_BREACH": "Brecha de datos personales",
         "UNAUTHORIZED_ACCESS": "Acceso no autorizado",
@@ -1152,7 +1152,7 @@
         "jurisdictionWindow": "{name} (plazo de {hours} h)",
         "noJurisdictions": "No hay jurisdicciones aplicadas a esta organización",
         "noJurisdictionsHint": "Todavía no hay jurisdicciones aplicadas a esta organización.",
-        "goToRegulations": "Añade jurisdicciones en Regulaciones",
+        "goToRegulations": "Añade jurisdicciones en Normativa",
         "recipient": "Tipo de destinatario",
         "recipientType": {
           "DPA": "Autoridad de control (p. ej., AEPD)",
@@ -3141,7 +3141,7 @@
   },
   "incidents": {
     "title": "Incidencias",
-    "newIncident": "Nueva incidencia",
+    "newIncident": "Nuevo incidente",
     "reported": "Comunicada",
     "investigating": "En investigación",
     "contained": "Contenida",
@@ -3189,7 +3189,7 @@
       "body": "Los expertos en operaciones de cumplimiento pueden ayudarte a estructurar EIPD, PIA y otros flujos de evaluación en la plataforma."
     },
     "incident": {
-      "heading": "¿Necesitas ayuda con tu flujo de respuesta a incidencias?",
+      "heading": "¿Necesitas ayuda con tu flujo de respuesta a incidentes?",
       "body": "Un experto en operaciones de cumplimiento puede ayudarte a configurar el registro de brechas, los flujos de respuesta y la documentación. Para asesoramiento jurídico sobre obligaciones de notificación, consulta a un abogado cualificado."
     },
     "emptyState": {
@@ -3291,7 +3291,7 @@
   "security": {
     "badge": "Defensa en profundidad",
     "title": "Seguridad de los datos",
-    "subtitle": "DPO Central se ha construido con defensa en profundidad en cada capa. Como plataforma de gestión de privacidad que maneja resultados de evaluaciones, registros de incidencias, contratos con proveedores y solicitudes de interesados, la seguridad es un requisito fundamental, no algo secundario.",
+    "subtitle": "DPO Central se ha construido con defensa en profundidad en cada capa. Como plataforma de gestión de privacidad que maneja resultados de evaluaciones, registros de incidentes, contratos con proveedores y solicitudes de interesados, la seguridad es un requisito fundamental, no algo secundario.",
     "stats": {
       "layers": "Capas de seguridad",
       "headers": "Cabeceras HTTP",
@@ -3442,7 +3442,7 @@
       "created": "Incidencia registrada",
       "updated": "Incidencia actualizada",
       "deleted": "Incidencia eliminada",
-      "statusUpdated": "Estado de la incidencia actualizado",
+      "statusUpdated": "Estado del incidente actualizado",
       "timelineAdded": "Entrada de cronología añadida",
       "taskCreated": "Tarea creada",
       "notificationCreated": "Notificación creada",
@@ -3702,8 +3702,8 @@
         "specialCat": "{count, plural, one {# elemento de datos de categorías especiales está catalogado} other {# elementos de datos de categorías especiales están catalogados}}: se aplican las garantías del artículo 9.",
         "intlTransfers": "{count, plural, one {# transferencia internacional está documentada} other {# transferencias internacionales están documentadas}} en las actividades de tratamiento.",
         "adm": "{count, plural, one {# actividad implica} other {# actividades implican}} decisiones automatizadas sujetas al artículo 22.",
-        "openIncidents": "{count, plural, one {# incidencia está abierta} other {# incidencias están abiertas}} y en investigación.",
-        "healthyProgram": "No se han detectado hallazgos relevantes. El programa de privacidad se encuentra en estado estable en los pilares de inventario, tratamiento, proveedores y respuesta a incidencias."
+        "openIncidents": "{count, plural, one {# incidente está abierto} other {# incidentes están abiertos}} y en investigación.",
+        "healthyProgram": "No se han detectado hallazgos relevantes. El programa de privacidad se encuentra en estado estable en los pilares de inventario, tratamiento, proveedores y respuesta a incidentes."
       }
     },
     "ropaReport": {
@@ -4160,7 +4160,7 @@
     },
     "breachRegister": {
       "pageTitle": "Registro de brechas",
-      "coverTitle": "Registro de brechas e incidencias",
+      "coverTitle": "Registro de brechas e incidentes",
       "coverSubtitle": "RGPD, artículo 33.5",
       "summary": "Resumen",
       "stats": {
@@ -4170,7 +4170,7 @@
         "pendingNotifications": "Notificaciones pendientes a la autoridad de control"
       },
       "byStatus": "Por estado",
-      "allIncidents": "Todas las incidencias",
+      "allIncidents": "Todos los incidentes",
       "unknown": "Desconocido",
       "overviewColumns": {
         "id": "ID",
@@ -4186,7 +4186,7 @@
         "count": "Nº"
       },
       "meta": {
-        "incidentId": "ID de la incidencia",
+        "incidentId": "ID del incidente",
         "type": "Tipo",
         "discovered": "Descubierta",
         "discoveredBy": "Descubierta por",
@@ -4348,7 +4348,7 @@
             "desc": "Puntuación de cumplimiento, evolución, informes para la dirección"
           },
           "regulations": {
-            "label": "Regulaciones",
+            "label": "Normativa",
             "desc": "Más de 40 jurisdicciones, asistente de aplicabilidad, configuración de plazos"
           },
           "aiSystems": {
@@ -5192,7 +5192,7 @@
         "configBody": "La integración con AI Sentinel requiere las variables de entorno AI_SENTINEL_API_URL y AI_SENTINEL_API_KEY. Una vez configuradas, verás el botón «Enviar a AI Sentinel» en la página de listado de sistemas de IA. Los sistemas exportados muestran una etiqueta de vinculado y un enlace directo en su página de detalle."
       },
       "nav": {
-        "previous": "Regulaciones",
+        "previous": "Normativa",
         "next": "Funciones Premium"
       }
     },
@@ -5318,22 +5318,22 @@
       },
       "nav": {
         "previous": "Autocompletado de EIPD",
-        "next": "Regulaciones"
+        "next": "Normativa"
       }
     },
     "regulations": {
-      "title": "Seguimiento de regulaciones",
-      "subtitle": "Lleva el control de qué regulaciones de privacidad se aplican a tu organización, entiende sus requisitos y deja que el sistema configure automáticamente los plazos y las ventanas de notificación según tus jurisdicciones aplicables.",
+      "title": "Seguimiento de la normativa",
+      "subtitle": "Lleva el control de qué normas de privacidad se aplican a tu organización, entiende sus requisitos y deja que el sistema configure automáticamente los plazos y las ventanas de notificación según tus jurisdicciones aplicables.",
       "catalog": {
         "title": "Catálogo de jurisdicciones",
-        "description": "Explora más de 40 regulaciones de privacidad de todo el mundo, organizadas por región y categoría.",
+        "description": "Explora más de 40 normas de privacidad de todo el mundo, organizadas por región y categoría.",
         "mockupTitle": "Tarjetas de jurisdicción",
         "dsarLabel": "Plazo de solicitudes de derechos:",
         "breachLabel": "Notificación de brecha:"
       },
       "applicability": {
         "title": "Asistente de aplicabilidad",
-        "description": "Responde preguntas sencillas sobre tu organización para determinar qué regulaciones se aplican.",
+        "description": "Responde preguntas sencillas sobre tu organización para determinar qué normas se aplican.",
         "steps": {
           "location": {
             "title": "Responde preguntas de ubicación",
@@ -5341,22 +5341,22 @@
           },
           "identify": {
             "title": "Identifica jurisdicciones aplicables",
-            "description": "El asistente analiza tus respuestas e identifica qué regulaciones de privacidad se aplican a tu organización según su alcance jurisdiccional."
+            "description": "El asistente analiza tus respuestas e identifica qué normas de privacidad se aplican a tu organización según su alcance jurisdiccional."
           },
           "review": {
             "title": "Revisa las recomendaciones",
-            "description": "Revisa la lista de regulaciones recomendadas y elige cuáles aplicar a tu organización. Puedes añadir u omitir cualquier recomendación."
+            "description": "Revisa la lista de normas recomendadas y elige cuáles aplicar a tu organización. Puedes añadir u omitir cualquier recomendación."
           },
           "configure": {
             "title": "Configuración automática de plazos",
-            "description": "Una vez aplicadas, el sistema configura automáticamente los plazos de respuesta a las solicitudes de derechos y las ventanas de notificación de brechas según los requisitos de cada regulación."
+            "description": "Una vez aplicadas, el sistema configura automáticamente los plazos de respuesta a las solicitudes de derechos y las ventanas de notificación de brechas según los requisitos de cada norma."
           }
         },
         "tipTitle": "Vuelve a ejecutarlo al ampliar tu actividad",
         "tipBody": "Ejecuta el asistente de aplicabilidad de nuevo cada vez que entres en nuevos mercados, contrates empleados en nuevos países o despliegues infraestructura en nuevas regiones. Pueden aplicarse nuevas jurisdicciones a medida que crezca tu presencia."
       },
       "categories": {
-        "title": "Categorías de regulación",
+        "title": "Categorías de normas",
         "items": {
           "comprehensive": {
             "title": "Integrales",
@@ -5364,11 +5364,11 @@
           },
           "sectoral": {
             "title": "Sectoriales",
-            "desc": "Regulaciones específicas de sector dirigidas a industrias concretas, como HIPAA para salud y PCI DSS para datos de pago."
+            "desc": "Normas específicas de sector dirigidas a industrias concretas, como HIPAA para salud y PCI DSS para datos de pago."
           },
           "ai": {
             "title": "Gobernanza de IA",
-            "desc": "Regulaciones y marcos específicos de IA, como el Reglamento de IA de la UE, que abordan la transparencia algorítmica y la toma de decisiones automatizada."
+            "desc": "Normas y marcos específicos de IA, como el Reglamento de IA de la UE, que abordan la transparencia algorítmica y la toma de decisiones automatizada."
           },
           "emerging": {
             "title": "Emergentes",
@@ -5378,7 +5378,7 @@
       },
       "managing": {
         "title": "Gestionar jurisdicciones",
-        "intro": "Una vez que hayas identificado las regulaciones aplicables a través del asistente o de la selección manual, puedes gestionarlas desde el panel de Regulaciones. Aplicar una jurisdicción la crea en la base de datos de tu organización y la vincula a tu perfil de cumplimiento.",
+        "intro": "Una vez que hayas identificado las normas aplicables a través del asistente o de la selección manual, puedes gestionarlas desde el apartado Normativa. Aplicar una jurisdicción la crea en la base de datos de tu organización y la vincula a tu perfil de cumplimiento.",
         "mockupTitle": "Gestión de jurisdicciones",
         "primaryBadge": "Principal",
         "statuses": {
@@ -5410,7 +5410,7 @@
           }
         },
         "noteTitle": "Las jurisdicciones son acumulativas",
-        "noteBody": "Cuando varias jurisdicciones se aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD exige responder a una solicitud de derechos en 30 días y la LGPD en 15, el sistema aplicará el plazo de 15 días. Así te ayuda a cumplir todas las regulaciones aplicables a la vez."
+        "noteBody": "Cuando varias jurisdicciones se aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD exige responder a una solicitud de derechos en 30 días y la LGPD en 15, el sistema aplicará el plazo de 15 días. Así te ayuda a cumplir todas las normas aplicables a la vez."
       },
       "nav": {
         "previous": "Cumplimiento de transferencias",
@@ -6597,7 +6597,7 @@
         "steps": {
           "report": {
             "title": "Comunica el incidente",
-            "description": "Ve al módulo Incidentes y pulsa «Comunicar incidente». Indica los datos iniciales: título, descripción, gravedad y sistemas afectados."
+            "description": "Ve al módulo Incidentes y pulsa «Registrar incidente». Indica los datos iniciales: título, descripción, gravedad y sistemas afectados."
           },
           "triage": {
             "title": "Triaje e investigación",
@@ -7420,7 +7420,7 @@
             "Datos financieros",
             "Datos de comportamiento o de uso",
             "Datos de localización",
-            "Datos de categoría especial",
+            "Categorías especiales de datos",
             "Datos penales"
           ]
         },
@@ -7676,7 +7676,7 @@
           "helpText": "Selecciona uno o ambos. El informe enumera todos los requisitos de los marcos seleccionados y marca cada uno como cubierto o pendiente. Fuentes: Reglamento (UE) 2016/679, artículos 35 y 36; Código de Reglamentos de California, título 11, división 6, capítulo 1, artículo 10.",
           "options": [
             "Unión Europea: Reglamento (UE) 2016/679, artículo 35",
-            "California: reglamento de evaluación de riesgos de la CCPA, 11 CCR, artículo 10"
+            "California: reglamento de evaluación de riesgos de la CCPA, 11 CCR artículo 10"
           ]
         },
         "q8_1": {
@@ -7977,7 +7977,7 @@
         },
         "hd7_2": {
           "text": "¿Qué otras garantías se aplican?",
-          "helpText": "Colorado, Connecticut y Texas reconocen los mecanismos universales de exclusión voluntaria. Fuente: catálogo de jurisdicciones de DPO Central, ficha CPA, CTDPA y TDPSA.",
+          "helpText": "Colorado, Connecticut y Texas reconocen los mecanismos universales de exclusión voluntaria. Fuente: catálogo de jurisdicciones de DPO Central, fichas CPA, CTDPA y TDPSA.",
           "options": [
             "Eliminar rutas de URL, términos de búsqueda y parámetros de los eventos del píxel y del SDK",
             "Respetar las señales de preferencia de exclusión voluntaria",
@@ -8001,7 +8001,7 @@
         },
         "hd8_3": {
           "text": "Washington o Nevada: ¿utilizas una geovalla alrededor de lugares donde se prestan servicios sanitarios para identificar o seguir a los consumidores, o para enviarles mensajes?",
-          "helpText": "Esta geovalla está prohibida: a menos de 2.000 pies de asistencia sanitaria presencial en Washington y a menos de 1.750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse. Fuente: RCW 19.373.080; NRS 603A.540 (comprobado el 16 de septiembre de 2026)."
+          "helpText": "Esta geovalla está prohibida: a menos de 2000 pies de un lugar de asistencia sanitaria presencial en Washington y a menos de 1750 pies de un centro médico en Nevada. Un Sí aparece en el informe como un incumplimiento que debe resolverse. Fuente: RCW 19.373.080; NRS 603A.540 (comprobado el 16 de septiembre de 2026)."
         },
         "hd8_4": {
           "text": "Maryland: ¿alguna comunicación constituye una venta de datos sensibles, incluidos los de salud?",
@@ -8021,11 +8021,11 @@
         },
         "hd8_8": {
           "text": "Estados de EE. UU.: ¿obtienes consentimiento expreso (opt-in) antes de tratar datos sensibles, incluidos los de salud?",
-          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, ficha CTDPA, CPA, VCDPA, TDPSA y OCPA. En otros estados, revisa cada ley [por verificar]. En Maryland, el consentimiento no permite una venta."
+          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, fichas CTDPA, CPA, VCDPA, TDPSA y OCPA. En otros estados, revisa cada ley [por verificar]. En Maryland, el consentimiento no permite una venta."
         },
         "hd8_9": {
           "text": "Estados de EE. UU.: ¿pueden los consumidores excluirse de la publicidad segmentada y de la venta de sus datos?",
-          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, ficha CTDPA, CPA, VCDPA, TDPSA y OCPA (derecho de exclusión voluntaria). El alcance exacto del derecho en cada estado [por verificar]."
+          "helpText": "Fuente: catálogo de jurisdicciones de DPO Central, fichas CTDPA, CPA, VCDPA, TDPSA y OCPA (derecho de exclusión voluntaria). El alcance exacto del derecho de exclusión en cada estado [por verificar]."
         },
         "hd8_10": {
           "text": "UE/EEE o Reino Unido: ¿has recabado el asesoramiento del delegado de protección de datos sobre esta EIPD?",
@@ -8637,8 +8637,8 @@
       },
       "incidents": {
         "label": "Registro de brechas",
-        "why": "Registra las incidencias y controla el plazo de 72 horas para notificar brechas.",
-        "do": "Registra las incidencias en el registro y vigila el plazo de 72 horas."
+        "why": "Registra los incidentes y controla el plazo de 72 horas para notificar brechas.",
+        "do": "Registra los incidentes en el registro y vigila el plazo de 72 horas."
       },
       "audits": {
         "label": "Auditorías e informes",
@@ -8735,8 +8735,8 @@
     "plan": "Plan",
     "requestsDue": "{count, plural, one {# solicitud por vencer} other {# solicitudes por vencer}}",
     "requestsDueNone": "Sin solicitudes por vencer",
-    "openIncidents": "{count, plural, one {# incidencia abierta} other {# incidencias abiertas}}",
-    "openIncidentsNone": "Sin incidencias abiertas",
+    "openIncidents": "{count, plural, one {# incidente abierto} other {# incidentes abiertos}}",
+    "openIncidentsNone": "Sin incidentes abiertos",
     "lastActivity": "Última actividad: {when}",
     "noActivity": "Aún sin actividad",
     "empty": {
@@ -8949,7 +8949,7 @@
       "entitlementNotFoundOrAlreadyInactive": "No se ha encontrado el derecho de uso o ya está inactivo.",
       "failedToSendTestMessageToSlackPlease": "No se ha podido enviar el mensaje de prueba a Slack. Comprueba la URL del webhook.",
       "generationNotFound": "No se ha encontrado la generación.",
-      "incidentNotFound": "No se ha encontrado la incidencia.",
+      "incidentNotFound": "No se ha encontrado el incidente.",
       "industryTemplateNotFound": "No se ha encontrado la plantilla del sector.",
       "intakeFormNotAvailableForThisOrganization": "El formulario de recepción no está disponible para esta organización.",
       "jurisdictionNotFoundInCatalog": "No se ha encontrado la jurisdicción en el catálogo.",
@@ -8960,7 +8960,7 @@
       "noAiSystemsFoundToExport": "No hay sistemas de IA que exportar.",
       "noSlackWebhookUrlConfiguredPleaseSaveA": "No hay ninguna URL de webhook de Slack configurada. Guarda primero una URL de webhook.",
       "noBillingCustomerFoundForThisOrganization": "No se ha encontrado ningún cliente de facturación para esta organización.",
-      "noComplianceDataToSnapshotYetAddData": "Todavía no hay datos de cumplimiento para la instantánea. Añade primero activos de datos, evaluaciones, solicitudes de derechos, incidencias o proveedores.",
+      "noComplianceDataToSnapshotYetAddData": "Todavía no hay datos de cumplimiento para la instantánea. Añade primero activos de datos, evaluaciones, solicitudes de derechos, incidentes o proveedores.",
       "noUserFoundWithThisEmailTheyMust": "No hay ningún usuario con este correo electrónico. Primero tiene que registrarse.",
       "notificationNotFound": "No se ha encontrado la notificación.",
       "onlyAnOwnerOrAnAdminOfBoth": "Solo un propietario o un administrador de ambas organizaciones puede copiar una plantilla.",

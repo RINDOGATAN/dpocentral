@@ -233,7 +233,7 @@ describe("the age of the sources", () => {
     expect(subtitle(en)).toContain("[to verify]");
     expect(subtitle(en)).toMatch(/draft for review by counsel, not legal advice/i);
     expect(subtitle(es)).toContain("[por verificar]");
-    expect(subtitle(es)).toMatch(/borrador para revisión por un abogado, no asesoramiento jurídico/i);
+    expect(subtitle(es)).toMatch(/borrador para que lo revise un abogado, no asesoramiento jurídico/i);
   });
 
   it("keeps the card sentence to one sentence, with both citations", () => {

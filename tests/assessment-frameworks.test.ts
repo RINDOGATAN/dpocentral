@@ -340,7 +340,7 @@ describe("message bundles", () => {
   it("names the template the generic one, in a sentence a card can hold", () => {
     const meta = (locale: "en" | "es") => dpiaFrameworkMessages(locale).template[DPIA_TEMPLATE_ID];
     expect(meta("en").name).toBe("Data Protection Impact Assessment (generic)");
-    expect(meta("es").name).toBe("Evaluación de impacto en la protección de datos (genérica)");
+    expect(meta("es").name).toBe("Evaluación de impacto relativa a la protección de datos (genérica)");
     for (const locale of ["en", "es"] as const) {
       const description = meta(locale).description;
       expect(description.match(/\.\s/g) ?? [], locale).toHaveLength(0);

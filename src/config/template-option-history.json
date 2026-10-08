@@ -16,12 +16,6 @@
         "Una condición o un tratamiento concretos, o salud reproductiva o sexual"
       ]
     ],
-    "dpia.question.q0_1.options": [
-      [
-        "Unión Europea: Reglamento (UE) 2016/679, artículo 35",
-        "California: reglamento de evaluación de riesgos de la CCPA, 11 CCR artículo 10"
-      ]
-    ],
     "dpia.question.q1_3.options": [
       [
         "Consentimiento (Art. 6(1)(a))",
@@ -222,6 +216,17 @@
         "Cambio de subencargado o transferencia ulterior",
         "Ciclo de revisión periódico de 12 meses",
         "Directrices o acción de aplicación de la autoridad de control"
+      ]
+    ],
+    "tia.question.tiav2_1_3.options": [
+      [
+        "Datos de contacto",
+        "Identificadores",
+        "Datos financieros",
+        "Datos de comportamiento o de uso",
+        "Datos de localización",
+        "Datos de categoría especial",
+        "Datos penales"
       ]
     ],
     "tia.question.tiav2_2_2.options": [

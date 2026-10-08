@@ -204,7 +204,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
       required: true,
       text: {
         en: "Safeguards planned to address the negative impacts",
-        es: "Salvaguardas previstas para afrontar los efectos negativos",
+        es: "Garantías previstas para afrontar los efectos negativos",
       },
       help: {
         en: "Source: 11 CCR 7152(a)(6).",
@@ -221,7 +221,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
       },
       help: {
         en: "Weigh the negative impacts, as mitigated by the safeguards, against the benefits. Source: 11 CCR 7152(a)(7).",
-        es: "Pondera los efectos negativos, ya mitigados por las salvaguardas, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
+        es: "Pondera los efectos negativos, ya mitigados por las garantías, frente a los beneficios. Fuente: 11 CCR 7152(a)(7).",
       },
       options: {
         en: [
@@ -230,7 +230,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
           "Not decided yet",
         ],
         es: [
-          "Sí: los beneficios superan a los efectos negativos una vez aplicadas las salvaguardas",
+          "Sí: los beneficios superan a los efectos negativos una vez aplicadas las garantías",
           "No: los efectos negativos superan a los beneficios",
           "Aún sin decidir",
         ],
@@ -321,7 +321,7 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
       required: true,
       text: {
         en: "Submission to the California Privacy Protection Agency by 1 April 2028",
-        es: "Presentación a la Agencia de Protección de la Privacidad de California a más tardar el 1 de abril de 2028",
+        es: "Presentación a la Agencia de Protección de la Privacidad de California antes del 1 de abril de 2028",
       },
       help: {
         en: "Source: 11 CCR 7157(a).",
