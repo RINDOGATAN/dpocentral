@@ -56,6 +56,13 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      {
+        // The landing's hero video and its poster change rarely and are
+        // large: let browsers keep them for a week (a new file gets a new
+        // name, or waits out the week).
+        source: "/:file(hero-dpo-bg\\.mp4|hero-dpo-poster\\.jpg)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],
+      },
     ];
   },
 };

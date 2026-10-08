@@ -408,9 +408,13 @@ function StepRow<C>({
     return (
       <span className={cn(className, "cursor-default text-muted-foreground")} aria-disabled="true">
         <Circle className="size-3.5 shrink-0 opacity-40" aria-hidden="true" />
-        <span className={WRAP_LABEL}>{label}</span>
-        <span className="shrink-0 rounded-full border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wider">
-          {t("stepStatus.coming")}
+        {/* The badge sits under the name: beside it, in the phone sheet, it
+            left the name so little room that Spanish words broke mid-word. */}
+        <span className={WRAP_LABEL}>
+          <span className="block">{label}</span>
+          <span className="mt-1 inline-block rounded-full border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wider">
+            {t("stepStatus.coming")}
+          </span>
         </span>
       </span>
     );

@@ -140,9 +140,9 @@ export default async function VendorsPage() {
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">{t("contracts.label")}</p>
           <div className="space-y-2">
             {contractKeys.map((key) => (
-              <div key={key} className="flex items-start justify-between p-2 rounded-lg bg-background/50 border border-border/50 gap-3">
-                <span className="text-sm font-medium text-foreground">{t(`contracts.items.${key}.doc`)}</span>
-                <span className="text-xs text-muted-foreground shrink-0 text-right">{t(`contracts.items.${key}.purpose`)}</span>
+              <div key={key} className="flex flex-col sm:flex-row sm:items-start sm:justify-between p-2 rounded-lg bg-background/50 border border-border/50 gap-1 sm:gap-3">
+                <span className="text-sm font-medium text-foreground min-w-0">{t(`contracts.items.${key}.doc`)}</span>
+                <span className="text-xs text-muted-foreground min-w-0 sm:max-w-[60%] sm:text-right">{t(`contracts.items.${key}.purpose`)}</span>
               </div>
             ))}
           </div>

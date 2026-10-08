@@ -135,16 +135,16 @@ export default async function DocsGettingStartedPage() {
         <InfoCallout type="info" title={t("quickstart.nonDestructiveTitle")}>
           {t("quickstart.nonDestructiveBody")}
         </InfoCallout>
-        <div className="mt-2 flex gap-3">
+        <div className="mt-2 flex flex-wrap gap-3">
           <Link href="/privacy/quickstart">
-            <Button className="gap-2">
+            <Button className="gap-2 whitespace-normal h-auto min-h-9 text-left">
               <Zap className="w-4 h-4" />
               {t("quickstart.openWizard")}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
           <Link href="/privacy/docs/quickstart">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 whitespace-normal h-auto min-h-9 text-left">
               {t("quickstart.fullGuide")}
               <ArrowRight className="w-4 h-4" />
             </Button>

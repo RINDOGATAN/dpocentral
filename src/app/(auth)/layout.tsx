@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { brand } from "@/config/brand";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 export default function AuthLayout({
   children,
@@ -17,11 +18,14 @@ export default function AuthLayout({
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b border-border">
-        <div className="container mx-auto px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-            <span className="text-muted-foreground" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <Link href="/" className="flex items-center gap-2 min-w-0">
+            <img src="/logo-negative.svg" alt="TODO.LAW" className="shrink-0" style={{ height: "28px", width: "auto" }} />
+            <span className="text-muted-foreground whitespace-nowrap" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </Link>
+          <div className="text-sm text-muted-foreground shrink-0" data-testid="auth-language">
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 

@@ -9,17 +9,19 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      {/* A sidebar of its own fixed width from tablet up: a fifth of a 768 px
+          screen clipped the longer Spanish section names. */}
+      <div className="grid grid-cols-1 md:grid-cols-[13rem_minmax(0,1fr)] gap-8 lg:gap-10">
         {/* Sidebar */}
-        <aside className="md:col-span-1">
+        <aside>
           <div className="sticky top-24">
             <DocsNav />
           </div>
         </aside>
 
         {/* Content */}
-        <div className="md:col-span-4 min-w-0">{children}</div>
+        <div className="min-w-0">{children}</div>
       </div>
     </div>
   );

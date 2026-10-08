@@ -205,8 +205,8 @@ export default function DSARPage() {
                   {/* Mobile Layout - Stacked */}
                   <div className="flex flex-col gap-3 sm:hidden">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium font-mono text-primary text-sm">{request.publicId}</span>
+                      <div className="flex items-center gap-2 flex-wrap min-w-0">
+                        <span className="font-medium font-mono text-primary text-sm break-all min-w-0">{request.publicId}</span>
                         <Badge variant="outline" className="text-xs">{t(`type.${request.type}`)}</Badge>
                       </div>
                       <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[request.status] || ""}`}>

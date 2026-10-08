@@ -43,7 +43,9 @@ export function FlowDiagram({
   }
 
   return (
-    <div className="flex items-start gap-2 overflow-x-auto pb-2">
+    // Bounded to its column, and the sideways scroll stays inside the box: on
+    // a Safari phone it used to carry on and pan the whole page.
+    <div className="flex items-start gap-2 w-full max-w-full overflow-x-auto overscroll-x-contain pb-2">
       {steps.map((step, i) => (
         <div key={i} className="flex items-start gap-2 min-w-0">
           <div className="flex flex-col items-center min-w-[120px]">

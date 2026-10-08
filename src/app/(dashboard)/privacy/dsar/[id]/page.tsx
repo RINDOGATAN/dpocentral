@@ -273,7 +273,9 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </Link>
           <div className="min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-semibold font-mono">{request.publicId}</h1>
+              {/* The reference is a long unbroken token (it is also the key to
+                  the public status page): it must wrap on a phone. */}
+              <h1 className="text-xl sm:text-2xl font-semibold font-mono break-all min-w-0">{request.publicId}</h1>
               <Badge variant="outline">{tList(`type.${request.type}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</Badge>
               <Badge variant="outline" className={statusColors[request.status] || ""}>
                 {tList(`status.${request.status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED` | `status.REJECTED`)}
@@ -503,12 +505,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
         <TabsContent value="tasks" className="mt-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-2">
-              <div>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
                 <CardTitle>{tp("tasks.title")}</CardTitle>
                 <CardDescription>{tp("tasks.subtitle")}</CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2 shrink-0">
                 {totalTasks === 0 && (
                   <Button
                     size="sm"
@@ -590,12 +592,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
         <TabsContent value="communications" className="mt-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-2">
-              <div>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
                 <CardTitle>{tp("comms.title")}</CardTitle>
                 <CardDescription>{tp("comms.subtitle")}</CardDescription>
               </div>
-              <Button size="sm" onClick={() => setIsSendMessageOpen(true)}>
+              <Button size="sm" className="self-start sm:self-auto shrink-0" onClick={() => setIsSendMessageOpen(true)}>
                 <Send className="w-4 h-4 mr-2" />
                 {tp("comms.send")}
               </Button>

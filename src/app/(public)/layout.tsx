@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 function JsonLd() {
   const jsonLd = {
@@ -74,16 +75,22 @@ export default async function PublicLayout({
       <JsonLd />
       {/* Header */}
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
           <Link
             href="/"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 min-w-0"
+            aria-label={brand.nameUppercase}
           >
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-            <span className="text-muted-foreground" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
+            <img src="/logo-negative.svg" alt="TODO.LAW" className="shrink-0" style={{ height: "28px", width: "auto" }} />
+            {/* The product name gives way on a phone, where the two links
+                (longer in Spanish) need the room. */}
+            <span className="hidden sm:inline text-muted-foreground whitespace-nowrap" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6 shrink-0">
+            <div className="text-sm text-muted-foreground" data-testid="public-language">
+              <LanguageSwitcher />
+            </div>
             <Link
               href="/docs"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
