@@ -129,7 +129,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_7_a",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(7)(a)", es: "art. 35(7)(a)" },
+    citation: { en: "Art. 35(7)(a)", es: "art. 35.7.a)" },
     label: {
       en: "A systematic description of the envisaged processing operations and the purposes, including where applicable the legitimate interest pursued",
       es: "Una descripción sistemática de las operaciones de tratamiento previstas y de los fines, incluido, en su caso, el interés legítimo perseguido",
@@ -139,7 +139,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_7_b",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(7)(b)", es: "art. 35(7)(b)" },
+    citation: { en: "Art. 35(7)(b)", es: "art. 35.7.b)" },
     label: {
       en: "An assessment of the necessity and proportionality of the processing in relation to the purposes",
       es: "Una evaluación de la necesidad y la proporcionalidad del tratamiento en relación con los fines",
@@ -149,7 +149,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_7_c",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(7)(c)", es: "art. 35(7)(c)" },
+    citation: { en: "Art. 35(7)(c)", es: "art. 35.7.c)" },
     label: {
       en: "An assessment of the risks to the rights and freedoms of data subjects",
       es: "Una evaluación de los riesgos para los derechos y libertades de los interesados",
@@ -159,7 +159,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_7_d",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(7)(d)", es: "art. 35(7)(d)" },
+    citation: { en: "Art. 35(7)(d)", es: "art. 35.7.d)" },
     label: {
       en: "The measures envisaged to address the risks, including safeguards, security measures and mechanisms to ensure the protection of personal data and to demonstrate compliance",
       es: "Las medidas previstas para afrontar los riesgos, incluidas garantías, medidas de seguridad y mecanismos que garanticen la protección de datos personales y demuestren la conformidad",
@@ -169,7 +169,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_2",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(2)", es: "art. 35(2)" },
+    citation: { en: "Art. 35(2)", es: "art. 35.2" },
     label: {
       en: "The advice of the data protection officer, where one is designated",
       es: "El asesoramiento del delegado de protección de datos, cuando haya sido designado",
@@ -179,7 +179,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_9",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(9)", es: "art. 35(9)" },
+    citation: { en: "Art. 35(9)", es: "art. 35.9" },
     label: {
       en: "The views of data subjects or their representatives, where appropriate",
       es: "La opinión de los interesados o de sus representantes, cuando proceda",
@@ -189,7 +189,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_36_1",
     framework: "EU_GDPR",
-    citation: { en: "Art. 36(1)", es: "art. 36(1)" },
+    citation: { en: "Art. 36(1)", es: "art. 36.1" },
     label: {
       en: "Prior consultation with the supervisory authority where the residual risk remains high",
       es: "Consulta previa a la autoridad de control cuando el riesgo residual siga siendo alto",
@@ -199,7 +199,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
   {
     id: "gdpr_35_11",
     framework: "EU_GDPR",
-    citation: { en: "Art. 35(11)", es: "art. 35(11)" },
+    citation: { en: "Art. 35(11)", es: "art. 35.11" },
     label: {
       en: "Review when the risk changes",
       es: "Revisión cuando cambie el riesgo",

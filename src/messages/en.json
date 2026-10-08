@@ -4975,7 +4975,7 @@
         "overdueLabel": "Overdue",
         "daysRemaining": "{count} days remaining",
         "warningTitle": "SLA Deadlines",
-        "warningBody": "Under GDPR, you must respond to DSARs within 30 calendar days (extendable to 90 days for complex requests). The system sends email notifications at 7 days, 3 days, and 1 day before the deadline."
+        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). The system sends email notifications at 7 days, 3 days, and 1 day before the deadline."
       },
       "portal": {
         "title": "Public Portal",
@@ -5431,7 +5431,45 @@
         "description": "Browse 40+ privacy regulations from around the world, organized by region and category.",
         "mockupTitle": "Jurisdiction Cards",
         "dsarLabel": "DSAR deadline:",
-        "breachLabel": "Breach notification:"
+        "breachLabel": "Breach notification:",
+        "cards": {
+          "GDPR": {
+            "region": "European Union",
+            "dsar": "1 month (+2 where necessary)",
+            "breach": "72 hours",
+            "name": "GDPR"
+          },
+          "CCPA": {
+            "region": "California",
+            "dsar": "45 days (+45 where necessary)",
+            "breach": "Expedient",
+            "name": "CCPA/CPRA"
+          },
+          "LGPD": {
+            "region": "Brazil",
+            "dsar": "15 days",
+            "breach": "3 business days",
+            "name": "LGPD"
+          },
+          "PIPL": {
+            "region": "China",
+            "dsar": "Timely (no fixed deadline)",
+            "breach": "Immediately",
+            "name": "PIPL"
+          },
+          "POPIA": {
+            "region": "South Africa",
+            "dsar": "30 days",
+            "breach": "As soon as possible",
+            "name": "POPIA"
+          },
+          "AIACT": {
+            "region": "European Union",
+            "dsar": "N/A",
+            "breach": "Serious incidents: 15 days (Art. 73)",
+            "name": "EU AI Act"
+          }
+        }
       },
       "applicability": {
         "title": "Applicability Wizard",
@@ -5512,7 +5550,7 @@
           }
         },
         "noteTitle": "Jurisdictions are additive",
-        "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if GDPR requires a 30-day DSAR response and LGPD requires 15 days, the system will enforce the 15-day deadline. This helps you meet every applicable regulation at once."
+        "noteBody": "When multiple jurisdictions apply to the same processing activity, the system follows the strictest rule. For example, if the GDPR gives one month to answer a DSAR and the LGPD gives 15 days, the system will enforce the 15-day deadline. This helps you meet every applicable regulation at once."
       },
       "nav": {
         "previous": "Transfer Compliance",
@@ -6337,7 +6375,7 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework: GDPR (30 days), CCPA/CPRA (45 days), LGPD (15 days), and 40+ others.",
+        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework: GDPR (one month, extendable by two further months where necessary), CCPA/CPRA (45 days, extendable once by a further 45 days where reasonably necessary), LGPD (15 days), and 40+ others.",
         "stats": {
           "days": {
             "value": "15-45",

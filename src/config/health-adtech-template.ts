@@ -70,17 +70,17 @@ const CHECKED = { en: "checked 16 September 2026", es: "comprobado el 16 de sept
 const SRC_CA_TRIGGERS = src(`11 CCR 7150(b) (${CHECKED.en})`, `11 CCR 7150(b) (${CHECKED.es})`);
 const SRC_PROCESSING = src(
   `11 CCR 7152(a)(1) to (3); GDPR Art. 35(7)(a) (${CHECKED.en})`,
-  `11 CCR 7152(a)(1) a (3); art. 35(7)(a) del RGPD (${CHECKED.es})`
+  `11 CCR 7152(a)(1) a (3); art. 35.7.a) del RGPD (${CHECKED.es})`
 );
-const SRC_NECESSITY = src(`GDPR Art. 35(7)(b) (${CHECKED.en})`, `art. 35(7)(b) del RGPD (${CHECKED.es})`);
+const SRC_NECESSITY = src(`GDPR Art. 35(7)(b) (${CHECKED.en})`, `art. 35.7.b) del RGPD (${CHECKED.es})`);
 const SRC_CA_BENEFITS = src(`11 CCR 7152(a)(4) (${CHECKED.en})`, `11 CCR 7152(a)(4) (${CHECKED.es})`);
 const SRC_IMPACTS = src(
   `11 CCR 7152(a)(5); GDPR Art. 35(7)(c) (${CHECKED.en})`,
-  `11 CCR 7152(a)(5); art. 35(7)(c) del RGPD (${CHECKED.es})`
+  `11 CCR 7152(a)(5); art. 35.7.c) del RGPD (${CHECKED.es})`
 );
 const SRC_SAFEGUARDS = src(
   `11 CCR 7152(a)(6); GDPR Art. 35(7)(d) (${CHECKED.en})`,
-  `11 CCR 7152(a)(6); art. 35(7)(d) del RGPD (${CHECKED.es})`
+  `11 CCR 7152(a)(6); art. 35.7.d) del RGPD (${CHECKED.es})`
 );
 const SRC_CA_DECISION = src(
   `11 CCR 7152(a)(7) to (9) (${CHECKED.en})`,
@@ -127,7 +127,7 @@ const SRC_DPIA_TEMPLATE = src(
 );
 const SRC_ART35_3 = src(
   "GDPR Art. 35(3)(a) to (c), as used in the DPO Central risk mappings and DPIA template",
-  "art. 35(3)(a) a (c) del RGPD, según las tablas de riesgo y la plantilla de EIPD de DPO Central"
+  "art. 35.3.a) a c) del RGPD, según las tablas de riesgo y la plantilla de EIPD de DPO Central"
 );
 
 // ── Jurisdictions (question hd1_1) ───────────────────────────────────────
@@ -283,7 +283,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         showIf: whenJurisdiction("EU", "UK"),
         text: {
           en: "Which GDPR Article 35(3) cases apply?",
-          es: "¿Qué supuestos del artículo 35(3) del RGPD se aplican?",
+          es: "¿Qué supuestos del artículo 35.3 del RGPD se aplican?",
         },
         help: join(
           {
@@ -301,9 +301,9 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
             "None of these",
           ],
           es: [
-            "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35(3)(a))",
-            "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35(3)(b))",
-            "Observación sistemática a gran escala de una zona de acceso público (art. 35(3)(c))",
+            "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35.3.a))",
+            "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35.3.b))",
+            "Observación sistemática a gran escala de una zona de acceso público (art. 35.3.c))",
             "Ninguno, pero el tratamiento sigue siendo probablemente de alto riesgo",
             "Ninguno de ellos",
           ],
@@ -429,16 +429,16 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         showIf: whenJurisdiction("EU", "UK"),
         text: {
           en: "Which GDPR legal basis and, for health data, which Article 9(2) condition do you rely on?",
-          es: "¿En qué base jurídica del RGPD y, para los datos de salud, en qué condición del artículo 9(2) te basas?",
+          es: "¿En qué base jurídica del RGPD y, para los datos de salud, en qué condición del artículo 9.2 te basas?",
         },
         help: join(
           {
             en: "An Article 9(2) condition must be identified for each special category. For health data used in advertising, explicit consent is usually the only available condition [to verify]. Legitimate interest can only support data that is not special category data.",
-            es: "Debe identificarse una condición del artículo 9(2) para cada categoría especial. Para los datos de salud usados en publicidad, el consentimiento explícito suele ser la única condición disponible [por verificar]. El interés legítimo solo puede amparar datos que no sean de categoría especial.",
+            es: "Debe identificarse una condición del artículo 9.2 para cada categoría especial. Para los datos de salud usados en publicidad, el consentimiento explícito suele ser la única condición disponible [por verificar]. El interés legítimo solo puede amparar datos que no sean de categoría especial.",
           },
           src(
             "DPO Central DPIA auto-fill rules (Art. 9(2)) and DPIA template (Art. 6 bases)",
-            "reglas de autocompletado y plantilla de EIPD de DPO Central (condiciones del art. 9(2) y bases del art. 6)"
+            "reglas de autocompletado y plantilla de EIPD de DPO Central (condiciones del art. 9.2 y bases del art. 6)"
           )
         ),
         options: {
@@ -448,8 +448,8 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
             "Another basis (explain in the notes)",
           ],
           es: [
-            "Consentimiento (art. 6(1)(a)) y consentimiento explícito (art. 9(2)(a))",
-            "Interés legítimo (art. 6(1)(f)), sin datos de categoría especial",
+            "Consentimiento (art. 6.1.a)) y consentimiento explícito (art. 9.2.a))",
+            "Interés legítimo (art. 6.1.f)), sin datos de categoría especial",
             "Otra base (explícala en las notas)",
           ],
         },
@@ -470,7 +470,7 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
           },
           src(
             "GDPR Art. 6(1)(f), DPO Central LIA template",
-            "art. 6(1)(f) del RGPD, plantilla de LIA de DPO Central"
+            "art. 6.1.f) del RGPD, plantilla de LIA de DPO Central"
           )
         ),
       },
@@ -1149,7 +1149,7 @@ export const HEALTH_ADTECH_NAME: BiText = {
  */
 export const HEALTH_ADTECH_DESCRIPTION: BiText = {
   en: "One global assessment for pixels, SDKs and audiences that may involve health data: the nine elements of a CCPA risk assessment (11 CCR 7152(a)) and Article 35(7) GDPR.",
-  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35(7) del RGPD.",
+  es: "Una evaluación global para píxeles, SDK y audiencias que pueden implicar datos de salud: los nueve elementos de una evaluación de riesgos de la CCPA (11 CCR 7152(a)) y el artículo 35.7 del RGPD.",
 };
 
 // ── Stored (English) template ─────────────────────────────────────────────

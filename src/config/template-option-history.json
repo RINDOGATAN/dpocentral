@@ -8,6 +8,22 @@
         "No aceptable"
       ]
     ],
+    "dpia.question.hd1_3.options": [
+      [
+        "Evaluación sistemática y exhaustiva, incluida la elaboración de perfiles, con efectos jurídicos o similarmente significativos (art. 35(3)(a))",
+        "Tratamiento a gran escala de categorías especiales de datos, como los datos de salud (art. 35(3)(b))",
+        "Observación sistemática a gran escala de una zona de acceso público (art. 35(3)(c))",
+        "Ninguno, pero el tratamiento sigue siendo probablemente de alto riesgo",
+        "Ninguno de ellos"
+      ]
+    ],
+    "dpia.question.hd2_4.options": [
+      [
+        "Consentimiento (art. 6(1)(a)) y consentimiento explícito (art. 9(2)(a))",
+        "Interés legítimo (art. 6(1)(f)), sin datos de categoría especial",
+        "Otra base (explícala en las notas)"
+      ]
+    ],
     "dpia.question.hd6_2.options": [
       [
         "Ninguna información de salud",
@@ -24,6 +40,14 @@
         "Intereses vitales (Art. 6(1)(d))",
         "Misión de interés público (Art. 6(1)(e))",
         "Interés legítimo (Art. 6(1)(f))"
+      ],
+      [
+        "Consentimiento (art. 6(1)(a))",
+        "Contrato (art. 6(1)(b))",
+        "Obligación legal (art. 6(1)(c))",
+        "Intereses vitales (art. 6(1)(d))",
+        "Misión de interés público (art. 6(1)(e))",
+        "Interés legítimo (art. 6(1)(f))"
       ]
     ],
     "dpia.question.q2_1.options": [
@@ -118,6 +142,16 @@
         "Datos de localización",
         "Datos de categoría especial",
         "Datos penales"
+      ]
+    ],
+    "pia.question.piav2_2_1.options": [
+      [
+        "Consentimiento (art. 6(1)(a))",
+        "Contrato (art. 6(1)(b))",
+        "Obligación legal (art. 6(1)(c))",
+        "Intereses vitales (art. 6(1)(d))",
+        "Misión de interés público (art. 6(1)(e))",
+        "Interés legítimo (art. 6(1)(f))"
       ]
     ],
     "tia.question.tia1_3.options": [

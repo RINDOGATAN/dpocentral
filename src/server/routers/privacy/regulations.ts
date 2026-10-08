@@ -18,19 +18,14 @@ export const regulationsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       // Fetch the jurisdiction catalog dynamically
-      const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
+      const { JURISDICTION_CATALOG, jurisdictionSearchText } = await import("@/config/jurisdiction-catalog");
 
       let filtered = [...JURISDICTION_CATALOG];
 
       if (input.search) {
+        // Matches the English and the Spanish names, so "RGPD" or "Brasil" work too.
         const q = input.search.toLowerCase();
-        filtered = filtered.filter(
-          (j) =>
-            j.name.toLowerCase().includes(q) ||
-            j.shortName.toLowerCase().includes(q) ||
-            j.code.toLowerCase().includes(q) ||
-            j.region.toLowerCase().includes(q)
-        );
+        filtered = filtered.filter((j) => jurisdictionSearchText(j).includes(q));
       }
 
       if (input.category) {
