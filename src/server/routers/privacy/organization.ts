@@ -349,31 +349,16 @@ export const organizationRouter = createTRPCRouter({
     .input(
       z.object({
         organizationId: z.string(),
-        // Checked below, so a malformed address gets a plain sentence in the
-        // person's language rather than the validator's raw report.
-        email: z.string().trim().min(1).max(320),
+        email: z.string().email(),
         role: z.nativeEnum(OrganizationRole).default(OrganizationRole.MEMBER),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const es = pilotLocale(localeFromCookieGetter(ctx.getCookie)) === "es";
-
       // Only owners and admins can add members
       if (!["OWNER", "ADMIN"].includes(ctx.membership.role)) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: es
-            ? "No tienes permiso para añadir miembros."
-            : "You do not have permission to add members.",
-        });
-      }
-
-      if (!z.string().email().safeParse(input.email).success) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: es
-            ? "Esa dirección de correo no es válida."
-            : "That email address is not valid.",
+          message: "You do not have permission to add members",
         });
       }
 
@@ -382,13 +367,10 @@ export const organizationRouter = createTRPCRouter({
         where: { email: input.email },
       });
 
-      // No invitation is sent: the person signs in once, then is added here.
       if (!user) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: es
-            ? "Nadie ha entrado todavía con esa dirección. Pide a esa persona que entre una vez en DPO Central con ella y vuelve a añadirla."
-            : "Nobody has signed in with that address yet. Ask them to sign in to DPO Central once with it, then add them again.",
+          message: "No user found with this email. They must sign up first.",
         });
       }
 
@@ -405,9 +387,7 @@ export const organizationRouter = createTRPCRouter({
       if (existingMembership) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: es
-            ? "Esa persona ya es miembro de esta organización."
-            : "This person is already a member of this organization.",
+          message: "This user is already a member of the organization",
         });
       }
 
