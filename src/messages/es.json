@@ -4402,35 +4402,44 @@
     },
     "gettingStarted": {
       "title": "Primeros pasos",
-      "subtitle": "Te damos la bienvenida a DPO Central, tu plataforma integral de gestión de privacidad. Esta guía cubre todas las funciones para ayudarte a gestionar el cumplimiento en protección de datos.",
+      "subtitle": "Te damos la bienvenida a DPO Central, tu plataforma de gestión de la privacidad. Esta guía describe cada pantalla y cómo usarla.",
       "dashboard": {
         "title": "Visión general del panel",
-        "description": "El panel ofrece una instantánea en tiempo real de tu programa de privacidad.",
-        "mockupTitle": "Estadísticas del panel",
-        "cards": {
-          "dataInventory": {
-            "label": "Inventario de datos",
-            "value": "24",
-            "sub": "8 actividades"
-          },
-          "openDsars": {
-            "label": "Solicitudes abiertas",
-            "value": "3",
-            "sub": "Todas en plazo"
-          },
-          "assessments": {
-            "label": "Evaluaciones",
-            "value": "12",
-            "sub": "2 pendientes de revisión"
-          },
-          "incidents": {
-            "label": "Incidencias",
-            "value": "1",
-            "sub": "0 críticas"
-          }
+        "description": "El panel muestra en qué punto está tu programa de privacidad, de arriba abajo.",
+        "mockupTitle": "Cifra del programa y áreas",
+        "parts": {
+          "firstRun": "La primera vez, una tarjeta breve explica cómo funciona DPO Central hasta que eliges «Entendido». El botón de ayuda de la barra superior la vuelve a abrir.",
+          "figure": "La cifra del programa, «N de M pasos confirmados», con cuántos pasos están por confirmar, en curso y sin empezar.",
+          "areas": "Seis áreas, una por cada fase de la ruta, cada una con su estado y su siguiente acción. Al pulsar un área se abre esa acción.",
+          "documents": "Los documentos que puedes generar hoy, con el botón «Descargar documentos listos» (consulta Documentos más abajo).",
+          "next": "Tus tres próximas acciones, junto a Plazos en riesgo (consulta Próximas acciones y plazos más abajo).",
+          "missing": "Lo que falta: los pasos sin empezar y los documentos que aún no están en DPO Central."
         },
-        "calloutTitle": "Las tarjetas de estadísticas son interactivas",
-        "calloutBody": "Pulsa cualquier tarjeta para ir directamente a la vista de listado de ese módulo."
+        "calloutTitle": "Los borradores cuentan cuando se confirman",
+        "calloutBody": "Los registros que redactan el inicio rápido o una plantilla no cuentan hasta que una persona los confirma. Mientras tanto, la cifra los muestra «por confirmar», y «Revisar y confirmar» los abre.",
+        "limitedTitle": "Miembros limitados a departamentos",
+        "limitedBody": "Un miembro limitado a algunos departamentos no ve las cifras de la organización. En su lugar, el panel muestra un enlace a Requiere acción."
+      },
+      "documents": {
+        "title": "Documentos",
+        "description": "El panel de documentos recoge todos los documentos que DPO Central puede generar, con su estado y lo que aún les falta.",
+        "states": {
+          "ready": "Completo. Descárgalo (en PDF y en otros formatos cuando se ofrecen) o ábrelo.",
+          "draft": "Se puede generar ya. Lo que falta se indica bajo su nombre.",
+          "needsInput": "Falta un dato. El panel lo indica, con un botón que lleva a él.",
+          "notYet": "DPO Central aún no genera este documento. Se enumeran en una sola línea."
+        },
+        "packBody": "Un ZIP con todos los documentos listos y un índice. Marca «Incluir también los borradores» para añadir los borradores, marcados como BORRADOR en el nombre del archivo, con lo que les falta en la primera página."
+      },
+      "nextActions": {
+        "title": "Próximas acciones y plazos",
+        "description": "Dos paneles del panel principal indican qué hacer a continuación, y una lista reúne todo lo que espera a una persona.",
+        "nextBody": "Las tres cosas más útiles que puedes hacer ahora: primero lo que espera en Requiere acción y después los siguientes pasos de la ruta. Cada una tiene un botón Abrir, Revisar o Continuar. Cuando hay más pendiente, un enlace abre todo lo que requiere acción.",
+        "deadlinesBody": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar, solicitudes de derechos que vencen y el próximo hito del plan (día 30, 60 o 90). Cada línea abre el registro.",
+        "deadlinesBodyNoDsar": "Los plazos de los próximos 30 días y los vencidos: brechas a la espera de decidir si se notifican, brechas que hay que notificar y el próximo hito del plan (día 30, 60 o 90). Cada línea abre el registro.",
+        "needsBody": "Requiere acción, en el menú, reúne todo lo que espera a una persona:",
+        "dsarTitle": "Recordatorios y prórrogas de las solicitudes de derechos",
+        "dsarBody": "Se envían recordatorios por correo electrónico 7, 3 y 1 día antes del vencimiento de una solicitud de derechos, y una vez cuando vence. Cuando la norma lo permite, el botón «Prorrogar el plazo» de la solicitud aplica una prórroga y anota tu motivo. Consulta Ejercicio de derechos, Seguimiento de plazos."
       },
       "quickstart": {
         "title": "Asistente de inicio rápido",
@@ -4451,46 +4460,27 @@
         "fullGuide": "Guía completa de inicio rápido"
       },
       "navigation": {
-        "title": "Navegación",
-        "description": "La barra de navegación principal da acceso a todos los módulos.",
-        "items": {
-          "dashboard": {
-            "label": "Panel",
-            "desc": "Estadísticas generales, actividad reciente, acciones rápidas"
-          },
-          "dataInventory": {
-            "label": "Inventario de datos",
-            "desc": "Activos, elementos de datos, actividades de tratamiento, flujos"
-          },
-          "dsar": {
-            "label": "Derechos",
-            "desc": "Solicitudes de los interesados, seguimiento de plazos, portal público"
-          },
-          "assessments": {
-            "label": "Evaluaciones",
-            "desc": "EIPD, PIA, TIA, LIA con plantillas y aprobaciones"
-          },
-          "incidents": {
-            "label": "Incidencias",
-            "desc": "Seguimiento de brechas, notificaciones a la autoridad de control, cronologías"
-          },
-          "vendors": {
-            "label": "Proveedores",
-            "desc": "Contratos, cuestionarios, niveles de riesgo"
-          },
-          "reports": {
-            "label": "Informes",
-            "desc": "Puntuación de cumplimiento, evolución, informes para la dirección"
-          },
-          "regulations": {
-            "label": "Normativa",
-            "desc": "Más de 40 jurisdicciones, asistente de aplicabilidad, configuración de plazos"
-          },
-          "aiSystems": {
-            "label": "Sistemas de IA",
-            "desc": "Registro del Reglamento de IA de la UE, clasificación de riesgo, gobernanza"
-          }
-        }
+        "title": "El menú",
+        "description": "El menú de la izquierda sigue la ruta de un programa de privacidad, en seis fases.",
+        "organisation": "Arriba está la organización en la que trabajas. Abre la lista de tus organizaciones, que termina con «Nueva organización», o «Añadir un cliente» para los profesionales de la privacidad. Los profesionales de la privacidad ven también Todos los clientes, una tabla con cada cliente.",
+        "stages": "Después vienen Resumen (el panel) y las seis fases numeradas. Cada fase se abre en sus pasos:",
+        "states": "Cada fase y cada paso muestran su estado: hecho, en curso, sin empezar, por confirmar o requiere acción.",
+        "documentLines": "Una línea bajo cada paso indica los documentos que genera y su estado.",
+        "optional": "Los pasos opcionales nunca cuentan en la cifra del programa. Sistemas de IA solo aparece cuando hay un sistema de IA registrado.",
+        "notYet": "«Aún no en DPO Central», al pie de la ruta, recoge lo que el producto aún no hace. Una fase que solo tiene esos pasos indica «Próximamente».",
+        "lockTitle": "El candado",
+        "lockBody": "En tu propia instancia, un pequeño candado junto a Evaluaciones o Diligencia debida de proveedores indica que la organización no tiene licencia para ese tipo de evaluación premium (EIPD, evaluación de proveedores). El piloto alojado nunca muestra un candado.",
+        "libraryTitle": "Biblioteca y herramientas",
+        "library": {
+          "needsAction": "Todo lo que espera a una persona, en un solo lugar.",
+          "incomplete": "Registros de tratamiento a los que les falta un dato que exige un registro de actividades.",
+          "reports": "La cifra del programa, la puntuación por módulos, los indicadores de riesgo, las instantáneas y los informes en PDF.",
+          "experts": "El directorio de expertos.",
+          "skills": "Los módulos premium instalados en tu propia instancia, que se activan con un archivo de licencia.",
+          "help": "Esta guía.",
+          "settings": "Tu cuenta, la organización y su equipo."
+        },
+        "phone": "En el móvil, la barra bajo la barra superior muestra la fase actual y abre el mismo menú."
       },
       "roles": {
         "title": "Roles de usuario",
@@ -4506,21 +4496,6 @@
         },
         "inheritanceTitle": "Herencia de roles",
         "inheritanceBody": "Cada rol hereda todos los permisos de los roles inferiores. Por ejemplo, un Administrador tiene todos los permisos de Responsable de privacidad, Miembro y Lector."
-      },
-      "quickActions": {
-        "title": "Acciones rápidas",
-        "description": "El panel ofrece atajos para las tareas más comunes.",
-        "mockupTitle": "Panel de acciones rápidas",
-        "panelTitle": "Acciones rápidas",
-        "panelSubtitle": "Tareas comunes",
-        "actions": {
-          "addAsset": "Añadir activo de datos",
-          "newDsar": "Nueva solicitud de derechos",
-          "startAssessment": "Iniciar evaluación",
-          "reportIncident": "Registrar incidente",
-          "addVendor": "Añadir proveedor",
-          "runAudit": "Ejecutar auditoría"
-        }
       },
       "nav": {
         "next": "Inicio rápido"
@@ -4538,7 +4513,7 @@
         },
         "privacyProfessional": {
           "label": "Profesional de privacidad",
-          "desc": "Para consultores de privacidad y DPD que asesoran a varias organizaciones. Tienes un panel «Mis clientes» que muestra todas tus organizaciones cliente con estadísticas resumidas."
+          "desc": "Para consultores de privacidad y DPD que asesoran a varias organizaciones. Tienes Todos los clientes, una tabla que muestra en qué punto está cada organización cliente."
         },
         "tipPrefix": "Puedes cambiar tu tipo de cuenta en cualquier momento desde la página de ",
         "tipSettings": "Configuración",
@@ -4557,18 +4532,18 @@
         }
       },
       "clientDashboard": {
-        "title": "Panel de clientes",
-        "description": "Gestiona todas tus organizaciones cliente desde una única vista.",
-        "intro": "El Panel de clientes (disponible para el perfil Profesional de privacidad) muestra todas las organizaciones a las que perteneces con estadísticas en tiempo real:",
+        "title": "Todos los clientes",
+        "description": "En qué punto está cada una de tus organizaciones cliente, en una tabla.",
+        "intro": "Todos los clientes (para profesionales de la privacidad) tiene una fila por cada organización cliente de la que eres miembro. Cada fila lee las mismas cifras que el panel de ese cliente:",
         "items": {
-          "dsars": "Solicitudes de derechos abiertas y vencidas por cliente",
-          "assessments": "Número de evaluaciones pendientes",
-          "incidents": "Número de incidentes abiertos",
-          "vendors": "Número de proveedores activos",
-          "lastActivity": "Fecha y hora de la última actividad",
-          "attention": "Indicadores de atención para elementos vencidos"
+          "client": "El cliente, con tu rol en él",
+          "confirmed": "La cifra del programa y cuántos registros en borrador esperan a ser confirmados",
+          "areas": "Las seis áreas, cada una con su estado",
+          "documents": "Documentos listos, sobre el total",
+          "deadline": "El próximo plazo (una brecha que notificar, una solicitud de derechos que vence o un hito del plan), con su referencia",
+          "action": "La siguiente acción"
         },
-        "outro": "Pulsa cualquier tarjeta de cliente para pasar al panel de esa organización."
+        "outro": "Las filas se ordenan por el plazo más próximo: primero el más cercano o el más vencido. Pulsa el nombre de un cliente para abrir su panel; pulsa su plazo o su siguiente acción para ir directamente. «Añadir un cliente» está junto al título, y el menú de cada fila ofrece «Crear un cliente nuevo a partir de este». En el móvil, cada cliente es una tarjeta con los mismos datos."
       },
       "settings": {
         "title": "Cambiar el tipo de cuenta",
@@ -4793,7 +4768,7 @@
         "steps": {
           "navigate": {
             "title": "Ve a Proveedores",
-            "description": "Pulsa «Proveedores» en la barra de navegación principal."
+            "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Proveedores y encargados."
           },
           "click": {
             "title": "Pulsa «Añadir proveedor»",
@@ -4870,7 +4845,7 @@
         "steps": {
           "navigate": {
             "title": "Ve a Inventario de datos",
-            "description": "Pulsa «Inventario de datos» en la barra de navegación principal."
+            "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Inventario de datos."
           },
           "add": {
             "title": "Pulsa «Añadir activo»",
@@ -5595,7 +5570,7 @@
       "subtitle": "Supervisa el estado de cumplimiento en privacidad de tu organización con una única puntuación, un desglose por módulo e indicadores de riesgo que señalan qué hacer. Exporta informes listos para la dirección y demuestra la responsabilidad proactiva.",
       "score": {
         "title": "Puntuación de cumplimiento",
-        "description": "Una puntuación ponderada de 0 a 100 que refleja la salud general de tu programa de privacidad en todos los módulos.",
+        "description": "La página Informes empieza por la cifra del programa, la misma que en el panel, el menú y Todos los clientes. Debajo figura una puntuación ponderada por módulos, de 0 a 100.",
         "mockupTitle": "Pesos por módulo",
         "weightSubtitle": "peso",
         "modules": {
@@ -5605,11 +5580,11 @@
           "Incidents": "Incidentes",
           "Vendors": "Proveedores"
         },
-        "intro": "Cada módulo aporta un porcentaje ponderado a la puntuación de cumplimiento general. La puntuación final se calcula en una escala de 0 a 100 con el siguiente código de colores:",
+        "intro": "Cada módulo aporta una parte ponderada de la puntuación. No se da ninguna etiqueta hasta que todas las áreas tienen datos; las áreas sin datos se dejan fuera en lugar de contarse como conformes. Cuando todas las áreas tienen datos, la puntuación lleva una etiqueta:",
         "bands": {
-          "strong": "80–100: Fuerte",
-          "attention": "60–79: Requiere atención",
-          "risk": "0–59: En riesgo"
+          "strong": "De 80 a 100: Fuerte",
+          "attention": "De 60 a 79: Moderado",
+          "risk": "De 0 a 59: Requiere atención"
         }
       },
       "modules": {
@@ -5690,20 +5665,23 @@
         "tipBody": "Toma una instantánea mensual de tu puntuación de cumplimiento para crear un histórico de tendencia para los informes a la dirección. Las instantáneas recogen la puntuación, el desglose por módulo y los indicadores de riesgo activos en ese momento, lo que facilita demostrar el progreso a la dirección y a los auditores."
       },
       "board": {
-        "title": "Exportar informe para la dirección",
-        "description": "Genera informes PDF profesionales para la dirección y las presentaciones al consejo.",
-        "pdfLabel": "Exportar PDF",
-        "boardIncludes": "El informe para la dirección incluye:",
-        "boardItems": {
-          "executive": "Resumen ejecutivo con la puntuación general de cumplimiento",
-          "breakdown": "Desglose módulo por módulo con puntuaciones individuales",
-          "trend": "Gráfico de tendencia que muestra el histórico de la puntuación durante el periodo seleccionado",
-          "indicators": "Indicadores de riesgo activos y acciones recomendadas",
-          "dsar": "Estadísticas de solicitudes de derechos: total recibidas, completadas a tiempo, tiempo medio de resolución",
-          "incident": "Resumen de incidentes: número por gravedad, tasa de cumplimiento de notificaciones",
-          "vendor": "Visión general de proveedores: distribución por nivel de riesgo, resumen de estado de contratos"
+        "title": "Informe ejecutivo",
+        "description": "Un informe breve para el consejo o la dirección, para el periodo que elijas.",
+        "intro": "Ábrelo desde el menú: fase 6, Responde y mejora, paso Informe ejecutivo. Elige el periodo (por defecto, el último trimestre; también este trimestre hasta hoy, el último mes, los últimos 12 meses u otras fechas), añade tu comentario y guárdalo, y descarga el PDF en inglés o en español. Se genera con los datos que ya están en DPO Central, sin IA y sin introducir datos nuevos. Es opcional y no cambia la cifra del programa.",
+        "includesTitle": "El informe recoge:",
+        "items": {
+          "programme": "La cifra del programa y las seis áreas con su estado",
+          "documents": "Los documentos listos y los que no lo están, con lo que le falta a cada uno",
+          "incidents": "Los incidentes y brechas del periodo, y si se notificaron en 72 horas",
+          "rights": "Las solicitudes de derechos del periodo: en plazo, fuera de plazo, vencidas y abiertas",
+          "vendors": "Los proveedores: confirmados, con contrato de encargo del tratamiento, y de riesgo alto o crítico sin él",
+          "assessments": "Las EIPD y las evaluaciones del interés legítimo, aprobadas y pendientes",
+          "risks": "Los principales riesgos o carencias",
+          "actions": "Las tres próximas acciones, con un responsable y una fecha",
+          "comment": "Tu comentario, guardado con el informe de ese periodo"
         },
-        "allPdfsTitle": "Los ocho informes PDF:",
+        "disclaimer": "El informe recoge hechos registrados en DPO Central. No es asesoramiento jurídico y no afirma que la organización cumpla ninguna ley.",
+        "allPdfsTitle": "Los informes en PDF de cada módulo:",
         "allPdfs": {
           "inventoryLabel": "Inventario de datos",
           "inventoryDesc": ": activos, elementos, transferencias y un mapa de flujos de datos generado",
@@ -5862,6 +5840,7 @@
       "cardBodyMid": " al año cada uno y se activan sin conexión con un archivo de licencia. En el piloto alojado se incluyen todos sin coste, dentro de los límites del piloto.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
       "cardContact": " Para datos reales de clientes, ejecuta tu propia instancia.",
+      "menuLock": "En tu propia instancia, el menú muestra un pequeño candado junto a un paso que lleva a un tipo de evaluación premium para el que esta organización no tiene licencia (Evaluaciones para la EIPD, Diligencia debida de proveedores para las evaluaciones de proveedores). El piloto alojado nunca muestra un candado.",
       "badgeLabel": "Módulo premium",
       "viewAddons": "Ver complementos",
       "runYourOwn": "Ejecuta tu propia instancia",
@@ -6235,7 +6214,7 @@
         "steps": {
           "navigate": {
             "title": "Ve a Inventario de datos",
-            "description": "Abre el módulo Inventario de datos desde la navegación principal."
+            "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Inventario de datos."
           },
           "click": {
             "title": "Pulsa «Añadir activo»",
@@ -6408,7 +6387,7 @@
       },
       "sla": {
         "title": "Seguimiento de plazos",
-        "intro": "El sistema calcula automáticamente los plazos de respuesta según las jurisdicciones aplicadas. Los plazos dependen de cada marco: RGPD (un mes, prorrogable otros dos meses en caso necesario), CCPA/CPRA (45 días, prorrogables una vez otros 45 días cuando sea razonablemente necesario), LGPD (15 días) y más de 40 marcos más.",
+        "intro": "El sistema calcula automáticamente los plazos de respuesta según las jurisdicciones aplicadas. Los plazos dependen de cada marco: RGPD (un mes, prorrogable otros dos meses en caso necesario), CCPA/CPRA (45 días, prorrogables una vez otros 45 días cuando sea razonablemente necesario), LGPD (15 días) y más de 40 marcos más. Se envían recordatorios por correo electrónico 7, 3 y 1 día antes del vencimiento, y una vez cuando vence. Cuando la norma permite una prórroga, el botón Prorrogar el plazo de la solicitud la aplica una sola vez y anota tu motivo.",
         "stats": {
           "days": {
             "value": "15-45",
@@ -6501,7 +6480,7 @@
         "steps": {
           "receive": {
             "title": "Recibir solicitud",
-            "description": "Un interesado envía una solicitud a través del portal público (con consentimiento) o tú la creas manualmente en el panel."
+            "description": "Un interesado envía una solicitud a través del portal público (con consentimiento) o tú la creas manualmente en Solicitudes de derechos."
           },
           "verify": {
             "title": "Verificar identidad",
@@ -6604,15 +6583,15 @@
       },
       "walkthrough": {
         "title": "Haz una EIPD en ocho pasos",
-        "intro": "Este es el recorrido por las pantallas reales, desde el panel hasta el informe exportado.",
+        "intro": "Este es el recorrido por las pantallas reales, desde el menú hasta el informe exportado.",
         "actors": {
           "dpo": "DPD",
           "approver": "Aprobador"
         },
         "steps": {
           "start": {
-            "title": "Empieza una EIPD desde el panel",
-            "description": "El panel incluye la acción rápida «Empezar una EIPD». Abre el formulario de nueva evaluación con el tipo ya elegido. Desde el módulo Evaluaciones se llega al mismo formulario, para todos los tipos que ofrece el producto."
+            "title": "Empieza una EIPD desde Evaluaciones",
+            "description": "En el menú, abre la fase 4, Evalúa el riesgo, y elige Evaluaciones. Elige la plantilla Evaluación de impacto relativa a la protección de datos, o Nueva evaluación y el tipo EIPD. En tu propia instancia, un candado junto al paso indica que la licencia de la EIPD no está instalada."
           },
           "create": {
             "title": "Ponle nombre y créala",
@@ -6730,7 +6709,7 @@
         "title": "Notificación a la autoridad de control",
         "intro": "Según el artículo 33 del RGPD, las brechas de seguridad de los datos personales deben notificarse a la autoridad de control en un plazo de 72 horas desde que se tenga constancia de ellas. DPO Central controla este plazo automáticamente.",
         "ruleLabel": "Regla de 72 horas",
-        "ruleBody": "Cuando sea probable que una brecha constituya un riesgo para los derechos y libertades de las personas físicas, notifícala a la autoridad de control sin dilación indebida y, de ser posible, a más tardar 72 horas después de haber tenido constancia de ella. El sistema controla este plazo desde el momento en que se comunica el incidente y muestra cuentas atrás en tu panel."
+        "ruleBody": "Cuando sea probable que una brecha constituya un riesgo para los derechos y libertades de las personas físicas, notifícala a la autoridad de control sin dilación indebida y, de ser posible, a más tardar 72 horas después de haber tenido constancia de ella. El sistema controla este plazo desde el momento en que se comunica el incidente y lo muestra en Plazos en riesgo, en el panel, y en Requiere acción."
       },
       "dashboard": {
         "title": "Panel de incidentes",

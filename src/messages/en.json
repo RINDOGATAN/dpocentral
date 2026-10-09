@@ -4402,35 +4402,44 @@
     },
     "gettingStarted": {
       "title": "Getting Started",
-      "subtitle": "Welcome to DPO Central — your comprehensive privacy management platform. This guide covers every feature to help you manage data protection compliance.",
+      "subtitle": "Welcome to DPO Central, your privacy management platform. This guide describes each screen and how to use it.",
       "dashboard": {
         "title": "Dashboard Overview",
-        "description": "The dashboard provides a real-time snapshot of your privacy program.",
-        "mockupTitle": "Dashboard Stats",
-        "cards": {
-          "dataInventory": {
-            "label": "Data Inventory",
-            "value": "24",
-            "sub": "8 activities"
-          },
-          "openDsars": {
-            "label": "Open DSARs",
-            "value": "3",
-            "sub": "All on track"
-          },
-          "assessments": {
-            "label": "Assessments",
-            "value": "12",
-            "sub": "2 pending review"
-          },
-          "incidents": {
-            "label": "Incidents",
-            "value": "1",
-            "sub": "0 critical"
-          }
+        "description": "The dashboard shows where your privacy programme stands, from the top down.",
+        "mockupTitle": "Programme figure and areas",
+        "parts": {
+          "firstRun": "On first use, a short card explains how DPO Central works until you choose \"Got it\". The help button in the top bar reopens it.",
+          "figure": "The programme figure, \"N of M steps confirmed\", with how many steps are to confirm, in progress and not started.",
+          "areas": "Six area tiles, one for each stage of the path, each with its state word and its next action. A tile opens that action.",
+          "documents": "Documents you can produce today, with the button \"Download ready documents\" (see Documents below).",
+          "next": "Next three actions, beside Deadlines at risk (see Next actions and deadlines below).",
+          "missing": "What is missing: the steps not started and the documents that are not in DPO Central yet."
         },
-        "calloutTitle": "Stat cards are interactive",
-        "calloutBody": "Click on any stat card to navigate directly to that module's list view."
+        "calloutTitle": "Drafts count once confirmed",
+        "calloutBody": "Records drafted by the quick start or a template do not count until a person confirms them. Until then the figure shows them as \"to confirm\", and \"Review and confirm\" opens them.",
+        "limitedTitle": "Members limited to departments",
+        "limitedBody": "A member limited to some departments does not see the organisation's figures. The dashboard shows a link to Needs action instead."
+      },
+      "documents": {
+        "title": "Documents",
+        "description": "The documents panel lists every document DPO Central can produce, with its state and what it still needs.",
+        "states": {
+          "ready": "Complete. Download it (PDF, and other formats where offered) or open it.",
+          "draft": "Can be produced now. The gaps are listed under its name.",
+          "needsInput": "One input is missing. The panel names it, with a button that leads to it.",
+          "notYet": "DPO Central does not produce this document yet. These are listed on one line."
+        },
+        "packBody": "One ZIP of every ready document, with an index. Tick \"Include the drafts too\" to add the drafts, marked DRAFT in their file names, with their gaps on the first page."
+      },
+      "nextActions": {
+        "title": "Next actions and deadlines",
+        "description": "Two panels on the dashboard say what to do next, and one list gathers everything that waits for a person.",
+        "nextBody": "The three most useful things to do now: first what waits in Needs action, then the next steps on the path. Each has an Open, Review or Continue button. When more is waiting, a link opens everything that needs action.",
+        "deadlinesBody": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, rights requests due, and the plan's next milestone (day 30, 60 or 90). Each line opens the record.",
+        "deadlinesBodyNoDsar": "Deadlines in the next 30 days, and overdue ones: breaches waiting for a decision on notifying, breaches to notify, and the plan's next milestone (day 30, 60 or 90). Each line opens the record.",
+        "needsBody": "Needs action, in the menu, gathers everything waiting for a person:",
+        "dsarTitle": "Rights-request reminders and extensions",
+        "dsarBody": "Reminder emails go out 7, 3 and 1 day before a rights request's deadline, and once when it is overdue. Where the law allows it, the \"Extend deadline\" button on the request applies one extension and records your reason. See DSAR Management, SLA Tracking."
       },
       "quickstart": {
         "title": "Quickstart Wizard",
@@ -4451,46 +4460,27 @@
         "fullGuide": "Full Quickstart Guide"
       },
       "navigation": {
-        "title": "Navigation",
-        "description": "The main navigation bar provides access to all modules.",
-        "items": {
-          "dashboard": {
-            "label": "Dashboard",
-            "desc": "Overview stats, recent activity, quick actions"
-          },
-          "dataInventory": {
-            "label": "Data Inventory",
-            "desc": "Assets, data elements, processing activities, flows"
-          },
-          "dsar": {
-            "label": "DSAR",
-            "desc": "Subject access requests, SLA tracking, public portal"
-          },
-          "assessments": {
-            "label": "Assessments",
-            "desc": "DPIA, PIA, TIA, LIA with templates & approvals"
-          },
-          "incidents": {
-            "label": "Incidents",
-            "desc": "Breach tracking, DPA notifications, timelines"
-          },
-          "vendors": {
-            "label": "Vendors",
-            "desc": "Contracts, questionnaires, risk tiers"
-          },
-          "reports": {
-            "label": "Reports",
-            "desc": "Compliance posture score, trend tracking, board reports"
-          },
-          "regulations": {
-            "label": "Regulations",
-            "desc": "40+ jurisdictions, applicability wizard, deadline config"
-          },
-          "aiSystems": {
-            "label": "AI Systems",
-            "desc": "EU AI Act register, risk classification, governance"
-          }
-        }
+        "title": "The menu",
+        "description": "The left menu follows the path of a privacy programme, in six stages.",
+        "organisation": "At the top is the organisation you are working in. It opens the list of your organisations, which ends with \"New organization\", or \"Add a client\" for privacy professionals. Privacy professionals also see All clients, a table of every client.",
+        "stages": "Then Overview (the dashboard) and the six numbered stages. Each stage opens to its steps:",
+        "states": "Each stage and each step shows its state: done, in progress, not started, to confirm or needs action.",
+        "documentLines": "A line under a step names the documents it produces and their states.",
+        "optional": "Optional steps are never counted in the programme figure. AI systems appears only when an AI system is recorded.",
+        "notYet": "\"Not in DPO Central yet\", at the foot of the path, lists what the product does not do yet. A stage with only such steps reads \"Coming\".",
+        "lockTitle": "The lock",
+        "lockBody": "On your own instance, a small lock beside Assessments or Vendor due diligence means the organisation has no licence for that premium assessment type (DPIA, vendor assessment). The hosted pilot never shows a lock.",
+        "libraryTitle": "Library and tools",
+        "library": {
+          "needsAction": "Everything waiting for a person, in one place.",
+          "incomplete": "Processing records missing a field a record of processing needs.",
+          "reports": "The programme figure, the module score, risk indicators, snapshots and PDF reports.",
+          "experts": "The expert directory.",
+          "skills": "Premium modules installed on your own instance, activated with a licence file.",
+          "help": "This guide.",
+          "settings": "Your account, the organisation and its team."
+        },
+        "phone": "On a phone, the bar under the top bar shows the current stage and opens the same menu."
       },
       "roles": {
         "title": "User Roles",
@@ -4506,21 +4496,6 @@
         },
         "inheritanceTitle": "Role inheritance",
         "inheritanceBody": "Each role inherits all permissions from the roles below it. For example, an ADMIN has all PRIVACY_OFFICER, MEMBER, and VIEWER permissions."
-      },
-      "quickActions": {
-        "title": "Quick Actions",
-        "description": "The dashboard provides shortcuts to common tasks.",
-        "mockupTitle": "Quick Actions Panel",
-        "panelTitle": "Quick Actions",
-        "panelSubtitle": "Common tasks",
-        "actions": {
-          "addAsset": "Add Data Asset",
-          "newDsar": "New DSAR",
-          "startAssessment": "Start Assessment",
-          "reportIncident": "Report Incident",
-          "addVendor": "Add Vendor",
-          "runAudit": "Run Audit"
-        }
       },
       "nav": {
         "next": "Quickstart"
@@ -4538,7 +4513,7 @@
         },
         "privacyProfessional": {
           "label": "Privacy Professional",
-          "desc": "For privacy consultants and DPOs who advise multiple organizations. You get a \"My Clients\" dashboard showing all your client organizations with summary statistics."
+          "desc": "For privacy consultants and DPOs who advise several organisations. You get All clients, a table showing where each client organisation stands."
         },
         "tipPrefix": "You can change your account type at any time from the ",
         "tipSettings": "Settings",
@@ -4557,18 +4532,18 @@
         }
       },
       "clientDashboard": {
-        "title": "Client Dashboard",
-        "description": "Manage all your client organizations from one view.",
-        "intro": "The Client Dashboard (available to Privacy Professionals) shows all organizations you're a member of with real-time statistics:",
+        "title": "All clients",
+        "description": "Where each of your client organisations stands, in one table.",
+        "intro": "All clients (for privacy professionals) has one row per client organisation you belong to. Each row reads the same figures as that client's own dashboard:",
         "items": {
-          "dsars": "Open DSARs and overdue count per client",
-          "assessments": "Pending assessments count",
-          "incidents": "Open incidents count",
-          "vendors": "Active vendor count",
-          "lastActivity": "Last activity timestamp",
-          "attention": "Attention indicators for overdue items"
+          "client": "The client, with your role in it",
+          "confirmed": "The programme figure, and how many drafted records wait to be confirmed",
+          "areas": "The six areas, each with its state word",
+          "documents": "Documents ready, out of the total",
+          "deadline": "The next deadline (a breach to notify, a rights request due or a plan milestone), with its reference",
+          "action": "The next action"
         },
-        "outro": "Click any client card to switch to that organization's dashboard."
+        "outro": "Rows are sorted by the nearest deadline, the soonest or most overdue first. Select a client's name to open its dashboard; select its deadline or next action to go straight there. \"Add a client\" sits beside the title, and each row's menu offers \"Start a new client from this one\". On a phone, each client is a card with the same fields."
       },
       "settings": {
         "title": "Changing Your Account Type",
@@ -4793,7 +4768,7 @@
         "steps": {
           "navigate": {
             "title": "Navigate to Vendors",
-            "description": "Click 'Vendors' in the main navigation bar."
+            "description": "In the left menu, open stage 3, Know your data, and choose Vendors and processors."
           },
           "click": {
             "title": "Click 'Add Vendor'",
@@ -4870,7 +4845,7 @@
         "steps": {
           "navigate": {
             "title": "Navigate to Data Inventory",
-            "description": "Click 'Data Inventory' in the main navigation bar."
+            "description": "In the left menu, open stage 3, Know your data, and choose Data inventory."
           },
           "add": {
             "title": "Click 'Add Asset'",
@@ -5595,7 +5570,7 @@
       "subtitle": "Monitor your organization's privacy compliance posture with a single score, module-level breakdowns, and actionable risk indicators. Export board-ready reports to demonstrate accountability.",
       "score": {
         "title": "Compliance Posture Score",
-        "description": "A weighted 0-100 score that reflects the overall health of your privacy program across all modules.",
+        "description": "The Reports page leads with the programme figure, the same as on the dashboard, the menu and All clients. Under it sits a weighted module score from 0 to 100.",
         "mockupTitle": "Module Weights",
         "weightSubtitle": "weight",
         "modules": {
@@ -5605,11 +5580,11 @@
           "Incidents": "Incidents",
           "Vendors": "Vendors"
         },
-        "intro": "Each module contributes a weighted percentage to the overall compliance posture score. The final score is calculated on a 0–100 scale with the following color coding:",
+        "intro": "Each module contributes a weighted share of the module score. No label is given until every area has data; areas with no data are left out rather than counted as compliant. Once every area has data, the score carries a label:",
         "bands": {
-          "strong": "80–100: Strong",
-          "attention": "60–79: Needs Attention",
-          "risk": "0–59: At Risk"
+          "strong": "80 to 100: Strong",
+          "attention": "60 to 79: Moderate",
+          "risk": "0 to 59: Needs Attention"
         }
       },
       "modules": {
@@ -5690,20 +5665,23 @@
         "tipBody": "Take a monthly snapshot of your compliance score to build a trend history for board reporting. Snapshots capture the score, module breakdown, and active risk indicators at that point in time, making it easy to demonstrate progress to management and auditors."
       },
       "board": {
-        "title": "Board Report Export",
-        "description": "Generate professional PDF reports for management and board presentations.",
-        "pdfLabel": "PDF Export",
-        "boardIncludes": "Board report includes:",
-        "boardItems": {
-          "executive": "Executive summary with overall compliance posture score",
-          "breakdown": "Module-by-module breakdown with individual scores",
-          "trend": "Trend chart showing score history over the selected period",
-          "indicators": "Active risk indicators and recommended actions",
-          "dsar": "DSAR statistics: total received, completed on time, average resolution time",
-          "incident": "Incident summary: count by severity, notification compliance rate",
-          "vendor": "Vendor overview: risk tier distribution, contract status summary"
+        "title": "Executive report",
+        "description": "A short report for the board or management, for a period you choose.",
+        "intro": "Open it from the menu: stage 6, Respond and improve, step Executive report. Choose the period (last quarter by default; this quarter so far, last month, the last 12 months or other dates), add your comment and save it, then download the PDF in English or Spanish. It is built from the data already in DPO Central, with no AI and no new data entry. It is optional and does not change the programme figure.",
+        "includesTitle": "The report covers:",
+        "items": {
+          "programme": "The programme figure and the six areas with their state words",
+          "documents": "Documents ready and not ready, with what each lacks",
+          "incidents": "Incidents and breaches in the period, and whether they were notified within 72 hours",
+          "rights": "Rights requests in the period: on time, late, overdue and open",
+          "vendors": "Vendors: confirmed, with a data processing agreement, and high or critical risk without one",
+          "assessments": "DPIAs and legitimate interest assessments, approved and pending",
+          "risks": "The main risks or gaps",
+          "actions": "The next three actions, with an owner and a date",
+          "comment": "Your comment, saved with the report for that period"
         },
-        "allPdfsTitle": "All eight PDF reports:",
+        "disclaimer": "The report states facts recorded in DPO Central. It is not legal advice and does not state that the organisation complies with any law.",
+        "allPdfsTitle": "The PDF reports on each module:",
         "allPdfs": {
           "inventoryLabel": "Data Inventory",
           "inventoryDesc": " — assets, elements, transfers, and a rendered Data Flow Map",
@@ -5862,6 +5840,7 @@
       "cardBodyMid": " a year each and are activated offline with a licence file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
       "cardContact": " For real client data, run your own instance.",
+      "menuLock": "On your own instance, the menu shows a small lock beside a step that leads to a premium assessment type this organisation has no licence for (Assessments for the DPIA, Vendor due diligence for vendor assessments). The hosted pilot never shows a lock.",
       "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
       "runYourOwn": "Run your own instance",
@@ -6235,7 +6214,7 @@
         "steps": {
           "navigate": {
             "title": "Navigate to Data Inventory",
-            "description": "Open the Data Inventory module from the main navigation."
+            "description": "In the left menu, open stage 3, Know your data, and choose Data inventory."
           },
           "click": {
             "title": "Click Add Asset",
@@ -6408,7 +6387,7 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework: GDPR (one month, extendable by two further months where necessary), CCPA/CPRA (45 days, extendable once by a further 45 days where reasonably necessary), LGPD (15 days), and 40+ others.",
+        "intro": "The system automatically calculates SLA deadlines based on your applied jurisdictions. Deadlines are per-framework: GDPR (one month, extendable by two further months where necessary), CCPA/CPRA (45 days, extendable once by a further 45 days where reasonably necessary), LGPD (15 days), and 40+ others. Reminder emails go out 7, 3 and 1 day before the deadline and once when it is overdue. Where the law allows an extension, the Extend deadline button on the request applies it once and records your reason.",
         "stats": {
           "days": {
             "value": "15-45",
@@ -6501,7 +6480,7 @@
         "steps": {
           "receive": {
             "title": "Receive Request",
-            "description": "A data subject submits a request through the public portal (with consent) or you create one manually in the dashboard."
+            "description": "A data subject submits a request through the public portal (with consent) or you create one manually in Rights requests."
           },
           "verify": {
             "title": "Verify Identity",
@@ -6604,15 +6583,15 @@
       },
       "walkthrough": {
         "title": "Run a DPIA in eight steps",
-        "intro": "This is the path through the real screens, from the dashboard to the exported report.",
+        "intro": "This is the path through the real screens, from the menu to the exported report.",
         "actors": {
           "dpo": "DPO",
           "approver": "Approver"
         },
         "steps": {
           "start": {
-            "title": "Start a DPIA from the dashboard",
-            "description": "The dashboard carries a \"Start a DPIA\" quick action. It opens the new-assessment form with the type already chosen. The Assessments module reaches the same form, for every type the product offers."
+            "title": "Start a DPIA from Assessments",
+            "description": "In the menu, open stage 4, Assess the risk, and choose Assessments. Choose the Data Protection Impact Assessment template, or New Assessment and the DPIA type. On your own instance, a lock beside the step means the DPIA licence is not installed."
           },
           "create": {
             "title": "Name it and create it",
@@ -6730,7 +6709,7 @@
         "title": "DPA Notification",
         "intro": "Under GDPR Article 33, personal data breaches must be reported to the supervisory authority within 72 hours of becoming aware of the breach. DPO Central tracks this deadline automatically.",
         "ruleLabel": "72-Hour Rule",
-        "ruleBody": "When a breach is likely to result in a risk to the rights and freedoms of individuals, notify the supervisory authority without undue delay and, where feasible, not later than 72 hours after becoming aware of it. The system tracks this deadline from the moment the incident is reported and displays countdown timers on your dashboard."
+        "ruleBody": "When a breach is likely to result in a risk to the rights and freedoms of individuals, notify the supervisory authority without undue delay and, where feasible, not later than 72 hours after becoming aware of it. The system tracks this deadline from the moment the incident is reported and lists it under Deadlines at risk on the dashboard and in Needs action."
       },
       "dashboard": {
         "title": "Incident Dashboard",
