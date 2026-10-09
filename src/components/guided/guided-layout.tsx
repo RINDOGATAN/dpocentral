@@ -51,6 +51,7 @@ import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
 import { currentStepId, nextStep, overallProgress, withoutOrgWideSteps, withoutSteps } from "./path";
 import { useDsarAccess } from "@/lib/use-dsar-access";
+import { useAuditAccess } from "@/lib/use-audit-access";
 import { PathMenu } from "./path-menu";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
@@ -115,6 +116,9 @@ export function GuidedLayout({
   // The rights-requests step is left out for a member who may not read
   // requests (src/lib/dsar-access.ts).
   const { canHandle: canHandleDsars } = useDsarAccess();
+  // The audit trail's library entry, for the roles that read it
+  // (src/lib/audit-access.ts); not shown while the role is still loading.
+  const { canRead: canReadAudit } = useAuditAccess();
   useProgramPathRefresh();
   const [collapsed, setCollapsedState] = useState(initialCollapsed);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -136,6 +140,7 @@ export function GuidedLayout({
     search,
     stripeEnabled: features.stripeEnabled,
     clientMode: isProfessional,
+    auditTrail: canReadAudit === true,
     t,
     overview: OVERVIEW,
     planLine: orgWide ? planDayText(plan, t) : null,

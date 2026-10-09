@@ -262,9 +262,10 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "assessments",
           href: "/privacy/assessments",
           icon: ClipboardCheck,
-          // The DPIA is the step's headline document and a premium type: the
-          // lock Classic's "Start a DPIA" quick action carried moves here.
-          premiumType: "DPIA",
+          // No lock on the step (owner's decision, 9 October 2026): most
+          // assessments here need no licence. Where the DPIA is not licensed,
+          // the lock sits on the DPIA option inside the assessments page and
+          // the type picker instead (src/components/premium/licence-lock.tsx).
           rule: "Done when at least one assessment is approved (DPIA, PIA and screening). Started when any assessment exists.",
           status: (c) =>
             c.assessmentsApproved > 0 ? "done" : c.assessments > 0 ? "started" : "todo",
@@ -361,11 +362,17 @@ const FULL_PATH: PathConfig<PathCounts> = {
   // deliberately NOT repeated here under "Library and tools".
   // "Library and tools": every entry of the retired Classic menus that is not
   // a step, once (tests/guided-path.test.ts keeps it so).
-  library: ({ stripeEnabled }) => [
+  library: ({ stripeEnabled, auditTrail = true }) => [
     // The two ready lists (stage 4): what is waiting, and what is unfinished.
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },
     { id: "incomplete", href: "/privacy/incomplete", icon: ClipboardList },
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
+    // The organisation's audit trail (owner's decision, 9 October 2026, as
+    // AI Sentinel has it): owners, admins and privacy officers only
+    // (src/lib/audit-access.ts), so the menu leaves it out for anyone else.
+    ...(auditTrail
+      ? [{ id: "auditTrail", href: "/privacy/audit-trail", icon: ScrollText }]
+      : []),
     { id: "experts", href: "/privacy/experts", icon: Search },
     { id: "skills", href: "/privacy/skills", icon: KeyRound },
     ...(stripeEnabled

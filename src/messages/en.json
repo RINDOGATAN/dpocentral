@@ -206,7 +206,7 @@
       "contactToEnable": "Contact {name} to enable",
       "premiumSkill": "Premium skill",
       "premiumSkillHint": "Available as a downloadable skill on the todo.law marketplace.",
-      "typeCardLockedLabel": "{name} (premium skill, not enabled for this organisation)",
+      "typeCardLockedLabel": "{name} (requires a licence)",
       "notCreated": "The assessment was not created",
       "typeGatedNotice": "{name} is a premium skill and is not enabled for this organisation yet. If creation is refused, the reason is shown below the form.",
       "selectTemplate": "Select Template",
@@ -4619,12 +4619,13 @@
         "optional": "Optional steps are never counted in the programme figure. AI systems appears only when an AI system is recorded.",
         "notYet": "\"Not in DPO Central yet\", at the foot of the path, lists what the product does not do yet. A stage with only such steps reads \"Coming\".",
         "lockTitle": "The lock",
-        "lockBody": "On your own instance, a small lock beside Assessments or Vendor due diligence means the organisation has no licence for that premium assessment type (DPIA, vendor assessment). The hosted pilot never shows a lock.",
+        "lockBody": "On your own instance, a small lock beside Vendor due diligence in the menu, or beside the DPIA in Assessments and in the type picker, means the organisation has no licence for that premium assessment type. The hosted pilot never shows a lock.",
         "libraryTitle": "Library and tools",
         "library": {
           "needsAction": "Everything waiting for a person, in one place.",
           "incomplete": "Processing records missing a field a record of processing needs.",
           "reports": "The programme figure, the module score, risk indicators, snapshots and PDF reports.",
+          "auditTrail": "Every recorded change, newest first, with filters and a CSV export. Owners, admins and privacy officers only.",
           "experts": "The expert directory.",
           "skills": "Premium modules installed on your own instance, activated with a licence file.",
           "help": "This guide.",
@@ -5990,7 +5991,7 @@
       "cardBodyMid": " a year each and are activated offline with a licence file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
       "cardContact": " For real client data, run your own instance.",
-      "menuLock": "On your own instance, the menu shows a small lock beside a step that leads to a premium assessment type this organisation has no licence for (Assessments for the DPIA, Vendor due diligence for vendor assessments). The hosted pilot never shows a lock.",
+      "menuLock": "On your own instance, a small lock shows where a premium assessment type needs a licence this organisation does not have: beside Vendor due diligence in the menu, and beside the DPIA option in Assessments and in the type picker. The hosted pilot never shows a lock.",
       "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
       "runYourOwn": "Run your own instance",
@@ -6741,7 +6742,7 @@
         "steps": {
           "start": {
             "title": "Start a DPIA from Assessments",
-            "description": "In the menu, open stage 4, Assess the risk, and choose Assessments. Choose the Data Protection Impact Assessment template, or New Assessment and the DPIA type. On your own instance, a lock beside the step means the DPIA licence is not installed."
+            "description": "In the menu, open stage 4, Assess the risk, and choose Assessments. Choose the Data Protection Impact Assessment template, or New Assessment and the DPIA type. On your own instance, a lock beside the DPIA means its licence is not installed."
           },
           "create": {
             "title": "Name it and create it",
@@ -8965,6 +8966,7 @@
       "needsAction": "Needs action",
       "incomplete": "Incomplete",
       "reports": "Reports",
+      "auditTrail": "Audit trail",
       "experts": "Find an expert",
       "clients": "All clients",
       "skills": "Skills",
@@ -9657,6 +9659,75 @@
       "vendors": "vendors with a data processing agreement",
       "vendorsNone": "no confirmed vendors",
       "vendorsFlag": "{count} high or critical risk without one"
+    }
+  },
+  "auditTrail": {
+    "title": "Audit trail",
+    "subtitle": "Every recorded change, newest first: who did it, to what, and when. The trail is written by the actions themselves and cannot be edited here.",
+    "restricted": "The audit trail is available to owners, admins and privacy officers.",
+    "empty": "Nothing recorded yet for this organization.",
+    "emptyFiltered": "No entries match these filters.",
+    "filters": {
+      "area": "Area",
+      "action": "Action",
+      "actor": "Person",
+      "from": "From",
+      "to": "To",
+      "all": "All",
+      "clear": "Clear filters"
+    },
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "entity": "Record",
+      "detail": "Recorded detail"
+    },
+    "export": "Export as CSV",
+    "exportHint": "The export follows the filters above and carries the generation time and the application version, so the file can be placed in a production log.",
+    "loadMore": "Load more",
+    "showing": "Showing {count} of {total} entries",
+    "showingFiltered": "{count} matching entries shown",
+    "since": "Trail starts {date}",
+    "actorRemoved": "Account removed",
+    "noDetail": "No detail recorded",
+    "reference": "Reference {reference}",
+    "rightsRequestWithheld": "Rights request: the content is not shown in the trail. Open the request to read it.",
+    "areas": {
+      "Organization": "Organization",
+      "OrganizationMember": "Team",
+      "OrganizationJurisdiction": "Jurisdictions",
+      "OrganizationAiSettings": "AI settings",
+      "BusinessUnit": "Departments",
+      "DataAsset": "Data inventory",
+      "DataFlow": "Data flows",
+      "DataTransfer": "Transfers",
+      "ProcessingActivity": "Processing activities",
+      "Vendor": "Vendors",
+      "VendorContract": "Vendor contracts",
+      "Assessment": "Assessments",
+      "Incident": "Incidents",
+      "IncidentNotification": "Incident notifications",
+      "DSARRequest": "Rights requests",
+      "AISystem": "AI systems",
+      "Report": "Reports",
+      "AuditLog": "Audit trail",
+      "Checkout": "Billing"
+    },
+    "actions": {
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted",
+      "SUBMIT": "Submitted",
+      "SUBMIT_AND_APPROVE": "Submitted and approved",
+      "APPROVAL_APPROVED": "Approved",
+      "APPROVAL_REJECTED": "Rejected",
+      "AUTO_CREATE": "Created automatically",
+      "AUTO_JOIN": "Joined automatically",
+      "CREATE_FROM_TEMPLATE": "Created from a template",
+      "DELETE_TEMPLATE_ITEMS": "Template records removed",
+      "EXPORT_PDF": "Exported as PDF",
+      "EXPORT_AUDIT_TRAIL": "Audit trail exported"
     }
   }
 }

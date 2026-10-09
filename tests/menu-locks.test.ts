@@ -29,12 +29,19 @@ describe("which steps carry a lock", () => {
 
   it("on the kit, the steps whose premium type is not installed", () => {
     expect(lockedStepIds(DPO_CENTRAL_PATH, { entitledTypes: [], hosted: false })).toEqual([
-      "assessments",
       "vendorDueDiligence",
     ]);
     expect(lockedStepIds(DPO_CENTRAL_PATH, { entitledTypes: ["DPIA"], hosted: false })).toEqual([
       "vendorDueDiligence",
     ]);
+  });
+
+  it("never on the Assessments step: the DPIA lock sits on the DPIA option instead (9 October 2026)", () => {
+    const step = DPO_CENTRAL_PATH.stages.flatMap((s) => s.steps).find((s) => s.id === "assessments");
+    expect(step?.premiumType).toBeUndefined();
+    for (const entitledTypes of [[], ["PIA"], ["VENDOR"]]) {
+      expect(lockedStepIds(DPO_CENTRAL_PATH, { entitledTypes, hosted: false })).not.toContain("assessments");
+    }
   });
 
   it("none where nothing is locked", () => {
@@ -62,5 +69,31 @@ describe("how the lock is shown", () => {
     expect(block).not.toMatch(/€|\$\d|price|precio/i);
     expect(en.guided.requiresLicence).toBe("Requires a licence");
     expect(es.guided.requiresLicence).toBe("Requiere una licencia");
+  });
+});
+
+describe("the DPIA option's lock", () => {
+  it("the assessments page locks the DPIA card by the same rule, never on the hosted pilot", () => {
+    const page = read("src/app/(dashboard)/privacy/assessments/page.tsx");
+    expect(page).toContain('isAssessmentTypeLocked({ type: "DPIA", entitledTypes: entitledData.entitledTypes, hosted })');
+    expect(page).toContain("enabled: !!organization?.id && !hosted");
+    expect(page).toContain('item.type === "DPIA" && dpiaLocked && (');
+    expect(page).toContain("<LicenceLock");
+  });
+
+  it("the type picker's lock carries the accessible label and a locked card shows no price", () => {
+    const picker = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
+    expect(picker).toContain('<span className="sr-only">{tg("requiresLicence")}</span>');
+    const badge = picker.slice(picker.indexOf("{isLocked\n"), picker.indexOf(": tp(\"premiumSkill\")"));
+    expect(badge).toContain('? tg("requiresLicence")');
+    expect(en.pages.newAssessment.typeCardLockedLabel).toBe("{name} (requires a licence)");
+    expect(es.pages.newAssessment.typeCardLockedLabel).toBe("{name} (requiere una licencia)");
+  });
+
+  it("the shared lock carries the accessible label and no price", () => {
+    const lock = read("src/components/premium/licence-lock.tsx");
+    expect(lock).toContain('<Lock className="size-3.5" aria-hidden="true" />');
+    expect(lock).toContain('<span className="sr-only">{t("requiresLicence")}</span>');
+    expect(lock.split("*/").slice(1).join("")).not.toMatch(/€|\$\d|price|precio|formatPrice/i);
   });
 });
