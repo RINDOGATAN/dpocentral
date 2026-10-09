@@ -4415,6 +4415,44 @@
         "nextReview": "Next Review"
       },
       "dpaMissing": "MISSING"
+    },
+    "documentPack": {
+      "fileTitle": "Document-Pack",
+      "indexFile": "00-INDEX.md",
+      "manifestFile": "99-MANIFEST.txt",
+      "draftMark": "DRAFT",
+      "assessmentsDir": "assessments",
+      "dpaDir": "dpa",
+      "assessmentName": "{type}: {name}",
+      "assessmentGaps": "not approved yet; what is outstanding is listed on its first page",
+      "dpaName": "DPA with {vendor}",
+      "draftNote": {
+        "gapsTitle": "This document is a draft",
+        "intro": "It can be shared for review, but it is not finished. These gaps remain:",
+        "generated": "Generated {date}"
+      },
+      "index": {
+        "title": "Document pack: {org}",
+        "generated": "Generated: {date}",
+        "readyOnly": "This pack holds the documents that are ready. Drafts were not asked for.",
+        "withDrafts": "This pack holds the documents that are ready and the drafts. A draft has DRAFT in its file name and its gaps on its first page.",
+        "contents": "Contents",
+        "colDocument": "Document",
+        "colState": "State",
+        "colDate": "Date",
+        "colFile": "File",
+        "empty": "No document is ready yet.",
+        "notIncluded": "Not in this pack",
+        "unapprovedLeftOut": "{count, plural, one {# assessment is not approved yet} other {# assessments are not approved yet}}: drafts were not asked for",
+        "manifest": "{file} lists a SHA-256 digest for every file in the pack, so any single file can be checked."
+      },
+      "reasons": {
+        "draftsNotRequested": "draft ({gaps}); drafts were not asked for",
+        "notYet": "not in DPO Central yet",
+        "screenOnly": "shown on screen only",
+        "notEntitled": "its export is not included in this installation",
+        "notForThisMember": "kept to the people who handle rights requests"
+      }
     }
   },
   "docs": {
@@ -8980,27 +9018,26 @@
     "title": "All clients",
     "addClient": "Add a client",
     "subtitle": "{count, plural, one {# organisation} other {# organisations}} you manage",
-    "tiles": {
-      "requestsDue": "Requests due",
-      "openIncidents": "Open incidents",
-      "needAttention": "Need attention",
-      "clients": "Clients"
-    },
-    "stages": "Stages",
-    "nextStep": "Next step",
-    "allDone": "Every step done",
-    "plan": "Plan",
-    "requestsDue": "{count, plural, one {# request due} other {# requests due}}",
-    "requestsDueNone": "No requests due",
-    "openIncidents": "{count, plural, one {# open incident} other {# open incidents}}",
-    "openIncidentsNone": "No open incidents",
-    "lastActivity": "Last activity: {when}",
-    "noActivity": "No activity yet",
     "empty": {
       "title": "No client organisations yet",
       "body": "Organisations you are a member of will appear here."
     },
-    "draftsToConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}"
+    "draftsToConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",
+    "needAttention": "{count, plural, one {# needs attention} other {# need attention}}",
+    "columns": {
+      "client": "Client",
+      "confirmed": "Confirmed",
+      "areas": "Areas",
+      "documents": "Documents ready",
+      "deadline": "Next deadline",
+      "action": "Next action",
+      "menu": "More"
+    },
+    "docsReady": "{ready} of {total} ready",
+    "noDeadline": "None",
+    "none": "No figure yet",
+    "limited": "Limited to your departments: the organisation-wide figures are not shown.",
+    "sortNote": "Sorted by the nearest deadline, the soonest first; clients with no deadline follow, by name."
   },
   "applicability": {
     "cardTitle": "What applies to you",
@@ -9431,6 +9468,12 @@
       "notStarted": "Not started: {steps}.",
       "notYet": "Not in DPO Central yet: {names}.",
       "none": "Nothing is missing on the path."
+    },
+    "pack": {
+      "button": "Download ready documents",
+      "includeDrafts": "Include the drafts too ({count}), marked DRAFT",
+      "count": "{count, plural, one {# document in one ZIP, with an index} other {# documents in one ZIP, with an index}}",
+      "none": "No document is ready yet."
     }
   }
 }

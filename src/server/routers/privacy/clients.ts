@@ -8,6 +8,12 @@ import { evaluatePath, type PathStatuses } from "@/components/guided/path";
 import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
 import { loadPlanStart } from "@/server/services/program/plan-start";
 import { isDsarModuleEnabled } from "@/config/features";
+import { evaluateRegister, registerFor, type EvaluatedDocument } from "@/config/document-register";
+import { loadDocumentFacts } from "@/server/services/program/document-facts";
+import { loadDeadlines, type Deadline } from "@/server/services/program/deadlines";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
+import { collectNeedsAction } from "@/server/services/views/queries";
+import type { NeedsActionItem } from "@/lib/needs-action";
 
 const MAX_CLIENT_ORGS = 50;
 
@@ -35,6 +41,17 @@ export const clientsRouter = createTRPCRouter({
           organizationName: membership.organization.name,
           organizationSlug: membership.organization.slug,
           role: membership.role,
+        };
+        // The firm view's columns (owner's decision d9): the documents, what
+        // needs action and the deadlines, read exactly as the client's own
+        // dashboard reads them (programPath.overview). A member limited to
+        // departments gets none of the organisation-wide figures, as on the
+        // dashboard.
+        const noOverview = {
+          limited: false,
+          documents: [] as EvaluatedDocument[],
+          needsAction: [] as NeedsActionItem[],
+          deadlines: [] as Deadline[],
         };
 
         const now = new Date();
@@ -112,8 +129,23 @@ export const clientsRouter = createTRPCRouter({
           const steps = evaluatePath(DPO_CENTRAL_PATH, counts);
           const planStart = await loadPlanStart(ctx.prisma, orgId, steps.quickstart === "done");
 
+          const scope = await loadBusinessUnitScope(ctx.prisma, membership.id);
+          const overview = scope.all
+            ? await Promise.all([
+                loadDocumentFacts(ctx.prisma, orgId),
+                collectNeedsAction(ctx.prisma, orgId, scope),
+                loadDeadlines(ctx.prisma, orgId, { role: membership.role, userId }),
+              ]).then(([facts, needsAction, deadlines]) => ({
+                limited: false,
+                documents: evaluateRegister(registerFor({ dsarEnabled: dsarOn }), facts),
+                needsAction: needsAction.items,
+                deadlines,
+              }))
+            : { ...noOverview, limited: true };
+
           return {
             ...base,
+            ...overview,
             steps,
             planStart: planStart?.toISOString() ?? null,
             drafts: draftTotal(counts),
@@ -130,6 +162,7 @@ export const clientsRouter = createTRPCRouter({
           logger.error("Failed to fetch stats for org", error, { orgId });
           return {
             ...base,
+            ...noOverview,
             steps: emptySteps,
             planStart: null,
             drafts: 0,

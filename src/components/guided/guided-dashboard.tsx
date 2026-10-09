@@ -20,11 +20,13 @@
  * dashboard (src/app/(dashboard)/privacy/page.tsx) until it is retired.
  */
 
+import { useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight, Download, ExternalLink, FileText, ListChecks } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusChip } from "@/components/ui/status-chip";
 import type { StatusTone } from "@/config/status-tone";
@@ -35,10 +37,13 @@ import { useDsarAccess } from "@/lib/use-dsar-access";
 import { plansUrl } from "@/lib/hosted";
 import { cn, formatDateIn, formatDateTimeIn } from "@/lib/utils";
 import { formatRequestRef } from "@/lib/request-ref";
+import { formatIncidentRef } from "@/lib/incident-ref";
 import { needsActionTotal } from "@/lib/needs-action";
+import { packCounts } from "@/lib/document-pack";
 import {
   nextActions,
   panelRows,
+  planMilestone,
   programmeAreas,
   type Area,
   type NextAction,
@@ -68,8 +73,6 @@ const WORD_TONE: Record<StageWord, StatusTone> = {
   action: "danger",
   coming: "neutral",
 };
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function GuidedDashboard({ fromQuickstart = false }: { fromQuickstart?: boolean }) {
   const tp = useTranslations("pages.dashboard");
@@ -231,12 +234,15 @@ function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOverview | 
 
   return (
     <Card data-testid="documents-panel" aria-busy={!rows}>
-      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <FileText className="size-4 text-primary shrink-0" aria-hidden="true" />
-          {t("title")}
-        </CardTitle>
-        <CardDescription className="text-xs sm:text-sm">{t("subtitle")}</CardDescription>
+      <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-3 flex flex-col md:flex-row md:items-start md:justify-between gap-3 space-y-0">
+        <div className="min-w-0 flex flex-col gap-1.5">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <FileText className="size-4 text-primary shrink-0" aria-hidden="true" />
+            {t("title")}
+          </CardTitle>
+          <CardDescription className="text-xs sm:text-sm">{t("subtitle")}</CardDescription>
+        </div>
+        {overview && <PackDownload overview={overview} hideDsar={hideDsar} />}
       </CardHeader>
       <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {!rows ? (
@@ -265,6 +271,52 @@ function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOverview | 
         )}
       </CardContent>
     </Card>
+  );
+}
+
+/**
+ * "Download ready documents" (owner's decisions, 9 October 2026, step 5):
+ * one ZIP of every ready document, with an index and an integrity manifest
+ * (/api/export/document-pack). With "Include drafts" the drafts go in too,
+ * marked DRAFT in their file names, their gaps on their first page.
+ */
+function PackDownload({ overview, hideDsar }: { overview: ProgrammeOverview; hideDsar: boolean }) {
+  const t = useTranslations("documentRegister");
+  const locale = useLocale();
+  const { organization } = useOrganization();
+  const [withDrafts, setWithDrafts] = useState(false);
+  const counts = packCounts(overview.documents, { dsarAllowed: !hideDsar });
+  const count = counts.ready + (withDrafts ? counts.drafts : 0);
+  const orgId = organization?.id ?? "";
+  const href = `/api/export/document-pack?organizationId=${encodeURIComponent(orgId)}&locale=${locale}${withDrafts ? "&drafts=1" : ""}`;
+  const button = (
+    <Button size="sm" className="gap-1.5 h-auto min-h-8 py-1 whitespace-normal" disabled={count === 0 || !orgId}>
+      <Download className="size-3.5 shrink-0" aria-hidden="true" />
+      {t("pack.button")}
+    </Button>
+  );
+  return (
+    <div className="flex flex-col gap-1.5 md:items-end shrink-0" data-testid="pack-download">
+      {count > 0 && orgId ? (
+        <a href={href} download data-testid="pack-link" className="self-start md:self-end">
+          {button}
+        </a>
+      ) : (
+        <span className="self-start md:self-end">{button}</span>
+      )}
+      <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+        <Checkbox
+          checked={withDrafts}
+          onCheckedChange={(v) => setWithDrafts(v === true)}
+          disabled={counts.drafts === 0}
+          data-testid="pack-drafts"
+        />
+        {t("pack.includeDrafts", { count: counts.drafts })}
+      </label>
+      <p className="text-xs text-muted-foreground tabular-nums" data-testid="pack-count">
+        {count === 0 ? t("pack.none") : t("pack.count", { count })}
+      </p>
+    </div>
   );
 }
 
@@ -478,13 +530,7 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
   const now = Date.now();
 
   // The plan's next milestone (day 30, 60 or 90), while the plan runs.
-  let milestone: { day: number; at: Date } | null = null;
-  if (planStart && plan?.kind === "running") {
-    const window = PLAN_WINDOWS.find((w) => w.untilDay >= plan.day);
-    if (window) {
-      milestone = { day: window.untilDay, at: new Date(new Date(planStart).getTime() + (window.untilDay - 1) * DAY_MS) };
-    }
-  }
+  const milestone = planMilestone(PLAN_WINDOWS, planStart, plan);
 
   return (
     <Card data-testid="deadlines" aria-busy={!overview}>
@@ -500,9 +546,7 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
           <ul className="divide-y divide-border">
             {overview.deadlines.map((d) => {
               const ref =
-                d.kind === "dsarDue"
-                  ? formatRequestRef(d.publicId, locale)
-                  : `INC-${d.publicId.slice(-6).toUpperCase()}`;
+                d.kind === "dsarDue" ? formatRequestRef(d.publicId, locale) : formatIncidentRef(d.publicId);
               const at = new Date(d.at);
               const overdue = at.getTime() < now;
               const when = d.kind === "dsarDue" ? formatDateIn(at, locale) : formatDateTimeIn(at, locale);

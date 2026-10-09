@@ -13,9 +13,8 @@
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-import { renderDpaPdf, renderTiaPdf } from "@/server/services/export/dpa/render";
-import { dpaSnapshotSchema } from "@/lib/dpa-engine/snapshot";
-import type { AssembleInput } from "@/lib/dpa-engine";
+import { buildDpaExport, dpaInput } from "@/server/services/export/documents/dpa";
+import { fileResponse } from "@/server/services/export/documents/context";
 
 export async function GET(
   request: Request,
@@ -57,51 +56,22 @@ export async function GET(
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const stored = (contract.metadata as { dpaEngine?: unknown } | null)?.dpaEngine;
-    const parsed = dpaSnapshotSchema.safeParse(stored);
-    if (!parsed.success) {
+    if (!dpaInput(contract)) {
       return Response.json(
         { error: "This contract has no generated DPA snapshot" },
         { status: 404 }
       );
     }
-    const snapshot = parsed.data;
 
-    const input: AssembleInput = {
-      facts: snapshot.facts,
-      selections: snapshot.selections,
-      context: {
-        language: snapshot.language,
-        effectiveDate: new Date(snapshot.effectiveDate),
-        governingLaw: snapshot.governingLaw,
-        controller: snapshot.controller,
-        processor: snapshot.processor,
-        dealName: snapshot.dealName ?? undefined,
-        producedDate: new Date(snapshot.producedAt),
-      },
-    };
-
-    const orgName = contract.vendor.organization.name;
-    const slug = contract.vendor.name.replace(/[^a-zA-Z0-9]+/g, "-");
-    const dateStr = snapshot.effectiveDate.slice(0, 10);
-
-    const rendered =
-      doc === "tia"
-        ? await renderTiaPdf(input, orgName)
-        : await renderDpaPdf(input, orgName);
-    if (!rendered) {
+    const file = await buildDpaExport(contract, contract.vendor.organization.name, doc);
+    if (!file) {
       return Response.json(
         { error: "No standalone TIA applies to this DPA (no third-country transfer, or the TIA was excluded)" },
         { status: 404 }
       );
     }
 
-    return new Response(new Uint8Array(rendered.buffer), {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${doc === "tia" ? "TIA" : "DPA"}-${slug}-${dateStr}.pdf"`,
-      },
-    });
+    return fileResponse(file);
   } catch (err) {
     return pdfErrorResponse(err, "dpa");
   }

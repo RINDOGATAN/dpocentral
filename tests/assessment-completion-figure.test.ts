@@ -44,12 +44,13 @@ describe("the completion figure", () => {
   it("is the calculation both exports use", () => {
     const source = (rel: string) => readFileSync(path.resolve(__dirname, "..", rel), "utf8");
     for (const route of [
-      "src/app/api/export/assessment/[id]/route.ts",
-      "src/app/api/export/assessment-portfolio/route.ts",
+      // The routes render through these builders (also used by the document pack).
+      "src/server/services/export/documents/assessment.ts",
+      "src/server/services/export/documents/assessment-portfolio.ts",
     ]) {
       expect(source(route), route).toContain("assessmentProgress(");
     }
-    expect(source("src/app/api/export/assessment-portfolio/route.ts")).not.toContain(
+    expect(source("src/server/services/export/documents/assessment-portfolio.ts")).not.toContain(
       "_count.responses"
     );
   });

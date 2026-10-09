@@ -81,11 +81,13 @@ describe("the pages", () => {
     expect(cards.length).toBeGreaterThanOrEqual(4);
   });
 
-  it("a client card opens through a real button named by the client", () => {
+  it("a client row or card opens through a real button named by the client", () => {
+    // The firm view (owner's decision d9): a table on wide screens, one card
+    // per client on a phone; neither the row nor the card is clickable as a
+    // whole, the client's name is the button.
     const src = read("src/app/(dashboard)/privacy/clients/page.tsx");
     for (const card of src.match(/<Card\b[\s\S]*?>/g) ?? []) expect(card).not.toMatch(/onClick=/);
-    expect(src).toMatch(/<button\s+type="button"\s+onClick=\{\(\) => handleClientClick\(client\)\}/);
-    expect(src).toMatch(/after:absolute after:inset-0/);
-    expect(src).toMatch(/relative z-10 flex items-center gap-2 shrink-0/);
+    expect(src).not.toMatch(/<tr\b[^>]*onClick=/);
+    expect(src).toMatch(/<button\s+type="button"\s+onClick=\{onOpen\}[\s\S]*?\{row\.name\}\s*<\/button>/);
   });
 });

@@ -2,20 +2,15 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { getSessionToken } from "@/lib/session-cookie";
-import { getCookieLocale } from "@/i18n/server-locale";
-import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { BreachRegisterReport, incidentsToCSV } from "@/server/services/export/breach-register";
-import type { IncidentExportData } from "@/server/services/export/breach-register";
-import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-import { locales, defaultLocale } from "@/i18n/config";
+import { buildBreachRegisterExport } from "@/server/services/export/documents/breach-register";
+import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const organizationId = searchParams.get("organizationId");
-  const format = searchParams.get("format") || "pdf";
+  const format = searchParams.get("format") === "csv" ? "csv" : "pdf";
 
   if (!organizationId) {
     return Response.json({ error: "organizationId is required" }, { status: 400 });
@@ -31,111 +26,27 @@ export async function GET(request: Request) {
   if (limited) return limited;
 
   try {
-
-  const membership = await prisma.organizationMember.findFirst({
-    where: {
-      organizationId,
-      user: { email: userEmail },
-    },
-    include: { organization: true },
-  });
-  if (!membership) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  // Locale resolution: ?locale=es → `locale` cookie → default
-  const requestedLocale = searchParams.get("locale");
-  const cookieLocale = await getCookieLocale();
-  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
-    (l): l is string => !!l && (locales as readonly string[]).includes(l)
-  ) ?? defaultLocale;
-  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.breachRegister" });
-
-  const incidents = await prisma.incident.findMany({
-    where: { organizationId },
-    include: {
-      notifications: {
-        include: { jurisdiction: true },
+    const membership = await prisma.organizationMember.findFirst({
+      where: {
+        organizationId,
+        user: { email: userEmail },
       },
-      timeline: {
-        include: { createdBy: { select: { name: true } } },
-        orderBy: { timestamp: "asc" },
-      },
-    },
-    orderBy: { discoveredAt: "desc" },
-  });
+      include: { organization: true },
+    });
+    if (!membership) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-  const data: IncidentExportData[] = incidents.map((inc) => ({
-    id: inc.id,
-    publicId: inc.publicId,
-    title: inc.title,
-    description: inc.description,
-    type: inc.type,
-    severity: inc.severity,
-    status: inc.status,
-    discoveredAt: inc.discoveredAt,
-    discoveredBy: inc.discoveredBy,
-    discoveryMethod: inc.discoveryMethod,
-    affectedRecords: inc.affectedRecords,
-    affectedSubjects: inc.affectedSubjects,
-    dataCategories: inc.dataCategories,
-    containedAt: inc.containedAt,
-    containmentActions: inc.containmentActions,
-    rootCause: inc.rootCause,
-    resolvedAt: inc.resolvedAt,
-    resolutionNotes: inc.resolutionNotes,
-    lessonsLearned: inc.lessonsLearned,
-    notificationRequired: inc.notificationRequired,
-    notificationDeadline: inc.notificationDeadline,
-    createdAt: inc.createdAt,
-    notifications: inc.notifications.map((n) => ({
-      status: n.status,
-      notificationDate: n.sentAt,
-      jurisdiction: { name: n.jurisdiction.name, code: n.jurisdiction.code },
-    })),
-    timeline: inc.timeline.map((t) => ({
-      title: t.title,
-      description: t.description,
-      timestamp: t.timestamp,
-      user: t.createdBy,
-    })),
-  }));
-
-  const orgName = membership.organization.name;
-  const dateStr = fmtDate(new Date());
-
-  // Audit log
-  await prisma.auditLog.create({
-    data: {
+    const file = await buildBreachRegisterExport({
+      prisma,
       organizationId,
+      orgName: membership.organization.name,
       userId: membership.userId,
-      entityType: "Incident",
-      entityId: organizationId,
-      action: "EXPORT_BREACH_REGISTER",
-      changes: { format, count: data.length },
-    },
-  });
-
-  if (format === "csv") {
-    const csv = incidentsToCSV(data);
-    return new Response(csv, {
-      headers: {
-        "Content-Type": "text/csv; charset=utf-8",
-        "Content-Disposition": `attachment; filename="Breach-Register-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.csv"`,
-      },
+      locale: await resolveExportLocale(searchParams.get("locale")),
+      format,
+      audit: true,
     });
-  }
-
-    const buffer = await renderToBuffer(
-      BreachRegisterReport({ incidents: data, orgName, t, locale: resolvedLocale })
-    );
-
-    return new Response(new Uint8Array(buffer), {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="Breach-Register-${orgName.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf"`,
-      },
-    });
+    return fileResponse(file);
   } catch (err) {
     return pdfErrorResponse(err, "breach-register");
   }
