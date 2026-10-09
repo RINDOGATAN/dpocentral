@@ -20,6 +20,7 @@ import {
   ArrowRight,
   CalendarClock,
   CheckCircle2,
+  CircleDashed,
   ClipboardCheck,
   ListChecks,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const ICON: Record<NeedsActionKind, React.ElementType> = {
   "breach-window": AlertTriangle,
   "breach-decision": AlertTriangle,
   "assessment-approval": ClipboardCheck,
+  "drafts-to-confirm": CircleDashed,
 };
 
 export default function NeedsActionPage() {

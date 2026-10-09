@@ -13,6 +13,7 @@
 import type { Db } from "@/lib/prisma";
 import type { PathCounts } from "@/components/guided/path-config";
 import { isIntakeConfigured } from "@/server/services/dsar/defaultIntakeForm";
+import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
 
 function settingsObject(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -25,13 +26,19 @@ export async function loadPathCounts(
   organizationId: string,
 ): Promise<PathCounts> {
   const org = { organizationId };
+  // A draft: created by the quick start, a template or another client's copy,
+  // and not yet confirmed by a person (services/template-items/drafts.ts).
+  const drafts = { organizationId, ...DRAFT_WHERE };
 
   const [
     organization,
     dataAssets,
+    dataAssetsDrafts,
     processingActivities,
+    processingActivitiesDrafts,
     jurisdictions,
     vendors,
+    vendorsDrafts,
     vendorsAssessed,
     vendorAssessments,
     assessments,
@@ -39,6 +46,7 @@ export async function loadPathCounts(
     liaAssessments,
     liaApproved,
     transfers,
+    transfersDrafts,
     dsarRequests,
     intakeForm,
     incidents,
@@ -46,9 +54,12 @@ export async function loadPathCounts(
   ] = await Promise.all([
     prisma.organization.findFirst({ where: { id: organizationId }, select: { settings: true } }),
     prisma.dataAsset.count({ where: org }),
+    prisma.dataAsset.count({ where: drafts }),
     prisma.processingActivity.count({ where: org }),
+    prisma.processingActivity.count({ where: drafts }),
     prisma.organizationJurisdiction.count({ where: org }),
     prisma.vendor.count({ where: org }),
+    prisma.vendor.count({ where: drafts }),
     prisma.vendor.count({ where: { ...org, assessments: { some: { status: "APPROVED" } } } }),
     prisma.assessment.count({ where: { ...org, vendorId: { not: null } } }),
     prisma.assessment.count({ where: org }),
@@ -56,6 +67,7 @@ export async function loadPathCounts(
     prisma.assessment.count({ where: { ...org, template: { type: "LIA" } } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "LIA" } } }),
     prisma.dataTransfer.count({ where: org }),
+    prisma.dataTransfer.count({ where: { ...org, processingActivity: DRAFT_WHERE } }),
     prisma.dSARRequest.count({ where: org }),
     // The active intake form's shape, not just its presence: every org is
     // auto-seeded a default form so the public portal works out of the box, so
@@ -85,9 +97,12 @@ export async function loadPathCounts(
   return {
     quickstartCompleted: typeof quickstart.completedAt === "string",
     dataAssets,
+    dataAssetsDrafts,
     processingActivities,
+    processingActivitiesDrafts,
     jurisdictions,
     vendors,
+    vendorsDrafts,
     vendorsAssessed,
     vendorAssessments,
     assessments,
@@ -95,9 +110,15 @@ export async function loadPathCounts(
     liaAssessments,
     liaApproved,
     transfers,
+    transfersDrafts,
     dsarRequests,
     dsarIntakeConfigured: intakeForm ? isIntakeConfigured(intakeForm) : false,
     incidents,
     aiSystems,
   };
+}
+
+/** Records drafted and not yet confirmed, across the three kinds. */
+export function draftTotal(counts: PathCounts): number {
+  return counts.dataAssetsDrafts + counts.processingActivitiesDrafts + counts.vendorsDrafts;
 }

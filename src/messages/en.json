@@ -1533,7 +1533,11 @@
         "title": "What applies to you",
         "intro": "A few short questions about how you handle personal data. Together with the laws you operate under, they show what is likely to apply and what is worth checking. You can skip this now and set it later in Settings.",
         "skip": "Not sure yet: skip",
-        "continue": "Save and continue"
+        "continue": "Save and continue",
+        "placesQuestion": "Where does your organisation operate?",
+        "placesHint": "Choose every place where you have customers, staff or users. It decides which laws we check against. You can change it later on the What applies page.",
+        "placesUnsure": "I am not sure yet",
+        "placesFailed": "Could not save where you operate. You can set it on the What applies page."
       },
       "steps": {
         "applies": "What applies",
@@ -1675,8 +1679,8 @@
       "saveSnapshot": "Save Snapshot",
       "regulatoryReport": "Regulatory Report",
       "score": {
-        "title": "Overall Compliance Score",
-        "subtitle": "Aggregated score across all privacy modules, weighted by importance.",
+        "title": "Module score",
+        "subtitle": "Weighted across every area, by importance.",
         "strong": "Strong",
         "moderate": "Moderate",
         "needsAttention": "Needs Attention",
@@ -1687,7 +1691,9 @@
         "unrated": "Not yet rated",
         "unratedRing": "Not rated",
         "unratedSubtitle": "No module has data to score yet. Add data assets, assessments, DSARs, incidents or vendors and the score will appear here.",
-        "partialSubtitle": "Based on {rated} of {total} modules ({pct}% of the weighting). Modules with no data are excluded rather than counted as compliant."
+        "partialSubtitle": "Based on {rated} of {total} areas ({pct}% of the weighting). No rating is given until every area has data; areas with no data are left out rather than counted as compliant.",
+        "areasWithData": "Data in {rated} of {total} areas",
+        "value": "{score} / 100"
       },
       "breakdown": {
         "heading": "Module Compliance Breakdown",
@@ -8740,14 +8746,16 @@
       "todo": "not started",
       "started": "in progress",
       "done": "done",
-      "coming": "Coming"
+      "coming": "Coming",
+      "toConfirm": "to confirm"
     },
     "stepStatus": {
       "done": "done",
       "started": "in progress",
       "todo": "not started",
       "coming": "coming",
-      "optional": "optional"
+      "optional": "optional",
+      "toConfirm": "to confirm"
     },
     "account": "Account",
     "switchClient": "Client",
@@ -8870,7 +8878,9 @@
       "button": "Go to {step}",
       "allDoneTitle": "Your program is set up",
       "allDoneBody": "Every step on the path is done. Keep your records current and review them regularly.",
-      "allDoneButton": "Back to the overview"
+      "allDoneButton": "Back to the overview",
+      "toConfirm": "The quick start or a template drafted these records. Check them and confirm them: they count once a person confirms them.",
+      "reviewButton": "Review and confirm"
     },
     "band": {
       "step": "Step {number}",
@@ -8896,6 +8906,14 @@
       "changed": "Layout changed.",
       "useGuided": "Use the guided layout",
       "useClassic": "Use the classic layout"
+    },
+    "figure": {
+      "line": "{done} of {total} steps confirmed",
+      "toConfirm": "{count} to confirm",
+      "started": "{count} in progress",
+      "notStarted": "{count} not started",
+      "draftsWaiting": "{count, plural, one {# drafted record waits for a person to confirm it. It counts once confirmed.} other {# drafted records wait for a person to confirm them. They count once confirmed.}}",
+      "review": "Review and confirm"
     }
   },
   "help": {
@@ -8950,7 +8968,8 @@
     "empty": {
       "title": "No client organisations yet",
       "body": "Organisations you are a member of will appear here."
-    }
+    },
+    "draftsToConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}"
   },
   "applicability": {
     "cardTitle": "What applies to you",
@@ -9074,14 +9093,16 @@
         "dsar-due": "Rights requests due",
         "breach-window": "Breaches to notify",
         "breach-decision": "Breaches waiting for a decision on notifying",
-        "assessment-approval": "Assessments to approve"
+        "assessment-approval": "Assessments to approve",
+        "drafts-to-confirm": "Drafted records to confirm"
       },
       "hint": {
         "review-due": "Processing records whose review date has passed.",
         "dsar-due": "Open requests near or past their deadline.",
         "breach-window": "Open breaches that must be notified.",
         "breach-decision": "Breaches logged in the last 72 hours with no notification recorded and not marked as requiring one. Decide whether to notify before the window ends.",
-        "assessment-approval": "Assessments sent for review or approval."
+        "assessment-approval": "Assessments sent for review or approval.",
+        "drafts-to-confirm": "Records the quick start or a template drafted. They count towards your programme once a person confirms them."
       }
     },
     "incomplete": {
@@ -9267,5 +9288,37 @@
     "off": "Rights requests are not included in this plan.",
     "exportBody": "The rights-request records your organisation already holds can still be downloaded.",
     "exportLink": "Download the records (JSON)"
+  },
+  "drafts": {
+    "badge": "To confirm",
+    "badgeHint": "Drafted by the quick start or a template. It counts towards your programme once a person confirms it.",
+    "confirm": "Confirm",
+    "confirmedOne": "Confirmed. It now counts towards your programme.",
+    "confirmedMany": "{count, plural, one {# record confirmed} other {# records confirmed}}",
+    "confirmFailed": "Could not confirm. Try again.",
+    "noticeCount": "{count, plural, one {# drafted record to confirm.} other {# drafted records to confirm.}}",
+    "noticeWhy": "They count towards your programme once a person confirms them.",
+    "reviewAndConfirm": "Review and confirm",
+    "reviewTitle": "Review and confirm",
+    "reviewSubtitle": "The quick start, templates and copies from another client drafted these records. Open each one to check or correct it, then confirm it. Each counts towards your programme once confirmed.",
+    "reviewEmpty": "Nothing to confirm: every drafted record has been confirmed.",
+    "selectAll": "Select all",
+    "clearSelection": "Clear selection",
+    "confirmSelected": "Confirm selected ({count})",
+    "waiting": "{count, plural, one {# waiting} other {# waiting}}",
+    "approverOnly": "Only owners, admins and privacy officers can confirm records. You can open each one to review it.",
+    "selectOne": "Select {name}",
+    "kind": {
+      "dataAsset": "Data assets",
+      "processingActivity": "Processing activities",
+      "vendor": "Vendors"
+    }
+  },
+  "jurisdictionPicker": {
+    "group": {
+      "europe": "Europe",
+      "us": "United States",
+      "other": "Rest of the world"
+    }
   }
 }

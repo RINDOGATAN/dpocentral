@@ -47,6 +47,12 @@ import { makeScrubber, type ScrubFlag, type Scrubber } from "@/lib/client-templa
 import { isIntakeConfigured, type IntakeFormShape } from "@/server/services/dsar/defaultIntakeForm";
 import { isDsarModuleEnabled } from "@/config/features";
 
+/** Copied records are drafts: they count once a person confirms them. */
+const CLIENT_TEMPLATE_DRAFT = {
+  provenance: "AUTO_TEMPLATE" as const,
+  sourceRef: "client-template",
+} as const;
+
 // ─── Permission ──────────────────────────────────────────────────────────────
 
 /**
@@ -585,6 +591,8 @@ export async function applyClientTemplate(
         vendor: a.vendor,
         isProduction: a.isProduction,
         metadata: withTemplateCopyMark(null, now) as Prisma.InputJsonValue,
+        // A draft until a person confirms it (template-items/drafts.ts).
+        ...CLIENT_TEMPLATE_DRAFT,
       },
       select: { id: true },
     });
@@ -636,6 +644,8 @@ export async function applyClientTemplate(
         // A draft brought in from a template, not yet an active record.
         isActive: false,
         metadata: withTemplateCopyMark(null, now) as Prisma.InputJsonValue,
+        // A draft until a person confirms it (template-items/drafts.ts).
+        ...CLIENT_TEMPLATE_DRAFT,
       },
       select: { id: true },
     });
@@ -665,6 +675,8 @@ export async function applyClientTemplate(
         certifications: v.certifications,
         status: "UNDER_REVIEW",
         metadata: withTemplateCopyMark(null, now) as Prisma.InputJsonValue,
+        // A draft until a person confirms it (template-items/drafts.ts).
+        ...CLIENT_TEMPLATE_DRAFT,
       },
       select: { id: true },
     });

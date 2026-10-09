@@ -55,6 +55,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { DataCategory, DataSensitivity } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { ConfirmDraftButton, DraftBadge } from "@/components/privacy/draft-confirm";
 import { RecordHeader } from "@/components/privacy/record-header";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { toneForSensitivity } from "@/config/status-tone";
@@ -341,10 +342,12 @@ export default function DataAssetDetailPage() {
               <Badge variant="outline" className="border-primary text-primary">{tp("production")}</Badge>
             )}
             <TemplateBadge metadata={asset.metadata} className="text-xs" />
+            <DraftBadge record={asset} className="text-xs" />
           </>
         }
         actions={
           <>
+            <ConfirmDraftButton kind="dataAsset" id={asset.id} record={asset} />
             <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
               <Button variant="outline" size="sm">
                 <Edit className="w-4 h-4 mr-2" />

@@ -38,6 +38,9 @@ export function NextStepCard({
     ? planPaceText(planState(DPO_CENTRAL_PATH, PLAN_WINDOWS, statuses, planStart, new Date()), t)
     : null;
   const StepIcon = next?.step.icon;
+  // The step is met only by drafts: the action is to confirm them, on the
+  // review page (drafts count once a person confirms them).
+  const toConfirm = !!next && statuses?.[next.step.id] === "toConfirm";
 
   return (
     <Card className="border-primary/30 bg-primary/5" aria-busy={!statuses}>
@@ -63,7 +66,9 @@ export function NextStepCard({
               <h2 className="mt-1 font-semibold text-base sm:text-lg">
                 {t(`steps.${next.step.id}.label`)}
               </h2>
-              <p className="text-sm text-muted-foreground mt-1">{t(`steps.${next.step.id}.why`)}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {toConfirm ? t("nextStep.toConfirm") : t(`steps.${next.step.id}.why`)}
+              </p>
               {pace && (
                 <p className="text-xs text-muted-foreground mt-2">
                   <span className="sr-only">{t("plan.label")}: </span>
@@ -71,13 +76,22 @@ export function NextStepCard({
                 </p>
               )}
             </div>
-            {next.step.href && (
-              <Link href={next.step.href} className="w-full sm:w-auto shrink-0">
-                <Button className="w-full sm:w-auto gap-2">
-                  {t("nextStep.button", { step: t(`steps.${next.step.id}.label`) })}
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            {toConfirm ? (
+              <Link href="/privacy/review" className="w-full sm:w-auto shrink-0">
+                <Button className="w-full sm:w-auto gap-2 whitespace-normal h-auto min-h-9 py-2">
+                  {t("nextStep.reviewButton")}
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                 </Button>
               </Link>
+            ) : (
+              next.step.href && (
+                <Link href={next.step.href} className="w-full sm:w-auto shrink-0">
+                  <Button className="w-full sm:w-auto gap-2">
+                    {t("nextStep.button", { step: t(`steps.${next.step.id}.label`) })}
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </Button>
+                </Link>
+              )
             )}
           </>
         ) : (

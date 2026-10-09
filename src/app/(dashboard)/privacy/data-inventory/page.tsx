@@ -56,6 +56,7 @@ import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
 import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -263,6 +264,9 @@ export default function DataInventoryPage() {
       />
 
       {/* Filters, search, sort, department and saved views (all in the URL) */}
+      {/* Drafts the quick start or a template made: they count once confirmed. */}
+      <DraftsNotice />
+
       <ListFilterBar
         def={def}
         organizationId={organization?.id ?? ""}
@@ -314,6 +318,7 @@ export default function DataInventoryPage() {
                           <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{asset.name}</CardTitle>
                           <CardDescription className="text-xs sm:text-sm">{asset.owner || t("asset.ownerEmpty")}</CardDescription>
                           <TemplateBadge metadata={asset.metadata} className="mt-1 w-fit text-xs" />
+                          <DraftBadge record={asset} className="mt-1 w-fit text-xs" />
                         </CardHeader>
                         <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
                           <div className="flex justify-between text-xs sm:text-sm">
@@ -387,6 +392,7 @@ export default function DataInventoryPage() {
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2">{activity.purpose}</p>
                           <TemplateBadge metadata={activity.metadata} className="text-xs" />
+                          <DraftBadge record={activity} className="text-xs" />
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>{t("activity.assetsCount", { count: activity.assets?.length ?? 0 })}</span>
                             <Button variant="ghost" size="sm" className="h-8 px-2">
@@ -403,6 +409,7 @@ export default function DataInventoryPage() {
                                 <CardTitle className="text-base">{activity.name}</CardTitle>
                                 <CardDescription className="line-clamp-1">{activity.purpose}</CardDescription>
                                 <TemplateBadge metadata={activity.metadata} className="mt-1.5 text-xs" />
+                                <DraftBadge record={activity} className="mt-1.5 text-xs" />
                               </div>
                               <Badge>{activity.legalBasis ? t(`legalBasis.${activity.legalBasis}`) : t("activity.noBasis")}</Badge>
                             </div>

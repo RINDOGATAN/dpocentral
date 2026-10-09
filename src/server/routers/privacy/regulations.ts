@@ -206,6 +206,83 @@ export const regulationsRouter = createTRPCRouter({
       return { jurisdiction, orgJurisdiction };
     }),
 
+  // "Where does your organisation operate?" (the quick start's first step,
+  // owner's decision d8): the organisation's places become exactly the ones
+  // chosen. Only the places the picker offers are touched
+  // (src/config/jurisdiction-places.ts): an AI-governance entry declared on the
+  // "What applies" page is never removed from here. At least one place: an
+  // empty choice means "not sure yet", which the screen does not send.
+  setJurisdictions: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        codes: z.array(z.string()).min(1).max(60),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
+      const { isPlaceCode, PLACE_CODES } = await import("@/config/jurisdiction-places");
+      const codes = [...new Set(input.codes)];
+      const unknown = codes.filter((c) => !isPlaceCode(c));
+      if (unknown.length > 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown place: ${unknown.join(", ")}` });
+      }
+      const organizationId = ctx.organization.id;
+
+      const current = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId },
+        include: { jurisdiction: { select: { code: true } } },
+      });
+      const currentCodes = new Set(current.map((oj) => oj.jurisdiction.code));
+      const added = codes.filter((c) => !currentCodes.has(c));
+      const removed = current.filter(
+        (oj) => PLACE_CODES.includes(oj.jurisdiction.code) && !codes.includes(oj.jurisdiction.code)
+      );
+
+      for (const code of added) {
+        const entry = JURISDICTION_CATALOG.find((j) => j.code === code)!;
+        const jurisdiction = await ctx.prisma.jurisdiction.upsert({
+          where: { code },
+          update: {},
+          create: {
+            code: entry.code,
+            name: entry.name,
+            region: entry.region,
+            dsarDeadlineDays: entry.dsarDeadlineDays,
+            breachNotificationHours: entry.breachNotificationHours,
+            requirements: {
+              keyRequirements: entry.keyRequirements,
+              applicabilityCriteria: entry.applicabilityCriteria,
+              penalties: entry.penalties,
+            },
+          },
+        });
+        await ctx.prisma.organizationJurisdiction.upsert({
+          where: { organizationId_jurisdictionId: { organizationId, jurisdictionId: jurisdiction.id } },
+          update: {},
+          create: { organizationId, jurisdictionId: jurisdiction.id },
+        });
+      }
+      if (removed.length > 0) {
+        await ctx.prisma.organizationJurisdiction.deleteMany({
+          where: { organizationId, id: { in: removed.map((oj) => oj.id) } },
+        });
+      }
+      if (added.length > 0 || removed.length > 0) {
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId,
+            userId: ctx.session.user.id,
+            entityType: "OrganizationJurisdiction",
+            entityId: organizationId,
+            action: "UPDATE",
+            changes: { added, removed: removed.map((oj) => oj.jurisdiction.code), source: "quickstart" },
+          },
+        });
+      }
+      return { codes, added: added.length, removed: removed.length };
+    }),
+
   // Remove a jurisdiction from the organization
   removeJurisdiction: writerProcedure
     .input(

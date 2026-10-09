@@ -36,6 +36,7 @@ import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "@/components/guided/path-config"
 import { nextStep, stageProgress, type PathStatuses, type StageState } from "@/components/guided/path";
 import { planState } from "@/components/guided/plan";
 import { planSummaryText } from "@/components/guided/plan-text";
+import { figureFor, ProgramFigureLine } from "@/components/guided/program-figure";
 
 /** A relative time in the active locale, or null for "no activity yet". */
 function useRelativeTime() {
@@ -61,6 +62,7 @@ function useRelativeTime() {
 const STAGE_DOT: Record<StageState, string> = {
   done: "bg-primary border-primary",
   started: "bg-amber-500 border-amber-500",
+  toConfirm: "bg-transparent border-amber-500",
   todo: "bg-transparent border-muted-foreground/40",
   coming: "bg-transparent border-dashed border-muted-foreground/40",
 };
@@ -219,6 +221,21 @@ export default function ClientsPage() {
                       )}
                     </div>
                   </div>
+
+                  {/* The one programme figure, as on the client's own dashboard. */}
+                  {(() => {
+                    const figure = figureFor(statuses);
+                    return figure ? (
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm">
+                        <ProgramFigureLine figure={figure} className="font-medium" />
+                        {client.drafts > 0 && (
+                          <span className="text-xs text-muted-foreground">
+                            {t("draftsToConfirm", { count: client.drafts })}
+                          </span>
+                        )}
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* Stage rings */}
                   <div className="flex items-center justify-between gap-2">

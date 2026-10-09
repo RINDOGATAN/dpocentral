@@ -49,18 +49,34 @@ import { withoutSteps, type PathConfig } from "./path";
 import { isDsarModuleEnabled } from "@/config/features";
 import type { PlanWindow } from "./plan";
 
-/** What the rules read. Counts only: nothing here names a record. */
+/**
+ * What the rules read. Counts only: nothing here names a record.
+ *
+ * Drafts (owner's decision d2, 9 October 2026): a data asset, a processing
+ * activity or a vendor that the quick start, an industry template or "Start
+ * from another client" created is a draft until a person confirms it
+ * (src/server/services/template-items/drafts.ts). The `...Drafts` counts are
+ * the part of each total still waiting; the rules count only the rest, so a
+ * step met by drafts alone reads "to confirm", never "done".
+ */
 export interface PathCounts {
   /** The quick start has been run to the end at least once (settings flag). */
   quickstartCompleted: boolean;
-  /** Data assets (the inventory). */
+  /** Data assets (the inventory), drafts included. */
   dataAssets: number;
-  /** Processing activities (records of processing / ROPA). */
+  /** Of those, drafts not yet confirmed. */
+  dataAssetsDrafts: number;
+  /** Processing activities (records of processing / ROPA), drafts included. */
   processingActivities: number;
+  /** Of those, drafts not yet confirmed. */
+  processingActivitiesDrafts: number;
   /** Operating jurisdictions declared for the organisation. */
   jurisdictions: number;
 
+  /** Vendors, drafts included. */
   vendors: number;
+  /** Of those, drafts not yet confirmed. */
+  vendorsDrafts: number;
   /** Vendors with a completed due-diligence assessment (approved, vendor-linked). */
   vendorsAssessed: number;
   /** Vendor-linked assessments in any state. */
@@ -72,7 +88,10 @@ export interface PathCounts {
   liaAssessments: number;
   /** Legitimate-interest assessments approved. */
   liaApproved: number;
+  /** Cross-border transfers, including those of draft activities. */
   transfers: number;
+  /** Of those, transfers recorded on a processing activity that is still a draft. */
+  transfersDrafts: number;
 
   /** Data-subject requests received. */
   dsarRequests: number;
@@ -92,9 +111,12 @@ export interface PathCounts {
 export const EMPTY_PATH_COUNTS: PathCounts = {
   quickstartCompleted: false,
   dataAssets: 0,
+  dataAssetsDrafts: 0,
   processingActivities: 0,
+  processingActivitiesDrafts: 0,
   jurisdictions: 0,
   vendors: 0,
+  vendorsDrafts: 0,
   vendorsAssessed: 0,
   vendorAssessments: 0,
   assessments: 0,
@@ -102,11 +124,29 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
   liaAssessments: 0,
   liaApproved: 0,
   transfers: 0,
+  transfersDrafts: 0,
   dsarRequests: 0,
   dsarIntakeConfigured: false,
   incidents: 0,
   aiSystems: 0,
 };
+
+/** Records a person has confirmed (or entered by hand): the total less the drafts. */
+const confirmed = (total: number, drafts: number) => Math.max(0, total - drafts);
+
+/**
+ * The status of a step that is met by "at least one record": done when one is
+ * confirmed, to confirm when there are only drafts, otherwise `otherwise`.
+ */
+function recordStep(
+  total: number,
+  drafts: number,
+  otherwise: "started" | "todo" = "todo",
+): "done" | "toConfirm" | "started" | "todo" {
+  if (confirmed(total, drafts) > 0) return "done";
+  if (total > 0) return "toConfirm";
+  return otherwise;
+}
 
 const FULL_PATH: PathConfig<PathCounts> = {
   stages: [
@@ -120,9 +160,10 @@ const FULL_PATH: PathConfig<PathCounts> = {
           icon: Sparkles,
           // Sets up the whole organisation: not shown to a department-limited member.
           orgWide: true,
-          rule: "Done when the quick start has been completed once, or when the work it would do already exists (at least one data asset and one vendor). Started when a data asset, a vendor or a processing activity exists.",
+          rule: "Done when the quick start has been completed once, or when the work it would do already exists (at least one confirmed data asset and one confirmed vendor). Started when a data asset, a vendor or a processing activity exists.",
           status: (c) =>
-            c.quickstartCompleted || (c.dataAssets > 0 && c.vendors > 0)
+            c.quickstartCompleted ||
+            (confirmed(c.dataAssets, c.dataAssetsDrafts) > 0 && confirmed(c.vendors, c.vendorsDrafts) > 0)
               ? "done"
               : c.dataAssets + c.vendors + c.processingActivities > 0
                 ? "started"
@@ -172,8 +213,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "dataInventory",
           href: "/privacy/data-inventory",
           icon: Database,
-          rule: "Done when at least one data asset is recorded. Started never: an inventory is either begun or not.",
-          status: (c) => (c.dataAssets > 0 ? "done" : "todo"),
+          rule: "Done when at least one data asset is confirmed (entered by a person, or drafted and then confirmed). To confirm when only drafts exist. Started never: an inventory is either begun or not.",
+          status: (c) => recordStep(c.dataAssets, c.dataAssetsDrafts),
         },
         {
           id: "ropa",
@@ -181,16 +222,16 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // An activity's own page (and its edit page) is this step, not 3.1.
           alsoAt: ["/privacy/data-inventory/activities"],
           icon: ClipboardList,
-          rule: "Done when at least one processing activity (record of processing) is recorded. Started when a data asset exists without one.",
+          rule: "Done when at least one processing activity (record of processing) is confirmed. To confirm when only drafts exist. Started when a data asset exists without one.",
           status: (c) =>
-            c.processingActivities > 0 ? "done" : c.dataAssets > 0 ? "started" : "todo",
+            recordStep(c.processingActivities, c.processingActivitiesDrafts, c.dataAssets > 0 ? "started" : "todo"),
         },
         {
           id: "vendors",
           href: "/privacy/vendors",
           icon: Building2,
-          rule: "Done when at least one vendor is recorded (the vendor catalogue is the way to add one).",
-          status: (c) => (c.vendors > 0 ? "done" : "todo"),
+          rule: "Done when at least one vendor is confirmed (the vendor catalogue is the way to add one). To confirm when only drafts exist.",
+          status: (c) => recordStep(c.vendors, c.vendorsDrafts),
         },
         // Last in the stage, read-only and never counted: it appears only when
         // the organisation actually has an AI system, and links to the list
@@ -222,8 +263,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "transfers",
           href: "/privacy/transfers",
           icon: Globe,
-          rule: "Done when at least one cross-border transfer is recorded with its mechanism. Started never.",
-          status: (c) => (c.transfers > 0 ? "done" : "todo"),
+          rule: "Done when at least one cross-border transfer is recorded with its mechanism on a confirmed processing activity. To confirm when every transfer sits on a draft activity. Started never.",
+          status: (c) => recordStep(c.transfers, c.transfersDrafts),
         },
         {
           id: "vendorDueDiligence",

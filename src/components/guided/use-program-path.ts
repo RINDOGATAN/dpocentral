@@ -36,6 +36,8 @@ export function useProgramPathQuery(): {
   steps: PathStatuses | null;
   /** Day 1 of the 30/60/90-day plan (ISO), null before it starts. */
   planStart: string | null;
+  /** Records drafted and not yet confirmed; null while loading. */
+  drafts: number | null;
   refreshing: boolean;
 } {
   const { organization } = useOrganization();
@@ -43,7 +45,12 @@ export function useProgramPathQuery(): {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id, staleTime: STALE_MS, refetchOnWindowFocus: false },
   );
-  return { steps: data?.steps ?? null, planStart: data?.planStart ?? null, refreshing: isFetching };
+  return {
+    steps: data?.steps ?? null,
+    planStart: data?.planStart ?? null,
+    drafts: data?.drafts ?? null,
+    refreshing: isFetching,
+  };
 }
 
 /** The 30/60/90-day plan's state for the current organisation; null while it loads. */

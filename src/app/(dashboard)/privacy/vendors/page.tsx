@@ -40,6 +40,7 @@ import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
 import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
@@ -259,6 +260,9 @@ export default function VendorsPage() {
       )}
 
       {/* Filters, search, sort and saved views (all in the URL) */}
+      {/* Drafts the quick start or a template made: they count once confirmed. */}
+      <DraftsNotice />
+
       <ListFilterBar
         def={def}
         organizationId={organization?.id ?? ""}
@@ -297,6 +301,7 @@ export default function VendorsPage() {
                     {(vendor.categories as string[])?.join(" - ") || t("card.noCategories")}
                   </CardDescription>
                   <TemplateBadge metadata={vendor.metadata} className="mt-1 w-fit text-xs" />
+                  <DraftBadge record={vendor} className="mt-1 w-fit text-xs" />
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {vendor.dataProcessed && (vendor.dataProcessed as string[]).length > 0 && (

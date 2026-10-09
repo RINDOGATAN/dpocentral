@@ -25,6 +25,7 @@ import {
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { formatIncidentRef } from "@/lib/incident-ref";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
@@ -193,7 +194,7 @@ export default function IncidentsPage() {
                   {/* Mobile Layout - Stacked */}
                   <div className="flex flex-col gap-3 sm:hidden">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-medium font-mono text-primary text-sm">{incident.publicId}</span>
+                      <span className="font-medium font-mono text-primary text-sm" title={incident.publicId}>{formatIncidentRef(incident.publicId)}</span>
                       <StatusChip tone={toneForRiskTier(incident.severity)} className="text-xs shrink-0">
                         {t(`severity.${incident.severity}`)}
                       </StatusChip>
@@ -235,7 +236,7 @@ export default function IncidentsPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium font-mono text-primary">{incident.publicId}</span>
+                        <span className="font-medium font-mono text-primary" title={incident.publicId}>{formatIncidentRef(incident.publicId)}</span>
                         <Badge variant="outline">{t(`type.${incident.type}`)}</Badge>
                         <StatusChip tone={toneForRiskTier(incident.severity)}>
                           {t(`severity.${incident.severity}`)}
