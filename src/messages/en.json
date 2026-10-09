@@ -8747,7 +8747,8 @@
       "started": "in progress",
       "done": "done",
       "coming": "Coming",
-      "toConfirm": "to confirm"
+      "toConfirm": "to confirm",
+      "action": "needs action"
     },
     "stepStatus": {
       "done": "done",
@@ -8755,7 +8756,8 @@
       "todo": "not started",
       "coming": "coming",
       "optional": "optional",
-      "toConfirm": "to confirm"
+      "toConfirm": "to confirm",
+      "action": "needs action"
     },
     "account": "Account",
     "switchClient": "Client",
@@ -8914,6 +8916,33 @@
       "notStarted": "{count} not started",
       "draftsWaiting": "{count, plural, one {# drafted record waits for a person to confirm it. It counts once confirmed.} other {# drafted records wait for a person to confirm them. They count once confirmed.}}",
       "review": "Review and confirm"
+    },
+    "notYetGroup": "Not in DPO Central yet",
+    "stepDocsLabel": "Documents",
+    "areas": {
+      "title": "Areas",
+      "coming": "Not in DPO Central yet",
+      "confirm": "Confirm the drafted records",
+      "step": "Next: {step}",
+      "done": "Every step done"
+    },
+    "nextActions": {
+      "title": "Next three actions",
+      "open": "Open",
+      "review": "Review",
+      "continue": "Continue",
+      "allNeedsAction": "Everything that needs action ({count})",
+      "empty": "Nothing waits for you, and every step on the path is done.",
+      "toConfirm": "Drafted records count once a person confirms them."
+    },
+    "deadlines": {
+      "title": "Deadlines at risk",
+      "breachDecision": "Breach {ref}: decide whether to notify",
+      "breachNotify": "Breach {ref}: notify",
+      "dsarDue": "Rights request {ref} due",
+      "plan": "Plan: day {day} milestone",
+      "overdue": "overdue since {date}",
+      "empty": "No deadline in the next 30 days."
     }
   },
   "help": {
@@ -8943,7 +8972,9 @@
       "guidesTitle": "Start with a short guide",
       "dismiss": "Got it",
       "reopen": "Reopen it any time from the help button."
-    }
+    },
+    "expertsLine": "Need a hand? Experts can help with setup, deployment and compliance work.",
+    "expertsLink": "Find an expert"
   },
   "portfolio": {
     "title": "All clients",
@@ -9319,6 +9350,87 @@
       "europe": "Europe",
       "us": "United States",
       "other": "Rest of the world"
+    }
+  },
+  "documentRegister": {
+    "title": "Documents you can produce today",
+    "subtitle": "Every document DPO Central can produce, with its state and what it still needs.",
+    "state": {
+      "ready": "ready",
+      "draft": "draft",
+      "needsInput": "needs an input",
+      "notYet": "not in DPO Central yet"
+    },
+    "legend": {
+      "ready": "Ready",
+      "draft": "Draft, the gaps are listed",
+      "needsInput": "Needs an input, named",
+      "notYet": "Not in DPO Central yet"
+    },
+    "needs": "needs: {input}",
+    "inputs": {
+      "jurisdiction": "where you operate",
+      "activity": "a processing activity",
+      "vendor": "a vendor",
+      "assessment": "an assessment",
+      "dpiaStart": "a DPIA to be started",
+      "dpiaModule": "the DPIA module",
+      "dpiaModuleHosted": "the DPIA module",
+      "dpaFacts": "contract facts for a vendor",
+      "incident": "an incident logged",
+      "aiAssist": "AI assistance switched on",
+      "notificationRecord": "a notification record on an incident",
+      "dsarRequest": "a rights request"
+    },
+    "inputAction": {
+      "default": "Add it",
+      "dpiaModule": "How to get it",
+      "dpiaModuleHosted": "How to get it",
+      "aiAssist": "Open settings",
+      "dpaFacts": "Start",
+      "dpiaStart": "Start"
+    },
+    "gaps": {
+      "toConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",
+      "incomplete": "{count, plural, one {# record misses a required field} other {# records miss a required field}}",
+      "notApproved": "{count, plural, one {# not approved yet} other {# not approved yet}}",
+      "impactMissing": "{count, plural, one {# incident with no impact recorded} other {# incidents with no impact recorded}}",
+      "openRequests": "{count, plural, one {# request open, none completed} other {# requests open, none completed}}",
+      "noRecords": "no confirmed records yet"
+    },
+    "readyLine": "Content is real and confirmed.",
+    "format": {
+      "pdf": "PDF",
+      "csv": "CSV",
+      "screen": "on screen"
+    },
+    "open": "Open",
+    "downloadLabel": "Download {name} as {format}",
+    "items": {
+      "regulatoryReport": "Regulatory report",
+      "ropa": "Records of processing (ROPA)",
+      "vendorRegister": "Vendor register",
+      "dpa": "DPA with a vendor (and TIA)",
+      "assessmentReport": "Assessment report",
+      "dpia": "DPIA",
+      "assessmentPortfolio": "Assessment portfolio",
+      "dsarPerformance": "Rights request performance report",
+      "breachRegister": "Breach register",
+      "breachNotification": "Breach notification draft",
+      "programmeReport": "Privacy programme report",
+      "privacyNotice": "Privacy notice",
+      "dpoAppointment": "DPO appointment",
+      "trainingRecord": "Staff training record",
+      "consentRecords": "Notices and consent records",
+      "responseLetter": "Response letter to a rights request",
+      "boardReport": "Board report"
+    },
+    "notYetLine": "Not in DPO Central yet: {names}",
+    "missing": {
+      "title": "What is missing",
+      "notStarted": "Not started: {steps}.",
+      "notYet": "Not in DPO Central yet: {names}.",
+      "none": "Nothing is missing on the path."
     }
   }
 }

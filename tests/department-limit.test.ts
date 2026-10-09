@@ -147,10 +147,15 @@ describe("the sidebar and the Guided home", () => {
     const home = read("src/app/(dashboard)/privacy/page.tsx");
     expect(home).toContain("const { orgWide } = useMemberScope()");
     expect(home).toContain("if (!orgWide || !isEmptyOrg || fromQuickstart) return;");
-    expect(home).toContain('skin === "guided" && orgWide && <NextStepCard');
-    expect(home).toContain('skin !== "guided" && showQuickstart && orgWide &&');
+    // Classic: the quick start card and its two whole-programme actions.
+    expect(home).toContain("classic && showQuickstart && orgWide &&");
     // The quick start action and the whole-programme report.
     expect(home.match(/\{orgWide && \(/g)?.length).toBe(2);
+    // Guided (decision d7): the organisation's figure, areas, documents and
+    // next actions only for a member who sees the whole organisation.
+    const guided = read("src/components/guided/guided-dashboard.tsx");
+    expect(guided).toContain("const { orgWide } = useMemberScope()");
+    expect(guided).toContain("{orgWide ? (");
   });
 
   it("the quick start page says why, in both languages", () => {

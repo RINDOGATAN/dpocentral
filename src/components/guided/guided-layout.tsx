@@ -46,7 +46,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { MENU_COOKIE, cookieAssignment } from "@/lib/skin";
 import { signOutOfSuite } from "@/lib/sign-out";
-import { features } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
@@ -59,6 +59,9 @@ import { StepBand } from "./step-band";
 import { ProgressBar } from "./progress-ring";
 import { usePlanState, useProgramPath, useProgramPathRefresh } from "./use-program-path";
 import { planDayText } from "./plan-text";
+import { useProgrammeOverview } from "./use-programme-overview";
+import { stepNoteText } from "./document-words";
+import { attentionStages, notYetEntries, stepDocumentRows } from "@/lib/programme-overview";
 import { useSkin } from "./skin-context";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
@@ -97,7 +100,11 @@ export function GuidedLayout({
   const stepId = currentStepId(DPO_CENTRAL_PATH, pathname, search);
   const t = useTranslations("guided");
   const tn = useTranslations("nav");
+  const td = useTranslations("documentRegister");
   const statuses = useProgramPath();
+  // The document register's states and what needs action: the same answer
+  // the dashboard panel reads (decisions d4 and d6).
+  const { overview } = useProgrammeOverview();
   const plan = usePlanState();
   const { organization } = useOrganization();
   const { isProfessional } = useUserType();
@@ -129,6 +136,20 @@ export function GuidedLayout({
     showProgress: !limited,
   };
   if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);
+  const stepRows = overview ? stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents) : {};
+  const stepNotes = Object.fromEntries(
+    Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows)]),
+  );
+  const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
+  const fullMenuProps = {
+    ...menuProps,
+    stepNotes,
+    attention: overview ? attentionStages(overview.needsAction) : [],
+    notYet:
+      missing.length > 0
+        ? { title: t("notYetGroup"), items: missing.map((entry) => td(`items.${entry.id}`)) }
+        : null,
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -180,7 +201,7 @@ export function GuidedLayout({
           <div className="px-3 pb-6 flex flex-col gap-4">
             <OrganizationBlock onNavigate={() => setSheetOpen(false)} />
             <DepartmentSwitch />
-            <PathMenu {...menuProps} variant="sheet" onNavigate={() => setSheetOpen(false)} />
+            <PathMenu {...fullMenuProps} variant="sheet" onNavigate={() => setSheetOpen(false)} />
             <Button
               variant="ghost"
               className="w-full justify-start gap-3 min-h-11 text-base rounded-lg"
@@ -217,7 +238,7 @@ export function GuidedLayout({
                 </div>
               )}
               <div className={collapsed ? "" : "mt-4"}>
-                <PathMenu {...menuProps} variant="sidebar" collapsed={collapsed} />
+                <PathMenu {...fullMenuProps} variant="sidebar" collapsed={collapsed} />
               </div>
             </div>
             <div

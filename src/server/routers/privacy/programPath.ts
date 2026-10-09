@@ -20,6 +20,12 @@ import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath } from "@/components/guided/path";
 import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
 import { loadPlanStart } from "@/server/services/program/plan-start";
+import { loadDocumentFacts } from "@/server/services/program/document-facts";
+import { loadDeadlines } from "@/server/services/program/deadlines";
+import { evaluateRegister, registerFor } from "@/config/document-register";
+import { isDsarModuleEnabled } from "@/config/features";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
+import { collectNeedsAction } from "@/server/services/views/queries";
 
 export const programPathRouter = createTRPCRouter({
   status: organizationProcedure
@@ -38,6 +44,39 @@ export const programPathRouter = createTRPCRouter({
         // Records drafted for this organisation and not yet confirmed: what
         // "Review and confirm" holds (services/template-items/drafts.ts).
         drafts: draftTotal(counts),
+      };
+    }),
+
+  /**
+   * The dashboard's programme overview, and the menu's document lines
+   * (owner's decisions d4 to d7, 9 October 2026): every document in the
+   * register with its state, what needs action, and the deadlines at risk.
+   * One query for both, so the panel and the menu read the same answer.
+   *
+   * Organisation-wide figures: a member limited to departments gets nothing
+   * but `limited: true` (src/lib/department-limit.ts), as the menu and the
+   * dashboard show such a member no organisation-wide progress.
+   */
+  overview: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+      if (!scope.all) {
+        return { limited: true as const, documents: [], needsAction: [], deadlines: [] };
+      }
+      const [facts, needsAction, deadlines] = await Promise.all([
+        loadDocumentFacts(ctx.prisma, ctx.organization.id),
+        collectNeedsAction(ctx.prisma, ctx.organization.id, scope),
+        loadDeadlines(ctx.prisma, ctx.organization.id, {
+          role: ctx.membership.role,
+          userId: ctx.session.user.id,
+        }),
+      ]);
+      return {
+        limited: false as const,
+        documents: evaluateRegister(registerFor({ dsarEnabled: isDsarModuleEnabled() }), facts),
+        needsAction: needsAction.items,
+        deadlines,
       };
     }),
 });

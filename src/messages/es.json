@@ -8747,7 +8747,8 @@
       "started": "en curso",
       "done": "hecho",
       "coming": "Próximamente",
-      "toConfirm": "por confirmar"
+      "toConfirm": "por confirmar",
+      "action": "requiere acción"
     },
     "stepStatus": {
       "done": "hecho",
@@ -8755,7 +8756,8 @@
       "todo": "sin empezar",
       "coming": "próximamente",
       "optional": "opcional",
-      "toConfirm": "por confirmar"
+      "toConfirm": "por confirmar",
+      "action": "requiere acción"
     },
     "account": "Cuenta",
     "switchClient": "Cliente",
@@ -8914,6 +8916,33 @@
       "notStarted": "{count} sin empezar",
       "draftsWaiting": "{count, plural, one {# registro en borrador espera a que una persona lo confirme. Cuenta cuando está confirmado.} other {# registros en borrador esperan a que una persona los confirme. Cuentan cuando están confirmados.}}",
       "review": "Revisar y confirmar"
+    },
+    "notYetGroup": "Aún no en DPO Central",
+    "stepDocsLabel": "Documentos",
+    "areas": {
+      "title": "Áreas",
+      "coming": "Aún no en DPO Central",
+      "confirm": "Confirma los registros en borrador",
+      "step": "Siguiente: {step}",
+      "done": "Todos los pasos hechos"
+    },
+    "nextActions": {
+      "title": "Tus tres próximas acciones",
+      "open": "Abrir",
+      "review": "Revisar",
+      "continue": "Continuar",
+      "allNeedsAction": "Todo lo que requiere acción ({count})",
+      "empty": "No hay nada pendiente y todos los pasos de la ruta están hechos.",
+      "toConfirm": "Los registros en borrador cuentan cuando una persona los confirma."
+    },
+    "deadlines": {
+      "title": "Plazos en riesgo",
+      "breachDecision": "Brecha {ref}: decide si notificar",
+      "breachNotify": "Brecha {ref}: notificar",
+      "dsarDue": "La solicitud de derechos {ref} vence",
+      "plan": "Plan: hito del día {day}",
+      "overdue": "vencido desde el {date}",
+      "empty": "Ningún plazo en los próximos 30 días."
     }
   },
   "help": {
@@ -8943,7 +8972,9 @@
       "guidesTitle": "Empieza por una guía breve",
       "dismiss": "Entendido",
       "reopen": "Vuelve a abrirlo cuando quieras desde el botón de ayuda."
-    }
+    },
+    "expertsLine": "¿Necesitas ayuda? Hay expertos que pueden ayudarte con la puesta en marcha, el despliegue y el cumplimiento.",
+    "expertsLink": "Buscar un experto"
   },
   "portfolio": {
     "title": "Todos los clientes",
@@ -9319,6 +9350,87 @@
       "europe": "Europa",
       "us": "Estados Unidos",
       "other": "Resto del mundo"
+    }
+  },
+  "documentRegister": {
+    "title": "Documentos que puedes generar hoy",
+    "subtitle": "Todos los documentos que DPO Central puede generar, con su estado y lo que aún les falta.",
+    "state": {
+      "ready": "listo",
+      "draft": "borrador",
+      "needsInput": "falta un dato",
+      "notYet": "aún no en DPO Central"
+    },
+    "legend": {
+      "ready": "Listo",
+      "draft": "Borrador, con lo que falta",
+      "needsInput": "Falta un dato, que se indica",
+      "notYet": "Aún no en DPO Central"
+    },
+    "needs": "necesita: {input}",
+    "inputs": {
+      "jurisdiction": "dónde operas",
+      "activity": "una actividad de tratamiento",
+      "vendor": "un proveedor",
+      "assessment": "una evaluación",
+      "dpiaStart": "empezar una EIPD",
+      "dpiaModule": "el módulo de EIPD",
+      "dpiaModuleHosted": "el módulo de EIPD",
+      "dpaFacts": "los datos del contrato con un proveedor",
+      "incident": "un incidente registrado",
+      "aiAssist": "la asistencia de IA activada",
+      "notificationRecord": "un registro de notificación en un incidente",
+      "dsarRequest": "una solicitud de derechos"
+    },
+    "inputAction": {
+      "default": "Añadir",
+      "dpiaModule": "Cómo conseguirlo",
+      "dpiaModuleHosted": "Cómo conseguirlo",
+      "aiAssist": "Abrir ajustes",
+      "dpaFacts": "Empezar",
+      "dpiaStart": "Empezar"
+    },
+    "gaps": {
+      "toConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}",
+      "incomplete": "{count, plural, one {# registro sin un campo obligatorio} other {# registros sin algún campo obligatorio}}",
+      "notApproved": "{count, plural, one {# sin aprobar} other {# sin aprobar}}",
+      "impactMissing": "{count, plural, one {# incidente sin impacto registrado} other {# incidentes sin impacto registrado}}",
+      "openRequests": "{count, plural, one {# solicitud abierta, ninguna completada} other {# solicitudes abiertas, ninguna completada}}",
+      "noRecords": "aún no hay registros confirmados"
+    },
+    "readyLine": "El contenido es real y está confirmado.",
+    "format": {
+      "pdf": "PDF",
+      "csv": "CSV",
+      "screen": "en pantalla"
+    },
+    "open": "Abrir",
+    "downloadLabel": "Descargar {name} en {format}",
+    "items": {
+      "regulatoryReport": "Informe normativo",
+      "ropa": "Registro de actividades de tratamiento (RAT)",
+      "vendorRegister": "Registro de proveedores",
+      "dpa": "Contrato de encargo con un proveedor (y TIA)",
+      "assessmentReport": "Informe de evaluación",
+      "dpia": "EIPD",
+      "assessmentPortfolio": "Cartera de evaluaciones",
+      "dsarPerformance": "Informe de gestión de solicitudes de derechos",
+      "breachRegister": "Registro de brechas",
+      "breachNotification": "Borrador de notificación de brecha",
+      "programmeReport": "Informe del programa de privacidad",
+      "privacyNotice": "Política de privacidad",
+      "dpoAppointment": "Designación del DPD",
+      "trainingRecord": "Registro de formación del personal",
+      "consentRecords": "Avisos y registros de consentimiento",
+      "responseLetter": "Carta de respuesta a una solicitud de derechos",
+      "boardReport": "Informe para la dirección"
+    },
+    "notYetLine": "Aún no en DPO Central: {names}",
+    "missing": {
+      "title": "Lo que falta",
+      "notStarted": "Sin empezar: {steps}.",
+      "notYet": "Aún no en DPO Central: {names}.",
+      "none": "No falta nada en la ruta."
     }
   }
 }
