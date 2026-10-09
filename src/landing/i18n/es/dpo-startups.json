@@ -13,7 +13,7 @@
   "hero.platform_url": "https://dpocentral.todo.law",
 
   "social.title": "Diseñado para startups que tratan datos personales",
-  "social.s1": "Preparado para el RGPD",
+  "social.s1": "Pensado para programas del RGPD",
   "social.s2": "5 módulos integrados",
   "social.s3": "RAT del art. 30",
 
@@ -24,7 +24,7 @@
   "value.v1.desc": "Mantén actualizado el registro de actividades de tratamiento. Controla categorías de datos, bases jurídicas, plazos de conservación y flujos de datos. Genera el registro del art. 30 cuando lo necesites.",
   "value.v2.title": "Gestiona el ejercicio de derechos a escala",
   "value.v2.desc": "Un portal donde los interesados envían solicitudes de acceso, supresión o rectificación. Controla los plazos y responde dentro de los plazos legales.",
-  "value.v3.title": "De la brecha a la notificación en 72 h",
+  "value.v3.title": "Controla el plazo de 72 h de las brechas",
   "value.v3.desc": "Registra, evalúa y escala las brechas de seguridad de los datos personales con flujos estructurados. Análisis automático de los arts. 33 y 34 para notificar a la autoridad de control y comunicar a los interesados.",
   "value.v4.title": "Evaluaciones de impacto estructuradas",
   "value.v4.desc": "Flujos guiados para EIPD, LIA y TIA. Puntuación de riesgo y recomendaciones de mitigación incluidas; mapas de calor previstos.",
@@ -40,7 +40,7 @@
   "workflow.s3.title": "Realiza tus evaluaciones",
   "workflow.s3.desc": "EIPD, LIA y TIA: cuestionarios guiados con puntuación de riesgo.",
   "workflow.s4.title": "Supervisa y responde",
-  "workflow.s4.desc": "Gestiona incidentes y proveedores, y mantente preparado para las auditorías.",
+  "workflow.s4.desc": "Gestiona incidentes y proveedores, y mantén tus registros al día para las auditorías.",
 
   "feat.label": "Funciones principales",
   "feat.heading.prefix": "Todo lo que un DPD ",
