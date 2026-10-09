@@ -25,6 +25,9 @@ model User {
   emailVerified DateTime?
   image         String?
   userType      UserType?
+  // Language the person last used in the app ("en" or "es"); the language of
+  // e-mails sent to them when no request is in progress (reminders).
+  locale        String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -119,6 +122,10 @@ model Organization {
   // Hosted pilot: first sign-in after the pilot went live; the 90-day editing
   // window counts from here. Null until then (and always on the kit).
   pilotStartedAt DateTime?
+
+  // Rights requests: e-mail reminders before the deadline (7, 3 and 1 day,
+  // and once overdue). On by default; switched off in the request settings.
+  dsarRemindersEnabled Boolean @default(true)
 
   // Relations
   members              OrganizationMember[]
@@ -648,11 +655,36 @@ model DSARRequest {
   tasks          DSARTask[]
   communications DSARCommunication[]
   auditLog       DSARAuditLog[]
+  reminders      DsarReminder[]
 
   @@index([organizationId])
   @@index([status])
   @@index([dueDate])
   @@map("dsar_requests")
+}
+
+enum DsarReminderKind {
+  DAYS_7
+  DAYS_3
+  DAYS_1
+  OVERDUE
+}
+
+// One row per deadline reminder sent: the guard that keeps a reminder from
+// going out twice. Keyed by the due date it was computed from, so a request
+// whose deadline is extended is reminded again before the new date.
+model DsarReminder {
+  id             String           @id @default(cuid())
+  dsarRequestId  String
+  kind           DsarReminderKind
+  dueDate        DateTime
+  recipientCount Int              @default(0)
+  sentAt         DateTime         @default(now())
+
+  dsarRequest DSARRequest @relation(fields: [dsarRequestId], references: [id], onDelete: Cascade)
+
+  @@unique([dsarRequestId, kind, dueDate])
+  @@map("dsar_reminders")
 }
 
 enum DSARTaskStatus {

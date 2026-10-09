@@ -141,6 +141,61 @@ test("a new request's page fits a phone and its Add task button can be tapped", 
   await expectNoSidewaysScroll(page, "request list");
 });
 
+test("at 375 px a request's deadline is extended once, with a reason; reminders can be switched off", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "phone-390", "phone width only");
+  await page.setViewportSize({ width: 375, height: 812 });
+  const errors = watchForErrors(page);
+  await signInWithNewOrganisation(page, "extend");
+
+  // No primary jurisdiction yet: the GDPR rule applies (one month, plus two).
+  await page.goto("/privacy/dsar/new");
+  await page.getByRole("button", { name: /^access/i }).first().click();
+  await page.getByRole("textbox", { name: /full name/i }).fill(`Extend requester ${stamp}`);
+  await page.getByRole("textbox", { name: /email/i }).fill(`extend-requester-${stamp}@example.com`);
+  await page.getByRole("button", { name: /create request/i }).click();
+  await page.waitForURL(/\/privacy\/dsar\/(?!new$)[^/]+$/);
+
+  const extend = page.getByTestId("dsar-extend-deadline");
+  await extend.scrollIntoViewIfNeeded();
+  const box = (await extend.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(375);
+  await expectNoSidewaysScroll(page, "request page at 375 px");
+  await extend.click();
+
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText(/you must tell the person/i)).toBeVisible();
+  const dialogBox = (await dialog.boundingBox())!;
+  expect(dialogBox.x).toBeGreaterThanOrEqual(0);
+  expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(375);
+
+  // The reason is required: the confirm button waits for it.
+  const confirm = dialog.getByRole("button", { name: /^extend to/i });
+  await expect(confirm).toBeDisabled();
+  await dialog.getByLabel(/reason for the extension/i).fill("Complex request across several systems");
+  await confirm.click();
+  await expect(dialog).toBeHidden();
+
+  // Once only: the button gives way to a note, and the audit log has the reason.
+  await expect(page.getByTestId("dsar-extend-deadline")).toHaveCount(0);
+  await expect(page.getByText(/already been extended/i)).toBeVisible();
+  await page.getByRole("tab", { name: /audit log/i }).click();
+  await expect(page.getByText(/reason: complex request across several systems/i)).toBeVisible();
+
+  // Reminder e-mails: on by default, switched off, and still off after a reload.
+  await page.goto("/privacy/dsar/settings");
+  const reminders = page.getByTestId("dsar-reminders-switch");
+  await expect(reminders).toHaveAttribute("aria-checked", "true");
+  await reminders.click();
+  await expect(page.getByText(/reminder emails switched off/i)).toBeVisible();
+  await page.reload();
+  await expect(page.getByTestId("dsar-reminders-switch")).toHaveAttribute("aria-checked", "false");
+  await expectNoSidewaysScroll(page, "request settings at 375 px");
+
+  expect(errors).toEqual([]);
+});
+
 test("the public pages fit a phone and offer the language switch", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone-390", "phone width only");
   for (const locale of ["en", "es"]) {

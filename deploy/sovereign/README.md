@@ -66,7 +66,9 @@ sample organization attached. Port 8485 is the suite convention for DPO Central
 - **DSAR retention auto-redaction:** the `redaction-cron` service triggers
   `/api/cron/dsar-redaction` daily. Set `CRON_SECRET` in `.env` (openssl
   rand -hex 32) — with it empty, the endpoint refuses to run (fails closed)
-  and the cron container logs a warning instead.
+  and the cron container logs a warning instead. The same container calls
+  `/api/cron/dsar-reminders` (deadline reminder e-mails at 7, 3 and 1 day
+  and when overdue); it sends nothing unless `RESEND_API_KEY` is set.
 - **Rebuild after an update or brand/posture change:**
   `docker compose up -d --build app`. All `NEXT_PUBLIC_*` vars are baked in
   at build time — editing them in `.env` without a rebuild does nothing.

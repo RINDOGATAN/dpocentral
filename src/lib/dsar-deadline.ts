@@ -122,3 +122,51 @@ export function dsarReminderThreshold(
   for (const t of DSAR_REMINDER_DAYS) if (days <= t) hit = t;
   return hit;
 }
+
+/** The reminder e-mails the daily job can send for one due date. */
+export type DsarReminderKind = "DAYS_7" | "DAYS_3" | "DAYS_1" | "OVERDUE";
+
+/**
+ * The reminder a request is due for today: the threshold it has reached
+ * (7, 3 or 1 days left), or OVERDUE once the due date has passed; null when
+ * it is further away. Only the threshold reached now is returned, so a job
+ * that missed a day sends the nearer reminder, not every skipped one.
+ */
+export function dsarReminderKind(dueDate: Date, now: Date = new Date()): DsarReminderKind | null {
+  if (daysUntilDue(dueDate, now) < 0) return "OVERDUE";
+  const t = dsarReminderThreshold(dueDate, now);
+  return t === null ? null : (`DAYS_${t}` as DsarReminderKind);
+}
+
+/** Statuses after which a request needs no reminder and no extension. */
+export const DSAR_CLOSED_STATUSES = ["COMPLETED", "REJECTED", "CANCELLED"] as const;
+
+export function isDsarClosed(status: string): boolean {
+  return (DSAR_CLOSED_STATUSES as readonly string[]).includes(status);
+}
+
+export type DsarExtensionState =
+  | { allowed: true; newDueDate: Date; tellBy: Date }
+  | { allowed: false; reason: "closed" | "no_extension" | "already_extended" };
+
+/**
+ * Whether the law's own extension can be applied to a request, and to what
+ * date. Refused when the request is closed, when the law allows none
+ * (LGPD, for example), or when the request was already extended. `tellBy`
+ * is the current due date: the person must be told of the extension, with
+ * the reasons, within the first period (GDPR art. 12(3); CCPA: within the
+ * first 45 days).
+ */
+export function dsarExtensionState(
+  request: { status: string; receivedAt: Date; dueDate: Date; extendedDueDate: Date | null },
+  rule: DsarDeadlineRule
+): DsarExtensionState {
+  if (isDsarClosed(request.status)) return { allowed: false, reason: "closed" };
+  if (!rule.extension || rule.extension.amount <= 0) return { allowed: false, reason: "no_extension" };
+  if (request.extendedDueDate) return { allowed: false, reason: "already_extended" };
+  const extended = dsarExtendedDueDate(request.receivedAt, request.dueDate, rule);
+  if (!extended || extended.getTime() <= request.dueDate.getTime()) {
+    return { allowed: false, reason: "already_extended" };
+  }
+  return { allowed: true, newDueDate: extended, tellBy: request.dueDate };
+}

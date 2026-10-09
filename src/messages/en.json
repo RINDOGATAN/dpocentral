@@ -1368,6 +1368,22 @@
         "closed": "Closed",
         "due": "Due"
       },
+      "extend": {
+        "button": "Extend deadline",
+        "title": "Extend the deadline",
+        "description": "The law of your primary jurisdiction allows one extension. The new deadline will be {newDate}.",
+        "tellBy": "You must tell the person about the extension, with the reasons for the delay, no later than {date}, within the first period.",
+        "reasonLabel": "Reason for the extension",
+        "reasonPlaceholder": "For example: the request is complex and covers several systems.",
+        "reasonHint": "Recorded in the audit log of this request.",
+        "confirm": "Extend to {newDate}",
+        "done": "Deadline extended to {newDate}. Remember to tell the person.",
+        "reasonShown": "Reason: {reason}",
+        "unavailable": {
+          "no_extension": "The law of your primary jurisdiction allows no extension.",
+          "already_extended": "This deadline has already been extended."
+        }
+      },
       "requester": {
         "title": "Requester Information",
         "name": "Name",
@@ -2827,6 +2843,7 @@
       "SUBMIT_AND_APPROVE": "Submitted and approved",
       "STATUS_CHANGED": "Status changed",
       "DEADLINE_EXTENDED": "Deadline extended",
+      "DEADLINE_REMINDER_SENT": "Deadline reminder sent",
       "TASKS_GENERATED": "Tasks generated",
       "PII_REDACTED": "Personal data redacted",
       "GENERATE_DPA": "Data processing agreement generated",
@@ -3000,6 +3017,18 @@
       "restriction": "Right to Restriction"
     }
   },
+  "dsarReminderEmail": {
+    "subject": "{kind, select, DAYS_7 {{orgName}: rights request due in 7 days} DAYS_3 {{orgName}: rights request due in 3 days} DAYS_1 {{orgName}: rights request due within 1 day} other {{orgName}: rights request overdue}}",
+    "heading": "{kind, select, DAYS_7 {Due in 7 days} DAYS_3 {Due in 3 days} DAYS_1 {Due within 1 day} other {Overdue}}",
+    "body": "{kind, select, OVERDUE {The deadline of a rights request at {orgName} passed on {dueDate}, and the request is still open.} other {A rights request at {orgName} must be answered by {dueDate}.}}",
+    "referenceLabel": "Reference",
+    "typeLabel": "Type",
+    "receivedLabel": "Received",
+    "dueLabel": "Deadline",
+    "ctaText": "Open the request",
+    "whyYou": "You receive this because you are assigned a task on this request or, when nobody is, because you are a privacy officer, administrator or owner of {orgName}.",
+    "switchOff": "An administrator can switch these reminders off in the DSAR intake settings."
+  },
   "dsarSettings": {
     "title": "DSAR Intake Settings",
     "subtitle": "Configure your public data subject request portal",
@@ -3045,6 +3074,14 @@
       "description": "Add custom CSS to match your brand (optional)",
       "label": "Custom CSS",
       "help": "Applied to the public request form. Leave empty to use the default styling."
+    },
+    "remindersCard": {
+      "title": "Deadline reminders",
+      "description": "Emails before a request's deadline",
+      "label": "Send reminder emails",
+      "hint": "An email goes to the people assigned to the request's open tasks (or, if nobody is assigned, to the privacy officers, administrators and owners) 7, 3 and 1 day before the deadline, and once when it becomes overdue. Closed requests get none. Saved as soon as you change it.",
+      "savedOn": "Reminder emails switched on",
+      "savedOff": "Reminder emails switched off"
     },
     "actions": {
       "cancel": "Cancel",
@@ -4976,12 +5013,12 @@
       },
       "sla": {
         "title": "SLA Tracking",
-        "description": "DPO Central automatically tracks SLA deadlines and flags requests that are close to their deadline.",
+        "description": "DPO Central automatically tracks SLA deadlines, flags requests that are close to their deadline and sends reminder emails before it passes.",
         "mockupTitle": "SLA Progress Indicators",
         "overdueLabel": "Overdue",
         "daysRemaining": "{count} days remaining",
         "warningTitle": "SLA Deadlines",
-        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). Requests due within 7 days are flagged as at risk, and overdue requests are flagged as overdue. No reminder emails are sent."
+        "warningBody": "Under the GDPR, you must respond to DSARs without undue delay and in any event within one month of receipt. Where necessary, that period may be extended by two further months, taking into account the complexity and number of requests; you must inform the person of any extension, with the reasons for the delay, within the first month (Art. 12(3)). Requests due within 7 days are flagged as at risk, and overdue requests are flagged as overdue. Reminder emails go to the people assigned to the request's open tasks (or, if nobody is assigned, to the privacy officers, administrators and owners) 7, 3 and 1 day before the deadline, and once when it becomes overdue; an administrator can switch them off in the DSAR intake settings. Where the law allows an extension, the Extend deadline button on the request applies it once and records your reason; you must still tell the person within the first period."
       },
       "portal": {
         "title": "Public Portal",
@@ -9143,7 +9180,10 @@
       "templateNotFound": "Template not found",
       "thisEntitlementWasNotPurchasedViaStripeAnd": "This entitlement was not purchased via Stripe and cannot be self-cancelled",
       "thisOrganisationCouldNotBeCreatedPleaseTry": "This organisation could not be created. Please try again with a slightly different name.",
+      "theDeadlineAlreadyRunsToTheLongestPeriod": "The deadline already runs to the longest period the law allows",
+      "thePrimaryJurisdictionsLawAllowsNoExtension": "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days",
       "thisRequestIsAlreadyFinalisedAndCannotBe": "This request is already finalised and cannot be withdrawn.",
+      "thisRequestIsClosedItsDeadlineCannotBe": "This request is closed; its deadline cannot be extended",
       "thisUserIsAlreadyAMemberOfThe": "This user is already a member of the organization",
       "transferNotFound": "Transfer not found",
       "unknownDepartmentInTheList": "Unknown department in the list.",

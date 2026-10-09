@@ -1368,6 +1368,22 @@
         "closed": "Cerrada el",
         "due": "Vence"
       },
+      "extend": {
+        "button": "Prorrogar el plazo",
+        "title": "Prorrogar el plazo",
+        "description": "La norma de tu jurisdicción principal permite una prórroga. El nuevo plazo vencerá el {newDate}.",
+        "tellBy": "Debes informar a la persona de la prórroga, indicando los motivos de la dilación, a más tardar el {date}, dentro del primer plazo.",
+        "reasonLabel": "Motivo de la prórroga",
+        "reasonPlaceholder": "Por ejemplo: la solicitud es compleja y afecta a varios sistemas.",
+        "reasonHint": "Queda anotado en el registro de auditoría de esta solicitud.",
+        "confirm": "Prorrogar hasta el {newDate}",
+        "done": "Plazo prorrogado hasta el {newDate}. Recuerda informar a la persona.",
+        "reasonShown": "Motivo: {reason}",
+        "unavailable": {
+          "no_extension": "La norma de tu jurisdicción principal no permite prórrogas.",
+          "already_extended": "Este plazo ya se ha prorrogado."
+        }
+      },
       "requester": {
         "title": "Datos del solicitante",
         "name": "Nombre",
@@ -2826,7 +2842,8 @@
       "SUBMIT": "Enviado",
       "SUBMIT_AND_APPROVE": "Enviado y aprobado",
       "STATUS_CHANGED": "Estado cambiado",
-      "DEADLINE_EXTENDED": "Plazo ampliado",
+      "DEADLINE_EXTENDED": "Plazo prorrogado",
+      "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
       "TASKS_GENERATED": "Tareas generadas",
       "PII_REDACTED": "Datos personales ocultados",
       "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
@@ -3000,6 +3017,18 @@
       "restriction": "Derecho a la limitación del tratamiento"
     }
   },
+  "dsarReminderEmail": {
+    "subject": "{kind, select, DAYS_7 {{orgName}: solicitud de derechos que vence en 7 días} DAYS_3 {{orgName}: solicitud de derechos que vence en 3 días} DAYS_1 {{orgName}: solicitud de derechos que vence en 1 día o menos} other {{orgName}: solicitud de derechos vencida}}",
+    "heading": "{kind, select, DAYS_7 {Vence en 7 días} DAYS_3 {Vence en 3 días} DAYS_1 {Vence en 1 día o menos} other {Vencida}}",
+    "body": "{kind, select, OVERDUE {El plazo de una solicitud de derechos de {orgName} venció el {dueDate} y la solicitud sigue abierta.} other {Una solicitud de derechos de {orgName} debe responderse a más tardar el {dueDate}.}}",
+    "referenceLabel": "Referencia",
+    "typeLabel": "Tipo",
+    "receivedLabel": "Recibida",
+    "dueLabel": "Plazo",
+    "ctaText": "Abrir la solicitud",
+    "whyYou": "Recibes este aviso porque tienes asignada una tarea de esta solicitud o, si nadie la tiene, porque eres responsable de privacidad, administrador o propietario de {orgName}.",
+    "switchOff": "Un administrador puede desactivar estos recordatorios en la configuración del formulario de solicitudes."
+  },
   "dsarSettings": {
     "title": "Configuración del formulario de solicitudes",
     "subtitle": "Configura tu portal público de solicitudes",
@@ -3045,6 +3074,14 @@
       "description": "Añade CSS personalizado para adaptarlo a tu marca (opcional)",
       "label": "CSS personalizado",
       "help": "Se aplica al formulario público de solicitudes. Déjalo vacío para usar el estilo predeterminado."
+    },
+    "remindersCard": {
+      "title": "Recordatorios de plazo",
+      "description": "Correos electrónicos antes de que venza una solicitud",
+      "label": "Enviar recordatorios por correo electrónico",
+      "hint": "Se envía un correo electrónico a las personas asignadas a las tareas abiertas de la solicitud (o, si no hay nadie asignado, a los responsables de privacidad, administradores y propietarios) 7, 3 y 1 día antes del vencimiento, y una vez cuando vence. Las solicitudes cerradas no reciben ninguno. Se guarda en cuanto lo cambias.",
+      "savedOn": "Recordatorios por correo electrónico activados",
+      "savedOff": "Recordatorios por correo electrónico desactivados"
     },
     "actions": {
       "cancel": "Cancelar",
@@ -4976,12 +5013,12 @@
       },
       "sla": {
         "title": "Seguimiento de plazos",
-        "description": "DPO Central hace seguimiento automático de los plazos de respuesta y marca las solicitudes cuyo plazo está a punto de vencer.",
+        "description": "DPO Central hace seguimiento automático de los plazos de respuesta, marca las solicitudes cuyo plazo está a punto de vencer y envía recordatorios por correo electrónico antes del vencimiento.",
         "mockupTitle": "Indicadores de progreso de plazo",
         "overdueLabel": "Vencida",
         "daysRemaining": "{count} días restantes",
         "warningTitle": "Plazos de respuesta",
-        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). Las solicitudes que vencen en 7 días o menos se marcan como en riesgo, y las vencidas, como vencidas. No se envían recordatorios por correo electrónico."
+        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). Las solicitudes que vencen en 7 días o menos se marcan como en riesgo, y las vencidas, como vencidas. Se envían recordatorios por correo electrónico a las personas asignadas a las tareas abiertas de la solicitud (o, si no hay nadie asignado, a los responsables de privacidad, administradores y propietarios) 7, 3 y 1 día antes del vencimiento, y una vez cuando vence; un administrador puede desactivarlos en la configuración del formulario de solicitudes. Cuando la norma permite una prórroga, el botón Prorrogar el plazo de la solicitud la aplica una sola vez y anota tu motivo; aun así, debes informar a la persona dentro del primer plazo."
       },
       "portal": {
         "title": "Portal público",
@@ -9143,7 +9180,10 @@
       "templateNotFound": "No se ha encontrado la plantilla.",
       "thisEntitlementWasNotPurchasedViaStripeAnd": "Este derecho de uso no se adquirió a través de Stripe y no puedes cancelarlo por tu cuenta.",
       "thisOrganisationCouldNotBeCreatedPleaseTry": "No se ha podido crear esta organización. Vuelve a intentarlo con un nombre algo distinto.",
+      "theDeadlineAlreadyRunsToTheLongestPeriod": "El plazo ya llega al máximo que permite la norma.",
+      "thePrimaryJurisdictionsLawAllowsNoExtension": "La norma de la jurisdicción principal no permite prórrogas.",
       "thisRequestIsAlreadyFinalisedAndCannotBe": "Esta solicitud ya está finalizada y no se puede retirar.",
+      "thisRequestIsClosedItsDeadlineCannotBe": "Esta solicitud está cerrada; su plazo no se puede prorrogar.",
       "thisUserIsAlreadyAMemberOfThe": "Este usuario ya es miembro de la organización.",
       "transferNotFound": "No se ha encontrado la transferencia.",
       "unknownDepartmentInTheList": "Hay un departamento desconocido en la lista.",
