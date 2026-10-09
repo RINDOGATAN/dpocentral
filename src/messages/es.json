@@ -8906,7 +8906,8 @@
     },
     "switchOrganization": "Organización",
     "addClient": "Añadir un cliente",
-    "newOrganization": "Nueva organización"
+    "newOrganization": "Nueva organización",
+    "requiresLicence": "Requiere una licencia"
   },
   "help": {
     "open": "Ayuda de esta página",

@@ -262,6 +262,9 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "assessments",
           href: "/privacy/assessments",
           icon: ClipboardCheck,
+          // The DPIA is the step's headline document and a premium type: the
+          // lock Classic's "Start a DPIA" quick action carried moves here.
+          premiumType: "DPIA",
           rule: "Done when at least one assessment is approved (DPIA, PIA and screening). Started when any assessment exists.",
           status: (c) =>
             c.assessmentsApproved > 0 ? "done" : c.assessments > 0 ? "started" : "todo",
@@ -279,6 +282,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // review state. The page reads the view where it is wired; the menu
           // marks this step whichever way the page renders it.
           href: "/privacy/vendors?view=due-diligence",
+          // Vendor assessments are a premium type on the kit.
+          premiumType: "VENDOR",
           icon: FileCheck2,
           rule: "Done when every vendor has a completed due-diligence assessment. Started when any vendor assessment exists.",
           status: (c) =>

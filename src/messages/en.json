@@ -8906,7 +8906,8 @@
     },
     "switchOrganization": "Organization",
     "addClient": "Add a client",
-    "newOrganization": "New organization"
+    "newOrganization": "New organization",
+    "requiresLicence": "Requires a licence"
   },
   "help": {
     "open": "Help for this page",

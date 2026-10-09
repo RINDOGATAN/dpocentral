@@ -61,6 +61,9 @@ import { useProgrammeOverview } from "./use-programme-overview";
 import { stepNoteText } from "./document-words";
 import { attentionStages, notYetEntries, stepDocumentRows } from "@/lib/programme-overview";
 import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
+import { trpc } from "@/lib/trpc";
+import { lockedStepIds } from "@/lib/menu-locks";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 /** The path a department-limited member sees: no quick start. */
@@ -144,6 +147,14 @@ export function GuidedLayout({
     Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows)]),
   );
   const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
+  // A lock beside a step that leads to a premium type the organisation is not
+  // entitled to, by the pages' own rule; never on the hosted pilot, which
+  // therefore never asks (src/lib/menu-locks.ts).
+  const hosted = useHostedPilot();
+  const { data: entitled } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && !hosted },
+  );
   const fullMenuProps = {
     ...menuProps,
     stepNotes,
@@ -152,6 +163,7 @@ export function GuidedLayout({
       missing.length > 0
         ? { title: t("notYetGroup"), items: missing.map((entry) => td(`items.${entry.id}`)) }
         : null,
+    lockedSteps: lockedStepIds(menuProps.config, { entitledTypes: entitled?.entitledTypes, hosted }),
   };
 
   return (
