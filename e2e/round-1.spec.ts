@@ -47,7 +47,8 @@ test("sign-out from the library's address lands on our own page", async ({ page 
 test("a client card is reached with the keyboard, by its name", async ({ page }) => {
   await signInWithClient(page, "clients");
   await page.goto("/privacy/clients");
-  const open = page.getByRole("button", { name: `Round one clients ${stamp}` });
+  // Exact: the row's menu button is named "Start a new client from this one: <name>".
+  const open = page.getByRole("button", { name: `Round one clients ${stamp}`, exact: true });
   await expect(open).toBeVisible();
   await open.focus();
   await page.keyboard.press("Enter");
