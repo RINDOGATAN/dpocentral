@@ -15,6 +15,8 @@ import { ArrowLeft, Loader2, ExternalLink, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDsarAccess } from "@/lib/use-dsar-access";
+import { DsarRestrictedNotice } from "@/components/privacy/dsar-restricted-notice";
 
 const dsarTypeValues = [
   "ACCESS",
@@ -27,6 +29,7 @@ const dsarTypeValues = [
 
 export default function DSARSettingsPage() {
   const { organization } = useOrganization();
+  const { canHandle } = useDsarAccess();
   const t = useTranslations("dsarSettings");
   const tTypes = useTranslations("dsarPublic.status.typeLabels");
   const tDesc = useTranslations("dsarSettings.typeDescriptions");
@@ -143,6 +146,8 @@ export default function DSARSettingsPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (canHandle === false) return <DsarRestrictedNotice />;
 
   if (isLoading) {
     return (

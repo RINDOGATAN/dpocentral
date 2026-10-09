@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDsarAccess } from "@/lib/use-dsar-access";
+import { DsarRestrictedNotice } from "@/components/privacy/dsar-restricted-notice";
 import { DSARType } from "@prisma/client";
 
 const TYPE_KEYS: DSARType[] = ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY", "OBJECTION", "RESTRICTION"];
@@ -39,6 +41,7 @@ const RELATIONSHIP_OPTIONS = [
 export default function NewDSARRequestPage() {
   const router = useRouter();
   const { organization } = useOrganization();
+  const { canHandle } = useDsarAccess();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newDsar");
   const tCommon = useTranslations("common");
@@ -82,6 +85,8 @@ export default function NewDSARRequestPage() {
   };
 
   const isValid = form.type && form.requesterName && form.requesterEmail;
+
+  if (canHandle === false) return <DsarRestrictedNotice />;
 
   return (
     <div className="space-y-6">

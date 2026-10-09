@@ -86,6 +86,7 @@ const MEMBERS: Record<string, string[]> = {
     "CREATE", "UPDATE", "DELETE", "VIEW", "SUBMIT", "SUBMIT_AND_APPROVE", "STATUS_CHANGED",
     "DEADLINE_EXTENDED", "TASKS_GENERATED", "PII_REDACTED", "GENERATE_DPA", "UPDATE_COMPLIANCE",
     "EXPORT_TO_AI_SENTINEL", "REQUEST_CREATED", "REQUEST_SUBMITTED_PUBLIC", "REQUEST_WITHDRAWN_PUBLIC",
+    "PII_AUTO_REDACTED", "VIEWED",
   ],
   auditEntity: [
     "Organization", "OrganizationMember", "OrganizationJurisdiction", "OrganizationAiSettings",

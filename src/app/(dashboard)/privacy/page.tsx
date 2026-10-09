@@ -42,6 +42,7 @@ import {
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDsarAccess } from "@/lib/use-dsar-access";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
@@ -67,6 +68,7 @@ export default function PrivacyDashboardPage() {
   const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
+  const { canHandle: canHandleDsars } = useDsarAccess();
   const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
@@ -508,12 +510,14 @@ export default function PrivacyDashboardPage() {
                 <span className="truncate">{tp("quickActions.addAsset")}</span>
               </Button>
             </Link>
-            <Link href="/privacy/dsar">
-              <Button variant="outline" className="w-full justify-start h-11">
-                <FileText className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.newDsar")}</span>
-              </Button>
-            </Link>
+            {canHandleDsars !== false && (
+              <Link href="/privacy/dsar">
+                <Button variant="outline" className="w-full justify-start h-11">
+                  <FileText className="w-4 h-4 mr-2 shrink-0" />
+                  <span className="truncate">{tp("quickActions.newDsar")}</span>
+                </Button>
+              </Link>
+            )}
             <Link href="/privacy/incidents/new">
               <Button variant="outline" className="w-full justify-start h-11">
                 <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />

@@ -2177,6 +2177,15 @@
       "emptyOverdue": "No hay solicitudes vencidas",
       "emptyCompleted": "No hay solicitudes completadas",
       "emptyFiltered": "Ninguna solicitud coincide con estos filtros",
+      "restricted": {
+        "title": "El acceso a las solicitudes de derechos está restringido",
+        "body": "Las solicitudes de derechos contienen datos personales de quienes las presentan, por lo que solo pueden abrirlas los delegados de protección de datos, los administradores y los propietarios. Puedes abrir una solicitud cuando tengas asignada una de sus tareas. Las cifras de arriba están abiertas a todos los miembros.",
+        "emptyAssigned": "No tienes asignada ninguna tarea en ninguna solicitud",
+        "detailTitle": "No puedes abrir esta solicitud",
+        "detailBody": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas. Si necesitas trabajar en ella, pide a un delegado de protección de datos que te asigne una tarea.",
+        "backToList": "Volver a las solicitudes de derechos",
+        "actionBody": "Solo los delegados de protección de datos, los administradores y los propietarios pueden crear solicitudes o abrir su configuración."
+      },
       "publicPortal": {
         "title": "Portal público de recepción",
         "subtitle": "Comparte este enlace con los interesados",
@@ -2846,6 +2855,8 @@
       "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
       "TASKS_GENERATED": "Tareas generadas",
       "PII_REDACTED": "Datos personales ocultados",
+      "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
+      "VIEWED": "Consultada",
       "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
       "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
       "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
@@ -9112,6 +9123,7 @@
   },
   "serverErrors": {
     "exact": {
+      "dsarReadRestricted": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas",
       "aCustomerWithThisEmailAlreadyExists": "Ya existe un cliente con este correo electrónico.",
       "aDepartmentCannotBeItsOwnParent": "Un departamento no puede ser su propio departamento superior.",
       "aiSentinelIntegrationIsNotConfigured": "La integración con AI Sentinel no está configurada.",

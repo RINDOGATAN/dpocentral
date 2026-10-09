@@ -22,6 +22,7 @@ import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-package
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useDsarAccess } from "@/lib/use-dsar-access";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
@@ -50,6 +51,10 @@ export default function DSARPage() {
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("dsar");
   const { organization } = useOrganization();
+  // Members other than officers, admins and owners see the figures and only
+  // the requests on which they hold a task (src/lib/dsar-access.ts).
+  const { canHandle } = useDsarAccess();
+  const restricted = canHandle === false;
 
   const {
     data: dsarPages,
@@ -125,7 +130,7 @@ export default function DSARPage() {
             <Download className="w-4 h-4 sm:mr-2" />
             <span className="hidden sm:inline">{t("exportReport")}</span>
           </Button>
-          {isPortalComingSoon ? (
+          {restricted ? null : isPortalComingSoon ? (
             <div className="sm:flex-none">
               <Button variant="outline" size="icon" aria-label={t("settings")} className="shrink-0 sm:size-auto sm:px-4 sm:py-2" disabled>
                 <Lock className={`w-4 h-4 sm:mr-2 ${toneMark("warning")}`} />
@@ -141,13 +146,15 @@ export default function DSARPage() {
               </Button>
             </Link>
           )}
-          <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
-            <Button className="w-full sm:w-auto">
-              <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">{t("newRequest")}</span>
-              <span className="sm:hidden">{t("newRequestShort")}</span>
-            </Button>
-          </Link>
+          {!restricted && (
+            <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t("newRequest")}</span>
+                <span className="sm:hidden">{t("newRequestShort")}</span>
+              </Button>
+            </Link>
+          )}
           </>
         }
       />
@@ -182,6 +189,18 @@ export default function DSARPage() {
           </CardContent>
         </Card>
       </div>
+
+      {restricted && (
+        <Card>
+          <CardContent className="py-4 flex items-start gap-3">
+            <Lock className="w-5 h-5 shrink-0 mt-0.5 text-muted-foreground" />
+            <div>
+              <p className="font-medium text-sm sm:text-base">{t("restricted.title")}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{t("restricted.body")}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filters, search, sort and saved views (all in the URL) */}
       <ListFilterBar
@@ -320,6 +339,13 @@ export default function DSARPage() {
             </Link>
           ))}
         </div>
+      ) : noFilters && restricted ? (
+        <Card>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>{t("restricted.emptyAssigned")}</p>
+          </CardContent>
+        </Card>
       ) : noFilters ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
