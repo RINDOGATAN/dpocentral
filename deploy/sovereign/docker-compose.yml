@@ -189,6 +189,11 @@ services:
             curl -fsS -H "Authorization: Bearer $$CRON_SECRET" http://app:3001/api/cron/dsar-redaction \
               || echo "[redaction-cron] run failed (see app logs)"
             echo ""
+            # Deadline reminder e-mails: without RESEND_API_KEY the job sends
+            # and records nothing, so this call is harmless on a local install.
+            curl -fsS -H "Authorization: Bearer $$CRON_SECRET" http://app:3001/api/cron/dsar-reminders \
+              || echo "[redaction-cron] reminders run failed (see app logs)"
+            echo ""
           fi
           sleep 86400
         done

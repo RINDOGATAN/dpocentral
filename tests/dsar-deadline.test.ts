@@ -17,6 +17,7 @@ import {
   addPeriod,
   dsarDueDate,
   dsarExtendedDueDate,
+  dsarExtensionState,
   earliestDsarDeadline,
   dsarSlaStatus,
   dsarReminderThreshold,
@@ -202,5 +203,54 @@ describe("reminders and SLA status run on the due date", () => {
     // a 30-day rule would have put the due date on 2 March
     expect(ymd(addPeriod(received, { amount: 30, unit: "days" }))).toBe("2026-03-02");
     expect(dsarReminderThreshold(due, d(2026, 2, 21, 9))).toBe(7);
+  });
+});
+
+describe("dsarExtensionState: the Extend deadline button", () => {
+  const open = (receivedAt: Date, dueDate: Date, extra: Partial<{ status: string; extendedDueDate: Date | null }> = {}) => ({
+    status: "IN_PROGRESS",
+    receivedAt,
+    dueDate,
+    extendedDueDate: null,
+    ...extra,
+  });
+
+  it("GDPR: allowed once, to three months from receipt; tell the person by the first due date", () => {
+    const state = dsarExtensionState(open(d(2026, 1, 31), d(2026, 2, 28)), GDPR);
+    expect(state.allowed).toBe(true);
+    if (!state.allowed) return;
+    expect(ymd(state.newDueDate)).toBe("2026-04-30");
+    expect(ymd(state.tellBy)).toBe("2026-02-28");
+  });
+
+  it("CCPA/CPRA: allowed, 45 further days", () => {
+    const state = dsarExtensionState(open(d(2026, 1, 1), d(2026, 2, 15)), CCPA);
+    expect(state.allowed && ymd(state.newDueDate)).toBe("2026-04-01");
+  });
+
+  it("refused where the law allows none", () => {
+    expect(dsarExtensionState(open(d(2026, 1, 1), d(2026, 1, 16)), LGPD)).toEqual({
+      allowed: false,
+      reason: "no_extension",
+    });
+  });
+
+  it("refused once extended (recorded, or already at the longest period)", () => {
+    expect(
+      dsarExtensionState(open(d(2026, 1, 31), d(2026, 2, 28), { extendedDueDate: d(2026, 3, 10) }), GDPR)
+    ).toEqual({ allowed: false, reason: "already_extended" });
+    expect(dsarExtensionState(open(d(2026, 1, 31), d(2026, 4, 30)), GDPR)).toEqual({
+      allowed: false,
+      reason: "already_extended",
+    });
+  });
+
+  it("refused on a closed request", () => {
+    for (const status of ["COMPLETED", "REJECTED", "CANCELLED"]) {
+      expect(dsarExtensionState(open(d(2026, 1, 31), d(2026, 2, 28), { status }), GDPR)).toEqual({
+        allowed: false,
+        reason: "closed",
+      });
+    }
   });
 });

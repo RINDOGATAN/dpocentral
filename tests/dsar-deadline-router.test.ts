@@ -163,6 +163,50 @@ describe("extendDeadline", () => {
     ).rejects.toThrow(/longest period/);
   });
 
+  it("a request already extended is refused, and so is a closed one", async () => {
+    primary("GDPR", 30);
+    mocks.prisma.dSARRequest.findFirst.mockResolvedValue({
+      id: "dsar-1",
+      organizationId: "org-a",
+      status: "IN_PROGRESS",
+      receivedAt: d(2026, 1, 31),
+      dueDate: d(2026, 2, 28),
+      extendedDueDate: d(2026, 3, 5),
+    });
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "x" })
+    ).rejects.toThrow(/longest period/);
+    mocks.prisma.dSARRequest.findFirst.mockResolvedValue({
+      id: "dsar-1",
+      organizationId: "org-a",
+      status: "COMPLETED",
+      receivedAt: d(2026, 1, 31),
+      dueDate: d(2026, 2, 28),
+      extendedDueDate: null,
+    });
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "x" })
+    ).rejects.toThrow(/closed/);
+    expect(mocks.prisma.dSARRequest.update).not.toHaveBeenCalled();
+  });
+
+  it("the reason is required and recorded in the request's audit log", async () => {
+    primary("GDPR", 30);
+    existing(d(2026, 1, 31), d(2026, 2, 28));
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "" })
+    ).rejects.toThrow();
+    await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "Several systems" });
+    expect(mocks.prisma.dSARAuditLog.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          action: "DEADLINE_EXTENDED",
+          details: expect.objectContaining({ reason: "Several systems", statutoryExtension: true }),
+        }),
+      })
+    );
+  });
+
   it("explicit extensionDays still adds days to the current due date", async () => {
     existing(d(2026, 1, 1), d(2026, 2, 1));
     await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 10, reason: "x" });

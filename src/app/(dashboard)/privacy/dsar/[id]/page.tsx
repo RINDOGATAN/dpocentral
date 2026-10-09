@@ -30,6 +30,14 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowLeft,
   Clock,
   CheckCircle2,
@@ -42,6 +50,7 @@ import {
   Send,
   AlertTriangle,
   Loader2,
+  CalendarPlus,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
@@ -99,6 +108,8 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
   const [messageForm, setMessageForm] = useState({ subject: "", content: "" });
   const [responseLinkDraft, setResponseLinkDraft] = useState({ url: "", expiresAt: "" });
+  const [isExtendOpen, setIsExtendOpen] = useState(false);
+  const [extendReason, setExtendReason] = useState("");
 
   const { data: request, isLoading } = trpc.dsar.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -156,6 +167,19 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       utils.dsar.getById.invalidate();
       setIsSendMessageOpen(false);
       setMessageForm({ subject: "", content: "" });
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const extendDeadline = trpc.dsar.extendDeadline.useMutation({
+    onSuccess: (data) => {
+      toast.success(tp("extend.done", { newDate: formatDateIn(new Date(data.dueDate), locale) }));
+      utils.dsar.getById.invalidate();
+      utils.dsar.list.invalidate();
+      setIsExtendOpen(false);
+      setExtendReason("");
     },
     onError: (error) => {
       toast.error(error.message || t("generic.somethingWentWrong"));
@@ -361,6 +385,23 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             <p className="text-sm text-muted-foreground">
               {isCompleted ? tp("sla.closed") : tp("sla.due")}: {formatDateIn(new Date(request.dueDate), locale)}
             </p>
+            {!isCompleted && request.extension.allowed && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full sm:w-auto"
+                data-testid="dsar-extend-deadline"
+                onClick={() => setIsExtendOpen(true)}
+              >
+                <CalendarPlus className="w-4 h-4 mr-2" />
+                {tp("extend.button")}
+              </Button>
+            )}
+            {!isCompleted && !request.extension.allowed && request.extension.reason !== "closed" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {tp(`extend.unavailable.${request.extension.reason}`)}
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -659,6 +700,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
                       <Clock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                       <div className="min-w-0">
                         <p className="font-medium text-sm">{enumLabel("auditAction", entry.action)}</p>
+                        {entry.action === "DEADLINE_EXTENDED" &&
+                          typeof (entry.details as { reason?: unknown } | null)?.reason === "string" && (
+                            <p className="text-sm break-words">
+                              {tp("extend.reasonShown", { reason: (entry.details as { reason: string }).reason })}
+                            </p>
+                          )}
                         <p className="text-xs text-muted-foreground">
                           {formatDateTimeIn(new Date(entry.createdAt), locale)}
                         </p>
@@ -717,6 +764,64 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </form>
         </SheetContent>
       </Sheet>
+
+      {/* Extend deadline: the law's own extension, once, with a reason */}
+      {request.extension.allowed && (
+        <Dialog
+          open={isExtendOpen}
+          onOpenChange={(open) => {
+            setIsExtendOpen(open);
+            if (!open) setExtendReason("");
+          }}
+        >
+          <DialogContent>
+            <form
+              className="space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!organization?.id || !extendReason.trim()) return;
+                extendDeadline.mutate({ organizationId: organization.id, id, reason: extendReason.trim() });
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>{tp("extend.title")}</DialogTitle>
+                <DialogDescription>
+                  {tp("extend.description", {
+                    newDate: formatDateIn(new Date(request.extension.newDueDate), locale),
+                  })}
+                </DialogDescription>
+              </DialogHeader>
+              <p className="text-sm font-medium" role="note">
+                {tp("extend.tellBy", { date: formatDateIn(new Date(request.extension.tellBy), locale) })}
+              </p>
+              <div className="space-y-2">
+                <Label htmlFor="extend-reason">{tp("extend.reasonLabel")}</Label>
+                <Textarea
+                  id="extend-reason"
+                  rows={3}
+                  required
+                  maxLength={2000}
+                  placeholder={tp("extend.reasonPlaceholder")}
+                  value={extendReason}
+                  onChange={(e) => setExtendReason(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">{tp("extend.reasonHint")}</p>
+              </div>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsExtendOpen(false)}>
+                  {tCommon("cancel")}
+                </Button>
+                <Button type="submit" disabled={extendDeadline.isPending || !extendReason.trim()}>
+                  {extendDeadline.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {tp("extend.confirm", {
+                    newDate: formatDateIn(new Date(request.extension.newDueDate), locale),
+                  })}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Send Message Sheet */}
       <Sheet open={isSendMessageOpen} onOpenChange={setIsSendMessageOpen}>

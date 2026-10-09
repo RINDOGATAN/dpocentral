@@ -157,6 +157,7 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
     },
     include: {
       organization: true,
+      user: { select: { locale: true } },
     },
   });
 
@@ -165,6 +166,24 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
       code: "FORBIDDEN",
       message: "You do not have access to this organization",
     });
+  }
+
+  // Remember the language the member is using, so e-mails the app sends on
+  // its own (deadline reminders) arrive in that language. Written only when
+  // it changes, and never allowed to fail the request.
+  const cookieLocale = localeFromCookieGetter(ctx.getCookie);
+  const storedLocale = (membership as { user?: { locale: string | null } | null }).user?.locale;
+  if (cookieLocale && storedLocale !== undefined && storedLocale !== cookieLocale) {
+    try {
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: { locale: cookieLocale },
+      });
+    } catch (err) {
+      logger.warn("Could not record the member's language", {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   return next({

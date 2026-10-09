@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure, organizationProcedure, officerProced
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
-import { daysUntilDue as daysLeft, dsarExtendedDueDate, dsarSlaStatus } from "@/lib/dsar-deadline";
+import { daysUntilDue as daysLeft, dsarExtensionState, dsarSlaStatus } from "@/lib/dsar-deadline";
 import { calculateDSARDueDate, dsarDeadlineRuleFor } from "@/server/services/privacy/slaCalculator";
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
@@ -134,7 +134,15 @@ export const dsarRouter = createTRPCRouter({
 
       const daysUntilDue = daysLeft(request.dueDate);
 
-      return { ...request, daysUntilDue };
+      // What the "Extend deadline" button may do: the primary jurisdiction's
+      // own extension, once, on an open request.
+      const primary = await ctx.prisma.organizationJurisdiction.findFirst({
+        where: { organizationId: ctx.organization.id, isPrimary: true },
+        include: { jurisdiction: true },
+      });
+      const extension = dsarExtensionState(request, primaryDsarRule(primary));
+
+      return { ...request, daysUntilDue, extension };
     }),
 
   // Create a DSAR request (internal)
@@ -296,20 +304,20 @@ export const dsarRouter = createTRPCRouter({
           where: { organizationId: ctx.organization.id, isPrimary: true },
           include: { jurisdiction: true },
         });
-        const statutory = dsarExtendedDueDate(request.receivedAt, request.dueDate, primaryDsarRule(primary));
-        if (!statutory) {
+        // One statutory extension per request, never on a closed one.
+        const state = dsarExtensionState(request, primaryDsarRule(primary));
+        if (!state.allowed) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days",
+            message:
+              state.reason === "closed"
+                ? "This request is closed; its deadline cannot be extended"
+                : state.reason === "no_extension"
+                  ? "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days"
+                  : "The deadline already runs to the longest period the law allows",
           });
         }
-        if (statutory.getTime() <= request.dueDate.getTime()) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "The deadline already runs to the longest period the law allows",
-          });
-        }
-        newDueDate = statutory;
+        newDueDate = state.newDueDate;
       }
 
       const updated = await ctx.prisma.dSARRequest.update({
@@ -637,6 +645,38 @@ export const dsarRouter = createTRPCRouter({
           ...formData,
         },
       });
+    }),
+
+  // Deadline reminder e-mails (7, 3 and 1 day before, and once overdue):
+  // on by default, switched off per organisation.
+  getReminderSettings: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: { id: ctx.organization.id },
+        select: { dsarRemindersEnabled: true },
+      });
+      return { enabled: org?.dsarRemindersEnabled ?? true };
+    }),
+
+  setReminderSettings: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.organization.update({
+        where: { id: ctx.organization.id },
+        data: { dsarRemindersEnabled: input.enabled },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Organization",
+          entityId: ctx.organization.id,
+          action: "UPDATE",
+          changes: { dsarRemindersEnabled: input.enabled },
+        },
+      });
+      return { enabled: input.enabled };
     }),
 
   // ============================================================

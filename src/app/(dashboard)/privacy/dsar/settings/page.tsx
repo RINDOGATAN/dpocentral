@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Loader2, ExternalLink, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -52,6 +53,24 @@ export default function DSARSettingsPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
+
+  const utils = trpc.useUtils();
+  const { data: reminderSettings } = trpc.dsar.getReminderSettings.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const setReminders = trpc.dsar.setReminderSettings.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.enabled ? t("remindersCard.savedOn") : t("remindersCard.savedOff"));
+      utils.dsar.getReminderSettings.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const remindersOn = setReminders.isPending
+    ? (setReminders.variables?.enabled ?? reminderSettings?.enabled ?? true)
+    : (reminderSettings?.enabled ?? true);
 
   const saveSettings = trpc.dsar.upsertIntakeForm.useMutation({
     onSuccess: () => {
@@ -175,6 +194,30 @@ export default function DSARSettingsPage() {
             />
             <Label htmlFor="isActive">{t("portalCard.activeLabel")}</Label>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Deadline reminders: saved on change, independent of the form below */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("remindersCard.title")}</CardTitle>
+          <CardDescription>{t("remindersCard.description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="dsarReminders"
+              data-testid="dsar-reminders-switch"
+              checked={remindersOn}
+              disabled={setReminders.isPending || !organization?.id}
+              onCheckedChange={(checked) => {
+                if (!organization?.id) return;
+                setReminders.mutate({ organizationId: organization.id, enabled: checked });
+              }}
+            />
+            <Label htmlFor="dsarReminders">{t("remindersCard.label")}</Label>
+          </div>
+          <p className="text-xs text-muted-foreground">{t("remindersCard.hint")}</p>
         </CardContent>
       </Card>
 
