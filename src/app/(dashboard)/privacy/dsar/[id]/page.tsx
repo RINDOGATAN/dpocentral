@@ -50,6 +50,7 @@ import {
   Send,
   AlertTriangle,
   Loader2,
+  Lock,
   CalendarPlus,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -111,9 +112,13 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const [isExtendOpen, setIsExtendOpen] = useState(false);
   const [extendReason, setExtendReason] = useState("");
 
-  const { data: request, isLoading } = trpc.dsar.getById.useQuery(
+  const { data: request, isLoading, error: loadError } = trpc.dsar.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
-    { enabled: !!organization?.id }
+    {
+      enabled: !!organization?.id,
+      // A refusal is an answer, not a fault: no retry.
+      retry: (count, err) => err.data?.code !== "FORBIDDEN" && count < 1,
+    }
   );
 
   const utils = trpc.useUtils();
@@ -256,6 +261,21 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!request && loadError?.data?.code === "FORBIDDEN") {
+    // Members other than officers, admins and owners open only the requests
+    // on which they hold a task (src/lib/dsar-access.ts).
+    return (
+      <div className="text-center py-12 max-w-xl mx-auto">
+        <Lock className="w-8 h-8 mx-auto mb-4 text-muted-foreground" />
+        <p className="font-medium">{tList("restricted.detailTitle")}</p>
+        <p className="text-sm text-muted-foreground mt-2">{tList("restricted.detailBody")}</p>
+        <Link href="/privacy/dsar">
+          <Button variant="outline" className="mt-4">{tList("restricted.backToList")}</Button>
+        </Link>
       </div>
     );
   }

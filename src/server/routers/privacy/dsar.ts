@@ -13,6 +13,9 @@ import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmati
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
 import { assertPilotCapacity, assertPilotWritable, pilotLocale } from "@/server/services/pilot/caps";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
+import { canHandleDsars } from "@/lib/dsar-access";
+import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
+import { redactDsarRequest } from "@/server/services/dsar/redact";
 
 // SLA rule of the organisation's primary jurisdiction: calendar months where
 // the law says months (GDPR art. 12(3): one month), days otherwise. Applies to
@@ -29,7 +32,9 @@ export const dsarRouter = createTRPCRouter({
   // DSAR REQUESTS
   // ============================================================
 
-  // List all DSAR requests
+  // List DSAR requests. Officers, admins and owners see every request; any
+  // other member sees only the requests on which they hold a task
+  // (src/lib/dsar-access.ts).
   list: organizationProcedure
     .input(
       z.object({
@@ -48,6 +53,7 @@ export const dsarRouter = createTRPCRouter({
       const requests = await ctx.prisma.dSARRequest.findMany({
         where: {
           organizationId: ctx.organization.id,
+          ...dsarReadFilter(ctx.membership.role, ctx.session.user.id),
           status: input.status,
           type: input.type,
           ...(input.overdue && {
@@ -92,14 +98,17 @@ export const dsarRouter = createTRPCRouter({
       return { requests: requestsWithSLA, nextCursor };
     }),
 
-  // Get a single DSAR request
+  // Get a single DSAR request (same rule as list), and record the view
   getById: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const role = ctx.membership.role;
+      const asHandler = canHandleDsars(role);
       const request = await ctx.prisma.dSARRequest.findFirst({
         where: {
           id: input.id,
           organizationId: ctx.organization.id,
+          ...dsarReadFilter(role, ctx.session.user.id),
         },
         include: {
           tasks: {
@@ -126,11 +135,23 @@ export const dsarRouter = createTRPCRouter({
       });
 
       if (!request) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "DSAR request not found",
-        });
+        // A member who may not read it gets the same answer whether or not
+        // the request exists: no probing of ids.
+        throw new TRPCError(
+          asHandler
+            ? { code: "NOT_FOUND", message: "DSAR request not found" }
+            : {
+                code: "FORBIDDEN",
+                message:
+                  "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
+              }
+        );
       }
+
+      await recordDsarView(ctx.prisma, request.id, ctx.session.user.id, {
+        role,
+        asAssignee: !asHandler,
+      });
 
       const daysUntilDue = daysLeft(request.dueDate);
 
@@ -1085,37 +1106,13 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
-      // Redact requester PII
-      await ctx.prisma.dSARRequest.update({
-        where: { id: input.id },
-        data: {
-          requesterName: "REDACTED",
-          requesterEmail: "redacted@redacted",
-          requesterPhone: null,
-          requesterAddress: null,
-          description: null,
-          requestedData: null,
-          responseNotes: null,
-          redactedAt: new Date(),
-        },
-      });
-
-      // Redact communication content
-      await ctx.prisma.dSARCommunication.updateMany({
-        where: { dsarRequestId: input.id },
-        data: { content: "REDACTED", subject: null, attachments: undefined },
-      });
-
-      // Redact task data exports and notes
-      await ctx.prisma.dSARTask.updateMany({
-        where: { dsarRequestId: input.id },
-        data: { dataExport: undefined, notes: null, description: null },
-      });
-
-      // Audit log (no PII)
-      await ctx.prisma.dSARAuditLog.create({
-        data: {
-          dsarRequestId: input.id,
+      // Every field that can hold personal data, in the request, its
+      // messages, its tasks and the free text of its trail
+      // (src/server/services/dsar/redact.ts).
+      await redactDsarRequest(ctx.prisma, input.id, {
+        organizationId: ctx.organization.id,
+        now: new Date(),
+        audit: {
           action: "PII_REDACTED",
           performedBy: ctx.session.user.id,
           details: { reason: "manual_redaction" },

@@ -48,6 +48,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDsarAccess } from "@/lib/use-dsar-access";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
@@ -83,6 +84,9 @@ export function DashboardShell({
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const tNav = useTranslations("nav");
   const tCommon = useTranslations("common");
+  // Rights requests: hidden from members who may not read them
+  // (src/lib/dsar-access.ts); shown while the role is still loading.
+  const { canHandle: canHandleDsars } = useDsarAccess();
 
   // Primary nav: always visible in the top bar
   const primaryNavItems = [
@@ -93,7 +97,9 @@ export function DashboardShell({
 
   // Secondary nav: shown in "More" dropdown on desktop, flat in mobile sheet
   const moreNavItems = [
-    { href: "/privacy/dsar", label: tNav("dsar"), icon: FileText },
+    ...(canHandleDsars !== false
+      ? [{ href: "/privacy/dsar", label: tNav("dsar"), icon: FileText }]
+      : []),
     { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
     { href: "/privacy/transfers", label: tNav("transfers"), icon: Globe },
     { href: "/privacy/skills", label: tNav("skills"), icon: KeyRound },

@@ -31,7 +31,7 @@ vi.mock("@/lib/prisma", () => {
 vi.mock("@/lib/logger", () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
-vi.mock("@prisma/client", () => ({ AssessmentType: {} }));
+vi.mock("@prisma/client", () => ({ AssessmentType: {}, Prisma: { DbNull: "DbNull" } }));
 
 import { safeEqual, safeEqualAny } from "@/lib/safe-equal";
 import { validateImportApiKey } from "@/lib/import-auth";

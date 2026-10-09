@@ -19,6 +19,7 @@ const mocks = vi.hoisted(() => ({
     organization: { findUnique: vi.fn(), update: vi.fn() },
     user: { update: vi.fn() },
     dSARRequest: { findFirst: vi.fn() },
+    dSARAuditLog: { findFirst: vi.fn(), create: vi.fn() },
     auditLog: { create: vi.fn() },
   },
 }));
@@ -55,6 +56,8 @@ beforeEach(() => {
   mocks.prisma.organization.update.mockResolvedValue({});
   mocks.prisma.auditLog.create.mockResolvedValue({});
   mocks.prisma.user.update.mockResolvedValue({});
+  mocks.prisma.dSARAuditLog.findFirst.mockResolvedValue(null);
+  mocks.prisma.dSARAuditLog.create.mockResolvedValue({});
 });
 
 describe("reminder settings", () => {
@@ -109,7 +112,7 @@ describe("request page: Extend deadline button state", () => {
       jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 },
     });
     stored();
-    const r = await as("VIEWER").getById({ organizationId: "org-a", id: "dsar-1" });
+    const r = await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" });
     expect(r.extension).toEqual({ allowed: true, newDueDate: d(2026, 4, 30), tellBy: d(2026, 2, 28) });
   });
 
@@ -119,7 +122,7 @@ describe("request page: Extend deadline button state", () => {
       jurisdiction: { code: "LGPD", dsarDeadlineDays: 15 },
     });
     stored();
-    expect((await as("VIEWER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
+    expect((await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
       allowed: false,
       reason: "no_extension",
     });
@@ -128,7 +131,7 @@ describe("request page: Extend deadline button state", () => {
       jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 },
     });
     stored({ extendedDueDate: d(2026, 4, 30), dueDate: d(2026, 4, 30) });
-    expect((await as("VIEWER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
+    expect((await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
       allowed: false,
       reason: "already_extended",
     });

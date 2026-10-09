@@ -2177,6 +2177,15 @@
       "emptyOverdue": "No overdue requests",
       "emptyCompleted": "No completed requests",
       "emptyFiltered": "No requests match these filters",
+      "restricted": {
+        "title": "Rights requests are restricted",
+        "body": "Rights requests contain the personal data of the people who made them, so only privacy officers, admins and owners can open them. You can open a request when you are assigned one of its tasks. The figures above are open to every member.",
+        "emptyAssigned": "You are not assigned to a task on any request",
+        "detailTitle": "You cannot open this request",
+        "detailBody": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks. Ask a privacy officer to assign you a task if you need to work on it.",
+        "backToList": "Back to rights requests",
+        "actionBody": "Only privacy officers, admins and owners can create requests or open the request settings."
+      },
       "publicPortal": {
         "title": "Public Intake Portal",
         "subtitle": "Share this link with data subjects",
@@ -2846,6 +2855,8 @@
       "DEADLINE_REMINDER_SENT": "Deadline reminder sent",
       "TASKS_GENERATED": "Tasks generated",
       "PII_REDACTED": "Personal data redacted",
+      "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
+      "VIEWED": "Opened",
       "GENERATE_DPA": "Data processing agreement generated",
       "UPDATE_COMPLIANCE": "Compliance updated",
       "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
@@ -9112,6 +9123,7 @@
   },
   "serverErrors": {
     "exact": {
+      "dsarReadRestricted": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
       "aCustomerWithThisEmailAlreadyExists": "A customer with this email already exists",
       "aDepartmentCannotBeItsOwnParent": "A department cannot be its own parent.",
       "aiSentinelIntegrationIsNotConfigured": "AI Sentinel integration is not configured",

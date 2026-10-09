@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { safeEqual } from "@/lib/safe-equal";
+import { redactDsarRequest } from "@/server/services/dsar/redact";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -98,33 +99,12 @@ async function autoRedactCompletedDsars(
   });
 
   for (const req of expiredRequests) {
-    await prisma.dSARRequest.update({
-      where: { id: req.id },
-      data: {
-        requesterName: "REDACTED",
-        requesterEmail: "redacted@redacted",
-        requesterPhone: null,
-        requesterAddress: null,
-        description: null,
-        requestedData: null,
-        responseNotes: null,
-        redactedAt: now,
-      },
-    });
-
-    await prisma.dSARCommunication.updateMany({
-      where: { dsarRequestId: req.id },
-      data: { content: "REDACTED", subject: null },
-    });
-
-    await prisma.dSARTask.updateMany({
-      where: { dsarRequestId: req.id },
-      data: { notes: null, description: null },
-    });
-
-    await prisma.dSARAuditLog.create({
-      data: {
-        dsarRequestId: req.id,
+    // Same routine as the manual "Redact" action: every field that can hold
+    // personal data (src/server/services/dsar/redact.ts).
+    await redactDsarRequest(prisma, req.id, {
+      organizationId,
+      now,
+      audit: {
         action: "PII_AUTO_REDACTED",
         performedBy: "SYSTEM",
         details: { retentionDays, completedBefore: cutoff.toISOString() },

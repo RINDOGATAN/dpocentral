@@ -51,7 +51,8 @@ import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
-import { currentStepId, nextStep, overallProgress, withoutOrgWideSteps } from "./path";
+import { currentStepId, nextStep, overallProgress, withoutOrgWideSteps, withoutSteps } from "./path";
+import { useDsarAccess } from "@/lib/use-dsar-access";
 import { PathMenu } from "./path-menu";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
@@ -64,6 +65,7 @@ const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 /** The path a department-limited member sees: no quick start. */
 const LIMITED_PATH = withoutOrgWideSteps(DPO_CENTRAL_PATH);
 const ALL_CLIENTS_HREF = "/privacy/clients";
+const DSAR_STEP_IDS = ["dsar"] as const;
 
 const BRAND_STYLE = { fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 } as const;
 
@@ -102,6 +104,9 @@ export function GuidedLayout({
   // A member limited to departments sees neither the quick start nor the
   // organisation-wide progress (src/lib/department-limit.ts).
   const { limited, orgWide } = useMemberScope();
+  // The rights-requests step is left out for a member who may not read
+  // requests (src/lib/dsar-access.ts).
+  const { canHandle: canHandleDsars } = useDsarAccess();
   useProgramPathRefresh();
   const [collapsed, setCollapsedState] = useState(initialCollapsed);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -123,6 +128,7 @@ export function GuidedLayout({
     planLine: orgWide ? planDayText(plan, t) : null,
     showProgress: !limited,
   };
+  if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

@@ -4,12 +4,15 @@
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { dsarReadFilter } from "@/server/services/dsar/access";
 
 /**
  * GET /api/export/organization-data?organizationId=...
  *
  * Every record the organisation holds, as one JSON file. Any member may
- * download it. It is a GET route, so it stays available when a hosted pilot
+ * download it; rights requests follow the reading rule of the DSAR module
+ * (src/lib/dsar-access.ts): officers, admins and owners get all of them, any
+ * other member only those on which they hold a task. It is a GET route, so it stays available when a hosted pilot
  * organisation has become read-only: the pilot's promise is that everything
  * created there can be taken to the user's own instance.
  */
@@ -70,7 +73,7 @@ export async function GET(request: Request) {
       prisma.dataTransfer.findMany({ where }),
       prisma.dSARIntakeForm.findMany({ where }),
       prisma.dSARRequest.findMany({
-        where,
+        where: { ...where, ...dsarReadFilter(membership.role, membership.userId) },
         include: { tasks: true, communications: true },
       }),
       prisma.assessmentTemplate.findMany({ where }),

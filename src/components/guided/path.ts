@@ -90,6 +90,16 @@ export function withoutOrgWideSteps<C>(config: PathConfig<C>): PathConfig<C> {
   };
 }
 
+/** The path without the named steps (and without stages left empty). */
+export function withoutSteps<C>(config: PathConfig<C>, ids: readonly string[]): PathConfig<C> {
+  return {
+    ...config,
+    stages: config.stages
+      .map((stage) => ({ ...stage, steps: stage.steps.filter((s) => !ids.includes(s.id)) }))
+      .filter((stage) => stage.steps.length > 0),
+  };
+}
+
 export interface PathStage<C> {
   /** Stable id; also the i18n key under `stages.<id>`. */
   id: string;
