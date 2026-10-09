@@ -9,8 +9,8 @@
  * into the fuller docs, and a link to the words of the law where the page
  * enforces one.
  *
- * Product-neutral but for the registry it reads. Mounted in both the Guided and
- * the Classic header, so the help is one tap away from every page. When a page
+ * Product-neutral but for the registry it reads. Mounted in the dashboard
+ * header, so the help is one tap away from every page. When a page
  * has no entry (outside the privacy area) the button does not render.
  */
 

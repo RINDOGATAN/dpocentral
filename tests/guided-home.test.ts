@@ -2,38 +2,29 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Guided home (F3, F9 of the September browser round).
+ * The dashboard home (F3, F9 of the September browser round; Classic retired
+ * on 9 October 2026, decision d11).
  *
- * - It does not ask for the Vendor.Watch portfolio: only the Classic quick
- *   start card reads it.
- * - The Data Inventory card names both counts: "N assets" and "M activities",
- *   the activities being the real count, refreshed after a quick start.
+ * - It does not ask for the Vendor.Watch portfolio: the quick start reads it.
+ * - The quick start refreshes the counts it changes.
  */
 
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import en from "@/messages/en.json";
-import es from "@/messages/es.json";
 
 const ROOT = path.resolve(__dirname, "..");
 const read = (p: string) => readFileSync(path.join(ROOT, p), "utf8");
 const home = read("src/app/(dashboard)/privacy/page.tsx");
 
-describe("Guided home", () => {
-  it("asks for the portfolio only in Classic", () => {
-    const call = home.slice(home.indexOf("quickstart.getPortfolio.useQuery"));
-    const enabled = call.slice(0, call.indexOf(");"));
-    expect(enabled).toContain('skin !== "guided"');
+describe("dashboard home", () => {
+  it("does not ask for the portfolio", () => {
+    expect(home).not.toContain("quickstart.getPortfolio");
   });
 
-  it("labels the asset count and the activity count", () => {
-    expect(home).toMatch(/stats\.assetsCount", \{ count: dashboardStats\.dataAssets \}/);
-    expect(home).toMatch(/stats\.activitiesCount", \{ count: dashboardStats\.processingActivities \}/);
-    for (const bundle of [en, es]) {
-      expect(bundle.pages.dashboard.stats.assetsCount).toMatch(/\{count, plural/);
-      expect(bundle.pages.dashboard.stats.activitiesCount).toMatch(/\{count, plural/);
-    }
+  it("renders the one dashboard, with no layout switch", () => {
+    expect(home).toContain("return <GuidedDashboard fromQuickstart={fromQuickstart} />;");
+    expect(home).not.toMatch(/useSkin|skin !==/);
   });
 
   it("the quick start refreshes the counts it changes", () => {

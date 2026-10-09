@@ -3,131 +3,33 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Database,
-  FileText,
-  ClipboardCheck,
-  AlertTriangle,
-  Building2,
-  LogOut,
-  User,
-  Menu,
-  BookOpen,
-  CreditCard,
-  Scale,
-  Shield,
-  Lock,
-  MessageSquareWarning,
-  Briefcase,
-  Search,
-  Settings,
-  Bell,
-  BarChart3,
-  Globe,
-  Bot,
-  KeyRound,
-  MoreHorizontal,
-  LayoutPanelLeft,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { PageHelpButton } from "@/components/help/page-help-button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useDsarAccess } from "@/lib/use-dsar-access";
+import { BookOpen, CreditCard, Scale, Shield, Lock } from "lucide-react";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
-import { PersonaSelector } from "@/components/privacy/persona-selector";
 import { OnboardingWelcome } from "@/components/privacy/onboarding-welcome";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { features, isDsarModuleEnabled } from "@/config/features";
+import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
-import { signOutOfSuite } from "@/lib/sign-out";
-import type { Skin } from "@/lib/skin";
-import { SkinProvider, useSkin } from "@/components/guided/skin-context";
 import { GuidedLayout } from "@/components/guided/guided-layout";
 
 export function DashboardShell({
   children,
-  skin = "guided",
   menuCollapsed = false,
 }: {
   children: React.ReactNode;
-  /** The layout chosen in the `dpc_skin` cookie (src/lib/skin.ts). Guided unless Classic is chosen. */
-  skin?: Skin;
-  /** Guided only: the left menu shows icons only (`dpc_menu` cookie). */
+  /** The left menu shows icons only (`dpc_menu` cookie, src/lib/menu-cookie.ts). */
   menuCollapsed?: boolean;
 }) {
-  const { data: session } = useSession();
-  const pathname = usePathname();
   const { organization, organizations, isLoading: orgLoading } = useOrganization();
-  const { needsOnboarding, isBusinessOwner, isProfessional, isLoading: userTypeLoading } = useUserType();
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const { needsOnboarding, isLoading: userTypeLoading } = useUserType();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const tNav = useTranslations("nav");
   const tCommon = useTranslations("common");
-  // Rights requests: hidden from members who may not read them
-  // (src/lib/dsar-access.ts); shown while the role is still loading.
-  const { canHandle: canHandleDsars } = useDsarAccess();
-
-  // Primary nav: always visible in the top bar
-  const primaryNavItems = [
-    { href: "/privacy/data-inventory", label: tNav("dataInventory"), icon: Database },
-    { href: "/privacy/assessments", label: tNav("assessments"), icon: ClipboardCheck },
-    { href: "/privacy/vendors", label: tNav("vendors"), icon: Building2 },
-  ];
-
-  // Secondary nav: shown in "More" dropdown on desktop, flat in mobile sheet
-  const moreNavItems = [
-    // Hidden when the rights-request module is not part of this plan.
-    ...(isDsarModuleEnabled() && canHandleDsars !== false
-      ? [{ href: "/privacy/dsar", label: tNav("dsar"), icon: FileText }]
-      : []),
-    { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },
-    { href: "/privacy/transfers", label: tNav("transfers"), icon: Globe },
-    { href: "/privacy/skills", label: tNav("skills"), icon: KeyRound },
-    ...(isProfessional
-      ? [{ href: "/privacy/clients", label: tNav("myClients"), icon: Briefcase }]
-      : []),
-    ...(features.complianceDashboardEnabled
-      ? [{ href: "/privacy/reports", label: tNav("reports"), icon: BarChart3 }]
-      : []),
-    ...(features.regulatoryTrackerEnabled
-      ? [{ href: "/privacy/regulations", label: tNav("regulations"), icon: Globe }]
-      : []),
-    ...(features.aiGovernanceEnabled
-      ? [{ href: "/privacy/ai-systems", label: tNav("aiSystems"), icon: Bot }]
-      : []),
-    ...(features.expertDirectoryEnabled
-      ? [{ href: "/privacy/experts", label: tNav("findExpert"), icon: Search }]
-      : []),
-  ];
-
-  // All items combined (used by mobile sheet)
-  const allNavItems = [...primaryNavItems, ...moreNavItems];
-
-  // Check if any "More" item is active (to highlight the More button)
-  const isMoreActive = moreNavItems.some(
-    (item) => pathname === item.href || (item.href !== "/privacy" && pathname.startsWith(item.href))
-  );
 
   if (orgLoading || userTypeLoading) {
     return (
@@ -150,226 +52,24 @@ export function DashboardShell({
     return <OrganizationSetup />;
   }
 
-  // Guided (the default; Classic stays per browser for a while): the privacy
-  // program path as a left menu. The pages, the footer and the feedback dialog
-  // are the same as Classic.
-  if (skin === "guided") {
-    return (
-      <SkinProvider skin="guided">
-        <GuidedLayout
-          footer={<DashboardFooter />}
-          initialCollapsed={menuCollapsed}
-          onFeedback={() => setFeedbackOpen(true)}
-        >
-          {children}
-        </GuidedLayout>
-        <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
-      </SkinProvider>
-    );
-  }
-
+  // The one layout (Guided; Classic was retired on 9 October 2026): the
+  // privacy program path as a left menu, with the footer and the feedback
+  // dialog below.
   return (
-    <SkinProvider skin="classic">
-    <div className="min-h-screen bg-background">
-      {/* Top Navigation */}
-      <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-            {/* Mobile Menu Button */}
-            <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden shrink-0">
-                  <Menu className="w-5 h-5" />
-                  <span className="sr-only">{tNav("openMenu")}</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[320px]">
-                <SheetHeader>
-                  <SheetTitle className="flex items-center gap-2">
-                    <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-                    <span style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
-                  </SheetTitle>
-                </SheetHeader>
-                <nav className="mt-6 flex flex-col gap-1">
-                  {allNavItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href ||
-                      (item.href !== "/privacy" && pathname.startsWith(item.href));
-
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileNavOpen(false)}
-                      >
-                        <Button
-                          variant="ghost"
-                          className={`w-full justify-start gap-3 h-12 text-base ${
-                            isActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""
-                          }`}
-                        >
-                          <Icon className="w-5 h-5" />
-                          {item.label}
-                        </Button>
-                      </Link>
-                    );
-                  })}
-                  <div className="h-px bg-border my-2" />
-                  <Link href="/privacy/settings" onClick={() => setMobileNavOpen(false)}>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-3 h-12 text-base"
-                    >
-                      <Settings className="w-5 h-5" />
-                      {tNav("settings")}
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 h-12 text-base"
-                    onClick={() => { setMobileNavOpen(false); setFeedbackOpen(true); }}
-                  >
-                    <MessageSquareWarning className="w-5 h-5" />
-                    {tNav("feedback")}
-                  </Button>
-                </nav>
-              </SheetContent>
-            </Sheet>
-
-            <Link href="/privacy" className="flex items-center gap-2 shrink-0">
-              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-              {/* The name hides under `sm` so the top-bar controls stay on the
-                  bar at 360 px (the logo mark keeps the brand present). */}
-              <span className="hidden sm:inline" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>{brand.nameUppercase}</span>
-            </Link>
-
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {primaryNavItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href ||
-                (item.href !== "/privacy" && pathname.startsWith(item.href));
-
-              return (
-                <Link key={item.href} href={item.href}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`gap-2 ${isActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </Button>
-                </Link>
-              );
-            })}
-            {moreNavItems.length > 0 && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`gap-2 ${isMoreActive ? "bg-primary/15 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
-                  >
-                    <MoreHorizontal className="w-4 h-4" />
-                    <span className="hidden lg:inline">{tNav("more")}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  {moreNavItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href ||
-                      (item.href !== "/privacy" && pathname.startsWith(item.href));
-
-                    return (
-                      <DropdownMenuItem key={item.href} asChild>
-                        <Link
-                          href={item.href}
-                          className={`flex items-center gap-2 ${isActive ? "text-primary" : ""}`}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {item.label}
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </nav>
-
-          {/* Right side actions */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <PageHelpButton />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setFeedbackOpen(true)}
-              title={tNav("feedback")}
-            >
-              <MessageSquareWarning className="w-4 h-4" />
-            </Button>
-            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-              <User className="w-4 h-4" />
-              <span className="hidden lg:inline max-w-[150px] truncate">{session?.user?.email}</span>
-            </div>
-            <Link href="/privacy/settings">
-              <Button variant="ghost" size="icon" title={tNav("settings")}>
-                <Settings className="w-4 h-4" />
-              </Button>
-            </Link>
-            <UseGuidedLayout />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                void signOutOfSuite();
-              }}
-              title={tNav("signOut")}
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
+    <>
+      <GuidedLayout
+        footer={<DashboardFooter />}
+        initialCollapsed={menuCollapsed}
+        onFeedback={() => setFeedbackOpen(true)}
+      >
         {children}
-      </main>
-
-      <DashboardFooter />
-
+      </GuidedLayout>
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
-    </div>
-    </SkinProvider>
+    </>
   );
 }
 
-/**
- * Classic only: the way back to Guided, beside the other account actions. The
- * Guided layout has the matching "Use the classic layout" in its account menu,
- * and Settings offers both through the Layout card.
- */
-function UseGuidedLayout() {
-  const { setSkin } = useSkin();
-  const t = useTranslations("guided.layout");
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setSkin("guided")}
-      title={t("useGuided")}
-    >
-      <LayoutPanelLeft className="w-4 h-4" />
-      <span className="sr-only">{t("useGuided")}</span>
-    </Button>
-  );
-}
-
-/** The footer both layouts share: service line, legal links, source offer. */
+/** The dashboard footer: service line, legal links, source offer. */
 function DashboardFooter() {
   const tFooter = useTranslations("footer");
   const hosted = useHostedPilot();

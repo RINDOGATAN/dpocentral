@@ -354,7 +354,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
   // "All clients" is the one client view in Guided, and it sits once, at the
   // top of the menu (the client switcher block in guided-layout.tsx). It is
   // deliberately NOT repeated here under "Library and tools".
-  // "Library and tools": every Classic entry that is not a step, once.
+  // "Library and tools": every entry of the retired Classic menus that is not
+  // a step, once (tests/guided-path.test.ts keeps it so).
   library: ({ stripeEnabled }) => [
     // The two ready lists (stage 4): what is waiting, and what is unfinished.
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },

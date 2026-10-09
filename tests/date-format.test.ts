@@ -33,13 +33,15 @@ describe("formatDateTimeIn", () => {
   });
 });
 
-describe("Recent activity on the home", () => {
+describe("deadlines on the home", () => {
+  // Classic's Recent activity card was retired (decision d11); the dashboard's
+  // dates are its deadlines, in the interface's language.
   it("formats with the interface's language", () => {
     const home = readFileSync(
-      path.resolve(__dirname, "../src/app/(dashboard)/privacy/page.tsx"),
+      path.resolve(__dirname, "../src/components/guided/guided-dashboard.tsx"),
       "utf8"
     );
-    expect(home).toContain("formatDateTimeIn(activity.createdAt, locale)");
+    expect(home).toMatch(/formatDateTimeIn\([^)]*locale\)/);
     expect(home).not.toMatch(/toLocaleString\(\)/);
   });
 });

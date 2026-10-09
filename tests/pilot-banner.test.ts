@@ -28,8 +28,8 @@ vi.mock("next/navigation", () => ({
   redirect: mocks.redirect,
   useSearchParams: () => new URLSearchParams(),
 }));
-// The signed-in layout now reads the layout-choice cookie and the request
-// path (src/lib/skin.ts, the safe return on session end). Neither is under
+// The signed-in layout reads the left-menu cookie and the request path
+// (src/lib/menu-cookie.ts, the safe return on session end). Neither is under
 // test here; a request scope is not set up, so stub both.
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => ({ get: () => undefined })),

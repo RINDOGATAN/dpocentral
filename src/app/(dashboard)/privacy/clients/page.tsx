@@ -110,9 +110,9 @@ export default function ClientsPage() {
   // "Start a new client from this one": the row's client is the source; the
   // dialog creates the new client and copies into it. Owner/admin only.
   const [copyFrom, setCopyFrom] = useState<{ id: string; name: string } | null>(null);
-  // "Add a client": a blank client with only a name, the Guided way in (the
-  // Classic switcher's "New Organization" is not shown in Guided). The new
-  // client becomes the current one and opens on its own dashboard.
+  // "Add a client": a blank client with only a name (the left menu's client
+  // switcher offers the same dialog). The new client becomes the current one
+  // and opens on its own dashboard.
   const [addOpen, setAddOpen] = useState(false);
 
   const now = new Date();

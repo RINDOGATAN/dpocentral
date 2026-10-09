@@ -198,11 +198,10 @@ describe("F4: the dashboard's request queue shows a reference, not the database 
     expect(formatRequestRef("cmabcdefghij1234xyz9q", "fr")).toBe("REQ-4XYZ9Q");
   });
 
-  it("is what the dashboard shows, the full id only in the tooltip", () => {
-    const page = read("src/app/(dashboard)/privacy/page.tsx");
-    expect(page).toContain("formatRequestRef(dsar.publicId, locale)");
-    expect(page).toContain("title={dsar.publicId}");
-    expect(page).not.toContain(">{dsar.publicId}<");
+  it("is what the dashboard's deadlines show (the Classic request queue was retired)", () => {
+    const guided = read("src/components/guided/guided-dashboard.tsx");
+    expect(guided).toContain("formatRequestRef(");
+    expect(guided).not.toContain(">{dsar.publicId}<");
   });
 });
 
@@ -236,26 +235,6 @@ describe("F5: the vendors card counts every vendor it lists", () => {
     expect(stats.activeVendors).toBe(0);
     expect(stats.totalVendors).toBe(3);
   });
-
-  it("says both figures on the card, in English and Spanish", () => {
-    const page = read("src/app/(dashboard)/privacy/page.tsx");
-    expect(page).toContain('tp("vendors.countLine", { total: dashboardStats.totalVendors, active: dashboardStats.activeVendors })');
-    expect(en.pages.dashboard.vendors.countLine).toContain("{active}");
-    expect(es.pages.dashboard.vendors.countLine).toContain("{active");
-    expect(es.pages.dashboard.vendors.countLine).toContain("proveedores");
-  });
-});
-
-describe("F6: the DPIA quick action is never cut short", () => {
-  it("lets the label and the badge wrap instead of truncating the label", () => {
-    const page = read("src/app/(dashboard)/privacy/page.tsx");
-    const start = page.indexOf('href="/privacy/assessments/new?type=DPIA"');
-    const block = page.slice(start, page.indexOf("</Link>", start));
-    expect(block).toContain('<span className="min-w-0">{tp("quickActions.newDpia")}</span>');
-    expect(block).not.toContain('<span className="truncate">{tp("quickActions.newDpia")}</span>');
-    expect(block).toContain("whitespace-normal");
-    expect(block).toContain("sm:h-auto");
-  });
 });
 
 describe("F7: a blank client can be added in the Guided layout", () => {
@@ -267,10 +246,17 @@ describe("F7: a blank client can be added in the Guided layout", () => {
     expect(es.portfolio.addClient).toBe("Añadir un cliente");
   });
 
-  it("is the same dialog Classic's switcher opens", () => {
-    const dashboard = read("src/app/(dashboard)/privacy/page.tsx");
-    expect(dashboard).toContain("<NewOrganizationDialog open={createOrgOpen}");
-    expect(dashboard).not.toContain("trpc.organization.create.useMutation");
+  it("is the same dialog the left menu's organisation switcher opens, for everyone", () => {
+    // Classic's dashboard switcher offered "New Organization" to every person;
+    // since Classic was retired (decision d11) the left menu's switcher does.
+    const layout = read("src/components/guided/guided-layout.tsx");
+    expect(layout).toContain("<NewOrganizationDialog");
+    expect(layout).toContain('isProfessional ? t("addClient") : t("newOrganization")');
+    expect(layout).not.toContain("trpc.organization.create.useMutation");
+    for (const bundle of [en, es]) {
+      expect(bundle.guided.addClient).toBeTruthy();
+      expect(bundle.guided.newOrganization).toBeTruthy();
+    }
   });
 
   it("derives the slug from the name", () => {

@@ -349,49 +349,45 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
   });
 
   // ── Layout and sign-out ──────────────────────────────────────────────
-  // Guided is the default; Classic stays reachable per browser. Check Classic
-  // renders (its top-bar sign-out button), then return to Guided.
-  await step("classic layout stays reachable", async () => {
-    await page.goto("/privacy?skin=classic");
-    // The middleware strips ?skin= and sets the cookie; Classic renders the
-    // sign-out control as a visible top-bar button.
-    await expect(page.getByRole("button", { name: /sign out/i }).first()).toBeVisible();
-    await page.goto("/privacy?skin=guided");
+  // Classic was retired (decision d11). An old Classic link, or a browser
+  // that still holds the old cookie, lands on the one layout.
+  await step("old classic links open the one layout", async () => {
+    await page.context().addCookies([{ name: "dpc_skin", value: "classic", url: new URL(page.url()).origin }]);
+    await page.goto("/privacy/vendors?skin=classic");
+    await page.waitForURL((url) => url.pathname === "/privacy/vendors" && !url.searchParams.has("skin"));
     await expect(page.getByRole("button", { name: /account/i })).toBeVisible();
+    await expect(page.getByText(/use the classic layout/i)).toHaveCount(0);
+    await page.goto("/privacy?skin=guided");
+    await page.waitForURL((url) => url.pathname === "/privacy" && !url.searchParams.has("skin"));
+    await expect(page.getByTestId("guided-dashboard")).toBeVisible();
   });
 
   // The top bar must not overflow on a narrow phone: the "?" help button that
   // stage 2 added had pushed Account off the right edge, so a phone user could
-  // not sign out. Measured directly at 360 and 390 px in both skins.
+  // not sign out. Measured directly at 360 and 390 px.
   await step("the top bar fits the phone at 360 and 390 px", async () => {
     const original = page.viewportSize();
-    const bars: Array<{ skin: string; control: RegExp }> = [
-      { skin: "guided", control: /account/i },
-      { skin: "classic", control: /sign out/i },
-    ];
     try {
       for (const width of [360, 390]) {
-        for (const { skin, control } of bars) {
-          await page.setViewportSize({ width, height: 844 });
-          await page.goto(`/privacy?skin=${skin}`);
-          const button = page.getByRole("button", { name: control }).first();
-          await expect(button).toBeVisible();
-          const header = page.locator("header").first();
-          const { scrollWidth, clientWidth } = await header.evaluate((el) => ({
-            scrollWidth: el.scrollWidth,
-            clientWidth: el.clientWidth,
-          }));
-          expect(scrollWidth, `${skin} header overflows at ${width} px`).toBeLessThanOrEqual(clientWidth);
-          const box = await button.boundingBox();
-          expect(box, `${skin} control has no box at ${width} px`).not.toBeNull();
-          expect(box!.x, `${skin} control off the left at ${width} px`).toBeGreaterThanOrEqual(0);
-          expect(box!.x + box!.width, `${skin} control off the right at ${width} px`).toBeLessThanOrEqual(width);
-        }
+        await page.setViewportSize({ width, height: 844 });
+        await page.goto("/privacy");
+        const button = page.getByRole("button", { name: /account/i }).first();
+        await expect(button).toBeVisible();
+        const header = page.locator("header").first();
+        const { scrollWidth, clientWidth } = await header.evaluate((el) => ({
+          scrollWidth: el.scrollWidth,
+          clientWidth: el.clientWidth,
+        }));
+        expect(scrollWidth, `header overflows at ${width} px`).toBeLessThanOrEqual(clientWidth);
+        const box = await button.boundingBox();
+        expect(box, `account control has no box at ${width} px`).not.toBeNull();
+        expect(box!.x, `account control off the left at ${width} px`).toBeGreaterThanOrEqual(0);
+        expect(box!.x + box!.width, `account control off the right at ${width} px`).toBeLessThanOrEqual(width);
       }
     } finally {
-      // Leave the walk where it expects to be: Guided, at the walk's viewport.
+      // Leave the walk where it expects to be, at the walk's viewport.
       if (original) await page.setViewportSize(original);
-      await page.goto("/privacy?skin=guided");
+      await page.goto("/privacy");
     }
   });
 

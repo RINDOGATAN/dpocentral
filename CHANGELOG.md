@@ -4,6 +4,26 @@ All notable changes to DPO Central are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [Semantic Versioning](https://semver.org).
 
+## [Unreleased]
+
+### Removed
+
+- **The Classic layout.** Guided is now the only dashboard layout. The
+  layout switch (the Settings card, the account menu entry and Classic's way
+  back), the Classic top bar and its menus, and the Classic dashboard (its
+  counters, request queue, recent activity, quick actions and vendor card)
+  are gone, with their translations and tests. Every Classic menu entry stays
+  in the Guided menu.
+- Old links keep working: the `?skin=` parameter is dropped from dashboard
+  addresses with a redirect to the same page. A stored `dpc_skin` cookie is
+  left in place and ignored. No database change.
+
+### Changed
+
+- The left menu's organisation switcher now always opens and ends with
+  "Add a client" (privacy professionals) or "New organization" (everyone
+  else), the entry Classic's dashboard switcher offered to every person.
+
 ## [0.1.25] - 2026-09-11
 
 ### Fixed

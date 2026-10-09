@@ -11,7 +11,8 @@
  * At each moment: the documents panel shows every document with its state,
  * the menu's line under each step says the same, the six area tiles carry the
  * menu's state words, and the dashboard has none of the removed pieces. Then
- * the Classic dashboard still opens.
+ * a browser that still holds the retired Classic cookie gets the same
+ * dashboard (Classic was retired, decision d11).
  *
  * Runs in any project (desktop or phone width, any engine). DR_LOCALE=es walks
  * it in Spanish; DR_SHOTS=<dir> saves a screenshot at each stop.
@@ -258,11 +259,11 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   await expect(page.getByTestId("help-experts-line")).toBeVisible();
   await page.keyboard.press("Escape");
 
-  // Classic still opens with its own dashboard.
+  // The retired Classic cookie is ignored: the same dashboard opens.
   await context.addCookies([{ name: "dpc_skin", value: "classic", url: new URL(page.url()).origin }]);
   await page.goto("/privacy");
-  await expect(page.getByTestId("kpi-assets")).toBeVisible();
-  await expect(page.getByTestId("guided-dashboard")).toHaveCount(0);
-  await expectNoSidewaysScroll(page, "classic dashboard");
-  await shot(page, "04-classic", project);
+  await expect(page.getByTestId("guided-dashboard")).toBeVisible();
+  await expect(page.getByTestId("kpi-assets")).toHaveCount(0);
+  await expectNoSidewaysScroll(page, "dashboard with the old classic cookie");
+  await shot(page, "04-old-classic-cookie", project);
 });
