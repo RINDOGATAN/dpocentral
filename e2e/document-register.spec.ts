@@ -91,8 +91,9 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
     })),
   );
   const menu = await openMenu(page);
-  // Open every stage, so every step line is in the page.
-  const closed = menu.locator("button[aria-expanded='false']");
+  // Open every stage, so every step line is in the page (stage buttons only:
+  // the organisation switcher above is also a collapsed button).
+  const closed = menu.locator("li > button[aria-expanded='false']");
   for (let guard = 0; guard < 10 && (await closed.count()) > 0; guard++) {
     await closed.first().click();
   }

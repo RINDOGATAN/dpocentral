@@ -182,7 +182,7 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
     await page.getByRole("button", { name: /open the program path|abrir la ruta del programa/i }).click();
   }
   const menu = wide(page) ? page.locator("aside nav").first() : page.getByRole("dialog");
-  const closed = menu.locator("button[aria-expanded='false']");
+  const closed = menu.locator("li > button[aria-expanded='false']");
   for (let guard = 0; guard < 10 && (await closed.count()) > 0; guard++) await closed.first().click();
   await expect(menu.getByTestId("step-docs-audits")).toContainText(
     es ? "Informe ejecutivo · listo" : "Executive report · ready",
