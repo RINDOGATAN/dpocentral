@@ -26,7 +26,8 @@
  * Pure: no React, no Prisma, no Next. Tested in tests/document-register.test.ts.
  */
 
-import type { PathCounts } from "@/components/guided/path-config";
+import { DPO_CENTRAL_PATH, type PathCounts } from "@/components/guided/path-config";
+import { evaluatePath, programFigure } from "@/components/guided/path";
 
 export type DocumentState = "ready" | "draft" | "needsInput" | "notYet";
 
@@ -85,7 +86,8 @@ export type DocumentInput =
   | "incident"
   | "aiAssist"
   | "notificationRecord"
-  | "dsarRequest";
+  | "dsarRequest"
+  | "confirmedStep";
 
 export type DocumentStatus =
   | { state: "ready" }
@@ -154,10 +156,12 @@ export const INPUTS: Record<DocumentInput, { href: string; external?: boolean }>
   aiAssist: { href: "/privacy/settings" },
   notificationRecord: { href: "/privacy/incidents" },
   dsarRequest: { href: "/privacy/dsar" },
+  // The quick start drafts the first records; confirming one completes a step.
+  confirmedStep: { href: "/privacy/quickstart" },
 };
 
 export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
-  // ---- Produced today: the inventory's eleven ----------------------------
+  // ---- Produced today: the inventory's eleven, and the board report -------
   {
     id: "regulatoryReport",
     stepId: "applies",
@@ -313,6 +317,21 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     },
   },
 
+  {
+    // Owner's decision d12, 9 October 2026: the first missing document.
+    id: "boardReport",
+    stepId: "audits",
+    href: "/privacy/board-report",
+    download: "/api/export/board-report",
+    formats: ["pdf"],
+    needs: "At least one confirmed step on the path. Read from data already in DPO Central, for a chosen period (the last full quarter by default).",
+    rule: "Ready when at least one step of the path is confirmed (the programme figure is not zero); otherwise needs a confirmed step.",
+    evaluate: (f) =>
+      programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, f)).confirmed > 0
+        ? ready()
+        : needs("confirmedStep"),
+  },
+
   // ---- Not in DPO Central yet --------------------------------------------
   // Each sits under the step that would produce it, so every "coming" step on
   // the path is named here once (tests/document-register.test.ts).
@@ -355,14 +374,6 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     formats: [],
     module: "dsar",
     needs: "A response letter to a rights request (today only a link and a log are stored).",
-    rule: "Not in DPO Central yet.",
-  },
-  {
-    id: "boardReport",
-    stepId: "audits",
-    href: null,
-    formats: [],
-    needs: "A board report page (the data procedure exists).",
     rule: "Not in DPO Central yet.",
   },
 ];

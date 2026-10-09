@@ -63,6 +63,7 @@ const PRODUCED = [
   "breachRegister",
   "breachNotification",
   "programmeReport",
+  "boardReport",
 ];
 
 const EMPTY: DocumentFacts = {
@@ -135,7 +136,6 @@ describe("d4: the register", () => {
       "trainingRecord",
       "consentRecords",
       "responseLetter",
-      "boardReport",
     ]);
     expect(new Set(DOCUMENT_REGISTER.map((d) => d.id)).size).toBe(DOCUMENT_REGISTER.length);
   });
@@ -213,12 +213,12 @@ describe("d4: the states", () => {
       breachRegister: "needsInput:incident",
       breachNotification: "needsInput:aiAssist",
       programmeReport: "draft",
+      boardReport: "needsInput:confirmedStep",
       privacyNotice: "notYet",
       dpoAppointment: "notYet",
       trainingRecord: "notYet",
       consentRecords: "notYet",
       responseLetter: "notYet",
-      boardReport: "notYet",
     });
   });
 

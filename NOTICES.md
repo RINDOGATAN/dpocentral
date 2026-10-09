@@ -23,7 +23,7 @@ vendored, embedded, or foundational.
 | @xyflow/react + elkjs | data-flow diagrams | MIT / EPL-2.0 |
 | Inter font (vendored, `src/server/services/export/fonts/`) | PDF text rendering | SIL OFL 1.1 |
 | Noto Sans font (vendored, same dir, Latin subset) | PDF text rendering | SIL OFL 1.1 |
-| Jost, Archivo Black fonts | web UI (self-hosted at build via `next/font`) | SIL OFL 1.1 |
+| Jost, Archivo Black fonts | web UI (self-hosted at build via `next/font`); board report PDF (vendored TTFs in `src/server/services/export/fonts/`, Jost as static 400/500/600/700 instances of the variable font) | SIL OFL 1.1 |
 | next-intl | localization | MIT |
 | Stripe SDK | payments (cloud posture only) | MIT |
 | PostgreSQL 16 (Docker images) | database (deploy bundles) | PostgreSQL License |

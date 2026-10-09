@@ -115,9 +115,9 @@ describe("documents ready", () => {
 
   it("counts the ready ones out of every document DPO Central produces here", () => {
     // Regulatory report, ROPA, vendor register and the programme report are ready.
-    expect(documentsReady(evaluateRegister(registerFor({ dsarEnabled: true }), facts))).toEqual({ ready: 4, total: 11 });
+    expect(documentsReady(evaluateRegister(registerFor({ dsarEnabled: true }), facts))).toEqual({ ready: 5, total: 12 });
     // Without the rights-request module its report is not counted.
-    expect(documentsReady(evaluateRegister(registerFor({ dsarEnabled: false }), facts))).toEqual({ ready: 4, total: 10 });
+    expect(documentsReady(evaluateRegister(registerFor({ dsarEnabled: false }), facts))).toEqual({ ready: 5, total: 11 });
   });
 });
 

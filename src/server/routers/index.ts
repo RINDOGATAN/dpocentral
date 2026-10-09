@@ -14,6 +14,7 @@ import { billingRouter } from "./billing";
 import { feedbackRouter } from "./feedback";
 import { quickstartRouter } from "./privacy/quickstart";
 import { programPathRouter } from "./privacy/programPath";
+import { boardReportRouter } from "./privacy/boardReport";
 import { draftsRouter } from "./privacy/drafts";
 import { userRouter } from "./privacy/user";
 import { expertsRouter } from "./privacy/experts";
@@ -43,6 +44,7 @@ export const appRouter = createTRPCRouter({
   feedback: feedbackRouter,
   quickstart: quickstartRouter,
   programPath: programPathRouter,
+  boardReport: boardReportRouter,
   drafts: draftsRouter,
   user: userRouter,
   experts: expertsRouter,

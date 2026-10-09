@@ -6,3 +6,20 @@ This font file is vendored unchanged for server-side text rendering by
 @resvg/resvg-js when generating data flow diagrams in PDF exports. It is
 redistributed under the terms of the SIL OFL, which permits free use,
 modification, and bundling.
+
+Jost (Jost-Regular, -Medium, -SemiBold, -Bold)
+Copyright 2020 The Jost Project Authors (https://github.com/indestructible-type)
+Source: Google Fonts, https://github.com/google/fonts/tree/main/ofl/jost
+License: SIL Open Font License, Version 1.1, https://openfontlicense.org/
+The four files are static instances (weights 400, 500, 600, 700) cut from the
+variable font Jost[wght].ttf with fontTools varLib.instancer, so the PDF
+renderer can embed each weight. No Reserved Font Name is declared.
+
+Archivo Black (ArchivoBlack-Regular)
+Copyright 2017 The Archivo Black Project Authors (https://github.com/Omnibus-Type/ArchivoBlack)
+Source: Google Fonts, https://github.com/google/fonts/tree/main/ofl/archivoblack
+License: SIL Open Font License, Version 1.1, https://openfontlicense.org/
+Vendored unchanged.
+
+Both are used by the board report PDF (src/server/services/export/board-report.tsx),
+in the TODO.LAW print style.

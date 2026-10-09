@@ -62,6 +62,7 @@ for (const [file, fn] of [
   ["dsar-performance", "buildDsarPerformanceExport"],
   ["breach-register", "buildBreachRegisterExport"],
   ["privacy-program", "buildPrivacyProgramExport"],
+  ["board-report", "buildBoardReportExport"],
 ] as const) {
   vi.doMock(`@/server/services/export/documents/${file}`, () => ({
     [fn]: (args: unknown) => mocks.builder(file, args),
@@ -192,7 +193,7 @@ describe("planPack: which documents go in", () => {
   });
 
   it("counts for the dashboard's button", () => {
-    expect(packCounts(documents, { dsarAllowed: true })).toEqual({ ready: 4, drafts: 3 });
+    expect(packCounts(documents, { dsarAllowed: true })).toEqual({ ready: 5, drafts: 3 });
   });
 });
 
