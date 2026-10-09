@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { dsarDeadlineMonths } from "@/server/services/privacy/slaCalculator";
+import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
 
 export const regulationsRouter = createTRPCRouter({
   // List all available jurisdictions from the catalog
@@ -308,7 +309,9 @@ export const regulationsRouter = createTRPCRouter({
             status: { in: ["DRAFT", "IN_PROGRESS", "PENDING_REVIEW", "PENDING_APPROVAL"] },
           },
         }),
-        ctx.prisma.dSARIntakeForm.count({ where: { organizationId: orgId, isActive: true } }),
+        isDsarModuleEnabled()
+          ? ctx.prisma.dSARIntakeForm.count({ where: { organizationId: orgId, isActive: true } })
+          : 0,
         ctx.prisma.incident.count({ where: { organizationId: orgId } }),
         ctx.prisma.vendor.count({
           where: { organizationId: orgId, status: { in: ["ACTIVE", "UNDER_REVIEW"] } },
@@ -339,6 +342,9 @@ export const regulationsRouter = createTRPCRouter({
             if (inProgressDpiaCount > 0) return { status: "partial", detail: `${inProgressDpiaCount} in progress` };
             return { status: "missing", detail: "No DPIA on file" };
           case "dsar-portal":
+            // Without the rights-request module the requirement stays on the
+            // list (the law still asks for it) but this tool does not meet it.
+            if (!isDsarModuleEnabled()) return { status: "missing", detail: DSAR_MODULE_OFF_MESSAGE };
             return intakeFormCount === 0
               ? { status: "missing", detail: "Public intake form not configured" }
               : { status: "satisfied", detail: "Public portal active" };

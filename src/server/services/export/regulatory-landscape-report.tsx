@@ -83,6 +83,14 @@ export interface RegulatoryLandscapeData {
   // Deadline compliance
   dsarOnTimeRate: number; // 0-100
   breachNotificationCompliance: number; // 0-100
+
+  /**
+   * False when the rights-request module is not part of this plan
+   * (NEXT_PUBLIC_DSAR_ENABLED=false): the report leaves out the organisation's
+   * rights-request figures. The statutory deadlines per jurisdiction stay, as
+   * they describe the law. Missing means true.
+   */
+  dsarModule?: boolean;
 }
 
 // ── Helpers ──────────────────────────────────────────────
@@ -249,6 +257,7 @@ export function RegulatoryLandscapeReport({
   locale?: string;
 }) {
   const tr: PdfT = t ?? fallbackT;
+  const showDsar = data.dsarModule !== false;
   const orgName = data.organization.name;
   const date = data.generatedAt;
   const jurisdictions = data.jurisdictions;
@@ -329,18 +338,22 @@ export function RegulatoryLandscapeReport({
 
         <View style={s.calloutBox}>
           <Text style={s.calloutTitle}>{tr("programHealth")}</Text>
+          {showDsar && (
           <Text style={s.calloutText}>
             {"\u2022"}  {tr("healthDsarOnTime", { rate: data.dsarOnTimeRate })}
           </Text>
+          )}
           <Text style={s.calloutText}>
             {"\u2022"}  {tr("healthOpenIncidents", {
               open: data.moduleStats.incidentOpen,
               critical: data.moduleStats.incidentCritical,
             })}
           </Text>
+          {showDsar && (
           <Text style={s.calloutText}>
             {"\u2022"}  {tr("healthOverdueDsars", { count: data.moduleStats.dsarOverdue })}
           </Text>
+          )}
           <Text style={s.calloutText}>
             {"\u2022"}  {tr("healthHighRiskVendors", { count: data.moduleStats.vendorHighRisk })}
           </Text>
@@ -411,6 +424,8 @@ export function RegulatoryLandscapeReport({
       <ContentPage title={tr("pageTitle")} orgName={orgName} date={date}>
         <Text style={s.sectionTitle}>{tr("deadlineCompliance")}</Text>
 
+        {showDsar && (
+        <>
         <View style={s.statsGrid}>
           <StatCard value={data.moduleStats.dsarTotal} label={tr("stats.totalDsars")} />
           <StatCard value={`${data.dsarOnTimeRate}%`} label={tr("stats.onTimeRate")} />
@@ -449,6 +464,8 @@ export function RegulatoryLandscapeReport({
         />
 
         <View style={s.divider} />
+        </>
+        )}
 
         <AccentSectionHeader
           title={tr("breachDeadlines")}

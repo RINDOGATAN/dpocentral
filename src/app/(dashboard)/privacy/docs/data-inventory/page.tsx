@@ -10,6 +10,7 @@ import { StepList } from "@/components/docs/step-list";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export default async function DocsDataInventoryPage() {
   const t = await getTranslations("docs.dataInventory");
@@ -200,7 +201,7 @@ export default async function DocsDataInventoryPage() {
 
       <DocNavFooter
         previous={{ title: t("nav.previous"), href: "/privacy/docs/quickstart" }}
-        next={{ title: t("nav.next"), href: "/privacy/docs/dsar" }}
+        next={{ title: t("nav.next"), href: isDsarModuleEnabled() ? "/privacy/docs/dsar" : "/privacy/docs/assessments" }}
       />
     </div>
   );

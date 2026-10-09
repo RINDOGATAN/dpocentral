@@ -23,6 +23,8 @@ import {
   type RateLimiter,
 } from "./lib/rate-limit";
 import { classifyRequest, type LimitedRoute } from "./lib/rate-limit-routes";
+import { isDsarModuleEnabled } from "./config/features";
+import { isDsarModulePath } from "./lib/dsar-module";
 import {
   SKIN_COOKIE,
   SKIN_COOKIE_OPTIONS,
@@ -151,6 +153,15 @@ function applyLocaleCookies(response: NextResponse, request: NextRequest, chosen
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
+
+  if (!isDsarModuleEnabled() && isDsarModulePath(pathname)) {
+    const notFound = new NextResponse("Not found", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+    applyCsp(notFound);
+    return notFound;
+  }
 
   // `?skin=guided` / `?skin=classic` on a dashboard address (for demos): keep
   // the choice in its cookie and come back to the same address without the

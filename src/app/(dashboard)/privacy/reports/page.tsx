@@ -28,6 +28,7 @@ import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneFill, toneMark, toneStroke, toneTint } from "@/config/status-palette";
 import { toneForScore } from "@/config/status-tone";
+import { isDsarModuleEnabled } from "@/config/features";
 
 function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel: string }) {
   const size = 160;
@@ -146,6 +147,7 @@ export default function ReportsPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.reports");
+  const dsarOn = isDsarModuleEnabled();
 
   const { data: complianceData, isLoading: isLoadingScore } =
     trpc.reports.getComplianceScore.useQuery(
@@ -313,6 +315,7 @@ export default function ReportsPage() {
               unratedValue={tp("breakdown.unratedValue")}
               icon={FileText}
             />
+            {dsarOn && (
             <ModuleBreakdownCard
               label={tp("breakdown.dsarSla")}
               score={breakdown.dsar.score}
@@ -325,6 +328,7 @@ export default function ReportsPage() {
               unratedValue={tp("breakdown.unratedValue")}
               icon={Clock}
             />
+            )}
             <ModuleBreakdownCard
               label={tp("breakdown.incidentResponse")}
               score={breakdown.incident.score}
@@ -423,7 +427,8 @@ export default function ReportsPage() {
               </CardContent>
             </Card>
 
-            {/* DSAR */}
+            {/* DSAR (not when the module is off) */}
+            {dsarOn && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
@@ -455,6 +460,7 @@ export default function ReportsPage() {
                 </div>
               </CardContent>
             </Card>
+            )}
 
             {/* Assessments */}
             <Card>

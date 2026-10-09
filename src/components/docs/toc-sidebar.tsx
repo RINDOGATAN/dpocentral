@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { PremiumBadge } from "./premium-badge";
 import { cn } from "@/lib/utils";
+import { isDsarModuleEnabled } from "@/config/features";
 
 interface TocChild {
   label: string;
@@ -38,7 +39,7 @@ interface TocSection {
   children?: TocChild[];
 }
 
-const tocSections: TocSection[] = [
+const allTocSections: TocSection[] = [
   {
     href: "/privacy/docs",
     label: "Getting Started",
@@ -223,6 +224,12 @@ const tocSections: TocSection[] = [
     ],
   },
 ];
+
+// The rights-request guide is left out when the module is not part of this
+// plan (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts).
+const tocSections: TocSection[] = isDsarModuleEnabled()
+  ? allTocSections
+  : allTocSections.filter((s) => s.href !== "/privacy/docs/dsar");
 
 export function TocSidebar() {
   const pathname = usePathname();

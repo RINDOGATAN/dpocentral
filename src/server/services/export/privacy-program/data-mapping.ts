@@ -81,6 +81,12 @@ export interface ProgramInput {
   vendors: RawVendor[];
   aiSystems: RawAISystem[];
   counts: RawCounts;
+  /**
+   * False when the rights-request module is not part of this plan
+   * (NEXT_PUBLIC_DSAR_ENABLED=false): the report then carries no rights-request
+   * figure at all. Missing means true.
+   */
+  dsarModule?: boolean;
 }
 
 // ─── Derived numbers ──────────────────────────────────────────────────────────
@@ -96,6 +102,7 @@ export function computeHeroStats(input: ProgramInput) {
     activityCount: activities.length,
     vendorCount: vendors.length,
     dsarOnTimePct, // null when no completed DSARs yet
+    showDsar: input.dsarModule !== false,
   };
 }
 
@@ -144,7 +151,7 @@ export function computeKeyFindings(input: ProgramInput, t: PdfT): KeyFindingItem
     (v) => v.riskTier === "HIGH" || v.riskTier === "CRITICAL"
   ).length;
 
-  if (counts.overdueDsars > 0) {
+  if (input.dsarModule !== false && counts.overdueDsars > 0) {
     items.push({
       tone: "danger",
       text: t("findings.overdueDsars", { count: counts.overdueDsars }),

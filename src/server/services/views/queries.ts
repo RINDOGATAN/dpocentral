@@ -15,6 +15,7 @@
 // view rather than shown as an org-wide number under a department name.
 
 import type { Db } from "@/lib/prisma";
+import { isDsarModuleEnabled } from "@/config/features";
 import {
   buildNeedsAction,
   needsActionTotal,
@@ -67,13 +68,16 @@ export async function collectNeedsAction(
   if (!departmentScoped) {
     const dueBefore = new Date(now.getTime() + DSAR_DUE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
     const [dsar, breach, assessment] = await Promise.all([
-      prisma.dSARRequest.count({
-        where: {
-          organizationId,
-          status: { notIn: [...OPEN_DSAR_EXCLUDED] },
-          dueDate: { lt: dueBefore },
-        },
-      }),
+      // Not counted when the rights-request module is off.
+      isDsarModuleEnabled()
+        ? prisma.dSARRequest.count({
+            where: {
+              organizationId,
+              status: { notIn: [...OPEN_DSAR_EXCLUDED] },
+              dueDate: { lt: dueBefore },
+            },
+          })
+        : null,
       prisma.incident.count({
         where: {
           organizationId,

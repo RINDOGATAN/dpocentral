@@ -9,8 +9,10 @@ import { StatusNote } from "@/components/ui/status-note";
 import { toneMark } from "@/config/status-palette";
 import { trpc } from "@/lib/trpc";
 import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import { isDsarModuleEnabled } from "@/config/features";
+import { useOrganization } from "@/lib/organization-context";
 
-const EXPORTS = [
+const ALL_EXPORTS = [
   { key: "all", path: "organization-data", format: null },
   { key: "program", path: "privacy-program", format: null },
   { key: "ropa", path: "ropa", format: null },
@@ -20,12 +22,31 @@ const EXPORTS = [
   { key: "assessmentPortfolio", path: "assessment-portfolio", format: null },
 ] as const;
 
+type ExportLink = { key: string; path: string; format: string | null };
+
+/**
+ * The exports offered. Without the rights-request module
+ * (NEXT_PUBLIC_DSAR_ENABLED=false) its report goes, and owners and admins get
+ * the download of the rights-request records the organisation already holds
+ * instead (GET /api/export/rights-requests).
+ */
+function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
+  if (dsarOn) return ALL_EXPORTS;
+  const rest: ExportLink[] = ALL_EXPORTS.filter((e) => e.key !== "dsarPerformance");
+  return isAdmin
+    ? [...rest, { key: "rightsRequests", path: "rights-requests", format: null }]
+    : rest;
+}
+
 /**
  * Hosted pilot card for Settings: days left, records against the ceiling,
  * the two ways out, and every export. Renders nothing on the kit.
  */
 export function PilotStatusCard({ organizationId }: { organizationId: string }) {
   const t = useTranslations("pilot");
+  const { organizations } = useOrganization();
+  const role = (organizations.find((o) => o.id === organizationId) as { role?: string } | undefined)?.role;
+  const exportLinks = exportsFor(isDsarModuleEnabled(), role === "OWNER" || role === "ADMIN");
   const { data: status } = trpc.organization.getPilotStatus.useQuery(
     { organizationId },
     { enabled: !!organizationId }
@@ -102,7 +123,7 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
         <div id="pilot-export">
           <h3 className="text-sm font-medium mb-2">{t("settings.exportTitle")}</h3>
           <ul className="flex flex-col gap-1 text-sm">
-            {EXPORTS.map((e) => (
+            {exportLinks.map((e) => (
               <li key={e.key}>
                 <a
                   href={`/api/export/${e.path}?organizationId=${organizationId}${e.format ? `&format=${e.format}` : ""}`}

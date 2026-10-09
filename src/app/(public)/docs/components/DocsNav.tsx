@@ -13,8 +13,9 @@ import {
   AlertTriangle,
   Building2,
 } from "lucide-react";
+import { isDsarModuleEnabled } from "@/config/features";
 
-const sections = [
+const allSections = [
   {
     key: "gettingStarted",
     href: "/docs",
@@ -46,6 +47,12 @@ const sections = [
     icon: Building2,
   },
 ] as const;
+
+// The rights-request guide is left out when the module is not part of this
+// plan (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts).
+const sections = isDsarModuleEnabled()
+  ? allSections
+  : allSections.filter((s) => s.key !== "dsar");
 
 export function DocsNav() {
   const pathname = usePathname();
