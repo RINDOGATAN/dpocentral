@@ -83,4 +83,48 @@ describe("the user guide describes the Guided product", () => {
       for (const hash of hashes) expect(page, `${href}#${hash}`).toContain(`id="${hash}"`);
     }
   });
+
+  describe("the table of contents speaks the reader's language", () => {
+    const toc = read("src/components/docs/toc-sidebar.tsx");
+    type TocBundle = Record<string, { label: string; items?: Record<string, string> }>;
+    const enToc = (en as unknown as { docs: { toc: TocBundle } }).docs.toc;
+    const esToc = (es as unknown as { docs: { toc: TocBundle } }).docs.toc;
+
+    // Each section of the component, with the keys of its entries.
+    const sections = toc
+      .split(/\n  \{\n    href: /)
+      .slice(1)
+      .map((block) => ({
+        key: /key: "(\w+)"/.exec(block)![1],
+        children: [...block.matchAll(/\{ key: "(\w+)", hash:/g)].map((m) => m[1]),
+      }));
+
+    it("holds no hard-coded label and reads docs.toc", () => {
+      expect(toc).not.toMatch(/label: "/);
+      expect(toc).toContain('useTranslations("docs.toc")');
+      expect(sections.length).toBeGreaterThan(10);
+    });
+
+    for (const [locale, bundle] of [["en", enToc], ["es", esToc]] as const) {
+      it(`has every label in ${locale}`, () => {
+        for (const { key, children } of sections) {
+          expect(bundle[key]?.label, `${locale} ${key}`).toBeTruthy();
+          for (const child of children) expect(bundle[key]?.items?.[child], `${locale} ${key}.${child}`).toBeTruthy();
+        }
+      });
+    }
+
+    it("never falls back to English in Spanish", () => {
+      // Abbreviations that read the same in both languages.
+      const same = new Set(["premium.items.pia", "premium.items.tia"]);
+      expect(Object.keys(esToc)).toEqual(Object.keys(enToc));
+      for (const [key, text] of stringLeaves(enToc)) {
+        const spanish = stringLeaves(esToc).find(([k]) => k === key)?.[1];
+        expect(spanish, key).toBeTruthy();
+        if (!same.has(key)) expect(spanish, key).not.toBe(text);
+      }
+      const allEs = stringLeaves(esToc).map(([, text]) => text).join(" | ");
+      expect(allEs).not.toMatch(/\b(Guide|Overview|Management|Tracking|Settings|Reports?)\b/);
+    });
+  });
 });

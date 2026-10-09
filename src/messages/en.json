@@ -4396,6 +4396,157 @@
       "incidents": "Incidents",
       "vendors": "Vendor Management"
     },
+    "toc": {
+      "gettingStarted": {
+        "label": "Getting Started",
+        "items": {
+          "dashboard": "Dashboard Overview",
+          "documents": "Documents",
+          "nextActions": "Next Actions and Deadlines",
+          "quickstart": "Quickstart Wizard",
+          "navigation": "The Menu",
+          "roles": "User Roles"
+        }
+      },
+      "guideRole": {
+        "label": "Guide: Controller or processor?"
+      },
+      "guideDpo": {
+        "label": "Guide: Do I need a DPO?"
+      },
+      "guideDpia": {
+        "label": "Guide: When is a DPIA required?"
+      },
+      "quickstart": {
+        "label": "Quickstart",
+        "items": {
+          "howItWorks": "How It Works",
+          "vendorWatch": "Vendor.Watch Import",
+          "industryTemplates": "Industry Templates",
+          "afterQuickstart": "After Quickstart"
+        }
+      },
+      "dataInventory": {
+        "label": "Data Inventory",
+        "items": {
+          "assets": "Assets",
+          "elements": "Data Elements",
+          "activities": "Processing Activities",
+          "flows": "Data Flows",
+          "transfers": "Cross-Border Transfers"
+        }
+      },
+      "dsar": {
+        "label": "DSAR Management",
+        "items": {
+          "creating": "Creating Requests",
+          "tasks": "Task Management",
+          "sla": "SLA Tracking",
+          "portal": "Public Portal",
+          "intakeConfig": "Intake Form Config"
+        }
+      },
+      "assessments": {
+        "label": "Assessments",
+        "items": {
+          "templates": "Templates",
+          "creating": "Creating Assessments",
+          "riskScoring": "Risk Scoring",
+          "mitigations": "Mitigations",
+          "approvals": "Approvals"
+        }
+      },
+      "incidents": {
+        "label": "Incidents",
+        "items": {
+          "reporting": "Reporting",
+          "timeline": "Timeline",
+          "notifications": "DPA Notifications",
+          "tasks": "Response Tasks"
+        }
+      },
+      "vendors": {
+        "label": "Vendor Management",
+        "items": {
+          "adding": "Adding Vendors",
+          "contracts": "Contracts",
+          "questionnaires": "Questionnaires",
+          "riskReviews": "Risk Reviews"
+        }
+      },
+      "experts": {
+        "label": "Expert Help & Personas",
+        "items": {
+          "personas": "User Personas",
+          "directory": "Expert Directory",
+          "allClients": "All Clients",
+          "settings": "Settings"
+        }
+      },
+      "reports": {
+        "label": "Compliance Reports",
+        "items": {
+          "score": "Compliance Score",
+          "modules": "Module Breakdown",
+          "risk": "Risk Indicators",
+          "snapshots": "Trend Tracking",
+          "executive": "Executive Report"
+        }
+      },
+      "dpiaAutoFill": {
+        "label": "DPIA Auto-Fill",
+        "items": {
+          "overview": "How It Works",
+          "steps": "Wizard Steps",
+          "sources": "Auto-Fill Sources",
+          "confidence": "Confidence Levels",
+          "ai": "AI Enhancement"
+        }
+      },
+      "transferCompliance": {
+        "label": "Transfer Compliance",
+        "items": {
+          "overview": "Overview",
+          "complianceStatus": "Compliance Status",
+          "schremsIi": "Schrems II Checklist",
+          "adequacy": "Adequacy Decisions",
+          "supplementaryMeasures": "Supplementary Measures",
+          "sccTracking": "SCC Tracking"
+        }
+      },
+      "regulations": {
+        "label": "Regulation Hub",
+        "items": {
+          "catalog": "Jurisdiction Catalog",
+          "applicability": "Applicability Wizard",
+          "categories": "Categories",
+          "managing": "Managing Jurisdictions",
+          "impact": "System Impact"
+        }
+      },
+      "aiGovernance": {
+        "label": "AI Governance",
+        "items": {
+          "overview": "Why AI Governance?",
+          "riskLevels": "Risk Classification",
+          "registration": "Registering Systems",
+          "suggestion": "Risk Suggestion",
+          "obligations": "Obligations",
+          "linking": "Module Integration",
+          "sentinel": "AI Sentinel Integration"
+        }
+      },
+      "premium": {
+        "label": "Premium Features",
+        "items": {
+          "dpia": "DPIA",
+          "pia": "PIA",
+          "tia": "TIA",
+          "vendorRisk": "Vendor Risk Assessment",
+          "vendorCatalog": "Vendor Catalog"
+        }
+      }
+    },
     "common": {
       "previous": "Previous",
       "next": "Next"
