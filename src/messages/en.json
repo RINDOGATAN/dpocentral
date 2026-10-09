@@ -8896,9 +8896,9 @@
         "do": "Record incidents in the register and watch the 72-hour clock."
       },
       "audits": {
-        "label": "Audits and reports",
-        "why": "Review the program and report to management.",
-        "do": "Record audits, reviews and reports to management."
+        "label": "Report to management",
+        "why": "Tell the board or management where the programme stands.",
+        "do": "Produce the board report for a period and add your comment."
       }
     },
     "library": {
@@ -9417,7 +9417,8 @@
       "incident": "an incident logged",
       "aiAssist": "AI assistance switched on",
       "notificationRecord": "a notification record on an incident",
-      "dsarRequest": "a rights request"
+      "dsarRequest": "a rights request",
+      "confirmedStep": "a confirmed step on the path"
     },
     "inputAction": {
       "default": "Add it",
@@ -9425,7 +9426,8 @@
       "dpiaModuleHosted": "How to get it",
       "aiAssist": "Open settings",
       "dpaFacts": "Start",
-      "dpiaStart": "Start"
+      "dpiaStart": "Start",
+      "confirmedStep": "Start"
     },
     "gaps": {
       "toConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",
@@ -9474,6 +9476,117 @@
       "includeDrafts": "Include the drafts too ({count}), marked DRAFT",
       "count": "{count, plural, one {# document in one ZIP, with an index} other {# documents in one ZIP, with an index}}",
       "none": "No document is ready yet."
+    }
+  },
+  "boardReport": {
+    "title": "Board report",
+    "subtitle": "A short report for the board or management, from the data in DPO Central, for the period you choose.",
+    "period": {
+      "label": "Period",
+      "lastQuarter": "Last quarter",
+      "thisQuarter": "This quarter so far",
+      "lastMonth": "Last month",
+      "last12Months": "Last 12 months",
+      "custom": "Other dates",
+      "from": "From",
+      "to": "To",
+      "apply": "Show"
+    },
+    "periodLine": "Period: {from} to {to}",
+    "generatedLine": "Generated on {date}",
+    "scopeNote": "Incidents and rights requests are counted for the period. Every other figure is as on the date generated.",
+    "disclaimer": "This report states facts recorded in DPO Central. It is not legal advice and does not state that the organisation complies with any law.",
+    "download": "Download PDF",
+    "downloadLabel": "Download the board report as PDF in {language}",
+    "downloadOther": "PDF in {language}",
+    "language": {
+      "en": "English",
+      "es": "Spanish"
+    },
+    "limited": "The board report covers the whole organisation. Ask an owner or an admin for it.",
+    "programme": {
+      "title": "The programme",
+      "colArea": "Area",
+      "colState": "State"
+    },
+    "documents": {
+      "title": "Documents",
+      "line": "{ready} of {total} documents ready",
+      "ready": "Ready",
+      "missing": "Not ready yet",
+      "noneReady": "None yet.",
+      "noneMissing": "None."
+    },
+    "incidents": {
+      "title": "Incidents and breaches in the period",
+      "inPeriod": "Logged in the period",
+      "notifiedWithin72h": "Notified to the authority within 72 hours",
+      "notifiedLate": "Notified to the authority after 72 hours",
+      "notNotifiedYet": "Marked as requiring notification, not notified yet",
+      "openNow": "Open on the date generated (from any period)"
+    },
+    "rights": {
+      "title": "Rights requests in the period",
+      "received": "Received in the period",
+      "completedOnTime": "Completed on time",
+      "completedLate": "Completed late",
+      "openOverdue": "Open and overdue",
+      "openInTime": "Open, within the deadline",
+      "closedOther": "Rejected or cancelled"
+    },
+    "vendors": {
+      "title": "Vendors",
+      "total": "Confirmed vendors",
+      "withDpa": "With a data processing agreement",
+      "highRiskWithoutDpa": "High or critical risk without one",
+      "drafts": "{count, plural, one {# drafted vendor waits to be confirmed and is not counted.} other {# drafted vendors wait to be confirmed and are not counted.}}"
+    },
+    "assessments": {
+      "title": "Assessments",
+      "colType": "Type",
+      "colApproved": "Approved",
+      "colPending": "Pending",
+      "dpia": "Data protection impact assessments (DPIA)",
+      "lia": "Legitimate interest assessments (LIA)"
+    },
+    "risks": {
+      "title": "Top risks and gaps",
+      "needsAction": "{kind}: {count}",
+      "document": "{name}: {state}",
+      "empty": "Nothing is waiting for a person and every document DPO Central produces is ready."
+    },
+    "actions": {
+      "title": "Next three actions",
+      "colAction": "Action",
+      "colOwner": "Owner",
+      "colDate": "Date",
+      "step": "{step}",
+      "confirm": "{step}: confirm the drafted records",
+      "noOwner": "Not named",
+      "noDate": "No date set",
+      "deadline": "{date} (deadline)",
+      "plan": "{date} (plan)",
+      "ownerNote": "Owner: the organisation's privacy officer in DPO Central (or its owner). Date: the record's own deadline, or the end of the 30, 60 or 90-day window of the plan for that area.",
+      "empty": "Nothing left to do on the path."
+    },
+    "comment": {
+      "title": "DPO's comment",
+      "placeholder": "A few lines for the board: context, decisions you ask for, what comes next.",
+      "save": "Save with the report",
+      "saving": "Saving",
+      "saved": "Saved on {date} by {name}",
+      "savedNoName": "Saved on {date}",
+      "toast": "Comment saved with the report for this period.",
+      "error": "The comment could not be saved. Try again.",
+      "count": "{count} of {max} characters",
+      "unsaved": "Save the comment to put it in the PDF.",
+      "readOnly": "Only an owner, an admin or a privacy officer can write the comment.",
+      "none": "No comment."
+    },
+    "pdf": {
+      "fileTitle": "Board-Report",
+      "preparedWith": "Prepared with DPO Central",
+      "page": "Page {page} of {total}"
     }
   }
 }

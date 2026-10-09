@@ -106,6 +106,13 @@ export interface PathCounts {
 
   /** AI systems using personal data (read-only; governed in AI Sentinel). */
   aiSystems: number;
+
+  /**
+   * Board reports saved (one per period, with the DPO's comment), read from
+   * the organisation's settings (src/server/services/program/board-report.ts).
+   * Optional: absent reads as none.
+   */
+  boardReportsSaved?: number;
 }
 
 export const EMPTY_PATH_COUNTS: PathCounts = {
@@ -329,12 +336,17 @@ const FULL_PATH: PathConfig<PathCounts> = {
           rule: "Done when at least one incident (breach) is recorded: the register and the 72-hour clock are in use.",
           status: (c) => (c.incidents > 0 ? "done" : "todo"),
         },
+        // The board report (owner's decision d12, 9 October 2026): a short
+        // report to the board or management for a period, from data already
+        // here. Optional, so it never changes the programme figure and is
+        // never offered as the next step; last in the stage.
         {
           id: "audits",
-          href: null,
+          href: "/privacy/board-report",
           icon: History,
-          coming: true,
-          rule: "Coming. Audits, reviews and reports to management have no dedicated page yet.",
+          optional: true,
+          rule: "Optional, never counted. Opens the board report. Done once a board report has been saved for a period (with or without the DPO's comment); not started before.",
+          status: (c) => ((c.boardReportsSaved ?? 0) > 0 ? "done" : "todo"),
         },
       ],
     },

@@ -8896,9 +8896,9 @@
         "do": "Registra los incidentes en el registro y vigila el plazo de 72 horas."
       },
       "audits": {
-        "label": "Auditorías e informes",
-        "why": "Revisa el programa e informa a la dirección.",
-        "do": "Registra auditorías, revisiones e informes a la dirección."
+        "label": "Informe a la dirección",
+        "why": "Explica al consejo o a la dirección en qué punto está el programa.",
+        "do": "Genera el informe para la dirección de un periodo y añade tu comentario."
       }
     },
     "library": {
@@ -9417,7 +9417,8 @@
       "incident": "un incidente registrado",
       "aiAssist": "la asistencia de IA activada",
       "notificationRecord": "un registro de notificación en un incidente",
-      "dsarRequest": "una solicitud de derechos"
+      "dsarRequest": "una solicitud de derechos",
+      "confirmedStep": "un paso confirmado en la ruta"
     },
     "inputAction": {
       "default": "Añadir",
@@ -9425,7 +9426,8 @@
       "dpiaModuleHosted": "Cómo conseguirlo",
       "aiAssist": "Abrir ajustes",
       "dpaFacts": "Empezar",
-      "dpiaStart": "Empezar"
+      "dpiaStart": "Empezar",
+      "confirmedStep": "Empezar"
     },
     "gaps": {
       "toConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}",
@@ -9474,6 +9476,117 @@
       "includeDrafts": "Incluir también los borradores ({count}), marcados como BORRADOR",
       "count": "{count, plural, one {# documento en un ZIP, con un índice} other {# documentos en un ZIP, con un índice}}",
       "none": "Todavía no hay ningún documento listo."
+    }
+  },
+  "boardReport": {
+    "title": "Informe para la dirección",
+    "subtitle": "Un informe breve para el consejo o la dirección, con los datos de DPO Central, del periodo que elijas.",
+    "period": {
+      "label": "Periodo",
+      "lastQuarter": "Último trimestre",
+      "thisQuarter": "Este trimestre hasta hoy",
+      "lastMonth": "Último mes",
+      "last12Months": "Últimos 12 meses",
+      "custom": "Otras fechas",
+      "from": "Desde",
+      "to": "Hasta",
+      "apply": "Mostrar"
+    },
+    "periodLine": "Periodo: del {from} al {to}",
+    "generatedLine": "Generado el {date}",
+    "scopeNote": "Los incidentes y las solicitudes de derechos se cuentan dentro del periodo. Las demás cifras son las de la fecha de generación.",
+    "disclaimer": "Este informe recoge hechos registrados en DPO Central. No es asesoramiento jurídico ni afirma que la organización cumpla ninguna norma.",
+    "download": "Descargar PDF",
+    "downloadLabel": "Descargar el informe para la dirección en PDF en {language}",
+    "downloadOther": "PDF en {language}",
+    "language": {
+      "en": "inglés",
+      "es": "español"
+    },
+    "limited": "El informe para la dirección abarca toda la organización. Pídeselo a un propietario o a un administrador.",
+    "programme": {
+      "title": "El programa",
+      "colArea": "Área",
+      "colState": "Estado"
+    },
+    "documents": {
+      "title": "Documentos",
+      "line": "{ready} de {total} documentos listos",
+      "ready": "Listos",
+      "missing": "Aún no listos",
+      "noneReady": "Ninguno todavía.",
+      "noneMissing": "Ninguno."
+    },
+    "incidents": {
+      "title": "Incidentes y brechas en el periodo",
+      "inPeriod": "Registrados en el periodo",
+      "notifiedWithin72h": "Notificados a la autoridad en 72 horas",
+      "notifiedLate": "Notificados a la autoridad después de 72 horas",
+      "notNotifiedYet": "Marcados como notificables, aún sin notificar",
+      "openNow": "Abiertos en la fecha de generación (de cualquier periodo)"
+    },
+    "rights": {
+      "title": "Solicitudes de derechos en el periodo",
+      "received": "Recibidas en el periodo",
+      "completedOnTime": "Completadas en plazo",
+      "completedLate": "Completadas fuera de plazo",
+      "openOverdue": "Abiertas y vencidas",
+      "openInTime": "Abiertas, dentro de plazo",
+      "closedOther": "Rechazadas o canceladas"
+    },
+    "vendors": {
+      "title": "Proveedores",
+      "total": "Proveedores confirmados",
+      "withDpa": "Con contrato de encargo del tratamiento",
+      "highRiskWithoutDpa": "De riesgo alto o crítico sin ese contrato",
+      "drafts": "{count, plural, one {# proveedor en borrador espera confirmación y no se cuenta.} other {# proveedores en borrador esperan confirmación y no se cuentan.}}"
+    },
+    "assessments": {
+      "title": "Evaluaciones",
+      "colType": "Tipo",
+      "colApproved": "Aprobadas",
+      "colPending": "Pendientes",
+      "dpia": "Evaluaciones de impacto (EIPD)",
+      "lia": "Evaluaciones del interés legítimo (LIA)"
+    },
+    "risks": {
+      "title": "Principales riesgos y carencias",
+      "needsAction": "{kind}: {count}",
+      "document": "{name}: {state}",
+      "empty": "No hay nada pendiente de una persona y todos los documentos que genera DPO Central están listos."
+    },
+    "actions": {
+      "title": "Próximas tres acciones",
+      "colAction": "Acción",
+      "colOwner": "Responsable",
+      "colDate": "Fecha",
+      "step": "{step}",
+      "confirm": "{step}: confirma los registros en borrador",
+      "noOwner": "Sin asignar",
+      "noDate": "Sin fecha",
+      "deadline": "{date} (vencimiento)",
+      "plan": "{date} (plan)",
+      "ownerNote": "Responsable: la persona responsable de privacidad de la organización en DPO Central (o su propietario). Fecha: el vencimiento del propio registro o, si no lo tiene, el final del tramo de 30, 60 o 90 días del plan para esa área.",
+      "empty": "No queda nada por hacer en la ruta."
+    },
+    "comment": {
+      "title": "Comentario del DPD",
+      "placeholder": "Unas líneas para la dirección: contexto, decisiones que pides y próximos pasos.",
+      "save": "Guardar con el informe",
+      "saving": "Guardando",
+      "saved": "Guardado el {date} por {name}",
+      "savedNoName": "Guardado el {date}",
+      "toast": "Comentario guardado con el informe de este periodo.",
+      "error": "No se ha podido guardar el comentario. Inténtalo de nuevo.",
+      "count": "{count} de {max} caracteres",
+      "unsaved": "Guarda el comentario para que aparezca en el PDF.",
+      "readOnly": "Solo un propietario, un administrador o un responsable de privacidad puede escribir el comentario.",
+      "none": "Sin comentario."
+    },
+    "pdf": {
+      "fileTitle": "Informe-Direccion",
+      "preparedWith": "Preparado con DPO Central",
+      "page": "Página {page} de {total}"
     }
   }
 }

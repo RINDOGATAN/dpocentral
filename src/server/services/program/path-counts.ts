@@ -115,6 +115,7 @@ export async function loadPathCounts(
     dsarIntakeConfigured: intakeForm ? isIntakeConfigured(intakeForm) : false,
     incidents,
     aiSystems,
+    boardReportsSaved: Object.keys(settingsObject(settingsObject(settings.boardReport).reports)).length,
   };
 }
 

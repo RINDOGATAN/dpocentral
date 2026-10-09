@@ -43,6 +43,7 @@ import { buildAssessmentPortfolioExport } from "./documents/assessment-portfolio
 import { buildDsarPerformanceExport } from "./documents/dsar-performance";
 import { buildBreachRegisterExport } from "./documents/breach-register";
 import { buildPrivacyProgramExport } from "./documents/privacy-program";
+import { buildBoardReportExport } from "./documents/board-report";
 import { ASSESSMENT_EXPORT_INCLUDE, buildAssessmentExport } from "./documents/assessment";
 import { buildDpaExport } from "./documents/dpa";
 
@@ -57,6 +58,8 @@ const BUILDERS: Record<string, Builder> = {
   dsarPerformance: buildDsarPerformanceExport,
   breachRegister: buildBreachRegisterExport,
   programmeReport: buildPrivacyProgramExport,
+  // The last full quarter, as the dashboard's single download.
+  boardReport: buildBoardReportExport,
 };
 
 export interface PackRow {
