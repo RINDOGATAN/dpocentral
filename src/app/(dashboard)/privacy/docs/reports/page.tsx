@@ -17,7 +17,7 @@ import { DocSection } from "@/components/docs/doc-section";
 import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
-import { PremiumBadge } from "@/components/docs/premium-badge";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export default async function DocsReportsPage() {
   const t = await getTranslations("docs.reports");
@@ -48,7 +48,19 @@ export default async function DocsReportsPage() {
     { key: "november", score: 74, change: "+1", color: "bg-green-100 text-green-800 border-transparent" },
   ];
 
-  const boardKeys = ["executive", "breakdown", "trend", "indicators", "dsar", "incident", "vendor"] as const;
+  // The executive report's sections (src/lib/board-report-text.ts); the
+  // rights-request line goes when the module is not part of this plan.
+  const boardKeys = [
+    "programme",
+    "documents",
+    "incidents",
+    "rights",
+    "vendors",
+    "assessments",
+    "risks",
+    "actions",
+    "comment",
+  ].filter((key) => isDsarModuleEnabled() || key !== "rights");
   const pdfReports = [
     { label: "inventoryLabel", desc: "inventoryDesc" },
     { label: "ropaLabel", desc: "ropaDesc" },
@@ -185,25 +197,26 @@ export default async function DocsReportsPage() {
       </DocSection>
 
       <DocSection
-        id="board-reports"
+        id="executive-report"
         title={t("board.title")}
         description={t("board.description")}
       >
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <FileDown className="h-5 w-5 text-primary" />
-            <span className="font-medium">{t("board.pdfLabel")}</span>
-            <PremiumBadge />
+          <div className="flex items-start gap-2">
+            <FileDown className="h-5 w-5 text-primary shrink-0" />
+            <p className="text-sm text-muted-foreground">{t("board.intro")}</p>
           </div>
 
           <div className="rounded-lg border p-4 space-y-3">
-            <p className="text-sm font-medium">{t("board.boardIncludes")}</p>
+            <p className="text-sm font-medium">{t("board.includesTitle")}</p>
             <ul className="text-sm text-muted-foreground space-y-1.5 list-disc ml-4">
               {boardKeys.map((key) => (
-                <li key={key}>{t(`board.boardItems.${key}`)}</li>
+                <li key={key}>{t(`board.items.${key}`)}</li>
               ))}
             </ul>
           </div>
+
+          <InfoCallout type="info">{t("board.disclaimer")}</InfoCallout>
 
           <div className="rounded-lg border p-4 space-y-3">
             <p className="text-sm font-medium">{t("board.allPdfsTitle")}</p>

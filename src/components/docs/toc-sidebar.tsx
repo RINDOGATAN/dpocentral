@@ -46,10 +46,11 @@ const allTocSections: TocSection[] = [
     icon: BookOpen,
     children: [
       { label: "Dashboard Overview", hash: "#dashboard" },
+      { label: "Documents", hash: "#documents" },
+      { label: "Next Actions and Deadlines", hash: "#next-actions" },
       { label: "Quickstart Wizard", hash: "#quickstart" },
-      { label: "Navigation", hash: "#navigation" },
+      { label: "The Menu", hash: "#navigation" },
       { label: "User Roles", hash: "#roles" },
-      { label: "Quick Actions", hash: "#quick-actions" },
     ],
   },
   {
@@ -143,7 +144,7 @@ const allTocSections: TocSection[] = [
     children: [
       { label: "User Personas", hash: "#personas" },
       { label: "Expert Directory", hash: "#expert-directory" },
-      { label: "Client Dashboard", hash: "#client-dashboard" },
+      { label: "All Clients", hash: "#all-clients" },
       { label: "Settings", hash: "#settings" },
     ],
   },
@@ -156,7 +157,7 @@ const allTocSections: TocSection[] = [
       { label: "Module Breakdown", hash: "#module-breakdown" },
       { label: "Risk Indicators", hash: "#risk-indicators" },
       { label: "Trend Tracking", hash: "#snapshots" },
-      { label: "Board Reports", hash: "#board-reports" },
+      { label: "Executive Report", hash: "#executive-report" },
     ],
   },
   {

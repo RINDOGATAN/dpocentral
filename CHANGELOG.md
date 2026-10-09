@@ -20,6 +20,15 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Changed
 
+- **The user guide describes the Guided product.** Getting started now
+  covers the dashboard (programme figure, six areas, what is missing), the
+  documents panel and "Download ready documents", the next three actions,
+  Needs action and the deadlines at risk, and the menu (state words,
+  document lines, "Not in DPO Central yet", the licence lock on your own
+  instance). All clients and the executive report replace the client cards
+  and the old board report export. The pages that pointed to the main
+  navigation bar or the DPIA quick action now point to the menu. English
+  and Spanish.
 - The left menu's organisation switcher now always opens and ends with
   "Add a client" (privacy professionals) or "New organization" (everyone
   else), the entry Classic's dashboard switcher offered to every person.

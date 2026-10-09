@@ -35,8 +35,8 @@ export const PAGE_HELP: PageHelp[] = [
       "La pantalla que muestra dónde está tu programa de privacidad: qué está registrado, qué queda por hacer y lo próximo que atender en tus datos, proveedores, evaluaciones y solicitudes.",
     ),
     firstStep: L(
-      "If you are just starting, open Quick start; otherwise use the next-step card to go to whatever is still open.",
-      "Si empiezas ahora, abre el inicio rápido; si no, usa la tarjeta de siguiente paso para ir a lo que quede pendiente.",
+      "If you are just starting, open Quick start; otherwise use Next three actions to go to whatever is still open.",
+      "Si empiezas ahora, abre el inicio rápido; si no, usa Tus tres próximas acciones para ir a lo que quede pendiente.",
     ),
     terms: ["controller", "processor", "rights-request"],
     docs: [DOC("/privacy/docs", "How DPO Central works", "Cómo funciona DPO Central")],

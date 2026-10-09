@@ -56,6 +56,7 @@ export default function DocsPremiumPage() {
                 {t("cardBodyPrefix")}{price}{t("cardBodyMid")}
                 {canSelfService ? t("cardSelfService") : t("cardContact")}
               </p>
+              <p className="text-sm text-muted-foreground mt-2">{t("menuLock")}</p>
               {canSelfService ? (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
                   <Link href="/privacy/billing">

@@ -11,7 +11,7 @@ export default async function DocsExpertsPage() {
   const t = await getTranslations("docs.experts");
 
   const directoryItems = ["search", "specialization", "countryLang", "certifications", "contact"] as const;
-  const clientItems = ["dsars", "assessments", "incidents", "vendors", "lastActivity", "attention"] as const;
+  const clientItems = ["client", "confirmed", "areas", "documents", "deadline", "action"] as const;
 
   return (
     <div className="space-y-10">
@@ -64,7 +64,7 @@ export default async function DocsExpertsPage() {
       </DocSection>
 
       <DocSection
-        id="client-dashboard"
+        id="all-clients"
         title={t("clientDashboard.title")}
         description={t("clientDashboard.description")}
       >
