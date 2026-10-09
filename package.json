@@ -34,6 +34,7 @@
     "db:seed-demo-proserv": "tsx scripts/assert-safe-db.ts && tsx scripts/demo/runner.ts --vertical professional-services",
     "db:seed-demo-all": "tsx scripts/assert-safe-db.ts && tsx scripts/demo/runner.ts --all",
     "db:verify-demo": "tsx scripts/assert-safe-db.ts && tsx scripts/verify-demo.ts",
+    "db:purge-dsar-data": "tsx scripts/assert-safe-db.ts && tsx scripts/purge-dsar-data.ts",
     "demo:setup": "bash scripts/demo/setup-demo.sh",
     "demo:setup-all": "bash scripts/demo/setup-demo.sh --all",
     "catalog:verify": "tsx scripts/verify-catalog-snapshot.ts"

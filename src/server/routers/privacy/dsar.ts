@@ -16,6 +16,7 @@ import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
 import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
+import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
 
 // SLA rule of the organisation's primary jurisdiction: calendar months where
 // the law says months (GDPR art. 12(3): one month), days otherwise. Applies to
@@ -27,6 +28,22 @@ function primaryDsarRule(
   return dsarDeadlineRuleFor(primary?.jurisdiction.code, primary?.jurisdiction.dsarDeadlineDays);
 }
 
+// The rights-request module can be left out of a deployment
+// (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts). Then every
+// procedure of this router, the public ones first, refuses with NOT_FOUND
+// before it reads or writes anything. Public procedures check before input
+// parsing; member procedures right after the membership check.
+const requireDsarModule = <T>({ next }: { next: () => T }) => {
+  if (!isDsarModuleEnabled()) {
+    throw new TRPCError({ code: "NOT_FOUND", message: DSAR_MODULE_OFF_MESSAGE });
+  }
+  return next();
+};
+const dsarPublicProcedure = publicProcedure.use(requireDsarModule);
+const dsarOrganizationProcedure = organizationProcedure.use(requireDsarModule);
+const dsarOfficerProcedure = officerProcedure.use(requireDsarModule);
+const dsarAdminOrgProcedure = adminOrgProcedure.use(requireDsarModule);
+
 export const dsarRouter = createTRPCRouter({
   // ============================================================
   // DSAR REQUESTS
@@ -35,7 +52,7 @@ export const dsarRouter = createTRPCRouter({
   // List DSAR requests. Officers, admins and owners see every request; any
   // other member sees only the requests on which they hold a task
   // (src/lib/dsar-access.ts).
-  list: organizationProcedure
+  list: dsarOrganizationProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -99,7 +116,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Get a single DSAR request (same rule as list), and record the view
-  getById: organizationProcedure
+  getById: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
       const role = ctx.membership.role;
@@ -167,7 +184,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Create a DSAR request (internal)
-  create: officerProcedure
+  create: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -240,7 +257,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Update DSAR request status
-  updateStatus: officerProcedure
+  updateStatus: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -293,7 +310,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Extend deadline
-  extendDeadline: officerProcedure
+  extendDeadline: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -373,7 +390,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Create task
-  createTask: officerProcedure
+  createTask: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -423,7 +440,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Update task
-  updateTask: officerProcedure
+  updateTask: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -473,7 +490,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Auto-generate tasks from data assets
-  generateTasks: officerProcedure
+  generateTasks: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -532,7 +549,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Add communication
-  addCommunication: officerProcedure
+  addCommunication: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -610,7 +627,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Get intake form configuration
-  getIntakeForm: organizationProcedure
+  getIntakeForm: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       return ctx.prisma.dSARIntakeForm.findFirst({
@@ -622,7 +639,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Create/update intake form
-  upsertIntakeForm: adminOrgProcedure
+  upsertIntakeForm: dsarAdminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -670,7 +687,7 @@ export const dsarRouter = createTRPCRouter({
 
   // Deadline reminder e-mails (7, 3 and 1 day before, and once overdue):
   // on by default, switched off per organisation.
-  getReminderSettings: organizationProcedure
+  getReminderSettings: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const org = await ctx.prisma.organization.findUnique({
@@ -680,7 +697,7 @@ export const dsarRouter = createTRPCRouter({
       return { enabled: org?.dsarRemindersEnabled ?? true };
     }),
 
-  setReminderSettings: adminOrgProcedure
+  setReminderSettings: dsarAdminOrgProcedure
     .input(z.object({ organizationId: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.organization.update({
@@ -705,7 +722,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Get public intake form config by org slug (for the public portal)
-  getPublicForm: publicProcedure
+  getPublicForm: dsarPublicProcedure
     .input(z.object({ orgSlug: z.string() }))
     .query(async ({ ctx, input }) => {
       const org = await ctx.prisma.organization.findUnique({
@@ -734,7 +751,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Submit public DSAR request
-  submitPublic: publicProcedure
+  submitPublic: dsarPublicProcedure
     .input(
       z.object({
         orgSlug: z.string(),
@@ -819,7 +836,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Check request status (public)
-  checkStatus: publicProcedure
+  checkStatus: dsarPublicProcedure
     .input(z.object({ publicId: z.string() }))
     .query(async ({ ctx, input }) => {
       const request = await ctx.prisma.dSARRequest.findUnique({
@@ -861,7 +878,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Set the public response download link (officer/dashboard side)
-  setResponseLink: officerProcedure
+  setResponseLink: dsarOfficerProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -911,7 +928,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Withdraw a public request (data subject self-cancel)
-  withdrawPublic: publicProcedure
+  withdrawPublic: dsarPublicProcedure
     .input(z.object({ publicId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const request = await ctx.prisma.dSARRequest.findUnique({
@@ -956,7 +973,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Get DSAR statistics
-  getStats: organizationProcedure
+  getStats: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const now = new Date();
@@ -1037,7 +1054,7 @@ export const dsarRouter = createTRPCRouter({
   // ============================================================
 
   // Hard-delete a completed/cancelled DSAR and all related records
-  deleteDSAR: adminOrgProcedure
+  deleteDSAR: dsarAdminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),
@@ -1079,7 +1096,7 @@ export const dsarRouter = createTRPCRouter({
     }),
 
   // Redact PII from a completed DSAR (keeps anonymized audit trail)
-  redactDSAR: adminOrgProcedure
+  redactDSAR: dsarAdminOrgProcedure
     .input(
       z.object({
         organizationId: z.string(),

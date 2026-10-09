@@ -15,8 +15,15 @@ import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export async function GET(request: NextRequest) {
+  // Not served when the rights-request module is off (src/config/features.ts);
+  // src/middleware.ts answers the address 404 before it gets here.
+  if (!isDsarModuleEnabled()) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
   const token = await getSessionToken(request);
   const userEmail = token?.email as string | undefined;
   if (!userEmail) {

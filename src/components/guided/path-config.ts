@@ -45,7 +45,8 @@ import {
   UserCheck,
   BarChart3,
 } from "lucide-react";
-import type { PathConfig } from "./path";
+import { withoutSteps, type PathConfig } from "./path";
+import { isDsarModuleEnabled } from "@/config/features";
 import type { PlanWindow } from "./plan";
 
 /** What the rules read. Counts only: nothing here names a record. */
@@ -107,7 +108,7 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
   aiSystems: 0,
 };
 
-export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
+const FULL_PATH: PathConfig<PathCounts> = {
   stages: [
     {
       id: "setup",
@@ -317,6 +318,15 @@ export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = {
     { id: "settings", href: "/privacy/settings", icon: Settings },
   ],
 };
+
+/**
+ * The path this deployment shows. Without the rights-request module
+ * (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts) the "dsar" step is
+ * left out everywhere: the menu, the progress, the next step and the plan.
+ */
+export const DPO_CENTRAL_PATH: PathConfig<PathCounts> = isDsarModuleEnabled()
+  ? FULL_PATH
+  : withoutSteps(FULL_PATH, ["dsar"]);
 
 /**
  * The 30/60/90-day plan over the six stages (src/components/guided/plan.ts):

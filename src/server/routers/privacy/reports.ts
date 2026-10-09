@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
+import { isDsarModuleEnabled } from "@/config/features";
 
 // Helper to compute compliance score from all modules
 async function computeComplianceScore(
@@ -11,6 +12,10 @@ async function computeComplianceScore(
   organizationId: string
 ) {
   const now = new Date();
+  // Without the rights-request module (src/config/features.ts) its counts are
+  // not read and it drops out of the score: the weights of the other modules
+  // are renormalised, as for any unrated module.
+  const dsarOn = isDsarModuleEnabled();
   const twelveMonthsAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
 
   const [
@@ -56,20 +61,24 @@ async function computeComplianceScore(
       where: { organizationId, status: "APPROVED" },
     }),
     // DSAR: total (excluding cancelled)
-    prisma.dSARRequest.count({
-      where: {
-        organizationId,
-        status: { notIn: ["CANCELLED"] },
-      },
-    }),
+    dsarOn
+      ? prisma.dSARRequest.count({
+          where: {
+            organizationId,
+            status: { notIn: ["CANCELLED"] },
+          },
+        })
+      : 0,
     // DSAR: overdue (not completed and past due date)
-    prisma.dSARRequest.count({
-      where: {
-        organizationId,
-        dueDate: { lt: now },
-        status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-      },
-    }),
+    dsarOn
+      ? prisma.dSARRequest.count({
+          where: {
+            organizationId,
+            dueDate: { lt: now },
+            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+          },
+        })
+      : 0,
     // Incident: requiring notification
     prisma.incident.count({
       where: {
@@ -107,13 +116,15 @@ async function computeComplianceScore(
       },
     }),
     // Risk indicators
-    prisma.dSARRequest.count({
-      where: {
-        organizationId,
-        dueDate: { lt: now },
-        status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-      },
-    }),
+    dsarOn
+      ? prisma.dSARRequest.count({
+          where: {
+            organizationId,
+            dueDate: { lt: now },
+            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+          },
+        })
+      : 0,
     prisma.vendor.count({
       where: {
         organizationId,
@@ -182,7 +193,7 @@ async function computeComplianceScore(
   const weighted = [
     { score: ropaScore, weight: 0.25 },
     { score: assessmentScore, weight: 0.20 },
-    { score: dsarScore, weight: 0.25 },
+    ...(dsarOn ? [{ score: dsarScore, weight: 0.25 }] : []),
     { score: incidentScore, weight: 0.15 },
     { score: vendorScore, weight: 0.15 },
   ];
@@ -228,6 +239,8 @@ async function computeComplianceScore(
   return {
     score,
     coverage,
+    /** False when the rights-request module is not part of this plan. */
+    dsarModule: dsarOn,
     breakdown: {
       ropa: { score: ropaScore, total: totalAssets, compliant: assetsWithActivities },
       assessment: { score: assessmentScore, total: totalAssessments, compliant: approvedAssessments },
@@ -326,6 +339,8 @@ export const reportsRouter = createTRPCRouter({
       const now = new Date();
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       const orgId = ctx.organization.id;
+      // No rights-request figures when the module is off (src/config/features.ts).
+      const dsarOn = isDsarModuleEnabled();
 
       const [
         // Data Inventory
@@ -365,35 +380,43 @@ export const reportsRouter = createTRPCRouter({
         ctx.prisma.dataFlow.count({ where: { organizationId: orgId } }),
         ctx.prisma.dataTransfer.count({ where: { organizationId: orgId } }),
         // DSAR
-        ctx.prisma.dSARRequest.count({ where: { organizationId: orgId } }),
-        ctx.prisma.dSARRequest.count({
-          where: {
-            organizationId: orgId,
-            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-          },
-        }),
-        ctx.prisma.dSARRequest.count({
-          where: {
-            organizationId: orgId,
-            dueDate: { lt: now },
-            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-          },
-        }),
-        ctx.prisma.dSARRequest.count({
-          where: {
-            organizationId: orgId,
-            status: "COMPLETED",
-            completedAt: { gte: thirtyDaysAgo },
-          },
-        }),
-        ctx.prisma.dSARRequest.findMany({
-          where: {
-            organizationId: orgId,
-            status: "COMPLETED",
-            completedAt: { not: null },
-          },
-          select: { receivedAt: true, completedAt: true },
-        }),
+        dsarOn ? ctx.prisma.dSARRequest.count({ where: { organizationId: orgId } }) : 0,
+        dsarOn
+          ? ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: orgId,
+                status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+              },
+            })
+          : 0,
+        dsarOn
+          ? ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: orgId,
+                dueDate: { lt: now },
+                status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+              },
+            })
+          : 0,
+        dsarOn
+          ? ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: orgId,
+                status: "COMPLETED",
+                completedAt: { gte: thirtyDaysAgo },
+              },
+            })
+          : 0,
+        dsarOn
+          ? ctx.prisma.dSARRequest.findMany({
+              where: {
+                organizationId: orgId,
+                status: "COMPLETED",
+                completedAt: { not: null },
+              },
+              select: { receivedAt: true, completedAt: true },
+            })
+          : ([] as { receivedAt: Date; completedAt: Date | null }[]),
         // Assessment
         ctx.prisma.assessment.count({ where: { organizationId: orgId } }),
         ctx.prisma.assessment.count({ where: { organizationId: orgId, status: "DRAFT" } }),
@@ -485,6 +508,8 @@ export const reportsRouter = createTRPCRouter({
           flows: flowCount,
           transfers: transferCount,
         },
+        /** False when the rights-request module is not part of this plan. */
+        dsarModule: dsarOn,
         dsar: {
           total: dsarTotal,
           open: dsarOpen,

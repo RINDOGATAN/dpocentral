@@ -344,6 +344,22 @@ describe("F8: a breach with no decision on notifying", () => {
     expect(undecided.status).toEqual({ notIn: ["CLOSED", "FALSE_POSITIVE"] });
   });
 
+  it("still counts with the rights-request module off, while requests are not counted", async () => {
+    vi.stubEnv("NEXT_PUBLIC_DSAR_ENABLED", "false");
+    const counts = {
+      processingActivity: { count: vi.fn().mockResolvedValue(0) },
+      dSARRequest: { count: vi.fn().mockResolvedValue(5) },
+      incident: { count: vi.fn() },
+      assessment: { count: vi.fn().mockResolvedValue(0) },
+    };
+    counts.incident.count.mockImplementation(async ({ where }: { where: Record<string, unknown> }) =>
+      where.notificationRequired === false ? 1 : 0,
+    );
+    const result = await collectNeedsAction(counts as never, "org-1", { all: true });
+    expect(counts.dSARRequest.count).not.toHaveBeenCalled();
+    expect(result.items.map((i) => i.kind)).toEqual(["breach-decision"]);
+  });
+
   it("is left out of a department view, like the other organisation-wide categories", async () => {
     const counts = {
       processingActivity: { count: vi.fn().mockResolvedValue(0) },

@@ -20,6 +20,7 @@ import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export async function GET(request: NextRequest) {
   const token = await getSessionToken(request);
@@ -100,11 +101,14 @@ export async function GET(request: NextRequest) {
     prisma.dataTransfer.count({ where: { organizationId } }),
   ]);
 
-  // DSAR stats
-  const dsarAll = await prisma.dSARRequest.findMany({
-    where: { organizationId },
-    select: { status: true, receivedAt: true, completedAt: true, dueDate: true },
-  });
+  // DSAR stats (none when the rights-request module is off)
+  const dsarOn = isDsarModuleEnabled();
+  const dsarAll = dsarOn
+    ? await prisma.dSARRequest.findMany({
+        where: { organizationId },
+        select: { status: true, receivedAt: true, completedAt: true, dueDate: true },
+      })
+    : [];
   const dsarTotal = dsarAll.length;
   const dsarCompleted = dsarAll.filter((d) => d.status === "COMPLETED").length;
   const dsarOverdue = dsarAll.filter(
@@ -206,9 +210,15 @@ export async function GET(request: NextRequest) {
   const dsarScore = dsarTotal > 0 ? Math.max(0, dsarOnTimeRate) : 100;
   const incidentScore = incidentTotal > 0 ? Math.round(((incidentTotal - incidentOpen) / incidentTotal) * 100) : 100;
   const vendorScore = vendorTotal > 0 ? Math.round(((vendorTotal - vendorHighRisk) / vendorTotal) * 100) : 100;
-  const complianceScore = Math.round(
-    ropaScore * 0.25 + assessmentScore * 0.2 + dsarScore * 0.25 + incidentScore * 0.15 + vendorScore * 0.15
-  );
+  // Without the rights-request module its 25% share is left out and the
+  // other weights are scaled up to 100%.
+  const complianceScore = dsarOn
+    ? Math.round(
+        ropaScore * 0.25 + assessmentScore * 0.2 + dsarScore * 0.25 + incidentScore * 0.15 + vendorScore * 0.15
+      )
+    : Math.round(
+        (ropaScore * 0.25 + assessmentScore * 0.2 + incidentScore * 0.15 + vendorScore * 0.15) / 0.75
+      );
 
   // ── Build Report Data ──────────────────────────────────
   const reportData: RegulatoryLandscapeData = {
@@ -235,6 +245,7 @@ export async function GET(request: NextRequest) {
     vendorsByCountry,
     dsarOnTimeRate: Math.max(0, Math.min(100, dsarOnTimeRate)),
     breachNotificationCompliance: 100, // placeholder — requires incident-notification join
+    dsarModule: dsarOn,
   };
 
   // ── Render PDF ─────────────────────────────────────────

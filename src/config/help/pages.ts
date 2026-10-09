@@ -20,6 +20,7 @@
 
 import type { Localized, PageHelp } from "@/config/help/types";
 import { OFFICIAL_LINKS } from "@/config/help/official-links";
+import { isDsarModuleEnabled } from "@/config/features";
 
 const L = (en: string, es: string): Localized => ({ en, es });
 
@@ -305,6 +306,11 @@ const ROUTES_BY_LENGTH = PAGE_HELP.map((entry) => entry.route).sort(
  */
 export function helpForPath(pathname: string): PageHelp | null {
   const clean = pathname.split("?")[0].replace(/\/+$/, "") || "/privacy";
+  // No help about rights requests when the module is not part of this plan:
+  // the page shows a short note instead (src/config/features.ts).
+  if (!isDsarModuleEnabled() && (clean === "/privacy/dsar" || clean.startsWith("/privacy/dsar/"))) {
+    return null;
+  }
   if (BY_ROUTE[clean]) return BY_ROUTE[clean];
   for (const route of ROUTES_BY_LENGTH) {
     if (route === "/privacy") continue; // never let the root swallow a child

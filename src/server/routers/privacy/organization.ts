@@ -13,6 +13,7 @@ import {
   provenEmailOf,
 } from "@/lib/org-domain";
 import { ensureDefaultIntakeForm } from "@/server/services/dsar/defaultIntakeForm";
+import { isDsarModuleEnabled } from "@/config/features";
 import { planTemplateRemoval, removeTemplateItems } from "@/server/services/template-items/remove";
 import { logger } from "@/lib/logger";
 import {
@@ -197,13 +198,17 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
-      // Seed a default DSAR intake form so the public portal works out of the box
-      try {
-        await ensureDefaultIntakeForm(ctx.prisma, organization.id);
-      } catch (error) {
-        logger.error("Failed to seed default DSAR intake form", error, {
-          organizationId: organization.id,
-        });
+      // Seed a default DSAR intake form so the public portal works out of the
+      // box. Not when the rights-request module is left out of this plan
+      // (src/config/features.ts): there is no public portal to serve it.
+      if (isDsarModuleEnabled()) {
+        try {
+          await ensureDefaultIntakeForm(ctx.prisma, organization.id);
+        } catch (error) {
+          logger.error("Failed to seed default DSAR intake form", error, {
+            organizationId: organization.id,
+          });
+        }
       }
 
       // Auto-link to Customer for Privacy Professionals
@@ -651,6 +656,7 @@ export const organizationRouter = createTRPCRouter({
         await loadBusinessUnitScope(ctx.prisma, ctx.membership.id),
       );
       const deptWhere = deptConditions.length > 0 ? { AND: deptConditions as never } : {};
+      const dsarOn = isDsarModuleEnabled();
 
       const [
         totalAssets,
@@ -669,19 +675,24 @@ export const organizationRouter = createTRPCRouter({
         ctx.prisma.processingActivity.count({
           where: { organizationId: ctx.organization.id, isActive: true, ...deptWhere },
         }),
-        ctx.prisma.dSARRequest.count({
-          where: {
-            organizationId: ctx.organization.id,
-            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-          },
-        }),
-        ctx.prisma.dSARRequest.count({
-          where: {
-            organizationId: ctx.organization.id,
-            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-            dueDate: { lt: now },
-          },
-        }),
+        // Rights-request counts are zero when the module is off.
+        dsarOn
+          ? ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: ctx.organization.id,
+                status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+              },
+            })
+          : 0,
+        dsarOn
+          ? ctx.prisma.dSARRequest.count({
+              where: {
+                organizationId: ctx.organization.id,
+                status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+                dueDate: { lt: now },
+              },
+            })
+          : 0,
         ctx.prisma.assessment.count({
           where: {
             organizationId: ctx.organization.id,
@@ -710,6 +721,7 @@ export const organizationRouter = createTRPCRouter({
           where: {
             organizationId: ctx.organization.id,
             createdAt: { gte: thirtyDaysAgo },
+            ...(dsarOn ? {} : { entityType: { not: "DSARRequest" } }),
           },
           orderBy: { createdAt: "desc" },
           take: 10,

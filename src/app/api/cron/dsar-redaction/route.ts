@@ -19,6 +19,10 @@ export const dynamic = "force-dynamic";
 // Scheduled in vercel.json at "0 3 * * *" (daily 03:00 UTC). The full
 // notifications cron (email/in-app/slack) was removed; only DSAR redaction
 // runs from here now.
+//
+// It sends nothing, so it keeps running when the rights-request module is off
+// (NEXT_PUBLIC_DSAR_ENABLED=false): records an organisation already holds are
+// still cleared of personal data once their retention period ends.
 // ---------------------------------------------------------------------------
 
 export async function GET(request: Request) {

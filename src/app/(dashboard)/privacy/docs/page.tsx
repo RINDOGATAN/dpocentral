@@ -24,9 +24,13 @@ import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import Link from "next/link";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export default async function DocsGettingStartedPage() {
   const t = await getTranslations("docs.gettingStarted");
+  // Without the rights-request module (src/config/features.ts) the guide
+  // leaves it out of the menu, the dashboard picture and the quick actions.
+  const dsarOn = isDsarModuleEnabled();
 
   const navItems: { icon: typeof LayoutDashboard; key: string }[] = [
     { icon: LayoutDashboard, key: "dashboard" },
@@ -38,7 +42,7 @@ export default async function DocsGettingStartedPage() {
     { icon: Shield, key: "reports" },
     { icon: Scale, key: "regulations" },
     { icon: Shield, key: "aiSystems" },
-  ];
+  ].filter((item) => dsarOn || item.key !== "dsar");
 
   const roleRows = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
 
@@ -49,7 +53,7 @@ export default async function DocsGettingStartedPage() {
     { icon: AlertTriangle, key: "reportIncident" },
     { icon: Building2, key: "addVendor" },
     { icon: Shield, key: "runAudit" },
-  ];
+  ].filter((item) => dsarOn || item.key !== "newDsar");
 
   return (
     <div className="space-y-10">
@@ -71,6 +75,7 @@ export default async function DocsGettingStartedPage() {
                 <p className="text-xs text-muted-foreground">{t("dashboard.cards.dataInventory.sub")}</p>
               </CardContent>
             </Card>
+            {dsarOn && (
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
                 <CardTitle className="text-xs font-medium">{t("dashboard.cards.openDsars.label")}</CardTitle>
@@ -81,6 +86,7 @@ export default async function DocsGettingStartedPage() {
                 <p className="text-xs text-muted-foreground">{t("dashboard.cards.openDsars.sub")}</p>
               </CardContent>
             </Card>
+            )}
             <Card className="hover:translate-y-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
                 <CardTitle className="text-xs font-medium">{t("dashboard.cards.assessments.label")}</CardTitle>

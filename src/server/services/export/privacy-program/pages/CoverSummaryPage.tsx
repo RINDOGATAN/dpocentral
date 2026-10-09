@@ -117,6 +117,7 @@ export function CoverSummaryPage({
         <StatTile value={hero.assetCount} label={t("cover.stats.dataAssets")} />
         <StatTile value={hero.activityCount} label={t("cover.stats.processingActivities")} />
         <StatTile value={hero.vendorCount} label={t("cover.stats.vendors")} />
+        {hero.showDsar && (
         <StatTile
           value={hero.dsarOnTimePct ?? "—"}
           suffix={hero.dsarOnTimePct !== null ? "%" : undefined}
@@ -131,6 +132,7 @@ export function CoverSummaryPage({
                   : "danger"
           }
         />
+        )}
       </StatTileRow>
 
       <View style={s.twoCol}>

@@ -4,6 +4,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Prisma } from "@prisma/client";
 import { brand } from "@/config/brand";
+import { isDsarModuleEnabled } from "@/config/features";
 import {
   isHostedDeployment,
   PILOT_EXPORT_PATH,
@@ -508,7 +509,8 @@ export async function getPilotStatus(
 ): Promise<PilotStatus> {
   if (!isHostedDeployment()) return { hosted: false };
   const usage = await Promise.all(
-    STATUS_RESOURCES.map(async (resource) => ({
+    // Rights requests are not listed when the module is not part of this plan.
+    STATUS_RESOURCES.filter((r) => r !== "dsarRequests" || isDsarModuleEnabled()).map(async (resource) => ({
       resource,
       used: await COUNTERS[resource](db, org.id),
       limit: PILOT_LIMITS[resource],
