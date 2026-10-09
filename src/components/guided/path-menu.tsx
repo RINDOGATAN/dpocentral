@@ -27,6 +27,7 @@ import {
   stageOfStep,
   stageOpenByDefault,
   stageProgress,
+  stageWord,
   type PathConfig,
   type PathStage,
   type PathStatuses,
@@ -64,6 +65,23 @@ interface PathMenuProps<C> {
    * step's state are not shown (src/lib/department-limit.ts).
    */
   showProgress?: boolean;
+  /**
+   * One quiet line under a step, by step id: the documents it produces and
+   * their states (owner's decision d6), worded by the product from its
+   * document register. Shown only with the progress.
+   */
+  stepNotes?: Record<string, string>;
+  /**
+   * The ids of the stages with work waiting for a person: their state word
+   * reads "needs action" (path.ts, stageWord).
+   */
+  attention?: readonly string[];
+  /**
+   * Everything the product does not offer yet, gathered in one group at the
+   * foot of the path (owner's decision d6) instead of "coming" lines spread
+   * over the stages. Nothing when null or empty.
+   */
+  notYet?: { title: string; items: string[] } | null;
 }
 
 /**
@@ -98,6 +116,9 @@ export function PathMenu<C>({
   overview,
   planLine = null,
   showProgress = true,
+  stepNotes = {},
+  attention = [],
+  notYet = null,
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode });
   const currentStep = currentStepId(config, pathname, search);
@@ -251,7 +272,10 @@ export function PathMenu<C>({
           const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const panelId = `path-stage-${variant}-${stage.id}`;
           const holdsCurrent = stage.id === currentStage?.id;
-          const shownSteps = stage.steps.filter((step) => isShown(step, statuses));
+          // Steps with no page yet are not listed here: they are gathered in
+          // the "Not in DPO Central yet" group at the foot (decision d6).
+          const shownSteps = stage.steps.filter((step) => isShown(step, statuses) && !step.coming);
+          if (shownSteps.length === 0) return null;
           // Nothing to open: no chevron, and the row is plain text.
           const expandable = stageExpandable(stage, statuses);
           const stepList = (
@@ -262,6 +286,7 @@ export function PathMenu<C>({
                     step={step}
                     status={statuses ? statuses[step.id] ?? "todo" : null}
                     showProgress={showProgress}
+                    note={showProgress ? stepNotes[step.id] : undefined}
                     current={step.id === currentStep}
                     className={itemBase}
                     idle={itemIdle}
@@ -301,13 +326,11 @@ export function PathMenu<C>({
                 {showProgress && (
                 <span className="truncate text-xs text-muted-foreground tabular-nums">
                   {progress ? (
-                    progress.state === "coming" ? (
-                      t("stageState.coming")
-                    ) : (
-                      `${t("stageProgress", { done: progress.done, total: progress.total })} · ${t(
-                        `stageState.${progress.state}`,
-                      )}`
-                    )
+                    // One state word per stage (decision d6); the ring beside it
+                    // carries the count.
+                    <span data-testid={`stage-word-${stage.id}`}>
+                      {t(`stageState.${stageWord(stage, statuses!, attention)}`)}
+                    </span>
                   ) : (
                     <>
                       <span aria-hidden="true">&nbsp;</span>
@@ -360,6 +383,17 @@ export function PathMenu<C>({
         })}
       </ol>
 
+      {notYet && notYet.items.length > 0 && (
+        <div className="px-3 pt-4" data-testid="menu-not-yet">
+          <p className="pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {notYet.title} <span className="tabular-nums">({notYet.items.length})</span>
+          </p>
+          <p className={cn("text-muted-foreground leading-snug", sheet ? "text-sm" : "text-xs")}>
+            {notYet.items.join(" · ")}
+          </p>
+        </div>
+      )}
+
       <p className="px-3 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
         {t("libraryTitle")}
       </p>
@@ -389,6 +423,7 @@ function StepRow<C>({
   step,
   status,
   showProgress = true,
+  note,
   current,
   className,
   idle,
@@ -400,6 +435,8 @@ function StepRow<C>({
   status: StepStatus | null;
   /** False: a plain mark, no state (the state is the whole organisation's). */
   showProgress?: boolean;
+  /** The quiet line under the label: the step's documents and their states. */
+  note?: string;
   current: boolean;
   className: string;
   idle: string;
@@ -435,7 +472,17 @@ function StepRow<C>({
       ) : (
         <step.icon className="size-3.5 shrink-0" aria-hidden="true" />
       )}
-      <span className={WRAP_LABEL}>{label}</span>
+      <span className={WRAP_LABEL}>
+        <span className="block">{label}</span>
+        {note && (
+          <span
+            className="mt-0.5 block text-[11px] leading-snug text-muted-foreground"
+            data-testid={`step-docs-${step.id}`}
+          >
+            {note}
+          </span>
+        )}
+      </span>
     </Link>
   );
 }

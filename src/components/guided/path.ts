@@ -199,6 +199,26 @@ export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): S
   return { done, total: counted.length, state };
 }
 
+/**
+ * The one state word a stage carries in the menu and on its dashboard tile
+ * (owner's decision d6, 9 October 2026): done, to confirm, in progress, not
+ * started, or "action" when something in the stage waits for a person
+ * (`attention`: the ids of such stages, from "Needs action"). A stage whose
+ * steps all have no page yet stays "coming".
+ */
+export type StageWord = StageState | "action";
+
+export function stageWord<C>(
+  stage: PathStage<C>,
+  statuses: PathStatuses,
+  attention: readonly string[] = [],
+): StageWord {
+  const { state } = stageProgress(stage, statuses);
+  if (state === "coming") return "coming";
+  if (attention.includes(stage.id)) return "action";
+  return state;
+}
+
 /** Done over counted, across the whole path. */
 export function overallProgress<C>(config: PathConfig<C>, statuses: PathStatuses) {
   const figure = programFigure(config, statuses);

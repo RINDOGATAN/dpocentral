@@ -32,6 +32,7 @@ import { glossaryTerm } from "@/config/help/glossary";
 import { HELP_GUIDES } from "@/config/help/guide-links";
 import { setIntroCookie } from "@/lib/help-intro";
 import { useContentLocale } from "@/lib/content-locale";
+import { features } from "@/config/features";
 
 export function PageHelpButton() {
   const pathname = usePathname();
@@ -144,6 +145,21 @@ export function PageHelpButton() {
                 ))}
               </ul>
             </Section>
+          )}
+
+          {/* The one line left of the dashboard's two expert banners (owner's
+              decision d7, 9 October 2026). */}
+          {features.expertDirectoryEnabled && (
+            <p className="text-muted-foreground leading-relaxed" data-testid="help-experts-line">
+              {t("expertsLine")}{" "}
+              <Link
+                href="/privacy/experts"
+                onClick={() => setOpen(false)}
+                className="text-primary underline underline-offset-4"
+              >
+                {t("expertsLink")}
+              </Link>
+            </p>
           )}
 
           <button

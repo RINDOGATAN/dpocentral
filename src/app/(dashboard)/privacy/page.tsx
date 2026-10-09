@@ -44,9 +44,8 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
-import { NextStepCard } from "@/components/guided/next-step-card";
 import { ProgramFigureCard } from "@/components/guided/program-figure";
-import { FirstRunCard } from "@/components/help/first-run-card";
+import { GuidedDashboard } from "@/components/guided/guided-dashboard";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
@@ -74,12 +73,12 @@ export default function PrivacyDashboardPage() {
 
   const { data: dsarList } = trpc.dsar.list.useQuery(
     { organizationId: organization?.id ?? "", limit: 3 },
-    { enabled: !!organization?.id && dsarOn }
+    { enabled: !!organization?.id && dsarOn && skin !== "guided" }
   );
 
   const { data: vendorList } = trpc.vendor.list.useQuery(
     { organizationId: organization?.id ?? "", limit: 3 },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && skin !== "guided" }
   );
 
   // Show quickstart card for orgs that haven't built out their privacy program yet
@@ -117,7 +116,7 @@ export default function PrivacyDashboardPage() {
   const hosted = useHostedPilot();
   const { data: entitled } = trpc.assessment.getEntitledTypes.useQuery(
     { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && skin !== "guided" }
   );
   const dpiaGated =
     !!entitled &&
@@ -128,6 +127,12 @@ export default function PrivacyDashboardPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id && showQuickstart === true && skin !== "guided" && orgWide }
   );
+
+  // Guided: the programme at one glance (owner's decisions d4 to d7, 9 October
+  // 2026), in its own component. Everything below is the Classic dashboard,
+  // kept as it is until Classic is retired (decision d11).
+  const classic = skin !== "guided";
+  if (!classic) return <GuidedDashboard fromQuickstart={fromQuickstart} />;
 
   if (isLoading) {
     return (
@@ -152,10 +157,6 @@ export default function PrivacyDashboardPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Guided only: the one-minute introduction on the first visit (dismissed
-          per browser), then the first step on the path that is not done. */}
-      {skin === "guided" && <FirstRunCard />}
-      {skin === "guided" && orgWide && <NextStepCard waitForFresh={fromQuickstart} />}
       {/* The one programme figure ("2 of 10 steps confirmed"), the same as in
           the menu, All clients and Reports. The organisation's own figure, so
           not for a member limited to departments. */}
@@ -190,7 +191,7 @@ export default function PrivacyDashboardPage() {
           )}
         {/* One client switcher: Guided carries it in the left menu (the client
             switcher block), so the page-header switch is Classic-only. */}
-        {skin !== "guided" && (
+        {classic && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2 shrink-0">
@@ -226,7 +227,7 @@ export default function PrivacyDashboardPage() {
       {/* Quickstart Card — shown when org has few records. Guided leads to the
           quick start through the one "Next step" card above, so this second
           call to action is Classic-only: one card at the top. */}
-      {skin !== "guided" && showQuickstart && orgWide &&
+      {classic && showQuickstart && orgWide &&
         (portfolio?.hasPortfolio ? (
           /* VW portfolio detected — show tailored card */
           <Card className="border-primary/50 bg-primary/5">
