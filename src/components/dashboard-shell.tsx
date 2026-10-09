@@ -374,7 +374,7 @@ function DashboardFooter() {
           <p>
             DPO Central &middot; AGPL-3.0 &middot; &copy; Rindogatan LLC &middot;{" "}
             <Link href="/licenses" className="underline hover:text-foreground transition-colors">
-              Source &amp; licence
+              {tFooter("sourceAndLicence")}
             </Link>
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">

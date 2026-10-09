@@ -40,10 +40,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
     };
   }, [isMenuOpen]);
 
-  const menuLabel =
-    locale === "es"
-      ? isMenuOpen ? "Cerrar el menú" : "Abrir el menú"
-      : isMenuOpen ? "Close the menu" : "Open the menu";
+  const menuLabel = t(isMenuOpen ? "header.menuClose" : "header.menuOpen");
 
   return (
     <header ref={headerRef} className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">

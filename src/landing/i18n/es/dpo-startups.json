@@ -1,4 +1,6 @@
 {
+  "header.menuOpen": "Abrir el menú",
+  "header.menuClose": "Cerrar el menú",
   "header.badge": "DPO Central",
   "header.cta": "Iniciar sesión",
   "hero.badge": "Gestión de programas de privacidad",

@@ -113,7 +113,7 @@
         "dpa": "DPA",
         "trustCenter": "Centro de confianza",
         "autoFilled": "Los campos del formulario se han rellenado a partir del catálogo. Revisa y edita lo que necesites.",
-        "searchPlaceholder": "Busca proveedores (p. ej., Google Analytics, Mailchimp, HubSpot)...",
+        "searchPlaceholder": "Busca un proveedor",
         "searching": "Buscando en el catálogo...",
         "noResults": "No se han encontrado proveedores para «{query}»",
         "noResultsHint": "Prueba otro término o añádelo manualmente más abajo",
@@ -812,7 +812,7 @@
       },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
-      "riskBadge": "Riesgo {level}",
+      "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}",
       "exportPdf": "Exportar PDF",
       "submitApprove": "Aprobar evaluación",
       "submitReview": "Enviar a revisión interna",
@@ -1245,7 +1245,7 @@
       "back": "Volver a proveedores",
       "delete": "Eliminar",
       "edit": "Editar proveedor",
-      "riskBadge": "Riesgo {level}",
+      "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}",
       "noCategories": "Sin categorías",
       "info": {
         "website": "Sitio web",
@@ -1562,7 +1562,7 @@
         "subtitle": "Busca en el catálogo de proveedores y selecciona las herramientas que utiliza tu organización.",
         "back": "Atrás",
         "selectedSuffix": "{count} seleccionados",
-        "searchPlaceholder": "Buscar proveedores (p. ej., Google Analytics, Salesforce, Stripe...)",
+        "searchPlaceholder": "Busca un proveedor",
         "searching": "Buscando...",
         "noResults": "No se han encontrado proveedores para «{query}»",
         "verified": "Verificado",
@@ -1937,7 +1937,7 @@
         "dataProcessed": "Datos tratados",
         "moreItems": "+{count} más",
         "added": "Añadido: {date}",
-        "riskBadge": "Riesgo {level}"
+        "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}"
       },
       "status": {
         "PROSPECTIVE": "Potencial",
@@ -1986,7 +1986,7 @@
         "responsesShort": "{count, plural, one {# respuesta} other {# respuestas}}",
         "templateUnknown": "Desconocida",
         "templatePrefix": "Plantilla: {name}",
-        "riskBadge": "Riesgo {level}"
+        "riskBadge": "{level, select, Bajo {Riesgo bajo} Medio {Riesgo medio} Alto {Riesgo alto} Crítico {Riesgo crítico} other {Riesgo {level}}}"
       },
       "type": {
         "DPIA": "EIPD",
@@ -2084,10 +2084,10 @@
       },
       "members": {
         "title": "Miembros del equipo",
-        "descriptionAdmin": "Invita a compañeros para colaborar en tu programa de privacidad.",
+        "descriptionAdmin": "Añade compañeros para colaborar en tu programa de privacidad.",
         "descriptionViewer": "Solo los propietarios y administradores pueden gestionar los miembros.",
-        "inviteLabel": "Invitar a un compañero",
-        "inviteHelp": "Introduce su correo de trabajo y elige un rol. Recibirá una invitación para unirse a esta organización.",
+        "inviteLabel": "Añadir a un compañero",
+        "inviteHelp": "Añade a un compañero que ya haya iniciado sesión una vez en DPO Central con esta dirección de correo y elige un rol. No se envía ningún correo de invitación.",
         "inviteEmailPlaceholder": "companero@ejemplo.com",
         "add": "Añadir",
         "added": "Miembro añadido",
@@ -2096,7 +2096,7 @@
         "you": "(tú)",
         "removeAria": "Eliminar miembro",
         "removeConfirmTitle": "¿Eliminar a {name}?",
-        "removeConfirmDescription": "Perderá el acceso a esta organización de inmediato. Puedes volver a enviarle una invitación más tarde.",
+        "removeConfirmDescription": "Perderá el acceso a esta organización de inmediato. Puedes volver a añadir a esta persona más tarde.",
         "removeConfirm": "Eliminar",
         "rolesLegend": "Roles: Propietario (control total) · Administrador (gestiona módulos y miembros) · Responsable de privacidad (gestiona registros) · Miembro (crea y edita) · Lector (solo lectura)"
       }
@@ -2910,6 +2910,7 @@
     "serviceBy": "{brandName} es un servicio de {companyName}.",
     "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
     "userGuide": "Guía de usuario",
+    "sourceAndLicence": "Código fuente y licencia",
     "billing": "Facturación",
     "termsOfService": "Condiciones del servicio",
     "privacyPolicy": "Política de privacidad",
@@ -2947,7 +2948,7 @@
     "switchOrg": "Cambiar organización"
   },
   "quickstart": {
-    "recommended": "Recomendado: configuración completa",
+    "recommended": "Configuración completa",
     "recommendedDesc": "Importa tus proveedores y añade una plantilla sectorial para el programa de protección de datos más completo."
   },
   "dashboard": {
@@ -4975,12 +4976,12 @@
       },
       "sla": {
         "title": "Seguimiento de plazos",
-        "description": "DPO Central hace seguimiento automático de los plazos de respuesta y te alerta antes de que venzan.",
+        "description": "DPO Central hace seguimiento automático de los plazos de respuesta y marca las solicitudes cuyo plazo está a punto de vencer.",
         "mockupTitle": "Indicadores de progreso de plazo",
         "overdueLabel": "Vencida",
         "daysRemaining": "{count} días restantes",
         "warningTitle": "Plazos de respuesta",
-        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). El sistema envía notificaciones por correo electrónico 7, 3 y 1 día antes del vencimiento."
+        "warningBody": "Según el RGPD, debes responder a las solicitudes de derechos sin dilación indebida y, en cualquier caso, en el plazo de un mes a partir de su recepción. Ese plazo puede prorrogarse otros dos meses en caso necesario, teniendo en cuenta la complejidad y el número de solicitudes; debes informar a la persona de la prórroga, indicando los motivos de la dilación, dentro del primer mes (art. 12.3 del RGPD). Las solicitudes que vencen en 7 días o menos se marcan como en riesgo, y las vencidas, como vencidas. No se envían recordatorios por correo electrónico."
       },
       "portal": {
         "title": "Portal público",
@@ -5531,7 +5532,7 @@
           "NotApplied": "No aplicada"
         },
         "infoTitle": "Jurisdicción principal",
-        "infoBody": "Establecer una jurisdicción principal determina el plazo predeterminado de respuesta a las solicitudes de derechos y la ventana de notificación de brechas que se usan en toda tu organización. Las demás jurisdicciones aplicadas se siguen en paralelo, y el plazo más estricto siempre prevalece cuando se solapan varias jurisdicciones."
+        "infoBody": "Establecer una jurisdicción principal determina el plazo predeterminado de respuesta a las solicitudes de derechos y la ventana de notificación de brechas que se usan en toda tu organización. Las demás jurisdicciones aplicadas se siguen en paralelo. Las nuevas solicitudes toman el plazo de tu jurisdicción principal; el informe del panorama regulatorio muestra qué norma es la más estricta."
       },
       "impact": {
         "title": "Impacto en el sistema",
@@ -5541,7 +5542,7 @@
           "dsar": {
             "label": "Plazos de solicitudes",
             "value": "Automáticos",
-            "subtitle": "Según la jurisdicción más estricta"
+            "subtitle": "Según tu jurisdicción principal"
           },
           "breach": {
             "label": "Notificaciones de brecha",
@@ -5554,8 +5555,8 @@
             "subtitle": "Seguimiento continuo de requisitos"
           }
         },
-        "noteTitle": "Las jurisdicciones son acumulativas",
-        "noteBody": "Cuando varias jurisdicciones se aplican a la misma actividad de tratamiento, el sistema sigue la regla más estricta. Por ejemplo, si el RGPD da un mes para responder a una solicitud de derechos y la LGPD da 15 días, el sistema aplicará el plazo de 15 días. Así te ayuda a cumplir todas las normas aplicables a la vez."
+        "noteTitle": "La jurisdicción principal fija el plazo",
+        "noteBody": "Las nuevas solicitudes toman el plazo de la jurisdicción principal de tu organización. Cuando se aplican varias jurisdicciones, el sistema no cambia por sí solo a la más estricta: el informe del panorama regulatorio las compara y muestra qué norma es la más estricta. Por ejemplo, si el RGPD da un mes para responder a una solicitud de derechos y la LGPD da 15 días, el informe muestra el plazo de 15 días, y puedes hacer principal la jurisdicción más estricta."
       },
       "nav": {
         "previous": "Cumplimiento de transferencias",
@@ -6024,7 +6025,7 @@
           },
           "Member": {
             "role": "Miembro",
-            "desc": "Crear y editar registros, enviar solicitudes de derechos, notificar incidentes"
+            "desc": "Crear y editar registros, enviar solicitudes de derechos, registrar incidentes"
           },
           "Viewer": {
             "role": "Lector",
@@ -6963,6 +6964,7 @@
     },
     "shell": {
       "userGuide": "Guía de usuario",
+    "sourceAndLicence": "Código fuente y licencia",
       "menu": "Menú de la documentación"
     },
     "mockup": {
