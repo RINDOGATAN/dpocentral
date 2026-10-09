@@ -3,19 +3,10 @@
 
 import { NextRequest } from "next/server";
 import { getSessionToken } from "@/lib/session-cookie";
-import { getCookieLocale } from "@/i18n/server-locale";
-import { getTranslations } from "next-intl/server";
 import prisma from "@/lib/prisma";
-import { renderToBuffer } from "@react-pdf/renderer";
-import {
-  AssessmentPortfolioReport,
-  type AssessmentPortfolioData,
-  type PortfolioAssessment,
-} from "@/server/services/export/assessment-portfolio-report";
-import { fmtDate } from "@/server/services/export/pdf-styles";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
-import { locales, defaultLocale } from "@/i18n/config";
-import { assessmentProgress } from "@/server/services/assessment/progress";
+import { buildAssessmentPortfolioExport } from "@/server/services/export/documents/assessment-portfolio";
+import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
 
 export async function GET(request: NextRequest) {
   const token = await getSessionToken(request);
@@ -33,164 +24,30 @@ export async function GET(request: NextRequest) {
   if (limited) return limited;
 
   try {
-
-  const membership = await prisma.organizationMember.findFirst({
-    where: { organizationId, user: { email: userEmail } },
-  });
-  if (!membership) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  const org = await prisma.organization.findUnique({
-    where: { id: organizationId },
-    select: { name: true },
-  });
-  if (!org) {
-    return Response.json({ error: "Organization not found" }, { status: 404 });
-  }
-
-  // ── Fetch all assessments with relations ───────────────
-  const assessments = await prisma.assessment.findMany({
-    where: { organizationId },
-    include: {
-      template: { select: { type: true, name: true, version: true, sections: true } },
-      processingActivity: { select: { name: true } },
-      vendor: { select: { name: true } },
-      mitigations: { select: { status: true } },
-      approvals: { select: { status: true }, orderBy: { level: "desc" }, take: 1 },
-      // The answers themselves, not a count: completion is measured over the
-      // questions the answers make visible, the same way the single export
-      // and the assessment page measure it.
-      responses: { select: { questionId: true, response: true } },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
-
-  // ── Transform to portfolio items ───────────────────────
-  const portfolioAssessments: PortfolioAssessment[] = assessments.map((a) => {
-    // One completion figure for the whole product: the conditional-aware
-    // calculation. Counting every question of the template, including the
-    // ones the answers hide, made the portfolio and the single assessment
-    // report two different percentages for the same assessment.
-    const {
-      totalQuestions,
-      answeredQuestions: responseCount,
-      completionPercentage,
-    } = assessmentProgress(
-      { type: a.template?.type ?? "CUSTOM", sections: a.template?.sections ?? [] },
-      a.responses
-    );
-
-    const mitigationCount = a.mitigations.length;
-    const mitigationsCompleted = a.mitigations.filter(
-      (m) => m.status === "IMPLEMENTED" || m.status === "VERIFIED"
-    ).length;
-
-    return {
-      id: a.id,
-      name: a.name,
-      status: a.status,
-      riskLevel: a.riskLevel,
-      riskScore: a.riskScore,
-      startedAt: a.startedAt,
-      submittedAt: a.submittedAt,
-      completedAt: a.completedAt,
-      dueDate: a.dueDate,
-      completionPercentage,
-      templateType: a.template?.type ?? "CUSTOM",
-      templateName: a.template?.name ?? "Unknown",
-      linkedActivity: a.processingActivity?.name ?? null,
-      linkedVendor: a.vendor?.name ?? null,
-      mitigationCount,
-      mitigationsCompleted,
-      approvalStatus: a.approvals[0]?.status ?? null,
-      responseCount,
-      totalQuestions,
-    };
-  });
-
-  // ── Compute stats ──────────────────────────────────────
-  const byStatus: Record<string, number> = {};
-  const byType: Record<string, number> = {};
-  const byRiskLevel: Record<string, number> = {};
-  let totalMitigations = 0;
-  let mitigationsCompleted = 0;
-  let completionSum = 0;
-
-  for (const a of portfolioAssessments) {
-    byStatus[a.status] = (byStatus[a.status] ?? 0) + 1;
-    byType[a.templateType] = (byType[a.templateType] ?? 0) + 1;
-    if (a.riskLevel) {
-      byRiskLevel[a.riskLevel] = (byRiskLevel[a.riskLevel] ?? 0) + 1;
+    const membership = await prisma.organizationMember.findFirst({
+      where: { organizationId, user: { email: userEmail } },
+    });
+    if (!membership) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
     }
-    totalMitigations += a.mitigationCount;
-    mitigationsCompleted += a.mitigationsCompleted;
-    completionSum += a.completionPercentage;
-  }
 
-  const now = new Date();
-  const overdue = portfolioAssessments.filter(
-    (a) =>
-      a.dueDate &&
-      new Date(a.dueDate) < now &&
-      !["APPROVED", "ARCHIVED"].includes(a.status)
-  ).length;
+    const org = await prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { name: true },
+    });
+    if (!org) {
+      return Response.json({ error: "Organization not found" }, { status: 404 });
+    }
 
-  const reportData: AssessmentPortfolioData = {
-    organization: { name: org.name },
-    generatedAt: fmtDate(new Date()),
-    assessments: portfolioAssessments,
-    stats: {
-      total: portfolioAssessments.length,
-      byStatus,
-      byType,
-      byRiskLevel,
-      approved: byStatus["APPROVED"] ?? 0,
-      overdue,
-      avgCompletion: portfolioAssessments.length > 0
-        ? Math.round(completionSum / portfolioAssessments.length)
-        : 0,
-      totalMitigations,
-      mitigationsCompleted,
-    },
-  };
-
-  const requestedLocale = request.nextUrl.searchParams.get("locale");
-  const cookieLocale = await getCookieLocale();
-  const resolvedLocale = [requestedLocale, cookieLocale, defaultLocale].find(
-    (l): l is string => !!l && (locales as readonly string[]).includes(l)
-  ) ?? defaultLocale;
-  const t = await getTranslations({ locale: resolvedLocale, namespace: "pdf.assessmentPortfolio" });
-
-  // ── Render PDF ─────────────────────────────────────────
-  const buffer = await renderToBuffer(
-    AssessmentPortfolioReport({ data: reportData, t, locale: resolvedLocale })
-  );
-
-  const dateStr = fmtDate(new Date());
-  const filename = `Assessment-Portfolio-${org.name.replace(/[^a-zA-Z0-9]/g, "-")}-${dateStr}.pdf`;
-
-  await prisma.auditLog.create({
-    data: {
+    const file = await buildAssessmentPortfolioExport({
+      prisma,
       organizationId,
+      orgName: org.name,
       userId: membership.userId,
-      entityType: "Report",
-      entityId: "assessment-portfolio",
-      action: "EXPORT_PDF",
-      changes: {
-        format: "pdf",
-        reportType: "assessment-portfolio",
-        assessmentCount: portfolioAssessments.length,
-      },
-    },
-  });
-
-  return new Response(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${filename}"`,
-    },
-  });
+      locale: await resolveExportLocale(request.nextUrl.searchParams.get("locale")),
+      audit: true,
+    });
+    return fileResponse(file);
   } catch (err) {
     return pdfErrorResponse(err, "assessment-portfolio");
   }

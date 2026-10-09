@@ -35,6 +35,7 @@ import {
   type EvaluatedDocument,
 } from "@/config/document-register";
 import type { NeedsActionItem, NeedsActionKind } from "@/lib/needs-action";
+import type { PlanState, PlanWindow } from "@/components/guided/plan";
 
 /** The stage each kind of waiting work belongs to (null: no single stage). */
 export const NEEDS_ACTION_STAGE: Record<NeedsActionKind, string | null> = {
@@ -244,4 +245,82 @@ export function nextActions<C>(
     }
   }
   return out.slice(0, limit);
+}
+
+// ---------------------------------------------------------------------------
+// Deadlines and the firm view (owner's decision d9)
+// ---------------------------------------------------------------------------
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** A deadline at risk, as the server sends it (src/server/services/program/deadlines.ts). */
+export interface RecordDeadline {
+  kind: "breachDecision" | "breachNotify" | "dsarDue";
+  /** ISO date the deadline falls on. */
+  at: string;
+  publicId: string;
+  href: string;
+}
+
+/** A deadline of the firm view: a record's, or the plan's next milestone. */
+export type ClientDeadline = RecordDeadline | { kind: "plan"; at: string; day: number };
+
+/**
+ * The plan's next milestone (day 30, 60 or 90) while the plan runs: the last
+ * day of the window the plan is in. Null before the plan starts and after it
+ * ends. The dashboard's deadlines card and the firm view both read it here.
+ */
+export function planMilestone(
+  windows: readonly PlanWindow[],
+  planStart: string | Date | null,
+  plan: PlanState | null,
+): { day: number; at: Date } | null {
+  if (!planStart || plan?.kind !== "running") return null;
+  const window = windows.find((w) => w.untilDay >= plan.day);
+  if (!window) return null;
+  const start = typeof planStart === "string" ? new Date(planStart) : planStart;
+  return { day: window.untilDay, at: new Date(start.getTime() + (window.untilDay - 1) * DAY_MS) };
+}
+
+/**
+ * The nearest deadline of one client: the earliest of its breach windows,
+ * its rights requests due and its plan's next milestone. An overdue one is
+ * the earliest of all, so it comes first.
+ */
+export function nearestDeadline(
+  deadlines: readonly RecordDeadline[],
+  milestone: { day: number; at: Date } | null,
+): ClientDeadline | null {
+  const all: ClientDeadline[] = [...deadlines];
+  if (milestone) all.push({ kind: "plan", at: milestone.at.toISOString(), day: milestone.day });
+  if (all.length === 0) return null;
+  return all.reduce((a, b) => (new Date(b.at).getTime() < new Date(a.at).getTime() ? b : a));
+}
+
+/**
+ * The firm view's order (owner's decision d9): by the nearest deadline, the
+ * soonest (or most overdue) first; the clients with no deadline after them,
+ * by name.
+ */
+export function sortByNearestDeadline<T extends { name: string; deadline: { at: string } | null }>(
+  rows: readonly T[],
+  locale = "en",
+): T[] {
+  return [...rows].sort((a, b) => {
+    if (a.deadline && b.deadline) {
+      const diff = new Date(a.deadline.at).getTime() - new Date(b.deadline.at).getTime();
+      if (diff !== 0) return diff;
+    } else if (a.deadline) return -1;
+    else if (b.deadline) return 1;
+    return a.name.localeCompare(b.name, locale);
+  });
+}
+
+/**
+ * "4 of 11 ready": the documents DPO Central produces for this deployment
+ * (the ones not in DPO Central yet are not counted) and how many are ready.
+ */
+export function documentsReady(documents: readonly EvaluatedDocument[]): { ready: number; total: number } {
+  const produced = documents.filter((d) => d.status.state !== "notYet");
+  return { ready: produced.filter((d) => d.status.state === "ready").length, total: produced.length };
 }

@@ -4415,6 +4415,44 @@
         "nextReview": "Próx. revisión"
       },
       "dpaMissing": "FALTA"
+    },
+    "documentPack": {
+      "fileTitle": "Paquete-de-documentos",
+      "indexFile": "00-INDICE.md",
+      "manifestFile": "99-MANIFIESTO.txt",
+      "draftMark": "BORRADOR",
+      "assessmentsDir": "evaluaciones",
+      "dpaDir": "contratos-de-encargo",
+      "assessmentName": "{type}: {name}",
+      "assessmentGaps": "sin aprobar; lo que falta figura en su primera página",
+      "dpaName": "Contrato de encargo con {vendor}",
+      "draftNote": {
+        "gapsTitle": "Este documento es un borrador",
+        "intro": "Puedes compartirlo para revisión, pero no está terminado. Falta lo siguiente:",
+        "generated": "Generado el {date}"
+      },
+      "index": {
+        "title": "Paquete de documentos: {org}",
+        "generated": "Generado: {date}",
+        "readyOnly": "Este paquete contiene los documentos listos. No se han pedido los borradores.",
+        "withDrafts": "Este paquete contiene los documentos listos y los borradores. Un borrador lleva BORRADOR en el nombre del fichero y lo que le falta en su primera página.",
+        "contents": "Contenido",
+        "colDocument": "Documento",
+        "colState": "Estado",
+        "colDate": "Fecha",
+        "colFile": "Fichero",
+        "empty": "Todavía no hay ningún documento listo.",
+        "notIncluded": "Fuera de este paquete",
+        "unapprovedLeftOut": "{count, plural, one {# evaluación sin aprobar} other {# evaluaciones sin aprobar}}: no se han pedido los borradores",
+        "manifest": "{file} recoge una huella SHA-256 de cada fichero del paquete, para que se pueda comprobar cualquiera de ellos."
+      },
+      "reasons": {
+        "draftsNotRequested": "borrador ({gaps}); no se han pedido los borradores",
+        "notYet": "aún no en DPO Central",
+        "screenOnly": "solo se muestra en pantalla",
+        "notEntitled": "su exportación no está incluida en esta instalación",
+        "notForThisMember": "reservado a quienes gestionan las solicitudes de derechos"
+      }
     }
   },
   "docs": {
@@ -8980,27 +9018,26 @@
     "title": "Todos los clientes",
     "addClient": "Añadir un cliente",
     "subtitle": "{count, plural, one {# organización} other {# organizaciones}} que gestionas",
-    "tiles": {
-      "requestsDue": "Solicitudes por vencer",
-      "openIncidents": "Incidencias abiertas",
-      "needAttention": "Requieren atención",
-      "clients": "Clientes"
-    },
-    "stages": "Fases",
-    "nextStep": "Siguiente paso",
-    "allDone": "Todos los pasos completados",
-    "plan": "Plan",
-    "requestsDue": "{count, plural, one {# solicitud por vencer} other {# solicitudes por vencer}}",
-    "requestsDueNone": "Sin solicitudes por vencer",
-    "openIncidents": "{count, plural, one {# incidente abierto} other {# incidentes abiertos}}",
-    "openIncidentsNone": "Sin incidentes abiertos",
-    "lastActivity": "Última actividad: {when}",
-    "noActivity": "Aún sin actividad",
     "empty": {
       "title": "Aún no hay organizaciones cliente",
       "body": "Las organizaciones de las que eres miembro aparecerán aquí."
     },
-    "draftsToConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}"
+    "draftsToConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}",
+    "needAttention": "{count, plural, one {# requiere atención} other {# requieren atención}}",
+    "columns": {
+      "client": "Cliente",
+      "confirmed": "Confirmado",
+      "areas": "Áreas",
+      "documents": "Documentos listos",
+      "deadline": "Próximo plazo",
+      "action": "Siguiente acción",
+      "menu": "Más"
+    },
+    "docsReady": "{ready} de {total} listos",
+    "noDeadline": "Ninguno",
+    "none": "Sin cifra todavía",
+    "limited": "Limitado a tus departamentos: no se muestran las cifras de toda la organización.",
+    "sortNote": "Ordenados por el plazo más próximo, el más cercano primero; después, los clientes sin plazo, por nombre."
   },
   "applicability": {
     "cardTitle": "Qué se te aplica",
@@ -9431,6 +9468,12 @@
       "notStarted": "Sin empezar: {steps}.",
       "notYet": "Aún no en DPO Central: {names}.",
       "none": "No falta nada en la ruta."
+    },
+    "pack": {
+      "button": "Descargar documentos listos",
+      "includeDrafts": "Incluir también los borradores ({count}), marcados como BORRADOR",
+      "count": "{count, plural, one {# documento en un ZIP, con un índice} other {# documentos en un ZIP, con un índice}}",
+      "none": "Todavía no hay ningún documento listo."
     }
   }
 }
