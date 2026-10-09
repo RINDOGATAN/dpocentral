@@ -55,7 +55,7 @@ import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { PersonaSelector } from "@/components/privacy/persona-selector";
 import { OnboardingWelcome } from "@/components/privacy/onboarding-welcome";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { features } from "@/config/features";
+import { features, isDsarModuleEnabled } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
@@ -97,7 +97,8 @@ export function DashboardShell({
 
   // Secondary nav: shown in "More" dropdown on desktop, flat in mobile sheet
   const moreNavItems = [
-    ...(canHandleDsars !== false
+    // Hidden when the rights-request module is not part of this plan.
+    ...(isDsarModuleEnabled() && canHandleDsars !== false
       ? [{ href: "/privacy/dsar", label: tNav("dsar"), icon: FileText }]
       : []),
     { href: "/privacy/incidents", label: tNav("incidents"), icon: AlertTriangle },

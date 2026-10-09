@@ -40,6 +40,10 @@ export interface FeatureFlags {
   aiGovernanceEnabled: boolean;
   aiSentinelIntegrationEnabled: boolean;
 
+  // Rights-request (DSAR) module: dashboard pages, public request form and
+  // status pages, reminders, reports. On by default on every build.
+  dsarEnabled: boolean;
+
   // Internationalization
   i18nEnabled: boolean;
   availableLocales: string[];
@@ -87,6 +91,9 @@ const defaultFeatures: FeatureFlags = {
   aiGovernanceEnabled: true,
   aiSentinelIntegrationEnabled: true,
 
+  // Rights requests (NEXT_PUBLIC_DSAR_ENABLED=false turns the module off)
+  dsarEnabled: true,
+
   // i18n
   i18nEnabled: true,
   availableLocales: ["en", "es"],
@@ -108,6 +115,7 @@ const defaultFeatures: FeatureFlags = {
  * - NEXT_PUBLIC_AVAILABLE_LOCALES (comma-separated)
  * - NEXT_PUBLIC_DEFAULT_LOCALE
  * - NEXT_PUBLIC_AI_ASSIST_ENABLED (=false hides the AI affordances entirely)
+ * - NEXT_PUBLIC_DSAR_ENABLED (=false turns the rights-request module off)
  */
 export function getFeatureFlags(): FeatureFlags {
   const envLocales = process.env.NEXT_PUBLIC_AVAILABLE_LOCALES;
@@ -155,6 +163,7 @@ export function getFeatureFlags(): FeatureFlags {
     aiSentinelIntegrationEnabled:
       process.env.NEXT_PUBLIC_AI_SENTINEL_ENABLED !== "false" &&
       defaultFeatures.aiSentinelIntegrationEnabled,
+    dsarEnabled: isDsarModuleEnabled(),
     i18nEnabled:
       process.env.NEXT_PUBLIC_I18N_ENABLED === "true" ||
       defaultFeatures.i18nEnabled,
@@ -168,6 +177,28 @@ export function getFeatureFlags(): FeatureFlags {
       defaultFeatures.aiAssistEnabled,
   };
 }
+
+/**
+ * Whether the rights-request (DSAR) module is part of this deployment.
+ *
+ * On unless NEXT_PUBLIC_DSAR_ENABLED is exactly "false". When off, the
+ * module's menu entry, dashboard pages, guided step, tiles, documentation and
+ * report sections are hidden; the public request form and status pages answer
+ * 404; the module's API refuses every call; new organisations get no public
+ * form; the deadline-reminder cron does nothing. The records an organisation
+ * already holds are not touched (the rights-request export stays available to
+ * its owners and admins).
+ *
+ * Read at call time so server code and tests see the current environment.
+ * NEXT_PUBLIC_* values are baked into the build, so changing it on a hosted
+ * or self-hosted instance takes a rebuild.
+ */
+export function isDsarModuleEnabled(): boolean {
+  return process.env.NEXT_PUBLIC_DSAR_ENABLED !== "false" && defaultFeatures.dsarEnabled;
+}
+
+/** The note shown where the rights-request module would have been. */
+export const DSAR_MODULE_OFF_MESSAGE = "Rights requests are not included in this plan.";
 
 /**
  * Singleton feature flags instance

@@ -11,6 +11,7 @@ import { FeatureMockup } from "@/components/docs/feature-mockup";
 import { InfoCallout } from "@/components/docs/info-callout";
 import { PremiumBadge } from "@/components/docs/premium-badge";
 import { DocNavFooter } from "@/components/docs/doc-nav-footer";
+import { isDsarModuleEnabled } from "@/config/features";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 
@@ -127,7 +128,7 @@ export default async function DocsAssessmentsPage() {
       </DocSection>
 
       <DocNavFooter
-        previous={{ title: t("nav.previous"), href: "/privacy/docs/dsar" }}
+        previous={{ title: t("nav.previous"), href: isDsarModuleEnabled() ? "/privacy/docs/dsar" : "/privacy/docs/data-inventory" }}
         next={{ title: t("nav.next"), href: "/privacy/docs/incidents" }}
       />
     </div>

@@ -7012,7 +7012,7 @@
     },
     "shell": {
       "userGuide": "Guía de usuario",
-    "sourceAndLicence": "Código fuente y licencia",
+      "sourceAndLicence": "Código fuente y licencia",
       "menu": "Menú de la documentación"
     },
     "mockup": {
@@ -8706,7 +8706,8 @@
         "vendorRegister": "Registro de proveedores (CSV)",
         "breachRegister": "Registro de brechas (CSV)",
         "dsarPerformance": "Informe de solicitudes de interesados (PDF)",
-        "assessmentPortfolio": "Cartera de evaluaciones (PDF)"
+        "assessmentPortfolio": "Cartera de evaluaciones (PDF)",
+        "rightsRequests": "Registros anteriores de solicitudes de derechos (JSON)"
       }
     }
   },
@@ -9254,5 +9255,10 @@
     "body": "Puede que la dirección esté mal escrita o que la página se haya movido. Tus registros guardados no se ven afectados.",
     "home": "Ir a la página de inicio",
     "dashboard": "Ir a tu panel"
+  },
+  "dsarModule": {
+    "off": "Las solicitudes de derechos no están incluidas en este plan.",
+    "exportBody": "Puedes seguir descargando los registros de solicitudes de derechos que tu organización ya tiene.",
+    "exportLink": "Descargar los registros (JSON)"
   }
 }

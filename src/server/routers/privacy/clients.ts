@@ -7,6 +7,7 @@ import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath, type PathStatuses } from "@/components/guided/path";
 import { loadPathCounts } from "@/server/services/program/path-counts";
 import { loadPlanStart } from "@/server/services/program/plan-start";
+import { isDsarModuleEnabled } from "@/config/features";
 
 const MAX_CLIENT_ORGS = 50;
 
@@ -44,6 +45,8 @@ export const clientsRouter = createTRPCRouter({
           // The six-stage rings, the next step and the plan all read the same
           // path counts the Guided menu reads, so a client's row in the
           // portfolio can never disagree with its own dashboard.
+          // No rights-request counts when the module is off (src/config/features.ts).
+          const dsarOn = isDsarModuleEnabled();
           const [
             counts,
             openDsars,
@@ -55,26 +58,32 @@ export const clientsRouter = createTRPCRouter({
             lastLog,
           ] = await Promise.all([
             loadPathCounts(ctx.prisma, orgId),
-            ctx.prisma.dSARRequest.count({
-              where: {
-                organizationId: orgId,
-                status: { notIn: ["COMPLETED", "REJECTED"] },
-              },
-            }),
-            ctx.prisma.dSARRequest.count({
-              where: {
-                organizationId: orgId,
-                status: { notIn: ["COMPLETED", "REJECTED"] },
-                dueDate: { lt: now },
-              },
-            }),
-            ctx.prisma.dSARRequest.count({
-              where: {
-                organizationId: orgId,
-                status: { notIn: ["COMPLETED", "REJECTED"] },
-                dueDate: { gte: now, lt: dueSoonCutoff },
-              },
-            }),
+            dsarOn
+              ? ctx.prisma.dSARRequest.count({
+                  where: {
+                    organizationId: orgId,
+                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                  },
+                })
+              : 0,
+            dsarOn
+              ? ctx.prisma.dSARRequest.count({
+                  where: {
+                    organizationId: orgId,
+                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                    dueDate: { lt: now },
+                  },
+                })
+              : 0,
+            dsarOn
+              ? ctx.prisma.dSARRequest.count({
+                  where: {
+                    organizationId: orgId,
+                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                    dueDate: { gte: now, lt: dueSoonCutoff },
+                  },
+                })
+              : 0,
             ctx.prisma.assessment.count({
               where: {
                 organizationId: orgId,

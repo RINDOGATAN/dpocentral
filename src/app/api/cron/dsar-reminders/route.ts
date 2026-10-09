@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { safeEqual } from "@/lib/safe-equal";
+import { isDsarModuleEnabled } from "@/config/features";
 import {
   reminderMailerFromEnv,
   runDsarDeadlineReminders,
@@ -43,6 +44,14 @@ export async function GET(request: Request) {
   }
 
   const now = new Date();
+
+  // Without the rights-request module (src/config/features.ts) no reminder is
+  // sent and nothing is read: the run succeeds and reports that it skipped.
+  if (!isDsarModuleEnabled()) {
+    logger.info("DSAR reminders cron skipped: the rights-request module is off");
+    return NextResponse.json({ success: true, timestamp: now.toISOString(), skipped: "dsar-module-off" });
+  }
+
   try {
     const summary = await runDsarDeadlineReminders(prisma, reminderMailerFromEnv(), now);
     logger.info("DSAR reminders cron completed", summary as unknown as Record<string, unknown>);

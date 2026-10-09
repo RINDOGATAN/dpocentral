@@ -7012,7 +7012,7 @@
     },
     "shell": {
       "userGuide": "User Guide",
-    "sourceAndLicence": "Source & licence",
+      "sourceAndLicence": "Source & licence",
       "menu": "Documentation Menu"
     },
     "mockup": {
@@ -8706,7 +8706,8 @@
         "vendorRegister": "Vendor register (CSV)",
         "breachRegister": "Breach register (CSV)",
         "dsarPerformance": "Data subject request report (PDF)",
-        "assessmentPortfolio": "Assessment portfolio (PDF)"
+        "assessmentPortfolio": "Assessment portfolio (PDF)",
+        "rightsRequests": "Earlier rights-request records (JSON)"
       }
     }
   },
@@ -9254,5 +9255,10 @@
     "body": "The address may be mistyped, or the page may have moved. Your saved records are not affected.",
     "home": "Go to the home page",
     "dashboard": "Go to your dashboard"
+  },
+  "dsarModule": {
+    "off": "Rights requests are not included in this plan.",
+    "exportBody": "The rights-request records your organisation already holds can still be downloaded.",
+    "exportLink": "Download the records (JSON)"
   }
 }

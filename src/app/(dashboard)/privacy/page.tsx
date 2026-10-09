@@ -43,6 +43,7 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
+import { isDsarModuleEnabled } from "@/config/features";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { toast } from "sonner";
@@ -69,6 +70,9 @@ export default function PrivacyDashboardPage() {
   const { label: enumLabel } = useEnumLabels();
   const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
   const { canHandle: canHandleDsars } = useDsarAccess();
+  // Without the rights-request module its tile, queue and quick action go,
+  // and its list is never asked for (src/config/features.ts).
+  const dsarOn = isDsarModuleEnabled();
   const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const [newOrgName, setNewOrgName] = useState("");
@@ -105,7 +109,7 @@ export default function PrivacyDashboardPage() {
 
   const { data: dsarList } = trpc.dsar.list.useQuery(
     { organizationId: organization?.id ?? "", limit: 3 },
-    { enabled: !!organization?.id }
+    { enabled: !!organization?.id && dsarOn }
   );
 
   const { data: vendorList } = trpc.vendor.list.useQuery(
@@ -322,7 +326,7 @@ export default function PrivacyDashboardPage() {
       <DeploymentExpertCta />
 
       {/* Quick Stats - 2 columns on mobile, 4 on desktop */}
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className={`grid gap-3 sm:gap-4 grid-cols-2 ${dsarOn ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.dataInventory")}</CardTitle>
@@ -339,6 +343,7 @@ export default function PrivacyDashboardPage() {
           </CardContent>
         </Card>
 
+        {dsarOn && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">{tp("stats.openDsars")}</CardTitle>
@@ -358,6 +363,7 @@ export default function PrivacyDashboardPage() {
             </p>
           </CardContent>
         </Card>
+        )}
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6 sm:pb-2">
@@ -388,7 +394,8 @@ export default function PrivacyDashboardPage() {
 
       {/* Main Content Grid */}
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
-        {/* DSAR Queue */}
+        {/* DSAR Queue (not when the module is off) */}
+        {dsarOn && (
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center justify-between gap-2">
@@ -442,6 +449,7 @@ export default function PrivacyDashboardPage() {
             )}
           </CardContent>
         </Card>
+        )}
 
         {/* Recent Activity */}
         <Card>
@@ -510,7 +518,7 @@ export default function PrivacyDashboardPage() {
                 <span className="truncate">{tp("quickActions.addAsset")}</span>
               </Button>
             </Link>
-            {canHandleDsars !== false && (
+            {dsarOn && canHandleDsars !== false && (
               <Link href="/privacy/dsar">
                 <Button variant="outline" className="w-full justify-start h-11">
                   <FileText className="w-4 h-4 mr-2 shrink-0" />

@@ -45,6 +45,7 @@ import {
 } from "@/config/client-template";
 import { makeScrubber, type ScrubFlag, type Scrubber } from "@/lib/client-template/scrub";
 import { isIntakeConfigured, type IntakeFormShape } from "@/server/services/dsar/defaultIntakeForm";
+import { isDsarModuleEnabled } from "@/config/features";
 
 // ─── Permission ──────────────────────────────────────────────────────────────
 
@@ -223,7 +224,10 @@ export async function planClientTemplate(
   },
 ): Promise<ClientTemplatePlan> {
   const parts = effectivePartsLocal(input.parts);
-  const want = (p: CopyPart) => parts.includes(p);
+  // The intake form is never copied when the rights-request module is not
+  // part of this plan (src/config/features.ts).
+  const want = (p: CopyPart) =>
+    parts.includes(p) && (p !== "dsarIntake" || isDsarModuleEnabled());
   const src = { organizationId: input.sourceOrganizationId };
   const tgt = input.targetOrganizationId ? { organizationId: input.targetOrganizationId } : null;
 

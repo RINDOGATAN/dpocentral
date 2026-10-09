@@ -5,6 +5,7 @@ import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { dsarReadFilter } from "@/server/services/dsar/access";
+import { isDsarModuleEnabled } from "@/config/features";
 
 /**
  * GET /api/export/organization-data?organizationId=...
@@ -15,6 +16,11 @@ import { dsarReadFilter } from "@/server/services/dsar/access";
  * other member only those on which they hold a task. It is a GET route, so it stays available when a hosted pilot
  * organisation has become read-only: the pilot's promise is that everything
  * created there can be taken to the user's own instance.
+ *
+ * When the rights-request module is not part of this plan
+ * (NEXT_PUBLIC_DSAR_ENABLED=false) the file leaves the rights requests and
+ * intake forms out; owners and admins download those on their own from
+ * /api/export/rights-requests.
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -43,6 +49,7 @@ export async function GET(request: Request) {
     }
 
     const where = { organizationId };
+    const dsarOn = isDsarModuleEnabled();
     const [
       members,
       jurisdictions,
@@ -71,11 +78,13 @@ export async function GET(request: Request) {
       prisma.processingActivity.findMany({ where, include: { assets: true } }),
       prisma.dataFlow.findMany({ where }),
       prisma.dataTransfer.findMany({ where }),
-      prisma.dSARIntakeForm.findMany({ where }),
-      prisma.dSARRequest.findMany({
-        where: { ...where, ...dsarReadFilter(membership.role, membership.userId) },
-        include: { tasks: true, communications: true },
-      }),
+      dsarOn ? prisma.dSARIntakeForm.findMany({ where }) : null,
+      dsarOn
+        ? prisma.dSARRequest.findMany({
+            where: { ...where, ...dsarReadFilter(membership.role, membership.userId) },
+            include: { tasks: true, communications: true },
+          })
+        : null,
       prisma.assessmentTemplate.findMany({ where }),
       prisma.assessment.findMany({
         where,
@@ -112,8 +121,7 @@ export async function GET(request: Request) {
       processingActivities,
       dataFlows,
       dataTransfers,
-      dsarIntakeForms,
-      dsarRequests,
+      ...(dsarOn ? { dsarIntakeForms, dsarRequests } : {}),
       assessmentTemplates,
       assessments,
       incidents,

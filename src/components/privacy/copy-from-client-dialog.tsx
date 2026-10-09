@@ -47,6 +47,7 @@ import {
   effectiveParts,
   type CopyPart,
 } from "@/config/client-template";
+import { isDsarModuleEnabled } from "@/config/features";
 
 /** Where a flagged item opens in the new client, by part. */
 const ITEM_HREF: Record<CopyPart, ((id: string) => string) | null> = {
@@ -299,7 +300,7 @@ export function CopyFromClientDialog({
             {sourceId && (
               <fieldset className="space-y-2">
                 <legend className="text-sm font-medium mb-1">{t("partsLegend")}</legend>
-                {COPY_PARTS.map((p) => {
+                {COPY_PARTS.filter((p) => p !== "dsarIntake" || isDsarModuleEnabled()).map((p) => {
                   const needs = PART_REQUIRES[p];
                   const blocked = !!needs && !parts.includes(needs);
                   const count = preview?.counts[p];

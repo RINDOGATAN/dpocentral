@@ -22,6 +22,7 @@ import {
   pilotLocale,
   type PilotResource,
 } from "@/server/services/pilot/caps";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicOverview");
@@ -42,7 +43,12 @@ export default async function DocsOverviewPage() {
   // The figures come from the pilot configuration, never from prose, so the
   // page cannot drift from what the product enforces.
   const locale = pilotLocale(await getLocale());
-  const ceilings = (Object.keys(PILOT_LIMITS) as PilotResource[]).map((resource) => ({
+  // Without the rights-request module (src/config/features.ts) the overview
+  // leaves it out of the ceilings, modules, reports and core items.
+  const dsarOn = isDsarModuleEnabled();
+  const ceilings = (Object.keys(PILOT_LIMITS) as PilotResource[])
+    .filter((resource) => dsarOn || resource !== "dsarRequests")
+    .map((resource) => ({
     resource,
     limit: PILOT_LIMITS[resource],
     label: RESOURCE_LABELS[resource][locale],
@@ -54,7 +60,7 @@ export default async function DocsOverviewPage() {
     { key: "assessments", href: "/docs/assessments", icon: ClipboardCheck },
     { key: "incidents", href: "/docs/incidents", icon: AlertTriangle },
     { key: "vendors", href: "/docs/vendors", icon: Building2 },
-  ];
+  ].filter((m) => dsarOn || m.key !== "dsar");
 
   const roleKeys = ["Owner", "Admin", "PrivacyOfficer", "Member", "Viewer"] as const;
   const reportKeys = [
@@ -66,8 +72,10 @@ export default async function DocsOverviewPage() {
     "ropa",
     "vendor",
     "breach",
-  ] as const;
-  const coreItems = ["inventory", "dsar", "incidents", "assessments", "vendors"] as const;
+  ].filter((k) => dsarOn || k !== "dsar") as readonly string[];
+  const coreItems = (["inventory", "dsar", "incidents", "assessments", "vendors"] as const).filter(
+    (k) => dsarOn || k !== "dsar"
+  );
   const premiumItems = ["assessments", "vendor", "catalog", "audit"] as const;
 
   return (

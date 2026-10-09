@@ -3,6 +3,7 @@
 
 import type { MetadataRoute } from "next";
 import { brand } from "@/config/brand";
+import { isDsarModuleEnabled } from "@/config/features";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = brand.appUrl;
@@ -27,12 +28,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/docs/dsar`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+    // Not listed when the rights-request module is off (src/config/features.ts).
+    ...(isDsarModuleEnabled()
+      ? [
+          {
+            url: `${baseUrl}/docs/dsar`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+          },
+        ]
+      : []),
     {
       url: `${baseUrl}/docs/assessments`,
       lastModified: now,

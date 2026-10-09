@@ -13,6 +13,7 @@ import type { FlowPageBatch } from "@/server/services/export/privacy-program/pag
 import { renderFlowGraphPng } from "@/server/services/export/flow-graph-pdf";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { locales, defaultLocale } from "@/i18n/config";
+import { isDsarModuleEnabled } from "@/config/features";
 
 function fmtDate(d: Date): string {
   return d.toISOString().split("T")[0]!;
@@ -57,6 +58,7 @@ export async function GET(request: Request) {
     ]);
 
     const now = new Date();
+    const dsarOn = isDsarModuleEnabled();
 
     const [
       assets,
@@ -92,23 +94,30 @@ export async function GET(request: Request) {
       prisma.dataFlow.findMany({
         where: { organizationId },
       }),
-      prisma.dSARRequest.count({
-        where: {
-          organizationId,
-          status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-        },
-      }),
-      prisma.dSARRequest.count({
-        where: {
-          organizationId,
-          status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-          dueDate: { lt: now },
-        },
-      }),
-      prisma.dSARRequest.findMany({
-        where: { organizationId, status: "COMPLETED" },
-        select: { dueDate: true, updatedAt: true },
-      }),
+      // No rights-request figures when the module is off.
+      dsarOn
+        ? prisma.dSARRequest.count({
+            where: {
+              organizationId,
+              status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+            },
+          })
+        : 0,
+      dsarOn
+        ? prisma.dSARRequest.count({
+            where: {
+              organizationId,
+              status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
+              dueDate: { lt: now },
+            },
+          })
+        : 0,
+      dsarOn
+        ? prisma.dSARRequest.findMany({
+            where: { organizationId, status: "COMPLETED" },
+            select: { dueDate: true, updatedAt: true },
+          })
+        : [],
       prisma.incident.count({
         where: { organizationId, status: { notIn: ["CLOSED", "FALSE_POSITIVE"] } },
       }),
@@ -179,6 +188,7 @@ export async function GET(request: Request) {
         openIncidents,
         activeAssessments,
       },
+      dsarModule: dsarOn,
     };
 
     // ── Build flow-map batches with production + participation filter ────────
