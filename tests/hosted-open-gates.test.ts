@@ -8,8 +8,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import en from "@/messages/en.json";
-import es from "@/messages/es.json";
 
 const mocks = vi.hoisted(() => ({
   prisma: {
@@ -372,12 +370,15 @@ describe("the export carries no gate of its own", () => {
 });
 
 describe("reaching a new DPIA", () => {
-  it("takes two clicks from the dashboard: the quick action, then Create", () => {
-    const dashboard = readFileSync(
-      path.resolve(__dirname, "..", "src/app/(dashboard)/privacy/page.tsx"),
+  it("takes two clicks from the dashboard: the documents panel, then Create", () => {
+    // The dashboard's documents panel links the DPIA's missing input straight
+    // to the form with the type chosen (the Classic quick action it replaces
+    // was retired with Classic, decision d11).
+    const register = readFileSync(
+      path.resolve(__dirname, "..", "src/config/document-register.ts"),
       "utf8"
     );
-    expect(dashboard).toContain('href="/privacy/assessments/new?type=DPIA"');
+    expect(register).toContain('dpiaStart: { href: "/privacy/assessments/new?type=DPIA" }');
 
     // The form opens on the details because the type comes from the query.
     const form = readFileSync(
@@ -385,14 +386,6 @@ describe("reaching a new DPIA", () => {
       "utf8"
     );
     expect(form).toContain('searchParams.get("type")');
-  });
-
-  it("offers the label in both languages", () => {
-    expect(en.pages.dashboard.quickActions.newDpia).toBeTruthy();
-    expect(es.pages.dashboard.quickActions.newDpia).toBeTruthy();
-    expect(es.pages.dashboard.quickActions.newDpia).not.toBe(
-      en.pages.dashboard.quickActions.newDpia
-    );
   });
 });
 

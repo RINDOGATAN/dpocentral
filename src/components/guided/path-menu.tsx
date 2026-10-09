@@ -15,7 +15,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Check, ChevronDown, Circle, CircleDashed, CircleDot, type LucideIcon } from "lucide-react";
+import { Check, ChevronDown, Circle, CircleDashed, CircleDot, Lock, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   currentLibraryId,
@@ -82,6 +82,12 @@ interface PathMenuProps<C> {
    * over the stages. Nothing when null or empty.
    */
   notYet?: { title: string; items: string[] } | null;
+  /**
+   * The ids of the steps shown with a small lock: a premium type the
+   * organisation is not entitled to, on a deployment that enforces licences
+   * (src/lib/menu-locks.ts). Empty on the hosted pilot.
+   */
+  lockedSteps?: readonly string[];
 }
 
 /**
@@ -119,6 +125,7 @@ export function PathMenu<C>({
   stepNotes = {},
   attention = [],
   notYet = null,
+  lockedSteps = [],
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode });
   const currentStep = currentStepId(config, pathname, search);
@@ -288,6 +295,7 @@ export function PathMenu<C>({
                     showProgress={showProgress}
                     note={showProgress ? stepNotes[step.id] : undefined}
                     current={step.id === currentStep}
+                    locked={lockedSteps.includes(step.id)}
                     className={itemBase}
                     idle={itemIdle}
                     active={itemActive}
@@ -425,6 +433,7 @@ function StepRow<C>({
   showProgress = true,
   note,
   current,
+  locked = false,
   className,
   idle,
   active,
@@ -438,6 +447,8 @@ function StepRow<C>({
   /** The quiet line under the label: the step's documents and their states. */
   note?: string;
   current: boolean;
+  /** A small lock beside the label: the step needs a licence here. */
+  locked?: boolean;
   className: string;
   idle: string;
   active: string;
@@ -473,7 +484,19 @@ function StepRow<C>({
         <step.icon className="size-3.5 shrink-0" aria-hidden="true" />
       )}
       <span className={WRAP_LABEL}>
-        <span className="block">{label}</span>
+        <span className="block">
+          {label}
+          {locked && (
+            <span
+              className="ml-1.5 inline-flex align-[-1px] text-muted-foreground"
+              title={t("requiresLicence")}
+              data-testid={`step-lock-${step.id}`}
+            >
+              <Lock className="size-3" aria-hidden="true" />
+              <span className="sr-only">{t("requiresLicence")}</span>
+            </span>
+          )}
+        </span>
         {note && (
           <span
             className="mt-0.5 block text-[11px] leading-snug text-muted-foreground"

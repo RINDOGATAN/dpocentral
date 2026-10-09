@@ -170,8 +170,14 @@ describe("the flag", () => {
 
 describe("menus, guided step, help and docs", () => {
   it("the menu entry is gated on the flag", () => {
-    expect(read("src/components/dashboard-shell.tsx")).toMatch(
-      /isDsarModuleEnabled\(\) && canHandleDsars !== false\s*\?\s*\[\{ href: "\/privacy\/dsar"/
+    // The one menu is the Guided path (Classic's top bar was retired,
+    // decision d11): its rights-request step goes when the module is off,
+    // and for a member who may not read requests.
+    expect(read("src/components/guided/path-config.ts")).toMatch(
+      /isDsarModuleEnabled\(\)\s*\?\s*FULL_PATH\s*:\s*withoutSteps\(FULL_PATH, \["dsar"\]\)/
+    );
+    expect(read("src/components/guided/guided-layout.tsx")).toContain(
+      "if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);"
     );
   });
 
@@ -204,7 +210,7 @@ describe("menus, guided step, help and docs", () => {
       "src/app/sitemap.ts",
       "src/app/(public)/docs/page.tsx",
       "src/app/(dashboard)/privacy/docs/page.tsx",
-      "src/app/(dashboard)/privacy/page.tsx",
+      "src/components/guided/guided-layout.tsx",
       "src/app/(dashboard)/privacy/reports/page.tsx",
       "src/components/pilot/pilot-status-card.tsx",
     ]) {

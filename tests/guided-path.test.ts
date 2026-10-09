@@ -113,8 +113,9 @@ describe("the shape of the path", () => {
       // guided-layout.tsx), not in the library: one client view, one place.
       "/privacy/clients",
     ]);
-    // The Classic top-bar entries (src/components/dashboard-shell.tsx) plus
-    // Settings. Every one must be reachable from Guided, once.
+    // The entries of the retired Classic top bar plus Settings (Classic was
+    // retired on 9 October 2026, decision d11). Every one must stay reachable
+    // from the one layout.
     const classic = [
       "/privacy/data-inventory",
       "/privacy/assessments",

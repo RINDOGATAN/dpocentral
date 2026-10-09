@@ -386,8 +386,8 @@ describe("d7: the Guided dashboard", () => {
   const home = read("src/app/(dashboard)/privacy/page.tsx");
   const guided = read("src/components/guided/guided-dashboard.tsx");
 
-  it("Guided renders the new dashboard; Classic keeps its own", () => {
-    expect(home).toContain("if (!classic) return <GuidedDashboard fromQuickstart={fromQuickstart} />;");
+  it("is the only dashboard (Classic retired, decision d11)", () => {
+    expect(home).toContain("return <GuidedDashboard fromQuickstart={fromQuickstart} />;");
   });
 
   it("keeps the figure, the areas, the documents, the next actions and the deadlines", () => {

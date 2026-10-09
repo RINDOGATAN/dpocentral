@@ -3,17 +3,15 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Guided layout (the default; Classic stays per browser for a while): a
- * slim top bar, the privacy program path as a left menu from the `lg`
- * breakpoint, and on smaller screens a one-line stage bar that opens the same
- * path in the side sheet.
- *
- * Only the chrome differs from Classic. The pages, the footer and the feedback
- * dialog are the ones Classic uses (see dashboard-shell.tsx).
+ * The dashboard layout (Guided, the only one since Classic was retired on
+ * 9 October 2026, owner's decision d11): a slim top bar, the privacy program
+ * path as a left menu from the `lg` breakpoint, and on smaller screens a
+ * one-line stage bar that opens the same path in the side sheet. The footer
+ * and the feedback dialog come from dashboard-shell.tsx.
  */
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -24,10 +22,10 @@ import {
   ChevronsLeft,
   ChevronsRight,
   LayoutDashboard,
-  LayoutPanelTop,
   LogOut,
   Menu,
   MessageSquareWarning,
+  Plus,
   User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,7 +42,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
-import { MENU_COOKIE, cookieAssignment } from "@/lib/skin";
+import { MENU_COOKIE, cookieAssignment } from "@/lib/menu-cookie";
 import { signOutOfSuite } from "@/lib/sign-out";
 import { features, isDsarModuleEnabled } from "@/config/features";
 import { brand } from "@/config/brand";
@@ -62,7 +60,10 @@ import { planDayText } from "./plan-text";
 import { useProgrammeOverview } from "./use-programme-overview";
 import { stepNoteText } from "./document-words";
 import { attentionStages, notYetEntries, stepDocumentRows } from "@/lib/programme-overview";
-import { useSkin } from "./skin-context";
+import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
+import { trpc } from "@/lib/trpc";
+import { lockedStepIds } from "@/lib/menu-locks";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 /** The path a department-limited member sees: no quick start. */
@@ -117,6 +118,11 @@ export function GuidedLayout({
   useProgramPathRefresh();
   const [collapsed, setCollapsedState] = useState(initialCollapsed);
   const [sheetOpen, setSheetOpen] = useState(false);
+  // "New organization" / "Add a client" from the switcher (the entry Classic's
+  // dashboard switcher had). The dialog lives here, not in the switcher, so
+  // closing the phone sheet does not close it.
+  const [addOrgOpen, setAddOrgOpen] = useState(false);
+  const router = useRouter();
 
   const setCollapsed = (next: boolean) => {
     setCollapsedState(next);
@@ -141,6 +147,14 @@ export function GuidedLayout({
     Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows)]),
   );
   const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
+  // A lock beside a step that leads to a premium type the organisation is not
+  // entitled to, by the pages' own rule; never on the hosted pilot, which
+  // therefore never asks (src/lib/menu-locks.ts).
+  const hosted = useHostedPilot();
+  const { data: entitled } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && !hosted },
+  );
   const fullMenuProps = {
     ...menuProps,
     stepNotes,
@@ -149,6 +163,7 @@ export function GuidedLayout({
       missing.length > 0
         ? { title: t("notYetGroup"), items: missing.map((entry) => td(`items.${entry.id}`)) }
         : null,
+    lockedSteps: lockedStepIds(menuProps.config, { entitledTypes: entitled?.entitledTypes, hosted }),
   };
 
   return (
@@ -199,7 +214,13 @@ export function GuidedLayout({
             </SheetTitle>
           </SheetHeader>
           <div className="px-3 pb-6 flex flex-col gap-4">
-            <OrganizationBlock onNavigate={() => setSheetOpen(false)} />
+            <OrganizationBlock
+              onNavigate={() => setSheetOpen(false)}
+              onAdd={() => {
+                setSheetOpen(false);
+                setAddOrgOpen(true);
+              }}
+            />
             <DepartmentSwitch />
             <PathMenu {...fullMenuProps} variant="sheet" onNavigate={() => setSheetOpen(false)} />
             <Button
@@ -231,7 +252,7 @@ export function GuidedLayout({
                 collapsed ? "px-2 py-3" : "px-3 py-4",
               )}
             >
-              {!collapsed && <OrganizationBlock />}
+              {!collapsed && <OrganizationBlock onAdd={() => setAddOrgOpen(true)} />}
               {!collapsed && (
                 <div className="mt-3">
                   <DepartmentSwitch />
@@ -283,65 +304,64 @@ export function GuidedLayout({
           {footer}
         </div>
       </div>
+
+      <NewOrganizationDialog
+        open={addOrgOpen}
+        onOpenChange={setAddOrgOpen}
+        onCreated={() => router.push("/privacy")}
+      />
     </div>
   );
 }
 
 /**
- * Top of the menu: the organisation. For a privacy professional with more than
- * one client, the client's name opens a switcher with every client, and "All
- * clients" leads to the client overview.
+ * Top of the menu: the organisation. Its name opens a switcher with every
+ * organisation the person belongs to and, at the foot, the way to add one
+ * ("Add a client" for a privacy professional, "New organization" otherwise;
+ * Classic offered it on its dashboard switcher to everyone). For a privacy
+ * professional, "All clients" leads to the client overview.
  */
-function OrganizationBlock({ onNavigate }: { onNavigate?: () => void }) {
+function OrganizationBlock({ onNavigate, onAdd }: { onNavigate?: () => void; onAdd: () => void }) {
   const { organization, organizations, setOrganization } = useOrganization();
   const { isProfessional } = useUserType();
   const t = useTranslations("guided");
-  const canSwitch = organizations.length > 1;
-
-  if (!canSwitch && !isProfessional) {
-    return (
-      <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2.5">
-        <Building2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-        <span className="min-w-0 truncate text-sm font-medium">{organization?.name}</span>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-1">
-      {canSwitch ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-secondary motion-safe:transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <Building2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-              <span className="flex min-w-0 flex-1 flex-col">
-                <span className="text-[11px] text-muted-foreground">{t("switchClient")}</span>
-                <span className="truncate text-sm font-medium">{organization?.name}</span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            className="flex min-h-11 w-full items-center gap-3 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-secondary motion-safe:transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            data-testid="organization-switcher"
+          >
+            <Building2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+            <span className="flex min-w-0 flex-1 flex-col">
+              <span className="text-[11px] text-muted-foreground">
+                {isProfessional ? t("switchClient") : t("switchOrganization")}
               </span>
-              <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="min-w-[240px]">
-            {organizations.map((org) => (
-              <DropdownMenuItem
-                key={org.id}
-                onClick={() => setOrganization(org)}
-                className={org.id === organization?.id ? "bg-primary/10 text-primary" : ""}
-              >
-                {org.name}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2.5">
-          <Building2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <span className="min-w-0 truncate text-sm font-medium">{organization?.name}</span>
-        </div>
-      )}
+              <span className="truncate text-sm font-medium">{organization?.name}</span>
+            </span>
+            <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="min-w-[240px]">
+          {organizations.map((org) => (
+            <DropdownMenuItem
+              key={org.id}
+              onClick={() => setOrganization(org)}
+              className={org.id === organization?.id ? "bg-primary/10 text-primary" : ""}
+            >
+              {org.name}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onAdd} className="flex items-center gap-2" data-testid="organization-add">
+            <Plus className="size-4" aria-hidden="true" />
+            {isProfessional ? t("addClient") : t("newOrganization")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isProfessional && (
         <Link
           href={ALL_CLIENTS_HREF}
@@ -356,10 +376,9 @@ function OrganizationBlock({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-/** The account: who is signed in, the way back to Classic, sign out. */
+/** The account: who is signed in, feedback on a phone, sign out. */
 function AccountMenu({ onFeedback }: { onFeedback: () => void }) {
   const { data: session } = useSession();
-  const { setSkin } = useSkin();
   const t = useTranslations("guided");
   const tn = useTranslations("nav");
 
@@ -381,11 +400,6 @@ function AccountMenu({ onFeedback }: { onFeedback: () => void }) {
           {tn("feedback")}
         </DropdownMenuItem>
         {/* Settings is in "Library and tools"; one place for it. */}
-        <DropdownMenuItem onClick={() => setSkin("classic")} className="flex items-center gap-2">
-          <LayoutPanelTop className="size-4" />
-          {t("layout.useClassic")}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             void signOutOfSuite();

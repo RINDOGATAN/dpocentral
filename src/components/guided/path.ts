@@ -79,6 +79,13 @@ export interface PathStep<C> {
    * limited to departments (src/lib/department-limit.ts).
    */
   orgWide?: boolean;
+  /**
+   * The premium assessment type the step leads to (src/lib/premium-gate.ts).
+   * On a deployment that enforces licences, the menu shows a small lock
+   * beside the step while the organisation is not entitled to that type
+   * (src/lib/menu-locks.ts). Never on the hosted pilot.
+   */
+  premiumType?: string;
 }
 
 /**

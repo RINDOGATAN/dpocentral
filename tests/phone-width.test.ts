@@ -81,14 +81,10 @@ describe("no sideways scrolling at phone width, signed in", () => {
    */
   it("pins no control to a pixel width without a phone form", () => {
     const allowed: Record<string, string> = {
-      "src/components/dashboard-shell.tsx w-[280px]":
-        "the navigation drawer: fixed position, off canvas, narrower than the phone",
       "src/components/guided/guided-layout.tsx w-[300px]":
         "the guided navigation drawer: fixed position, off canvas, narrower than the phone",
       "src/app/(dashboard)/privacy/docs/layout.tsx w-[280px]":
         "the user guide drawer: fixed position, off canvas, narrower than the phone",
-      "src/app/(dashboard)/privacy/page.tsx w-[240px]":
-        "the organisation menu: a portalled popover, positioned away from the edges by Radix",
       "src/app/(dashboard)/privacy/dsar/[id]/page.tsx w-[120px]":
         "a compact task status select; 120px leaves the task name room at 390px",
       "src/app/(dashboard)/privacy/experts/page.tsx w-[160px]":
@@ -366,7 +362,7 @@ describe("no sideways scrolling at phone width, signed in", () => {
   /**
    * The signed-in top bar has a fixed set of controls that must all stay on
    * one line at 360 px: the menu, the brand, "?", the language switch and
-   * Account (Guided) or sign-out (Classic). What overflows first is the widest
+   * Account. What overflows first is the widest
    * text, so on a phone the brand name hides to its logo mark and the language
    * switch shrinks to a two-letter code. The rendered proof is the e2e smoke
    * walk (e2e/smoke.spec.ts, "the top bar fits the phone at 360 and 390 px");
@@ -374,14 +370,11 @@ describe("no sideways scrolling at phone width, signed in", () => {
    */
   it("compacts the top bar so nothing overflows the phone", () => {
     const guided = readFileSync("src/components/guided/guided-layout.tsx", "utf8");
-    const classic = readFileSync("src/components/dashboard-shell.tsx", "utf8");
     const lang = readFileSync("src/components/ui/language-switcher.tsx", "utf8");
 
-    // The brand name hides below `sm` in both top bars (the logo mark stays).
-    expect(guided, "Guided brand name must hide below sm")
+    // The brand name hides below `sm` (the logo mark stays).
+    expect(guided, "brand name must hide below sm")
       .toContain('nameClassName="hidden sm:inline"');
-    expect(classic, "Classic brand name must hide below sm")
-      .toMatch(/className="hidden sm:inline"[^>]*>\{brand\.nameUppercase\}/);
 
     // The language switch shows a short code below `sm` and the full name from
     // `sm`, and stays labelled for screen readers.

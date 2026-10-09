@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { SignedInPilotBanner } from "@/components/pilot/pilot-shell";
-import { MENU_COOKIE, SKIN_COOKIE, parseMenuCollapsed, parseSkin } from "@/lib/skin";
+import { MENU_COOKIE, parseMenuCollapsed } from "@/lib/menu-cookie";
 
 export default async function DashboardLayout({
   children,
@@ -26,16 +26,14 @@ export default async function DashboardLayout({
     redirect(`/sign-in?${params.toString()}`);
   }
 
-  // The layout choice is a cookie, read here so the first paint is already in
-  // the chosen layout (src/lib/skin.ts). No cookie is Guided, so a new
-  // visitor's very first render is already Guided.
+  // Whether the left menu is collapsed is a cookie, read here so the first
+  // paint is already right (src/lib/menu-cookie.ts).
   const cookieStore = await cookies();
-  const skin = parseSkin(cookieStore.get(SKIN_COOKIE)?.value);
   const menuCollapsed = parseMenuCollapsed(cookieStore.get(MENU_COOKIE)?.value);
 
   return (
     <>
-      <DashboardShell skin={skin} menuCollapsed={menuCollapsed}>
+      <DashboardShell menuCollapsed={menuCollapsed}>
         {children}
       </DashboardShell>
       {/* The pilot banner is shown only once a person is signed in */}

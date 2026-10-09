@@ -16,8 +16,8 @@
  *
  * Every reading comes from src/lib/programme-overview.ts over the document
  * register (src/config/document-register.ts) and the path, the same readings
- * the Guided menu makes, so the two cannot disagree. Classic keeps its own
- * dashboard (src/app/(dashboard)/privacy/page.tsx) until it is retired.
+ * the Guided menu makes, so the two cannot disagree. Since Classic was
+ * retired (9 October 2026, decision d11) this is the only dashboard.
  */
 
 import { useState } from "react";

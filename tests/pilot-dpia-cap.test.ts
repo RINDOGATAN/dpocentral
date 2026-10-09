@@ -162,10 +162,10 @@ describe("DPIAs on the hosted pilot tier", () => {
     const read = (p: string) => readFileSync(path.resolve(__dirname, "..", p), "utf8");
     const note = read("src/components/pilot/dpia-free-note.tsx");
     expect(note).toContain("href={plansUrl(locale)}");
-    // The type card, the form, and the quick action all carry the note.
+    // The type card and the form carry the note (the Classic dashboard's
+    // quick action that also carried it was retired, decision d11).
     const form = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
     expect(form.match(/<DpiaFreeNote/g)?.length).toBe(2);
-    expect(read("src/app/(dashboard)/privacy/page.tsx")).toContain("<DpiaFreeNote");
   });
 
   it("the refusal comes through the tRPC error with the link, in Spanish too", async () => {

@@ -133,18 +133,11 @@ describe("the new-assessment page on a refusal", () => {
   });
 });
 
-describe("the Guided home's quick action", () => {
-  it("labels the DPIA when it is gated, by the shared lock rule", () => {
-    const home = read("src/app/(dashboard)/privacy/page.tsx");
-    expect(home).toContain('isAssessmentTypeLocked({ type: "DPIA"');
-    expect(home).toMatch(/dpiaGated && \([\s\S]{0,600}quickActions\.premium/);
-  });
-
+describe("the gated-type labels", () => {
   it("ships the labels in English and Spanish", () => {
     for (const bundle of [en, es]) {
       expect(bundle.pages.newAssessment.typeCardLockedLabel).toContain("{name}");
       expect(bundle.pages.newAssessment.typeGatedNotice).toContain("{name}");
-      expect(bundle.pages.dashboard.quickActions.premium).toBeTruthy();
     }
   });
 });

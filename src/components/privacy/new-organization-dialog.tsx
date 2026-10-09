@@ -3,10 +3,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The one "new organisation" dialog: a blank client with only a name. Used by
- * Classic's switcher on the dashboard and by "Add a client" on All clients
- * (the Guided way in, where Classic's switcher is not shown). Starting a client
- * from another one is a different dialog (copy-from-client-dialog.tsx).
+ * The one "new organisation" dialog: a blank client with only a name. Opened
+ * from the left menu's organisation switcher ("New organization" or "Add a
+ * client") and by "Add a client" on All clients. Starting a client from
+ * another one is a different dialog (copy-from-client-dialog.tsx).
  */
 
 import { useState } from "react";

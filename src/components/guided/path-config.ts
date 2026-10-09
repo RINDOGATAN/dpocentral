@@ -262,6 +262,9 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "assessments",
           href: "/privacy/assessments",
           icon: ClipboardCheck,
+          // The DPIA is the step's headline document and a premium type: the
+          // lock Classic's "Start a DPIA" quick action carried moves here.
+          premiumType: "DPIA",
           rule: "Done when at least one assessment is approved (DPIA, PIA and screening). Started when any assessment exists.",
           status: (c) =>
             c.assessmentsApproved > 0 ? "done" : c.assessments > 0 ? "started" : "todo",
@@ -279,6 +282,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // review state. The page reads the view where it is wired; the menu
           // marks this step whichever way the page renders it.
           href: "/privacy/vendors?view=due-diligence",
+          // Vendor assessments are a premium type on the kit.
+          premiumType: "VENDOR",
           icon: FileCheck2,
           rule: "Done when every vendor has a completed due-diligence assessment. Started when any vendor assessment exists.",
           status: (c) =>
@@ -354,7 +359,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
   // "All clients" is the one client view in Guided, and it sits once, at the
   // top of the menu (the client switcher block in guided-layout.tsx). It is
   // deliberately NOT repeated here under "Library and tools".
-  // "Library and tools": every Classic entry that is not a step, once.
+  // "Library and tools": every entry of the retired Classic menus that is not
+  // a step, once (tests/guided-path.test.ts keeps it so).
   library: ({ stripeEnabled }) => [
     // The two ready lists (stage 4): what is waiting, and what is unfinished.
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },

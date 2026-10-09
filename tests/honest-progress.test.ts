@@ -268,7 +268,7 @@ describe("d3: one programme figure", () => {
     expect(menu).toMatch(/programFigure\(config, statuses\)/);
     expect(menu).toMatch(/t\("figure\.line"/);
     expect(menu).not.toMatch(/overallPercent/);
-    const dashboard = read("src/app/(dashboard)/privacy/page.tsx");
+    const dashboard = read("src/components/guided/guided-dashboard.tsx");
     expect(dashboard).toMatch(/<ProgramFigureCard \/>/);
     const clients = read("src/app/(dashboard)/privacy/clients/page.tsx");
     expect(clients).toMatch(/<ProgramFigureLine figure=\{figure\}/);
@@ -341,13 +341,6 @@ describe("d8: the quick start asks where the organisation operates", () => {
 });
 
 describe("small items from the step-1 browser check", () => {
-  it("quick actions wrap their labels instead of cutting them", () => {
-    const home = read("src/app/(dashboard)/privacy/page.tsx");
-    const block = home.slice(home.indexOf('tp("quickActions.title")'), home.indexOf('tp("quickActions.quickstart")') + 80);
-    expect(block).not.toMatch(/<span className="truncate">/);
-    expect(block.match(/whitespace-normal/g)?.length).toBeGreaterThanOrEqual(6);
-  });
-
   it("the incidents list shows the short INC- reference, the full id only in the tooltip", () => {
     const list = read("src/app/(dashboard)/privacy/incidents/page.tsx");
     expect(list).not.toMatch(/>\{incident\.publicId\}</);

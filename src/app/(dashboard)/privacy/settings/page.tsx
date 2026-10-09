@@ -37,7 +37,6 @@ import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
-import { LayoutCard } from "@/components/guided/layout-card";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { writeLocaleCookie } from "@/i18n/locale-cookie";
@@ -169,10 +168,6 @@ export default function SettingsPage() {
 
       {/* Hosted pilot: days left, ceilings, exports (hidden on the kit) */}
       {orgId && <PilotStatusCard organizationId={orgId} />}
-
-      {/* Layout: Guided (default) or Classic (will be retired). A per-browser
-          choice; the change applies at once. */}
-      <LayoutCard />
 
       {/* Profile */}
       <Card>
