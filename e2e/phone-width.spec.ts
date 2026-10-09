@@ -94,10 +94,11 @@ test("the Guided screens fit a 390 px phone", async ({ page }, testInfo) => {
   await expect(page.getByTestId("record-header")).toBeVisible();
   await expectNoSidewaysScroll(page, "asset page");
 
-  // The Guided home, with both counts named.
+  // The Guided home: the six areas and the documents panel (decision d7
+  // replaced the counters), the records of processing drafted by the quick start.
   await page.goto("/privacy");
-  await expect(page.getByTestId("kpi-assets")).toHaveText(/^\d+ assets?$/);
-  await expect(page.getByTestId("kpi-activities")).toHaveText(/^[1-9]\d* activit(y|ies)$/);
+  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(6);
+  await expect(page.getByTestId("doc-ropa")).toHaveAttribute("data-state", "draft");
   await expectNoSidewaysScroll(page, "Guided home");
 
   // The path, as a phone opens it.
