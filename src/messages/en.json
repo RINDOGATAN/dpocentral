@@ -8896,9 +8896,9 @@
         "do": "Record incidents in the register and watch the 72-hour clock."
       },
       "audits": {
-        "label": "Report to management",
+        "label": "Executive report",
         "why": "Tell the board or management where the programme stands.",
-        "do": "Produce the board report for a period and add your comment."
+        "do": "Produce the executive report for a period and add your comment."
       }
     },
     "library": {
@@ -9462,7 +9462,7 @@
       "trainingRecord": "Staff training record",
       "consentRecords": "Notices and consent records",
       "responseLetter": "Response letter to a rights request",
-      "boardReport": "Board report"
+      "boardReport": "Executive report"
     },
     "notYetLine": "Not in DPO Central yet: {names}",
     "missing": {
@@ -9479,7 +9479,7 @@
     }
   },
   "boardReport": {
-    "title": "Board report",
+    "title": "Executive report",
     "subtitle": "A short report for the board or management, from the data in DPO Central, for the period you choose.",
     "period": {
       "label": "Period",
@@ -9497,13 +9497,13 @@
     "scopeNote": "Incidents and rights requests are counted for the period. Every other figure is as on the date generated.",
     "disclaimer": "This report states facts recorded in DPO Central. It is not legal advice and does not state that the organisation complies with any law.",
     "download": "Download PDF",
-    "downloadLabel": "Download the board report as PDF in {language}",
+    "downloadLabel": "Download the executive report as PDF in {language}",
     "downloadOther": "PDF in {language}",
     "language": {
       "en": "English",
       "es": "Spanish"
     },
-    "limited": "The board report covers the whole organisation. Ask an owner or an admin for it.",
+    "limited": "The executive report covers the whole organisation. Ask an owner or an admin for it.",
     "programme": {
       "title": "The programme",
       "colArea": "Area",
@@ -9584,9 +9584,24 @@
       "none": "No comment."
     },
     "pdf": {
-      "fileTitle": "Board-Report",
+      "fileTitle": "Executive-Report",
       "preparedWith": "Prepared with DPO Central",
       "page": "Page {page} of {total}"
+    },
+    "kpi": {
+      "title": "At a glance",
+      "ofTotal": "of {total}",
+      "programme": "steps confirmed",
+      "documents": "documents ready",
+      "breaches": "breaches notified to the authority within 72 hours",
+      "breachesNone": "no notifiable breaches in the period",
+      "breachesFlag": "{count} late or not notified yet",
+      "rights": "rights requests completed on time",
+      "rightsNone": "no rights requests completed in the period",
+      "rightsFlag": "{count} open and overdue",
+      "vendors": "vendors with a data processing agreement",
+      "vendorsNone": "no confirmed vendors",
+      "vendorsFlag": "{count} high or critical risk without one"
     }
   }
 }

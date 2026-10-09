@@ -8,7 +8,8 @@
  * skipped against any other database). It checks:
  *
  * - the dashboard's documents panel and the menu line under "Report to
- *   management" call the board report ready, with its PDF;
+ *   management" (now "Executive report") call the report ready, with its PDF;
+ * - "At a glance" at the top: the programme ring and the four figures;
  * - the page shows the period (the last full quarter by default), the
  *   programme figure and the six areas, documents, incidents notified within
  *   72 hours, rights requests, vendors, assessments, risks and actions;
@@ -184,10 +185,10 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const closed = menu.locator("button[aria-expanded='false']");
   for (let guard = 0; guard < 10 && (await closed.count()) > 0; guard++) await closed.first().click();
   await expect(menu.getByTestId("step-docs-audits")).toContainText(
-    es ? "Informe para la dirección · listo" : "Board report · ready",
+    es ? "Informe ejecutivo · listo" : "Executive report · ready",
   );
-  await expect(menu.getByTestId("menu-not-yet")).not.toContainText(es ? "Informe para la dirección" : "Board report");
-  await menu.getByRole("link", { name: es ? /Informe a la dirección/ : /Report to management/ }).first().click();
+  await expect(menu.getByTestId("menu-not-yet")).not.toContainText(es ? "Informe ejecutivo" : "Executive report");
+  await menu.getByRole("link", { name: es ? /Informe ejecutivo/ : /Executive report/ }).first().click();
   await page.waitForURL("**/privacy/board-report**");
 
   // The page.
@@ -195,6 +196,18 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await expect(report).toBeVisible();
   await expect(page.getByTestId("board-period-line")).toContainText(es ? "Periodo: del 1 de" : "Period: 1 ");
   await expect(page.getByTestId("board-figure")).toContainText(es ? "pasos confirmados" : "steps confirmed");
+  await expect(page.getByRole("heading", { level: 1, name: es ? "Informe ejecutivo" : "Executive report" })).toBeVisible();
+  // At a glance: one breach of two notifiable within 72 hours, one request of one on time, one vendor of two with a DPA.
+  const kpis = page.getByTestId("board-kpis");
+  await expect(kpis).toContainText(es ? "De un vistazo" : "At a glance");
+  await expect(page.getByTestId("board-kpi-breaches-value")).toHaveText("1");
+  await expect(page.getByTestId("board-kpi-breaches")).toContainText(es ? "de 2" : "of 2");
+  await expect(page.getByTestId("board-kpi-breaches-flag")).toContainText(es ? "1 fuera de plazo o sin notificar" : "1 late or not notified yet");
+  await expect(page.getByTestId("board-kpi-rights")).toContainText(es ? "de 1" : "of 1");
+  await expect(page.getByTestId("board-kpi-rights-flag")).toBeVisible();
+  await expect(page.getByTestId("board-kpi-vendors-flag")).toContainText(
+    es ? "1 de riesgo alto o crítico sin ese contrato" : "1 high or critical risk without one",
+  );
   await expect(page.getByTestId("board-programme").locator("dt")).toHaveCount(6);
   const incidents = page.getByTestId("board-incidents");
   await expect(incidents).toContainText(es ? "Notificados a la autoridad en 72 horas" : "Notified to the authority within 72 hours");
@@ -243,6 +256,7 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
     const pages = (body.toString("latin1").match(/\/Type\s*\/Page(?!s)/g) ?? []).length;
     expect(pages, `${lang} PDF pages`).toBeGreaterThanOrEqual(2);
     expect(pages, `${lang} PDF pages`).toBeLessThanOrEqual(3);
-    if (SHOTS) writeFileSync(`${SHOTS}/${project}-${LOCALE}-board-report-${lang}.pdf`, body);
+    expect(response.headers()["content-disposition"]).toContain(lang === "es" ? "Informe-Ejecutivo-" : "Executive-Report-");
+    if (SHOTS) writeFileSync(`${SHOTS}/${project}-${LOCALE}-executive-report-${lang}.pdf`, body);
   }
 });

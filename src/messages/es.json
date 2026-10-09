@@ -8896,9 +8896,9 @@
         "do": "Registra los incidentes en el registro y vigila el plazo de 72 horas."
       },
       "audits": {
-        "label": "Informe a la dirección",
+        "label": "Informe ejecutivo",
         "why": "Explica al consejo o a la dirección en qué punto está el programa.",
-        "do": "Genera el informe para la dirección de un periodo y añade tu comentario."
+        "do": "Genera el informe ejecutivo de un periodo y añade tu comentario."
       }
     },
     "library": {
@@ -9462,7 +9462,7 @@
       "trainingRecord": "Registro de formación del personal",
       "consentRecords": "Avisos y registros de consentimiento",
       "responseLetter": "Carta de respuesta a una solicitud de derechos",
-      "boardReport": "Informe para la dirección"
+      "boardReport": "Informe ejecutivo"
     },
     "notYetLine": "Aún no en DPO Central: {names}",
     "missing": {
@@ -9479,7 +9479,7 @@
     }
   },
   "boardReport": {
-    "title": "Informe para la dirección",
+    "title": "Informe ejecutivo",
     "subtitle": "Un informe breve para el consejo o la dirección, con los datos de DPO Central, del periodo que elijas.",
     "period": {
       "label": "Periodo",
@@ -9497,13 +9497,13 @@
     "scopeNote": "Los incidentes y las solicitudes de derechos se cuentan dentro del periodo. Las demás cifras son las de la fecha de generación.",
     "disclaimer": "Este informe recoge hechos registrados en DPO Central. No es asesoramiento jurídico ni afirma que la organización cumpla ninguna norma.",
     "download": "Descargar PDF",
-    "downloadLabel": "Descargar el informe para la dirección en PDF en {language}",
+    "downloadLabel": "Descargar el informe ejecutivo en PDF en {language}",
     "downloadOther": "PDF en {language}",
     "language": {
       "en": "inglés",
       "es": "español"
     },
-    "limited": "El informe para la dirección abarca toda la organización. Pídeselo a un propietario o a un administrador.",
+    "limited": "El informe ejecutivo abarca toda la organización. Pídeselo a un propietario o a un administrador.",
     "programme": {
       "title": "El programa",
       "colArea": "Área",
@@ -9584,9 +9584,24 @@
       "none": "Sin comentario."
     },
     "pdf": {
-      "fileTitle": "Informe-Direccion",
+      "fileTitle": "Informe-Ejecutivo",
       "preparedWith": "Preparado con DPO Central",
       "page": "Página {page} de {total}"
+    },
+    "kpi": {
+      "title": "De un vistazo",
+      "ofTotal": "de {total}",
+      "programme": "pasos confirmados",
+      "documents": "documentos listos",
+      "breaches": "brechas notificadas a la autoridad en 72 horas",
+      "breachesNone": "ninguna brecha notificable en el periodo",
+      "breachesFlag": "{count, plural, one {# fuera de plazo o sin notificar} other {# fuera de plazo o sin notificar}}",
+      "rights": "solicitudes de derechos completadas en plazo",
+      "rightsNone": "ninguna solicitud completada en el periodo",
+      "rightsFlag": "{count, plural, one {# abierta y vencida} other {# abiertas y vencidas}}",
+      "vendors": "proveedores con contrato de encargo del tratamiento",
+      "vendorsNone": "ningún proveedor confirmado",
+      "vendorsFlag": "{count} de riesgo alto o crítico sin ese contrato"
     }
   }
 }

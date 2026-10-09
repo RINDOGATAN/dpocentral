@@ -7,7 +7,7 @@
  *
  * - the period: the last full quarter by default, presets, and what is refused;
  * - the register: ready with one confirmed step, otherwise it needs one; the
- *   menu line under "Report to management"; the step is optional, so the
+ *   menu line under "Executive report"; the step is optional, so the
  *   programme figure does not move;
  * - the readings: the top three risks or gaps, the next three actions with an
  *   owner and a date;
@@ -154,7 +154,7 @@ describe("the register and the menu (d12)", () => {
     expect(notYetEntries({ dsarEnabled: true }).map((e) => e.id)).not.toContain("boardReport");
   });
 
-  it("has its line under the step 'Report to management', which opens the page and is never counted", () => {
+  it("has its line under the step 'Executive report', which opens the page and is never counted", () => {
     const step = DPO_CENTRAL_PATH.stages.flatMap((s) => s.steps).find((s) => s.id === "audits")!;
     expect(step.href).toBe("/privacy/board-report");
     expect(step.optional).toBe(true);
@@ -169,8 +169,8 @@ describe("the register and the menu (d12)", () => {
     const docs = evaluateRegister(registerFor({ dsarEnabled: true }), counts);
     const statuses = evaluatePath(DPO_CENTRAL_PATH, counts);
     expect(stepDocumentRows(DPO_CENTRAL_PATH, statuses, docs).audits.map((r) => r.entry.id)).toEqual(["boardReport"]);
-    expect(en.guided.steps.audits.label).toBe("Report to management");
-    expect(es.guided.steps.audits.label).toBe("Informe a la dirección");
+    expect(en.guided.steps.audits.label).toBe("Executive report");
+    expect(es.guided.steps.audits.label).toBe("Informe ejecutivo");
   });
 });
 
@@ -417,7 +417,7 @@ const SAMPLE: BoardReport = {
 describe("the words, the same on the page and in the PDF", () => {
   it("reads in English", () => {
     const text = boardReportText(SAMPLE, tr(en, "en"), "en");
-    expect(text.title).toBe("Board report");
+    expect(text.title).toBe("Executive report");
     expect(text.periodLine).toBe("Period: 1 July 2026 to 30 September 2026");
     expect(text.generatedLine).toBe("Generated on 9 October 2026");
     expect(text.programme.figure).toBe("4 of 10 steps confirmed");
@@ -430,7 +430,7 @@ describe("the words, the same on the page and in the PDF", () => {
       "not started",
     ]);
     expect(text.documents.line).toBe("2 of 4 documents ready");
-    expect(text.documents.ready).toEqual(["Regulatory report", "Board report"]);
+    expect(text.documents.ready).toEqual(["Regulatory report", "Executive report"]);
     expect(text.documents.missing).toEqual([
       { label: "Vendor register", value: "draft (1 record to confirm)" },
       { label: "Records of processing (ROPA)", value: "needs: a processing activity" },
@@ -447,7 +447,7 @@ describe("the words, the same on the page and in the PDF", () => {
 
   it("reads in Spanish (Castilian)", () => {
     const text = boardReportText(SAMPLE, tr(es, "es"), "es");
-    expect(text.title).toBe("Informe para la dirección");
+    expect(text.title).toBe("Informe ejecutivo");
     expect(text.periodLine).toBe("Periodo: del 1 de julio de 2026 al 30 de septiembre de 2026");
     expect(text.programme.figure).toBe("4 de 10 pasos confirmados");
     expect(text.assessments.rows[0][0]).toBe("Evaluaciones de impacto (EIPD)");
@@ -466,6 +466,47 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(es.boardReport.disclaimer).toContain("No es asesoramiento jurídico");
   });
 
+  it("names the report 'Executive report' / 'Informe ejecutivo' everywhere, the board still named in the subtitle", () => {
+    expect(en.documentRegister.items.boardReport).toBe("Executive report");
+    expect(es.documentRegister.items.boardReport).toBe("Informe ejecutivo");
+    expect(en.boardReport.pdf.fileTitle).toBe("Executive-Report");
+    expect(es.boardReport.pdf.fileTitle).toBe("Informe-Ejecutivo");
+    expect(en.boardReport.subtitle).toContain("the board or management");
+    expect(es.boardReport.subtitle).toContain("el consejo o la dirección");
+    for (const bundle of [en, es]) {
+      expect(JSON.stringify(bundle.boardReport)).not.toMatch(/board report|informe para la dirección/i);
+    }
+  });
+
+  it("at a glance: the programme figure as the hero, then four figures with a bar and a warning where needed", () => {
+    const k = boardReportText(SAMPLE, tr(en, "en"), "en").kpis;
+    expect(k.title).toBe("At a glance");
+    expect(k.hero).toMatchObject({ value: "4", of: "of 10", label: "steps confirmed", ratio: 0.4 });
+    expect(k.tiles.map((t) => [t.id, t.value, t.of, t.ratio, t.flag])).toEqual([
+      ["documents", "2", "of 4", 0.5, null],
+      ["breaches", "1", "of 2", 0.5, "1 late or not notified yet"],
+      ["rights", "3", "of 4", 0.75, "1 open and overdue"],
+      ["vendors", "4", "of 6", 4 / 6, "1 high or critical risk without one"],
+    ]);
+    const es1 = boardReportText(SAMPLE, tr(es, "es"), "es").kpis;
+    expect(es1.title).toBe("De un vistazo");
+    expect(es1.tiles[1].label).toBe("brechas notificadas a la autoridad en 72 horas");
+    expect(es1.tiles[2].flag).toBe("1 abierta y vencida");
+  });
+
+  it("at a glance: no rights tile without the module; plain words when there is nothing to count", () => {
+    const empty: BoardReport = {
+      ...SAMPLE,
+      rights: null,
+      incidents: { inPeriod: 1, notifiedWithin72h: 0, notifiedLate: 0, notNotifiedYet: 0, openNow: 0 },
+      vendors: { total: 0, withDpa: 0, highRiskWithoutDpa: 0, drafts: 0 },
+    };
+    const k = boardReportText(empty, tr(en, "en"), "en").kpis;
+    expect(k.tiles.map((t) => t.id)).toEqual(["documents", "breaches", "vendors"]);
+    expect(k.tiles[1]).toMatchObject({ value: "0", of: null, ratio: null, label: "no notifiable breaches in the period" });
+    expect(k.tiles[2]).toMatchObject({ value: "0", of: null, ratio: null, label: "no confirmed vendors" });
+  });
+
   it("formats dates in UTC so a day never shifts", () => {
     expect(formatBoardDate("2026-07-01", "en")).toBe("1 July 2026");
     expect(formatBoardDate("2026-07-01", "es")).toBe("1 de julio de 2026");
@@ -477,7 +518,7 @@ describe("the words, the same on the page and in the PDF", () => {
       const text = boardReportText(SAMPLE, tr(bundle as typeof en, locale), locale);
       const doc = BoardReportDocument({ text, locale, pageLabel: (p, t) => `${p}/${t}`, preparedWith: "x" });
       const printed = collectText(doc).join("\n");
-      for (const line of [text.periodLine, text.programme.figure, text.documents.line, text.disclaimer, text.comment.text!]) {
+      for (const line of [text.periodLine, text.programme.figure, text.documents.line, text.disclaimer, text.comment.text!, text.kpis.title, ...text.kpis.tiles.map((k) => k.label)]) {
         expect(printed).toContain(line);
       }
       for (const row of text.actions.rows) expect(printed).toContain(row.owner);

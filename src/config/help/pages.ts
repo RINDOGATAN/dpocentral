@@ -203,7 +203,7 @@ export const PAGE_HELP: PageHelp[] = [
   },
   {
     route: "/privacy/board-report",
-    title: L("Board report", "Informe para la dirección"),
+    title: L("Executive report", "Informe ejecutivo"),
     purpose: L(
       "A short report for the board or management on where the privacy programme stands in a period: the programme figure, documents, incidents, rights requests, vendors, assessments, the main gaps and the next actions. It is built from the records you already keep; it states facts and gives no legal advice.",
       "Un informe breve para el consejo o la dirección sobre en qué punto está el programa de privacidad en un periodo: la cifra del programa, los documentos, los incidentes, las solicitudes de derechos, los proveedores, las evaluaciones, las principales carencias y las próximas acciones. Se genera con los registros que ya mantienes; recoge hechos y no es asesoramiento jurídico.",

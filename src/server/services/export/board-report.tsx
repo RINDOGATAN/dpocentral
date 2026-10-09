@@ -17,10 +17,10 @@
 
 import React from "react";
 import path from "node:path";
-import { Document, Font, Page, Text, View } from "@react-pdf/renderer";
+import { Circle, Document, Font, Page, Path, Svg, Text, View } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
 import { brand } from "@/config/brand";
-import type { BoardReportText, Row } from "@/lib/board-report-text";
+import type { BoardReportText, Kpi, Row } from "@/lib/board-report-text";
 
 // ── Fonts: the leaflets' own (SIL OFL, vendored in ./fonts) ─────────────
 const fontsDir = path.join(process.cwd(), "src/server/services/export/fonts");
@@ -49,6 +49,10 @@ const HAIR = "#e0e5e7";
 const TINT = "#f0f8fa";
 /** The accent's own hairline inside a tinted box. */
 const TINT_HAIR = "#d3e7ee";
+
+/** The one warning tone: text #92400e (7.0:1 on white) with a #d97706 mark, as the other reports. */
+const WARN_TEXT = "#92400e";
+const WARN_MARK = "#d97706";
 
 const RADIUS = 12;
 
@@ -177,6 +181,78 @@ function BoxRow({ children }: { children: React.ReactNode[] }) {
   );
 }
 
+// ── "At a glance": the main figures, presiding over the report ──────────
+
+/** The SVG path of an arc on a circle, from 12 o'clock, clockwise, `ratio` of the way round. */
+function arcPath(cx: number, cy: number, r: number, ratio: number): string {
+  const a = Math.min(0.9999, Math.max(0, ratio)) * 2 * Math.PI;
+  const x = cx + r * Math.sin(a);
+  const y = cy - r * Math.cos(a);
+  return `M ${cx} ${cy - r} A ${r} ${r} 0 ${a > Math.PI ? 1 : 0} 1 ${x.toFixed(2)} ${y.toFixed(2)}`;
+}
+
+function HeroRing({ kpi }: { kpi: Kpi }) {
+  const size = 76;
+  const stroke = 8;
+  const r = (size - stroke) / 2;
+  return (
+    <View style={{ width: 96, alignItems: "center" }}>
+      <View style={{ width: size, height: size }}>
+        <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <Circle cx={size / 2} cy={size / 2} r={r} stroke={HAIR} strokeWidth={stroke} fill="none" />
+          {(kpi.ratio ?? 0) > 0 && (
+            <Path d={arcPath(size / 2, size / 2, r, kpi.ratio ?? 0)} stroke={ACCENT} strokeWidth={stroke} strokeLinecap="round" fill="none" />
+          )}
+        </Svg>
+        <View style={{ position: "absolute", top: 0, left: 0, width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ fontFamily: "Archivo Black", fontSize: 22, color: INK }}>{kpi.value}</Text>
+          {kpi.of && <Text style={{ fontSize: 8.5, fontWeight: 500, color: MUTED, marginTop: -2 }}>{kpi.of}</Text>}
+        </View>
+      </View>
+      <Text style={{ fontSize: 8.5, fontWeight: 600, color: INK, marginTop: 5, textAlign: "center" }}>{kpi.label}</Text>
+    </View>
+  );
+}
+
+function Tile({ kpi }: { kpi: Kpi }) {
+  return (
+    <View style={{ paddingVertical: 2 }}>
+      <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+        <Text style={{ fontFamily: "Archivo Black", fontSize: 18, color: INK, lineHeight: 1 }}>{kpi.value}</Text>
+        {kpi.of && <Text style={{ fontSize: 9, fontWeight: 500, color: MUTED, marginLeft: 4, marginBottom: 1 }}>{kpi.of}</Text>}
+      </View>
+      <Text style={{ fontSize: 8, color: MUTED, marginTop: 3 }}>{kpi.label}</Text>
+      {kpi.ratio !== null && (
+        <View style={{ height: 4, backgroundColor: HAIR, borderRadius: 2, marginTop: 5 }}>
+          <View style={{ height: 4, width: `${Math.round(kpi.ratio * 100)}%`, backgroundColor: ACCENT, borderRadius: 2 }} />
+        </View>
+      )}
+      {kpi.flag && (
+        <View style={{ flexDirection: "row", alignItems: "flex-start", marginTop: 5 }}>
+          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: WARN_MARK, marginRight: 4, marginTop: 2.5 }} />
+          <Text style={{ flex: 1, fontSize: 7.6, fontWeight: 600, color: WARN_TEXT }}>{kpi.flag}</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function KpiStrip({ kpis }: { kpis: BoardReportText["kpis"] }) {
+  return (
+    <View style={{ marginTop: 12, borderWidth: 1, borderColor: HAIR, borderRadius: RADIUS, paddingVertical: 11, paddingHorizontal: 14 }} wrap={false}>
+      <Text style={{ ...label, marginBottom: 6 }}>{kpis.title}</Text>
+      <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+        <HeroRing kpi={kpis.hero} />
+        {kpis.tiles.map((kpi) => (
+          <View key={kpi.id} style={{ flex: 1, marginLeft: 10, paddingLeft: 10, borderLeftWidth: 1, borderLeftColor: HAIR, alignSelf: "stretch" }}>
+            <Tile kpi={kpi} />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export function BoardReportDocument({
   text,
   locale,
@@ -268,17 +344,19 @@ export function BoardReportDocument({
         </View>
 
         {/* The name block and the period. */}
-        <View style={{ marginTop: 6 }}>
+        <View style={{ marginTop: 2 }}>
           <Text style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2.4, textTransform: "uppercase", color: ACCENT_DEEP }}>
             {t.organization}
           </Text>
-          <Text style={{ fontFamily: "Archivo Black", fontSize: 26, lineHeight: 1.05, textTransform: "uppercase", color: INK, marginTop: 4 }}>
+          <Text style={{ fontFamily: "Archivo Black", fontSize: 24, lineHeight: 1.05, textTransform: "uppercase", color: INK, marginTop: 4 }}>
             {t.title}
           </Text>
-          <Text style={{ fontSize: 12.5, fontWeight: 500, color: INK, marginTop: 8 }}>{t.periodLine}</Text>
+          <Text style={{ fontSize: 12, fontWeight: 500, color: INK, marginTop: 6 }}>{t.periodLine}</Text>
           <Text style={{ fontSize: 10, color: MUTED, marginTop: 2 }}>{t.generatedLine}</Text>
-          <Text style={{ fontSize: 8.5, color: MUTED, marginTop: 6 }}>{t.scopeNote}</Text>
+          <Text style={{ fontSize: 8.5, color: MUTED, marginTop: 4 }}>{t.scopeNote}</Text>
         </View>
+
+        <KpiStrip kpis={t.kpis} />
 
         {pairs.map((pair, i) => (
           <BoxRow key={i}>{pair}</BoxRow>

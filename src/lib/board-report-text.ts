@@ -30,8 +30,25 @@ export interface Row {
   value: string;
 }
 
+/**
+ * One indicator of the "At a glance" strip. `value` is the big number, `of`
+ * the "of M" beside it (null when there is nothing to count), `ratio` the
+ * share the bar or ring fills (0 to 1; null: no bar), `flag` a short warning
+ * in words when something needs attention (shown in the one warning tone).
+ */
+export interface Kpi {
+  id: "programme" | "documents" | "breaches" | "rights" | "vendors";
+  value: string;
+  of: string | null;
+  label: string;
+  ratio: number | null;
+  flag: string | null;
+}
+
 export interface BoardReportText {
   title: string;
+  /** The indicators at the top: the programme figure as the hero, then up to four tiles. */
+  kpis: { title: string; hero: Kpi; tiles: Kpi[] };
   organization: string;
   periodLine: string;
   generatedLine: string;
@@ -121,8 +138,81 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       : board("comment.savedNoName", { date: date(comment.savedAt) })
     : null;
 
+  // "At a glance": the main figures, from the same data (owner, 9 October 2026).
+  const ratio = (n: number, d: number) => (d > 0 ? Math.min(1, n / d) : null);
+  const of = (total: number) => board("kpi.ofTotal", { total });
+  const notifiable = incidents.notifiedWithin72h + incidents.notifiedLate + incidents.notNotifiedYet;
+  const breachIssues = incidents.notifiedLate + incidents.notNotifiedYet;
+  const completed = rights ? rights.completedOnTime + rights.completedLate : 0;
+  const tiles: Kpi[] = [
+    {
+      id: "documents",
+      value: num(ready.length),
+      of: of(produced),
+      label: board("kpi.documents"),
+      ratio: ratio(ready.length, produced),
+      flag: null,
+    },
+    notifiable > 0
+      ? {
+          id: "breaches",
+          value: num(incidents.notifiedWithin72h),
+          of: of(notifiable),
+          label: board("kpi.breaches"),
+          ratio: ratio(incidents.notifiedWithin72h, notifiable),
+          flag: breachIssues > 0 ? board("kpi.breachesFlag", { count: breachIssues }) : null,
+        }
+      : { id: "breaches", value: "0", of: null, label: board("kpi.breachesNone"), ratio: null, flag: null },
+  ];
+  if (rights) {
+    tiles.push(
+      completed > 0
+        ? {
+            id: "rights",
+            value: num(rights.completedOnTime),
+            of: of(completed),
+            label: board("kpi.rights"),
+            ratio: ratio(rights.completedOnTime, completed),
+            flag: rights.openOverdue > 0 ? board("kpi.rightsFlag", { count: rights.openOverdue }) : null,
+          }
+        : {
+            id: "rights",
+            value: "0",
+            of: null,
+            label: board("kpi.rightsNone"),
+            ratio: null,
+            flag: rights.openOverdue > 0 ? board("kpi.rightsFlag", { count: rights.openOverdue }) : null,
+          },
+    );
+  }
+  tiles.push(
+    vendors.total > 0
+      ? {
+          id: "vendors",
+          value: num(vendors.withDpa),
+          of: of(vendors.total),
+          label: board("kpi.vendors"),
+          ratio: ratio(vendors.withDpa, vendors.total),
+          flag: vendors.highRiskWithoutDpa > 0 ? board("kpi.vendorsFlag", { count: vendors.highRiskWithoutDpa }) : null,
+        }
+      : { id: "vendors", value: "0", of: null, label: board("kpi.vendorsNone"), ratio: null, flag: null },
+  );
+  const kpis = {
+    title: board("kpi.title"),
+    hero: {
+      id: "programme" as const,
+      value: num(f.confirmed),
+      of: of(f.total),
+      label: board("kpi.programme"),
+      ratio: ratio(f.confirmed, f.total) ?? 0,
+      flag: null,
+    },
+    tiles,
+  };
+
   return {
     title: board("title"),
+    kpis,
     organization: report.organizationName,
     periodLine: board("periodLine", { from: date(report.period.from), to: date(report.period.to) }),
     generatedLine: board("generatedLine", { date: date(report.generatedAt) }),

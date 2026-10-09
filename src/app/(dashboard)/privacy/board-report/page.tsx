@@ -19,7 +19,7 @@ import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Download, History } from "lucide-react";
+import { AlertTriangle, Download, History } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,8 @@ import {
   type BoardReport,
   type PeriodPreset,
 } from "@/lib/board-report";
-import { boardReportText, type BoardReportText, type Row } from "@/lib/board-report-text";
+import { boardReportText, type BoardReportText, type Kpi, type Row } from "@/lib/board-report-text";
+import { screenPalette } from "@/config/status-palette";
 
 export default function BoardReportPage() {
   const t = useTranslations("boardReport");
@@ -209,6 +210,8 @@ function ReportView({ report }: { report: BoardReport }) {
         </CardContent>
       </Card>
 
+      <KpiStrip kpis={text.kpis} />
+
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
         <Section title={text.programme.title} testId="board-programme">
           <p className="text-base font-semibold" data-testid="board-figure">{text.programme.figure}</p>
@@ -304,6 +307,84 @@ function ReportView({ report }: { report: BoardReport }) {
 
       <p className="text-xs text-muted-foreground" data-testid="board-disclaimer">{text.disclaimer}</p>
     </article>
+  );
+}
+
+/**
+ * "At a glance" (owner, 9 October 2026): the programme figure as a ring, then
+ * the main figures as tiles with a bar, the same as the top of the PDF. One
+ * accent, neutral greys, and the product's one warning mark for what needs
+ * attention (the words stay in the body colour).
+ */
+function KpiStrip({ kpis }: { kpis: BoardReportText["kpis"] }) {
+  const hero = kpis.hero;
+  const size = 104;
+  const stroke = 10;
+  const r = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * r;
+  return (
+    <Card data-testid="board-kpis">
+      <CardContent className="p-4 sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary mb-3">{kpis.title}</p>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+          <div className="flex sm:flex-col items-center gap-4 sm:gap-2 shrink-0 sm:w-36" data-testid="board-kpi-programme">
+            <div className="relative shrink-0" style={{ width: size, height: size }}>
+              <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true" className="-rotate-90">
+                <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-foreground/10" />
+                {(hero.ratio ?? 0) > 0 && (
+                  <circle
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={r}
+                    fill="none"
+                    strokeWidth={stroke}
+                    strokeLinecap="round"
+                    strokeDasharray={`${(hero.ratio ?? 0) * circumference} ${circumference}`}
+                    className="stroke-primary"
+                  />
+                )}
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="font-display text-3xl leading-none tabular-nums">{hero.value}</span>
+                {hero.of && <span className="text-xs text-muted-foreground mt-1">{hero.of}</span>}
+              </div>
+            </div>
+            <p className="text-sm font-medium sm:text-center">{hero.label}</p>
+          </div>
+          <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-4 flex-1 min-w-0">
+            {kpis.tiles.map((kpi) => (
+              <KpiTile key={kpi.id} kpi={kpi} />
+            ))}
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function KpiTile({ kpi }: { kpi: Kpi }) {
+  const warn = screenPalette.warning.mark;
+  return (
+    <li className="min-w-0 sm:border-l sm:border-border sm:pl-4" data-testid={`board-kpi-${kpi.id}`}>
+      <p className="flex items-baseline gap-1.5">
+        <span className="font-display text-2xl leading-none tabular-nums" data-testid={`board-kpi-${kpi.id}-value`}>
+          {kpi.value}
+        </span>
+        {kpi.of && <span className="text-xs text-muted-foreground">{kpi.of}</span>}
+      </p>
+      <p className="text-xs text-muted-foreground mt-1.5 break-words">{kpi.label}</p>
+      {kpi.ratio !== null && (
+        <div className="h-1.5 rounded-full bg-foreground/10 mt-2 overflow-hidden" aria-hidden="true">
+          <div className="h-full rounded-full bg-primary" style={{ width: `${Math.round(kpi.ratio * 100)}%` }} />
+        </div>
+      )}
+      {kpi.flag && (
+        <p className="flex items-start gap-1.5 text-xs mt-2 break-words" data-testid={`board-kpi-${kpi.id}-flag`}>
+          <AlertTriangle className={`size-3.5 shrink-0 mt-px ${warn.class}`} aria-hidden="true" />
+          {kpi.flag}
+        </p>
+      )}
+    </li>
   );
 }
 
