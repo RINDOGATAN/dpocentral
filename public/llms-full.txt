@@ -150,12 +150,12 @@ instance: https://www.todo.law/run
 
 ## Security
 
-- Zero-knowledge authentication (magic links, no passwords stored)
+- Password-less sign-in (Google or single-use email links; no passwords stored)
 - 5-tier RBAC with organization-level multi-tenancy
 - Input validation and sanitization
 - Rate limiting per endpoint
 - TLS-only with HSTS (2-year max-age), CSP, X-Frame-Options, X-Content-Type-Options
-- Full audit logging
+- Audit log of changes to key records
 - Data minimization by design
 - Edge network deployment (Vercel)
 
