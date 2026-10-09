@@ -51,6 +51,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
 import { formatIncidentRef } from "@/lib/incident-ref";
+import { breachWindowEnd } from "@/lib/breach-window";
 import { parseDateInput } from "@/lib/date-input";
 
 import { formatDateIn, formatDateTimeIn, formatNumberIn } from "@/lib/utils";
@@ -260,6 +261,28 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               </Badge>
             </div>
             <h1 className="text-2xl font-semibold mt-1 break-words">{incident.title}</h1>
+            {/* The 72-hour clock while nobody has decided on notifying: open,
+                not marked as requiring notification (the banner below covers
+                that case) and no notification recorded. */}
+            {incident.status !== "CLOSED" &&
+              incident.status !== "FALSE_POSITIVE" &&
+              !incident.notificationRequired &&
+              !incident.notifications?.length &&
+              (() => {
+                const end = breachWindowEnd(incident);
+                const ended = end.getTime() <= Date.now();
+                return (
+                  <p
+                    className={`mt-1 flex items-center gap-1.5 text-sm ${ended ? "text-muted-foreground" : "font-medium"}`}
+                    data-testid="incident-window-clock"
+                  >
+                    <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    {ended
+                      ? tp("windowClock.ended", { date: formatDateTimeIn(end, locale) })
+                      : tp("windowClock.open", { date: formatDateTimeIn(end, locale) })}
+                  </p>
+                );
+              })()}
           </div>
         </div>
         <div className="flex flex-wrap gap-2">

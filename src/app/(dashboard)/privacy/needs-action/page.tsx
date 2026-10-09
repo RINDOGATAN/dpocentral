@@ -34,6 +34,7 @@ const ICON: Record<NeedsActionKind, React.ElementType> = {
   "review-due": CalendarClock,
   "dsar-due": AlarmClock,
   "breach-window": AlertTriangle,
+  "breach-decision": AlertTriangle,
   "assessment-approval": ClipboardCheck,
 };
 

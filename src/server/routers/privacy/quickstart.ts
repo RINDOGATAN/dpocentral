@@ -34,6 +34,7 @@ import {
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
+import { quickstartSettingsAfterRun } from "@/server/services/program/quickstart-settings";
 
 // Capped resources a quickstart batch can add.
 const PILOT_BATCH_RESOURCES: PilotResource[] = [
@@ -1157,23 +1158,29 @@ export const quickstartRouter = createTRPCRouter({
         }
       }
 
-      // Save the programme's name onto the organisation (additive merge into
-      // its settings JSON) so the result screen and exports can name it.
-      // Best-effort: a failure here never fails the quickstart.
-      if (input.programName && input.programName.trim()) {
-        try {
-          const org = await ctx.prisma.organization.findUnique({
-            where: { id: orgId },
-            select: { settings: true },
-          });
-          const settings = (org?.settings as Record<string, unknown> | null) ?? {};
-          await ctx.prisma.organization.update({
-            where: { id: orgId },
-            data: { settings: { ...settings, programName: input.programName.trim() } },
-          });
-        } catch (nameErr) {
-          console.warn("[quickstart] Could not save programme name:", nameErr);
-        }
+      // Record on the organisation (additive merge into its settings JSON) that
+      // the quick start was run to the end, and the programme's name when one
+      // was given. The path's quick start step and day 1 of the 30/60/90-day
+      // plan read `settings.quickstart.completedAt`
+      // (services/program/path-counts.ts, plan-start.ts): without it a run
+      // with a template and no vendors left "Next step: Quick start" and the
+      // plan "Not started". The first completion is kept, so a second run never
+      // moves day 1. Best-effort: a failure here never fails the quickstart.
+      try {
+        const org = await ctx.prisma.organization.findUnique({
+          where: { id: orgId },
+          select: { settings: true },
+        });
+        const settings = quickstartSettingsAfterRun(org?.settings, {
+          now: new Date(),
+          programName: input.programName,
+        });
+        await ctx.prisma.organization.update({
+          where: { id: orgId },
+          data: { settings: settings as Prisma.InputJsonValue },
+        });
+      } catch (settingsErr) {
+        console.warn("[quickstart] Could not record the quick start on the organisation:", settingsErr);
       }
 
       return result;

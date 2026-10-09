@@ -68,6 +68,10 @@ export interface PathCounts {
 
   assessments: number;
   assessmentsApproved: number;
+  /** Legitimate-interest assessments (an LIA template) in any state. */
+  liaAssessments: number;
+  /** Legitimate-interest assessments approved. */
+  liaApproved: number;
   transfers: number;
 
   /** Data-subject requests received. */
@@ -95,6 +99,8 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
   vendorAssessments: 0,
   assessments: 0,
   assessmentsApproved: 0,
+  liaAssessments: 0,
+  liaApproved: 0,
   transfers: 0,
   dsarRequests: 0,
   dsarIntakeConfigured: false,
@@ -234,12 +240,19 @@ const FULL_PATH: PathConfig<PathCounts> = {
                 ? "started"
                 : "todo",
         },
+        // The assessment picker offers the legitimate-interest template as
+        // included, so the step opens it rather than calling it "coming".
+        // Optional: it is needed only where legitimate interest is the legal
+        // basis, so it is never counted and never offered as the next step.
+        // Last in the stage, after the counted steps.
         {
           id: "lia",
-          href: null,
+          href: "/privacy/assessments/new?type=LIA",
           icon: Scale,
-          coming: true,
-          rule: "Coming. Legitimate-interest assessments are a template, not their own page yet.",
+          optional: true,
+          rule: "Optional, never counted: needed only where legitimate interest is the legal basis. Opens the assessment form on the legitimate-interest template. Done when a legitimate-interest assessment is approved; started when one exists.",
+          status: (c) =>
+            c.liaApproved > 0 ? "done" : c.liaAssessments > 0 ? "started" : "todo",
         },
       ],
     },

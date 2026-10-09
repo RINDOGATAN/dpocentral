@@ -5,7 +5,8 @@
 // A privacy lead should not have to open five modules to learn there is nothing
 // to do, or miss the one thing there is. The categories are the ones the stage-4
 // directive named: reviews due, rights requests due, breaches inside the
-// 72-hour window, and assessments waiting to be approved.
+// 72-hour window, and assessments waiting to be approved; plus breaches logged
+// inside their 72-hour window with no decision on notifying yet.
 //
 // This module is pure: it turns a set of counts into an ordered list of items,
 // dropping the empty ones so the list only ever shows real work. The counts are
@@ -16,6 +17,7 @@ export const NEEDS_ACTION_KINDS = [
   "review-due",
   "dsar-due",
   "breach-window",
+  "breach-decision",
   "assessment-approval",
 ] as const;
 
@@ -26,6 +28,7 @@ const HREF: Record<NeedsActionKind, string> = {
   "review-due": "/privacy/data-inventory",
   "dsar-due": "/privacy/dsar",
   "breach-window": "/privacy/incidents",
+  "breach-decision": "/privacy/incidents",
   "assessment-approval": "/privacy/assessments",
 };
 
@@ -41,6 +44,12 @@ export interface NeedsActionCounts {
   /// Breaches inside the 72-hour notification window: open incidents that must
   /// be notified and whose deadline has not passed. Null when department-scoped.
   breachWindow: number | null;
+  /// Open incidents discovered inside the 72-hour window that are not marked
+  /// as requiring notification and have no notification recorded: nobody has
+  /// decided yet whether to notify (src/lib/breach-window.ts). Optional, so a
+  /// caller that does not gather it shows nothing for it. Null when
+  /// department-scoped.
+  breachDecision?: number | null;
   /// Assessments sent for approval (PENDING_APPROVAL or PENDING_REVIEW). Null
   /// when department-scoped.
   assessmentApproval: number | null;
@@ -61,6 +70,7 @@ export function buildNeedsAction(counts: NeedsActionCounts): NeedsActionItem[] {
   push("review-due", counts.reviewDue);
   push("dsar-due", counts.dsarDue);
   push("breach-window", counts.breachWindow);
+  push("breach-decision", counts.breachDecision ?? null);
   push("assessment-approval", counts.assessmentApproval);
   return items;
 }

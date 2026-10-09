@@ -1090,6 +1090,10 @@
         "overdue": "OVERDUE — was due {date}",
         "create": "Create Notification"
       },
+      "windowClock": {
+        "open": "72-hour window ends {date}. Decide whether to notify.",
+        "ended": "72-hour window ended {date}. No notification is recorded."
+      },
       "stats": {
         "discovered": "Discovered",
         "affectedRecords": "Affected Records",
@@ -2344,7 +2348,7 @@
       },
       "vendors": {
         "title": "Vendors",
-        "activeCount": "{count, plural, one {# active vendor} other {# active vendors}}",
+        "countLine": "{total, plural, one {# vendor} other {# vendors}}, {active} active",
         "categoryFallback": "Vendor",
         "empty": "Add vendors to track third-party risk"
       },
@@ -8925,6 +8929,7 @@
   },
   "portfolio": {
     "title": "All clients",
+    "addClient": "Add a client",
     "subtitle": "{count, plural, one {# organisation} other {# organisations}} you manage",
     "tiles": {
       "requestsDue": "Requests due",
@@ -9068,12 +9073,14 @@
         "review-due": "Reviews due",
         "dsar-due": "Rights requests due",
         "breach-window": "Breaches to notify",
+        "breach-decision": "Breaches waiting for a decision on notifying",
         "assessment-approval": "Assessments to approve"
       },
       "hint": {
         "review-due": "Processing records whose review date has passed.",
         "dsar-due": "Open requests near or past their deadline.",
         "breach-window": "Open breaches that must be notified.",
+        "breach-decision": "Breaches logged in the last 72 hours with no notification recorded and not marked as requiring one. Decide whether to notify before the window ends.",
         "assessment-approval": "Assessments sent for review or approval."
       }
     },

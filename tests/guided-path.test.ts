@@ -52,6 +52,8 @@ const COMPLETE: PathCounts = {
   vendorAssessments: 2,
   assessments: 2,
   assessmentsApproved: 1,
+  liaAssessments: 1,
+  liaApproved: 1,
   transfers: 1,
   dsarRequests: 1,
   dsarIntakeConfigured: true,

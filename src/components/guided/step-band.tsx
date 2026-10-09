@@ -9,7 +9,9 @@
  * can walk the whole path with that one button.
  *
  * The first time a stage is seen done, the band says so instead, once and
- * quietly ("Stage 3 complete. Next: Assess the risk."). No sound, no confetti;
+ * quietly ("Stage 3 complete. Next: Assess the risk."). "Next" names the stage
+ * holding the next step not done, wherever it is on the path; "Every stage is
+ * done" only when no counted step is left. No sound, no confetti;
  * the fade is skipped when reduced motion is asked for.
  *
  * Mounted by the Guided layout with a key per address, so the message lasts
@@ -22,7 +24,12 @@ import { useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { useOrganization } from "@/lib/organization-context";
 import { DPO_CENTRAL_PATH } from "./path-config";
-import { stageToCelebrate, stepAndFollowing, type PathStatuses } from "./path";
+import {
+  stageAfterCelebration,
+  stageToCelebrate,
+  stepAndFollowing,
+  type PathStatuses,
+} from "./path";
 
 const SEEN_KEY = "dpc_stages_done";
 
@@ -69,6 +76,9 @@ export function StepBand({
       ? stageToCelebrate(DPO_CENTRAL_PATH, statuses, seen)
       : null;
   const celebrate = result?.celebrate ?? null;
+  // The stage still open after the one just finished (null: every stage done).
+  const openStage =
+    celebrate !== null && statuses ? stageAfterCelebration(DPO_CENTRAL_PATH, statuses) : null;
   const remember = result ? result.remember.join(",") : null;
 
   useEffect(() => {
@@ -92,10 +102,10 @@ export function StepBand({
             <Check className="size-3" strokeWidth={3} aria-hidden="true" />
           </span>
           <span className="min-w-0">
-            {celebrate + 1 < stages.length
+            {openStage !== null
               ? t("band.stageDone", {
                   number: celebrate + 1,
-                  next: t(`stages.${stages[celebrate + 1].id}`),
+                  next: t(`stages.${stages[openStage].id}`),
                 })
               : t("band.lastStageDone", { number: celebrate + 1 })}
           </span>
