@@ -31,8 +31,10 @@ jobs:
       - name: Dependency audit, development tools (soft)
         # 2026-10-05: split from the gate above. The remaining high advisories
         # are in development tools only (braces via eslint-config-next, with no
-        # fixed release published for any version; @vitest/mocker via vitest),
-        # never shipped to production. Production stays a hard gate at high.
+        # fixed release published for any version), never shipped to
+        # production. 2026-10-09: the vitest, @vitest/mocker and tinypool
+        # advisories were cleared by the move to vitest 4.1.11. Production
+        # stays a hard gate at high.
         # Remove `continue-on-error` when a fixed braces release exists.
         continue-on-error: true
         run: npm audit --audit-level=high
