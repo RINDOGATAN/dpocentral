@@ -395,7 +395,9 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Tabs */}
       <Tabs defaultValue="details">
-        <TabsList>
+        {/* Five tabs do not fit a phone's width: below sm the strip wraps onto
+            a second line, so no tab is cut off or hidden behind a scroll. */}
+        <TabsList className="h-auto flex-wrap sm:h-9 sm:flex-nowrap" data-testid="incident-tabs">
           <TabsTrigger value="details">{tp("tabs.details")}</TabsTrigger>
           <TabsTrigger value="timeline">{tp("tabs.timelineWithCount", { count: incident.timeline?.length ?? 0 })}</TabsTrigger>
           <TabsTrigger value="tasks">{tp("tabs.tasksWithCount", { count: incident.tasks?.length ?? 0 })}</TabsTrigger>

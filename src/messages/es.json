@@ -1533,7 +1533,11 @@
         "title": "Qué te aplica",
         "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
         "skip": "Aún no lo sé: omitir",
-        "continue": "Guardar y continuar"
+        "continue": "Guardar y continuar",
+        "placesQuestion": "¿Dónde opera tu organización?",
+        "placesHint": "Elige todos los lugares donde tienes clientes, personal o usuarios. Determina qué leyes comprobamos. Puedes cambiarlo más adelante en la página Qué te aplica.",
+        "placesUnsure": "Todavía no lo sé",
+        "placesFailed": "No se ha podido guardar dónde operas. Puedes indicarlo en la página Qué te aplica."
       },
       "steps": {
         "applies": "Qué te aplica",
@@ -1675,8 +1679,8 @@
       "saveSnapshot": "Guardar instantánea",
       "regulatoryReport": "Informe regulatorio",
       "score": {
-        "title": "Puntuación global de cumplimiento",
-        "subtitle": "Puntuación agregada de todos los módulos de privacidad, ponderada por importancia.",
+        "title": "Puntuación por módulos",
+        "subtitle": "Ponderada entre todas las áreas, por importancia.",
         "strong": "Sólida",
         "moderate": "Moderada",
         "needsAttention": "Requiere atención",
@@ -1687,7 +1691,9 @@
         "unrated": "Sin evaluar",
         "unratedRing": "Sin evaluar",
         "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade activos de datos, evaluaciones, solicitudes de derechos, incidentes o proveedores y la puntuación aparecerá aquí.",
-        "partialSubtitle": "Calculada sobre {rated} de {total} módulos ({pct} % de la ponderación). Los módulos sin datos quedan excluidos en lugar de contarse como conformes."
+        "partialSubtitle": "Calculada sobre {rated} de {total} áreas ({pct} % de la ponderación). No se da ninguna valoración hasta que todas las áreas tengan datos; las áreas sin datos quedan fuera en lugar de contarse como conformes.",
+        "areasWithData": "Datos en {rated} de {total} áreas",
+        "value": "{score} / 100"
       },
       "breakdown": {
         "heading": "Desglose de cumplimiento por módulo",
@@ -8740,14 +8746,16 @@
       "todo": "sin empezar",
       "started": "en curso",
       "done": "hecho",
-      "coming": "Próximamente"
+      "coming": "Próximamente",
+      "toConfirm": "por confirmar"
     },
     "stepStatus": {
       "done": "hecho",
       "started": "en curso",
       "todo": "sin empezar",
       "coming": "próximamente",
-      "optional": "opcional"
+      "optional": "opcional",
+      "toConfirm": "por confirmar"
     },
     "account": "Cuenta",
     "switchClient": "Cliente",
@@ -8870,7 +8878,9 @@
       "button": "Ir a {step}",
       "allDoneTitle": "Tu programa está en marcha",
       "allDoneBody": "Todos los pasos de la ruta están completados. Mantén tus registros al día y revísalos con regularidad.",
-      "allDoneButton": "Volver al resumen"
+      "allDoneButton": "Volver al resumen",
+      "toConfirm": "El inicio rápido o una plantilla han redactado estos registros. Revísalos y confírmalos: cuentan cuando una persona los confirma.",
+      "reviewButton": "Revisar y confirmar"
     },
     "band": {
       "step": "Paso {number}",
@@ -8896,6 +8906,14 @@
       "changed": "Se ha cambiado el diseño.",
       "useGuided": "Usar el diseño guiado",
       "useClassic": "Usar el diseño clásico"
+    },
+    "figure": {
+      "line": "{done} de {total} pasos confirmados",
+      "toConfirm": "{count} por confirmar",
+      "started": "{count} en curso",
+      "notStarted": "{count} sin empezar",
+      "draftsWaiting": "{count, plural, one {# registro en borrador espera a que una persona lo confirme. Cuenta cuando está confirmado.} other {# registros en borrador esperan a que una persona los confirme. Cuentan cuando están confirmados.}}",
+      "review": "Revisar y confirmar"
     }
   },
   "help": {
@@ -8950,7 +8968,8 @@
     "empty": {
       "title": "Aún no hay organizaciones cliente",
       "body": "Las organizaciones de las que eres miembro aparecerán aquí."
-    }
+    },
+    "draftsToConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}"
   },
   "applicability": {
     "cardTitle": "Qué se te aplica",
@@ -9074,14 +9093,16 @@
         "dsar-due": "Solicitudes de derechos por vencer",
         "breach-window": "Brechas por notificar",
         "breach-decision": "Brechas pendientes de decidir si se notifican",
-        "assessment-approval": "Evaluaciones por aprobar"
+        "assessment-approval": "Evaluaciones por aprobar",
+        "drafts-to-confirm": "Registros en borrador por confirmar"
       },
       "hint": {
         "review-due": "Registros de tratamiento cuya fecha de revisión ha pasado.",
         "dsar-due": "Solicitudes abiertas con el plazo a punto de vencer o ya vencido.",
         "breach-window": "Brechas abiertas que deben notificarse.",
         "breach-decision": "Brechas registradas en las últimas 72 horas sin ninguna notificación ni marca de que deban notificarse. Decide si hay que notificar antes de que venza el plazo.",
-        "assessment-approval": "Evaluaciones enviadas para revisión o aprobación."
+        "assessment-approval": "Evaluaciones enviadas para revisión o aprobación.",
+        "drafts-to-confirm": "Registros que ha redactado el inicio rápido o una plantilla. Cuentan para tu programa cuando una persona los confirma."
       }
     },
     "incomplete": {
@@ -9267,5 +9288,37 @@
     "off": "Las solicitudes de derechos no están incluidas en este plan.",
     "exportBody": "Puedes seguir descargando los registros de solicitudes de derechos que tu organización ya tiene.",
     "exportLink": "Descargar los registros (JSON)"
+  },
+  "drafts": {
+    "badge": "Por confirmar",
+    "badgeHint": "Lo ha redactado el inicio rápido o una plantilla. Cuenta para tu programa cuando una persona lo confirma.",
+    "confirm": "Confirmar",
+    "confirmedOne": "Confirmado. Ya cuenta para tu programa.",
+    "confirmedMany": "{count, plural, one {# registro confirmado} other {# registros confirmados}}",
+    "confirmFailed": "No se ha podido confirmar. Inténtalo de nuevo.",
+    "noticeCount": "{count, plural, one {# registro en borrador por confirmar.} other {# registros en borrador por confirmar.}}",
+    "noticeWhy": "Cuentan para tu programa cuando una persona los confirma.",
+    "reviewAndConfirm": "Revisar y confirmar",
+    "reviewTitle": "Revisar y confirmar",
+    "reviewSubtitle": "El inicio rápido, las plantillas y las copias de otro cliente han redactado estos registros. Abre cada uno para revisarlo o corregirlo y después confírmalo. Cada uno cuenta para tu programa cuando está confirmado.",
+    "reviewEmpty": "Nada que confirmar: todos los registros en borrador están confirmados.",
+    "selectAll": "Seleccionar todo",
+    "clearSelection": "Quitar selección",
+    "confirmSelected": "Confirmar seleccionados ({count})",
+    "waiting": "{count, plural, one {# pendiente} other {# pendientes}}",
+    "approverOnly": "Solo los propietarios, los administradores y los responsables de privacidad pueden confirmar registros. Puedes abrir cada uno para revisarlo.",
+    "selectOne": "Seleccionar {name}",
+    "kind": {
+      "dataAsset": "Activos de datos",
+      "processingActivity": "Actividades de tratamiento",
+      "vendor": "Proveedores"
+    }
+  },
+  "jurisdictionPicker": {
+    "group": {
+      "europe": "Europa",
+      "us": "Estados Unidos",
+      "other": "Resto del mundo"
+    }
   }
 }

@@ -26,63 +26,11 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { StatusMark } from "@/components/ui/status-chip";
-import { toneBorder, toneFill, toneMark, toneStroke, toneTint } from "@/config/status-palette";
+import { toneBorder, toneFill, toneMark, toneTint } from "@/config/status-palette";
 import { toneForScore } from "@/config/status-tone";
 import { isDsarModuleEnabled } from "@/config/features";
-
-function ScoreRing({ score, unratedLabel }: { score: number | null; unratedLabel: string }) {
-  const size = 160;
-  const strokeWidth = 12;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  // An unrated programme draws an empty ring, never a full one.
-  const offset = score === null ? circumference : circumference - (score / 100) * circumference;
-
-  // The band is a tone: it colours the ring and adds an icon, and the number
-  // itself stays in the body colour where it is readable.
-  const tone = score === null ? null : toneForScore(score);
-  const strokeColor = tone === null ? "stroke-muted" : toneStroke(tone);
-
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg width={size} height={size} className="-rotate-90">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth={strokeWidth}
-          className="stroke-muted-foreground/30"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          className={strokeColor}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        {score === null ? (
-          <span className="text-sm font-medium text-muted-foreground px-4 text-center">
-            {unratedLabel}
-          </span>
-        ) : (
-          <>
-            <span className="text-4xl font-bold text-foreground">{score}</span>
-            <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
-              {tone && <StatusMark tone={tone} className="h-3.5 w-3.5" />}/&nbsp;100
-            </span>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
+import { ProgramFigureLine, ProgramFigureParts, useProgramFigure } from "@/components/guided/program-figure";
+import { ProgressBar } from "@/components/guided/progress-ring";
 
 function ModuleBreakdownCard({
   label,
@@ -147,6 +95,9 @@ export default function ReportsPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.reports");
+  const tg = useTranslations("guided");
+  // The one programme figure (src/components/guided/path.ts, programFigure).
+  const { figure } = useProgramFigure();
   const dsarOn = isDsarModuleEnabled();
 
   const { data: complianceData, isLoading: isLoadingScore } =
@@ -186,6 +137,10 @@ export default function ReportsPage() {
   const coverage = complianceData?.coverage;
   const riskIndicators = complianceData?.riskIndicators ?? [];
 
+  // The label is a verdict on the whole programme: given only when every
+  // area has data (owner's decision d3).
+  const fullCoverage =
+    !!coverage && coverage.totalModules > 0 && coverage.ratedModules === coverage.totalModules;
   const scoreLabel =
     score === null
       ? tp("score.unrated")
@@ -193,10 +148,6 @@ export default function ReportsPage() {
   const scoreBadgeVariant =
     score === null ? "outline" : score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive";
 
-  // The score only reflects modules that have data. Say so whenever that is
-  // less than the whole model, so a high number can't be read as full coverage.
-  const isPartial =
-    !!coverage && coverage.ratedModules > 0 && coverage.ratedModules < coverage.totalModules;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -239,49 +190,89 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Compliance Score Card */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <ScoreRing score={score} unratedLabel={tp("score.unratedRing")} />
-            <div className="flex-1 text-center sm:text-left">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
-                <h2 className="text-lg font-semibold">{tp("score.title")}</h2>
-                <Badge variant={scoreBadgeVariant as any}>{scoreLabel}</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4">
-                {score === null
-                  ? tp("score.unratedSubtitle")
-                  : isPartial
-                    ? tp("score.partialSubtitle", {
-                        rated: coverage!.ratedModules,
-                        total: coverage!.totalModules,
-                        pct: coverage!.ratedWeightPct,
-                      })
-                    : tp("score.subtitle")}
-              </p>
-              {trendData && trendData.length > 1 && (
-                <div className="flex items-center gap-2 text-sm">
-                  {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
+      {/* The headline is the one programme figure ("2 of 10 steps confirmed"),
+          the same as on the dashboard, the menu and All clients (owner's
+          decision d3). The weighted module score stays as detail under it, and
+          its "Strong / Moderate" label only when every area has data: a label
+          on partial data reads as a verdict it cannot give. */}
+      <Card data-testid="reports-headline">
+        <CardContent className="p-4 sm:p-6 space-y-4">
+          <div className="space-y-2">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {tg("overallLabel")}
+            </p>
+            {figure ? (
+              <>
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1 sm:gap-3">
+                  <ProgramFigureLine figure={figure} className="block text-lg sm:text-xl font-semibold" />
+                  <ProgramFigureParts figure={figure} className="text-sm" />
+                </div>
+                <ProgressBar value={figure.confirmed} total={figure.total} />
+              </>
+            ) : (
+              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" aria-label={tg("loading")} />
+            )}
+          </div>
+
+          <div className="border-t border-border pt-4 space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-sm font-semibold">{tp("score.title")}</h2>
+              {coverage && (
+                <span className="text-sm text-muted-foreground" data-testid="reports-areas">
+                  {tp("score.areasWithData", { rated: coverage.ratedModules, total: coverage.totalModules })}
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {score === null ? (
+                tp("score.unratedSubtitle")
+              ) : (
+                <>
+                  <span className="font-medium text-foreground tabular-nums">
+                    {tp("score.value", { score })}
+                  </span>
+                  {fullCoverage ? (
                     <>
-                      <TrendingUp className={`w-4 h-4 ${toneMark("success")}`} />
-                      <span className="font-medium">
-                        {tp("score.trendUp", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
-                      </span>
-                      <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
+                      {" "}
+                      <Badge variant={scoreBadgeVariant as any} data-testid="reports-score-label">
+                        {scoreLabel}
+                      </Badge>{" "}
+                      {tp("score.subtitle")}
                     </>
                   ) : (
                     <>
-                      <TrendingDown className={`w-4 h-4 ${toneMark("danger")}`} />
-                      <span className="font-medium">
-                        {tp("score.trendDown", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
-                      </span>
-                      <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
+                      {" "}
+                      {tp("score.partialSubtitle", {
+                        rated: coverage!.ratedModules,
+                        total: coverage!.totalModules,
+                        pct: coverage!.ratedWeightPct,
+                      })}
                     </>
                   )}
-                </div>
+                </>
               )}
-            </div>
+            </p>
+            {score !== null && trendData && trendData.length > 1 && (
+              <div className="flex items-center gap-2 text-sm">
+                {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
+                  <>
+                    <TrendingUp className={`w-4 h-4 ${toneMark("success")}`} />
+                    <span className="font-medium">
+                      {tp("score.trendUp", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
+                    </span>
+                    <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
+                  </>
+                ) : (
+                  <>
+                    <TrendingDown className={`w-4 h-4 ${toneMark("danger")}`} />
+                    <span className="font-medium">
+                      {tp("score.trendDown", { points: Math.round(trendData[trendData.length - 1].score - trendData[trendData.length - 2].score) })}
+                    </span>
+                    <span className="text-muted-foreground">{tp("score.vsLastMonth")}</span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

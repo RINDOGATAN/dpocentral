@@ -45,6 +45,7 @@ import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 import { useSkin } from "@/components/guided/skin-context";
 import { NextStepCard } from "@/components/guided/next-step-card";
+import { ProgramFigureCard } from "@/components/guided/program-figure";
 import { FirstRunCard } from "@/components/help/first-run-card";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
@@ -155,6 +156,10 @@ export default function PrivacyDashboardPage() {
           per browser), then the first step on the path that is not done. */}
       {skin === "guided" && <FirstRunCard />}
       {skin === "guided" && orgWide && <NextStepCard waitForFresh={fromQuickstart} />}
+      {/* The one programme figure ("2 of 10 steps confirmed"), the same as in
+          the menu, All clients and Reports. The organisation's own figure, so
+          not for a member limited to departments. */}
+      {orgWide && <ProgramFigureCard />}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
@@ -463,7 +468,9 @@ export default function PrivacyDashboardPage() {
                 limited time (the server count; nothing off the pilot tier). */}
             {/* When gated, the label and the badge both stay whole: the button
                 grows and the badge wraps under the label in a narrow column,
-                rather than cutting the label to "Start a ...". */}
+                rather than cutting the label to "Start a ...". The other
+                actions wrap the same way, so a long Spanish label ("Asistente
+                de inicio rápido") is never cut either. */}
             <div>
               <Link href="/privacy/assessments/new?type=DPIA">
                 <Button
@@ -487,36 +494,36 @@ export default function PrivacyDashboardPage() {
               <DpiaFreeNote className="mt-1 px-1" />
             </div>
             <Link href="/privacy/data-inventory/new">
-              <Button variant="outline" className="w-full justify-start h-11">
+              <Button variant="outline" className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left">
                 <Database className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.addAsset")}</span>
+                <span className="min-w-0">{tp("quickActions.addAsset")}</span>
               </Button>
             </Link>
             {dsarOn && canHandleDsars !== false && (
               <Link href="/privacy/dsar">
-                <Button variant="outline" className="w-full justify-start h-11">
+                <Button variant="outline" className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left">
                   <FileText className="w-4 h-4 mr-2 shrink-0" />
-                  <span className="truncate">{tp("quickActions.newDsar")}</span>
+                  <span className="min-w-0">{tp("quickActions.newDsar")}</span>
                 </Button>
               </Link>
             )}
             <Link href="/privacy/incidents/new">
-              <Button variant="outline" className="w-full justify-start h-11">
+              <Button variant="outline" className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left">
                 <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.reportIncident")}</span>
+                <span className="min-w-0">{tp("quickActions.reportIncident")}</span>
               </Button>
             </Link>
             <Link href="/privacy/vendors/new">
-              <Button variant="outline" className="w-full justify-start h-11">
+              <Button variant="outline" className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left">
                 <Building2 className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.addVendor")}</span>
+                <span className="min-w-0">{tp("quickActions.addVendor")}</span>
               </Button>
             </Link>
             {orgWide && (
             <Link href="/privacy/quickstart">
-              <Button variant="outline" className="w-full justify-start h-11">
+              <Button variant="outline" className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left">
                 <Sparkles className="w-4 h-4 mr-2 shrink-0" />
-                <span className="truncate">{tp("quickActions.quickstart")}</span>
+                <span className="min-w-0">{tp("quickActions.quickstart")}</span>
               </Button>
             </Link>
             )}

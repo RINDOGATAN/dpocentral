@@ -53,6 +53,9 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { ApplicabilityQuestions, ApplicabilityResult } from "@/components/privacy/applicability-check";
+import { JurisdictionPicker } from "@/components/privacy/jurisdiction-picker";
+import { DraftsNotice } from "@/components/privacy/draft-confirm";
+import { isPlaceCode } from "@/config/jurisdiction-places";
 import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
 import {
   EMPTY_APPLICABILITY_ANSWERS,
@@ -209,17 +212,30 @@ export default function QuickstartPage() {
   }, [fromVendorWatch, portfolioLoading, portfolio]);
 
   // The stored posture answers and the jurisdictions the organisation already
-  // declares, for the "What applies" step (read-only jurisdictions here; they
-  // are set on the regulations page).
+  // declares, for the "What applies" step. The step also asks where the
+  // organisation operates (owner's decision d8, as AI Sentinel's quick start
+  // does), so "What applies" is done once the quick start is.
   const { data: applicabilityData } = trpc.regulations.getApplicability.useQuery(
     { organizationId: orgId },
     { enabled: !!orgId }
   );
   const setApplicabilityMutation = trpc.regulations.setApplicability.useMutation();
+  const setJurisdictionsMutation = trpc.regulations.setJurisdictions.useMutation();
   // The person's edits win; until they touch anything, show the stored answers
   // (or all "not sure yet" before they load). Mirrors the Settings card.
   const applicabilityValue =
     applicabilityAnswers ?? applicabilityData?.answers ?? EMPTY_APPLICABILITY_ANSWERS;
+  // Where the organisation operates: the stored places until the person
+  // changes the choice (null = untouched); "not sure yet" saves nothing.
+  const storedCodes = applicabilityData?.jurisdictionCodes ?? [];
+  const [placesInput, setPlacesInput] = useState<string[] | null>(null);
+  const [placesUnsure, setPlacesUnsure] = useState(false);
+  const chosenPlaces = placesInput ?? storedCodes.filter(isPlaceCode);
+  // The result reads the places as chosen, plus anything declared elsewhere
+  // that is not a place (the EU AI Act on the "What applies" page).
+  const resultCodes = placesUnsure
+    ? storedCodes.filter((c) => !isPlaceCode(c))
+    : [...storedCodes.filter((c) => !isPlaceCode(c)), ...chosenPlaces];
 
   const { data: catalogAccess } = trpc.vendor.hasVendorCatalogAccess.useQuery(
     { organizationId: orgId },
@@ -297,6 +313,14 @@ export default function QuickstartPage() {
     // Save only real answers; all "not sure yet" is the same as skipping.
     if (hasAnyApplicabilityAnswer(applicabilityValue)) {
       setApplicabilityMutation.mutate({ organizationId: orgId, answers: applicabilityValue });
+    }
+    // Places: saved only when the person changed them and chose at least one;
+    // "not sure yet" (or nothing chosen) leaves the stored places as they are.
+    if (placesInput !== null && !placesUnsure && placesInput.length > 0) {
+      setJurisdictionsMutation.mutate(
+        { organizationId: orgId, codes: placesInput },
+        { onError: (error) => toast.error(error.message || tp("applies.placesFailed")) },
+      );
     }
     setStep(afterApplies());
   };
@@ -469,6 +493,30 @@ export default function QuickstartPage() {
               <CardDescription>{tp("applies.intro")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Where the organisation operates: the laws to check against. */}
+              <div className="space-y-3 rounded-lg border border-border p-4">
+                <div>
+                  <h3 className="text-sm font-semibold">{tp("applies.placesQuestion")}</h3>
+                  <p className="text-xs text-muted-foreground mt-1">{tp("applies.placesHint")}</p>
+                </div>
+                <JurisdictionPicker
+                  value={chosenPlaces}
+                  onChange={(codes) => {
+                    setPlacesInput(codes);
+                    if (codes.length > 0) setPlacesUnsure(false);
+                  }}
+                  disabled={placesUnsure}
+                  idPrefix="quickstart-place"
+                />
+                <label className="flex items-center gap-2 text-sm cursor-pointer min-h-9">
+                  <Checkbox
+                    checked={placesUnsure}
+                    onCheckedChange={(checked) => setPlacesUnsure(checked === true)}
+                    data-testid="places-unsure"
+                  />
+                  {tp("applies.placesUnsure")}
+                </label>
+              </div>
               <ApplicabilityQuestions
                 answers={applicabilityValue}
                 onChange={setApplicabilityAnswers}
@@ -476,7 +524,7 @@ export default function QuickstartPage() {
               />
               <div className="rounded-lg border border-border p-4">
                 <ApplicabilityResult
-                  jurisdictionCodes={applicabilityData?.jurisdictionCodes ?? []}
+                  jurisdictionCodes={resultCodes}
                   answers={applicabilityValue}
                 />
               </div>
@@ -1466,6 +1514,10 @@ export default function QuickstartPage() {
               </p>
             </CardContent>
           </Card>
+
+          {/* The records just made are drafts: they count towards the
+              programme once a person confirms them. */}
+          {!nothingCreated && <DraftsNotice />}
 
           {/* What was created: every record the server made, by name, each
               linked to its own page. A data flow has no page of its own, so

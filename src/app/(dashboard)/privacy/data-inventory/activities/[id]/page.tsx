@@ -36,6 +36,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { RecordHeader } from "@/components/privacy/record-header";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { ConfirmDraftButton, DraftBadge } from "@/components/privacy/draft-confirm";
 
 export default function ActivityDetailPage() {
   const params = useParams();
@@ -216,15 +217,19 @@ export default function ActivityDetailPage() {
             </Badge>
             {!activity.isActive && <Badge variant="secondary">{tp("inactive")}</Badge>}
             <TemplateBadge metadata={activity.metadata} className="text-xs" />
+            <DraftBadge record={activity} className="text-xs" />
           </>
         }
         actions={
+          <>
+          <ConfirmDraftButton kind="processingActivity" id={activity.id} record={activity} />
           <Link href={`/privacy/data-inventory/activities/${activity.id}/edit`}>
             <Button variant="outline" size="sm">
               <Edit className="w-4 h-4 mr-2" />
               {tp("edit")}
             </Button>
           </Link>
+          </>
         }
       />
 

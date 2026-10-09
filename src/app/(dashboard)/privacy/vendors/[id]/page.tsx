@@ -51,6 +51,7 @@ import { ProduceDpaDialog } from "./produce-dpa-dialog";
 import { VendorStatus, VendorRiskTier, ContractType, ReviewType } from "@prisma/client";
 import { StatusChip } from "@/components/ui/status-chip";
 import { TemplateBadge } from "@/components/privacy/template-badge";
+import { ConfirmDraftButton, DraftBadge } from "@/components/privacy/draft-confirm";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { toneChip } from "@/config/status-palette";
 
@@ -246,6 +247,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                 </Badge>
               )}
               <TemplateBadge metadata={vendor.metadata} className="text-xs" />
+              <DraftBadge record={vendor} className="text-xs" />
             </div>
             <p className="text-muted-foreground break-words">
               {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}
@@ -253,6 +255,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <ConfirmDraftButton kind="vendor" id={vendor.id} record={vendor} />
           <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
             {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
             {tp("delete")}

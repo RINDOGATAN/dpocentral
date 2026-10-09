@@ -324,6 +324,9 @@ describe("F8: a breach with no decision on notifying", () => {
   it("is counted by the Needs action query for the whole organisation", async () => {
     const counts = {
       processingActivity: { count: vi.fn().mockResolvedValue(0) },
+      // Drafts to confirm (Needs action counts them too; none here).
+      dataAsset: { count: vi.fn().mockResolvedValue(0) },
+      vendor: { count: vi.fn().mockResolvedValue(0) },
       dSARRequest: { count: vi.fn().mockResolvedValue(0) },
       incident: { count: vi.fn() },
       assessment: { count: vi.fn().mockResolvedValue(0) },
@@ -348,6 +351,8 @@ describe("F8: a breach with no decision on notifying", () => {
     vi.stubEnv("NEXT_PUBLIC_DSAR_ENABLED", "false");
     const counts = {
       processingActivity: { count: vi.fn().mockResolvedValue(0) },
+      dataAsset: { count: vi.fn().mockResolvedValue(0) },
+      vendor: { count: vi.fn().mockResolvedValue(0) },
       dSARRequest: { count: vi.fn().mockResolvedValue(5) },
       incident: { count: vi.fn() },
       assessment: { count: vi.fn().mockResolvedValue(0) },

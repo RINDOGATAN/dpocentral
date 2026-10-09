@@ -18,7 +18,7 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure } from "../../trpc";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath } from "@/components/guided/path";
-import { loadPathCounts } from "@/server/services/program/path-counts";
+import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
 import { loadPlanStart } from "@/server/services/program/plan-start";
 
 export const programPathRouter = createTRPCRouter({
@@ -32,6 +32,12 @@ export const programPathRouter = createTRPCRouter({
         ctx.organization.id,
         steps.quickstart === "done",
       );
-      return { steps, planStart: planStart?.toISOString() ?? null };
+      return {
+        steps,
+        planStart: planStart?.toISOString() ?? null,
+        // Records drafted for this organisation and not yet confirmed: what
+        // "Review and confirm" holds (services/template-items/drafts.ts).
+        drafts: draftTotal(counts),
+      };
     }),
 });

@@ -21,20 +21,25 @@
 import type { LucideIcon } from "lucide-react";
 
 /**
- * - `done`     the rule is met
- * - `started`  there is something, but not yet enough
- * - `todo`     nothing yet
- * - `coming`   the product has no page for it yet
- * - `hidden`   the step does not concern this organisation (its `shownWhen`
- *              rule is not met): not shown, not counted, never the next step
+ * - `done`       the rule is met by records a person has confirmed
+ * - `toConfirm`  the rule would be met, but only by drafts: records the quick
+ *                start, a template or another client's copy created, which
+ *                count once a person confirms them (owner's decision d2,
+ *                9 October 2026). Never counted as done.
+ * - `started`    there is something, but not yet enough
+ * - `todo`       nothing yet
+ * - `coming`     the product has no page for it yet
+ * - `hidden`     the step does not concern this organisation (its `shownWhen`
+ *                rule is not met): not shown, not counted, never the next step
  */
-export type StepStatus = "done" | "started" | "todo" | "coming" | "hidden";
+export type StepStatus = "done" | "toConfirm" | "started" | "todo" | "coming" | "hidden";
 
 /**
- * A stage as a whole: not started, in progress, done, or "coming" (a stage
- * whose steps all have no page yet, so it carries no count and no progress).
+ * A stage as a whole: not started, in progress, drafts waiting to be
+ * confirmed, done, or "coming" (a stage whose steps all have no page yet, so
+ * it carries no count and no progress).
  */
-export type StageState = "todo" | "started" | "done" | "coming";
+export type StageState = "todo" | "started" | "toConfirm" | "done" | "coming";
 
 export interface PathStep<C> {
   /** Stable id; also the i18n key under `steps.<id>`. */
@@ -177,28 +182,66 @@ export interface StageProgress {
 export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): StageProgress {
   const counted = stage.steps.filter((s) => isCounted(s) && isShown(s, statuses));
   const done = counted.filter((s) => statuses[s.id] === "done").length;
-  const moving = counted.some((s) => statuses[s.id] === "done" || statuses[s.id] === "started");
+  const moving = counted.some(
+    (s) => statuses[s.id] === "done" || statuses[s.id] === "started" || statuses[s.id] === "toConfirm",
+  );
+  const drafts = counted.some((s) => statuses[s.id] === "toConfirm");
   const allComing = counted.length === 0 && stage.steps.some((s) => s.coming);
   const state: StageState = allComing
     ? "coming"
     : counted.length > 0 && done === counted.length
       ? "done"
-      : moving
-        ? "started"
-        : "todo";
+      : drafts
+        ? "toConfirm"
+        : moving
+          ? "started"
+          : "todo";
   return { done, total: counted.length, state };
 }
 
 /** Done over counted, across the whole path. */
 export function overallProgress<C>(config: PathConfig<C>, statuses: PathStatuses) {
-  let done = 0;
-  let total = 0;
+  const figure = programFigure(config, statuses);
+  return { done: figure.confirmed, total: figure.total };
+}
+
+/**
+ * THE programme figure ("2 of 10 steps confirmed"), owner's decision d3,
+ * 9 October 2026. Computed here and only here: the dashboard, the menu, All
+ * clients and the Reports page all read it through this function, so they
+ * can never show different numbers.
+ *
+ * - `total`      the counted steps shown for this organisation (a step with a
+ *                page, not optional, not hidden)
+ * - `confirmed`  of those, the steps whose rule is met by confirmed records
+ * - `toConfirm`  steps met only by drafts waiting for a person to confirm them
+ * - `started`    steps with something, but not yet enough
+ * - `notStarted` steps with nothing yet
+ *
+ * The four parts always add up to `total`.
+ */
+export interface ProgramFigure {
+  confirmed: number;
+  total: number;
+  toConfirm: number;
+  started: number;
+  notStarted: number;
+}
+
+export function programFigure<C>(config: PathConfig<C>, statuses: PathStatuses): ProgramFigure {
+  const figure: ProgramFigure = { confirmed: 0, total: 0, toConfirm: 0, started: 0, notStarted: 0 };
   for (const stage of config.stages) {
-    const p = stageProgress(stage, statuses);
-    done += p.done;
-    total += p.total;
+    for (const step of stage.steps) {
+      if (!isCounted(step) || !isShown(step, statuses)) continue;
+      figure.total += 1;
+      const status = statuses[step.id];
+      if (status === "done") figure.confirmed += 1;
+      else if (status === "toConfirm") figure.toConfirm += 1;
+      else if (status === "started") figure.started += 1;
+      else figure.notStarted += 1;
+    }
   }
-  return { done, total };
+  return figure;
 }
 
 export interface NextStep<C> {

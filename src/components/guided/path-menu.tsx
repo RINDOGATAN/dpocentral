@@ -15,7 +15,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Check, ChevronDown, Circle, CircleDot, type LucideIcon } from "lucide-react";
+import { Check, ChevronDown, Circle, CircleDashed, CircleDot, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   currentLibraryId,
@@ -23,7 +23,7 @@ import {
   isCounted,
   isShown,
   stageExpandable,
-  overallPercent,
+  programFigure,
   stageOfStep,
   stageOpenByDefault,
   stageProgress,
@@ -101,7 +101,9 @@ export function PathMenu<C>({
 }: PathMenuProps<C>) {
   const library = config.library({ stripeEnabled, clientMode });
   const currentStep = currentStepId(config, pathname, search);
-  const percent = statuses && showProgress ? overallPercent(config, statuses) : null;
+  // The one programme figure ("2 of 10 steps confirmed"), as on the
+  // dashboard, All clients and the Reports page (path.ts, programFigure).
+  const figure = statuses && showProgress ? programFigure(config, statuses) : null;
   const onOverview = pathname === overview.href;
   const currentStage = stageOfStep(config, currentStep);
   const openStage = stageOpenByDefault(config, currentStep, statuses, onOverview);
@@ -136,9 +138,11 @@ export function PathMenu<C>({
         {showProgress && (
         <span
           className="text-[11px] font-semibold tabular-nums text-primary"
-          title={percent === null ? t("loading") : t("overall", { percent })}
+          title={
+            figure === null ? t("loading") : t("figure.line", { done: figure.confirmed, total: figure.total })
+          }
         >
-          {percent === null ? " " : `${percent}%`}
+          {figure === null ? " " : `${figure.confirmed}/${figure.total}`}
         </span>
         )}
         <IconLink
@@ -208,21 +212,21 @@ export function PathMenu<C>({
       {/* The whole program at a glance: always one line and a bar tall, so
           nothing moves when the figure arrives. */}
       {showProgress && (
-      <div className="px-3 pb-2 flex flex-col gap-1.5" aria-busy={percent === null}>
-        <span className="flex items-baseline justify-between gap-2 text-sm">
+      <div className="px-3 pb-2 flex flex-col gap-1.5" aria-busy={figure === null}>
+        <span className="flex flex-col gap-0.5 text-sm">
           <span className="font-medium text-foreground">{t("overallLabel")}</span>
-          <span className="tabular-nums text-primary font-semibold">
-            {percent === null ? (
+          <span className="tabular-nums text-primary font-semibold" data-testid="menu-program-figure">
+            {figure === null ? (
               <>
                 <span aria-hidden="true">&nbsp;</span>
                 <span className="sr-only">{t("loading")}</span>
               </>
             ) : (
-              `${percent}%`
+              t("figure.line", { done: figure.confirmed, total: figure.total })
             )}
           </span>
         </span>
-        <ProgressBar value={percent} total={100} />
+        <ProgressBar value={figure?.confirmed ?? null} total={figure?.total ?? 0} />
         {planLine && (
           <span className="text-xs text-muted-foreground tabular-nums">{planLine}</span>
         )}
@@ -461,6 +465,8 @@ function StepMark({
         <span className="flex size-3.5 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <Check className="size-2.5" strokeWidth={3} aria-hidden="true" />
         </span>
+      ) : status === "toConfirm" ? (
+        <CircleDashed className="size-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
       ) : status === "started" ? (
         <CircleDot className="size-3.5 text-primary" aria-hidden="true" />
       ) : (

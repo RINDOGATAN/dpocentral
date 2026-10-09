@@ -19,6 +19,7 @@ export const NEEDS_ACTION_KINDS = [
   "breach-window",
   "breach-decision",
   "assessment-approval",
+  "drafts-to-confirm",
 ] as const;
 
 export type NeedsActionKind = (typeof NEEDS_ACTION_KINDS)[number];
@@ -30,6 +31,7 @@ const HREF: Record<NeedsActionKind, string> = {
   "breach-window": "/privacy/incidents",
   "breach-decision": "/privacy/incidents",
   "assessment-approval": "/privacy/assessments",
+  "drafts-to-confirm": "/privacy/review",
 };
 
 export interface NeedsActionCounts {
@@ -53,6 +55,10 @@ export interface NeedsActionCounts {
   /// Assessments sent for approval (PENDING_APPROVAL or PENDING_REVIEW). Null
   /// when department-scoped.
   assessmentApproval: number | null;
+  /// Records the quick start, a template or another client's copy drafted and
+  /// nobody has confirmed (src/server/services/template-items/drafts.ts).
+  /// Optional; null when department-scoped.
+  draftsToConfirm?: number | null;
 }
 
 export interface NeedsActionItem {
@@ -72,6 +78,7 @@ export function buildNeedsAction(counts: NeedsActionCounts): NeedsActionItem[] {
   push("breach-window", counts.breachWindow);
   push("breach-decision", counts.breachDecision ?? null);
   push("assessment-approval", counts.assessmentApproval);
+  push("drafts-to-confirm", counts.draftsToConfirm ?? null);
   return items;
 }
 

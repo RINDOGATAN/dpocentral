@@ -872,6 +872,11 @@ export const quickstartRouter = createTRPCRouter({
                 type: "APPLICATION",
                 hostingType: "On-premise / Cloud",
                 isProduction: true,
+                // Drafted like every other quick-start record: "To confirm"
+                // until a person confirms it (template-items/drafts.ts).
+                provenance: "AUTO_TEMPLATE",
+                sourceRef: "quickstart",
+                metadata: { source: "quickstart" },
               },
             });
             counts.assets++;

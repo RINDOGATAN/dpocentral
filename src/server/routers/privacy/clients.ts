@@ -5,7 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { logger } from "@/lib/logger";
 import { DPO_CENTRAL_PATH } from "@/components/guided/path-config";
 import { evaluatePath, type PathStatuses } from "@/components/guided/path";
-import { loadPathCounts } from "@/server/services/program/path-counts";
+import { draftTotal, loadPathCounts } from "@/server/services/program/path-counts";
 import { loadPlanStart } from "@/server/services/program/plan-start";
 import { isDsarModuleEnabled } from "@/config/features";
 
@@ -116,6 +116,7 @@ export const clientsRouter = createTRPCRouter({
             ...base,
             steps,
             planStart: planStart?.toISOString() ?? null,
+            drafts: draftTotal(counts),
             openDsars,
             overdueDsars,
             dueSoonDsars,
@@ -131,6 +132,7 @@ export const clientsRouter = createTRPCRouter({
             ...base,
             steps: emptySteps,
             planStart: null,
+            drafts: 0,
             openDsars: 0,
             overdueDsars: 0,
             dueSoonDsars: 0,
