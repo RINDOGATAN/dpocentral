@@ -1090,6 +1090,10 @@
         "overdue": "VENCIDA: debía notificarse el {date}",
         "create": "Crear notificación"
       },
+      "windowClock": {
+        "open": "El plazo de 72 horas vence el {date}. Decide si hay que notificar.",
+        "ended": "El plazo de 72 horas venció el {date}. No consta ninguna notificación."
+      },
       "stats": {
         "discovered": "Descubierto",
         "affectedRecords": "Registros afectados",
@@ -2344,7 +2348,7 @@
       },
       "vendors": {
         "title": "Proveedores",
-        "activeCount": "{count, plural, one {# proveedor activo} other {# proveedores activos}}",
+        "countLine": "{total, plural, one {# proveedor} other {# proveedores}}, {active, plural, one {# activo} other {# activos}}",
         "categoryFallback": "Proveedor",
         "empty": "Añade proveedores para gestionar el riesgo de terceros"
       },
@@ -8924,6 +8928,7 @@
   },
   "portfolio": {
     "title": "Todos los clientes",
+    "addClient": "Añadir un cliente",
     "subtitle": "{count, plural, one {# organización} other {# organizaciones}} que gestionas",
     "tiles": {
       "requestsDue": "Solicitudes por vencer",
@@ -9067,12 +9072,14 @@
         "review-due": "Revisiones pendientes",
         "dsar-due": "Solicitudes de derechos por vencer",
         "breach-window": "Brechas por notificar",
+        "breach-decision": "Brechas pendientes de decidir si se notifican",
         "assessment-approval": "Evaluaciones por aprobar"
       },
       "hint": {
         "review-due": "Registros de tratamiento cuya fecha de revisión ha pasado.",
         "dsar-due": "Solicitudes abiertas con el plazo a punto de vencer o ya vencido.",
         "breach-window": "Brechas abiertas que deben notificarse.",
+        "breach-decision": "Brechas registradas en las últimas 72 horas sin ninguna notificación ni marca de que deban notificarse. Decide si hay que notificar antes de que venza el plazo.",
         "assessment-approval": "Evaluaciones enviadas para revisión o aprobación."
       }
     },

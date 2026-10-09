@@ -660,6 +660,7 @@ export const organizationRouter = createTRPCRouter({
         activeAssessments,
         openIncidents,
         activeVendors,
+        totalVendors,
         recentAuditLogs,
       ] = await Promise.all([
         ctx.prisma.dataAsset.count({
@@ -699,6 +700,12 @@ export const organizationRouter = createTRPCRouter({
             status: "ACTIVE",
           },
         }),
+        // Every vendor in any status: the dashboard's vendor card lists them
+        // all, so its count line names both figures (a prospective vendor is
+        // listed but is not active).
+        ctx.prisma.vendor.count({
+          where: { organizationId: ctx.organization.id },
+        }),
         ctx.prisma.auditLog.findMany({
           where: {
             organizationId: ctx.organization.id,
@@ -722,6 +729,7 @@ export const organizationRouter = createTRPCRouter({
         activeAssessments,
         openIncidents,
         activeVendors,
+        totalVendors,
         recentAuditLogs,
       };
     }),

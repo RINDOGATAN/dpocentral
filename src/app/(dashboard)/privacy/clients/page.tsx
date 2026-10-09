@@ -20,10 +20,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertTriangle, Building2, Clock, Loader2, AlertCircle, FileText, ArrowRight, MoreVertical, Copy } from "lucide-react";
+import { AlertTriangle, Building2, Clock, Loader2, AlertCircle, FileText, ArrowRight, MoreVertical, Copy, Plus } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
+import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
 import { canUseForTemplate } from "@/config/client-template";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -99,6 +100,10 @@ export default function ClientsPage() {
   // "Start a new client from this one": the row's client is the source; the
   // dialog creates the new client and copies into it. Owner/admin only.
   const [copyFrom, setCopyFrom] = useState<{ id: string; name: string } | null>(null);
+  // "Add a client": a blank client with only a name, the Guided way in (the
+  // Classic switcher's "New Organization" is not shown in Guided). The new
+  // client becomes the current one and opens on its own dashboard.
+  const [addOpen, setAddOpen] = useState(false);
 
   const requestsDue = clients?.reduce((s, c) => s + c.overdueDsars + c.dueSoonDsars, 0) ?? 0;
   const totalIncidents = clients?.reduce((s, c) => s + c.openIncidents, 0) ?? 0;
@@ -123,11 +128,17 @@ export default function ClientsPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {t("subtitle", { count: clients?.length ?? 0 })}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {t("subtitle", { count: clients?.length ?? 0 })}
+          </p>
+        </div>
+        <Button size="sm" className="gap-2 shrink-0 self-start" onClick={() => setAddOpen(true)}>
+          <Plus className="w-4 h-4" aria-hidden="true" />
+          {t("addClient")}
+        </Button>
       </div>
 
       {/* Summary tiles */}
@@ -267,6 +278,12 @@ export default function ClientsPage() {
           </CardContent>
         </Card>
       )}
+
+      <NewOrganizationDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onCreated={() => router.push("/privacy")}
+      />
 
       <CopyFromClientDialog
         open={!!copyFrom}

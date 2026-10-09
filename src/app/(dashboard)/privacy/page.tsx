@@ -7,8 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Database,
   FileText,
@@ -33,19 +31,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
-import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
 import { formatDateTimeIn } from "@/lib/utils";
 import { useEnumLabels } from "@/lib/enum-labels";
@@ -58,46 +49,19 @@ import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
 import { useMemberScope } from "@/lib/use-member-scope";
+import { formatRequestRef } from "@/lib/request-ref";
+import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const t = useTranslations("toasts");
   const tp = useTranslations("pages.dashboard");
-  const tCommon = useTranslations("common");
   const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
-  const { organization, organizations, setOrganization, refetchOrganizations } = useOrganization();
+  const { organization, organizations, setOrganization } = useOrganization();
   const { canHandle: canHandleDsars } = useDsarAccess();
   const { skin } = useSkin();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
-  const [newOrgName, setNewOrgName] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-
-  const createOrg = trpc.organization.create.useMutation({
-    onSuccess: (org) => {
-      setOrganization(org);
-      refetchOrganizations();
-      setCreateOrgOpen(false);
-      setNewOrgName("");
-      toast.success(t("organization.created", { name: org.name }));
-    },
-    onError: (err) => {
-      toast.error(err.message || t("generic.somethingWentWrong"));
-    },
-    onSettled: () => setIsCreating(false),
-  });
-
-  const generateSlug = (text: string) =>
-    text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-
-  const handleCreateOrg = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newOrgName.trim()) return;
-    setIsCreating(true);
-    createOrg.mutate({ name: newOrgName.trim(), slug: generateSlug(newOrgName) });
-  };
-
   const { data: stats, isLoading } = trpc.organization.getDashboardStats.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
@@ -176,6 +140,7 @@ export default function PrivacyDashboardPage() {
     activeAssessments: stats?.activeAssessments ?? 0,
     openIncidents: stats?.openIncidents ?? 0,
     activeVendors: stats?.activeVendors ?? 0,
+    totalVendors: stats?.totalVendors ?? 0,
   };
 
   const recentActivity = stats?.recentAuditLogs ?? [];
@@ -411,7 +376,10 @@ export default function PrivacyDashboardPage() {
                   <div className="flex items-start sm:items-center gap-3 sm:gap-4 p-2 -mx-2 hover:bg-muted/50 transition-colors">
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium font-mono text-primary text-sm">{dsar.publicId}</span>
+                        {/* A short reference, not the database identifier (kept in the tooltip). */}
+                        <span className="font-medium font-mono text-primary text-sm" title={dsar.publicId}>
+                          {formatRequestRef(dsar.publicId, locale)}
+                        </span>
                         <Badge variant="outline" className="text-xs">{enumLabel("dsarType", dsar.type)}</Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground truncate">{dsar.requesterName}</p>
@@ -485,15 +453,21 @@ export default function PrivacyDashboardPage() {
                 whether it is offered); the form repeats the label. */}
             {/* On the pilot tier the action says the two DPIAs are free for a
                 limited time (the server count; nothing off the pilot tier). */}
+            {/* When gated, the label and the badge both stay whole: the button
+                grows and the badge wraps under the label in a narrow column,
+                rather than cutting the label to "Start a ...". */}
             <div>
               <Link href="/privacy/assessments/new?type=DPIA">
-                <Button variant="outline" className="w-full justify-start h-11">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start h-auto sm:h-auto min-h-11 py-2 whitespace-normal text-left flex-wrap gap-y-1"
+                >
                   <ClipboardCheck className="w-4 h-4 mr-2 shrink-0" />
-                  <span className="truncate">{tp("quickActions.newDpia")}</span>
+                  <span className="min-w-0">{tp("quickActions.newDpia")}</span>
                   {dpiaGated && (
                     <Badge
                       variant="secondary"
-                      className="ml-auto shrink-0 bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
+                      className="ml-auto shrink-0 whitespace-nowrap bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                       data-testid="quick-action-dpia-gated"
                     >
                       <Lock className="w-3 h-3 mr-1" aria-hidden="true" />
@@ -547,7 +521,7 @@ export default function PrivacyDashboardPage() {
             <div className="flex items-center justify-between gap-2">
               <div>
                 <CardTitle className="text-base sm:text-lg">{tp("vendors.title")}</CardTitle>
-                <CardDescription className="text-xs sm:text-sm">{tp("vendors.activeCount", { count: dashboardStats.activeVendors })}</CardDescription>
+                <CardDescription className="text-xs sm:text-sm">{tp("vendors.countLine", { total: dashboardStats.totalVendors, active: dashboardStats.activeVendors })}</CardDescription>
               </div>
               <Link href="/privacy/vendors">
                 <Button variant="ghost" size="sm" className="shrink-0">
@@ -587,35 +561,9 @@ export default function PrivacyDashboardPage() {
         </Card>
       </div>
 
-      {/* Create Organization Dialog */}
-      <Dialog open={createOrgOpen} onOpenChange={setCreateOrgOpen}>
-        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{tp("newOrgDialog.title")}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleCreateOrg} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="new-org-name">{tp("newOrgDialog.nameLabel")}</Label>
-              <Input
-                id="new-org-name"
-                placeholder={tp("newOrgDialog.namePlaceholder")}
-                value={newOrgName}
-                onChange={(e) => setNewOrgName(e.target.value)}
-                autoFocus
-                required
-              />
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="ghost" onClick={() => setCreateOrgOpen(false)}>
-                {tCommon("cancel")}
-              </Button>
-              <Button type="submit" disabled={isCreating || !newOrgName.trim()}>
-                {isCreating ? tp("newOrgDialog.creating") : tp("newOrgDialog.create")}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {/* Create Organization Dialog (Classic's switcher; Guided reaches the
+          same dialog from "Add a client" on All clients). */}
+      <NewOrganizationDialog open={createOrgOpen} onOpenChange={setCreateOrgOpen} />
     </div>
   );
 }

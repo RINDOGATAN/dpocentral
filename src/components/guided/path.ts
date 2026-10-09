@@ -343,6 +343,20 @@ export function stageToCelebrate<C>(
   return { remember: [...new Set([...seen, ...done])], celebrate };
 }
 
+/**
+ * What the band says after "Stage N complete": the stage that holds the next
+ * step not done, or null when every counted step on the path is done. Read
+ * from the whole path, never from the stage that follows the one just
+ * finished: finishing the last stage while an earlier one is still open must
+ * not announce "Every stage is done".
+ */
+export function stageAfterCelebration<C>(
+  config: PathConfig<C>,
+  statuses: PathStatuses,
+): number | null {
+  return nextStep(config, statuses)?.stageIndex ?? null;
+}
+
 /** Progress across the whole path as a whole percentage; 0 when nothing counts. */
 export function overallPercent<C>(config: PathConfig<C>, statuses: PathStatuses): number {
   const { done, total } = overallProgress(config, statuses);

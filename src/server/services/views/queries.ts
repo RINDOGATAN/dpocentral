@@ -21,6 +21,7 @@ import {
   type NeedsActionCounts,
 } from "@/lib/needs-action";
 import { missingRecordFields, type RecordField } from "@/lib/record-completeness";
+import { breachWindowOpenSince } from "@/lib/breach-window";
 import {
   departmentScopeConditions,
   type BusinessUnitScope,
@@ -63,10 +64,11 @@ export async function collectNeedsAction(
   // view; a department view leaves them out.
   let dsarDue: number | null = null;
   let breachWindow: number | null = null;
+  let breachDecision: number | null = null;
   let assessmentApproval: number | null = null;
   if (!departmentScoped) {
     const dueBefore = new Date(now.getTime() + DSAR_DUE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
-    const [dsar, breach, assessment] = await Promise.all([
+    const [dsar, breach, undecided, assessment] = await Promise.all([
       prisma.dSARRequest.count({
         where: {
           organizationId,
@@ -81,16 +83,35 @@ export async function collectNeedsAction(
           status: { notIn: [...CLOSED_INCIDENT] },
         },
       }),
+      // Logged inside the 72-hour window with no decision on notifying: not
+      // marked as requiring notification (false is also the default for an
+      // incident logged with no detail) and no notification recorded.
+      prisma.incident.count({
+        where: {
+          organizationId,
+          notificationRequired: false,
+          status: { notIn: [...CLOSED_INCIDENT] },
+          discoveredAt: { gt: breachWindowOpenSince(now) },
+          notifications: { none: {} },
+        },
+      }),
       prisma.assessment.count({
         where: { organizationId, status: { in: [...PENDING_ASSESSMENT] } },
       }),
     ]);
     dsarDue = dsar;
     breachWindow = breach;
+    breachDecision = undecided;
     assessmentApproval = assessment;
   }
 
-  const counts: NeedsActionCounts = { reviewDue, dsarDue, breachWindow, assessmentApproval };
+  const counts: NeedsActionCounts = {
+    reviewDue,
+    dsarDue,
+    breachWindow,
+    breachDecision,
+    assessmentApproval,
+  };
   const items = buildNeedsAction(counts);
   return { items, total: needsActionTotal(items), departmentScoped };
 }
