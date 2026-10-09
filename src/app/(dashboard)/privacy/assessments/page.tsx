@@ -29,6 +29,9 @@ import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { PageHeader } from "@/components/privacy/page-header";
 import { DpiaFreeNote } from "@/components/pilot/dpia-free-note";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { LicenceLock } from "@/components/premium/licence-lock";
+import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 
 import { formatDateIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
@@ -65,6 +68,19 @@ export default function AssessmentsPage() {
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
+
+  // The DPIA option carries the licence lock that used to sit on the menu's
+  // Assessments step (owner's decision, 9 October 2026): same rule, never on
+  // the hosted pilot, nothing shown until the answer arrives.
+  const hosted = useHostedPilot();
+  const { data: entitledData } = trpc.assessment.getEntitledTypes.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && !hosted }
+  );
+  const dpiaLocked =
+    !hosted &&
+    !!entitledData &&
+    isAssessmentTypeLocked({ type: "DPIA", entitledTypes: entitledData.entitledTypes, hosted });
 
   const assessments = assessmentsData?.assessments ?? [];
   const templates = templatesData ?? [];
@@ -299,9 +315,10 @@ export default function AssessmentsPage() {
             {[
               { type: "LIA", nameKey: "lia" },
               { type: "CUSTOM", nameKey: "custom" },
-              // The DPIA is never locked: without a licence it is on the pilot
-              // tier (two free for a limited time, said under the card; see
-              // isDpiaPilotTier in server/services/licensing/entitlement.ts).
+              // Hosted, the DPIA is on the pilot tier (two free for a limited
+              // time, said under the card; see isDpiaPilotTier). On your own
+              // instance without its licence, the card carries the lock and
+              // leads to the form's licence notice.
               { type: "DPIA", nameKey: "dpia" },
             ].map((item) => (
               <Link key={item.type} href={`/privacy/assessments/new?type=${item.type}`}>
@@ -310,7 +327,12 @@ export default function AssessmentsPage() {
                     <div className="flex items-center justify-between mb-2">
                       <Badge variant="outline">{enumLabel("assessmentType", item.type)}</Badge>
                     </div>
-                    <h4 className="font-medium">{t(`quickStart.${item.nameKey}` as `quickStart.lia` | `quickStart.custom` | `quickStart.dpia`)}</h4>
+                    <h4 className="font-medium">
+                      {t(`quickStart.${item.nameKey}` as `quickStart.lia` | `quickStart.custom` | `quickStart.dpia`)}
+                      {item.type === "DPIA" && dpiaLocked && (
+                        <LicenceLock className="ml-1.5 align-[-2px]" testId="assessments-dpia-lock" />
+                      )}
+                    </h4>
                     {item.type === "DPIA" && <DpiaFreeNote className="mt-1" />}
                     <p className="text-xs text-muted-foreground mt-1">
                       {templates.find((tpl) => tpl.type === item.type)

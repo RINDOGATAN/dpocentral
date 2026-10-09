@@ -70,6 +70,7 @@ export default function NewAssessmentPage() {
   const tp = useTranslations("pages.newAssessment");
   const tTrial = useTranslations("pages.trialAssessments");
   const tCommon = useTranslations("common");
+  const tg = useTranslations("guided");
   const typeName = (type: string | null | undefined) =>
     type
       ? tp(`type.${type}` as `type.LIA` | `type.CUSTOM` | `type.DPIA` | `type.PIA` | `type.TIA` | `type.VENDOR`)
@@ -279,9 +280,12 @@ export default function NewAssessmentPage() {
                           }`}
                         >
                           {isLocked ? (
-                            <Lock className="w-5 h-5 text-amber-500" />
+                            <span data-testid={`type-lock-${at.type}`} title={tg("requiresLicence")}>
+                              <Lock className="w-5 h-5 text-amber-500" aria-hidden="true" />
+                              <span className="sr-only">{tg("requiresLicence")}</span>
+                            </span>
                           ) : (
-                            <Icon className="w-5 h-5 text-primary" />
+                            <Icon className="w-5 h-5 text-primary" aria-hidden="true" />
                           )}
                         </div>
                         <div className="flex gap-1.5">
@@ -301,11 +305,16 @@ export default function NewAssessmentPage() {
                                 {tp("active")}
                               </Badge>
                             ) : (
+                              // A locked type names what it needs, never a price.
                               <Badge
                                 variant="secondary"
                                 className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs"
                               >
-                                {features.stripeEnabled ? `${formatPrice(9)}${tp("perMonth")}` : tp("premiumSkill")}
+                                {isLocked
+                                  ? tg("requiresLicence")
+                                  : features.stripeEnabled
+                                    ? `${formatPrice(9)}${tp("perMonth")}`
+                                    : tp("premiumSkill")}
                               </Badge>
                             )
                           ) : (

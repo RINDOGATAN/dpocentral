@@ -70,7 +70,7 @@ export default async function DocsGettingStartedPage() {
     "assessment-approval",
   ].filter((kind) => dsarOn || kind !== "dsar-due");
 
-  const libraryItems = ["needsAction", "incomplete", "reports", "experts", "skills", "help", "settings"] as const;
+  const libraryItems = ["needsAction", "incomplete", "reports", "auditTrail", "experts", "skills", "help", "settings"] as const;
 
   const roleRows = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
 

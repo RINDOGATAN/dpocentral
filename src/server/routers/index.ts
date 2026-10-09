@@ -30,6 +30,7 @@ import { savedViewRouter } from "./privacy/savedView";
 import { viewsRouter } from "./privacy/views";
 import { skillsRouter } from "./skills";
 import { diagnosticsRouter } from "./diagnostics";
+import { auditRouter } from "./privacy/audit";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
@@ -60,6 +61,7 @@ export const appRouter = createTRPCRouter({
   views: viewsRouter,
   skills: skillsRouter,
   diagnostics: diagnosticsRouter,
+  audit: auditRouter,
 });
 
 export type AppRouter = typeof appRouter;

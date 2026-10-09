@@ -6,6 +6,26 @@ All notable changes to DPO Central are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Audit trail** ("Registro de auditoría"), under Library and tools: the
+  organisation's audit log, newest first, filtered by area, action, person
+  and dates, fifty entries at a time, and exported as CSV with the same
+  filters (the export is itself recorded). Owners, admins and privacy
+  officers only; the menu leaves it out for other members and the server
+  refuses them. Entries about rights requests show the reference and the
+  action only, on screen and in the CSV; without the rights-request module
+  they are left out. English and Spanish. No database change.
+
+### Changed
+
+- **The DPIA licence lock moves from the menu to the DPIA option.** The
+  Assessments step no longer carries a lock. On your own instance, where
+  the DPIA is not licensed, the lock sits on the DPIA card of the
+  Assessments page and of the type picker, labelled "Requires a licence"
+  ("Requiere una licencia") with no price. Same entitlement check; never on
+  the hosted pilot. The Vendor due diligence lock is unchanged.
+
 ### Removed
 
 - **The Classic layout.** Guided is now the only dashboard layout. The

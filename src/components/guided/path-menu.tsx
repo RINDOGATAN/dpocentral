@@ -47,6 +47,8 @@ interface PathMenuProps<C> {
   stripeEnabled: boolean;
   /** The account works for client organisations (the library shows the client cards). */
   clientMode?: boolean;
+  /** The member reads the audit trail (src/lib/audit-access.ts): its library entry is shown. */
+  auditTrail?: boolean;
   variant: "sidebar" | "sheet";
   /** Sidebar only: icons, no words. */
   collapsed?: boolean;
@@ -115,6 +117,7 @@ export function PathMenu<C>({
   search = "",
   stripeEnabled,
   clientMode = false,
+  auditTrail = false,
   variant,
   collapsed = false,
   onNavigate,
@@ -127,7 +130,7 @@ export function PathMenu<C>({
   notYet = null,
   lockedSteps = [],
 }: PathMenuProps<C>) {
-  const library = config.library({ stripeEnabled, clientMode });
+  const library = config.library({ stripeEnabled, clientMode, auditTrail });
   const currentStep = currentStepId(config, pathname, search);
   // The one programme figure ("2 of 10 steps confirmed"), as on the
   // dashboard, All clients and the Reports page (path.ts, programFigure).

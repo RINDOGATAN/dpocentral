@@ -202,6 +202,21 @@ export const PAGE_HELP: PageHelp[] = [
     official: [OFFICIAL_LINKS.gdprArt5],
   },
   {
+    route: "/privacy/audit-trail",
+    title: L("Audit trail", "Registro de auditoría"),
+    purpose: L(
+      "Every recorded change in the organisation, newest first: who did it, to what, and when. Owners, admins and privacy officers read it. Entries about rights requests show the reference and the action only.",
+      "Todos los cambios registrados en la organización, del más reciente al más antiguo: quién, sobre qué y cuándo. Lo leen los propietarios, los administradores y los responsables de privacidad. Las entradas sobre solicitudes de derechos muestran solo la referencia y la acción.",
+    ),
+    firstStep: L(
+      "Filter by area, action, person or dates, then export the result as CSV if you need to hand it over.",
+      "Filtra por área, acción, persona o fechas y, si tienes que entregarlo, exporta el resultado en CSV.",
+    ),
+    terms: [],
+    docs: [],
+    official: [OFFICIAL_LINKS.gdprArt5],
+  },
+  {
     route: "/privacy/board-report",
     title: L("Executive report", "Informe ejecutivo"),
     purpose: L(

@@ -129,7 +129,15 @@ export interface LibraryItem {
 export interface PathConfig<C> {
   stages: PathStage<C>[];
   /** "Library and tools": everything that is not a step but must stay reachable. */
-  library: (options: { stripeEnabled: boolean; clientMode?: boolean }) => LibraryItem[];
+  library: (options: {
+    stripeEnabled: boolean;
+    clientMode?: boolean;
+    /**
+     * False for a member who may not read the audit trail: its entry is left
+     * out. The menu passes it explicitly; left out, the entry is listed.
+     */
+    auditTrail?: boolean;
+  }) => LibraryItem[];
 }
 
 export type PathStatuses = Record<string, StepStatus>;

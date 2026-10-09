@@ -206,7 +206,7 @@
       "contactToEnable": "Contacta con {name} para activarlo",
       "premiumSkill": "Módulo premium",
       "premiumSkillHint": "Disponible como módulo descargable en el catálogo de módulos de todo.law.",
-      "typeCardLockedLabel": "{name} (módulo premium, no activado para esta organización)",
+      "typeCardLockedLabel": "{name} (requiere una licencia)",
       "notCreated": "No se ha creado la evaluación",
       "typeGatedNotice": "{name} es un módulo premium y aún no está activado para esta organización. Si se rechaza la creación, el motivo aparece debajo del formulario.",
       "selectTemplate": "Selecciona una plantilla",
@@ -4620,12 +4620,13 @@
         "optional": "Los pasos opcionales nunca cuentan en la cifra del programa. Sistemas de IA solo aparece cuando hay un sistema de IA registrado.",
         "notYet": "«Aún no en DPO Central», al pie de la ruta, recoge lo que el producto aún no hace. Una fase que solo tiene esos pasos indica «Próximamente».",
         "lockTitle": "El candado",
-        "lockBody": "En tu propia instancia, un pequeño candado junto a Evaluaciones o Diligencia debida de proveedores indica que la organización no tiene licencia para ese tipo de evaluación premium (EIPD, evaluación de proveedores). El piloto alojado nunca muestra un candado.",
+        "lockBody": "En tu propia instancia, un pequeño candado junto a Diligencia debida de proveedores en el menú, o junto a la EIPD en Evaluaciones y en el selector de tipo, indica que la organización no tiene licencia para ese tipo de evaluación premium. El piloto alojado nunca muestra un candado.",
         "libraryTitle": "Biblioteca y herramientas",
         "library": {
           "needsAction": "Todo lo que espera a una persona, en un solo lugar.",
           "incomplete": "Registros de tratamiento a los que les falta un dato que exige un registro de actividades.",
           "reports": "La cifra del programa, la puntuación por módulos, los indicadores de riesgo, las instantáneas y los informes en PDF.",
+          "auditTrail": "Todos los cambios registrados, del más reciente al más antiguo, con filtros y exportación en CSV. Solo para propietarios, administradores y responsables de privacidad.",
           "experts": "El directorio de expertos.",
           "skills": "Los módulos premium instalados en tu propia instancia, que se activan con un archivo de licencia.",
           "help": "Esta guía.",
@@ -5991,7 +5992,7 @@
       "cardBodyMid": " al año cada uno y se activan sin conexión con un archivo de licencia. En el piloto alojado se incluyen todos sin coste, dentro de los límites del piloto.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
       "cardContact": " Para datos reales de clientes, ejecuta tu propia instancia.",
-      "menuLock": "En tu propia instancia, el menú muestra un pequeño candado junto a un paso que lleva a un tipo de evaluación premium para el que esta organización no tiene licencia (Evaluaciones para la EIPD, Diligencia debida de proveedores para las evaluaciones de proveedores). El piloto alojado nunca muestra un candado.",
+      "menuLock": "En tu propia instancia, un pequeño candado indica dónde un tipo de evaluación premium necesita una licencia que esta organización no tiene: junto a Diligencia debida de proveedores en el menú, y junto a la opción EIPD en Evaluaciones y en el selector de tipo. El piloto alojado nunca muestra un candado.",
       "badgeLabel": "Módulo premium",
       "viewAddons": "Ver complementos",
       "runYourOwn": "Ejecuta tu propia instancia",
@@ -6742,7 +6743,7 @@
         "steps": {
           "start": {
             "title": "Empieza una EIPD desde Evaluaciones",
-            "description": "En el menú, abre la fase 4, Evalúa el riesgo, y elige Evaluaciones. Elige la plantilla Evaluación de impacto relativa a la protección de datos, o Nueva evaluación y el tipo EIPD. En tu propia instancia, un candado junto al paso indica que la licencia de la EIPD no está instalada."
+            "description": "En el menú, abre la fase 4, Evalúa el riesgo, y elige Evaluaciones. Elige la plantilla Evaluación de impacto relativa a la protección de datos, o Nueva evaluación y el tipo EIPD. En tu propia instancia, un candado junto a la EIPD indica que su licencia no está instalada."
           },
           "create": {
             "title": "Ponle nombre y créala",
@@ -8966,6 +8967,7 @@
       "needsAction": "Requiere acción",
       "incomplete": "Incompletos",
       "reports": "Informes",
+      "auditTrail": "Registro de auditoría",
       "experts": "Buscar un experto",
       "clients": "Todos los clientes",
       "skills": "Módulos",
@@ -9658,6 +9660,75 @@
       "vendors": "proveedores con contrato de encargo del tratamiento",
       "vendorsNone": "ningún proveedor confirmado",
       "vendorsFlag": "{count} de riesgo alto o crítico sin ese contrato"
+    }
+  },
+  "auditTrail": {
+    "title": "Registro de auditoría",
+    "subtitle": "Todos los cambios registrados, del más reciente al más antiguo: quién, sobre qué y cuándo. El registro lo escriben las propias acciones y aquí no puede modificarse.",
+    "restricted": "El registro de auditoría está disponible para propietarios, administradores y responsables de privacidad.",
+    "empty": "Todavía no hay nada registrado en esta organización.",
+    "emptyFiltered": "Ninguna entrada coincide con estos filtros.",
+    "filters": {
+      "area": "Área",
+      "action": "Acción",
+      "actor": "Persona",
+      "from": "Desde",
+      "to": "Hasta",
+      "all": "Todo",
+      "clear": "Quitar filtros"
+    },
+    "columns": {
+      "when": "Cuándo",
+      "who": "Quién",
+      "action": "Acción",
+      "entity": "Registro",
+      "detail": "Detalle registrado"
+    },
+    "export": "Exportar en CSV",
+    "exportHint": "La exportación sigue los filtros de arriba e incluye la hora de generación y la versión de la aplicación, de modo que el fichero puede incorporarse a un registro de entrega.",
+    "loadMore": "Cargar más",
+    "showing": "Se muestran {count} de {total} entradas",
+    "showingFiltered": "Se muestran {count} entradas que coinciden",
+    "since": "El registro empieza el {date}",
+    "actorRemoved": "Cuenta eliminada",
+    "noDetail": "Sin detalle registrado",
+    "reference": "Referencia {reference}",
+    "rightsRequestWithheld": "Solicitud de derechos: el contenido no se muestra en el registro. Abre la solicitud para leerlo.",
+    "areas": {
+      "Organization": "Organización",
+      "OrganizationMember": "Equipo",
+      "OrganizationJurisdiction": "Jurisdicciones",
+      "OrganizationAiSettings": "Ajustes de IA",
+      "BusinessUnit": "Departamentos",
+      "DataAsset": "Inventario de datos",
+      "DataFlow": "Flujos de datos",
+      "DataTransfer": "Transferencias",
+      "ProcessingActivity": "Actividades de tratamiento",
+      "Vendor": "Proveedores",
+      "VendorContract": "Contratos con proveedores",
+      "Assessment": "Evaluaciones",
+      "Incident": "Incidentes",
+      "IncidentNotification": "Notificaciones de incidentes",
+      "DSARRequest": "Solicitudes de derechos",
+      "AISystem": "Sistemas de IA",
+      "Report": "Informes",
+      "AuditLog": "Registro de auditoría",
+      "Checkout": "Facturación"
+    },
+    "actions": {
+      "CREATE": "Creado",
+      "UPDATE": "Actualizado",
+      "DELETE": "Eliminado",
+      "SUBMIT": "Presentado",
+      "SUBMIT_AND_APPROVE": "Presentado y aprobado",
+      "APPROVAL_APPROVED": "Aprobado",
+      "APPROVAL_REJECTED": "Rechazado",
+      "AUTO_CREATE": "Creado automáticamente",
+      "AUTO_JOIN": "Incorporación automática",
+      "CREATE_FROM_TEMPLATE": "Creado desde una plantilla",
+      "DELETE_TEMPLATE_ITEMS": "Registros de plantilla eliminados",
+      "EXPORT_PDF": "Exportado en PDF",
+      "EXPORT_AUDIT_TRAIL": "Registro de auditoría exportado"
     }
   }
 }
