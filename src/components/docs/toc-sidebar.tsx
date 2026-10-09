@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   BookOpen,
   Database,
@@ -26,14 +27,16 @@ import { PremiumBadge } from "./premium-badge";
 import { cn } from "@/lib/utils";
 import { isDsarModuleEnabled } from "@/config/features";
 
+// Labels live in the message bundles under docs.toc.<key>.label and
+// docs.toc.<key>.items.<child key>, in every language the guide speaks.
 interface TocChild {
-  label: string;
+  key: string;
   hash: string;
 }
 
 interface TocSection {
   href: string;
-  label: string;
+  key: string;
   icon: React.ElementType;
   premium?: boolean;
   children?: TocChild[];
@@ -42,186 +45,186 @@ interface TocSection {
 const allTocSections: TocSection[] = [
   {
     href: "/privacy/docs",
-    label: "Getting Started",
+    key: "gettingStarted",
     icon: BookOpen,
     children: [
-      { label: "Dashboard Overview", hash: "#dashboard" },
-      { label: "Documents", hash: "#documents" },
-      { label: "Next Actions and Deadlines", hash: "#next-actions" },
-      { label: "Quickstart Wizard", hash: "#quickstart" },
-      { label: "The Menu", hash: "#navigation" },
-      { label: "User Roles", hash: "#roles" },
+      { key: "dashboard", hash: "#dashboard" },
+      { key: "documents", hash: "#documents" },
+      { key: "nextActions", hash: "#next-actions" },
+      { key: "quickstart", hash: "#quickstart" },
+      { key: "navigation", hash: "#navigation" },
+      { key: "roles", hash: "#roles" },
     ],
   },
   {
     href: "/privacy/docs/guides/controller-or-processor",
-    label: "Guide: Controller or processor?",
+    key: "guideRole",
     icon: Building2,
   },
   {
     href: "/privacy/docs/guides/do-i-need-a-dpo",
-    label: "Guide: Do I need a DPO?",
+    key: "guideDpo",
     icon: FileText,
   },
   {
     href: "/privacy/docs/guides/when-is-a-dpia-required",
-    label: "Guide: When is a DPIA required?",
+    key: "guideDpia",
     icon: ClipboardCheck,
   },
   {
     href: "/privacy/docs/quickstart",
-    label: "Quickstart",
+    key: "quickstart",
     icon: Zap,
     children: [
-      { label: "How It Works", hash: "#how-it-works" },
-      { label: "Vendor.Watch Import", hash: "#vendor-watch" },
-      { label: "Industry Templates", hash: "#industry-templates" },
-      { label: "After Quickstart", hash: "#after-quickstart" },
+      { key: "howItWorks", hash: "#how-it-works" },
+      { key: "vendorWatch", hash: "#vendor-watch" },
+      { key: "industryTemplates", hash: "#industry-templates" },
+      { key: "afterQuickstart", hash: "#after-quickstart" },
     ],
   },
   {
     href: "/privacy/docs/data-inventory",
-    label: "Data Inventory",
+    key: "dataInventory",
     icon: Database,
     children: [
-      { label: "Assets", hash: "#assets" },
-      { label: "Data Elements", hash: "#data-elements" },
-      { label: "Processing Activities", hash: "#processing-activities" },
-      { label: "Data Flows", hash: "#data-flows" },
-      { label: "Cross-Border Transfers", hash: "#transfers" },
+      { key: "assets", hash: "#assets" },
+      { key: "elements", hash: "#data-elements" },
+      { key: "activities", hash: "#processing-activities" },
+      { key: "flows", hash: "#data-flows" },
+      { key: "transfers", hash: "#transfers" },
     ],
   },
   {
     href: "/privacy/docs/dsar",
-    label: "DSAR Management",
+    key: "dsar",
     icon: FileText,
     children: [
-      { label: "Creating Requests", hash: "#creating" },
-      { label: "Task Management", hash: "#tasks" },
-      { label: "SLA Tracking", hash: "#sla" },
-      { label: "Public Portal", hash: "#portal" },
-      { label: "Intake Form Config", hash: "#intake-config" },
+      { key: "creating", hash: "#creating" },
+      { key: "tasks", hash: "#tasks" },
+      { key: "sla", hash: "#sla" },
+      { key: "portal", hash: "#portal" },
+      { key: "intakeConfig", hash: "#intake-config" },
     ],
   },
   {
     href: "/privacy/docs/assessments",
-    label: "Assessments",
+    key: "assessments",
     icon: ClipboardCheck,
     children: [
-      { label: "Templates", hash: "#templates" },
-      { label: "Creating Assessments", hash: "#creating" },
-      { label: "Risk Scoring", hash: "#risk-scoring" },
-      { label: "Mitigations", hash: "#mitigations" },
-      { label: "Approvals", hash: "#approvals" },
+      { key: "templates", hash: "#templates" },
+      { key: "creating", hash: "#creating" },
+      { key: "riskScoring", hash: "#risk-scoring" },
+      { key: "mitigations", hash: "#mitigations" },
+      { key: "approvals", hash: "#approvals" },
     ],
   },
   {
     href: "/privacy/docs/incidents",
-    label: "Incidents",
+    key: "incidents",
     icon: AlertTriangle,
     children: [
-      { label: "Reporting", hash: "#reporting" },
-      { label: "Timeline", hash: "#timeline" },
-      { label: "DPA Notifications", hash: "#notifications" },
-      { label: "Response Tasks", hash: "#tasks" },
+      { key: "reporting", hash: "#reporting" },
+      { key: "timeline", hash: "#timeline" },
+      { key: "notifications", hash: "#notifications" },
+      { key: "tasks", hash: "#tasks" },
     ],
   },
   {
     href: "/privacy/docs/vendors",
-    label: "Vendor Management",
+    key: "vendors",
     icon: Building2,
     children: [
-      { label: "Adding Vendors", hash: "#adding" },
-      { label: "Contracts", hash: "#contracts" },
-      { label: "Questionnaires", hash: "#questionnaires" },
-      { label: "Risk Reviews", hash: "#risk-reviews" },
+      { key: "adding", hash: "#adding" },
+      { key: "contracts", hash: "#contracts" },
+      { key: "questionnaires", hash: "#questionnaires" },
+      { key: "riskReviews", hash: "#risk-reviews" },
     ],
   },
   {
     href: "/privacy/docs/experts",
-    label: "Expert Help & Personas",
+    key: "experts",
     icon: Search,
     children: [
-      { label: "User Personas", hash: "#personas" },
-      { label: "Expert Directory", hash: "#expert-directory" },
-      { label: "All Clients", hash: "#all-clients" },
-      { label: "Settings", hash: "#settings" },
+      { key: "personas", hash: "#personas" },
+      { key: "directory", hash: "#expert-directory" },
+      { key: "allClients", hash: "#all-clients" },
+      { key: "settings", hash: "#settings" },
     ],
   },
   {
     href: "/privacy/docs/reports",
-    label: "Compliance Reports",
+    key: "reports",
     icon: BarChart3,
     children: [
-      { label: "Compliance Score", hash: "#compliance-score" },
-      { label: "Module Breakdown", hash: "#module-breakdown" },
-      { label: "Risk Indicators", hash: "#risk-indicators" },
-      { label: "Trend Tracking", hash: "#snapshots" },
-      { label: "Executive Report", hash: "#executive-report" },
+      { key: "score", hash: "#compliance-score" },
+      { key: "modules", hash: "#module-breakdown" },
+      { key: "risk", hash: "#risk-indicators" },
+      { key: "snapshots", hash: "#snapshots" },
+      { key: "executive", hash: "#executive-report" },
     ],
   },
   {
     href: "/privacy/docs/dpia-auto-fill",
-    label: "DPIA Auto-Fill",
+    key: "dpiaAutoFill",
     icon: Wand2,
     children: [
-      { label: "How It Works", hash: "#overview" },
-      { label: "Wizard Steps", hash: "#wizard-steps" },
-      { label: "Auto-Fill Sources", hash: "#auto-fill-sources" },
-      { label: "Confidence Levels", hash: "#confidence-levels" },
-      { label: "AI Enhancement", hash: "#ai-integration" },
+      { key: "overview", hash: "#overview" },
+      { key: "steps", hash: "#wizard-steps" },
+      { key: "sources", hash: "#auto-fill-sources" },
+      { key: "confidence", hash: "#confidence-levels" },
+      { key: "ai", hash: "#ai-integration" },
     ],
   },
   {
     href: "/privacy/docs/transfer-compliance",
-    label: "Transfer Compliance",
+    key: "transferCompliance",
     icon: ArrowRightLeft,
     children: [
-      { label: "Overview", hash: "#overview" },
-      { label: "Compliance Status", hash: "#compliance-status" },
-      { label: "Schrems II Checklist", hash: "#schrems-ii" },
-      { label: "Adequacy Decisions", hash: "#adequacy" },
-      { label: "Supplementary Measures", hash: "#supplementary-measures" },
-      { label: "SCC Tracking", hash: "#scc-tracking" },
+      { key: "overview", hash: "#overview" },
+      { key: "complianceStatus", hash: "#compliance-status" },
+      { key: "schremsIi", hash: "#schrems-ii" },
+      { key: "adequacy", hash: "#adequacy" },
+      { key: "supplementaryMeasures", hash: "#supplementary-measures" },
+      { key: "sccTracking", hash: "#scc-tracking" },
     ],
   },
   {
     href: "/privacy/docs/regulations",
-    label: "Regulation Hub",
+    key: "regulations",
     icon: Globe,
     children: [
-      { label: "Jurisdiction Catalog", hash: "#catalog" },
-      { label: "Applicability Wizard", hash: "#applicability" },
-      { label: "Categories", hash: "#categories" },
-      { label: "Managing Jurisdictions", hash: "#managing" },
-      { label: "System Impact", hash: "#impact" },
+      { key: "catalog", hash: "#catalog" },
+      { key: "applicability", hash: "#applicability" },
+      { key: "categories", hash: "#categories" },
+      { key: "managing", hash: "#managing" },
+      { key: "impact", hash: "#impact" },
     ],
   },
   {
     href: "/privacy/docs/ai-governance",
-    label: "AI Governance",
+    key: "aiGovernance",
     icon: Bot,
     children: [
-      { label: "Why AI Governance?", hash: "#overview" },
-      { label: "Risk Classification", hash: "#risk-levels" },
-      { label: "Registering Systems", hash: "#registration" },
-      { label: "Risk Suggestion", hash: "#risk-suggestion" },
-      { label: "Obligations", hash: "#obligations" },
-      { label: "Module Integration", hash: "#linking" },
-      { label: "AI Sentinel Integration", hash: "#ai-sentinel" },
+      { key: "overview", hash: "#overview" },
+      { key: "riskLevels", hash: "#risk-levels" },
+      { key: "registration", hash: "#registration" },
+      { key: "suggestion", hash: "#risk-suggestion" },
+      { key: "obligations", hash: "#obligations" },
+      { key: "linking", hash: "#linking" },
+      { key: "sentinel", hash: "#ai-sentinel" },
     ],
   },
   {
     href: "/privacy/docs/premium",
-    label: "Premium Features",
+    key: "premium",
     icon: Sparkles,
     premium: true,
     children: [
-      { label: "DPIA", hash: "#dpia" },
-      { label: "PIA", hash: "#pia" },
-      { label: "TIA", hash: "#tia" },
-      { label: "Vendor Risk Assessment", hash: "#vendor-risk" },
-      { label: "Vendor Catalog", hash: "#vendor-catalog" },
+      { key: "dpia", hash: "#dpia" },
+      { key: "pia", hash: "#pia" },
+      { key: "tia", hash: "#tia" },
+      { key: "vendorRisk", hash: "#vendor-risk" },
+      { key: "vendorCatalog", hash: "#vendor-catalog" },
     ],
   },
 ];
@@ -233,6 +236,7 @@ const tocSections: TocSection[] = isDsarModuleEnabled()
   : allTocSections.filter((s) => s.href !== "/privacy/docs/dsar");
 
 export function TocSidebar() {
+  const t = useTranslations("docs.toc");
   const pathname = usePathname();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     () => {
@@ -280,7 +284,7 @@ export function TocSidebar() {
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="truncate">{section.label}</span>
+                <span className="truncate">{t(`${section.key}.label`)}</span>
                 {section.premium && <PremiumBadge />}
               </Link>
               {section.children && (
@@ -305,7 +309,7 @@ export function TocSidebar() {
                     href={`${section.href}${child.hash}`}
                     className="block text-xs text-muted-foreground hover:text-foreground py-1 px-2 rounded-md hover:bg-muted transition-colors"
                   >
-                    {child.label}
+                    {t(`${section.key}.items.${child.key}`)}
                   </Link>
                 ))}
               </div>

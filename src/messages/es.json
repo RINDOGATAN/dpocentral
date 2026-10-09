@@ -4396,6 +4396,157 @@
       "incidents": "Incidencias",
       "vendors": "Gestión de proveedores"
     },
+    "toc": {
+      "gettingStarted": {
+        "label": "Primeros pasos",
+        "items": {
+          "dashboard": "Visión general del panel",
+          "documents": "Documentos",
+          "nextActions": "Próximas acciones y plazos",
+          "quickstart": "Asistente de inicio rápido",
+          "navigation": "El menú",
+          "roles": "Roles de usuario"
+        }
+      },
+      "guideRole": {
+        "label": "Guía: ¿Responsable o encargado?"
+      },
+      "guideDpo": {
+        "label": "Guía: ¿Necesito un DPD?"
+      },
+      "guideDpia": {
+        "label": "Guía: ¿Cuándo se exige una EIPD?"
+      },
+      "quickstart": {
+        "label": "Inicio rápido",
+        "items": {
+          "howItWorks": "Cómo funciona",
+          "vendorWatch": "Importar desde Vendor.Watch",
+          "industryTemplates": "Plantillas por sector",
+          "afterQuickstart": "Después del inicio rápido"
+        }
+      },
+      "dataInventory": {
+        "label": "Inventario de datos",
+        "items": {
+          "assets": "Activos de datos",
+          "elements": "Elementos de datos",
+          "activities": "Actividades de tratamiento",
+          "flows": "Flujos de datos",
+          "transfers": "Transferencias internacionales"
+        }
+      },
+      "dsar": {
+        "label": "Ejercicio de derechos",
+        "items": {
+          "creating": "Crear solicitudes",
+          "tasks": "Gestión de tareas",
+          "sla": "Seguimiento de plazos",
+          "portal": "Portal público",
+          "intakeConfig": "Configuración del formulario"
+        }
+      },
+      "assessments": {
+        "label": "Evaluaciones",
+        "items": {
+          "templates": "Plantillas",
+          "creating": "Crear evaluaciones",
+          "riskScoring": "Puntuación de riesgo",
+          "mitigations": "Medidas de mitigación",
+          "approvals": "Aprobaciones"
+        }
+      },
+      "incidents": {
+        "label": "Incidentes",
+        "items": {
+          "reporting": "Registro",
+          "timeline": "Cronología",
+          "notifications": "Notificaciones a la autoridad",
+          "tasks": "Tareas de respuesta"
+        }
+      },
+      "vendors": {
+        "label": "Gestión de proveedores",
+        "items": {
+          "adding": "Añadir proveedores",
+          "contracts": "Contratos",
+          "questionnaires": "Cuestionarios",
+          "riskReviews": "Revisiones de riesgo"
+        }
+      },
+      "experts": {
+        "label": "Ayuda experta y perfiles",
+        "items": {
+          "personas": "Perfiles de usuario",
+          "directory": "Directorio de expertos",
+          "allClients": "Todos los clientes",
+          "settings": "Tipo de cuenta"
+        }
+      },
+      "reports": {
+        "label": "Informes de cumplimiento",
+        "items": {
+          "score": "Puntuación de cumplimiento",
+          "modules": "Desglose por módulo",
+          "risk": "Indicadores de riesgo",
+          "snapshots": "Seguimiento de tendencias",
+          "executive": "Informe ejecutivo"
+        }
+      },
+      "dpiaAutoFill": {
+        "label": "Autocompletado de la EIPD",
+        "items": {
+          "overview": "Cómo funciona",
+          "steps": "Pasos del asistente",
+          "sources": "Qué se autocompleta",
+          "confidence": "Niveles de confianza",
+          "ai": "Mejora con IA"
+        }
+      },
+      "transferCompliance": {
+        "label": "Cumplimiento de transferencias",
+        "items": {
+          "overview": "Visión general",
+          "complianceStatus": "Estado de cumplimiento",
+          "schremsIi": "Lista de verificación de Schrems II",
+          "adequacy": "Decisiones de adecuación",
+          "supplementaryMeasures": "Medidas complementarias",
+          "sccTracking": "Seguimiento de las CCT"
+        }
+      },
+      "regulations": {
+        "label": "Normativa",
+        "items": {
+          "catalog": "Catálogo de jurisdicciones",
+          "applicability": "Asistente de aplicabilidad",
+          "categories": "Categorías",
+          "managing": "Gestionar jurisdicciones",
+          "impact": "Impacto en el sistema"
+        }
+      },
+      "aiGovernance": {
+        "label": "Gobernanza de IA",
+        "items": {
+          "overview": "¿Por qué la gobernanza de IA?",
+          "riskLevels": "Clasificación de riesgo",
+          "registration": "Registrar sistemas",
+          "suggestion": "Sugerencia de riesgo",
+          "obligations": "Obligaciones",
+          "linking": "Integración con otros módulos",
+          "sentinel": "Integración con AI Sentinel"
+        }
+      },
+      "premium": {
+        "label": "Funciones premium",
+        "items": {
+          "dpia": "EIPD",
+          "pia": "PIA",
+          "tia": "TIA",
+          "vendorRisk": "Evaluación de riesgo de proveedor",
+          "vendorCatalog": "Catálogo de proveedores"
+        }
+      }
+    },
     "common": {
       "previous": "Anterior",
       "next": "Siguiente"
