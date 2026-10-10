@@ -9,7 +9,7 @@
  * Guided home, the path (the phone sheet) and a record's own page. On each,
  * the page must be no wider than the window. The walk also checks, on the
  * way, the round's fixes it passes through: the result screen links each
- * record to its own page, an activity's page reads Step 3.2, the home's
+ * record to its own page, an activity's page reads Step 2.2, the home's
  * Data Inventory card names its counts, and an LIA is created.
  *
  * Runs in the phone-390 project only.
@@ -84,8 +84,8 @@ test("the Guided screens fit a 390 px phone", async ({ page }, testInfo) => {
   const activityHref = hrefs.find((h) => h.startsWith("/privacy/data-inventory/activities/"))!;
   await page.goto(activityHref);
   await expect(page.getByTestId("record-header")).toBeVisible();
-  await expect(page.getByText("Step 3.2").first()).toBeVisible();
-  await expect(page.getByText("Step 3.1")).toHaveCount(0);
+  await expect(page.getByText("Step 2.2").first()).toBeVisible();
+  await expect(page.getByText("Step 2.1")).toHaveCount(0);
   await expectNoSidewaysScroll(page, "activity page");
 
   // And an asset's own page.
