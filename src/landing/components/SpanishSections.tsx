@@ -194,7 +194,7 @@ function Videos({ t }: { t: T }) {
                 >
                   <source src={`${base}.webm`} type="video/webm" />
                   <source src={`${base}.mp4`} type="video/mp4" />
-                  <track kind="captions" srcLang="es" label={t("es.videos.captions")} src={`${base}.vtt`} default />
+                  <track kind="captions" srcLang="es" label={t("es.videos.captions")} src={`${base}.vtt`} />
                 </video>
                 <figcaption id={captionId} className="p-5">
                   <span className="block text-base font-display mb-1">{t(`es.videos.v${n}.title`)}</span>
