@@ -39,6 +39,12 @@ interface StartupProductPageProps {
   heroPoster?: string;
   accentGradient?: string;
   callbackUrl: string;
+  /**
+   * The sections between the value section and the closing call to action.
+   * When given (the Spanish page), they replace "How it works" and the
+   * feature showcase; when left out (the English page), those two show.
+   */
+  middle?: React.ReactNode;
 }
 
 const fadeUp = {
@@ -70,6 +76,7 @@ const StartupProductPage = ({
   heroPoster,
   accentGradient = "from-accent/20 to-accent/5",
   callbackUrl,
+  middle,
 }: StartupProductPageProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [cardMode, setCardMode] = useState<"signup" | "login" | "sent">("signup");
@@ -236,14 +243,11 @@ const StartupProductPage = ({
                     <span className="text-accent">{t("hero.title.accent")}</span>
                     {t("hero.title.suffix")}
                   </h1>
-                  <p className="text-lg text-white/90 leading-relaxed font-body mb-4 max-w-lg">
+                  {/* The product summary (hero.subtitle) sits in the sign-up
+                      card on the right, so the left column carries only the
+                      badge, the title and the welcome line. */}
+                  <p className="text-lg text-white/90 leading-relaxed font-body mb-8 max-w-lg">
                     {t("hero.welcome")}
-                  </p>
-                  <p className="text-lg text-white/70 leading-relaxed font-body mb-4 max-w-lg">
-                    {t("hero.subtitle")}
-                  </p>
-                  <p className="text-sm text-white/70 leading-relaxed font-body mb-8 max-w-lg">
-                    {t("hero.ai")}
                   </p>
                 </motion.div>
               </div>
@@ -406,6 +410,8 @@ const StartupProductPage = ({
         </div>
       </section>
 
+      {middle ?? (
+        <>
       {/* HOW IT WORKS */}
       <section className="py-20 md:py-28 bg-secondary/20 border-y border-border">
         <div className="container px-6">
@@ -489,6 +495,8 @@ const StartupProductPage = ({
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* BOTTOM CTA */}
       <section className="py-20 md:py-28 border-t border-border bg-secondary/10">
