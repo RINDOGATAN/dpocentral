@@ -15,6 +15,7 @@ import {
   QUESTIONS,
   WAY_INDEX,
   levelOf,
+  meets,
   optionsFor,
   pickWay,
   recommend,
@@ -39,7 +40,8 @@ const ROWS: [keyof Answers, string, number][] = [
   ["ai", "none", 0],
   ["ai", "ext", 0],
   ["ai", "key", 1],
-  ["ai", "local", 2],
+  // Owner, 10 Oct 2026: the managed instance runs open-weight models, so level 1.
+  ["ai", "local", 1],
   ["iso", "yes", 1],
   ["iso", "no", 0],
   ["it", "yes", 0],
@@ -69,6 +71,8 @@ describe.each(LOCALES)("level table (%s)", (locale) => {
     expect(pickWay({ data: "real" }, locale)).toBe("managed");
     expect(pickWay({ ai: "key" }, locale)).toBe("managed");
     expect(pickWay({ iso: "yes" }, locale)).toBe("managed");
+    expect(pickWay({ ai: "local" }, locale)).toBe("managed");
+    expect(pickWay({ ai: "local", it: "no", data: "special" }, locale)).toBe("managed");
   });
 
   it("sends special-category or privileged data to managed", () => {
@@ -93,10 +97,9 @@ describe.each(LOCALES)("level table (%s)", (locale) => {
 describe("level 2 in Spain: three ways only", () => {
   it.each([
     [{ loc: "servers" }],
-    [{ ai: "local" }],
     [{ cert: "yes" }],
     [{ loc: "servers", it: "yes" }],
-    [{ ai: "local", it: "no" }],
+    [{ loc: "servers", ai: "local", it: "no" }],
   ] as Answers[][])("%o leads to the deployment", (a) => {
     expect(pickWay(a, "es")).toBe("deploy");
   });
@@ -134,7 +137,9 @@ describe("level 2 in English: five ways", () => {
   it("leads to the Box with no IT team and the office or local models only", () => {
     expect(levelOf({ loc: "office" }, "en")).toBe(2);
     expect(pickWay({ loc: "office", it: "no" }, "en")).toBe("box");
-    expect(pickWay({ ai: "local", it: "no" }, "en")).toBe("box");
+    // Local models alone now ask only for managed; with the own servers (level 2), still the Box.
+    expect(pickWay({ ai: "local", it: "no" }, "en")).toBe("managed");
+    expect(pickWay({ loc: "servers", ai: "local", it: "no" }, "en")).toBe("box");
   });
 
   it("leads to the deployment with no IT team otherwise, or when the IT question is unanswered", () => {
@@ -174,14 +179,18 @@ describe("copy rules", () => {
     expect(es).not.toMatch(/\busted(es)?\b|vosotros|\bvuestr/i);
   });
 
-  it("managed never claims local models; the cloud states pilot, shared, no certification", () => {
+  it("managed: hosted in Asturias, open-weight models on the instance; the cloud states pilot, shared, no certification", () => {
+    // Owner's wording of 10 Oct 2026, identical on the storefront and AI Sentinel.
+    expect(COPY.en.summaries.managed).toBe(
+      "An isolated instance we run for your organization alone, hosted in Asturias, Spain. Your records stay on that instance. AI features stay off until you turn them on, and can use open-weight models hosted on the instance itself, so the text does not leave it, or your own provider key."
+    );
+    expect(COPY.es.summaries.managed).toBe(
+      "Una instancia aislada que operamos nosotros, solo para tu organización, alojada en Asturias (España). Tus registros se quedan en esa instancia. Las funciones de IA están desactivadas hasta que las activas, y pueden usar modelos de pesos abiertos alojados en la propia instancia, de modo que el texto no sale de ella, o la clave de tu propio proveedor."
+    );
     for (const l of LOCALES) {
-      const managed = COPY[l].summaries.managed!;
-      expect(managed).not.toMatch(/local|pesos abiertos|open-weight/i);
+      expect(meets("managed", "ai:local")).toBe(true);
+      expect(COPY[l].whyP).toMatch(/managed instance|instancia gestionada/);
     }
-    // Accurate once AI is on: records stay, the record's details go to the provider whose key is set.
-    expect(COPY.en.summaries.managed).toMatch(/Your records stay on that instance\. If you turn AI features on, the details of the record being drafted go to the AI provider whose key you set\./);
-    expect(COPY.es.summaries.managed).toMatch(/Tus registros se quedan en esa instancia\. Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA cuya clave configures\./);
     // No unqualified "your data stays" where AI could send text out.
     for (const l of LOCALES) expect(all(l)).not.toMatch(/Your data stays on (that instance|your servers|your hardware)|Tus datos se quedan/);
     expect(COPY.en.summaries.cloud).toMatch(/capped pilot[\s\S]*test records[\s\S]*shared[\s\S]*no service level or independent certification/);
