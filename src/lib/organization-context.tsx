@@ -10,6 +10,8 @@ interface Organization {
   id: string;
   name: string;
   slug: string;
+  /** Hosted plan: "PILOT" or "EU_CLOUD" (the paid plan lifts the pilot limits). */
+  plan?: string;
 }
 
 interface OrganizationContextType {
@@ -74,4 +76,12 @@ export function useOrganization() {
     throw new Error("useOrganization must be used within an OrganizationProvider");
   }
   return context;
+}
+
+/**
+ * The selected organisation, or null outside an OrganizationProvider (a
+ * component that can also render on its own, such as the pilot banner).
+ */
+export function useSelectedOrganizationOrNull(): Organization | null {
+  return useContext(OrganizationContext)?.organization ?? null;
 }

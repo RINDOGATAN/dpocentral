@@ -6,6 +6,7 @@ import { createContext, useContext, useState, useSyncExternalStore } from "react
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { PILOT_DOCS_PATH, RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import { useSelectedOrganizationOrNull } from "@/lib/organization-context";
 
 // Whether this deployment is the hosted pilot. Resolved on the server
 // (src/lib/hosted.ts) and handed down from the root layout.
@@ -74,9 +75,14 @@ export function HostedPilotSentence({ className }: { className?: string }) {
   );
 }
 
-/** One-line banner on every signed-in hosted page, dismissible for the browser session. */
+/**
+ * One-line banner on every signed-in hosted page, dismissible for the browser
+ * session. Not shown while the selected organisation is on the paid EU cloud
+ * plan, which is not a pilot.
+ */
 export function HostedPilotBanner() {
   const t = useTranslations("pilot");
+  const organization = useSelectedOrganizationOrNull();
   // Dismissal lives in sessionStorage; the server render always shows the bar.
   const dismissedThisSession = useSyncExternalStore(
     subscribeDismiss,
@@ -86,6 +92,7 @@ export function HostedPilotBanner() {
   const [dismissedNow, setDismissedNow] = useState(false);
 
   if (dismissedThisSession || dismissedNow) return null;
+  if (organization?.plan === "EU_CLOUD") return null;
 
   const dismiss = () => {
     try {

@@ -59,11 +59,12 @@ export function formatDateTimeIn(
  * ("28/09/2026" in both languages). Use instead of a bare
  * toLocaleDateString(), which follows the browser and not the interface.
  */
-export function formatDateIn(date: Date | string, locale: string): string {
+export function formatDateIn(date: Date | string, locale: string, timeZone?: string): string {
   return new Date(date).toLocaleDateString(DATE_LOCALE[locale] ?? DATE_LOCALE.en, {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
   });
 }
 

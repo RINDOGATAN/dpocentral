@@ -19,6 +19,7 @@ import {
   assertPilotCapacity,
   assertPilotWritable,
   CAPPED_CREATE_PATHS,
+  isPaidPlan,
   pilotLocale,
   READ_ONLY_ALLOWED_PATHS,
   recordPilotFirstSignIn,
@@ -199,20 +200,22 @@ export const withOrganization = t.middleware(async ({ ctx, next, getRawInput }) 
 // signed-in member after the pilot went live records the organisation's first
 // sign-in, which starts the editing window. Once the window ends, org-scoped
 // mutations are refused (exports are GET routes and stay open); creates are
-// refused at the records ceiling.
+// refused at the records ceiling. None of this applies to an organisation on
+// the paid EU cloud plan (Organization.plan = EU_CLOUD).
 const enforcePilotCaps = t.middleware(async ({ ctx, next, path, type }) => {
-  const org = (ctx as { organization?: { id: string; pilotStartedAt: Date | null } })
+  const org = (ctx as { organization?: { id: string; pilotStartedAt: Date | null; plan?: string | null } })
     .organization;
   if (!org) return next();
   await recordPilotFirstSignIn(ctx.prisma, org);
-  if (type !== "mutation") return next();
+  // The paid EU cloud plan is not the pilot: no window, no ceilings.
+  if (type !== "mutation" || isPaidPlan(org)) return next();
   const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
   if (!READ_ONLY_ALLOWED_PATHS.has(path)) {
     assertPilotWritable(org, locale);
   }
   const resource = CAPPED_CREATE_PATHS[path];
   if (resource) {
-    await assertPilotCapacity(ctx.prisma, org.id, resource, 1, locale);
+    await assertPilotCapacity(ctx.prisma, org, resource, 1, locale);
   }
   return next();
 });

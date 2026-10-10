@@ -5,6 +5,7 @@ import { AssessmentType, EntitlementStatus, LicenseType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { isHostedDeployment } from "@/lib/hosted";
+import { organizationOnPaidPlan } from "@/server/services/pilot/caps";
 
 // Self-hosted builds have no payment rail (Stripe is off), so no feature is gated
 // by an entitlement. The hosted service is a free pilot: every module is open to
@@ -146,7 +147,9 @@ export async function checkAssessmentEntitlement(
  * types and features it covers.
  */
 export async function isDpiaPilotTier(organizationId: string): Promise<boolean> {
-  if (isHostedDeployment()) return true;
+  // The hosted service: every organisation, except one on the paid EU cloud
+  // plan (Organization.plan, see services/pilot/caps.ts).
+  if (isHostedDeployment()) return !(await organizationOnPaidPlan(prisma, organizationId));
   if (!features.stripeEnabled) return false;
   const result = await checkAssessmentEntitlement(organizationId, "DPIA");
   return !result.entitled;

@@ -8965,6 +8965,11 @@
         "dsarPerformance": "Informe de solicitudes de interesados (PDF)",
         "assessmentPortfolio": "Cartera de evaluaciones (PDF)",
         "rightsRequests": "Registros anteriores de solicitudes de derechos (JSON)"
+      },
+      "paid": {
+        "title": "Plan nube UE",
+        "description": "Tu organización tiene el plan nube UE. No se le aplican los límites del piloto ni el plazo de edición.",
+        "renews": "Se renueva el {date}."
       }
     }
   },
