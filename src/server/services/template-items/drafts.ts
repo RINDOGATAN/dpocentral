@@ -26,9 +26,16 @@
  */
 
 import type { Db } from "@/lib/prisma";
+import { DRAFT_PROVENANCES } from "@/lib/drafts";
 
-/** The Prisma filter for "a draft nobody has confirmed yet". */
-export const DRAFT_WHERE = { provenance: "AUTO_TEMPLATE" as const, confirmedAt: null };
+/**
+ * The Prisma filter for "a draft nobody has confirmed yet": made by a template,
+ * or brought in by an import (provenance IMPORTED, src/server/services/portability).
+ */
+export const DRAFT_WHERE = {
+  provenance: { in: [...DRAFT_PROVENANCES] },
+  confirmedAt: null,
+};
 
 export const DRAFT_KINDS = ["dataAsset", "processingActivity", "vendor"] as const;
 export type DraftKind = (typeof DRAFT_KINDS)[number];

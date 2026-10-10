@@ -14,12 +14,23 @@ export function canConfirmDrafts(role: string | null | undefined): boolean {
 }
 
 /**
- * A record is a draft when a template made it (provenance AUTO_TEMPLATE) and
+ * The provenances that make a record a draft until a person confirms it: a
+ * template made it (AUTO_TEMPLATE), or an import brought it in (IMPORTED,
+ * src/server/services/portability).
+ */
+export const DRAFT_PROVENANCES = ["AUTO_TEMPLATE", "IMPORTED"] as const;
+
+/**
+ * A record is a draft when a template made it or an import brought it in, and
  * nobody has confirmed it yet (no confirmedAt).
  */
 export function isDraftRecord(record: {
   provenance?: string | null;
   confirmedAt?: Date | string | null;
 } | null | undefined): boolean {
-  return !!record && record.provenance === "AUTO_TEMPLATE" && !record.confirmedAt;
+  return (
+    !!record &&
+    (DRAFT_PROVENANCES as readonly string[]).includes(record.provenance ?? "") &&
+    !record.confirmedAt
+  );
 }
