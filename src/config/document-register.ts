@@ -398,6 +398,34 @@ export function evaluateRegister(entries: readonly DocumentEntry[], facts: Docum
   return entries.map((entry) => ({ id: entry.id, status: documentStatus(entry, facts) }));
 }
 
+/**
+ * How many records of a step are confirmed, in draft, and confirmed but
+ * missing a required field. The menu's status line states these numbers; the
+ * tick and the programme figure keep their own rule (path-config.ts).
+ */
+export interface RecordCounts {
+  confirmed: number;
+  drafts: number;
+  incomplete: number;
+}
+
+/** The steps whose menu line states counts, with the words under `documentRegister.counts.<key>`. */
+export type CountedStepId = "dataInventory" | "ropa" | "vendors";
+
+export function stepRecordCounts(facts: DocumentFacts): Record<CountedStepId, RecordCounts> {
+  const of = (total: number, drafts: number, incomplete = 0): RecordCounts => ({
+    confirmed: confirmed(total, drafts),
+    drafts: Math.min(drafts, total),
+    // Only records a person has confirmed can be "confirmed but incomplete".
+    incomplete: Math.min(incomplete, confirmed(total, drafts)),
+  });
+  return {
+    dataInventory: of(facts.dataAssets, facts.dataAssetsDrafts),
+    ropa: of(facts.processingActivities, facts.processingActivitiesDrafts, facts.activitiesIncomplete),
+    vendors: of(facts.vendors, facts.vendorsDrafts),
+  };
+}
+
 export function documentEntry(id: string): DocumentEntry | undefined {
   return DOCUMENT_REGISTER.find((d) => d.id === id);
 }

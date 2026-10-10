@@ -9562,6 +9562,23 @@
       "openRequests": "{count, plural, one {# request open, none completed} other {# requests open, none completed}}",
       "noRecords": "no confirmed records yet"
     },
+    "counts": {
+      "assets": {
+        "confirmed": "{count, plural, one {# confirmed} other {# confirmed}}",
+        "draft": "{count} in draft",
+        "incomplete": "{count} with missing details"
+      },
+      "activities": {
+        "confirmed": "{count, plural, one {# confirmed} other {# confirmed}}",
+        "draft": "{count} in draft",
+        "incomplete": "{count} with missing details"
+      },
+      "vendors": {
+        "confirmed": "{count, plural, one {# confirmed} other {# confirmed}}",
+        "draft": "{count} in draft",
+        "incomplete": "{count} with missing details"
+      }
+    },
     "readyLine": "Content is real and confirmed.",
     "format": {
       "pdf": "PDF",

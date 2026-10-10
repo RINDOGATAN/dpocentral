@@ -69,5 +69,10 @@ describe("industry templates in Spanish", () => {
   it("return flows are named in the screen's language", () => {
     expect(returnFlowName("A", "B", "en")).toBe("A to B");
     expect(returnFlowName("A", "B", "es")).toBe("De A a B");
+    expect(returnFlowName("Sistema de gestión de pedidos", "Base de datos de clientes", "es")).toBe(
+      "De sistema de gestión de pedidos a base de datos de clientes",
+    );
+    expect(returnFlowName("CRM", "SAP Business One", "es")).toBe("De CRM a SAP Business One");
+    expect(returnFlowName("Stripe", "Base de datos", "en")).toBe("Stripe to Base de datos");
   });
 });

@@ -466,11 +466,11 @@ export const HEALTH_ADTECH_SECTIONS: BiSection[] = [
         help: join(
           {
             en: "Record the interest, the necessity and the balance against the individuals' rights; a full LIA can be attached.",
-            es: "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una LIA completa.",
+            es: "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una EIL completa.",
           },
           src(
             "GDPR Art. 6(1)(f), DPO Central LIA template",
-            "art. 6.1.f) del RGPD, plantilla de LIA de DPO Central"
+            "art. 6.1.f) del RGPD, plantilla de EIL de DPO Central"
           )
         ),
       },
