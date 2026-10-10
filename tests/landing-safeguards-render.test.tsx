@@ -120,7 +120,8 @@ describe("safeguards guide, Spanish", () => {
     const g = guide(c.heading);
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
     expect(within(g).queryByTestId("safeguards-bar")).toBeNull();
-    fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.real }));
+    // Special categories still go to the managed instance (real data now goes to the cloud plan).
+    fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.special }));
     const bar = within(g).getByTestId("safeguards-bar");
     expect(bar.className).toMatch(/\blg:hidden\b/);
     expect(bar.className).toMatch(/\bsticky\b/);
@@ -144,7 +145,8 @@ describe("safeguards guide, Spanish", () => {
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.any }));
     expect(within(g).getByRole("status").textContent).toContain(es["es.ways.w1.title"]);
-    expect(g.textContent).toContain("Lo alojamos nosotros, en la UE.");
+    expect(g.textContent).toContain("Lo alojamos nosotros, con los datos en la UE (Fráncfort).");
+    expect(g.textContent).toContain("contratar el Plan nube UE para datos reales.");
     expect(g.textContent).toContain("que puede estar fuera de la UE.");
     expect(waysSection("es").textContent).toContain("Garantías y alojamiento");
   });
@@ -155,10 +157,11 @@ describe("safeguards guide, Spanish", () => {
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
     // "Tu propio hardware" (the customer's own equipment) is allowed; the TODO.LAW Box is not.
     const bad = /\bkit\b|TODO\.LAW hardware|Hardware TODO\.LAW|Law-Firm-in-a-Box|\bBox\b|Docker|Instalador local|ejecut|\$|€/i;
-    expect(g.textContent).not.toMatch(bad);
+    const noPlanPrice = () => g.textContent ?? "";
+    expect(noPlanPrice()).not.toMatch(bad);
     for (const r of within(g).getAllByRole("radio")) {
       fireEvent.click(r);
-      expect(g.textContent).not.toMatch(bad);
+      expect(noPlanPrice()).not.toMatch(bad);
       expect(g.textContent).not.toMatch(/Estados Unidos/);
     }
     // The panel says why, without the classifier sentence; question 6 keeps its example.
