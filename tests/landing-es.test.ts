@@ -9,7 +9,8 @@
  *   - the hero's left column shows the badge, the title and the welcome line
  *     only (the summary lives in the sign-up card);
  *   - the Spanish page replaces "How it works" and "Features" with its own
- *     sections; the English page keeps them;
+ *     sections (since the English landing of October 2026, both languages
+ *     do; see tests/landing-en.test.ts);
  *   - the Spanish sections show no price, and the three videos ship with a
  *     poster, both formats and Spanish captions;
  *   - customer logos render nothing while the configured list is empty, and
@@ -22,7 +23,7 @@ import path from "path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import CustomerLogos from "@/landing/components/CustomerLogos";
-import SpanishSections from "@/landing/components/SpanishSections";
+import LandingSections from "@/landing/components/LandingSections";
 import { CUSTOMER_LOGOS } from "@/landing/config/customer-logos";
 
 const ROOT = path.resolve(__dirname, "..");
@@ -64,7 +65,7 @@ describe("landing hero", () => {
 });
 
 describe("Spanish sections", () => {
-  const html = renderToStaticMarkup(createElement(SpanishSections, { t: tEs }));
+  const html = renderToStaticMarkup(createElement(LandingSections, { t: tEs, locale: "es" }));
   const esOnly = Object.entries(es).filter(([k]) => k.startsWith("es."));
 
   it("render the four sections in order, with every key translated", () => {

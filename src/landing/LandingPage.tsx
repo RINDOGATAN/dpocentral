@@ -8,7 +8,7 @@ import { Database, UserCheck, AlertTriangle, Package } from "lucide-react";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
 import StartupsFooter from "./components/StartupsFooter";
-import SpanishSections from "./components/SpanishSections";
+import LandingSections from "./components/LandingSections";
 import en from "./i18n/en/dpo-startups.json";
 import es from "./i18n/es/dpo-startups.json";
 import authEn from "./i18n/en/startups-auth.json";
@@ -116,7 +116,7 @@ export default function LandingPage() {
         heroVideo="/hero-dpo-bg.mp4"
         heroPoster="/hero-dpo-poster.jpg"
         callbackUrl="/privacy"
-        middle={locale === "es" ? <SpanishSections t={t} /> : undefined}
+        middle={<LandingSections t={t} locale={locale} />}
       />
       <StartupsFooter t={t} />
     </>

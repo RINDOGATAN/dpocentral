@@ -2,11 +2,17 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Spanish landing's middle (locale es only; the English page keeps its
- * "How it works" and "Features" sections): the three tools and how they
- * connect, three short videos, the five stages of the program and the three
- * ways to run it, then the customer logos (shown only when the configured
- * list is not empty). No prices.
+ * The landing's middle, the same sections in both languages: the three
+ * tools and how they connect, the short videos, the five stages of the
+ * program, and the ways to host it. The Spanish page then shows the
+ * customer logos (only when the configured list is not empty); the English
+ * page shows none. No prices.
+ *
+ * Each language has its own copy under `<locale>.*` in the landing
+ * dictionary, and its own list of ways: three in Spanish, five in English
+ * (as on the English storefront). The videos come from
+ * src/landing/config/videos.ts; a video that is not published there shows
+ * no card, and with none published the section is left out.
  *
  * Motion is the page's existing fade-up on scroll, run under
  * MotionConfig reducedMotion="user": with reduced motion asked for, nothing
@@ -24,8 +30,11 @@ import {
   Cloud,
   Compass,
   Database,
+  ExternalLink,
+  GraduationCap,
   HardDrive,
   Mail,
+  Package,
   Scale,
   Server,
   ShieldCheck,
@@ -35,9 +44,54 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { brand } from "@/config/brand";
+import { LANDING_VIDEOS, type LandingLocale, type LandingVideo } from "../config/videos";
 import CustomerLogos from "./CustomerLogos";
 
 type T = (key: string) => string;
+
+/** The public kit that installs the suite with Docker. */
+export const KIT_URL = "https://github.com/RINDOGATAN/todolaw-suite";
+
+type WayAction = "none" | "mail" | "link";
+
+interface Way {
+  icon: LucideIcon;
+  action: WayAction;
+  href?: string;
+}
+
+interface LocaleSetup {
+  bullets: { ais: number; dpc: number; vw: number };
+  ways: Way[];
+  captionsLang: string;
+  logos: boolean;
+}
+
+const SETUP: Record<LandingLocale, LocaleSetup> = {
+  es: {
+    bullets: { ais: 4, dpc: 5, vw: 3 },
+    ways: [
+      { icon: Cloud, action: "none" },
+      { icon: Server, action: "mail" },
+      { icon: HardDrive, action: "mail" },
+    ],
+    captionsLang: "es",
+    logos: true,
+  },
+  en: {
+    bullets: { ais: 4, dpc: 5, vw: 3 },
+    ways: [
+      { icon: Cloud, action: "none" },
+      { icon: Package, action: "link", href: KIT_URL },
+      { icon: HardDrive, action: "mail" },
+      { icon: Server, action: "mail" },
+      { icon: GraduationCap, action: "mail" },
+    ],
+    captionsLang: "en",
+    // No customer logos on the English page.
+    logos: false,
+  },
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -55,6 +109,17 @@ const reveal = (i = 0) => ({
   viewport: { once: true, margin: "-40px" },
   variants: fadeUp,
 });
+
+/**
+ * Card widths for a centred, wrapping row (gap-6 = 1.5rem): three cards sit
+ * three across from `md`; any other count goes two across from `md` and
+ * three across from `lg`, the last row centred.
+ */
+function cardWidth(count: number): string {
+  return count === 3
+    ? "w-full md:w-[calc((100%-3rem)/3)]"
+    : "w-full md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]";
+}
 
 function SectionHead({ t, k, sub = true }: { t: T; k: string; sub?: boolean }) {
   return (
@@ -77,12 +142,6 @@ interface Tool {
   bullets: number;
   hub?: boolean;
 }
-
-const TOOLS: Record<"ais" | "dpc" | "vw", Tool> = {
-  ais: { key: "es.suite.ais", icon: Bot, bullets: 4 },
-  dpc: { key: "es.suite.dpc", icon: ShieldCheck, bullets: 5, hub: true },
-  vw: { key: "es.suite.vw", icon: Store, bullets: 3 },
-};
 
 function ToolPanel({ t, tool, i }: { t: T; tool: Tool; i: number }) {
   const Icon = tool.icon;
@@ -149,17 +208,24 @@ function Connector({ t, labelKey, toward, i }: { t: T; labelKey: string; toward:
   );
 }
 
-function Suite({ t }: { t: T }) {
+function Suite({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
+  const k = `${p}.suite`;
+  const tool = (id: "ais" | "dpc" | "vw", icon: LucideIcon, hub = false): Tool => ({
+    key: `${k}.${id}`,
+    icon,
+    bullets: setup.bullets[id],
+    hub,
+  });
   return (
-    <section className="py-20 md:py-28 bg-secondary/20 border-y border-border" aria-labelledby="es.suite-heading">
+    <section className="py-20 md:py-28 bg-secondary/20 border-y border-border" aria-labelledby={`${k}-heading`}>
       <div className="container px-6">
-        <SectionHead t={t} k="es.suite" />
+        <SectionHead t={t} k={k} />
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_7.5rem_minmax(0,1.12fr)_7.5rem_minmax(0,1fr)] items-stretch">
-          <ToolPanel t={t} tool={TOOLS.ais} i={0} />
-          <Connector t={t} labelKey="es.suite.link.ais" toward="right" i={1} />
-          <ToolPanel t={t} tool={TOOLS.dpc} i={1} />
-          <Connector t={t} labelKey="es.suite.link.vw" toward="left" i={2} />
-          <ToolPanel t={t} tool={TOOLS.vw} i={2} />
+          <ToolPanel t={t} tool={tool("ais", Bot)} i={0} />
+          <Connector t={t} labelKey={`${k}.link.ais`} toward="right" i={1} />
+          <ToolPanel t={t} tool={tool("dpc", ShieldCheck, true)} i={1} />
+          <Connector t={t} labelKey={`${k}.link.vw`} toward="left" i={2} />
+          <ToolPanel t={t} tool={tool("vw", Store)} i={2} />
         </div>
       </div>
     </section>
@@ -168,20 +234,23 @@ function Suite({ t }: { t: T }) {
 
 /* ── b. Videos ──────────────────────────────────────────────────────── */
 
-const VIDEOS = ["01-inicio-rapido", "02-progreso", "04-informe-ejecutivo"] as const;
-
-function Videos({ t }: { t: T }) {
+function Videos({ t, p, setup, videos }: { t: T; p: LandingLocale; setup: LocaleSetup; videos: readonly LandingVideo[] }) {
+  const k = `${p}.videos`;
+  // n follows the position in the configured list, published or not, so a
+  // card keeps its title and caption keys while its neighbours are pending.
+  const cards = videos.map((v, i) => ({ ...v, n: i + 1 })).filter((v) => v.published);
+  if (cards.length === 0) return null;
+  const width = cardWidth(cards.length);
   return (
-    <section className="py-20 md:py-28" aria-labelledby="es.videos-heading">
+    <section className="py-20 md:py-28" aria-labelledby={`${k}-heading`}>
       <div className="container px-6">
-        <SectionHead t={t} k="es.videos" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {VIDEOS.map((file, i) => {
-            const n = i + 1;
-            const base = `/videos/es/${file}`;
-            const captionId = `es-video-${n}-caption`;
+        <SectionHead t={t} k={k} />
+        <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
+          {cards.map(({ file, n }, i) => {
+            const base = `/videos/${p}/${file}`;
+            const captionId = `${p}-video-${n}-caption`;
             return (
-              <motion.figure key={file} {...reveal(i)} className="rounded-2xl border border-border bg-card overflow-hidden flex flex-col">
+              <motion.figure key={file} {...reveal(i)} className={`${width} rounded-2xl border border-border bg-card overflow-hidden flex flex-col`}>
                 <video
                   className="block w-full aspect-video bg-black"
                   controls
@@ -189,16 +258,16 @@ function Videos({ t }: { t: T }) {
                   playsInline
                   preload="none"
                   poster={`${base}.png`}
-                  aria-label={t(`es.videos.v${n}.title`)}
+                  aria-label={t(`${k}.v${n}.title`)}
                   aria-describedby={captionId}
                 >
                   <source src={`${base}.webm`} type="video/webm" />
                   <source src={`${base}.mp4`} type="video/mp4" />
-                  <track kind="captions" srcLang="es" label={t("es.videos.captions")} src={`${base}.vtt`} default />
+                  <track kind="captions" srcLang={setup.captionsLang} label={t(`${k}.captions`)} src={`${base}.vtt`} default />
                 </video>
                 <figcaption id={captionId} className="p-5">
-                  <span className="block text-base font-display mb-1">{t(`es.videos.v${n}.title`)}</span>
-                  <span className="block text-sm text-muted-foreground font-body leading-relaxed">{t(`es.videos.v${n}.caption`)}</span>
+                  <span className="block text-base font-display mb-1">{t(`${k}.v${n}.title`)}</span>
+                  <span className="block text-sm text-muted-foreground font-body leading-relaxed">{t(`${k}.v${n}.caption`)}</span>
                 </figcaption>
               </motion.figure>
             );
@@ -213,11 +282,12 @@ function Videos({ t }: { t: T }) {
 
 const STAGE_ICONS: LucideIcon[] = [Compass, Database, Scale, Users, Siren];
 
-function Stages({ t }: { t: T }) {
+function Stages({ t, p }: { t: T; p: LandingLocale }) {
+  const k = `${p}.stages`;
   return (
-    <section className="py-20 md:py-28 bg-secondary/20 border-y border-border" aria-labelledby="es.stages-heading">
+    <section className="py-20 md:py-28 bg-secondary/20 border-y border-border" aria-labelledby={`${k}-heading`}>
       <div className="container px-6">
-        <SectionHead t={t} k="es.stages" />
+        <SectionHead t={t} k={k} />
         <div className="relative max-w-6xl mx-auto">
           {/* the path that joins the stages */}
           <div aria-hidden="true" className="hidden lg:block absolute top-7 left-[10%] right-[10%] h-px bg-gradient-to-r from-accent/20 via-accent/70 to-accent/20" />
@@ -235,10 +305,10 @@ function Stages({ t }: { t: T }) {
                   </div>
                   <div className="paper-card flex-1 lg:w-full !p-5">
                     <span className="block text-[11px] uppercase tracking-wider text-muted-foreground font-medium font-body mb-1">
-                      {t("es.stages.stage")} {n}
+                      {t(`${k}.stage`)} {n}
                     </span>
-                    <h3 className="text-base font-display mb-2 leading-snug">{t(`es.stages.s${n}.title`)}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-body">{t(`es.stages.s${n}.desc`)}</p>
+                    <h3 className="text-base font-display mb-2 leading-snug">{t(`${k}.s${n}.title`)}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-body">{t(`${k}.s${n}.desc`)}</p>
                   </div>
                 </motion.li>
               );
@@ -250,41 +320,50 @@ function Stages({ t }: { t: T }) {
   );
 }
 
-/* ── d. Where it runs ───────────────────────────────────────────────── */
+/* ── d. Where it is hosted ──────────────────────────────────────────── */
 
-const WAYS: Array<{ icon: LucideIcon; letter: string; request: boolean }> = [
-  { icon: Cloud, letter: "a", request: false },
-  { icon: Server, letter: "b", request: true },
-  { icon: HardDrive, letter: "c", request: true },
-];
+const LETTERS = "abcdefghij";
 
-function Ways({ t }: { t: T }) {
+const linkClass =
+  "mt-auto inline-flex items-center gap-2 self-start text-sm font-medium text-accent hover:text-foreground transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-card";
+
+function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
+  const k = `${p}.ways`;
+  const width = cardWidth(setup.ways.length);
   return (
-    <section className="py-20 md:py-28" aria-labelledby="es.ways-heading">
+    <section className="py-20 md:py-28" aria-labelledby={`${k}-heading`}>
       <div className="container px-6">
-        <SectionHead t={t} k="es.ways" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {WAYS.map(({ icon: Icon, letter, request }, i) => {
+        <SectionHead t={t} k={k} />
+        <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
+          {setup.ways.map(({ icon: Icon, action, href }, i) => {
             const n = i + 1;
-            const mailto = `mailto:${brand.supportEmail}?subject=${encodeURIComponent(t(`es.ways.w${n}.subject`))}`;
+            const letter = LETTERS[i];
+            const title = t(`${k}.w${n}.title`);
             return (
-              <motion.article key={letter} {...reveal(i)} className="paper-card flex flex-col">
+              <motion.article key={letter} {...reveal(i)} className={`${width} paper-card flex flex-col`}>
                 <div className="flex items-center justify-between mb-5">
                   <div className="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">
                     <Icon className="w-6 h-6" aria-hidden="true" />
                   </div>
                   <span className="text-3xl font-display text-muted-foreground" aria-hidden="true">{letter}</span>
                 </div>
-                <h3 className="text-lg font-display mb-2">{t(`es.ways.w${n}.title`)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed font-body mb-5">{t(`es.ways.w${n}.desc`)}</p>
-                {request && (
+                <h3 className="text-lg font-display mb-2">{title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed font-body mb-5">{t(`${k}.w${n}.desc`)}</p>
+                {action === "mail" && (
                   <a
-                    href={mailto}
-                    className="mt-auto inline-flex items-center gap-2 self-start text-sm font-medium text-accent hover:text-foreground transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                    href={`mailto:${brand.supportEmail}?subject=${encodeURIComponent(t(`${k}.w${n}.subject`))}`}
+                    className={linkClass}
                   >
                     <Mail className="w-4 h-4" aria-hidden="true" />
-                    {t("es.ways.request")}
-                    <span className="sr-only">: {t(`es.ways.w${n}.title`)}</span>
+                    {t(`${k}.request`)}
+                    <span className="sr-only">: {title}</span>
+                  </a>
+                )}
+                {action === "link" && href && (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                    {t(`${k}.w${n}.link`)}
+                    <span className="sr-only">: {title}</span>
                   </a>
                 )}
               </motion.article>
@@ -296,14 +375,22 @@ function Ways({ t }: { t: T }) {
   );
 }
 
-export default function SpanishSections({ t }: { t: T }) {
+interface LandingSectionsProps {
+  t: T;
+  locale: LandingLocale;
+  /** For tests; the page uses the configured list. */
+  videos?: readonly LandingVideo[];
+}
+
+export default function LandingSections({ t, locale, videos = LANDING_VIDEOS[locale] }: LandingSectionsProps) {
+  const setup = SETUP[locale];
   return (
     <MotionConfig reducedMotion="user">
-      <Suite t={t} />
-      <Videos t={t} />
-      <Stages t={t} />
-      <Ways t={t} />
-      <CustomerLogos t={t} />
+      <Suite t={t} p={locale} setup={setup} />
+      <Videos t={t} p={locale} setup={setup} videos={videos} />
+      <Stages t={t} p={locale} />
+      <Ways t={t} p={locale} setup={setup} />
+      {setup.logos && <CustomerLogos t={t} />}
     </MotionConfig>
   );
 }

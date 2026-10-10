@@ -41,8 +41,8 @@ interface StartupProductPageProps {
   callbackUrl: string;
   /**
    * The sections between the value section and the closing call to action.
-   * When given (the Spanish page), they replace "How it works" and the
-   * feature showcase; when left out (the English page), those two show.
+   * When given (both languages pass LandingSections), they replace the
+   * older "How it works" and feature showcase; when left out, those show.
    */
   middle?: React.ReactNode;
 }
