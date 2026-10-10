@@ -31,12 +31,11 @@ export const LANDING_VIDEOS: Record<LandingLocale, readonly LandingVideo[]> = {
     { file: "02-progreso", published: true },
     { file: "04-informe-ejecutivo", published: true },
   ],
-  // Not recorded yet; a separate job records them into public/videos/en/.
   en: [
-    { file: "01-inicio-rapido", published: false },
-    { file: "02-progreso", published: false },
-    { file: "03-documentos", published: false },
-    { file: "04-informe-ejecutivo", published: false },
-    { file: "05-eipd", published: false },
+    { file: "01-inicio-rapido", published: true },
+    { file: "02-progreso", published: true },
+    { file: "03-documentos", published: true },
+    { file: "04-informe-ejecutivo", published: true },
+    { file: "05-eipd", published: true },
   ],
 };
