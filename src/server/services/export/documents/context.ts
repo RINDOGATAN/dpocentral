@@ -52,8 +52,19 @@ export async function resolveExportLocale(requested: string | null): Promise<Loc
 }
 
 /** The organisation's name as it appears in a file name. */
+/**
+ * An organisation's name as part of a file name: accents dropped rather than
+ * turned into dashes ("Ejemplo Logística, S.L." gives "Ejemplo-Logistica-S-L",
+ * not "Ejemplo-Log-stica--S-L-"), one dash between words, none at the ends.
+ */
 export function nameForFile(name: string): string {
-  return name.replace(/[^a-zA-Z0-9]/g, "-");
+  return (
+    name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "organisation"
+  );
 }
 
 export function today(): string {

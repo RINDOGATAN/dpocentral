@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The DSAR router sets due dates with the primary jurisdiction's rule:
+ * The DSAR router sets due dates with the primary jurisdiction's rule
+ * (with none marked primary, the strictest of the organisation's):
  * calendar months for GDPR / UK GDPR, days for laws stated in days. A
  * statutory extension (no extensionDays given) applies the law's further
  * period. Stored due dates of existing requests are only read, never
@@ -16,7 +17,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
-    organizationJurisdiction: { findFirst: vi.fn() },
+    organizationJurisdiction: { findMany: vi.fn() },
     dSARRequest: { findFirst: vi.fn(), create: vi.fn(), update: vi.fn() },
     dSARAuditLog: { create: vi.fn() },
     auditLog: { create: vi.fn() },
@@ -53,10 +54,16 @@ function caller() {
 }
 
 function primary(code: string, dsarDeadlineDays: number) {
-  mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue({
-    isPrimary: true,
-    jurisdiction: { code, dsarDeadlineDays },
-  });
+  mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([
+    { isPrimary: true, jurisdiction: { code, dsarDeadlineDays } },
+  ]);
+}
+
+/** The quick start's shape: the organisation's laws, none marked primary. */
+function unmarked(...laws: Array<[string, number]>) {
+  mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue(
+    laws.map(([code, dsarDeadlineDays]) => ({ isPrimary: false, jurisdiction: { code, dsarDeadlineDays } }))
+  );
 }
 
 const NEW_REQUEST = {
@@ -104,12 +111,42 @@ describe("create", () => {
     expect(mocks.prisma.dSARRequest.create.mock.calls[0][0].data.dueDate).toEqual(d(2026, 3, 17));
   });
 
-  it("no primary jurisdiction: the GDPR rule, one month", async () => {
+  it("no jurisdiction at all: the GDPR rule, one month", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(d(2026, 3, 31));
-    mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue(null);
+    mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([]);
     await caller().create(NEW_REQUEST);
     expect(mocks.prisma.dSARRequest.create.mock.calls[0][0].data.dueDate).toEqual(d(2026, 4, 30));
+  });
+
+  it("none marked primary (the quick start's way): California alone keeps 45 days", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(d(2026, 10, 10));
+    unmarked(["CCPA", 45]);
+    await caller().create(NEW_REQUEST);
+    expect(mocks.prisma.dSARRequest.create.mock.calls[0][0].data.dueDate).toEqual(d(2026, 11, 24));
+  });
+
+  it("none marked primary: the strictest law sets the date (GDPR and CCPA: one month; LGPD: 15 days)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(d(2026, 10, 10));
+    unmarked(["CCPA", 45], ["GDPR", 30]);
+    await caller().create(NEW_REQUEST);
+    expect(mocks.prisma.dSARRequest.create.mock.calls[0][0].data.dueDate).toEqual(d(2026, 11, 10));
+    unmarked(["GDPR", 30], ["LGPD", 15]);
+    await caller().create(NEW_REQUEST);
+    expect(mocks.prisma.dSARRequest.create.mock.calls[1][0].data.dueDate).toEqual(d(2026, 10, 25));
+  });
+
+  it("a primary jurisdiction still wins over a stricter one", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(d(2026, 10, 10));
+    mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([
+      { isPrimary: false, jurisdiction: { code: "LGPD", dsarDeadlineDays: 15 } },
+      { isPrimary: true, jurisdiction: { code: "CCPA", dsarDeadlineDays: 45 } },
+    ]);
+    await caller().create(NEW_REQUEST);
+    expect(mocks.prisma.dSARRequest.create.mock.calls[0][0].data.dueDate).toEqual(d(2026, 11, 24));
   });
 });
 
@@ -141,6 +178,13 @@ describe("extendDeadline", () => {
 
   it("CCPA/CPRA statutory extension: 45 further days", async () => {
     primary("CCPA", 45);
+    existing(d(2026, 1, 1), d(2026, 2, 15));
+    await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "Reasonably necessary" });
+    expect(mocks.prisma.dSARRequest.update.mock.calls[0][0].data.dueDate).toEqual(d(2026, 4, 1));
+  });
+
+  it("none marked primary, California alone: the CCPA extension (45 further days), not the GDPR one", async () => {
+    unmarked(["CCPA", 45]);
     existing(d(2026, 1, 1), d(2026, 2, 15));
     await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", reason: "Reasonably necessary" });
     expect(mocks.prisma.dSARRequest.update.mock.calls[0][0].data.dueDate).toEqual(d(2026, 4, 1));
@@ -211,6 +255,6 @@ describe("extendDeadline", () => {
     existing(d(2026, 1, 1), d(2026, 2, 1));
     await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 10, reason: "x" });
     expect(mocks.prisma.dSARRequest.update.mock.calls[0][0].data.dueDate).toEqual(d(2026, 2, 11));
-    expect(mocks.prisma.organizationJurisdiction.findFirst).not.toHaveBeenCalled();
+    expect(mocks.prisma.organizationJurisdiction.findMany).not.toHaveBeenCalled();
   });
 });

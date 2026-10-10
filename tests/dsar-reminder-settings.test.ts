@@ -15,7 +15,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
-    organizationJurisdiction: { findFirst: vi.fn() },
+    organizationJurisdiction: { findMany: vi.fn() },
     organization: { findUnique: vi.fn(), update: vi.fn() },
     user: { update: vi.fn() },
     dSARRequest: { findFirst: vi.fn() },
@@ -107,29 +107,26 @@ describe("request page: Extend deadline button state", () => {
   }
 
   it("GDPR, not yet extended: offered, with the new date and the tell-by date", async () => {
-    mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue({
-      isPrimary: true,
-      jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 },
-    });
+    mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([
+      { isPrimary: true, jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 } },
+    ]);
     stored();
     const r = await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" });
     expect(r.extension).toEqual({ allowed: true, newDueDate: d(2026, 4, 30), tellBy: d(2026, 2, 28) });
   });
 
   it("a law without extension, or a request already extended: not offered, with the reason", async () => {
-    mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue({
-      isPrimary: true,
-      jurisdiction: { code: "LGPD", dsarDeadlineDays: 15 },
-    });
+    mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([
+      { isPrimary: true, jurisdiction: { code: "LGPD", dsarDeadlineDays: 15 } },
+    ]);
     stored();
     expect((await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
       allowed: false,
       reason: "no_extension",
     });
-    mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue({
-      isPrimary: true,
-      jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 },
-    });
+    mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([
+      { isPrimary: true, jurisdiction: { code: "GDPR", dsarDeadlineDays: 30 } },
+    ]);
     stored({ extendedDueDate: d(2026, 4, 30), dueDate: d(2026, 4, 30) });
     expect((await as("PRIVACY_OFFICER").getById({ organizationId: "org-a", id: "dsar-1" })).extension).toEqual({
       allowed: false,

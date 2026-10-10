@@ -21,7 +21,8 @@ import {
   Scale,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { DATE_LOCALE } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -94,6 +95,7 @@ function ModuleBreakdownCard({
 export default function ReportsPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
+  const locale = useLocale();
   const tp = useTranslations("pages.reports");
   const tg = useTranslations("guided");
   // The one programme figure (src/components/guided/path.ts, programFigure).
@@ -572,7 +574,7 @@ export default function ReportsPage() {
                     {trendData.map((snapshot) => (
                       <div key={snapshot.id} className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {new Date(snapshot.month).toLocaleDateString(undefined, {
+                          {new Date(snapshot.month).toLocaleDateString(DATE_LOCALE[locale] ?? DATE_LOCALE.en, {
                             month: "short",
                             year: "numeric",
                           })}

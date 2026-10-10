@@ -120,3 +120,25 @@ it("does not create a request for an org with no active intake form", async () =
   });
   expect(mocks.prisma.dSARRequest.create).not.toHaveBeenCalled();
 });
+
+it("dates a portal request by the organisation's laws when none is marked primary (California: 45 days)", async () => {
+  const before = Date.now();
+  mocks.prisma.organization.findUnique.mockResolvedValue({
+    id: "org-acme",
+    name: "Acme",
+    slug: "acme",
+    dsarIntakeForms: [{ id: "form-1", isActive: true }],
+    jurisdictions: [{ isPrimary: false, jurisdiction: { code: "CCPA", dsarDeadlineDays: 45 } }],
+  });
+  mocks.prisma.dSARRequest.create.mockResolvedValue({ id: "req-2", publicId: "DSAR-PUBLIC-2" });
+
+  await anon().submitPublic(validSubmission);
+
+  const { data } = mocks.prisma.dSARRequest.create.mock.calls[0][0];
+  const days = (data.dueDate.getTime() - data.receivedAt.getTime()) / 86_400_000;
+  expect(Math.round(days)).toBe(45);
+  expect(data.receivedAt.getTime()).toBeGreaterThanOrEqual(before);
+  // The query reads every jurisdiction, not only a primary one.
+  const query = mocks.prisma.organization.findUnique.mock.calls[0][0];
+  expect(query.include.jurisdictions.where).toBeUndefined();
+});

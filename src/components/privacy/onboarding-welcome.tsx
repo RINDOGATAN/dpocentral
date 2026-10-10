@@ -15,6 +15,7 @@ import { brand } from "@/config/brand";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { UserType } from "@prisma/client";
+import { organizationSlug } from "@/lib/organization-slug";
 
 const personas = [
   {
@@ -43,13 +44,7 @@ export function OnboardingWelcome() {
   const setUserType = trpc.user.setUserType.useMutation();
   const createOrg = trpc.organization.create.useMutation();
 
-  const generateSlug = (text: string) => {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  };
+  const generateSlug = organizationSlug;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

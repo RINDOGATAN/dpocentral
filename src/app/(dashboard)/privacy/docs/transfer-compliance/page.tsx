@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { Globe, FileCheck, Shield, CheckCircle, Lock, FileText, Users } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { DATE_LOCALE, formatDateIn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocSection } from "@/components/docs/doc-section";
 import { StepList } from "@/components/docs/step-list";
@@ -53,6 +54,10 @@ const supplementaryIcons: Record<typeof supplementaryKeys[number], typeof Lock> 
 
 export default async function DocsTransferCompliancePage() {
   const t = await getTranslations("docs.transferCompliance");
+  const locale = await getLocale();
+  // Example destinations by country code, named in the reader's language.
+  const countryName = (code: string) =>
+    new Intl.DisplayNames([DATE_LOCALE[locale] ?? DATE_LOCALE.en], { type: "region" }).of(code) ?? code;
 
   const overviewStats: { key: string; icon: typeof Globe }[] = [
     { key: "adequacy", icon: Globe },
@@ -61,10 +66,10 @@ export default async function DocsTransferCompliancePage() {
   ];
 
   const sccs = [
-    { vendor: "CloudHost EU", destination: "US (Virginia)", expires: "2026-06-15", daysLeft: 88, status: "Active" },
-    { vendor: "Analytics Corp", destination: "India", expires: "2026-04-20", daysLeft: 32, status: "Expiring Soon" },
-    { vendor: "DataSync Ltd", destination: "Brazil", expires: "2026-04-01", daysLeft: 13, status: "Urgent" },
-    { vendor: "Legacy Hosting", destination: "Singapore", expires: "2026-02-28", daysLeft: 0, status: "Expired" },
+    { vendor: "CloudHost EU", destination: `${countryName("US")} (Virginia)`, expires: "2026-06-15", daysLeft: 88, status: "Active" },
+    { vendor: "Analytics Corp", destination: countryName("IN"), expires: "2026-04-20", daysLeft: 32, status: "Expiring Soon" },
+    { vendor: "DataSync Ltd", destination: countryName("BR"), expires: "2026-04-01", daysLeft: 13, status: "Urgent" },
+    { vendor: "Legacy Hosting", destination: countryName("SG"), expires: "2026-02-28", daysLeft: 0, status: "Expired" },
   ];
 
   return (
@@ -169,7 +174,7 @@ export default async function DocsTransferCompliancePage() {
                     <span className="text-sm font-medium">{scc.vendor}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 ml-6">
-                    {scc.destination} — {t("sccTracking.expiresLabel", { date: scc.expires })}
+                    {scc.destination} · {t("sccTracking.expiresLabel", { date: formatDateIn(scc.expires, locale) })}
                   </p>
                 </div>
                 <StatusChip tone={sccStatusTone[scc.status] ?? "neutral"} className="text-[10px]">
