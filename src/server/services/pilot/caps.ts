@@ -24,9 +24,65 @@ import {
  *   - a ceiling on the records an organisation can hold (PILOT_LIMITS).
  * The self-hosted kit is never capped: every function here is a no-op unless
  * isHostedDeployment() is true.
+ *
+ * An organisation on the paid EU cloud plan (Organization.plan = EU_CLOUD,
+ * set by scripts/set-org-plan.ts) is not on the pilot: none of the caps, the
+ * editing window or the free-DPIA rule applies to it. The pilot clock is
+ * still recorded, so an organisation returned to PILOT finds its window where
+ * it was.
  */
 
 export const PILOT_DAYS = 90;
+
+/**
+ * An organisation as the ceilings take it: its id (the plan is then read from
+ * the database), or the organisation row the caller already holds (its plan
+ * is used as it is; a row without one counts as the pilot).
+ */
+export type OrgRef = string | ({ id: string } & PlanOrg);
+
+const orgId = (org: OrgRef) => (typeof org === "string" ? org : org.id);
+
+async function onPaidPlan(db: PlanLookupDb, org: OrgRef): Promise<boolean> {
+  return typeof org === "string" ? organizationOnPaidPlan(db, org) : isPaidPlan(org);
+}
+
+/** The plan that lifts the pilot's caps (Prisma enum OrganizationPlan). */
+export const PAID_PLAN = "EU_CLOUD" as const;
+
+/** The plan field as the caps read it; absent or null counts as the pilot. */
+export type PlanOrg = { plan?: string | null };
+
+/** True for an organisation on the paid EU cloud plan. */
+export function isPaidPlan(org: PlanOrg | null | undefined): boolean {
+  return org?.plan === PAID_PLAN;
+}
+
+type PlanLookupDb = {
+  organization?: {
+    findUnique: (args: {
+      where: { id: string };
+      select: { plan: true };
+    }) => Promise<{ plan: string | null } | null>;
+  };
+};
+
+/**
+ * Reads the organisation's plan from the database. An organisation that is
+ * not found, or a database handle without the organisations model (a test
+ * double), counts as the pilot: the caps then apply, never the reverse.
+ */
+export async function organizationOnPaidPlan(
+  db: PlanLookupDb,
+  organizationId: string
+): Promise<boolean> {
+  if (!db.organization?.findUnique) return false;
+  const org = await db.organization.findUnique({
+    where: { id: organizationId },
+    select: { plan: true },
+  });
+  return isPaidPlan(org);
+}
 
 /**
  * The date the hosted pilot went live. The editing window never starts before
@@ -38,7 +94,7 @@ export const PILOT_CLOCK_START = new Date("2026-10-01T00:00:00Z");
  * The field the pilot clock reads. `pilotStartedAt` is the organisation's
  * first sign-in after the pilot went live; null until that sign-in happens.
  */
-export type PilotClockOrg = { pilotStartedAt: Date | null };
+export type PilotClockOrg = { pilotStartedAt: Date | null } & PlanOrg;
 
 export type PilotResource =
   | "dataAssets"
@@ -89,7 +145,7 @@ export type PilotDb = {
   incident: CountDelegate;
   aISystem: CountDelegate;
   organizationMember: CountDelegate;
-};
+} & PlanLookupDb;
 
 const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: string) => Promise<number>> = {
   dataAssets: (db, organizationId) => db.dataAsset.count({ where: { organizationId } }),
@@ -386,6 +442,7 @@ export function pilotDaysLeft(org: PilotClockOrg, now: Date = new Date()): numbe
 }
 
 export function isPilotReadOnly(org: PilotClockOrg, now: Date = new Date()): boolean {
+  if (isPaidPlan(org)) return false;
   const end = pilotEndsAt(org);
   return end !== null && now.getTime() >= end.getTime();
 }
@@ -437,12 +494,14 @@ export function assertPilotWritable(
  */
 export async function assertPilotCapacity(
   db: PilotDb,
-  organizationId: string,
+  organization: OrgRef,
   resource: PilotResource,
   adding = 1,
   locale: Locale = "en"
 ): Promise<void> {
   if (!isHostedDeployment()) return;
+  if (await onPaidPlan(db, organization)) return;
+  const organizationId = orgId(organization);
   const used = await COUNTERS[resource](db, organizationId);
   if (used + adding > PILOT_LIMITS[resource]) {
     throw new TRPCError({
@@ -455,24 +514,32 @@ export async function assertPilotCapacity(
 /** True when one more record of `resource` fits under the ceiling. */
 export async function hasPilotRoom(
   db: PilotDb,
-  organizationId: string,
+  organization: OrgRef,
   resource: PilotResource
 ): Promise<boolean> {
   if (!isHostedDeployment()) return true;
+  if (await onPaidPlan(db, organization)) return true;
+  const organizationId = orgId(organization);
   const used = await COUNTERS[resource](db, organizationId);
   return used < PILOT_LIMITS[resource];
 }
 
 /**
  * Hosted pilot: an account may belong to one organisation. Throws when the
- * user already has a membership.
+ * user already has a membership. `joining` is the organisation the account
+ * is being added to, when there is one: an organisation on the paid plan may
+ * add a person who already belongs to another. Creating a new organisation
+ * passes none, so the rule still applies there (a new organisation starts on
+ * the pilot).
  */
 export async function assertOneOrganizationPerAccount(
   db: { organizationMember: CountDelegate },
   userId: string,
-  locale: Locale = "en"
+  locale: Locale = "en",
+  joining?: PlanOrg
 ): Promise<void> {
   if (!isHostedDeployment()) return;
+  if (isPaidPlan(joining)) return;
   const memberships = await db.organizationMember.count({ where: { userId } });
   if (memberships > 0) {
     throw new TRPCError({
@@ -498,6 +565,14 @@ export type PilotStatus =
   | { hosted: false }
   | {
       hosted: true;
+      /** On the paid EU cloud plan: no caps, no editing window. */
+      paid: true;
+      plan: typeof PAID_PLAN;
+      renewsAt: Date | null;
+    }
+  | {
+      hosted: true;
+      paid: false;
       days: number;
       daysLeft: number;
       /** False until the first sign-in after the pilot went live is recorded. */
@@ -509,10 +584,13 @@ export type PilotStatus =
 
 export async function getPilotStatus(
   db: PilotDb,
-  org: { id: string } & PilotClockOrg,
+  org: { id: string; planRenewsAt?: Date | null } & PilotClockOrg,
   now: Date = new Date()
 ): Promise<PilotStatus> {
   if (!isHostedDeployment()) return { hosted: false };
+  if (isPaidPlan(org)) {
+    return { hosted: true, paid: true, plan: PAID_PLAN, renewsAt: org.planRenewsAt ?? null };
+  }
   const usage = await Promise.all(
     // Rights requests are not listed when the module is not part of this plan.
     STATUS_RESOURCES.filter((r) => r !== "dsarRequests" || isDsarModuleEnabled()).map(async (resource) => ({
@@ -523,6 +601,7 @@ export async function getPilotStatus(
   );
   return {
     hosted: true,
+    paid: false,
     days: PILOT_DAYS,
     started: pilotStart(org) !== null,
     daysLeft: pilotDaysLeft(org, now),

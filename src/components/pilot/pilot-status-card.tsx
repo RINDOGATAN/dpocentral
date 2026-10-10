@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertTriangle, Download } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusNote } from "@/components/ui/status-note";
@@ -11,6 +11,7 @@ import { trpc } from "@/lib/trpc";
 import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
 import { isDsarModuleEnabled } from "@/config/features";
 import { useOrganization } from "@/lib/organization-context";
+import { formatDateIn } from "@/lib/utils";
 
 const ALL_EXPORTS = [
   { key: "all", path: "organization-data", format: null },
@@ -38,12 +39,40 @@ function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
     : rest;
 }
 
+/** Every export, as links (the pilot card and the paid plan card). */
+function ExportList({ organizationId, links }: { organizationId: string; links: readonly ExportLink[] }) {
+  const t = useTranslations("pilot");
+  return (
+    <div id="pilot-export">
+      <h3 className="text-sm font-medium mb-2">{t("settings.exportTitle")}</h3>
+      <ul className="flex flex-col gap-1 text-sm">
+        {links.map((e) => (
+          <li key={e.key}>
+            <a
+              href={`/api/export/${e.path}?organizationId=${organizationId}${e.format ? `&format=${e.format}` : ""}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              <Download className="w-3.5 h-3.5" />
+              {t(`settings.exports.${e.key}`)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /**
  * Hosted pilot card for Settings: days left, records against the ceiling,
- * the two ways out, and every export. Renders nothing on the kit.
+ * the two ways out, and every export. On the paid EU cloud plan: the plan's
+ * name, that the pilot limits do not apply, the renewal date, and every
+ * export (no price). Renders nothing on the kit.
  */
 export function PilotStatusCard({ organizationId }: { organizationId: string }) {
   const t = useTranslations("pilot");
+  const locale = useLocale();
   const { organizations } = useOrganization();
   const role = (organizations.find((o) => o.id === organizationId) as { role?: string } | undefined)?.role;
   const exportLinks = exportsFor(isDsarModuleEnabled(), role === "OWNER" || role === "ADMIN");
@@ -53,6 +82,26 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
   );
 
   if (!status?.hosted) return null;
+
+  if (status.paid) {
+    return (
+      <Card id="pilot" data-testid="paid-plan-card">
+        <CardHeader>
+          <CardTitle className="text-base">{t("settings.paid.title")}</CardTitle>
+          <CardDescription>{t("settings.paid.description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {status.renewsAt && (
+            <p className="text-sm">
+              {/* Plan dates are calendar days recorded at midnight UTC. */}
+              {t("settings.paid.renews", { date: formatDateIn(status.renewsAt, locale, "UTC") })}
+            </p>
+          )}
+          <ExportList organizationId={organizationId} links={exportLinks} />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const systems = status.usage.find((u) => u.resource === "dataAssets");
   const atCeiling = status.usage.some((u) => u.used >= u.limit);
@@ -120,24 +169,7 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
           </ul>
         </div>
 
-        <div id="pilot-export">
-          <h3 className="text-sm font-medium mb-2">{t("settings.exportTitle")}</h3>
-          <ul className="flex flex-col gap-1 text-sm">
-            {exportLinks.map((e) => (
-              <li key={e.key}>
-                <a
-                  href={`/api/export/${e.path}?organizationId=${organizationId}${e.format ? `&format=${e.format}` : ""}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary hover:underline"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  {t(`settings.exports.${e.key}`)}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ExportList organizationId={organizationId} links={exportLinks} />
       </CardContent>
     </Card>
   );

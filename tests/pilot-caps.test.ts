@@ -455,7 +455,7 @@ describe("records ceiling", () => {
     mocks.prisma.dataAsset.count.mockResolvedValue(7);
     const status = await getPilotStatus(mocks.prisma as unknown as PilotDb, ORG);
     expect(status).toMatchObject({ hosted: true, readOnly: false, daysLeft: PILOT_DAYS - 10 });
-    if (!status.hosted) throw new Error("expected hosted status");
+    if (!status.hosted || status.paid) throw new Error("expected pilot status");
     expect(status.usage[0]).toEqual({ resource: "dataAssets", used: 7, limit: 25 });
   });
 

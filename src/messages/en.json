@@ -8965,6 +8965,11 @@
         "dsarPerformance": "Data subject request report (PDF)",
         "assessmentPortfolio": "Assessment portfolio (PDF)",
         "rightsRequests": "Earlier rights-request records (JSON)"
+      },
+      "paid": {
+        "title": "EU cloud plan",
+        "description": "Your organization is on the EU cloud plan. The pilot limits and the editing window do not apply.",
+        "renews": "Renews on {date}."
       }
     }
   },

@@ -782,7 +782,7 @@ export const dsarRouter = createTRPCRouter({
       // Hosted pilot caps also bound the public intake (no-op on the kit)
       const pilotLang = pilotLocale(input.locale);
       assertPilotWritable(org, pilotLang);
-      await assertPilotCapacity(ctx.prisma, org.id, "dsarRequests", 1, pilotLang);
+      await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
 
       const receivedAt = new Date();
       const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(org.jurisdictions, receivedAt));

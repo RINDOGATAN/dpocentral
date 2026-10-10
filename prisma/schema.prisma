@@ -138,6 +138,18 @@ model Organization {
   safeguardsChoiceById String?
   safeguardsChoiceAt   DateTime?
 
+  // Hosted service: the organisation's plan. PILOT (the default) is the free,
+  // capped pilot; EU_CLOUD is the paid EU cloud plan, which lifts the pilot
+  // caps and the editing window (src/server/services/pilot/caps.ts). Payment
+  // is collected outside the app; the plan is set by an operator with
+  // scripts/set-org-plan.ts, which writes an audit-trail entry. planNote is an
+  // operator's reference (an invoice id), never shown to the organisation.
+  // Meaningless on the kit, which is never capped.
+  plan          OrganizationPlan @default(PILOT)
+  planStartedAt DateTime?
+  planRenewsAt  DateTime?
+  planNote      String?
+
   // Relations
   members              OrganizationMember[]
   jurisdictions        OrganizationJurisdiction[]
@@ -1877,6 +1889,12 @@ model AiGeneration {
 //   managed       b) a fully managed virtual server for the organisation
 //   own_hardware  c) the organisation's own hardware
 //   later         "decide later": treated as shared_eu
+// The hosted service's plan for an organisation (Organization.plan).
+enum OrganizationPlan {
+  PILOT
+  EU_CLOUD
+}
+
 enum SafeguardsChoice {
   shared_eu
   managed

@@ -59,6 +59,12 @@ export async function availableSlug(
   });
 }
 
+/** The organisation without the operator's plan reference (planNote). */
+function withoutPlanNote<T extends { planNote?: string | null }>(org: T): Omit<T, "planNote"> {
+  const { planNote: _planNote, ...rest } = org;
+  return rest;
+}
+
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -82,8 +88,10 @@ export const organizationRouter = createTRPCRouter({
       orderBy: { joinedAt: "desc" },
     });
 
+    // planNote is the operator's reference for the paid plan (an invoice
+    // id): never sent to the organisation's members.
     return memberships.map((m) => ({
-      ...m.organization,
+      ...withoutPlanNote(m.organization),
       role: m.role,
       joinedAt: m.joinedAt,
     }));
@@ -127,7 +135,7 @@ export const organizationRouter = createTRPCRouter({
       });
 
       return {
-        ...org,
+        ...(org ? withoutPlanNote(org) : org),
         currentUserRole: ctx.membership.role,
       };
     }),
@@ -401,10 +409,12 @@ export const organizationRouter = createTRPCRouter({
       }
 
       // Hosted pilot: the invitee may not already belong to another organisation
+      // (lifted when this organisation is on the paid EU cloud plan)
       await assertOneOrganizationPerAccount(
         ctx.prisma,
         user.id,
-        pilotLocale(localeFromCookieGetter(ctx.getCookie))
+        pilotLocale(localeFromCookieGetter(ctx.getCookie)),
+        ctx.organization
       );
 
       const membership = await ctx.prisma.organizationMember.create({
