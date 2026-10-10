@@ -22,6 +22,7 @@ import {
   pilotLocale,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { isHostedDeployment } from "@/lib/hosted";
 import {
   departmentScopeConditions,
   loadBusinessUnitScope,
@@ -174,6 +175,9 @@ export const organizationRouter = createTRPCRouter({
           name: input.name,
           slug,
           domain,
+          // Hosted service: the creator sees the welcome card (safeguards
+          // question) on the first visit to /privacy. Never on the kit.
+          welcomeUserId: isHostedDeployment() ? ctx.session.user.id : null,
           members: {
             create: {
               userId: ctx.session.user.id,

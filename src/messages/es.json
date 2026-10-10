@@ -8780,6 +8780,74 @@
       "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
     }
   },
+  "safeguards": {
+    "welcome": {
+      "title": "Te damos la bienvenida a una nueva generación de herramientas para gestionar programas de privacidad y de gobierno de la IA.",
+      "ai": "Diseñado desde el primer día para trabajar con IA: la IA prepara borradores de evaluaciones de impacto y de análisis de incidentes a partir de tus propios registros, y tú revisas y confirmas. Desactivada por defecto.",
+      "question": "Antes de empezar, una pregunta. ¿Qué garantías de seguridad, confidencialidad y protección de datos necesitas?",
+      "continue": "Continuar",
+      "later": "Decidir más tarde",
+      "note": "Puedes cambiar tu respuesta en Ajustes. La IA viene desactivada.",
+      "whereData": "Dónde viven tus datos",
+      "saveError": "No hemos podido guardar tu respuesta. Inténtalo de nuevo dentro de un momento."
+    },
+    "choices": {
+      "shared_eu": {
+        "title": "a) Por ahora, la nube compartida de la UE",
+        "description": "Trabajo con encargados y subencargados que tienen auditorías ISO 27001 o SOC 2 Tipo II, en una nube compartida alojada en la UE. Las funciones de IA solo se activan cuando yo lo pida y con proveedores aprobados para cada caso."
+      },
+      "managed": {
+        "title": "b) Un servidor virtual enteramente gestionado, solo para nosotros",
+        "description": "Necesitamos una instancia independiente, gestionada por TODO.LAW, con sus propios modelos de IA locales y con un acuerdo de nivel de servicio."
+      },
+      "own_hardware": {
+        "title": "c) En nuestro propio hardware",
+        "description": "Necesitamos instalarlo en nuestras propias máquinas, con modelos de IA que funcionen en local."
+      },
+      "later": {
+        "title": "Decidir más tarde (se trata como la nube compartida de la UE)"
+      }
+    },
+    "form": {
+      "title": "Hablemos de cómo instalarlo",
+      "intro": "Déjanos estos datos y te escribiremos por correo electrónico. Mientras tanto, puedes seguir probando la demo con datos de prueba.",
+      "name": "Nombre",
+      "email": "Correo electrónico de trabajo",
+      "emailHint": "De tu cuenta",
+      "organization": "Organización",
+      "country": "País",
+      "userCount": "¿Cuántas personas lo usarían?",
+      "userCountOptions": {
+        "1-5": "1 a 5",
+        "6-25": "6 a 25",
+        "26+": "Más de 25"
+      },
+      "message": "Algo más que debamos saber (opcional)",
+      "send": "Enviar",
+      "notNow": "Ahora no",
+      "privacyNote": "Usaremos estos datos solo para responder a tu solicitud y los borraremos un año después de cerrarla.",
+      "privacyLink": "Más información en la política de privacidad",
+      "required": "Escribe tu nombre, un correo electrónico de trabajo válido, tu organización, tu país y cuántas personas lo usarían.",
+      "sendError": "No hemos podido enviar tu solicitud. Inténtalo de nuevo dentro de un momento.",
+      "alreadyOpen": "Ya tenemos tu solicitud y te escribiremos."
+    },
+    "sent": {
+      "title": "Gracias",
+      "text": "Hemos recibido tu solicitud y alguien de nuestro equipo te escribirá por correo electrónico. Mientras tanto, puedes seguir probando la demo con datos de prueba.",
+      "continue": "Continuar"
+    },
+    "settings": {
+      "title": "Garantías de seguridad y de protección de datos",
+      "description": "La pregunta de la bienvenida. Puedes cambiar tu respuesta cuando quieras.",
+      "question": "¿Qué garantías de seguridad, confidencialidad y protección de datos necesitas?",
+      "current": "Tu respuesta: {choice}",
+      "none": "Sin respuesta todavía. Mientras no respondas, se aplica la nube compartida de la UE.",
+      "openRequest": "Recibimos tu solicitud el {date} y te escribiremos por correo electrónico.",
+      "save": "Guardar respuesta",
+      "saved": "Respuesta guardada",
+      "readOnly": "Solo una persona propietaria o administradora puede cambiar esta respuesta."
+    }
+  },
   "pilot": {
     "banner": "Piloto alojado: gratuito, limitado (<docs>ver documentación</docs>) y sin garantías contractuales. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
     "bannerLabel": "Aviso del piloto alojado",

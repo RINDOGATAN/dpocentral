@@ -10,12 +10,13 @@
  * left menu's organisation block.
  */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { GuidedDashboard } from "@/components/guided/guided-dashboard";
+import { WelcomeCard } from "@/components/safeguards/welcome-card";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -37,7 +38,20 @@ export default function PrivacyDashboardPage() {
   // organisation-wide action (src/lib/department-limit.ts).
   const { orgWide } = useMemberScope();
 
+  // The first-visit welcome card (hosted service, organisation's creator
+  // only; the server decides). It comes BEFORE the quick start: the redirect
+  // below waits until the card is answered or put off. A failed check never
+  // blocks the dashboard.
+  const [welcomeDone, setWelcomeDone] = useState(false);
+  const welcome = trpc.safeguards.getWelcome.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id, retry: false, refetchOnWindowFocus: false }
+  );
+  const welcomeShown = !welcomeDone && welcome.data?.show === true;
+  const welcomeSettled = welcomeDone || !welcome.isLoading;
+
   useEffect(() => {
+    if (!welcomeSettled || welcomeShown) return;
     if (!orgWide || !isEmptyOrg || fromQuickstart) return;
     // First visit only: once quickstart has been shown it sets a cookie
     // (see quickstart/page.tsx), so an empty org can still navigate to the
@@ -47,7 +61,18 @@ export default function PrivacyDashboardPage() {
       .includes("dpo_quickstart_seen=1");
     if (quickstartSeen) return;
     router.replace("/privacy/quickstart");
-  }, [orgWide, isEmptyOrg, fromQuickstart, router]);
+  }, [welcomeSettled, welcomeShown, orgWide, isEmptyOrg, fromQuickstart, router]);
 
-  return <GuidedDashboard fromQuickstart={fromQuickstart} />;
+  return (
+    <>
+      <GuidedDashboard fromQuickstart={fromQuickstart} />
+      {welcomeShown && organization?.id && welcome.data?.show && (
+        <WelcomeCard
+          organizationId={organization.id}
+          prefill={welcome.data.prefill}
+          onDone={() => setWelcomeDone(true)}
+        />
+      )}
+    </>
+  );
 }

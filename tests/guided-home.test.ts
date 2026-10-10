@@ -23,7 +23,8 @@ describe("dashboard home", () => {
   });
 
   it("renders the one dashboard, with no layout switch", () => {
-    expect(home).toContain("return <GuidedDashboard fromQuickstart={fromQuickstart} />;");
+    expect(home).toContain("<GuidedDashboard fromQuickstart={fromQuickstart} />");
+    expect(home.match(/<GuidedDashboard /g)).toHaveLength(1);
     expect(home).not.toMatch(/useSkin|skin !==/);
   });
 

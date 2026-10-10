@@ -36,6 +36,7 @@ import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
+import { SafeguardsSettingsCard } from "@/components/safeguards/safeguards-settings-card";
 import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
@@ -526,6 +527,9 @@ export default function SettingsPage() {
 
       {/* AI assistance (per-org posture, off by default) */}
       {org && <AiPostureCard organizationId={orgId} isAdmin={isAdmin} />}
+
+      {/* The welcome card's safeguards question (hosted service only) */}
+      {org && <SafeguardsSettingsCard organizationId={orgId} isAdmin={isAdmin} />}
 
       {/* Remove the unedited quick-start / template records in one step. */}
       {orgId && <TemplateItemsCard organizationId={orgId} canManage={isAdmin} />}
