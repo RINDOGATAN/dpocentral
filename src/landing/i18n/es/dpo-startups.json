@@ -27,7 +27,7 @@
   "value.v3.title": "Controla el plazo de 72 h de las brechas",
   "value.v3.desc": "Registra, evalúa y escala las brechas de seguridad de los datos personales con flujos estructurados. Análisis automático de los arts. 33 y 34 para notificar a la autoridad de control y comunicar a los interesados.",
   "value.v4.title": "Evaluaciones de impacto estructuradas",
-  "value.v4.desc": "Flujos guiados para EIPD, EIL y EIT. Puntuación de riesgo y recomendaciones de mitigación incluidas; mapas de calor previstos.",
+  "value.v4.desc": "Flujos guiados para EIPD, EIL y EIT. Puntuación de riesgo y recomendaciones de mitigación incluidas.",
 
   "workflow.label": "Cómo funciona",
   "workflow.heading.prefix": "De cero a ",

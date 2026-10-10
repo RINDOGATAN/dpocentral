@@ -70,6 +70,13 @@ describe("English copy, after the owner's review", () => {
     }
   });
 
+  it("promises no heat maps in either language", () => {
+    const es = JSON.parse(read("src/landing/i18n/es/dpo-startups.json")) as Record<string, string>;
+    for (const [k, v] of [...Object.entries(en), ...Object.entries(es)]) {
+      expect(v, k).not.toMatch(/heat ?maps?|mapas? de calor/i);
+    }
+  });
+
   it("uses US spelling in every English landing string", () => {
     for (const file of ["dpo-startups.json", "startups-auth.json"]) {
       const bundle = JSON.parse(read(`src/landing/i18n/en/${file}`)) as Record<string, string>;

@@ -27,7 +27,7 @@
   "value.v3.title": "Keep every breach in one register",
   "value.v3.desc": "Log, assess and escalate each incident with a structured workflow. For GDPR and UK GDPR, it runs the 72-hour clock and the Article 33 and 34 analysis for notifying the authority and the people affected. Incidents under US state breach laws are kept in the same register.",
   "value.v4.title": "Structured impact assessments",
-  "value.v4.desc": "Guided DPIAs, PIAs, LIAs and TIAs for GDPR and UK GDPR, and the risk assessments that the CCPA regulations require in California. Risk scoring and mitigation recommendations are included; heat maps are planned.",
+  "value.v4.desc": "Guided DPIAs, PIAs, LIAs and TIAs for GDPR and UK GDPR, and the risk assessments that the CCPA regulations require in California. Risk scoring and mitigation recommendations are included.",
 
   "workflow.label": "How It Works",
   "workflow.heading.prefix": "From zero to ",
