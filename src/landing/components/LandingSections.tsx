@@ -10,7 +10,8 @@
  *
  * Each language has its own copy under `<locale>.*` in the landing
  * dictionary, and its own list of ways: three in Spanish, five in English
- * (as on the English storefront). The videos come from
+ * (as on the English storefront). After the ways boxes, the safeguards
+ * guide (src/landing/content/safeguards.ts) recommends one and marks it. The videos come from
  * src/landing/config/videos.ts; a video that is not published there shows
  * no card, and with none published the section is left out.
  *
@@ -43,9 +44,11 @@ import {
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useState } from "react";
 import { brand } from "@/config/brand";
 import { LANDING_VIDEOS, type LandingLocale, type LandingVideo } from "../config/videos";
 import CustomerLogos from "./CustomerLogos";
+import SafeguardsGuide from "./SafeguardsGuide";
 
 type T = (key: string) => string;
 
@@ -328,9 +331,19 @@ const LETTERS = "abcdefghij";
 const linkClass =
   "mt-auto inline-flex items-center gap-2 self-start text-sm font-medium text-accent hover:text-foreground transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-card";
 
+/** The anchor of a ways box, which the safeguards guide links to. */
+const wayBoxId = (p: LandingLocale) => (i: number) => `${p}-way-${LETTERS[i]}`;
+
+/**
+ * The ways boxes, then the safeguards guide (closed by default, opening in
+ * place). The way the guide recommends is marked on its box: the accent
+ * border and the hover shadow, nothing added inside.
+ */
 function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
   const k = `${p}.ways`;
   const width = cardWidth(setup.ways.length);
+  const boxId = wayBoxId(p);
+  const [recommended, setRecommended] = useState<number | null>(null);
   return (
     <section className="py-20 md:py-28" aria-labelledby={`${k}-heading`}>
       <div className="container px-6">
@@ -340,8 +353,15 @@ function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
             const n = i + 1;
             const letter = LETTERS[i];
             const title = t(`${k}.w${n}.title`);
+            const marked = recommended === i;
             return (
-              <motion.article key={letter} {...reveal(i)} className={`${width} paper-card flex flex-col`}>
+              <motion.article
+                key={letter}
+                id={boxId(i)}
+                data-recommended={marked ? "true" : undefined}
+                {...reveal(i)}
+                className={`${width} paper-card flex flex-col scroll-mt-28 ${marked ? "border-accent shadow-[var(--shadow-hover)]" : ""}`}
+              >
                 <div className="flex items-center justify-between mb-5">
                   <div className="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">
                     <Icon className="w-6 h-6" aria-hidden="true" />
@@ -370,6 +390,9 @@ function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
               </motion.article>
             );
           })}
+        </div>
+        <div className="max-w-6xl mx-auto mt-8">
+          <SafeguardsGuide locale={p} boxId={boxId} onRecommend={setRecommended} />
         </div>
       </div>
     </section>
