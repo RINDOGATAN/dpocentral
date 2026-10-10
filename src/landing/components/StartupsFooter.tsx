@@ -1,21 +1,31 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { storefrontLogoLabel, storefrontUrl, type LandingLocale } from "../config/storefront";
+
 interface StartupsFooterProps {
   t: (key: string) => string;
+  locale: LandingLocale;
 }
 
-const StartupsFooter = ({ t }: StartupsFooterProps) => {
+const StartupsFooter = ({ t, locale }: StartupsFooterProps) => {
   return (
     <footer className="py-12 border-t border-border">
       <div className="container px-6">
         <div className="flex flex-col items-center gap-6">
-          <a href="https://todo.law" className="flex items-center gap-2">
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "30px", width: "auto" }} />
+          <div className="flex items-center gap-2">
+            <a
+              href={storefrontUrl(locale)}
+              aria-label={storefrontLogoLabel(locale)}
+              data-testid="footer-logo-link"
+              className="flex items-center"
+            >
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "30px", width: "auto" }} />
+            </a>
             <span className="text-xs text-muted-foreground font-body">
               {t("footer.tagline")}
             </span>
-          </a>
+          </div>
 
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a
