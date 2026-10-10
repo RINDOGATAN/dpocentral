@@ -507,6 +507,38 @@ export const platformAdminRouter = createTRPCRouter({
     }),
 
   // ============================================================
+  // SAFEGUARDS REQUESTS (welcome card options b and c)
+  // Kept until closed, then six months (the daily purge deletes them).
+  // ============================================================
+
+  listSafeguardsRequests: adminProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.safeguardsRequest.findMany({
+        where: { organizationId: input.organizationId },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  closeSafeguardsRequest: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.prisma.safeguardsRequest.findUnique({
+        where: { id: input.id },
+        select: { id: true, status: true },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Request not found" });
+      }
+      if (existing.status === "closed") return { closed: true };
+      await ctx.prisma.safeguardsRequest.update({
+        where: { id: input.id },
+        data: { status: "closed", closedAt: new Date() },
+      });
+      return { closed: true };
+    }),
+
+  // ============================================================
   // USERS (full management)
   // ============================================================
 

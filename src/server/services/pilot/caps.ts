@@ -139,6 +139,11 @@ export const CAPPED_CREATE_PATHS: Record<string, PilotResource> = {
 export const READ_ONLY_ALLOWED_PATHS = new Set<string>([
   // Sends the organisation's AI systems to AI Sentinel: an export.
   "aiGovernance.exportToAiSentinel",
+  // The safeguards question (welcome card and Settings) changes no programme
+  // record; a firm whose editing window has ended may still answer it or ask
+  // to talk about a managed server or its own hardware.
+  "safeguards.setChoice",
+  "safeguards.submitRequest",
 ]);
 
 type Locale = "en" | "es";

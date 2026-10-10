@@ -37,6 +37,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { SafeguardsRequestsCard } from "@/components/admin/safeguards-requests-card";
 
 export default function OrganizationDetailPage() {
   const params = useParams();
@@ -371,6 +372,8 @@ export default function OrganizationDetailPage() {
               </div>
             </CardContent>
           </Card>
+
+          <SafeguardsRequestsCard organizationId={orgId} />
 
           {/* Recent Audit Logs */}
           <Card>

@@ -127,6 +127,17 @@ model Organization {
   // and once overdue). On by default; switched off in the request settings.
   dsarRemindersEnabled Boolean @default(true)
 
+  // Hosted service: the safeguards question of the first-visit welcome card
+  // (src/server/services/safeguards). welcomeUserId is the person who created
+  // the organisation on the hosted service and has not answered yet; the card
+  // is shown to that person only, and the column is cleared once they answer
+  // or choose "decide later". Null on the kit and on organisations created
+  // before the card existed. The choice itself (with who and when) stays.
+  welcomeUserId        String?
+  safeguardsChoice     SafeguardsChoice?
+  safeguardsChoiceById String?
+  safeguardsChoiceAt   DateTime?
+
   // Relations
   members              OrganizationMember[]
   jurisdictions        OrganizationJurisdiction[]
@@ -156,6 +167,8 @@ model Organization {
   // Embedded AI (optional assists)
   aiSettings    OrganizationAiSettings?
   aiGenerations AiGeneration[]
+
+  safeguardsRequests SafeguardsRequest[]
 
   @@map("organizations")
 }
@@ -1850,4 +1863,48 @@ model AiGeneration {
 
   @@index([organizationId, createdAt])
   @@map("ai_generations")
+}
+
+// The answer to the welcome card's safeguards question (hosted service).
+//   shared_eu     a) the shared EU cloud, as it is
+//   managed       b) a fully managed virtual server for the organisation
+//   own_hardware  c) the organisation's own hardware
+//   later         "decide later": treated as shared_eu
+enum SafeguardsChoice {
+  shared_eu
+  managed
+  own_hardware
+  later
+}
+
+enum SafeguardsRequestStatus {
+  open
+  closed
+}
+
+// A request to talk about choice b or c, sent to the tech firm's sales inbox.
+// Used only to answer the request: no marketing list, no other use. Kept until
+// the request is closed and then for six months; the daily purge
+// (/api/cron/safeguards-requests-purge) deletes it after that.
+model SafeguardsRequest {
+  id               String                  @id @default(cuid())
+  organizationId   String
+  choice           SafeguardsChoice
+  name             String
+  email            String
+  organizationName String
+  country          String
+  userCount        String // "1-5" | "6-25" | "26+"
+  message          String?
+  locale           String                  @default("en")
+  status           SafeguardsRequestStatus @default(open)
+  closedAt         DateTime?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([status, closedAt])
+  @@map("safeguards_requests")
 }

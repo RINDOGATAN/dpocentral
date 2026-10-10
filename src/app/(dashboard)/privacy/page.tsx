@@ -17,6 +17,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { GuidedDashboard } from "@/components/guided/guided-dashboard";
+import { WelcomeCard } from "@/components/safeguards/welcome-card";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -48,15 +49,37 @@ export default function PrivacyDashboardPage() {
     setQuickstartSeen(document.cookie.split("; ").includes("dpo_quickstart_seen=1"));
   }, []);
 
+  // The first-visit welcome card (hosted service, organisation's creator
+  // only; the server decides). It comes BEFORE the quick start: the redirect
+  // below waits until the card is answered or put off. A failed check never
+  // blocks the dashboard.
+  const [welcomeDone, setWelcomeDone] = useState(false);
+  const welcome = trpc.safeguards.getWelcome.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id, retry: false, refetchOnWindowFocus: false }
+  );
+  const welcomeShown = !welcomeDone && welcome.data?.show === true;
+  const welcomeSettled = welcomeDone || !welcome.isLoading;
+
   useEffect(() => {
+    if (!welcomeSettled || welcomeShown) return;
     if (!orgWide || !isEmptyOrg || fromQuickstart || quickstartSeen !== false) return;
     router.replace("/privacy/quickstart");
-  }, [orgWide, isEmptyOrg, fromQuickstart, quickstartSeen, router]);
+  }, [welcomeSettled, welcomeShown, orgWide, isEmptyOrg, fromQuickstart, quickstartSeen, router]);
+
+  const welcomeCard =
+    welcomeShown && organization?.id && welcome.data?.show ? (
+      <WelcomeCard
+        organizationId={organization.id}
+        prefill={welcome.data.prefill}
+        onDone={() => setWelcomeDone(true)}
+      />
+    ) : null;
 
   // While it is not yet known whether this visit goes on to the quick start,
   // or while it is on its way there, the dashboard is not drawn: it used to
   // flash (with its "How it works" card) between "Get started" and the quick
-  // start.
+  // start. The welcome card, when due, is shown over this placeholder.
   const mayRedirect =
     !fromQuickstart &&
     quickstartSeen !== true &&
@@ -64,11 +87,19 @@ export default function PrivacyDashboardPage() {
     (!stats || isEmptyOrg);
   if (mayRedirect) {
     return (
-      <div className="py-24 text-center text-sm text-muted-foreground" role="status">
-        {tCommon("loading")}
-      </div>
+      <>
+        <div className="py-24 text-center text-sm text-muted-foreground" role="status">
+          {tCommon("loading")}
+        </div>
+        {welcomeCard}
+      </>
     );
   }
 
-  return <GuidedDashboard fromQuickstart={fromQuickstart} />;
+  return (
+    <>
+      <GuidedDashboard fromQuickstart={fromQuickstart} />
+      {welcomeCard}
+    </>
+  );
 }

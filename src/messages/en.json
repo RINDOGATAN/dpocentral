@@ -8780,6 +8780,74 @@
       "ai_failed": "The AI engine did not return a draft. Try again."
     }
   },
+  "safeguards": {
+    "welcome": {
+      "title": "Welcome to a new generation of privacy and AI governance software.",
+      "ai": "Designed from day one to work with AI: AI drafts impact assessments and incident analyses from your own records, and you review and confirm. Off by default.",
+      "question": "Before you start, one question. What security, confidentiality and data protection safeguards do you need?",
+      "continue": "Continue",
+      "later": "Decide later",
+      "note": "You can change your answer in Settings. AI comes switched off.",
+      "whereData": "Where your data lives",
+      "saveError": "Your answer could not be saved. Please try again in a moment."
+    },
+    "choices": {
+      "shared_eu": {
+        "title": "a) For now, the shared EU cloud",
+        "description": "I can work with processors and sub-processors that hold ISO 27001 or SOC 2 Type II audits, on a shared cloud hosted in the EU. AI features are switched on only when I ask, with providers approved case by case."
+      },
+      "managed": {
+        "title": "b) A fully managed virtual server for us alone",
+        "description": "We need a separate instance, managed by TODO.LAW, with its own local AI models, under a service level agreement."
+      },
+      "own_hardware": {
+        "title": "c) On our own hardware",
+        "description": "We need to install it on our own machines, with AI models that run locally."
+      },
+      "later": {
+        "title": "Decide later (treated as the shared EU cloud)"
+      }
+    },
+    "form": {
+      "title": "Let's talk about installing it",
+      "intro": "Leave us these details and we will write to you by e-mail. Meanwhile you can keep trying the demo with test data.",
+      "name": "Name",
+      "email": "Work e-mail",
+      "emailHint": "From your account",
+      "organization": "Organisation",
+      "country": "Country",
+      "userCount": "How many people would use it?",
+      "userCountOptions": {
+        "1-5": "1 to 5",
+        "6-25": "6 to 25",
+        "26+": "More than 25"
+      },
+      "message": "Anything else we should know (optional)",
+      "send": "Send",
+      "notNow": "Not now",
+      "privacyNote": "We will use these details only to answer your request and delete them six months after it is closed.",
+      "privacyLink": "More in the privacy policy",
+      "required": "Please fill in your name, a valid work e-mail, your organisation, your country and how many people would use it.",
+      "sendError": "Your request could not be sent. Please try again in a moment.",
+      "alreadyOpen": "We already have your request and will write to you."
+    },
+    "sent": {
+      "title": "Thank you",
+      "text": "We have your request, and someone from our team will write to you by e-mail. Meanwhile you can keep trying the demo with test data.",
+      "continue": "Continue"
+    },
+    "settings": {
+      "title": "Security and data protection safeguards",
+      "description": "The question from the welcome card. You can change your answer at any time.",
+      "question": "What security, confidentiality and data protection safeguards do you need?",
+      "current": "Your answer: {choice}",
+      "none": "No answer yet. Until you answer, the shared EU cloud applies.",
+      "openRequest": "We received your request on {date} and will write to you by e-mail.",
+      "save": "Save answer",
+      "saved": "Answer saved",
+      "readOnly": "Only an owner or admin can change this answer."
+    }
+  },
   "pilot": {
     "banner": "Hosted pilot: free, capped (<docs>see docs</docs>), and with no contractual safeguards. To deploy real customer details, <run>run your own instance</run>.",
     "bannerLabel": "Hosted pilot notice",

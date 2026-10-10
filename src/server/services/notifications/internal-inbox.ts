@@ -101,6 +101,12 @@ export interface InternalNotice {
    * can still be traced back to a row. Keep it to identifiers, not content.
    */
   record: Record<string, unknown>;
+  /**
+   * Another of our own inboxes, when the notice is not for the operator's
+   * (for example the sales inbox, src/server/services/safeguards). Defaults
+   * to internalInboxAddresses().
+   */
+  to?: string[];
 }
 
 export interface InternalNoticeResult {
@@ -115,7 +121,7 @@ export interface InternalNoticeResult {
 export async function sendInternalNotice(
   notice: InternalNotice
 ): Promise<InternalNoticeResult> {
-  const to = internalInboxAddresses();
+  const to = notice.to && notice.to.length > 0 ? notice.to : internalInboxAddresses();
   const client = getResend();
 
   if (!client) {
