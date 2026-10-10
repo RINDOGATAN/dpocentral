@@ -138,17 +138,28 @@ describe("safeguards guide, Spanish", () => {
     expect(document.activeElement).toBe(card);
   });
 
-  it("shows no kit, hardware, 'ejecut' or '$' in the guide with any answer chosen", () => {
+  it("names the cloud as its box does, hosted in the EU, with the AI provider caveat", () => {
     mount("es");
     const g = guide(c.heading);
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
-    const bad = /\bkit\b|hardware|\bBox\b|Docker|Instalador local|ejecut|\$|€/i;
+    fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.any }));
+    expect(within(g).getByRole("status").textContent).toContain(es["es.ways.w1.title"]);
+    expect(g.textContent).toContain("Lo alojamos nosotros, en la UE.");
+    expect(g.textContent).toContain("que puede estar fuera de la UE.");
+    expect(waysSection("es").textContent).toContain("Garantías y alojamiento");
+  });
+
+  it("shows no kit, TODO.LAW Box, Docker, 'ejecut' or '$' in the guide with any answer chosen", () => {
+    mount("es");
+    const g = guide(c.heading);
+    fireEvent.click(within(g).getByRole("button", { name: c.open }));
+    // "Tu propio hardware" (the customer's own equipment) is allowed; the TODO.LAW Box is not.
+    const bad = /\bkit\b|TODO\.LAW hardware|Hardware TODO\.LAW|Law-Firm-in-a-Box|\bBox\b|Docker|Instalador local|ejecut|\$|€/i;
     expect(g.textContent).not.toMatch(bad);
     for (const r of within(g).getAllByRole("radio")) {
       fireEvent.click(r);
       expect(g.textContent).not.toMatch(bad);
-      // Never names a country or claims EU hosting.
-      expect(g.textContent).not.toMatch(/Estados Unidos|\bUE\b|Europ/);
+      expect(g.textContent).not.toMatch(/Estados Unidos/);
     }
     // The panel says why, without the classifier sentence; question 6 keeps its example.
     expect(within(g).getByText(c.whyP)).toBeTruthy();
@@ -200,13 +211,13 @@ describe("safeguards guide, English", () => {
     expect(g.textContent).toContain("ISO 27001");
   });
 
-  it("states no prices, no long dash and no country in the guide", () => {
+  it("states no prices, no long dash and no US hosting in the guide", () => {
     mount("en");
     const g = guide(c.heading);
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
     for (const r of within(g).getAllByRole("radio")) fireEvent.click(r);
     expect(g.textContent).not.toMatch(/[$€]|—|–/);
-    expect(g.textContent).not.toMatch(/United States|\bEU\b|Europ|classifier/);
+    expect(g.textContent).not.toMatch(/United States|classifier/);
   });
 
   it("is closed in the server-rendered page, so the page's links are unchanged", () => {

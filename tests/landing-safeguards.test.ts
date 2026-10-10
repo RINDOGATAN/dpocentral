@@ -167,9 +167,10 @@ describe("copy rules", () => {
     }
   });
 
-  it("Spanish has no kit, hardware, Box or Docker, no 'ejecut', and uses tú", () => {
+  it("Spanish has no kit, TODO.LAW Box or Docker, no 'ejecut', and uses tú", () => {
     const es = all("es");
-    expect(es).not.toMatch(/\bkit\b|hardware|\bBox\b|Docker|Instalador local|ejecut/i);
+    // "Tu propio hardware" (the customer's own equipment) is allowed; the TODO.LAW Box is not.
+    expect(es).not.toMatch(/\bkit\b|TODO\.LAW hardware|Hardware TODO\.LAW|Law-Firm-in-a-Box|\bBox\b|Docker|Instalador local|ejecut/i);
     expect(es).not.toMatch(/\busted(es)?\b|vosotros|\bvuestr/i);
   });
 
@@ -180,21 +181,38 @@ describe("copy rules", () => {
     }
     // Accurate once AI is on: records stay, the record's details go to the provider whose key is set.
     expect(COPY.en.summaries.managed).toMatch(/Your records stay on that instance\. If you turn AI features on, the details of the record being drafted go to the AI provider whose key you set\./);
-    expect(COPY.es.summaries.managed).toMatch(/Tus registros se quedan en esa instancia\. Si activas las funciones de IA, los detalles del registro que se redacta van al proveedor de IA cuya clave configures\./);
+    expect(COPY.es.summaries.managed).toMatch(/Tus registros se quedan en esa instancia\. Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA cuya clave configures\./);
     // No unqualified "your data stays" where AI could send text out.
     for (const l of LOCALES) expect(all(l)).not.toMatch(/Your data stays on (that instance|your servers|your hardware)|Tus datos se quedan/);
     expect(COPY.en.summaries.cloud).toMatch(/capped pilot[\s\S]*test records[\s\S]*shared[\s\S]*no service level or independent certification/);
     expect(COPY.es.summaries.cloud).toMatch(/piloto[\s\S]*con límites[\s\S]*registros de prueba[\s\S]*comparte[\s\S]*certificación independiente/);
   });
 
-  it("names no country for the cloud and never claims EU hosting", () => {
-    // The hosted functions run in Frankfurt (vercel.json), so the storefront's
-    // "served from the United States" is not true here; no EU claim is made either.
+  it("says the cloud is hosted in the EU, and that its AI provider may be outside it", () => {
+    // Database in Frankfurt, functions in fra1 (vercel.json, PR #96): the storefront's
+    // "served from the United States" is not true here.
     expect(JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8")).regions).toEqual(["fra1"]);
-    for (const l of LOCALES) {
-      expect(all(l)).not.toMatch(/United States|Estados Unidos|\bUS\b|\bEE\.? ?UU\.?\b/);
-      expect(all(l)).not.toMatch(/\bEU\b|\bUE\b|Europ|Frankfurt|Fráncfort|Alemania|Germany/i);
-    }
+    for (const l of LOCALES) expect(all(l)).not.toMatch(/United States|Estados Unidos|\bUS\b|\bEE\.? ?UU\.?\b/);
+    expect(COPY.en.summaries.cloud).toMatch(/^Hosted by us in the EU\./);
+    expect(COPY.en.summaries.cloud).toMatch(/go to the external AI provider set up on the service, which may be outside the EU\.$/);
+    expect(COPY.es.summaries.cloud).toMatch(/^Lo alojamos nosotros, en la UE\./);
+    expect(COPY.es.summaries.cloud).toMatch(
+      /Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE\.$/
+    );
+    // The EU claim is the cloud's alone: no other way's summary says it.
+    for (const l of LOCALES)
+      for (const [w, s] of Object.entries(COPY[l].summaries)) if (w !== "cloud") expect(s).not.toMatch(/hosted in the EU|alojad[oa] en la UE|en la UE\./);
+  });
+
+  it("names each Spanish way as its box does, and keeps the deployment true to that box", () => {
+    const es = dict("es");
+    for (const [w, i] of Object.entries(WAY_INDEX.es)) expect(COPY.es.names[w as keyof typeof COPY.es.names]).toBe(es[`es.ways.w${i! + 1}.title`]);
+    // The box: installed on the organization's equipment, data stays on its premises.
+    expect(es["es.ways.w3.desc"]).toMatch(/equipo de tu organización[\s\S]*no salen de tus instalaciones/);
+    expect(COPY.es.summaries.deploy).toMatch(/lo instalamos en un equipo de tu organización/);
+    expect(COPY.es.summaries.deploy).toMatch(/se quedan en tus instalaciones/);
+    expect(COPY.es.summaries.deploy).not.toMatch(/servidores/);
+    expect(es["es.ways.label"]).toBe("Garantías y alojamiento");
   });
 
   it("says what DPO Central's AI features send: the record being drafted, never 'selected text'", () => {
@@ -218,7 +236,8 @@ describe("copy rules", () => {
 
   it("leaves the classifier sentence out of the panel", () => {
     for (const l of LOCALES) expect(COPY[l].whyP).not.toMatch(/classifier|clasificador/i);
-    expect(COPY.en.whyP).toMatch(/on the Box/);
+    expect(COPY.en.whyP).toMatch(/on TODO\.LAW hardware/);
+    expect(COPY.en.whyP).not.toMatch(/the Box/);
     expect(COPY.es.whyP).not.toMatch(/Box/);
   });
 
