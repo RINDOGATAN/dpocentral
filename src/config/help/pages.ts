@@ -69,7 +69,7 @@ export const PAGE_HELP: PageHelp[] = [
     ),
     firstStep: L(
       "Run the applicability wizard, or add each jurisdiction where you operate or have people whose data you process.",
-      "Ejecuta el asistente de aplicabilidad o añade cada jurisdicción donde operas o donde hay personas de las que tratas datos.",
+      "Abre el asistente de aplicabilidad o añade cada jurisdicción donde operas o donde hay personas de las que tratas datos.",
     ),
     terms: ["controller", "adequacy"],
     docs: [

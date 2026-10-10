@@ -182,19 +182,19 @@ export function pilotMessage(
   const exp = exportUrl();
   if (kind === "readOnly") {
     return locale === "es"
-      ? `Esta organización piloto es de solo lectura: el piloto de ${PILOT_DAYS} días ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o ejecutar tu propia instancia (${run}).`
+      ? `Esta organización piloto es de solo lectura: el piloto de ${PILOT_DAYS} días ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o alojar tu propia instancia (${run}).`
       : `This pilot organization is read-only: the ${PILOT_DAYS}-day pilot has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
   }
   if (kind === "oneOrganization") {
     return locale === "es"
-      ? `El piloto alojado admite una organización por cuenta. Para gestionar más, ejecuta tu propia instancia (${run}). Puedes exportar lo que ya tienes (${exp}).`
+      ? `El piloto alojado admite una organización por cuenta. Para gestionar más, aloja tu propia instancia (${run}). Puedes exportar lo que ya tienes (${exp}).`
       : `The hosted pilot allows one organization per account. To manage more, run your own instance (${run}). You can export what you already have (${exp}).`;
   }
   const r = resource ?? "dataAssets";
   const limit = PILOT_LIMITS[r];
   const label = RESOURCE_LABELS[r][locale];
   return locale === "es"
-    ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, ejecuta tu propia instancia (${run}) o exporta tus registros (${exp}).`
+    ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, aloja tu propia instancia (${run}) o exporta tus registros (${exp}).`
     : `You have reached the pilot limit of ${limit} ${label}. To continue, run your own instance (${run}) or export your records (${exp}).`;
 }
 

@@ -136,7 +136,7 @@
 
   "es.ways.label": "Formas de usarlo",
   "es.ways.heading.prefix": "Tú eliges ",
-  "es.ways.heading.accent": "dónde se ejecuta",
+  "es.ways.heading.accent": "dónde se aloja",
   "es.ways.sub": "El mismo producto, de tres maneras. Puedes empezar en la nube y cambiar después.",
   "es.ways.request": "Solicítalo",
   "es.ways.w1.title": "En la nube de la UE",
@@ -154,7 +154,7 @@
   "cta.heading.prefix": "¿Preparado para tomar el ",
   "cta.heading.accent": "control",
   "cta.heading.suffix": "?",
-  "cta.text": "Pruébalo hoy en el piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, ejecuta tu propia instancia.",
+  "cta.text": "Pruébalo hoy en el piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, pide una instancia gestionada o alójala en tus propios servidores.",
   "cta.button": "Abrir DPO Central",
   "footer.tagline": "Plataforma de gestión de la privacidad",
   "footer.privacy": "Privacidad",

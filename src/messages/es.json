@@ -215,7 +215,7 @@
       "system": "Sistema",
       "sectionsCount": "{count, plural, one {# sección} other {# secciones}}",
       "noTemplatesTitle": "No hay plantillas disponibles",
-      "noTemplatesBody": "No se ha encontrado una plantilla para {name}. Ejecuta el script de carga inicial de plantillas o crea una plantilla primero.",
+      "noTemplatesBody": "No se ha encontrado una plantilla para {name}. Lanza el script de carga inicial de plantillas o crea una plantilla primero.",
       "chooseDifferent": "Elegir otro tipo",
       "details": "Datos de la evaluación",
       "usingTemplate": "Plantilla: {name}",
@@ -328,7 +328,7 @@
       "clonePrompt": "Nombre de la copia:",
       "cloneSuffix": "{name} (copia)",
       "noSystemTitle": "No hay ninguna plantilla incluida instalada",
-      "noSystemBody": "Ejecuta la carga inicial de contenido para crear las plantillas incluidas.",
+      "noSystemBody": "Lanza la carga inicial de contenido para crear las plantillas incluidas.",
       "noCustomTitle": "Todavía no tienes ninguna plantilla propia",
       "noCustomBody": "Copia una plantilla incluida para empezar la tuya. La copia pertenece a tu organización y se puede responder desde el primer momento.",
       "aboutTitle": "Sobre estas plantillas",
@@ -1520,7 +1520,7 @@
     "quickstart": {
       "back": "Panel",
       "limitedTitle": "El inicio rápido es para toda la organización",
-      "limitedBody": "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Un administrador puede ejecutarlo.",
+      "limitedBody": "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Un administrador puede ponerlo en marcha.",
       "limitedBack": "Volver a la vista general",
       "title": "Asistente del programa de privacidad",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
@@ -4678,7 +4678,7 @@
         "vendorWatchTitle": "Integración con Vendor.Watch",
         "vendorWatchBody": "Si tienes una cartera en Vendor.Watch, el asistente detecta automáticamente tus proveedores y los preselecciona, sin búsquedas manuales. Puedes importar hasta 5 proveedores gratis.",
         "nonDestructiveTitle": "No destructivo",
-        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes ejecutarlo varias veces sin problema.",
+        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes usarlo varias veces sin problema.",
         "openWizard": "Abrir asistente de inicio rápido",
         "fullGuide": "Guía completa de inicio rápido"
       },
@@ -5135,7 +5135,7 @@
         "body1Mid": " en la página de detalle de la actividad, o desde ",
         "body1ManageActivities": "Gestionar actividades",
         "body1End": " en la página de detalle del activo), el sistema crea automáticamente registros de flujo de datos que los conectan en un orden lógico, según la posición habitual de cada tipo de activo en una canalización de datos (primero las aplicaciones de entrada, luego los servicios de ingesta, después las bases de datos, después el almacenamiento de archivos y, por último, los destinos de terceros).",
-        "body2Start": "Puedes volver a ejecutar la generación en cualquier momento con el botón ",
+        "body2Start": "Puedes volver a generar los flujos en cualquier momento con el botón ",
         "body2GenerateFlows": "Generar flujos",
         "body2End": " en la página de detalle de una actividad. Los flujos existentes no se duplican: lo que hayas editado a mano se conserva y solo se añaden las conexiones nuevas.",
         "tipTitle": "Flujos bidireccionales",
@@ -5267,7 +5267,7 @@
           "desc": "Elige tu sector y obtén una estructura predefinida de activos de datos, actividades de tratamiento y flujos de datos. Cada plantilla está diseñada por profesionales de privacidad para reflejar los patrones comunes de tratamiento de datos de ese sector."
         },
         "nonDestructiveTitle": "No destructivo",
-        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes ejecutarlo varias veces sin problema."
+        "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes usarlo varias veces sin problema."
       },
       "vendorWatch": {
         "title": "Importar la cartera de Vendor.Watch",
@@ -5339,7 +5339,7 @@
       "afterQuickstart": {
         "title": "Después del inicio rápido",
         "description": "Qué hacer cuando tu programa de privacidad ya está en marcha.",
-        "intro": "El inicio rápido te da una base sólida. Después de ejecutarlo, deberías:",
+        "intro": "El inicio rápido te da una base sólida. Después de usarlo, deberías:",
         "items": {
           "review": {
             "label": "Revisar los elementos de datos",
@@ -5724,8 +5724,8 @@
             "description": "Una vez aplicadas, el sistema configura automáticamente los plazos de respuesta a las solicitudes de derechos y las ventanas de notificación de brechas según los requisitos de cada norma."
           }
         },
-        "tipTitle": "Vuelve a ejecutarlo al ampliar tu actividad",
-        "tipBody": "Ejecuta el asistente de aplicabilidad de nuevo cada vez que entres en nuevos mercados, contrates empleados en nuevos países o despliegues infraestructura en nuevas regiones. Pueden aplicarse nuevas jurisdicciones a medida que crezca tu presencia."
+        "tipTitle": "Vuelve a usarlo al ampliar tu actividad",
+        "tipBody": "Vuelve a abrir el asistente de aplicabilidad cada vez que entres en nuevos mercados, contrates empleados en nuevos países o despliegues infraestructura en nuevas regiones. Pueden aplicarse nuevas jurisdicciones a medida que crezca tu presencia."
       },
       "categories": {
         "title": "Categorías de normas",
@@ -6063,11 +6063,11 @@
       "cardBodyPrefix": "En el kit (tu propia instancia), los módulos premium cuestan ",
       "cardBodyMid": " al año cada uno y se activan sin conexión con un archivo de licencia. En el piloto alojado se incluyen todos sin coste, dentro de los límites del piloto.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
-      "cardContact": " Para datos reales de clientes, ejecuta tu propia instancia.",
+      "cardContact": " Para datos reales de clientes, aloja tu propia instancia.",
       "menuLock": "En tu propia instancia, un pequeño candado indica dónde un tipo de evaluación premium necesita una licencia que esta organización no tiene: junto a Diligencia debida de proveedores en el menú, y junto a la opción EIPD en Evaluaciones y en el selector de tipo. El piloto alojado nunca muestra un candado.",
       "badgeLabel": "Módulo premium",
       "viewAddons": "Ver complementos",
-      "runYourOwn": "Ejecuta tu propia instancia",
+      "runYourOwn": "Aloja tu propia instancia",
       "dpia": {
         "title": "EIPD: evaluación de impacto relativa a la protección de datos",
         "description": "Exigida por el artículo 35 del RGPD cuando sea probable que el tratamiento entrañe un alto riesgo para las personas.",
@@ -6251,7 +6251,7 @@
           },
           "PrivacyOfficer": {
             "role": "Responsable de privacidad",
-            "desc": "Acceso completo a todos los módulos de privacidad, ejecutar evaluaciones, gestionar incidentes"
+            "desc": "Acceso completo a todos los módulos de privacidad, realizar evaluaciones, gestionar incidentes"
           },
           "Member": {
             "role": "Miembro",
@@ -6960,7 +6960,7 @@
       },
       "tasks": {
         "title": "Tareas de respuesta",
-        "intro": "Asigna tareas de respuesta a miembros del equipo para coordinar la respuesta al incidente. Lleva el seguimiento de la finalización y asegúrate de que se ejecuten todos los pasos de remediación."
+        "intro": "Asigna tareas de respuesta a miembros del equipo para coordinar la respuesta al incidente. Lleva el seguimiento de la finalización y asegúrate de que se completen todos los pasos de remediación."
       },
       "workflow": {
         "title": "Comunicar un incidente",
@@ -8930,7 +8930,7 @@
       "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos, dentro de los límites que ves abajo. {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
       "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que has creado.",
       "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
-      "waysOut": "Para seguir trabajando sin límites, <run>ejecuta tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",
+      "waysOut": "Para seguir trabajando sin límites, <run>aloja tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",
       "limitsTitle": "Límites",
       "usage": "{used} de {limit}",
       "resources": {
@@ -9481,7 +9481,7 @@
       "someCopiedTextStillPointsAtTheOther": "Parte del texto copiado sigue haciendo referencia al otro cliente. Revisa la lista antes de copiar.",
       "someVendorSlugsAreNotInYourVendor": "Algunos proveedores no están en tu cartera de Vendor.Watch.",
       "submitApproveIsOnlyAvailableForSingleUser": "«Enviar y aprobar» solo está disponible en organizaciones de un único usuario. Usa en su lugar el envío habitual.",
-      "tiaTemplateNotAvailableRunTheTemplateSeed": "La plantilla de EIT no está disponible. Ejecuta primero el script de carga de plantillas.",
+      "tiaTemplateNotAvailableRunTheTemplateSeed": "La plantilla de EIT no está disponible. Lanza primero el script de carga de plantillas.",
       "taskNotFound": "No se ha encontrado la tarea.",
       "templateNotFoundOrNotAccessible": "No se ha encontrado la plantilla o no tienes acceso a ella.",
       "templateNotFound": "No se ha encontrado la plantilla.",

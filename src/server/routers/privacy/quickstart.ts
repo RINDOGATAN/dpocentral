@@ -498,7 +498,7 @@ export const quickstartRouter = createTRPCRouter({
           code: "FORBIDDEN",
           message:
             pilotLang === "es"
-              ? "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Pide a un administrador que lo ejecute."
+              ? "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Pide a un administrador que lo ponga en marcha."
               : "The quick start sets up the whole organization, and your access is limited to your department. Ask an administrator to run it.",
         });
       }
