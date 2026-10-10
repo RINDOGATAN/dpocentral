@@ -107,7 +107,9 @@ describe("English sections", () => {
       expect(v).toMatch(/preload="none"/);
       expect(v).toMatch(/controls/);
       expect(v).toMatch(/poster="\/videos\/en\/[^"]+\.png"/);
-      expect(v).toMatch(/<track[^>]*kind="captions"[^>]*srclang="en"[^>]*default/i);
+      expect(v).toMatch(/<track[^>]*kind="captions"[^>]*srclang="en"/i);
+      // Subtitles are burned into the picture: the track must be offered but never on by default.
+      expect(v).not.toMatch(/<track[^>]*\sdefault/i);
       expect(v).not.toMatch(/\/videos\/es\//);
     }
     expect(LANDING_VIDEOS.en.map((v) => v.file)).toEqual([

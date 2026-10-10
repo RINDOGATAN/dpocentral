@@ -263,7 +263,8 @@ function Videos({ t, p, setup, videos }: { t: T; p: LandingLocale; setup: Locale
                 >
                   <source src={`${base}.webm`} type="video/webm" />
                   <source src={`${base}.mp4`} type="video/mp4" />
-                  <track kind="captions" srcLang={setup.captionsLang} label={t(`${k}.captions`)} src={`${base}.vtt`} default />
+                  {/* Subtitles are burned into the picture: the track is offered, never on by default. */}
+                  <track kind="captions" srcLang={setup.captionsLang} label={t(`${k}.captions`)} src={`${base}.vtt`} />
                 </video>
                 <figcaption id={captionId} className="p-5">
                   <span className="block text-base font-display mb-1">{t(`${k}.v${n}.title`)}</span>
