@@ -10,7 +10,7 @@ Company: TODO.LAW (https://todo.law)
 License: Open Core — AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
 Source: https://github.com/RINDOGATAN/dpocentral
 
-En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos y allí no se vende nada. Para datos reales de clientes, ejecuta tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos y allí no se vende nada. Para datos reales de clientes, aloja tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ---
 

@@ -283,7 +283,7 @@ versión 2.0.
 - Las listas dentro de una celda se separan con "; ".
 - Una celda que una hoja de cálculo leería como fórmula (empieza por =, +, -,
   @) se escribe con un apóstrofo delante, para que abrir el archivo nunca
-  ejecute nada. Quita ese apóstrofo si tratas el archivo con un programa.
+  active ninguna fórmula. Quita ese apóstrofo si tratas el archivo con un programa.
 - Las tablas de registros dependientes (\`vendor-contracts.csv\`,
   \`assessment-measures.csv\`, \`incident-timeline.csv\`) llevan el id del registro
   al que pertenecen.
