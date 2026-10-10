@@ -233,7 +233,7 @@
       "submit": "Iniciar evaluación",
       "type": {
         "LIA": "Evaluación del interés legítimo",
-        "LIA_short": "LIA",
+        "LIA_short": "EIL",
         "LIA_desc": "Pondera los intereses legítimos frente a los derechos de los interesados conforme al artículo 6.1.f) del RGPD.",
         "CUSTOM": "Evaluación personalizada",
         "CUSTOM_short": "Personalizada",
@@ -337,7 +337,7 @@
       "aboutDpiaBody": "Obligatoria cuando es probable que el tratamiento entrañe un alto riesgo para las personas.",
       "aboutTia": "EIT (capítulo V)",
       "aboutTiaBody": "Evalúa una transferencia de datos personales a un país fuera del Espacio Económico Europeo.",
-      "aboutLia": "LIA (artículo 6.1.f)",
+      "aboutLia": "EIL (artículo 6.1.f)",
       "aboutLiaBody": "La ponderación que hay que hacer antes de basarse en el interés legítimo como base jurídica."
     },
     "newIncident": {
@@ -2018,7 +2018,7 @@
         "DPIA": "EIPD",
         "PIA": "PIA",
         "TIA": "EIT",
-        "LIA": "LIA",
+        "LIA": "EIL",
         "VENDOR": "Proveedor",
         "CUSTOM": "Personalizada"
       },
@@ -2618,7 +2618,7 @@
       "DPIA": "EIPD",
       "PIA": "PIA",
       "TIA": "EIT",
-      "LIA": "LIA",
+      "LIA": "EIL",
       "VENDOR": "Evaluación de proveedor",
       "CUSTOM": "Personalizada"
     },
@@ -3952,7 +3952,7 @@
     "assessmentPortfolio": {
       "pageTitle": "Cartera de evaluaciones",
       "coverTitle": "Cartera de evaluaciones de impacto",
-      "coverSubtitle": "Informe de estado de EIPD, LIA y evaluaciones de privacidad",
+      "coverSubtitle": "Informe de estado de EIPD, EIL y evaluaciones de privacidad",
       "coverGenerated": "Generado: {date}",
       "coverConfidential": "CONFIDENCIAL: este documento resume el programa de evaluaciones de impacto en la privacidad de la organización. Está destinado a los DPD, a los responsables de privacidad y, previa solicitud, a las autoridades de control.",
       "executiveSummary": "Resumen ejecutivo",
@@ -4734,7 +4734,7 @@
         },
         "calloutTitle": "Tipos de evaluación gratuitos y Premium",
         "calloutFreeLabel": "Gratuitos (núcleo):",
-        "calloutFreeBody": " Las evaluaciones LIA y personalizadas están disponibles para todos los usuarios. ",
+        "calloutFreeBody": " Las evaluaciones EIL y personalizadas están disponibles para todos los usuarios. ",
         "calloutPremiumLabel": "Premium:",
         "calloutPremiumBody": " Las evaluaciones EIPD, PIA, EIT y de riesgo de proveedor requieren una licencia Premium.",
         "calloutSeeMorePrefix": " Consulta la página de ",
@@ -4747,7 +4747,7 @@
         "steps": {
           "select": {
             "title": "Selecciona una plantilla",
-            "description": "Elige el tipo de evaluación que se ajuste a lo que necesitas (LIA, EIPD, PIA, EIT, proveedor o personalizada)."
+            "description": "Elige el tipo de evaluación que se ajuste a lo que necesitas (EIL, EIPD, PIA, EIT, proveedor o personalizada)."
           },
           "fill": {
             "title": "Rellena los detalles del proyecto",
@@ -5845,7 +5845,7 @@
           "dsarLabel": "Rendimiento en ejercicio de derechos",
           "dsarDesc": ": volúmenes de solicitudes, cumplimiento de plazos, tendencias mensuales",
           "portfolioLabel": "Cartera de evaluaciones",
-          "portfolioDesc": ": resumen de EIPD/PIA/EIT/LIA de todo el programa",
+          "portfolioDesc": ": resumen de EIPD/PIA/EIT/EIL de todo el programa",
           "assessmentLabel": "Evaluación (individual)",
           "assessmentDesc": ": cuestionario completo con respuestas y puntuación de riesgo",
           "regulatoryLabel": "Panorama regulatorio",
@@ -5895,7 +5895,7 @@
           },
           "create": {
             "title": "Crea la evaluación",
-            "description": "Finaliza y crea una EIPD o una LIA en borrador con todas las respuestas autocompletadas. La evaluación pasa al estado Borrador, lista para seguir editándola o enviarla a revisión."
+            "description": "Finaliza y crea una EIPD o una EIL en borrador con todas las respuestas autocompletadas. La evaluación pasa al estado Borrador, lista para seguir editándola o enviarla a revisión."
           }
         }
       },
@@ -6202,7 +6202,7 @@
         },
         "assessments": {
           "title": "Evaluaciones",
-          "description": "Realiza EIPD, PIA, LIA, EIT y evaluaciones de riesgo de proveedores con plantillas configurables y flujos de aprobación."
+          "description": "Realiza EIPD, PIA, EIL, EIT y evaluaciones de riesgo de proveedores con plantillas configurables y flujos de aprobación."
         },
         "incidents": {
           "title": "Gestión de incidentes",
@@ -6219,7 +6219,7 @@
         "items": {
           "assessmentExport": {
             "name": "Exportación de evaluación",
-            "desc": "Detalle de una EIPD o LIA con preguntas y respuestas, puntuaciones de riesgo y mitigaciones"
+            "desc": "Detalle de una EIPD o EIL con preguntas y respuestas, puntuaciones de riesgo y mitigaciones"
           },
           "portfolio": {
             "name": "Cartera de evaluaciones",
@@ -6259,7 +6259,7 @@
           "inventory": "Inventario de datos y RAT",
           "dsar": "Ejercicio de derechos y portal público",
           "incidents": "Seguimiento de incidentes",
-          "assessments": "Evaluaciones básicas (LIA, personalizadas)",
+          "assessments": "Evaluaciones básicas (EIL, personalizadas)",
           "vendors": "Gestión de proveedores (básica)"
         },
         "premiumTitle": "Módulos premium (60 € al año cada uno en el kit)",
@@ -6656,11 +6656,11 @@
     },
     "publicAssessments": {
       "metaTitle": "Evaluaciones",
-      "metaDescription": "Realiza EIPD, EIT, LIA y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
+      "metaDescription": "Realiza EIPD, EIT, EIL y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
       "ogTitle": "Evaluaciones | DPO CENTRAL",
-      "ogDescription": "Evaluaciones de impacto: EIPD, EIT, LIA y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
+      "ogDescription": "Evaluaciones de impacto: EIPD, EIT, EIL y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
       "title": "Evaluaciones",
-      "subtitle": "Realiza evaluaciones de impacto en la privacidad con plantillas configurables. Puntúa los riesgos, documenta las mitigaciones y gestiona los flujos de aprobación de EIPD, EIT, LIA y evaluaciones personalizadas.",
+      "subtitle": "Realiza evaluaciones de impacto en la privacidad con plantillas configurables. Puntúa los riesgos, documenta las mitigaciones y gestiona los flujos de aprobación de EIPD, EIT, EIL y evaluaciones personalizadas.",
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige una plantilla integrada, o la personalizada para una revisión que no encaje en ninguna de las demás. Cada plantilla lleva sus propias preguntas y criterios de riesgo, y toda evaluación creada a partir de una recorre el mismo flujo de aprobación.",
@@ -6672,7 +6672,7 @@
         },
         "items": {
           "LIA": {
-            "name": "Evaluación del interés legítimo (LIA)",
+            "name": "Evaluación del interés legítimo (EIL)",
             "desc": "Valora si el interés legítimo puede invocarse como base jurídica"
           },
           "CUSTOM": {
@@ -6806,7 +6806,7 @@
         "portfolioDesc": "Exporta un resumen conjunto de las evaluaciones con el estado de todo tu programa de evaluaciones de impacto, por tipo, nivel de riesgo y grado de finalización.",
         "portfolioFeatures": {
           "status": "Distribución de estado y riesgo entre todas las evaluaciones",
-          "type": "Desglose por tipo (EIPD, LIA, personalizada)",
+          "type": "Desglose por tipo (EIPD, EIL, personalizada)",
           "highRisk": "Tarjetas de detalle de riesgo alto y vencidas",
           "mitigation": "Seguimiento de finalización de mitigaciones",
           "perType": "Páginas de detalle por tipo"
@@ -8163,7 +8163,7 @@
         },
         "hd2_5": {
           "text": "Si te basas en el interés legítimo, resume la ponderación.",
-          "helpText": "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una LIA completa. Fuente: art. 6.1.f) del RGPD, plantilla de LIA de DPO Central."
+          "helpText": "Deja constancia del interés, de la necesidad y de la ponderación frente a los derechos de las personas; puedes adjuntar una EIL completa. Fuente: art. 6.1.f) del RGPD, plantilla de EIL de DPO Central."
         },
         "hd3_1": {
           "text": "¿De qué fuentes proceden los datos (sitios web, aplicaciones, páginas, socios)?",
@@ -8630,7 +8630,7 @@
         },
         "piav2_2_1": {
           "text": "¿Cuál es la base jurídica del tratamiento?",
-          "helpText": "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
+          "helpText": "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla EIL). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
           "options": [
             "Consentimiento (art. 6.1.a))",
             "Contrato (art. 6.1.b))",
@@ -9494,6 +9494,23 @@
       "openRequests": "{count, plural, one {# solicitud abierta, ninguna completada} other {# solicitudes abiertas, ninguna completada}}",
       "noRecords": "aún no hay registros confirmados"
     },
+    "counts": {
+      "assets": {
+        "confirmed": "{count, plural, one {# confirmado} other {# confirmados}}",
+        "draft": "{count} en borrador",
+        "incomplete": "{count} con datos pendientes"
+      },
+      "activities": {
+        "confirmed": "{count, plural, one {# confirmada} other {# confirmadas}}",
+        "draft": "{count} en borrador",
+        "incomplete": "{count} con datos pendientes"
+      },
+      "vendors": {
+        "confirmed": "{count, plural, one {# confirmado} other {# confirmados}}",
+        "draft": "{count} en borrador",
+        "incomplete": "{count} con datos pendientes"
+      }
+    },
     "readyLine": "El contenido es real y está confirmado.",
     "format": {
       "pdf": "PDF",
@@ -9604,7 +9621,7 @@
       "colApproved": "Aprobadas",
       "colPending": "Pendientes",
       "dpia": "Evaluaciones de impacto (EIPD)",
-      "lia": "Evaluaciones del interés legítimo (LIA)"
+      "lia": "Evaluaciones del interés legítimo (EIL)"
     },
     "risks": {
       "title": "Principales riesgos y carencias",

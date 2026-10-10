@@ -1023,9 +1023,21 @@ export function getLocalizedTemplates(locale: TemplateLocale): IndustryTemplate[
   return INDUSTRY_TEMPLATES.map((t) => localizeTemplate(t, locale));
 }
 
+/**
+ * A record name placed mid-sentence in Spanish loses its capital ("Sistema de
+ * gestión" becomes "sistema de gestión"), but an acronym or a proper noun
+ * keeps it: only when the second letter is lowercase too ("CRM", "SAP" and a
+ * single letter stay).
+ */
+export function lowerFirstInSentence(name: string): string {
+  return /^\p{Lu}\p{Ll}/u.test(name) ? name.charAt(0).toLowerCase() + name.slice(1) : name;
+}
+
 /** Name of the inbound flow a bidirectional template flow generates. */
 export function returnFlowName(fromAssetName: string, toAssetName: string, locale: TemplateLocale): string {
-  return locale === "es" ? `De ${fromAssetName} a ${toAssetName}` : `${fromAssetName} to ${toAssetName}`;
+  return locale === "es"
+    ? `De ${lowerFirstInSentence(fromAssetName)} a ${lowerFirstInSentence(toAssetName)}`
+    : `${fromAssetName} to ${toAssetName}`;
 }
 
 /** Frequency used when a return flow does not set one. */

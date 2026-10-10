@@ -15,13 +15,15 @@
 
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
-import type { EvaluatedDocument } from "@/config/document-register";
+import type { CountedStepId, EvaluatedDocument, RecordCounts } from "@/config/document-register";
 import type { NeedsActionItem } from "@/lib/needs-action";
 
 const STALE_MS = 30_000;
 
 export interface ProgrammeOverview {
   documents: EvaluatedDocument[];
+  /** Records per counted step, for the menu's status lines. */
+  recordCounts: Record<CountedStepId, RecordCounts> | null;
   needsAction: NeedsActionItem[];
   deadlines: { kind: "breachDecision" | "breachNotify" | "dsarDue"; at: string; publicId: string; href: string }[];
 }
@@ -35,7 +37,7 @@ export function useProgrammeOverview(): { overview: ProgrammeOverview | null; re
   );
   if (!data || data.limited) return { overview: null, refreshing: isFetching };
   return {
-    overview: { documents: data.documents, needsAction: data.needsAction, deadlines: data.deadlines },
+    overview: { documents: data.documents, recordCounts: data.recordCounts, needsAction: data.needsAction, deadlines: data.deadlines },
     refreshing: isFetching,
   };
 }

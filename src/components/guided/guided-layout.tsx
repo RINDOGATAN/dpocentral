@@ -59,7 +59,7 @@ import { ProgressBar } from "./progress-ring";
 import { usePlanState, useProgramPath, useProgramPathRefresh } from "./use-program-path";
 import { planDayText } from "./plan-text";
 import { useProgrammeOverview } from "./use-programme-overview";
-import { stepNoteText } from "./document-words";
+import { recordCountsText, stepNoteText } from "./document-words";
 import { attentionStages, notYetEntries, stepDocumentRows } from "@/lib/programme-overview";
 import { NewOrganizationDialog } from "@/components/privacy/new-organization-dialog";
 import { trpc } from "@/lib/trpc";
@@ -149,8 +149,12 @@ export function GuidedLayout({
   if (canHandleDsars === false) menuProps.config = withoutSteps(menuProps.config, DSAR_STEP_IDS);
   const stepRows = overview ? stepDocumentRows(menuProps.config, menuProps.statuses, overview.documents) : {};
   const stepNotes = Object.fromEntries(
-    Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows)]),
+    Object.entries(stepRows).map(([id, rows]) => [id, stepNoteText(td, rows, overview?.recordCounts ?? undefined)]),
   );
+  const inventoryNote = overview?.recordCounts
+    ? recordCountsText(td, "dataInventory", overview.recordCounts.dataInventory, { onlyIfDrafts: true })
+    : null;
+  if (inventoryNote) stepNotes.dataInventory = inventoryNote;
   const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which

@@ -146,7 +146,7 @@ describe("quickstart.execute on a Spanish screen", () => {
     expect(result.created.activities.map((a) => a.name)).toContain("Gestión de cuentas de clientes");
     const flowNames = result.created.flows.map((f) => f.name);
     expect(flowNames).toContain("De clientes a pedidos");
-    expect(flowNames).toContain("De Sistema de gestión de pedidos a Base de datos de clientes");
+    expect(flowNames).toContain("De sistema de gestión de pedidos a base de datos de clientes");
     expect(flowNames.some((n) => / to /.test(n))).toBe(false);
   });
 });

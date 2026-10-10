@@ -22,7 +22,7 @@ import { draftTotal, loadPathCounts } from "@/server/services/program/path-count
 import { loadPlanStart } from "@/server/services/program/plan-start";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { loadDeadlines } from "@/server/services/program/deadlines";
-import { evaluateRegister, registerFor } from "@/config/document-register";
+import { evaluateRegister, registerFor, stepRecordCounts } from "@/config/document-register";
 import { isDsarModuleEnabled } from "@/config/features";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { collectNeedsAction } from "@/server/services/views/queries";
@@ -75,6 +75,7 @@ export const programPathRouter = createTRPCRouter({
       return {
         limited: false as const,
         documents: evaluateRegister(registerFor({ dsarEnabled: isDsarModuleEnabled() }), facts),
+        recordCounts: stepRecordCounts(facts),
         needsAction: needsAction.items,
         deadlines,
       };

@@ -788,7 +788,7 @@ const piaV2: V2Template = {
           ],
           help: L(
             "Every processing needs one of the six lawful bases, chosen before processing begins. Legitimate interest also needs a balancing test (the LIA template). Example: \"Contract.\" Source: GDPR Art. 6(1).",
-            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla LIA). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
+            "Todo tratamiento necesita una de las seis bases jurídicas, elegida antes de empezar. El interés legítimo requiere además una ponderación (la plantilla EIL). Ejemplo: «Contrato». Fuente: RGPD, art. 6.1.",
           ),
         },
         {
