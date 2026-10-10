@@ -45,7 +45,7 @@ import { useUserType } from "@/lib/use-user-type";
 import { MENU_COOKIE, cookieAssignment } from "@/lib/menu-cookie";
 import { signOutOfSuite } from "@/lib/sign-out";
 import { features, isDsarModuleEnabled } from "@/config/features";
-import { brand } from "@/config/brand";
+import { BrandMark } from "@/components/brand-mark";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
@@ -71,19 +71,6 @@ const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 const LIMITED_PATH = withoutOrgWideSteps(DPO_CENTRAL_PATH);
 const ALL_CLIENTS_HREF = "/privacy/clients";
 const DSAR_STEP_IDS = ["dsar"] as const;
-
-const BRAND_STYLE = { fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 } as const;
-
-function BrandMark({ nameClassName }: { nameClassName?: string }) {
-  return (
-    <>
-      <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-      <span className={cn("text-lg tracking-tight", nameClassName)} style={BRAND_STYLE}>
-        {brand.nameUppercase}
-      </span>
-    </>
-  );
-}
 
 export function GuidedLayout({
   children,

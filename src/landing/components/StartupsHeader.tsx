@@ -3,7 +3,8 @@
 
 import { Globe, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import DpoCentralLogo from "./DpoCentralLogo";
+import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -49,7 +50,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           through the menu's links. */}
       <div className={`nav-header px-6 ${isMenuOpen ? "!bg-card !backdrop-blur-none" : ""}`}>
         <div className="flex items-center justify-between h-14">
-          <DpoCentralLogo productOf={t("header.productOf")} />
+          <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 text-white">
+            <BrandMark />
+          </Link>
 
           <div className="hidden md:flex items-center gap-3">
             <button
