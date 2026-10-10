@@ -186,7 +186,9 @@ function AreasCard({
                 <>
                   <span className="flex items-start justify-between gap-2">
                     <span className="min-w-0 font-medium text-sm break-words">
-                      <span className="tabular-nums text-muted-foreground mr-1.5">{area.number}</span>
+                      {area.number !== null && (
+                        <span className="tabular-nums text-muted-foreground mr-1.5">{area.number}</span>
+                      )}
                       {t(`stages.${area.stage.id}`)}
                     </span>
                     <StatusChip tone={WORD_TONE[area.word]} className="text-xs shrink-0">

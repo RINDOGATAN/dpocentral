@@ -3416,11 +3416,11 @@
       "hosting": "Hosting & Environment"
     },
     "badges": {
-      "noPasswords": "No passwords",
+      "noPasswords": "Passwordless",
       "fiveTierRbac": "5-tier RBAC",
       "perEndpoint": "Per-endpoint",
       "sixHeaders": "6 headers",
-      "signedPaymentEvents": "Signed payment events",
+      "signedPaymentEvents": "Stripe signatures checked",
       "edgeNetwork": "Edge network"
     },
     "items": {

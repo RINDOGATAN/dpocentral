@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { use, useState, useCallback, useRef, useMemo } from "react";
+import { use, useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -75,6 +75,7 @@ import { legacyOptionLists, legacySections, localizeValues } from "@/lib/templat
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 import { CompletenessPanel } from "@/components/assessments/completeness-panel";
 import { assessmentCompleteness } from "@/lib/assessment-completeness";
+import { isEmptyAnswer } from "@/lib/assessment-answer";
 
 import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
 const statusColors: Record<string, string> = {
@@ -349,8 +350,20 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     }));
     // Optimistically update the query cache so UI reflects the change instantly
     const queryKey = { organizationId: organization.id, id };
+    // A multi-select with every option unticked is no answer: the response is
+    // removed (the server deletes it too), so the question counts as open.
+    const emptyAnswer = isEmptyAnswer(value);
     utils.assessment.getById.setData(queryKey, (old: any) => {
       if (!old) return old;
+      if (emptyAnswer) {
+        const remaining = (old.responses ?? []).filter((r: any) => r.questionId !== questionId);
+        const totalQ = old.totalQuestions ?? 0;
+        return {
+          ...old,
+          responses: remaining,
+          completionPercentage: totalQ > 0 ? Math.round((remaining.length / totalQ) * 100) : 0,
+        };
+      }
       const existingIdx = old.responses?.findIndex((r: any) => r.questionId === questionId) ?? -1;
       const newResponse = {
         questionId,
@@ -385,6 +398,17 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       riskScore: question.riskScore,
     });
   }, [organization?.id, id, draftResponses, autoSaveResponse, utils.assessment.getById]);
+
+  // When a text answer's editor opens, the keyboard focus moves into it, so
+  // a keyboard or screen-reader user lands where they can type.
+  useEffect(() => {
+    if (!editingQuestion) return;
+    const el = document.getElementById(`response-${editingQuestion}`) as HTMLTextAreaElement | null;
+    if (!el) return;
+    el.focus();
+    const end = el.value.length;
+    el.setSelectionRange(end, end);
+  }, [editingQuestion]);
 
   const startEditingQuestion = useCallback((questionId: string, existingResponse?: any) => {
     setEditingQuestion(questionId);
@@ -619,7 +643,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // counted here over the visible questions; otherwise the server's figures.
   const visibleCounts = useMemo(() => {
     if (!conditional) return null;
-    const answered = new Set((assessment?.responses ?? []).map((r: any) => r.questionId));
+    const answered = new Set((assessment?.responses ?? []).filter((r: any) => !isEmptyAnswer(r.response)).map((r: any) => r.questionId));
     let total = 0;
     let done = 0;
     for (const s of expandedSections) {
@@ -647,7 +671,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const requiredQuestionIds = expandedSections.flatMap((s: any) =>
     (s.questions || []).filter((q: any) => q.required).map((q: any) => q.id)
   );
-  const answeredIds = new Set(assessment?.responses?.map((r: any) => r.questionId) ?? []);
+  const answeredIds = new Set((assessment?.responses ?? []).filter((r: any) => !isEmptyAnswer(r.response)).map((r: any) => r.questionId));
   const allRequiredAnswered = requiredQuestionIds.length === 0 || requiredQuestionIds.every((id: string) => answeredIds.has(id));
 
   // These hooks MUST be called unconditionally (before early returns)
@@ -1050,7 +1074,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           const response = assessment.responses?.find(
                             (r: any) => r.questionId === question.id
                           );
-                          const isAnswered = !!response;
+                          const isAnswered = !!response && !isEmptyAnswer(response.response);
                           const responseValue = response
                             ? typeof response.response === "string"
                               ? response.response
@@ -1215,7 +1239,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     </div>
                                     {response?.notes && !isEditing && (
                                       <p className="text-xs text-muted-foreground mt-1">
-                                        <strong>Notes:</strong> {response.notes}
+                                        <strong>{tp("question.notes")}</strong> {response.notes}
                                       </p>
                                     )}
                                   </div>
@@ -1281,7 +1305,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                             <p className="text-sm whitespace-pre-wrap">{responseValue}</p>
                                             {response.notes && (
                                               <p className="text-xs text-muted-foreground mt-2">
-                                                <strong>Notes:</strong> {response.notes}
+                                                <strong>{tp("question.notes")}</strong> {response.notes}
                                               </p>
                                             )}
                                           </div>

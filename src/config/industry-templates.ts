@@ -9,6 +9,7 @@
  */
 
 import type { DataAssetType, DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
+import { INDUSTRY_TEMPLATES_ES } from "./industry-templates-es";
 
 // ============================================================
 // TYPES
@@ -151,7 +152,7 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
       {
         name: "Payment Gateway",
         type: "THIRD_PARTY",
-        description: "Payment processing via Stripe, PayPal, or similar provider",
+        description: "Payment processing through a payment provider",
         hostingType: "Cloud",
         owner: "Finance",
         elements: [
@@ -281,7 +282,7 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
       {
         name: "Application Logs",
         type: "CLOUD_SERVICE",
-        description: "Centralized logging and monitoring system (e.g., Datadog, Sentry)",
+        description: "Centralized logging and error monitoring system",
         hostingType: "Cloud",
         owner: "Engineering",
         elements: [
@@ -306,7 +307,7 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
       {
         name: "Billing System",
         type: "CLOUD_SERVICE",
-        description: "Subscription billing and invoicing (e.g., Stripe)",
+        description: "Subscription billing and invoicing through a payment provider",
         hostingType: "Cloud",
         owner: "Finance",
         elements: [
@@ -959,6 +960,77 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
 
 export function getTemplateById(id: string): IndustryTemplate | undefined {
   return INDUSTRY_TEMPLATES.find(t => t.id === id);
+}
+
+export type TemplateLocale = "en" | "es";
+
+/**
+ * The template's text in the screen's language. English is the source; for
+ * Spanish every user-visible string is looked up in INDUSTRY_TEMPLATES_ES
+ * (asset names too, through the same table, so the cross-references between
+ * assets, activities and flows keep matching). Ids, enums and the suggested
+ * vendor categories (internal) stay as they are.
+ */
+export function localizeTemplate(template: IndustryTemplate, locale: TemplateLocale): IndustryTemplate {
+  if (locale !== "es") return template;
+  const tr = (s: string) => INDUSTRY_TEMPLATES_ES[s] ?? s;
+  return {
+    ...template,
+    name: tr(template.name),
+    description: tr(template.description),
+    assets: template.assets.map((a) => ({
+      ...a,
+      name: tr(a.name),
+      description: tr(a.description),
+      hostingType: tr(a.hostingType),
+      owner: tr(a.owner),
+      elements: a.elements.map((e) => ({ ...e, name: tr(e.name) })),
+    })),
+    activities: template.activities.map((a) => ({
+      ...a,
+      name: tr(a.name),
+      description: tr(a.description),
+      purpose: tr(a.purpose),
+      dataSubjects: a.dataSubjects.map(tr),
+      recipients: a.recipients.map(tr),
+      retentionPeriod: tr(a.retentionPeriod),
+      assetNames: a.assetNames.map(tr),
+    })),
+    flows: template.flows.map((f) => ({
+      ...f,
+      name: tr(f.name),
+      description: tr(f.description),
+      sourceAssetName: tr(f.sourceAssetName),
+      destAssetName: tr(f.destAssetName),
+      frequency: tr(f.frequency),
+      returnFlow: f.returnFlow
+        ? {
+            ...f.returnFlow,
+            description: tr(f.returnFlow.description),
+            frequency: f.returnFlow.frequency ? tr(f.returnFlow.frequency) : undefined,
+          }
+        : undefined,
+    })),
+  };
+}
+
+export function getLocalizedTemplateById(id: string, locale: TemplateLocale): IndustryTemplate | undefined {
+  const template = getTemplateById(id);
+  return template ? localizeTemplate(template, locale) : undefined;
+}
+
+export function getLocalizedTemplates(locale: TemplateLocale): IndustryTemplate[] {
+  return INDUSTRY_TEMPLATES.map((t) => localizeTemplate(t, locale));
+}
+
+/** Name of the inbound flow a bidirectional template flow generates. */
+export function returnFlowName(fromAssetName: string, toAssetName: string, locale: TemplateLocale): string {
+  return locale === "es" ? `De ${fromAssetName} a ${toAssetName}` : `${fromAssetName} to ${toAssetName}`;
+}
+
+/** Frequency used when a return flow does not set one. */
+export function defaultReturnFlowFrequency(locale: TemplateLocale): string {
+  return locale === "es" ? "A petición" : "On request";
 }
 
 export function getTemplateIds(): string[] {

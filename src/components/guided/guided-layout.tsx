@@ -49,7 +49,7 @@ import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { DPO_CENTRAL_PATH } from "./path-config";
-import { currentStepId, nextStep, overallProgress, withoutOrgWideSteps, withoutSteps } from "./path";
+import { currentStepId, nextStep, numberedStageCount, overallProgress, stageNumber, withoutOrgWideSteps, withoutSteps } from "./path";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { useAuditAccess } from "@/lib/use-audit-access";
 import { PathMenu } from "./path-menu";
@@ -436,7 +436,7 @@ function PhoneStageBar({
   onOpen: () => void;
 }) {
   const t = useTranslations("guided");
-  const total = DPO_CENTRAL_PATH.stages.length;
+  const total = numberedStageCount(DPO_CENTRAL_PATH);
   const next = statuses && showProgress ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
   const overall = statuses && showProgress ? overallProgress(DPO_CENTRAL_PATH, statuses) : null;
 
@@ -446,7 +446,7 @@ function PhoneStageBar({
     ? t("loading")
     : next
       ? t("phoneBar", {
-          number: next.stageIndex + 1,
+          number: stageNumber(DPO_CENTRAL_PATH, next.stage.id) ?? next.stageIndex + 1,
           total,
           stage: t(`stages.${next.stage.id}`),
         })

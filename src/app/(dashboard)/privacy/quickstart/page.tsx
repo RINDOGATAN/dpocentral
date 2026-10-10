@@ -5,7 +5,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
   CardContent,
@@ -103,6 +103,9 @@ export default function QuickstartPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.quickstart");
   const tct = useTranslations("clientTemplate");
+  // The industry templates come in the screen's language; the language is in
+  // the query input so a switch reads them again.
+  const templateLocale = useLocale() === "es" ? "es" : "en";
   // Not offered to a member limited to departments (src/lib/department-limit.ts);
   // the server refuses quickstart.execute to them as well.
   const { limited } = useMemberScope();
@@ -249,7 +252,7 @@ export default function QuickstartPage() {
     );
 
   const { data: templates } = trpc.quickstart.listTemplates.useQuery(
-    { organizationId: orgId },
+    { organizationId: orgId, locale: templateLocale },
     { enabled: !!orgId }
   );
 
@@ -262,7 +265,7 @@ export default function QuickstartPage() {
 
   const { data: industryPreview } =
     trpc.quickstart.previewIndustryTemplate.useQuery(
-      { organizationId: orgId, industryId: selectedIndustryId ?? "" },
+      { organizationId: orgId, industryId: selectedIndustryId ?? "", locale: templateLocale },
       { enabled: !!orgId && !!selectedIndustryId }
     );
 
@@ -360,6 +363,7 @@ export default function QuickstartPage() {
       skipActivityNames,
       fromPortfolio: isPortfolioFlow && useVendors,
       programName: programName.trim() || undefined,
+      locale: templateLocale,
     });
   };
 

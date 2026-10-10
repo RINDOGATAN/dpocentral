@@ -26,6 +26,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { DPO_CENTRAL_PATH } from "./path-config";
 import {
   stageAfterCelebration,
+  stageNumber,
   stageToCelebrate,
   stepAndFollowing,
   type PathStatuses,
@@ -104,10 +105,10 @@ export function StepBand({
           <span className="min-w-0">
             {openStage !== null
               ? t("band.stageDone", {
-                  number: celebrate + 1,
+                  number: stageNumber(DPO_CENTRAL_PATH, stages[celebrate].id) ?? celebrate + 1,
                   next: t(`stages.${stages[openStage].id}`),
                 })
-              : t("band.lastStageDone", { number: celebrate + 1 })}
+              : t("band.lastStageDone", { number: stageNumber(DPO_CENTRAL_PATH, stages[celebrate].id) ?? celebrate + 1 })}
           </span>
         </p>
       ) : (

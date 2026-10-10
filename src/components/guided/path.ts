@@ -180,6 +180,28 @@ export function stageExpandable<C>(stage: PathStage<C>, statuses: PathStatuses |
   return stage.steps.some((step) => isShown(step, statuses) && !!step.href && !step.coming);
 }
 
+/**
+ * The number a stage is shown with, the same on the menu, the dashboard's
+ * area tiles, the plan line and the step band: stages are numbered
+ * consecutively, leaving out a stage whose steps are all still coming (it is
+ * not listed in the menu, so numbering it made the menu read 1, 3, 4...).
+ * Null for such a stage.
+ */
+export function stageNumber<C>(config: PathConfig<C>, stageId: string): number | null {
+  let n = 0;
+  for (const stage of config.stages) {
+    const numbered = stage.steps.some((step) => !step.coming);
+    if (numbered) n++;
+    if (stage.id === stageId) return numbered ? n : null;
+  }
+  return null;
+}
+
+/** How many stages carry a number (stageNumber): the "of N" of "Stage 2 of 5". */
+export function numberedStageCount<C>(config: PathConfig<C>): number {
+  return config.stages.filter((stage) => stage.steps.some((step) => !step.coming)).length;
+}
+
 export interface StageProgress {
   done: number;
   total: number;
@@ -378,7 +400,12 @@ export function stepSequence<C>(
     for (const [stepIndex, step] of stage.steps.entries()) {
       if (!step.href || step.coming) continue;
       if (statuses !== undefined && step.id !== keep && !isShown(step, statuses)) continue;
-      out.push({ stage, stageIndex, step, number: `${stageIndex + 1}.${stepIndex + 1}` });
+      out.push({
+        stage,
+        stageIndex,
+        step,
+        number: `${stageNumber(config, stage.id) ?? stageIndex + 1}.${stepIndex + 1}`,
+      });
     }
   }
   return out;

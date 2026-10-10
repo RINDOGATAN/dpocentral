@@ -1,7 +1,9 @@
 {
   "header.menuOpen": "Abrir el menú",
   "header.menuClose": "Cerrar el menú",
-  "header.badge": "DPO Central",
+  "header.productOf": "un producto de TODO.LAW",
+  "hero.welcome": "Te damos la bienvenida a una nueva generación de herramientas para gestionar programas de privacidad y de gobierno de la IA.",
+  "hero.ai": "Diseñado desde el primer día para trabajar con IA: la IA prepara borradores de evaluaciones de impacto y de análisis de incidentes a partir de tus propios registros, y tú revisas y confirmas. Desactivada por defecto.",
   "header.cta": "Iniciar sesión",
   "hero.badge": "Gestión de programas de privacidad",
   "hero.title.prefix": "Protección de datos ",
@@ -27,7 +29,7 @@
   "value.v3.title": "Controla el plazo de 72 h de las brechas",
   "value.v3.desc": "Registra, evalúa y escala las brechas de seguridad de los datos personales con flujos estructurados. Análisis automático de los arts. 33 y 34 para notificar a la autoridad de control y comunicar a los interesados.",
   "value.v4.title": "Evaluaciones de impacto estructuradas",
-  "value.v4.desc": "Flujos guiados para EIPD, LIA y TIA. Puntuación de riesgo y recomendaciones de mitigación incluidas; mapas de calor previstos.",
+  "value.v4.desc": "Flujos guiados para EIPD, LIA y EIT. Puntuación de riesgo y recomendaciones de mitigación incluidas; mapas de calor previstos.",
 
   "workflow.label": "Cómo funciona",
   "workflow.heading.prefix": "De cero a ",
@@ -38,7 +40,7 @@
   "workflow.s2.title": "Configura tu portal de ejercicio de derechos",
   "workflow.s2.desc": "Da a los interesados un portal de autoservicio para ejercer sus derechos.",
   "workflow.s3.title": "Realiza tus evaluaciones",
-  "workflow.s3.desc": "EIPD, LIA y TIA: cuestionarios guiados con puntuación de riesgo.",
+  "workflow.s3.desc": "EIPD, LIA y EIT: cuestionarios guiados con puntuación de riesgo.",
   "workflow.s4.title": "Supervisa y responde",
   "workflow.s4.desc": "Gestiona incidentes y proveedores, y mantén tus registros al día para las auditorías.",
 

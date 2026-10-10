@@ -1,7 +1,9 @@
 {
   "header.menuOpen": "Open the menu",
   "header.menuClose": "Close the menu",
-  "header.badge": "DPO Central",
+  "header.productOf": "a TODO.LAW product",
+  "hero.welcome": "Welcome to a new generation of privacy and AI governance software.",
+  "hero.ai": "Designed from day one to work with AI: AI drafts impact assessments and incident analyses from your own records, and you review and confirm. Off by default.",
   "header.cta": "Sign In",
   "hero.badge": "Privacy Program Management",
   "hero.title.prefix": "Privacy compliance ",
