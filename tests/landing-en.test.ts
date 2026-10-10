@@ -38,8 +38,47 @@ const nonePublished = LANDING_VIDEOS.en.map((v) => ({ ...v, published: false }))
 
 // What the English page shows, apart from the parts the older page kept.
 const shown = Object.entries(en).filter(
-  ([k]) => k.startsWith("en.") || k.startsWith("hero.") || k.startsWith("social.") || k.startsWith("cta.")
+  ([k]) =>
+    k.startsWith("en.") ||
+    k.startsWith("hero.") ||
+    k.startsWith("social.") ||
+    k.startsWith("value.") ||
+    k.startsWith("cta.")
 );
+
+describe("English copy, after the owner's review", () => {
+  it("says one subscription covers the three tools", () => {
+    expect(en["en.suite.heading.prefix"] + en["en.suite.heading.accent"]).toBe("Three tools, one subscription");
+    expect(en["en.suite.sub"]).toMatch(/One subscription/);
+    for (const tool of ["DPO Central", "AI Sentinel", "VendorWatch"]) expect(en["en.suite.sub"]).toContain(tool);
+  });
+
+  it("combines US law with GDPR in each of the four value cards", () => {
+    for (const n of [1, 2, 3, 4]) {
+      const desc = en[`value.v${n}.desc`];
+      expect(desc, `v${n}`).toMatch(/CCPA|US state/);
+      expect(desc, `v${n}`).toMatch(/\bGDPR\b/);
+      expect(desc, `v${n}`).toMatch(/UK GDPR/);
+    }
+  });
+
+  it("positions DPO Central as the place to start, calmly and without comparisons", () => {
+    expect(en["en.ways.sub"]).toMatch(/place to start a privacy program/);
+    expect(en["en.ways.sub"]).toMatch(/grows with you/);
+    for (const [k, v] of shown) {
+      expect(v, k).not.toMatch(/\benterprise\b|replace|instead of|unlike|cheaper|competitor/i);
+    }
+  });
+
+  it("uses US spelling in every English landing string", () => {
+    for (const file of ["dpo-startups.json", "startups-auth.json"]) {
+      const bundle = JSON.parse(read(`src/landing/i18n/en/${file}`)) as Record<string, string>;
+      for (const [k, v] of Object.entries(bundle)) {
+        expect(v, `${file} ${k}`).not.toMatch(/programme|organisation|catalogue|licence|colour|analyse/i);
+      }
+    }
+  });
+});
 
 describe("English landing page", () => {
   it("passes the shared sections for both languages", () => {
