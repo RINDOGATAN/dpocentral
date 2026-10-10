@@ -22,6 +22,7 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Shield, CheckCircle2, Loader2, AlertTriangle, Copy, Check } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { sanitizeCss } from "@/lib/sanitize";
+import { localizedIntakeText } from "@/lib/dsar-default-intake";
 import { DSARType } from "@prisma/client";
 import { StatusNote } from "@/components/ui/status-note";
 
@@ -101,6 +102,9 @@ export default function PublicDSARPage() {
     );
   }
 
+  // The seeded form's words are stored in English; untouched, they show in the visitor's language.
+  const words = localizedIntakeText(formConfig, t);
+
   if (submitMutation.isSuccess && submitMutation.data) {
     const publicId = submitMutation.data.publicId;
     const handleCopyRef = async () => {
@@ -121,7 +125,7 @@ export default function PublicDSARPage() {
             </div>
             <CardTitle>{t("success.title")}</CardTitle>
             <CardDescription>
-              {formConfig.thankYouMessage || t("success.fallbackDescription")}
+              {words.thankYouMessage || t("success.fallbackDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -177,9 +181,9 @@ export default function PublicDSARPage() {
           <div className="mx-auto mb-4 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
             <Shield className="w-6 h-6 text-primary" />
           </div>
-          <h1 className="text-2xl font-semibold">{formConfig.title}</h1>
+          <h1 className="text-2xl font-semibold">{words.title}</h1>
           <p className="text-muted-foreground mt-1">
-            {formConfig.description || t("header.fallbackDescription", { orgName: formConfig.orgName })}
+            {words.description || t("header.fallbackDescription", { orgName: formConfig.orgName })}
           </p>
         </div>
 

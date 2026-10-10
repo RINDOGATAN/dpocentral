@@ -158,7 +158,7 @@ export default async function DocsReportsPage() {
           <ul className="list-disc ml-5 space-y-1">
             {riskKeys.map((key) => (
               <li key={key}>
-                <strong>{t(`risk.items.${key}.label`)}</strong> &mdash; {t(`risk.items.${key}.example`)}
+                <strong>{t(`risk.items.${key}.label`)}</strong>: {t(`risk.items.${key}.example`)}
               </li>
             ))}
           </ul>

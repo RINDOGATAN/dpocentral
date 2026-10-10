@@ -146,7 +146,7 @@
   "es.ways.w2.desc": "Una instancia solo para tu organización, en un servidor virtual que gestionamos por ti.",
   "es.ways.w2.subject": "DPO Central: servidor virtual gestionado",
   "es.ways.w3.title": "Tu propio hardware",
-  "es.ways.w3.desc": "Lo instalamos en un equipo de tu organización. Los datos no salen de tus instalaciones.",
+  "es.ways.w3.desc": "Lo instalamos en un equipo de tu organización. Los datos no salen de tus instalaciones, salvo que conectes un proveedor de IA externo.",
   "es.ways.w3.subject": "DPO Central en mi propio hardware",
 
   "es.logos.label": "Organizaciones que usan DPO Central",

@@ -3123,7 +3123,9 @@
         "hint": "Please check the link you used, or contact the organization directly."
       },
       "header": {
-        "fallbackDescription": "Submit a request regarding your personal data held by {orgName}"
+        "fallbackDescription": "Submit a request regarding your personal data held by {orgName}",
+        "defaultTitle": "Data Subject Request",
+        "defaultDescription": "Submit a request regarding your personal data"
       },
       "card": {
         "title": "Your Request",
@@ -3204,7 +3206,8 @@
         "copiedAriaLabel": "Copied",
         "emailSentLead": "We sent a confirmation to ",
         "emailSentTrail": " with this reference and a link to track progress. Save it — you'll need it to check status.",
-        "checkStatus": "Check Request Status"
+        "checkStatus": "Check Request Status",
+        "defaultThankYou": "Thank you for your request. We will process it within the legally required timeframe."
       },
       "languageSwitcher": "Language"
     },
@@ -5027,7 +5030,11 @@
           "Expired": "Expired"
         },
         "calloutTitle": "Contract expiry alerts",
-        "calloutBody": "The system sends email notifications 90, 60, and 30 days before a contract expires, giving you time to renew or renegotiate terms."
+        "calloutBody": "The system sends email notifications 90, 60, and 30 days before a contract expires, giving you time to renew or renegotiate terms.",
+        "types": {
+          "DPA": "DPA",
+          "DPA_SCC": "DPA + SCC"
+        }
       },
       "questionnaires": {
         "title": "Questionnaires",
@@ -9885,7 +9892,35 @@
       "CREATE_FROM_TEMPLATE": "Created from a template",
       "DELETE_TEMPLATE_ITEMS": "Template records removed",
       "EXPORT_PDF": "Exported as PDF",
-      "EXPORT_AUDIT_TRAIL": "Audit trail exported"
+      "EXPORT_AUDIT_TRAIL": "Audit trail exported",
+      "CONFIRM": "Confirmed",
+      "VIEWED": "Viewed",
+      "STATUS_CHANGED": "Status changed",
+      "DEADLINE_EXTENDED": "Deadline extended",
+      "DEADLINE_REMINDER_SENT": "Deadline reminder sent",
+      "TASKS_GENERATED": "Tasks generated",
+      "PII_REDACTED": "Personal data redacted",
+      "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
+      "GENERATE_DPA": "Data processing agreement generated",
+      "UPDATE_COMPLIANCE": "Compliance updated",
+      "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
+      "REQUEST_CREATED": "Request created",
+      "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal",
+      "EXPORT_BOARD_REPORT": "Executive report exported",
+      "SAVE_BOARD_REPORT": "Executive report saved",
+      "EXPORT_DOCUMENT_PACK": "Document pack exported",
+      "EXPORT_ROPA": "Records of processing exported",
+      "EXPORT_BREACH_REGISTER": "Breach register exported",
+      "EXPORT_VENDOR_REGISTER": "Vendor register exported",
+      "EXPORT_PRIVACY_PROGRAM": "Privacy programme report exported",
+      "EXPORT_PROGRAMME": "Programme exported",
+      "IMPORT_PROGRAMME": "Programme imported",
+      "IMPORT_REGISTER": "Register imported from a spreadsheet",
+      "PILOT_LIMIT_REACHED": "Pilot limit reached",
+      "CHECKOUT_INITIATED": "Checkout started",
+      "RESPONSE_LINK_SET": "Response link set",
+      "RESPONSE_LINK_CLEARED": "Response link removed"
     }
   }
 }

@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
 import { daysUntilDue as daysLeft, dsarExtensionState, dsarSlaStatus } from "@/lib/dsar-deadline";
-import { calculateDSARDueDate, dsarDeadlineRuleFor } from "@/server/services/privacy/slaCalculator";
+import { calculateDSARDueDate, orgDsarRule } from "@/server/services/privacy/slaCalculator";
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
 import { sendDSARCommunicationEmail } from "@/server/services/dsar/sendCommunicationEmail";
@@ -22,11 +22,10 @@ import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features"
 // the law says months (GDPR art. 12(3): one month), days otherwise. Applies to
 // requests created and extensions applied from now on; stored due dates of
 // existing requests are never rewritten.
-function primaryDsarRule(
-  primary: { jurisdiction: { code: string; dsarDeadlineDays: number } } | null | undefined
-) {
-  return dsarDeadlineRuleFor(primary?.jurisdiction.code, primary?.jurisdiction.dsarDeadlineDays);
-}
+/** Every jurisdiction of the organisation, as orgDsarRule reads them. */
+const DSAR_RULE_JURISDICTIONS = {
+  select: { isPrimary: true, jurisdiction: { select: { code: true, dsarDeadlineDays: true } } },
+} as const;
 
 // The rights-request module can be left out of a deployment
 // (NEXT_PUBLIC_DSAR_ENABLED=false, src/config/features.ts). Then every
@@ -174,11 +173,11 @@ export const dsarRouter = createTRPCRouter({
 
       // What the "Extend deadline" button may do: the primary jurisdiction's
       // own extension, once, on an open request.
-      const primary = await ctx.prisma.organizationJurisdiction.findFirst({
-        where: { organizationId: ctx.organization.id, isPrimary: true },
-        include: { jurisdiction: true },
+      const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId: ctx.organization.id },
+        ...DSAR_RULE_JURISDICTIONS,
       });
-      const extension = dsarExtensionState(request, primaryDsarRule(primary));
+      const extension = dsarExtensionState(request, orgDsarRule(jurisdictions, request.receivedAt));
 
       return { ...request, daysUntilDue, extension };
     }),
@@ -199,20 +198,14 @@ export const dsarRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Get organization's primary jurisdiction for SLA calculation
-      const orgJurisdiction = await ctx.prisma.organizationJurisdiction.findFirst({
-        where: {
-          organizationId: ctx.organization.id,
-          isPrimary: true,
-        },
-        include: {
-          jurisdiction: true,
-        },
+      // The primary jurisdiction's period, else the strictest of the
+      // organisation's; the GDPR month when it has none (orgDsarRule).
+      const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId: ctx.organization.id },
+        ...DSAR_RULE_JURISDICTIONS,
       });
-
-      // Defaults to the GDPR rule (one month) if no jurisdiction is set
       const receivedAt = new Date();
-      const dueDate = calculateDSARDueDate(receivedAt, primaryDsarRule(orgJurisdiction));
+      const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(jurisdictions, receivedAt));
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {
@@ -338,12 +331,12 @@ export const dsarRouter = createTRPCRouter({
       if (input.extensionDays !== undefined) {
         newDueDate = addDays(request.dueDate, input.extensionDays);
       } else {
-        const primary = await ctx.prisma.organizationJurisdiction.findFirst({
-          where: { organizationId: ctx.organization.id, isPrimary: true },
-          include: { jurisdiction: true },
+        const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
+          where: { organizationId: ctx.organization.id },
+          ...DSAR_RULE_JURISDICTIONS,
         });
         // One statutory extension per request, never on a closed one.
-        const state = dsarExtensionState(request, primaryDsarRule(primary));
+        const state = dsarExtensionState(request, orgDsarRule(jurisdictions, request.receivedAt));
         if (!state.allowed) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -775,10 +768,7 @@ export const dsarRouter = createTRPCRouter({
             where: { isActive: true },
             take: 1,
           },
-          jurisdictions: {
-            where: { isPrimary: true },
-            include: { jurisdiction: true },
-          },
+          jurisdictions: DSAR_RULE_JURISDICTIONS,
         },
       });
 
@@ -795,7 +785,7 @@ export const dsarRouter = createTRPCRouter({
       await assertPilotCapacity(ctx.prisma, org.id, "dsarRequests", 1, pilotLang);
 
       const receivedAt = new Date();
-      const dueDate = calculateDSARDueDate(receivedAt, primaryDsarRule(org.jurisdictions[0]));
+      const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(org.jurisdictions, receivedAt));
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {

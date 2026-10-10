@@ -14,6 +14,7 @@ import es from "./i18n/es/dpo-startups.json";
 import authEn from "./i18n/en/startups-auth.json";
 import authEs from "./i18n/es/startups-auth.json";
 import { cleanUpLocaleCookies, readLocaleCookie, writeLocaleCookie } from "@/i18n/locale-cookie";
+import { LANDING_SEO } from "@/config/seo";
 
 function detectLocale(): "en" | "es" {
   if (typeof window === "undefined") return "en";
@@ -25,6 +26,8 @@ function detectLocale(): "en" | "es" {
 
 export default function LandingPage() {
   const [locale, setLocale] = useState<"en" | "es">("en");
+  // Until the browser has read `?lang=` and the cookie, the server's title stands.
+  const [detectedOnce, setDetectedOnce] = useState(false);
 
   const router = useRouter();
 
@@ -32,17 +35,31 @@ export default function LandingPage() {
     cleanUpLocaleCookies();
     const detected = detectLocale();
     setLocale(detected);
+    setDetectedOnce(true);
     // `?lang=` can differ from the cookie the server rendered with.
     document.documentElement.lang = detected;
   }, []);
+
+  // The tab title follows the text shown (the server picks the same title
+  // from `?lang=` and the cookie, src/app/page.tsx), also after a toggle.
+  useEffect(() => {
+    if (detectedOnce) document.title = LANDING_SEO[locale].title;
+  }, [locale, detectedOnce]);
 
   const toggleLocale = useCallback(() => {
     const next = locale === "en" ? "es" : "en";
     writeLocaleCookie(next);
     setLocale(next);
-    // The page text switches at once; <html lang> now, and the tab title
-    // (generated on the server from the cookie) with a refresh of the route.
+    // The page text and the tab title switch at once; <html lang> now, and
+    // the rest of the server metadata with a refresh of the route.
     document.documentElement.lang = next;
+    // The choice is now the cookie's; a `?lang=` left in the address would
+    // otherwise win again on the refresh (src/app/page.tsx reads it first).
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("lang")) {
+      url.searchParams.delete("lang");
+      window.history.replaceState(window.history.state, "", url.toString());
+    }
     router.refresh();
   }, [locale, router]);
 

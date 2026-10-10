@@ -12,6 +12,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { brand } from "@/config/brand";
 import { useTranslations } from "next-intl";
+import { organizationSlug } from "@/lib/organization-slug";
 
 
 export function OrganizationSetup() {
@@ -27,13 +28,7 @@ export function OrganizationSetup() {
     },
   });
 
-  const generateSlug = (text: string) => {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  };
+  const generateSlug = organizationSlug;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

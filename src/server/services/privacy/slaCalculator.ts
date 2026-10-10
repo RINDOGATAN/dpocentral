@@ -4,7 +4,7 @@
 import { differenceInDays, differenceInHours } from "date-fns";
 import { JURISDICTION_CORE_DATA, JURISDICTION_CORE_BY_CODE } from "@/config/jurisdiction-data";
 import { JURISDICTION_CATALOG } from "@/config/jurisdiction-catalog";
-import { dsarDueDate, type DsarDeadlineRule } from "@/lib/dsar-deadline";
+import { dsarDueDate, earliestDsarDeadline, type DsarDeadlineRule } from "@/lib/dsar-deadline";
 
 export interface SLAResult {
   dueDate: Date;
@@ -53,6 +53,31 @@ export function dsarDeadlineRuleFor(
           ? { amount: extDays, unit: "days" }
           : null,
   };
+}
+
+/** An organisation's jurisdiction row, as the rights-request rule reads it. */
+export interface OrgJurisdictionForDsar {
+  isPrimary: boolean;
+  jurisdiction: { code: string; dsarDeadlineDays: number | null };
+}
+
+/**
+ * The rule a new rights request runs under: the primary jurisdiction's when
+ * one is marked; otherwise the strictest of the organisation's jurisdictions
+ * (the one whose answer is due first for a request received at
+ * `receivedAt`); GDPR's when the organisation has none. The quick start saves
+ * jurisdictions without marking a primary one, so a California-only
+ * organisation gets 45 days and an LGPD one 15, not the GDPR month.
+ */
+export function orgDsarRule(
+  jurisdictions: readonly OrgJurisdictionForDsar[],
+  receivedAt: Date = new Date()
+): DsarDeadlineRule {
+  const ruleOf = (oj: OrgJurisdictionForDsar) =>
+    dsarDeadlineRuleFor(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays);
+  const primary = jurisdictions.find((oj) => oj.isPrimary);
+  if (primary) return ruleOf(primary);
+  return earliestDsarDeadline(receivedAt, jurisdictions.map(ruleOf))?.rule ?? DEFAULT_DSAR_RULE;
 }
 
 /** Months of the framework's answer period when its law states months, else null. */

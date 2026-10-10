@@ -18,10 +18,9 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { organizationSlug } from "@/lib/organization-slug";
 
-export function organizationSlug(text: string): string {
-  return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-}
+export { organizationSlug };
 
 export function NewOrganizationDialog({
   open,

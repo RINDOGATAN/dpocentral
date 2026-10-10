@@ -1911,10 +1911,10 @@
         "FALSE_POSITIVE": "Falso positivo"
       },
       "severity": {
-        "LOW": "Bajo",
-        "MEDIUM": "Medio",
-        "HIGH": "Alto",
-        "CRITICAL": "Crítico"
+        "LOW": "Baja",
+        "MEDIUM": "Media",
+        "HIGH": "Alta",
+        "CRITICAL": "Crítica"
       },
       "emptyAll": {
         "title": "No hay incidentes registrados",
@@ -3123,7 +3123,9 @@
         "hint": "Comprueba el enlace que has utilizado o contacta directamente con la organización."
       },
       "header": {
-        "fallbackDescription": "Envía una solicitud sobre tus datos personales en poder de {orgName}"
+        "fallbackDescription": "Envía una solicitud sobre tus datos personales en poder de {orgName}",
+        "defaultTitle": "Solicitud de ejercicio de derechos",
+        "defaultDescription": "Envía una solicitud sobre tus datos personales"
       },
       "card": {
         "title": "Tu solicitud",
@@ -3204,7 +3206,8 @@
         "copiedAriaLabel": "Copiado",
         "emailSentLead": "Hemos enviado una confirmación a ",
         "emailSentTrail": " con esta referencia y un enlace para seguir el progreso. Guárdalo: lo necesitarás para consultar el estado.",
-        "checkStatus": "Consultar estado de la solicitud"
+        "checkStatus": "Consultar estado de la solicitud",
+        "defaultThankYou": "Gracias por tu solicitud. La tramitaremos dentro del plazo que marca la ley."
       },
       "languageSwitcher": "Idioma"
     },
@@ -5027,7 +5030,11 @@
           "Expired": "Vencido"
         },
         "calloutTitle": "Alertas de vencimiento de contrato",
-        "calloutBody": "El sistema envía notificaciones por correo electrónico 90, 60 y 30 días antes del vencimiento de un contrato, para que tengas tiempo de renovar o renegociar las condiciones."
+        "calloutBody": "El sistema envía notificaciones por correo electrónico 90, 60 y 30 días antes del vencimiento de un contrato, para que tengas tiempo de renovar o renegociar las condiciones.",
+        "types": {
+          "DPA": "DPA",
+          "DPA_SCC": "DPA + CCT"
+        }
       },
       "questionnaires": {
         "title": "Cuestionarios",
@@ -9885,7 +9892,35 @@
       "CREATE_FROM_TEMPLATE": "Creado desde una plantilla",
       "DELETE_TEMPLATE_ITEMS": "Registros de plantilla eliminados",
       "EXPORT_PDF": "Exportado en PDF",
-      "EXPORT_AUDIT_TRAIL": "Registro de auditoría exportado"
+      "EXPORT_AUDIT_TRAIL": "Registro de auditoría exportado",
+      "CONFIRM": "Confirmado",
+      "VIEWED": "Consultado",
+      "STATUS_CHANGED": "Estado cambiado",
+      "DEADLINE_EXTENDED": "Plazo prorrogado",
+      "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
+      "TASKS_GENERATED": "Tareas generadas",
+      "PII_REDACTED": "Datos personales ocultados",
+      "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
+      "GENERATE_DPA": "Contrato de encargo del tratamiento generado",
+      "UPDATE_COMPLIANCE": "Cumplimiento actualizado",
+      "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
+      "REQUEST_CREATED": "Solicitud creada",
+      "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal",
+      "EXPORT_BOARD_REPORT": "Informe ejecutivo exportado",
+      "SAVE_BOARD_REPORT": "Informe ejecutivo guardado",
+      "EXPORT_DOCUMENT_PACK": "Paquete de documentos exportado",
+      "EXPORT_ROPA": "Registro de actividades de tratamiento exportado",
+      "EXPORT_BREACH_REGISTER": "Registro de brechas exportado",
+      "EXPORT_VENDOR_REGISTER": "Registro de proveedores exportado",
+      "EXPORT_PRIVACY_PROGRAM": "Informe del programa de privacidad exportado",
+      "EXPORT_PROGRAMME": "Programa exportado",
+      "IMPORT_PROGRAMME": "Programa importado",
+      "IMPORT_REGISTER": "Registro importado desde una hoja de cálculo",
+      "PILOT_LIMIT_REACHED": "Límite del piloto alcanzado",
+      "CHECKOUT_INITIATED": "Pago iniciado",
+      "RESPONSE_LINK_SET": "Enlace de respuesta añadido",
+      "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado"
     }
   }
 }

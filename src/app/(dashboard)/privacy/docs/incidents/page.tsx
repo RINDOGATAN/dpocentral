@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { AlertTriangle, Clock, Bell, CheckSquare } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -15,15 +16,16 @@ import { toneForRiskTier, type StatusTone } from "@/config/status-tone";
 
 // The documentation shows the same tones the product paints.
 const statusTone: Record<string, StatusTone> = {
-  OPEN: "info",
+  REPORTED: "info",
   INVESTIGATING: "warning",
   CONTAINED: "warning",
-  RESOLVED: "success",
   CLOSED: "neutral",
 };
 
 export default async function DocsIncidentsPage() {
   const t = await getTranslations("docs.incidents");
+  const tEnum = await getTranslations("enums");
+  const locale = await getLocale();
 
   const statCards: { key: string; value: string; icon: typeof AlertTriangle }[] = [
     { key: "total", value: "7", icon: AlertTriangle },
@@ -35,18 +37,19 @@ export default async function DocsIncidentsPage() {
   const incidentCards: { key: string; severity: string; status: string; date: string }[] = [
     { key: "email", severity: "HIGH", status: "INVESTIGATING", date: "2025-01-15" },
     { key: "export", severity: "MEDIUM", status: "CONTAINED", date: "2025-01-10" },
-    { key: "api", severity: "CRITICAL", status: "OPEN", date: "2025-01-18" },
-    { key: "usb", severity: "LOW", status: "RESOLVED", date: "2024-12-20" },
+    { key: "api", severity: "CRITICAL", status: "REPORTED", date: "2025-01-18" },
+    { key: "usb", severity: "LOW", status: "CLOSED", date: "2024-12-20" },
   ];
 
   const stepKeys = ["report", "assess", "assign", "investigate", "notify", "resolve"] as const;
 
   const timelineEntries: { time: string; key: string; user: string }[] = [
-    { time: "Jan 18, 09:30", key: "reported", user: "admin@acme.com" },
-    { time: "Jan 18, 09:45", key: "severity", user: "admin@acme.com" },
-    { time: "Jan 18, 10:00", key: "investigation", user: "dpo@acme.com" },
-    { time: "Jan 18, 11:30", key: "rootCause", user: "dpo@acme.com" },
-    { time: "Jan 18, 14:00", key: "notification", user: "admin@acme.com" },
+    // Example times, written in the reader's language (UTC, so they never shift).
+    { time: "2025-01-18T09:30:00Z", key: "reported", user: "admin@acme.com" },
+    { time: "2025-01-18T09:45:00Z", key: "severity", user: "admin@acme.com" },
+    { time: "2025-01-18T10:00:00Z", key: "investigation", user: "dpo@acme.com" },
+    { time: "2025-01-18T11:30:00Z", key: "rootCause", user: "dpo@acme.com" },
+    { time: "2025-01-18T14:00:00Z", key: "notification", user: "admin@acme.com" },
   ];
 
   const tasks: { key: string; assigneeKey: string; done: boolean }[] = [
@@ -92,15 +95,15 @@ export default async function DocsIncidentsPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{t(`reporting.cards.${incident.key}`)}</span>
                     <StatusChip tone={toneForRiskTier(incident.severity)} className="text-[10px]">
-                      {incident.severity}
+                      {tEnum(`incidentSeverity.${incident.severity}` as "incidentSeverity.LOW")}
                     </StatusChip>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {t("reporting.reportedLabel", { date: incident.date })}
+                    {t("reporting.reportedLabel", { date: formatDateIn(incident.date, locale) })}
                   </p>
                 </div>
                 <StatusChip tone={statusTone[incident.status] ?? "neutral"} className="text-[10px]">
-                  {incident.status}
+                  {tEnum(`incidentStatus.${incident.status}` as "incidentStatus.REPORTED")}
                 </StatusChip>
               </div>
             ))}
@@ -121,7 +124,7 @@ export default async function DocsIncidentsPage() {
             {timelineEntries.map((entry, i) => (
               <div key={i} className="relative">
                 <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background" />
-                <p className="text-xs text-muted-foreground">{entry.time} — {entry.user}</p>
+                <p className="text-xs text-muted-foreground">{formatDateTimeIn(entry.time, locale, "UTC")} · {entry.user}</p>
                 <p className="text-sm">{t(`timeline.entries.${entry.key}`)}</p>
               </div>
             ))}

@@ -3,14 +3,15 @@
 
 import { DSARType } from "@prisma/client";
 import type prisma from "@/lib/prisma";
+import { DEFAULT_INTAKE_TEXT } from "@/lib/dsar-default-intake";
 
 type PrismaLike = typeof prisma;
 
 export const DEFAULT_INTAKE_FORM = {
   name: "DSAR Intake Form",
   slug: "request",
-  title: "Data Subject Request",
-  description: "Submit a request regarding your personal data",
+  title: DEFAULT_INTAKE_TEXT.title,
+  description: DEFAULT_INTAKE_TEXT.description,
   fields: [],
   enabledTypes: [
     DSARType.ACCESS,
@@ -18,8 +19,7 @@ export const DEFAULT_INTAKE_FORM = {
     DSARType.ERASURE,
     DSARType.PORTABILITY,
   ],
-  thankYouMessage:
-    "Thank you for your request. We will process it within the legally required timeframe.",
+  thankYouMessage: DEFAULT_INTAKE_TEXT.thankYouMessage,
   isActive: true,
 } as const;
 

@@ -22,7 +22,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn(), findFirst: vi.fn() },
-    organizationJurisdiction: { findFirst: vi.fn() },
+    organizationJurisdiction: { findMany: vi.fn() },
     dSARRequest: { findFirst: vi.fn(), findMany: vi.fn(), count: vi.fn(), groupBy: vi.fn() },
     dSARAuditLog: { findFirst: vi.fn(), create: vi.fn() },
     dSARIntakeForm: { findMany: vi.fn() },
@@ -117,7 +117,7 @@ beforeEach(() => {
   );
   mocks.prisma.dSARRequest.count.mockResolvedValue(2);
   mocks.prisma.dSARRequest.groupBy.mockResolvedValue([]);
-  mocks.prisma.organizationJurisdiction.findFirst.mockResolvedValue(null);
+  mocks.prisma.organizationJurisdiction.findMany.mockResolvedValue([]);
   mocks.prisma.dSARAuditLog.findFirst.mockResolvedValue(null);
   mocks.prisma.dSARAuditLog.create.mockResolvedValue({});
 });

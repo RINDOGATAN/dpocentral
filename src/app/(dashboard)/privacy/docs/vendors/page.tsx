@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { Building2, FileCheck, MessageSquare, ShieldAlert, Clock } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { formatDateIn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DocSection } from "@/components/docs/doc-section";
@@ -18,6 +19,7 @@ import { toneForRiskTier, toneForVendorStatus } from "@/config/status-tone";
 
 export default async function DocsVendorsPage() {
   const t = await getTranslations("docs.vendors");
+  const locale = await getLocale();
 
   const stats: { key: string; value: string; icon: typeof Building2 }[] = [
     { key: "total", value: "18", icon: Building2 },
@@ -35,9 +37,9 @@ export default async function DocsVendorsPage() {
 
   const stepKeys = ["navigate", "click", "details", "risk", "contract", "questionnaire"] as const;
 
-  const contracts: { vendor: string; type: string; start: string; end: string; statusKey: "Active" | "ExpiringSoon" | "Expired"; badgeVariant: "success" | "warning" | "destructive" }[] = [
+  const contracts: { vendor: string; type: "DPA" | "DPA_SCC"; start: string; end: string; statusKey: "Active" | "ExpiringSoon" | "Expired"; badgeVariant: "success" | "warning" | "destructive" }[] = [
     { vendor: "Acme Cloud Services", type: "DPA", start: "2024-01-01", end: "2025-12-31", statusKey: "Active", badgeVariant: "success" },
-    { vendor: "DataTech Analytics", type: "DPA + SCC", start: "2024-06-15", end: "2025-06-14", statusKey: "ExpiringSoon", badgeVariant: "warning" },
+    { vendor: "DataTech Analytics", type: "DPA_SCC", start: "2024-06-15", end: "2025-06-14", statusKey: "ExpiringSoon", badgeVariant: "warning" },
     { vendor: "SecureMail Pro", type: "DPA", start: "2023-03-01", end: "2024-02-28", statusKey: "Expired", badgeVariant: "destructive" },
   ];
 
@@ -116,7 +118,7 @@ export default async function DocsVendorsPage() {
                   <div>
                     <p className="text-sm font-medium">{contract.vendor}</p>
                     <p className="text-xs text-muted-foreground">
-                      {contract.type} — {contract.start} {t("contracts.dateRangeSeparator")} {contract.end}
+                      {t(`contracts.types.${contract.type}`)} · {formatDateIn(contract.start, locale)} {t("contracts.dateRangeSeparator")} {formatDateIn(contract.end, locale)}
                     </p>
                   </div>
                 </div>
@@ -141,7 +143,7 @@ export default async function DocsVendorsPage() {
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="text-sm font-medium">{q.vendor}</p>
-                    <p className="text-xs text-muted-foreground">{t("questionnaires.sentLabel", { date: q.sent })}</p>
+                    <p className="text-xs text-muted-foreground">{t("questionnaires.sentLabel", { date: formatDateIn(q.sent, locale) })}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
