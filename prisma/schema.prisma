@@ -170,6 +170,9 @@ model Organization {
 
   safeguardsRequests SafeguardsRequest[]
 
+  // Programme portability: which imported record came from which source record
+  programmeImportRecords ProgrammeImportRecord[]
+
   @@map("organizations")
 }
 
@@ -370,9 +373,13 @@ enum DataSensitivity {
 // for every pre-existing row) or AUTO_TEMPLATE (the quick start or an industry
 // template created it). "Remove all template items" only touches AUTO_TEMPLATE
 // rows a person has not confirmed. See src/server/services/template-items/.
+// IMPORTED: brought in by a programme or register import
+// (src/server/services/portability); a draft until a person confirms it, like
+// a template record, but never removed as a template item.
 enum Provenance {
   USER_ENTERED
   AUTO_TEMPLATE
+  IMPORTED
 }
 
 model DataAsset {
@@ -1907,4 +1914,27 @@ model SafeguardsRequest {
   @@index([organizationId, status])
   @@index([status, closedAt])
   @@map("safeguards_requests")
+}
+
+// Programme portability (owner's decision, 9 October 2026; the EU Data Act,
+// Chapter VI): src/server/services/portability. One row per record an import
+// created, keyed by where it came from, so running the same import twice
+// creates nothing the second time and a later import can point at records an
+// earlier one created. `kind` is the register ("dataAsset", "vendor", ...);
+// `sourceKey` is the source's namespace and the record's id there; `localId`
+// is the record created here. The row is never used to overwrite anything.
+model ProgrammeImportRecord {
+  id             String   @id @default(cuid())
+  organizationId String
+  importId       String
+  kind           String
+  sourceKey      String
+  localId        String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, kind, sourceKey])
+  @@index([organizationId, importId])
+  @@map("programme_import_records")
 }

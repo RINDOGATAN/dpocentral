@@ -86,9 +86,11 @@ describe("d2: drafts count once confirmed", () => {
     expect(p.done).toBe(0);
   });
 
-  it("a draft is AUTO_TEMPLATE with no confirmation date", () => {
-    expect(DRAFT_WHERE).toEqual({ provenance: "AUTO_TEMPLATE", confirmedAt: null });
+  it("a draft is AUTO_TEMPLATE or IMPORTED with no confirmation date", () => {
+    expect(DRAFT_WHERE).toEqual({ provenance: { in: ["AUTO_TEMPLATE", "IMPORTED"] }, confirmedAt: null });
     expect(isDraftRecord({ provenance: "AUTO_TEMPLATE", confirmedAt: null })).toBe(true);
+    expect(isDraftRecord({ provenance: "IMPORTED", confirmedAt: null })).toBe(true);
+    expect(isDraftRecord({ provenance: "IMPORTED", confirmedAt: new Date() })).toBe(false);
     expect(isDraftRecord({ provenance: "AUTO_TEMPLATE", confirmedAt: new Date() })).toBe(false);
     expect(isDraftRecord({ provenance: "USER_ENTERED", confirmedAt: null })).toBe(false);
   });
@@ -170,7 +172,7 @@ function fakePrisma(rows: { kind: "dataAsset" | "processingActivity" | "vendor";
           r.kind === kind &&
           ids.includes(r.id) &&
           r.org === where.organizationId &&
-          (r.provenance ?? "AUTO_TEMPLATE") === where.provenance &&
+          (where.provenance as { in: string[] }).in.includes(r.provenance ?? "AUTO_TEMPLATE") &&
           r.confirmedAt === null,
       );
       return { count: hit.length, apply: () => hit.forEach((r) => (r.confirmedAt = data.confirmedAt as Date)) };
@@ -228,7 +230,11 @@ describe("confirming drafts", () => {
     const { prisma, tx } = fakePrisma([{ kind: "vendor", id: "v1", org: "o1", confirmedAt: null }]);
     await confirmDrafts(prisma as never, { organizationId: "o1", userId: "u1", items: [{ kind: "vendor", id: "v1" }] });
     const where = tx.vendor.updateMany.mock.calls[0][0].where;
-    expect(where).toMatchObject({ organizationId: "o1", provenance: "AUTO_TEMPLATE", confirmedAt: null });
+    expect(where).toMatchObject({
+      organizationId: "o1",
+      provenance: { in: ["AUTO_TEMPLATE", "IMPORTED"] },
+      confirmedAt: null,
+    });
     expect(tx.dataAsset.updateMany).not.toHaveBeenCalled();
   });
 });

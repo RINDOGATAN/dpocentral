@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ApplicabilityCard } from "@/components/privacy/applicability-check";
 import { TemplateItemsCard } from "@/components/privacy/template-items-card";
 import { DepartmentsCard } from "@/components/privacy/departments-card";
+import { ProgrammeExportCard } from "@/components/privacy/programme-export-card";
+import { ProgrammeImportCard } from "@/components/privacy/programme-import-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -533,6 +535,11 @@ export default function SettingsPage() {
 
       {/* Remove the unedited quick-start / template records in one step. */}
       {orgId && <TemplateItemsCard organizationId={orgId} canManage={isAdmin} />}
+
+      {/* Programme portability: the whole programme out, and a programme or a
+          register in, in the open format. OWNER/ADMIN, enforced server-side. */}
+      {orgId && isAdmin && <ProgrammeExportCard organizationId={orgId} />}
+      {orgId && isAdmin && <ProgrammeImportCard organizationId={orgId} />}
 
       <DeploymentExpertCta />
 

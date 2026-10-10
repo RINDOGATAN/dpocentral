@@ -8,6 +8,26 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
+- **Take your programme with you** ("Llévate tu programa"), in Settings:
+  the whole programme as one ZIP in an open, documented format
+  (`dpocentral-programme/1.0`): `programme.json` with stable ids and
+  explicit references, one CSV per register (UTF-8 with a byte-order mark,
+  headers in the reader's language), the JSON Schema (draft 2020-12) and an
+  explanation of every field in English (README.md) and Spanish (LEEME.md),
+  and a manifest with a SHA-256 digest per file. Streamed page by page.
+  Owners and admins only; recorded in the audit trail. Rights requests
+  (personal data) only with a separate box that says so. This is also how
+  DPO Central supports switching and export under the EU Data Act,
+  Chapter VI.
+- **Import a programme** ("Importar un programa"), in Settings: a programme
+  in that format (the ZIP or programme.json) into a new or empty
+  organisation, or one register (processing activities, systems, vendors)
+  from a CSV file with a column-matching step. A check shows the counts and
+  every problem before anything is written; records arrive as drafts to
+  confirm; nothing is overwritten; the same file twice adds nothing.
+  Migration `20261009200000_programme_import_records` (additive only: the
+  `IMPORTED` provenance and one new table).
+
 - **Audit trail** ("Registro de auditoría"), under Library and tools: the
   organisation's audit log, newest first, filtered by area, action, person
   and dates, fifty entries at a time, and exported as CSV with the same
