@@ -11,7 +11,7 @@
  *  - answers b and c store a request and mail it to the sales inbox only
  *    (SALES_INBOX_EMAIL, else the operator's inbox), with a calm result even
  *    when the mail service fails;
- *  - requests closed more than one year ago are purged daily, behind
+ *  - requests closed more than six months ago are purged daily, behind
  *    CRON_SECRET; open ones are never touched.
  *
  * Prisma and the mail client are module-mocked.
@@ -346,14 +346,14 @@ describe("answers b and c", () => {
 describe("the purge", () => {
   const now = new Date("2027-10-10T03:30:00Z");
 
-  it("deletes only requests closed more than one year ago", async () => {
+  it("deletes only requests closed more than six months ago", async () => {
     mocks.prisma.safeguardsRequest.deleteMany.mockResolvedValue({ count: 2 });
     const result = await purgeClosedSafeguardsRequests(mocks.prisma, now);
     expect(result.deleted).toBe(2);
     expect(mocks.prisma.safeguardsRequest.deleteMany).toHaveBeenCalledWith({
-      where: { status: "closed", closedAt: { lt: new Date("2026-10-10T03:30:00Z") } },
+      where: { status: "closed", closedAt: { lt: new Date("2027-04-10T03:30:00Z") } },
     });
-    expect(purgeCutoff(now).toISOString()).toBe("2026-10-10T03:30:00.000Z");
+    expect(purgeCutoff(now).toISOString()).toBe("2027-04-10T03:30:00.000Z");
   });
 
   it("the cron fails closed without CRON_SECRET and refuses a wrong secret", async () => {

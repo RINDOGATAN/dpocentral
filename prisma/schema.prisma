@@ -1884,7 +1884,7 @@ enum SafeguardsRequestStatus {
 
 // A request to talk about choice b or c, sent to the tech firm's sales inbox.
 // Used only to answer the request: no marketing list, no other use. Kept until
-// the request is closed and then for one year; the daily purge
+// the request is closed and then for six months; the daily purge
 // (/api/cron/safeguards-requests-purge) deletes it after that.
 model SafeguardsRequest {
   id               String                  @id @default(cuid())

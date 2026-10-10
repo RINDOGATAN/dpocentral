@@ -11,11 +11,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // ---------------------------------------------------------------------------
-// Vercel Cron: delete safeguards requests closed more than one year ago
+// Vercel Cron: delete safeguards requests closed more than six months ago
 //
 // A request for a managed server or own hardware (the welcome card's options
-// b and c) is kept until it is closed and then for one year (owner's decision
-// O3, 9 October 2026). Open requests are never touched. Scheduled in
+// b and c) is kept until it is closed and then for six months (owner's
+// decision O3, 9 October 2026, revised to six months to match the privacy
+// notice). Open requests are never touched. Scheduled in
 // vercel.json at "30 3 * * *" (daily 03:30 UTC).
 //
 // Same guard as the other crons: fails CLOSED without CRON_SECRET,

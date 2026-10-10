@@ -5,7 +5,7 @@
 /**
  * Platform admin: the organisation's requests to talk about a managed server
  * or its own hardware (welcome card options b and c). Closing a request
- * starts its one-year retention; the daily purge deletes it after that.
+ * starts its six-month retention; the daily purge deletes it after that.
  */
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +27,7 @@ export function SafeguardsRequestsCard({ organizationId }: { organizationId: str
   });
   const close = trpc.platformAdmin.closeSafeguardsRequest.useMutation({
     onSuccess: () => {
-      toast.success("Request closed. It will be deleted one year from today.");
+      toast.success("Request closed. It will be deleted six months from today.");
       utils.platformAdmin.listSafeguardsRequests.invalidate({ organizationId });
     },
     onError: (err) => toast.error(err.message),
@@ -39,7 +39,7 @@ export function SafeguardsRequestsCard({ organizationId }: { organizationId: str
         <CardTitle>Safeguards requests</CardTitle>
         <CardDescription>
           Requests for a managed server or own hardware. Use them only to answer the request.
-          Closed requests are deleted one year after closing.
+          Closed requests are deleted six months after closing.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">

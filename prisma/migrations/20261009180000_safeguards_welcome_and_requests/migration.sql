@@ -10,7 +10,7 @@
 -- organizations.safeguardsChoice / safeguardsChoiceById / safeguardsChoiceAt:
 --   the answer, who gave it and when. Null until answered.
 -- safeguards_requests: one row per request for option b or c, sent to the tech
---   firm's sales inbox. Kept while open, then for one year after closedAt; the
+--   firm's sales inbox. Kept while open, then for six months after closedAt; the
 --   daily purge (/api/cron/safeguards-requests-purge) deletes it after that.
 
 -- CreateEnum

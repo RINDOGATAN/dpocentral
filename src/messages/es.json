@@ -8825,7 +8825,7 @@
       "message": "Algo más que debamos saber (opcional)",
       "send": "Enviar",
       "notNow": "Ahora no",
-      "privacyNote": "Usaremos estos datos solo para responder a tu solicitud y los borraremos un año después de cerrarla.",
+      "privacyNote": "Usaremos estos datos solo para responder a tu solicitud y los borraremos seis meses después de cerrarla.",
       "privacyLink": "Más información en la política de privacidad",
       "required": "Escribe tu nombre, un correo electrónico de trabajo válido, tu organización, tu país y cuántas personas lo usarían.",
       "sendError": "No hemos podido enviar tu solicitud. Inténtalo de nuevo dentro de un momento.",

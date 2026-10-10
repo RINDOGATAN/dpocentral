@@ -16,7 +16,7 @@
  *   inbox. Nobody else is contacted: the hosting partner joins only after the
  *   first conversation and with the visitor's agreement.
  *
- *   How long a request is kept: until it is closed, then one year. The daily
+ *   How long a request is kept: until it is closed, then six months. The daily
  *   purge (/api/cron/safeguards-requests-purge) deletes it after that. No
  *   marketing list, no other use.
  */
@@ -38,7 +38,7 @@ export type RequestChoice = (typeof REQUEST_CHOICES)[number];
 export const USER_COUNT_BANDS = ["1-5", "6-25", "26+"] as const;
 
 /** A request is kept this long after it is closed. */
-export const CLOSED_REQUEST_RETENTION_DAYS = 365;
+export const CLOSED_REQUEST_RETENTION_MONTHS = 6;
 
 /** Open requests an organisation may hold at once (a guard against repeats). */
 export const MAX_OPEN_REQUESTS_PER_ORG = 3;
@@ -137,7 +137,9 @@ export function sendSafeguardsRequestNotice(
 
 /** The latest closedAt a request may have and still be kept. */
 export function purgeCutoff(now: Date): Date {
-  return new Date(now.getTime() - CLOSED_REQUEST_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+  const cutoff = new Date(now.getTime());
+  cutoff.setUTCMonth(cutoff.getUTCMonth() - CLOSED_REQUEST_RETENTION_MONTHS);
+  return cutoff;
 }
 
 interface PurgePrisma {
@@ -149,8 +151,8 @@ interface PurgePrisma {
 }
 
 /**
- * Delete every request closed more than one year ago. Open requests, and
- * closed ones within the year, are never touched.
+ * Delete every request closed more than six months ago. Open requests, and
+ * closed ones within the six months, are never touched.
  */
 export async function purgeClosedSafeguardsRequests(
   prisma: PurgePrisma,

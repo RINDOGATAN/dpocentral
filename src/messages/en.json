@@ -8825,7 +8825,7 @@
       "message": "Anything else we should know (optional)",
       "send": "Send",
       "notNow": "Not now",
-      "privacyNote": "We will use these details only to answer your request and delete them one year after it is closed.",
+      "privacyNote": "We will use these details only to answer your request and delete them six months after it is closed.",
       "privacyLink": "More in the privacy policy",
       "required": "Please fill in your name, a valid work e-mail, your organisation, your country and how many people would use it.",
       "sendError": "Your request could not be sent. Please try again in a moment.",

@@ -508,7 +508,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // ============================================================
   // SAFEGUARDS REQUESTS (welcome card options b and c)
-  // Kept until closed, then one year (the daily purge deletes them).
+  // Kept until closed, then six months (the daily purge deletes them).
   // ============================================================
 
   listSafeguardsRequests: adminProcedure
