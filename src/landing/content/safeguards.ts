@@ -59,7 +59,7 @@ export const LADDER: Record<Locale, WayId[]> = {
   en: ["cloud", "managed", "kit", "deploy", "box"],
 };
 
-type Option = { value: string; level: Level; only?: Locale };
+type Option = { value: string; level: Level; only?: Locale; /** A different level in one market (Spanish "real": the Plan nube UE accepts real data). */ levelIn?: Partial<Record<Locale, Level>> };
 
 export const QUESTIONS: { id: QuestionId; options: Option[] }[] = [
   {
@@ -74,7 +74,7 @@ export const QUESTIONS: { id: QuestionId; options: Option[] }[] = [
     id: "data",
     options: [
       { value: "test", level: 0 },
-      { value: "real", level: 1 },
+      { value: "real", level: 1, levelIn: { es: 0 } },
       { value: "special", level: 1 },
     ],
   },
@@ -134,7 +134,8 @@ export function levelOf(answers: Answers, locale: Locale): Level {
   let level: Level = 0;
   for (const q of QUESTIONS) {
     const o = optionsFor(q, locale).find((x) => x.value === answers[q.id]);
-    if (o && o.level > level) level = o.level;
+    const l = o ? (o.levelIn?.[locale] ?? o.level) : 0;
+    if (l > level) level = l;
   }
   return level;
 }
@@ -160,7 +161,17 @@ export function requirementsOf(answers: Answers, locale: Locale): SafeguardKey[]
   });
 }
 
-export const meets = (way: WayId, key: SafeguardKey) => MET[key][way];
+/**
+ * Spanish market, from 10 Oct 2026: the Plan nube UE (paid cloud plan) accepts real data,
+ * so the cloud meets "data:real" there. Special categories and professional secrecy stay
+ * with the managed instance.
+ */
+const MET_ES: Partial<Record<SafeguardKey, Partial<Record<WayId, boolean>>>> = {
+  "data:real": { cloud: true },
+};
+
+export const meets = (way: WayId, key: SafeguardKey, locale?: Locale) =>
+  (locale === "es" ? MET_ES[key]?.[way] : undefined) ?? MET[key][way];
 
 export type Recommendation = {
   level: Level;
@@ -178,11 +189,11 @@ export function recommend(answers: Answers, locale: Locale): Recommendation | nu
   const reqs = requirementsOf(answers, locale);
   const ladder = LADDER[locale];
   const i = ladder.indexOf(way);
-  const near = (w: WayId | undefined) => (w ? { way: w, missing: reqs.filter((k) => !meets(w, k)) } : null);
+  const near = (w: WayId | undefined) => (w ? { way: w, missing: reqs.filter((k) => !meets(w, k, locale)) } : null);
   return {
     level: levelOf(answers, locale),
     way,
-    checks: reqs.map((key) => ({ key, met: meets(way, key) })),
+    checks: reqs.map((key) => ({ key, met: meets(way, key, locale) })),
     up: near(ladder[i + 1]),
     down: near(ladder[i - 1]),
   };
@@ -399,8 +410,8 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
     notes: {
       "loc:servers": { cloud: "Lo alojamos nosotros en la UE, en un servicio compartido.", managed: "Lo alojamos nosotros, en una instancia solo para ti.", deploy: "Instalado en un equipo de tu organización." },
       "loc:office": {},
-      "data:real": { cloud: "El piloto es solo para registros de prueba o seudónimos.", managed: "Una instancia solo para tu organización.", deploy: "Tus registros se quedan en tus instalaciones." },
-      "data:special": { cloud: "El piloto es solo para registros de prueba o seudónimos.", managed: "Una instancia solo para tu organización.", deploy: "Tus registros se quedan en tus instalaciones." },
+      "data:real": { cloud: "Con el Plan nube UE.", managed: "Una instancia solo para tu organización.", deploy: "Tus registros se quedan en tus instalaciones." },
+      "data:special": { cloud: "Elige la instancia gestionada.", managed: "Una instancia solo para tu organización.", deploy: "Tus registros se quedan en tus instalaciones." },
       "ai:none": { cloud: AI_OFF_ES, managed: AI_OFF_ES, deploy: AI_OFF_ES },
       "ai:key": { cloud: "El proveedor de IA lo configuramos nosotros para todo el servicio; no puedes usar tu clave.", managed: "La instancia se puede configurar con tu propia clave.", deploy: "Configuramos la IA con tu propia clave." },
       "ai:local": { cloud: "Con la IA activada, los datos del registro que se redacta van al proveedor de IA externo del servicio, que puede estar fuera de la UE.", managed: "Los modelos de pesos abiertos pueden funcionar en la propia instancia, de modo que el texto no sale de ella.", deploy: "Podemos configurar un modelo de pesos abiertos en ese equipo, si tiene capacidad." },
@@ -410,7 +421,7 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
     },
     summaries: {
       cloud:
-        "Lo alojamos nosotros, en la UE. Un piloto gratuito y con límites para probar los flujos de trabajo con registros de prueba. No es apto para datos reales de clientes, se comparte con otras organizaciones (los registros de cada una están separados) y no tiene acuerdo de nivel de servicio ni certificación independiente. Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE.",
+        "Lo alojamos nosotros, con los datos en la UE (Fráncfort). Puedes probarlo con el piloto gratuito y con límites, solo con datos de prueba, o contratar el Plan nube UE para datos reales. Es un servicio compartido (los registros de cada organización están separados) y no tiene certificación independiente. Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE.",
       managed: "Una instancia aislada que operamos nosotros, solo para tu organización, alojada en Asturias (España). Tus registros se quedan en esa instancia. Las funciones de IA están desactivadas hasta que las activas, y pueden usar modelos de pesos abiertos alojados en la propia instancia, de modo que el texto no sale de ella, o la clave de tu propio proveedor.",
       deploy:
         "Seis semanas con nosotros: lo instalamos en un equipo de tu organización, formamos a tu equipo y te dejamos un manual de operación. Los registros se quedan en tus instalaciones, bajo tus propios controles. Para las funciones de IA, podemos configurar un modelo de pesos abiertos en ese equipo, si tiene capacidad, y así los datos no salen de tus instalaciones; o usar tu propia clave, y entonces los datos del registro que se redacta van a ese proveedor.",
