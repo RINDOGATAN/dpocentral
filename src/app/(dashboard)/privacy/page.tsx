@@ -12,6 +12,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useMemberScope } from "@/lib/use-member-scope";
@@ -22,6 +23,7 @@ export default function PrivacyDashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();
+  const tCommon = useTranslations("common");
   const { data: stats, isLoading } = trpc.organization.getDashboardStats.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
@@ -36,7 +38,16 @@ export default function PrivacyDashboardPage() {
 
   // A member limited to departments is never sent to the quick start, an
   // organisation-wide action (src/lib/department-limit.ts).
-  const { orgWide } = useMemberScope();
+  const { orgWide, limited } = useMemberScope();
+
+  // First visit only: once quickstart has been shown it sets a cookie
+  // (see quickstart/page.tsx), so an empty org can still navigate to the
+  // dashboard without being bounced back in a loop. Read after mount (null
+  // until then), as the cookie is not known when the page is rendered.
+  const [quickstartSeen, setQuickstartSeen] = useState<boolean | null>(null);
+  useEffect(() => {
+    setQuickstartSeen(document.cookie.split("; ").includes("dpo_quickstart_seen=1"));
+  }, []);
 
   // The first-visit welcome card (hosted service, organisation's creator
   // only; the server decides). It comes BEFORE the quick start: the redirect
@@ -52,27 +63,43 @@ export default function PrivacyDashboardPage() {
 
   useEffect(() => {
     if (!welcomeSettled || welcomeShown) return;
-    if (!orgWide || !isEmptyOrg || fromQuickstart) return;
-    // First visit only: once quickstart has been shown it sets a cookie
-    // (see quickstart/page.tsx), so an empty org can still navigate to the
-    // dashboard without being bounced back in a loop.
-    const quickstartSeen = document.cookie
-      .split("; ")
-      .includes("dpo_quickstart_seen=1");
-    if (quickstartSeen) return;
+    if (!orgWide || !isEmptyOrg || fromQuickstart || quickstartSeen !== false) return;
     router.replace("/privacy/quickstart");
-  }, [welcomeSettled, welcomeShown, orgWide, isEmptyOrg, fromQuickstart, router]);
+  }, [welcomeSettled, welcomeShown, orgWide, isEmptyOrg, fromQuickstart, quickstartSeen, router]);
+
+  const welcomeCard =
+    welcomeShown && organization?.id && welcome.data?.show ? (
+      <WelcomeCard
+        organizationId={organization.id}
+        prefill={welcome.data.prefill}
+        onDone={() => setWelcomeDone(true)}
+      />
+    ) : null;
+
+  // While it is not yet known whether this visit goes on to the quick start,
+  // or while it is on its way there, the dashboard is not drawn: it used to
+  // flash (with its "How it works" card) between "Get started" and the quick
+  // start. The welcome card, when due, is shown over this placeholder.
+  const mayRedirect =
+    !fromQuickstart &&
+    quickstartSeen !== true &&
+    (limited === null || orgWide) &&
+    (!stats || isEmptyOrg);
+  if (mayRedirect) {
+    return (
+      <>
+        <div className="py-24 text-center text-sm text-muted-foreground" role="status">
+          {tCommon("loading")}
+        </div>
+        {welcomeCard}
+      </>
+    );
+  }
 
   return (
     <>
       <GuidedDashboard fromQuickstart={fromQuickstart} />
-      {welcomeShown && organization?.id && welcome.data?.show && (
-        <WelcomeCard
-          organizationId={organization.id}
-          prefill={welcome.data.prefill}
-          onDone={() => setWelcomeDone(true)}
-        />
-      )}
+      {welcomeCard}
     </>
   );
 }

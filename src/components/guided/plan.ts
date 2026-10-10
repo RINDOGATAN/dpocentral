@@ -22,7 +22,7 @@
  * Pure: no React, no Prisma, no Next.
  */
 
-import { stageProgress, type PathConfig, type PathStatuses } from "./path";
+import { stageNumber, stageProgress, type PathConfig, type PathStatuses } from "./path";
 
 export interface PlanWindow {
   /** The last day of the window: 30, 60, 90. */
@@ -88,7 +88,7 @@ export function planState<C>(
 
   if (day > totalDays) {
     const stageNumbers = config.stages
-      .map((stage, index) => ({ id: stage.id, number: index + 1 }))
+      .map((stage, index) => ({ id: stage.id, number: stageNumber(config, stage.id) ?? index + 1 }))
       .filter((s) => open.includes(s.id))
       .map((s) => s.number);
     return { kind: "remaining", day, totalDays, stageNumbers };

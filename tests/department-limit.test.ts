@@ -145,8 +145,10 @@ describe("the sidebar and the Guided home", () => {
 
   it("the home hides the quick start, the next step and the whole-programme actions", () => {
     const home = read("src/app/(dashboard)/privacy/page.tsx");
-    expect(home).toContain("const { orgWide } = useMemberScope()");
-    expect(home).toContain("if (!orgWide || !isEmptyOrg || fromQuickstart) return;");
+    expect(home).toContain("const { orgWide, limited } = useMemberScope()");
+    expect(home).toContain("if (!orgWide || !isEmptyOrg || fromQuickstart || quickstartSeen !== false) return;");
+    // A limited member is never held on the loading line either.
+    expect(home).toContain("(limited === null || orgWide) &&");
     // The dashboard (decision d7): the organisation's figure, areas, documents and
     // next actions only for a member who sees the whole organisation.
     const guided = read("src/components/guided/guided-dashboard.tsx");

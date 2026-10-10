@@ -58,9 +58,9 @@ describe("security and landing copy makes no inaccurate claims", () => {
   it("security badges carry the accurate labels", () => {
     const en = JSON.parse(read("src/messages/en.json")).security.badges;
     const es = JSON.parse(read("src/messages/es.json")).security.badges;
-    expect(en.noPasswords).toBe("No passwords");
+    expect(en.noPasswords).toBe("Passwordless");
     expect(es.noPasswords).toBe("Sin contraseñas");
-    expect(en.signedPaymentEvents).toBe("Signed payment events");
-    expect(es.signedPaymentEvents).toBe("Pagos con firma verificada");
+    expect(en.signedPaymentEvents).toBe("Stripe signatures checked");
+    expect(es.signedPaymentEvents).toBe("Firmas de Stripe comprobadas");
   });
 });

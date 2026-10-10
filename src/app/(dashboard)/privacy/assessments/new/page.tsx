@@ -35,7 +35,7 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
-import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES, COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
+import { SKILL_PACKAGE_IDS, COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice } from "@/lib/currency";
@@ -98,12 +98,16 @@ export default function NewAssessmentPage() {
   const utils = trpc.useUtils();
 
   // Query entitled assessment types
-  const { data: entitledData } = trpc.assessment.getEntitledTypes.useQuery(
+  const { data: entitledData, isFetched: entitledFetched } = trpc.assessment.getEntitledTypes.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id }
   );
 
   const entitledTypes = entitledData?.entitledTypes ?? [];
+  // Until the entitlements are read every card would look locked, and a quick
+  // click opened the "Activate" dialog for a module that is already active:
+  // the cards wait for them.
+  const entitlementsLoaded = !!entitledData || entitledFetched;
 
   // The pilot tier's two free DPIAs (null off the pilot tier: nothing shown).
   const dpiaQuota = useDpiaQuota();
@@ -189,6 +193,7 @@ export default function NewAssessmentPage() {
   );
 
   const handleTypeSelect = (type: string) => {
+    if (!entitlementsLoaded) return;
     if (isComingSoon(type)) return;
 
     if (isTypeLocked(type)) {
@@ -260,15 +265,19 @@ export default function NewAssessmentPage() {
                   <Card
                     key={at.type}
                     className={`transition-all ${CARD_BUTTON_FOCUS} ${
-                      isLocked
-                        ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
-                        : "cursor-pointer hover:border-primary/50 hover:shadow-md"
+                      !entitlementsLoaded
+                        ? "cursor-wait opacity-60"
+                        : isLocked
+                          ? "cursor-pointer border-dashed opacity-75 hover:border-amber-500/50"
+                          : "cursor-pointer hover:border-primary/50 hover:shadow-md"
                     }`}
                     {...cardButton(() => handleTypeSelect(at.type), {
                       label: isLocked
                         ? tp("typeCardLockedLabel", { name: typeName(at.type) })
                         : typeName(at.type),
                     })}
+                    aria-disabled={!entitlementsLoaded || undefined}
+                    aria-busy={!entitlementsLoaded || undefined}
                   >
                     <CardContent className="pt-5 pb-4">
                       <div className="flex items-start justify-between mb-3">
@@ -570,7 +579,7 @@ export default function NewAssessmentPage() {
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}
         skillPackageId={SKILL_PACKAGE_IDS[upgradeSkillKey] ?? ""}
-        skillName={SKILL_DISPLAY_NAMES[upgradeSkillKey] ?? upgradeFeatureName}
+        skillName={upgradeSkillKey ? typeName(upgradeSkillKey) : upgradeFeatureName}
       />
     </div>
   );

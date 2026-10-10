@@ -353,7 +353,7 @@ const tiaV2: V2Template = {
   supersedes: "system-tia-template",
   type: "TIA" as AssessmentType,
   version: "2.0",
-  name: L("Transfer Impact Assessment", "Evaluación de impacto de las transferencias (TIA)"),
+  name: L("Transfer Impact Assessment", "Evaluación de impacto de las transferencias (EIT)"),
   description: L(
     "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers. Informational, not legal advice; verify with qualified counsel.",
     "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
@@ -847,7 +847,7 @@ const piaV2: V2Template = {
           text: L("Is any data transferred outside the EU or EEA?", "¿Se transfieren datos fuera de la UE o del EEE?"),
           help: L(
             "A transfer to a third country needs a transfer tool and, outside adequacy, a Transfer Impact Assessment (the TIA template). Example: \"Yes: our hosting provider is in the United States.\" Source: GDPR Arts. 44 to 49.",
-            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla TIA). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
+            "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49.",
           ),
         },
         {
@@ -855,10 +855,10 @@ const piaV2: V2Template = {
           type: "text",
           required: false,
           showIf: whenYes("piav2_3_3"),
-          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y se ha hecho una TIA?"),
+          text: L("Which transfer tool covers it, and is a TIA in place?", "¿Qué instrumento de transferencia lo cubre y se ha hecho una EIT?"),
           help: L(
             "Name the transfer tool and whether a Transfer Impact Assessment has been done. Example: \"Standard Contractual Clauses; TIA completed 2026-05.\" Source: GDPR Arts. 46 and 44.",
-            "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; TIA completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44.",
+            "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; EIT completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44.",
           ),
         },
       ],

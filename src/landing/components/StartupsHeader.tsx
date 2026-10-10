@@ -3,6 +3,7 @@
 
 import { Globe, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import DpoCentralLogo from "./DpoCentralLogo";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -48,12 +49,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           through the menu's links. */}
       <div className={`nav-header px-6 ${isMenuOpen ? "!bg-card !backdrop-blur-none" : ""}`}>
         <div className="flex items-center justify-between h-14">
-          <a href="https://todo.law" className="flex items-center gap-3">
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-            <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 bg-accent/10 text-accent rounded-full text-xs font-medium uppercase tracking-wider font-body" style={{ fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 }}>
-              {t("header.badge")}
-            </span>
-          </a>
+          <DpoCentralLogo productOf={t("header.productOf")} />
 
           <div className="hidden md:flex items-center gap-3">
             <button

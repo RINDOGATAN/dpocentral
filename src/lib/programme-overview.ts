@@ -20,6 +20,7 @@
 import {
   isCounted,
   isShown,
+  stageNumber,
   stageWord,
   type PathConfig,
   type PathStage,
@@ -155,7 +156,8 @@ export type AreaAction =
 
 export interface Area<C> {
   stage: PathStage<C>;
-  number: number;
+  /** Null for a stage whose steps are all still coming: it carries no number (path.ts, stageNumber). */
+  number: number | null;
   word: StageWord;
   action: AreaAction;
 }
@@ -180,7 +182,7 @@ export function programmeAreas<C>(
   needsAction: readonly NeedsActionItem[],
 ): Area<C>[] {
   const attention = attentionStages(needsAction);
-  return config.stages.map((stage, index) => {
+  return config.stages.map((stage) => {
     const word = stageWord(stage, statuses, attention);
     const waiting = needsAction.find((item) => NEEDS_ACTION_STAGE[item.kind] === stage.id);
     const open = firstOpenStep(stage, statuses);
@@ -194,7 +196,7 @@ export function programmeAreas<C>(
             : open
               ? { kind: "step", step: open as PathStep<unknown> }
               : { kind: "done" };
-    return { stage, number: index + 1, word, action };
+    return { stage, number: stageNumber(config, stage.id), word, action };
   });
 }
 

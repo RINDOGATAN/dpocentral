@@ -22,6 +22,8 @@ import {
   overallProgress,
   stageOfStep,
   stageExpandable,
+  stageNumber,
+  numberedStageCount,
   stageOpenByDefault,
   stageProgress,
   stageToCelebrate,
@@ -351,10 +353,18 @@ describe("the 'Next step' band", () => {
   });
 
   it("numbers each step by its stage and its place in the stage", () => {
+    // Stage 2 (people) is all coming and is not listed in the menu, so the
+    // stages after it are numbered on from 2: the menu reads 1, 2, 3, 4, 5.
     const number = (id: string) => walk.find((e) => e.step.id === id)?.number;
     expect(number("quickstart")).toBe("1.1");
-    expect(number("dataInventory")).toBe("3.1");
-    expect(number("incidents")).toBe("6.1");
+    expect(number("dataInventory")).toBe("2.1");
+    expect(number("incidents")).toBe("5.1");
+  });
+
+  it("numbers the stages consecutively, leaving out one whose steps are all coming", () => {
+    const numbers = PATH.stages.map((s) => stageNumber(PATH, s.id));
+    expect(numbers).toEqual([1, null, 2, 3, 4, 5]);
+    expect(numberedStageCount(PATH)).toBe(5);
   });
 
   it("leads from each step to the next one, so one button walks the whole path", () => {
@@ -400,11 +410,11 @@ describe("the current page", () => {
     expect(stageExpandable({ ...inventory, steps: [] }, null)).toBe(false);
   });
 
-  it("gives a record's own page the step of its record type (3.2 on an activity)", () => {
+  it("gives a record's own page the step of its record type (2.2 on an activity)", () => {
     expect(currentStepId(PATH, "/privacy/data-inventory/asset-1")).toBe("dataInventory");
     expect(currentStepId(PATH, "/privacy/data-inventory/activities/act-1")).toBe("ropa");
     expect(currentStepId(PATH, "/privacy/data-inventory/activities/act-1/edit")).toBe("ropa");
-    expect(stepAndFollowing(PATH, currentStepId(PATH, "/privacy/data-inventory/activities/act-1"))?.current.number).toBe("3.2");
+    expect(stepAndFollowing(PATH, currentStepId(PATH, "/privacy/data-inventory/activities/act-1"))?.current.number).toBe("2.2");
   });
 
   it("does not claim the dashboard or a library page as a step", () => {

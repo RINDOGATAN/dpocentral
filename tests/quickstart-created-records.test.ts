@@ -135,6 +135,22 @@ describe("quickstart.execute records its completion (clarity review F1)", () => 
   });
 });
 
+describe("quickstart.execute on a Spanish screen", () => {
+  it("creates the template's records with their Spanish names", async () => {
+    const result = await callerFor(quickstartRouter, sessionFor("user-1")).execute({
+      organizationId: ORG.id,
+      industryId: TEMPLATE.id,
+      locale: "es",
+    });
+    expect(result.created.assets.map((a) => a.name)).toContain("Base de datos de clientes");
+    expect(result.created.activities.map((a) => a.name)).toContain("Gestión de cuentas de clientes");
+    const flowNames = result.created.flows.map((f) => f.name);
+    expect(flowNames).toContain("De clientes a pedidos");
+    expect(flowNames).toContain("De Sistema de gestión de pedidos a Base de datos de clientes");
+    expect(flowNames.some((n) => / to /.test(n))).toBe(false);
+  });
+});
+
 describe("the result screen", () => {
   const page = readFileSync(
     path.resolve(__dirname, "../src/app/(dashboard)/privacy/quickstart/page.tsx"),
