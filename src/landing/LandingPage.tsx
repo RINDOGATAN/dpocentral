@@ -135,7 +135,7 @@ export default function LandingPage() {
         callbackUrl="/privacy"
         middle={<LandingSections t={t} locale={locale} />}
       />
-      <StartupsFooter t={t} />
+      <StartupsFooter t={t} locale={locale} />
     </>
   );
 }

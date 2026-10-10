@@ -4,7 +4,8 @@
 import { Globe, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { BrandMark } from "@/components/brand-mark";
+import { BrandLogo, BrandName } from "@/components/brand-mark";
+import { storefrontLogoLabel, storefrontUrl } from "../config/storefront";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -50,9 +51,21 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           through the menu's links. */}
       <div className={`nav-header px-6 ${isMenuOpen ? "!bg-card !backdrop-blur-none" : ""}`}>
         <div className="flex items-center justify-between h-14">
-          <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 text-white">
-            <BrandMark />
-          </Link>
+          <div className="flex min-w-0 shrink-0 items-center gap-2 text-white">
+            {/* The TODO.LAW logo leads to the storefront; the product's name
+                next to it keeps leading to this landing. */}
+            <a
+              href={storefrontUrl(locale)}
+              aria-label={storefrontLogoLabel(locale)}
+              data-testid="landing-logo-link"
+              className="flex items-center"
+            >
+              <BrandLogo />
+            </a>
+            <Link href="/" className="flex items-center">
+              <BrandName />
+            </Link>
+          </div>
 
           <div className="hidden md:flex items-center gap-3">
             <button

@@ -15,13 +15,25 @@ import { cn } from "@/lib/utils";
 
 const BRAND_STYLE = { fontFamily: "var(--font-jost), 'Jost', sans-serif", fontWeight: 600 } as const;
 
+/** The TODO.LAW wordmark alone, for callers that link it on its own. */
+export function BrandLogo() {
+  return <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />;
+}
+
+/** The product name alone, in capitals. */
+export function BrandName({ nameClassName }: { nameClassName?: string }) {
+  return (
+    <span className={cn("text-lg tracking-tight", nameClassName)} style={BRAND_STYLE}>
+      {brand.nameUppercase}
+    </span>
+  );
+}
+
 export function BrandMark({ nameClassName }: { nameClassName?: string }) {
   return (
     <>
-      <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
-      <span className={cn("text-lg tracking-tight", nameClassName)} style={BRAND_STYLE}>
-        {brand.nameUppercase}
-      </span>
+      <BrandLogo />
+      <BrandName nameClassName={nameClassName} />
     </>
   );
 }
