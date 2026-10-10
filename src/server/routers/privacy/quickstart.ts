@@ -20,8 +20,10 @@ import {
   type VendorDataMapping,
 } from "../../../config/vendor-data-mappings";
 import {
-  getTemplateById,
-  INDUSTRY_TEMPLATES,
+  defaultReturnFlowFrequency,
+  getLocalizedTemplateById,
+  getLocalizedTemplates,
+  returnFlowName,
   type IndustryTemplate,
 } from "../../../config/industry-templates";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
@@ -360,10 +362,18 @@ export const quickstartRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         industryId: z.string(),
+        /** The screen's language; the locale cookie when absent. */
+        locale: z.enum(["en", "es"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const template = getTemplateById(input.industryId);
+      // The template's text follows the screen's language; execute reads
+      // the locale cookie the screen's language comes from, so the names
+      // previewed are the names created.
+      const template = getLocalizedTemplateById(
+        input.industryId,
+        input.locale ?? pilotLocale(localeFromCookieGetter(ctx.getCookie))
+      );
       if (!template) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -440,9 +450,10 @@ export const quickstartRouter = createTRPCRouter({
   // List available industry templates (lightweight)
   // ──────────────────────────────────────────────────
   listTemplates: organizationProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(() => {
-      return INDUSTRY_TEMPLATES.map((t) => ({
+    .input(z.object({ organizationId: z.string(), locale: z.enum(["en", "es"]).optional() }))
+    .query(({ ctx, input }) => {
+      const locale = input.locale ?? pilotLocale(localeFromCookieGetter(ctx.getCookie));
+      return getLocalizedTemplates(locale).map((t) => ({
         id: t.id,
         name: t.name,
         description: t.description,
@@ -466,12 +477,15 @@ export const quickstartRouter = createTRPCRouter({
         skipActivityNames: z.array(z.string()).default([]),
         fromPortfolio: z.boolean().default(false),
         programName: z.string().max(200).optional(),
+        /** The screen's language, for the template's text; the locale cookie when absent. */
+        locale: z.enum(["en", "es"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const orgId = ctx.organization.id;
       const userId = ctx.session.user.id;
       const pilotLang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
+      const templateLang = input.locale ?? pilotLang;
       const skipAssets = new Set(input.skipAssetNames);
       const skipActivities = new Set(input.skipActivityNames);
 
@@ -557,7 +571,7 @@ export const quickstartRouter = createTRPCRouter({
       // Validate industry template if selected
       let template: IndustryTemplate | undefined;
       if (input.industryId) {
-        template = getTemplateById(input.industryId);
+        template = getLocalizedTemplateById(input.industryId, templateLang);
         if (!template) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1089,13 +1103,13 @@ export const quickstartRouter = createTRPCRouter({
                 const back = await tx.dataFlow.create({
                   data: {
                     organizationId: orgId,
-                    name: `${templateFlow.destAssetName} to ${templateFlow.sourceAssetName}`,
+                    name: returnFlowName(templateFlow.destAssetName, templateFlow.sourceAssetName, templateLang),
                     description: templateFlow.returnFlow.description,
                     sourceAssetId: destId,
                     destinationAssetId: sourceId,
                     dataCategories:
                       templateFlow.returnFlow.dataCategories ?? templateFlow.dataCategories,
-                    frequency: templateFlow.returnFlow.frequency ?? "On request",
+                    frequency: templateFlow.returnFlow.frequency ?? defaultReturnFlowFrequency(templateLang),
                     isAutomated: templateFlow.isAutomated,
                   },
                 });

@@ -1,7 +1,9 @@
 {
   "header.menuOpen": "Abrir el menú",
   "header.menuClose": "Cerrar el menú",
-  "header.badge": "DPO Central",
+  "header.productOf": "un producto de TODO.LAW",
+  "hero.welcome": "Te damos la bienvenida a una nueva generación de herramientas para gestionar programas de privacidad y de gobierno de la IA.",
+  "hero.ai": "Diseñado desde el primer día para trabajar con IA: la IA prepara borradores de evaluaciones de impacto y de análisis de incidentes a partir de tus propios registros, y tú revisas y confirmas. Desactivada por defecto.",
   "header.cta": "Iniciar sesión",
   "hero.badge": "Gestión de programas de privacidad",
   "hero.title.prefix": "Protección de datos ",

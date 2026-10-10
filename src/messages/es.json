@@ -3420,7 +3420,7 @@
       "fiveTierRbac": "RBAC 5 niveles",
       "perEndpoint": "Por endpoint",
       "sixHeaders": "6 cabeceras",
-      "signedPaymentEvents": "Pagos con firma verificada",
+      "signedPaymentEvents": "Firmas de Stripe comprobadas",
       "edgeNetwork": "Red perimetral"
     },
     "items": {

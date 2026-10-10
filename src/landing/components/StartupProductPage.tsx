@@ -236,8 +236,14 @@ const StartupProductPage = ({
                     <span className="text-accent">{t("hero.title.accent")}</span>
                     {t("hero.title.suffix")}
                   </h1>
-                  <p className="text-lg text-white/70 leading-relaxed font-body mb-8 max-w-lg">
+                  <p className="text-lg text-white/90 leading-relaxed font-body mb-4 max-w-lg">
+                    {t("hero.welcome")}
+                  </p>
+                  <p className="text-lg text-white/70 leading-relaxed font-body mb-4 max-w-lg">
                     {t("hero.subtitle")}
+                  </p>
+                  <p className="text-sm text-white/70 leading-relaxed font-body mb-8 max-w-lg">
+                    {t("hero.ai")}
                   </p>
                 </motion.div>
               </div>
