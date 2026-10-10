@@ -99,7 +99,10 @@ describe("Spanish copy", () => {
 
     it(`${bundle.name} has every key the English bundle has`, () => {
       const esKeys = new Set(es.map(([k]) => k));
-      expect(en.map(([k]) => k).filter((k) => !esKeys.has(k))).toEqual([]);
+      // Keys under `en.` are the English landing's own sections (its copy is
+      // written for the US, not translated), as `es.` keys are the Spanish
+      // landing's; neither needs a counterpart in the other bundle.
+      expect(en.map(([k]) => k).filter((k) => !k.startsWith("en.") && !esKeys.has(k))).toEqual([]);
     });
 
     it(`${bundle.name} addresses the reader as tú, never usted`, () => {
