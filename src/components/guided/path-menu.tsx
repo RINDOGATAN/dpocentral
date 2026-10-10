@@ -23,6 +23,7 @@ import {
   isCounted,
   isShown,
   stageExpandable,
+  stageNumber,
   programFigure,
   stageOfStep,
   stageOpenByDefault,
@@ -187,7 +188,8 @@ export function PathMenu<C>({
         {config.stages.map((stage, index) => {
           const progress = statuses && showProgress ? stageProgress(stage, statuses) : null;
           const href = stageTarget(stage, statuses);
-          const label = `${t("stageNumber", { number: index + 1 })}: ${t(`stages.${stage.id}`)}${
+          const number = stageNumber(config, stage.id) ?? index + 1;
+          const label = `${t("stageNumber", { number })}: ${t(`stages.${stage.id}`)}${
             progress
               ? progress.state === "coming"
                 ? `, ${t("stageState.coming")}`
@@ -202,7 +204,7 @@ export function PathMenu<C>({
               size={32}
               complete={progress?.state === "done"}
             >
-              {index + 1}
+              {number}
             </ProgressRing>
           );
           return href ? (
@@ -320,7 +322,7 @@ export function PathMenu<C>({
                 total={progress?.total ?? 0}
                 complete={progress?.state === "done"}
               >
-                {index + 1}
+                {stageNumber(config, stage.id) ?? index + 1}
               </ProgressRing>
               <span className="flex min-w-0 flex-1 flex-col">
                 <span

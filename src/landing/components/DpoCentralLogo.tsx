@@ -12,6 +12,8 @@
  * VendorWatch only and must not be used here.
  */
 
+import Link from "next/link";
+
 export const DPO_CENTRAL_ACCENT = "#53aecc";
 
 export function TodoLawSymbol({ size = 30, color = DPO_CENTRAL_ACCENT }: { size?: number; color?: string }) {
@@ -57,17 +59,17 @@ interface DpoCentralLogoProps {
 export default function DpoCentralLogo({ productOf }: DpoCentralLogoProps) {
   return (
     <div className="flex items-center gap-2.5 min-w-0">
-      <a href="/" className="flex-shrink-0" aria-hidden="true" tabIndex={-1}>
+      <Link href="/" className="flex-shrink-0" aria-hidden="true" tabIndex={-1}>
         <TodoLawSymbol size={30} />
-      </a>
+      </Link>
       <div className="flex flex-col leading-none min-w-0">
-        <a
+        <Link
           href="/"
           className="text-foreground whitespace-nowrap"
           style={{ fontFamily: "var(--font-display), 'Archivo Black', sans-serif", fontSize: "17px", lineHeight: 1.1 }}
         >
           DPO Central
-        </a>
+        </Link>
         <a
           href="https://todo.law"
           className="mt-1 text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"

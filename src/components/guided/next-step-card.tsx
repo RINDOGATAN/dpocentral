@@ -15,7 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DPO_CENTRAL_PATH, PLAN_WINDOWS } from "./path-config";
-import { nextStep } from "./path";
+import { nextStep, stageNumber } from "./path";
 import { planState } from "./plan";
 import { planPaceText } from "./plan-text";
 import { useProgramPathQuery } from "./use-program-path";
@@ -59,7 +59,7 @@ export function NextStepCard({
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium uppercase tracking-wider text-primary">
                 {t("nextStep.title")} · {t("nextStep.stage", {
-                  number: next.stageIndex + 1,
+                  number: stageNumber(DPO_CENTRAL_PATH, next.stage.id) ?? next.stageIndex + 1,
                   stage: t(`stages.${next.stage.id}`),
                 })}
               </p>

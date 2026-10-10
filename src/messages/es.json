@@ -245,7 +245,7 @@
         "PIA_short": "PIA",
         "PIA_desc": "Evalúa los riesgos e impactos de privacidad de proyectos, sistemas o procesos.",
         "TIA": "Evaluación de impacto de las transferencias",
-        "TIA_short": "TIA",
+        "TIA_short": "EIT",
         "TIA_desc": "Evalúa los riesgos de las transferencias internacionales y las medidas complementarias necesarias.",
         "VENDOR": "Evaluación de riesgo del proveedor",
         "VENDOR_short": "Proveedor",
@@ -335,7 +335,7 @@
       "aboutSubtitle": "Una plantilla contiene las secciones y las preguntas que hace una evaluación",
       "aboutDpia": "EIPD (artículo 35)",
       "aboutDpiaBody": "Obligatoria cuando es probable que el tratamiento entrañe un alto riesgo para las personas.",
-      "aboutTia": "TIA (capítulo V)",
+      "aboutTia": "EIT (capítulo V)",
       "aboutTiaBody": "Evalúa una transferencia de datos personales a un país fuera del Espacio Económico Europeo.",
       "aboutLia": "LIA (artículo 6.1.f)",
       "aboutLiaBody": "La ponderación que hay que hacer antes de basarse en el interés legítimo como base jurídica."
@@ -623,14 +623,14 @@
         "needsReview": "Requiere revisión",
         "nonCompliant": "No conforme",
         "expiring30d": "Caduca en 30 días",
-        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en CCT no tiene} other {<b>#</b> transferencias basadas en CCT no tienen}} aún evaluación de impacto de las transferencias (TIA). Tras Schrems II, las CCT exigen una TIA.",
+        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en CCT no tiene} other {<b>#</b> transferencias basadas en CCT no tienen}} aún evaluación de impacto de las transferencias (EIT). Tras Schrems II, las CCT exigen una EIT.",
         "all": "Todas las transferencias",
         "allSubtitle": "Pulsa una transferencia para revisar los detalles de cumplimiento y la lista de comprobación de Schrems II.",
         "empty": "Aún no hay transferencias registradas",
         "emptySubtitle": "Añade una transferencia internacional de datos para empezar a controlar el cumplimiento del capítulo V del RGPD.",
         "linkedTo": "vinculada a {name}",
-        "tiaDone": "TIA hecha",
-        "tiaPending": "TIA pendiente",
+        "tiaDone": "EIT hecha",
+        "tiaPending": "EIT pendiente",
         "sccExpires": "Las CCT caducan el {date}",
         "create": "Crear",
         "descriptionLabel": "Descripción"
@@ -639,8 +639,8 @@
         "back": "Volver",
         "edit": "Editar",
         "adequateCountry": "País con adecuación",
-        "tiaDone": "TIA hecha",
-        "tiaPending": "TIA pendiente",
+        "tiaDone": "EIT hecha",
+        "tiaPending": "EIT pendiente",
         "adequacyTitle": "Decisión de adecuación en vigor",
         "adequacyBody": "{country} cuenta con una decisión de adecuación de la UE (adoptada el {date}).",
         "adequacyPartial": " ⚠ Parcial: consulta las notas.",
@@ -659,19 +659,19 @@
         "sccExpired": "Estas cláusulas ya han caducado: renuévalas de inmediato.",
         "sccExpiringSoon": "{count, plural, one {Solo queda # día: programa la renovación.} other {Solo quedan # días: programa la renovación.}}",
         "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
-        "tiaPendingTitle": "Evaluación de impacto de las transferencias (TIA) pendiente",
+        "tiaPendingTitle": "Evaluación de impacto de las transferencias (EIT) pendiente",
         "tiaPendingBody": "Schrems II exige evaluar las leyes de vigilancia del país de destino y la eficacia de tus salvaguardas.",
-        "startTia": "Iniciar TIA"
+        "startTia": "Iniciar EIT"
       },
       "edit": {
         "title": "Editar cumplimiento de la transferencia",
         "complianceStatus": "Estado de cumplimiento",
         "complianceStatusSubtitle": "Ajuste manual del estado de cumplimiento de la transferencia",
         "status": "Estado",
-        "tia": "Evaluación de impacto de las transferencias (TIA)",
+        "tia": "Evaluación de impacto de las transferencias (EIT)",
         "tiaSubtitle": "Obligatoria para transferencias basadas en CCT a jurisdicciones sin adecuación (Schrems II).",
-        "tiaCompleted": "TIA completada",
-        "tiaDate": "Fecha de finalización de la TIA",
+        "tiaCompleted": "EIT completada",
+        "tiaDate": "Fecha de finalización de la EIT",
         "sccAndSafeguards": "CCT y salvaguardas",
         "sccAndSafeguardsSubtitle": "Validez de las CCT y salvaguardas adicionales",
         "sccExpiry": "Fecha de caducidad de las CCT",
@@ -1208,10 +1208,10 @@
     },
     "vendorDetail": {
       "dpa": {
-        "produce": "Generar DPA + TIA",
-        "openTia": "TIA",
+        "produce": "Generar DPA + EIT",
+        "openTia": "EIT",
         "title": "Generar DPA + evaluación de impacto de las transferencias",
-        "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El contrato de encargo del tratamiento (anexos I a IV) y, para transferencias a terceros países, una TIA independiente se generan a partir de tus respuestas confirmadas.",
+        "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El contrato de encargo del tratamiento (anexos I a IV) y, para transferencias a terceros países, una EIT independiente se generan a partir de tus respuestas confirmadas.",
         "loading": "Analizando los datos del proveedor…",
         "notesTitle": "Cómo se precargaron estos datos",
         "sectionAgreement": "Acuerdo y partes",
@@ -1239,7 +1239,7 @@
         "warningsTitle": "Revisar antes de firmar",
         "successBody": "El contrato de encargo del tratamiento se ha generado y se ha guardado en este proveedor, pendiente de firma. Descarga los documentos abajo: seguirán disponibles en la lista de contratos.",
         "downloadDpa": "Descargar DPA (PDF)",
-        "downloadTia": "Descargar TIA (PDF)",
+        "downloadTia": "Descargar EIT (PDF)",
         "generate": "Generar documentos",
         "generating": "Generando…",
         "cancel": "Cancelar",
@@ -1527,7 +1527,7 @@
       "programName": {
         "label": "Nombre del programa",
         "help": "Este nombre identifica tu programa de privacidad en el panel, en la pantalla de resultados y en tus exportaciones. De inicio es el nombre de tu organización; cámbialo si tu programa se conoce por otro nombre.",
-        "placeholder": "p. ej. Programa de privacidad de Acme"
+        "placeholder": "p. ej. Programa de privacidad de Ejemplo Logística"
       },
       "applies": {
         "title": "Qué te aplica",
@@ -1795,8 +1795,8 @@
         "reqIncidentResponseDesc": "Documenta un flujo de respuesta a incidentes para que las brechas puedan clasificarse, contenerse y notificarse dentro de los plazos legales.",
         "reqVendorDpas": "Firma un contrato de encargo del tratamiento (DPA) con cada encargado",
         "reqVendorDpasDesc": "Mantén un contrato de encargo del tratamiento con cada proveedor activo que trate datos personales por cuenta de tu organización.",
-        "reqTransferTia": "Completa una TIA para cada transferencia internacional",
-        "reqTransferTiaDesc": "Cuando los datos personales salen del territorio regulado, se requiere una evaluación de impacto de las transferencias (TIA, Schrems II) para los destinos sin decisión de adecuación.",
+        "reqTransferTia": "Completa una EIT para cada transferencia internacional",
+        "reqTransferTiaDesc": "Cuando los datos personales salen del territorio regulado, se requiere una evaluación de impacto de las transferencias (EIT, Schrems II) para los destinos sin decisión de adecuación.",
         "reqAiSystemRegister": "Mantén un registro de sistemas de IA",
         "reqAiSystemRegisterDesc": "Documenta cada sistema de IA en uso, clasifica su nivel de riesgo y haz seguimiento de las obligaciones del proveedor o del responsable del despliegue."
       }
@@ -2005,7 +2005,7 @@
         "all": "Todas",
         "dpia": "EIPD",
         "vendor": "Proveedor",
-        "tia": "TIA"
+        "tia": "EIT"
       },
       "card": {
         "responses": "Respuestas",
@@ -2017,7 +2017,7 @@
       "type": {
         "DPIA": "EIPD",
         "PIA": "PIA",
-        "TIA": "TIA",
+        "TIA": "EIT",
         "LIA": "LIA",
         "VENDOR": "Proveedor",
         "CUSTOM": "Personalizada"
@@ -2042,7 +2042,7 @@
       },
       "emptyDpia": "No hay EIPD",
       "emptyVendor": "No hay evaluaciones de proveedores",
-      "emptyTia": "No hay evaluaciones TIA",
+      "emptyTia": "No hay evaluaciones EIT",
       "emptyFiltered": "Ninguna evaluación coincide con estos filtros",
       "quickStart": {
         "title": "Plantillas de inicio rápido",
@@ -2249,12 +2249,12 @@
         "subtitle": "Documenta las transferencias internacionales y sus garantías (arts. 44 a 49 del RGPD)"
       },
       "transfer": {
-        "tiaCompleted": "TIA completada",
-        "tiaPending": "TIA pendiente",
-        "tiaInProgress": "TIA en curso",
-        "startTia": "Iniciar TIA",
-        "continueTia": "Continuar TIA",
-        "viewTia": "Ver TIA"
+        "tiaCompleted": "EIT completada",
+        "tiaPending": "EIT pendiente",
+        "tiaInProgress": "EIT en curso",
+        "startTia": "Iniciar EIT",
+        "continueTia": "Continuar EIT",
+        "viewTia": "Ver EIT"
       },
       "activityDialog": {
         "title": "Añadir actividad de tratamiento",
@@ -2308,7 +2308,7 @@
       "newOrgDialog": {
         "title": "Nueva organización",
         "nameLabel": "Nombre de la organización",
-        "namePlaceholder": "p. ej., Acme Corporation",
+        "namePlaceholder": "p. ej., Ejemplo Logística, S.L.",
         "creating": "Creando...",
         "create": "Crear"
       }
@@ -2617,7 +2617,7 @@
     "assessmentType": {
       "DPIA": "EIPD",
       "PIA": "PIA",
-      "TIA": "TIA",
+      "TIA": "EIT",
       "LIA": "LIA",
       "VENDOR": "Evaluación de proveedor",
       "CUSTOM": "Personalizada"
@@ -2897,7 +2897,7 @@
     "privacyProfessional": "Profesional de privacidad",
     "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
     "orgName": "Nombre de la organización",
-    "orgNamePlaceholder": "p. ej., Acme Corporation",
+    "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
     "getStarted": "Comenzar",
     "settingUp": "Configurando...",
     "persona": {
@@ -2911,7 +2911,7 @@
     "welcome": "Te damos la bienvenida a {brandName}",
     "createOrg": "Crea tu organización para comenzar con la gestión de privacidad",
     "orgName": "Nombre de la organización",
-    "orgNamePlaceholder": "p. ej., Acme Corporation",
+    "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
     "createOrganization": "Crear organización",
     "creating": "Creando...",
     "switchOrg": "Cambiar organización"
@@ -3308,7 +3308,7 @@
     },
     "transfer": {
       "heading": "Transferencias internacionales detectadas",
-      "body": "Los datos que salen del EEE requieren garantías adecuadas. Un experto en operaciones de cumplimiento puede ayudarte a documentar las transferencias y estructurar tu flujo de TIA."
+      "body": "Los datos que salen del EEE requieren garantías adecuadas. Un experto en operaciones de cumplimiento puede ayudarte a documentar las transferencias y estructurar tu flujo de EIT."
     }
   },
   "experts": {
@@ -3481,8 +3481,8 @@
     "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
   },
   "toasts": {
-    "dpaGeneratedNoTia": "DPA generado (este proveedor no requiere TIA)",
-    "dpaGenerated": "DPA y TIA generados",
+    "dpaGeneratedNoTia": "DPA generado (este proveedor no requiere EIT)",
+    "dpaGenerated": "DPA y EIT generados",
     "generic": {
       "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."
     },
@@ -4540,7 +4540,7 @@
         "items": {
           "dpia": "EIPD",
           "pia": "PIA",
-          "tia": "TIA",
+          "tia": "EIT",
           "vendorRisk": "Evaluación de riesgo de proveedor",
           "vendorCatalog": "Catálogo de proveedores"
         }
@@ -4736,7 +4736,7 @@
         "calloutFreeLabel": "Gratuitos (núcleo):",
         "calloutFreeBody": " Las evaluaciones LIA y personalizadas están disponibles para todos los usuarios. ",
         "calloutPremiumLabel": "Premium:",
-        "calloutPremiumBody": " Las evaluaciones EIPD, PIA, TIA y de riesgo de proveedor requieren una licencia Premium.",
+        "calloutPremiumBody": " Las evaluaciones EIPD, PIA, EIT y de riesgo de proveedor requieren una licencia Premium.",
         "calloutSeeMorePrefix": " Consulta la página de ",
         "calloutSeeMoreLink": "Funciones Premium",
         "calloutSeeMoreSuffix": " para más detalles."
@@ -4747,7 +4747,7 @@
         "steps": {
           "select": {
             "title": "Selecciona una plantilla",
-            "description": "Elige el tipo de evaluación que se ajuste a lo que necesitas (LIA, EIPD, PIA, TIA, proveedor o personalizada)."
+            "description": "Elige el tipo de evaluación que se ajuste a lo que necesitas (LIA, EIPD, PIA, EIT, proveedor o personalizada)."
           },
           "fill": {
             "title": "Rellena los detalles del proyecto",
@@ -5077,7 +5077,7 @@
           "UnderReview": "En revisión"
         },
         "warningTitle": "Cumplimiento tras Schrems II",
-        "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de las transferencias (TIA) detecta riesgos, pueden ser necesarias garantías adicionales. Consulta la sección Funciones Premium para las TIA.",
+        "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de las transferencias (EIT) detecta riesgos, pueden ser necesarias garantías adicionales. Consulta la sección Funciones Premium para las EIT.",
         "tipTitle": "Exportar el RAT",
         "tipBody": "Puedes exportar tu registro de actividades de tratamiento (RAT) completo desde la vista de listado del Inventario de datos. La exportación incluye todos los activos, elementos, actividades, bases jurídicas y registros de transferencia."
       },
@@ -5459,7 +5459,7 @@
     },
     "transferCompliance": {
       "title": "Gestor de cumplimiento de transferencias",
-      "subtitle": "Supervisa y gestiona las transferencias internacionales de datos con un panel de cumplimiento centralizado. Controla las decisiones de adecuación, las CCT y el estado de las TIA en todos tus flujos internacionales de datos.",
+      "subtitle": "Supervisa y gestiona las transferencias internacionales de datos con un panel de cumplimiento centralizado. Controla las decisiones de adecuación, las CCT y el estado de las EIT en todos tus flujos internacionales de datos.",
       "overview": {
         "title": "Visión general del cumplimiento de transferencias",
         "description": "Tras Schrems II, las transferencias internacionales requieren una gestión cuidadosa del cumplimiento. El Gestor de cumplimiento de transferencias ofrece una vista centralizada de todos los flujos de datos internacionales.",
@@ -5475,7 +5475,7 @@
             "subtitle": "Contratos supervisados"
           },
           "tia": {
-            "label": "Estado TIA",
+            "label": "Estado EIT",
             "value": "Al día",
             "subtitle": "Evaluaciones de impacto de las transferencias"
           }
@@ -5493,7 +5493,7 @@
         },
         "descriptions": {
           "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o con CCT válidas y una evaluación de impacto de las transferencias completada. No hace falta ninguna acción.",
-          "NEEDS_REVIEW": "Hay CCT en vigor, pero no se ha completado ninguna TIA o las medidas complementarias pueden estar desactualizadas. Se recomienda revisar.",
+          "NEEDS_REVIEW": "Hay CCT en vigor, pero no se ha completado ninguna EIT o las medidas complementarias pueden estar desactualizadas. Se recomienda revisar.",
           "NON_COMPLIANT": "Las CCT han caducado o no hay ningún mecanismo de transferencia válido. Hace falta actuar de inmediato para evitar riesgos regulatorios.",
           "PENDING": "La transferencia se ha registrado pero aún no se ha evaluado. Completa la revisión de cumplimiento para asignarle un estado."
         }
@@ -5520,7 +5520,7 @@
           },
           "procedural": {
             "title": "Completa los trámites",
-            "description": "Completa los trámites necesarios: firma las CCT, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de las transferencias (TIA)."
+            "description": "Completa los trámites necesarios: firma las CCT, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de las transferencias (EIT)."
           },
           "monitor": {
             "title": "Sigue la evolución",
@@ -5845,7 +5845,7 @@
           "dsarLabel": "Rendimiento en ejercicio de derechos",
           "dsarDesc": ": volúmenes de solicitudes, cumplimiento de plazos, tendencias mensuales",
           "portfolioLabel": "Cartera de evaluaciones",
-          "portfolioDesc": ": resumen de EIPD/PIA/TIA/LIA de todo el programa",
+          "portfolioDesc": ": resumen de EIPD/PIA/EIT/LIA de todo el programa",
           "assessmentLabel": "Evaluación (individual)",
           "assessmentDesc": ": cuestionario completo con respuestas y puntuación de riesgo",
           "regulatoryLabel": "Panorama regulatorio",
@@ -6046,10 +6046,10 @@
         "infoContactSuffix": " para habilitar las evaluaciones PIA en tu organización."
       },
       "tia": {
-        "title": "TIA: evaluación de impacto de las transferencias",
+        "title": "EIT: evaluación de impacto de las transferencias",
         "description": "Evalúa los riesgos de las transferencias internacionales de datos tras la sentencia Schrems II.",
         "badge": "Cumplimiento Schrems II",
-        "evalTitle": "La TIA evalúa:",
+        "evalTitle": "La EIT evalúa:",
         "evalItems": {
           "legal": "El marco jurídico del país destinatario",
           "surveillance": "Leyes de vigilancia y acceso por autoridades",
@@ -6066,12 +6066,12 @@
           "consent": "Consentimiento (específico)",
           "encryption": "Cifrado en tránsito y en reposo"
         },
-        "infoTitle": "Habilitar TIA",
+        "infoTitle": "Habilitar EIT",
         "infoSelfPrefix": "Disponible como complemento. Visita la ",
         "infoSelfLink": "página de facturación",
-        "infoSelfSuffix": " para habilitar las evaluaciones TIA.",
+        "infoSelfSuffix": " para habilitar las evaluaciones EIT.",
         "infoContactPrefix": "Disponible como complemento. Contacta con ",
-        "infoContactSuffix": " para habilitar las evaluaciones TIA en tu organización."
+        "infoContactSuffix": " para habilitar las evaluaciones EIT en tu organización."
       },
       "vendorRisk": {
         "title": "Evaluación de riesgo de proveedor",
@@ -6202,7 +6202,7 @@
         },
         "assessments": {
           "title": "Evaluaciones",
-          "description": "Realiza EIPD, PIA, LIA, TIA y evaluaciones de riesgo de proveedores con plantillas configurables y flujos de aprobación."
+          "description": "Realiza EIPD, PIA, LIA, EIT y evaluaciones de riesgo de proveedores con plantillas configurables y flujos de aprobación."
         },
         "incidents": {
           "title": "Gestión de incidentes",
@@ -6264,7 +6264,7 @@
         },
         "premiumTitle": "Módulos premium (60 € al año cada uno en el kit)",
         "premiumItems": {
-          "assessments": "Evaluaciones EIPD, PIA y TIA",
+          "assessments": "Evaluaciones EIPD, PIA y EIT",
           "vendor": "Evaluaciones de riesgo de proveedor",
           "catalog": "Catálogo de proveedores (catálogo inicial de encargados habituales)",
           "audit": "Funciones avanzadas de auditoría"
@@ -6656,11 +6656,11 @@
     },
     "publicAssessments": {
       "metaTitle": "Evaluaciones",
-      "metaDescription": "Realiza EIPD, TIA, LIA y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
+      "metaDescription": "Realiza EIPD, EIT, LIA y evaluaciones personalizadas con plantillas configurables, flujos de aprobación y puntuación de riesgo.",
       "ogTitle": "Evaluaciones | DPO CENTRAL",
-      "ogDescription": "Evaluaciones de impacto: EIPD, TIA, LIA y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
+      "ogDescription": "Evaluaciones de impacto: EIPD, EIT, LIA y personalizadas, con plantillas, flujos de aprobación y puntuación de riesgo.",
       "title": "Evaluaciones",
-      "subtitle": "Realiza evaluaciones de impacto en la privacidad con plantillas configurables. Puntúa los riesgos, documenta las mitigaciones y gestiona los flujos de aprobación de EIPD, TIA, LIA y evaluaciones personalizadas.",
+      "subtitle": "Realiza evaluaciones de impacto en la privacidad con plantillas configurables. Puntúa los riesgos, documenta las mitigaciones y gestiona los flujos de aprobación de EIPD, EIT, LIA y evaluaciones personalizadas.",
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige una plantilla integrada, o la personalizada para una revisión que no encaje en ninguna de las demás. Cada plantilla lleva sus propias preguntas y criterios de riesgo, y toda evaluación creada a partir de una recorre el mismo flujo de aprobación.",
@@ -6684,7 +6684,7 @@
             "desc": "Obligatoria según el artículo 35 del RGPD para los tratamientos de alto riesgo"
           },
           "TIA": {
-            "name": "Evaluación de impacto de las transferencias (TIA)",
+            "name": "Evaluación de impacto de las transferencias (EIT)",
             "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)"
           }
         }
@@ -6937,13 +6937,13 @@
         "artifacts": {
           "dpaTitle": "Contrato de encargo del tratamiento (PDF)",
           "dpaDesc": "Contrato entre responsable y encargado conforme al artículo 28, con términos negociados y anexos I a IV: descripción del tratamiento, medidas técnicas y organizativas (MTO), incorporación de las cláusulas contractuales tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la evaluación de impacto de las transferencias. Los anexos III y IV aparecen automáticamente cuando el encargado está establecido fuera del EEE o del Reino Unido.",
-          "tiaTitle": "TIA independiente (PDF)",
+          "tiaTitle": "EIT independiente (PDF)",
           "tiaDesc": "El anexo IV reproducido sin modificaciones, precedido de un encabezado de identificación y listo para ponerlo a disposición de la autoridad de control que lo solicite conforme a la cláusula 14 de las CCT incorporadas. Sigue el marco de seis pasos de las Recomendaciones 01/2020 del CEPD."
         },
         "steps": {
           "open": {
-            "title": "Abre el proveedor y elige «Generar DPA + TIA»",
-            "description": "En la página de detalle del proveedor, abre la pestaña Contratos y pulsa «Generar DPA + TIA». Disponible para propietarios, administradores y responsables de privacidad."
+            "title": "Abre el proveedor y elige «Generar DPA + EIT»",
+            "description": "En la página de detalle del proveedor, abre la pestaña Contratos y pulsa «Generar DPA + EIT». Disponible para propietarios, administradores y responsables de privacidad."
           },
           "review": {
             "title": "Revisa los datos precargados",
@@ -6962,15 +6962,15 @@
           },
           "download": {
             "title": "Descarga y firma",
-            "description": "Descarga los PDF del contrato de encargo del tratamiento y de la TIA desde la pantalla de confirmación o en cualquier momento desde la pestaña Contratos del proveedor. Cuando esté firmado por ambas partes, cambia el estado del contrato a Activo."
+            "description": "Descarga los PDF del contrato de encargo del tratamiento y de la EIT desde la pantalla de confirmación o en cualquier momento desde la pestaña Contratos del proveedor. Cuando esté firmado por ambas partes, cambia el estado del contrato a Activo."
           }
         },
         "honesty": {
           "title": "El generador nunca exagera tu situación",
-          "desc": "El anexo II solo enumera medidas de seguridad confirmadas con pruebas reales de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la TIA, no las garantías sobre las MTO. Las declaraciones del importador (solicitudes de las autoridades públicas, historial de brechas) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la TIA documenta un riesgo residual salvo que exista al menos una medida complementaria técnica."
+          "desc": "El anexo II solo enumera medidas de seguridad confirmadas con pruebas reales de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la EIT, no las garantías sobre las MTO. Las declaraciones del importador (solicitudes de las autoridades públicas, historial de brechas) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la EIT documenta un riesgo residual salvo que exista al menos una medida complementaria técnica."
         },
         "afterTitle": "Tras la generación",
-        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la TIA a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
+        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
       },
       "metaTitle": "Gestión de proveedores",
       "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, cuestionarios de privacidad, niveles de riesgo y flujos de revisión periódica.",
@@ -7883,7 +7883,7 @@
       },
       "template": {
         "system-tia-template-v2": {
-          "name": "Evaluación de impacto de las transferencias (TIA)",
+          "name": "Evaluación de impacto de las transferencias (EIT)",
           "description": "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado."
         }
       }
@@ -8665,11 +8665,11 @@
         },
         "piav2_3_3": {
           "text": "¿Se transfieren datos fuera de la UE o del EEE?",
-          "helpText": "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla TIA). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49."
+          "helpText": "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49."
         },
         "piav2_3_4": {
-          "text": "¿Qué instrumento de transferencia lo cubre y se ha hecho una TIA?",
-          "helpText": "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; TIA completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44."
+          "text": "¿Qué instrumento de transferencia lo cubre y se ha hecho una EIT?",
+          "helpText": "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; EIT completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44."
         },
         "piav2_4_1": {
           "text": "¿Se ha facilitado a las personas la información sobre privacidad que exigen los artículos 13 y 14?",
@@ -9340,7 +9340,7 @@
       "someCopiedTextStillPointsAtTheOther": "Parte del texto copiado sigue haciendo referencia al otro cliente. Revisa la lista antes de copiar.",
       "someVendorSlugsAreNotInYourVendor": "Algunos proveedores no están en tu cartera de Vendor.Watch.",
       "submitApproveIsOnlyAvailableForSingleUser": "«Enviar y aprobar» solo está disponible en organizaciones de un único usuario. Usa en su lugar el envío habitual.",
-      "tiaTemplateNotAvailableRunTheTemplateSeed": "La plantilla de TIA no está disponible. Ejecuta primero el script de carga de plantillas.",
+      "tiaTemplateNotAvailableRunTheTemplateSeed": "La plantilla de EIT no está disponible. Ejecuta primero el script de carga de plantillas.",
       "taskNotFound": "No se ha encontrado la tarea.",
       "templateNotFoundOrNotAccessible": "No se ha encontrado la plantilla o no tienes acceso a ella.",
       "templateNotFound": "No se ha encontrado la plantilla.",
@@ -9506,7 +9506,7 @@
       "regulatoryReport": "Informe normativo",
       "ropa": "Registro de actividades de tratamiento (RAT)",
       "vendorRegister": "Registro de proveedores",
-      "dpa": "Contrato de encargo con un proveedor (y TIA)",
+      "dpa": "Contrato de encargo con un proveedor (y EIT)",
       "assessmentReport": "Informe de evaluación",
       "dpia": "EIPD",
       "assessmentPortfolio": "Cartera de evaluaciones",

@@ -37,6 +37,7 @@ import {
   type AutoFillTarget,
 } from "@/config/dpia-auto-fill-targets";
 import { assertIdsInOrg } from "../../org-ownership";
+import { isEmptyAnswer } from "@/lib/assessment-answer";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -528,6 +529,15 @@ export const assessmentRouter = createTRPCRouter({
           code: "BAD_REQUEST",
           message: "Cannot modify an approved assessment",
         });
+      }
+
+      // A multi-select with every option unticked is no answer: remove the
+      // stored response, so the question counts as unanswered again.
+      if (isEmptyAnswer(input.response)) {
+        await ctx.prisma.assessmentResponse.deleteMany({
+          where: { assessmentId: input.assessmentId, questionId: input.questionId },
+        });
+        return null;
       }
 
       const response = await ctx.prisma.assessmentResponse.upsert({

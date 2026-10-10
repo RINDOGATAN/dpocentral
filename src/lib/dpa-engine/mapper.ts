@@ -205,7 +205,7 @@ export function mapVendorToDpaInputs(input: MapperInput): MappedDpaInputs {
     facts["tia-safeguards"] = "org-audits-review";
     notes.push({
       en: "Certifications support the audits-review TIA safeguard only; Annex II stays at the baseline unless controls are confirmed against actual audit evidence.",
-      es: "Las certificaciones solo justifican la salvaguarda de revisión de auditorías de la TIA; el Anexo II se mantiene en el nivel base salvo que los controles se confirmen con evidencia real de auditoría.",
+      es: "Las certificaciones solo justifican la salvaguarda de revisión de auditorías de la EIT; el Anexo II se mantiene en el nivel base salvo que los controles se confirmen con evidencia real de auditoría.",
     });
   }
 
