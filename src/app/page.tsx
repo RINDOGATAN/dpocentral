@@ -15,15 +15,20 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 /**
  * The landing's title and description in the language it shows: `?lang=`
- * first, then the `locale` cookie (the same rule as the landing in the
- * browser, src/landing/LandingPage.tsx). The layout's own metadata follows
+ * first, then the `locale` cookie, then Accept-Language (src/config/seo.ts);
+ * the page body is rendered in the same language on the server. The layout's own metadata follows
  * the request locale, which ignores `?lang=` and may come from
  * Accept-Language while the landing shows English, so the landing sets both
  * languages explicitly (absolute, outside the layout's "%s | ..." template).
  */
-export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+async function pageLocale(searchParams: SearchParams) {
   const { lang } = await searchParams;
-  const locale = landingLocale(lang, localeFromCookieHeader((await headers()).get("cookie")));
+  const h = await headers();
+  return landingLocale(lang, localeFromCookieHeader(h.get("cookie")), h.get("accept-language"));
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+  const locale = await pageLocale(searchParams);
   const { title, description } = LANDING_SEO[locale];
   return {
     title: { absolute: title },
@@ -40,7 +45,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   };
 }
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {
   const session = await getServerSession(authOptions);
 
   if (session) {
@@ -53,5 +58,6 @@ export default async function HomePage() {
     redirect("/sign-in");
   }
 
-  return <LandingPage />;
+  // Rendered in its language on the server, so the first paint is never in the other one.
+  return <LandingPage initialLocale={await pageLocale(searchParams)} />;
 }

@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { StatusMark } from "@/components/ui/status-chip";
@@ -234,11 +234,9 @@ const StartupProductPage = ({
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
+                {/* Visible in the server's HTML (no fade-in): the subtitle is the page's
+                    largest paint, which must not wait for the script (10 Oct 2026). */}
+                <m.div initial={false}>
                   <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-accent/15 backdrop-blur-sm rounded-full border border-accent/30">
                     <span className="text-xs uppercase tracking-wider text-accent font-medium font-body">
                       {t("hero.badge")}
@@ -255,10 +253,10 @@ const StartupProductPage = ({
                   <p className="text-lg text-white/90 leading-relaxed font-body mb-8 max-w-lg">
                     {t("hero.subtitle")}
                   </p>
-                </motion.div>
+                </m.div>
               </div>
 
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 30, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.3 }}
@@ -367,7 +365,7 @@ const StartupProductPage = ({
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           </div>
         </div>
@@ -399,7 +397,7 @@ const StartupProductPage = ({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {valueProps.map((vp, i) => (
-              <motion.div
+              <m.div
                 key={vp.title}
                 custom={i}
                 initial="hidden"
@@ -410,7 +408,7 @@ const StartupProductPage = ({
               >
                 <h3 className="text-lg font-display mb-3">{vp.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed font-body">{vp.desc}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -431,7 +429,7 @@ const StartupProductPage = ({
           </div>
           <div className="max-w-3xl mx-auto">
             {workflowSteps.map((step, i) => (
-              <motion.div
+              <m.div
                 key={step.title}
                 custom={i}
                 initial="hidden"
@@ -449,7 +447,7 @@ const StartupProductPage = ({
                   <h3 className="text-lg font-display mb-2">{step.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed font-body">{step.desc}</p>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -467,7 +465,7 @@ const StartupProductPage = ({
           </div>
           <div className="space-y-8 max-w-5xl mx-auto">
             {features.map((feature, index) => (
-              <motion.div
+              <m.div
                 key={feature.id}
                 custom={index}
                 initial="hidden"
@@ -496,7 +494,7 @@ const StartupProductPage = ({
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -508,7 +506,7 @@ const StartupProductPage = ({
           (English); the Spanish page keeps only the button back to the top. */}
       <section className={`${has("cta.text") ? "py-20 md:py-28" : "py-12 md:py-16"} border-t border-border bg-secondary/10`}>
         <div className="container px-6 text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -542,7 +540,7 @@ const StartupProductPage = ({
                 {t("cta.docs")}
               </a>
             )}
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

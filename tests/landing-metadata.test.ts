@@ -17,17 +17,22 @@ import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 
 let cookieHeader: string | null = null;
+let acceptLanguage: string | null = null;
 
 vi.mock("next/headers", () => ({
-  headers: async () => new Headers(cookieHeader ? { cookie: cookieHeader } : {}),
+  headers: async () =>
+    new Headers({
+      ...(cookieHeader ? { cookie: cookieHeader } : {}),
+      ...(acceptLanguage ? { "accept-language": acceptLanguage } : {}),
+    }),
 }));
 vi.mock("next-auth", () => ({ getServerSession: async () => null }));
 vi.mock("@/lib/auth", () => ({ authOptions: {} }));
 vi.mock("next/navigation", () => ({ redirect: () => {}, useRouter: () => ({ refresh: () => {} }) }));
 vi.mock("@/landing/LandingPage", () => ({ default: () => null }));
 
-const { generateMetadata } = await import("@/app/page");
-const { LANDING_SEO, landingLocale } = await import("@/config/seo");
+const { generateMetadata, default: HomePage } = await import("@/app/page");
+const { LANDING_SEO, landingLocale, prefersSpanish } = await import("@/config/seo");
 
 const ROOT = path.resolve(__dirname, "..");
 const meta = (search: Record<string, string | string[]> = {}) => generateMetadata({ searchParams: Promise.resolve(search) });
@@ -35,6 +40,7 @@ const ES_TITLE = "DPO CENTRAL: gestión de la privacidad y la protección de dat
 
 beforeEach(() => {
   cookieHeader = null;
+  acceptLanguage = null;
 });
 
 describe("landing metadata", () => {
@@ -79,5 +85,40 @@ describe("landing metadata", () => {
     const landing = readFileSync(path.join(ROOT, "src/landing/LandingPage.tsx"), "utf8");
     expect(landing).toMatch(/document\.title = LANDING_SEO\[locale\]\.title;/);
     expect(landing).toMatch(/searchParams\.delete\("lang"\)/);
+  });
+
+  // Owner, 10 Oct 2026: a Spanish browser with no cookie and no ?lang= saw English.
+  it("serves Spanish to a Spanish browser with no cookie, from the first paint", async () => {
+    acceptLanguage = "es-ES,es;q=0.9,en;q=0.8";
+    expect((await meta()).title).toEqual({ absolute: ES_TITLE });
+    const el = (await HomePage({ searchParams: Promise.resolve({}) })) as { props: { initialLocale: string } };
+    expect(el.props.initialLocale).toBe("es");
+    // The cookie and ?lang= still come first.
+    cookieHeader = "locale=en";
+    expect((await meta()).title).toEqual({ absolute: LANDING_SEO.en.title });
+    cookieHeader = null;
+    expect((await meta({ lang: "en" })).title).toEqual({ absolute: LANDING_SEO.en.title });
+    acceptLanguage = "en-US,en;q=0.9,es;q=0.5";
+    expect((await meta()).title).toEqual({ absolute: LANDING_SEO.en.title });
+  });
+
+  it("reads Accept-Language by quality, Spanish only when it comes before English", () => {
+    expect(prefersSpanish("es")).toBe(true);
+    expect(prefersSpanish("es-419")).toBe(true);
+    expect(prefersSpanish("fr-FR,es;q=0.8,en;q=0.5")).toBe(true);
+    expect(prefersSpanish("en;q=0.4,es;q=0.6")).toBe(true);
+    expect(prefersSpanish("en-GB,es;q=0.9")).toBe(false);
+    expect(prefersSpanish("fr-FR")).toBe(false);
+    expect(prefersSpanish("es;q=0")).toBe(false);
+    expect(prefersSpanish(null)).toBe(false);
+  });
+
+  it("renders the landing in the server's language and never switches it on load", () => {
+    const landing = readFileSync(path.join(ROOT, "src/landing/LandingPage.tsx"), "utf8");
+    expect(landing).toMatch(/useState<"en" \| "es">\(initialLocale\)/);
+    expect(landing).not.toMatch(/detectLocale|readLocaleCookie/);
+    const hero = readFileSync(path.join(ROOT, "src/landing/components/StartupProductPage.tsx"), "utf8");
+    // The hero block (badge, title, subtitle) is visible in the server's HTML.
+    expect(hero).toContain("<m.div initial={false}>");
   });
 });

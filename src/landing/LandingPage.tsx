@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { LazyMotion, domAnimation } from "framer-motion";
 import { Database, UserCheck, AlertTriangle, Package } from "lucide-react";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
@@ -13,43 +14,37 @@ import en from "./i18n/en/dpo-startups.json";
 import es from "./i18n/es/dpo-startups.json";
 import authEn from "./i18n/en/startups-auth.json";
 import authEs from "./i18n/es/startups-auth.json";
-import { cleanUpLocaleCookies, readLocaleCookie, writeLocaleCookie } from "@/i18n/locale-cookie";
+import { cleanUpLocaleCookies, writeLocaleCookie } from "@/i18n/locale-cookie";
 import { LANDING_SEO } from "@/config/seo";
 
-function detectLocale(): "en" | "es" {
-  if (typeof window === "undefined") return "en";
-  const params = new URLSearchParams(window.location.search);
-  const lang = params.get("lang");
-  if (lang === "es" || lang === "en") return lang;
-  return readLocaleCookie() ?? "en";
-}
-
-export default function LandingPage() {
-  const [locale, setLocale] = useState<"en" | "es">("en");
-  // Until the browser has read `?lang=` and the cookie, the server's title stands.
-  const [detectedOnce, setDetectedOnce] = useState(false);
+/**
+ * The landing, in the language the server chose (`?lang=`, the cookie, then
+ * Accept-Language: src/config/seo.ts). Nothing switches after load, so the first
+ * paint is the final text (owner, 10 Oct 2026); only the toggle changes it.
+ */
+export default function LandingPage({ initialLocale = "en" }: { initialLocale?: "en" | "es" }) {
+  const [locale, setLocale] = useState<"en" | "es">(initialLocale);
+  // The server's title stands until the visitor toggles.
+  const [toggled, setToggled] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     cleanUpLocaleCookies();
-    const detected = detectLocale();
-    setLocale(detected);
-    setDetectedOnce(true);
-    // `?lang=` can differ from the cookie the server rendered with.
-    document.documentElement.lang = detected;
-  }, []);
+    // The root layout's <html lang> follows the cookie and Accept-Language, not `?lang=`.
+    document.documentElement.lang = initialLocale;
+  }, [initialLocale]);
 
-  // The tab title follows the text shown (the server picks the same title
-  // from `?lang=` and the cookie, src/app/page.tsx), also after a toggle.
+  // The tab title follows the text shown after a toggle.
   useEffect(() => {
-    if (detectedOnce) document.title = LANDING_SEO[locale].title;
-  }, [locale, detectedOnce]);
+    if (toggled) document.title = LANDING_SEO[locale].title;
+  }, [locale, toggled]);
 
   const toggleLocale = useCallback(() => {
     const next = locale === "en" ? "es" : "en";
     writeLocaleCookie(next);
     setLocale(next);
+    setToggled(true);
     // The page text and the tab title switch at once; <html lang> now, and
     // the rest of the server metadata with a refresh of the route.
     document.documentElement.lang = next;
@@ -115,8 +110,10 @@ export default function LandingPage() {
 
   const socialProofs = [t("social.s1"), t("social.s2"), t("social.s3")];
 
+  // The lighter framer-motion build (owner's performance review, 10 Oct 2026): `m`
+  // components with the DOM animation features only; `strict` fails on a full `motion`.
   return (
-    <>
+    <LazyMotion features={domAnimation} strict>
       <StartupsHeader
         t={t}
         locale={locale}
@@ -136,6 +133,6 @@ export default function LandingPage() {
         middle={<LandingSections t={t} locale={locale} />}
       />
       <StartupsFooter t={t} locale={locale} />
-    </>
+    </LazyMotion>
   );
 }
