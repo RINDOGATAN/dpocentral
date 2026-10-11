@@ -255,9 +255,11 @@ describe("copy rules", () => {
     for (const [w, i] of Object.entries(WAY_INDEX.es)) expect(COPY.es.names[w as keyof typeof COPY.es.names]).toBe(es[`es.ways.w${i! + 1}.title`]);
     // The box: installed on the organization's equipment, data stays on its premises.
     expect(es["es.ways.w3.desc"]).toMatch(/equipo de tu organización[\s\S]*no salen de tus instalaciones/);
-    expect(COPY.es.summaries.deploy).toMatch(/lo instalamos en un equipo de tu organización/);
+    // The guide's answer (owner, 10 Oct 2026): installed on your own servers with our
+    // assistance; no six-week engagement, training or price on the Spanish site.
+    expect(COPY.es.summaries.deploy).toMatch(/^La suite instalada en tus propios servidores, con nuestra asistencia presencial o remota\./);
     expect(COPY.es.summaries.deploy).toMatch(/se quedan en tus instalaciones/);
-    expect(COPY.es.summaries.deploy).not.toMatch(/servidores/);
+    expect(JSON.stringify(COPY.es)).not.toMatch(/[Ss]eis semanas|formamos|manual de operación|15\.000/);
     expect(es["es.ways.label"]).toBe("Garantías y alojamiento");
   });
 
