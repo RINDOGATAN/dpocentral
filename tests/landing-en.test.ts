@@ -63,9 +63,12 @@ describe("English copy, after the owner's review", () => {
   });
 
   // The hosting intro is the owner's own line since 10 Oct 2026; no comparisons anywhere.
+  // Owner, 11 Oct 2026: the hero subtitle says the program can be migrated "to an
+  // enterprise platform" (a way out, not a comparison); only that phrase is allowed.
   it("positions DPO Central calmly and without comparisons", () => {
     for (const [k, v] of shown) {
-      expect(v, k).not.toMatch(/\benterprise\b|replace|instead of|unlike|cheaper|competitor/i);
+      const text = k === "hero.subtitle" ? v.replace("or to an enterprise platform at any time", "") : v;
+      expect(text, k).not.toMatch(/\benterprise\b|replace|instead of|unlike|cheaper|competitor/i);
     }
   });
 
