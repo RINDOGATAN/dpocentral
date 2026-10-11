@@ -13,13 +13,23 @@ import {
 } from "@/lib/hosted";
 import {
   PILOT_DAYS,
+  PILOT_DAYS_BEFORE_SHORTENING,
   PILOT_DPIA_LIMIT,
   PILOT_LIMITS,
   RESOURCE_LABELS,
+  PILOT_WINDOW_SHORTENED_AT,
   type PilotResource,
 } from "./limits";
 
-export { PILOT_DAYS, PILOT_DPIA_LIMIT, PILOT_LIMITS, RESOURCE_LABELS, type PilotResource };
+export {
+  PILOT_DAYS,
+  PILOT_DAYS_BEFORE_SHORTENING,
+  PILOT_DPIA_LIMIT,
+  PILOT_LIMITS,
+  PILOT_WINDOW_SHORTENED_AT,
+  RESOURCE_LABELS,
+  type PilotResource,
+};
 
 /**
  * Hosted pilot caps.
@@ -196,8 +206,8 @@ export function pilotMessage(
   const exp = exportUrl();
   if (kind === "readOnly") {
     return locale === "es"
-      ? `Esta organización piloto es de solo lectura: el piloto de ${PILOT_DAYS} días ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o alojar tu propia instancia (${run}).`
-      : `This pilot organization is read-only: the ${PILOT_DAYS}-day pilot has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
+      ? `Esta organización piloto es de solo lectura: el periodo de edición del piloto ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o alojar tu propia instancia (${run}).`
+      : `This pilot organization is read-only: the pilot's editing window has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
   }
   if (kind === "oneOrganization") {
     return locale === "es"
@@ -377,7 +387,15 @@ export function pilotStart(org: PilotClockOrg): Date | null {
 
 export function pilotEndsAt(org: PilotClockOrg): Date | null {
   const start = pilotStart(org);
-  return start ? new Date(start.getTime() + PILOT_DAYS * DAY_MS) : null;
+  if (!start) return null;
+  const startMs = start.getTime();
+  const shortenedAt = PILOT_WINDOW_SHORTENED_AT.getTime();
+  if (startMs >= shortenedAt) return new Date(startMs + PILOT_DAYS * DAY_MS);
+  // Already in its pilot when the window was shortened: the earlier of its
+  // original ninety-day end and PILOT_DAYS from the change.
+  return new Date(
+    Math.min(startMs + PILOT_DAYS_BEFORE_SHORTENING * DAY_MS, shortenedAt + PILOT_DAYS * DAY_MS)
+  );
 }
 
 /** Whole days of editing left (0 once read-only; the full window before it starts). */

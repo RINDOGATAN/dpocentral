@@ -49,7 +49,7 @@ clears this host only. Turn it on once each sibling serves
 returns: a hop to a product that does not serve it would end the sign-out on
 that product's error page. The rules are in `src/lib/suite-logout.ts`.
 
-**Pilot limits.** One organisation per account, 90 days of editing from the
+**Pilot limits.** One organisation per account, 15 days of editing from the
 organisation's first sign-in, then read-only with export, and a records
 ceiling per organisation (`src/server/services/pilot/caps.ts`). These limits
 exist because the hosted service is a shared demonstration, not a place for

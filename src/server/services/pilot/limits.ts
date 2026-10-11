@@ -10,7 +10,25 @@
 
 type Locale = "en" | "es";
 
-export const PILOT_DAYS = 90;
+/**
+ * The editing window, in days. Fifteen since the owner's decision of 11 Oct
+ * 2026 (it was ninety); organisations already in their pilot then keep the
+ * transition rule in pilotEndsAt.
+ */
+export const PILOT_DAYS = 15;
+
+/** The editing window before 11 Oct 2026, kept only for the transition rule. */
+export const PILOT_DAYS_BEFORE_SHORTENING = 90;
+
+/**
+ * When the shorter window took effect: the end of its release day (11 Oct
+ * 2026, UTC), so that an organisation already in its pilot has at least
+ * PILOT_DAYS full days from the release. An organisation whose window started
+ * before this instant keeps whichever ends EARLIER of its original ninety-day
+ * end and PILOT_DAYS from this instant: nobody becomes read-only at the
+ * release. Computed, not stored: no data migration.
+ */
+export const PILOT_WINDOW_SHORTENED_AT = new Date("2026-10-12T00:00:00Z");
 
 export type PilotResource =
   | "dataAssets"

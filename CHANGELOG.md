@@ -6,6 +6,15 @@ All notable changes to DPO Central are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **The hosted pilot's editing window is 15 days, not 90** (owner, 11 Oct 2026). One constant,
+  `PILOT_DAYS` in `src/server/services/pilot/caps.ts`; the documentation, Settings card and
+  sign-in screen read it. Transition, computed and not stored (no migration): an organisation
+  whose window started before the end of 11 Oct 2026 (UTC) keeps whichever ends earlier of its
+  original 90-day end and 15 days from then, so nobody becomes read-only at the release. The
+  read-only message no longer names a number of days.
+
 ### Added
 
 - **Take your programme with you** ("Llévate tu programa"), in Settings:
