@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { StatusNote } from "@/components/ui/status-note";
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -180,7 +181,10 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
 
   const extendDeadline = trpc.dsar.extendDeadline.useMutation({
     onSuccess: (data) => {
-      toast.success(tp("extend.done", { newDate: formatDateIn(new Date(data.dueDate), locale) }));
+      const newDate = formatDateIn(new Date(data.dueDate), locale);
+      // The requester was told of the new date by e-mail when the mail
+      // service accepted it; the reasons are still the organisation's to send.
+      toast.success(tp(data.requesterNotified ? "extend.doneNotified" : "extend.done", { newDate }));
       utils.dsar.getById.invalidate();
       utils.dsar.list.invalidate();
       setIsExtendOpen(false);
@@ -425,6 +429,16 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </CardContent>
         </Card>
       </div>
+
+      {/* LOPDGDD art. 13.3: an access request repeated within six months */}
+      {request.repeatAccess && (
+        <StatusNote tone="warning" title={tp("repeatAccess.title")} data-testid="dsar-repeat-access">
+          {tp("repeatAccess.body", {
+            count: request.repeatAccess.count,
+            date: formatDateIn(new Date(request.repeatAccess.lastReceivedAt), locale),
+          })}
+        </StatusNote>
+      )}
 
       {/* Requester Info */}
       <Card>

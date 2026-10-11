@@ -7,6 +7,7 @@ import { logger } from "@/lib/logger";
 import { safeEqual } from "@/lib/safe-equal";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
 import { deleteExpiredCounters } from "@/lib/shared-rate-limit";
+import { effectiveRetentionDays } from "@/server/services/dsar/module";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,8 +15,10 @@ export const dynamic = "force-dynamic";
 // ---------------------------------------------------------------------------
 // Vercel Cron: DSAR PII auto-redaction
 //
-// Redacts personal data from completed DSARs after their retention period.
-// Default 90 days post-completion; configurable per-org via DSARIntakeForm.
+// Redacts personal data from closed DSARs after their retention period.
+// Hosted service: fixed at 30 days after closing. Self-hosted kit: 90 days by
+// default, configurable per organisation (DSARIntakeForm.retentionDays,
+// 1 to 3650). See effectiveRetentionDays in src/server/services/dsar/module.ts.
 //
 // Scheduled in vercel.json at "0 3 * * *" (daily 03:00 UTC). The full
 // notifications cron (email/in-app/slack) was removed; only DSAR redaction
@@ -91,12 +94,12 @@ async function autoRedactCompletedDsars(
   now: Date,
   summary: { dsarRedacted: number },
 ) {
-  // Get org retention setting (from intake form, default 90 days)
+  // Retention: fixed on the hosted service, the form's setting on the kit.
   const intakeForm = await prisma.dSARIntakeForm.findFirst({
     where: { organizationId },
     select: { retentionDays: true },
   });
-  const retentionDays = intakeForm?.retentionDays ?? 90;
+  const retentionDays = effectiveRetentionDays(intakeForm?.retentionDays);
 
   const cutoff = new Date(now.getTime() - retentionDays * 24 * 60 * 60 * 1000);
 
@@ -105,7 +108,10 @@ async function autoRedactCompletedDsars(
     where: {
       organizationId,
       status: { in: ["COMPLETED", "CANCELLED", "REJECTED"] },
-      completedAt: { lt: cutoff },
+      // Closed before the cut-off. A request closed before the closing date
+      // was recorded for every closing status has none: its last change
+      // stands in for it.
+      OR: [{ completedAt: { lt: cutoff } }, { completedAt: null, updatedAt: { lt: cutoff } }],
       redactedAt: null,
     },
     select: { id: true },

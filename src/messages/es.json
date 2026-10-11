@@ -1386,7 +1386,8 @@
         "unavailable": {
           "no_extension": "La norma de tu jurisdicción principal no permite prórrogas.",
           "already_extended": "Este plazo ya se ha prorrogado."
-        }
+        },
+        "doneNotified": "Plazo ampliado hasta el {newDate}. Se ha comunicado la nueva fecha a la persona por correo; envíale los motivos."
       },
       "requester": {
         "title": "Datos del solicitante",
@@ -1461,6 +1462,10 @@
         "messageLabel": "Mensaje *",
         "messagePlaceholder": "Escribe tu mensaje...",
         "submit": "Enviar"
+      },
+      "repeatAccess": {
+        "title": "Solicitud de acceso repetida",
+        "body": "Esta dirección de correo hizo {count, plural, one {otra solicitud de acceso} other {otras # solicitudes de acceso}} en los seis meses anteriores a esta (la última, el {date}). Según el artículo 13.3 de la LOPDGDD, el ejercicio del derecho de acceso más de una vez en seis meses puede considerarse repetitivo, salvo que exista causa legítima. La decisión es tuya."
       }
     },
     "aiSystemDetail": {
@@ -2876,7 +2881,11 @@
       "EXPORT_TO_AI_SENTINEL": "Exportado a AI Sentinel",
       "REQUEST_CREATED": "Solicitud creada",
       "REQUEST_SUBMITTED_PUBLIC": "Solicitud enviada desde el portal",
-      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal"
+      "REQUEST_WITHDRAWN_PUBLIC": "Solicitud retirada desde el portal",
+      "SUPPORT": "Consultada por soporte",
+      "INACTIVITY_NOTICE_SENT": "Aviso de eliminación enviado a propietarios y administradores",
+      "DSAR_PUBLIC_SUBMISSION": "Solicitud recibida por el formulario público",
+      "DSAR_DELETED_INACTIVE": "Eliminada tras 30 días sin actividad"
     },
     "auditEntity": {
       "Organization": "Organización",
@@ -3092,7 +3101,10 @@
       "privacyNoticeUrl": "URL del aviso de privacidad",
       "privacyNoticeUrlHint": "URL pública del aviso de privacidad de tu organización. Se muestra al solicitante en el formulario.",
       "retentionDays": "Plazo de conservación (días)",
-      "retentionDaysHint": "Días que transcurren desde que se completa una solicitud hasta que se ocultan automáticamente los datos personales. Valor predeterminado: 90."
+      "retentionDaysHint": "Días que transcurren desde que se completa una solicitud hasta que se ocultan automáticamente los datos personales. Valor predeterminado: 90.",
+      "privacyContactEmail": "Correo de contacto de privacidad",
+      "privacyContactEmailHint": "Se muestra en el formulario público cuando no admite solicitudes, para que la gente pueda seguir contactándote.",
+      "retentionHostedHint": "En el servicio alojado, los datos personales de una solicitud cerrada se eliminan 30 días después del cierre."
     },
     "cssCard": {
       "title": "Estilo personalizado",
@@ -3210,7 +3222,12 @@
         "defaultThankYou": "Gracias por tu solicitud. La tramitaremos dentro del plazo que marca la ley.",
         "noEmailNote": "Guarda esta referencia: la necesitarás para consultar el estado de tu solicitud. Esta vez no se ha enviado ningún correo de confirmación."
       },
-      "languageSwitcher": "Idioma"
+      "languageSwitcher": "Idioma",
+      "closed": {
+        "title": "Este formulario no admite solicitudes en este momento",
+        "withContact": "Escribe a {orgName} a <mail>{email}</mail>.",
+        "withoutContact": "Ponte en contacto directamente con {orgName}."
+      }
     },
     "status": {
       "loadingError": {
@@ -3267,6 +3284,10 @@
         "description": "La organización ha subido tu respuesta. Puedes descargarla desde el siguiente enlace.",
         "download": "Descargar respuesta",
         "expiresOn": "Disponible hasta el {date}"
+      },
+      "unavailable": {
+        "title": "Esta página no está disponible",
+        "description": "Ponte en contacto directamente con la organización."
       }
     },
     "email": {
@@ -3285,6 +3306,14 @@
       "referenceLabel": "Número de referencia",
       "ctaText": "Ver estado de la solicitud",
       "footer": "Si tienes preguntas, responde a este correo o utiliza el enlace anterior para consultar el estado de tu solicitud."
+    },
+    "extensionEmail": {
+      "subject": "{orgName}: nueva fecha para tu solicitud",
+      "greeting": "Hola, {name}:",
+      "body": "{orgName} ha ampliado el plazo para responder a tu solicitud. La nueva fecha es el {newDate}.",
+      "reasons": "{orgName} te enviará los motivos de la ampliación.",
+      "referenceLabel": "Número de referencia",
+      "statusLabel": "Consulta el estado de tu solicitud"
     }
   },
   "assessments": {
@@ -5232,10 +5261,6 @@
           "autoAck": {
             "label": "Acuse de recibo automático",
             "desc": "Envía un correo de confirmación al recibir la solicitud"
-          },
-          "identity": {
-            "label": "Verificación de identidad",
-            "desc": "Exige subir un documento de identidad antes de tramitar la solicitud"
           },
           "types": {
             "label": "Tipos de solicitud",
@@ -9553,7 +9578,9 @@
       "dsarIntakeNotAccepted": "No hemos podido aceptar esta solicitud. Vuelve a cargar la página y envíala de nuevo.",
       "dsarIntakeTooFast": "Tómate un momento para revisar tu solicitud y vuelve a enviarla.",
       "dsarIntakeTooMany": "Hoy se han enviado demasiadas solicitudes desde aquí. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
-      "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización."
+      "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
+      "dsarModuleInactiveCreate": "El módulo de solicitudes de derechos no está activo en esta organización. Está disponible como complemento; las solicitudes que ya tienes siguen disponibles.",
+      "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización."
     },
     "pattern": {
       "freeSlotsPortfolio": "Puedes importar hasta 5 proveedores gratis desde tu cartera de Vendor.Watch. {remaining, plural, one {Te queda # plaza gratuita} other {Te quedan # plazas gratuitas}}. Suscríbete al complemento Catálogo de proveedores para importar más.",
@@ -9589,7 +9616,15 @@
   "dsarModule": {
     "off": "Las solicitudes de derechos no están incluidas en este plan.",
     "exportBody": "Puedes seguir descargando los registros de solicitudes de derechos que tu organización ya tiene.",
-    "exportLink": "Descargar los registros (JSON)"
+    "exportLink": "Descargar los registros (JSON)",
+    "addOnLine": "Disponible como complemento: 49 € al mes",
+    "addOnTitle": "Las solicitudes de derechos son un complemento de tu plan",
+    "addOnBody": "Disponible como complemento: 49 € al mes. Las solicitudes que ya tienes siguen disponibles aquí.",
+    "addOnLink": "Consulta los planes",
+    "pilotUsage": "Piloto: {used} de {limit} solicitudes por el formulario público.",
+    "monthUsage": "Este mes: {used} de {limit} solicitudes por el formulario público.",
+    "limitReached": "El formulario público no admite solicitudes ahora; en su lugar muestra tu correo de contacto de privacidad.",
+    "staffNote": "Las solicitudes que registras tú no cuentan."
   },
   "drafts": {
     "badge": "Por confirmar",
@@ -9951,5 +9986,17 @@
       "RESPONSE_LINK_SET": "Enlace de respuesta añadido",
       "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado"
     }
+  },
+  "dsarGeneratedTask": {
+    "title": "Buscar y extraer los datos de {asset}",
+    "description": "Identificar y extraer los datos personales de {requester} que hay en {asset}."
+  },
+  "dsarInactivityEmail": {
+    "subject": "{orgName}: una solicitud de derechos se eliminará el {date}",
+    "heading": "Una solicitud de derechos lleva {days} días sin actividad",
+    "body": "La solicitud {reference} de {orgName} no tiene actividad desde el {lastActivity}. En el servicio alojado, una solicitud abierta sin actividad durante 30 días se elimina. Si nadie trabaja en ella, se eliminará el {date}.",
+    "action": "Cualquier cambio en la solicitud, en una tarea o en un mensaje la conserva.",
+    "ctaText": "Abrir la solicitud",
+    "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}."
   }
 }

@@ -103,6 +103,11 @@ export function GuidedLayout({
   // The rights-requests step is left out for a member who may not read
   // requests (src/lib/dsar-access.ts).
   const { canHandle: canHandleDsars } = useDsarAccess();
+  const tm = useTranslations("dsarModule");
+  const { data: dsarAccess } = trpc.dsar.moduleAccess.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && canHandleDsars === true && isDsarModuleEnabled(), refetchOnWindowFocus: false },
+  );
   // The audit trail's library entry, for the roles that read it
   // (src/lib/audit-access.ts); not shown while the role is still loading.
   const { canRead: canReadAudit } = useAuditAccess();
@@ -142,6 +147,9 @@ export function GuidedLayout({
     ? recordCountsText(td, "dataInventory", overview.recordCounts.dataInventory, { onlyIfDrafts: true })
     : null;
   if (inventoryNote) stepNotes.dataInventory = inventoryNote;
+  // Hosted paid plan without the rights-request add-on: the step stays in the
+  // menu with its price line (src/server/services/dsar/module.ts).
+  if (dsarAccess?.gate === "inactive") stepNotes.dsar = tm("addOnLine");
   const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which

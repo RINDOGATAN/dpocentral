@@ -21,8 +21,9 @@ const mocks = vi.hoisted(() => {
     counters,
     prisma: {
       organization: { findUnique: vi.fn() },
-      dSARRequest: { create: vi.fn() },
+      dSARRequest: { create: vi.fn(), count: vi.fn(async () => 0) },
       dSARAuditLog: { create: vi.fn() },
+      auditLog: { create: vi.fn(async () => ({})), count: vi.fn(async () => 0) },
       $queryRaw: vi.fn(async (_sql: TemplateStringsArray, key: string, start: Date) => {
         const k = `${key}|${start.toISOString()}`;
         const n = (counters.get(k) ?? 0) + 1;

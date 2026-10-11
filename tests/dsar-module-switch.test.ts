@@ -92,6 +92,8 @@ vi.mock("@/server/services/dsar/deadlineReminders", () => ({
 vi.mock("@/lib/session-cookie", () => ({ getSessionToken: async () => mocks.session }));
 vi.mock("next-intl/middleware", () => ({ default: () => () => NextResponse.next() }));
 vi.mock("@/lib/organization-context", () => ({ useOrganization: () => mocks.org }));
+// The hosted add-on line reads its own query; rendered alone here, it shows nothing.
+vi.mock("@/components/privacy/dsar-module-access-note", () => ({ DsarModuleAccessNote: () => null }));
 
 import { isDsarModuleEnabled, getFeatureFlags, DSAR_MODULE_OFF_MESSAGE } from "@/config/features";
 import { dsarRouter } from "@/server/routers/privacy/dsar";

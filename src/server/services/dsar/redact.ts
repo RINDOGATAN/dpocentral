@@ -63,7 +63,8 @@ export const REDACTED_TASK_FIELDS = {
  * stays.
  */
 const AUDIT_FREE_TEXT_KEYS = ["notes", "reason"] as const;
-const AUDIT_ACTIONS_WITH_FREE_TEXT = ["STATUS_CHANGED", "DEADLINE_EXTENDED"];
+// SUPPORT: the reason a support read gives (scripts/dsar-support-read.ts).
+const AUDIT_ACTIONS_WITH_FREE_TEXT = ["STATUS_CHANGED", "DEADLINE_EXTENDED", "SUPPORT"];
 
 type RedactDb = {
   dSARRequest: { update: (args: Prisma.DSARRequestUpdateArgs) => Promise<unknown> };

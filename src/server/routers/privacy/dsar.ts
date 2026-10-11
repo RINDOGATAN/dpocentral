@@ -18,6 +18,18 @@ import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
 import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
 import {
+  acceptsPublicRequest,
+  DSAR_MODULE_MESSAGES,
+  DSAR_PUBLIC_SUBMISSION,
+  dsarModuleGate,
+  effectiveRetentionDays,
+  getDsarModuleAccess,
+} from "@/server/services/dsar/module";
+import { sendDSARExtensionEmail } from "@/server/services/dsar/sendExtensionEmail";
+import { countRecentAccessRequests } from "@/server/services/dsar/repeat-access";
+import { generatedTaskText } from "@/server/services/dsar/generated-tasks";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import {
   assertHumanSubmission,
   assertWithinDailyLimits,
   issueFormToken,
@@ -185,7 +197,12 @@ export const dsarRouter = createTRPCRouter({
       });
       const extension = dsarExtensionState(request, orgDsarRule(jurisdictions, request.receivedAt));
 
-      return { ...request, daysUntilDue, extension };
+      // Spain, LOPDGDD art. 13.3: an access request made again within six
+      // months may be treated as repetitive. Staff are told; nothing is
+      // refused on their behalf.
+      const repeatAccess = await countRecentAccessRequests(ctx.prisma, request);
+
+      return { ...request, daysUntilDue, extension, repeatAccess };
     }),
 
   // Create a DSAR request (internal)
@@ -204,6 +221,12 @@ export const dsarRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Hosted paid plan without the add-on: no new request; the ones held
+      // stay readable and workable (src/server/services/dsar/module.ts).
+      // Requests entered here never count toward the public-form limits.
+      if (dsarModuleGate(ctx.organization) === "inactive") {
+        throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.inactiveCreate });
+      }
       // The primary jurisdiction's period, else the strictest of the
       // organisation's; the GDPR month when it has none (orgDsarRule).
       const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
@@ -282,7 +305,13 @@ export const dsarRouter = createTRPCRouter({
       // Set timestamps based on status
       if (input.status === DSARStatus.IDENTITY_VERIFIED) {
         updateData.verifiedAt = new Date();
-      } else if (input.status === DSARStatus.COMPLETED) {
+      } else if (
+        input.status === DSARStatus.COMPLETED ||
+        input.status === DSARStatus.REJECTED ||
+        input.status === DSARStatus.CANCELLED
+      ) {
+        // Closing: the retention period counts from here, whichever way the
+        // request was closed (src/app/api/cron/dsar-redaction).
         updateData.completedAt = new Date();
       }
 
@@ -366,6 +395,21 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
+      // The requester is told of the new date by e-mail at once, in their
+      // language; the reasons follow from the organisation. The reason typed
+      // here is never put in the e-mail.
+      let requesterNotified = false;
+      if (request.requesterEmail && !request.redactedAt) {
+        requesterNotified = await sendDSARExtensionEmail({
+          to: request.requesterEmail,
+          requesterName: request.requesterName,
+          organizationName: ctx.organization.name,
+          publicId: request.publicId,
+          newDueDate,
+          locale: (request.metadata as { locale?: string } | null)?.locale,
+        });
+      }
+
       await ctx.prisma.dSARAuditLog.create({
         data: {
           dsarRequestId: input.id,
@@ -377,11 +421,12 @@ export const dsarRouter = createTRPCRouter({
             extensionDays: input.extensionDays,
             statutoryExtension: input.extensionDays === undefined,
             reason: input.reason,
+            requesterNotified,
           },
         },
       });
 
-      return updated;
+      return { ...updated, requesterNotified };
     }),
 
   // ============================================================
@@ -520,13 +565,18 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      // Create a task for each asset
+      // Create a task for each asset, in the language of the person
+      // generating them.
+      const locale = pilotLocale(
+        localeFromCookieGetter(ctx.getCookie) ??
+          (ctx.membership as { user?: { locale: string | null } | null }).user?.locale ??
+          undefined
+      );
       const tasks = await ctx.prisma.dSARTask.createMany({
         data: assets.map((asset) => ({
           dsarRequestId: input.dsarRequestId,
           dataAssetId: asset.id,
-          title: `Search and extract data from ${asset.name}`,
-          description: `Identify and extract personal data for ${request.requesterName} from the ${asset.name} system.`,
+          ...generatedTaskText(locale, { asset: asset.name, requester: request.requesterName }),
           status: DSARTaskStatus.PENDING,
         })),
       });
@@ -651,12 +701,19 @@ export const dsarRouter = createTRPCRouter({
         customCss: z.string().optional(),
         thankYouMessage: z.string().optional(),
         privacyNoticeUrl: z.string().url().optional().or(z.literal("")),
+        // Shown on the public form when it is not taking requests.
+        privacyContactEmail: z.string().email().max(320).optional().or(z.literal("")),
+        // The kit's setting; the hosted service keeps 30 days whatever is stored.
         retentionDays: z.number().int().min(1).max(3650).optional(),
         isActive: z.boolean().default(true),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { organizationId: _orgId, ...formData } = input;
+      const { organizationId: _orgId, privacyContactEmail, ...rest } = input;
+      const formData = {
+        ...rest,
+        ...(privacyContactEmail !== undefined && { privacyContactEmail: privacyContactEmail || null }),
+      };
 
       // customCss is rendered inside a <style> block on the *public* DSAR
       // portal — sanitize at write time so markup can never be stored
@@ -686,6 +743,15 @@ export const dsarRouter = createTRPCRouter({
 
   // Deadline reminder e-mails (7, 3 and 1 day before, and once overdue):
   // on by default, switched off per organisation.
+  // The module's state for this organisation (hosted pilot, add-on active
+  // or not, the kit) and how many public-form requests are left. Read by the
+  // menu and the module's pages.
+  moduleAccess: dsarOrganizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      return getDsarModuleAccess(ctx.prisma, ctx.organization);
+    }),
+
   getReminderSettings: dsarOrganizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
@@ -730,20 +796,29 @@ export const dsarRouter = createTRPCRouter({
           dsarIntakeForms: { where: { isActive: true }, take: 1 },
         },
       });
-      if (!org || org.dsarIntakeForms.length === 0) {
+      // No organisation, no active form, or (hosted) the add-on not active:
+      // one and the same answer, so the page cannot tell them apart.
+      if (!org || org.dsarIntakeForms.length === 0 || dsarModuleGate(org) === "inactive") {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Intake form not available for this organization",
         });
       }
       const form = org.dsarIntakeForms[0]!;
+      // At the pilot's or the month's limit the form shows the organisation's
+      // privacy contact instead of taking the request.
+      const access = await getDsarModuleAccess(ctx.prisma, org);
+      const accepting = acceptsPublicRequest(access);
       return {
         orgName: org.name,
         title: form.title,
         description: form.description,
         thankYouMessage: form.thankYouMessage,
         privacyNoticeUrl: form.privacyNoticeUrl,
-        retentionDays: form.retentionDays,
+        accepting,
+        contactEmail: accepting ? null : (form.privacyContactEmail ?? null),
+        // What the requester is told: 30 days on the hosted service.
+        retentionDays: effectiveRetentionDays(form.retentionDays),
         enabledTypes: form.enabledTypes,
         customCss: form.customCss,
         // Signed with the time the form was loaded; submitPublic refuses a
@@ -790,7 +865,7 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      if (!org || org.dsarIntakeForms.length === 0) {
+      if (!org || org.dsarIntakeForms.length === 0 || dsarModuleGate(org) === "inactive") {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Organization or intake form not found",
@@ -801,6 +876,12 @@ export const dsarRouter = createTRPCRouter({
       const pilotLang = pilotLocale(input.locale);
       assertPilotWritable(org, pilotLang);
       await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
+
+      // The module's own limit (hosted): 3 public-form requests in total on
+      // the pilot, 10 per calendar month (Madrid) with the add-on.
+      if (!acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org))) {
+        throw new TRPCError({ code: "FORBIDDEN", message: DSAR_MODULE_MESSAGES.formClosed });
+      }
 
       // Shared daily limits per client address and per organisation, counted
       // in the database so every server instance sees the same total.
@@ -823,6 +904,9 @@ export const dsarRouter = createTRPCRouter({
           requestedData: input.requestedData,
           receivedAt,
           dueDate,
+          // The requester's language, for the e-mails that follow (a
+          // deadline extension, messages from the organisation).
+          ...(input.locale && { metadata: { locale: pilotLocale(input.locale) } }),
         },
       });
 
@@ -831,6 +915,19 @@ export const dsarRouter = createTRPCRouter({
           dsarRequestId: request.id,
           action: "REQUEST_SUBMITTED_PUBLIC",
           details: { type: input.type },
+        },
+      });
+
+      // The count of public-form requests (src/server/services/dsar/module.ts):
+      // an organisation entry with no personal data, which outlives the
+      // request, so deleting a request never frees a place.
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: org.id,
+          entityType: "DSARRequest",
+          entityId: request.id,
+          action: DSAR_PUBLIC_SUBMISSION,
+          metadata: { type: input.type },
         },
       });
 
@@ -870,7 +967,7 @@ export const dsarRouter = createTRPCRouter({
           dueDate: true,
           completedAt: true,
           metadata: true,
-          organization: { select: { name: true, slug: true } },
+          organization: { select: { name: true, slug: true, plan: true, dsarModuleStatus: true } },
         },
       });
 
@@ -879,6 +976,12 @@ export const dsarRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Request not found",
         });
+      }
+
+      // Hosted paid plan without the add-on: a neutral "not available" page,
+      // which names nothing about the organisation or the request.
+      if (dsarModuleGate(request.organization) === "inactive") {
+        return { available: false as const };
       }
 
       let responseUrl: string | null = null;
@@ -893,8 +996,12 @@ export const dsarRouter = createTRPCRouter({
         }
       }
 
-      const { metadata: _metadata, ...rest } = request;
-      return { ...rest, responseUrl, responseExpiresAt };
+      const {
+        metadata: _metadata,
+        organization: { name, slug },
+        ...rest
+      } = request;
+      return { available: true as const, ...rest, organization: { name, slug }, responseUrl, responseExpiresAt };
     }),
 
   // Set the public response download link (officer/dashboard side)
@@ -953,10 +1060,10 @@ export const dsarRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const request = await ctx.prisma.dSARRequest.findUnique({
         where: { publicId: input.publicId },
-        select: { id: true, status: true },
+        select: { id: true, status: true, organization: { select: { plan: true, dsarModuleStatus: true } } },
       });
 
-      if (!request) {
+      if (!request || (request.organization && dsarModuleGate(request.organization) === "inactive")) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Request not found" });
       }
 

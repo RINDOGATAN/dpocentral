@@ -100,6 +100,24 @@ export default function DSARStatusPage() {
     );
   }
 
+  // The organisation's rights-request add-on is not active (hosted service):
+  // a neutral page that names nothing about the request.
+  if (!request.available) {
+    return (
+      <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg" data-testid="dsar-status-unavailable">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+              <AlertTriangle className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <CardTitle>{t("unavailable.title")}</CardTitle>
+            <CardDescription>{t("unavailable.description")}</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   const progress = computeProgress(request.status);
   const isFailed = request.status === "REJECTED" || request.status === "CANCELLED";
   const isDone = request.status === "COMPLETED";

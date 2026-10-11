@@ -150,6 +150,19 @@ model Organization {
   planRenewsAt  DateTime?
   planNote      String?
 
+  // Hosted service: the rights-request (DSAR) add-on of an organisation on the
+  // paid plan (src/server/services/dsar/module.ts). ACTIVE opens the module
+  // (10 public-form requests per calendar month, Europe/Madrid); NONE,
+  // CANCELLED or null keep it closed to new requests while every request
+  // already held stays readable. A pilot organisation does not need it (3
+  // public-form requests in total). Set by an operator with
+  // scripts/set-dsar-module.ts, which writes an audit-trail entry. The
+  // subscription id is the payment provider's reference, never shown to the
+  // organisation. Meaningless on the kit, where the module is never limited.
+  dsarModuleStatus         DsarModuleStatus?
+  dsarModuleSubscriptionId String?
+  dsarModuleRenewsAt       DateTime?
+
   // Relations
   members              OrganizationMember[]
   jurisdictions        OrganizationJurisdiction[]
@@ -801,6 +814,9 @@ model DSARIntakeForm {
   customCss       String?    @db.Text
   thankYouMessage String?    @db.Text
   privacyNoticeUrl String?   // Link to org's privacy policy for DSAR intake
+  // Where requesters write when the form is not taking requests (the hosted
+  // service's monthly or pilot limit reached). Shown on the public form.
+  privacyContactEmail String?
   retentionDays   Int        @default(90) // Days after completion to retain PII before auto-redaction
   isActive        Boolean    @default(true)
   createdAt       DateTime   @default(now())
@@ -1889,6 +1905,13 @@ model AiGeneration {
 //   managed       b) a fully managed virtual server for the organisation
 //   own_hardware  c) the organisation's own hardware
 //   later         "decide later": treated as shared_eu
+// The hosted service's rights-request add-on (Organization.dsarModuleStatus).
+enum DsarModuleStatus {
+  NONE
+  ACTIVE
+  CANCELLED
+}
+
 // The hosted service's plan for an organisation (Organization.plan).
 enum OrganizationPlan {
   PILOT

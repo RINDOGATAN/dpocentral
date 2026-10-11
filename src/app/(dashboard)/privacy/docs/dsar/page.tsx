@@ -41,7 +41,8 @@ export default async function DocsDsarPage() {
     { id: "DSAR-2025-0038", days: 30, total: 30 },
   ];
 
-  const intakeItems = ["autoAck", "identity", "types", "custom"] as const;
+  // No "identity verification" item: the form never asks for an ID upload.
+  const intakeItems = ["autoAck", "types", "custom"] as const;
 
   return (
     <div className="space-y-10">

@@ -240,7 +240,10 @@ describe("nightly retention cron", () => {
       where: {
         organizationId: "org-a",
         status: { in: ["COMPLETED", "CANCELLED", "REJECTED"] },
-        completedAt: { lt: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) },
+        OR: [
+          { completedAt: { lt: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) } },
+          { completedAt: null, updatedAt: { lt: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) } },
+        ],
         redactedAt: null,
       },
       select: { id: true },
