@@ -62,6 +62,14 @@ describe("landing hero", () => {
     expect(en["hero.card"]).toMatch(/Ready to fly in a few minutes\.$/);
   });
 
+  // Owner, 10 Oct 2026: the Spanish subtitle follows the English positioning (firms,
+  // consultants and in-house teams), no longer "diseñada para startups".
+  it("speaks to firms, consultants and in-house teams in both subtitles", () => {
+    expect(en["hero.subtitle"]).toMatch(/law firms and consultants advising smaller clients, and for in-house teams/);
+    expect(es["hero.subtitle"]).toMatch(/despachos y consultores que asesoran a clientes más pequeños, y para equipos internos de pequeñas y medianas empresas\.$/);
+    expect(es["hero.subtitle"]).not.toMatch(/startups|[—–]|\busted\b|vosotr/i);
+  });
+
   it("says «sin papeleos.» in Spanish and keeps the English title", () => {
     expect(es["hero.title.accent"]).toBe("sin papeleos.");
     expect(en["hero.title.accent"]).toBe("without spreadsheets.");
