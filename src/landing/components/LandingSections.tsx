@@ -4,9 +4,8 @@
 /**
  * The landing's middle, the same sections in both languages: the three
  * tools and how they connect, the short videos, the five stages of the
- * program, and the ways to host it. The Spanish page then shows the
- * customer logos (only when the configured list is not empty); the English
- * page shows none. No prices.
+ * program, and the ways to host it. Both pages then show the customer
+ * logos above the footer (only when the configured list is not empty). No prices.
  *
  * Each language has its own copy under `<locale>.*` in the landing
  * dictionary, and its own list of ways: three in Spanish, five in English
@@ -87,8 +86,8 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
       { icon: HardDrive, action: "mail" },
     ],
     captionsLang: "en",
-    // No customer logos on the English page.
-    logos: false,
+    // Customer logos on the English page too (draft, 11 Oct 2026).
+    logos: true,
   },
 };
 
@@ -410,7 +409,7 @@ export default function LandingSections({ t, locale, videos = LANDING_VIDEOS[loc
       <Videos t={t} p={locale} setup={setup} videos={videos} />
       <Stages t={t} p={locale} />
       <Ways t={t} p={locale} setup={setup} />
-      {setup.logos && <CustomerLogos t={t} />}
+      {setup.logos && <CustomerLogos label={t(`${locale}.logos.label`)} />}
     </MotionConfig>
   );
 }
