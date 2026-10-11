@@ -64,6 +64,13 @@ import { StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneChip } from "@/config/status-palette";
 
 import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
+import {
+  fillModelReply,
+  modelRepliesFor,
+  modelReplyValues,
+  remainingPlaceholders,
+} from "@/lib/dsar-model-replies";
+import type { ModelReplyLanguage } from "@/config/dsar-model-replies";
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-muted-foreground text-muted-foreground",
   IDENTITY_PENDING: "border-muted-foreground text-muted-foreground",
@@ -109,6 +116,10 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
   const [isSendMessageOpen, setIsSendMessageOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({ title: "", description: "" });
   const [messageForm, setMessageForm] = useState({ subject: "", content: "" });
+  // Model replies (src/config/dsar-model-replies.ts): which one, in which language.
+  const [replyId, setReplyId] = useState("");
+  const [replyLanguage, setReplyLanguage] = useState<ModelReplyLanguage | null>(null);
+  const tm = useTranslations("pages.dsarDetail.modelReplies");
   const [responseLinkDraft, setResponseLinkDraft] = useState({ url: "", expiresAt: "" });
   const [isExtendOpen, setIsExtendOpen] = useState(false);
   const [extendReason, setExtendReason] = useState("");
@@ -173,6 +184,7 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
       utils.dsar.getById.invalidate();
       setIsSendMessageOpen(false);
       setMessageForm({ subject: "", content: "" });
+      setReplyId("");
     },
     onError: (error) => {
       toast.error(error.message || t("generic.somethingWentWrong"));
@@ -230,9 +242,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
     });
   };
 
+  // Placeholders left in the message: sending waits until they are completed.
+  const unfilled = remainingPlaceholders(messageForm.subject, messageForm.content);
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!organization?.id || !messageForm.content) return;
+    if (!organization?.id || !messageForm.content || unfilled.length > 0) return;
     addCommunication.mutate({
       organizationId: organization.id,
       dsarRequestId: id,
@@ -865,6 +880,87 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             <SheetDescription>{tp("sendMessage.subtitle", { name: request.requesterName })}</SheetDescription>
           </SheetHeader>
           <form onSubmit={handleSendMessage} className="space-y-4 mt-4">
+            {(() => {
+              // Language: the one chosen, else the requester's, else the page's.
+              const language: ModelReplyLanguage =
+                replyLanguage ??
+                (request.modelReply?.requesterLocale === "es" || request.modelReply?.requesterLocale === "en"
+                  ? request.modelReply.requesterLocale
+                  : locale === "es"
+                    ? "es"
+                    : "en");
+              const replies = modelRepliesFor(request.type);
+              const insert = (id: string, lang: ModelReplyLanguage) => {
+                const reply = replies.find((r) => r.id === id);
+                if (!reply) return;
+                const filled = fillModelReply(
+                  reply,
+                  lang,
+                  modelReplyValues(
+                    {
+                      requesterName: request.requesterName,
+                      publicId: request.publicId,
+                      receivedAt: request.receivedAt,
+                      dueDate: request.dueDate,
+                      extendedDueDate: request.extendedDueDate,
+                      originalDueDate: request.modelReply?.originalDueDate,
+                      organizationName: organization?.name ?? "",
+                      statusLink: request.modelReply?.statusLink ?? "",
+                      privacyContact: request.modelReply?.privacyContact,
+                    },
+                    lang
+                  )
+                );
+                setMessageForm({ subject: filled.subject, content: filled.body });
+              };
+              return (
+                <div className="space-y-2 rounded-lg border p-3" data-testid="dsar-model-replies">
+                  <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                    <div className="space-y-1">
+                      <Label>{tm("label")}</Label>
+                      <Select
+                        value={replyId}
+                        onValueChange={(id) => {
+                          setReplyId(id);
+                          insert(id, language);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={tm("placeholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {replies.map((r) => (
+                            <SelectItem key={r.id} value={r.id}>
+                              {tm(`names.${r.id}`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label>{tm("languageLabel")}</Label>
+                      <Select
+                        value={language}
+                        onValueChange={(value) => {
+                          const lang = value as ModelReplyLanguage;
+                          setReplyLanguage(lang);
+                          if (replyId) insert(replyId, lang);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="es">{tm("languages.es")}</SelectItem>
+                          <SelectItem value="en">{tm("languages.en")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{tm("hint")}</p>
+                </div>
+              );
+            })()}
             <div className="space-y-2">
               <Label htmlFor="message-subject">{tp("sendMessage.subjectLabel")}</Label>
               <Input
@@ -879,17 +975,25 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
               <Textarea
                 id="message-content"
                 placeholder={tp("sendMessage.messagePlaceholder")}
-                rows={5}
+                rows={replyId ? 14 : 5}
                 value={messageForm.content}
                 onChange={(e) => setMessageForm({ ...messageForm, content: e.target.value })}
                 required
               />
             </div>
+            {unfilled.length > 0 && (
+              <StatusNote tone="warning" data-testid="dsar-unfilled-placeholders">
+                {tm("remaining", { list: unfilled.join(", ") })}
+              </StatusNote>
+            )}
             <SheetFooter>
               <Button type="button" variant="outline" onClick={() => setIsSendMessageOpen(false)}>
                 {tCommon("cancel")}
               </Button>
-              <Button type="submit" disabled={addCommunication.isPending || !messageForm.content}>
+              <Button
+                type="submit"
+                disabled={addCommunication.isPending || !messageForm.content || unfilled.length > 0}
+              >
                 {addCommunication.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {tp("sendMessage.submit")}
               </Button>

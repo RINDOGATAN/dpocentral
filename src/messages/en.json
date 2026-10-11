@@ -1466,6 +1466,31 @@
       "repeatAccess": {
         "title": "Repeated access request",
         "body": "This e-mail address made {count, plural, one {another access request} other {# other access requests}} in the six months before this one (the last on {date}). Under article 13.3 of the Spanish data protection act (LOPDGDD), access exercised more than once within six months may be considered repetitive, unless there is a legitimate reason. The decision is yours."
+      },
+      "modelReplies": {
+        "label": "Model reply",
+        "placeholder": "Choose a model reply",
+        "languageLabel": "Language of the reply",
+        "languages": {
+          "en": "English",
+          "es": "Spanish"
+        },
+        "hint": "Inserting a model reply replaces the subject and the message. Names, reference, dates and links are filled in; complete the rest.",
+        "remaining": "Complete these before sending: {list}",
+        "names": {
+          "acknowledgement": "Acknowledgement of receipt",
+          "identity": "Request for information to confirm identity",
+          "extension": "Extension of the time limit",
+          "refusal": "Refusal",
+          "favourable-access": "Favourable reply: access",
+          "favourable-rectification": "Favourable reply: rectification",
+          "favourable-erasure": "Favourable reply: erasure",
+          "favourable-erasure-blocked": "Favourable reply: erasure, with some data blocked",
+          "favourable-objection": "Favourable reply: objection",
+          "favourable-restriction": "Favourable reply: restriction",
+          "favourable-portability": "Favourable reply: portability",
+          "repetitive": "Repetitive request (access within six months)"
+        }
       }
     },
     "aiSystemDetail": {
@@ -9580,7 +9605,8 @@
       "dsarIntakeTooMany": "Too many requests have been sent from here today. Please try again tomorrow, or contact the organization directly.",
       "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly.",
       "dsarModuleInactiveCreate": "The rights-request module is not active for this organization. It is available as an add-on; the requests already held stay available.",
-      "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly."
+      "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly.",
+      "dsarUnfilledPlaceholders": "Complete every placeholder in braces in the message before sending it."
     },
     "pattern": {
       "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",

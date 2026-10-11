@@ -1466,6 +1466,31 @@
       "repeatAccess": {
         "title": "Solicitud de acceso repetida",
         "body": "Esta dirección de correo hizo {count, plural, one {otra solicitud de acceso} other {otras # solicitudes de acceso}} en los seis meses anteriores a esta (la última, el {date}). Según el artículo 13.3 de la LOPDGDD, el ejercicio del derecho de acceso más de una vez en seis meses puede considerarse repetitivo, salvo que exista causa legítima. La decisión es tuya."
+      },
+      "modelReplies": {
+        "label": "Respuesta modelo",
+        "placeholder": "Elige una respuesta modelo",
+        "languageLabel": "Idioma de la respuesta",
+        "languages": {
+          "en": "Inglés",
+          "es": "Español"
+        },
+        "hint": "Al insertar una respuesta modelo se sustituyen el asunto y el mensaje. Se rellenan el nombre, la referencia, las fechas y los enlaces; completa el resto.",
+        "remaining": "Completa esto antes de enviar: {list}",
+        "names": {
+          "acknowledgement": "Acuse de recibo",
+          "identity": "Petición de información para confirmar la identidad",
+          "extension": "Ampliación del plazo",
+          "refusal": "Denegación",
+          "favourable-access": "Respuesta favorable: acceso",
+          "favourable-rectification": "Respuesta favorable: rectificación",
+          "favourable-erasure": "Respuesta favorable: supresión",
+          "favourable-erasure-blocked": "Respuesta favorable: supresión, con algunos datos bloqueados",
+          "favourable-objection": "Respuesta favorable: oposición",
+          "favourable-restriction": "Respuesta favorable: limitación",
+          "favourable-portability": "Respuesta favorable: portabilidad",
+          "repetitive": "Solicitud repetitiva (acceso en menos de seis meses)"
+        }
       }
     },
     "aiSystemDetail": {
@@ -9580,7 +9605,8 @@
       "dsarIntakeTooMany": "Hoy se han enviado demasiadas solicitudes desde aquí. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
       "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
       "dsarModuleInactiveCreate": "El módulo de solicitudes de derechos no está activo en esta organización. Está disponible como complemento; las solicitudes que ya tienes siguen disponibles.",
-      "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización."
+      "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización.",
+      "dsarUnfilledPlaceholders": "Completa todos los campos entre llaves del mensaje antes de enviarlo."
     },
     "pattern": {
       "freeSlotsPortfolio": "Puedes importar hasta 5 proveedores gratis desde tu cartera de Vendor.Watch. {remaining, plural, one {Te queda # plaza gratuita} other {Te quedan # plazas gratuitas}}. Suscríbete al complemento Catálogo de proveedores para importar más.",
