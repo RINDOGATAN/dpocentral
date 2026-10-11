@@ -99,7 +99,7 @@ describe("English sections", () => {
   const html = render(allPublished);
 
   it("render the four sections in order, with every key translated", () => {
-    const order = ["Three tools", "See how it", "Five stages", "You choose"].map((s) => html.indexOf(s));
+    const order = ["Three tools", "See how it", "Five stages", "Tailored to"].map((s) => html.indexOf(s));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(html).not.toMatch(/>en\.[a-z]/);
@@ -127,17 +127,18 @@ describe("English sections", () => {
   it("offer five ways, as on the English storefront", () => {
     const titles = [1, 2, 3, 4, 5].map((n) => en[`en.ways.w${n}.title`]);
     expect(titles).toEqual([
-      "TODO.LAW cloud",
+      "In the TODO.LAW cloud",
       "The self-install kit",
       "TODO.LAW hardware",
-      "A managed instance",
-      "Deployment and training on your servers",
+      "Managed virtual server",
+      "Your own hardware",
     ]);
     expect(en["en.ways.w6.title"]).toBeUndefined();
     for (const t of titles) expect(html).toContain(t.replace("&", "&amp;"));
     expect(en["en.ways.label"]).toBe("Guarantees and hosting");
-    expect(en["en.ways.heading.prefix"] + en["en.ways.heading.accent"]).toBe("You choose where it lives");
-    expect(en["en.ways.sub"]).toMatch(/take your program with you at any time/);
+    expect(en["en.ways.heading.prefix"] + en["en.ways.heading.accent"]).toBe("Tailored to your needs");
+    // Portability now sits on the cloud box (owner, 10 Oct 2026).
+    expect(en["en.ways.w1.desc"]).toMatch(/take your program elsewhere whenever you like with a simple export/);
   });
 
   it("ask by email for the Box, the managed instance and the deployment, and link the kit", () => {
