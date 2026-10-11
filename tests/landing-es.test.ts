@@ -69,7 +69,7 @@ describe("Spanish sections", () => {
   const esOnly = Object.entries(es).filter(([k]) => k.startsWith("es."));
 
   it("render the four sections in order, with every key translated", () => {
-    const order = ["Tres herramientas", "Descubre cómo", "Cinco etapas", "Tú eliges"].map((s) => html.indexOf(s));
+    const order = ["Tres herramientas", "Descubre cómo", "Cinco etapas", "Adaptado a"].map((s) => html.indexOf(s));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(html).not.toMatch(/>es\.[a-z]/);

@@ -336,7 +336,7 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
   es: {
     // The boxes' own titles (es.ways.w1..w3.title).
     names: {
-      cloud: "En la nube de la UE",
+      cloud: "En la nube de TODO.LAW",
       managed: "Servidor virtual gestionado",
       deploy: "Tu propio hardware",
     },
