@@ -301,7 +301,7 @@ export const CSV_TABLES: CsvTable[] = [
       c("name", "Name", "Nombre"),
       c("processingActivityId", "Activity id", "Id de la actividad"),
       c("destinationCountry", "Destination country", "País de destino"),
-      c("destinationOrg", "Receiving organisation", "Organización receptora"),
+      c("destinationOrg", "Receiving organization", "Organización receptora"),
       c("mechanism", "Mechanism", "Mecanismo", "enum", { enumName: "TransferMechanism" }),
       c("tiaCompleted", "Transfer impact assessment done", "Evaluación de impacto de la transferencia hecha", "bool"),
       c("sccExpiryDate", "Clauses expire", "Vencimiento de las cláusulas", "date"),

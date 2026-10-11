@@ -202,19 +202,19 @@
       "generating": "Drafting…",
       "insert": "Insert draft",
       "discard": "Discard",
-      "provenance": "AI-generated with {model} — review before use",
-      "inserted": "Draft inserted — review it and save",
+      "provenance": "AI-generated with {model}: review before use",
+      "inserted": "Draft inserted: review it and save",
       "offHint": "AI assistance is off for this organization. An administrator can enable it in Settings.",
-      "notConfiguredHint": "AI assistance is enabled, but no AI engine is available yet. Ask your server administrator to configure an AI engine (see the suite's .env.example — the gateway address is LLM_GATEWAY_URL).",
+      "notConfiguredHint": "AI assistance is enabled, but no AI engine is available yet. Ask your server administrator to configure an AI engine (see the suite's .env.example: the gateway address is LLM_GATEWAY_URL).",
       "linkActivityHint": "Link a processing activity to draft with AI.",
       "waitHint": "This can take a few minutes on a local model.",
       "cancelWait": "Cancel",
-      "cancelNote": "Stopped waiting. The server may still finish this draft — it counts against the hourly AI limit."
+      "cancelNote": "Stopped waiting. The server may still finish this draft, and it counts against the hourly AI limit."
     },
     "posture": {
-      "off": "Off — no AI calls",
+      "off": "Off: no AI calls",
       "local_gateway": "Local gateway (self-hosted engine)",
-      "cloud_eu": "Cloud — EU provider",
+      "cloud_eu": "Cloud: EU provider",
       "cloud_us": "Cloud LLM"
     },
     "postureCard": {
@@ -229,7 +229,7 @@
       "ackLabel": "I am authorized to enable AI assistance for this organization",
       "ackBullets": {
         "data": "The selected data is sent to the AI engine of the chosen posture.",
-        "review": "AI output is a draft — a qualified professional must review it before use.",
+        "review": "AI output is a draft: a qualified professional must review it before use.",
         "off": "While the posture is Off, no AI calls are ever made."
       },
       "ackRequiredHint": "Tick the acknowledgment to continue.",
@@ -247,7 +247,7 @@
     },
     "errors": {
       "ai_off": "AI assistance is off for this organization. An administrator can enable it in Settings.",
-      "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example — LLM_GATEWAY_URL).",
+      "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example: LLM_GATEWAY_URL).",
       "ai_rate_limited": "This organization has reached its hourly AI limit. Try again later.",
       "ai_failed": "The AI engine did not return a draft. Try again."
     }

@@ -10,6 +10,7 @@
  */
 
 import type { AIRiskLevel } from "@prisma/client";
+import { recordName } from "@/lib/record-name";
 
 // ============================================================
 // TYPES
@@ -183,7 +184,7 @@ export function buildAISystemFromCatalog(
     : "AI capabilities";
 
   return {
-    name: `AI System — ${vendorName}`,
+    name: recordName("AI System", vendorName),
     description: `Auto-registered from vendor catalog import. ${vendorName} provides ${capsStr}.`,
     purpose: catalog.aiCapabilities.length > 0
       ? catalog.aiCapabilities.join("; ")

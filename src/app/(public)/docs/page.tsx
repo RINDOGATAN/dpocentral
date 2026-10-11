@@ -106,7 +106,7 @@ export default async function DocsOverviewPage() {
             <p className="mt-2">{t("hostedPilot.oneOrganization")}</p>
           </div>
           <p>{t("hostedPilot.exports")}</p>
-          {/* Owner, 10 Oct 2026: for real data, a paid plan or a managed instance (no "no safeguards" line). */}
+          {/* Owner, 11 Oct 2026: the paid plan and the quotation live here, not in the intro (no "no safeguards" line). */}
           <p>{t("hostedPilot.run")}</p>
           <p>
             <a href={plansUrl(locale)} className="text-primary font-medium hover:underline">

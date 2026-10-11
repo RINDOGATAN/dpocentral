@@ -107,7 +107,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     ...EN_FALLBACK,
     coverGenerated: "Generated: {date}",
     coverConfidential:
-      "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
+      "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request.",
     sectionProgress: "{answered} of {total} questions answered",
     questionNumber: "Q{n}.",
     priorityCode: "P{n}",

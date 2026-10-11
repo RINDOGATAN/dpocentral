@@ -43,7 +43,7 @@ test("take the programme out, bring it into an empty organisation, add a registe
 
   await a.goto("/privacy/settings");
   const exportCard = a.getByTestId("programme-export-card");
-  await expect(exportCard.getByText("Take your programme with you")).toBeVisible();
+  await expect(exportCard.getByText("Take your program with you")).toBeVisible();
   const [download] = await Promise.all([a.waitForEvent("download"), exportCard.getByTestId("programme-export-download").click()]);
   const zipPath = testInfo.outputPath("programme.zip");
   await download.saveAs(zipPath);
@@ -60,7 +60,7 @@ test("take the programme out, bring it into an empty organisation, add a registe
   await signInWithNewOrganisation(b, `portb-${project}-${stamp}@example.com`, `Portability B ${project} ${stamp}`);
   await b.goto("/privacy/settings");
   const importCard = b.getByTestId("programme-import-card");
-  await expect(importCard.getByText("Import a programme")).toBeVisible();
+  await expect(importCard.getByText("Import a program")).toBeVisible();
   await importCard.locator("#import-file-programme").setInputFiles(zipPath);
   await importCard.getByRole("button", { name: "Check the file" }).click();
   const summary = importCard.getByTestId("import-summary");

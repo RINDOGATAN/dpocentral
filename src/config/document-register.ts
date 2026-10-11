@@ -168,7 +168,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     href: "/privacy/regulations",
     download: "/api/export/regulatory-landscape",
     formats: ["pdf"],
-    needs: "At least one declared jurisdiction (where the organisation operates).",
+    needs: "At least one declared jurisdiction (where the organization operates).",
     rule: "Ready when at least one jurisdiction is declared; otherwise needs one.",
     evaluate: (f) => (f.jurisdictions > 0 ? ready() : needs("jurisdiction")),
   },
@@ -227,7 +227,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     stepId: "assessments",
     href: "/privacy/assessments",
     formats: ["pdf"],
-    needs: "The DPIA module: on the self-hosted kit, its template installed from a signed module; on the hosted service, two are free per organisation.",
+    needs: "The DPIA module: on the self-hosted kit, its template installed from a signed module; on the hosted service, two are free per organization.",
     rule: "Needs the DPIA module where it is not installed (self-hosted) or after the two free ones (hosted). Otherwise needs a DPIA to be started; draft while none is approved; ready once one is.",
     evaluate: (f) =>
       f.dpiaAccess === "module"
@@ -325,7 +325,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     download: "/api/export/board-report",
     formats: ["pdf"],
     needs: "At least one confirmed step on the path. Read from data already in DPO Central, for a chosen period (the last full quarter by default).",
-    rule: "Ready when at least one step of the path is confirmed (the programme figure is not zero); otherwise needs a confirmed step.",
+    rule: "Ready when at least one step of the path is confirmed (the program figure is not zero); otherwise needs a confirmed step.",
     evaluate: (f) =>
       programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, f)).confirmed > 0
         ? ready()

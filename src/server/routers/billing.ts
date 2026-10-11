@@ -162,7 +162,7 @@ export const billingRouter = createTRPCRouter({
       if (!entitlement.stripeSubscriptionId) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "This entitlement was not purchased via Stripe and cannot be self-cancelled",
+          message: "This entitlement was not purchased via Stripe and cannot be self-canceled",
         });
       }
 

@@ -53,7 +53,7 @@ export const GUIDES: Guide[] = [
     slug: "controller-or-processor",
     title: L("Controller or processor?", "¿Responsable o encargado?"),
     lead: L(
-      "The GDPR gives you duties according to the role you play around a set of personal data. Deciding why and how data is processed makes you a controller; processing it for someone else on their instructions makes you a processor. The same organisation can be a controller for some data and a processor for other data.",
+      "The GDPR gives you duties according to the role you play around a set of personal data. Deciding why and how data is processed makes you a controller; processing it for someone else on their instructions makes you a processor. The same organization can be a controller for some data and a processor for other data.",
       "El RGPD te asigna obligaciones según el papel que desempeñes respecto a un conjunto de datos personales. Decidir por qué y cómo se tratan los datos te convierte en responsable; tratarlos para otra parte y siguiendo sus instrucciones te convierte en encargado. Una misma organización puede ser responsable de unos datos y encargada de otros.",
     ),
     sections: [
@@ -113,7 +113,7 @@ export const GUIDES: Guide[] = [
     slug: "do-i-need-a-dpo",
     title: L("Do I need a DPO?", "¿Necesito un DPD?"),
     lead: L(
-      "A data protection officer (DPO) is an independent person who advises on data protection and is a point of contact for the supervisory authority. The GDPR makes one compulsory in three cases; many organisations appoint one anyway, and some other laws set their own rule.",
+      "A data protection officer (DPO) is an independent person who advises on data protection and is a point of contact for the supervisory authority. The GDPR makes one compulsory in three cases; many organizations appoint one anyway, and some other laws set their own rule.",
       "Un delegado de protección de datos (DPD) es una persona independiente que asesora sobre protección de datos y actúa como punto de contacto con la autoridad de control. El RGPD lo hace obligatorio en tres supuestos; muchas organizaciones designan uno de todos modos, y algunas otras leyes fijan su propia regla.",
     ),
     sections: [
@@ -134,7 +134,7 @@ export const GUIDES: Guide[] = [
           {
             term: L("Large-scale regular monitoring", "Observación habitual a gran escala"),
             body: L(
-              "Your core activities require regular and systematic monitoring of people on a large scale, such as tracking online behaviour to build profiles.",
+              "Your core activities require regular and systematic monitoring of people on a large scale, such as tracking online behavior to build profiles.",
               "Tus actividades principales requieren una observación habitual y sistemática de personas a gran escala, como el seguimiento del comportamiento en línea para elaborar perfiles.",
             ),
           },
@@ -150,7 +150,7 @@ export const GUIDES: Guide[] = [
       {
         heading: L("Beyond the GDPR", "Más allá del RGPD"),
         intro: L(
-          "Other regimes set their own trigger. Brazil's LGPD and several laws in Asia and Africa require a data protection officer or equivalent for most controllers. Under the UK GDPR the test mirrors the EU one. US state privacy laws do not require a named DPO, but they do expect someone to be accountable for the programme. Even where no law compels it, a named lead is the person the rest of the programme answers to.",
+          "Other regimes set their own trigger. Brazil's LGPD and several laws in Asia and Africa require a data protection officer or equivalent for most controllers. Under the UK GDPR the test mirrors the EU one. US state privacy laws do not require a named DPO, but they do expect someone to be accountable for the program. Even where no law compels it, a named lead is the person the rest of the program answers to.",
           "Otros regímenes fijan su propio desencadenante. La LGPD de Brasil y varias leyes de Asia y África exigen un delegado de protección de datos o figura equivalente para la mayoría de los responsables. En el RGPD del Reino Unido el criterio refleja el de la UE. Las leyes estatales de privacidad de EE. UU. no exigen un DPD designado, pero sí esperan que alguien rinda cuentas del programa. Incluso donde ninguna ley lo obliga, una persona responsable designada es la figura ante la que responde el resto del programa.",
         ),
       },
@@ -193,7 +193,7 @@ export const GUIDES: Guide[] = [
           {
             term: L("Large-scale special category data", "Categorías especiales a gran escala"),
             body: L(
-              "Processing on a large scale of special category data (such as health, race or religion) or of data on criminal convictions and offences.",
+              "Processing on a large scale of special category data (such as health, race or religion) or of data on criminal convictions and offenses.",
               "Tratamiento a gran escala de categorías especiales de datos (como salud, origen o religión) o de datos sobre condenas e infracciones penales.",
             ),
           },
@@ -209,7 +209,7 @@ export const GUIDES: Guide[] = [
       {
         heading: L("The authorities' lists", "Las listas de las autoridades"),
         intro: L(
-          "Each supervisory authority publishes a list of processing operations that always need a DPIA, and may publish a list of those that do not. Common additions are: combining datasets from different sources, processing on a large scale, using new technologies, tracking location or behaviour, and processing data about vulnerable people such as children or employees. Check the list of the authority that supervises you.",
+          "Each supervisory authority publishes a list of processing operations that always need a DPIA, and may publish a list of those that do not. Common additions are: combining datasets from different sources, processing on a large scale, using new technologies, tracking location or behavior, and processing data about vulnerable people such as children or employees. Check the list of the authority that supervises you.",
           "Cada autoridad de control publica una lista de tratamientos que siempre necesitan una EIPD y puede publicar una lista de los que no. Adiciones habituales son: combinar conjuntos de datos de distintas fuentes, tratar a gran escala, usar nuevas tecnologías, rastrear la ubicación o el comportamiento y tratar datos de personas vulnerables como menores o empleados. Consulta la lista de la autoridad que te supervisa.",
         ),
       },

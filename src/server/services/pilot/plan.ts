@@ -119,7 +119,7 @@ export async function setOrganizationPlan(
   now: Date = new Date()
 ): Promise<SetPlanResult> {
   const key = input.org.trim();
-  if (!key) throw new PlanInputError("Give the organisation's id or slug.");
+  if (!key) throw new PlanInputError("Give the organization's id or slug.");
   if (!isPlan(input.plan)) throw new PlanInputError(`Unknown plan: ${String(input.plan)}.`);
 
   const row: PlanOrgRow | null = await db.organization.findFirst({
@@ -134,7 +134,7 @@ export async function setOrganizationPlan(
       planNote: true,
     },
   });
-  if (!row) throw new PlanInputError(`No organisation with the id or slug "${key}".`);
+  if (!row) throw new PlanInputError(`No organization with the id or slug "${key}".`);
 
   const before: PlanState = {
     plan: row.plan,

@@ -239,7 +239,7 @@ Un saludo,
     es: "Nos pediste que limitáramos el uso de tus datos personales. Desde ahora solo los conservamos y no los usamos para nada más, salvo con tu consentimiento, para formular, ejercer o defender reclamaciones, para proteger los derechos de otra persona o por razones importantes de interés público. Te avisaremos antes de levantar la limitación. Detalles: {details}.",
   }),
   favourable("favourable-portability", ["PORTABILITY"], {
-    en: "You asked to receive the personal data you gave us in a portable format. You can download it, in a structured, commonly used and machine-readable format, from your request's page: {status_link}. If you asked us to send it directly to another organisation, we have done so where technically possible: {details}.",
+    en: "You asked to receive the personal data you gave us in a portable format. You can download it, in a structured, commonly used and machine-readable format, from your request's page: {status_link}. If you asked us to send it directly to another organization, we have done so where technically possible: {details}.",
     es: "Nos pediste recibir en un formato portable los datos personales que nos facilitaste. Puedes descargarlos, en un formato estructurado, de uso común y de lectura mecánica, en la página de tu solicitud: {status_link}. Si nos pediste que los enviáramos directamente a otra organización, lo hemos hecho cuando ha sido técnicamente posible: {details}.",
   }),
   // 6. Repetitive request (access more than once in six months)

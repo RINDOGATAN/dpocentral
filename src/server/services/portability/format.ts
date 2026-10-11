@@ -155,10 +155,10 @@ export const Jurisdiction = d(
     jurisdictionCode: d(z.string().min(1).max(100), "The law's short code, for example GDPR or CCPA. This is the stable identifier.", "El código corto de la norma, por ejemplo GDPR o CCPA. Es el identificador estable."),
     name: text("The law's name.", "El nombre de la norma."),
     region: text("Where it applies, for example EU or US-CA.", "Dónde se aplica, por ejemplo EU o US-CA."),
-    isPrimary: bool("The organisation's main law.", "La norma principal de la organización."),
-    customSettings: json("Settings the organisation changed for this law.", "Ajustes que la organización cambió para esta norma."),
+    isPrimary: bool("The organization's main law.", "La norma principal de la organización."),
+    customSettings: json("Settings the organization changed for this law.", "Ajustes que la organización cambió para esta norma."),
   }),
-  "A law or regulation the organisation follows.",
+  "A law or regulation the organization follows.",
   "Una ley o norma que sigue la organización.",
 );
 
@@ -166,10 +166,10 @@ export const Person = d(
   z.object({
     id: id("The person's id at the source. Other records point at it with `...PersonId`.", "El id de la persona en el origen. Otros registros la señalan con `...PersonId`."),
     name: text("Name.", "Nombre."),
-    email: text("E-mail address. Used on import to recognise the same person among the new organisation's members.", "Dirección de correo. Al importar sirve para reconocer a la misma persona entre los miembros de la nueva organización."),
-    role: eo("OrganizationRole", "Role in the organisation at the source.", "Papel en la organización en el origen."),
+    email: text("E-mail address. Used on import to recognize the same person among the new organization's members.", "Dirección de correo. Al importar sirve para reconocer a la misma persona entre los miembros de la nueva organización."),
+    role: eo("OrganizationRole", "Role in the organization at the source.", "Papel en la organización en el origen."),
   }),
-  "A member of the organisation, as far as other records refer to them. Members are never created by an import: access is granted by inviting people.",
+  "A member of the organization, as far as other records refer to them. Members are never created by an import: access is granted by inviting people.",
   "Un miembro de la organización, en la medida en que otros registros lo mencionan. Una importación nunca crea miembros: el acceso se concede invitando a las personas.",
 );
 
@@ -181,7 +181,7 @@ export const BusinessUnit = d(
     ownerPersonId: ref("The member who owns it (an id in `people`).", "El miembro responsable (un id de `people`)."),
     createdAt,
   }),
-  "A department of the organisation.",
+  "A department of the organization.",
   "Un departamento de la organización.",
 );
 
@@ -292,7 +292,7 @@ export const DataTransfer = d(
     name: d(z.string().max(100_000), "Name.", "Nombre."),
     description: text("Description.", "Descripción."),
     destinationCountry: d(z.string().max(1_000), "Destination country (ISO code).", "País de destino (código ISO)."),
-    destinationOrg: text("Receiving organisation.", "Organización que recibe los datos."),
+    destinationOrg: text("Receiving organization.", "Organización que recibe los datos."),
     jurisdictionCode: ref("The law that applies (a `jurisdictionCode`).", "La norma aplicable (un `jurisdictionCode`)."),
     mechanism: en("TransferMechanism", "Transfer mechanism.", "Mecanismo de transferencia."),
     safeguards: text("Safeguards in place.", "Garantías aplicadas."),
@@ -374,7 +374,7 @@ export const Vendor = d(
   z.object({
     id: id("The vendor's id.", "El id del proveedor."),
     name: d(z.string().max(100_000), "Name.", "Nombre."),
-    description: text("What they do for the organisation.", "Qué hacen para la organización."),
+    description: text("What they do for the organization.", "Qué hacen para la organización."),
     website: text("Website.", "Sitio web."),
     status: eo("VendorStatus", "Status.", "Estado."),
     riskTier: eo("VendorRiskTier", "Risk tier.", "Nivel de riesgo."),
@@ -404,13 +404,13 @@ export const Vendor = d(
 export const AssessmentTemplate = d(
   z.object({
     id: id("The template's id. Assessments point at it with `templateId`.", "El id de la plantilla. Las evaluaciones la señalan con `templateId`."),
-    origin: d(z.enum(["organization", "system"]), "organization: made by the organisation, and carried in full; system: built into DPO Central, carried by name and version only.", "organization: la hizo la organización y viaja completa; system: viene con DPO Central y viaja solo por nombre y versión."),
+    origin: d(z.enum(["organization", "system"]), "organization: made by the organization, and carried in full; system: built into DPO Central, carried by name and version only.", "organization: la hizo la organización y viaja completa; system: viene con DPO Central y viaja solo por nombre y versión."),
     type: en("AssessmentType", "Kind of assessment.", "Tipo de evaluación."),
     name: d(z.string().max(100_000), "Name.", "Nombre."),
     description: text("Description.", "Descripción."),
     version: text("Version.", "Versión."),
-    sections: json("The sections and questions (organisation templates only).", "Las secciones y preguntas (solo plantillas de la organización)."),
-    scoringLogic: json("How answers are scored (organisation templates only).", "Cómo se puntúan las respuestas (solo plantillas de la organización)."),
+    sections: json("The sections and questions (organization templates only).", "Las secciones y preguntas (solo plantillas de la organización)."),
+    scoringLogic: json("How answers are scored (organization templates only).", "Cómo se puntúan las respuestas (solo plantillas de la organización)."),
     isActive: bool("Offered for new assessments.", "Se ofrece para nuevas evaluaciones."),
     createdAt,
   }),
@@ -682,7 +682,7 @@ export const RightsRequest = d(
     requesterEmail: d(z.string().max(1_000), "Requester's e-mail (personal data).", "Correo del solicitante (dato personal)."),
     requesterPhone: text("Requester's phone (personal data).", "Teléfono del solicitante (dato personal)."),
     requesterAddress: text("Requester's address (personal data).", "Dirección del solicitante (dato personal)."),
-    relationship: text("Relationship to the organisation (customer, employee...).", "Relación con la organización (cliente, empleado...)."),
+    relationship: text("Relationship to the organization (customer, employee...).", "Relación con la organización (cliente, empleado...)."),
     description: text("What was asked.", "Qué se pidió."),
     requestedData: text("Data requested.", "Datos solicitados."),
     verificationMethod: text("How identity was verified.", "Cómo se verificó la identidad."),
@@ -748,7 +748,7 @@ export const DocumentStatus = d(
     gaps: strings("What is missing, where it is a draft, as gap=count (for example toConfirm=3).", "Qué falta, si es un borrador, como hueco=número (por ejemplo toConfirm=3)."),
     input: text("The record it waits for, where it needs one.", "El registro que espera, si necesita uno."),
   }),
-  "The state of a document the programme can produce, at the time of the export. Information only: an import does not read it.",
+  "The state of a document the program can produce, at the time of the export. Information only: an import does not read it.",
   "El estado de un documento que el programa puede generar, en el momento de la exportación. Solo informativo: una importación no lo lee.",
 );
 
@@ -767,14 +767,14 @@ export const AuditEntry = d(
 
 export const Organization = d(
   z.object({
-    id: id("The organisation's id at the source.", "El id de la organización en el origen."),
+    id: id("The organization's id at the source.", "El id de la organización en el origen."),
     name: d(z.string().max(100_000), "Name.", "Nombre."),
     domain: text("E-mail domain used to join.", "Dominio de correo para unirse."),
     createdAt,
     dsarRemindersEnabled: bool("Deadline reminders for rights requests are on.", "Los recordatorios de plazo de las solicitudes de derechos están activados."),
-    settings: json("Organisation-wide settings (programme name, quick start state...).", "Ajustes de toda la organización (nombre del programa, estado del inicio rápido...)."),
+    settings: json("Organization-wide settings (program name, quick start state...).", "Ajustes de toda la organización (nombre del programa, estado del inicio rápido...)."),
   }),
-  "The organisation's profile.",
+  "The organization's profile.",
   "El perfil de la organización.",
 );
 
@@ -790,7 +790,7 @@ export const Programme = d(
       z.object({
         system: d(z.string().max(200), "The software that wrote the file.", "El programa que escribió el archivo."),
         version: text("Its version.", "Su versión."),
-        organizationId: id("The organisation's id there. With `system` it names the source of every id in the file.", "El id de la organización allí. Junto con `system` identifica el origen de todos los ids del archivo."),
+        organizationId: id("The organization's id there. With `system` it names the source of every id in the file.", "El id de la organización allí. Junto con `system` identifica el origen de todos los ids del archivo."),
       }),
       "Where the file comes from.",
       "De dónde viene el archivo.",
@@ -804,7 +804,7 @@ export const Programme = d(
       "Qué contiene el archivo además de los registros.",
     ),
     organization: Organization,
-    jurisdictions: list(Jurisdiction, "Laws and regulations the organisation follows.", "Leyes y normas que sigue la organización."),
+    jurisdictions: list(Jurisdiction, "Laws and regulations the organization follows.", "Leyes y normas que sigue la organización."),
     people: list(Person, "Members other records refer to.", "Miembros a los que se refieren otros registros."),
     businessUnits: list(BusinessUnit, "Departments.", "Departamentos."),
     dataAssets: list(DataAsset, "Systems (the data inventory).", "Sistemas (el inventario de datos)."),
@@ -819,10 +819,10 @@ export const Programme = d(
     aiSystems: list(AISystem, "The AI register.", "El registro de IA."),
     rightsRequestForms: list(RightsRequestForm, "Rights request forms.", "Formularios de solicitud de derechos."),
     rightsRequests: list(RightsRequest, "Rights requests (only when included; personal data).", "Solicitudes de derechos (solo si se incluyen; datos personales)."),
-    documents: list(DocumentStatus, "The state of the programme's documents at the time of the export.", "El estado de los documentos del programa en el momento de la exportación."),
+    documents: list(DocumentStatus, "The state of the program's documents at the time of the export.", "El estado de los documentos del programa en el momento de la exportación."),
     auditTrail: list(AuditEntry, "The audit trail (who did what and when).", "El registro de auditoría (quién hizo qué y cuándo)."),
   }),
-  "A whole privacy programme, as exported by DPO Central (format dpocentral-programme/1.0).",
+  "A whole privacy program, as exported by DPO Central (format dpocentral-programme/1.0).",
   "Un programa de privacidad completo, tal como lo exporta DPO Central (formato dpocentral-programme/1.0).",
 );
 
@@ -897,7 +897,7 @@ export function validateProgramme(
           message:
             typeof format === "string"
               ? `Unsupported format "${format.slice(0, 80)}": this version reads ${PROGRAMME_FORMAT_MAJOR}x.`
-              : `Not a programme file: the "format" field is missing (expected "${PROGRAMME_FORMAT}").`,
+              : `Not a program file: the "format" field is missing (expected "${PROGRAMME_FORMAT}").`,
         },
       ],
     };

@@ -28,6 +28,7 @@ import {
 } from "@prisma/client";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
 import { assertUsersAreMembers } from "../../org-ownership";
+import { recordName } from "@/lib/record-name";
 
 export const vendorRouter = createTRPCRouter({
   // ============================================================
@@ -640,7 +641,7 @@ export const vendorRouter = createTRPCRouter({
           status: ContractStatus.PENDING_SIGNATURE,
           name:
             input.dealName?.trim() ||
-            `DPA — ${vendor.name} (${input.effectiveDate.toISOString().slice(0, 10)})`,
+            recordName("DPA", `${vendor.name} (${input.effectiveDate.toISOString().slice(0, 10)})`),
           startDate: input.effectiveDate,
           metadata: { dpaEngine: JSON.parse(JSON.stringify(snapshot)) },
         },

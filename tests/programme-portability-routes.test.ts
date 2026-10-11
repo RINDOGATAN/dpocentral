@@ -100,7 +100,7 @@ describe("GET /api/export/programme", () => {
     const res = await get(`organizationId=${SOURCE_ORG}&locale=es`);
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("application/zip");
-    expect(res.headers.get("Content-Disposition")).toMatch(/^attachment; filename="Programme-Org-src-\d{4}-\d{2}-\d{2}\.zip"$/);
+    expect(res.headers.get("Content-Disposition")).toMatch(/^attachment; filename="Program-Org-src-\d{4}-\d{2}-\d{2}\.zip"$/);
     const zip = new AdmZip(Buffer.from(await res.arrayBuffer()));
     const programme = JSON.parse(zip.getEntry("programme.json")!.getData().toString("utf8"));
     expect(programme.dataAssets).toHaveLength(3);

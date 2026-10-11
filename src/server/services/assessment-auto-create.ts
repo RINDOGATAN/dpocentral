@@ -16,6 +16,7 @@ import {
   isPremiumAssessmentType,
 } from "../services/licensing/entitlement";
 import { countDpiaCreated, PILOT_DPIA_LIMIT } from "./pilot/caps";
+import { recordName, legacyRecordName } from "@/lib/record-name";
 
 interface AutoCreateParams {
   tx: Prisma.TransactionClient;
@@ -113,15 +114,15 @@ export async function createAssessmentFromActivity(
     : assessmentType === "DPIA"
       ? "Data Protection Impact Assessment"
       : `${assessmentType} Assessment`;
-  const name = vendorName
-    ? `${typeName} — ${vendorName}`
-    : typeName;
+  const name = vendorName ? recordName(typeName, vendorName) : typeName;
+  // A draft created before 11 Oct 2026 carries the older name.
+  const names = vendorName ? [name, legacyRecordName(typeName, vendorName)] : [name];
 
   // Check for duplicate
   const existing = await tx.assessment.findFirst({
     where: {
       organizationId,
-      name,
+      name: { in: names },
       status: { in: [AssessmentStatus.DRAFT, AssessmentStatus.IN_PROGRESS] },
     },
   });

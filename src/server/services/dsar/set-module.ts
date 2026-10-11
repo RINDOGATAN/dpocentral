@@ -79,7 +79,7 @@ function same(a: DsarModuleState, b: DsarModuleState): boolean {
 
 export async function setDsarModule(db: SetDb, input: SetDsarModuleInput): Promise<SetDsarModuleResult> {
   const key = input.org.trim();
-  if (!key) throw new DsarModuleInputError("Give the organisation's id or slug.");
+  if (!key) throw new DsarModuleInputError("Give the organization's id or slug.");
   if (!isDsarModuleStatus(input.status)) throw new DsarModuleInputError(`Unknown status: ${String(input.status)}.`);
 
   const row = await db.organization.findFirst({
@@ -94,7 +94,7 @@ export async function setDsarModule(db: SetDb, input: SetDsarModuleInput): Promi
       dsarModuleRenewsAt: true,
     },
   });
-  if (!row) throw new DsarModuleInputError(`No organisation with the id or slug "${key}".`);
+  if (!row) throw new DsarModuleInputError(`No organization with the id or slug "${key}".`);
 
   const before: DsarModuleState = {
     dsarModuleStatus: row.dsarModuleStatus,
@@ -106,7 +106,7 @@ export async function setDsarModule(db: SetDb, input: SetDsarModuleInput): Promi
   const organization = { id: row.id, slug: row.slug, name: row.name, plan: row.plan };
   const note =
     row.plan !== "EU_CLOUD" && after.dsarModuleStatus === "ACTIVE"
-      ? "The organisation is on the pilot plan: the pilot's own limit (3 public-form requests) applies until it is on EU_CLOUD."
+      ? "The organization is on the pilot plan: the pilot's own limit (3 public-form requests) applies until it is on EU_CLOUD."
       : null;
 
   if (!input.execute || !changed) return { organization, before, after, changed, written: false, note };

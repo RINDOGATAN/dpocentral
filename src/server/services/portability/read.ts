@@ -134,7 +134,7 @@ async function jurisdictionsById(db: Db): Promise<Map<string, { code: string; na
 
 export async function readOrganization(db: Db, organizationId: string) {
   const [org] = (await delegate(db, "organization").findMany({ where: { id: organizationId }, take: 1 })) as Row[];
-  if (!org) throw new Error("Organisation not found");
+  if (!org) throw new Error("Organization not found");
   return {
     id: org.id,
     name: org.name as string,

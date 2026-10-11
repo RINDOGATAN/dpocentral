@@ -154,7 +154,7 @@ describe("purge: real run", () => {
   it("an unknown organisation stops the run before anything is read or deleted", async () => {
     await expect(
       purgeDsarData(makeDb(ORGS), { organizations: ["alpha", "nobody"], dryRun: false })
-    ).rejects.toThrow(/Unknown organisation\(s\): nobody/);
+    ).rejects.toThrow(/Unknown organization\(s\): nobody/);
     expect(deletes).toEqual([]);
   });
 

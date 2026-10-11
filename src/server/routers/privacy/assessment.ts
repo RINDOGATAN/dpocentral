@@ -38,6 +38,7 @@ import {
 } from "@/config/dpia-auto-fill-targets";
 import { assertIdsInOrg } from "../../org-ownership";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
+import { recordName } from "@/lib/record-name";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -478,7 +479,7 @@ export const assessmentRouter = createTRPCRouter({
           templateId: template.id,
           dataTransferId: transfer.id,
           processingActivityId: transfer.processingActivityId ?? undefined,
-          name: `TIA — ${transfer.name}`,
+          name: recordName("TIA", transfer.name),
           description: `Transfer Impact Assessment for transfer to ${transfer.destinationCountry}.`,
           status: AssessmentStatus.DRAFT,
         },

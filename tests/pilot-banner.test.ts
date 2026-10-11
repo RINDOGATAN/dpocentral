@@ -175,7 +175,7 @@ describe("the bar on signed-in pages", () => {
       expect(html).toContain(
         "Tu piloto termina el 26 de octubre de 2026. Pasa al plan de pago para seguir editando con todos tus registros."
       );
-      expect(html).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
+      expect(html).toContain('href="https://www.todo.law/es/precios"');
       expect(html).toContain(">Ver precios</a>");
       expect(html).not.toMatch(/Piloto alojado|datos reales|instancia gestionada|\busted\b/);
     } finally {
@@ -189,7 +189,7 @@ describe("the bar on signed-in pages", () => {
     const en = await renderSignedIn("en");
     expect(en).toContain('data-state="readOnly"');
     expect(en).toContain(
-      "Your pilot has ended: the organisation is read-only and you can export it at any time."
+      "Your pilot has ended: the organization is read-only and you can export it at any time."
     );
     expect(en).toContain('href="https://www.todo.law/pricing"');
     expect(en).toContain(">See pricing</a>");
@@ -197,7 +197,7 @@ describe("the bar on signed-in pages", () => {
     expect(es).toContain(
       "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras."
     );
-    expect(es).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
+    expect(es).toContain('href="https://www.todo.law/es/precios"');
     expect(es).toContain(">Ver precios</a>");
   });
 

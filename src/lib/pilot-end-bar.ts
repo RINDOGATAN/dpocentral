@@ -40,13 +40,13 @@ export function pilotEndBarState(
 }
 
 /**
- * Where the bar's link goes. Spanish: the Spanish landing's prices section;
- * otherwise the storefront's pricing page (the English landing does not carry
- * prices yet).
+ * Where the bar's link goes: the storefront's prices page in the reader's
+ * language, the same page as every other in-app prices link (owner, 11 Oct
+ * 2026, consistency review DPC-3: one Spanish prices page for the whole app).
  */
 export const PILOT_END_BAR_PRICING_URL = {
   en: "https://www.todo.law/pricing",
-  es: "https://dpocentral.todo.law/?lang=es#precios",
+  es: "https://www.todo.law/es/precios",
 } as const;
 
 export function pilotEndBarPricingUrl(locale: string | undefined): string {

@@ -311,7 +311,7 @@ export function tableToProgramme(
       problems.push({
         row: rowNo,
         field: missing.join(","),
-        en: `Row left out: ${names.map((f) => f.en).join(", ")} is empty or not recognised.`,
+        en: `Row left out: ${names.map((f) => f.en).join(", ")} is empty or not recognized.`,
         es: `Fila no importada: ${names.map((f) => f.es).join(", ")} está vacío o no se reconoce.`,
       });
       return;
@@ -377,7 +377,7 @@ export function tableToProgramme(
     for (const issue of parsed.error.issues) {
       const index = typeof issue.path[1] === "number" ? issue.path[1] : -1;
       const field = String(issue.path[2] ?? "");
-      if (index < 0) throw new Error(`CSV conversion produced an invalid programme: ${issue.message}`);
+      if (index < 0) throw new Error(`CSV conversion produced an invalid program: ${issue.message}`);
       bad.add(index);
       problems.push({
         row: rowOf[index] ?? 0,

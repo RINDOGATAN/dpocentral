@@ -82,7 +82,7 @@ export function verifyEd25519Signature(
     });
     return verify(null, data, publicKey, signature);
   } catch (error) {
-    logger.error("Licence signature verification failed", error);
+    logger.error("License signature verification failed", error);
     return false;
   }
 }
@@ -180,7 +180,7 @@ export function verifyLicenseFile(
       publicKeyPem
     );
   } catch (error) {
-    logger.error("Licence file verification failed", error);
+    logger.error("License file verification failed", error);
     return false;
   }
 }

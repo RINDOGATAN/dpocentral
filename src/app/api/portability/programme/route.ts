@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     if (err instanceof ImportRefusedError) {
       return Response.json({ step, error: "refused", summary: err.summary }, { status: 409 });
     }
-    logger.error("Programme import failed", err);
+    logger.error("Program import failed", err);
     return Response.json({ error: "The import failed and nothing was written. Try again." }, { status: 500 });
   }
 }

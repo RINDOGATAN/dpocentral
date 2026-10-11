@@ -133,7 +133,7 @@ async function deleteForOrg(db: PrismaClient, organizationId: string): Promise<D
     if (anyLeft(left)) {
       // Throwing rolls the whole organisation back.
       throw new Error(
-        `Rights-request records remain after deletion for organisation ${organizationId}: ${JSON.stringify(left)}`
+        `Rights-request records remain after deletion for organization ${organizationId}: ${JSON.stringify(left)}`
       );
     }
     return {
@@ -163,7 +163,7 @@ export async function purgeDsarData(db: PrismaClient, opts: PurgeOptions): Promi
   const startedAt = now().toISOString();
 
   if (!opts.all && (!opts.organizations || opts.organizations.length === 0)) {
-    throw new Error("Name the organisations (--org <id or slug>) or pass --all.");
+    throw new Error("Name the organizations (--org <id or slug>) or pass --all.");
   }
 
   const orgs = await db.organization.findMany({
@@ -178,7 +178,7 @@ export async function purgeDsarData(db: PrismaClient, opts: PurgeOptions): Promi
     const known = new Set(orgs.flatMap((o) => [o.id, o.slug]));
     const missing = opts.organizations!.filter((o) => !known.has(o));
     if (missing.length > 0) {
-      throw new Error(`Unknown organisation(s): ${missing.join(", ")}. Nothing was changed.`);
+      throw new Error(`Unknown organization(s): ${missing.join(", ")}. Nothing was changed.`);
     }
   }
 

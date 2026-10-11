@@ -119,7 +119,7 @@ export function sendSafeguardsRequestNotice(
       { label: "Choice", value: CHOICE_LABELS[request.choice] },
       { label: "Name", value: request.name },
       { label: "Work e-mail", value: request.email },
-      { label: "Organisation", value: request.organizationName },
+      { label: "Organization", value: request.organizationName },
       { label: "Country", value: request.country },
       { label: "People who would use it", value: request.userCount },
       { label: "Language", value: request.locale },

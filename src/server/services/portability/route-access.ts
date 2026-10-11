@@ -50,7 +50,7 @@ export async function checkImportAccess(
     try {
       assertPilotWritable(membership.organization, locale);
     } catch (err) {
-      const message = err instanceof TRPCError ? err.message : "This organisation cannot be edited.";
+      const message = err instanceof TRPCError ? err.message : "This organization cannot be edited.";
       return { ok: false, response: Response.json({ error: message }, { status: 403 }) };
     }
   }

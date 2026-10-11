@@ -97,7 +97,7 @@ export async function GET(request: Request) {
           input: d.status.state === "needsInput" ? d.status.input : null,
         }));
       } catch (err) {
-        logger.warn("Programme export: documents' states left out", {
+        logger.warn("Program export: documents' states left out", {
           error: err instanceof Error ? err.message : String(err),
         });
         return [];
@@ -117,7 +117,7 @@ export async function GET(request: Request) {
       try {
         yield* archive;
       } catch (err) {
-        logger.error("Programme export failed while streaming", err);
+        logger.error("Program export failed while streaming", err);
         throw err;
       }
     })();
@@ -125,7 +125,7 @@ export async function GET(request: Request) {
     return new Response(toReadableStream(logged), {
       headers: {
         "Content-Type": "application/zip",
-        "Content-Disposition": `attachment; filename="Programme-${nameForFile(membership.organization.name)}-${today()}.zip"`,
+        "Content-Disposition": `attachment; filename="Program-${nameForFile(membership.organization.name)}-${today()}.zip"`,
         "Cache-Control": "no-store",
       },
     });

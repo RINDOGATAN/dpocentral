@@ -1104,7 +1104,7 @@ export const dsarRouter = createTRPCRouter({
       if (finalStates.includes(request.status)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "This request is already finalised and cannot be withdrawn.",
+          message: "This request is already finalized and cannot be withdrawn.",
         });
       }
 
@@ -1229,7 +1229,7 @@ export const dsarRouter = createTRPCRouter({
       if (!["COMPLETED", "CANCELLED"].includes(request.status)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Only completed or cancelled requests can be deleted",
+          message: "Only completed or canceled requests can be deleted",
         });
       }
 
@@ -1275,7 +1275,7 @@ export const dsarRouter = createTRPCRouter({
       if (!["COMPLETED", "CANCELLED", "REJECTED"].includes(request.status)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Only completed, cancelled, or rejected requests can be redacted",
+          message: "Only completed, canceled, or rejected requests can be redacted",
         });
       }
 
