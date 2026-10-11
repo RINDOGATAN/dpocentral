@@ -4,7 +4,6 @@
 
 import { createContext, useContext } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { PILOT_DOCS_PATH } from "@/lib/hosted";
 import { useSelectedOrganizationOrNull } from "@/lib/organization-context";
 import { trpc } from "@/lib/trpc";
 import {
@@ -30,29 +29,6 @@ export function HostedPilotProvider({
 
 export function useHostedPilot(): boolean {
   return useContext(HostedPilotContext);
-}
-
-/** The pilot sentence, with its link to the limits in the docs (owner's wording, 10 Oct 2026). */
-export function HostedPilotSentence({ className }: { className?: string }) {
-  const t = useTranslations("pilot");
-  return (
-    <span className={className} data-testid="hosted-pilot-sentence">
-      {t.rich("banner", {
-        // The banner sits on every signed-in page, so the link opens in a new tab and
-        // nobody loses a half-filled form by reading the limits.
-        docs: (chunks) => (
-          <a
-            href={PILOT_DOCS_PATH}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline font-medium"
-          >
-            {chunks}
-          </a>
-        ),
-      })}
-    </span>
-  );
 }
 
 /** The bar as drawn, given its state; renders nothing when hidden. */

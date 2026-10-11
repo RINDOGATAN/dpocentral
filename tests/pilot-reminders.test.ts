@@ -245,7 +245,7 @@ describe("language", () => {
     expect(byTo["es@example.com"].subject).toBe("Tu piloto de DPO Central termina en 5 días");
     expect(byTo["es@example.com"].text).toContain("1.800 € al año o 179 € al mes");
     expect(byTo["es@example.com"].text).toContain("https://www.todo.law/es/contact/managed");
-    expect(byTo["en@example.com"].text).toContain("1,800 USD a year or 179 USD a month");
+    expect(byTo["en@example.com"].text).toContain("$1,800 a year or $179 a month");
     expect(byTo["en@example.com"].text).toContain("https://www.todo.law/pricing");
   });
 });

@@ -232,7 +232,7 @@ describe("the bar on public pages", () => {
     }
   });
 
-  it("is absent from the sign-in screen, which keeps its quiet pilot sentence", () => {
+  it("is absent from the sign-in screen, which shows the editing terms and no longer the old pilot sentence", () => {
     hosted();
     for (const locale of ["en", "es"] as const) {
       const html = render(
@@ -240,7 +240,9 @@ describe("the bar on public pages", () => {
         createElement(SignInForm, { methods: { local: false, email: true, google: true } }),
       );
       expect(html).not.toContain("pilot-end-bar");
-      expect(html).toContain('data-testid="hosted-pilot-sentence"');
+      expect(html).not.toContain("hosted-pilot-sentence");
+      expect(html).toContain('data-testid="hosted-pilot-terms"');
+      expect(html).not.toMatch(/For real data|Para datos reales|managed instance|instancia gestionada/);
     }
   });
 
@@ -284,10 +286,14 @@ describe("the bar on public pages", () => {
 });
 
 describe("hosted pilot messages", () => {
-  it("sends the reader to the documentation for the limits, in both languages", () => {
-    // The sign-up screen renders HostedPilotSentence, i.e. `pilot.banner`.
-    expect(en.pilot.banner).toContain("<docs>see docs</docs>");
-    expect(es.pilot.banner).toContain("<docs>consulta la documentación</docs>");
+  it("states only the editing terms on the sign-in screen, in both languages (owner, 11 Oct 2026)", () => {
+    expect(en.pilot.signIn).toBe(
+      "Free pilot: {days} days of editing from your first sign-in, then read-only with export."
+    );
+    expect(es.pilot.signIn).toBe(
+      "Piloto gratuito: {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación."
+    );
+    expect((en.pilot as Record<string, unknown>).banner).toBeUndefined();
   });
 
   it("states the editing window in Settings, in both languages", () => {

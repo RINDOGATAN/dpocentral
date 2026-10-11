@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { Lock, Shield, Globe, Building2, Search, Sparkles, Server, CreditCard } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,11 @@ import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice, KIT_MODULE_PRICE_PER_YEAR } from "@/lib/currency";
-import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import { plansUrl } from "@/lib/hosted";
 
 export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
+  const locale = useLocale();
   // Yearly price of one premium module in the kit (self-hosted, offline
   // licence). The hosted pilot sells nothing.
   const price = formatPrice(KIT_MODULE_PRICE_PER_YEAR, "EUR");
@@ -66,7 +67,7 @@ export default function DocsPremiumPage() {
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" className="mt-3" asChild>
-                  <a href={RUN_YOUR_OWN_URL} target="_blank" rel="noopener noreferrer">
+                  <a href={plansUrl(locale)} target="_blank" rel="noopener noreferrer">
                     <Server className="h-4 w-4 mr-2" />
                     {t("runYourOwn")}
                   </a>

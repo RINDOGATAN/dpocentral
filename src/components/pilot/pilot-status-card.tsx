@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StatusNote } from "@/components/ui/status-note";
 import { toneMark } from "@/config/status-palette";
 import { trpc } from "@/lib/trpc";
-import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import { plansUrl } from "@/lib/hosted";
 import { isDsarModuleEnabled } from "@/config/features";
 import { useOrganization } from "@/lib/organization-context";
 import { formatDateIn } from "@/lib/utils";
@@ -66,7 +66,7 @@ function ExportList({ organizationId, links }: { organizationId: string; links: 
 
 /**
  * Hosted pilot card for Settings: days left, records against the ceiling,
- * the two ways out, and every export. On the paid EU cloud plan: the plan's
+ * the ways on (the paid plan, the export), and every export. On the paid EU cloud plan: the plan's
  * name, that the pilot limits do not apply, the renewal date, and every
  * export (no price). Renders nothing on the kit.
  */
@@ -108,7 +108,7 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
   const links = {
     run: (chunks: React.ReactNode) => (
       <a
-        href={RUN_YOUR_OWN_URL}
+        href={plansUrl(locale)}
         target="_blank"
         rel="noopener noreferrer"
         className="text-primary underline"

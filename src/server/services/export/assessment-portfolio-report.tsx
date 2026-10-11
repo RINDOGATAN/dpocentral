@@ -83,7 +83,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     coverSubtitle: "DPIA, LIA & Privacy Assessment Status Report",
     coverGenerated: "Generated: {date}",
     coverConfidential:
-      "CONFIDENTIAL — This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
+      "CONFIDENTIAL. This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
     pageTitle: "Assessment Portfolio",
     executiveSummary: "Executive Summary",
     "stats.total": "Total Assessments",
@@ -99,7 +99,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     "meta.mitigationsCompletedValue": "{done} of {total}",
     "meta.overdueAssessments": "Overdue Assessments",
     "meta.overdueNone": "None",
-    gdprCalloutTitle: "GDPR Article 35 — Impact Assessment Obligations",
+    gdprCalloutTitle: "GDPR Article 35: Impact Assessment Obligations",
     gdprCalloutBody:
       "Controllers must carry out a DPIA before processing that is likely to result in a high risk to the rights and freedoms of natural persons. The assessment must be reviewed and updated when processing operations change.",
     overview: "Assessment Overview",

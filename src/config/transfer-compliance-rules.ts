@@ -532,7 +532,7 @@ export function getTransferComplianceExplanation(
   const countryCode = transfer.destinationCountry.toUpperCase();
 
   if (EEA_COUNTRY_CODES.has(countryCode)) {
-    return "Transfer within the EEA — no Chapter V restrictions apply.";
+    return "Transfer within the EEA: no Chapter V restrictions apply.";
   }
 
   const decision = getAdequacyDecision(countryCode);
@@ -541,7 +541,7 @@ export function getTransferComplianceExplanation(
     case "COMPLIANT":
       if (decision) {
         const partialNote = decision.isPartial
-          ? ` Note: This is a partial adequacy decision — ${decision.notes ?? "verify scope of coverage."}`
+          ? ` Note: This is a partial adequacy decision: ${decision.notes ?? "verify scope of coverage."}`
           : "";
         return `${decision.country} has an EU adequacy decision (adopted ${decision.decisionDate}).${partialNote}`;
       }

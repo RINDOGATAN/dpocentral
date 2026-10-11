@@ -10,7 +10,8 @@ import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
-import { HostedPilotSentence, useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { PILOT_DAYS } from "@/server/services/pilot/limits";
 import { StatusNote } from "@/components/ui/status-note";
 import type { SignInMethods } from "@/lib/sign-in-methods";
 
@@ -24,6 +25,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
   const isDev = methods.local;
   const t = useTranslations("auth");
   const tMeta = useTranslations("metadata");
+  const tPilot = useTranslations("pilot");
   const hostedPilot = useHostedPilot();
   const [email, setEmail] = useState("");
   const [devEmail, setDevEmail] = useState("");
@@ -147,8 +149,12 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
             </p>
           )}
           {hostedPilot && (
-            <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
-              <HostedPilotSentence />
+            // The editing terms only (owner, 11 Oct 2026): the old pilot sentence is gone.
+            <p
+              data-testid="hosted-pilot-terms"
+              className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground"
+            >
+              {tPilot("signIn", { days: PILOT_DAYS })}
             </p>
           )}
         </div>

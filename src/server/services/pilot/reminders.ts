@@ -128,7 +128,7 @@ export function endPhrase(endsAt: Date, locale: Locale): string {
 
 /** The paid plan's price, in the currency of the e-mail's language. */
 export const PLAN_PRICE: Record<Locale, string> = {
-  en: "1,800 USD a year or 179 USD a month",
+  en: "$1,800 a year or $179 a month",
   es: "1.800 € al año o 179 € al mes",
 };
 
