@@ -113,7 +113,9 @@ describe("English sections", () => {
       expect(v, k).not.toMatch(/\bthe (first|only)\b|\b(leading|best|unrivaled|world-class|revolutionary)\b/i);
       expect(v, k).not.toMatch(/\bexecute\b/i);
     }
-    expect(html).not.toMatch(/<img/);
+    // The only images are the customer logos (draft, 11 Oct 2026), above the footer.
+    expect((html.match(/<img /g) ?? []).length).toBe((html.match(/src="\/images\/clients\//g) ?? []).length);
+    expect(html).toContain("Organizations we have worked with");
   });
 
   it("use no long dash and US spelling", () => {
