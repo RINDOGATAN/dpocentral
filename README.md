@@ -62,7 +62,7 @@ One codebase, two postures, switched by environment only:
 - **Hosted pilot** (cloud): Google OAuth / magic links. A free pilot with
   limits and no contractual safeguards (no data processing agreement, no
   service level, no security certification): every module is included, one
-  organization per account, 90 days of editing from your first sign-in, then
+  organization per account, 15 days of editing from your first sign-in, then
   read-only with export, three impact assessments per organization, and a
   ceiling on records per organization (for example 25 systems, 50 vendors).
   Exports are never limited, and nothing is sold on the hosted service. The

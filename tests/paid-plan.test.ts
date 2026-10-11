@@ -3,7 +3,7 @@
 
 /**
  * The paid EU cloud plan (Organization.plan = EU_CLOUD) lifts the hosted
- * pilot's limits for one organisation: the records ceilings, the 90-day
+ * pilot's limits for one organisation: the records ceilings, the
  * editing window, the two free DPIAs, the members ceiling and the
  * one-organisation rule for people it adds. A PILOT organisation keeps every
  * limit, and the self-hosted kit is unchanged. The operator's script
@@ -190,7 +190,7 @@ describe("records ceilings", () => {
 });
 
 describe("the editing window", () => {
-  it("makes a PILOT organisation read-only after 90 days", () => {
+  it("makes a PILOT organisation read-only after the editing window", () => {
     hosted();
     afterWindow();
     expect(isPilotReadOnly(PILOT_ORG)).toBe(true);

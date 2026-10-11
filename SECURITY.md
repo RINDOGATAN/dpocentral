@@ -40,7 +40,7 @@ security:
 | Backups | The database provider's point-in-time restore | `backup.sh` (encrypted `pg_dump`) and `restore.sh`; the operator sets the schedule |
 | Secrets | Platform environment (sensitive values are write-only there) | `.env` next to the compose file, `chmod 600` |
 | Premium modules | All included in the free pilot; nothing is sold on the hosted service | Offline Ed25519-signed licence files (€60 a year each); no phone-home |
-| Pilot limits | One organization per account; 90 days of editing from the organization's first sign-in, then read-only with export; a records ceiling per organization (`src/server/services/pilot/caps.ts`). No security certification: not for real client data | None |
+| Pilot limits | One organization per account; 15 days of editing from the organization's first sign-in, then read-only with export; a records ceiling per organization (`src/server/services/pilot/caps.ts`). No security certification: not for real client data | None |
 
 Who is responsible for what in each posture, with a checklist for the hosted
 maintainer and one for the firm running the bundle, is in `docs/security.md`.

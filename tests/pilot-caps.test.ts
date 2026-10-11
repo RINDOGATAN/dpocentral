@@ -4,7 +4,7 @@
  *
  * On the hosted service (VERCEL_ENV=production or a todo.law cookie domain):
  *   - one organisation per account;
- *   - after the 90-day pilot the organisation is read-only (mutations
+ *   - after the editing window (PILOT_DAYS) the organisation is read-only (mutations
  *     refused) while reads and exports keep working;
  *   - creates are refused at the records ceiling.
  * On the self-hosted kit none of this applies.
@@ -79,9 +79,12 @@ import {
   getPilotStatus,
   PILOT_CLOCK_START,
   PILOT_DAYS,
+  PILOT_DAYS_BEFORE_SHORTENING,
   PILOT_LIMITS,
+  PILOT_WINDOW_SHORTENED_AT,
   isPilotReadOnly,
   pilotDaysLeft,
+  pilotEndsAt,
   pilotStart,
   type PilotDb,
 } from "@/server/services/pilot/caps";
@@ -185,7 +188,7 @@ describe("one organisation per account", () => {
   });
 });
 
-describe("the 90-day switch to read-only", () => {
+describe("the switch to read-only at the end of the editing window", () => {
   it("allows edits before the end of the pilot", async () => {
     hosted();
     setNow(PILOT_DAYS - 1);
@@ -224,9 +227,39 @@ describe("the 90-day switch to read-only", () => {
     const early = { pilotStartedAt: new Date(PILOT_CLOCK_START.getTime() - 20 * DAY) };
     expect(pilotStart(early)).toEqual(PILOT_CLOCK_START);
     vi.setSystemTime(PILOT_CLOCK_START);
-    expect(pilotDaysLeft(early)).toBe(PILOT_DAYS);
-    vi.setSystemTime(new Date(PILOT_CLOCK_START.getTime() + (PILOT_DAYS - 1) * DAY));
     expect(isPilotReadOnly(early)).toBe(false);
+    // Started before the window was shortened: it ends PILOT_DAYS after the change.
+    expect(pilotEndsAt(early)).toEqual(new Date(PILOT_WINDOW_SHORTENED_AT.getTime() + PILOT_DAYS * DAY));
+  });
+});
+
+describe("the transition when the window went from 90 to 15 days (11 Oct 2026)", () => {
+  const shortened = () => PILOT_WINDOW_SHORTENED_AT.getTime();
+
+  it("is 15 days now, 90 before, and takes effect at the end of the release day", () => {
+    expect(PILOT_DAYS).toBe(15);
+    expect(PILOT_DAYS_BEFORE_SHORTENING).toBe(90);
+    expect(PILOT_WINDOW_SHORTENED_AT.toISOString()).toBe("2026-10-12T00:00:00.000Z");
+  });
+
+  it("gives an organisation already in its pilot the earlier of its 90-day end and 15 days from the change", () => {
+    for (const started of [PILOT_CLOCK_START, new Date(shortened() - DAY)]) {
+      expect(pilotEndsAt({ pilotStartedAt: started })).toEqual(new Date(shortened() + 15 * DAY));
+    }
+  });
+
+  it("leaves nobody read-only at the release, with at least 15 days left", () => {
+    const atRelease = new Date("2026-10-11T18:00:00Z");
+    for (const started of [PILOT_CLOCK_START, new Date("2026-10-05T00:00:00Z"), new Date("2026-10-11T12:00:00Z")]) {
+      const org = { pilotStartedAt: started };
+      expect(isPilotReadOnly(org, atRelease)).toBe(false);
+      expect(pilotDaysLeft(org, atRelease)).toBeGreaterThanOrEqual(15);
+    }
+  });
+
+  it("applies the plain 15 days to a window that starts from the change onwards", () => {
+    const later = new Date("2026-12-01T09:00:00Z");
+    expect(pilotEndsAt({ pilotStartedAt: later })).toEqual(new Date(later.getTime() + 15 * DAY));
   });
 
   it("answers in Castilian Spanish when the locale is es", async () => {

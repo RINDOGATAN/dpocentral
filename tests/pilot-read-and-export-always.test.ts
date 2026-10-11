@@ -1,6 +1,6 @@
 /**
  * The hosted pilot's promise, in one suite: a firm can ALWAYS read and
- * export what it holds. Neither a records ceiling nor the end of the 90-day
+ * export what it holds. Neither a records ceiling nor the end of the
  * editing window ever refuses a read or an export. (The other halves, the
  * refusals themselves, are in pilot-caps.test.ts and pilot-dpia-cap.test.ts.)
  *
@@ -191,7 +191,7 @@ describe("the app router, as the suite sees it", () => {
   });
 });
 
-describe("at every records ceiling, inside the 90 days", () => {
+describe("at every records ceiling, inside the editing window", () => {
   it("every query passes the pilot gate", async () => {
     firmAtEveryCeiling(10);
     expect(await refusedAmong(queries)).toEqual([]);
@@ -204,7 +204,7 @@ describe("at every records ceiling, inside the 90 days", () => {
   });
 });
 
-describe("after the 90 days, at every records ceiling", () => {
+describe("after the editing window, at every records ceiling", () => {
   it("every query still passes the pilot gate: the clock never locks out reading", async () => {
     firmAtEveryCeiling(PILOT_DAYS + 365);
     expect(await refusedAmong(queries)).toEqual([]);
