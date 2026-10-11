@@ -105,7 +105,7 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   expect(Object.keys(lines).length, "menu document lines").toBeGreaterThan(4);
   const all = Object.values(lines).join(" | ");
   for (const row of rows) {
-    if (row.name === (es ? "Informe del programa de privacidad" : "Privacy programme report")) continue;
+    if (row.name === (es ? "Informe del programa de privacidad" : "Privacy program report")) continue;
     const words = row.kind === "needsInput" ? row.detail : row.state;
     // The activities and vendors registers state counts ("1 confirmed, 2 in
     // draft") where the panel says "draft"; the state is the same.

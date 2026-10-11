@@ -118,7 +118,7 @@ test("M1: two DPIAs are free on the pilot tier; the third is refused with the pl
 
   await page.goto("/privacy");
   await expect(page.getByTestId("dpia-free-note").first()).toContainText(
-    "Free for a limited time: two DPIAs per organisation on the pilot tier",
+    "Free for a limited time: two DPIAs per organization on the pilot tier",
   );
 
   for (const n of [1, 2]) {
