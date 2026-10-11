@@ -8,5 +8,8 @@
   "login.magicLink": "Enviar enlace de acceso",
   "login.newHere": "¿Es tu primera vez? Regístrate",
   "login.google": "Continuar con Google",
-  "or": "o"
+  "or": "o",
+  "error.emailUnavailable": "El acceso por correo electrónico no está disponible. Usa Google.",
+  "error.sendFailed": "No se ha podido enviar el enlace de acceso. Inténtalo de nuevo.",
+  "error.resendFailed": "No se ha podido reenviar el enlace. Inténtalo de nuevo."
 }

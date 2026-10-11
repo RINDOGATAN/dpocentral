@@ -10,8 +10,8 @@
  * only in the languages listed in PRICING_SECTION_LOCALES (Spanish for now).
  *
  * Each language has its own copy under `<locale>.*` in the landing
- * dictionary, and its own list of ways: three in Spanish, five in English
- * (as on the English storefront). After the ways boxes, the safeguards
+ * dictionary, and its own list of ways: three in each language (cloud,
+ * managed, your own hardware). After the ways boxes, the safeguards
  * guide (src/landing/content/safeguards.ts) recommends one and marks it. The videos come from
  * src/landing/config/videos.ts; a video that is not published there shows
  * no card, and with none published the section is left out.

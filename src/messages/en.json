@@ -6377,7 +6377,7 @@
       },
       "licensing": {
         "title": "Open Core Licensing",
-        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. On your own instance (the open-source kit), premium modules cost €60 a year each, activated offline with a licence file. On the hosted service every module is included: within the pilot's limits, or without limits on the paid plan.",
+        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. On your own instance (the open-source kit), premium modules cost $60 a year each, activated offline with a licence file. On the hosted service every module is included: within the pilot's limits, or without limits on the paid plan.",
         "coreTitle": "Core (Open Source)",
         "coreItems": {
           "inventory": "Data Inventory & ROPA",
@@ -6386,7 +6386,7 @@
           "assessments": "Basic assessments (LIA, Custom)",
           "vendors": "Vendor management (basic)"
         },
-        "premiumTitle": "Premium modules (€60 a year each in the kit)",
+        "premiumTitle": "Premium modules ($60 a year each in the kit)",
         "premiumItems": {
           "assessments": "DPIA, PIA, TIA assessments",
           "vendor": "Vendor risk assessments",
@@ -7086,7 +7086,7 @@
         "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program: the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
         "artifacts": {
           "dpaTitle": "Data Processing Agreement (PDF)",
-          "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I–IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III–IV appear automatically when the processor is established outside the EEA/UK.",
+          "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I to IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III and IV appear automatically when the processor is established outside the EEA/UK.",
           "tiaTitle": "Standalone TIA (PDF)",
           "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header, ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
         },

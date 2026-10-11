@@ -8,5 +8,8 @@
   "login.magicLink": "Send magic link",
   "login.newHere": "New here? Sign up",
   "login.google": "Continue with Google",
-  "or": "or"
+  "or": "or",
+  "error.emailUnavailable": "Email sign-in is not available. Please use Google.",
+  "error.sendFailed": "The sign-in link could not be sent. Please try again.",
+  "error.resendFailed": "The link could not be sent again. Please try again."
 }
