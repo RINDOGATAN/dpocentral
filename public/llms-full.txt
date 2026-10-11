@@ -15,10 +15,11 @@ En español: el servicio alojado es un piloto gratuito, con límites y sin certi
 ## Precios (página en español)
 
 - [Precios en la página en español](https://dpocentral.todo.law/?lang=es#precios)
-- Piloto gratuito: una organización por cuenta; un plazo de edición limitado desde el primer inicio de sesión de la organización y, después, solo lectura con exportación; límites de registros; para registros de prueba, no para datos personales reales.
-- Plan nube UE, por organización: 1.800 € al año (o 179 € al mes). Incluye DPO Central, AI Sentinel y VendorWatch (plan Monitor), sin límite de personas usuarias, datos guardados en centros de datos de la UE (Fráncfort), sin plazo de edición ni tope de registros. Lo vende Rindogatan LLC (Estados Unidos), que no cobra el IVA español. Módulo de solicitudes de derechos, cuando esté disponible: 49 € al mes.
-- Instancia gestionada o tu propio hardware: bajo presupuesto (https://www.todo.law/es/contact/managed, https://www.todo.law/es/contact/deployment).
+- Piloto gratuito: gratis; 15 días de edición; después, solo lectura con exportación.
+- Plan nube UE: 1.800 € al año (o 179 € al mes). DPO Central, AI Sentinel y VendorWatch; sin límite de usuarios ni de registros; datos en la UE (Fráncfort). Sin IVA español (inversión del sujeto pasivo para empresas de la UE).
+- Condiciones: https://www.todo.law/es/legal/condiciones-plan-nube-ue
 - Subencargados: https://www.todo.law/es/legal/subencargados-plan-nube-ue
+- ¿Instancia gestionada o tu propio hardware? Escríbenos: https://www.todo.law/es/contact/managed
 
 ---
 
