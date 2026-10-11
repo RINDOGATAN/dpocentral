@@ -8850,7 +8850,7 @@
       "postureLabel": "Postura de IA",
       "engineConfigured": "Motor configurado: {provider}",
       "engineNotConfigured": "No hay ningún motor de IA configurado en este servidor. La IA permanece inactiva aunque se seleccione una postura.",
-      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier punto de conexión compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier punto de conexión compatible con OpenAI, p. ej. un Ollama local) o una ANTHROPIC_API_KEY.",
       "laneAvailable": "motor disponible",
       "laneUnavailable": "sin motor",
       "ackLabel": "Tengo autorización para activar la asistencia de IA en esta organización",
