@@ -20,7 +20,7 @@
  * moves. The videos never play on their own and load nothing until asked.
  */
 
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, m } from "framer-motion";
 import {
   ArrowDown,
   ArrowLeft,
@@ -145,7 +145,7 @@ interface Tool {
 function ToolPanel({ t, tool, i }: { t: T; tool: Tool; i: number }) {
   const Icon = tool.icon;
   return (
-    <motion.article
+    <m.article
       {...reveal(i)}
       className={
         "relative h-full rounded-2xl border p-6 md:p-7 flex flex-col " +
@@ -177,7 +177,7 @@ function ToolPanel({ t, tool, i }: { t: T; tool: Tool; i: number }) {
           </li>
         ))}
       </ul>
-    </motion.article>
+    </m.article>
   );
 }
 
@@ -190,7 +190,7 @@ function Connector({ t, labelKey, toward, i }: { t: T; labelKey: string; toward:
   const Wide = toward === "right" ? ArrowRight : ArrowLeft;
   const Narrow = toward === "right" ? ArrowDown : ArrowUp;
   return (
-    <motion.div {...reveal(i)} className="flex lg:flex-col items-center justify-center gap-3 py-3 lg:py-0 lg:px-1">
+    <m.div {...reveal(i)} className="flex lg:flex-col items-center justify-center gap-3 py-3 lg:py-0 lg:px-1">
       {/* the line */}
       <div className="flex lg:w-full flex-col lg:flex-row items-center" aria-hidden="true">
         <span className="block w-px h-6 lg:h-px lg:w-full lg:flex-1 bg-gradient-to-b lg:bg-gradient-to-r from-accent/10 via-accent/70 to-accent/10" />
@@ -203,7 +203,7 @@ function Connector({ t, labelKey, toward, i }: { t: T; labelKey: string; toward:
       <span className="max-w-[14rem] lg:max-w-none text-xs leading-snug text-accent/90 font-body font-medium lg:text-center">
         {t(labelKey)}
       </span>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -249,7 +249,7 @@ function Videos({ t, p, setup, videos }: { t: T; p: LandingLocale; setup: Locale
             const base = `/videos/${p}/${file}`;
             const captionId = `${p}-video-${n}-caption`;
             return (
-              <motion.figure key={file} {...reveal(i)} className={`${width} rounded-2xl border border-border bg-card overflow-hidden flex flex-col`}>
+              <m.figure key={file} {...reveal(i)} className={`${width} rounded-2xl border border-border bg-card overflow-hidden flex flex-col`}>
                 <video
                   className="block w-full aspect-video bg-black"
                   controls
@@ -269,7 +269,7 @@ function Videos({ t, p, setup, videos }: { t: T; p: LandingLocale; setup: Locale
                   <span className="block text-base font-display mb-1">{t(`${k}.v${n}.title`)}</span>
                   <span className="block text-sm text-muted-foreground font-body leading-relaxed">{t(`${k}.v${n}.caption`)}</span>
                 </figcaption>
-              </motion.figure>
+              </m.figure>
             );
           })}
         </div>
@@ -296,7 +296,7 @@ function Stages({ t, p }: { t: T; p: LandingLocale }) {
             {STAGE_ICONS.map((Icon, i) => {
               const n = i + 1;
               return (
-                <motion.li key={n} {...reveal(i)} className="flex lg:flex-col items-start lg:items-center gap-4 lg:text-center">
+                <m.li key={n} {...reveal(i)} className="flex lg:flex-col items-start lg:items-center gap-4 lg:text-center">
                   <div className="relative flex-shrink-0 w-14 h-14 rounded-full border border-accent/60 bg-[#1a1a1a] flex items-center justify-center text-accent">
                     <Icon className="w-6 h-6" aria-hidden="true" />
                     <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-accent text-[#1a1a1a] text-xs font-display flex items-center justify-center" aria-hidden="true">
@@ -310,7 +310,7 @@ function Stages({ t, p }: { t: T; p: LandingLocale }) {
                     <h3 className="text-base font-display mb-2 leading-snug">{t(`${k}.s${n}.title`)}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed font-body">{t(`${k}.s${n}.desc`)}</p>
                   </div>
-                </motion.li>
+                </m.li>
               );
             })}
           </ol>
@@ -351,7 +351,7 @@ function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
             const title = t(`${k}.w${n}.title`);
             const marked = recommended === i;
             return (
-              <motion.article
+              <m.article
                 key={letter}
                 id={boxId(i)}
                 data-recommended={marked ? "true" : undefined}
@@ -383,7 +383,7 @@ function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
                     <span className="sr-only">: {title}</span>
                   </a>
                 )}
-              </motion.article>
+              </m.article>
             );
           })}
         </div>
