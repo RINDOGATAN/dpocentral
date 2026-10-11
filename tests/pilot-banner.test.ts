@@ -1,10 +1,13 @@
 /**
- * Hosted pilot banner. It is shown only once a person is signed in: the
- * dashboard layout mounts it (src/components/pilot/pilot-shell.tsx,
- * SignedInPilotBanner). The root layout's PilotShell carries no banner, so
- * the landing page, the documentation and the sign-in screen show none and
- * reserve no space for one. The quiet pilot sentence on the sign-in screen
- * stays. Wording, dismissal and storage key are unchanged; absent on the kit.
+ * The end-of-pilot bar (owner, 11 Oct 2026), which replaced the warning
+ * banner. It is shown only once a person is signed in: the dashboard layout
+ * mounts it at the top (src/components/pilot/pilot-shell.tsx,
+ * SignedInPilotBanner). Nothing for most of the pilot; in the last five days
+ * the end date and a link to the prices; once read-only, that the export
+ * stays open. Never for an organisation on the paid plan, never on the kit.
+ * The root layout's PilotShell carries no bar, so the landing page, the
+ * documentation and the sign-in screen show none. The quiet pilot sentence
+ * on the sign-in screen stays.
  */
 
 import { describe, it, expect, afterEach, vi } from "vitest";
@@ -19,6 +22,28 @@ import es from "@/messages/es.json";
 const mocks = vi.hoisted(() => ({
   session: { user: { id: "user-1" } } as unknown,
   redirect: vi.fn(),
+  organization: { id: "org-1", name: "Org", slug: "org", plan: "PILOT" } as
+    | { id: string; name: string; slug: string; plan?: string }
+    | null,
+  status: undefined as unknown,
+  queried: [] as unknown[],
+}));
+
+// The bar reads the selected organisation and the Settings card's status.
+vi.mock("@/lib/organization-context", () => ({
+  useSelectedOrganizationOrNull: () => mocks.organization,
+}));
+vi.mock("@/lib/trpc", () => ({
+  trpc: {
+    organization: {
+      getPilotStatus: {
+        useQuery: (input: unknown, opts: { enabled?: boolean }) => {
+          if (opts?.enabled) mocks.queried.push(input);
+          return { data: opts?.enabled ? mocks.status : undefined };
+        },
+      },
+    },
+  },
 }));
 
 vi.mock("@/lib/auth", () => ({ authOptions: {} }));
@@ -42,6 +67,7 @@ vi.mock("@/components/dashboard-shell", () => ({
 }));
 
 import { PilotShell } from "@/components/pilot/pilot-shell";
+import { PILOT_END_BAR_DAYS, pilotEndBarState } from "@/lib/pilot-end-bar";
 import DashboardLayout from "@/app/(dashboard)/layout";
 import { SignInForm } from "@/app/(auth)/sign-in/sign-in-form";
 
@@ -66,45 +92,138 @@ async function renderSignedIn(locale: "en" | "es") {
 
 const hosted = () => vi.stubEnv("VERCEL_ENV", "production");
 
+const DAY = 24 * 60 * 60 * 1000;
+const inDays = (days: number) => new Date(Date.now() + days * DAY);
+const pilotStatus = (endsAt: Date | null, readOnly = false) => ({
+  hosted: true as const,
+  paid: false as const,
+  endsAt,
+  readOnly,
+});
+
 afterEach(() => {
   vi.unstubAllEnvs();
   mocks.session = { user: { id: "user-1" } };
+  mocks.organization = { id: "org-1", name: "Org", slug: "org", plan: "PILOT" };
+  mocks.status = undefined;
+  mocks.queried = [];
 });
 
-describe("hosted pilot banner: signed-in pages", () => {
-  it("is present in the signed-in layout, in English, with the docs and /run links", async () => {
-    hosted();
-    const html = await renderSignedIn("en");
-    expect(html).toContain("<main>page</main>");
-    expect(html).toContain('data-testid="hosted-pilot-banner"');
-    // Owner's wording, 10 Oct 2026: no "no contractual safeguards" line.
-    expect(html).toContain("Hosted pilot: free and capped (");
-    expect(html).toContain('href="/docs#hosted-pilot"');
-    expect(html).toContain("see docs</a>");
-    expect(html).toContain("). For real data, choose a paid plan or a managed instance.");
-    expect(html).not.toMatch(/contractual safeguards/);
-    expect(html).toContain('aria-label="Dismiss"');
+describe("when the bar shows", () => {
+  const now = new Date("2026-10-20T12:00:00Z");
+  const at = (days: number) => new Date(now.getTime() + days * DAY);
+
+  it("is hidden for most of the pilot, shown in the last five days, read-only after", () => {
+    expect(PILOT_END_BAR_DAYS).toBe(5);
+    expect(pilotEndBarState(pilotStatus(at(14)), now)).toBe("hidden");
+    expect(pilotEndBarState(pilotStatus(at(5.01)), now)).toBe("hidden");
+    expect(pilotEndBarState(pilotStatus(at(5)), now)).toBe("ending");
+    expect(pilotEndBarState(pilotStatus(at(0.1)), now)).toBe("ending");
+    expect(pilotEndBarState(pilotStatus(at(-1), true), now)).toBe("readOnly");
+    // The end has passed even if the status was fetched just before.
+    expect(pilotEndBarState(pilotStatus(at(-0.01)), now)).toBe("readOnly");
   });
 
-  it("is present in the signed-in layout in Castilian Spanish", async () => {
+  it("is hidden before the clock starts, on the paid plan, on the kit and while loading", () => {
+    expect(pilotEndBarState(pilotStatus(null), now)).toBe("hidden");
+    expect(pilotEndBarState({ hosted: true, paid: true }, now)).toBe("hidden");
+    expect(pilotEndBarState({ hosted: false }, now)).toBe("hidden");
+    expect(pilotEndBarState(undefined, now)).toBe("hidden");
+  });
+});
+
+describe("the bar on signed-in pages", () => {
+  it("shows nothing for most of the pilot, and no warning text", async () => {
+    hosted();
+    mocks.status = pilotStatus(inDays(10));
+    for (const locale of ["en", "es"] as const) {
+      const html = await renderSignedIn(locale);
+      expect(html).toBe("<main>page</main>");
+      expect(html).not.toMatch(/Hosted pilot|For real data|Run your own instance|Piloto alojado/);
+    }
+  });
+
+  it("gives the end date and the pricing link in the last five days, in English", async () => {
+    hosted();
+    const endsAt = new Date("2026-10-26T09:00:00Z");
+    vi.useFakeTimers({ now: new Date("2026-10-23T09:00:00Z"), toFake: ["Date"] });
+    try {
+      mocks.status = pilotStatus(endsAt);
+      const html = await renderSignedIn("en");
+      expect(html).toContain('data-testid="pilot-end-bar"');
+      expect(html).toContain('data-state="ending"');
+      expect(html).toContain(
+        "Your pilot ends on 26 October 2026. Move to the paid plan to keep editing with all your records."
+      );
+      expect(html).toContain('href="https://www.todo.law/pricing"');
+      expect(html).toContain(">See pricing</a>");
+      // At the top of the signed-in page, before the application itself.
+      expect(html.indexOf("pilot-end-bar")).toBeLessThan(html.indexOf("<main>"));
+      expect(html).not.toMatch(/Hosted pilot|For real data|managed instance|Run your own instance/);
+      expect(html).not.toMatch(/[\u2013\u2014]/);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("gives the end date and the Spanish prices link in the last five days, in Castilian", async () => {
     vi.stubEnv("AUTH_COOKIE_DOMAIN", ".todo.law");
-    const html = await renderSignedIn("es");
-    expect(html).toContain('data-testid="hosted-pilot-banner"');
-    expect(html).toContain("Piloto alojado: gratuito y con límites (");
-    expect(html).toContain("consulta la documentación</a>");
-    expect(html).toContain("). Para datos reales, elige un plan de pago o una instancia gestionada.");
-    expect(html).not.toMatch(/garantías contractuales/);
-    expect(html).toContain('aria-label="Cerrar"');
+    vi.useFakeTimers({ now: new Date("2026-10-23T09:00:00Z"), toFake: ["Date"] });
+    try {
+      mocks.status = pilotStatus(new Date("2026-10-26T09:00:00Z"));
+      const html = await renderSignedIn("es");
+      expect(html).toContain(
+        "Tu piloto termina el 26 de octubre de 2026. Pasa al plan de pago para seguir editando con todos tus registros."
+      );
+      expect(html).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
+      expect(html).toContain(">Ver precios</a>");
+      expect(html).not.toMatch(/Piloto alojado|datos reales|instancia gestionada|\busted\b/);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("says the organisation is read-only and exportable once the pilot is over, in both languages", async () => {
+    hosted();
+    mocks.status = pilotStatus(inDays(-3), true);
+    const en = await renderSignedIn("en");
+    expect(en).toContain('data-state="readOnly"');
+    expect(en).toContain(
+      "Your pilot has ended: the organisation is read-only and you can export it at any time."
+    );
+    expect(en).toContain('href="https://www.todo.law/pricing"');
+    expect(en).toContain(">See pricing</a>");
+    const es = await renderSignedIn("es");
+    expect(es).toContain(
+      "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras."
+    );
+    expect(es).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
+    expect(es).toContain(">Ver precios</a>");
+  });
+
+  it("never shows to an organisation on the paid plan, and does not even ask for its status", async () => {
+    hosted();
+    mocks.organization = { id: "org-1", name: "Org", slug: "org", plan: "EU_CLOUD" };
+    mocks.status = pilotStatus(inDays(-3), true);
+    for (const locale of ["en", "es"] as const) {
+      expect(await renderSignedIn(locale)).toBe("<main>page</main>");
+    }
+    expect(mocks.queried).toEqual([]);
+    // The status itself says paid when the selected record lags behind.
+    mocks.organization = { id: "org-1", name: "Org", slug: "org", plan: "PILOT" };
+    mocks.status = { hosted: true, paid: true, plan: "EU_CLOUD", renewsAt: null };
+    expect(await renderSignedIn("en")).toBe("<main>page</main>");
   });
 
   it("is absent on the kit, signed in or not", async () => {
     vi.stubEnv("VERCEL_ENV", "");
     vi.stubEnv("AUTH_COOKIE_DOMAIN", "");
+    mocks.status = pilotStatus(inDays(1));
     expect(await renderSignedIn("en")).toBe("<main>page</main>");
   });
 });
 
-describe("hosted pilot banner: public pages", () => {
+describe("the bar on public pages", () => {
   it("the root layout carries no banner and reserves no space, in both languages", () => {
     hosted();
     for (const locale of ["en", "es"] as const) {
@@ -120,8 +239,7 @@ describe("hosted pilot banner: public pages", () => {
         locale,
         createElement(SignInForm, { methods: { local: false, email: true, google: true } }),
       );
-      expect(html).not.toContain("hosted-pilot-banner");
-      expect(html).not.toContain(locale === "en" ? "Hosted pilot notice" : es.pilot.bannerLabel);
+      expect(html).not.toContain("pilot-end-bar");
       expect(html).toContain('data-testid="hosted-pilot-sentence"');
     }
   });
@@ -139,7 +257,7 @@ describe("hosted pilot banner: public pages", () => {
     walk(root);
     const mounting = files
       .filter((f) => !f.includes(`${path.sep}components${path.sep}pilot${path.sep}`))
-      .filter((f) => /HostedPilotBanner|SignedInPilotBanner/.test(readFileSync(f, "utf8")))
+      .filter((f) => /HostedPilotEndBar|SignedInPilotBanner/.test(readFileSync(f, "utf8")))
       .map((f) => path.relative(root, f));
     expect(mounting).toEqual([path.join("app", "(dashboard)", "layout.tsx")]);
 

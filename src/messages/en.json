@@ -9000,8 +9000,11 @@
   },
   "pilot": {
     "banner": "Hosted pilot: free and capped (<docs>see docs</docs>). For real data, choose a paid plan or a managed instance.",
-    "bannerLabel": "Hosted pilot notice",
-    "dismiss": "Dismiss",
+    "endBar": {
+      "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
+      "readOnly": "Your pilot has ended: the organisation is read-only and you can export it at any time.",
+      "pricing": "See pricing"
+    },
     "settings": {
       "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",
       "description": "The hosted service is a free pilot. Every module is included, within the limits below. {days} days of editing from your first sign-in, then read-only with export.",

@@ -2,11 +2,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { createContext, useContext, useState, useSyncExternalStore } from "react";
-import { useTranslations } from "next-intl";
-import { X } from "lucide-react";
+import { createContext, useContext } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { PILOT_DOCS_PATH } from "@/lib/hosted";
 import { useSelectedOrganizationOrNull } from "@/lib/organization-context";
+import { trpc } from "@/lib/trpc";
+import {
+  pilotEndBarDate,
+  pilotEndBarPricingUrl,
+  pilotEndBarState,
+  type PilotEndBarState,
+} from "@/lib/pilot-end-bar";
 
 // Whether this deployment is the hosted pilot. Resolved on the server
 // (src/lib/hosted.ts) and handed down from the root layout.
@@ -24,22 +30,6 @@ export function HostedPilotProvider({
 
 export function useHostedPilot(): boolean {
   return useContext(HostedPilotContext);
-}
-
-const DISMISS_KEY = "dpc.pilotBanner.dismissed";
-const DISMISS_EVENT = "dpc:pilot-banner-dismissed";
-
-function subscribeDismiss(onChange: () => void) {
-  window.addEventListener(DISMISS_EVENT, onChange);
-  return () => window.removeEventListener(DISMISS_EVENT, onChange);
-}
-
-function readDismissed(): boolean {
-  try {
-    return window.sessionStorage.getItem(DISMISS_KEY) === "1";
-  } catch {
-    return false;
-  }
 }
 
 /** The pilot sentence, with its link to the limits in the docs (owner's wording, 10 Oct 2026). */
@@ -65,57 +55,64 @@ export function HostedPilotSentence({ className }: { className?: string }) {
   );
 }
 
-/**
- * One-line banner on every signed-in hosted page, dismissible for the browser
- * session. Not shown while the selected organisation is on the paid EU cloud
- * plan, which is not a pilot.
- */
-export function HostedPilotBanner() {
-  const t = useTranslations("pilot");
-  const organization = useSelectedOrganizationOrNull();
-  // Dismissal lives in sessionStorage; the server render always shows the bar.
-  const dismissedThisSession = useSyncExternalStore(
-    subscribeDismiss,
-    readDismissed,
-    () => false
-  );
-  const [dismissedNow, setDismissedNow] = useState(false);
-
-  if (dismissedThisSession || dismissedNow) return null;
-  if (organization?.plan === "EU_CLOUD") return null;
-
-  const dismiss = () => {
-    try {
-      window.sessionStorage.setItem(DISMISS_KEY, "1");
-      window.dispatchEvent(new Event(DISMISS_EVENT));
-    } catch {
-      // Storage unavailable: hide for this page view only.
-    }
-    setDismissedNow(true);
-  };
-
+/** The bar as drawn, given its state; renders nothing when hidden. */
+export function PilotEndBar({
+  state,
+  endsOn,
+  pricingUrl,
+}: {
+  state: PilotEndBarState;
+  /** The end date, already written out in the reader's language. */
+  endsOn: string | null;
+  pricingUrl: string;
+}) {
+  const t = useTranslations("pilot.endBar");
+  if (state === "hidden") return null;
+  if (state === "ending" && !endsOn) return null;
   return (
-    <>
-      {/* Spacer so the fixed bar never covers the end of the page */}
-      <div aria-hidden className="h-16 sm:h-12" />
-      <div
-        role="region"
-        aria-label={t("bannerLabel")}
-        data-testid="hosted-pilot-banner"
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-background/95 backdrop-blur text-xs sm:text-sm"
-      >
-        <div className="mx-auto max-w-7xl px-4 py-2 min-h-10 flex items-center justify-between gap-3">
-          <HostedPilotSentence className="line-clamp-3 sm:line-clamp-2" />
-          <button
-            type="button"
-            onClick={dismiss}
-            aria-label={t("dismiss")}
-            className="shrink-0 p-1 text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </>
+    <div
+      role="status"
+      data-testid="pilot-end-bar"
+      data-state={state}
+      className="w-full border-b border-border bg-muted/60 text-xs sm:text-sm text-foreground"
+    >
+      <p className="mx-auto max-w-7xl px-4 py-1.5 text-center break-words">
+        {state === "ending" ? t("ending", { date: endsOn ?? "" }) : t("readOnly")}{" "}
+        <a
+          href={pricingUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 font-medium hover:text-primary"
+        >
+          {t("pricing")}
+        </a>
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The end-of-pilot bar for the selected organisation (owner, 11 Oct 2026):
+ * nothing for most of the pilot, the end date in the last days, the read-only
+ * line once the window is over. Nothing on the paid plan or on the kit. Reads
+ * the same status as the Settings card, so the two never disagree.
+ */
+export function HostedPilotEndBar() {
+  const locale = useLocale();
+  const organization = useSelectedOrganizationOrNull();
+  const onPaidPlan = organization?.plan === "EU_CLOUD";
+  const { data: status } = trpc.organization.getPilotStatus.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id && !onPaidPlan, staleTime: 60 * 1000 }
+  );
+  if (!organization || onPaidPlan) return null;
+  const state = pilotEndBarState(status);
+  const endsAt = status && status.hosted && !status.paid ? status.endsAt : null;
+  return (
+    <PilotEndBar
+      state={state}
+      endsOn={endsAt ? pilotEndBarDate(endsAt, locale) : null}
+      pricingUrl={pilotEndBarPricingUrl(locale)}
+    />
   );
 }

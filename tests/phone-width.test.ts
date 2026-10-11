@@ -391,14 +391,14 @@ describe("no sideways scrolling at phone width, signed in", () => {
     expect(header).not.toMatch(/<PageHelpButton[^>]*className="[^"]*hidden/);
   });
 
-  /** The hosted pilot banner wraps its sentence and keeps its dismiss control. */
-  it("keeps the pilot banner inside the viewport", () => {
-    const banner = readFileSync("src/components/pilot/hosted-pilot.tsx", "utf8");
-    // Fixed to the viewport edges, so it is sized by the screen, not by text.
-    expect(banner).toContain("fixed bottom-0 inset-x-0");
-    // The sentence clamps by line rather than running off the side.
-    expect(banner).toMatch(/line-clamp-\d/);
-    // The dismiss control keeps its size whatever the sentence does.
-    expect(banner).toContain("shrink-0");
+  /** The end-of-pilot bar wraps its sentence instead of widening the page. */
+  it("keeps the end-of-pilot bar inside the viewport", () => {
+    const bar = readFileSync("src/components/pilot/hosted-pilot.tsx", "utf8");
+    // Full width of its container, so it is sized by the screen, not by text.
+    expect(bar).toContain("w-full");
+    // A long word breaks rather than setting a minimum width.
+    expect(bar).toContain("break-words");
+    // In the flow of the page, not fixed over its content.
+    expect(bar).not.toMatch(/\bfixed\b/);
   });
 });
