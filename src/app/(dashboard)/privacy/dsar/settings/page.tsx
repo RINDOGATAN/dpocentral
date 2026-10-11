@@ -17,6 +17,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { DsarRestrictedNotice } from "@/components/privacy/dsar-restricted-notice";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
 const dsarTypeValues = [
   "ACCESS",
@@ -30,6 +31,8 @@ const dsarTypeValues = [
 export default function DSARSettingsPage() {
   const { organization } = useOrganization();
   const { canHandle } = useDsarAccess();
+  // Hosted service: retention after closing is fixed at 30 days.
+  const hosted = useHostedPilot();
   const t = useTranslations("dsarSettings");
   const tTypes = useTranslations("dsarPublic.status.typeLabels");
   const tDesc = useTranslations("dsarSettings.typeDescriptions");
@@ -47,6 +50,7 @@ export default function DSARSettingsPage() {
     customCss: "",
     thankYouMessage: "Thank you for your request. We will process it within the legally required timeframe.",
     privacyNoticeUrl: "",
+    privacyContactEmail: "",
     retentionDays: 90,
     isActive: true,
   });
@@ -97,6 +101,7 @@ export default function DSARSettingsPage() {
         customCss: existingForm.customCss || "",
         thankYouMessage: existingForm.thankYouMessage || "Thank you for your request. We will process it within the legally required timeframe.",
         privacyNoticeUrl: existingForm.privacyNoticeUrl || "",
+        privacyContactEmail: existingForm.privacyContactEmail || "",
         retentionDays: existingForm.retentionDays ?? 90,
         isActive: existingForm.isActive ?? true,
       });
@@ -123,6 +128,7 @@ export default function DSARSettingsPage() {
       customCss: formData.customCss || undefined,
       thankYouMessage: formData.thankYouMessage || undefined,
       privacyNoticeUrl: formData.privacyNoticeUrl || undefined,
+      privacyContactEmail: formData.privacyContactEmail.trim(),
       retentionDays: Number.isFinite(formData.retentionDays) ? formData.retentionDays : 90,
       isActive: formData.isActive,
     });
@@ -351,6 +357,22 @@ export default function DSARSettingsPage() {
               <p className="text-xs text-muted-foreground">{t("complianceCard.privacyNoticeUrlHint")}</p>
             </div>
             <div className="space-y-2">
+              <Label htmlFor="privacyContactEmail">{t("complianceCard.privacyContactEmail")}</Label>
+              <Input
+                id="privacyContactEmail"
+                type="email"
+                placeholder="privacy@example.com"
+                value={formData.privacyContactEmail}
+                onChange={(e) => setFormData({ ...formData, privacyContactEmail: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">{t("complianceCard.privacyContactEmailHint")}</p>
+            </div>
+            {hosted ? (
+              <p className="text-sm text-muted-foreground" data-testid="dsar-retention-hosted">
+                {t("complianceCard.retentionHostedHint")}
+              </p>
+            ) : (
+            <div className="space-y-2">
               <Label htmlFor="retentionDays">{t("complianceCard.retentionDays")}</Label>
               <Input
                 id="retentionDays"
@@ -368,6 +390,7 @@ export default function DSARSettingsPage() {
               />
               <p className="text-xs text-muted-foreground">{t("complianceCard.retentionDaysHint")}</p>
             </div>
+            )}
           </CardContent>
         </Card>
 

@@ -37,6 +37,7 @@ security:
 | Database | Managed Postgres, one dedicated database for this app | Postgres 16 container on the firm's disk |
 | Rate limits | Per function instance (see below) | One process, so one global limit; the client address is only known behind the TLS profile or another proxy |
 | DSAR retention job | Platform cron with `CRON_SECRET` | A small scheduler container calling the same route with `CRON_SECRET` |
+| DSAR retention period | Fixed: personal data removed 30 days after closing; open requests with no activity for 30 days deleted after a 7-day notice to owners and administrators (`/api/cron/dsar-inactive`) | The form's setting, 1 to 3650 days (default 90); no inactivity deletion |
 | Backups | The database provider's point-in-time restore | `backup.sh` (encrypted `pg_dump`) and `restore.sh`; the operator sets the schedule |
 | Secrets | Platform environment (sensitive values are write-only there) | `.env` next to the compose file, `chmod 600` |
 | Premium modules | All included in the free pilot; nothing is sold on the hosted service | Offline Ed25519-signed licence files (€60 a year each); no phone-home |

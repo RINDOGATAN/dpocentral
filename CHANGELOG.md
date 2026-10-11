@@ -17,6 +17,30 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
+- **Rights requests per organisation on the hosted service** (owner, 11 Oct 2026). A pilot
+  organisation may receive 3 requests through the public form in total; an organisation on the
+  paid plan needs the add-on (`dsarModuleStatus` ACTIVE, set with
+  `npm run db:set-dsar-module`, dry run unless `--execute`) and may then receive 10 per calendar
+  month, Europe/Madrid. Requests entered by staff never count. At the limit the form shows the
+  organisation's privacy contact e-mail (new optional setting). Without the add-on the menu
+  shows "Available as an add-on: 49 USD a month" ("49 € al mes" in Spanish), the public form and
+  status pages show a neutral "not available" page, and every request already held stays
+  readable. The kit is unchanged. Migration `20261011180000_dsar_module_addon` (one enum, four
+  nullable columns).
+- **Hosted retention**: the personal data of a closed request is removed 30 days after closing
+  (fixed; the 1 to 3650-day setting applies on the kit only), and every closing status now
+  records its closing date. A new nightly job (`/api/cron/dsar-inactive`) deletes open requests
+  with no activity for 30 days, after an e-mail notice to owners and administrators 7 days
+  before, and keeps a contentless entry in the organisation's audit log.
+- **Support reads** (`npm run db:dsar-support-read`) write a SUPPORT entry in the request's own
+  trail before reading.
+- The requester is told by e-mail when the deadline is extended (new date; the reasons follow
+  from the organisation). Staff are warned when the same address made an access request in the
+  six months before (LOPDGDD art. 13.3). Generated tasks are titled in the reader's language.
+- **Public form abuse protection**: hidden field, minimum fill time, shared daily limits in the
+  database (per address and per organisation), and at most 3 acknowledgement e-mails a day to one
+  recipient (migration `20261011150000_rate_limit_counters`).
+
 - **Take your programme with you** ("Llévate tu programa"), in Settings:
   the whole programme as one ZIP in an open, documented format
   (`dpocentral-programme/1.0`): `programme.json` with stable ids and
@@ -57,6 +81,7 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Removed
 
+- The help text "Require ID upload before processing": the form never asks for one.
 - **The Classic layout.** Guided is now the only dashboard layout. The
   layout switch (the Settings card, the account menu entry and Classic's way
   back), the Classic top bar and its menus, and the Classic dashboard (its

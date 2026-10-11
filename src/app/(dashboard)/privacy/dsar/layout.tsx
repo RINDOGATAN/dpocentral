@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 import { isDsarModuleEnabled } from "@/config/features";
 import { DsarModuleOffDashboardNote } from "@/components/privacy/dsar-module-off-note";
+import { DsarModuleAccessNote } from "@/components/privacy/dsar-module-access-note";
 
 /**
  * Every dashboard page of the rights-request module (/privacy/dsar/*). When
@@ -12,5 +13,12 @@ import { DsarModuleOffDashboardNote } from "@/components/privacy/dsar-module-off
  */
 export default function DsarModuleLayout({ children }: { children: ReactNode }) {
   if (!isDsarModuleEnabled()) return <DsarModuleOffDashboardNote />;
-  return <>{children}</>;
+  // Hosted service: the add-on line, or the public-form usage
+  // (src/server/services/dsar/module.ts). Pages and requests stay readable.
+  return (
+    <>
+      <DsarModuleAccessNote />
+      {children}
+    </>
+  );
 }

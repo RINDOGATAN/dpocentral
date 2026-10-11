@@ -44,7 +44,7 @@ export default function PublicDSARPage() {
   const locale = useLocale();
   const t = useTranslations("dsarPublic.form");
 
-  const { data: formConfig, isLoading: configLoading, error: configError } =
+  const { data: formConfig, isLoading: configLoading, error: configError, refetch: refetchForm } =
     trpc.dsar.getPublicForm.useQuery(
       { orgSlug },
       // Loaded once: the form token it carries dates the page load, and a
@@ -52,7 +52,13 @@ export default function PublicDSARPage() {
       { retry: false, refetchOnWindowFocus: false, refetchOnReconnect: false, staleTime: Infinity }
     );
 
-  const submitMutation = trpc.dsar.submitPublic.useMutation();
+  const submitMutation = trpc.dsar.submitPublic.useMutation({
+    // The form reached its limit meanwhile: reload it, so it shows where to
+    // write instead.
+    onError: (error) => {
+      if (error.data?.code === "FORBIDDEN") void refetchForm();
+    },
+  });
 
   const [consentGiven, setConsentGiven] = useState(false);
   // The hidden field: people never see it, form-filling scripts fill it.
@@ -106,6 +112,36 @@ export default function PublicDSARPage() {
           <CardContent className="text-center">
             <p className="text-sm text-muted-foreground">{t("loadingError.hint")}</p>
           </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // The hosted service's limit for this organisation is reached: no form,
+  // only where to write.
+  if (!formConfig.accepting) {
+    return (
+      <div className="min-h-screen bg-muted/50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg" data-testid="dsar-form-closed">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+              <Shield className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <CardTitle>{t("closed.title")}</CardTitle>
+            <CardDescription>
+              {formConfig.contactEmail
+                ? t.rich("closed.withContact", {
+                    orgName: formConfig.orgName,
+                    email: formConfig.contactEmail,
+                    mail: (chunks) => (
+                      <a className="text-primary underline break-all" href={`mailto:${formConfig.contactEmail}`}>
+                        {chunks}
+                      </a>
+                    ),
+                  })
+                : t("closed.withoutContact", { orgName: formConfig.orgName })}
+            </CardDescription>
+          </CardHeader>
         </Card>
       </div>
     );

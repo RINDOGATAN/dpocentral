@@ -36,6 +36,8 @@
     "db:verify-demo": "tsx scripts/assert-safe-db.ts && tsx scripts/verify-demo.ts",
     "db:purge-dsar-data": "tsx scripts/assert-safe-db.ts && tsx scripts/purge-dsar-data.ts",
     "db:set-org-plan": "tsx scripts/assert-safe-db.ts && tsx scripts/set-org-plan.ts",
+    "db:set-dsar-module": "tsx scripts/assert-safe-db.ts && tsx scripts/set-dsar-module.ts",
+    "db:dsar-support-read": "tsx scripts/assert-safe-db.ts && tsx scripts/dsar-support-read.ts",
     "demo:setup": "bash scripts/demo/setup-demo.sh",
     "demo:setup-all": "bash scripts/demo/setup-demo.sh --all",
     "catalog:verify": "tsx scripts/verify-catalog-snapshot.ts"

@@ -1386,7 +1386,8 @@
         "unavailable": {
           "no_extension": "The law of your primary jurisdiction allows no extension.",
           "already_extended": "This deadline has already been extended."
-        }
+        },
+        "doneNotified": "Deadline extended to {newDate}. The person has been told of the new date by e-mail; send them the reasons."
       },
       "requester": {
         "title": "Requester Information",
@@ -1461,6 +1462,10 @@
         "messageLabel": "Message *",
         "messagePlaceholder": "Write your message...",
         "submit": "Send"
+      },
+      "repeatAccess": {
+        "title": "Repeated access request",
+        "body": "This e-mail address made {count, plural, one {another access request} other {# other access requests}} in the six months before this one (the last on {date}). Under article 13.3 of the Spanish data protection act (LOPDGDD), access exercised more than once within six months may be considered repetitive, unless there is a legitimate reason. The decision is yours."
       }
     },
     "aiSystemDetail": {
@@ -2876,7 +2881,11 @@
       "EXPORT_TO_AI_SENTINEL": "Exported to AI Sentinel",
       "REQUEST_CREATED": "Request created",
       "REQUEST_SUBMITTED_PUBLIC": "Request submitted from the portal",
-      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal"
+      "REQUEST_WITHDRAWN_PUBLIC": "Request withdrawn from the portal",
+      "SUPPORT": "Read by support",
+      "INACTIVITY_NOTICE_SENT": "Deletion notice sent to the owners and administrators",
+      "DSAR_PUBLIC_SUBMISSION": "Request received through the public form",
+      "DSAR_DELETED_INACTIVE": "Deleted after 30 days without activity"
     },
     "auditEntity": {
       "Organization": "Organisation",
@@ -3092,7 +3101,10 @@
       "privacyNoticeUrl": "Privacy Notice URL",
       "privacyNoticeUrlHint": "Public URL of your organization's privacy notice. Shown to requesters on the intake form.",
       "retentionDays": "Retention period (days)",
-      "retentionDaysHint": "Days after a request is completed before personal data is automatically redacted. Default 90."
+      "retentionDaysHint": "Days after a request is completed before personal data is automatically redacted. Default 90.",
+      "privacyContactEmail": "Privacy contact e-mail",
+      "privacyContactEmailHint": "Shown on the public form when it is not taking requests, so people can still reach you.",
+      "retentionHostedHint": "On the hosted service, the personal data of a closed request is removed 30 days after closing."
     },
     "cssCard": {
       "title": "Custom Styling",
@@ -3210,7 +3222,12 @@
         "defaultThankYou": "Thank you for your request. We will process it within the legally required timeframe.",
         "noEmailNote": "Keep this reference: you will need it to check the status of your request. No confirmation e-mail was sent this time."
       },
-      "languageSwitcher": "Language"
+      "languageSwitcher": "Language",
+      "closed": {
+        "title": "This form is not taking requests at the moment",
+        "withContact": "Please write to {orgName} at <mail>{email}</mail>.",
+        "withoutContact": "Please contact {orgName} directly."
+      }
     },
     "status": {
       "loadingError": {
@@ -3267,6 +3284,10 @@
         "description": "The organization has uploaded your response. You can download it from the link below.",
         "download": "Download response",
         "expiresOn": "Available until {date}"
+      },
+      "unavailable": {
+        "title": "This page is not available",
+        "description": "Please contact the organization directly."
       }
     },
     "email": {
@@ -3285,6 +3306,14 @@
       "referenceLabel": "Reference number",
       "ctaText": "View Request Status",
       "footer": "If you have questions, reply to this email or use the link above to check your request status."
+    },
+    "extensionEmail": {
+      "subject": "{orgName}: new date for your request",
+      "greeting": "Hello {name},",
+      "body": "{orgName} has extended the time to answer your request. The new date is {newDate}.",
+      "reasons": "{orgName} will send you the reasons for the extension.",
+      "referenceLabel": "Reference number",
+      "statusLabel": "Check the status of your request"
     }
   },
   "assessments": {
@@ -5232,10 +5261,6 @@
           "autoAck": {
             "label": "Auto-acknowledgment",
             "desc": "Send confirmation email on submission"
-          },
-          "identity": {
-            "label": "Identity verification",
-            "desc": "Require ID upload before processing"
           },
           "types": {
             "label": "Request types",
@@ -9553,7 +9578,9 @@
       "dsarIntakeNotAccepted": "We could not accept this request. Please reload the page and submit it again.",
       "dsarIntakeTooFast": "Please take a moment to check your request, then submit it again.",
       "dsarIntakeTooMany": "Too many requests have been sent from here today. Please try again tomorrow, or contact the organization directly.",
-      "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly."
+      "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly.",
+      "dsarModuleInactiveCreate": "The rights-request module is not active for this organization. It is available as an add-on; the requests already held stay available.",
+      "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly."
     },
     "pattern": {
       "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",
@@ -9589,7 +9616,15 @@
   "dsarModule": {
     "off": "Rights requests are not included in this plan.",
     "exportBody": "The rights-request records your organisation already holds can still be downloaded.",
-    "exportLink": "Download the records (JSON)"
+    "exportLink": "Download the records (JSON)",
+    "addOnLine": "Available as an add-on: 49 USD a month",
+    "addOnTitle": "Rights requests are an add-on on your plan",
+    "addOnBody": "Available as an add-on: 49 USD a month. The requests you already hold stay available here.",
+    "addOnLink": "See the plans",
+    "pilotUsage": "Pilot: {used} of {limit} requests through the public form.",
+    "monthUsage": "This month: {used} of {limit} requests through the public form.",
+    "limitReached": "The public form is not taking requests now; it shows your privacy contact e-mail instead.",
+    "staffNote": "Requests you enter yourself do not count."
   },
   "drafts": {
     "badge": "To confirm",
@@ -9951,5 +9986,17 @@
       "RESPONSE_LINK_SET": "Response link set",
       "RESPONSE_LINK_CLEARED": "Response link removed"
     }
+  },
+  "dsarGeneratedTask": {
+    "title": "Search and extract data from {asset}",
+    "description": "Identify and extract the personal data of {requester} held in {asset}."
+  },
+  "dsarInactivityEmail": {
+    "subject": "{orgName}: a rights request will be deleted on {date}",
+    "heading": "A rights request has had no activity for {days} days",
+    "body": "Request {reference} in {orgName} has had no activity since {lastActivity}. On the hosted service, an open request with no activity for 30 days is deleted. Unless someone works on it, it will be deleted on {date}.",
+    "action": "Any change to the request, a task or a message keeps it.",
+    "ctaText": "Open the request",
+    "whyYou": "You receive this because you are an owner or administrator of {orgName}."
   }
 }
