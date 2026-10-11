@@ -13,7 +13,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { RUN_YOUR_OWN_URL } from "@/lib/hosted";
 import {
   PILOT_DAYS,
   PILOT_DPIA_LIMIT,
@@ -106,21 +105,8 @@ export default async function DocsOverviewPage() {
             <p className="mt-2">{t("hostedPilot.oneOrganization")}</p>
           </div>
           <p>{t("hostedPilot.exports")}</p>
-          <p>{t("hostedPilot.safeguards")}</p>
-          <p>
-            {t.rich("hostedPilot.run", {
-              run: (chunks) => (
-                <a
-                  href={RUN_YOUR_OWN_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline font-medium text-foreground"
-                >
-                  {chunks}
-                </a>
-              ),
-            })}
-          </p>
+          {/* Owner, 10 Oct 2026: for real data, a paid plan or a managed instance (no "no safeguards" line). */}
+          <p>{t("hostedPilot.run")}</p>
         </div>
       </section>
 

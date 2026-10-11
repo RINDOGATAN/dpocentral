@@ -6216,8 +6216,7 @@
         "ceilingsIntro": "Una organización puede tener como máximo:",
         "oneOrganization": "Una cuenta pertenece a una sola organización.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
-        "safeguards": "No hay garantías contractuales: ni contrato de encargo del tratamiento, ni nivel de servicio, ni certificación de seguridad.",
-        "run": "Para trabajar con datos reales de clientes, <run>usa tu propia instancia</run>."
+        "run": "Para datos reales, elige un plan de pago o una instancia gestionada."
       },
       "support": {
         "title": "Cuando algo falla",
@@ -8929,7 +8928,7 @@
     }
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, limitado (<docs>ver documentación</docs>) y sin garantías contractuales. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
+    "banner": "Piloto alojado: gratuito y con límites (<docs>consulta la documentación</docs>). Para datos reales, elige un plan de pago o una instancia gestionada.",
     "bannerLabel": "Aviso del piloto alojado",
     "dismiss": "Cerrar",
     "settings": {

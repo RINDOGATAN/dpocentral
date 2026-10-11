@@ -6216,8 +6216,7 @@
         "ceilingsIntro": "An organization can hold up to:",
         "oneOrganization": "An account belongs to one organization.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
-        "safeguards": "There are no contractual safeguards: no data processing agreement, no service level and no security certification.",
-        "run": "To work with real customer details, <run>run your own instance</run>."
+        "run": "For real data, choose a paid plan or a managed instance."
       },
       "support": {
         "title": "When something goes wrong",
@@ -8929,7 +8928,7 @@
     }
   },
   "pilot": {
-    "banner": "Hosted pilot: free, capped (<docs>see docs</docs>), and with no contractual safeguards. To deploy real customer details, <run>run your own instance</run>.",
+    "banner": "Hosted pilot: free and capped (<docs>see docs</docs>). For real data, choose a paid plan or a managed instance.",
     "bannerLabel": "Hosted pilot notice",
     "dismiss": "Dismiss",
     "settings": {
