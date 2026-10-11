@@ -4,7 +4,7 @@
 
 /**
  * The safeguards guide in the landing's hosting section ("You choose where it lives" /
- * "Tú eliges dónde se aloja"), as on the storefront (todolaw PR #59): after the ways
+ * "Adaptado a tus necesidades"), as on the storefront (todolaw PR #59): after the ways
  * boxes, closed by default, opens in place (no dialog, no new route), real radio buttons
  * with labels, the result announced, the recommended box marked, and a quiet bar on
  * phones. Spanish: three ways only, and no kit, hardware, "ejecut" or "$" in the guide.

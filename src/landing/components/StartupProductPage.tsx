@@ -79,6 +79,11 @@ const StartupProductPage = ({
   middle,
 }: StartupProductPageProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  /**
+   * Whether the dictionary has copy for a key: t returns the key itself when
+   * it is missing, and an empty string leaves the piece out on purpose.
+   */
+  const has = (key: string) => t(key) !== key && t(key) !== "";
   const [cardMode, setCardMode] = useState<"signup" | "login" | "sent">("signup");
   const [emailInput, setEmailInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -325,7 +330,7 @@ const StartupProductPage = ({
                     <div className="relative animate-fade-in">
                       <h2 className="text-xl md:text-2xl font-display mb-2">{t("hero.cta")}</h2>
                       <p className="text-sm text-muted-foreground font-body mb-6">
-                        {t("hero.subtitle").split(".")[0]}.
+                        {has("hero.card") ? t("hero.card") : `${t("hero.subtitle").split(".")[0]}.`}
                       </p>
                       <form onSubmit={handleMagicLink} className="space-y-4">
                         <input
@@ -400,7 +405,7 @@ const StartupProductPage = ({
                 whileInView="visible"
                 viewport={{ once: true, margin: "-50px" }}
                 variants={fadeUp}
-                className="paper-card"
+                className="paper-card transition-shadow"
               >
                 <h3 className="text-lg font-display mb-3">{vp.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed font-body">{vp.desc}</p>
@@ -498,8 +503,9 @@ const StartupProductPage = ({
         </>
       )}
 
-      {/* BOTTOM CTA */}
-      <section className="py-20 md:py-28 border-t border-border bg-secondary/10">
+      {/* BOTTOM CTA: a heading and a line where the dictionary has them
+          (English); the Spanish page keeps only the button back to the top. */}
+      <section className={`${has("cta.text") ? "py-20 md:py-28" : "py-12 md:py-16"} border-t border-border bg-secondary/10`}>
         <div className="container px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -507,12 +513,16 @@ const StartupProductPage = ({
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-2xl md:text-4xl mb-6">
-              {t("cta.heading.prefix")}
-              <span className="text-accent">{t("cta.heading.accent")}</span>
-              {t("cta.heading.suffix")}
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto font-body">{t("cta.text")}</p>
+            {has("cta.heading.prefix") && (
+              <h2 className="text-2xl md:text-4xl mb-6">
+                {t("cta.heading.prefix")}
+                <span className="text-accent">{t("cta.heading.accent")}</span>
+                {t("cta.heading.suffix")}
+              </h2>
+            )}
+            {has("cta.text") && (
+              <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto font-body">{t("cta.text")}</p>
+            )}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="btn-primary text-base px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"

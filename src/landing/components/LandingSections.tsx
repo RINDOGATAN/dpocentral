@@ -307,7 +307,7 @@ function Stages({ t, p }: { t: T; p: LandingLocale }) {
                       {n}
                     </span>
                   </div>
-                  <div className="paper-card flex-1 lg:w-full !p-5">
+                  <div className="paper-card transition-shadow flex-1 lg:w-full !p-5">
                     <span className="block text-[11px] uppercase tracking-wider text-muted-foreground font-medium font-body mb-1">
                       {t(`${k}.stage`)} {n}
                     </span>
@@ -360,7 +360,7 @@ function Ways({ t, p, setup }: { t: T; p: LandingLocale; setup: LocaleSetup }) {
                 id={boxId(i)}
                 data-recommended={marked ? "true" : undefined}
                 {...reveal(i)}
-                className={`${width} paper-card flex flex-col scroll-mt-28 ${marked ? "border-accent shadow-[var(--shadow-hover)]" : ""}`}
+                className={`${width} paper-card transition-shadow flex flex-col scroll-mt-28 ${marked ? "border-accent shadow-[var(--shadow-hover)]" : ""}`}
               >
                 <div className="flex items-center justify-between mb-5">
                   <div className="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">
