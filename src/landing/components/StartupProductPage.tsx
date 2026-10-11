@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { StatusMark } from "@/components/ui/status-chip";
+import { writeLocaleCookie } from "@/i18n/locale-cookie";
 
 export interface Feature {
   id: string;
@@ -530,6 +531,17 @@ const StartupProductPage = ({
               {t("cta.button")}
               <ArrowRight className="w-5 h-5 ml-2 inline" />
             </button>
+            {/* The product's public documentation (/docs), in the page's
+                language: the cookie is set first, as the docs read it. */}
+            {has("cta.docs") && (
+              <a
+                href="/docs"
+                onClick={() => writeLocaleCookie(document.documentElement.lang === "es" ? "es" : "en")}
+                className="block w-fit mx-auto mt-6 text-base font-medium text-accent hover:text-foreground underline underline-offset-4 transition-colors font-body"
+              >
+                {t("cta.docs")}
+              </a>
+            )}
           </motion.div>
         </div>
       </section>
