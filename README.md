@@ -69,7 +69,7 @@ One codebase, two postures, switched by environment only:
   For real data, choose the paid Cloud Plan (<https://www.todo.law/pricing>),
   a managed instance, or your own hardware (<https://www.todo.law/run>).
 
-Premium modules cost €60 a year each in the kit (your own instance), activated
+Premium modules cost $60 a year each in the kit (your own instance), activated
 offline with a licence file. The dormant Stripe code
 (`NEXT_PUBLIC_STRIPE_ENABLED`) is for forks only and stays off here.
 

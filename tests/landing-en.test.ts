@@ -137,7 +137,7 @@ describe("English sections", () => {
     expect(en["en.ways.sub"]).toBe("Three hosting options, with different safeguards, certifications and levels of control.");
     expect(html).not.toMatch(/self-install kit|TODO\.LAW hardware|Law-Firm-in-a-Box|github\.com\/RINDOGATAN\/todolaw-suite/);
     for (const t of titles) expect(html).toContain(t.replace("&", "&amp;"));
-    expect(en["en.ways.label"]).toBe("Guarantees and hosting");
+    expect(en["en.ways.label"]).toBe("Safeguards and hosting");
     expect(en["en.ways.heading.prefix"] + en["en.ways.heading.accent"]).toBe("Tailored to your needs");
     // Portability now sits on the cloud box (owner, 10 Oct 2026).
     expect(en["en.ways.w1.desc"]).toMatch(/take your program elsewhere whenever you like with a simple export/);

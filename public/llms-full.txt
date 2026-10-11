@@ -8,7 +8,7 @@ Hosted pilot: https://dpocentral.todo.law (free, with limits, for test records; 
 Plans and prices: https://www.todo.law/pricing
 Managed instance or your own hardware: https://www.todo.law/run
 Company: TODO.LAW (https://todo.law)
-License: Open Core: AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
+License: Open Core: AGPL-3.0 (core) + premium modules at $60 a year each in the kit (your own instance, offline activation)
 Source: https://github.com/RINDOGATAN/dpocentral
 
 En español: el servicio alojado empieza con un piloto gratuito y con límites, para registros de prueba; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propio hardware (https://www.todo.law/es/garantias-alojamiento-certificaciones). Los módulos premium cuestan 60 € al año cada uno en el kit.
@@ -141,7 +141,7 @@ DPO Central follows an open core model:
 - AI governance register
 - Notifications & reports
 
-**Premium modules (€60 a year each in the kit, activated offline with a licence file)**:
+**Premium modules ($60 a year each in the kit, activated offline with a licence file)**:
 - DPIA, PIA, TIA assessment templates & scoring
 - Vendor risk assessments & scoring
 - Vendor Catalog (starter catalog of common processors)
