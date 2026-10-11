@@ -143,7 +143,7 @@ const EN_FALLBACK: Record<string, string> = {
   coverTitle: "Regulatory Landscape Report",
   coverSubtitle: "Privacy Program Compliance & Exposure Analysis",
   coverConfidential:
-    "CONFIDENTIAL — This document provides a regulatory compliance overview for internal use by the privacy and legal teams. It should not be distributed externally without authorization.",
+    "CONFIDENTIAL. This document provides a regulatory compliance overview for internal use by the privacy and legal teams. It should not be distributed externally without authorization.",
   executiveSummary: "Executive Summary",
   "stats.appliedFrameworks": "Applied Frameworks",
   "stats.complianceScore": "Compliance Score",

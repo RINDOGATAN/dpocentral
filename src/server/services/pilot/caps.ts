@@ -8,8 +8,9 @@ import { isDsarModuleEnabled } from "@/config/features";
 import {
   isHostedDeployment,
   PILOT_EXPORT_PATH,
+  managedUrl,
   PLANS_URL,
-  RUN_YOUR_OWN_URL,
+  plansUrl,
 } from "@/lib/hosted";
 import {
   PILOT_DAYS,
@@ -202,24 +203,25 @@ export function pilotMessage(
   locale: Locale,
   resource?: PilotResource
 ): string {
-  const run = RUN_YOUR_OWN_URL;
+  const plans = plansUrl(locale);
+  const managed = managedUrl(locale);
   const exp = exportUrl();
   if (kind === "readOnly") {
     return locale === "es"
-      ? `Esta organización piloto es de solo lectura: el periodo de edición del piloto ha terminado. Puedes seguir exportando todo lo que creaste (${exp}) o alojar tu propia instancia (${run}).`
-      : `This pilot organization is read-only: the pilot's editing window has ended. You can still export everything you created (${exp}) or run your own instance (${run}).`;
+      ? `Esta organización piloto es de solo lectura: el periodo de edición del piloto ha terminado. Puedes seguir exportando todo lo que has creado (${exp}) o pasar al plan de pago (${plans}).`
+      : `This pilot organization is read-only: the pilot's editing window has ended. You can still export everything you created (${exp}) or move to the paid plan (${plans}).`;
   }
   if (kind === "oneOrganization") {
     return locale === "es"
-      ? `El piloto alojado admite una organización por cuenta. Para gestionar más, aloja tu propia instancia (${run}). Puedes exportar lo que ya tienes (${exp}).`
-      : `The hosted pilot allows one organization per account. To manage more, run your own instance (${run}). You can export what you already have (${exp}).`;
+      ? `El piloto alojado admite una organización por cuenta. Para gestionar más, pide una instancia gestionada (${managed}). Puedes exportar lo que ya tienes (${exp}).`
+      : `The hosted pilot allows one organization per account. To manage more, ask for a managed instance (${managed}). You can export what you already have (${exp}).`;
   }
   const r = resource ?? "dataAssets";
   const limit = PILOT_LIMITS[r];
   const label = RESOURCE_LABELS[r][locale];
   return locale === "es"
-    ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, aloja tu propia instancia (${run}) o exporta tus registros (${exp}).`
-    : `You have reached the pilot limit of ${limit} ${label}. To continue, run your own instance (${run}) or export your records (${exp}).`;
+    ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, pasa al plan de pago (${plans}) o exporta tus registros (${exp}).`
+    : `You have reached the pilot limit of ${limit} ${label}. To continue, move to the paid plan (${plans}) or export your records (${exp}).`;
 }
 
 // ── Impact assessments on the pilot tier ─────────────────────────────────

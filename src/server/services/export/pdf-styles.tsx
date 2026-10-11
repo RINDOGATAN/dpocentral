@@ -689,7 +689,7 @@ export function CoverPage({
       {subtitle && <Text style={s.coverSubtitle}>{subtitle}</Text>}
       <Text style={s.coverDate}>Generated {date}</Text>
       <Text style={s.coverConfidential}>
-        CONFIDENTIAL — This document contains sensitive information about data
+        CONFIDENTIAL. This document contains sensitive information about data
         protection practices. Distribution should be limited to authorized
         personnel and supervisory authorities upon request.
       </Text>

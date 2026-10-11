@@ -357,7 +357,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
       await resend.emails.send({
         from: emailFrom(),
         to: customer.email,
-        subject: `${brand.name} — Payment Failed`,
+        subject: `${brand.name}: payment failed`,
         html: `
           <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
             <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">

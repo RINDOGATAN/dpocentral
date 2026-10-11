@@ -75,7 +75,7 @@ const EN_FALLBACK: Record<string, string> = {
   coverTitle: "DSAR Performance Report",
   coverSubtitle: "Data Subject Access Request Compliance & Metrics",
   coverConfidential:
-    "CONFIDENTIAL — This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
+    "CONFIDENTIAL. This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
   executiveSummary: "Executive Summary",
   "stats.totalRequests": "Total Requests",
   "stats.onTimeRate": "On-Time Rate",
@@ -129,7 +129,7 @@ const EN_FALLBACK: Record<string, string> = {
   "agingColumns.band": "Age Band",
   "agingColumns.open": "Open Requests",
   "agingColumns.risk": "Risk Level",
-  riskCritical: "Critical — likely overdue",
+  riskCritical: "Critical: likely overdue",
   riskAtRisk: "At risk",
   riskOnTrack: "On track",
   "dsarTypes.ACCESS": "Access (Right of Access)",

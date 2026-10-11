@@ -315,7 +315,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!template) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Assessment template is missing — it may have been deleted",
+          message: "Assessment template is missing: it may have been deleted",
         });
       }
       const { completionPercentage, totalQuestions } = assessmentProgress(
@@ -626,7 +626,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!assessment.template) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Assessment template is missing — it may have been deleted",
+          message: "Assessment template is missing: it may have been deleted",
         });
       }
 
@@ -668,7 +668,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!assessment.template) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Assessment template is missing — it may have been deleted",
+          message: "Assessment template is missing: it may have been deleted",
         });
       }
 
@@ -978,7 +978,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!assessment.template) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Assessment template is missing — it may have been deleted",
+          message: "Assessment template is missing: it may have been deleted",
         });
       }
 
@@ -1100,7 +1100,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!assessment.template) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Assessment template is missing — it may have been deleted",
+          message: "Assessment template is missing: it may have been deleted",
         });
       }
 

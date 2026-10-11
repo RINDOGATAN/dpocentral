@@ -171,7 +171,7 @@ describe("one organisation per account", () => {
     hosted();
     mocks.prisma.organizationMember.count.mockResolvedValue(1);
     await expect(create()).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(create()).rejects.toThrow("https://www.todo.law/run");
+    await expect(create()).rejects.toThrow("https://www.todo.law/contact/managed");
     expect(mocks.prisma.organization.create).not.toHaveBeenCalled();
   });
 
@@ -204,7 +204,8 @@ describe("the switch to read-only at the end of the editing window", () => {
     const err = await addJurisdiction(caller).catch((e) => e);
     expect(err).toMatchObject({ code: "FORBIDDEN" });
     expect(err.message).toContain("read-only");
-    expect(err.message).toContain("https://www.todo.law/run");
+    expect(err.message).toContain("https://www.todo.law/pricing");
+    expect(err.message).not.toMatch(/own instance/);
     expect(err.message).toContain("/privacy/settings#pilot-export");
     expect(mocks.prisma.organizationJurisdiction.upsert).not.toHaveBeenCalled();
   });

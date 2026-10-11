@@ -153,7 +153,7 @@
       "compliance": {
         "title": "Compliance Information",
         "fromCatalog": "From Catalog",
-        "subtitle": "Reference data from the vendor catalog — not assessed; verify with the vendor",
+        "subtitle": "Reference data from the vendor catalog, not assessed: verify with the vendor",
         "certifications": "Certifications",
         "privacyPolicyUrl": "Privacy Policy URL",
         "dpaUrl": "DPA URL",
@@ -643,7 +643,7 @@
         "tiaPending": "TIA pending",
         "adequacyTitle": "Adequacy decision in force",
         "adequacyBody": "{country} has an EU adequacy decision (adopted {date}).",
-        "adequacyPartial": " ⚠ Partial — see notes.",
+        "adequacyPartial": " ⚠ Partial: see notes.",
         "complianceStatus": "Compliance Status",
         "suggestedFromData": "Suggested from current data: <b>{status}</b>",
         "schremsTitle": "Schrems II Checklist",
@@ -656,8 +656,8 @@
         "category_organizational": "Organizational",
         "measuresActive": "{count, plural, one {# measure active} other {# measures active}}",
         "sccExpires": "SCC expires {date}.",
-        "sccExpired": "This SCC has already expired — renew immediately.",
-        "sccExpiringSoon": "{count, plural, one {Only # day left — schedule a renewal.} other {Only # days left — schedule a renewal.}}",
+        "sccExpired": "This SCC has already expired. Renew it now.",
+        "sccExpiringSoon": "{count, plural, one {Only # day left: schedule a renewal.} other {Only # days left: schedule a renewal.}}",
         "sccRemaining": "{count, plural, one {# day remaining.} other {# days remaining.}}",
         "tiaPendingTitle": "Transfer Impact Assessment pending",
         "tiaPendingBody": "Schrems II requires an assessment of the destination country's surveillance laws and the effectiveness of your safeguards.",
@@ -694,7 +694,7 @@
       "title": "Vendor Due-Diligence Templates",
       "subtitle": "Reference templates for vendor risk assessments.",
       "vwTitle": "Vendor compliance gathering happens on Vendor.Watch",
-      "vwBody": "Vendors self-report certifications, sub-processors, data locations, AI capabilities, and breach history on their Vendor.Watch profile. DPO Central reads this data directly from the shared catalog — no need to send questionnaires from here.",
+      "vwBody": "Vendors self-report certifications, sub-processors, data locations, AI capabilities, and breach history on their Vendor.Watch profile. DPO Central reads this data directly from the shared catalog, so there is no need to send questionnaires from here.",
       "vwOpen": "Open Vendor.Watch",
       "libraryTitle": "Template Library",
       "librarySubtitle": "Reference question sets for vendor due diligence. Useful as a checklist while reviewing a vendor's Vendor.Watch profile.",
@@ -1087,7 +1087,7 @@
       "notifBanner": {
         "title": "Regulatory Notification Required",
         "deadline": "Deadline: {date}",
-        "overdue": "OVERDUE — was due {date}",
+        "overdue": "OVERDUE: was due {date}",
         "create": "Create Notification"
       },
       "windowClock": {
@@ -1137,7 +1137,7 @@
         "empty": "No notifications created",
         "createDpa": "Create DPA Notification",
         "create": "Create Notification",
-        "voluntaryHint": "No notification is required for this incident — you can still create one voluntarily."
+        "voluntaryHint": "No notification is required for this incident. You can still create one voluntarily."
       },
       "documents": {
         "title": "Document uploads coming soon",
@@ -1157,7 +1157,7 @@
         "titleLabel": "Title",
         "titlePlaceholder": "Short summary of the entry",
         "descLabel": "Description",
-        "descPlaceholder": "Details — what happened, who was involved, what evidence",
+        "descPlaceholder": "Details: what happened, who was involved, what evidence",
         "submit": "Add Entry",
         "type": {
           "OBSERVATION": "Observation",
@@ -1211,7 +1211,7 @@
         "produce": "Produce DPA + TIA",
         "openTia": "TIA",
         "title": "Produce DPA + Transfer Impact Assessment",
-        "subtitle": "Review every pre-filled fact before generating — they become representations in a signable document. The DPA (Annexes I–IV) and, for third-country transfers, a standalone TIA are generated from your confirmed answers.",
+        "subtitle": "Review every pre-filled fact before generating: they become representations in a signable document. The DPA (Annexes I–IV) and, for third-country transfers, a standalone TIA are generated from your confirmed answers.",
         "loading": "Mapping the vendor's data…",
         "notesTitle": "How these facts were pre-filled",
         "sectionAgreement": "Agreement & parties",
@@ -1234,10 +1234,10 @@
         "sectionFacts": "Processing facts",
         "sectionTerms": "Negotiated terms",
         "selectPlaceholder": "Select…",
-        "issuesTitle": "These answers contradict each other — confirm before generating",
+        "issuesTitle": "These answers contradict each other: confirm before generating",
         "confirmIssue": "I confirm this is accurate.",
         "warningsTitle": "Review before signing",
-        "successBody": "The DPA has been generated and stored against this vendor as a contract pending signature. Download the documents below — they remain available from the contract list.",
+        "successBody": "The DPA has been generated and stored against this vendor as a contract pending signature. Download the documents below; they remain available from the contract list.",
         "downloadDpa": "Download DPA (PDF)",
         "downloadTia": "Download TIA (PDF)",
         "generate": "Generate documents",
@@ -1281,7 +1281,7 @@
       "contracts": {
         "add": "Add Contract",
         "start": "Start: {date}",
-        "endSuffix": " — End: {date}",
+        "endSuffix": " · End: {date}",
         "open": "Open",
         "noDocument": "No document",
         "empty": "No contracts recorded"
@@ -1592,7 +1592,7 @@
         "verified": "Verified",
         "highCriticality": "High criticality",
         "alreadyImported": "Already imported",
-        "vendorMeta": "{category} — {label} — {count, plural, one {# data element} other {# data elements}}"
+        "vendorMeta": "{category} · {label} · {count, plural, one {# data element} other {# data elements}}"
       },
       "choose": {
         "intro": "Choose how you want to bootstrap your privacy program. You can use both options together.",
@@ -1678,7 +1678,7 @@
         "templateAssetMeta": "{count, plural, one {# element} other {# elements}}",
         "building": "Building...",
         "build": "Build My Privacy Program",
-        "aiTooltip": "AI-capable vendor — AI System record will be created"
+        "aiTooltip": "AI-capable vendor: an AI system record will be created"
       },
       "success": {
         "alreadySetTitle": "Everything is already set up!",
@@ -2129,7 +2129,7 @@
       "organization": {
         "title": "Organization",
         "descriptionAdmin": "Rename your organization or set its domain. Only owners and admins can edit these.",
-        "descriptionViewer": "Read-only — only owners and admins can change these values.",
+        "descriptionViewer": "Read-only: only owners and admins can change these values.",
         "name": "Name",
         "domain": "Domain",
         "domainHint": "Only the domain of the owner's own sign-in address is accepted. Public email domains (gmail.com etc.) are not allowed.",
@@ -2933,7 +2933,7 @@
   "enableFeature": {
     "title": "Enable {skill}",
     "fallbackDescription": "Add {skill} to your organization.",
-    "price": "{price}/month — cancel anytime",
+    "price": "{price}/month, cancel anytime",
     "cancel": "Cancel",
     "confirm": "Enable Feature",
     "redirecting": "Redirecting…",
@@ -2951,7 +2951,7 @@
   },
   "skills": {
     "title": "Skills",
-    "subtitle": "Premium skills purchased on TODO.LAW. Upload the licence file from your confirmation email to activate them for this organization — verified locally, no network required.",
+    "subtitle": "Premium skills purchased on TODO.LAW. Upload the licence file from your confirmation email to activate them for this organization (verified locally, no network required).",
     "activateTitle": "Activate with a licence file",
     "activateHint": "Choose the .license.json file you received after your purchase. Only organization owners and admins can activate.",
     "chooseFile": "Choose licence file",
@@ -3638,16 +3638,16 @@
       "elementUpdated": "Data element updated",
       "elementDeleted": "Element deleted",
       "activitiesUpdated": "Activities updated",
-      "activitiesUpdatedWithFlows": "Activities updated — auto-generated {count, plural, one {# data flow} other {# data flows}}"
+      "activitiesUpdatedWithFlows": "Activities updated: auto-generated {count, plural, one {# data flow} other {# data flows}}"
     },
     "activity": {
       "created": "Processing activity created",
       "updated": "Processing activity updated",
       "deleted": "Processing activity deleted",
       "assetsLinked": "Linked assets updated",
-      "assetsLinkedWithFlows": "Linked assets — auto-generated {count, plural, one {# data flow} other {# data flows}}",
+      "assetsLinkedWithFlows": "Linked assets: auto-generated {count, plural, one {# data flow} other {# data flows}}",
       "flowsGenerated": "{count, plural, one {Generated # new data flow} other {Generated # new data flows}}",
-      "noNewFlows": "No new flows to generate — the existing graph already covers this activity"
+      "noNewFlows": "No new flows to generate: the existing graph already covers this activity"
     },
     "vendor": {
       "created": "Vendor created",
@@ -3706,7 +3706,7 @@
       "snapshotSaveFailed": "Failed to save snapshot"
     },
     "quickstart": {
-      "noNewRecords": "All records already exist — nothing new to create",
+      "noNewRecords": "All records already exist: nothing new to create",
       "selectAtLeastOne": "Select at least one option",
       "selectAtLeastOneVendor": "Select at least one vendor",
       "selectTemplate": "Select an industry template",
@@ -3722,7 +3722,7 @@
       "brandUppercase": "DPO CENTRAL",
       "confidential": "CONFIDENTIAL",
       "generated": "Generated {date}",
-      "confidentialBody": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request."
+      "confidentialBody": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request."
     },
     "enum": {
       "assetType": {
@@ -3882,7 +3882,7 @@
       "ai": {
         "sectionNumber": "Section 05",
         "title": "AI Governance",
-        "lead": "EU AI Act posture across the organisation's registered AI systems. Coverage reflects only systems explicitly catalogued — inferred or shadow AI is out of scope.",
+        "lead": "EU AI Act posture across the organisation's registered AI systems. Coverage reflects only systems explicitly catalogued; inferred or shadow AI is out of scope.",
         "donutCompliant": "EU AI Act Compliant",
         "donutSub": "{count} of {total} systems",
         "riskDistribution": "Risk Distribution",
@@ -3909,7 +3909,7 @@
       "flowMap": {
         "sectionNumber": "Section 06",
         "title": "Data Flow Map",
-        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are colour-coded by asset type; dashed edges are auto-generated from activity–asset links, solid edges are explicitly recorded.",
+        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are colour-coded by asset type; dashed edges are auto-generated from activity-asset links, solid edges are explicitly recorded.",
         "leadMulti": "End-to-end data flows are split across {count} cluster groups to stay legible at this scale. Each page shows one group of processing activities.",
         "showingCount": "Showing {filtered} of {original} assets",
         "orphansDropped": "{count, plural, one {# orphaned} other {# orphaned}} (no flows, no activity link) filtered out",
@@ -3921,9 +3921,9 @@
       "findings": {
         "overdueDsars": "{count, plural, one {# data-subject request is} other {# data-subject requests are}} past the statutory response deadline.",
         "vendorsMissingDpa": "{count, plural, one {# active vendor ({pct}%) has} other {# active vendors ({pct}%) have}} no Data Processing Agreement on file.",
-        "highRiskVendors": "{count, plural, one {# vendor is} other {# vendors are}} classified as high or critical risk — governance review recommended.",
+        "highRiskVendors": "{count, plural, one {# vendor is} other {# vendors are}} classified as high or critical risk: governance review recommended.",
         "overdueReview": "{count, plural, one {# processing activity is} other {# processing activities are}} overdue for periodic review.",
-        "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} catalogued — Article 9 safeguards apply.",
+        "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} catalogued: Article 9 safeguards apply.",
         "intlTransfers": "{count, plural, one {# international transfer is} other {# international transfers are}} documented across processing activities.",
         "adm": "{count, plural, one {# activity involves} other {# activities involve}} automated decision-making subject to Article 22.",
         "openIncidents": "{count, plural, one {# incident is} other {# incidents are}} open and under investigation.",
@@ -3954,7 +3954,7 @@
         "recipients": "Recipients",
         "retentionPeriod": "Retention Period",
         "automatedDecisions": "Automated Decisions",
-        "automatedYes": "Yes — {detail}",
+        "automatedYes": "Yes: {detail}",
         "automatedNoDetails": "No details",
         "automatedNo": "No",
         "lastReviewed": "Last Reviewed",
@@ -3999,7 +3999,7 @@
       "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
       "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL — This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
+      "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "riskLevel": "Risk Level",
@@ -4085,7 +4085,7 @@
       "coverTitle": "Impact Assessment Portfolio",
       "coverSubtitle": "DPIA, LIA & Privacy Assessment Status Report",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL — This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
+      "coverConfidential": "CONFIDENTIAL. This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "total": "Total Assessments",
@@ -4104,7 +4104,7 @@
         "overdueAssessments": "Overdue Assessments",
         "overdueNone": "None"
       },
-      "gdprCalloutTitle": "GDPR Article 35 — Impact Assessment Obligations",
+      "gdprCalloutTitle": "GDPR Article 35: Impact Assessment Obligations",
       "gdprCalloutBody": "Controllers must carry out a DPIA before processing that is likely to result in a high risk to the rights and freedoms of natural persons. The assessment must be reviewed and updated when processing operations change.",
       "overview": "Assessment Overview",
       "byStatus": "By Status",
@@ -4201,7 +4201,7 @@
       "coverTitle": "Regulatory Landscape Report",
       "coverSubtitle": "Privacy Program Compliance & Exposure Analysis",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL — This document provides a regulatory compliance overview for internal use by the privacy and legal teams. It should not be distributed externally without authorization.",
+      "coverConfidential": "CONFIDENTIAL. This document provides a regulatory compliance overview for internal use by the privacy and legal teams. It should not be distributed externally without authorization.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "appliedFrameworks": "Applied Frameworks",
@@ -4305,7 +4305,7 @@
       "coverTitle": "DSAR Performance Report",
       "coverSubtitle": "Data Subject Access Request Compliance & Metrics",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL — This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
+      "coverConfidential": "CONFIDENTIAL. This report contains aggregated performance metrics for data subject request handling. No individual personal data is included in this report.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "totalRequests": "Total Requests",
@@ -4370,7 +4370,7 @@
         "open": "Open Requests",
         "risk": "Risk Level"
       },
-      "riskCritical": "Critical — likely overdue",
+      "riskCritical": "Critical: likely overdue",
       "riskAtRisk": "At risk",
       "riskOnTrack": "On track",
       "dsarTypes": {
@@ -4463,7 +4463,7 @@
       "coverage": "Coverage",
       "coverageDpa": "DPA on file",
       "coverageCertified": "Certified",
-      "certificationsTop": "Certifications — Top",
+      "certificationsTop": "Certifications: Top",
       "directory": "Directory",
       "directoryLead": "All vendors grouped by primary category. Risk tier and DPA status are shown inline; certifications appear as chips.",
       "columns": {
@@ -4734,7 +4734,7 @@
           "desc": "Pick your industry (E-commerce, SaaS, Healthcare, Fintech, Media, or Professional Services) and get a pre-built scaffold of assets, activities, and data flows."
         },
         "vendorWatchTitle": "Vendor.Watch integration",
-        "vendorWatchBody": "If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects your vendors and pre-selects them — no manual searching needed. Up to 5 vendors can be imported for free.",
+        "vendorWatchBody": "If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects your vendors and pre-selects them, with no manual searching. Up to 5 vendors can be imported for free.",
         "nonDestructiveTitle": "Non-destructive",
         "nonDestructiveBody": "The quickstart only creates new records. It never modifies or deletes existing data and automatically skips duplicates. You can run it multiple times safely.",
         "openWizard": "Open Quickstart Wizard",
@@ -5114,7 +5114,7 @@
     },
     "dataInventory": {
       "title": "Data Inventory",
-      "subtitle": "The Data Inventory module is the foundation of your privacy program. It tracks what personal data you hold, where it flows, and how it's processed — forming the basis for your Record of Processing Activities (ROPA).",
+      "subtitle": "The Data Inventory module is the foundation of your privacy program. It tracks what personal data you hold, where it flows, and how it's processed, and it forms the basis for your Record of Processing Activities (ROPA).",
       "assets": {
         "title": "Data Assets",
         "description": "Data assets represent systems, databases, or applications that store personal data.",
@@ -5177,7 +5177,7 @@
       },
       "flows": {
         "title": "Data Flows",
-        "description": "Data flows visualize how personal data moves between assets — auto-generated from your processing activity links.",
+        "description": "Data flows visualize how personal data moves between assets. They are auto-generated from your processing activity links.",
         "mockupTitle": "Data Flow Diagram",
         "nodes": {
           "crm": "CRM",
@@ -5185,14 +5185,14 @@
           "analytics": "Analytics (EU)"
         },
         "body1Bold": "You don't have to draw the graph.",
-        "body1Rest": " Whenever you link a processing activity to two or more assets — via the ",
+        "body1Rest": " Whenever you link a processing activity to two or more assets (via the ",
         "body1ManageAssets": "Manage Assets",
         "body1Mid": " button on the activity detail page, or ",
         "body1ManageActivities": "Manage Activities",
-        "body1End": " on the asset detail page — the system automatically creates DataFlow records connecting them in a sensible order, based on the typical position of each asset type in a data pipeline (input applications first, then ingest services, then databases, then file storage, then third-party sinks).",
+        "body1End": " on the asset detail page), the system automatically creates DataFlow records connecting them in a sensible order, based on the typical position of each asset type in a data pipeline (input applications first, then ingest services, then databases, then file storage, then third-party sinks).",
         "body2Start": "You can re-trigger generation at any time with the ",
         "body2GenerateFlows": "Generate Flows",
-        "body2End": " button on an activity detail page. Existing flows are deduped — anything you've manually edited is preserved, and only new connections are added.",
+        "body2End": " button on an activity detail page. Existing flows are deduped: anything you've manually edited is preserved, and only new connections are added.",
         "tipTitle": "Bidirectional flows",
         "tipBody": "Many real systems are bidirectional (a CRM both receives and returns customer data). The quickstart vendor mappings and industry templates already mark the common bidirectional pairs, and the live graph renders the outbound and return edges as separated curves so they don't overlap."
       },
@@ -5216,7 +5216,7 @@
     },
     "dsar": {
       "title": "DSAR Management",
-      "subtitle": "Manage Data Subject Access Requests (DSARs) end-to-end — from intake through a public portal to task assignment, SLA tracking, and fulfillment.",
+      "subtitle": "Manage Data Subject Access Requests (DSARs) end-to-end: from intake through a public portal to task assignment, SLA tracking, and fulfillment.",
       "creating": {
         "title": "Creating Requests",
         "description": "DSARs can be created manually by staff or submitted by data subjects through the public portal.",
@@ -5323,7 +5323,7 @@
       "vendorWatch": {
         "title": "Vendor.Watch Portfolio Import",
         "description": "If you have a Vendor.Watch account, the quickstart detects your portfolio automatically.",
-        "intro": "When you navigate to the quickstart wizard, it checks if your account has a Vendor.Watch portfolio. If found, your vendors are pre-selected and ready to import — no manual searching needed.",
+        "intro": "When you navigate to the quickstart wizard, it checks if your account has a Vendor.Watch portfolio. If found, your vendors are pre-selected and ready to import, with no manual searching.",
         "mockupTitle": "What gets created per vendor",
         "items": {
           "asset": {
@@ -5332,7 +5332,7 @@
           },
           "elements": {
             "label": "Data Elements",
-            "desc": "3–10 elements per asset — identifiers, behavioral data, financial data, etc."
+            "desc": "3–10 elements per asset: identifiers, behavioral data, financial data, etc."
           },
           "activity": {
             "label": "Processing Activity",
@@ -5442,7 +5442,7 @@
           "MINIMAL": "Minimal"
         },
         "descriptions": {
-          "UNACCEPTABLE": "Prohibited — must be decommissioned",
+          "UNACCEPTABLE": "Prohibited: must be decommissioned",
           "HIGH": "Strict compliance obligations",
           "LIMITED": "Transparency requirements",
           "MINIMAL": "No specific obligations"
@@ -5555,7 +5555,7 @@
       },
       "sentinel": {
         "title": "AI Sentinel Integration",
-        "description": "DPO Central serves as the lightweight privacy-compliance register for AI systems. For deep AI governance — risk classification history, compliance frameworks, oversight gates, AI incidents, policies — use AI Sentinel.",
+        "description": "DPO Central serves as the lightweight privacy-compliance register for AI systems. For deep AI governance (risk classification history, compliance frameworks, oversight gates, AI incidents, policies), use AI Sentinel.",
         "importTitle": "Vendor Import Creates AI Records",
         "importDesc": "When you import AI-capable vendors from the Vendor Catalog during quickstart, DPO Central automatically creates AI System records with capabilities, techniques, EU AI Act role, and risk classification from the catalog data.",
         "exportTitle": "Export to AI Sentinel",
@@ -5959,24 +5959,24 @@
         "allPdfsTitle": "The PDF reports on each module:",
         "allPdfs": {
           "inventoryLabel": "Data Inventory",
-          "inventoryDesc": " — assets, elements, transfers, and a rendered Data Flow Map",
+          "inventoryDesc": ": assets, elements, transfers, and a rendered Data Flow Map",
           "ropaLabel": "ROPA",
-          "ropaDesc": " (premium) — GDPR Article 30 record with per-activity flow clusters",
+          "ropaDesc": " (premium): GDPR Article 30 record with per-activity flow clusters",
           "vendorLabel": "Vendor Register",
-          "vendorDesc": " — vendor list with risk tiers and contract status",
+          "vendorDesc": ": vendor list with risk tiers and contract status",
           "breachLabel": "Breach Register",
-          "breachDesc": " — incident summaries, timelines, and DPA notifications",
+          "breachDesc": ": incident summaries, timelines, and DPA notifications",
           "dsarLabel": "DSAR Performance",
-          "dsarDesc": " — request volumes, SLA compliance, monthly trends",
+          "dsarDesc": ": request volumes, SLA compliance, monthly trends",
           "portfolioLabel": "Assessment Portfolio",
-          "portfolioDesc": " — DPIA/PIA/TIA/LIA rollups across the program",
+          "portfolioDesc": ": DPIA/PIA/TIA/LIA rollups across the program",
           "assessmentLabel": "Assessment (individual)",
-          "assessmentDesc": " — full questionnaire with responses and risk scoring",
+          "assessmentDesc": ": full questionnaire with responses and risk scoring",
           "regulatoryLabel": "Regulatory Landscape",
-          "regulatoryDesc": " — applied jurisdictions and compliance posture"
+          "regulatoryDesc": ": applied jurisdictions and compliance posture"
         },
         "flowTipTitle": "Data Flow Map in PDFs",
-        "flowTipBody": "The Data Inventory and ROPA PDFs render a beautiful auto-laid-out diagram of how data moves between your assets, with nodes colour-coded by asset type and edges labelled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing required — it's generated from your activity-asset links.",
+        "flowTipBody": "The Data Inventory and ROPA PDFs render an automatically laid-out diagram of how data moves between your assets, with nodes colour-coded by asset type and edges labelled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing is needed: it is generated from your activity-asset links.",
         "premiumTitle": "ROPA export",
         "premiumBody": "The ROPA PDF export is included on the hosted pilot and on your own instance, like every other PDF report."
       },
@@ -6098,7 +6098,7 @@
         "providersOr": " or ",
         "providersSuffix": " in your environment variables to enable AI-generated risk narratives, mitigation suggestions, and plain-language summaries.",
         "fallbackTitle": "Graceful fallback",
-        "fallbackBody": "When no API key is configured, the wizard operates entirely with rule-based auto-fill. All core functionality works without AI — the AI layer is purely additive for generating narrative text.",
+        "fallbackBody": "When no API key is configured, the wizard operates entirely with rule-based auto-fill. All core functionality works without AI; the AI layer only adds narrative text.",
         "privacyTitle": "Data stays under your control",
         "privacyBody": "No data leaves your environment unless you explicitly configure an API key. When AI is enabled, only the minimal context needed for the specific question is sent to the provider. No data inventory is shared in bulk."
       },
@@ -6114,13 +6114,13 @@
       "cardBodyPrefix": "In the kit (your own instance), premium modules cost ",
       "cardBodyMid": " a year each and are activated offline with a licence file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
-      "cardContact": " For real client data, run your own instance.",
+      "cardContact": " For real client data, move to the paid plan, or ask for a managed instance or your own hardware on quotation.",
       "menuLock": "On your own instance, a small lock shows where a premium assessment type needs a licence this organisation does not have: beside Vendor due diligence in the menu, and beside the DPIA option in Assessments and in the type picker. The hosted pilot never shows a lock.",
       "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
-      "runYourOwn": "Run your own instance",
+      "runYourOwn": "See the plans",
       "dpia": {
-        "title": "DPIA — Data Protection Impact Assessment",
+        "title": "DPIA: Data Protection Impact Assessment",
         "description": "Required by GDPR Article 35 when processing is likely to result in high risk to individuals.",
         "badge": "GDPR Article 35 Compliance",
         "whenTitle": "When is a DPIA required?",
@@ -6148,7 +6148,7 @@
         "infoContactSuffix": " to enable DPIA assessments for your organization."
       },
       "pia": {
-        "title": "PIA — Privacy Impact Assessment",
+        "title": "PIA: Privacy Impact Assessment",
         "description": "A broader privacy assessment framework for evaluating privacy implications beyond GDPR-specific requirements.",
         "badge": "Privacy Impact Analysis",
         "diffTitle": "How does PIA differ from DPIA?",
@@ -6170,7 +6170,7 @@
         "infoContactSuffix": " to enable PIA assessments for your organization."
       },
       "tia": {
-        "title": "TIA — Transfer Impact Assessment",
+        "title": "TIA: Transfer Impact Assessment",
         "description": "Evaluate the risks of international data transfers following the Schrems II ruling.",
         "badge": "Schrems II Compliance",
         "evalTitle": "TIA evaluates:",
@@ -6260,7 +6260,7 @@
         "ceilingsIntro": "An organization can hold up to:",
         "oneOrganization": "An account belongs to one organization.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
-        "run": "On the paid plan none of these limits apply: there is no editing window and no record ceiling. The plans and their prices are on the pricing page.",
+        "run": "On the paid plan none of these limits apply and your records are kept: there is no editing window and no record ceiling. The plans and their prices are on the pricing page. A managed instance or your own hardware is available on quotation.",
         "plansLink": "See the plans"
       },
       "support": {
@@ -6594,7 +6594,7 @@
           },
           "auto": {
             "title": "Auto-Redaction",
-            "desc": "After the retention period (default 90 days post-completion), all PII is automatically replaced with 'REDACTED'. The anonymized audit trail is preserved."
+            "desc": "After the retention period (30 days after closing on the hosted service; 90 days by default when self-hosted), all personal data is automatically replaced with 'REDACTED'. The anonymized audit trail is preserved."
           },
           "pii": {
             "title": "PII-Free Reports",
@@ -6647,7 +6647,7 @@
           },
           "retention": {
             "setting": "Retention period",
-            "detail": "Default 90 days"
+            "detail": "30 days after closing (hosted); 90 by default (self-hosted)"
           },
           "notice": {
             "setting": "Privacy notice link",
@@ -6714,7 +6714,7 @@
           },
           "period": {
             "label": "Retention Period",
-            "description": "Default 90 days"
+            "description": "30 days after closing (hosted); 90 by default (self-hosted)"
           },
           "auto": {
             "label": "Auto-Redaction",
@@ -8880,19 +8880,19 @@
       "generating": "Drafting…",
       "insert": "Insert draft",
       "discard": "Discard",
-      "provenance": "AI-generated with {model} — review before use",
-      "inserted": "Draft inserted — review it and save",
+      "provenance": "AI-generated with {model}: review before use",
+      "inserted": "Draft inserted: review it and save",
       "offHint": "AI assistance is off for this organization. An administrator can enable it in Settings.",
-      "notConfiguredHint": "AI assistance is enabled, but no AI engine is available yet. Ask your server administrator to configure an AI engine (see the suite's .env.example — the gateway address is LLM_GATEWAY_URL).",
+      "notConfiguredHint": "AI assistance is enabled, but no AI engine is available yet. Ask your server administrator to configure an AI engine (see the suite's .env.example: the gateway address is LLM_GATEWAY_URL).",
       "linkActivityHint": "Link a processing activity to draft with AI.",
       "waitHint": "This can take a few minutes on a local model.",
       "cancelWait": "Cancel",
-      "cancelNote": "Stopped waiting. The server may still finish this draft — it counts against the hourly AI limit."
+      "cancelNote": "Stopped waiting. The server may still finish this draft, and it counts against the hourly AI limit."
     },
     "posture": {
-      "off": "Off — no AI calls",
+      "off": "Off: no AI calls",
       "local_gateway": "Local gateway (self-hosted engine)",
-      "cloud_eu": "Cloud — EU provider",
+      "cloud_eu": "Cloud: EU provider",
       "cloud_us": "Cloud LLM"
     },
     "postureCard": {
@@ -8907,7 +8907,7 @@
       "ackLabel": "I am authorized to enable AI assistance for this organization",
       "ackBullets": {
         "data": "The selected data is sent to the AI engine of the chosen posture.",
-        "review": "AI output is a draft — a qualified professional must review it before use.",
+        "review": "AI output is a draft: a qualified professional must review it before use.",
         "off": "While the posture is Off, no AI calls are ever made."
       },
       "ackRequiredHint": "Tick the acknowledgment to continue.",
@@ -8925,7 +8925,7 @@
     },
     "errors": {
       "ai_off": "AI assistance is off for this organization. An administrator can enable it in Settings.",
-      "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example — LLM_GATEWAY_URL).",
+      "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example: LLM_GATEWAY_URL).",
       "ai_rate_limited": "This organization has reached its hourly AI limit. Try again later.",
       "ai_failed": "The AI engine did not return a draft. Try again."
     }
@@ -8999,7 +8999,7 @@
     }
   },
   "pilot": {
-    "banner": "Hosted pilot: free and capped (<docs>see docs</docs>). For real data, choose a paid plan or a managed instance.",
+    "signIn": "Free pilot: {days} days of editing from your first sign-in, then read-only with export.",
     "endBar": {
       "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
       "readOnly": "Your pilot has ended: the organisation is read-only and you can export it at any time.",
@@ -9010,7 +9010,7 @@
       "description": "The hosted service is a free pilot. Every module is included, within the limits below. {days} days of editing from your first sign-in, then read-only with export.",
       "readOnly": "The pilot has ended. This organization is read-only. You can still export everything you created.",
       "limitReached": "You have reached a pilot limit. You can no longer add records of that kind here.",
-      "waysOut": "To keep working without limits, <run>run your own instance</run>. To take your records with you, <export>export them</export>.",
+      "waysOut": "To keep working without limits, <run>move to the paid plan</run>. To take your records with you, <export>export them</export>.",
       "limitsTitle": "Limits",
       "usage": "{used} of {limit}",
       "resources": {
@@ -9040,8 +9040,8 @@
         "rightsRequests": "Earlier rights-request records (JSON)"
       },
       "paid": {
-        "title": "EU cloud plan",
-        "description": "Your organization is on the EU cloud plan. The pilot limits and the editing window do not apply.",
+        "title": "Cloud Plan",
+        "description": "Your organization is on the Cloud Plan. The pilot limits and the editing window do not apply.",
         "renews": "Renews on {date}."
       }
     }
@@ -9646,9 +9646,9 @@
     "off": "Rights requests are not included in this plan.",
     "exportBody": "The rights-request records your organisation already holds can still be downloaded.",
     "exportLink": "Download the records (JSON)",
-    "addOnLine": "Available as an add-on: 49 USD a month",
+    "addOnLine": "Available as an add-on: $49 a month",
     "addOnTitle": "Rights requests are an add-on on your plan",
-    "addOnBody": "Available as an add-on: 49 USD a month. The requests you already hold stay available here.",
+    "addOnBody": "Available as an add-on: $49 a month. The requests you already hold stay available here.",
     "addOnLink": "See the plans",
     "pilotUsage": "Pilot: {used} of {limit} requests through the public form.",
     "monthUsage": "This month: {used} of {limit} requests through the public form.",

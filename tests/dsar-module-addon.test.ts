@@ -362,7 +362,7 @@ describe("the add-on's words", () => {
   it("states the price in US dollars in English and in euros in Spanish", () => {
     expect(en.dsarModule.addOnLine).toBe(DSAR_ADDON_PRICE_LINE.en);
     expect(es.dsarModule.addOnLine).toBe(DSAR_ADDON_PRICE_LINE.es);
-    expect(en.dsarModule.addOnLine).toBe("Available as an add-on: 49 USD a month");
+    expect(en.dsarModule.addOnLine).toBe("Available as an add-on: $49 a month");
     expect(es.dsarModule.addOnLine).toBe("Disponible como complemento: 49 € al mes");
   });
 

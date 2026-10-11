@@ -6114,11 +6114,11 @@
       "cardBodyPrefix": "En el kit (tu propia instancia), los módulos premium cuestan ",
       "cardBodyMid": " al año cada uno y se activan sin conexión con un archivo de licencia. En el piloto alojado se incluyen todos sin coste, dentro de los límites del piloto.",
       "cardSelfService": " Habilita cualquier función al instante desde la página de facturación.",
-      "cardContact": " Para datos reales de clientes, aloja tu propia instancia.",
+      "cardContact": " Para datos reales de clientes, pasa al plan de pago, o pide presupuesto para una instancia gestionada o tu propio hardware.",
       "menuLock": "En tu propia instancia, un pequeño candado indica dónde un tipo de evaluación premium necesita una licencia que esta organización no tiene: junto a Diligencia debida de proveedores en el menú, y junto a la opción EIPD en Evaluaciones y en el selector de tipo. El piloto alojado nunca muestra un candado.",
       "badgeLabel": "Módulo premium",
       "viewAddons": "Ver complementos",
-      "runYourOwn": "Aloja tu propia instancia",
+      "runYourOwn": "Ver los planes",
       "dpia": {
         "title": "EIPD: evaluación de impacto relativa a la protección de datos",
         "description": "Exigida por el artículo 35 del RGPD cuando sea probable que el tratamiento entrañe un alto riesgo para las personas.",
@@ -6260,7 +6260,7 @@
         "ceilingsIntro": "Una organización puede tener como máximo:",
         "oneOrganization": "Una cuenta pertenece a una sola organización.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
-        "run": "Con el plan de pago no se aplica ninguno de estos límites: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios.",
+        "run": "Con el plan de pago no se aplica ninguno de estos límites y tus registros se conservan: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios. Una instancia gestionada o tu propio hardware, previo presupuesto.",
         "plansLink": "Ver los planes"
       },
       "support": {
@@ -6594,7 +6594,7 @@
           },
           "auto": {
             "title": "Ocultación automática",
-            "desc": "Tras el periodo de conservación (por defecto, 90 días después del cierre), todos los datos personales se sustituyen automáticamente por «REDACTED». Se conserva la pista de auditoría anonimizada."
+            "desc": "Tras el periodo de conservación (30 días después del cierre en el servicio alojado; por defecto, 90 días en una instalación propia), todos los datos personales se sustituyen automáticamente por «REDACTED». Se conserva la pista de auditoría anonimizada."
           },
           "pii": {
             "title": "Informes sin datos personales",
@@ -6647,7 +6647,7 @@
           },
           "retention": {
             "setting": "Plazo de conservación",
-            "detail": "Por defecto 90 días"
+            "detail": "30 días tras el cierre (alojado); por defecto 90 (instalación propia)"
           },
           "notice": {
             "setting": "Enlace al aviso de privacidad",
@@ -6714,7 +6714,7 @@
           },
           "period": {
             "label": "Plazo de conservación",
-            "description": "Por defecto 90 días"
+            "description": "30 días tras el cierre (alojado); por defecto 90 (instalación propia)"
           },
           "auto": {
             "label": "Ocultación automática",
@@ -8999,7 +8999,7 @@
     }
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito y con límites (<docs>consulta la documentación</docs>). Para datos reales, elige un plan de pago o una instancia gestionada.",
+    "signIn": "Piloto gratuito: {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
     "endBar": {
       "ending": "Tu piloto termina el {date}. Pasa al plan de pago para seguir editando con todos tus registros.",
       "readOnly": "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras.",
@@ -9010,7 +9010,7 @@
       "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos, dentro de los límites que ves abajo. {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
       "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que has creado.",
       "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
-      "waysOut": "Para seguir trabajando sin límites, <run>aloja tu propia instancia</run>. Para llevarte tus registros, <export>expórtalos</export>.",
+      "waysOut": "Para seguir trabajando sin límites, <run>pasa al plan de pago</run>. Para llevarte tus registros, <export>expórtalos</export>.",
       "limitsTitle": "Límites",
       "usage": "{used} de {limit}",
       "resources": {

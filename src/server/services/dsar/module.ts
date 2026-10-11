@@ -42,7 +42,7 @@ export const DSAR_MONTH_TIME_ZONE = "Europe/Madrid";
 
 /** The add-on's price as the menu states it: euros in Spanish, US dollars in English. */
 export const DSAR_ADDON_PRICE_LINE = {
-  en: "Available as an add-on: 49 USD a month",
+  en: "Available as an add-on: $49 a month",
   es: "Disponible como complemento: 49 € al mes",
 } as const;
 

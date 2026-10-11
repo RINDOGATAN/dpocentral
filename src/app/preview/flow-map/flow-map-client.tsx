@@ -20,7 +20,7 @@ export function FlowMapPreview() {
       >
         <div>
           <h1 className="text-lg font-semibold" style={{ color: "#0f172a" }}>
-            Data Flow Map — Preview
+            Data Flow Map: Preview
           </h1>
           <p className="text-xs mt-0.5" style={{ color: "#64748b" }}>
             Unauthenticated mock preview of the redesigned flow visualization.

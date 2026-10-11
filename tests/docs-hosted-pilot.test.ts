@@ -107,13 +107,8 @@ describe("the hosted pilot documentation", () => {
     expect(Object.keys(PILOT_LIMITS).length).toBeGreaterThan(5);
   });
 
-  it("is where the banner's link lands", () => {
+  it("keeps the anchor the pilot links point to", () => {
     expect(PILOT_DOCS_PATH).toBe("/docs#hosted-pilot");
-    expect(
-      readFileSync(
-        path.resolve(__dirname, "..", "src/components/pilot/hosted-pilot.tsx"),
-        "utf8"
-      )
-    ).toContain("PILOT_DOCS_PATH");
+    expect(PAGE).toContain('id="hosted-pilot"');
   });
 });
