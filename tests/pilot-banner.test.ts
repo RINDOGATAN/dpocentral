@@ -77,14 +77,12 @@ describe("hosted pilot banner: signed-in pages", () => {
     const html = await renderSignedIn("en");
     expect(html).toContain("<main>page</main>");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
-    expect(html).toContain("Hosted pilot: free, capped (");
+    // Owner's wording, 10 Oct 2026: no "no contractual safeguards" line.
+    expect(html).toContain("Hosted pilot: free and capped (");
     expect(html).toContain('href="/docs#hosted-pilot"');
     expect(html).toContain("see docs</a>");
-    expect(html).toContain(
-      "), and with no contractual safeguards. To deploy real customer details, "
-    );
-    expect(html).toContain('href="https://www.todo.law/run"');
-    expect(html).toContain("run your own instance</a>.");
+    expect(html).toContain("). For real data, choose a paid plan or a managed instance.");
+    expect(html).not.toMatch(/contractual safeguards/);
     expect(html).toContain('aria-label="Dismiss"');
   });
 
@@ -92,12 +90,10 @@ describe("hosted pilot banner: signed-in pages", () => {
     vi.stubEnv("AUTH_COOKIE_DOMAIN", ".todo.law");
     const html = await renderSignedIn("es");
     expect(html).toContain('data-testid="hosted-pilot-banner"');
-    expect(html).toContain("Piloto alojado: gratuito, limitado (");
-    expect(html).toContain("ver documentación</a>");
-    expect(html).toContain(
-      ") y sin garantías contractuales. Para manejar datos reales de clientes, "
-    );
-    expect(html).toContain("usa tu propia instancia</a>.");
+    expect(html).toContain("Piloto alojado: gratuito y con límites (");
+    expect(html).toContain("consulta la documentación</a>");
+    expect(html).toContain("). Para datos reales, elige un plan de pago o una instancia gestionada.");
+    expect(html).not.toMatch(/garantías contractuales/);
     expect(html).toContain('aria-label="Cerrar"');
   });
 
@@ -173,7 +169,7 @@ describe("hosted pilot messages", () => {
   it("sends the reader to the documentation for the limits, in both languages", () => {
     // The sign-up screen renders HostedPilotSentence, i.e. `pilot.banner`.
     expect(en.pilot.banner).toContain("<docs>see docs</docs>");
-    expect(es.pilot.banner).toContain("<docs>ver documentación</docs>");
+    expect(es.pilot.banner).toContain("<docs>consulta la documentación</docs>");
   });
 
   it("states the editing window in Settings, in both languages", () => {

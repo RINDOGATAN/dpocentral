@@ -249,11 +249,11 @@ const StartupProductPage = ({
                     <span className="text-accent">{t("hero.title.accent")}</span>
                     {t("hero.title.suffix")}
                   </h1>
-                  {/* The product summary (hero.subtitle) sits in the sign-up
-                      card on the right, so the left column carries only the
-                      badge, the title and the welcome line. */}
+                  {/* The product summary under the title (owner, 10 Oct 2026: the
+                      generic welcome line is gone); the sign-up card carries its
+                      own short line (hero.card). */}
                   <p className="text-lg text-white/90 leading-relaxed font-body mb-8 max-w-lg">
-                    {t("hero.welcome")}
+                    {t("hero.subtitle")}
                   </p>
                 </motion.div>
               </div>

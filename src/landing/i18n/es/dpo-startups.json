@@ -1,7 +1,6 @@
 {
   "header.menuOpen": "Abrir el menú",
   "header.menuClose": "Cerrar el menú",
-  "hero.welcome": "Te damos la bienvenida a una nueva generación de herramientas para gestionar programas de privacidad y de gobierno de la IA.",
   "header.cta": "Iniciar sesión",
   "hero.badge": "Gestión de programas de privacidad",
   "hero.title.prefix": "Protección de datos ",
@@ -12,12 +11,10 @@
   "hero.card": "Inventario de datos, ejercicio de derechos, evaluaciones de impacto, gestión de terceros e incidentes. Listo para volar en unos pocos minutos.",
   "hero.login": "¿Ya tienes cuenta? Inicia sesión",
   "hero.platform_url": "https://dpocentral.todo.law",
-
   "social.title": "Diseñado para startups que tratan datos personales",
   "social.s1": "Pensado para programas del RGPD",
   "social.s2": "5 módulos integrados",
   "social.s3": "RAT del art. 30",
-
   "value.label": "Por qué DPO Central",
   "value.heading.prefix": "Tu programa de privacidad merece algo mejor que ",
   "value.heading.accent": "hojas de cálculo",
@@ -29,7 +26,6 @@
   "value.v3.desc": "Registra, evalúa y escala las brechas de seguridad de los datos personales con flujos estructurados. Análisis automático de los arts. 33 y 34 para notificar a la autoridad de control y comunicar a los interesados.",
   "value.v4.title": "Evaluaciones de impacto estructuradas",
   "value.v4.desc": "Flujos guiados para EIPD, EIL y EIT. Puntuación de riesgo y recomendaciones de mitigación incluidas.",
-
   "workflow.label": "Cómo funciona",
   "workflow.heading.prefix": "De cero a ",
   "workflow.heading.accent": "un programa de privacidad operativo",
@@ -42,11 +38,9 @@
   "workflow.s3.desc": "EIPD, EIL y EIT: cuestionarios guiados con puntuación de riesgo.",
   "workflow.s4.title": "Supervisa y responde",
   "workflow.s4.desc": "Gestiona incidentes y proveedores, y mantén tus registros al día para las auditorías.",
-
   "feat.label": "Funciones principales",
   "feat.heading.prefix": "Todo lo que un DPD ",
   "feat.heading.accent": "necesita",
-
   "feat.inv.title": "Inventario de datos y RAT",
   "feat.inv.headline": "Documenta cada actividad de tratamiento.",
   "feat.inv.desc": "Mantén actualizado el registro de actividades de tratamiento. Controla categorías de datos, bases jurídicas, plazos de conservación y flujos en tu organización.",
@@ -54,7 +48,6 @@
   "feat.inv.h2": "RAT del art. 30",
   "feat.inv.h3": "Seguimiento de bases jurídicas",
   "feat.inv.h4": "Gestión de plazos de conservación",
-
   "feat.dsar.title": "Ejercicio de derechos",
   "feat.dsar.headline": "Gestiona las solicitudes de los interesados a escala.",
   "feat.dsar.desc": "Un portal propio donde los interesados envían sus solicitudes. Controla los plazos, asigna tareas y responde dentro de los plazos legales.",
@@ -62,7 +55,6 @@
   "feat.dsar.h2": "Seguimiento automático de plazos",
   "feat.dsar.h3": "Paso de verificación de identidad",
   "feat.dsar.h4": "Biblioteca de plantillas de respuesta (prevista)",
-
   "feat.inc.title": "Seguimiento de incidentes",
   "feat.inc.headline": "De la detección de la brecha a la notificación.",
   "feat.inc.desc": "Registra, evalúa y escala las brechas. Evalúa automáticamente si hay que notificar a la autoridad de control o comunicarlo a los interesados.",
@@ -70,7 +62,6 @@
   "feat.inc.h2": "Evaluación de gravedad y riesgo",
   "feat.inc.h3": "Análisis de los arts. 33 y 34",
   "feat.inc.h4": "Protocolos de respuesta a incidentes (previstos)",
-
   "feat.vendor.title": "Gestión de proveedores",
   "feat.vendor.headline": "Conoce a tus encargados del tratamiento.",
   "feat.vendor.desc": "Controla encargados y subencargados del tratamiento. Gestiona los contratos de encargo (DPA), realiza evaluaciones de riesgo y mantén un registro actualizado.",
@@ -78,7 +69,6 @@
   "feat.vendor.h2": "Gestión y seguimiento de contratos de encargo",
   "feat.vendor.h3": "Flujos de evaluación de riesgos",
   "feat.vendor.h4": "Seguimiento del vencimiento de contratos",
-
   "es.suite.label": "Qué incluye",
   "es.suite.heading.prefix": "Tres herramientas, ",
   "es.suite.heading.accent": "una sola suscripción",
@@ -106,7 +96,6 @@
   "es.suite.vw.b3": "Importación directa a tu registro de encargados",
   "es.suite.link.ais": "Cada sistema de IA, enlazado con su EIPD",
   "es.suite.link.vw": "Los proveedores pasan a tu registro de encargados",
-
   "es.videos.label": "Vídeos",
   "es.videos.heading.prefix": "Descubre cómo ",
   "es.videos.heading.accent": "funciona",
@@ -118,7 +107,6 @@
   "es.videos.v2.caption": "Los borradores no cuentan hasta que los confirmas.",
   "es.videos.v3.title": "El informe para la dirección",
   "es.videos.v3.caption": "Las cifras clave del periodo, en una página y en PDF.",
-
   "es.stages.label": "Cómo funciona",
   "es.stages.heading.prefix": "Cinco etapas, ",
   "es.stages.heading.accent": "en orden",
@@ -134,7 +122,6 @@
   "es.stages.s4.desc": "Lo que debes informar y cómo atender a los interesados.",
   "es.stages.s5.title": "Responde y mejora",
   "es.stages.s5.desc": "Brechas, registro de auditoría e informe ejecutivo.",
-
   "es.ways.label": "Garantías y alojamiento",
   "es.ways.heading.prefix": "Adaptado a ",
   "es.ways.heading.accent": "tus necesidades",
@@ -149,9 +136,7 @@
   "es.ways.w3.title": "Tu propio hardware",
   "es.ways.w3.desc": "La suite de TODO.LAW en un equipo de tu organización. Los datos no salen de tus instalaciones, salvo que conectes con un proveedor de IA externo.",
   "es.ways.w3.subject": "DPO Central en mi propio hardware",
-
   "es.logos.label": "Organizaciones que usan DPO Central",
-
   "cta.heading.prefix": "",
   "cta.heading.accent": "",
   "cta.heading.suffix": "",

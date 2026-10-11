@@ -5,7 +5,7 @@
  * The public documentation carries a "Hosted pilot" section, early on the
  * overview page, in English and in Castilian Spanish. It says what the hosted
  * service allows (the editing window, the impact assessments, the record
- * ceilings) and what it does not carry (contractual safeguards), it states
+ * ceilings) and where real data belongs (a paid plan or a managed instance), it states
  * that exports are never limited, and the banner's "see docs" link lands on it.
  * The figures are read from the pilot configuration, so the page cannot state
  * a number the product does not enforce.
@@ -28,7 +28,6 @@ type Section = {
   ceilingsIntro: string;
   oneOrganization: string;
   exports: string;
-  safeguards: string;
   run: string;
 };
 
@@ -45,14 +44,17 @@ describe("the hosted pilot documentation", () => {
   for (const [locale, bundle] of [["en", en], ["es", es]] as const) {
     const s = section(bundle);
 
-    it(`states every limit and the absence of safeguards in ${locale}`, () => {
+    it(`states every limit and where real data goes in ${locale}`, () => {
       for (const [key, text] of Object.entries(s)) {
         expect(typeof text, key).toBe("string");
         expect(text.length, key).toBeGreaterThan(5);
       }
       expect(s.window).toContain("{days}");
       expect(s.assessments).toContain("{assessments}");
-      expect(s.run).toContain("<run>");
+      // Owner, 10 Oct 2026: a paid plan or a managed instance; no "no safeguards" line.
+      expect(s.run).toMatch(locale === "es" ? /plan de pago o una instancia gestionada/ : /paid plan or a managed instance/);
+      expect(Object.keys(s)).not.toContain("safeguards");
+      expect(JSON.stringify(s)).not.toMatch(/contractual safeguards|garantías contractuales/);
     });
 
     it(`says the count is of assessments created in ${locale}`, () => {
@@ -84,8 +86,7 @@ describe("the hosted pilot documentation", () => {
     expect(PAGE).toContain('id="hosted-pilot"');
     expect(PAGE.indexOf('id="hosted-pilot"')).toBeLessThan(PAGE.indexOf("quickstart.title"));
     for (const key of Object.keys(section(en))) {
-      if (key === "run") expect(PAGE).toContain('t.rich("hostedPilot.run"');
-      else expect(PAGE, key).toContain(`hostedPilot.${key}`);
+      expect(PAGE, key).toContain(`hostedPilot.${key}`);
     }
   });
 

@@ -1,7 +1,6 @@
 {
   "header.menuOpen": "Open the menu",
   "header.menuClose": "Close the menu",
-  "hero.welcome": "Welcome to a new generation of privacy and AI governance software.",
   "header.cta": "Sign in",
   "hero.badge": "Privacy program management",
   "hero.title.prefix": "Privacy compliance ",
@@ -11,12 +10,10 @@
   "hero.cta": "Get started free",
   "hero.login": "Already have an account? Log in",
   "hero.platform_url": "https://dpocentral.todo.law",
-
   "social.title": "Built for the people who run privacy programs",
   "social.s1": "CCPA, US state laws and GDPR",
   "social.s2": "5 integrated modules",
   "social.s3": "All your clients in one view",
-
   "value.label": "Why DPO Central",
   "value.heading.prefix": "Your privacy program deserves better than ",
   "value.heading.accent": "spreadsheets",
@@ -28,7 +25,6 @@
   "value.v3.desc": "Log, assess and escalate each incident with a structured workflow. For GDPR and UK GDPR, it runs the 72-hour clock and the Article 33 and 34 analysis for notifying the authority and the people affected. Incidents under US state breach laws are kept in the same register.",
   "value.v4.title": "Structured impact assessments",
   "value.v4.desc": "Guided DPIAs, PIAs, LIAs and TIAs for GDPR and UK GDPR, and the risk assessments that the CCPA regulations require in California. Risk scoring and mitigation recommendations are included.",
-
   "workflow.label": "How It Works",
   "workflow.heading.prefix": "From zero to ",
   "workflow.heading.accent": "a working privacy program",
@@ -41,11 +37,9 @@
   "workflow.s3.desc": "DPIAs, LIAs, TIAs: guided questionnaires with risk scoring.",
   "workflow.s4.title": "Monitor & respond",
   "workflow.s4.desc": "Track incidents, manage vendors, and keep your records up to date for audits.",
-
   "feat.label": "Core Capabilities",
   "feat.heading.prefix": "Everything a DPO ",
   "feat.heading.accent": "needs",
-
   "feat.inv.title": "Data Inventory & ROPA",
   "feat.inv.headline": "Map every processing activity.",
   "feat.inv.desc": "Maintain a living Record of Processing Activities. Track data categories, lawful bases, retention periods, and data flows across your organization.",
@@ -53,7 +47,6 @@
   "feat.inv.h2": "Art. 30 ROPA generation",
   "feat.inv.h3": "Lawful basis tracking",
   "feat.inv.h4": "Retention schedule management",
-
   "feat.dsar.title": "DSAR Management",
   "feat.dsar.headline": "Handle data subject requests at scale.",
   "feat.dsar.desc": "A dedicated portal where data subjects submit requests. Track deadlines, assign tasks, and respond within regulatory timelines.",
@@ -61,7 +54,6 @@
   "feat.dsar.h2": "Automated deadline tracking",
   "feat.dsar.h3": "Identity verification step",
   "feat.dsar.h4": "Response template library (planned)",
-
   "feat.inc.title": "Incident Tracking",
   "feat.inc.headline": "From breach detection to notification.",
   "feat.inc.desc": "Log, assess, and escalate breaches. Automatically evaluate whether notification to the supervisory authority or data subjects is required.",
@@ -69,7 +61,6 @@
   "feat.inc.h2": "Severity & risk assessment",
   "feat.inc.h3": "Art. 33/34 analysis",
   "feat.inc.h4": "Incident response playbooks (planned)",
-
   "feat.vendor.title": "Vendor Management",
   "feat.vendor.headline": "Know your processors.",
   "feat.vendor.desc": "Track processors and sub-processors. Manage DPAs, run vendor risk assessments, and maintain an up-to-date vendor register.",
@@ -77,7 +68,6 @@
   "feat.vendor.h2": "DPA management & tracking",
   "feat.vendor.h3": "Risk assessment workflows",
   "feat.vendor.h4": "Contract expiry tracking",
-
   "en.suite.label": "What is included",
   "en.suite.heading.prefix": "Three tools, ",
   "en.suite.heading.accent": "one subscription",
@@ -105,7 +95,6 @@
   "en.suite.vw.b3": "Direct import into your vendor register",
   "en.suite.link.ais": "Each AI system, linked to its DPIA",
   "en.suite.link.vw": "Vendors go straight into your vendor register",
-
   "en.videos.label": "Videos",
   "en.videos.heading.prefix": "See how it ",
   "en.videos.heading.accent": "works",
@@ -121,7 +110,6 @@
   "en.videos.v4.caption": "The key figures on one page, downloadable as a PDF.",
   "en.videos.v5.title": "Your DPIA, step by step",
   "en.videos.v5.caption": "A guided DPIA from the template, linked to the processing activity.",
-
   "en.stages.label": "How it works",
   "en.stages.heading.prefix": "Five stages, ",
   "en.stages.heading.accent": "in order",
@@ -137,34 +125,24 @@
   "en.stages.s4.desc": "What you must disclose, and how to handle the requests people send.",
   "en.stages.s5.title": "Respond and improve",
   "en.stages.s5.desc": "Breaches, the audit trail and the executive report.",
-
   "en.ways.label": "Guarantees and hosting",
-  "en.ways.heading.prefix": "You choose ",
-  "en.ways.heading.accent": "where it lives",
-  "en.ways.sub": "The same product, in five ways. DPO Central is a place to start a privacy program, at a cost that smaller teams and the firms advising them can afford, and it grows with you. You can start on the cloud and move later. You can also take your program with you at any time as a file you download, for example if you later move to a larger platform.",
+  "en.ways.heading.prefix": "Tailored to ",
+  "en.ways.heading.accent": "your needs",
+  "en.ways.sub": "Three hosting options, with different safeguards, certifications and levels of control.",
   "en.ways.request": "Ask us",
-  "en.ways.w1.title": "TODO.LAW cloud",
-  "en.ways.w1.desc": "You use it in the browser and we host it. A free pilot with limits, for test records rather than real client data.",
-  "en.ways.w2.title": "The self-install kit",
-  "en.ways.w2.desc": "Open source, installed with Docker on a machine you choose. You run it yourself, and the data stays with you.",
-  "en.ways.w2.link": "View the kit",
-  "en.ways.w3.title": "TODO.LAW hardware",
-  "en.ways.w3.desc": "Law-Firm-in-a-Box™: a quiet box in your office with everything pre-loaded. Client files never leave the building.",
-  "en.ways.w3.subject": "DPO Central on Law-Firm-in-a-Box",
-  "en.ways.w4.title": "A managed instance",
-  "en.ways.w4.desc": "An isolated instance for your firm alone, which we run for you.",
-  "en.ways.w4.subject": "DPO Central: a managed instance",
-  "en.ways.w5.title": "Deployment and training on your servers",
-  "en.ways.w5.desc": "We set it up with you on your own servers, train your people and leave you a runbook.",
-  "en.ways.w5.subject": "DPO Central: deployment and training on our servers",
-
-  "cta.heading.prefix": "Ready to take ",
-  "cta.heading.accent": "control",
-  "cta.heading.suffix": "?",
-  "cta.text": "Try it today on the hosted pilot: free, with limits, and without a security certification. For real client data, choose the kit, the Box, a managed instance or your own servers.",
-  "cta.button": "Launch DPO Central",
+  "en.ways.w1.title": "In the TODO.LAW cloud",
+  "en.ways.w1.desc": "You use it in the browser, on desktop or mobile. Nothing to install, and you can take your program elsewhere whenever you like with a simple export.",
+  "en.ways.w2.title": "Managed virtual server",
+  "en.ways.w2.desc": "An isolated instance we run for you from Asturias, Spain, with open LLMs available and a tailored SLA.",
+  "en.ways.w2.subject": "DPO Central: a managed virtual server",
+  "en.ways.w3.title": "Your own hardware",
+  "en.ways.w3.desc": "The TODO.LAW suite on a machine in your organization. Your data never leaves your premises unless you connect an outside AI provider.",
+  "en.ways.w3.subject": "DPO Central on our own hardware",
+  "cta.button": "Open DPO Central",
+  "cta.docs": "Read the documentation",
   "footer.tagline": "Privacy management platform",
   "footer.privacy": "Privacy",
   "footer.terms": "Terms",
-  "footer.security": "Data Security"
+  "footer.security": "Data Security",
+  "hero.card": "Data inventory, rights requests, impact assessments, vendor and incident management. Ready to fly in a few minutes."
 }

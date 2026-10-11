@@ -50,12 +50,16 @@ describe("landing header logo", () => {
 });
 
 describe("landing hero", () => {
-  it("shows no subtitle or AI sentence in the left column", () => {
+  // Owner, 10 Oct 2026: the generic welcome line is gone and the product summary is back
+  // under the title; the sign-up card carries its own short line (hero.card).
+  it("shows the product summary under the title, with no welcome or AI sentence", () => {
     const page = read("src/landing/components/StartupProductPage.tsx");
     expect(page).not.toContain('t("hero.ai")');
-    // hero.subtitle is used once: its first sentence, in the sign-up card.
-    expect(page.match(/t\("hero\.subtitle"\)/g)).toHaveLength(1);
-    expect(page).toContain('t("hero.subtitle").split(".")[0]');
+    expect(page).not.toContain('t("hero.welcome")');
+    expect(page).toContain('{t("hero.subtitle")}');
+    for (const d of [es, en]) expect(d["hero.welcome"]).toBeUndefined();
+    expect(es["hero.card"]).toMatch(/Listo para volar en unos pocos minutos\.$/);
+    expect(en["hero.card"]).toMatch(/Ready to fly in a few minutes\.$/);
   });
 
   it("says «sin papeleos.» in Spanish and keeps the English title", () => {

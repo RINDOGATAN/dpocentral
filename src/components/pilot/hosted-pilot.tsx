@@ -5,7 +5,7 @@
 import { createContext, useContext, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
-import { PILOT_DOCS_PATH, RUN_YOUR_OWN_URL } from "@/lib/hosted";
+import { PILOT_DOCS_PATH } from "@/lib/hosted";
 import { useSelectedOrganizationOrNull } from "@/lib/organization-context";
 
 // Whether this deployment is the hosted pilot. Resolved on the server
@@ -42,27 +42,17 @@ function readDismissed(): boolean {
   }
 }
 
-/** The pilot sentence, with its link to the limits in the docs and to /run. */
+/** The pilot sentence, with its link to the limits in the docs (owner's wording, 10 Oct 2026). */
 export function HostedPilotSentence({ className }: { className?: string }) {
   const t = useTranslations("pilot");
   return (
     <span className={className} data-testid="hosted-pilot-sentence">
       {t.rich("banner", {
-        // The banner sits on every signed-in page, so both links open in a new tab and
+        // The banner sits on every signed-in page, so the link opens in a new tab and
         // nobody loses a half-filled form by reading the limits.
         docs: (chunks) => (
           <a
             href={PILOT_DOCS_PATH}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline font-medium"
-          >
-            {chunks}
-          </a>
-        ),
-        run: (chunks) => (
-          <a
-            href={RUN_YOUR_OWN_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="underline font-medium"
