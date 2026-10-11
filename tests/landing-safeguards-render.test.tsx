@@ -174,9 +174,10 @@ describe("safeguards guide, Spanish", () => {
 describe("safeguards guide, English", () => {
   const c = COPY.en;
 
-  it("keeps the five boxes and offers all five ways", () => {
+  // Three boxes and three ways in English too since 10 Oct 2026 (owner).
+  it("keeps the three boxes and offers the three ways", () => {
     mount("en");
-    expect(boxes("en")).toHaveLength(5);
+    expect(boxes("en")).toHaveLength(3);
     const g = guide(c.heading);
     expect(waysSection("en").contains(g)).toBe(true);
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
@@ -191,25 +192,17 @@ describe("safeguards guide, English", () => {
 
     // Managed.
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.real }));
-    expect(status.textContent).toContain(title(4));
-    expect(marked("en")).toEqual([title(4)]);
+    expect(status.textContent).toContain(title(2));
+    expect(marked("en")).toEqual([title(2)]);
 
-    // The Box: inside the office, no IT team.
+    // Your own hardware: inside the office, with or without an IT team.
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.office }));
     fireEvent.click(within(g).getAllByRole("radio", { name: "No" })[0]); // question 4 has a longer "No"; this is the IT team's
     expect(status.textContent).toContain(title(3));
     expect(marked("en")).toEqual([title(3)]);
     expect(within(g).getByRole("link", { name: new RegExp(c.see) }).getAttribute("href")).toBe(`#${boxes("en")[2].id}`);
-
-    // Deployment and training: own servers, no IT team.
-    fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.servers }));
-    expect(status.textContent).toContain(title(5));
-    expect(marked("en")).toEqual([title(5)]);
-
-    // The kit: own servers, an IT team.
     fireEvent.click(within(g).getAllByRole("radio", { name: "Yes" })[1]); // the IT team's "Yes"
-    expect(status.textContent).toContain(title(2));
-    expect(marked("en")).toEqual([title(2)]);
+    expect(marked("en")).toEqual([title(3)]);
     expect(within(g).getByText(c.whyP)).toBeTruthy();
     expect(g.textContent).toContain("ISO 27001");
   });
