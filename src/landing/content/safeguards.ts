@@ -416,7 +416,7 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
       "ai:key": { cloud: "El proveedor de IA lo configuramos nosotros para todo el servicio; no puedes usar tu clave.", managed: "La instancia se puede configurar con tu propia clave.", deploy: "Configuramos la IA con tu propia clave." },
       "ai:local": { cloud: "Con la IA activada, los datos del registro que se redacta van al proveedor de IA externo del servicio, que puede estar fuera de la UE.", managed: "Los modelos de pesos abiertos pueden funcionar en la propia instancia, de modo que el texto no sale de ella.", deploy: "Podemos configurar un modelo de pesos abiertos en ese equipo, si tiene capacidad." },
       "iso:yes": { cloud: "Es un servicio compartido: los registros de cada organización están separados, pero el sistema es común.", managed: "Una instancia aislada solo para ti.", deploy: "Tu propia instalación." },
-      "it:no": { cloud: "Lo mantenemos nosotros.", managed: "Lo mantenemos nosotros para ti.", deploy: "Lo instalamos, formamos a tu equipo y te dejamos un manual de operación." },
+      "it:no": { cloud: "Lo mantenemos nosotros.", managed: "Lo mantenemos nosotros para ti.", deploy: "Lo instalamos con nuestra asistencia presencial o remota." },
       "cert:yes": { cloud: "Funciona bajo nuestros controles y sin certificación independiente.", managed: "Funciona bajo nuestros controles; hoy no tenemos certificación independiente.", deploy: "Queda dentro de tu perímetro, bajo tus propios controles y certificaciones." },
     },
     summaries: {
@@ -424,7 +424,7 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
         "Lo alojamos nosotros, con los datos en la UE (Fráncfort). Puedes probarlo con el piloto gratuito y con límites, solo con datos de prueba, o contratar el Plan nube UE para datos reales. Es un servicio compartido (los registros de cada organización están separados) y no tiene certificación independiente. Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE.",
       managed: "Una instancia aislada que operamos nosotros, solo para tu organización, alojada en Asturias (España). Tus registros se quedan en esa instancia. Las funciones de IA están desactivadas hasta que las activas, y pueden usar modelos de pesos abiertos alojados en la propia instancia, de modo que el texto no sale de ella, o la clave de tu propio proveedor.",
       deploy:
-        "Seis semanas con nosotros: lo instalamos en un equipo de tu organización, formamos a tu equipo y te dejamos un manual de operación. Los registros se quedan en tus instalaciones, bajo tus propios controles. Para las funciones de IA, podemos configurar un modelo de pesos abiertos en ese equipo, si tiene capacidad, y así los datos no salen de tus instalaciones; o usar tu propia clave, y entonces los datos del registro que se redacta van a ese proveedor.",
+        "La suite instalada en tus propios servidores, con nuestra asistencia presencial o remota. Los registros se quedan en tus instalaciones, bajo tus propios controles. Para las funciones de IA, podemos configurar un modelo de pesos abiertos en ese equipo, si tiene capacidad, y así los datos no salen de tus instalaciones; o usar tu propia clave, y entonces los datos del registro que se redacta van a ese proveedor.",
     },
   },
 };
