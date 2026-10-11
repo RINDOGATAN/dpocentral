@@ -4,9 +4,17 @@
 
 DPO Central is an open-core GDPR privacy management platform built for startups and organizations handling personal data. It provides five integrated modules — Data Inventory, DSAR Management, Assessments, Incident Tracking, and Vendor Management — in one unified dashboard.
 
-Built by TODO.LAW. The hosted service at https://dpocentral.todo.law is a free pilot with limits and no security certification: every module is included and nothing is sold there. For real client data, run your own instance: https://www.todo.law/run. Premium modules cost €60 a year each in the kit (your own instance, offline activation).
+Built by TODO.LAW. The hosted service at https://dpocentral.todo.law starts as a free pilot with limits and no security certification, with every module included. For real data, choose the Cloud Plan, a managed instance or your own instance (see Pricing below). Premium modules cost €60 a year each in the kit (your own instance, offline activation).
 
-En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales de clientes, aloja tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado empieza con un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales, contrata el Plan nube UE, una instancia gestionada o tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
+
+## Pricing
+
+- [Pricing on the landing](https://dpocentral.todo.law/#pricing) (Spanish: https://dpocentral.todo.law/?lang=es#precios)
+- Free pilot: one organization per account; 90 days of editing from the organization's first sign-in, then read-only with export; record limits; for test records, not real personal data.
+- Cloud Plan, per organization: DPO Central, AI Sentinel and VendorWatch (Monitor plan), unlimited users, data stored in EU data centers (Frankfurt), no editing window and no record limits. English pages: $1,800 a year (or $179 a month). Spanish pages ("Plan nube UE"): 1.800 € al año (o 179 € al mes). One currency per page. Sold by Rindogatan LLC (United States), which does not charge Spanish VAT. Rights-request module, when available: $49 / 49 € a month.
+- Managed instance or your own hardware: on quotation (https://www.todo.law/contact/managed, https://www.todo.law/contact/deployment).
+- Sub-processors: https://www.todo.law/legal/eu-cloud-plan-subprocessors
 
 ## Documentation
 

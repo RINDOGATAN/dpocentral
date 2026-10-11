@@ -4,13 +4,13 @@
 
 DPO Central is an open-core GDPR privacy management platform built by TODO.LAW for startups and organizations that handle personal data. It replaces spreadsheets and fragmented workflows with five integrated privacy modules in one unified dashboard.
 
-Hosted pilot: https://dpocentral.todo.law (free, with limits, no security certification; every module included; nothing is sold there)
+Hosted pilot: https://dpocentral.todo.law (free, with limits, no security certification; every module included). For real data: the Cloud Plan, a managed instance or your own instance (see Pricing)
 Run your own instance: https://www.todo.law/run
 Company: TODO.LAW (https://todo.law)
 License: Open Core — AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
 Source: https://github.com/RINDOGATAN/dpocentral
 
-En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos y allí no se vende nada. Para datos reales de clientes, aloja tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ---
 
@@ -143,8 +143,16 @@ cost. Limits: one organization per account; 90 days of editing from your
 first sign-in, then read-only with export (every export stays available); a
 ceiling on records per
 organization (for example 25 systems, 50 vendors, 100 data subject
-requests). No security certification. For real client data, run your own
-instance: https://www.todo.law/run
+requests). No security certification. For real data, choose the Cloud Plan, a managed
+instance or your own instance: see Pricing below.
+
+## Pricing
+
+- [Pricing on the landing](https://dpocentral.todo.law/#pricing) (Spanish: https://dpocentral.todo.law/?lang=es#precios)
+- Free pilot: one organization per account; 90 days of editing from the organization's first sign-in, then read-only with export; record limits; for test records, not real personal data.
+- Cloud Plan, per organization: DPO Central, AI Sentinel and VendorWatch (Monitor plan), unlimited users, data stored in EU data centers (Frankfurt), no editing window and no record limits. English pages: $1,800 a year (or $179 a month). Spanish pages ("Plan nube UE"): 1.800 € al año (o 179 € al mes). One currency per page. Sold by Rindogatan LLC (United States), which does not charge Spanish VAT. Rights-request module, when available: $49 / 49 € a month.
+- Managed instance or your own hardware: on quotation (https://www.todo.law/contact/managed, https://www.todo.law/contact/deployment).
+- Sub-processors: https://www.todo.law/legal/eu-cloud-plan-subprocessors
 
 ---
 
