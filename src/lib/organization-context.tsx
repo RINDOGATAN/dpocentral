@@ -12,6 +12,8 @@ interface Organization {
   slug: string;
   /** Hosted plan: "PILOT" or "EU_CLOUD" (the paid plan lifts the pilot limits). */
   plan?: string;
+  /** The signed-in person's role in it (OWNER, ADMIN, ...), as the list returns it. */
+  role?: string;
 }
 
 interface OrganizationContextType {

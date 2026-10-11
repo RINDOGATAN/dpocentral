@@ -16,7 +16,12 @@ export function PilotShell({ children }: { children: React.ReactNode }) {
 /**
  * The pilot bar, for the signed-in application only (mounted at the
  * top of the dashboard layout). Renders nothing on the self-hosted kit.
+ * Offers the move to the paid plan only when the automatic upgrade is
+ * switched on and a payment link is set for the viewer's currency: the
+ * dashboard layout works that out on the server from the request headers
+ * (upgradeLinkFor in src/lib/plan-upgrade.ts) and passes `upgrade`. Neither
+ * the secret nor the link reaches the browser.
  */
-export function SignedInPilotBanner() {
-  return isHostedDeployment() ? <HostedPilotEndBar /> : null;
+export function SignedInPilotBanner({ upgrade = false }: { upgrade?: boolean }) {
+  return isHostedDeployment() ? <HostedPilotEndBar upgrade={upgrade} /> : null;
 }
