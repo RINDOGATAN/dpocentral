@@ -11,6 +11,15 @@ import {
   PLANS_URL,
   RUN_YOUR_OWN_URL,
 } from "@/lib/hosted";
+import {
+  PILOT_DAYS,
+  PILOT_DPIA_LIMIT,
+  PILOT_LIMITS,
+  RESOURCE_LABELS,
+  type PilotResource,
+} from "./limits";
+
+export { PILOT_DAYS, PILOT_DPIA_LIMIT, PILOT_LIMITS, RESOURCE_LABELS, type PilotResource };
 
 /**
  * Hosted pilot caps.
@@ -31,8 +40,6 @@ import {
  * still recorded, so an organisation returned to PILOT finds its window where
  * it was.
  */
-
-export const PILOT_DAYS = 90;
 
 /**
  * An organisation as the ceilings take it: its id (the plan is then read from
@@ -95,38 +102,6 @@ export const PILOT_CLOCK_START = new Date("2026-10-01T00:00:00Z");
  * first sign-in after the pilot went live; null until that sign-in happens.
  */
 export type PilotClockOrg = { pilotStartedAt: Date | null } & PlanOrg;
-
-export type PilotResource =
-  | "dataAssets"
-  | "dataElements"
-  | "processingActivities"
-  | "dataFlows"
-  | "dataTransfers"
-  | "vendors"
-  | "vendorContracts"
-  | "dsarRequests"
-  | "assessments"
-  | "assessmentTemplates"
-  | "incidents"
-  | "aiSystems"
-  | "members";
-
-/** Records ceiling per organisation on the hosted pilot. */
-export const PILOT_LIMITS: Record<PilotResource, number> = {
-  dataAssets: 25,
-  dataElements: 250,
-  processingActivities: 50,
-  dataFlows: 100,
-  dataTransfers: 50,
-  vendors: 50,
-  vendorContracts: 50,
-  dsarRequests: 100,
-  assessments: 25,
-  assessmentTemplates: 10,
-  incidents: 25,
-  aiSystems: 25,
-  members: 5,
-};
 
 type CountDelegate = { count: (args: { where: object }) => Promise<number> };
 
@@ -204,23 +179,6 @@ export const READ_ONLY_ALLOWED_PATHS = new Set<string>([
 
 type Locale = "en" | "es";
 
-/** Lower-case names of the capped resources, for use inside a sentence or list. */
-export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
-  dataAssets: { en: "systems", es: "sistemas" },
-  dataElements: { en: "data elements", es: "elementos de datos" },
-  processingActivities: { en: "processing activities", es: "actividades de tratamiento" },
-  dataFlows: { en: "data flows", es: "flujos de datos" },
-  dataTransfers: { en: "transfers", es: "transferencias" },
-  vendors: { en: "vendors", es: "proveedores" },
-  vendorContracts: { en: "vendor contracts", es: "contratos con proveedores" },
-  dsarRequests: { en: "data subject requests", es: "solicitudes de ejercicio de derechos" },
-  assessments: { en: "assessments", es: "evaluaciones" },
-  assessmentTemplates: { en: "assessment templates", es: "plantillas de evaluación" },
-  incidents: { en: "incidents", es: "incidencias" },
-  aiSystems: { en: "AI systems", es: "sistemas de IA" },
-  members: { en: "members", es: "miembros" },
-};
-
 export function pilotLocale(value: string | undefined): Locale {
   return value?.toLowerCase().startsWith("es") ? "es" : "en";
 }
@@ -255,17 +213,6 @@ export function pilotMessage(
 }
 
 // ── Impact assessments on the pilot tier ─────────────────────────────────
-
-/**
- * Impact assessments (type DPIA) an organisation on the pilot tier may create:
- * free for a limited time, two per organisation (the owner's decision of 29
- * September 2026, which replaced the earlier three). The pilot tier is the
- * hosted service, and, on a build that sells licences, any organisation with
- * no DPIA licence (isDpiaPilotTier in services/licensing/entitlement.ts). The
- * overall records ceiling (PILOT_LIMITS.assessments) still applies on the
- * hosted service; this narrower rule bites first.
- */
-export const PILOT_DPIA_LIMIT = 2;
 
 /**
  * The count is of impact assessments CREATED, not of the ones still there:

@@ -5,7 +5,9 @@
  * The landing's middle, the same sections in both languages: the three
  * tools and how they connect, the short videos, the five stages of the
  * program, and the ways to host it. Both pages then show the customer
- * logos above the footer (only when the configured list is not empty). No prices.
+ * logos above the footer (only when the configured list is not empty). After
+ * the ways, the pricing section (owner, 11 Oct 2026: PricingSection.tsx),
+ * only in the languages listed in PRICING_SECTION_LOCALES (Spanish for now).
  *
  * Each language has its own copy under `<locale>.*` in the landing
  * dictionary, and its own list of ways: three in Spanish, five in English
@@ -46,6 +48,8 @@ import { brand } from "@/config/brand";
 import { LANDING_VIDEOS, type LandingLocale, type LandingVideo } from "../config/videos";
 import CustomerLogos from "./CustomerLogos";
 import SafeguardsGuide from "./SafeguardsGuide";
+import PricingSection from "./PricingSection";
+import { pricingShownFor } from "../config/pricing";
 
 type T = (key: string) => string;
 
@@ -409,6 +413,7 @@ export default function LandingSections({ t, locale, videos = LANDING_VIDEOS[loc
       <Videos t={t} p={locale} setup={setup} videos={videos} />
       <Stages t={t} p={locale} />
       <Ways t={t} p={locale} setup={setup} />
+      {pricingShownFor(locale) && <PricingSection locale={locale} />}
       {setup.logos && <CustomerLogos label={t(`${locale}.logos.label`)} />}
     </MotionConfig>
   );

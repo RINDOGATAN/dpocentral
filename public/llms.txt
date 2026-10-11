@@ -6,7 +6,15 @@ DPO Central is an open-core GDPR privacy management platform built for startups 
 
 Built by TODO.LAW. The hosted service at https://dpocentral.todo.law is a free pilot with limits and no security certification: every module is included and nothing is sold there. For real client data, run your own instance: https://www.todo.law/run. Premium modules cost €60 a year each in the kit (your own instance, offline activation).
 
-En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales de clientes, aloja tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado empieza con un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
+
+## Precios (página en español)
+
+- [Precios en la página en español](https://dpocentral.todo.law/?lang=es#precios)
+- Piloto gratuito: una organización por cuenta; un plazo de edición limitado desde el primer inicio de sesión de la organización y, después, solo lectura con exportación; límites de registros; para registros de prueba, no para datos personales reales.
+- Plan nube UE, por organización: 1.800 € al año (o 179 € al mes). Incluye DPO Central, AI Sentinel y VendorWatch (plan Monitor), sin límite de personas usuarias, datos guardados en centros de datos de la UE (Fráncfort), sin plazo de edición ni tope de registros. Lo vende Rindogatan LLC (Estados Unidos), que no cobra el IVA español. Módulo de solicitudes de derechos, cuando esté disponible: 49 € al mes.
+- Instancia gestionada o tu propio hardware: bajo presupuesto (https://www.todo.law/es/contact/managed, https://www.todo.law/es/contact/deployment).
+- Subencargados: https://www.todo.law/es/legal/subencargados-plan-nube-ue
 
 ## Documentation
 
