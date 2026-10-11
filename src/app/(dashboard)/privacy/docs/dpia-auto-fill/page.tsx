@@ -135,7 +135,7 @@ export default async function DocsDpiaAutoFillPage() {
               <p className="font-medium text-sm">{t("ai.providersTitle")}</p>
               <p className="text-xs text-muted-foreground">
                 {t("ai.providersPrefix")}
-                <code className="rounded bg-muted px-1 py-0.5 text-[11px]">OPENAI_API_KEY</code>
+                <code className="rounded bg-muted px-1 py-0.5 text-[11px]">LLM_GATEWAY_URL + LLM_MODEL_ALIAS</code>
                 {t("ai.providersOr")}
                 <code className="rounded bg-muted px-1 py-0.5 text-[11px]">ANTHROPIC_API_KEY</code>
                 {t("ai.providersSuffix")}

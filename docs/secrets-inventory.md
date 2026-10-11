@@ -41,7 +41,6 @@ Columns:
 | `AI_SENTINEL_API_KEY` | yes | Hosted env; Kit .env (optional) | Pushes AI systems to the AI-governance sibling app and reads its AI-Act status | Issued by the sibling app's operator | not recorded |
 | `DEALROOM_API_KEY` | yes | Hosted env (optional; unset = the local directory list in `src/server/services/dealroom/directory-data.ts`) | Reads the contract-negotiation sibling app's expert directory | Issued by the sibling app's operator | not recorded |
 | `LLM_GATEWAY_KEY` (and the lane variants `_EU`, `_US`, `_LOCAL`) | yes | Hosted env; Kit .env | Authenticates to the OpenAI-compatible AI gateway for narrative generation | Whoever runs the gateway; self-host administrator | not recorded |
-| `OPENAI_API_KEY` | yes | Hosted env (optional fallback provider) | Direct AI provider access when no gateway is configured | Hosted operator, in the provider console | not recorded |
 | `ANTHROPIC_API_KEY` | yes | Hosted env (optional fallback provider) | Direct AI provider access when no gateway is configured | Hosted operator, in the provider console | not recorded |
 | `STRIPE_SECRET_KEY` | yes | Hosted env (Kit .env keeps it empty) | Creating checkout sessions, customer portal sessions, price verification; dormant while `NEXT_PUBLIC_STRIPE_ENABLED` is false | Hosted operator, in the payment provider dashboard | not recorded |
 | `STRIPE_WEBHOOK_SECRET` | yes | Hosted env (Kit .env keeps it empty) | Verifies webhook signatures on `/api/webhooks/stripe` | Hosted operator, in the payment provider dashboard | not recorded |
