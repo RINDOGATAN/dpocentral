@@ -29,9 +29,9 @@
  *     not "the selected text". Off by default; an organization admin turns them on
  *     (services/ai/posture.ts requireAi, routers/privacy/ai.ts setPosture).
  *   - The cloud is hosted in the EU (database in Frankfurt, functions in fra1:
- *     vercel.json, PR #96), as the Spanish box says, not "served from the United
- *     States" as on the storefront. The AI provider set up on the service may be
- *     outside the EU, and the copy says so.
+ *     vercel.json, PR #96), and only the Spanish copy says so: the English copy
+ *     names no hosting region (owner, 11 Oct 2026: no mention of EU hosting to US
+ *     visitors; the English landing does not know the visitor's country).
  *   - Spanish names are the boxes' own titles; "Tu propio hardware" is the
  *     customer's own equipment, not the TODO.LAW Box, and the deployment copy follows
  *     that box (installed on the organization's equipment, on its premises).
@@ -307,20 +307,20 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
       "cert:yes": "Your own controls and certifications cover the system",
     },
     notes: {
-      "loc:servers": { cloud: "Hosted by us in the EU, on a shared service.", managed: "Hosted by us, on an instance for you alone.", kit: "Installed on a machine you choose.", deploy: "Installed on your servers.", box: "Your own hardware." },
+      "loc:servers": { cloud: "Hosted by us, on a shared service.", managed: "Hosted by us, on an instance for you alone.", kit: "Installed on a machine you choose.", deploy: "Installed on your servers.", box: "Your own hardware." },
       "loc:office": { cloud: "Hosted by us.", managed: "Hosted by us, outside your office.", kit: "On a machine in your office, if you choose.", deploy: "On your servers, in your office if they are there.", box: "The hardware sits in your office." },
       "data:real": { cloud: "The pilot is for test records or pseudonyms only.", managed: "An instance for your organization alone.", kit: "Your records stay on your machine.", deploy: "Your records stay on your servers.", box: "Your records stay on your hardware." },
       "data:special": { cloud: "The pilot is for test records or pseudonyms only.", managed: "An instance for your organization alone.", kit: "Your records stay on your machine.", deploy: "Your records stay on your servers.", box: "Your records stay on your hardware." },
       "ai:none": { cloud: AI_OFF_EN, managed: AI_OFF_EN, kit: AI_OFF_EN, deploy: AI_OFF_EN, box: AI_OFF_EN },
       "ai:key": { cloud: "We set the AI provider for the whole service; you cannot use your own key.", managed: "The instance can be set up with your own key.", kit: "You set the AI engine and key yourself.", deploy: "We set up AI with your own key.", box: "You can add your own key, or keep to the local models." },
-      "ai:local": { cloud: "With AI on, the details of the record being drafted go to the service's external AI provider, which may be outside the EU.", managed: "Open-weight models can run on the instance itself, so the text does not leave it.", kit: "Point AI at a local model engine you run; the kit does not include one.", deploy: "We can set up an open-weight model on your servers, if they have the capacity.", box: "Open-weight models run on the hardware itself." },
+      "ai:local": { cloud: "With AI on, the details of the record being drafted go to the service's external AI provider.", managed: "Open-weight models can run on the instance itself, so the text does not leave it.", kit: "Point AI at a local model engine you run; the kit does not include one.", deploy: "We can set up an open-weight model on your servers, if they have the capacity.", box: "Open-weight models run on the hardware itself." },
       "iso:yes": { cloud: "A shared service: each organization's records are kept apart, but the system is shared.", managed: "An isolated instance for you alone.", kit: "Your own installation.", deploy: "Your own installation.", box: "Your own installation." },
       "it:no": { cloud: "We run it.", managed: "We run it for you.", kit: "Your team installs it, updates it and backs it up.", deploy: "We install it with our on-site or remote help.", box: "Set-up and maintenance are included." },
       "cert:yes": { cloud: "It works under our controls.", managed: "It works under our controls.", kit: PERIMETER_EN, deploy: PERIMETER_EN, box: PERIMETER_EN },
     },
     summaries: {
       cloud:
-        "Hosted by us in the EU. A free, capped pilot to try the workflows with test records. It is not for real client data, it is shared with other organizations (each one's records kept apart), and it has no service level. If you turn AI features on, the details of the record being drafted go to the external AI provider set up on the service, which may be outside the EU.",
+        "Hosted by us. A free, capped pilot to try the workflows with test records. It is not for real client data, it is shared with other organizations (each one's records kept apart), and it has no service level. If you turn AI features on, the details of the record being drafted go to the external AI provider set up on the service.",
       managed: "An isolated instance we run for your organization alone, hosted in Asturias, Spain. Your records stay on that instance. AI features stay off until you turn them on, and can use open-weight models hosted on the instance itself, so the text does not leave it, or your own provider key.",
       kit: "Open source and Docker, installed by your own team on a machine you choose. Your data stays on that machine, unless you connect an outside AI service with your own key. AI features can also use a local model engine that you run on your own network; the kit does not include one.",
       deploy:

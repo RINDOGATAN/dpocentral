@@ -144,3 +144,15 @@ export function cleanUpLocaleCookies(): void {
     document.cookie = cookie;
   }
 }
+
+/**
+ * The language a shareable link asks for: `?lang=es|en` on the public DSAR
+ * portal (/dsar/...) and the public docs (/docs, /docs/...). Null elsewhere or
+ * for an unknown language.
+ */
+export function langParamLocale(pathname: string, lang: string | null): Locale | undefined {
+  const linkable =
+    pathname.startsWith("/dsar") || pathname === "/docs" || pathname.startsWith("/docs/");
+  if (!linkable || !lang || !isValidLocale(lang)) return undefined;
+  return lang as Locale;
+}

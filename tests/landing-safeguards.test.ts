@@ -227,13 +227,15 @@ describe("copy rules", () => {
     expect(all("en")).not.toMatch(/[Ss]ix weeks|train your people|runbook|\$15/);
   });
 
-  it("says the cloud is hosted in the EU, and that its AI provider may be outside it", () => {
+  it("says the cloud is hosted in the EU in Spanish only, and that its AI provider may be outside it", () => {
     // Database in Frankfurt, functions in fra1 (vercel.json, PR #96): the storefront's
     // "served from the United States" is not true here.
     expect(JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8")).regions).toEqual(["fra1"]);
     for (const l of LOCALES) expect(all(l)).not.toMatch(/United States|Estados Unidos|\bUS\b|\bEE\.? ?UU\.?\b/);
-    expect(COPY.en.summaries.cloud).toMatch(/^Hosted by us in the EU\./);
-    expect(COPY.en.summaries.cloud).toMatch(/go to the external AI provider set up on the service, which may be outside the EU\.$/);
+    // English names no hosting region (owner, 11 Oct 2026: no mention of EU hosting to US visitors).
+    expect(COPY.en.summaries.cloud).toMatch(/^Hosted by us\./);
+    expect(COPY.en.summaries.cloud).toMatch(/go to the external AI provider set up on the service\.$/);
+    expect(all("en")).not.toMatch(/\bEU\b|Frankfurt|Europe/);
     expect(COPY.es.summaries.cloud).toMatch(/^Lo alojamos nosotros, con los datos en la UE \(Fráncfort\)\./);
     expect(COPY.es.summaries.cloud).toMatch(
       /Si activas las funciones de IA, los datos del registro que se redacta van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE\.$/

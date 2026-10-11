@@ -134,7 +134,7 @@ describe("English sections", () => {
     const titles = [1, 2, 3].map((n) => en[`en.ways.w${n}.title`]);
     expect(titles).toEqual(["In the TODO.LAW cloud", "Managed virtual server", "Your own hardware"]);
     expect(en["en.ways.w4.title"]).toBeUndefined();
-    expect(en["en.ways.sub"]).toBe("Three hosting options, with different safeguards, certifications and levels of control.");
+    expect(en["en.ways.sub"]).toBe("Three hosting options, with different safeguards and levels of control.");
     expect(html).not.toMatch(/self-install kit|TODO\.LAW hardware|Law-Firm-in-a-Box|github\.com\/RINDOGATAN\/todolaw-suite/);
     for (const t of titles) expect(html).toContain(t.replace("&", "&amp;"));
     expect(en["en.ways.label"]).toBe("Safeguards and hosting");

@@ -6322,7 +6322,7 @@
         },
         "dsar": {
           "title": "Ejercicio de derechos",
-          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción."
+          "description": "Gestiona de principio a fin las solicitudes de ejercicio de derechos de los interesados, con seguimiento de plazos, gestión de tareas y un portal público de recepción. En el servicio alojado, se ofrecerá por separado, cuando esté disponible."
         },
         "assessments": {
           "title": "Evaluaciones",
@@ -6406,14 +6406,14 @@
       },
       "hosting": {
         "title": "Dónde se aloja",
-        "intro": "Te ofrecemos tres modalidades de alojamiento con diferentes garantías, certificaciones y niveles de control.",
+        "intro": "Te ofrecemos tres modalidades de alojamiento con diferentes garantías y niveles de control.",
         "cloud": {
           "title": "En la nube de TODO.LAW",
           "desc": "Lo usas desde el navegador, en el ordenador o en el móvil. No instalas nada y puedes llevarte tu programa a otro sitio cuando quieras, mediante una sencilla exportación."
         },
         "managed": {
           "title": "Servidor virtual gestionado",
-          "desc": "Una instancia aislada que operamos nosotros desde Asturias, con disponibilidad de LLMs abiertos y SLA a medida."
+          "desc": "Una instancia aislada que operamos nosotros desde Asturias, con disponibilidad de LLM abiertos y SLA a medida."
         },
         "own": {
           "title": "Tu propio hardware",
@@ -6553,7 +6553,7 @@
       "ogTitle": "Ejercicio de derechos | DPO CENTRAL",
       "ogDescription": "Ciclo de vida completo de las solicitudes de derechos: recepción con privacidad desde el diseño, verificación de identidad, seguimiento de plazos, ocultación automática de datos e informes de rendimiento.",
       "title": "Ejercicio de derechos",
-      "subtitle": "Gestiona las solicitudes de los interesados desde su presentación hasta su cierre. Lleva el seguimiento de los plazos, asigna tareas a tu equipo y ofrece un portal público para que los interesados presenten solicitudes, todo con tratamiento de datos con privacidad desde el diseño y ocultación automática de datos personales.",
+      "subtitle": "Gestiona las solicitudes de los interesados desde su presentación hasta su cierre. Lleva el seguimiento de los plazos, asigna tareas a tu equipo y ofrece un portal público para que los interesados presenten solicitudes, todo con tratamiento de datos con privacidad desde el diseño y ocultación automática de datos personales. En el servicio alojado, el módulo de ejercicio de derechos se ofrecerá por separado, cuando esté disponible.",
       "lifecycle": {
         "title": "Ciclo de vida de la solicitud",
         "intro": "Cada solicitud recorre un ciclo de vida definido con seguimiento automático de plazos. El sistema supervisa los plazos y avisa a tu equipo cuando hay que actuar.",
