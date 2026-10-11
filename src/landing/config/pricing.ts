@@ -86,7 +86,9 @@ export interface PricingCopy {
     amount: string;
     period: string;
     monthly: string;
-    items: [string, string, string];
+    /** The plan's lines. English names no hosting region (owner, 11 Oct 2026: no mention
+     *  of EU hosting to US visitors); the Spanish card keeps "Datos en la UE (Fráncfort)". */
+    items: string[];
     cta: string;
     /** The small line under the button: the tax note, then "terms and sub-processors" as two links. */
     note: { tax: string; terms: string; and: string; subprocessors: string; end: string };
@@ -115,7 +117,6 @@ export const PRICING_COPY: Record<LandingLocale, PricingCopy> = {
       items: [
         "DPO Central, AI Sentinel and VendorWatch",
         "No limits on users or records",
-        "Data stored in the EU (Frankfurt)",
       ],
       cta: "Subscribe",
       note: { tax: "No VAT charged.", terms: "Terms", and: "and", subprocessors: "sub-processors", end: "." },

@@ -10,7 +10,7 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale, type Locale } from "./i18n/config";
-import { localeCookieCleanup, localeCookieWrites } from "./i18n/locale-cookie";
+import { LOCALE_COOKIE, langParamLocale, localeCookieCleanup, localeCookieWrites } from "./i18n/locale-cookie";
 import {
   authLimiter,
   checkoutLimiter,
@@ -170,6 +170,14 @@ export default function middleware(request: NextRequest) {
   // layout) can send a signed-out visitor back to it after sign-in.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
+  // A shareable language link (`?lang=es|en` on the public DSAR portal and the
+  // public docs): record the language, and add it to the cookie header the page
+  // reads, so the first render is already in that language (last value wins).
+  const chosen = langParamLocale(pathname, request.nextUrl.searchParams.get("lang"));
+  if (chosen) {
+    const cookie = request.headers.get("cookie");
+    requestHeaders.set("cookie", `${cookie ? `${cookie}; ` : ""}${LOCALE_COOKIE}=${chosen}`);
+  }
   const forwarded = { request: { headers: requestHeaders } };
 
   // Rate limit the public and static-key API surface, one bucket per route
@@ -205,16 +213,6 @@ export default function middleware(request: NextRequest) {
     pathname.includes(".")
   ) {
     const response = currencyResponse || NextResponse.next(forwarded);
-    // Allow shareable locale-forced links into the public DSAR portal:
-    // `/dsar/<slug>?lang=es` sets the `locale` cookie so SSR picks
-    // the right language on first render (no JS-side flash).
-    let chosen: Locale | undefined;
-    if (pathname.startsWith("/dsar")) {
-      const langParam = request.nextUrl.searchParams.get("lang");
-      if (langParam && (locales as readonly string[]).includes(langParam)) {
-        chosen = langParam as Locale;
-      }
-    }
     applyLocaleCookies(response, request, chosen);
     applyCsp(response);
     return response;
@@ -228,7 +226,7 @@ export default function middleware(request: NextRequest) {
 
   if (!i18nRoutingEnabled) {
     const response = currencyResponse || NextResponse.next(forwarded);
-    applyLocaleCookies(response, request);
+    applyLocaleCookies(response, request, chosen);
     applyCsp(response);
     return response;
   }
@@ -246,7 +244,7 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  applyLocaleCookies(intlResponse, request);
+  applyLocaleCookies(intlResponse, request, chosen);
   applyCsp(intlResponse);
   return intlResponse;
 }

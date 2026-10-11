@@ -6322,7 +6322,7 @@
         },
         "dsar": {
           "title": "DSAR Management",
-          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal."
+          "description": "Handle data subject access requests end-to-end with SLA tracking, task management, and a public intake portal. On the hosted service, offered separately, when available."
         },
         "assessments": {
           "title": "Assessments",
@@ -6406,7 +6406,7 @@
       },
       "hosting": {
         "title": "Where it runs",
-        "intro": "Three hosting options, with different safeguards, certifications and levels of control.",
+        "intro": "Three hosting options, with different safeguards and levels of control.",
         "cloud": {
           "title": "In the TODO.LAW cloud",
           "desc": "You use it in the browser, on desktop or mobile. Nothing to install, and you can take your program elsewhere whenever you like with a simple export."
@@ -6553,7 +6553,7 @@
       "ogTitle": "DSAR Management | DPO CENTRAL",
       "ogDescription": "End-to-end DSAR lifecycle: privacy-by-design intake, identity verification, SLA tracking, auto-redaction, and performance reporting.",
       "title": "DSAR Management",
-      "subtitle": "Handle data subject access requests from submission to completion. Track SLA deadlines, assign tasks to your team, and provide a public portal for data subjects to submit requests, all with privacy-by-design data handling and automatic PII redaction.",
+      "subtitle": "Handle data subject access requests from submission to completion. Track SLA deadlines, assign tasks to your team, and provide a public portal for data subjects to submit requests, all with privacy-by-design data handling and automatic PII redaction. On the hosted service, the rights-request module is offered separately, when available.",
       "lifecycle": {
         "title": "Request Lifecycle",
         "intro": "Every DSAR moves through a defined lifecycle with automatic SLA tracking. The system monitors deadlines and alerts your team when action is needed.",

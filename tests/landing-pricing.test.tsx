@@ -136,7 +136,6 @@ describe("pricing section", () => {
       "or $179 a month",
       "DPO Central, AI Sentinel and VendorWatch",
       "No limits on users or records",
-      "Data stored in the EU (Frankfurt)",
       "Subscribe",
       "No VAT charged. Terms and sub-processors .",
       "Managed instance or your own hardware? Contact us .",
@@ -144,6 +143,8 @@ describe("pricing section", () => {
       expect(t).toContain(line);
     }
     expect(t).not.toMatch(/€|\bEUR\b|\beuros?\b/i);
+    // No hosting region to English visitors (owner, 11 Oct 2026).
+    expect(t).not.toMatch(/\bEU\b|Frankfurt|Europe/);
   });
 
   it("has two cards and nothing of the first version", () => {
