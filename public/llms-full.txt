@@ -1,16 +1,17 @@
-# DPO Central — Full Product Description
+# DPO Central: Full Product Description
 
 > Privacy management made simple. A single source of truth for your privacy management program.
 
 DPO Central is an open-core GDPR privacy management platform built by TODO.LAW for startups and organizations that handle personal data. It replaces spreadsheets and fragmented workflows with five integrated privacy modules in one unified dashboard.
 
-Hosted pilot: https://dpocentral.todo.law (free, with limits, no security certification; every module included; nothing is sold there)
-Run your own instance: https://www.todo.law/run
+Hosted pilot: https://dpocentral.todo.law (free, with limits, for test records; every module included)
+Plans and prices: https://www.todo.law/pricing
+Managed instance or your own hardware: https://www.todo.law/run
 Company: TODO.LAW (https://todo.law)
-License: Open Core — AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
+License: Open Core: AGPL-3.0 (core) + premium modules at €60 a year each in the kit (your own instance, offline activation)
 Source: https://github.com/RINDOGATAN/dpocentral
 
-En español: el servicio alojado es un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propia instancia (https://www.todo.law/run). Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado empieza con un piloto gratuito y con límites, para registros de prueba; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propio hardware (https://www.todo.law/es/garantias-alojamiento-certificaciones). Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ## Precios (página en español)
 
@@ -30,10 +31,10 @@ En español: el servicio alojado es un piloto gratuito, con límites y sin certi
 Map your entire data landscape. Track data assets, data elements, processing activities, and cross-border data transfers.
 
 - **Data Assets**: Register databases, applications, file systems, cloud services, APIs, and physical storage
-- **Data Elements**: Classify data by sensitivity — Public, Internal, Confidential, Restricted, Special Category (Art. 9 GDPR)
+- **Data Elements**: Classify data by sensitivity: Public, Internal, Confidential, Restricted, Special Category (Art. 9 GDPR)
 - **Processing Activities**: Document legal bases (Consent, Contract, Legal Obligation, Vital Interests, Public Task, Legitimate Interests), purposes, data categories, retention periods, and recipients
 - **Data Flows**: Visual data flow diagrams showing how personal data moves between assets
-- **Cross-Border Transfers**: Track transfer mechanisms — Adequacy Decisions, Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs)
+- **Cross-Border Transfers**: Track transfer mechanisms: Adequacy Decisions, Standard Contractual Clauses (SCCs), Binding Corporate Rules (BCRs)
 - **ROPA Generation**: Automatically generate your Record of Processing Activities (Art. 30 GDPR)
 
 ### 2. DSAR Management
@@ -42,7 +43,7 @@ Handle data subject access requests end-to-end with full lifecycle tracking.
 
 - **Request Types**: Access (Art. 15), Erasure (Art. 17), Rectification (Art. 16), Portability (Art. 20), Objection (Art. 21), Restriction (Art. 18)
 - **Lifecycle**: Submitted → Identity Check → In Progress → Review → Completed
-- **SLA Tracking**: 30-day standard deadline, 60-day extension, 72-hour breach notification
+- **Deadline Tracking**: deadlines follow the law that applies: one month under GDPR (extendable by two further months where necessary), 45 days under CCPA and CPRA (extendable once by a further 45 days); reminders before the deadline and when it is overdue
 - **Task Management**: Break requests into tasks with assignment and tracking
 - **Public Portal**: Shareable intake form at /dsar/{org-slug} for data subjects to submit requests directly
 - **Intake Configuration**: Customize which request types and fields appear on your public portal
@@ -52,11 +53,11 @@ Handle data subject access requests end-to-end with full lifecycle tracking.
 Conduct privacy impact assessments using configurable templates with approval workflows.
 
 - **Assessment Types**:
-  - LIA — Legitimate Interests Assessment (Core, free)
-  - Custom — Flexible assessment template (Core, free)
-  - DPIA — Data Protection Impact Assessment, Art. 35 GDPR (Premium)
-  - PIA — Privacy Impact Assessment (Premium)
-  - TIA — Transfer Impact Assessment, Schrems II (Premium)
+  - LIA: Legitimate Interests Assessment (Core, free)
+  - Custom: Flexible assessment template (Core, free)
+  - DPIA: Data Protection Impact Assessment, Art. 35 GDPR (Premium)
+  - PIA: Privacy Impact Assessment (Premium)
+  - TIA: Transfer Impact Assessment, Schrems II (Premium)
   - Vendor Risk Assessment (Premium)
 - **Approval Workflow**: Draft → In Progress → Pending Review → Approved
 - **Risk Scoring**: Low, Medium, High, Critical with risk mitigations (Implemented, In Progress, Planned)
@@ -76,7 +77,7 @@ Track privacy incidents from detection through resolution and regulatory notific
 
 Maintain your vendor register with contract tracking, questionnaires, and risk monitoring.
 
-- **Vendor Register**: Track vendors with statuses — Active, Under Review, Suspended, Offboarded
+- **Vendor Register**: Track vendors with statuses: Active, Under Review, Suspended, Offboarded
 - **Risk Tiers**: Low, Medium, High, Critical based on data processing scope
 - **Contract Management**: Track DPAs, SCCs, Sub-processor Agreements, Security Addenda
 - **Privacy Questionnaires**: 8-section security questionnaires (SIG/CAIQ/GDPR-based, 38 questions)
@@ -111,11 +112,11 @@ Searchable directory of privacy experts with filters by specialization, country,
 
 DPO Central uses 5-tier role-based access control (RBAC):
 
-1. **Owner** — Full control including billing, team management, and organization settings
-2. **Admin** — Manage users, configure modules, and access all privacy features
-3. **Privacy Officer** — Full access to all privacy modules, run assessments, manage incidents
-4. **Member** — Create and edit records, submit DSARs, report incidents
-5. **Viewer** — Read-only access to dashboards, reports, and records
+1. **Owner**: Full control including billing, team management, and organization settings
+2. **Admin**: Manage users, configure modules, and access all privacy features
+3. **Privacy Officer**: Full access to all privacy modules, run assessments, manage incidents
+4. **Member**: Create and edit records, submit DSARs, report incidents
+5. **Viewer**: Read-only access to dashboards, reports, and records
 
 ---
 
@@ -131,7 +132,7 @@ DPO Central uses 5-tier role-based access control (RBAC):
 
 DPO Central follows an open core model:
 
-**Core (AGPL-3.0 — Free)**:
+**Core (AGPL-3.0, free)**:
 - Data Inventory & ROPA generation
 - DSAR management & public portal
 - Incident tracking & DPA notification
@@ -152,8 +153,10 @@ cost. Limits: one organization per account; 15 days of editing from your
 first sign-in, then read-only with export (every export stays available); a
 ceiling on records per
 organization (for example 25 systems, 50 vendors, 100 data subject
-requests). No security certification. For real client data, run your own
-instance: https://www.todo.law/run
+requests). The pilot is for test records. For real data, choose the paid
+Cloud Plan (no editing window and no record ceiling; plans and prices:
+https://www.todo.law/pricing), a managed instance, or your own hardware
+(https://www.todo.law/run).
 
 ---
 
@@ -184,7 +187,8 @@ instance: https://www.todo.law/run
 ## Links
 
 - Hosted pilot: https://dpocentral.todo.law
-- Run your own instance: https://www.todo.law/run
+- Plans and prices: https://www.todo.law/pricing
+- Managed instance or your own hardware: https://www.todo.law/run
 - Documentation: https://dpocentral.todo.law/docs
 - Data Security: https://dpocentral.todo.law/security
 - Company: https://todo.law

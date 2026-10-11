@@ -239,7 +239,7 @@ export default function SecurityPage() {
               <div className="flex items-center gap-2 border-b px-4 py-2 bg-muted/30">
                 <Shield className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-xs font-medium text-muted-foreground">{t("controlsLabel")}</span>
-                <span className="text-xs text-muted-foreground">—</span>
+                <span className="text-xs text-muted-foreground" aria-hidden="true">·</span>
                 <span className="text-xs text-muted-foreground">{t(category.titleKey)}</span>
               </div>
 

@@ -2,11 +2,11 @@
 
 > Privacy management made simple. A single source of truth for your privacy management program.
 
-DPO Central is an open-core GDPR privacy management platform built for startups and organizations handling personal data. It provides five integrated modules — Data Inventory, DSAR Management, Assessments, Incident Tracking, and Vendor Management — in one unified dashboard.
+DPO Central is an open-core GDPR privacy management platform built for startups and organizations handling personal data. It provides five integrated modules (Data Inventory, DSAR Management, Assessments, Incident Tracking, and Vendor Management) in one unified dashboard.
 
-Built by TODO.LAW. The hosted service at https://dpocentral.todo.law is a free pilot with limits and no security certification: every module is included and nothing is sold there. For real client data, run your own instance: https://www.todo.law/run. Premium modules cost €60 a year each in the kit (your own instance, offline activation).
+Built by TODO.LAW. The hosted service at https://dpocentral.todo.law starts with a free pilot, for test records: every module is included, with 15 days of editing from the first sign-in, then read-only with export. For real data, choose the paid Cloud Plan (DPO Central, AI Sentinel and VendorWatch for each organization, data stored in the EU, in Frankfurt; plans and prices: https://www.todo.law/pricing), a managed instance, or your own hardware (https://www.todo.law/run). Premium modules cost €60 a year each in the kit (your own instance, offline activation).
 
-En español: el servicio alojado empieza con un piloto gratuito, con límites y sin certificación de seguridad; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propia instancia. Los módulos premium cuestan 60 € al año cada uno en el kit.
+En español: el servicio alojado empieza con un piloto gratuito y con límites, para registros de prueba; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propio hardware. Los módulos premium cuestan 60 € al año cada uno en el kit.
 
 ## Precios (página en español)
 

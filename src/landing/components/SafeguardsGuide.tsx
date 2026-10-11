@@ -6,8 +6,8 @@
  * The safeguards guide: a calm section after the ways boxes ("Not sure which
  * to choose?") that opens in place into six questions and recommends one way.
  * Ported from the storefront's guide (todolaw PR #59); the logic, the level
- * table and the copy live in src/landing/content/safeguards.ts. Spanish offers
- * three ways (cloud, managed, deployment), English all five, as the boxes do.
+ * table and the copy live in src/landing/content/safeguards.ts. Both languages
+ * offer three ways (cloud, managed, deployment), as the boxes do.
  * `onRecommend` hands the recommended box's position (or null) to the ways
  * section, which marks the box; `boxId` gives the anchor of a box, so the
  * result links to it.

@@ -162,10 +162,10 @@ const StartupProductPage = ({
       if (ok) {
         setCardMode("sent");
       } else {
-        setError("Email sign-in is not available. Please use Google.");
+        setError(tAuth("error.emailUnavailable"));
       }
     } catch {
-      setError("Failed to send sign-in link. Please try again.");
+      setError(tAuth("error.sendFailed"));
     } finally {
       setSending(false);
     }
@@ -177,10 +177,10 @@ const StartupProductPage = ({
     try {
       const ok = await sendMagicLink(emailInput);
       if (!ok) {
-        setError("Failed to resend link. Please try again.");
+        setError(tAuth("error.resendFailed"));
       }
     } catch {
-      setError("Failed to resend link. Please try again.");
+      setError(tAuth("error.resendFailed"));
     } finally {
       setSending(false);
     }

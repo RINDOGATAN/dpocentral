@@ -32,7 +32,7 @@ function JsonLd() {
           "@type": "Offer",
           price: "0",
           priceCurrency: "EUR",
-          description: "Free and open source under AGPL-3.0. All features included.",
+          description: "Free hosted pilot with limits. The core is open source under AGPL-3.0.",
         },
         creator: {
           "@type": "Organization",
