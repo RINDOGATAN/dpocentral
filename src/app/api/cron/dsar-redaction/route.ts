@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { safeEqual } from "@/lib/safe-equal";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
+import { deleteExpiredCounters } from "@/lib/shared-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,7 +49,7 @@ export async function GET(request: Request) {
   }
 
   const now = new Date();
-  const summary = { dsarRedacted: 0, errors: 0 };
+  const summary = { dsarRedacted: 0, errors: 0, countersDeleted: 0 };
 
   try {
     const organizations = await prisma.organization.findMany({
@@ -66,6 +67,14 @@ export async function GET(request: Request) {
   } catch (err) {
     logger.error("DSAR redaction cron fatal error", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+
+  // Shared rate-limit counters whose day has ended (src/lib/shared-rate-limit.ts).
+  try {
+    summary.countersDeleted = await deleteExpiredCounters(prisma, now);
+  } catch (err) {
+    logger.error("Expired rate-limit counters could not be deleted", err);
+    summary.errors++;
   }
 
   logger.info("DSAR redaction cron completed", summary as unknown as Record<string, unknown>);

@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/prisma", () => {
   const prisma = {
     organization: { findMany: (...a: unknown[]) => mocks.organizationFindMany(...a) },
+    rateLimitCounter: { deleteMany: async () => ({ count: 0 }) },
     assessmentTemplate: {
       findUnique: (...a: unknown[]) => mocks.templateFindUnique(...a),
       create: (...a: unknown[]) => mocks.templateCreate(...a),

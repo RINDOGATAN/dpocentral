@@ -17,6 +17,12 @@ import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
 import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
+import {
+  assertHumanSubmission,
+  assertWithinDailyLimits,
+  issueFormToken,
+  mayAcknowledge,
+} from "@/server/services/dsar/public-intake-guard";
 
 // SLA rule of the organisation's primary jurisdiction: calendar months where
 // the law says months (GDPR art. 12(3): one month), days otherwise. Applies to
@@ -740,6 +746,10 @@ export const dsarRouter = createTRPCRouter({
         retentionDays: form.retentionDays,
         enabledTypes: form.enabledTypes,
         customCss: form.customCss,
+        // Signed with the time the form was loaded; submitPublic refuses a
+        // submission without it, or sent too soon after it
+        // (src/server/services/dsar/public-intake-guard.ts).
+        formToken: issueFormToken(input.orgSlug),
       };
     }),
 
@@ -757,10 +767,18 @@ export const dsarRouter = createTRPCRouter({
         description: z.string().optional(),
         requestedData: z.string().optional(),
         locale: z.string().optional(),
+        // The hidden field: empty when a person fills the form.
+        website: z.string().max(500).optional(),
+        // From getPublicForm: when the form was loaded, signed.
+        formToken: z.string().max(200).optional(),
       })
     )
     .mutation(async ({ ctx, input: rawInput }) => {
       const input = sanitizeInput(rawInput);
+      // Abuse protection, before anything is read: the hidden field and the
+      // signed form token (minimum fill time). Refusals are counted, without
+      // personal data.
+      await assertHumanSubmission(ctx.prisma, input);
       const org = await ctx.prisma.organization.findUnique({
         where: { slug: input.orgSlug },
         include: {
@@ -783,6 +801,10 @@ export const dsarRouter = createTRPCRouter({
       const pilotLang = pilotLocale(input.locale);
       assertPilotWritable(org, pilotLang);
       await assertPilotCapacity(ctx.prisma, org, "dsarRequests", 1, pilotLang);
+
+      // Shared daily limits per client address and per organisation, counted
+      // in the database so every server instance sees the same total.
+      await assertWithinDailyLimits(ctx.prisma, org.id, ctx.clientIp);
 
       const receivedAt = new Date();
       const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(org.jurisdictions, receivedAt));
@@ -812,17 +834,25 @@ export const dsarRouter = createTRPCRouter({
         },
       });
 
-      await sendDSARConfirmationEmail({
-        to: input.requesterEmail,
-        requesterName: input.requesterName,
-        organizationName: org.name,
-        publicId: request.publicId,
-        type: input.type,
-        dueDate,
-        locale: input.locale,
-      });
+      // The acknowledgement carries the organisation, the type of request,
+      // the due date and the reference: never the description the requester
+      // typed. One address receives at most a few per day across every
+      // organisation; over that, the request still stands (the clock started
+      // on receipt) and the form tells the requester to keep the reference.
+      const acknowledgementSent = await mayAcknowledge(ctx.prisma, input.requesterEmail, org.id);
+      if (acknowledgementSent) {
+        await sendDSARConfirmationEmail({
+          to: input.requesterEmail,
+          requesterName: input.requesterName,
+          organizationName: org.name,
+          publicId: request.publicId,
+          type: input.type,
+          dueDate,
+          locale: input.locale,
+        });
+      }
 
-      return { publicId: request.publicId };
+      return { publicId: request.publicId, acknowledgementSent };
     }),
 
   // Check request status (public)

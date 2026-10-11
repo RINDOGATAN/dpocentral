@@ -1956,3 +1956,20 @@ model ProgrammeImportRecord {
   @@index([organizationId, importId])
   @@map("programme_import_records")
 }
+
+// Shared rate-limit counters (src/lib/shared-rate-limit.ts): one row per
+// bucket and fixed window, counted in the database so every server instance
+// sees the same total (the in-memory limiter in src/lib/rate-limit.ts is per
+// process). `key` names the bucket and never holds personal data as typed:
+// addresses (IP or e-mail) are stored only as a keyed hash. Rows past
+// `expiresAt` are deleted by the daily DSAR redaction cron.
+model RateLimitCounter {
+  key         String
+  windowStart DateTime
+  count       Int      @default(0)
+  expiresAt   DateTime
+
+  @@id([key, windowStart])
+  @@index([expiresAt])
+  @@map("rate_limit_counters")
+}

@@ -28,6 +28,12 @@ import {
 interface CreateContextOptions {
   session: Session | null;
   getCookie: (name: string) => string | undefined;
+  /**
+   * The client's address, as the reverse proxy reports it (the first
+   * x-forwarded-for entry, else x-real-ip). Null when no proxy set one.
+   * Used only for the public form's daily limit, and only as a keyed hash.
+   */
+  clientIp?: string | null;
 }
 
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
@@ -35,8 +41,18 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     session: opts.session,
     prisma,
     getCookie: opts.getCookie,
+    clientIp: opts.clientIp ?? null,
   };
 };
+
+/** The client address a reverse proxy set on the request, else null. */
+export function clientIpOf(req: Request): string | null {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip")?.trim() ||
+    null
+  );
+}
 
 export const createTRPCContext = async (opts: { req: Request }) => {
   const session = await getServerSession(authOptions);
@@ -45,6 +61,7 @@ export const createTRPCContext = async (opts: { req: Request }) => {
   return createInnerTRPCContext({
     session,
     getCookie: (name: string) => cookieStore.get(name)?.value,
+    clientIp: clientIpOf(opts.req),
   });
 };
 
