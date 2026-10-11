@@ -22,6 +22,7 @@ import {
   type PilotResource,
 } from "@/server/services/pilot/caps";
 import { isDsarModuleEnabled } from "@/config/features";
+import { plansUrl } from "@/lib/hosted";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("docs.publicOverview");
@@ -107,7 +108,42 @@ export default async function DocsOverviewPage() {
           <p>{t("hostedPilot.exports")}</p>
           {/* Owner, 10 Oct 2026: for real data, a paid plan or a managed instance (no "no safeguards" line). */}
           <p>{t("hostedPilot.run")}</p>
+          <p>
+            <a href={plansUrl(locale)} className="text-primary font-medium hover:underline">
+              {t("hostedPilot.plansLink")} &rarr;
+            </a>
+          </p>
         </div>
+      </section>
+
+      {/* Where it runs: the three hosting options, in the landing's own words (owner, 10 Oct 2026) */}
+      <section id="hosting" className="scroll-mt-24">
+        <h2 className="text-xl font-semibold text-foreground mb-2">{t("hosting.title")}</h2>
+        <p className="text-sm text-muted-foreground mb-4">{t("hosting.intro")}</p>
+        <div className="grid sm:grid-cols-3 gap-3">
+          {(["cloud", "managed", "own"] as const).map((k) => (
+            <div key={k} className="p-4 rounded-lg border border-border bg-card">
+              <p className="text-sm font-semibold text-foreground">{t(`hosting.${k}.title`)}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t(`hosting.${k}.desc`)}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Take your programme with you: the whole-programme export and import (src/server/services/portability) */}
+      <section id="portability" className="scroll-mt-24 p-6 rounded-2xl border border-border bg-card">
+        <h2 className="text-lg font-semibold text-foreground mb-3">{t("portability.title")}</h2>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>{t("portability.export")}</p>
+          <p>{t("portability.import")}</p>
+          <p>{t("portability.migrate")}</p>
+        </div>
+      </section>
+
+      {/* AI features: off until an Owner or Admin turns them on (src/components/ai/AiPostureCard.tsx) */}
+      <section id="ai" className="scroll-mt-24">
+        <h2 className="text-lg font-semibold text-foreground mb-2">{t("ai.title")}</h2>
+        <p className="text-sm text-muted-foreground">{t("ai.body")}</p>
       </section>
 
       {/* When something goes wrong: how to report it; linked from every error page */}

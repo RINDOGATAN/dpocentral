@@ -142,7 +142,7 @@ export default async function PublicLayout({
             href="/docs"
             className="hover:text-foreground transition-colors"
           >
-            {tFooter("howItWorks")}
+            {tFooter("docs")}
           </Link>
         </div>
       </footer>
