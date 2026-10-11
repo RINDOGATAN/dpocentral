@@ -9001,9 +9001,12 @@
   "pilot": {
     "signIn": "Free pilot: {days} days of editing from your first sign-in, then read-only with export.",
     "endBar": {
+      "trial": "Free for {days} days, until {date}. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year.",
+      "trialTransition": "Free until {date}. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year.",
       "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
       "readOnly": "Your pilot has ended: the organization is read-only and you can export it at any time.",
-      "pricing": "See pricing"
+      "pricing": "See pricing",
+      "dismiss": "Close"
     },
     "settings": {
       "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",

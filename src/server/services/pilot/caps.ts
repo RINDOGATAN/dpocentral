@@ -400,6 +400,12 @@ export function pilotEndsAt(org: PilotClockOrg): Date | null {
   );
 }
 
+/** A pilot begun before the window was shortened to PILOT_DAYS (it keeps the transition rule). */
+export function isTransitionPilot(org: PilotClockOrg): boolean {
+  const start = pilotStart(org);
+  return start !== null && start.getTime() < PILOT_WINDOW_SHORTENED_AT.getTime();
+}
+
 /** Whole days of editing left (0 once read-only; the full window before it starts). */
 export function pilotDaysLeft(org: PilotClockOrg, now: Date = new Date()): number {
   const end = pilotEndsAt(org);
@@ -546,6 +552,8 @@ export type PilotStatus =
       started: boolean;
       endsAt: Date | null;
       readOnly: boolean;
+      /** Begun before the window was shortened (11 Oct 2026): the bar says "Free until {date}". */
+      transition: boolean;
       usage: { resource: PilotResource; used: number; limit: number }[];
     };
 
@@ -574,6 +582,7 @@ export async function getPilotStatus(
     daysLeft: pilotDaysLeft(org, now),
     endsAt: pilotEndsAt(org),
     readOnly: isPilotReadOnly(org, now),
+    transition: isTransitionPilot(org),
     usage,
   };
 }

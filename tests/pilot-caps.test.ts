@@ -546,3 +546,13 @@ describe("export still allowed once read-only", () => {
     expect(res.status).toBe(403);
   });
 });
+
+describe("the transition flag the pilot bar reads (11 Oct 2026)", () => {
+  it("is true only for a pilot begun before the window was shortened", async () => {
+    const { isTransitionPilot } = await import("@/server/services/pilot/caps");
+    expect(isTransitionPilot({ pilotStartedAt: null } as never)).toBe(false);
+    expect(isTransitionPilot({ pilotStartedAt: new Date("2026-10-01T00:00:00Z") } as never)).toBe(true);
+    expect(isTransitionPilot({ pilotStartedAt: new Date("2026-10-12T00:00:00Z") } as never)).toBe(false);
+    expect(isTransitionPilot({ pilotStartedAt: new Date("2026-10-20T00:00:00Z") } as never)).toBe(false);
+  });
+});

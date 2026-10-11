@@ -14,7 +14,7 @@ export function PilotShell({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * The end-of-pilot bar, for the signed-in application only (mounted at the
+ * The pilot bar, for the signed-in application only (mounted at the
  * top of the dashboard layout). Renders nothing on the self-hosted kit.
  */
 export function SignedInPilotBanner() {

@@ -2,12 +2,15 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The end-of-pilot bar (owner, 11 Oct 2026). It replaced the warning banner
- * that sat on every signed-in page: for most of the pilot nothing is shown;
- * in the last PILOT_END_BAR_DAYS days a slim, neutral bar gives the end date
- * and a link to the prices; once the organisation is read-only the bar says
- * so and that the export stays open. Never shown off the hosted pilot, nor to
- * an organisation on the paid plan.
+ * The pilot bar on signed-in pages (owner, 11 Oct 2026, second version). For
+ * the WHOLE pilot, to every member (owners, admins and members alike), a
+ * slim top bar gives the end date and the Cloud Plan's price in the reader's
+ * currency (English $, Spanish €), with a link to the landing's pricing
+ * block. In the last PILOT_END_BAR_DAYS days it switches to the stronger
+ * "ending" wording; once the organisation is read-only it says so and that
+ * the export stays open. Never shown off the hosted pilot, nor to an
+ * organisation on the paid plan. A pilot begun before the window was
+ * shortened (the transition) is told "Free until {date}", not "for 15 days".
  *
  * Pure: no React, no Prisma. The component in
  * src/components/pilot/hosted-pilot.tsx feeds it the Settings card's status.
@@ -18,13 +21,20 @@ export const PILOT_END_BAR_DAYS = 5;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export type PilotEndBarState = "hidden" | "ending" | "readOnly";
+export type PilotEndBarState = "hidden" | "trial" | "ending" | "readOnly";
 
 /** What the bar needs from the pilot status (organization.getPilotStatus). */
 export type PilotEndBarStatus =
   | { hosted: false }
   | { hosted: true; paid: true }
-  | { hosted: true; paid: false; endsAt: Date | string | null; readOnly: boolean };
+  | {
+      hosted: true;
+      paid: false;
+      endsAt: Date | string | null;
+      readOnly: boolean;
+      /** Begun before the window was shortened to fifteen days (11 Oct 2026). */
+      transition?: boolean;
+    };
 
 export function pilotEndBarState(
   status: PilotEndBarStatus | null | undefined,
@@ -36,17 +46,19 @@ export function pilotEndBarState(
   if (!status.endsAt) return "hidden";
   const remaining = new Date(status.endsAt).getTime() - now.getTime();
   if (remaining <= 0) return "readOnly";
-  return remaining <= PILOT_END_BAR_DAYS * DAY_MS ? "ending" : "hidden";
+  return remaining <= PILOT_END_BAR_DAYS * DAY_MS ? "ending" : "trial";
 }
 
 /**
- * Where the bar's link goes: the storefront's prices page in the reader's
- * language, the same page as every other in-app prices link (owner, 11 Oct
- * 2026, consistency review DPC-3: one Spanish prices page for the whole app).
+ * Where the bar's link goes: the pricing block on this product's own landing
+ * (owner, 11 Oct 2026), in the reader's language. Relative, so it stays on
+ * the app's own domain. The `lang` parameter makes the landing show in that
+ * language and lets a signed-in person see it (src/app/page.tsx sends a
+ * signed-in visitor without it to the application).
  */
 export const PILOT_END_BAR_PRICING_URL = {
-  en: "https://www.todo.law/pricing",
-  es: "https://www.todo.law/es/precios",
+  en: "/?lang=en#pricing",
+  es: "/?lang=es#precios",
 } as const;
 
 export function pilotEndBarPricingUrl(locale: string | undefined): string {
