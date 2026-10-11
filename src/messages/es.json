@@ -2987,7 +2987,8 @@
     "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
     "createOrganization": "Crear organización",
     "creating": "Creando...",
-    "switchOrg": "Cambiar organización"
+    "switchOrg": "Cambiar organización",
+    "dpaAccept": "Acepto el <link>contrato de encargo del tratamiento</link> (versión {version}) para esta organización. Cubre el piloto gratuito y el Plan nube UE."
   },
   "quickstart": {
     "recommended": "Configuración completa",

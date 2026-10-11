@@ -79,7 +79,8 @@
     "orgNamePlaceholder": "z.B., Acme Corporation",
     "createOrganization": "Organisation erstellen",
     "creating": "Erstellen...",
-    "switchOrg": "Organisation wechseln"
+    "switchOrg": "Organisation wechseln",
+    "dpaAccept": "Ich akzeptiere den <link>Auftragsverarbeitungsvertrag</link> (Version {version}) für diese Organisation. Er gilt für das kostenlose Pilotprojekt und den EU Cloud Plan."
   },
   "dashboard": {
     "title": "Datenschutz-Dashboard",

@@ -10,6 +10,7 @@
  * On the self-hosted kit none of this applies.
  */
 
+import { PILOT_DPA, PILOT_DPA_ACTION } from "@/config/pilot-dpa";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { OrganizationRole } from "@prisma/client";
 
@@ -160,6 +161,53 @@ describe("hosted detection", () => {
   });
 });
 
+describe("the data processing agreement is accepted when a pilot organisation is opened", () => {
+  const auditActions = () =>
+    mocks.prisma.auditLog.create.mock.calls.map((c: unknown[]) => (c[0] as { data: { action: string } }).data);
+
+  it("refuses to open a hosted organisation without the acceptance", async () => {
+    hosted();
+    await expect(orgCaller().create({ name: "First", slug: "first" })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    await expect(
+      orgCaller().create({ name: "First", slug: "first", acceptDpa: false })
+    ).rejects.toThrow("data processing agreement");
+    expect(mocks.prisma.organization.create).not.toHaveBeenCalled();
+  });
+
+  it("records the version accepted, the language and the document, on the new organisation", async () => {
+    hosted();
+    await orgCaller((name) => (name === "NEXT_LOCALE" ? "es" : undefined)).create({
+      name: "First",
+      slug: "first",
+      acceptDpa: true,
+    });
+    const entry = auditActions().find((d: { action: string }) => d.action === PILOT_DPA_ACTION) as
+      | { organizationId: string; userId: string; changes: Record<string, string> }
+      | undefined;
+    expect(entry).toBeDefined();
+    expect(entry!.organizationId).toBe("org-new");
+    expect(entry!.userId).toBe("user-1");
+    expect(entry!.changes.dpaVersion).toBe(PILOT_DPA.version);
+    expect(["en", "es"]).toContain(entry!.changes.locale);
+    expect(entry!.changes.document).toBe(PILOT_DPA.href[entry!.changes.locale as "en" | "es"]);
+  });
+
+  it("never asks on the kit, and records nothing there", async () => {
+    kit();
+    await orgCaller().create({ name: "Kit", slug: "kit" });
+    expect(mocks.prisma.organization.create).toHaveBeenCalled();
+    expect(auditActions().some((d: { action: string }) => d.action === PILOT_DPA_ACTION)).toBe(false);
+  });
+
+  it("names agreement 1.1 at the storefront's addresses", () => {
+    expect(PILOT_DPA.version).toBe("1.1");
+    expect(PILOT_DPA.href.en).toBe("https://www.todo.law/legal/eu-cloud-plan-dpa");
+    expect(PILOT_DPA.href.es).toBe("https://www.todo.law/es/legal/encargo-tratamiento-plan-nube-ue");
+  });
+});
+
 describe("one organisation per account", () => {
   const create = () => orgCaller().create({ name: "Second", slug: "second" });
 
@@ -173,7 +221,7 @@ describe("one organisation per account", () => {
 
   it("allows the first organisation on the hosted pilot", async () => {
     hosted();
-    await create();
+    await orgCaller().create({ name: "First", slug: "first", acceptDpa: true });
     expect(mocks.prisma.organization.create).toHaveBeenCalled();
   });
 
