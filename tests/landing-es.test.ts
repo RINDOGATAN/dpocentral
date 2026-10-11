@@ -62,12 +62,19 @@ describe("landing hero", () => {
     expect(en["hero.card"]).toMatch(/Ready to fly in a few minutes\.$/);
   });
 
-  // Owner, 10 Oct 2026: the Spanish subtitle follows the English positioning (firms,
-  // consultants and in-house teams), no longer "diseñada para startups".
-  it("speaks to firms, consultants and in-house teams in both subtitles", () => {
-    expect(en["hero.subtitle"]).toMatch(/law firms and consultants advising smaller clients, and for in-house teams/);
-    expect(es["hero.subtitle"]).toMatch(/despachos y consultores que asesoran a clientes más pequeños, y para equipos internos de pequeñas y medianas empresas\.$/);
+  // Owner, 11 Oct 2026: the subtitle no longer repeats the sign-up card's list of
+  // modules; it introduces the setup wizard and says the program can be moved.
+  it("introduces the setup wizard in both subtitles", () => {
+    expect(en["hero.subtitle"]).toBe(
+      "Use our setup wizard to put together a privacy program in minutes: select your industry and top vendors and let the magic happen. You can migrate it to other hosting alternatives or to an enterprise platform at any time.",
+    );
+    expect(es["hero.subtitle"]).toBe(
+      "Usa nuestro asistente de configuración para montar un programa de protección de datos en unos pocos minutos: selecciona tu sector, tus proveedores principales y las decisiones clave. Podrás exportarlo a otra modalidad de alojamiento o a una plataforma de terceros cuando quieras.",
+    );
     expect(es["hero.subtitle"]).not.toMatch(/startups|[—–]|\busted\b|vosotr/i);
+    // The card keeps its own line, so the two no longer say the same thing.
+    expect(en["hero.subtitle"]).not.toBe(en["hero.card"]);
+    expect(es["hero.subtitle"]).not.toBe(es["hero.card"]);
   });
 
   it("says «sin papeleos.» in Spanish and keeps the English title", () => {
