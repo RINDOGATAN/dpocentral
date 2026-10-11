@@ -13,13 +13,13 @@
  *   - plain copy: no long dash.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import StartupsHeader from "@/landing/components/StartupsHeader";
 import PricingSection from "@/landing/components/PricingSection";
 import LandingSections from "@/landing/components/LandingSections";
-import { PLAN_PAYMENT_LINK, PRICING_COPY } from "@/landing/config/pricing";
+import { PLAN_PAYMENT_LINK, PRICING_COPY, PRICING_SECTION_LOCALES, pricingShownFor } from "@/landing/config/pricing";
 import { PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
 
 type L = "en" | "es";
@@ -29,11 +29,52 @@ const header = (locale: L) =>
 const section = (locale: L) => renderToStaticMarkup(createElement(PricingSection, { locale }));
 const text = (html: string) => html.replace(/<[^>]+>/g, " ");
 
-describe("header pricing link", () => {
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
+const landing = (locale: L) =>
+  renderToStaticMarkup(createElement(LandingSections, { t: (k: string) => k, locale, videos: [] }));
+
+describe("pricing is shown in Spanish only for now (PRICING_SECTION_LOCALES)", () => {
+  it("defaults to Spanish only", () => {
+    vi.stubEnv("NEXT_PUBLIC_PRICING_SECTION_LOCALES", "");
+    expect([...PRICING_SECTION_LOCALES]).toEqual(["es"]);
+    expect(pricingShownFor("es")).toBe(true);
+    expect(pricingShownFor("en")).toBe(false);
+  });
+
+  it("English: no pricing link (desktop or phone) and no section", () => {
+    vi.stubEnv("NEXT_PUBLIC_PRICING_SECTION_LOCALES", "");
+    const html = header("en");
+    expect(html).not.toContain('data-testid="nav-pricing"');
+    expect(html).not.toContain(">Pricing<");
+    const page = landing("en");
+    expect(page).not.toContain('id="pricing"');
+    expect(page).not.toContain('id="precios"');
+    expect(text(page)).not.toContain("$1,800");
+  });
+
+  it("Spanish: the section is on the landing", () => {
+    vi.stubEnv("NEXT_PUBLIC_PRICING_SECTION_LOCALES", "");
+    expect(landing("es")).toContain('id="precios"');
+  });
+
+  it("flipping the flag to include English shows the link and the section", () => {
+    vi.stubEnv("NEXT_PUBLIC_PRICING_SECTION_LOCALES", "es, en");
+    expect(pricingShownFor("en")).toBe(true);
+    expect(header("en")).toContain('data-testid="nav-pricing"');
+    expect(landing("en")).toContain('id="pricing"');
+    expect(landing("es")).toContain('id="precios"');
+  });
+});
+
+describe("header pricing link (where shown)", () => {
   it.each([
     ["en", "Pricing", "#pricing"],
     ["es", "Precios", "#precios"],
   ] as const)("%s: shows %s, leading to %s, before the language switch", (locale, label, href) => {
+    vi.stubEnv("NEXT_PUBLIC_PRICING_SECTION_LOCALES", "es,en");
     const html = header(locale);
     const tag = html.match(/<a[^>]*data-testid="nav-pricing"[^>]*>([^<]*)<\/a>/);
     expect(tag?.[0]).toContain(`href="${href}"`);

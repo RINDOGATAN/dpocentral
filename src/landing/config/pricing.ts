@@ -27,6 +27,27 @@ import {
 } from "@/server/services/pilot/limits";
 import { STOREFRONT_URL, type LandingLocale } from "./storefront";
 
+/**
+ * The languages whose landing shows the pricing link and section. Spanish
+ * only for now (owner, 11 Oct 2026: the English prices are still in review).
+ * To switch English on, add "en" here, or set the Vercel variable
+ * NEXT_PUBLIC_PRICING_SECTION_LOCALES=es,en (comma-separated; it replaces
+ * this default when set, and needs a redeploy because it is read at build).
+ */
+export const PRICING_SECTION_LOCALES: readonly LandingLocale[] = ["es"];
+
+/** Whether the landing in this language shows the pricing link and section. */
+export function pricingShownFor(
+  locale: LandingLocale,
+  env: string | undefined = process.env.NEXT_PUBLIC_PRICING_SECTION_LOCALES,
+): boolean {
+  const locales =
+    env && env.trim()
+      ? env.split(",").map((l) => l.trim().toLowerCase())
+      : (PRICING_SECTION_LOCALES as readonly string[]);
+  return locales.includes(locale);
+}
+
 /** The section's anchor, per language; the other language's anchor also lands on it. */
 export const PRICING_ANCHOR: Record<LandingLocale, string> = { en: "pricing", es: "precios" };
 
