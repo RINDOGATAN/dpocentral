@@ -3205,9 +3205,10 @@
         "copyAriaLabel": "Copy reference number",
         "copiedAriaLabel": "Copied",
         "emailSentLead": "We sent a confirmation to ",
-        "emailSentTrail": " with this reference and a link to track progress. Save it — you'll need it to check status.",
+        "emailSentTrail": " with this reference and a link to track progress. Save it: you'll need it to check status.",
         "checkStatus": "Check Request Status",
-        "defaultThankYou": "Thank you for your request. We will process it within the legally required timeframe."
+        "defaultThankYou": "Thank you for your request. We will process it within the legally required timeframe.",
+        "noEmailNote": "Keep this reference: you will need it to check the status of your request. No confirmation e-mail was sent this time."
       },
       "languageSwitcher": "Language"
     },
@@ -3274,7 +3275,7 @@
       "body": "{orgName} has received your {requestType}. We will respond by {dueDate}.",
       "referenceLabel": "Reference number",
       "ctaText": "Check Request Status",
-      "footer": "Save this email or bookmark the link above to track progress. We may contact you at this address if we need to verify your identity. Your contact details will be used solely to fulfill this request — never for marketing."
+      "footer": "Save this email or bookmark the link above to track progress. We may contact you at this address if we need to verify your identity. Your contact details will be used solely to fulfill this request, never for marketing."
     },
     "communicationEmail": {
       "subject": "{orgName}: Update on your data request",
@@ -9548,7 +9549,11 @@
       "installFailed": "Install failed",
       "activationNotFound": "Activation not found",
       "anUnexpectedErrorOccurredPleaseTryAgain": "An unexpected error occurred. Please try again.",
-      "weReReconnectingToTheServicePleaseTry": "We're reconnecting to the service. Please try again in a moment."
+      "weReReconnectingToTheServicePleaseTry": "We're reconnecting to the service. Please try again in a moment.",
+      "dsarIntakeNotAccepted": "We could not accept this request. Please reload the page and submit it again.",
+      "dsarIntakeTooFast": "Please take a moment to check your request, then submit it again.",
+      "dsarIntakeTooMany": "Too many requests have been sent from here today. Please try again tomorrow, or contact the organization directly.",
+      "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly."
     },
     "pattern": {
       "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",

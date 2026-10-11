@@ -28,6 +28,7 @@ const mocks = vi.hoisted(() => ({
     dSARTask: { updateMany: vi.fn() },
     dSARAuditLog: { findMany: vi.fn(), update: vi.fn(), create: vi.fn() },
     auditLog: { create: vi.fn(), updateMany: vi.fn() },
+    rateLimitCounter: { deleteMany: vi.fn() },
   },
 }));
 
@@ -202,6 +203,7 @@ describe("nightly retention cron", () => {
   beforeEach(() => {
     process.env.CRON_SECRET = SECRET;
     mocks.prisma.organization.findMany.mockResolvedValue([{ id: "org-a" }]);
+    mocks.prisma.rateLimitCounter.deleteMany.mockResolvedValue({ count: 0 });
   });
 
   it("clears every personal field, the same as the manual action", async () => {
@@ -216,7 +218,7 @@ describe("nightly retention cron", () => {
     );
     vi.useRealTimers();
     expect(res.status).toBe(200);
-    expect((await res.json()).summary).toEqual({ dsarRedacted: 1, errors: 0 });
+    expect((await res.json()).summary).toEqual({ dsarRedacted: 1, errors: 0, countersDeleted: 0 });
 
     expectFullRedaction("dsar-9", now);
     expect(mocks.prisma.dSARAuditLog.create).toHaveBeenCalledWith({
@@ -244,6 +246,23 @@ describe("nightly retention cron", () => {
       select: { id: true },
     });
     expect(mocks.prisma.dSARRequest.update).not.toHaveBeenCalled();
+  });
+
+  it("deletes the shared rate-limit counters whose day has ended", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const now = new Date("2026-10-09T03:00:00Z");
+    vi.setSystemTime(now);
+    mocks.prisma.dSARIntakeForm.findFirst.mockResolvedValue(null);
+    mocks.prisma.dSARRequest.findMany.mockResolvedValue([]);
+    mocks.prisma.rateLimitCounter.deleteMany.mockResolvedValue({ count: 4 });
+    const res = await cronGET(
+      new Request("http://localhost/api/cron/dsar-redaction", { headers: { authorization: `Bearer ${SECRET}` } })
+    );
+    vi.useRealTimers();
+    expect((await res.json()).summary).toMatchObject({ countersDeleted: 4, errors: 0 });
+    expect(mocks.prisma.rateLimitCounter.deleteMany).toHaveBeenCalledWith({
+      where: { expiresAt: { lt: now } },
+    });
   });
 
   it("still fails closed without the secret", async () => {

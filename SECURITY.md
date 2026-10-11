@@ -147,6 +147,21 @@ address is read from `x-forwarded-for`, which is only trustworthy behind a
 proxy that sets it; an install reached directly puts every client in one
 bucket and lets a client forge the header.
 
+**The public rights-request form has shared limits on top**
+(`src/server/services/dsar/public-intake-guard.ts`), counted in the database
+(`rate_limit_counters`) so every instance sees the same total: a hidden field
+that people never fill; a signed form token that dates the page load and
+refuses a submission sent less than 3 seconds after it, or more than a day
+later; per client address 10 submissions a day; per organisation 50 a day;
+and at most 3 acknowledgement e-mails a day to one recipient address across
+all organisations (over that, the request is still received and the form
+shows the reference; only the e-mail is not sent). Addresses are stored only
+as a keyed hash. Refusals are counted per reason and day and logged without
+personal data. Override with `DSAR_PUBLIC_LIMIT_PER_IP_DAY`,
+`DSAR_PUBLIC_LIMIT_PER_ORG_DAY`, `DSAR_ACK_LIMIT_PER_RECIPIENT_DAY`. If the
+counters cannot be written, the form lets the request through (a rights
+request is a legal obligation) and the in-memory limiter still applies.
+
 ### Audit trail
 
 - Create/update/delete operations across modules write audit log entries;
@@ -187,7 +202,8 @@ bundle. They apply to the hosted service and commercial arrangements:
 Stated so they can be weighed, not implied.
 
 1. **Rate limits are per process** and depend on a trustworthy
-   `x-forwarded-for` (see above). There is no shared store yet.
+   `x-forwarded-for` (see above). Only the public rights-request form has a
+   shared store (the database) so far.
 2. **The enforced CSP allows inline scripts**; the strict nonce policy is
    report-only.
 3. **The passwordless local provider has no build-time guard.** It is off on

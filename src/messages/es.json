@@ -3207,7 +3207,8 @@
         "emailSentLead": "Hemos enviado una confirmación a ",
         "emailSentTrail": " con esta referencia y un enlace para seguir el progreso. Guárdalo: lo necesitarás para consultar el estado.",
         "checkStatus": "Consultar estado de la solicitud",
-        "defaultThankYou": "Gracias por tu solicitud. La tramitaremos dentro del plazo que marca la ley."
+        "defaultThankYou": "Gracias por tu solicitud. La tramitaremos dentro del plazo que marca la ley.",
+        "noEmailNote": "Guarda esta referencia: la necesitarás para consultar el estado de tu solicitud. Esta vez no se ha enviado ningún correo de confirmación."
       },
       "languageSwitcher": "Idioma"
     },
@@ -9548,7 +9549,11 @@
       "installFailed": "No se ha podido completar la instalación.",
       "activationNotFound": "No se ha encontrado la activación.",
       "anUnexpectedErrorOccurredPleaseTryAgain": "Se ha producido un error inesperado. Vuelve a intentarlo.",
-      "weReReconnectingToTheServicePleaseTry": "Estamos volviendo a conectar con el servicio. Vuelve a intentarlo en un momento."
+      "weReReconnectingToTheServicePleaseTry": "Estamos volviendo a conectar con el servicio. Vuelve a intentarlo en un momento.",
+      "dsarIntakeNotAccepted": "No hemos podido aceptar esta solicitud. Vuelve a cargar la página y envíala de nuevo.",
+      "dsarIntakeTooFast": "Tómate un momento para revisar tu solicitud y vuelve a enviarla.",
+      "dsarIntakeTooMany": "Hoy se han enviado demasiadas solicitudes desde aquí. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
+      "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización."
     },
     "pattern": {
       "freeSlotsPortfolio": "Puedes importar hasta 5 proveedores gratis desde tu cartera de Vendor.Watch. {remaining, plural, one {Te queda # plaza gratuita} other {Te quedan # plazas gratuitas}}. Suscríbete al complemento Catálogo de proveedores para importar más.",

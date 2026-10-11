@@ -45,11 +45,18 @@ export default function PublicDSARPage() {
   const t = useTranslations("dsarPublic.form");
 
   const { data: formConfig, isLoading: configLoading, error: configError } =
-    trpc.dsar.getPublicForm.useQuery({ orgSlug }, { retry: false });
+    trpc.dsar.getPublicForm.useQuery(
+      { orgSlug },
+      // Loaded once: the form token it carries dates the page load, and a
+      // refetch on focus would restart the minimum fill time.
+      { retry: false, refetchOnWindowFocus: false, refetchOnReconnect: false, staleTime: Infinity }
+    );
 
   const submitMutation = trpc.dsar.submitPublic.useMutation();
 
   const [consentGiven, setConsentGiven] = useState(false);
+  // The hidden field: people never see it, form-filling scripts fill it.
+  const [website, setWebsite] = useState("");
   const [refCopied, setRefCopied] = useState(false);
   const [formData, setFormData] = useState({
     type: "" as DSARType | "",
@@ -72,6 +79,8 @@ export default function PublicDSARPage() {
       relationship: formData.relationship || undefined,
       description: formData.description || undefined,
       locale,
+      website,
+      formToken: formConfig?.formToken,
     });
   };
 
@@ -149,11 +158,15 @@ export default function PublicDSARPage() {
                 </Button>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground text-center">
-              {t("success.emailSentLead")}
-              <span className="font-medium text-foreground break-all">{formData.email}</span>
-              {t("success.emailSentTrail")}
-            </p>
+            {submitMutation.data.acknowledgementSent === false ? (
+              <p className="text-sm text-muted-foreground text-center">{t("success.noEmailNote")}</p>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center">
+                {t("success.emailSentLead")}
+                <span className="font-medium text-foreground break-all">{formData.email}</span>
+                {t("success.emailSentTrail")}
+              </p>
+            )}
             <Button asChild className="w-full">
               <a href={`/dsar/status/${publicId}`}>{t("success.checkStatus")}</a>
             </Button>
@@ -194,6 +207,22 @@ export default function PublicDSARPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Hidden from people and from screen readers; scripts fill it. */}
+              <div
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-10000px", top: "auto", width: 1, height: 1, overflow: "hidden" }}
+              >
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
               <div className="space-y-2">
                 <Label>{t("fields.requestTypeLabel")}</Label>
                 <Select

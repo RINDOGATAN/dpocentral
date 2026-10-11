@@ -72,6 +72,7 @@ vi.mock("@/server/services/dsar/sendCommunicationEmail", () => ({
 
 import { organizationRouter } from "@/server/routers/privacy/organization";
 import { dsarRouter } from "@/server/routers/privacy/dsar";
+import { issueFormToken } from "@/server/services/dsar/public-intake-guard";
 import { GET as exportOrganizationData } from "@/app/api/export/organization-data/route";
 import { isHostedDeployment } from "@/lib/hosted";
 import {
@@ -370,6 +371,7 @@ describe("the clock starts at the first sign-in", () => {
         type: "ACCESS",
         requesterName: "A",
         requesterEmail: "a@test.example",
+        formToken: issueFormToken("org", new Date(Date.now() - 10_000)),
       })
     ).rejects.toThrow("pilot limit");
     expect(mocks.prisma.organization.updateMany).not.toHaveBeenCalled();
@@ -478,6 +480,7 @@ describe("records ceiling", () => {
         type: "ACCESS",
         requesterName: "A",
         requesterEmail: "a@test.example",
+        formToken: issueFormToken("org", new Date(Date.now() - 10_000)),
       })
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mocks.prisma.dSARRequest.create).not.toHaveBeenCalled();
