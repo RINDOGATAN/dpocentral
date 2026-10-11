@@ -7,9 +7,13 @@
  *     last link before the language switch (the phone menu has it too);
  *   - one currency per page: the Spanish section shows euros only, the
  *     English one US dollars only;
- *   - the pilot's limits are the ones the caps enforce;
+ *   - second version (owner, 11 Oct 2026): only the hosted mode, in two
+ *     cards (the free pilot, the Cloud Plan) and one contact line for a
+ *     managed instance or your own hardware; the long paragraphs, the record
+ *     limits, the rights-request line and the quote card are gone;
+ *   - the pilot's editing days are the ones the caps enforce;
  *   - the payment button is the yearly link of the page's currency, and the
- *     managed and own-hardware ways lead to the storefront's wizard;
+ *     contact line leads to the storefront's wizard;
  *   - plain copy: no long dash.
  */
 
@@ -20,7 +24,7 @@ import StartupsHeader from "@/landing/components/StartupsHeader";
 import PricingSection from "@/landing/components/PricingSection";
 import LandingSections from "@/landing/components/LandingSections";
 import { PLAN_PAYMENT_LINK, PRICING_COPY, PRICING_SECTION_LOCALES, pricingShownFor } from "@/landing/config/pricing";
-import { PILOT_DAYS, PILOT_LIMITS } from "@/server/services/pilot/caps";
+import { PILOT_DAYS } from "@/server/services/pilot/caps";
 
 type L = "en" | "es";
 const noop = () => {};
@@ -92,49 +96,88 @@ describe("pricing section", () => {
     expect(html).toContain(`id="${locale === "en" ? "precios" : "pricing"}"`);
   });
 
-  it("Spanish: euros only", () => {
-    const t = text(section("es"));
-    expect(t).toContain("1.800 € al año");
-    expect(t).toContain("179 € al mes");
-    expect(t).toContain("49 € al mes");
+  it("Spanish: the exact copy, euros only", () => {
+    const t = text(section("es")).replace(/\s+/g, " ");
+    for (const line of [
+      "Precios",
+      "Empieza gratis. Cuando lo necesites, pasa al plan de pago con todos tus registros.",
+      "Piloto gratuito",
+      "Gratis",
+      `${PILOT_DAYS} días de edición`,
+      "Después, solo lectura con exportación",
+      "Empieza gratis",
+      "Plan nube UE",
+      "1.800 € al año",
+      "o 179 € al mes",
+      "DPO Central, AI Sentinel y VendorWatch",
+      "Sin límite de usuarios ni de registros",
+      "Datos en la UE (Fráncfort)",
+      "Contratar",
+      "Sin IVA español (inversión del sujeto pasivo para empresas de la UE). Condiciones y subencargados .",
+      "¿Instancia gestionada o tu propio hardware? Escríbenos .",
+    ]) {
+      expect(t).toContain(line);
+    }
     expect(t).not.toMatch(/\$|\bUSD\b|dólar/i);
   });
 
-  it("English: US dollars only", () => {
-    const t = text(section("en"));
-    expect(t).toContain("$1,800 a year");
-    expect(t).toContain("$179 a month");
-    expect(t).toContain("$49 a month");
+  it("English: the exact copy, US dollars only", () => {
+    const t = text(section("en")).replace(/\s+/g, " ");
+    for (const line of [
+      "Pricing",
+      "Start free. When you need it, move to the paid plan with all your records.",
+      "Free pilot",
+      "Free",
+      `${PILOT_DAYS} days of editing`,
+      "Then read-only with export",
+      "Start free",
+      "Cloud Plan",
+      "$1,800 a year",
+      "or $179 a month",
+      "DPO Central, AI Sentinel and VendorWatch",
+      "No limits on users or records",
+      "Data stored in the EU (Frankfurt)",
+      "Subscribe",
+      "No VAT charged. Terms and sub-processors .",
+      "Managed instance or your own hardware? Contact us .",
+    ]) {
+      expect(t).toContain(line);
+    }
     expect(t).not.toMatch(/€|\bEUR\b|\beuros?\b/i);
   });
 
-  it("subscribes yearly with the link of the page's currency", () => {
+  it("has two cards and nothing of the first version", () => {
+    for (const locale of ["en", "es"] as const) {
+      const html = section(locale);
+      expect(html.match(/<article/g)?.length).toBe(2);
+      expect(html).not.toContain("<details");
+      expect(html).not.toContain("/contact/deployment");
+    }
+    const all = text(section("en")) + text(section("es"));
+    expect(all).not.toMatch(/49 €|\$49|On quotation|Bajo presupuesto|For real data|Para datos reales|test records|registros de prueba|How you pay|Cómo pagas/);
+  });
+
+  it("subscribes yearly with the link of the page's currency; starts the pilot at sign-in", () => {
     expect(section("en")).toContain(`href="${PLAN_PAYMENT_LINK.en}"`);
     expect(section("es")).toContain(`href="${PLAN_PAYMENT_LINK.es}"`);
     expect(PLAN_PAYMENT_LINK.en).not.toBe(PLAN_PAYMENT_LINK.es);
+    expect(PLAN_PAYMENT_LINK.es).toBe("https://buy.stripe.com/fZubJ273hbnnbH56qn4sE04");
+    expect(PLAN_PAYMENT_LINK.en).toBe("https://buy.stripe.com/aFa9AU73h3UV26v7ur4sE05");
+    for (const locale of ["en", "es"] as const) {
+      expect(section(locale)).toMatch(/<a href="\/sign-in"[^>]*data-testid="pricing-start"/);
+    }
   });
 
-  it("states the pilot's limits as the caps enforce them", () => {
-    const en = text(section("en"));
-    const es = text(section("es"));
-    expect(en).toContain(`${PILOT_DAYS} days of editing`);
-    expect(es).toContain(`${PILOT_DAYS} días de edición`);
-    expect(en).toContain(`${PILOT_LIMITS.vendors} vendors`);
-    expect(es).toContain(`${PILOT_LIMITS.members} miembros`);
-  });
-
-  it("quotes the managed instance and own hardware, with the storefront's wizard", () => {
+  it("sends a managed instance or own hardware to the storefront's wizard", () => {
     expect(section("en")).toContain('href="https://www.todo.law/contact/managed"');
-    expect(section("en")).toContain('href="https://www.todo.law/contact/deployment"');
     expect(section("es")).toContain('href="https://www.todo.law/es/contact/managed"');
-    expect(section("es")).toContain('href="https://www.todo.law/es/contact/deployment"');
-    expect(text(section("en"))).toContain("On quotation");
-    expect(text(section("es"))).toContain("Bajo presupuesto");
   });
 
-  it("links the sub-processors in the page's language", () => {
-    expect(section("en")).toContain("https://www.todo.law/legal/eu-cloud-plan-subprocessors");
-    expect(section("es")).toContain("https://www.todo.law/es/legal/subencargados-plan-nube-ue");
+  it("links the plan terms and sub-processors in the page's language", () => {
+    expect(section("en")).toContain('href="https://www.todo.law/legal/eu-cloud-plan-terms"');
+    expect(section("en")).toContain('href="https://www.todo.law/legal/eu-cloud-plan-subprocessors"');
+    expect(section("es")).toContain('href="https://www.todo.law/es/legal/condiciones-plan-nube-ue"');
+    expect(section("es")).toContain('href="https://www.todo.law/es/legal/subencargados-plan-nube-ue"');
   });
 
   it("follows the ways section on the landing", () => {
