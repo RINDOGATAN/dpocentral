@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { Building2, FileCheck, MessageSquare, ShieldAlert, Clock } from "lucide-react";
+import { Building2, FileCheck, ShieldAlert, Clock } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { formatDateIn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,11 +43,6 @@ export default async function DocsVendorsPage() {
     { vendor: "SecureMail Pro", type: "DPA", start: "2023-03-01", end: "2024-02-28", statusKey: "Expired", badgeVariant: "destructive" },
   ];
 
-  const questionnaires: { vendor: string; sent: string; statusKey: "Completed" | "InProgress" | "Sent"; score: string; badgeVariant: "success" | "info" | "secondary" }[] = [
-    { vendor: "Acme Cloud Services", sent: "2024-12-01", statusKey: "Completed", score: "92%", badgeVariant: "success" },
-    { vendor: "DataTech Analytics", sent: "2025-01-05", statusKey: "InProgress", score: "—", badgeVariant: "info" },
-    { vendor: "SecureMail Pro", sent: "2025-01-10", statusKey: "Sent", score: "—", badgeVariant: "secondary" },
-  ];
 
   return (
     <div className="space-y-10">
@@ -135,27 +130,7 @@ export default async function DocsVendorsPage() {
       </DocSection>
 
       <DocSection id="questionnaires" title={t("questionnaires.title")} description={t("questionnaires.description")}>
-        <FeatureMockup title={t("questionnaires.mockupTitle")}>
-          <div className="space-y-2">
-            {questionnaires.map((q) => (
-              <div key={q.vendor} className="flex items-center justify-between rounded-md border px-3 py-2">
-                <div className="flex items-center gap-3">
-                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm font-medium">{q.vendor}</p>
-                    <p className="text-xs text-muted-foreground">{t("questionnaires.sentLabel", { date: formatDateIn(q.sent, locale) })}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {q.score !== "—" && <span className="text-xs font-medium text-primary">{q.score}</span>}
-                  <Badge variant={q.badgeVariant} className="text-[10px]">
-                    {t(`questionnaires.statuses.${q.statusKey}`)}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </FeatureMockup>
+        {/* No questionnaire is sent from DPO Central: vendors state their practices on Vendor.Watch (src/server/routers/privacy/vendor.ts). */}
         <InfoCallout type="tip" title={t("questionnaires.calloutTitle")}>
           {t("questionnaires.calloutBody")}
         </InfoCallout>

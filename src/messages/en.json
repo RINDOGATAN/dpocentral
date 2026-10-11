@@ -2951,7 +2951,7 @@
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
     "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs.",
-    "userGuide": "User Guide",
+    "userGuide": "Docs",
     "sourceAndLicence": "Source & licence",
     "billing": "Billing",
     "termsOfService": "Terms of Service",
@@ -4545,7 +4545,7 @@
         "items": {
           "adding": "Adding Vendors",
           "contracts": "Contracts",
-          "questionnaires": "Questionnaires",
+          "questionnaires": "Due diligence",
           "riskReviews": "Risk Reviews"
         }
       },
@@ -4968,7 +4968,7 @@
     },
     "vendors": {
       "title": "Vendor Management",
-      "subtitle": "Manage third-party vendors that process personal data on your behalf. Track contracts, conduct due diligence questionnaires, and monitor risk levels across your vendor portfolio.",
+      "subtitle": "Manage third-party vendors that process personal data on your behalf. Track contracts, bring in each vendor's public statements from its Vendor.Watch profile, and monitor risk levels across your vendor portfolio.",
       "adding": {
         "title": "Adding Vendors",
         "description": "Register vendors and capture key details about their data processing relationship with your organization.",
@@ -5014,8 +5014,8 @@
             "description": "Attach the Data Processing Agreement (DPA) or other relevant contracts."
           },
           "questionnaire": {
-            "title": "Send questionnaire",
-            "description": "Optionally send a due diligence questionnaire for the vendor to complete."
+            "title": "Link its Vendor.Watch profile",
+            "description": "Optionally link the vendor to its Vendor.Watch profile, so its certifications, sub-processors and data locations come in from the vendor's own statements."
           }
         }
       },
@@ -5037,17 +5037,10 @@
         }
       },
       "questionnaires": {
-        "title": "Questionnaires",
-        "description": "Send standardized due diligence questionnaires to vendors to assess their privacy and security practices.",
-        "mockupTitle": "Questionnaire Status",
-        "sentLabel": "Sent {date}",
-        "statuses": {
-          "Completed": "Completed",
-          "InProgress": "In Progress",
-          "Sent": "Sent"
-        },
-        "calloutTitle": "Questionnaire templates",
-        "calloutBody": "You can create reusable questionnaire templates covering topics like data security, breach notification processes, subprocessor management, and data retention. Templates can be customized per vendor category."
+        "title": "Due diligence",
+        "description": "DPO Central does not send questionnaires to vendors. Vendors state their practices on their Vendor.Watch profile, which DPO Central reads from the shared catalog. The due-diligence templates are reference question sets to use as a checklist.",
+        "calloutTitle": "Due-diligence templates",
+        "calloutBody": "Under Vendors, the due-diligence templates cover topics like data security, breach notification, sub-processor management and data retention. Use them as a checklist while you review a vendor's profile."
       },
       "riskReviews": {
         "title": "Risk Reviews",
@@ -6206,17 +6199,18 @@
       "ogTitle": "Documentation | DPO CENTRAL",
       "ogDescription": "Quick start guide, user roles, and module overview for GDPR privacy management.",
       "heroTitle": "DPO Central",
-      "heroSubtitle": "A single source of truth for your privacy management program. DPO Central helps organizations manage data inventory, DSARs, assessments, incidents, and vendor relationships from one unified platform.",
+      "heroSubtitle": "One place to run a privacy program: data inventory, rights requests, assessments, incidents and vendors. For firms and consultants who run programs for their clients, and for in-house teams.",
       "hostedPilot": {
         "title": "Hosted pilot",
-        "intro": "The hosted service is there to try the product. It is free, and it is not meant for real client matter. An instance of your own carries none of the limits below.",
+        "intro": "Hosted pilot: free and capped, to try the product with test records. The limits are set out below. For real data, choose a paid plan or a managed instance.",
         "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
         "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "An organization can hold up to:",
         "oneOrganization": "An account belongs to one organization.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
-        "run": "For real data, choose a paid plan or a managed instance."
+        "run": "On the paid plan none of these limits apply: there is no editing window and no record ceiling. The plans and their prices are on the pricing page.",
+        "plansLink": "See the plans"
       },
       "support": {
         "title": "When something goes wrong",
@@ -6289,7 +6283,7 @@
         },
         "vendors": {
           "title": "Vendor Management",
-          "description": "Maintain your vendor register, track contracts, send questionnaires, and monitor third-party risk."
+          "description": "Keep your vendor register, track contracts and reviews, and bring in each vendor's certifications, sub-processors and data locations from its Vendor.Watch profile."
         }
       },
       "reports": {
@@ -6332,7 +6326,7 @@
       },
       "licensing": {
         "title": "Open Core Licensing",
-        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. Premium modules cost €60 a year each in the kit (your own instance), activated offline with a licence file. The hosted service is a free pilot with limits: every module is included there, and nothing is sold.",
+        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. On your own instance (the open-source kit), premium modules cost €60 a year each, activated offline with a licence file. On the hosted service every module is included: within the pilot's limits, or without limits on the paid plan.",
         "coreTitle": "Core (Open Source)",
         "coreItems": {
           "inventory": "Data Inventory & ROPA",
@@ -6347,6 +6341,32 @@
           "vendor": "Vendor risk assessments",
           "catalog": "Vendor Catalog (starter catalog of common processors)",
           "audit": "Advanced audit features"
+        }
+      },
+      "portability": {
+        "title": "Take your program with you",
+        "export": "Owners and Admins can download the whole program at any time, from Settings, under \"Take your programme with you\". The ZIP holds programme.json (the whole program, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Rights requests are left out unless you tick them, because they hold personal data.",
+        "import": "The same file can be imported into a new or empty organization, on the hosted service or on your own instance. One register can also be imported from a spreadsheet (CSV). Everything arrives as drafts for you to review and confirm.",
+        "migrate": "If you outgrow DPO Central and move to an enterprise privacy platform, we help you move your program across from the same open format."
+      },
+      "ai": {
+        "title": "AI features",
+        "body": "AI features are off until an Owner or Admin turns them on in the organization's settings and confirms how they work. Until then, the product makes no call to an AI service."
+      },
+      "hosting": {
+        "title": "Where it runs",
+        "intro": "Three hosting options, with different safeguards, certifications and levels of control.",
+        "cloud": {
+          "title": "In the TODO.LAW cloud",
+          "desc": "You use it in the browser, on desktop or mobile. Nothing to install, and you can take your program elsewhere whenever you like with a simple export."
+        },
+        "managed": {
+          "title": "Managed virtual server",
+          "desc": "An isolated instance we run for you from Asturias, Spain, with open LLMs available and a tailored SLA."
+        },
+        "own": {
+          "title": "Your own hardware",
+          "desc": "The TODO.LAW suite on a machine in your organization. Your data never leaves your premises unless you connect an outside AI provider."
         }
       }
     },
@@ -6743,7 +6763,7 @@
       "templates": {
         "title": "Assessment Templates",
         "intro": "Choose a built-in template, or the custom one for a review that none of the others covers. Each template carries its own questions and risk criteria, and every assessment made from one goes through the same approval workflow.",
-        "hostedNote": "Every type is open on this hosted service, at no charge and with no lock on the export. The Premium mark applies to the self-hosted kit, where such a type is installed from a signed module.",
+        "hostedNote": "Every type is open on the hosted service: within the pilot's limits, or without limits on the paid plan, and there is never a lock on the export. The Premium mark applies to the self-hosted kit, where such a type is installed from a signed module.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Core",
@@ -7052,11 +7072,11 @@
         "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review, not legal advice."
       },
       "metaTitle": "Vendor Management",
-      "metaDescription": "Maintain your vendor register with contract tracking, privacy questionnaires, risk tiers, and periodic review workflows.",
+      "metaDescription": "Maintain your vendor register with contract tracking, risk tiers, due-diligence templates, Vendor.Watch profiles and periodic reviews.",
       "ogTitle": "Vendor Management | DPO CENTRAL",
-      "ogDescription": "Vendor register, contract management, privacy questionnaires, risk tier classification, and review workflows.",
+      "ogDescription": "Vendor register, contract management, risk tier classification, due-diligence templates and review workflows.",
       "title": "Vendor Management",
-      "subtitle": "Maintain a complete register of third-party vendors and processors. Track contracts, send privacy questionnaires, monitor risk tiers, and ensure your supply chain meets your privacy standards.",
+      "subtitle": "Maintain a complete register of third-party vendors and processors. Track contracts and reviews, classify risk tiers, and bring in what each vendor states publicly from its Vendor.Watch profile.",
       "register": {
         "title": "Vendor Register",
         "intro": "Your vendor register is the central record of all third parties that process personal data on your behalf. Each vendor entry captures contact details, processing purposes, contract status, and risk tier.",
@@ -7096,7 +7116,7 @@
       },
       "contracts": {
         "title": "Contract Management",
-        "intro": "Track Data Processing Agreements (DPAs), Standard Contractual Clauses (SCCs), and other contractual documents for each vendor. Set renewal reminders and monitor expiration dates.",
+        "intro": "Track Data Processing Agreements (DPAs), Standard Contractual Clauses (SCCs) and other contractual documents for each vendor. Record renewal and end dates: contracts close to expiry show on the vendors dashboard.",
         "label": "Key Contract Documents",
         "items": {
           "dpa": {
@@ -7118,9 +7138,9 @@
         }
       },
       "questionnaires": {
-        "title": "Privacy Questionnaires",
-        "intro": "Send privacy and security questionnaires to vendors to assess their data protection practices. Track responses and flag areas of concern for follow-up.",
-        "label": "Questionnaire Topics",
+        "title": "Due diligence and Vendor.Watch",
+        "intro": "DPO Central does not send questionnaires to vendors. Vendors state their certifications, sub-processors, data locations and AI capabilities on their Vendor.Watch profile, and DPO Central reads that profile from the shared catalog when you link the vendor. The due-diligence templates in Vendors are reference question sets, useful as a checklist while you review a vendor.",
+        "label": "Topics the templates cover",
         "topics": {
           "scope": "Data processing scope",
           "security": "Security measures",
@@ -7141,8 +7161,8 @@
             "description": "Initial assessment"
           },
           "questionnaire": {
-            "label": "Questionnaire",
-            "description": "Privacy review"
+            "label": "Due diligence",
+            "description": "Profile and checklist"
           },
           "contract": {
             "label": "Contract",
@@ -7171,12 +7191,12 @@
             "description": "Navigate to the Vendor Management module and click 'Add Vendor'. Enter the vendor name, contact details, and processing purpose."
           },
           "send": {
-            "title": "Send Questionnaire",
-            "description": "Select a privacy questionnaire template and send it to the vendor contact. The system tracks response status and deadlines."
+            "title": "Link its Vendor.Watch profile",
+            "description": "Add the vendor from the catalog, or link it to its Vendor.Watch profile, so its certifications, sub-processors and data locations come in from the vendor's own public statements."
           },
           "review": {
-            "title": "Review Responses",
-            "description": "Evaluate the vendor's questionnaire responses. Flag any areas of concern and assign a preliminary risk tier.",
+            "title": "Review the vendor",
+            "description": "Go through the profile with a due-diligence template as your checklist. Flag any areas of concern and assign a preliminary risk tier.",
             "detail1": "Check security certifications (ISO 27001, SOC 2, etc.)",
             "detail2": "Review sub-processor arrangements",
             "detail3": "Evaluate data transfer mechanisms"
@@ -7186,8 +7206,8 @@
             "description": "Upload and track the Data Processing Agreement (DPA) and any additional contractual documents."
           },
           "approve": {
-            "title": "Approve and Monitor",
-            "description": "Approve the vendor for active use. Set up periodic review reminders based on the vendor's risk tier."
+            "title": "Approve and schedule reviews",
+            "description": "Approve the vendor for active use, and schedule its next review according to its risk tier."
           }
         }
       },
@@ -7199,7 +7219,7 @@
       }
     },
     "shell": {
-      "userGuide": "User Guide",
+      "userGuide": "Docs",
       "sourceAndLicence": "Source & licence",
       "menu": "Documentation Menu"
     },

@@ -2951,7 +2951,7 @@
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
     "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
-    "userGuide": "Guía de usuario",
+    "userGuide": "Documentación",
     "sourceAndLicence": "Código fuente y licencia",
     "billing": "Facturación",
     "termsOfService": "Condiciones del servicio",
@@ -4545,7 +4545,7 @@
         "items": {
           "adding": "Añadir proveedores",
           "contracts": "Contratos",
-          "questionnaires": "Cuestionarios",
+          "questionnaires": "Diligencia debida",
           "riskReviews": "Revisiones de riesgo"
         }
       },
@@ -4968,7 +4968,7 @@
     },
     "vendors": {
       "title": "Gestión de proveedores",
-      "subtitle": "Gestiona los proveedores externos que tratan datos personales por cuenta tuya. Haz seguimiento de los contratos, envía cuestionarios de diligencia debida y supervisa los niveles de riesgo de toda tu cartera de proveedores.",
+      "subtitle": "Gestiona los proveedores externos que tratan datos personales por cuenta tuya. Haz seguimiento de los contratos, incorpora las declaraciones públicas de cada proveedor desde su perfil de Vendor.Watch y supervisa los niveles de riesgo de toda tu cartera de proveedores.",
       "adding": {
         "title": "Añadir proveedores",
         "description": "Registra proveedores y recoge los datos clave de la relación de tratamiento de datos que tienen con tu organización.",
@@ -5014,8 +5014,8 @@
             "description": "Adjunta el contrato de encargo del tratamiento (DPA) u otros contratos pertinentes."
           },
           "questionnaire": {
-            "title": "Envía un cuestionario",
-            "description": "Opcionalmente, envía un cuestionario de diligencia debida para que el proveedor lo complete."
+            "title": "Vincula su perfil de Vendor.Watch",
+            "description": "Opcionalmente, vincula al proveedor con su perfil de Vendor.Watch para que sus certificaciones, subencargados y ubicaciones de datos lleguen de sus propias declaraciones."
           }
         }
       },
@@ -5037,17 +5037,10 @@
         }
       },
       "questionnaires": {
-        "title": "Cuestionarios",
-        "description": "Envía cuestionarios estandarizados de diligencia debida para evaluar las prácticas de privacidad y seguridad de tus proveedores.",
-        "mockupTitle": "Estado de cuestionarios",
-        "sentLabel": "Enviado {date}",
-        "statuses": {
-          "Completed": "Completado",
-          "InProgress": "En curso",
-          "Sent": "Enviado"
-        },
-        "calloutTitle": "Plantillas de cuestionario",
-        "calloutBody": "Puedes crear plantillas de cuestionario reutilizables que cubran temas como la seguridad de los datos, los procesos de notificación de brechas, la gestión de subencargados y la conservación de datos. Las plantillas se pueden personalizar por categoría de proveedor."
+        "title": "Diligencia debida",
+        "description": "DPO Central no envía cuestionarios a los proveedores. Los proveedores declaran sus prácticas en su perfil de Vendor.Watch, que DPO Central lee del catálogo compartido. Las plantillas de diligencia debida son baterías de preguntas de referencia para usar como lista de comprobación.",
+        "calloutTitle": "Plantillas de diligencia debida",
+        "calloutBody": "En Proveedores, las plantillas de diligencia debida cubren temas como la seguridad de los datos, la notificación de brechas, la gestión de subencargados y la conservación de datos. Úsalas como lista de comprobación mientras revisas el perfil de un proveedor."
       },
       "riskReviews": {
         "title": "Revisiones de riesgo",
@@ -6206,17 +6199,18 @@
       "ogTitle": "Documentación | DPO CENTRAL",
       "ogDescription": "Guía rápida, roles de usuario y resumen de módulos para la gestión de la privacidad conforme al RGPD.",
       "heroTitle": "DPO Central",
-      "heroSubtitle": "Una única fuente de verdad para tu programa de gestión de privacidad. DPO Central ayuda a las organizaciones a gestionar el inventario de datos, las solicitudes de ejercicio de derechos, las evaluaciones, los incidentes y las relaciones con proveedores desde una plataforma unificada.",
+      "heroSubtitle": "Un único lugar para llevar un programa de privacidad: inventario de datos, ejercicio de derechos, evaluaciones, incidentes y proveedores. Para despachos y consultores que llevan los programas de sus clientes, y para equipos internos.",
       "hostedPilot": {
         "title": "Piloto alojado",
-        "intro": "El servicio alojado sirve para probar el producto. Es gratuito y no está pensado para asuntos reales de clientes. Una instancia propia no tiene ninguno de los límites siguientes.",
+        "intro": "Piloto alojado: gratuito y con límites, para probar el producto con registros de prueba. Los límites se detallan a continuación. Para datos reales, elige un plan de pago o una instancia gestionada.",
         "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
         "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Una organización puede tener como máximo:",
         "oneOrganization": "Una cuenta pertenece a una sola organización.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
-        "run": "Para datos reales, elige un plan de pago o una instancia gestionada."
+        "run": "Con el plan de pago no se aplica ninguno de estos límites: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios.",
+        "plansLink": "Ver los planes"
       },
       "support": {
         "title": "Cuando algo falla",
@@ -6289,7 +6283,7 @@
         },
         "vendors": {
           "title": "Gestión de proveedores",
-          "description": "Mantén tu registro de proveedores, lleva el seguimiento de contratos, envía cuestionarios y monitoriza el riesgo de terceros."
+          "description": "Mantén tu registro de proveedores, lleva el seguimiento de contratos y revisiones, e incorpora las certificaciones, los subencargados y las ubicaciones de datos de cada proveedor desde su perfil de Vendor.Watch."
         }
       },
       "reports": {
@@ -6332,7 +6326,7 @@
       },
       "licensing": {
         "title": "Licencia de núcleo abierto (open core)",
-        "intro": "DPO Central sigue un modelo de núcleo abierto (open core). La plataforma principal está disponible con licencia AGPL-3.0. Los módulos premium cuestan 60 € al año cada uno en el kit (tu propia instancia) y se activan sin conexión con un archivo de licencia. El servicio alojado es un piloto gratuito con límites: allí se incluyen todos los módulos y no se vende nada.",
+        "intro": "DPO Central sigue un modelo de núcleo abierto (open core). La plataforma principal está disponible con licencia AGPL-3.0. En tu propia instancia (el kit de código abierto), los módulos premium cuestan 60 € al año cada uno y se activan sin conexión con un archivo de licencia. En el servicio alojado se incluyen todos los módulos: dentro de los límites del piloto, o sin límites con el plan de pago.",
         "coreTitle": "Núcleo (código abierto)",
         "coreItems": {
           "inventory": "Inventario de datos y RAT",
@@ -6347,6 +6341,32 @@
           "vendor": "Evaluaciones de riesgo de proveedor",
           "catalog": "Catálogo de proveedores (catálogo inicial de encargados habituales)",
           "audit": "Funciones avanzadas de auditoría"
+        }
+      },
+      "portability": {
+        "title": "Llévate tu programa",
+        "export": "Los propietarios y administradores pueden descargar el programa completo en cualquier momento, desde Ajustes, en «Llévate tu programa». El ZIP contiene programme.json (el programa completo, con su esquema JSON), una tabla CSV por registro para hojas de cálculo y la explicación de cada campo en inglés y en español. Las solicitudes de derechos quedan fuera salvo que las marques, porque contienen datos personales.",
+        "import": "El mismo archivo se puede importar en una organización nueva o vacía, en el servicio alojado o en tu propia instancia. También se puede importar un registro desde una hoja de cálculo (CSV). Todo llega como borrador para que lo revises y lo confirmes.",
+        "migrate": "Si DPO Central se te queda pequeño y pasas a una plataforma de privacidad para grandes empresas, te ayudamos a trasladar tu programa desde el mismo formato abierto."
+      },
+      "ai": {
+        "title": "Funciones de IA",
+        "body": "Las funciones de IA están desactivadas hasta que un propietario o un administrador las activa en los ajustes de la organización y confirma cómo funcionan. Hasta entonces, el producto no hace ninguna llamada a un servicio de IA."
+      },
+      "hosting": {
+        "title": "Dónde se aloja",
+        "intro": "Te ofrecemos tres modalidades de alojamiento con diferentes garantías, certificaciones y niveles de control.",
+        "cloud": {
+          "title": "En la nube de TODO.LAW",
+          "desc": "Lo usas desde el navegador, en desktop o móvil. No instalas nada y puedes llevarte tu programa a otro sitio cuando quieras, mediante una sencilla exportación."
+        },
+        "managed": {
+          "title": "Servidor virtual gestionado",
+          "desc": "Una instancia aislada que operamos nosotros desde Asturias, con disponibilidad de LLMs abiertos y SLA a medida."
+        },
+        "own": {
+          "title": "Tu propio hardware",
+          "desc": "La suite de TODO.LAW en un equipo de tu organización. Los datos no salen de tus instalaciones, salvo que conectes con un proveedor de IA externo."
         }
       }
     },
@@ -6743,7 +6763,7 @@
       "templates": {
         "title": "Plantillas de evaluación",
         "intro": "Elige una plantilla integrada, o la personalizada para una revisión que no encaje en ninguna de las demás. Cada plantilla lleva sus propias preguntas y criterios de riesgo, y toda evaluación creada a partir de una recorre el mismo flujo de aprobación.",
-        "hostedNote": "Todos los tipos están disponibles en este servicio alojado, sin coste y sin bloqueo de la exportación. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
+        "hostedNote": "Todos los tipos están disponibles en el servicio alojado: dentro de los límites del piloto, o sin límites con el plan de pago, y la exportación nunca se bloquea. La marca Premium se refiere al paquete autoalojado, donde ese tipo se instala desde un módulo firmado.",
         "premiumBadge": "Premium",
         "tiers": {
           "Core": "Básico",
@@ -7052,11 +7072,11 @@
         "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
       },
       "metaTitle": "Gestión de proveedores",
-      "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, cuestionarios de privacidad, niveles de riesgo y flujos de revisión periódica.",
+      "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, niveles de riesgo, plantillas de diligencia debida, perfiles de Vendor.Watch y revisiones periódicas.",
       "ogTitle": "Gestión de proveedores | DPO CENTRAL",
-      "ogDescription": "Registro de proveedores, gestión de contratos, cuestionarios de privacidad, clasificación por nivel de riesgo y flujos de revisión.",
+      "ogDescription": "Registro de proveedores, gestión de contratos, clasificación por nivel de riesgo, plantillas de diligencia debida y flujos de revisión.",
       "title": "Gestión de proveedores",
-      "subtitle": "Mantén un registro completo de proveedores y encargados del tratamiento externos. Lleva el seguimiento de contratos, envía cuestionarios de privacidad, supervisa los niveles de riesgo y asegúrate de que tu cadena de suministro cumple tus estándares de privacidad.",
+      "subtitle": "Mantén un registro completo de proveedores y encargados del tratamiento externos. Lleva el seguimiento de contratos y revisiones, clasifica los niveles de riesgo e incorpora lo que cada proveedor declara públicamente desde su perfil de Vendor.Watch.",
       "register": {
         "title": "Registro de proveedores",
         "intro": "Tu registro de proveedores es el registro central de todos los terceros que tratan datos personales por cuenta tuya. Cada proveedor recoge los datos de contacto, las finalidades del tratamiento, el estado del contrato y el nivel de riesgo.",
@@ -7096,7 +7116,7 @@
       },
       "contracts": {
         "title": "Gestión de contratos",
-        "intro": "Lleva el seguimiento de los contratos de encargo del tratamiento (DPA), las cláusulas contractuales tipo (CCT) y otros documentos contractuales de cada proveedor. Configura recordatorios de renovación y controla las fechas de vencimiento.",
+        "intro": "Lleva el seguimiento de los contratos de encargo del tratamiento (DPA), las cláusulas contractuales tipo (CCT) y otros documentos contractuales de cada proveedor. Registra las fechas de renovación y de fin: los contratos próximos a vencer aparecen en el panel de proveedores.",
         "label": "Documentos contractuales clave",
         "items": {
           "dpa": {
@@ -7118,9 +7138,9 @@
         }
       },
       "questionnaires": {
-        "title": "Cuestionarios de privacidad",
-        "intro": "Envía cuestionarios de privacidad y seguridad a los proveedores para evaluar sus prácticas de protección de datos. Lleva el seguimiento de las respuestas y señala los aspectos preocupantes para revisarlos después.",
-        "label": "Temas del cuestionario",
+        "title": "Diligencia debida y Vendor.Watch",
+        "intro": "DPO Central no envía cuestionarios a los proveedores. Los proveedores declaran sus certificaciones, subencargados, ubicaciones de datos y capacidades de IA en su perfil de Vendor.Watch, y DPO Central lee ese perfil del catálogo compartido cuando vinculas al proveedor. Las plantillas de diligencia debida de Proveedores son baterías de preguntas de referencia, útiles como lista de comprobación mientras revisas a un proveedor.",
+        "label": "Temas que cubren las plantillas",
         "topics": {
           "scope": "Alcance del tratamiento",
           "security": "Medidas de seguridad",
@@ -7141,8 +7161,8 @@
             "description": "Evaluación inicial"
           },
           "questionnaire": {
-            "label": "Cuestionario",
-            "description": "Revisión de privacidad"
+            "label": "Diligencia debida",
+            "description": "Perfil y lista de comprobación"
           },
           "contract": {
             "label": "Contrato",
@@ -7171,12 +7191,12 @@
             "description": "Ve al módulo Gestión de proveedores y pulsa «Añadir proveedor». Introduce el nombre, los datos de contacto y la finalidad del tratamiento."
           },
           "send": {
-            "title": "Envía el cuestionario",
-            "description": "Selecciona una plantilla de cuestionario de privacidad y envíala al contacto del proveedor. El sistema lleva el seguimiento del estado y de los plazos de respuesta."
+            "title": "Vincula su perfil de Vendor.Watch",
+            "description": "Añade el proveedor desde el catálogo, o vincúlalo a su perfil de Vendor.Watch, para que sus certificaciones, subencargados y ubicaciones de datos lleguen de las propias declaraciones públicas del proveedor."
           },
           "review": {
-            "title": "Revisa las respuestas",
-            "description": "Evalúa las respuestas del proveedor al cuestionario. Señala los aspectos preocupantes y asigna un nivel de riesgo preliminar.",
+            "title": "Revisa al proveedor",
+            "description": "Repasa el perfil con una plantilla de diligencia debida como lista de comprobación. Señala los aspectos preocupantes y asigna un nivel de riesgo preliminar.",
             "detail1": "Comprueba las certificaciones de seguridad (ISO 27001, SOC 2, etc.)",
             "detail2": "Revisa los acuerdos con subencargados",
             "detail3": "Evalúa los mecanismos de transferencia de datos"
@@ -7186,8 +7206,8 @@
             "description": "Sube y controla el contrato de encargo del tratamiento (DPA) y cualquier otro documento contractual."
           },
           "approve": {
-            "title": "Aprueba y supervisa",
-            "description": "Aprueba el proveedor para uso activo. Configura recordatorios de revisión periódica según el nivel de riesgo del proveedor."
+            "title": "Aprueba y programa las revisiones",
+            "description": "Aprueba el proveedor para uso activo y programa su próxima revisión según su nivel de riesgo."
           }
         }
       },
@@ -7199,7 +7219,7 @@
       }
     },
     "shell": {
-      "userGuide": "Guía de usuario",
+      "userGuide": "Documentación",
       "sourceAndLicence": "Código fuente y licencia",
       "menu": "Menú de la documentación"
     },
