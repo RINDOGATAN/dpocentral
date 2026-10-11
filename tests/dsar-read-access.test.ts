@@ -25,7 +25,7 @@ const mocks = vi.hoisted(() => ({
     organizationJurisdiction: { findMany: vi.fn() },
     dSARRequest: { findFirst: vi.fn(), findMany: vi.fn(), count: vi.fn(), groupBy: vi.fn() },
     dSARAuditLog: { findFirst: vi.fn(), create: vi.fn() },
-    dSARIntakeForm: { findMany: vi.fn() },
+    dSARIntakeForm: { findMany: vi.fn(), findFirst: vi.fn(async () => null) },
     auditLog: { create: vi.fn() },
     user: { update: vi.fn() },
   },

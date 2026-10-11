@@ -17,6 +17,12 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
+- **Model replies to rights requests** (owner's approval, 11 Oct 2026): the six approved
+  letters (acknowledgement, identity, extension, refusal, one favourable reply per right,
+  repetitive access), in English and Castilian Spanish, offered in the request's "Send message"
+  panel by type and language. The app fills the requester's name, the reference, the dates, the
+  organisation's name, the status link and the privacy contact; sending is blocked, in the page
+  and on the server, while any placeholder in braces remains.
 - **Rights requests per organisation on the hosted service** (owner, 11 Oct 2026). A pilot
   organisation may receive 3 requests through the public form in total; an organisation on the
   paid plan needs the add-on (`dsarModuleStatus` ACTIVE, set with

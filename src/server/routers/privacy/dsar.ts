@@ -29,6 +29,8 @@ import { sendDSARExtensionEmail } from "@/server/services/dsar/sendExtensionEmai
 import { countRecentAccessRequests } from "@/server/services/dsar/repeat-access";
 import { generatedTaskText } from "@/server/services/dsar/generated-tasks";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { remainingPlaceholders, UNFILLED_PLACEHOLDERS_MESSAGE } from "@/lib/dsar-model-replies";
+import { brand } from "@/config/brand";
 import {
   assertHumanSubmission,
   assertWithinDailyLimits,
@@ -202,7 +204,25 @@ export const dsarRouter = createTRPCRouter({
       // refused on their behalf.
       const repeatAccess = await countRecentAccessRequests(ctx.prisma, request);
 
-      return { ...request, daysUntilDue, extension, repeatAccess };
+      // What the model replies fill in (src/lib/dsar-model-replies.ts): the
+      // status link, the privacy contact, the requester's language, and the
+      // due date before an extension (from the trail).
+      const intake = await ctx.prisma.dSARIntakeForm.findFirst({
+        where: { organizationId: ctx.organization.id },
+        select: { privacyContactEmail: true },
+      });
+      const firstExtension = [...(request.auditLog ?? [])]
+        .reverse()
+        .find((e) => e.action === "DEADLINE_EXTENDED");
+      const originalDue = (firstExtension?.details as { originalDue?: string } | null)?.originalDue ?? null;
+      const modelReply = {
+        statusLink: `${brand.appUrl.replace(/\/$/, "")}/dsar/status/${request.publicId}`,
+        privacyContact: intake?.privacyContactEmail ?? null,
+        requesterLocale: (request.metadata as { locale?: string } | null)?.locale ?? null,
+        originalDueDate: originalDue,
+      };
+
+      return { ...request, daysUntilDue, extension, repeatAccess, modelReply };
     }),
 
   // Create a DSAR request (internal)
@@ -621,6 +641,15 @@ export const dsarRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "DSAR request not found",
         });
+      }
+
+      // A model reply still holding a placeholder ({reasons}, {details}, ...)
+      // is not sent: staff complete it first.
+      if (
+        input.direction === "OUTBOUND" &&
+        remainingPlaceholders(input.subject ?? "", input.content).length > 0
+      ) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: UNFILLED_PLACEHOLDERS_MESSAGE });
       }
 
       const communication = await ctx.prisma.dSARCommunication.create({
