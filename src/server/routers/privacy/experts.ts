@@ -219,7 +219,7 @@ export const expertsRouter = createTRPCRouter({
         replyTo: input.requesterEmail,
         fields: [
           { label: "Who asked", value: input.requesterName },
-          { label: "Organisation", value: input.requesterCompany ?? organizationName },
+          { label: "Organization", value: input.requesterCompany ?? organizationName },
           { label: "Their address", value: input.requesterEmail },
           { label: "Subject", value: input.subject },
           { label: "Product", value: brand.name },

@@ -48,7 +48,7 @@ export function readProgrammeUpload(bytes: Uint8Array): UploadResult {
       entries.find((e) => /^[^/]+\/programme\.json$/.test(e.entryName));
     if (!entry) {
       return fail(
-        "The ZIP file has no programme.json. Upload the archive made by \"Take your programme with you\", or its programme.json.",
+        "The ZIP file has no programme.json. Upload the archive made by \"Take your program with you\", or its programme.json.",
         "El archivo ZIP no contiene programme.json. Sube el archivo que genera \"Llévate tu programa\" o su programme.json.",
       );
     }

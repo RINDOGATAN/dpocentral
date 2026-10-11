@@ -237,7 +237,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "vendors",
           href: "/privacy/vendors",
           icon: Building2,
-          rule: "Done when at least one vendor is confirmed (the vendor catalogue is the way to add one). To confirm when only drafts exist.",
+          rule: "Done when at least one vendor is confirmed (the vendor catalog is the way to add one). To confirm when only drafts exist.",
           status: (c) => recordStep(c.vendors, c.vendorsDrafts),
         },
         // Last in the stage, read-only and never counted: it appears only when

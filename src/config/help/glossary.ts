@@ -158,7 +158,7 @@ export const GLOSSARY: GlossaryTerm[] = [
     id: "sale-share",
     label: L("sale or share", "venta o cesión"),
     meaning: L(
-      "Under California's CCPA/CPRA, disclosing a consumer's personal information for money or other value, or for cross-context behavioural advertising; the consumer may opt out.",
+      "Under California's CCPA/CPRA, disclosing a consumer's personal information for money or other value, or for cross-context behavioral advertising; the consumer may opt out.",
       "Según la CCPA/CPRA de California, comunicar la información personal de un consumidor a cambio de dinero u otro valor, o para publicidad comportamental entre contextos; el consumidor puede oponerse.",
     ),
   },

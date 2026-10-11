@@ -3,8 +3,8 @@
     "titleCurrent": "Start from another client",
     "titleNew": "Start a new client from this one",
     "cardHint": "Copy the data inventory, processing activities, vendors and templates from one of your other clients, as drafts.",
-    "descriptionCurrent": "Copy a programme from one of your other clients into this one, as drafts. The other client's full name is replaced with this client's. Anything else that may point back to it is listed below for you to review before copying.",
-    "descriptionNew": "Create a new client and copy this client's programme into it, as drafts. {source}'s full name is replaced with the new client's. Anything else that may point back to it is listed below for you to review before copying.",
+    "descriptionCurrent": "Copy a program from one of your other clients into this one, as drafts. The other client's full name is replaced with this client's. Anything else that may point back to it is listed below for you to review before copying.",
+    "descriptionNew": "Create a new client and copy this client's program into it, as drafts. {source}'s full name is replaced with the new client's. Anything else that may point back to it is listed below for you to review before copying.",
     "sourceLabel": "Copy from",
     "sourcePlaceholder": "Choose a client",
     "sourceHint": "You can copy from clients where you are an owner or an admin.",
@@ -16,7 +16,7 @@
     "needsPart": "Needs {part}",
     "skipped": "({count} already here, left alone)",
     "dsarIntakeEdited": "This client's own request form has been set up, so it is left as it is.",
-    "neverCopied": "Never copied: rights requests, incidents, assessments and their evidence, contracts, the audit trail, members, licences and AI systems.",
+    "neverCopied": "Never copied: rights requests, incidents, assessments and their evidence, contracts, the audit trail, members, licenses and AI systems.",
     "flagsTitle": "{count, plural, one {# item still points at the other client} other {# items still point at the other client}}",
     "flagsHint": "The other client's full name was replaced. These are short forms, web or e-mail addresses that only a person can judge. Review them, then confirm.",
     "moreFlags": "and {count} more",
@@ -206,9 +206,9 @@
       "contactToEnable": "Contact {name} to enable",
       "premiumSkill": "Premium skill",
       "premiumSkillHint": "Available as a downloadable skill on the todo.law marketplace.",
-      "typeCardLockedLabel": "{name} (requires a licence)",
+      "typeCardLockedLabel": "{name} (requires a license)",
       "notCreated": "The assessment was not created",
-      "typeGatedNotice": "{name} is a premium skill and is not enabled for this organisation yet. If creation is refused, the reason is shown below the form.",
+      "typeGatedNotice": "{name} is a premium skill and is not enabled for this organization yet. If creation is refused, the reason is shown below the form.",
       "selectTemplate": "Select Template",
       "selectTemplateSubtitle": "Multiple templates available for {name}",
       "changeType": "Change type",
@@ -254,7 +254,7 @@
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "The DPIA template is not installed",
-      "licenceNoticeBody": "To create the DPIA, install the DPIA skill from the Skills page with your licence.",
+      "licenceNoticeBody": "To create the DPIA, install the DPIA skill from the Skills page with your license.",
       "title": "Auto-fill a DPIA",
       "subtitle": "Draft a DPIA from the processing activity you already recorded",
       "step": {
@@ -309,7 +309,7 @@
       "recordDescription": "Auto-filled from processing activity data"
     },
     "trialAssessments": {
-      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per organisation on the pilot tier",
+      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per organization on the pilot tier",
       "freeBadge": "Free for a limited time",
       "remaining": "This organization has {remaining} of the {limit} free DPIAs left.",
       "usedUp": "This organization has created its {limit} free DPIAs. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan.",
@@ -330,7 +330,7 @@
       "noSystemTitle": "No built-in template is installed",
       "noSystemBody": "Run the content seed to write the built-in templates.",
       "noCustomTitle": "You have no template of your own yet",
-      "noCustomBody": "Copy a built-in template to start one. The copy belongs to your organisation and can be answered straight away.",
+      "noCustomBody": "Copy a built-in template to start one. The copy belongs to your organization and can be answered straight away.",
       "aboutTitle": "About these templates",
       "aboutSubtitle": "A template holds the sections and the questions an assessment asks",
       "aboutDpia": "DPIA (Article 35)",
@@ -816,7 +816,7 @@
       "exportPdf": "Export PDF",
       "submitApprove": "Approve assessment",
       "submitReview": "Send for internal review",
-      "reviewRecipients": "When you send this, your organisation's privacy officers, admins and owner receive it for internal review.",
+      "reviewRecipients": "When you send this, your organization's privacy officers, admins and owner receive it for internal review.",
       "progress": {
         "answered": "{answered} of {total} questions answered"
       },
@@ -1482,13 +1482,13 @@
           "identity": "Request for information to confirm identity",
           "extension": "Extension of the time limit",
           "refusal": "Refusal",
-          "favourable-access": "Favourable reply: access",
-          "favourable-rectification": "Favourable reply: rectification",
-          "favourable-erasure": "Favourable reply: erasure",
-          "favourable-erasure-blocked": "Favourable reply: erasure, with some data blocked",
-          "favourable-objection": "Favourable reply: objection",
-          "favourable-restriction": "Favourable reply: restriction",
-          "favourable-portability": "Favourable reply: portability",
+          "favourable-access": "Favorable reply: access",
+          "favourable-rectification": "Favorable reply: rectification",
+          "favourable-erasure": "Favorable reply: erasure",
+          "favourable-erasure-blocked": "Favorable reply: erasure, with some data blocked",
+          "favourable-objection": "Favorable reply: objection",
+          "favourable-restriction": "Favorable reply: restriction",
+          "favourable-portability": "Favorable reply: portability",
           "repetitive": "Repetitive request (access within six months)"
         }
       }
@@ -1555,16 +1555,16 @@
       "title": "Privacy Program Quickstart",
       "subtitle": "Get a head start on your privacy program",
       "programName": {
-        "label": "Programme name",
-        "help": "This names your privacy programme across the dashboard, the result screen and your exports. It starts as your organisation's name; change it if your programme goes by something else.",
-        "placeholder": "e.g. Acme Privacy Programme"
+        "label": "Program name",
+        "help": "This names your privacy program across the dashboard, the result screen and your exports. It starts as your organization's name; change it if your program goes by something else.",
+        "placeholder": "e.g. Acme Privacy Program"
       },
       "applies": {
         "title": "What applies to you",
         "intro": "A few short questions about how you handle personal data. Together with the laws you operate under, they show what is likely to apply and what is worth checking. You can skip this now and set it later in Settings.",
         "skip": "Not sure yet: skip",
         "continue": "Save and continue",
-        "placesQuestion": "Where does your organisation operate?",
+        "placesQuestion": "Where does your organization operate?",
         "placesHint": "Choose every place where you have customers, staff or users. It decides which laws we check against. You can change it later on the What applies page.",
         "placesUnsure": "I am not sure yet",
         "placesFailed": "Could not save where you operate. You can set it on the What applies page."
@@ -1656,7 +1656,7 @@
       "review": {
         "title": "Review & Confirm",
         "subtitle": "Review what will be created, then build your privacy program.",
-        "forProgramme": "For the {name} programme",
+        "forProgramme": "For the {name} program",
         "back": "Back",
         "stats": {
           "vendors": "Vendors",
@@ -1683,7 +1683,7 @@
       "success": {
         "alreadySetTitle": "Everything is already set up!",
         "createdTitle": "Privacy Program Created!",
-        "forProgramme": "The {name} programme",
+        "forProgramme": "The {name} program",
         "createdListTitle": "What was created",
         "createdListVendors": "Vendors",
         "createdListAssets": "Data assets",
@@ -1816,7 +1816,7 @@
         "missing": "Not started",
         "takeAction": "Take action",
         "reqRopa": "Maintain a Record of Processing Activities (ROPA)",
-        "reqRopaDesc": "Document all processing activities your organisation performs, including purpose, legal basis, and data categories.",
+        "reqRopaDesc": "Document all processing activities your organization performs, including purpose, legal basis, and data categories.",
         "reqDpia": "Conduct DPIAs for high-risk processing",
         "reqDpiaDesc": "Document a Data Protection Impact Assessment for any processing likely to result in a high risk to data subjects.",
         "reqDsarPortal": "Provide a public data subject request channel",
@@ -2158,20 +2158,20 @@
       },
       "portability": {
         "export": {
-          "title": "Take your programme with you",
-          "lead": "Download everything your organisation has entered in DPO Central, in an open, documented format that another platform can read and that DPO Central can import again.",
-          "contents": "The ZIP holds programme.json (the whole programme, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Documents are kept in DPO Central as links: the links are in the file.",
+          "title": "Take your program with you",
+          "lead": "Download everything your organization has entered in DPO Central, in an open, documented format that another platform can read and that DPO Central can import again.",
+          "contents": "The ZIP holds programme.json (the whole program, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Documents are kept in DPO Central as links: the links are in the file.",
           "includeRights": "Include rights requests",
           "includeRightsWarning": "The file will then hold personal data of the people who made the requests (names, contact details, messages). Tick this only if you need them, and keep the file safe.",
-          "button": "Download the programme",
+          "button": "Download the program",
           "started": "The download has started."
         },
         "import": {
-          "title": "Import a programme",
-          "lead": "Bring in a programme exported from DPO Central, or one register from a spreadsheet. Everything arrives as drafts for you to review and confirm. Nothing already here is changed, and importing the same file again adds nothing new.",
-          "tabProgramme": "A whole programme",
+          "title": "Import a program",
+          "lead": "Bring in a program exported from DPO Central, or one register from a spreadsheet. Everything arrives as drafts for you to review and confirm. Nothing already here is changed, and importing the same file again adds nothing new.",
+          "tabProgramme": "A whole program",
           "tabRegister": "One register (CSV)",
-          "programmeHint": "The ZIP made by \"Take your programme with you\", or its programme.json. A whole programme goes into a new or empty organisation.",
+          "programmeHint": "The ZIP made by \"Take your program with you\", or its programme.json. A whole program goes into a new or empty organization.",
           "registerHint": "A CSV file (separated by commas or semicolons), for example saved from a spreadsheet or exported from another platform. Other formats, such as XML, are not read yet.",
           "file": "File",
           "register": "Register",
@@ -2181,7 +2181,7 @@
             "vendors": "Vendors"
           },
           "includeRights": "Import rights requests too",
-          "includeRightsWarning": "They hold personal data of the people who made them. Tick this only if this organisation should hold them.",
+          "includeRightsWarning": "They hold personal data of the people who made them. Tick this only if this organization should hold them.",
           "check": "Check the file",
           "checking": "Checking...",
           "recheck": "Check again with these columns",
@@ -2646,11 +2646,11 @@
       "createFlow": "Create Flow"
     },
     "empty": {
-      "loading": "Loading data flow visualisation…",
+      "loading": "Loading data flow visualization…",
       "noAssetsTitle": "No data assets found",
-      "noAssetsBody": "Add data assets first to visualise data flows",
+      "noAssetsBody": "Add data assets first to visualize data flows",
       "noFlowsTitle": "No data flows defined yet",
-      "noFlowsBody": "Create flows to visualise how data moves between systems",
+      "noFlowsBody": "Create flows to visualize how data moves between systems",
       "noAssetFlowsTitle": "No data flows connected to this asset",
       "noAssetFlowsBody": "Create a flow to connect this asset to other systems"
     },
@@ -2688,8 +2688,8 @@
       "ogDescription": "10 security layers: password-less sign-in, 5-tier RBAC, rate limiting, TLS + HSTS, audit logging, edge deployment."
     },
     "licenses": {
-      "title": "Licence & source",
-      "description": "DPO Central is open source under AGPL-3.0. Read the licence and get the complete corresponding source."
+      "title": "License & source",
+      "description": "DPO Central is open source under AGPL-3.0. Read the license and get the complete corresponding source."
     },
     "pageTitles": {
       "signIn": "Sign in",
@@ -2707,7 +2707,7 @@
       "HEALTH": "Health",
       "BIOMETRIC": "Biometric",
       "LOCATION": "Location",
-      "BEHAVIORAL": "Behavioural",
+      "BEHAVIORAL": "Behavioral",
       "EMPLOYMENT": "Employment",
       "EDUCATION": "Education",
       "POLITICAL": "Political opinions",
@@ -2761,7 +2761,7 @@
       "APPROVED": "Approved",
       "COMPLETED": "Completed",
       "REJECTED": "Rejected",
-      "CANCELLED": "Cancelled"
+      "CANCELLED": "Canceled"
     },
     "dsarTaskStatus": {
       "PENDING": "Pending",
@@ -2913,7 +2913,7 @@
       "DSAR_DELETED_INACTIVE": "Deleted after 30 days without activity"
     },
     "auditEntity": {
-      "Organization": "Organisation",
+      "Organization": "Organization",
       "OrganizationMember": "Team member",
       "OrganizationJurisdiction": "Jurisdiction",
       "OrganizationAiSettings": "AI settings",
@@ -2951,13 +2951,13 @@
   },
   "skills": {
     "title": "Skills",
-    "subtitle": "Premium skills purchased on TODO.LAW. Upload the licence file from your confirmation email to activate them for this organization (verified locally, no network required).",
-    "activateTitle": "Activate with a licence file",
+    "subtitle": "Premium skills purchased on TODO.LAW. Upload the license file from your confirmation email to activate them for this organization (verified locally, no network required).",
+    "activateTitle": "Activate with a license file",
     "activateHint": "Choose the .license.json file you received after your purchase. Only organization owners and admins can activate.",
-    "chooseFile": "Choose licence file",
+    "chooseFile": "Choose license file",
     "activate": "Activate skill",
     "activating": "Activating…",
-    "badFile": "That file isn't a valid licence. Use the .license.json from your purchase email.",
+    "badFile": "That file isn't a valid license. Use the .license.json from your purchase email.",
     "installTitle": "Install a skill package",
     "installHint": "Choose the .skill package you downloaded from the todo.law marketplace. It adds the premium assessment content (e.g. DPIA) to this install. Only organization owners and admins can install.",
     "chooseSkillFile": "Choose .skill file",
@@ -2978,7 +2978,7 @@
     "statusLocked": "Locked",
     "statusComingSoon": "Coming soon",
     "expires": "Expires {date}",
-    "perpetual": "Perpetual licence",
+    "perpetual": "Perpetual license",
     "activations": "{used} of {max} activations used",
     "perMonth": "/mo"
   },
@@ -2986,7 +2986,7 @@
     "serviceBy": "{brandName} is a {companyName} service.",
     "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs.",
     "userGuide": "Docs",
-    "sourceAndLicence": "Source & licence",
+    "sourceAndLicence": "Source & license",
     "billing": "Billing",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
@@ -3000,10 +3000,10 @@
     "subtitle": "Set up your account to get started with privacy management",
     "howWillYouUse": "How will you use {brandName}?",
     "businessOwner": "Business Owner",
-    "businessOwnerDesc": "I need privacy compliance for my organisation",
+    "businessOwnerDesc": "I need privacy compliance for my organization",
     "privacyProfessional": "Privacy Professional",
-    "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organisations",
-    "orgName": "Organisation Name",
+    "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
+    "orgName": "Organization Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "getStarted": "Get Started",
     "settingUp": "Setting up...",
@@ -3268,7 +3268,7 @@
       "overallProgress": "Overall Progress",
       "currentlyProcessing": "We are currently processing your request",
       "rejectedNotice": "This request was rejected. Please contact the organization for details.",
-      "cancelledNotice": "This request was cancelled. Please contact the organization for details.",
+      "cancelledNotice": "This request was canceled. Please contact the organization for details.",
       "expectedCompletion": "Expected completion",
       "completedLabel": "Completed",
       "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
@@ -3302,7 +3302,7 @@
         "confirm": "Yes, withdraw",
         "cancel": "Keep request open",
         "successTitle": "Request withdrawn",
-        "successDescription": "Your request has been cancelled."
+        "successDescription": "Your request has been canceled."
       },
       "download": {
         "title": "Your data is ready",
@@ -3722,7 +3722,7 @@
       "brandUppercase": "DPO CENTRAL",
       "confidential": "CONFIDENTIAL",
       "generated": "Generated {date}",
-      "confidentialBody": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request."
+      "confidentialBody": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request."
     },
     "enum": {
       "assetType": {
@@ -3783,7 +3783,7 @@
         "HEALTH": "Health",
         "BIOMETRIC": "Biometric",
         "LOCATION": "Location",
-        "BEHAVIORAL": "Behavioural",
+        "BEHAVIORAL": "Behavioral",
         "EMPLOYMENT": "Employment",
         "EDUCATION": "Education",
         "POLITICAL": "Political",
@@ -3820,7 +3820,7 @@
       "inventory": {
         "sectionNumber": "Section 02",
         "title": "Data Inventory",
-        "lead": "Overview of registered data assets, their classification density, and the share of personal and special-category data catalogued across the estate.",
+        "lead": "Overview of registered data assets, their classification density, and the share of personal and special-category data cataloged across the estate.",
         "donutPersonal": "Personal Data",
         "donutPersonalSub": "{count} of {total} elements",
         "donutSpecial": "Special Category",
@@ -3862,7 +3862,7 @@
       "vendors": {
         "sectionNumber": "Section 04",
         "title": "Vendors & Processors",
-        "lead": "All processors and sub-processors subject to Article 28 obligations. Risk tiering and DPA status are summarised below; the full register follows by category.",
+        "lead": "All processors and sub-processors subject to Article 28 obligations. Risk tiering and DPA status are summarized below; the full register follows by category.",
         "criticalityDistribution": "Criticality Distribution",
         "coverage": "Coverage",
         "coverageDpa": "DPA on file",
@@ -3882,7 +3882,7 @@
       "ai": {
         "sectionNumber": "Section 05",
         "title": "AI Governance",
-        "lead": "EU AI Act posture across the organisation's registered AI systems. Coverage reflects only systems explicitly catalogued; inferred or shadow AI is out of scope.",
+        "lead": "EU AI Act posture across the organization's registered AI systems. Coverage reflects only systems explicitly cataloged; inferred or shadow AI is out of scope.",
         "donutCompliant": "EU AI Act Compliant",
         "donutSub": "{count} of {total} systems",
         "riskDistribution": "Risk Distribution",
@@ -3909,7 +3909,7 @@
       "flowMap": {
         "sectionNumber": "Section 06",
         "title": "Data Flow Map",
-        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are colour-coded by asset type; dashed edges are auto-generated from activity-asset links, solid edges are explicitly recorded.",
+        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are color-coded by asset type; dashed edges are auto-generated from activity-asset links, solid edges are explicitly recorded.",
         "leadMulti": "End-to-end data flows are split across {count} cluster groups to stay legible at this scale. Each page shows one group of processing activities.",
         "showingCount": "Showing {filtered} of {original} assets",
         "orphansDropped": "{count, plural, one {# orphaned} other {# orphaned}} (no flows, no activity link) filtered out",
@@ -3923,7 +3923,7 @@
         "vendorsMissingDpa": "{count, plural, one {# active vendor ({pct}%) has} other {# active vendors ({pct}%) have}} no Data Processing Agreement on file.",
         "highRiskVendors": "{count, plural, one {# vendor is} other {# vendors are}} classified as high or critical risk: governance review recommended.",
         "overdueReview": "{count, plural, one {# processing activity is} other {# processing activities are}} overdue for periodic review.",
-        "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} catalogued: Article 9 safeguards apply.",
+        "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} cataloged: Article 9 safeguards apply.",
         "intlTransfers": "{count, plural, one {# international transfer is} other {# international transfers are}} documented across processing activities.",
         "adm": "{count, plural, one {# activity involves} other {# activities involve}} automated decision-making subject to Article 22.",
         "openIncidents": "{count, plural, one {# incident is} other {# incidents are}} open and under investigation.",
@@ -3999,7 +3999,7 @@
       "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
       "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorised personnel and supervisory authorities upon request.",
+      "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "riskLevel": "Risk Level",
@@ -4085,7 +4085,7 @@
       "coverTitle": "Impact Assessment Portfolio",
       "coverSubtitle": "DPIA, LIA & Privacy Assessment Status Report",
       "coverGenerated": "Generated: {date}",
-      "coverConfidential": "CONFIDENTIAL. This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
+      "coverConfidential": "CONFIDENTIAL. This document summarizes the organization's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
         "total": "Total Assessments",
@@ -4108,7 +4108,7 @@
       "gdprCalloutBody": "Controllers must carry out a DPIA before processing that is likely to result in a high risk to the rights and freedoms of natural persons. The assessment must be reviewed and updated when processing operations change.",
       "overview": "Assessment Overview",
       "byStatus": "By Status",
-      "byStatusDesc": "Current status of all assessments across the organisation",
+      "byStatusDesc": "Current status of all assessments across the organization",
       "statusColumns": {
         "status": "Status",
         "count": "Count",
@@ -4686,11 +4686,11 @@
       "subtitle": "Welcome to DPO Central, your privacy management platform. This guide describes each screen and how to use it.",
       "dashboard": {
         "title": "Dashboard Overview",
-        "description": "The dashboard shows where your privacy programme stands, from the top down.",
-        "mockupTitle": "Programme figure and areas",
+        "description": "The dashboard shows where your privacy program stands, from the top down.",
+        "mockupTitle": "Program figure and areas",
         "parts": {
           "firstRun": "On first use, a short card explains how DPO Central works until you choose \"Got it\". The help button in the top bar reopens it.",
-          "figure": "The programme figure, \"N of M steps confirmed\", with how many steps are to confirm, in progress and not started.",
+          "figure": "The program figure, \"N of M steps confirmed\", with how many steps are to confirm, in progress and not started.",
           "areas": "Six area tiles, one for each stage of the path, each with its state word and its next action. A tile opens that action.",
           "documents": "Documents you can produce today, with the button \"Download ready documents\" (see Documents below).",
           "next": "Next three actions, beside Deadlines at risk (see Next actions and deadlines below).",
@@ -4699,7 +4699,7 @@
         "calloutTitle": "Drafts count once confirmed",
         "calloutBody": "Records drafted by the quick start or a template do not count until a person confirms them. Until then the figure shows them as \"to confirm\", and \"Review and confirm\" opens them.",
         "limitedTitle": "Members limited to departments",
-        "limitedBody": "A member limited to some departments does not see the organisation's figures. The dashboard shows a link to Needs action instead."
+        "limitedBody": "A member limited to some departments does not see the organization's figures. The dashboard shows a link to Needs action instead."
       },
       "documents": {
         "title": "Documents",
@@ -4742,25 +4742,25 @@
       },
       "navigation": {
         "title": "The menu",
-        "description": "The left menu follows the path of a privacy programme, in six stages.",
-        "organisation": "At the top is the organisation you are working in. It opens the list of your organisations, which ends with \"New organization\", or \"Add a client\" for privacy professionals. Privacy professionals also see All clients, a table of every client.",
+        "description": "The left menu follows the path of a privacy program, in six stages.",
+        "organisation": "At the top is the organization you are working in. It opens the list of your organizations, which ends with \"New organization\", or \"Add a client\" for privacy professionals. Privacy professionals also see All clients, a table of every client.",
         "stages": "Then Overview (the dashboard) and the six numbered stages. Each stage opens to its steps:",
         "states": "Each stage and each step shows its state: done, in progress, not started, to confirm or needs action.",
         "documentLines": "A line under a step names the documents it produces and their states.",
-        "optional": "Optional steps are never counted in the programme figure. AI systems appears only when an AI system is recorded.",
+        "optional": "Optional steps are never counted in the program figure. AI systems appears only when an AI system is recorded.",
         "notYet": "\"Not in DPO Central yet\", at the foot of the path, lists what the product does not do yet. A stage with only such steps reads \"Coming\".",
         "lockTitle": "The lock",
-        "lockBody": "On your own instance, a small lock beside Vendor due diligence in the menu, or beside the DPIA in Assessments and in the type picker, means the organisation has no licence for that premium assessment type. The hosted pilot never shows a lock.",
+        "lockBody": "On your own instance, a small lock beside Vendor due diligence in the menu, or beside the DPIA in Assessments and in the type picker, means the organization has no license for that premium assessment type. The hosted pilot never shows a lock.",
         "libraryTitle": "Library and tools",
         "library": {
           "needsAction": "Everything waiting for a person, in one place.",
           "incomplete": "Processing records missing a field a record of processing needs.",
-          "reports": "The programme figure, the module score, risk indicators, snapshots and PDF reports.",
+          "reports": "The program figure, the module score, risk indicators, snapshots and PDF reports.",
           "auditTrail": "Every recorded change, newest first, with filters and a CSV export. Owners, admins and privacy officers only.",
           "experts": "The expert directory.",
-          "skills": "Premium modules installed on your own instance, activated with a licence file.",
+          "skills": "Premium modules installed on your own instance, activated with a license file.",
           "help": "This guide.",
-          "settings": "Your account, the organisation and its team."
+          "settings": "Your account, the organization and its team."
         },
         "phone": "On a phone, the bar under the top bar shows the current stage and opens the same menu."
       },
@@ -4795,7 +4795,7 @@
         },
         "privacyProfessional": {
           "label": "Privacy Professional",
-          "desc": "For privacy consultants and DPOs who advise several organisations. You get All clients, a table showing where each client organisation stands."
+          "desc": "For privacy consultants and DPOs who advise several organizations. You get All clients, a table showing where each client organization stands."
         },
         "tipPrefix": "You can change your account type at any time from the ",
         "tipSettings": "Settings",
@@ -4815,11 +4815,11 @@
       },
       "clientDashboard": {
         "title": "All clients",
-        "description": "Where each of your client organisations stands, in one table.",
-        "intro": "All clients (for privacy professionals) has one row per client organisation you belong to. Each row reads the same figures as that client's own dashboard:",
+        "description": "Where each of your client organizations stands, in one table.",
+        "intro": "All clients (for privacy professionals) has one row per client organization you belong to. Each row reads the same figures as that client's own dashboard:",
         "items": {
           "client": "The client, with your role in it",
-          "confirmed": "The programme figure, and how many drafted records wait to be confirmed",
+          "confirmed": "The program figure, and how many drafted records wait to be confirmed",
           "areas": "The six areas, each with its state word",
           "documents": "Documents ready, out of the total",
           "deadline": "The next deadline (a breach to notify, a rights request due or a plan milestone), with its reference",
@@ -5845,7 +5845,7 @@
       "subtitle": "Monitor your organization's privacy compliance posture with a single score, module-level breakdowns, and actionable risk indicators. Export board-ready reports to demonstrate accountability.",
       "score": {
         "title": "Compliance Posture Score",
-        "description": "The Reports page leads with the programme figure, the same as on the dashboard, the menu and All clients. Under it sits a weighted module score from 0 to 100.",
+        "description": "The Reports page leads with the program figure, the same as on the dashboard, the menu and All clients. Under it sits a weighted module score from 0 to 100.",
         "mockupTitle": "Module Weights",
         "weightSubtitle": "weight",
         "modules": {
@@ -5942,10 +5942,10 @@
       "board": {
         "title": "Executive report",
         "description": "A short report for the board or management, for a period you choose.",
-        "intro": "Open it from the menu: stage 6, Respond and improve, step Executive report. Choose the period (last quarter by default; this quarter so far, last month, the last 12 months or other dates), add your comment and save it, then download the PDF in English or Spanish. It is built from the data already in DPO Central, with no AI and no new data entry. It is optional and does not change the programme figure.",
+        "intro": "Open it from the menu: stage 6, Respond and improve, step Executive report. Choose the period (last quarter by default; this quarter so far, last month, the last 12 months or other dates), add your comment and save it, then download the PDF in English or Spanish. It is built from the data already in DPO Central, with no AI and no new data entry. It is optional and does not change the program figure.",
         "includesTitle": "The report covers:",
         "items": {
-          "programme": "The programme figure and the six areas with their state words",
+          "programme": "The program figure and the six areas with their state words",
           "documents": "Documents ready and not ready, with what each lacks",
           "incidents": "Incidents and breaches in the period, and whether they were notified within 72 hours",
           "rights": "Rights requests in the period: on time, late, overdue and open",
@@ -5955,7 +5955,7 @@
           "actions": "The next three actions, with an owner and a date",
           "comment": "Your comment, saved with the report for that period"
         },
-        "disclaimer": "The report states facts recorded in DPO Central. It is not legal advice and does not state that the organisation complies with any law.",
+        "disclaimer": "The report states facts recorded in DPO Central. It is not legal advice and does not state that the organization complies with any law.",
         "allPdfsTitle": "The PDF reports on each module:",
         "allPdfs": {
           "inventoryLabel": "Data Inventory",
@@ -5976,7 +5976,7 @@
           "regulatoryDesc": ": applied jurisdictions and compliance posture"
         },
         "flowTipTitle": "Data Flow Map in PDFs",
-        "flowTipBody": "The Data Inventory and ROPA PDFs render an automatically laid-out diagram of how data moves between your assets, with nodes colour-coded by asset type and edges labelled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing is needed: it is generated from your activity-asset links.",
+        "flowTipBody": "The Data Inventory and ROPA PDFs render an automatically laid-out diagram of how data moves between your assets, with nodes color-coded by asset type and edges labeled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing is needed: it is generated from your activity-asset links.",
         "premiumTitle": "ROPA export",
         "premiumBody": "The ROPA PDF export is included on the hosted pilot and on your own instance, like every other PDF report."
       },
@@ -6112,10 +6112,10 @@
       "subtitle": "Premium modules extend DPO Central with advanced assessment types, vendor intelligence, and specialized compliance tools. On the free hosted pilot every module is included. In the kit (your own instance), each costs {price} a year.",
       "cardTitle": "Premium Modules",
       "cardBodyPrefix": "In the kit (your own instance), premium modules cost ",
-      "cardBodyMid": " a year each and are activated offline with a licence file. On the hosted pilot every module is included at no cost, within the pilot limits.",
+      "cardBodyMid": " a year each and are activated offline with a license file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
       "cardContact": " For real client data, move to the paid plan, or ask for a managed instance or your own hardware on quotation.",
-      "menuLock": "On your own instance, a small lock shows where a premium assessment type needs a licence this organisation does not have: beside Vendor due diligence in the menu, and beside the DPIA option in Assessments and in the type picker. The hosted pilot never shows a lock.",
+      "menuLock": "On your own instance, a small lock shows where a premium assessment type needs a license this organization does not have: beside Vendor due diligence in the menu, and beside the DPIA option in Assessments and in the type picker. The hosted pilot never shows a lock.",
       "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
       "runYourOwn": "See the plans",
@@ -6253,7 +6253,7 @@
       "heroSubtitle": "One place to run a privacy program: data inventory, rights requests, assessments, incidents and vendors. For firms and consultants who run programs for their clients, and for in-house teams.",
       "hostedPilot": {
         "title": "Hosted pilot",
-        "intro": "Hosted pilot: free and capped, to try the product with test records. The limits are set out below. For real data, choose a paid plan or a managed instance.",
+        "intro": "Hosted pilot: free, to try the product with test records, within the limits set out below.",
         "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
         "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
@@ -6377,7 +6377,7 @@
       },
       "licensing": {
         "title": "Open Core Licensing",
-        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. On your own instance (the open-source kit), premium modules cost $60 a year each, activated offline with a licence file. On the hosted service every module is included: within the pilot's limits, or without limits on the paid plan.",
+        "intro": "DPO Central follows an open core model. The core platform is available under AGPL-3.0. On your own instance (the open-source kit), premium modules cost $60 a year each, activated offline with a license file. On the hosted service every module is included: within the pilot's limits, or without limits on the paid plan.",
         "coreTitle": "Core (Open Source)",
         "coreItems": {
           "inventory": "Data Inventory & ROPA",
@@ -6396,7 +6396,7 @@
       },
       "portability": {
         "title": "Take your program with you",
-        "export": "Owners and Admins can download the whole program at any time, from Settings, under \"Take your programme with you\". The ZIP holds programme.json (the whole program, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Rights requests are left out unless you tick them, because they hold personal data.",
+        "export": "Owners and Admins can download the whole program at any time, from Settings, under \"Take your program with you\". The ZIP holds programme.json (the whole program, with its JSON Schema), one CSV table per register for spreadsheets, and an explanation of every field in English and in Spanish. Rights requests are left out unless you tick them, because they hold personal data.",
         "import": "The same file can be imported into a new or empty organization, on the hosted service or on your own instance. One register can also be imported from a spreadsheet (CSV). Everything arrives as drafts for you to review and confirm.",
         "migrate": "If you outgrow DPO Central and move to an enterprise privacy platform, we help you move your program across from the same open format."
       },
@@ -6892,7 +6892,7 @@
         "steps": {
           "start": {
             "title": "Start a DPIA from Assessments",
-            "description": "In the menu, open stage 4, Assess the risk, and choose Assessments. Choose the Data Protection Impact Assessment template, or New Assessment and the DPIA type. On your own instance, a lock beside the DPIA means its licence is not installed."
+            "description": "In the menu, open stage 4, Assess the risk, and choose Assessments. Choose the Data Protection Impact Assessment template, or New Assessment and the DPIA type. On your own instance, a lock beside the DPIA means its license is not installed."
           },
           "create": {
             "title": "Name it and create it",
@@ -6920,7 +6920,7 @@
           },
           "approve": {
             "title": "Record mitigations and approve",
-            "description": "Add mitigation measures for the risks you identified, each with an owner and a due date, then submit. An organisation of one person can submit and approve in a single action; otherwise a named approver approves the assessment, rejects it or returns it for changes. An approved assessment is locked and kept as a record."
+            "description": "Add mitigation measures for the risks you identified, each with an owner and a due date, then submit. An organization of one person can submit and approve in a single action; otherwise a named approver approves the assessment, rejects it or returns it for changes. An approved assessment is locked and kept as a record."
           },
           "export": {
             "title": "Export the report",
@@ -6953,7 +6953,7 @@
           "history": "Approval history"
         },
         "portfolioTitle": "Assessment Portfolio Report",
-        "portfolioDesc": "Export a cross-assessment summary showing your entire impact assessment programme status, by type, risk level and completion.",
+        "portfolioDesc": "Export a cross-assessment summary showing your entire impact assessment program status, by type, risk level and completion.",
         "portfolioFeatures": {
           "status": "Status & risk distribution across all assessments",
           "type": "Type breakdown (DPIA, LIA, Custom)",
@@ -7086,7 +7086,7 @@
         "intro": "DPO Central can produce a signature-ready Data Processing Agreement and a standalone Transfer Impact Assessment for any vendor, populated from your own privacy program: the vendor register, submitted questionnaires, and the processing activities that name the vendor as a recipient. Documents are generated in English or Spanish.",
         "artifacts": {
           "dpaTitle": "Data Processing Agreement (PDF)",
-          "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I to IV: description of processing, technical and organisational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III and IV appear automatically when the processor is established outside the EEA/UK.",
+          "dpaDesc": "Article 28 controller-to-processor agreement with negotiated terms and Annexes I to IV: description of processing, technical and organizational measures (TOMs), incorporation of the EU Standard Contractual Clauses (with UK Addendum and Swiss adaptations), and the Transfer Impact Assessment. Annexes III and IV appear automatically when the processor is established outside the EEA/UK.",
           "tiaTitle": "Standalone TIA (PDF)",
           "tiaDesc": "Annex IV reproduced without modification, preceded by an identification header, ready for disclosure to a supervisory authority on request under Clause 14 of the incorporated SCCs. Follows the six-step framework of EDPB Recommendations 01/2020."
         },
@@ -7271,7 +7271,7 @@
     },
     "shell": {
       "userGuide": "Docs",
-      "sourceAndLicence": "Source & licence",
+      "sourceAndLicence": "Source & license",
       "menu": "Documentation Menu"
     },
     "mockup": {
@@ -7461,7 +7461,7 @@
         },
         "liav2_2_2": {
           "text": "Could a less intrusive means achieve the same result?",
-          "helpText": "If a less intrusive way exists that is reasonably effective, you should use it instead. Example: \"No: aggregated data would miss the individual fraud patterns.\" Source: GDPR Art. 6(1)(f); principle of data minimisation, Art. 5(1)(c).",
+          "helpText": "If a less intrusive way exists that is reasonably effective, you should use it instead. Example: \"No: aggregated data would miss the individual fraud patterns.\" Source: GDPR Art. 6(1)(f); principle of data minimization, Art. 5(1)(c).",
           "options": [
             "No, this is the least intrusive means",
             "A less intrusive means exists but is far less effective",
@@ -7469,16 +7469,16 @@
           ]
         },
         "liav2_2_3": {
-          "text": "Is the data limited to what the interest requires (data minimisation)?",
+          "text": "Is the data limited to what the interest requires (data minimization)?",
           "helpText": "Only the data genuinely needed for the interest should be processed. Example: \"Yes: we use the transaction and device data, not the full customer profile.\" Source: GDPR Art. 5(1)(c)."
         },
         "liav2_3_1": {
           "text": "What is the nature of the data?",
-          "helpText": "The more sensitive the data, the heavier it weighs against the interest. Special category and criminal-offence data need a separate condition and rarely sit under legitimate interest alone. Example: \"No special category data.\" Source: GDPR Arts. 9 and 10.",
+          "helpText": "The more sensitive the data, the heavier it weighs against the interest. Special category and criminal-offense data need a separate condition and rarely sit under legitimate interest alone. Example: \"No special category data.\" Source: GDPR Arts. 9 and 10.",
           "options": [
-            "No special category or criminal-offence data",
+            "No special category or criminal-offense data",
             "Sensitive but not special category",
-            "Includes special category or criminal-offence data"
+            "Includes special category or criminal-offense data"
           ]
         },
         "liav2_3_2": {
@@ -7507,7 +7507,7 @@
         },
         "liav2_3_5": {
           "text": "What is the overall balance?",
-          "helpText": "State the conclusion of the balance, taking the safeguards below into account. Where rights prevail, choose another lawful basis. Example: \"Balanced; the right to object and data minimisation are decisive.\" Source: GDPR Art. 6(1)(f).",
+          "helpText": "State the conclusion of the balance, taking the safeguards below into account. Where rights prevail, choose another lawful basis. Example: \"Balanced; the right to object and data minimization are decisive.\" Source: GDPR Art. 6(1)(f).",
           "options": [
             "The interest prevails",
             "Balanced; safeguards are decisive",
@@ -7516,13 +7516,13 @@
         },
         "liav2_4_1": {
           "text": "Which safeguards protect data subjects?",
-          "helpText": "Safeguards can tip a finely balanced case in favour of the interest. List the ones actually in place. Example: \"Right to object honoured, retention limits, pseudonymisation.\" Source: GDPR Arts. 21 and 5(1); Recital 47.",
+          "helpText": "Safeguards can tip a finely balanced case in favor of the interest. List the ones actually in place. Example: \"Right to object honored, retention limits, pseudonymization.\" Source: GDPR Arts. 21 and 5(1); Recital 47.",
           "options": [
-            "The right to object is honoured",
-            "Data minimisation",
+            "The right to object is honored",
+            "Data minimization",
             "Retention limits",
             "Access controls",
-            "Pseudonymisation",
+            "Pseudonymization",
             "Transparency in the privacy notice",
             "Regular review"
           ]
@@ -7533,7 +7533,7 @@
         },
         "liav2_4_3": {
           "text": "Conclusion and any conditions.",
-          "helpText": "Summarise the outcome and any conditions that must hold for the processing to remain justified. Example: \"May proceed while the right to object is honoured and retention stays at 12 months.\" Source: GDPR Art. 6(1)(f)."
+          "helpText": "Summarize the outcome and any conditions that must hold for the processing to remain justified. Example: \"May proceed while the right to object is honored and retention stays at 12 months.\" Source: GDPR Art. 6(1)(f)."
         }
       },
       "template": {
@@ -7616,7 +7616,7 @@
         },
         "customv2_2_1": {
           "text": "What are the key risks identified?",
-          "helpText": "Name the concrete risks to individuals or to compliance, not generic ones. Example: \"Tracking without consent; over-collection of behavioural data.\" Source: GDPR Art. 24."
+          "helpText": "Name the concrete risks to individuals or to compliance, not generic ones. Example: \"Tracking without consent; over-collection of behavioral data.\" Source: GDPR Art. 24."
         },
         "customv2_2_2": {
           "text": "What is the overall risk level?",
@@ -7662,7 +7662,7 @@
         },
         "tia3": {
           "title": "Supplementary Measures",
-          "description": "Identify technical, contractual, and organisational measures that supplement the transfer mechanism to ensure an equivalent level of protection"
+          "description": "Identify technical, contractual, and organizational measures that supplement the transfer mechanism to ensure an equivalent level of protection"
         },
         "tia4": {
           "title": "Risk Assessment & Conclusion",
@@ -7696,11 +7696,11 @@
       "question": {
         "tia1_1": {
           "text": "What personal data is being transferred?",
-          "helpText": "Describe the categories of personal data (e.g., contact details, behavioural data, special categories) and estimated volume"
+          "helpText": "Describe the categories of personal data (e.g., contact details, behavioral data, special categories) and estimated volume"
         },
         "tia1_2": {
           "text": "Who is the data exporter and who is the data importer?",
-          "helpText": "Name the organisations, their roles (controller/processor), and the countries they are established in"
+          "helpText": "Name the organizations, their roles (controller/processor), and the countries they are established in"
         },
         "tia1_3": {
           "text": "What is the transfer mechanism (Article 46 GDPR)?",
@@ -7722,8 +7722,8 @@
         "tia2_1": {
           "text": "Does the destination country have an EU adequacy decision?",
           "options": [
-            "Yes — full adequacy decision",
-            "Yes — partial adequacy decision",
+            "Yes: full adequacy decision",
+            "Yes: partial adequacy decision",
             "No adequacy decision",
             "Adequacy decision under review / challenged"
           ]
@@ -7744,17 +7744,17 @@
         "tia2_4": {
           "text": "Is the data importer subject to government access requests in practice?",
           "options": [
-            "No — data importer has never received a government access request",
-            "Possible — data importer operates in a sector that may be targeted",
-            "Yes — data importer publishes transparency reports confirming access requests",
+            "No: data importer has never received a government access request",
+            "Possible: data importer operates in a sector that may be targeted",
+            "Yes: data importer publishes transparency reports confirming access requests",
             "Unknown"
           ]
         },
         "tia2_5": {
           "text": "Are effective legal remedies available to EU data subjects in the destination country?",
           "options": [
-            "Yes — independent judicial review available",
-            "Partial — administrative remedies but no judicial review",
+            "Yes: independent judicial review available",
+            "Partial: administrative remedies but no judicial review",
             "No effective remedies available",
             "Unknown"
           ]
@@ -7767,8 +7767,8 @@
             "Encryption at rest (importer holds keys)",
             "Encryption in transit (TLS 1.2+)",
             "End-to-end encryption (exporter-held keys only)",
-            "Pseudonymisation before transfer",
-            "Anonymisation / aggregation before transfer",
+            "Pseudonymization before transfer",
+            "Anonymization / aggregation before transfer",
             "Split processing (no single party sees full dataset)",
             "None"
           ]
@@ -7779,7 +7779,7 @@
             "Obligation to challenge government access requests",
             "Obligation to notify exporter of government access (where legally permitted)",
             "Transparency reporting obligation",
-            "Prohibition on onward transfers without prior authorisation",
+            "Prohibition on onward transfers without prior authorization",
             "Audit rights for the data exporter",
             "Data localisation obligation (processing only in specified countries)",
             "Suspension / termination clause if legal framework changes",
@@ -7787,7 +7787,7 @@
           ]
         },
         "tia3_3": {
-          "text": "What organisational measures are in place?",
+          "text": "What organizational measures are in place?",
           "options": [
             "Internal policies restricting government access response procedures",
             "Staff training on data protection obligations",
@@ -7799,32 +7799,32 @@
         },
         "tia3_4": {
           "text": "Are the supplementary measures effective at preventing or mitigating the identified risks?",
-          "helpText": "Explain why the combination of measures above is sufficient — or insufficient — to ensure essentially equivalent protection. If the data must be available in the clear to the importer (e.g., for processing), encryption alone may not be effective against government access orders."
+          "helpText": "Explain why the combination of measures above is sufficient (or insufficient) to ensure essentially equivalent protection. If the data must be available in the clear to the importer (e.g., for processing), encryption alone may not be effective against government access orders."
         },
         "tia4_1": {
           "text": "What is the likelihood that public authorities in the destination country will access the transferred data?",
           "options": [
-            "Negligible — sector/data type not targeted, strong safeguards",
-            "Low — possible but unlikely given safeguards and data type",
-            "Medium — sector is known to be targeted; safeguards may not fully prevent access",
-            "High — evidence of routine access to this type of data/sector"
+            "Negligible: sector/data type not targeted, strong safeguards",
+            "Low: possible but unlikely given safeguards and data type",
+            "Medium: sector is known to be targeted; safeguards may not fully prevent access",
+            "High: evidence of routine access to this type of data/sector"
           ]
         },
         "tia4_2": {
           "text": "What would be the severity of impact on data subjects if their data were accessed?",
           "options": [
-            "Negligible — pseudonymised or non-sensitive data, minimal harm",
-            "Low — limited personal data, low sensitivity",
-            "Medium — identifiable personal data, moderate sensitivity",
-            "High — special category data, vulnerable individuals, or potential for significant harm"
+            "Negligible: pseudonymized or non-sensitive data, minimal harm",
+            "Low: limited personal data, low sensitivity",
+            "Medium: identifiable personal data, moderate sensitivity",
+            "High: special category data, vulnerable individuals, or potential for significant harm"
           ]
         },
         "tia4_3": {
           "text": "Overall conclusion: can the transfer proceed?",
           "options": [
-            "Yes — supplementary measures provide essentially equivalent protection",
-            "Yes, with conditions — additional measures required before transfer can proceed",
-            "No — residual risk is too high; transfer should be suspended or alternative mechanism sought"
+            "Yes: supplementary measures provide essentially equivalent protection",
+            "Yes, with conditions: additional measures required before transfer can proceed",
+            "No: residual risk is too high; transfer should be suspended or alternative mechanism sought"
           ]
         },
         "tia4_4": {
@@ -7874,20 +7874,20 @@
         },
         "tiav2_1_3": {
           "text": "What categories of personal data are transferred?",
-          "helpText": "The sensitivity and volume of the data drive the risk of the transfer. Name every category, because special category and criminal-offence data raise the bar. Example: \"Contact details, identifiers, behavioural data.\" Source: EDPB Recommendations 01/2020, step 1.",
+          "helpText": "The sensitivity and volume of the data drive the risk of the transfer. Name every category, because special category and criminal-offense data raise the bar. Example: \"Contact details, identifiers, behavioral data.\" Source: EDPB Recommendations 01/2020, step 1.",
           "options": [
             "Contact details",
             "Identifiers",
             "Financial data",
-            "Behavioural or usage data",
+            "Behavioral or usage data",
             "Location data",
             "Special category data",
-            "Criminal-offence data"
+            "Criminal-offense data"
           ]
         },
         "tiav2_1_4": {
           "text": "Who is the exporter and who is the importer, and in which countries?",
-          "helpText": "Name the organisations, their roles (controller or processor) and the countries of establishment, so the transfer is fully mapped. Example: \"We (controller, Spain) to our hosting provider (processor, United States).\" Source: EDPB Recommendations 01/2020, step 1."
+          "helpText": "Name the organizations, their roles (controller or processor) and the countries of establishment, so the transfer is fully mapped. Example: \"We (controller, Spain) to our hosting provider (processor, United States).\" Source: EDPB Recommendations 01/2020, step 1."
         },
         "tiav2_1_5": {
           "text": "Is the data onward-transferred to a further third country?",
@@ -7939,13 +7939,13 @@
         },
         "tiav2_3_1": {
           "text": "Which technical measures are in place?",
-          "helpText": "Effective encryption with keys held outside the destination is the strongest technical safeguard against government access. Example: \"Encryption at rest with EU-held keys and pseudonymisation.\" Source: EDPB Recommendations 01/2020, Annex 2.",
+          "helpText": "Effective encryption with keys held outside the destination is the strongest technical safeguard against government access. Example: \"Encryption at rest with EU-held keys and pseudonymization.\" Source: EDPB Recommendations 01/2020, Annex 2.",
           "options": [
             "Encryption at rest, importer cannot access the keys",
             "Encryption in transit (TLS 1.2 or higher)",
             "End-to-end encryption, exporter-held keys only",
-            "Pseudonymisation before transfer",
-            "Anonymisation or aggregation before transfer",
+            "Pseudonymization before transfer",
+            "Anonymization or aggregation before transfer",
             "Split processing across parties",
             "None"
           ]
@@ -7957,7 +7957,7 @@
             "Duty to challenge government access requests",
             "Duty to notify the exporter of access (where lawful)",
             "Transparency reporting obligation",
-            "No onward transfer without prior authorisation",
+            "No onward transfer without prior authorization",
             "Audit rights for the exporter",
             "Data localisation obligation",
             "Suspension or termination if the law changes",
@@ -7965,24 +7965,24 @@
           ]
         },
         "tiav2_3_3": {
-          "text": "Which organisational measures are in place?",
-          "helpText": "Organisational measures back up the technical and contractual ones with people and procedures. Example: \"A documented access-request policy and annual ISO 27001 certification.\" Source: EDPB Recommendations 01/2020, Annex 2.",
+          "text": "Which organizational measures are in place?",
+          "helpText": "Organizational measures back up the technical and contractual ones with people and procedures. Example: \"A documented access-request policy and annual ISO 27001 certification.\" Source: EDPB Recommendations 01/2020, Annex 2.",
           "options": [
             "Internal policy for responding to access requests",
             "Staff training on data protection",
             "A designated privacy or compliance team at the importer",
-            "Recognised certifications (ISO 27001, SOC 2)",
+            "Recognized certifications (ISO 27001, SOC 2)",
             "Incident response plan covering access scenarios",
             "None"
           ]
         },
         "tiav2_3_4": {
           "text": "Are the measures effective against the identified risks? Explain.",
-          "helpText": "Explain why the measures together do, or do not, bring the protection up to an essentially equivalent level. If the importer must access the data in the clear, encryption may not help against an access order. Example: \"Effective: data is pseudonymised and keys stay in the EU.\" Source: EDPB Recommendations 01/2020, step 4."
+          "helpText": "Explain why the measures together do, or do not, bring the protection up to an essentially equivalent level. If the importer must access the data in the clear, encryption may not help against an access order. Example: \"Effective: data is pseudonymized and keys stay in the EU.\" Source: EDPB Recommendations 01/2020, step 4."
         },
         "tiav2_4_1": {
           "text": "How likely is government access to the transferred data?",
-          "helpText": "Combine the destination's laws and practices with the data type and the safeguards. Example: \"Low: pseudonymised data, keys in the EU, sector not routinely targeted.\" Source: EDPB Recommendations 01/2020, step 3.",
+          "helpText": "Combine the destination's laws and practices with the data type and the safeguards. Example: \"Low: pseudonymized data, keys in the EU, sector not routinely targeted.\" Source: EDPB Recommendations 01/2020, step 3.",
           "options": [
             "Negligible",
             "Low",
@@ -8576,14 +8576,14 @@
         },
         "q1_6": {
           "text": "Describe the data flows and recipients",
-          "helpText": "Map how data moves through your systems — from collection to storage, processing, sharing, and deletion. Identify all recipients and processors."
+          "helpText": "Map how data moves through your systems, from collection to storage, processing, sharing, and deletion. Identify all recipients and processors."
         },
         "q2_1": {
           "text": "What is the sensitivity level of the data?",
           "options": [
             "Non-sensitive personal data only",
             "Mix of non-sensitive and sensitive indicators",
-            "Includes special category data (Art. 9) or criminal offence data (Art. 10)"
+            "Includes special category data (Art. 9) or criminal offense data (Art. 10)"
           ]
         },
         "q2_2": {
@@ -8597,19 +8597,19 @@
         "q2_4": {
           "text": "Would data subjects reasonably expect this processing?",
           "options": [
-            "Fully expected — directly related to the service they signed up for",
-            "Probably expected — a reasonable extension of the service",
-            "Possibly unexpected — not directly related to the primary service",
-            "Unexpected — data subjects would likely be surprised"
+            "Fully expected: directly related to the service they signed up for",
+            "Probably expected: a reasonable extension of the service",
+            "Possibly unexpected: not directly related to the primary service",
+            "Unexpected: data subjects would likely be surprised"
           ]
         },
         "q3_1": {
           "text": "Is the processing necessary to achieve the stated purpose?",
           "options": [
-            "Essential — cannot achieve the purpose without it",
-            "Highly beneficial — significantly more effective than alternatives",
-            "Somewhat beneficial — marginal improvement over alternatives",
-            "Not clearly necessary — alternatives could achieve the same result"
+            "Essential: cannot achieve the purpose without it",
+            "Highly beneficial: significantly more effective than alternatives",
+            "Somewhat beneficial: marginal improvement over alternatives",
+            "Not clearly necessary: alternatives could achieve the same result"
           ]
         },
         "q3_2": {
@@ -8640,7 +8640,7 @@
           "text": "Does the processing involve automated decision-making or profiling?"
         },
         "q5_2": {
-          "text": "Does the processing involve special category data or criminal offence data?"
+          "text": "Does the processing involve special category data or criminal offense data?"
         },
         "q5_3": {
           "text": "Does the processing involve systematic monitoring of a publicly accessible area?"
@@ -8653,7 +8653,7 @@
         },
         "q5_6": {
           "text": "Describe the identified risks to data subjects, including likelihood and severity for each",
-          "helpText": "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N — Title: Description. Likelihood: X. Severity: Y."
+          "helpText": "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N (Title): Description. Likelihood: X. Severity: Y."
         },
         "q6_1": {
           "text": "Technical measures in place or planned",
@@ -8685,7 +8685,7 @@
         },
         "q6_3": {
           "text": "Safeguards for individual rights (transparency, consent mechanisms, portability, opt-out)",
-          "helpText": "Describe how data subject rights are facilitated — e.g. privacy notices, consent preference centers, data portability tools, opt-out mechanisms."
+          "helpText": "Describe how data subject rights are facilitated (e.g. privacy notices, consent preference centers, data portability tools, opt-out mechanisms)."
         },
         "q7_1": {
           "text": "Overall residual risk level after mitigations",
@@ -8699,9 +8699,9 @@
         "q7_2": {
           "text": "Is prior consultation with the supervisory authority required? (Art. 36)",
           "options": [
-            "No — residual risk has been sufficiently mitigated",
-            "Under consideration — further analysis needed",
-            "Yes — high residual risk that cannot be sufficiently mitigated"
+            "No: residual risk has been sufficiently mitigated",
+            "Under consideration: further analysis needed",
+            "Yes: high residual risk that cannot be sufficiently mitigated"
           ]
         },
         "q7_3": {
@@ -8751,19 +8751,19 @@
             "Contact details",
             "Identifiers",
             "Financial data",
-            "Behavioural or usage data",
+            "Behavioral or usage data",
             "Location data",
             "Special category data",
-            "Criminal-offence data"
+            "Criminal-offense data"
           ]
         },
         "piav2_1_3": {
-          "text": "Does the processing involve special category or criminal-offence data?",
-          "helpText": "Special category data (Art. 9) and criminal-offence data (Art. 10) need a specific condition beyond the lawful basis. Example: \"No.\" Source: GDPR Arts. 9 and 10."
+          "text": "Does the processing involve special category or criminal-offense data?",
+          "helpText": "Special category data (Art. 9) and criminal-offense data (Art. 10) need a specific condition beyond the lawful basis. Example: \"No.\" Source: GDPR Arts. 9 and 10."
         },
         "piav2_1_4": {
           "text": "Which Article 9(2) or Article 10 condition applies?",
-          "helpText": "Name the specific condition that permits the special category or criminal-offence data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10."
+          "helpText": "Name the specific condition that permits the special category or criminal-offense data. Example: \"Explicit consent (Art. 9(2)(a)).\" Source: GDPR Arts. 9(2) and 10."
         },
         "piav2_1_5": {
           "text": "Who are the data subjects?",
@@ -8796,7 +8796,7 @@
         },
         "piav2_2_3": {
           "text": "Is the retention period justified and enforced?",
-          "helpText": "The period must be justified by the purpose or a legal duty, and the data actually deleted or anonymised at the end. Example: \"Yes: annual deletion job removes expired records.\" Source: GDPR Art. 5(1)(e)."
+          "helpText": "The period must be justified by the purpose or a legal duty, and the data actually deleted or anonymized at the end. Example: \"Yes: annual deletion job removes expired records.\" Source: GDPR Art. 5(1)(e)."
         },
         "piav2_3_1": {
           "text": "Who receives the data?",
@@ -8827,7 +8827,7 @@
         },
         "piav2_4_2": {
           "text": "Which data subject rights are supported?",
-          "helpText": "You must be able to honour the rights that apply to your basis and processing. Example: \"Access, rectification, erasure and objection.\" Source: GDPR Arts. 15 to 22.",
+          "helpText": "You must be able to honor the rights that apply to your basis and processing. Example: \"Access, rectification, erasure and objection.\" Source: GDPR Arts. 15 to 22.",
           "options": [
             "Access (Art. 15)",
             "Rectification (Art. 16)",
@@ -8850,7 +8850,7 @@
           "helpText": "Measures must be appropriate to the risk, covering confidentiality, integrity, availability and resilience. Example: \"Encryption, access controls, backups and logging.\" Source: GDPR Art. 32.",
           "options": [
             "Encryption",
-            "Pseudonymisation",
+            "Pseudonymization",
             "Access controls",
             "Logging and monitoring",
             "Backups and recovery",
@@ -8964,7 +8964,7 @@
       "name": "Name",
       "email": "Work e-mail",
       "emailHint": "From your account",
-      "organization": "Organisation",
+      "organization": "Organization",
       "country": "Country",
       "userCount": "How many people would use it?",
       "userCountOptions": {
@@ -8977,7 +8977,7 @@
       "notNow": "Not now",
       "privacyNote": "We will use these details only to answer your request and delete them six months after it is closed.",
       "privacyLink": "More in the privacy policy",
-      "required": "Please fill in your name, a valid work e-mail, your organisation, your country and how many people would use it.",
+      "required": "Please fill in your name, a valid work e-mail, your organization, your country and how many people would use it.",
       "sendError": "Your request could not be sent. Please try again in a moment.",
       "alreadyOpen": "We already have your request and will write to you."
     },
@@ -9002,7 +9002,7 @@
     "signIn": "Free pilot: {days} days of editing from your first sign-in, then read-only with export.",
     "endBar": {
       "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
-      "readOnly": "Your pilot has ended: the organisation is read-only and you can export it at any time.",
+      "readOnly": "Your pilot has ended: the organization is read-only and you can export it at any time.",
       "pricing": "See pricing"
     },
     "settings": {
@@ -9087,7 +9087,7 @@
     "account": "Account",
     "switchClient": "Client",
     "allClients": "All clients",
-    "addOrganization": "Add an organisation",
+    "addOrganization": "Add an organization",
     "expand": "Expand the menu",
     "collapse": "Collapse the menu",
     "phoneBar": "Stage {number} of {total}, {stage}",
@@ -9104,13 +9104,13 @@
     "steps": {
       "quickstart": {
         "label": "Quick start",
-        "why": "Set up your program in minutes: jurisdictions, an industry template and vendors from the catalogue.",
+        "why": "Set up your program in minutes: jurisdictions, an industry template and vendors from the catalog.",
         "do": "Run the quick start to set up jurisdictions, a template and your first vendors."
       },
       "applies": {
         "label": "What applies",
         "why": "Say where you operate and which laws apply, so the rest of the program is scoped to you.",
-        "do": "Declare the jurisdictions and laws that apply to your organisation."
+        "do": "Declare the jurisdictions and laws that apply to your organization."
       },
       "privacyPolicy": {
         "label": "Privacy policy and notices",
@@ -9140,7 +9140,7 @@
       "vendors": {
         "label": "Vendors and processors",
         "why": "Track the vendors that process personal data for you.",
-        "do": "Add the vendors that process personal data, from the catalogue."
+        "do": "Add the vendors that process personal data, from the catalog."
       },
       "aiSystems": {
         "label": "AI systems",
@@ -9184,7 +9184,7 @@
       },
       "audits": {
         "label": "Executive report",
-        "why": "Tell the board or management where the programme stands.",
+        "why": "Tell the board or management where the program stands.",
         "do": "Produce the executive report for a period and add your comment."
       }
     },
@@ -9264,7 +9264,7 @@
     "switchOrganization": "Organization",
     "addClient": "Add a client",
     "newOrganization": "New organization",
-    "requiresLicence": "Requires a licence"
+    "requiresLicence": "Requires a license"
   },
   "help": {
     "open": "Help for this page",
@@ -9287,7 +9287,7 @@
       "step1": "Set up: say where you operate and what you do, and DPO Central works out which laws apply.",
       "step2": "Know your data: record the personal data you hold, your vendors, and how you process it.",
       "step3": "Keep it current: run the assessments each law expects, answer rights requests on time, and log any breach.",
-      "promise": "One privacy programme: the records, assessments and requests each law expects, kept in one place.",
+      "promise": "One privacy program: the records, assessments and requests each law expects, kept in one place.",
       "clientsLine": "Working for several clients?",
       "clientsLink": "All clients shows where each one stands.",
       "guidesTitle": "Start with a short guide",
@@ -9300,10 +9300,10 @@
   "portfolio": {
     "title": "All clients",
     "addClient": "Add a client",
-    "subtitle": "{count, plural, one {# organisation} other {# organisations}} you manage",
+    "subtitle": "{count, plural, one {# organization} other {# organizations}} you manage",
     "empty": {
-      "title": "No client organisations yet",
-      "body": "Organisations you are a member of will appear here."
+      "title": "No client organizations yet",
+      "body": "Organizations you are a member of will appear here."
     },
     "draftsToConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",
     "needAttention": "{count, plural, one {# needs attention} other {# need attention}}",
@@ -9319,7 +9319,7 @@
     "docsReady": "{ready} of {total} ready",
     "noDeadline": "None",
     "none": "No figure yet",
-    "limited": "Limited to your departments: the organisation-wide figures are not shown.",
+    "limited": "Limited to your departments: the organization-wide figures are not shown.",
     "sortNote": "Sorted by the nearest deadline, the soonest first; clients with no deadline follow, by name."
   },
   "applicability": {
@@ -9339,7 +9339,7 @@
         "hint": "If so, you are a controller for that data and carry the main duties."
       },
       "actAsProcessor": {
-        "label": "Do you process personal data for other organisations on their instructions?",
+        "label": "Do you process personal data for other organizations on their instructions?",
         "hint": "If so, you are a processor for that data, bound by a written contract."
       },
       "largeVolume": {
@@ -9356,7 +9356,7 @@
       },
       "largeScaleMonitoring": {
         "label": "Do you monitor people regularly and systematically on a large scale?",
-        "hint": "For example tracking online behaviour, profiling, or wide video surveillance."
+        "hint": "For example tracking online behavior, profiling, or wide video surveillance."
       },
       "publicAuthority": {
         "label": "Are you a public authority or body?",
@@ -9432,13 +9432,13 @@
     },
     "departmentSwitch": {
       "label": "For my department",
-      "wholeOrg": "Whole organisation"
+      "wholeOrg": "Whole organization"
     },
     "needsAction": {
       "title": "Needs action",
       "subtitle": "Everything waiting for you, in one place.",
       "empty": "Nothing needs action right now.",
-      "deptNote": "Showing one department. Organisation-wide items are on the full list.",
+      "deptNote": "Showing one department. Organization-wide items are on the full list.",
       "kind": {
         "review-due": "Reviews due",
         "dsar-due": "Rights requests due",
@@ -9453,7 +9453,7 @@
         "breach-window": "Open breaches that must be notified.",
         "breach-decision": "Breaches logged in the last 72 hours with no notification recorded and not marked as requiring one. Decide whether to notify before the window ends.",
         "assessment-approval": "Assessments sent for review or approval.",
-        "drafts-to-confirm": "Records the quick start or a template drafted. They count towards your programme once a person confirms them."
+        "drafts-to-confirm": "Records the quick start or a template drafted. They count towards your program once a person confirms them."
       }
     },
     "incomplete": {
@@ -9495,8 +9495,8 @@
     "editTitle": "Edit department",
     "access": {
       "title": "Member access",
-      "description": "Limit a member to one or more departments. No limit means the whole organisation.",
-      "wholeOrg": "Whole organisation",
+      "description": "Limit a member to one or more departments. No limit means the whole organization.",
+      "wholeOrg": "Whole organization",
       "limited": "{count, plural, one {# department} other {# departments}}",
       "saved": "Access updated"
     }
@@ -9547,8 +9547,8 @@
       "noUserFoundWithThisEmailTheyMust": "No user found with this email. They must sign up first.",
       "notificationNotFound": "Notification not found",
       "onlyAnOwnerOrAnAdminOfBoth": "Only an owner or an admin of both organizations can copy a template",
-      "onlyCompletedOrCancelledRequestsCanBeDeleted": "Only completed or cancelled requests can be deleted",
-      "onlyCompletedCancelledOrRejectedRequestsCanBe": "Only completed, cancelled, or rejected requests can be redacted",
+      "onlyCompletedOrCancelledRequestsCanBeDeleted": "Only completed or canceled requests can be deleted",
+      "onlyCompletedCancelledOrRejectedRequestsCanBe": "Only completed, canceled, or rejected requests can be redacted",
       "onlyOwnersAndAdminsCanManageDepartments": "Only owners and admins can manage departments.",
       "onlyOwnersCanChangeMemberRoles": "Only owners can change member roles",
       "organizationIdIsRequired": "Organization ID is required",
@@ -9570,11 +9570,11 @@
       "taskNotFound": "Task not found",
       "templateNotFoundOrNotAccessible": "Template not found or not accessible",
       "templateNotFound": "Template not found",
-      "thisEntitlementWasNotPurchasedViaStripeAnd": "This entitlement was not purchased via Stripe and cannot be self-cancelled",
-      "thisOrganisationCouldNotBeCreatedPleaseTry": "This organisation could not be created. Please try again with a slightly different name.",
+      "thisEntitlementWasNotPurchasedViaStripeAnd": "This entitlement was not purchased via Stripe and cannot be self-canceled",
+      "thisOrganisationCouldNotBeCreatedPleaseTry": "This organization could not be created. Please try again with a slightly different name.",
       "theDeadlineAlreadyRunsToTheLongestPeriod": "The deadline already runs to the longest period the law allows",
       "thePrimaryJurisdictionsLawAllowsNoExtension": "The primary jurisdiction's law allows no extension; give extensionDays to extend by a set number of days",
-      "thisRequestIsAlreadyFinalisedAndCannotBe": "This request is already finalised and cannot be withdrawn.",
+      "thisRequestIsAlreadyFinalisedAndCannotBe": "This request is already finalized and cannot be withdrawn.",
       "thisRequestIsClosedItsDeadlineCannotBe": "This request is closed; its deadline cannot be extended",
       "thisUserIsAlreadyAMemberOfThe": "This user is already a member of the organization",
       "transferNotFound": "Transfer not found",
@@ -9622,14 +9622,14 @@
     }
   },
   "licenses": {
-    "heading": "Licence & source",
+    "heading": "License & source",
     "intro": "Legal notices for this program, as required by the GNU Affero General Public License.",
     "licensed": "Licensed under the GNU Affero General Public License, version 3 or later (AGPL-3.0-or-later).",
     "noWarranty": "This program comes with ABSOLUTELY NO WARRANTY.",
-    "freeSoftware": "This is free software, and you are welcome to redistribute it under the conditions of the AGPL-3.0-or-later. See the full licence text in the <file>LICENSE</file> file distributed with the source.",
+    "freeSoftware": "This is free software, and you are welcome to redistribute it under the conditions of the AGPL-3.0-or-later. See the full license text in the <file>LICENSE</file> file distributed with the source.",
     "sourceTitle": "Complete corresponding source code",
     "sourcePublic": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for this running instance is available at:",
-    "sourceOnRequest": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for the version running here{commit} is available to you at no charge. The public source repository is being finalised; until it is published, request the corresponding source by emailing <mail>{email}</mail> and we will provide it.",
+    "sourceOnRequest": "In accordance with AGPL-3.0 section 13, the complete corresponding source code for the version running here{commit} is available to you at no charge. The public source repository is being finalized; until it is published, request the corresponding source by emailing <mail>{email}</mail> and we will provide it.",
     "commit": " (commit {commit})",
     "premiumTitle": "Premium skills",
     "premiumBody": "Certain premium skills and add-ons are separately licensed and are <b>not</b> covered by the AGPL. They are not part of the corresponding source offered above.",
@@ -9644,7 +9644,7 @@
   },
   "dsarModule": {
     "off": "Rights requests are not included in this plan.",
-    "exportBody": "The rights-request records your organisation already holds can still be downloaded.",
+    "exportBody": "The rights-request records your organization already holds can still be downloaded.",
     "exportLink": "Download the records (JSON)",
     "addOnLine": "Available as an add-on: $49 a month",
     "addOnTitle": "Rights requests are an add-on on your plan",
@@ -9657,16 +9657,16 @@
   },
   "drafts": {
     "badge": "To confirm",
-    "badgeHint": "Drafted by the quick start, a template or an import. It counts towards your programme once a person confirms it.",
+    "badgeHint": "Drafted by the quick start, a template or an import. It counts towards your program once a person confirms it.",
     "confirm": "Confirm",
-    "confirmedOne": "Confirmed. It now counts towards your programme.",
+    "confirmedOne": "Confirmed. It now counts towards your program.",
     "confirmedMany": "{count, plural, one {# record confirmed} other {# records confirmed}}",
     "confirmFailed": "Could not confirm. Try again.",
     "noticeCount": "{count, plural, one {# drafted record to confirm.} other {# drafted records to confirm.}}",
-    "noticeWhy": "They count towards your programme once a person confirms them.",
+    "noticeWhy": "They count towards your program once a person confirms them.",
     "reviewAndConfirm": "Review and confirm",
     "reviewTitle": "Review and confirm",
-    "reviewSubtitle": "The quick start, templates, copies from another client and imports drafted these records. Open each one to check or correct it, then confirm it. Each counts towards your programme once confirmed.",
+    "reviewSubtitle": "The quick start, templates, copies from another client and imports drafted these records. Open each one to check or correct it, then confirm it. Each counts towards your program once confirmed.",
     "reviewEmpty": "Nothing to confirm: every drafted record has been confirmed.",
     "selectAll": "Select all",
     "clearSelection": "Clear selection",
@@ -9771,7 +9771,7 @@
       "dsarPerformance": "Rights request performance report",
       "breachRegister": "Breach register",
       "breachNotification": "Breach notification draft",
-      "programmeReport": "Privacy programme report",
+      "programmeReport": "Privacy program report",
       "privacyNotice": "Privacy notice",
       "dpoAppointment": "DPO appointment",
       "trainingRecord": "Staff training record",
@@ -9810,7 +9810,7 @@
     "periodLine": "Period: {from} to {to}",
     "generatedLine": "Generated on {date}",
     "scopeNote": "Incidents and rights requests are counted for the period. Every other figure is as on the date generated.",
-    "disclaimer": "This report states facts recorded in DPO Central. It is not legal advice and does not state that the organisation complies with any law.",
+    "disclaimer": "This report states facts recorded in DPO Central. It is not legal advice and does not state that the organization complies with any law.",
     "download": "Download PDF",
     "downloadLabel": "Download the executive report as PDF in {language}",
     "downloadOther": "PDF in {language}",
@@ -9818,9 +9818,9 @@
       "en": "English",
       "es": "Spanish"
     },
-    "limited": "The executive report covers the whole organisation. Ask an owner or an admin for it.",
+    "limited": "The executive report covers the whole organization. Ask an owner or an admin for it.",
     "programme": {
-      "title": "The programme",
+      "title": "The program",
       "colArea": "Area",
       "colState": "State"
     },
@@ -9847,7 +9847,7 @@
       "completedLate": "Completed late",
       "openOverdue": "Open and overdue",
       "openInTime": "Open, within the deadline",
-      "closedOther": "Rejected or cancelled"
+      "closedOther": "Rejected or canceled"
     },
     "vendors": {
       "title": "Vendors",
@@ -9881,7 +9881,7 @@
       "noDate": "No date set",
       "deadline": "{date} (deadline)",
       "plan": "{date} (plan)",
-      "ownerNote": "Owner: the organisation's privacy officer in DPO Central (or its owner). Date: the record's own deadline, or the end of the 30, 60 or 90-day window of the plan for that area.",
+      "ownerNote": "Owner: the organization's privacy officer in DPO Central (or its owner). Date: the record's own deadline, or the end of the 30, 60 or 90-day window of the plan for that area.",
       "empty": "Nothing left to do on the path."
     },
     "comment": {
@@ -10006,9 +10006,9 @@
       "EXPORT_ROPA": "Records of processing exported",
       "EXPORT_BREACH_REGISTER": "Breach register exported",
       "EXPORT_VENDOR_REGISTER": "Vendor register exported",
-      "EXPORT_PRIVACY_PROGRAM": "Privacy programme report exported",
-      "EXPORT_PROGRAMME": "Programme exported",
-      "IMPORT_PROGRAMME": "Programme imported",
+      "EXPORT_PRIVACY_PROGRAM": "Privacy program report exported",
+      "EXPORT_PROGRAMME": "Program exported",
+      "IMPORT_PROGRAMME": "Program imported",
       "IMPORT_REGISTER": "Register imported from a spreadsheet",
       "PILOT_LIMIT_REACHED": "Pilot limit reached",
       "CHECKOUT_INITIATED": "Checkout started",

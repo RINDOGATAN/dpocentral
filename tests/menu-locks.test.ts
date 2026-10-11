@@ -67,7 +67,7 @@ describe("how the lock is shown", () => {
     expect(block).toContain('<Lock className="size-3" aria-hidden="true" />');
     expect(block).toContain('<span className="sr-only">{t("requiresLicence")}</span>');
     expect(block).not.toMatch(/€|\$\d|price|precio/i);
-    expect(en.guided.requiresLicence).toBe("Requires a licence");
+    expect(en.guided.requiresLicence).toBe("Requires a license");
     expect(es.guided.requiresLicence).toBe("Requiere una licencia");
   });
 });
@@ -86,7 +86,7 @@ describe("the DPIA option's lock", () => {
     expect(picker).toContain('<span className="sr-only">{tg("requiresLicence")}</span>');
     const badge = picker.slice(picker.indexOf("{isLocked\n"), picker.indexOf(": tp(\"premiumSkill\")"));
     expect(badge).toContain('? tg("requiresLicence")');
-    expect(en.pages.newAssessment.typeCardLockedLabel).toBe("{name} (requires a licence)");
+    expect(en.pages.newAssessment.typeCardLockedLabel).toBe("{name} (requires a license)");
     expect(es.pages.newAssessment.typeCardLockedLabel).toBe("{name} (requiere una licencia)");
   });
 

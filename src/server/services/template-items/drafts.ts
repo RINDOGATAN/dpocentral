@@ -89,7 +89,7 @@ export async function listDrafts(prisma: Db, organizationId: string): Promise<Dr
 
 export class DraftNotFoundError extends Error {
   constructor() {
-    super("One or more records were not found in this organisation, or were already confirmed.");
+    super("One or more records were not found in this organization, or were already confirmed.");
   }
 }
 

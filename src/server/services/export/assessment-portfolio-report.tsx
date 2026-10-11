@@ -83,7 +83,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     coverSubtitle: "DPIA, LIA & Privacy Assessment Status Report",
     coverGenerated: "Generated: {date}",
     coverConfidential:
-      "CONFIDENTIAL. This document summarises the organisation's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
+      "CONFIDENTIAL. This document summarizes the organization's privacy impact assessment program. It is intended for DPOs, privacy officers, and supervisory authorities upon request.",
     pageTitle: "Assessment Portfolio",
     executiveSummary: "Executive Summary",
     "stats.total": "Total Assessments",
@@ -104,7 +104,7 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
       "Controllers must carry out a DPIA before processing that is likely to result in a high risk to the rights and freedoms of natural persons. The assessment must be reviewed and updated when processing operations change.",
     overview: "Assessment Overview",
     byStatus: "By Status",
-    byStatusDesc: "Current status of all assessments across the organisation",
+    byStatusDesc: "Current status of all assessments across the organization",
     "statusColumns.status": "Status",
     "statusColumns.count": "Count",
     "statusColumns.percentage": "Percentage",

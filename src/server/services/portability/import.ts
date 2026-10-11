@@ -192,7 +192,7 @@ const P = {
   notEmpty: (n: number): ImportProblem => ({
     level: "error",
     code: "not_empty",
-    en: `This organisation already holds ${n} records of its own. A whole programme is imported into a new or empty organisation, so nothing is mixed or overwritten. Create a new organisation for it, or remove the existing records first.`,
+    en: `This organization already holds ${n} records of its own. A whole program is imported into a new or empty organization, so nothing is mixed or overwritten. Create a new organization for it, or remove the existing records first.`,
     es: `Esta organización ya tiene ${n} registros propios. Un programa completo se importa en una organización nueva o vacía, para no mezclar ni sobrescribir nada. Crea una organización nueva para él o elimina antes los registros existentes.`,
   }),
   missingRef: (register: string, sourceId: string, field: string, target: string, dropped: "field" | "record"): ImportProblem => ({
@@ -260,7 +260,7 @@ const P = {
   history: (): ImportProblem => ({
     level: "info",
     code: "history_kept_in_metadata",
-    en: "Assessment approvals and saved versions, and each record's status and confirmation at the source, are kept with the record as history; they are not recreated here. The source's audit trail is not replayed: this organisation's trail records the import.",
+    en: "Assessment approvals and saved versions, and each record's status and confirmation at the source, are kept with the record as history; they are not recreated here. The source's audit trail is not replayed: this organization's trail records the import.",
     es: "Las aprobaciones y versiones guardadas de las evaluaciones, y el estado y la confirmación de cada registro en el origen, se guardan con el registro como historial; no se recrean aquí. El registro de auditoría del origen no se reproduce: el de esta organización registra la importación.",
   }),
   limit: (m: { en: string; es: string }): ImportProblem => ({ level: "error", code: "limit", ...m }),

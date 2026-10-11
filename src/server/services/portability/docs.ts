@@ -37,7 +37,7 @@ export function programmeJsonSchema(): Record<string, unknown> {
   return {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: SCHEMA_ID,
-    title: "DPO Central programme",
+    title: "DPO Central program",
     ...schema,
   };
 }
@@ -141,16 +141,16 @@ function sections(node: Node, path: string, locale: Locale, out: string[], level
 }
 
 const INTRO: Record<Locale, (dsar: boolean) => string> = {
-  en: (dsar) => `# Your privacy programme, exported from DPO Central
+  en: (dsar) => `# Your privacy program, exported from DPO Central
 
-This archive holds everything your organisation entered in DPO Central, in an
+This archive holds everything your organization entered in DPO Central, in an
 open format you can read, keep, and take to another platform. It is yours.
 
 ## What is in the archive
 
 | File | What it is |
 |---|---|
-| \`programme.json\` | The whole programme in one machine-readable file (format \`${PROGRAMME_FORMAT}\`). This is the file another system reads, and the file DPO Central imports. |
+| \`programme.json\` | The whole program in one machine-readable file (format \`${PROGRAMME_FORMAT}\`). This is the file another system reads, and the file DPO Central imports. |
 | \`csv/*.csv\` | One table per register, for a spreadsheet. UTF-8 with a byte-order mark, comma separated, one header row in the language you used when you exported. |
 | \`schema/programme.schema.json\` | The JSON Schema (draft 2020-12) of \`programme.json\`. Any JSON Schema validator checks a file against it. |
 | \`schema/README.md\`, \`schema/LEEME.md\` | This explanation, in English and in Spanish. |
@@ -170,7 +170,7 @@ records (\`documentUrl\`, \`url\`).
   \`vendorId\` an id in \`vendors\`, \`templateId\` an id in
   \`assessmentTemplates\`. References never depend on the order of a list.
 - A field ending in \`PersonId\` is an id in \`people\`. A person id that is not
-  in \`people\` belongs to someone who has since left the organisation.
+  in \`people\` belongs to someone who has since left the organization.
 - Laws are referred to by their code (\`jurisdictionCode\`, for example GDPR).
 - Dates are ISO 8601 in UTC, for example \`2026-10-09T14:30:00.000Z\`.
 - Fixed lists (status, type, legal basis...) hold English codes in
@@ -187,8 +187,8 @@ a draft ("to confirm") so that a person reviews it before it counts.
 
 ## What is not in the archive
 
-- Other organisations' data.
-- Passwords, sign-in sessions, API and licence keys, and the private links
+- Other organizations' data.
+- Passwords, sign-in sessions, API and license keys, and the private links
   vendors use to answer questionnaires.
 - The detail recorded in the audit trail: only who did what, to which record,
   and when (\`auditTrail\`).

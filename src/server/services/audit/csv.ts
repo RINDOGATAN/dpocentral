@@ -50,7 +50,7 @@ const HEADERS = {
 
 const WORDS = {
   en: {
-    organisation: "Organisation",
+    organisation: "Organization",
     rows: "Rows",
     truncated: (max: number) => ` (cut at the ${max} row limit; narrow the dates)`,
     filters: "Filters",

@@ -21,8 +21,12 @@ export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
   const locale = useLocale();
   // Yearly price of one premium module in the kit (self-hosted, offline
-  // licence). The hosted pilot sells nothing.
-  const price = formatPrice(KIT_MODULE_PRICE_PER_YEAR, "EUR");
+  // licence). The hosted pilot sells nothing. One currency per language
+  // (owner, 11 Oct 2026, consistency review DPC-4): dollars in English,
+  // euros in the other languages, written as each language writes them.
+  const price = locale.toLowerCase().startsWith("en")
+    ? formatPrice(KIT_MODULE_PRICE_PER_YEAR, "USD")
+    : `${KIT_MODULE_PRICE_PER_YEAR} €`;
   // /privacy/billing only exists when Stripe is on (self-host redirects it
   // to /privacy/skills), so the self-service upsell links need both flags.
   const canSelfService = features.stripeEnabled && features.selfServiceUpgrade;

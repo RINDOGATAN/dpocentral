@@ -31,7 +31,7 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy",
     title: L("Dashboard", "Panel"),
     purpose: L(
-      "The one screen that shows where your privacy programme stands: what is recorded, what still needs doing, and the next thing to attend to across your data, vendors, assessments and requests.",
+      "The one screen that shows where your privacy program stands: what is recorded, what still needs doing, and the next thing to attend to across your data, vendors, assessments and requests.",
       "La pantalla que muestra dónde está tu programa de privacidad: qué está registrado, qué queda por hacer y lo próximo que atender en tus datos, proveedores, evaluaciones y solicitudes.",
     ),
     firstStep: L(
@@ -46,11 +46,11 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/quickstart",
     title: L("Quick start", "Inicio rápido"),
     purpose: L(
-      "A short guided path that sets up a working programme in minutes: it works out which laws apply, adds an industry template, and brings in the vendors you use from the catalogue.",
+      "A short guided path that sets up a working program in minutes: it works out which laws apply, adds an industry template, and brings in the vendors you use from the catalog.",
       "Un recorrido guiado breve que pone en marcha un programa en minutos: determina qué leyes aplican, añade una plantilla sectorial e incorpora desde el catálogo los proveedores que utilizas.",
     ),
     firstStep: L(
-      "Answer the applicability questions first, so the rest of the programme is scoped to the laws that reach you.",
+      "Answer the applicability questions first, so the rest of the program is scoped to the laws that reach you.",
       "Responde primero las preguntas de aplicabilidad, para que el resto del programa se ajuste a las leyes que te alcanzan.",
     ),
     terms: ["controller", "processor", "lawful-basis"],
@@ -64,7 +64,7 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/regulations",
     title: L("What applies", "Qué aplica"),
     purpose: L(
-      "The laws that reach your organisation, decided by where you operate and whose data you process. Declaring your jurisdictions here is the switch the rest of the product reads to scope everything to you.",
+      "The laws that reach your organization, decided by where you operate and whose data you process. Declaring your jurisdictions here is the switch the rest of the product reads to scope everything to you.",
       "Las leyes que alcanzan a tu organización, decididas por dónde operas y de quién tratas datos. Declarar aquí tus jurisdicciones es el interruptor que lee el resto del producto para ajustarlo todo a ti.",
     ),
     firstStep: L(
@@ -101,7 +101,7 @@ export const PAGE_HELP: PageHelp[] = [
       "Tu registro de los proveedores externos que tratan datos personales para ti y la revisión de diligencia debida de cada uno. Cuando un encargado falla, responde el responsable, así que el contrato y la revisión importan.",
     ),
     firstStep: L(
-      "Add a vendor from the catalogue, then record its data processing agreement and complete its due-diligence review.",
+      "Add a vendor from the catalog, then record its data processing agreement and complete its due-diligence review.",
       "Añade un proveedor desde el catálogo, registra su contrato de encargo del tratamiento y completa su revisión de diligencia debida.",
     ),
     terms: ["processor", "sccs"],
@@ -205,7 +205,7 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/audit-trail",
     title: L("Audit trail", "Registro de auditoría"),
     purpose: L(
-      "Every recorded change in the organisation, newest first: who did it, to what, and when. Owners, admins and privacy officers read it. Entries about rights requests show the reference and the action only.",
+      "Every recorded change in the organization, newest first: who did it, to what, and when. Owners, admins and privacy officers read it. Entries about rights requests show the reference and the action only.",
       "Todos los cambios registrados en la organización, del más reciente al más antiguo: quién, sobre qué y cuándo. Lo leen los propietarios, los administradores y los responsables de privacidad. Las entradas sobre solicitudes de derechos muestran solo la referencia y la acción.",
     ),
     firstStep: L(
@@ -220,7 +220,7 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/board-report",
     title: L("Executive report", "Informe ejecutivo"),
     purpose: L(
-      "A short report for the board or management on where the privacy programme stands in a period: the programme figure, documents, incidents, rights requests, vendors, assessments, the main gaps and the next actions. It is built from the records you already keep; it states facts and gives no legal advice.",
+      "A short report for the board or management on where the privacy program stands in a period: the program figure, documents, incidents, rights requests, vendors, assessments, the main gaps and the next actions. It is built from the records you already keep; it states facts and gives no legal advice.",
       "Un informe breve para el consejo o la dirección sobre en qué punto está el programa de privacidad en un periodo: la cifra del programa, los documentos, los incidentes, las solicitudes de derechos, los proveedores, las evaluaciones, las principales carencias y las próximas acciones. Se genera con los registros que ya mantienes; recoge hechos y no es asesoramiento jurídico.",
     ),
     firstStep: L(
@@ -250,11 +250,11 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/clients",
     title: L("All clients", "Todos los clientes"),
     purpose: L(
-      "For accounts that work for several client organisations: one view showing where each client stands, so you can see at a glance which needs attention. Each client keeps its own separate records.",
+      "For accounts that work for several client organizations: one view showing where each client stands, so you can see at a glance which needs attention. Each client keeps its own separate records.",
       "Para las cuentas que trabajan para varias organizaciones cliente: una vista que muestra dónde está cada cliente, para ver de un vistazo cuál necesita atención. Cada cliente conserva sus propios registros separados.",
     ),
     firstStep: L(
-      "Pick a client to open its programme, or add a new client organisation.",
+      "Pick a client to open its program, or add a new client organization.",
       "Elige un cliente para abrir su programa o añade una nueva organización cliente.",
     ),
     terms: [],
@@ -265,11 +265,11 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/skills",
     title: L("Skills", "Complementos"),
     purpose: L(
-      "Where you upload and activate a licence for a premium package bought from the storefront. A licence unlocks a feature; it never installs code, and it is tied to the buyer's email.",
+      "Where you upload and activate a license for a premium package bought from the storefront. A license unlocks a feature; it never installs code, and it is tied to the buyer's email.",
       "Donde subes y activas una licencia de un paquete premium comprado en la tienda. Una licencia desbloquea una función; nunca instala código y está vinculada al correo del comprador.",
     ),
     firstStep: L(
-      "Upload your licence file to activate it; only an owner or admin can do this.",
+      "Upload your license file to activate it; only an owner or admin can do this.",
       "Sube tu archivo de licencia para activarla; solo un propietario o administrador puede hacerlo.",
     ),
     terms: [],
@@ -280,7 +280,7 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/settings",
     title: L("Settings", "Configuración"),
     purpose: L(
-      "Your organisation's own details: its operating jurisdictions, the team and their roles, the DSAR intake form. The jurisdictions you set here decide which laws the rest of the product applies.",
+      "Your organization's own details: its operating jurisdictions, the team and their roles, the DSAR intake form. The jurisdictions you set here decide which laws the rest of the product applies.",
       "Los datos de tu organización: sus jurisdicciones de actividad, el equipo y sus funciones, el formulario de recepción de solicitudes. Las jurisdicciones que fijes aquí deciden qué leyes aplica el resto del producto.",
     ),
     firstStep: L(
@@ -295,8 +295,8 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/billing",
     title: L("Billing", "Facturación"),
     purpose: L(
-      "Your subscription and payment details. On the hosted pilot and the self-hosted kit the in-app features are free, so this is only shown where paid billing is turned on.",
-      "Tu suscripción y datos de pago. En el piloto alojado y en el kit autoalojado las funciones de la aplicación son gratuitas, así que esto solo aparece donde la facturación de pago está activada.",
+      "Your subscription and payment details, where paid billing is turned on.",
+      "Tu suscripción y tus datos de pago, donde la facturación de pago está activada.",
     ),
     firstStep: L("Review your plan and payment method.", "Revisa tu plan y tu método de pago."),
     terms: [],

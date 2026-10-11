@@ -36,7 +36,7 @@ export function hexToRgb(hex: string): Rgb {
           .join("")
       : raw.slice(0, 6);
   if (!/^[0-9a-fA-F]{6}$/.test(full)) {
-    throw new Error(`not a hex colour: ${hex}`);
+    throw new Error(`not a hex color: ${hex}`);
   }
   return {
     r: parseInt(full.slice(0, 2), 16),

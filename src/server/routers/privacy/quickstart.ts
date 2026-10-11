@@ -54,6 +54,7 @@ import {
   buildAISystemFromCatalog,
   type VendorCatalogAIFields,
 } from "../../../config/vendor-ai-detection";
+import { recordName, legacyRecordName } from "@/lib/record-name";
 
 // ============================================================
 // HELPERS
@@ -124,7 +125,7 @@ function buildVendorPreview(
     assetType: mapping.asset.type,
     elementCount: mapping.elements.length,
     elements: mapping.elements.map((e) => e.name),
-    activityName: `${mapping.activity.name} — ${catalogVendor.name}`,
+    activityName: recordName(mapping.activity.name, catalogVendor.name),
     isHighRisk: mapping.isHighRisk,
     transfers,
     privacyTechnologies: catalogVendor.privacyTechnologies || [],
@@ -763,9 +764,12 @@ export const quickstartRouter = createTRPCRouter({
             counts.elements += mapping.elements.length;
 
             // Create processing activity for this vendor
-            const activityName = `${mapping.activity.name} — ${catalogVendor.name}`;
+            const activityName = recordName(mapping.activity.name, catalogVendor.name);
+            // An activity created before 11 Oct 2026 carries the older name.
+            const legacyActivityName = legacyRecordName(mapping.activity.name, catalogVendor.name);
             if (
               !existingActivityNames.has(activityName) &&
+              !existingActivityNames.has(legacyActivityName) &&
               !skipActivities.has(activityName)
             ) {
               const activity = await tx.processingActivity.create({
@@ -1199,7 +1203,7 @@ export const quickstartRouter = createTRPCRouter({
           data: { settings: settings as Prisma.InputJsonValue },
         });
       } catch (settingsErr) {
-        console.warn("[quickstart] Could not record the quick start on the organisation:", settingsErr);
+        console.warn("[quickstart] Could not record the quick start on the organization:", settingsErr);
       }
 
       return result;

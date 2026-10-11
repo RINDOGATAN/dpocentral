@@ -165,7 +165,7 @@ export function sourcesAreStale(now: Date = new Date()): boolean {
 }
 
 const CATALOGUE = (entry: string) =>
-  bi(`DPO Central jurisdiction catalogue (${entry})`, `Catálogo de jurisdicciones de DPO Central (${entry})`);
+  bi(`DPO Central jurisdiction catalog (${entry})`, `Catálogo de jurisdicciones de DPO Central (${entry})`);
 const PRIMARY = (en: string, es: string) =>
   bi(
     `Primary source (checked ${SOURCES_CHECKED_LABEL.en}): ${en}`,
@@ -238,7 +238,7 @@ const DPA_REQUIRED = (entry: string) =>
   ob(bi("Data protection assessment required", "Evaluación de protección de datos obligatoria"), CATALOGUE(entry));
 const UNIVERSAL_OPT_OUT = (entry: string) =>
   ob(
-    bi("Recognise universal opt-out mechanisms", "Reconocer los mecanismos universales de exclusión voluntaria"),
+    bi("Recognize universal opt-out mechanisms", "Reconocer los mecanismos universales de exclusión voluntaria"),
     CATALOGUE(entry)
   );
 
@@ -255,8 +255,8 @@ const HEALTH_DATA_LAW = (code: "WA" | "NV"): Obligation[] => {
     ob(
       bi(
         wa
-          ? "A valid authorisation signed by the consumer before any sale, naming the data, the seller and each purchaser, and expiring after one year"
-          : "The consumer's written authorisation, with the prescribed contents, before any sale of consumer health data",
+          ? "A valid authorization signed by the consumer before any sale, naming the data, the seller and each purchaser, and expiring after one year"
+          : "The consumer's written authorization, with the prescribed contents, before any sale of consumer health data",
         wa
           ? "Una autorización válida firmada por el consumidor antes de cualquier venta, que identifique los datos, al vendedor y a cada comprador, y que caduque al cabo de un año"
           : "La autorización escrita del consumidor, con el contenido exigido, antes de cualquier venta de sus datos de salud"
@@ -333,7 +333,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
   },
   WA: {
     consentModel: bi(
-      "Opt-in: consent to collect, separate consent to share (RCW 19.373.030); signed authorisation to sell (RCW 19.373.070)",
+      "Opt-in: consent to collect, separate consent to share (RCW 19.373.030); signed authorization to sell (RCW 19.373.070)",
       "Consentimiento previo: para recoger y otro distinto para compartir (RCW 19.373.030); autorización firmada para vender (RCW 19.373.070)"
     ),
     consentToVerify: false,
@@ -341,7 +341,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
   },
   NV: {
     consentModel: bi(
-      "Opt-in: consent to collect, separate consent to share (NRS 603A.500); written authorisation to sell (NRS 603A.535)",
+      "Opt-in: consent to collect, separate consent to share (NRS 603A.500); written authorization to sell (NRS 603A.535)",
       "Consentimiento previo: para recoger y otro distinto para compartir (NRS 603A.500); autorización escrita para vender (NRS 603A.535)"
     ),
     consentToVerify: false,
@@ -467,7 +467,7 @@ function findingsFor(
     if (yesNo(answers, "hd8_1") === false)
       out.push(f("gap", "Consent to collect and to share consumer health data is not obtained.", "No se obtiene el consentimiento para recoger y compartir datos de salud del consumidor."));
     if (yesNo(answers, "hd8_2") === false)
-      out.push(f("blocking", "Consumer health data is sold without a signed authorisation.", "Se venden datos de salud del consumidor sin autorización firmada."));
+      out.push(f("blocking", "Consumer health data is sold without a signed authorization.", "Se venden datos de salud del consumidor sin autorización firmada."));
     if (yesNo(answers, "hd8_3") === true)
       out.push(f("blocking", "Geofencing around health care facilities is prohibited.", "Las geovallas alrededor de centros sanitarios están prohibidas."));
   }

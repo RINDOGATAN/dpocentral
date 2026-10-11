@@ -55,7 +55,7 @@ export async function availableSlug(
   }
   throw new TRPCError({
     code: "CONFLICT",
-    message: "This organisation could not be created. Please try again with a slightly different name.",
+    message: "This organization could not be created. Please try again with a slightly different name.",
   });
 }
 

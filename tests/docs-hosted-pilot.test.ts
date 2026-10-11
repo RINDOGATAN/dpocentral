@@ -51,8 +51,10 @@ describe("the hosted pilot documentation", () => {
       }
       expect(s.window).toContain("{days}");
       expect(s.assessments).toContain("{assessments}");
-      // Owner, 10 Oct 2026: a paid plan or a managed instance; no "no safeguards" line.
-      expect(s.intro).toMatch(locale === "es" ? /Para datos reales, elige un plan de pago o una instancia gestionada\./ : /For real data, choose a paid plan or a managed instance\./);
+      // Owner, 11 Oct 2026 (consistency review DPC-1): the intro names test records and the limits only;
+      // the next paragraph ("run") carries the paid plan and the quotation. No "no safeguards" line.
+      expect(s.intro).toMatch(locale === "es" ? /registros de prueba, dentro de los límites/ : /test records, within the limits set out below\./);
+      expect(s.intro).not.toMatch(/For real data|Para datos reales|capped|con límites/);
       // The paid plan lifts the limits; the prices stay on the pricing page, never in the app.
       expect(s.run).toMatch(locale === "es" ? /plan de pago/ : /paid plan/);
       expect(s.run).not.toMatch(/[€$]\s?\d|\d\s?[€$]/);

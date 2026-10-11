@@ -6253,7 +6253,7 @@
       "heroSubtitle": "Un único lugar para llevar un programa de privacidad: inventario de datos, ejercicio de derechos, evaluaciones, incidentes y proveedores. Para despachos y consultores que llevan los programas de sus clientes, y para equipos internos.",
       "hostedPilot": {
         "title": "Piloto alojado",
-        "intro": "Piloto alojado: gratuito y con límites, para probar el producto con registros de prueba. Los límites se detallan a continuación. Para datos reales, elige un plan de pago o una instancia gestionada.",
+        "intro": "Piloto alojado: gratuito, para probar el producto con registros de prueba, dentro de los límites que se detallan a continuación.",
         "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
         "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
