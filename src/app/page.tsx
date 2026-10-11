@@ -47,8 +47,12 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 
 export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {
   const session = await getServerSession(authOptions);
+  const { lang } = await searchParams;
 
-  if (session) {
+  // A signed-in visitor goes to the application, unless the address asks for
+  // the landing in a language (`?lang=`): the in-app pilot bar's "See
+  // pricing" link opens the landing's pricing block that way.
+  if (session && !lang) {
     redirect("/privacy");
   }
 

@@ -1,9 +1,11 @@
 /**
- * The end-of-pilot bar (owner, 11 Oct 2026), which replaced the warning
- * banner. It is shown only once a person is signed in: the dashboard layout
- * mounts it at the top (src/components/pilot/pilot-shell.tsx,
- * SignedInPilotBanner). Nothing for most of the pilot; in the last five days
- * the end date and a link to the prices; once read-only, that the export
+ * The pilot bar (owner, 11 Oct 2026, second version). It is shown only once a
+ * person is signed in: the dashboard layout mounts it at the top
+ * (src/components/pilot/pilot-shell.tsx, SignedInPilotBanner). For the whole
+ * pilot, the free window, its end date and the Cloud Plan's price in the
+ * reader's currency, with a link to the landing's pricing block; a pilot
+ * begun before the window was shortened reads "Free until {date}"; in the
+ * last five days the stronger end wording; once read-only, that the export
  * stays open. Never for an organisation on the paid plan, never on the kit.
  * The root layout's PilotShell carries no bar, so the landing page, the
  * documentation and the sign-in screen show none. The quiet pilot sentence
@@ -94,11 +96,12 @@ const hosted = () => vi.stubEnv("VERCEL_ENV", "production");
 
 const DAY = 24 * 60 * 60 * 1000;
 const inDays = (days: number) => new Date(Date.now() + days * DAY);
-const pilotStatus = (endsAt: Date | null, readOnly = false) => ({
+const pilotStatus = (endsAt: Date | null, readOnly = false, transition = false) => ({
   hosted: true as const,
   paid: false as const,
   endsAt,
   readOnly,
+  transition,
 });
 
 afterEach(() => {
@@ -113,10 +116,11 @@ describe("when the bar shows", () => {
   const now = new Date("2026-10-20T12:00:00Z");
   const at = (days: number) => new Date(now.getTime() + days * DAY);
 
-  it("is hidden for most of the pilot, shown in the last five days, read-only after", () => {
+  it("shows the trial for the whole pilot, the end wording in the last five days, read-only after", () => {
     expect(PILOT_END_BAR_DAYS).toBe(5);
-    expect(pilotEndBarState(pilotStatus(at(14)), now)).toBe("hidden");
-    expect(pilotEndBarState(pilotStatus(at(5.01)), now)).toBe("hidden");
+    expect(pilotEndBarState(pilotStatus(at(15)), now)).toBe("trial");
+    expect(pilotEndBarState(pilotStatus(at(14)), now)).toBe("trial");
+    expect(pilotEndBarState(pilotStatus(at(5.01)), now)).toBe("trial");
     expect(pilotEndBarState(pilotStatus(at(5)), now)).toBe("ending");
     expect(pilotEndBarState(pilotStatus(at(0.1)), now)).toBe("ending");
     expect(pilotEndBarState(pilotStatus(at(-1), true), now)).toBe("readOnly");
@@ -133,14 +137,72 @@ describe("when the bar shows", () => {
 });
 
 describe("the bar on signed-in pages", () => {
-  it("shows nothing for most of the pilot, and no warning text", async () => {
+  it("shows the free window, its end date and the Cloud Plan's price for the whole pilot, in English (dollars)", async () => {
     hosted();
-    mocks.status = pilotStatus(inDays(10));
-    for (const locale of ["en", "es"] as const) {
-      const html = await renderSignedIn(locale);
-      expect(html).toBe("<main>page</main>");
-      expect(html).not.toMatch(/Hosted pilot|For real data|Run your own instance|Piloto alojado/);
+    vi.useFakeTimers({ now: new Date("2026-10-13T09:00:00Z"), toFake: ["Date"] });
+    try {
+      mocks.status = pilotStatus(new Date("2026-10-28T09:00:00Z"));
+      const html = await renderSignedIn("en");
+      expect(html).toContain('data-state="trial"');
+      expect(html).toContain(
+        "Free for 15 days, until 28 October 2026. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year."
+      );
+      expect(html).toContain('href="/?lang=en#pricing"');
+      expect(html).toContain(">See pricing</a>");
+      expect(html).toContain('data-testid="pilot-end-bar-dismiss"');
+      expect(html.indexOf("pilot-end-bar")).toBeLessThan(html.indexOf("<main>"));
+      expect(html).not.toMatch(/€|\bEUR\b|\bEU\b|[\u2013\u2014]/);
+    } finally {
+      vi.useRealTimers();
     }
+  });
+
+  it("shows the free window and the Plan nube UE's price for the whole pilot, in Castilian (euros)", async () => {
+    hosted();
+    vi.useFakeTimers({ now: new Date("2026-10-13T09:00:00Z"), toFake: ["Date"] });
+    try {
+      mocks.status = pilotStatus(new Date("2026-10-28T09:00:00Z"));
+      const html = await renderSignedIn("es");
+      expect(html).toContain(
+        "Gratis durante 15 días, hasta el 28 de octubre de 2026. Después, exporta tu programa o sigue con el Plan nube UE: 179 € al mes o 1.800 € al año."
+      );
+      expect(html).toContain('href="/?lang=es#precios"');
+      expect(html).toContain(">Ver precios</a>");
+      expect(html).not.toMatch(/\$|\bUSD\b|\busted\b|[\u2013\u2014]/);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("tells a pilot begun before the shorter window its real end date, without '15 days', in both languages", async () => {
+    hosted();
+    vi.useFakeTimers({ now: new Date("2026-10-13T09:00:00Z"), toFake: ["Date"] });
+    try {
+      mocks.status = pilotStatus(new Date("2026-10-27T00:00:00Z"), false, true);
+      const en = await renderSignedIn("en");
+      expect(en).toContain(
+        "Free until 27 October 2026. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year."
+      );
+      expect(en).not.toContain("15 days");
+      const es = await renderSignedIn("es");
+      expect(es).toContain(
+        "Gratis hasta el 27 de octubre de 2026. Después, exporta tu programa o sigue con el Plan nube UE: 179 € al mes o 1.800 € al año."
+      );
+      expect(es).not.toContain("15 días");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("never says the dollar and euro prices are the same", () => {
+    const all = JSON.stringify(en.pilot.endBar) + JSON.stringify(es.pilot.endBar);
+    expect(all).not.toMatch(/same price|mismo precio|equivalent|equivalente|\$[^"]*€|€[^"]*\$/i);
+  });
+
+  it("shows nothing before the clock starts", async () => {
+    hosted();
+    mocks.status = pilotStatus(null);
+    expect(await renderSignedIn("en")).toBe("<main>page</main>");
   });
 
   it("gives the end date and the pricing link in the last five days, in English", async () => {
@@ -155,8 +217,10 @@ describe("the bar on signed-in pages", () => {
       expect(html).toContain(
         "Your pilot ends on 26 October 2026. Move to the paid plan to keep editing with all your records."
       );
-      expect(html).toContain('href="https://www.todo.law/pricing"');
+      expect(html).toContain('href="/?lang=en#pricing"');
       expect(html).toContain(">See pricing</a>");
+      // The stronger bar cannot be closed.
+      expect(html).not.toContain("pilot-end-bar-dismiss");
       // At the top of the signed-in page, before the application itself.
       expect(html.indexOf("pilot-end-bar")).toBeLessThan(html.indexOf("<main>"));
       expect(html).not.toMatch(/Hosted pilot|For real data|managed instance|Run your own instance/);
@@ -175,7 +239,7 @@ describe("the bar on signed-in pages", () => {
       expect(html).toContain(
         "Tu piloto termina el 26 de octubre de 2026. Pasa al plan de pago para seguir editando con todos tus registros."
       );
-      expect(html).toContain('href="https://www.todo.law/es/precios"');
+      expect(html).toContain('href="/?lang=es#precios"');
       expect(html).toContain(">Ver precios</a>");
       expect(html).not.toMatch(/Piloto alojado|datos reales|instancia gestionada|\busted\b/);
     } finally {
@@ -191,13 +255,13 @@ describe("the bar on signed-in pages", () => {
     expect(en).toContain(
       "Your pilot has ended: the organization is read-only and you can export it at any time."
     );
-    expect(en).toContain('href="https://www.todo.law/pricing"');
+    expect(en).toContain('href="/?lang=en#pricing"');
     expect(en).toContain(">See pricing</a>");
     const es = await renderSignedIn("es");
     expect(es).toContain(
       "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras."
     );
-    expect(es).toContain('href="https://www.todo.law/es/precios"');
+    expect(es).toContain('href="/?lang=es#precios"');
     expect(es).toContain(">Ver precios</a>");
   });
 

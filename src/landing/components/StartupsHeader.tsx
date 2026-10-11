@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { BrandLogo, BrandName } from "@/components/brand-mark";
 import { storefrontLogoLabel, storefrontUrl } from "../config/storefront";
-import { PRICING_ANCHOR, PRICING_COPY, pricingShownFor } from "../config/pricing";
+import { PRICING_ANCHOR, PRICING_COPY } from "../config/pricing";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -45,12 +45,10 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
   }, [isMenuOpen]);
 
   const menuLabel = t(isMenuOpen ? "header.menuClose" : "header.menuOpen");
-  // "Pricing" / "Precios", to the landing's pricing section: the last link
+  // "Pricing" / "Precios", to the landing's pricing block: the last link
   // before the language switch, as on the other suite landings (owner, 11 Oct 2026).
   const pricingHref = `#${PRICING_ANCHOR[locale]}`;
   const pricingLabel = PRICING_COPY[locale].nav;
-  // Only where the section is shown (PRICING_SECTION_LOCALES).
-  const showPricing = pricingShownFor(locale);
 
   return (
     <header ref={headerRef} className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
@@ -75,15 +73,13 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            {showPricing && (
-              <a
-                href={pricingHref}
-                data-testid="nav-pricing"
-                className="px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {pricingLabel}
-              </a>
-            )}
+            <a
+              href={pricingHref}
+              data-testid="nav-pricing"
+              className="px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {pricingLabel}
+            </a>
             <button
               type="button"
               onClick={onLocaleToggle}
@@ -115,16 +111,14 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
         {isMenuOpen && (
           <div id={MENU_ID} className="md:hidden py-4 px-2 border-t border-border">
             <div className="flex flex-col gap-3">
-              {showPricing && (
-                <a
-                  href={pricingHref}
-                  onClick={closeMenu}
-                  data-testid="nav-pricing-phone"
-                  className="text-sm font-medium text-foreground px-2 py-2"
-                >
-                  {pricingLabel}
-                </a>
-              )}
+              <a
+                href={pricingHref}
+                onClick={closeMenu}
+                data-testid="nav-pricing-phone"
+                className="text-sm font-medium text-foreground px-2 py-2"
+              >
+                {pricingLabel}
+              </a>
               <button
                 type="button"
                 lang={locale === "en" ? "es" : "en"}

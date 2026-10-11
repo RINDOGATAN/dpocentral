@@ -33,8 +33,8 @@ export default async function DashboardLayout({
 
   return (
     <>
-      {/* The end-of-pilot bar, only once a person is signed in, and only in
-          the pilot's last days or once it is read-only. */}
+      {/* The pilot bar, only once a person is signed in: for the whole pilot,
+          the stronger wording in its last days, and once it is read-only. */}
       <SignedInPilotBanner />
       <DashboardShell menuCollapsed={menuCollapsed}>
         {children}
