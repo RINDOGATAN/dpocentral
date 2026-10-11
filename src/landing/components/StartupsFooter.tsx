@@ -29,13 +29,13 @@ const StartupsFooter = ({ t, locale }: StartupsFooterProps) => {
 
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a
-              href="https://todo.law/privacy"
+              href={locale === "es" ? "https://todo.law/es/privacy" : "https://todo.law/privacy"}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("footer.privacy")}
             </a>
             <a
-              href="https://todo.law/terms"
+              href={locale === "es" ? "https://todo.law/es/terms" : "https://todo.law/terms"}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("footer.terms")}

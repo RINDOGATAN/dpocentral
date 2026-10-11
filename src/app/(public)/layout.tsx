@@ -31,7 +31,7 @@ function JsonLd() {
         offers: {
           "@type": "Offer",
           price: "0",
-          priceCurrency: "EUR",
+          priceCurrency: "USD",
           description: "Free hosted pilot with limits. The core is open source under AGPL-3.0.",
         },
         creator: {
