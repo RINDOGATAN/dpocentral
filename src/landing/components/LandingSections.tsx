@@ -32,10 +32,8 @@ import {
   Compass,
   Database,
   ExternalLink,
-  GraduationCap,
   HardDrive,
   Mail,
-  Package,
   Scale,
   Server,
   ShieldCheck,
@@ -52,8 +50,6 @@ import SafeguardsGuide from "./SafeguardsGuide";
 
 type T = (key: string) => string;
 
-/** The public kit that installs the suite with Docker. */
-export const KIT_URL = "https://github.com/RINDOGATAN/todolaw-suite";
 
 type WayAction = "none" | "mail" | "link";
 
@@ -83,12 +79,12 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
   },
   en: {
     bullets: { ais: 4, dpc: 5, vw: 3 },
+    // Three ways, as in Spanish (owner, 10 Oct 2026): the kit and the Box stay on the
+    // storefront's Run it your way page only.
     ways: [
       { icon: Cloud, action: "none" },
-      { icon: Package, action: "link", href: KIT_URL },
-      { icon: HardDrive, action: "mail" },
       { icon: Server, action: "mail" },
-      { icon: GraduationCap, action: "mail" },
+      { icon: HardDrive, action: "mail" },
     ],
     captionsLang: "en",
     // No customer logos on the English page.

@@ -45,18 +45,18 @@ type Level = 0 | 1 | 2;
 
 /**
  * The position of each way among this landing's ways boxes, per language
- * (LandingSections SETUP: Spanish cloud, managed, own installation; English
- * cloud, kit, hardware, managed, deployment), so the result marks its box.
+ * (LandingSections SETUP: cloud, managed, own hardware in both languages since
+ * 10 Oct 2026), so the result marks its box.
  */
 export const WAY_INDEX: Record<Locale, Partial<Record<WayId, number>>> = {
   es: { cloud: 0, managed: 1, deploy: 2 },
-  en: { cloud: 0, kit: 1, box: 2, managed: 3, deploy: 4 },
+  en: { cloud: 0, managed: 1, deploy: 2 },
 };
 
 /** Lightest to strictest: "one step stricter / lighter" follows this order. */
 export const LADDER: Record<Locale, WayId[]> = {
   es: ["cloud", "managed", "deploy"],
-  en: ["cloud", "managed", "kit", "deploy", "box"],
+  en: ["cloud", "managed", "deploy"],
 };
 
 type Option = { value: string; level: Level; only?: Locale; /** A different level in one market (Spanish "real": the Plan nube UE accepts real data). */ levelIn?: Partial<Record<Locale, Level>> };
@@ -145,9 +145,6 @@ export function pickWay(answers: Answers, locale: Locale): WayId {
   const level = levelOf(answers, locale);
   if (level === 0) return "cloud";
   if (level === 1) return "managed";
-  if (locale === "es") return "deploy";
-  if (answers.it === "yes") return "kit";
-  if (answers.it === "no" && (answers.loc === "office" || answers.ai === "local")) return "box";
   return "deploy";
 }
 
@@ -243,8 +240,6 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
   en: {
     names: {
       cloud: "In the TODO.LAW cloud",
-      kit: "The self-install kit",
-      box: "TODO.LAW hardware",
       managed: "Managed virtual server",
       deploy: "Your own hardware",
     },
@@ -271,7 +266,7 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
     seeResult: "See the result",
     whyH: "Why this matters",
     whyP:
-      "Many tools with built-in AI send your text to an external AI provider. Here you choose. AI features are off until an administrator turns them on, and while they are off the product makes no AI calls at all. On a managed instance, on your own servers or on TODO.LAW hardware, AI features can use open-weight models hosted there, so the text does not leave that system.",
+      "Many tools with built-in AI send your text to an external AI provider. Here you choose. AI features are off until an administrator turns them on, and while they are off the product makes no AI calls at all. On a managed instance or on your own hardware, AI features can use open-weight models hosted there, so the text does not leave that system.",
     questions: {
       loc: {
         label: "Where must your data stay?",

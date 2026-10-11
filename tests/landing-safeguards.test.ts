@@ -163,38 +163,27 @@ describe("level 2 in Spain: three ways only", () => {
   });
 });
 
-describe("level 2 in English: five ways", () => {
-  it("leads to the kit with an IT team", () => {
-    expect(pickWay({ loc: "servers", it: "yes" }, "en")).toBe("kit");
-    expect(pickWay({ cert: "yes", it: "yes" }, "en")).toBe("kit");
-    expect(pickWay({ loc: "office", it: "yes" }, "en")).toBe("kit");
-  });
-
-  it("leads to the Box with no IT team and the office or local models only", () => {
+// Three ways in English too since 10 Oct 2026 (owner): no kit or Box on the landing.
+describe("level 2 in English: three ways, as in Spain", () => {
+  it("leads every strict answer to your own hardware, whatever the IT answer", () => {
     expect(levelOf({ loc: "office" }, "en")).toBe(2);
-    expect(pickWay({ loc: "office", it: "no" }, "en")).toBe("box");
-    // Local models alone now ask only for managed; with the own servers (level 2), still the Box.
+    for (const a of [{ loc: "servers", it: "yes" }, { loc: "servers", it: "no" }, { loc: "office", it: "no" }, { cert: "yes", it: "yes" }, { loc: "servers" }] as const) {
+      expect(pickWay(a, "en")).toBe("deploy");
+    }
+    // Local models alone ask only for managed.
     expect(pickWay({ ai: "local", it: "no" }, "en")).toBe("managed");
-    expect(pickWay({ loc: "servers", ai: "local", it: "no" }, "en")).toBe("box");
-  });
-
-  it("leads to the deployment with no IT team otherwise, or when the IT question is unanswered", () => {
-    expect(pickWay({ loc: "servers", it: "no" }, "en")).toBe("deploy");
-    expect(pickWay({ cert: "yes", it: "no" }, "en")).toBe("deploy");
-    expect(pickWay({ loc: "servers" }, "en")).toBe("deploy");
-    expect(pickWay({ loc: "office" }, "en")).toBe("deploy");
+    expect(LADDER.en).toEqual(["cloud", "managed", "deploy"]);
   });
 
   it("lists the safeguards each neighbour would not meet", () => {
     const r = recommend({ loc: "servers", it: "no", data: "real" }, "en")!;
     expect(r.way).toBe("deploy");
     expect(r.checks.every((c) => c.met)).toBe(true);
-    expect(r.up).toEqual({ way: "box", missing: [] });
-    expect(r.down).toEqual({ way: "kit", missing: ["it:no"] });
+    expect(r.up).toBeNull();
+    expect(r.down?.way).toBe("managed");
     const cloud = recommend({ loc: "any" }, "en")!;
     expect(cloud.down).toBeNull();
     expect(cloud.up?.way).toBe("managed");
-    expect(recommend({ loc: "office", it: "no" }, "en")!.up).toBeNull();
   });
 });
 
@@ -288,7 +277,7 @@ describe("copy rules", () => {
 
   it("leaves the classifier sentence out of the panel", () => {
     for (const l of LOCALES) expect(COPY[l].whyP).not.toMatch(/classifier|clasificador/i);
-    expect(COPY.en.whyP).toMatch(/on TODO\.LAW hardware/);
+    expect(COPY.en.whyP).toMatch(/on your own hardware/);
     expect(COPY.en.whyP).not.toMatch(/the Box/);
     expect(COPY.es.whyP).not.toMatch(/Box/);
   });

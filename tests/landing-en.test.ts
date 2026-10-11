@@ -22,7 +22,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import LandingSections, { KIT_URL } from "@/landing/components/LandingSections";
+import LandingSections from "@/landing/components/LandingSections";
 import { LANDING_VIDEOS, type LandingLocale } from "@/landing/config/videos";
 
 const ROOT = path.resolve(__dirname, "..");
@@ -62,9 +62,8 @@ describe("English copy, after the owner's review", () => {
     }
   });
 
-  it("positions DPO Central as the place to start, calmly and without comparisons", () => {
-    expect(en["en.ways.sub"]).toMatch(/place to start a privacy program/);
-    expect(en["en.ways.sub"]).toMatch(/grows with you/);
+  // The hosting intro is the owner's own line since 10 Oct 2026; no comparisons anywhere.
+  it("positions DPO Central calmly and without comparisons", () => {
     for (const [k, v] of shown) {
       expect(v, k).not.toMatch(/\benterprise\b|replace|instead of|unlike|cheaper|competitor/i);
     }
@@ -124,16 +123,14 @@ describe("English sections", () => {
     }
   });
 
-  it("offer five ways, as on the English storefront", () => {
-    const titles = [1, 2, 3, 4, 5].map((n) => en[`en.ways.w${n}.title`]);
-    expect(titles).toEqual([
-      "In the TODO.LAW cloud",
-      "The self-install kit",
-      "TODO.LAW hardware",
-      "Managed virtual server",
-      "Your own hardware",
-    ]);
-    expect(en["en.ways.w6.title"]).toBeUndefined();
+  // Three ways, as on the English storefront since 10 Oct 2026 (owner): the kit and the Box
+  // stay on the storefront's Run it your way page only.
+  it("offer three ways, as on the English storefront", () => {
+    const titles = [1, 2, 3].map((n) => en[`en.ways.w${n}.title`]);
+    expect(titles).toEqual(["In the TODO.LAW cloud", "Managed virtual server", "Your own hardware"]);
+    expect(en["en.ways.w4.title"]).toBeUndefined();
+    expect(en["en.ways.sub"]).toBe("Three hosting options, with different safeguards, certifications and levels of control.");
+    expect(html).not.toMatch(/self-install kit|TODO\.LAW hardware|Law-Firm-in-a-Box|github\.com\/RINDOGATAN\/todolaw-suite/);
     for (const t of titles) expect(html).toContain(t.replace("&", "&amp;"));
     expect(en["en.ways.label"]).toBe("Guarantees and hosting");
     expect(en["en.ways.heading.prefix"] + en["en.ways.heading.accent"]).toBe("Tailored to your needs");
@@ -141,9 +138,8 @@ describe("English sections", () => {
     expect(en["en.ways.w1.desc"]).toMatch(/take your program elsewhere whenever you like with a simple export/);
   });
 
-  it("ask by email for the Box, the managed instance and the deployment, and link the kit", () => {
-    expect(html.match(/href="mailto:[^"]+"/g)).toHaveLength(3);
-    expect(html).toContain(`href="${KIT_URL}"`);
+  it("ask by email for the managed server and your own hardware", () => {
+    expect(html.match(/href="mailto:[^"]+"/g)).toHaveLength(2);
   });
 
   it("play five videos only on request, with a poster, two formats and English captions", () => {
