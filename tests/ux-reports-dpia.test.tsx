@@ -13,7 +13,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import en from "@/messages/en.json";
@@ -40,11 +39,9 @@ const COMPLETENESS: Completeness = {
 
 function render(locale: "en" | "es", nothingAnswered: boolean) {
   return renderToStaticMarkup(
-    createElement(
-      NextIntlClientProvider,
-      { locale, messages: locale === "en" ? en : es },
-      createElement(CompletenessPanel, { completeness: COMPLETENESS, onJump: () => {}, nothingAnswered })
-    )
+    <NextIntlClientProvider locale={locale} messages={(locale === "en" ? en : es) as never} timeZone="UTC">
+      <CompletenessPanel completeness={COMPLETENESS} onJump={() => {}} nothingAnswered={nothingAnswered} />
+    </NextIntlClientProvider>
   );
 }
 
