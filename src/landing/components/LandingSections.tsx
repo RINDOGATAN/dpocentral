@@ -255,7 +255,6 @@ function Videos({ t, p, setup, videos }: { t: T; p: LandingLocale; setup: Locale
                 <video
                   className="block w-full aspect-video bg-black"
                   controls
-                  muted
                   playsInline
                   preload="none"
                   poster={`${base}.png`}

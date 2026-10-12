@@ -152,6 +152,8 @@ describe("English sections", () => {
     for (const v of videos) {
       expect(v).not.toMatch(/autoplay/i);
       expect(v).toMatch(/preload="none"/);
+      // Narrated: started by the visitor, so it plays with sound.
+      expect(v).not.toMatch(/\smuted(=|\s|>)/);
       expect(v).toMatch(/controls/);
       expect(v).toMatch(/poster="\/videos\/en\/[^"]+\.png"/);
       expect(v).toMatch(/<track[^>]*kind="captions"[^>]*srclang="en"/i);
