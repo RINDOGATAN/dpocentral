@@ -7,7 +7,9 @@
  * one simple block in both languages, matching the storefront home's (a
  * left-aligned title over a short "Product | Price" table): one row (what is
  * offered | what it costs), the "Start free" button and a small "Subscribe"
- * link, then one quiet line to the contact wizard.
+ * link, then one quiet line to the contact wizard. Under the price row, one
+ * small line links the plan's terms and sub-processors (same tab); the block
+ * says nothing about tax.
  * Copy and links: src/landing/config/pricing.ts. The same component, copy
  * and classes are on AI Sentinel's landing.
  *
@@ -20,6 +22,7 @@ import {
   PRICING_ANCHOR,
   PRICING_CONTACT_URL,
   PRICING_COPY,
+  PRICING_LEGAL_URL,
   PRICING_PILOT_DAYS,
 } from "../config/pricing";
 import type { LandingLocale } from "../config/storefront";
@@ -29,6 +32,8 @@ const CELL = "block sm:table-cell px-5 sm:px-6 align-top text-left";
 
 export default function PricingSection({ locale }: { locale: LandingLocale }) {
   const c = PRICING_COPY[locale];
+  const legal = PRICING_LEGAL_URL[locale];
+  const quiet = "underline underline-offset-4 hover:text-foreground transition-colors";
   const anchor = PRICING_ANCHOR[locale];
   const other = PRICING_ANCHOR[locale === "en" ? "es" : "en"];
   return (
@@ -67,6 +72,15 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
               </tr>
             </tbody>
           </table>
+          <p className="px-5 sm:px-6 pb-4 sm:-mt-2 text-xs text-muted-foreground font-body" data-testid="pricing-legal">
+            <a href={legal.terms} className={quiet} data-testid="pricing-terms">
+              {c.legal.terms}
+            </a>
+            <span aria-hidden="true"> · </span>
+            <a href={legal.subprocessors} className={quiet} data-testid="pricing-subprocessors">
+              {c.legal.subprocessors}
+            </a>
+          </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border px-5 sm:px-6 py-5">
             <a href="/sign-in" className="btn-primary" data-testid="pricing-start">
               {c.start}
