@@ -196,7 +196,8 @@ describe("who sees the welcome card", () => {
     const create = (userId: string) =>
       (callerFor(organizationRouter, sessionFor(userId)) as ReturnType<
         typeof organizationRouter.createCaller
-      >).create({ name: "Nueva", slug: "nueva" });
+      // The hosted pilot asks for the data processing agreement (src/config/pilot-dpa.ts).
+      >).create({ name: "Nueva", slug: "nueva", acceptDpa: true });
 
     await create("creator");
     expect(mocks.prisma.organization.create.mock.calls[0][0].data.welcomeUserId).toBe("creator");

@@ -79,7 +79,8 @@
     "orgNamePlaceholder": "ex., Acme Corporation",
     "createOrganization": "Creer l'organisation",
     "creating": "Creation...",
-    "switchOrg": "Changer d'organisation"
+    "switchOrg": "Changer d'organisation",
+    "dpaAccept": "J'accepte l'<link>accord de traitement des données</link> (version {version}) pour cette organisation. Il couvre le pilote gratuit et l'EU Cloud Plan."
   },
   "dashboard": {
     "title": "Tableau de bord confidentialite",
