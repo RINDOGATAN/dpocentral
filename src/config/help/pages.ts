@@ -160,9 +160,11 @@ export const PAGE_HELP: PageHelp[] = [
     route: "/privacy/dsar",
     title: L("Rights requests", "Solicitudes de derechos"),
     purpose: L(
-      "The requests people make to use their data protection rights, with the clock each law puts on answering them. Under the GDPR you have one month; a public intake form lets people reach you directly.",
-      "Las solicitudes que hacen las personas para ejercer sus derechos de protección de datos, con el plazo que cada ley marca para responderlas. En el RGPD dispones de un mes; un formulario público de recepción permite que las personas te contacten directamente.",
+      "The requests people make to use their data protection rights, with the clock each law puts on answering them. The deadlines of the laws your organization has declared are listed below; a public intake form lets people reach you directly.",
+      "Las solicitudes que hacen las personas para ejercer sus derechos de protección de datos, con el plazo que cada ley marca para responderlas. Abajo tienes los plazos de las leyes que ha declarado tu organización; un formulario público de recepción permite que las personas te contacten directamente.",
     ),
+    // The deadline of each law the organisation declared, read live.
+    deadlines: "dsar",
     firstStep: L(
       "Set up your intake form in Settings, then record and answer each request within the deadline.",
       "Configura tu formulario de recepción en Configuración y luego registra y responde cada solicitud dentro del plazo.",

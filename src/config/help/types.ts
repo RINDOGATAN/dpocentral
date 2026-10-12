@@ -36,4 +36,9 @@ export interface PageHelp {
   docs: HelpDocLink[];
   /** Links to the official legal text, where the page enforces one. */
   official: OfficialLink[];
+  /**
+   * A section listing a deadline of each law the organisation declared:
+   * "dsar" for the answer period of rights requests.
+   */
+  deadlines?: "dsar";
 }

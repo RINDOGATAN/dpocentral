@@ -18,9 +18,15 @@
  * Pure functions only: no database, no server imports, safe in the browser.
  */
 
-import { addDays, addMonths } from "date-fns";
+import { addBusinessDays, addDays, addMonths } from "date-fns";
 
-export type DeadlineUnit = "days" | "months";
+/**
+ * "businessDays" counts Monday to Friday only. Public holidays are not
+ * skipped (the CCPA regulations do not define how business days are
+ * counted), so a due date in business days can only come earlier than the
+ * law's, never later.
+ */
+export type DeadlineUnit = "days" | "months" | "businessDays";
 
 export interface DeadlinePeriod {
   amount: number;
@@ -36,9 +42,31 @@ export interface DsarDeadlineRule {
 
 /** Add a period to a date (calendar months clamp to the end of the month). */
 export function addPeriod(date: Date, period: DeadlinePeriod): Date {
-  return period.unit === "months"
-    ? addMonths(date, period.amount)
-    : addDays(date, period.amount);
+  if (period.unit === "months") return addMonths(date, period.amount);
+  if (period.unit === "businessDays") return addBusinessDays(date, period.amount);
+  return addDays(date, period.amount);
+}
+
+/**
+ * CCPA requests that run on their own clock, whatever the organisation's
+ * other laws: a request to opt out of sale or sharing (Cal. Code Regs.,
+ * tit. 11, 7026(f)(1)) and a request to limit the use of sensitive personal
+ * information (7027(g)(1)) are complied with as soon as feasibly possible and
+ * no later than 15 business days from receipt. The regulations give no
+ * extension for either.
+ */
+export const CCPA_FIFTEEN_BUSINESS_DAY_TYPES = ["OPT_OUT_SALE_SHARING", "LIMIT_SENSITIVE_PI"] as const;
+
+export const CCPA_FIFTEEN_BUSINESS_DAY_RULE: DsarDeadlineRule = {
+  deadline: { amount: 15, unit: "businessDays" },
+  extension: null,
+};
+
+/** The rule a request of `type` runs under, given the organisation's rule. */
+export function dsarRuleForType(type: string, orgRule: DsarDeadlineRule): DsarDeadlineRule {
+  return (CCPA_FIFTEEN_BUSINESS_DAY_TYPES as readonly string[]).includes(type)
+    ? CCPA_FIFTEEN_BUSINESS_DAY_RULE
+    : orgRule;
 }
 
 /** Due date of a request received at `receivedAt` under `rule`. */

@@ -33,6 +33,7 @@ import { HELP_GUIDES } from "@/config/help/guide-links";
 import { setIntroCookie } from "@/lib/help-intro";
 import { useContentLocale } from "@/lib/content-locale";
 import { features } from "@/config/features";
+import { LawDeadlines } from "./law-deadlines";
 
 export function PageHelpButton() {
   const pathname = usePathname();
@@ -77,6 +78,12 @@ export function PageHelpButton() {
           <Section heading={t("firstStep")}>
             <p className="text-muted-foreground leading-relaxed">{help.firstStep[locale]}</p>
           </Section>
+
+          {help.deadlines === "dsar" && (
+            <Section heading={t("deadlines.heading")}>
+              <LawDeadlines locale={locale} />
+            </Section>
+          )}
 
           {terms.length > 0 && (
             <Section heading={t("terms")}>

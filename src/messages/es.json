@@ -2295,7 +2295,9 @@
         "ERASURE": "Supresión",
         "PORTABILITY": "Portabilidad",
         "OBJECTION": "Oposición",
-        "RESTRICTION": "Limitación"
+        "RESTRICTION": "Limitación",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
       },
       "status": {
         "SUBMITTED": "Recibida",
@@ -2812,7 +2814,9 @@
       "RESTRICTION": "Limitación",
       "AUTOMATED_DECISION": "Decisión automatizada",
       "WITHDRAW_CONSENT": "Retirada del consentimiento",
-      "OTHER": "Otro"
+      "OTHER": "Otro",
+      "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+      "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
     },
     "dsarStatus": {
       "SUBMITTED": "Recibida",
@@ -3375,7 +3379,9 @@
         "RESTRICTION": "Solicitud de limitación del tratamiento",
         "AUTOMATED_DECISION": "Revisión de decisión automatizada",
         "WITHDRAW_CONSENT": "Retirada del consentimiento",
-        "OTHER": "Solicitud del interesado"
+        "OTHER": "Solicitud del interesado",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
       },
       "withdraw": {
         "button": "Retirar esta solicitud",
@@ -4468,7 +4474,9 @@
         "RESTRICTION": "Limitación del tratamiento",
         "WITHDRAW_CONSENT": "Retirada del consentimiento",
         "AUTOMATED_DECISION": "Revisión de decisión automatizada",
-        "OTHER": "Otros"
+        "OTHER": "Otros",
+        "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
       }
     },
     "breachRegister": {
@@ -5973,7 +5981,7 @@
           "breach": {
             "label": "Notificaciones de brecha",
             "value": "Automáticas",
-            "subtitle": "72 h, sin demora indebida o personalizado"
+            "subtitle": "72 h, sin dilación indebida o personalizado"
           },
           "monitoring": {
             "label": "Monitorización de cumplimiento",
@@ -9452,7 +9460,20 @@
       "reopen": "Vuelve a abrirlo cuando quieras desde el botón de ayuda."
     },
     "expertsLine": "¿Necesitas ayuda? Hay expertos que pueden ayudarte con la puesta en marcha, el despliegue y el cumplimiento.",
-    "expertsLink": "Buscar un experto"
+    "expertsLink": "Buscar un experto",
+    "deadlines": {
+      "heading": "Plazos de tus leyes",
+      "period": "{law}: {period} desde la recepción.",
+      "periodWithExtension": "{law}: {period} desde la recepción, prorrogable otros {extension}.",
+      "none": "Aún no has declarado ninguna ley: las solicitudes nuevas siguen el mes del RGPD, prorrogable otros dos meses. Declara tus leyes en Qué se te aplica.",
+      "ccpaFifteen": "CCPA: las solicitudes de exclusión de la venta o el intercambio y de limitación del uso de la información personal sensible, lo antes posible y, como máximo, en 15 días hábiles.",
+      "ccpaConfirm": "CCPA: confirma la recepción de una solicitud de saber, eliminar o corregir en un plazo de 10 días hábiles.",
+      "strictest": "Con varias leyes, una solicitud nueva toma el plazo de tu jurisdicción principal o, si no hay ninguna principal, el más breve.",
+      "days": "{count, plural, one {# día} other {# días}}",
+      "months": "{count, plural, one {# mes} other {# meses}}",
+      "businessDays": "{count, plural, one {# día hábil} other {# días hábiles}}",
+      "loading": "Leyendo tus leyes..."
+    }
   },
   "portfolio": {
     "title": "Todos los clientes",
@@ -10207,5 +10228,32 @@
       "incident": "Incidentes",
       "request": "Solicitudes de derechos"
     }
+  },
+  "ccpaRequests": {
+    "groupCcpa": "California (CCPA)",
+    "groupOther": "RGPD y otras leyes",
+    "clockNote": "El plazo de 45 días empieza el día en que se recibe la solicitud, aunque se esté verificando la identidad. Confirma la recepción en un plazo de 10 días hábiles e indica cómo se tramitará la solicitud y cuándo cabe esperar respuesta.",
+    "know": {
+      "label": "Derecho a saber",
+      "desc": "Qué información personal ha recogido, usado, vendido o compartido la empresa sobre el consumidor, incluidos los datos concretos."
+    },
+    "delete": {
+      "label": "Derecho de eliminación",
+      "desc": "Eliminar la información personal que la empresa ostenta sobre el consumidor."
+    },
+    "correct": {
+      "label": "Derecho de corrección",
+      "desc": "Corregir la información personal inexacta que la empresa conserva sobre el consumidor."
+    },
+    "clock45": "45 días naturales desde la recepción; prorrogable una vez por otros 45 días cuando sea razonablemente necesario, si se informa al consumidor dentro de los primeros 45.",
+    "optOut": {
+      "label": "Excluirse de la venta o el intercambio",
+      "desc": "Dejar de vender o compartir la información personal del consumidor. La empresa no puede exigir una solicitud verificable del consumidor."
+    },
+    "limit": {
+      "label": "Limitar el uso de la información personal sensible",
+      "desc": "Limitar el uso y la comunicación de la información personal sensible del consumidor. La empresa no puede exigir una solicitud verificable del consumidor."
+    },
+    "clock15": "Lo antes posible y, como máximo, en 15 días hábiles desde la recepción; sin prórroga."
   }
 }

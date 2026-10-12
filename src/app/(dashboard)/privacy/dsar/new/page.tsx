@@ -30,6 +30,21 @@ import { DSARType } from "@prisma/client";
 
 const TYPE_KEYS: DSARType[] = ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY", "OBJECTION", "RESTRICTION"];
 
+/**
+ * The California (CCPA) requests, shown when the organisation declared the
+ * CCPA. Know, delete and correct are stored as ACCESS, ERASURE and
+ * RECTIFICATION and run on the organisation's deadline (45 days for the CCPA
+ * alone); opt-out and limit have their own type and 15-business-day clock
+ * (src/lib/dsar-deadline.ts, dsarRuleForType).
+ */
+const CCPA_CARDS = [
+  { key: "ccpa-know", type: "ACCESS", text: "know", clock: "clock45" },
+  { key: "ccpa-delete", type: "ERASURE", text: "delete", clock: "clock45" },
+  { key: "ccpa-correct", type: "RECTIFICATION", text: "correct", clock: "clock45" },
+  { key: "ccpa-optout", type: "OPT_OUT_SALE_SHARING", text: "optOut", clock: "clock15" },
+  { key: "ccpa-limit", type: "LIMIT_SENSITIVE_PI", text: "limit", clock: "clock15" },
+] as const satisfies ReadonlyArray<{ key: string; type: DSARType; text: string; clock: string }>;
+
 const RELATIONSHIP_OPTIONS = [
   "Customer",
   "Employee",
@@ -48,6 +63,16 @@ export default function NewDSARRequestPage() {
   const tp = useTranslations("pages.newDsar");
   const tCommon = useTranslations("common");
   const tModule = useTranslations("dsarModule");
+  const tCcpa = useTranslations("ccpaRequests");
+  const [card, setCard] = useState<string>("");
+  // The laws the organisation declared decide which requests are offered.
+  const { data: applied } = trpc.regulations.listApplied.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id }
+  );
+  const codes = (applied?.jurisdictions ?? []).map((j) => j.code).filter((c) => c !== "EU_AI_ACT");
+  const hasCcpa = codes.includes("CCPA");
+  const hasOtherLaw = codes.length === 0 || codes.some((c) => c !== "CCPA");
   const canAdd = useDsarCanAddRequests();
 
   const [form, setForm] = useState({
@@ -135,23 +160,60 @@ export default function NewDSARRequestPage() {
             <CardDescription>{tp("type.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {TYPE_KEYS.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setForm({ ...form, type: value })}
-                  className={`text-left p-4 border transition-colors ${
-                    form.type === value
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <p className="font-medium text-sm">{tp(`type.${value}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{tp(`type.${value}_desc` as `type.ACCESS_desc` | `type.RECTIFICATION_desc` | `type.ERASURE_desc` | `type.PORTABILITY_desc` | `type.OBJECTION_desc` | `type.RESTRICTION_desc`)}</p>
-                </button>
-              ))}
-            </div>
+            {hasCcpa && (
+              <div className="space-y-3" data-testid="dsar-ccpa-types">
+                <div>
+                  <p className="text-sm font-medium">{tCcpa("groupCcpa")}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{tCcpa("clockNote")}</p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {CCPA_CARDS.map((c) => (
+                    <button
+                      key={c.key}
+                      type="button"
+                      onClick={() => {
+                        setCard(c.key);
+                        setForm({ ...form, type: c.type });
+                      }}
+                      aria-pressed={card === c.key}
+                      className={`text-left p-4 border transition-colors ${
+                        card === c.key ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <p className="font-medium text-sm">{tCcpa(`${c.text}.label`)}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{tCcpa(`${c.text}.desc`)}</p>
+                      <p className="text-xs mt-2">{tCcpa(c.clock)}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {hasOtherLaw && (
+              <div className={hasCcpa ? "space-y-3 mt-6" : ""}>
+                {hasCcpa && <p className="text-sm font-medium">{tCcpa("groupOther")}</p>}
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {TYPE_KEYS.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => {
+                        setCard(value);
+                        setForm({ ...form, type: value });
+                      }}
+                      aria-pressed={card === value}
+                      className={`text-left p-4 border transition-colors ${
+                        card === value
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <p className="font-medium text-sm">{tp(`type.${value}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{tp(`type.${value}_desc` as `type.ACCESS_desc` | `type.RECTIFICATION_desc` | `type.ERASURE_desc` | `type.PORTABILITY_desc` | `type.OBJECTION_desc` | `type.RESTRICTION_desc`)}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
