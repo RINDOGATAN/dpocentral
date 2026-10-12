@@ -3,10 +3,10 @@
 -- the subscription returns the organisation to the pilot limits. Additive
 -- only: one nullable column and one index. No data is updated; every existing
 -- organisation reads NULL (a plan set by an operator, never downgraded
--- automatically).
+-- automatically). Idempotent: safe to run again.
 
 -- AlterTable
-ALTER TABLE "organizations" ADD COLUMN     "planStripeSubscriptionId" TEXT;
+ALTER TABLE "organizations" ADD COLUMN IF NOT EXISTS "planStripeSubscriptionId" TEXT;
 
 -- CreateIndex
-CREATE INDEX "organizations_planStripeSubscriptionId_idx" ON "organizations"("planStripeSubscriptionId");
+CREATE INDEX IF NOT EXISTS "organizations_planStripeSubscriptionId_idx" ON "organizations"("planStripeSubscriptionId");

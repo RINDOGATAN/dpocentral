@@ -118,7 +118,6 @@ import {
   assertPilotCapacity,
   assertPilotWritable,
   PILOT_CLOCK_START,
-  PILOT_DAYS,
   type PilotDb,
 } from "@/server/services/pilot/caps";
 
@@ -390,7 +389,8 @@ describe("POST /api/plan/stripe-sync: the end of the subscription", () => {
 describe("the caps lift for an organisation the payment moved", () => {
   it("is read-only and capped before, writable and uncapped after", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date(PILOT_CLOCK_START.getTime() + (PILOT_DAYS + 10) * DAY));
+    // Well past any pilot window (the fifteen-day one and the transition rule alike).
+    vi.setSystemTime(new Date(PILOT_CLOCK_START.getTime() + 400 * DAY));
     const o = org("cmorg1");
     const full = new Proxy({}, { get: () => ({ count: async () => 1_000_000 }) }) as unknown as PilotDb;
 
@@ -472,6 +472,7 @@ describe("GET /api/plan/checkout", () => {
   });
 
   it("euros only for the 27 EU states: the UK, Switzerland, Norway and Latin America get USD", async () => {
+    state.sessionEmail = "owner@example.test";
     for (const c of ["GB", "CH", "NO", "IS", "LI", "MX", "AR"]) {
       expect(linkOf(await get("cmorg1", { "x-vercel-ip-country": c }))).toBe(USD_LINK);
     }
