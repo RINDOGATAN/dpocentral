@@ -29,7 +29,9 @@ export const LANDING_VIDEOS: Record<LandingLocale, readonly LandingVideo[]> = {
   es: [
     { file: "01-inicio-rapido", published: true },
     { file: "02-progreso", published: true },
+    { file: "03-documentos", published: true },
     { file: "04-informe-ejecutivo", published: true },
+    { file: "05-eipd", published: true },
   ],
   en: [
     { file: "01-inicio-rapido", published: true },

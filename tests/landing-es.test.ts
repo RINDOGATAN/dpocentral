@@ -11,7 +11,7 @@
  *   - the Spanish page replaces "How it works" and "Features" with its own
  *     sections (since the English landing of October 2026, both languages
  *     do; see tests/landing-en.test.ts);
- *   - the Spanish sections show no price, and the three videos ship with a
+ *   - the Spanish sections show no price, and the five videos ship with a
  *     poster, both formats and Spanish captions;
  *   - customer logos render nothing while the configured list is empty; the
  *     draft list carries ten clean, sized files.
@@ -106,9 +106,9 @@ describe("Spanish sections", () => {
     for (const [k, v] of suite) expect(v, k).not.toMatch(/derechos|solicitudes/i);
   });
 
-  it("play three videos only on request, with a poster, two formats and Spanish captions", () => {
+  it("play five videos only on request, with a poster, two formats and Spanish captions", () => {
     const videos = html.match(/<video[\s\S]*?<\/video>/g) ?? [];
-    expect(videos).toHaveLength(3);
+    expect(videos).toHaveLength(5);
     for (const v of videos) {
       expect(v).not.toMatch(/autoplay/i);
       expect(v).toMatch(/preload="none"/);
@@ -121,7 +121,7 @@ describe("Spanish sections", () => {
       // Subtitles are burned into the picture: the track must be offered but never on by default.
       expect(v).not.toMatch(/<track[^>]*\sdefault/i);
     }
-    for (const name of ["01-inicio-rapido", "02-progreso", "04-informe-ejecutivo"]) {
+    for (const name of ["01-inicio-rapido", "02-progreso", "03-documentos", "04-informe-ejecutivo", "05-eipd"]) {
       for (const ext of ["mp4", "webm", "png", "vtt"]) {
         expect(existsSync(path.join(ROOT, "public/videos/es", `${name}.${ext}`)), `${name}.${ext}`).toBe(true);
       }
