@@ -2386,7 +2386,8 @@
         "safeguardsLabel": "Garantías",
         "safeguardsPlaceholder": "p. ej., CCT UE (2021) + medidas complementarias",
         "descriptionLabel": "Descripción",
-        "create": "Crear"
+        "create": "Crear",
+        "countryHint": "Código de país de dos letras (ISO 3166), por ejemplo IN para India."
       },
       "legalBasis": {
         "CONSENT": "Consentimiento",

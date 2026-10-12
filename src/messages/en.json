@@ -2386,7 +2386,8 @@
         "safeguardsLabel": "Safeguards",
         "safeguardsPlaceholder": "e.g. EU SCCs (2021) + supplementary measures",
         "descriptionLabel": "Description",
-        "create": "Create"
+        "create": "Create",
+        "countryHint": "Two-letter country code (ISO 3166), for example IN for India."
       },
       "legalBasis": {
         "CONSENT": "Consent",

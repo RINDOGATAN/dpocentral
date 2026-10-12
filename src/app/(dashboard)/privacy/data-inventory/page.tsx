@@ -62,6 +62,7 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { useOrgRole } from "@/lib/use-org-role";
+import { isCountryCode, normaliseCountryCode } from "@/lib/country-code";
 
 
 const DataFlowVisualization = dynamic(
@@ -284,10 +285,11 @@ export default function DataInventoryPage() {
       <Tabs defaultValue="assets">
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="assets" className="text-xs sm:text-sm">
-            {t("tabs.assets", { count: dataAssets.length })}
+            {/* More systems than this page holds: say so instead of a short count. */}
+            {t("tabs.assets", { count: hasMoreAssets ? `${dataAssets.length}+` : dataAssets.length })}
           </TabsTrigger>
           <TabsTrigger value="activities" className="text-xs sm:text-sm">
-            {t("tabs.activities", { count: processingActivities.length })}
+            {t("tabs.activities", { count: hasMoreActivities ? `${processingActivities.length}+` : processingActivities.length })}
           </TabsTrigger>
           <TabsTrigger value="flows" className="text-xs sm:text-sm">
             {t("tabs.flows")}
@@ -499,7 +501,7 @@ export default function DataInventoryPage() {
                       </div>
                       <CardTitle className="mt-3 text-base sm:text-lg line-clamp-1">{transfer.name}</CardTitle>
                       <CardDescription className="text-xs sm:text-sm">
-                        {transfer.destinationOrg ? `${transfer.destinationOrg} — ` : ""}{transfer.destinationCountry}
+                        {transfer.destinationOrg ? `${transfer.destinationOrg} · ` : ""}{transfer.destinationCountry}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
@@ -684,7 +686,7 @@ export default function DataInventoryPage() {
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
-              if (!transferForm.name || !transferForm.destinationCountry || !transferForm.mechanism) return;
+              if (!transferForm.name || !isCountryCode(transferForm.destinationCountry) || !transferForm.mechanism) return;
               createTransfer.mutate({
                 organizationId: organization?.id ?? "",
                 name: transferForm.name,
@@ -713,9 +715,13 @@ export default function DataInventoryPage() {
                   id="transfer-country"
                   placeholder={t("transferDialog.countryPlaceholder")}
                   value={transferForm.destinationCountry}
-                  onChange={(e) => setTransferForm((f) => ({ ...f, destinationCountry: e.target.value }))}
+                  onChange={(e) => setTransferForm((f) => ({ ...f, destinationCountry: normaliseCountryCode(e.target.value) }))}
+                  maxLength={2}
+                  autoCapitalize="characters"
+                  aria-describedby="transfer-country-hint"
                   required
                 />
+                <p id="transfer-country-hint" className="text-xs text-muted-foreground">{t("transferDialog.countryHint")}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="transfer-org">{t("transferDialog.orgLabel")}</Label>
@@ -759,7 +765,7 @@ export default function DataInventoryPage() {
               </Button>
               <Button
                 type="submit"
-                disabled={createTransfer.isPending || !transferForm.name || !transferForm.destinationCountry || !transferForm.mechanism}
+                disabled={createTransfer.isPending || !transferForm.name || !isCountryCode(transferForm.destinationCountry) || !transferForm.mechanism}
               >
                 {createTransfer.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                 {t("addTransfer")}
