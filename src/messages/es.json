@@ -3106,7 +3106,11 @@
     "createOrganization": "Crear organización",
     "creating": "Creando...",
     "switchOrg": "Cambiar organización",
-    "dpaAccept": "Acepto el <link>contrato de encargo del tratamiento</link> (versión {version}) para esta organización. Cubre el piloto gratuito y el Plan nube UE."
+    "dpaAccept": "Acepto el <link>contrato de encargo del tratamiento</link> (versión {version}) para esta organización. Cubre el piloto gratuito y los dos planes nube.",
+    "dpaStepTitle": "Contrato de encargo del tratamiento",
+    "dpaStepBody": "Antes de seguir, acepta el contrato de encargo del tratamiento para {name} en nombre de la organización. Solo tienes que hacerlo una vez.",
+    "dpaStepContinue": "Aceptar y continuar",
+    "dpaPendingNote": "Un propietario o administrador de esta organización tiene que aceptar el <link>contrato de encargo del tratamiento</link> (versión {version})."
   },
   "quickstart": {
     "recommended": "Configuración completa",

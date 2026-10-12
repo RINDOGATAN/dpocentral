@@ -80,7 +80,11 @@
     "createOrganization": "Organisation erstellen",
     "creating": "Erstellen...",
     "switchOrg": "Organisation wechseln",
-    "dpaAccept": "Ich akzeptiere den <link>Auftragsverarbeitungsvertrag</link> (Version {version}) für diese Organisation. Er gilt für das kostenlose Pilotprojekt und den EU Cloud Plan."
+    "dpaAccept": "Ich akzeptiere den <link>Auftragsverarbeitungsvertrag</link> (Version {version}) für diese Organisation. Er gilt für das kostenlose Pilotprojekt und beide Cloud Plans.",
+    "dpaStepTitle": "Auftragsverarbeitungsvertrag",
+    "dpaStepBody": "Bevor Sie fortfahren, akzeptieren Sie bitte den Auftragsverarbeitungsvertrag für {name} im Namen der Organisation. Dies ist nur einmal nötig.",
+    "dpaStepContinue": "Akzeptieren und fortfahren",
+    "dpaPendingNote": "Ein Eigentümer oder Administrator dieser Organisation muss den <link>Auftragsverarbeitungsvertrag</link> (Version {version}) akzeptieren."
   },
   "dashboard": {
     "title": "Datenschutz-Dashboard",
