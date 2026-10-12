@@ -131,8 +131,8 @@ export const PAGE_HELP: PageHelp[] = [
       "Donde analizas el riesgo del tratamiento y realizas las evaluaciones que espera la ley: una EIPD para el tratamiento de alto riesgo, un juicio de ponderación del interés legítimo, una evaluación de impacto de la transferencia. Cada evaluación terminada es una prueba que puedes mostrar a una autoridad de control.",
     ),
     firstStep: L(
-      "Screen a processing activity first; where the risk is high, start a DPIA from the screening.",
-      "Analiza primero una actividad de tratamiento; cuando el riesgo sea alto, inicia una EIPD desde el análisis.",
+      "Start with the processing activity most likely to be high risk: choose New Assessment, then a DPIA, and link it to that activity.",
+      "Empieza por la actividad de tratamiento con más probabilidad de riesgo alto: elige «Nueva evaluación», después una EIPD, y vincúlala a esa actividad.",
     ),
     terms: ["dpia", "lia", "tia", "special-category-data"],
     docs: [

@@ -7,6 +7,15 @@ import { TRPCError } from "@trpc/server";
 import { isDsarModuleEnabled } from "@/config/features";
 
 // Helper to compute compliance score from all modules
+/** The risk indicators the compliance page can show, by key. */
+export type RiskIndicatorKey =
+  | "overdueDsars"
+  | "highRiskVendorsUnassessed"
+  | "openSevereIncidents"
+  | "draftAssessments"
+  | "contractsExpiring"
+  | "assetsWithoutActivity";
+
 async function computeComplianceScore(
   prisma: any,
   organizationId: string
@@ -214,26 +223,18 @@ async function computeComplianceScore(
     ratedWeightPct: Math.round(ratedWeight * 100),
   };
 
-  // Build risk indicators
-  const riskIndicators: string[] = [];
-  if (overdueDsarCount > 0) {
-    riskIndicators.push(`${overdueDsarCount} overdue DSAR${overdueDsarCount > 1 ? "s" : ""}`);
-  }
+  // Risk indicators, as a key and a count: the page words them in the
+  // reader's language (pages.reports.risk.items.*).
+  const riskIndicators: { key: RiskIndicatorKey; count: number }[] = [];
+  if (overdueDsarCount > 0) riskIndicators.push({ key: "overdueDsars", count: overdueDsarCount });
   if (highRiskVendorsWithoutAssessment > 0) {
-    riskIndicators.push(`${highRiskVendorsWithoutAssessment} high-risk vendor${highRiskVendorsWithoutAssessment > 1 ? "s" : ""} without assessment`);
+    riskIndicators.push({ key: "highRiskVendorsUnassessed", count: highRiskVendorsWithoutAssessment });
   }
-  if (criticalOpenIncidents > 0) {
-    riskIndicators.push(`${criticalOpenIncidents} open critical/high incident${criticalOpenIncidents > 1 ? "s" : ""}`);
-  }
-  if (draftAssessments > 0) {
-    riskIndicators.push(`${draftAssessments} assessment${draftAssessments > 1 ? "s" : ""} still in draft`);
-  }
-  if (contractsExpiringSoon > 0) {
-    riskIndicators.push(`${contractsExpiringSoon} vendor contract${contractsExpiringSoon > 1 ? "s" : ""} expiring within 30 days`);
-  }
+  if (criticalOpenIncidents > 0) riskIndicators.push({ key: "openSevereIncidents", count: criticalOpenIncidents });
+  if (draftAssessments > 0) riskIndicators.push({ key: "draftAssessments", count: draftAssessments });
+  if (contractsExpiringSoon > 0) riskIndicators.push({ key: "contractsExpiring", count: contractsExpiringSoon });
   if (totalAssets > 0 && assetsWithActivities < totalAssets) {
-    const unlinked = totalAssets - assetsWithActivities;
-    riskIndicators.push(`${unlinked} data asset${unlinked > 1 ? "s" : ""} not linked to processing activities`);
+    riskIndicators.push({ key: "assetsWithoutActivity", count: totalAssets - assetsWithActivities });
   }
 
   return {

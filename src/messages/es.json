@@ -804,11 +804,11 @@
         "requirementsTitle": "Requisitos pendientes ({count})",
         "frameworkPartial": "{framework}: {covered} de {total} requisitos cubiertos.",
         "frameworkComplete": "{framework}: todos los requisitos cubiertos ({total} de {total}).",
-        "notConforming": "Esta evaluación todavía no cumple las normas de {framework}.",
+        "notConforming": "Esta evaluación todavía no cumple esas normas.",
         "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
         "jump": "Ir al paso que lo responde",
         "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
-        "submitHint": "Responde las preguntas enumeradas arriba antes de enviar esta evaluación a revisión."
+        "submitHint": "Responde las preguntas que aparecen a continuación antes de enviar esta evaluación a revisión."
       },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
@@ -1560,17 +1560,17 @@
         "placeholder": "p. ej. Programa de privacidad de Ejemplo Logística"
       },
       "applies": {
-        "title": "Qué te aplica",
+        "title": "Qué se te aplica",
         "intro": "Unas preguntas breves sobre cómo tratas los datos personales. Junto con las leyes bajo las que operas, muestran qué es probable que te aplique y qué conviene comprobar. Puedes omitir esto ahora y configurarlo más tarde en Ajustes.",
         "skip": "Aún no lo sé: omitir",
         "continue": "Guardar y continuar",
         "placesQuestion": "¿Dónde opera tu organización?",
-        "placesHint": "Elige todos los lugares donde tienes clientes, personal o usuarios. Determina qué leyes comprobamos. Puedes cambiarlo más adelante en la página Qué te aplica.",
+        "placesHint": "Elige todos los lugares donde tienes clientes, personal o usuarios. Determina qué leyes comprobamos. Puedes cambiarlo más adelante en la página «Qué se te aplica».",
         "placesUnsure": "Todavía no lo sé",
-        "placesFailed": "No se ha podido guardar dónde operas. Puedes indicarlo en la página Qué te aplica."
+        "placesFailed": "No se ha podido guardar dónde operas. Puedes indicarlo en la página «Qué se te aplica»."
       },
       "steps": {
-        "applies": "Qué te aplica",
+        "applies": "Qué se te aplica",
         "choose": "Elegir camino",
         "vendors": "Seleccionar proveedores",
         "yourVendors": "Tus proveedores",
@@ -1740,7 +1740,15 @@
       "risk": {
         "title": "Indicadores de riesgo",
         "subtitle": "Aspectos que requieren atención",
-        "noneTitle": "No se han detectado indicadores de riesgo. ¡Buen trabajo!"
+        "noneTitle": "No se han detectado indicadores de riesgo. ¡Buen trabajo!",
+        "items": {
+          "overdueDsars": "{count, plural, one {# solicitud de derechos vencida} other {# solicitudes de derechos vencidas}}",
+          "highRiskVendorsUnassessed": "{count, plural, one {# proveedor de riesgo alto sin evaluación} other {# proveedores de riesgo alto sin evaluación}}",
+          "openSevereIncidents": "{count, plural, one {# incidente crítico o alto abierto} other {# incidentes críticos o altos abiertos}}",
+          "draftAssessments": "{count, plural, one {# evaluación todavía en borrador} other {# evaluaciones todavía en borrador}}",
+          "contractsExpiring": "{count, plural, one {# contrato con un proveedor vence en los próximos 30 días} other {# contratos con proveedores vencen en los próximos 30 días}}",
+          "assetsWithoutActivity": "{count, plural, one {# activo de datos sin vincular a ninguna actividad de tratamiento} other {# activos de datos sin vincular a ninguna actividad de tratamiento}}"
+        }
       },
       "modules": {
         "heading": "Detalles de los módulos",
@@ -2545,9 +2553,9 @@
     "tryAgain": "Inténtalo de nuevo",
     "sendingLink": "Enviando...",
     "signingIn": "Iniciando sesión...",
-    "bySigningIn": "Al iniciar sesión, aceptas nuestros",
+    "bySigningIn": "Al iniciar sesión, aceptas las",
     "termsOfUse": "Condiciones de uso",
-    "and": "y",
+    "and": "y la",
     "privacyPolicy": "Política de privacidad",
     "developmentMode": "Modo de desarrollo",
     "devSignIn": "Acceso de desarrollo (inmediato)",
@@ -4033,7 +4041,7 @@
       "conformanceOutstanding": "Pendiente",
       "conformanceNotAnswered": "No se pregunta en esta evaluación",
       "conformanceComplete": "{framework}: todos los requisitos cubiertos ({covered} de {total}).",
-      "conformancePartial": "{framework}: {covered} de {total} requisitos cubiertos. Esta evaluación no cumple las normas de {framework} hasta que se respondan los demás.",
+      "conformancePartial": "{framework}: {covered} de {total} requisitos cubiertos. Esta evaluación no cumple esas normas hasta que se respondan los demás.",
       "conformanceCaliforniaNotRequired": "No se da ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento.",
       "conformanceDisclaimer": "Esta tabla recoge qué requisitos cubren las respuestas. No es un dictamen jurídico ni constituye asesoramiento jurídico.",
       "coverGenerated": "Generado: {date}",
@@ -5829,7 +5837,7 @@
           },
           "sectoral": {
             "title": "Sectoriales",
-            "desc": "Normas específicas de sector dirigidas a industrias concretas, como HIPAA para salud y PCI DSS para datos de pago."
+            "desc": "Normas específicas dirigidas a sectores concretos, como HIPAA para la sanidad y PCI DSS para los datos de pago."
           },
           "ai": {
             "title": "Gobernanza de IA",
