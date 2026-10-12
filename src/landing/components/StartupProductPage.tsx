@@ -250,9 +250,11 @@ const StartupProductPage = ({
                   {/* The product summary under the title (owner, 10 Oct 2026: the
                       generic welcome line is gone); the sign-up card carries its
                       own short line (hero.card). */}
-                  <p className="text-lg text-white/90 leading-relaxed font-body mb-8 max-w-lg">
-                    {t("hero.subtitle")}
-                  </p>
+                  <div className="text-lg text-white/90 leading-relaxed font-body mb-8 max-w-lg space-y-4">
+                    {t("hero.subtitle").split("\n\n").map((part) => (
+                      <p key={part}>{part}</p>
+                    ))}
+                  </div>
                 </m.div>
               </div>
 
