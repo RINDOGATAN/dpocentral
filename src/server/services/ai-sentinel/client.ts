@@ -45,7 +45,8 @@ export async function checkAiSentinelAccount(
         "x-api-key": AI_SENTINEL_API_KEY!,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email }),
+      // AI Sentinel's import routes all take the account as `userEmail`.
+      body: JSON.stringify({ userEmail: email }),
     });
 
     if (!res.ok) {
