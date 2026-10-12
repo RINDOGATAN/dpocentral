@@ -52,6 +52,7 @@ const statusColors: Record<string, string> = {
 
 export default function IncidentsPage() {
   const t = useTranslations("pages.incidents");
+  const tErr = useTranslations("pages.incidentDetail.recordedInError");
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("incidents");
   const { organization } = useOrganization();
@@ -211,6 +212,9 @@ export default function IncidentsPage() {
                       <Badge variant="outline" className={`text-xs ${statusColors[incident.status] || ""}`}>
                         {t(`status.${incident.status}`)}
                       </Badge>
+                      {incident.recordedInErrorAt && (
+                        <Badge variant="secondary" className="text-xs">{tErr("badge")}</Badge>
+                      )}
                     </div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{t("card.recordsShort", { count: incident.affectedRecords ?? 0 })}</span>
@@ -248,6 +252,9 @@ export default function IncidentsPage() {
                         <Badge variant="outline" className={statusColors[incident.status] || ""}>
                           {t(`status.${incident.status}`)}
                         </Badge>
+                        {incident.recordedInErrorAt && (
+                          <Badge variant="secondary" data-testid="incident-row-recorded-in-error">{tErr("badge")}</Badge>
+                        )}
                       </div>
                       <p className="text-sm text-muted-foreground truncate mt-1">
                         {incident.title}

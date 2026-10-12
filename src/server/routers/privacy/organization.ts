@@ -803,7 +803,7 @@ export const organizationRouter = createTRPCRouter({
           },
         }),
         ctx.prisma.incident.count({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: ctx.organization.id,
             status: { notIn: ["CLOSED", "FALSE_POSITIVE"] },
           },

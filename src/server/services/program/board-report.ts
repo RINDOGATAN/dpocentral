@@ -135,14 +135,14 @@ export async function loadBoardReport(
     loadOwner(prisma, organizationId),
     prisma.organization.findFirst({ where: { id: organizationId }, select: { settings: true } }),
     prisma.incident.findMany({
-      where: { ...org, discoveredAt: inPeriod },
+      where: { recordedInErrorAt: null, ...org, discoveredAt: inPeriod },
       select: {
         discoveredAt: true,
         notificationRequired: true,
         notifications: { where: { recipientType: "DPA" }, select: { sentAt: true } },
       },
     }),
-    prisma.incident.count({ where: { ...org, status: OPEN_INCIDENT } }),
+    prisma.incident.count({ where: { recordedInErrorAt: null, ...org, status: OPEN_INCIDENT } }),
     dsarAllowed
       ? prisma.dSARRequest.findMany({
           where: { ...org, receivedAt: inPeriod },

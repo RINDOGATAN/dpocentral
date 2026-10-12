@@ -584,6 +584,8 @@ export async function* readRegister(
           lessonsLearned: nn(r.lessonsLearned),
           notificationRequired: r.notificationRequired,
           notificationDeadline: iso(r.notificationDeadline),
+          recordedInErrorAt: iso(r.recordedInErrorAt),
+          recordedInErrorReason: nn(r.recordedInErrorReason),
           timeline: (timeline.get(r.id) ?? []).map((x) => ({
             id: x.id,
             timestamp: iso(x.timestamp),

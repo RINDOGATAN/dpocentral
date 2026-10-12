@@ -86,7 +86,7 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
 
   // Incident stats
   const incidents = await prisma.incident.findMany({
-    where: { organizationId },
+    where: { recordedInErrorAt: null, organizationId },
     select: { status: true, severity: true },
   });
   const incidentTotal = incidents.length;

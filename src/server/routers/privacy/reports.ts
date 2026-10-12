@@ -93,14 +93,14 @@ async function computeComplianceScore(
       : 0,
     // Incident: requiring notification
     prisma.incident.count({
-      where: {
+      where: { recordedInErrorAt: null,
         organizationId,
         notificationRequired: true,
       },
     }),
     // Incident: notification deadline met (notified before deadline or closed)
     prisma.incident.count({
-      where: {
+      where: { recordedInErrorAt: null,
         organizationId,
         notificationRequired: true,
         OR: [
@@ -147,7 +147,7 @@ async function computeComplianceScore(
       },
     }),
     prisma.incident.count({
-      where: {
+      where: { recordedInErrorAt: null,
         organizationId,
         severity: { in: ["HIGH", "CRITICAL"] },
         status: { notIn: ["CLOSED", "FALSE_POSITIVE"] },
@@ -438,22 +438,22 @@ export const reportsRouter = createTRPCRouter({
           where: { organizationId: orgId, riskLevel: { in: ["HIGH", "CRITICAL"] } },
         }),
         // Incident
-        ctx.prisma.incident.count({ where: { organizationId: orgId } }),
+        ctx.prisma.incident.count({ where: { recordedInErrorAt: null, organizationId: orgId } }),
         ctx.prisma.incident.count({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: orgId,
             status: { notIn: ["CLOSED", "FALSE_POSITIVE"] },
           },
         }),
         ctx.prisma.incident.count({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: orgId,
             severity: { in: ["HIGH", "CRITICAL"] },
             status: { notIn: ["CLOSED", "FALSE_POSITIVE"] },
           },
         }),
         ctx.prisma.incident.findMany({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: orgId,
             status: "CLOSED",
             resolvedAt: { not: null },

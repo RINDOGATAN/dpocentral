@@ -1087,6 +1087,7 @@
       }
     },
     "incidentDetail": {
+      "recordedInError": {"action": "Registrada por error", "undo": "Deshacer «registrada por error»", "dialogTitle": "¿Marcar como registrada por error?", "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.", "reasonLabel": "¿Por qué se registró por error?", "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba", "confirm": "Marcar como registrada por error", "marked": "Incidencia marcada como registrada por error", "undone": "La incidencia vuelve a contar", "noticeTitle": "Registrada por error el {date}", "noticeReason": "Motivo: {reason}.", "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.", "badge": "Registrada por error"},
       "notFound": "Incidente no encontrado",
       "back": "Volver a incidentes",
       "close": "Cerrar incidente",
@@ -2960,6 +2961,8 @@
       "INVITE": "Invitación creada",
       "INVITE_CANCELLED": "Invitación cancelada",
       "JOIN_BY_INVITATION": "Se unió por invitación",
+      "RECORDED_IN_ERROR": "Registrada por error",
+      "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
       "TASKS_GENERATED": "Tareas generadas",
       "PII_REDACTED": "Datos personales ocultados",
       "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",
@@ -4466,6 +4469,7 @@
       }
     },
     "breachRegister": {
+      "recordedInErrorPrefix": "[Registrada por error]",
       "pageTitle": "Registro de brechas",
       "coverTitle": "Registro de brechas e incidentes",
       "coverSubtitle": "RGPD, artículo 33.5",
@@ -10146,6 +10150,8 @@
       "INVITE": "Invitación creada",
       "INVITE_CANCELLED": "Invitación cancelada",
       "JOIN_BY_INVITATION": "Se unió por invitación",
+      "RECORDED_IN_ERROR": "Registrada por error",
+      "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
       "TASKS_GENERATED": "Tareas generadas",
       "PII_REDACTED": "Datos personales ocultados",
       "PII_AUTO_REDACTED": "Datos personales ocultados al terminar el plazo de conservación",

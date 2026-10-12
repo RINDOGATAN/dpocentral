@@ -33,8 +33,10 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
 
   const data: IncidentExportData[] = incidents.map((inc) => ({
     id: inc.id,
+    recordedInError: !!inc.recordedInErrorAt,
     publicId: inc.publicId,
-    title: inc.title,
+    // Recorded in error: kept in the register, marked in its title.
+    title: inc.recordedInErrorAt ? `${t("recordedInErrorPrefix")} ${inc.title}` : inc.title,
     description: inc.description,
     type: inc.type,
     severity: inc.severity,

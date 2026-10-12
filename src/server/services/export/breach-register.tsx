@@ -22,6 +22,8 @@ import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/
 
 export interface IncidentExportData {
   id: string;
+  /** Recorded in error: listed (marked in the title) but left out of the figures. */
+  recordedInError?: boolean;
   publicId: string;
   title: string;
   description: string;
@@ -131,7 +133,8 @@ export function BreachRegisterReport({
   const byStatus: Record<string, number> = {};
   let pendingNotifications = 0;
 
-  for (const inc of incidents) {
+  const counted = incidents.filter((inc) => !inc.recordedInError);
+  for (const inc of counted) {
     bySeverity[inc.severity] = (bySeverity[inc.severity] || 0) + 1;
     byStatus[inc.status] = (byStatus[inc.status] || 0) + 1;
     if (
@@ -154,7 +157,7 @@ export function BreachRegisterReport({
       <ContentPage title={tr("pageTitle")} orgName={orgName} date={date}>
         <SectionTitle>{tr("summary")}</SectionTitle>
         <View style={s.statsGrid}>
-          <StatCard value={incidents.length} label={tr("stats.totalIncidents")} />
+          <StatCard value={counted.length} label={tr("stats.totalIncidents")} />
           <StatCard value={bySeverity["CRITICAL"] || 0} label={tr("stats.critical")} />
           <StatCard value={bySeverity["HIGH"] || 0} label={tr("stats.high")} />
           <StatCard value={pendingNotifications} label={tr("stats.pendingNotifications")} />

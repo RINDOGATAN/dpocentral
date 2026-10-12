@@ -56,6 +56,7 @@ import { parseDateInput } from "@/lib/date-input";
 
 import { formatDateIn, formatDateTimeIn, formatNumberIn } from "@/lib/utils";
 import { useOrgRole } from "@/lib/use-org-role";
+import { IncidentRecordedInErrorAction, IncidentRecordedInErrorNotice } from "@/components/privacy/incident-recorded-in-error";
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
   MEDIUM: "border-muted-foreground text-muted-foreground",
@@ -288,6 +289,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <IncidentRecordedInErrorAction
+            organizationId={organization?.id ?? ""}
+            incidentId={id}
+            recordedInError={!!incident.recordedInErrorAt}
+          />
           {isOfficer && (
             <Link href={`/privacy/incidents/${id}/edit`}>
               <Button variant="outline">
@@ -322,6 +328,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </Button>
         </div>
       </div>
+
+      <IncidentRecordedInErrorNotice
+        recordedInErrorAt={incident.recordedInErrorAt}
+        reason={incident.recordedInErrorReason}
+      />
 
       {/* Notification Banner */}
       {incident.notificationRequired && !incident.notifications?.length && (() => {
