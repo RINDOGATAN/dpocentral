@@ -23,13 +23,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { features } from "@/config/features";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneMark } from "@/config/status-palette";
 
 export default function BillingPage() {
+  const formatPrice = useFormatPrice();
   const router = useRouter();
   const { organization } = useOrganization();
   const [enableSkill, setEnableSkill] = useState<{

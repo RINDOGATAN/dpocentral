@@ -15,17 +15,19 @@ import { DocNavFooter } from "@/components/docs/doc-nav-footer";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { formatPrice, KIT_MODULE_PRICE_PER_YEAR } from "@/lib/currency";
+import { useDisplayCurrency } from "@/components/region-provider";
 import { plansUrl } from "@/lib/hosted";
 
 export default function DocsPremiumPage() {
   const t = useTranslations("docs.premium");
   const locale = useLocale();
   // Yearly price of one premium module in the kit (self-hosted, offline
-  // licence). The hosted pilot sells nothing. One currency per language:
-  // dollars in English,
-  // euros in the other languages, written as each language writes them.
+  // licence). The hosted pilot sells nothing. The currency follows
+  // src/lib/region.ts (euros on Spanish pages and for EU visitors, dollars
+  // otherwise), written as each language writes it.
+  const currency = useDisplayCurrency();
   const price = locale.toLowerCase().startsWith("en")
-    ? formatPrice(KIT_MODULE_PRICE_PER_YEAR, "USD")
+    ? formatPrice(KIT_MODULE_PRICE_PER_YEAR, currency)
     : `${KIT_MODULE_PRICE_PER_YEAR} €`;
   // /privacy/billing only exists when Stripe is on (self-host redirects it
   // to /privacy/skills), so the self-service upsell links need both flags.

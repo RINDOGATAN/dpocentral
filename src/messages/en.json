@@ -8944,7 +8944,9 @@
     "choices": {
       "shared_eu": {
         "title": "a) For now, the shared EU cloud",
-        "description": "I can work with processors and sub-processors that hold ISO 27001 or SOC 2 Type II audits, on a shared cloud hosted in the EU. AI features are switched on only when I ask, with providers approved case by case."
+        "description": "I can work with processors and sub-processors that hold ISO 27001 or SOC 2 Type II audits, on a shared cloud hosted in the EU. AI features are switched on only when I ask, with providers approved case by case.",
+        "titleOutsideEu": "a) For now, the shared cloud",
+        "descriptionOutsideEu": "I can work with processors and sub-processors that hold ISO 27001 or SOC 2 Type II audits, on a shared cloud. AI features are switched on only when I ask, with providers approved case by case."
       },
       "managed": {
         "title": "b) A fully managed virtual server for us alone",
@@ -8955,7 +8957,8 @@
         "description": "We need to install it on our own machines, with AI models that run locally."
       },
       "later": {
-        "title": "Decide later (treated as the shared EU cloud)"
+        "title": "Decide later (treated as the shared EU cloud)",
+        "titleOutsideEu": "Decide later (treated as the shared cloud)"
       }
     },
     "form": {
@@ -8992,6 +8995,7 @@
       "question": "What security, confidentiality and data protection safeguards do you need?",
       "current": "Your answer: {choice}",
       "none": "No answer yet. Until you answer, the shared EU cloud applies.",
+      "noneOutsideEu": "No answer yet. Until you answer, the shared cloud applies.",
       "openRequest": "We received your request on {date} and will write to you by e-mail.",
       "save": "Save answer",
       "saved": "Answer saved",
@@ -9001,8 +9005,8 @@
   "pilot": {
     "signIn": "Free pilot: {days} days of editing from your first sign-in, then read-only with export.",
     "endBar": {
-      "trial": "Free for {days} days, until {date}. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year.",
-      "trialTransition": "Free until {date}. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year.",
+      "trial": "Free for {days} days, until {date}. Then export your program or keep going on the Cloud Plan: {price}.",
+      "trialTransition": "Free until {date}. Then export your program or keep going on the Cloud Plan: {price}.",
       "ending": "Your pilot ends on {date}. Move to the paid plan to keep editing with all your records.",
       "readOnly": "Your pilot has ended: the organization is read-only and you can export it at any time.",
       "pricing": "See pricing",

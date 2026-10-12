@@ -26,6 +26,7 @@ import { classifyRequest, type LimitedRoute } from "./lib/rate-limit-routes";
 import { isDsarModuleEnabled } from "./config/features";
 import { isDsarModulePath } from "./lib/dsar-module";
 import { retiredClassicRedirect } from "./lib/menu-cookie";
+import { COUNTRY_HEADER, CURRENCY_COOKIE, regionCurrency } from "./lib/region";
 
 // One bucket per route class; a request is counted in exactly one of them.
 // Ceilings and the RATE_LIMIT_* overrides live in src/lib/rate-limit.ts.
@@ -191,14 +192,15 @@ export default function middleware(request: NextRequest) {
     }
   }
 
-  // Set currency cookie based on geo-IP (US -> USD, else EUR)
-  const hasCurrency = request.cookies.has("currency");
+  // The region's currency cookie (src/lib/region.ts: EU member states -> EUR,
+  // everyone else -> USD). Re-evaluated on every request and rewritten when
+  // the stored value differs, so a value written under an earlier rule, or
+  // before the visitor's country changed, never outlives one page load.
+  const currency = regionCurrency(request.headers.get(COUNTRY_HEADER));
   let currencyResponse: NextResponse | null = null;
-  if (!hasCurrency) {
-    const country = request.headers.get("x-vercel-ip-country") || "";
-    const currency = country === "US" ? "USD" : "EUR";
+  if (request.cookies.get(CURRENCY_COOKIE)?.value !== currency) {
     currencyResponse = NextResponse.next(forwarded);
-    currencyResponse.cookies.set("currency", currency, {
+    currencyResponse.cookies.set(CURRENCY_COOKIE, currency, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
       sameSite: "lax",
@@ -234,9 +236,9 @@ export default function middleware(request: NextRequest) {
   const intlResponse = intlMiddleware(request);
 
   if (currencyResponse) {
-    const cookieValue = currencyResponse.cookies.get("currency")?.value;
+    const cookieValue = currencyResponse.cookies.get(CURRENCY_COOKIE)?.value;
     if (cookieValue) {
-      intlResponse.cookies.set("currency", cookieValue, {
+      intlResponse.cookies.set(CURRENCY_COOKIE, cookieValue, {
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",

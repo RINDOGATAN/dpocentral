@@ -31,7 +31,7 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { formatDateIn } from "@/lib/utils";
 
 const LEGAL_BASES = new Set([
@@ -65,6 +65,7 @@ function formatArray(arr: unknown): string {
 }
 
 export default function ProcessingActivitiesPage() {
+  const formatPrice = useFormatPrice();
   const [searchQuery, setSearchQuery] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);

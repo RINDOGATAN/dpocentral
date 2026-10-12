@@ -26,11 +26,15 @@ import {
   PRICING_PILOT_DAYS,
 } from "../config/pricing";
 import type { LandingLocale } from "../config/storefront";
+import { useIsEu } from "@/components/region-provider";
+import { currencyFor } from "@/lib/region";
 
 /** A cell: stacked on phones, a table cell from `sm`, as on the storefront home. */
 const CELL = "block sm:table-cell px-5 sm:px-6 align-top text-left";
 
 export default function PricingSection({ locale }: { locale: LandingLocale }) {
+  // Spanish: euros; English: euros in the EU, US dollars elsewhere (src/lib/region.ts).
+  const currency = currencyFor(locale, useIsEu());
   const c = PRICING_COPY[locale];
   const legal = PRICING_LEGAL_URL[locale];
   const quiet = "underline underline-offset-4 hover:text-foreground transition-colors";
@@ -67,7 +71,7 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
                   {c.offer}
                 </th>
                 <td className={`${CELL} pb-5 sm:py-5 text-base md:text-lg text-muted-foreground sm:text-foreground leading-snug font-body`} data-testid="pricing-price">
-                  {c.price(PRICING_PILOT_DAYS)}
+                  {c.price(PRICING_PILOT_DAYS, currency)}
                 </td>
               </tr>
             </tbody>
@@ -86,7 +90,7 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
               {c.start}
             </a>
             <a
-              href={PLAN_PAYMENT_LINK[locale]}
+              href={PLAN_PAYMENT_LINK[currency]}
               rel="noopener"
               className="text-sm font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
               data-testid="pricing-subscribe"

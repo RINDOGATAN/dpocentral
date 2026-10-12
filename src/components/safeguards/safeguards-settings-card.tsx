@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { formatDateIn } from "@/lib/utils";
+import { useNamesEuHosting } from "@/components/region-provider";
 import {
   SafeguardsChoiceList,
   SafeguardsRequestForm,
@@ -32,6 +33,7 @@ export function SafeguardsSettingsCard({
 }) {
   const t = useTranslations("safeguards");
   const locale = useLocale();
+  const euCopy = useNamesEuHosting();
   const utils = trpc.useUtils();
   const { data: status } = trpc.safeguards.getStatus.useQuery(
     { organizationId },
@@ -78,7 +80,13 @@ export function SafeguardsSettingsCard({
 
   if (!status?.hosted) return null;
 
-  const storedLabel = stored ? t(`choices.${stored}.title`) : null;
+  // The shared cloud and "decide later" name EU hosting only where EU copy is shown.
+  const sfx = euCopy ? "" : "OutsideEu";
+  const storedLabel = !stored
+    ? null
+    : stored === "shared_eu" || stored === "later"
+      ? t(`choices.${stored}.title${sfx}`)
+      : t(`choices.${stored}.title`);
   const showForm =
     isAdmin && dirty && isRequestChoice(choice) && !status.openRequest && !sent;
 
@@ -93,7 +101,7 @@ export function SafeguardsSettingsCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm">
-          {storedLabel ? t("settings.current", { choice: storedLabel }) : t("settings.none")}
+          {storedLabel ? t("settings.current", { choice: storedLabel }) : t(`settings.none${sfx}`)}
         </p>
         {status.openRequest && (
           <p className="text-sm text-muted-foreground">

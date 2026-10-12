@@ -21,7 +21,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { STOREFRONT_BUY, MARKETPLACE_URL } from "@/lib/marketplace";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 
@@ -31,6 +31,7 @@ function looksLikeLicense(x: unknown): x is Record<string, unknown> {
 }
 
 export default function SkillsPage() {
+  const formatPrice = useFormatPrice();
   const t = useTranslations("skills");
   const locale = useLocale();
   const { organization } = useOrganization();

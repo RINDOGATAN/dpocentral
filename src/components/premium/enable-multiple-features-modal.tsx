@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { StatusNote } from "@/components/ui/status-note";
 import { useTranslations } from "next-intl";
 
@@ -45,6 +45,7 @@ export function EnableMultipleFeaturesModal({
   const t = useTranslations("enableFeature");
   const tCommon = useTranslations("common");
   const tPremium = useTranslations("premium");
+  const formatPrice = useFormatPrice();
 
   if (!open || !skills.length) return null;
 

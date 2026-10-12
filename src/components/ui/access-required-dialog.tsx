@@ -7,7 +7,7 @@ import { Button } from "./button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { useTranslations } from "next-intl";
 
 interface AccessRequiredDialogProps {
@@ -28,6 +28,7 @@ export function AccessRequiredDialog({
   const t = useTranslations("premium");
   const tCommon = useTranslations("common");
   const tEnable = useTranslations("enableFeature");
+  const formatPrice = useFormatPrice();
   if (!open) return null;
 
   const defaultMessage = t("addOnMessage", { feature: featureName, price: formatPrice(9) });
