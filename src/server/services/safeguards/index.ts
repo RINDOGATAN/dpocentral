@@ -3,7 +3,7 @@
 
 /**
  * The safeguards question of the first-visit welcome card (hosted service
- * only; owner's decisions O1 to O3, 9 October 2026).
+ * only).
  *
  *   Who sees the card: the person who created the organisation on the hosted
  *   service, once, on the first visit to /privacy, before the quick start.

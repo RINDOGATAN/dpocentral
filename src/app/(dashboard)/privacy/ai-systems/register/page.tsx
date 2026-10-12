@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * AI systems are read-only in DPO Central (the owner's decision, 27 Sep 2026):
+ * AI systems are read-only in DPO Central:
  * governance lives in AI Sentinel. Registering a system by hand is no longer
  * offered — this page is a plain notice pointing to AI Sentinel, kept so an old
  * link or bookmark lands somewhere clear instead of a broken form. The server

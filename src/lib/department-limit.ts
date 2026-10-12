@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * What a member limited to one or more departments is shown (the owner's
- * decision of 29 September 2026). Such a member works inside their
+ * What a member limited to one or more departments is shown. Such a member works inside their
  * department, so:
  *  - the department selector shows their department, never "Whole
  *    organisation" (the server narrows to it in any case);

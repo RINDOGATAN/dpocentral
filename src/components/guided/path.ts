@@ -24,8 +24,7 @@ import type { LucideIcon } from "lucide-react";
  * - `done`       the rule is met by records a person has confirmed
  * - `toConfirm`  the rule would be met, but only by drafts: records the quick
  *                start, a template or another client's copy created, which
- *                count once a person confirms them (owner's decision d2,
- *                9 October 2026). Never counted as done.
+ *                count once a person confirms them. Never counted as done.
  * - `started`    there is something, but not yet enough
  * - `todo`       nothing yet
  * - `coming`     the product has no page for it yet
@@ -237,8 +236,7 @@ export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): S
 }
 
 /**
- * The one state word a stage carries in the menu and on its dashboard tile
- * (owner's decision d6, 9 October 2026): done, to confirm, in progress, not
+ * The one state word a stage carries in the menu and on its dashboard tile: done, to confirm, in progress, not
  * started, or "action" when something in the stage waits for a person
  * (`attention`: the ids of such stages, from "Needs action"). A stage whose
  * steps all have no page yet stays "coming".
@@ -263,8 +261,8 @@ export function overallProgress<C>(config: PathConfig<C>, statuses: PathStatuses
 }
 
 /**
- * THE programme figure ("2 of 10 steps confirmed"), owner's decision d3,
- * 9 October 2026. Computed here and only here: the dashboard, the menu, All
+ * THE programme figure ("2 of 10 steps confirmed").
+ * Computed here and only here: the dashboard, the menu, All
  * clients and the Reports page all read it through this function, so they
  * can never show different numbers.
  *

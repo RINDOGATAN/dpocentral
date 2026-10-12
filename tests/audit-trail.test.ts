@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The organisation's audit trail (owner's decision, 9 October 2026, as AI
+ * The organisation's audit trail (as AI
  * Sentinel has it): owners, admins and privacy officers read it, newest first,
  * filtered and paged; the CSV follows the same filters and rules; entries
  * about rights requests show the reference and the action only; without the

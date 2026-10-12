@@ -3,7 +3,7 @@
 
 /**
  * The user guide describes the product as it is since the Classic layout was
- * retired (9 October 2026): the Guided dashboard, its documents panel, the
+ * retired: the Guided dashboard, its documents panel, the
  * next actions and deadlines, the menu, All clients and the executive report.
  * Nothing in the guide may describe the retired screens (counter cards, quick
  * actions, recent activity, the client cards), in English or in Spanish, and

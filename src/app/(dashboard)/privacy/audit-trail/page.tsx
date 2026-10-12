@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The audit trail, readable and exportable (owner's decision, 9 October
- * 2026; mirrors AI Sentinel's page).
+ * The audit trail, readable and exportable (mirrors AI Sentinel's page).
  *
  * Written by the actions themselves; this page only reads. Restricted to
  * owners, admins and privacy officers (src/lib/audit-access.ts, enforced by

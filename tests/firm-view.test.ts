@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The firm view, "All clients" as a table (owner's decision d9, 9 October
- * 2026): the confirmed figure, the areas in words, the documents ready, the
+ * The firm view, "All clients" as a table: the confirmed figure, the areas in words, the documents ready, the
  * next deadline (a breach window, a rights request due or the plan's next
  * milestone, with its INC-/REQ- reference) and the next action, sorted by the
  * nearest deadline. Every reading is the client's own dashboard's.

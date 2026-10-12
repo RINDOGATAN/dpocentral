@@ -48,8 +48,7 @@ export const programPathRouter = createTRPCRouter({
     }),
 
   /**
-   * The dashboard's programme overview, and the menu's document lines
-   * (owner's decisions d4 to d7, 9 October 2026): every document in the
+   * The dashboard's programme overview, and the menu's document lines: every document in the
    * register with its state, what needs action, and the deadlines at risk.
    * One query for both, so the panel and the menu read the same answer.
    *

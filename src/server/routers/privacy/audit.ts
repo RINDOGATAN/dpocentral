@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Audit router: reading the organisation's own audit trail (owner's
- * decision, 9 October 2026, as AI Sentinel has it).
+ * Audit router: reading the organisation's own audit trail (as AI
+ * Sentinel has it).
  *
  * The trail was always written; until now nothing in the product read it
  * beyond the platform operator's screens. A record that cannot be produced is

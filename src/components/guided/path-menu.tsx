@@ -70,7 +70,7 @@ interface PathMenuProps<C> {
   showProgress?: boolean;
   /**
    * One quiet line under a step, by step id: the documents it produces and
-   * their states (owner's decision d6), worded by the product from its
+   * their states, worded by the product from its
    * document register. Shown only with the progress.
    */
   stepNotes?: Record<string, string>;
@@ -81,7 +81,7 @@ interface PathMenuProps<C> {
   attention?: readonly string[];
   /**
    * Everything the product does not offer yet, gathered in one group at the
-   * foot of the path (owner's decision d6) instead of "coming" lines spread
+   * foot of the path instead of "coming" lines spread
    * over the stages. Nothing when null or empty.
    */
   notYet?: { title: string; items: string[] } | null;
@@ -285,7 +285,7 @@ export function PathMenu<C>({
           const panelId = `path-stage-${variant}-${stage.id}`;
           const holdsCurrent = stage.id === currentStage?.id;
           // Steps with no page yet are not listed here: they are gathered in
-          // the "Not in DPO Central yet" group at the foot (decision d6).
+          // the "Not in DPO Central yet" group at the foot.
           const shownSteps = stage.steps.filter((step) => isShown(step, statuses) && !step.coming);
           if (shownSteps.length === 0) return null;
           // Nothing to open: no chevron, and the row is plain text.
@@ -339,7 +339,7 @@ export function PathMenu<C>({
                 {showProgress && (
                 <span className="truncate text-xs text-muted-foreground tabular-nums">
                   {progress ? (
-                    // One state word per stage (decision d6); the ring beside it
+                    // One state word per stage; the ring beside it
                     // carries the count.
                     <span data-testid={`stage-word-${stage.id}`}>
                       {t(`stageState.${stageWord(stage, statuses!, attention)}`)}

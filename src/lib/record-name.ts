@@ -3,8 +3,7 @@
 
 /**
  * Names the app writes for the records it creates ("TIA: {transfer}",
- * "{activity}: {vendor}"). Owner, 11 Oct 2026 (consistency review DPC-9):
- * a colon separates the parts, no long dash. Records created before that
+ * "{activity}: {vendor}"). A colon separates the parts, no long dash. Records created before that
  * keep their names; where the app looks a record up by its generated name
  * (to avoid a duplicate), it also accepts the older form.
  */

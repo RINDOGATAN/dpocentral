@@ -53,7 +53,7 @@ describe("landing metadata", () => {
     expect(m.openGraph).toMatchObject({ title: LANDING_SEO.en.title, locale: "en" });
   });
 
-  it("writes the Spanish title the owner chose, and the Spanish description", async () => {
+  it("writes the Spanish title and the Spanish description", async () => {
     expect(LANDING_SEO.es.title).toBe(ES_TITLE);
     expect(LANDING_SEO.es.description).toBe(es.metadata.description);
     for (const s of [LANDING_SEO.es.title, LANDING_SEO.es.description]) {
@@ -87,7 +87,7 @@ describe("landing metadata", () => {
     expect(landing).toMatch(/searchParams\.delete\("lang"\)/);
   });
 
-  // Owner, 10 Oct 2026: a Spanish browser with no cookie and no ?lang= saw English.
+  // Regression: a Spanish browser with no cookie and no ?lang= saw English.
   it("serves Spanish to a Spanish browser with no cookie, from the first paint", async () => {
     acceptLanguage = "es-ES,es;q=0.9,en;q=0.8";
     expect((await meta()).title).toEqual({ absolute: ES_TITLE });

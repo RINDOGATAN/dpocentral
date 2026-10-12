@@ -172,8 +172,7 @@ describe("the flag", () => {
 
 describe("menus, guided step, help and docs", () => {
   it("the menu entry is gated on the flag", () => {
-    // The one menu is the Guided path (Classic's top bar was retired,
-    // decision d11): its rights-request step goes when the module is off,
+    // The one menu is the Guided path (Classic's top bar was retired): its rights-request step goes when the module is off,
     // and for a member who may not read requests.
     expect(read("src/components/guided/path-config.ts")).toMatch(
       /isDsarModuleEnabled\(\)\s*\?\s*FULL_PATH\s*:\s*withoutSteps\(FULL_PATH, \["dsar"\]\)/

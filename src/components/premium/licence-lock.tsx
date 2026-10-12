@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The small lock beside an option that needs a licence here (owner's
- * decision, 9 October 2026): on the DPIA option in the assessments page and
+ * The small lock beside an option that needs a licence here: on the DPIA option in the assessments page and
  * in the type picker, where the DPIA template is not licensed. The menu's
  * Assessments step carries no lock any more. Same rule as before
  * (isAssessmentTypeLocked: never on the hosted pilot). An accessible label,

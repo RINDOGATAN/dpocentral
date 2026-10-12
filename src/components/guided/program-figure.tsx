@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The one programme figure, "2 of 10 steps confirmed" (owner's decision d3,
- * 9 October 2026). The number comes from `programFigure` (./path.ts) and the
+ * The one programme figure, "2 of 10 steps confirmed". The number comes from `programFigure` (./path.ts) and the
  * words from one message (`guided.figure.line`), so the dashboard, the menu,
  * All clients and the Reports page all say exactly the same thing.
  */

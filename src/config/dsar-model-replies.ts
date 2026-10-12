@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Model replies to rights requests (owner's approval, 11 October 2026). The
+ * Model replies to rights requests. The
  * organisation's own letters to the requester, in the controller's voice
  * ("we" is the organisation), in English and in Castilian Spanish ("tú").
  * Staff insert one into a message from the request page; the app fills the

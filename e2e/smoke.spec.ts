@@ -349,7 +349,7 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
   });
 
   // ── Layout and sign-out ──────────────────────────────────────────────
-  // Classic was retired (decision d11). An old Classic link, or a browser
+  // Classic was retired. An old Classic link, or a browser
   // that still holds the old cookie, lands on the one layout.
   await step("old classic links open the one layout", async () => {
     await page.context().addCookies([{ name: "dpc_skin", value: "classic", url: new URL(page.url()).origin }]);

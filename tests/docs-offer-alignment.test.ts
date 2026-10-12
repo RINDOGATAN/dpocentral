@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The public documentation follows the offer as it stands (owner, 10 Oct 2026):
+ * The public documentation follows the offer as it stands:
  * three hosting options in the landing's own words, the whole-programme export
  * and import, AI features off until an Owner or Admin turns them on, and no
  * vendor questionnaires sent from DPO Central (vendors state their practices on

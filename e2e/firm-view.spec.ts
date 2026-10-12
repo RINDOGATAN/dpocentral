@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The firm view and the document pack (owner's decisions, 9 October 2026,
- * steps 4 and 5), seen in a browser by a consultancy with three clients at
+ * The firm view and the document pack (steps 4 and 5), seen in a browser by a consultancy with three clients at
  * different stages:
  *
  *   - one through the quick start, its drafts confirmed, a vendor, and a

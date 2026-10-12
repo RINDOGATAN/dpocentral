@@ -8,7 +8,7 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Changed
 
-- **The hosted pilot's editing window is 15 days, not 90** (owner, 11 Oct 2026). One constant,
+- **The hosted pilot's editing window is 15 days, not 90**. One constant,
   `PILOT_DAYS` in `src/server/services/pilot/caps.ts`; the documentation, Settings card and
   sign-in screen read it. Transition, computed and not stored (no migration): an organisation
   whose window started before the end of 11 Oct 2026 (UTC) keeps whichever ends earlier of its
@@ -17,13 +17,13 @@ All notable changes to DPO Central are documented here. The format follows
 
 ### Added
 
-- **Model replies to rights requests** (owner's approval, 11 Oct 2026): the six approved
+- **Model replies to rights requests**: the six approved
   letters (acknowledgement, identity, extension, refusal, one favourable reply per right,
   repetitive access), in English and Castilian Spanish, offered in the request's "Send message"
   panel by type and language. The app fills the requester's name, the reference, the dates, the
   organisation's name, the status link and the privacy contact; sending is blocked, in the page
   and on the server, while any placeholder in braces remains.
-- **Rights requests per organisation on the hosted service** (owner, 11 Oct 2026). A pilot
+- **Rights requests per organisation on the hosted service**. A pilot
   organisation may receive 3 requests through the public form in total; an organisation on the
   paid plan needs the add-on (`dsarModuleStatus` ACTIVE, set with
   `npm run db:set-dsar-module`, dry run unless `--execute`) and may then receive 10 per calendar

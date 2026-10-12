@@ -11,9 +11,8 @@
 type Locale = "en" | "es";
 
 /**
- * The editing window, in days. Fifteen since the owner's decision of 11 Oct
- * 2026 (it was ninety); organisations already in their pilot then keep the
- * transition rule in pilotEndsAt.
+ * The editing window, in days (it was ninety); organisations already in their
+ * pilot at the change keep the transition rule in pilotEndsAt.
  */
 export const PILOT_DAYS = 15;
 
@@ -81,8 +80,7 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
 
 /**
  * Impact assessments (type DPIA) an organisation on the pilot tier may create:
- * free for a limited time, two per organisation (the owner's decision of 29
- * September 2026, which replaced the earlier three). The pilot tier is the
+ * free for a limited time, two per organisation (which replaced the earlier three). The pilot tier is the
  * hosted service, and, on a build that sells licences, any organisation with
  * no DPIA licence (isDpiaPilotTier in services/licensing/entitlement.ts). The
  * overall records ceiling (PILOT_LIMITS.assessments) still applies on the

@@ -2,9 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report as a PDF (owner's decision d12, 9 October 2026), in the
- * TODO.LAW print style of the "Inside the box" leaflets (owner's review,
- * 9 October 2026): Archivo Black display and Jost text, ink on white, a
+ * The board report as a PDF, in the
+ * TODO.LAW print style of the "Inside the box" leaflets: Archivo Black display and Jost text, ink on white, a
  * steel-cyan accent, tracked uppercase labels, rounded content boxes with a
  * hairline border, a tinted rounded box for the DPO's comment, a header with
  * the wordmark and an accent rule, a hairline footer.

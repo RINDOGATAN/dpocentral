@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The pilot bar on signed-in pages (owner, 11 Oct 2026, second version). For
+ * The pilot bar on signed-in pages (second version). For
  * the WHOLE pilot, to every member (owners, admins and members alike), a
  * slim top bar gives the end date and the Cloud Plan's price in the reader's
  * currency (English $, Spanish €), with a link to the landing's pricing
@@ -50,8 +50,7 @@ export function pilotEndBarState(
 }
 
 /**
- * Where the bar's link goes: the pricing block on this product's own landing
- * (owner, 11 Oct 2026), in the reader's language. Relative, so it stays on
+ * Where the bar's link goes: the pricing block on this product's own landing, in the reader's language. Relative, so it stays on
  * the app's own domain. The `lang` parameter makes the landing show in that
  * language and lets a signed-in person see it (src/app/page.tsx sends a
  * signed-in visitor without it to the application).

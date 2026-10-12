@@ -140,7 +140,7 @@ export default function ReportsPage() {
   const riskIndicators = complianceData?.riskIndicators ?? [];
 
   // The label is a verdict on the whole programme: given only when every
-  // area has data (owner's decision d3).
+  // area has data.
   const fullCoverage =
     !!coverage && coverage.totalModules > 0 && coverage.ratedModules === coverage.totalModules;
   const scoreLabel =
@@ -193,8 +193,7 @@ export default function ReportsPage() {
       </div>
 
       {/* The headline is the one programme figure ("2 of 10 steps confirmed"),
-          the same as on the dashboard, the menu and All clients (owner's
-          decision d3). The weighted module score stays as detail under it, and
+          the same as on the dashboard, the menu and All clients. The weighted module score stays as detail under it, and
           its "Strong / Moderate" label only when every area has data: a label
           on partial data reads as a verdict it cannot give. */}
       <Card data-testid="reports-headline">

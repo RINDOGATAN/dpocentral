@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Polish round 2 (the owner's decisions of 29 September 2026), seen in a
+ * Polish round 2, seen in a
  * browser.
  *
  * - F11: the sign-in page shows only the methods the server offers. The walk

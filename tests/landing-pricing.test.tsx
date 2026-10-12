@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The landing's pricing block, third version (owner, 11 Oct 2026):
+ * The landing's pricing block, third version:
  *   - one simple block in BOTH languages, right after the hosting block;
  *   - the header carries "Pricing" / "Precios" to the block's anchor, the
  *     last link before the language switch (the phone menu has it too);
@@ -148,7 +148,7 @@ describe("pricing block", () => {
   });
 });
 
-describe("pricing block: legal links, no tax (owner, 11 Oct 2026)", () => {
+describe("pricing block: legal links, no tax", () => {
   const LINKS = {
     en: {
       terms: ["Terms", "https://www.todo.law/legal/eu-cloud-plan-terms"],

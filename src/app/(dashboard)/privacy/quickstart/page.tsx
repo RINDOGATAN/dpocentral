@@ -216,7 +216,7 @@ export default function QuickstartPage() {
 
   // The stored posture answers and the jurisdictions the organisation already
   // declares, for the "What applies" step. The step also asks where the
-  // organisation operates (owner's decision d8, as AI Sentinel's quick start
+  // organisation operates (as AI Sentinel's quick start
   // does), so "What applies" is done once the quick start is.
   const { data: applicabilityData } = trpc.regulations.getApplicability.useQuery(
     { organizationId: orgId },

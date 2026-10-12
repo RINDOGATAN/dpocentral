@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The dashboard home (F3, F9 of the September browser round; Classic retired
- * on 9 October 2026, decision d11).
+ * The dashboard home (F3, F9 of the September browser round; Classic
+ * retired).
  *
  * - It does not ask for the Vendor.Watch portfolio: the quick start reads it.
  * - The quick start refreshes the counts it changes.

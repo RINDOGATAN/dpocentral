@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report (owner's decision d12, 9 October 2026): a short, plain
+ * The board report: a short, plain
  * report a DPO gives to the board or management, on one screen and as a PDF
  * of two to three pages (English or Spanish), for a chosen period (the last
  * full quarter by default). Built from data already in DPO Central: no AI,
@@ -311,7 +311,7 @@ function ReportView({ report }: { report: BoardReport }) {
 }
 
 /**
- * "At a glance" (owner, 9 October 2026): the programme figure as a ring, then
+ * "At a glance": the programme figure as a ring, then
  * the main figures as tiles with a bar, the same as the top of the PDF. One
  * accent, neutral greys, and the product's one warning mark for what needs
  * attention (the words stay in the body colour).

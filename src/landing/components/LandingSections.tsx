@@ -6,7 +6,7 @@
  * tools and how they connect, the short videos, the five stages of the
  * program, and the ways to host it. Both pages then show the customer
  * logos above the footer (only when the configured list is not empty). After
- * the ways, the pricing block (owner, 11 Oct 2026: PricingSection.tsx), in
+ * the ways, the pricing block (PricingSection.tsx), in
  * both languages.
  *
  * Each language has its own copy under `<locale>.*` in the landing
@@ -81,7 +81,7 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
   },
   en: {
     bullets: { ais: 4, dpc: 5, vw: 3 },
-    // Three ways, as in Spanish (owner, 10 Oct 2026): the kit and the Box stay on the
+    // Three ways, as in Spanish: the kit and the Box stay on the
     // storefront's Run it your way page only.
     ways: [
       { icon: Cloud, action: "none" },
@@ -89,7 +89,7 @@ const SETUP: Record<LandingLocale, LocaleSetup> = {
       { icon: HardDrive, action: "mail" },
     ],
     captionsLang: "en",
-    // Customer logos on the English page too (draft, 11 Oct 2026).
+    // Customer logos on the English page too.
     logos: true,
   },
 };

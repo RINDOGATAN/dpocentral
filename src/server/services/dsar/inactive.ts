@@ -4,7 +4,7 @@
 /**
  * Hosted service only: open rights requests with no activity for 30 days are
  * deleted, after an e-mail notice to the organisation's owners and
- * administrators 7 days before (owner's decision, 11 October 2026). Run once
+ * administrators 7 days before. Run once
  * a day by /api/cron/dsar-inactive. The self-hosted kit is never touched.
  *
  * Activity: the latest of the request's own last change, any change to one of

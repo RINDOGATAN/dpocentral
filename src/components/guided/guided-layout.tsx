@@ -3,8 +3,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The dashboard layout (Guided, the only one since Classic was retired on
- * 9 October 2026, owner's decision d11): a slim top bar, the privacy program
+ * The dashboard layout (Guided, the only one since Classic was retired):
+ * a slim top bar, the privacy program
  * path as a left menu from the `lg` breakpoint, and on smaller screens a
  * one-line stage bar that opens the same path in the side sheet. The footer
  * and the feedback dialog come from dashboard-shell.tsx.
@@ -92,7 +92,7 @@ export function GuidedLayout({
   const td = useTranslations("documentRegister");
   const statuses = useProgramPath();
   // The document register's states and what needs action: the same answer
-  // the dashboard panel reads (decisions d4 and d6).
+  // the dashboard panel reads.
   const { overview } = useProgrammeOverview();
   const plan = usePlanState();
   const { organization } = useOrganization();

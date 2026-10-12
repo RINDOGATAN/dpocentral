@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report PDF (owner's decision d12). See ./context.ts. The period
+ * The board report PDF. See ./context.ts. The period
  * is the one asked for, or the last full quarter (the default, and what the
  * document pack holds).
  */

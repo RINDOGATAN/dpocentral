@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The landing's pricing block (owner, 11 Oct 2026, third version): one
+ * The landing's pricing block (third version): one
  * simple block, right under the hosting block, in both languages, matching
  * the storefront home's pricing block. A title, one row (what is offered |
  * what it costs), a "Start free" button to the existing sign-up, a small
@@ -16,11 +16,11 @@
  * named only in Spanish ("en la nube UE").
  *
  * Under the price row, one small line links the plan's terms and its
- * sub-processors on the storefront (owner, 11 Oct 2026); the block says
+ * sub-processors on the storefront; the block says
  * nothing about tax.
  *
  * Payment links: the euro link is the storefront's (src/content/plan-nube-ue.ts),
- * the dollar link is the owner's. Only yearly links exist. The pilot's days
+ * the dollar link is a separate payment link. Only yearly links exist. The pilot's days
  * are read from the value the service enforces (src/server/services/pilot/limits.ts).
  */
 

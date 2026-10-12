@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report (owner's decision d12, 9 October 2026): the first document
+ * The board report: the first document
  * that was "not in DPO Central yet" is now produced.
  *
  * - the period: the last full quarter by default, presets, and what is refused;
@@ -132,7 +132,7 @@ describe("the period", () => {
   });
 });
 
-describe("the register and the menu (d12)", () => {
+describe("the register and the menu", () => {
   const state = (facts: DocumentFacts) =>
     evaluateRegister(registerFor({ dsarEnabled: true }), facts).find((d) => d.id === "boardReport")!.status;
 

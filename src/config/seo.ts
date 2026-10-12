@@ -50,7 +50,7 @@ export function prefersSpanish(acceptLanguage: string | null | undefined): boole
 
 /**
  * The language the landing shows, decided on the server so the first paint is
- * already in it (owner, 10 Oct 2026: a Spanish browser with no cookie saw English):
+ * already in it (a Spanish browser with no cookie saw English):
  * `?lang=` first, then the cookie's choice, then the browser's Accept-Language,
  * else English. The same rule as AI Sentinel's landing.
  */

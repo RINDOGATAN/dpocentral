@@ -22,7 +22,7 @@ import { collectIncompleteRecords } from "@/server/services/views/queries";
 import { features } from "@/config/features";
 import { loadPathCounts } from "./path-counts";
 
-/** Whether a new DPIA can be started here (decision d5); the same rules as the type grid. */
+/** Whether a new DPIA can be started here; the same rules as the type grid. */
 async function loadDpiaAccess(prisma: Db, organizationId: string): Promise<DocumentFacts["dpiaAccess"]> {
   const hosted = isHostedDeployment();
   await ensureHostedTemplates();

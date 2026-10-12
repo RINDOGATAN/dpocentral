@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report (owner's decision d12, 9 October 2026): read for a period,
+ * The board report: read for a period,
  * and the DPO's comment saved with it. The data is assembled in
  * src/server/services/program/board-report.ts, the same for the page and for
  * the PDF (/api/export/board-report).

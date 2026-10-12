@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The signed-in session lasts 12 hours from sign-in (owner's decision). The
+ * The signed-in session lasts 12 hours from sign-in. The
  * JWT must carry the same lifetime, or the token could outlive the session it
  * stands for. No real database is touched.
  */

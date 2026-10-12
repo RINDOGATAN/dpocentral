@@ -70,12 +70,12 @@ export const languageNames: Record<string, string> = {
 // THIS ENTRY IS A REAL PERSON. It is not a fixture, not a placeholder and not
 // sample data. Do not replace it with an invented profile, and do not add
 // invented profiles beside it: the fictional names, firms and .example
-// addresses that used to live in this file were removed on 2026-09-20 by the
-// owner's decision, and no user may ever be shown an invented person again.
+// addresses that used to live in this file were removed, and no user may ever
+// be shown an invented person again.
 //
 // Only fields that are known to be true are filled in. Every other field is
-// left null or empty on purpose, and must stay that way until the owner
-// supplies the real value — an empty card is correct, a plausible-looking
+// left null or empty on purpose, and must stay that way until the real value
+// is known — an empty card is correct, a plausible-looking
 // invented one is not. The contact address in particular is unset because it
 // is not recorded anywhere in this repository; see the request-routing note in
 // src/server/routers/privacy/experts.ts, which copies every request to our own

@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The rights-request (DSAR) module on the hosted service, per organisation
- * (owner's decisions of 11 October 2026).
+ * The rights-request (DSAR) module on the hosted service, per organisation.
  *
  *  - Self-hosted kit: unchanged. The module is open and never limited.
  *  - Hosted, pilot organisation (plan PILOT): the module is open, with at most

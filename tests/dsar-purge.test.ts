@@ -3,8 +3,8 @@
 
 /**
  * The rights-request purge (scripts/purge-dsar-data.ts over
- * src/server/services/dsar/purge.ts), prepared for the owner's go and never
- * run by the build:
+ * src/server/services/dsar/purge.ts), run by hand only, never
+ * by the build:
  *
  *  - a dry run counts every kind of record and deletes nothing;
  *  - a real run deletes children first, in one transaction per organisation,

@@ -3,7 +3,7 @@
 
 /**
  * Which documents go into the document pack, and which stay out and why
- * (owner's decisions, 9 October 2026, step 5: one click on the dashboard's
+ * (one click on the dashboard's
  * documents panel gives one ZIP of every document in the "ready" state, and,
  * as an option, the drafts too, marked as drafts in their file names).
  *

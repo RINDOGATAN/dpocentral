@@ -85,7 +85,7 @@ afterEach(() => {
 });
 
 describe("assessment.create on a gated type", () => {
-  // Since 29 September 2026 the DPIA is not gated here (two are free on the
+  // The DPIA is not gated here (two are free on the
   // pilot tier, tests/hosted-open-gates.test.ts); the PIA still is.
   it("answers FORBIDDEN with the reason, and creates nothing", async () => {
     mocks.prisma.assessmentTemplate.findFirst.mockResolvedValue(PIA_TEMPLATE);

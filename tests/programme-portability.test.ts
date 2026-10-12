@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Programme portability (owner's decision, 9 October 2026; the EU Data Act,
+ * Programme portability (the EU Data Act,
  * Chapter VI): src/server/services/portability.
  *
  *  - the round trip: export, import into an empty organisation, export again:

@@ -3,8 +3,7 @@
 
 /**
  * Pilot-ending reminders, run once a day by /api/cron/pilot-reminders
- * (approved by the owner on 11 Oct 2026; the wording is his to review before
- * the switch goes on).
+ * (off until its feature switch is turned on).
  *
  * Two e-mails per organisation on the hosted pilot, to its owners and
  * administrators only (not every member):

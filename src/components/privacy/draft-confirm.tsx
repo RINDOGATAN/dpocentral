@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Drafts count once confirmed (owner's decision d2, 9 October 2026).
+ * Drafts count once confirmed.
  *
  * - `DraftBadge`: "To confirm" on a record the quick start, a template or
  *   another client's copy drafted and nobody has confirmed yet.

@@ -149,7 +149,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
             </p>
           )}
           {hostedPilot && (
-            // The editing terms only (owner, 11 Oct 2026): the old pilot sentence is gone.
+            // The editing terms only: the old pilot sentence is gone.
             <p
               data-testid="hosted-pilot-terms"
               className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground"

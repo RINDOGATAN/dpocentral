@@ -3,7 +3,7 @@
 
 /**
  * GET /api/export/board-report?organizationId=&from=YYYY-MM-DD&to=YYYY-MM-DD&locale=
- * The board report as a PDF (owner's decision d12), for the period asked for
+ * The board report as a PDF, for the period asked for
  * or the last full quarter. Same authentication as the other exports: the
  * session, then membership of the organisation. A member limited to
  * departments gets no organisation-wide report, as on the dashboard.

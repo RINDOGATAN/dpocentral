@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Drafts count once confirmed (owner's decision d2, 9 October 2026), as in AI
+ * Drafts count once confirmed, as in AI
  * Sentinel (its src/server/services/provenance and routers/governance/provenance.ts).
  *
  * A data asset, a processing activity or a vendor that the quick start, an

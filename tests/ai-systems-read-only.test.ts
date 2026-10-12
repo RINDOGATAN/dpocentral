@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * AI systems are read-only in DPO Central (the owner's decision, 27 Sep 2026:
- * "show AI systems read-only with 'Govern this in AI Sentinel'"). The three
+ * AI systems are read-only in DPO Central ("show AI systems read-only with 'Govern this in AI Sentinel'"). The three
  * mutating procedures — create, update, delete — must refuse, with a plain
  * message pointing to AI Sentinel, and must write nothing to the ai_systems
  * table. A legitimate OWNER is used, so it is the read-only rule that refuses,
