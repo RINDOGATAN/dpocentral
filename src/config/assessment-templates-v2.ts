@@ -254,7 +254,7 @@ const liaV2: V2Template = {
           ],
           help: L(
             "Reasonable expectations turn on the relationship and how the data was collected. The less expected, the harder the interest is to justify. Example: \"Clearly expected: customers expect fraud checks on payments.\" Source: GDPR Recital 47.",
-            "Las expectativas razonables dependen de la relación y de cómo se recabaron los datos. Cuanto menos esperado, más difícil de justificar el interés. Ejemplo: «Claramente esperado: los clientes esperan controles de fraude en los pagos». Fuente: RGPD, considerando 47.",
+            "Las expectativas razonables dependen de la relación y de cómo se han recabado los datos. Cuanto menos esperado, más difícil de justificar el interés. Ejemplo: «Claramente esperado: los clientes esperan controles de fraude en los pagos». Fuente: RGPD, considerando 47.",
           ),
         },
         {

@@ -215,7 +215,7 @@ ${CSV_TABLES.map((t) => `- \`csv/${t.file}\`: ${t.en}.`).join("\n")}
 `,
   es: (dsar) => `# Tu programa de privacidad, exportado de DPO Central
 
-Este archivo comprimido contiene todo lo que tu organización introdujo en DPO
+Este archivo comprimido contiene todo lo que tu organización ha introducido en DPO
 Central, en un formato abierto que puedes leer, guardar y llevar a otra
 plataforma. Es tuyo.
 
@@ -255,9 +255,9 @@ están en los registros (\`documentUrl\`, \`url\`).
 ## Borradores y registros confirmados
 
 Los sistemas, las actividades de tratamiento y los proveedores llevan
-\`confirmation\`: \`draft\` (borrador) cuando el registro lo creó una plantilla, el
+\`confirmation\`: \`draft\` (borrador) cuando el registro lo ha creado una plantilla, el
 inicio rápido o una importación y nadie lo ha revisado aún, y \`confirmed\`
-(confirmado) cuando lo introdujo o lo confirmó una persona (con quién y cuándo).
+(confirmado) cuando lo ha introducido o lo ha confirmado una persona (con quién y cuándo).
 Al importar este archivo en DPO Central, todos los registros llegan como
 borradores ("por confirmar") para que una persona los revise antes de que
 cuenten.
@@ -269,7 +269,7 @@ cuenten.
   con los que los proveedores responden a los cuestionarios.
 - El detalle registrado en el registro de auditoría: solo quién hizo qué, sobre
   qué registro y cuándo (\`auditTrail\`).
-${dsar ? "- No se ha omitido nada de las solicitudes de derechos: se pidió incluirlas, así que este archivo contiene datos personales de quienes las hicieron. Guárdalo con el cuidado que eso exige." : "- Las solicitudes de derechos (contienen datos personales de quienes las hicieron). Solo se añaden si quien exporta marca la casilla aparte que lo advierte."}
+${dsar ? "- No se ha omitido nada de las solicitudes de derechos: se ha pedido incluirlas, así que este archivo contiene datos personales de quienes las han hecho. Guárdalo con el cuidado que eso exige." : "- Las solicitudes de derechos (contienen datos personales de quienes las han hecho). Solo se añaden si quien exporta marca la casilla aparte que lo advierte."}
 
 ## Versiones
 

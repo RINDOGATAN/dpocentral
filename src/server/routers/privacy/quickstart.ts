@@ -976,7 +976,7 @@ export const quickstartRouter = createTRPCRouter({
             assessmentType: "DPIA",
             reason:
               templateLang === "es"
-                ? `Creada automáticamente: el inicio rápido marcó ${hrVendor.vendorName} como de alto riesgo${hrVendor.hasTransfers ? " (incluye transferencias internacionales)" : ""}`
+                ? `Creada automáticamente: el inicio rápido ha marcado ${hrVendor.vendorName} como de alto riesgo${hrVendor.hasTransfers ? " (incluye transferencias internacionales)" : ""}`
                 : `Auto-generated: ${hrVendor.vendorName} flagged as high-risk during quickstart import${hrVendor.hasTransfers ? " (includes international transfers)" : ""}`,
             locale: templateLang,
           });

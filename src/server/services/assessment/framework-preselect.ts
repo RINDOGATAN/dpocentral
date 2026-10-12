@@ -18,7 +18,7 @@ import {
 
 const NOTE = {
   en: "Preselected from the jurisdictions your organization declared. Change it if this assessment needs other frameworks.",
-  es: "Preseleccionado a partir de las jurisdicciones que declaró tu organización. Cámbialo si esta evaluación necesita otros marcos.",
+  es: "Preseleccionado a partir de las jurisdicciones que ha declarado tu organización. Cámbialo si esta evaluación necesita otros marcos.",
 } as const;
 
 /** The section of the template that holds the framework question, if any. */

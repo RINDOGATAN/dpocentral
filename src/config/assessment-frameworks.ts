@@ -294,7 +294,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
     citation: { en: "11 CCR 7152(a)(8)", es: "11 CCR 7152(a)(8)" },
     label: {
       en: "The names and positions of the people who prepared, reviewed and approved the assessment",
-      es: "Los nombres y cargos de quienes prepararon, revisaron y aprobaron la evaluación",
+      es: "Los nombres y cargos de quienes han preparado, revisado y aprobado la evaluación",
     },
     questionIds: ["q8_7"],
   },
