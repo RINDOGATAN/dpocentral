@@ -32,6 +32,7 @@ import {
   templateMetaForLocale,
 } from "@/server/services/assessment/template-locales";
 import { PDF, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 /** What the report reads of an assessment. */
 export const ASSESSMENT_EXPORT_INCLUDE = {
@@ -173,8 +174,8 @@ export async function buildAssessmentExport(
       }
     : undefined;
 
-  const buffer = await renderToBuffer(
-    AssessmentReport({ data, t, locale: locale, healthAdtech })
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
+    AssessmentReport({ data, t, locale: locale, healthAdtech }))
   );
   return {
     data: new Uint8Array(buffer),

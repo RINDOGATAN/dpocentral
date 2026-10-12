@@ -4,6 +4,7 @@
 import React from "react";
 import { Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import { tokens } from "../tokens";
+import { pdfChrome } from "@/server/services/export/pdf-locale";
 
 const s = StyleSheet.create({
   page: {
@@ -88,6 +89,7 @@ export function PageFrame({
   children: React.ReactNode;
   showTopRule?: boolean;
 }) {
+  const chrome = pdfChrome();
   return (
     <Page size={tokens.page.size} style={s.page} wrap>
       {showTopRule && <View style={s.topRule} fixed />}
@@ -97,10 +99,7 @@ export function PageFrame({
       </View>
       {children}
       <View style={s.footer} fixed>
-        <Text style={s.footerDisclaimer}>
-          DPO Central provides informational tools and templates, not legal advice.
-          Verify with qualified counsel before relying on outputs.
-        </Text>
+        <Text style={s.footerDisclaimer}>{chrome.disclaimer}</Text>
         <View style={s.footerRow}>
           <Text style={s.footerLabel}>DPO Central</Text>
           <Text style={s.footerLabel}>{date}</Text>

@@ -4538,6 +4538,10 @@
         "notEntitled": "su exportación no está incluida en esta instalación",
         "notForThisMember": "reservado a quienes gestionan las solicitudes de derechos"
       }
+    },
+    "chrome": {
+      "generatedBy": "Generado con DPO Central",
+      "noRecords": "Sin registros"
     }
   },
   "docs": {

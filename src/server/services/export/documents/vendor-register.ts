@@ -9,6 +9,7 @@ import { VendorRegisterDocument } from "@/server/services/export/vendor-register
 import { vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildVendorRegisterExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -71,11 +72,11 @@ export async function buildVendorRegisterExport(args: ExportArgs): Promise<Expor
     return { data: vendorsToCSV(data), filename: `${base}.csv`, contentType: CSV };
   }
 
-  const buffer = await renderToBuffer(
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
       VendorRegisterDocument({ vendors: data, orgName, t, tCommon, tEnum, locale }),
       args.draftNote,
-    ),
+    ))
   );
   return { data: new Uint8Array(buffer), filename: `${base}.pdf`, contentType: PDF };
 }

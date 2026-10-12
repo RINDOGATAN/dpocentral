@@ -14,6 +14,7 @@ import { fmtDate } from "@/server/services/export/pdf-styles";
 import { assessmentProgress } from "@/server/services/assessment/progress";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -127,8 +128,8 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
   const t = await getTranslations({ locale, namespace: "pdf.assessmentPortfolio" });
 
   // ── Render PDF ─────────────────────────────────────────
-  const buffer = await renderToBuffer(
-    withDraftGapsPage(AssessmentPortfolioReport({ data: reportData, t, locale }), args.draftNote),
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
+    withDraftGapsPage(AssessmentPortfolioReport({ data: reportData, t, locale }), args.draftNote))
   );
 
   const filename = `Assessment-Portfolio-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
