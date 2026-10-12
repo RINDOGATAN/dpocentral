@@ -30,6 +30,21 @@ vi.mock("@/lib/jit-provisioning", () => ({
 }));
 
 import { POST } from "@/app/api/import/portfolio-vendors/route";
+import { signImportIdentity } from "@/lib/import-identity";
+
+// The identity statement is mandatory; each request names the body's account.
+function identityFor(body: unknown): Record<string, string> {
+  const email = (body as { userEmail?: unknown })?.userEmail;
+  if (typeof email !== "string") return {};
+  return {
+    "x-import-identity": signImportIdentity({
+      issuer: "vendorwatch",
+      audience: "dpocentral-import",
+      email,
+      secret: "identity-secret",
+    }),
+  };
+}
 
 function makeRequest(body: unknown, apiKey: string | null = "secret-key") {
   return new Request("http://localhost/api/import/portfolio-vendors", {
@@ -37,6 +52,7 @@ function makeRequest(body: unknown, apiKey: string | null = "secret-key") {
     headers: {
       "Content-Type": "application/json",
       ...(apiKey ? { "x-api-key": apiKey } : {}),
+      ...identityFor(body),
     },
     body: JSON.stringify(body),
   });
@@ -45,6 +61,7 @@ function makeRequest(body: unknown, apiKey: string | null = "secret-key") {
 beforeEach(() => {
   vi.clearAllMocks();
   process.env.DPC_IMPORT_API_KEYS = "secret-key, other-key";
+  process.env.IMPORT_IDENTITY_SECRETS = "identity-secret";
   ensureDpoUser.mockResolvedValue({ id: "dpo-user-1" });
   findUnique.mockResolvedValue(null);
   upsert.mockResolvedValue({ id: "pv-1" });
