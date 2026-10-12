@@ -12,7 +12,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
-import { createCheckoutSession, createCustomer } from "@/lib/stripe";
+import { getLocale } from "next-intl/server";
+import { createCheckoutSession, createCustomer, getCustomer } from "@/lib/stripe";
+import { checkoutCurrency, COUNTRY_HEADER } from "@/lib/region";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 
@@ -182,12 +184,23 @@ export async function POST(request: NextRequest) {
       stripeCustomerId = stripeCustomer.id;
     }
 
-    // Determine currency from geo-IP (US → USD, else EUR)
-    const country = request.headers.get("x-vercel-ip-country") || "";
-    const isUSD = country === "US";
+    // The currency the page showed (src/lib/region.ts: Spanish pages and EU
+    // visitors in euros, everyone else in US dollars), unless the Stripe
+    // customer already has a billing currency, which Stripe keeps fixed.
+    let storedCurrency: string | null = null;
+    if (stripeCustomerId) {
+      const existing = await getCustomer(stripeCustomerId);
+      storedCurrency = "deleted" in existing && existing.deleted ? null : (existing.currency ?? null);
+    }
+    const currency = checkoutCurrency({
+      stored: storedCurrency,
+      locale: await getLocale(),
+      country: request.headers.get(COUNTRY_HEADER),
+    });
+    const isUSD = currency === "USD";
     const usdPriceId = process.env.STRIPE_PRICE_ID_USD;
 
-    // Build line items (use USD price for US visitors if available)
+    // Build line items (the USD price when the currency is USD and it is configured)
     const lineItems = skillPackages.map((pkg) => ({
       priceId: isUSD && usdPriceId ? usdPriceId : pkg.stripePriceId!,
       skillPackageId: pkg.id,

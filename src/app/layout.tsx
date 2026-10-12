@@ -13,6 +13,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { BrandTheme } from "@/components/brand-theme";
 import { PilotShell } from "@/components/pilot/pilot-shell";
 import { brand } from "@/config/brand";
+import { headers } from "next/headers";
+import { RegionProvider } from "@/components/region-provider";
+import { COUNTRY_HEADER, isEuCountry } from "@/lib/region";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -106,18 +109,21 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   const locale = await getLocale();
   const messages = await getMessages();
+  const eu = isEuCountry((await headers()).get(COUNTRY_HEADER));
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${jost.variable} ${archivoBlack.variable} font-sans antialiased`}>
         <BrandTheme />
         <NextIntlClientProvider messages={messages}>
-          <Providers session={session}>
-            <PilotShell>
-              {children}
-              <Toaster />
-            </PilotShell>
-          </Providers>
+          <RegionProvider eu={eu}>
+            <Providers session={session}>
+              <PilotShell>
+                {children}
+                <Toaster />
+              </PilotShell>
+            </Providers>
+          </RegionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

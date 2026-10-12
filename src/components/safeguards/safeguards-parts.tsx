@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
+import { useNamesEuHosting } from "@/components/region-provider";
 
 export type AnswerChoice = "shared_eu" | "managed" | "own_hardware";
 export type RequestChoice = "managed" | "own_hardware";
@@ -42,6 +43,8 @@ export function SafeguardsChoiceList({
 }) {
   const t = useTranslations("safeguards.choices");
   const name = useId();
+  // The shared cloud names its EU hosting only where EU copy is shown.
+  const sfx = useNamesEuHosting() ? "" : "OutsideEu";
   return (
     <fieldset className="space-y-2" disabled={disabled}>
       <legend className="text-sm font-medium mb-2">{legend}</legend>
@@ -68,8 +71,12 @@ export function SafeguardsChoiceList({
               className="mt-1 h-4 w-4 shrink-0 accent-primary"
             />
             <span className="min-w-0 space-y-1">
-              <span className="block text-sm font-medium">{t(`${choice}.title`)}</span>
-              <span className="block text-sm text-muted-foreground">{t(`${choice}.description`)}</span>
+              <span className="block text-sm font-medium">
+                {choice === "shared_eu" ? t(`shared_eu.title${sfx}`) : t(`${choice}.title`)}
+              </span>
+              <span className="block text-sm text-muted-foreground">
+                {choice === "shared_eu" ? t(`shared_eu.description${sfx}`) : t(`${choice}.description`)}
+              </span>
             </span>
           </label>
         );

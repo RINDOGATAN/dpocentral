@@ -29,8 +29,8 @@
  *     (services/ai/posture.ts requireAi, routers/privacy/ai.ts setPosture).
  *   - The cloud is hosted in the EU (database in Frankfurt, functions in fra1:
  *     vercel.json, PR #96), and only the Spanish copy says so: the English copy
- *     names no hosting region (no mention of EU hosting to US
- *     visitors; the English landing does not know the visitor's country).
+ *     names no hosting region (EU hosting is named in English only to
+ *     visitors in the EU: src/lib/region.ts).
  *   - Spanish names are the boxes' own titles; "Tu propio hardware" is the
  *     customer's own equipment, not the TODO.LAW Box, and the deployment copy follows
  *     that box (installed on the organization's equipment, on its premises).

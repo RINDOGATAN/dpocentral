@@ -8944,7 +8944,9 @@
     "choices": {
       "shared_eu": {
         "title": "a) Por ahora, la nube compartida de la UE",
-        "description": "Trabajo con encargados y subencargados que tienen auditorías ISO 27001 o SOC 2 Tipo II, en una nube compartida alojada en la UE. Las funciones de IA solo se activan cuando yo lo pida y con proveedores aprobados para cada caso."
+        "description": "Trabajo con encargados y subencargados que tienen auditorías ISO 27001 o SOC 2 Tipo II, en una nube compartida alojada en la UE. Las funciones de IA solo se activan cuando yo lo pida y con proveedores aprobados para cada caso.",
+        "titleOutsideEu": "a) Por ahora, la nube compartida de la UE",
+        "descriptionOutsideEu": "Trabajo con encargados y subencargados que tienen auditorías ISO 27001 o SOC 2 Tipo II, en una nube compartida alojada en la UE. Las funciones de IA solo se activan cuando yo lo pida y con proveedores aprobados para cada caso."
       },
       "managed": {
         "title": "b) Un servidor virtual enteramente gestionado, solo para nosotros",
@@ -8955,7 +8957,8 @@
         "description": "Necesitamos instalarlo en nuestras propias máquinas, con modelos de IA que funcionen en local."
       },
       "later": {
-        "title": "Decidir más tarde (se trata como la nube compartida de la UE)"
+        "title": "Decidir más tarde (se trata como la nube compartida de la UE)",
+        "titleOutsideEu": "Decidir más tarde (se trata como la nube compartida de la UE)"
       }
     },
     "form": {
@@ -8992,6 +8995,7 @@
       "question": "¿Qué garantías de seguridad, confidencialidad y protección de datos necesitas?",
       "current": "Tu respuesta: {choice}",
       "none": "Sin respuesta todavía. Mientras no respondas, se aplica la nube compartida de la UE.",
+      "noneOutsideEu": "Sin respuesta todavía. Mientras no respondas, se aplica la nube compartida de la UE.",
       "openRequest": "Recibimos tu solicitud el {date} y te escribiremos por correo electrónico.",
       "save": "Guardar respuesta",
       "saved": "Respuesta guardada",
@@ -9001,8 +9005,8 @@
   "pilot": {
     "signIn": "Piloto gratuito: {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
     "endBar": {
-      "trial": "Gratis durante {days} días, hasta el {date}. Después, exporta tu programa o sigue con el Plan nube UE: 179 € al mes o 1.800 € al año.",
-      "trialTransition": "Gratis hasta el {date}. Después, exporta tu programa o sigue con el Plan nube UE: 179 € al mes o 1.800 € al año.",
+      "trial": "Gratis durante {days} días, hasta el {date}. Después, exporta tu programa o sigue con el Plan nube UE: {price}.",
+      "trialTransition": "Gratis hasta el {date}. Después, exporta tu programa o sigue con el Plan nube UE: {price}.",
       "ending": "Tu piloto termina el {date}. Pasa al plan de pago para seguir editando con todos tus registros.",
       "readOnly": "Tu piloto ha terminado: la organización está en solo lectura y puedes exportarla cuando quieras.",
       "pricing": "Ver precios",

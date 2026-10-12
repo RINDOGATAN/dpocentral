@@ -125,14 +125,15 @@ describe("pricing block", () => {
   });
 
   it("starts the pilot at sign-in and subscribes yearly with the link of the page's currency", () => {
-    expect(PLAN_PAYMENT_LINK.es).toBe("https://buy.stripe.com/fZubJ273hbnnbH56qn4sE04");
-    expect(PLAN_PAYMENT_LINK.en).toBe("https://buy.stripe.com/aFa9AU73h3UV26v7ur4sE05");
-    for (const locale of ["en", "es"] as const) {
+    expect(PLAN_PAYMENT_LINK.EUR).toBe("https://buy.stripe.com/fZubJ273hbnnbH56qn4sE04");
+    expect(PLAN_PAYMENT_LINK.USD).toBe("https://buy.stripe.com/aFa9AU73h3UV26v7ur4sE05");
+    // Outside the EU (the default): English in dollars, Spanish in euros.
+    for (const [locale, cur, other] of [["en", "USD", "EUR"], ["es", "EUR", "USD"]] as const) {
       const html = section(locale);
       expect(html).toMatch(/<a href="\/sign-in"[^>]*data-testid="pricing-start"/);
       const sub = html.match(/<a[^>]*data-testid="pricing-subscribe"[^>]*>/)?.[0] ?? "";
-      expect(sub).toContain(`href="${PLAN_PAYMENT_LINK[locale]}"`);
-      expect(sub).not.toContain(PLAN_PAYMENT_LINK[locale === "en" ? "es" : "en"]);
+      expect(sub).toContain(`href="${PLAN_PAYMENT_LINK[cur]}"`);
+      expect(sub).not.toContain(PLAN_PAYMENT_LINK[other]);
     }
   });
 

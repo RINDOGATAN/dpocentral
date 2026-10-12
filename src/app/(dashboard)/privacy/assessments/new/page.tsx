@@ -38,7 +38,7 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { SKILL_PACKAGE_IDS, COMING_SOON_SKILL_IDS } from "@/config/skill-packages";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { DpiaFreeNote, useDpiaQuota } from "@/components/pilot/dpia-free-note";
 import { isAssessmentTypeLocked, isAssessmentTypeOffered, isPremiumTypeKey } from "@/lib/premium-gate";
@@ -60,6 +60,7 @@ const ASSESSMENT_TYPES: Array<{
 ];
 
 export default function NewAssessmentPage() {
+  const formatPrice = useFormatPrice();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { organization } = useOrganization();

@@ -33,7 +33,7 @@ import { SKILL_PACKAGE_IDS, SKILL_DISPLAY_NAMES } from "@/config/skill-packages"
 import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { brand } from "@/config/brand";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useTranslations, useLocale } from "next-intl";
 import { ListFilterBar } from "@/components/privacy/list-filter-bar";
@@ -59,6 +59,7 @@ const statusColors: Record<string, string> = {
 // report prints. The old map was 2.59 to 1 at CRITICAL.
 
 export default function VendorsPage() {
+  const formatPrice = useFormatPrice();
   const t = useTranslations("pages.vendors");
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("vendors");

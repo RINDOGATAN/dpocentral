@@ -24,7 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { features } from "@/config/features";
-import { formatPrice } from "@/lib/currency";
+import { useFormatPrice } from "@/components/region-provider";
 import { StatusNote } from "@/components/ui/status-note";
 
 interface EnableFeatureModalProps {
@@ -48,6 +48,7 @@ export function EnableFeatureModal({
   const [error, setError] = useState<string | null>(null);
   // Declared before the early returns below — hooks must not be conditional.
   const t = useTranslations("enableFeature");
+  const formatPrice = useFormatPrice();
 
   if (!open) return null;
 

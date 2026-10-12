@@ -5,7 +5,7 @@
  * The pilot bar on signed-in pages (second version). For
  * the WHOLE pilot, to every member (owners, admins and members alike), a
  * slim top bar gives the end date and the Cloud Plan's price in the reader's
- * currency (English $, Spanish €), with a link to the landing's pricing
+ * currency (pilotEndBarPrice), with a link to the landing's pricing
  * block. In the last PILOT_END_BAR_DAYS days it switches to the stronger
  * "ending" wording; once the organisation is read-only it says so and that
  * the export stays open. Never shown off the hosted pilot, nor to an
@@ -15,6 +15,8 @@
  * Pure: no React, no Prisma. The component in
  * src/components/pilot/hosted-pilot.tsx feeds it the Settings card's status.
  */
+
+import type { Currency } from "./region";
 
 /** How many days before the end of the editing window the bar appears. */
 export const PILOT_END_BAR_DAYS = 5;
@@ -64,6 +66,16 @@ export function pilotEndBarPricingUrl(locale: string | undefined): string {
   return locale?.toLowerCase().startsWith("es")
     ? PILOT_END_BAR_PRICING_URL.es
     : PILOT_END_BAR_PRICING_URL.en;
+}
+
+/**
+ * The Cloud Plan's price as the bar writes it: Spanish always in euros;
+ * English in euros for EU visitors and US dollars for everyone else
+ * (src/lib/region.ts).
+ */
+export function pilotEndBarPrice(locale: string | undefined, currency: Currency): string {
+  if (locale?.toLowerCase().startsWith("es")) return "179 € al mes o 1.800 € al año";
+  return currency === "EUR" ? "€179 a month or €1,800 a year" : "$179 a month or $1,800 a year";
 }
 
 /** The end date as the bar writes it: "26 October 2026" / "26 de octubre de 2026". */
