@@ -6529,7 +6529,7 @@
           "desc": "Lo usas desde el navegador, en el ordenador o en el móvil. No instalas nada y puedes llevarte tu programa a otro sitio cuando quieras, mediante una sencilla exportación."
         },
         "managed": {
-          "title": "Servidor virtual gestionado",
+          "title": "Instancia gestionada",
           "desc": "Una instancia aislada que operamos nosotros desde Asturias, con disponibilidad de LLM abiertos y SLA a medida."
         },
         "own": {

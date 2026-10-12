@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
 const CHOICE_LABEL: Record<string, string> = {
-  managed: "Managed virtual server",
+  managed: "Managed instance",
   own_hardware: "Own hardware",
 };
 

@@ -10,6 +10,8 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
 import path from "path";
 import {
+  HOSTING,
+  hostingLine,
   COPY,
   LADDER,
   QUESTIONS,
@@ -22,6 +24,7 @@ import {
   recommend,
   requirementsOf,
   type Answers,
+  type GuideWay,
   type Locale,
 } from "@/landing/content/safeguards";
 
@@ -86,7 +89,7 @@ describe.each(LOCALES)("level table (%s)", (locale) => {
     const c = COPY[locale];
     for (const q of QUESTIONS) for (const o of optionsFor(q, locale)) expect(c.questions[q.id].options[o.value]).toBeTruthy();
     for (const w of LADDER[locale]) expect(c.summaries[w]).toBeTruthy();
-    for (const w of LADDER[locale]) expect(WAY_NAMES[locale][w]).toBeTruthy();
+    for (const w of LADDER[locale]) expect(WAY_NAMES[locale][w as GuideWay]).toBeTruthy();
     // Every requirement reachable in this locale has a label and a note for every way it can be shown against.
     for (const q of QUESTIONS)
       for (const o of optionsFor(q, locale))
@@ -274,5 +277,13 @@ describe("copy rules", () => {
   it("keeps ISO 27001 as the example in question 6, in both languages", () => {
     expect(COPY.en.questions.cert.label).toMatch(/for example ISO 27001/);
     expect(COPY.es.questions.cert.label).toMatch(/por ejemplo, ISO 27001/);
+  });
+});
+
+describe("the cloud's hosting line", () => {
+  it("names EU hosting in Spanish and to EU visitors only, never to other visitors", () => {
+    expect(hostingLine(HOSTING, "es", false)).toContain("UE (Fráncfort)");
+    expect(hostingLine(HOSTING, "en", true)).toContain("EU (Frankfurt)");
+    expect(hostingLine(HOSTING, "en", false)).toBeNull();
   });
 });

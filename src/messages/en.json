@@ -6525,11 +6525,11 @@
         "title": "Where it runs",
         "intro": "Three hosting options, with different safeguards and levels of control.",
         "cloud": {
-          "title": "In the TODO.LAW cloud",
+          "title": "TODO.LAW cloud",
           "desc": "You use it in the browser, on desktop or mobile. Nothing to install, and you can take your program elsewhere whenever you like with a simple export."
         },
         "managed": {
-          "title": "Managed virtual server",
+          "title": "Managed instance",
           "desc": "An isolated instance we run for you from Asturias, Spain, with open LLMs available and a tailored SLA."
         },
         "own": {
