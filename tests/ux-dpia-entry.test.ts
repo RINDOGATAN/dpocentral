@@ -94,6 +94,12 @@ describe("U5: frameworks from the declared jurisdictions", () => {
     expect(data.notes).toMatch(/^Preseleccionado/);
   });
 
+  it("the preselected answer alone leaves the outstanding list folded", () => {
+    const page = read("src/app/(dashboard)/privacy/assessments/[id]/page.tsx");
+    expect(page).toMatch(/nothingAnswered=\{\(assessment\?\.responses \?\? \[\]\)\.every\(/);
+    expect(page).toContain("r.questionId === FRAMEWORK_QUESTION_ID");
+  });
+
   it("does nothing for a template without the question", async () => {
     expect(frameworkSectionId([{ id: "s1", questions: [{ id: "x" }] }])).toBeNull();
   });
