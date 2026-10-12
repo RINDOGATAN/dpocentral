@@ -60,3 +60,13 @@ describe("U1: systems on screen, data asset only in exports", () => {
     expect(hits).toEqual([]);
   });
 });
+
+describe("U1: server messages still find their translation", () => {
+  it("matches the exact English texts the server sends", async () => {
+    const { readFileSync } = await import("node:fs");
+    const inv = readFileSync("src/server/routers/privacy/dataInventory.ts", "utf8");
+    expect(inv).toContain(`"${en.serverErrors.exact.dataAssetNotFound}"`);
+    const rep = readFileSync("src/server/routers/privacy/reports.ts", "utf8");
+    expect(rep).toContain(en.serverErrors.exact.noComplianceDataToSnapshotYetAddData);
+  });
+});

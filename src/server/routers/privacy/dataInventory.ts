@@ -142,7 +142,7 @@ export const dataInventoryRouter = createTRPCRouter({
       if (!asset) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Data asset not found",
+          message: "System not found",
         });
       }
 
@@ -239,7 +239,7 @@ export const dataInventoryRouter = createTRPCRouter({
       if (asset.count === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Data asset not found",
+          message: "System not found",
         });
       }
 
@@ -286,7 +286,7 @@ export const dataInventoryRouter = createTRPCRouter({
       if (asset.count === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Data asset not found",
+          message: "System not found",
         });
       }
 
@@ -399,7 +399,7 @@ export const dataInventoryRouter = createTRPCRouter({
       if (!asset) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Data asset not found",
+          message: "System not found",
         });
       }
 
@@ -820,7 +820,7 @@ export const dataInventoryRouter = createTRPCRouter({
       if (!asset) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Data asset not found",
+          message: "System not found",
         });
       }
 
