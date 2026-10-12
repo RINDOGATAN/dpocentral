@@ -37,6 +37,7 @@ import {
   type AutoFillTarget,
 } from "@/config/dpia-auto-fill-targets";
 import { assertIdsInOrg } from "../../org-ownership";
+import { preselectDpiaFrameworks } from "../../services/assessment/framework-preselect";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
 import { recordName } from "@/lib/record-name";
 
@@ -405,6 +406,20 @@ export const assessmentRouter = createTRPCRouter({
           template: true,
         },
       });
+
+      // A DPIA starts with its frameworks chosen from the jurisdictions the
+      // organisation declared (California only: the California risk
+      // assessment; the EU: Article 35; both: both). It is an ordinary answer
+      // to the first question, so the person can change it there.
+      if (template.type === AssessmentType.DPIA) {
+        await preselectDpiaFrameworks(ctx.prisma, {
+          organizationId: ctx.organization.id,
+          assessmentId: assessment.id,
+          sections: template.sections,
+          userId: ctx.session.user.id,
+          locale: pilotLocale(localeFromCookieGetter(ctx.getCookie)),
+        });
+      }
 
       await ctx.prisma.auditLog.create({
         data: {

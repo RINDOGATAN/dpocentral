@@ -337,6 +337,40 @@ export function conformanceElementsFor(
   return templateId === CONFORMANCE_TEMPLATE_ID ? DPIA_FRAMEWORK_ELEMENTS : null;
 }
 
+// ── Preselection from the organisation's declared jurisdictions ─────────
+
+/**
+ * The jurisdiction codes (src/config/jurisdiction-catalog.ts) that select
+ * each framework when a DPIA is created: the GDPR gives Article 35, the CCPA
+ * gives the California risk assessment.
+ */
+export const FRAMEWORK_JURISDICTION_CODES: Record<FrameworkId, string[]> = {
+  EU_GDPR: ["GDPR"],
+  US_CCPA: ["CCPA"],
+};
+
+/**
+ * The frameworks a new DPIA starts with, from the codes of the jurisdictions
+ * the organisation declared: California only gives the California risk
+ * assessment, the EU gives Article 35, both give both. Null when no declared
+ * jurisdiction selects one (the question is then left for the person, and
+ * the European framework is assumed as before). The person can change it in
+ * the first question.
+ */
+export function frameworksForJurisdictions(codes: readonly string[]): FrameworkId[] | null {
+  const chosen = FRAMEWORK_IDS.filter((f) =>
+    FRAMEWORK_JURISDICTION_CODES[f].some((c) => codes.includes(c))
+  );
+  return chosen.length > 0 ? chosen : null;
+}
+
+/** The answer to store for those frameworks: the template's English options. */
+export function frameworkAnswerFor(frameworks: readonly FrameworkId[]): string {
+  return JSON.stringify(
+    frameworks.map((f) => (f === "EU_GDPR" ? EU_OPTION : CA_OPTION))
+  );
+}
+
 // ── Reading the answers ──────────────────────────────────────────────────
 
 /**

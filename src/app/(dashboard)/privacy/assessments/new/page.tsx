@@ -29,6 +29,7 @@ import {
   ArrowRightLeft,
   Building2,
   Settings2,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -476,6 +477,22 @@ export default function NewAssessmentPage() {
                 <StatusNote tone="info" data-testid="dpia-form-free-note">
                   <DpiaFreeNote detail className="text-sm text-foreground" />
                 </StatusNote>
+              )}
+              {/* The other way to start a DPIA: drafted from a recorded
+                  processing activity (the auto-fill wizard). Not offered once
+                  the pilot's free DPIAs are used up. */}
+              {selectedType === "DPIA" && !(dpiaQuota && dpiaQuota.remaining <= 0) && (
+                <Link
+                  href="/privacy/assessments/auto-fill"
+                  className="flex items-start gap-2 rounded-md border border-border px-3 py-2 text-sm hover:border-primary/50 hover:bg-muted/50 transition-colors min-h-[44px]"
+                  data-testid="dpia-auto-fill-link"
+                >
+                  <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                  <span>
+                    <span className="font-medium text-primary">{tp("autoFillLink")}</span>
+                    <span className="block text-xs text-muted-foreground">{tp("autoFillHint")}</span>
+                  </span>
+                </Link>
               )}
               <div className="space-y-2">
                 <Label htmlFor="name">{tp("name")}</Label>
