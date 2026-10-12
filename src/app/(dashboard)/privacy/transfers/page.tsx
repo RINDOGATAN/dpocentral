@@ -38,6 +38,7 @@ import {
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
+import { useSubmitLock } from "@/lib/use-submit-lock";
 import { useOrganization } from "@/lib/organization-context";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
@@ -93,6 +94,7 @@ export default function TransfersListPage() {
     { enabled: !!orgId }
   );
 
+  const submitLock = useSubmitLock();
   const createTransfer = trpc.dataInventory.createTransfer.useMutation({
     onSuccess: () => {
       toast.success(tToasts("transfer.created"));
@@ -286,6 +288,7 @@ export default function TransfersListPage() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!form.name || !isCountryCode(form.destinationCountry) || !form.mechanism) return;
+              if (!submitLock.acquire()) return;
               createTransfer.mutate({
                 organizationId: orgId,
                 name: form.name,
@@ -294,7 +297,7 @@ export default function TransfersListPage() {
                 mechanism: form.mechanism as any,
                 safeguards: form.safeguards || undefined,
                 description: form.description || undefined,
-              });
+              }, { onSettled: submitLock.release });
             }}
           >
             <div className="space-y-2">

@@ -62,6 +62,7 @@ import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { useOrgRole } from "@/lib/use-org-role";
+import { useSubmitLock } from "@/lib/use-submit-lock";
 import { isCountryCode, normaliseCountryCode } from "@/lib/country-code";
 
 
@@ -144,6 +145,8 @@ export default function DataInventoryPage() {
       router.replace("/privacy/data-inventory?tab=activities", { scroll: false });
     }
   }, [wantsNewActivity, canWrite, router]);
+  const activityLock = useSubmitLock();
+  const transferLock = useSubmitLock();
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -616,6 +619,7 @@ export default function DataInventoryPage() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!activityForm.name || !activityForm.purpose || !activityForm.legalBasis) return;
+              if (!activityLock.acquire()) return;
               createActivity.mutate({
                 organizationId: organization?.id ?? "",
                 name: activityForm.name,
@@ -625,7 +629,7 @@ export default function DataInventoryPage() {
                   ? activityForm.dataSubjects.split(",").map((s) => s.trim()).filter(Boolean)
                   : [],
                 categories: [],
-              });
+              }, { onSettled: activityLock.release });
             }}
           >
             <div className="space-y-2">
@@ -635,6 +639,7 @@ export default function DataInventoryPage() {
                 placeholder={t("activityDialog.namePlaceholder")}
                 value={activityForm.name}
                 onChange={(e) => setActivityForm((f) => ({ ...f, name: e.target.value }))}
+                maxLength={200}
                 required
               />
             </div>
@@ -703,6 +708,7 @@ export default function DataInventoryPage() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!transferForm.name || !isCountryCode(transferForm.destinationCountry) || !transferForm.mechanism) return;
+              if (!transferLock.acquire()) return;
               createTransfer.mutate({
                 organizationId: organization?.id ?? "",
                 name: transferForm.name,
@@ -711,7 +717,7 @@ export default function DataInventoryPage() {
                 mechanism: transferForm.mechanism as any,
                 safeguards: transferForm.safeguards || undefined,
                 description: transferForm.description || undefined,
-              });
+              }, { onSettled: transferLock.release });
             }}
           >
             <div className="space-y-2">

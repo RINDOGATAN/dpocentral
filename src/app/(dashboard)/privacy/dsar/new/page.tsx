@@ -21,6 +21,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
+import { useSubmitLock } from "@/lib/use-submit-lock";
 import { useDsarCanAddRequests } from "@/components/privacy/dsar-module-access-note";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
@@ -70,9 +71,11 @@ export default function NewDSARRequestPage() {
     },
   });
 
+  const submitLock = useSubmitLock();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!organization?.id || !form.type || !form.requesterName || !form.requesterEmail) return;
+    if (!submitLock.acquire()) return;
 
     createRequest.mutate({
       organizationId: organization.id,
@@ -84,7 +87,7 @@ export default function NewDSARRequestPage() {
       relationship: form.relationship || undefined,
       description: form.description || undefined,
       requestedData: form.requestedData || undefined,
-    });
+    }, { onSettled: submitLock.release });
   };
 
   const isValid = form.type && form.requesterName && form.requesterEmail;

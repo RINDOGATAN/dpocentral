@@ -110,6 +110,7 @@ export default function NewDataAssetPage() {
                   placeholder={tp("namePlaceholder")}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  maxLength={200}
                   required
                 />
               </div>

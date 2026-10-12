@@ -11,7 +11,7 @@ import prisma from "@/lib/prisma";
 import { getSecurityModule } from "@/lib/security";
 import { sanitizeStrings } from "@/lib/sanitize";
 import { formatUserError, isTransientDbMessage, TRANSIENT_MESSAGE } from "@/lib/format-error";
-import { invalidInputMessage, newErrorReference, unexpectedFailureMessage } from "@/lib/error-reference";
+import { invalidInputMessage, newErrorReference, sessionEndedMessage, unexpectedFailureMessage } from "@/lib/error-reference";
 import { logger } from "@/lib/logger";
 import { localizeServerMessage } from "@/lib/server-error-messages";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
@@ -81,6 +81,10 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         ),
       ].slice(0, 5);
       message = invalidInputMessage(locale(), fields);
+    } else if (error.code === "UNAUTHORIZED" && (!error.message || error.message === "UNAUTHORIZED")) {
+      // No session (expired, or signed out in another tab): say so and what
+      // to do, rather than the bare code.
+      message = sessionEndedMessage(locale());
     } else if (error.code === "INTERNAL_SERVER_ERROR") {
       // A TRPCError thrown on purpose carries a message written for people
       // and no foreign cause. Anything else is unexpected: the person gets
