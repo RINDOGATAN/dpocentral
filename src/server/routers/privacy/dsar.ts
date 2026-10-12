@@ -825,19 +825,20 @@ export const dsarRouter = createTRPCRouter({
           dsarIntakeForms: { where: { isActive: true }, take: 1 },
         },
       });
-      // No organisation, no active form, or (hosted) the add-on not active:
-      // one and the same answer, so the page cannot tell them apart.
-      if (!org || org.dsarIntakeForms.length === 0 || dsarModuleGate(org) === "inactive") {
+      // No organisation or no active form: not found.
+      if (!org || org.dsarIntakeForms.length === 0) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Intake form not available for this organization",
         });
       }
       const form = org.dsarIntakeForms[0]!;
-      // At the pilot's or the month's limit the form shows the organisation's
-      // privacy contact instead of taking the request.
-      const access = await getDsarModuleAccess(ctx.prisma, org);
-      const accepting = acceptsPublicRequest(access);
+      // At the pilot's or the month's limit, or (hosted) with the add-on not
+      // active, the form exists but takes no request: the page shows the
+      // organisation's privacy contact instead (submitPublic refuses anyway).
+      const accepting =
+        dsarModuleGate(org) !== "inactive" &&
+        acceptsPublicRequest(await getDsarModuleAccess(ctx.prisma, org));
       return {
         orgName: org.name,
         title: form.title,

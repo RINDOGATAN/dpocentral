@@ -194,6 +194,22 @@ export default function NewAssessmentPage() {
     isAssessmentTypeOffered({ type: at.type, entitledTypes, comingSoon: isComingSoon(at.type) })
   );
 
+  // A type that is not offered (announced as coming soon, with no template)
+  // cannot be opened through its address either: ?type=VENDOR falls back to
+  // the type picker once the entitlements are known.
+  const typeFromUrlNotOffered =
+    entitlementsLoaded &&
+    !!selectedType &&
+    !offeredTypes.some((at) => at.type === selectedType);
+  useEffect(() => {
+    if (!typeFromUrlNotOffered) return;
+    setSelectedType(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("type");
+    const qs = params.toString();
+    router.replace(qs ? `/privacy/assessments/new?${qs}` : "/privacy/assessments/new");
+  }, [typeFromUrlNotOffered, searchParams, router]);
+
   const handleTypeSelect = (type: string) => {
     if (!entitlementsLoaded) return;
     if (isComingSoon(type)) return;
@@ -446,7 +462,7 @@ export default function NewAssessmentPage() {
       )}
 
       {/* No templates found */}
-      {selectedType && !templatesLoading && templates && templates.length === 0 && (
+      {selectedType && entitlementsLoaded && !typeFromUrlNotOffered && !templatesLoading && templates && templates.length === 0 && (
         <Card>
           <CardContent className="py-8 text-center">
             <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />

@@ -3701,7 +3701,7 @@
       "assetsLinked": "Linked systems updated",
       "assetsLinkedWithFlows": "Linked systems: auto-generated {count, plural, one {# data flow} other {# data flows}}",
       "flowsGenerated": "{count, plural, one {Generated # new data flow} other {Generated # new data flows}}",
-      "noNewFlows": "No new flows to generate: the existing graph already covers this activity"
+      "noNewFlows": "No new flows to generate: the existing map already covers this activity"
     },
     "vendor": {
       "created": "Vendor created",
@@ -3963,10 +3963,10 @@
       "flowMap": {
         "sectionNumber": "Section 06",
         "title": "Data Flow Map",
-        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are color-coded by asset type; dashed edges are auto-generated from activity-asset links, solid edges are explicitly recorded.",
-        "leadMulti": "End-to-end data flows are split across {count} cluster groups to stay legible at this scale. Each page shows one group of processing activities.",
+        "leadSingle": "Production assets that participate in at least one data flow or processing activity. Nodes are color-coded by asset type; dashed lines are auto-generated from activity-asset links, solid lines are explicitly recorded.",
+        "leadMulti": "End-to-end data flows are split across {count} groups to stay legible at this scale. Each page shows one group of processing activities.",
         "showingCount": "Showing {filtered} of {original} assets",
-        "orphansDropped": "{count, plural, one {# orphaned} other {# orphaned}} (no flows, no activity link) filtered out",
+        "orphansDropped": "{count, plural, one {# system with no flow and no activity} other {# systems with no flow and no activity}} left out",
         "nonProductionDropped": "{count, plural, one {# not in production} other {# not in production}} left out with their flows",
         "assetTypes": "Asset Types",
         "clusterOverview": "Overview",
@@ -3998,7 +3998,7 @@
       },
       "byLegalBasis": "By Legal Basis",
       "dataFlowMap": "Data Flow Map",
-      "dataFlowMapLead": "Each processing activity is shown as a bordered cluster containing the assets it touches. Dashed edges were auto-generated from activity-asset links; solid edges are explicit.",
+      "dataFlowMapLead": "Each processing activity is shown as a bordered group containing the assets it touches. Dashed lines were auto-generated from activity-asset links; solid lines are explicit.",
       "processingActivities": "Processing Activities",
       "incomplete": "INCOMPLETE",
       "activity": {
@@ -5243,7 +5243,7 @@
           "marketing": "Marketing",
           "analytics": "Analytics (EU)"
         },
-        "body1Bold": "You don't have to draw the graph.",
+        "body1Bold": "You don't have to draw the map.",
         "body1Rest": " Whenever you link a processing activity to two or more systems (via the ",
         "body1ManageAssets": "Manage Systems",
         "body1Mid": " button on the activity detail page, or ",
@@ -5253,7 +5253,7 @@
         "body2GenerateFlows": "Generate Flows",
         "body2End": " button on an activity detail page. Existing flows are deduped: anything you've manually edited is preserved, and only new connections are added.",
         "tipTitle": "Bidirectional flows",
-        "tipBody": "Many real systems are bidirectional (a CRM both receives and returns customer data). The quickstart vendor mappings and industry templates already mark the common bidirectional pairs, and the live graph renders the outbound and return edges as separated curves so they don't overlap."
+        "tipBody": "Many real systems are bidirectional (a CRM both receives and returns customer data). The quickstart vendor mappings and industry templates already mark the common bidirectional pairs, and the live map draws the outbound and return lines as separate curves so they don't overlap."
       },
       "transfers": {
         "title": "Cross-Border Transfers",
