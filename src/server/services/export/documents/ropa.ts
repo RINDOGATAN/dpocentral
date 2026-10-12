@@ -17,6 +17,7 @@ import {
 } from "@/server/services/export/flow-graph-pdf";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -163,11 +164,11 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
     { rankdir: "LR", clusters, fitWidth: 720, typeLabel: flowLabels.typeLabel }
   );
 
-  const buffer = await renderToBuffer(
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
       RopaDocument({ entries, orgName, flowGraph, t, tCommon, tEnum, locale }),
       args.draftNote,
-    ),
+    ))
   );
   return { data: new Uint8Array(buffer), filename: `${base}.pdf`, contentType: PDF };
 }

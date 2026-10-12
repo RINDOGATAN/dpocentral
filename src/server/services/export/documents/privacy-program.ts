@@ -14,6 +14,7 @@ import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildPrivacyProgramExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -228,7 +229,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     });
   }
 
-  const buffer = await renderToBuffer(
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
       PrivacyProgramDocument({
         orgName,
@@ -245,7 +246,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
         flowNonProductionDropped: flowResult.nonProductionDropped,
       }),
       args.draftNote,
-    ),
+    ))
   );
 
   return {

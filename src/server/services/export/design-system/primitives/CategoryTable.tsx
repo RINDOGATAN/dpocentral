@@ -4,6 +4,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
 import { tokens } from "../tokens";
+import { pdfChrome } from "@/server/services/export/pdf-locale";
 
 const s = StyleSheet.create({
   wrap: {
@@ -80,7 +81,7 @@ export function CategoryTable({
   count,
   columns,
   rows,
-  emptyText = "No records.",
+  emptyText,
 }: {
   category?: string;
   count?: number;
@@ -89,6 +90,8 @@ export function CategoryTable({
   emptyText?: string;
 }) {
   const totalFlex = columns.reduce((n, c) => n + c.width, 0);
+  const chrome = pdfChrome();
+  const empty = emptyText ?? `${chrome.noRecords}.`;
   return (
     <View style={s.wrap}>
       {category && (
@@ -114,7 +117,7 @@ export function CategoryTable({
         ))}
       </View>
       {rows.length === 0 ? (
-        <Text style={s.emptyState}>{emptyText}</Text>
+        <Text style={s.emptyState}>{empty}</Text>
       ) : (
         rows.map((row, ri) => (
           <View key={ri} style={s.dataRow} wrap={false}>

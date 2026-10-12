@@ -9,6 +9,7 @@ import { BreachRegisterReport, incidentsToCSV } from "@/server/services/export/b
 import type { IncidentExportData } from "@/server/services/export/breach-register";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildBreachRegisterExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -84,8 +85,8 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
     return { data: incidentsToCSV(data), filename: `${base}.csv`, contentType: CSV };
   }
 
-  const buffer = await renderToBuffer(
-    withDraftGapsPage(BreachRegisterReport({ incidents: data, orgName, t, locale }), args.draftNote),
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
+    withDraftGapsPage(BreachRegisterReport({ incidents: data, orgName, t, locale }), args.draftNote))
   );
   return { data: new Uint8Array(buffer), filename: `${base}.pdf`, contentType: PDF };
 }

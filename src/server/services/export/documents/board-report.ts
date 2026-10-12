@@ -16,6 +16,7 @@ import { loadBoardReport } from "@/server/services/program/board-report";
 import { BoardReportDocument } from "../board-report";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildBoardReportExport(args: ExportArgs & { period?: BoardPeriod }): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -54,7 +55,7 @@ export async function buildBoardReportExport(args: ExportArgs & { period?: Board
     });
   }
 
-  const buffer = await renderToBuffer(
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
       BoardReportDocument({
         text,
@@ -63,7 +64,7 @@ export async function buildBoardReportExport(args: ExportArgs & { period?: Board
         preparedWith: board("pdf.preparedWith"),
       }),
       args.draftNote,
-    ),
+    ))
   );
   return {
     data: new Uint8Array(buffer),

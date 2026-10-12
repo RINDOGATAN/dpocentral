@@ -19,6 +19,7 @@ import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaC
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -209,8 +210,8 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
   };
 
   // ── Render PDF ─────────────────────────────────────────
-  const buffer = await renderToBuffer(
-    withDraftGapsPage(RegulatoryLandscapeReport({ data: reportData, t, locale }), args.draftNote),
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
+    withDraftGapsPage(RegulatoryLandscapeReport({ data: reportData, t, locale }), args.draftNote))
   );
 
   const filename = `Regulatory-Landscape-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;

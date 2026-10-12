@@ -17,6 +17,7 @@ import { fmtDate } from "@/server/services/export/pdf-styles";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildDsarPerformanceExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -191,8 +192,8 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
     aging,
   };
 
-  const buffer = await renderToBuffer(
-    withDraftGapsPage(DSARPerformanceReport({ data: reportData, t, locale }), args.draftNote),
+  const buffer = await withPdfLocale(locale, () => renderToBuffer(
+    withDraftGapsPage(DSARPerformanceReport({ data: reportData, t, locale }), args.draftNote))
   );
 
   const filename = `DSAR-Performance-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
