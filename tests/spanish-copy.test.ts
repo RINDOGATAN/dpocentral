@@ -95,7 +95,7 @@ const PAREN_CITATION = /\b(arts?\.|art[ií]culos?)\s?\d+\(\d+\)|\(\d+\)\([a-z]\)
 
 /** Recent or undated actions take the present perfect in Castilian. */
 const SIMPLE_PAST =
-  /(?<!\p{L})(no se pudo|no se pudieron|se (?:guardó|envió|eliminó|actualizó|copió|importaron|unió)|(?:recibiste|descargaste|registraste|enviaste|hiciste|observaste|respondiste|consultaste|comunicaste|documentaste|pediste|facilitaste|guardaste|declaraste|confirmaste|creaste|elegiste|marcaste|opusiste))(?!\p{L})/iu;
+  /(?<!\p{L})(no se pudo|no se pudieron|se (?:guardó|envió|eliminó|copió|importaron|unió)|(?:recibiste|descargaste|registraste|enviaste|hiciste|observaste|respondiste|consultaste|comunicaste|documentaste|pediste|facilitaste|guardaste|declaraste|confirmaste|creaste|elegiste|marcaste|opusiste))(?!\p{L})/iu;
 
 describe("Spanish copy", () => {
   it("scans the app bundle and the landing bundles", () => {
