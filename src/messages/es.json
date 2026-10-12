@@ -2560,6 +2560,7 @@
     "deleteEntitlementDesc": "¿Eliminar esta habilitación ({name})? Las organizaciones vinculadas perderán el acceso de inmediato. Esta acción no se puede deshacer."
   },
   "auth": {
+    "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
     "signIn": "Iniciar sesión",
     "signOut": "Cerrar sesión",
     "signUp": "Registrarse",
@@ -2599,6 +2600,7 @@
       "Default": "Error al iniciar sesión. Inténtalo de nuevo."
     },
     "authErrorPage": {
+      "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
       "title": "Error de autenticación",
       "titleAccountExists": "La cuenta ya existe",
       "body": "Algo ha ido mal durante el inicio de sesión. Puede que el enlace haya caducado o que ya se haya utilizado.",
@@ -9657,6 +9659,7 @@
   },
   "serverErrors": {
     "exact": {
+      "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
       "dsarReadRestricted": "Las solicitudes de derechos están abiertas a los delegados de protección de datos, los administradores y los propietarios, y al miembro que tenga asignada una de sus tareas",
       "aCustomerWithThisEmailAlreadyExists": "Ya existe un cliente con este correo electrónico.",
       "aDepartmentCannotBeItsOwnParent": "Un departamento no puede ser su propio departamento superior.",

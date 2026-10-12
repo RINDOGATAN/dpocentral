@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import {
   SafeguardsChoiceList,
   SafeguardsRequestForm,
@@ -72,7 +73,9 @@ export function WelcomeCard({
       setStep("sent");
     },
     onError: (err) => {
-      setFormError(err.data?.code === "CONFLICT" ? t("form.alreadyOpen") : t("form.sendError"));
+      setFormError(isEmailNotAcceptedError(err)
+          ? err.message
+          : err.data?.code === "CONFLICT" ? t("form.alreadyOpen") : t("form.sendError"));
     },
   });
 

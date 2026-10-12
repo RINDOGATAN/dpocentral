@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
+import { BLOCKED_EMAIL_MESSAGE_KEY } from "@/lib/email-policy";
 
 function AuthErrorContent() {
   const t = useTranslations("auth.authErrorPage");
@@ -14,6 +15,8 @@ function AuthErrorContent() {
   const error = searchParams.get("error");
 
   const isAccountNotLinked = error === "OAuthAccountNotLinked";
+  // E-mail policy refusal (src/lib/email-policy.ts): the one approved sentence.
+  const isEmailNotAccepted = error === BLOCKED_EMAIL_MESSAGE_KEY;
 
   return (
     <div className="w-full max-w-md">
@@ -31,7 +34,11 @@ function AuthErrorContent() {
           {isAccountNotLinked ? t("titleAccountExists") : t("title")}
         </h1>
         <p className="text-muted-foreground mb-6">
-          {isAccountNotLinked ? t("bodyAccountExists") : t("body")}
+          {isEmailNotAccepted
+            ? t("emailNotAccepted")
+            : isAccountNotLinked
+              ? t("bodyAccountExists")
+              : t("body")}
         </p>
         <Link href="/sign-in" className="btn-brutal inline-block px-6 py-3">
           {isAccountNotLinked ? t("ctaAccountExists") : t("cta")}

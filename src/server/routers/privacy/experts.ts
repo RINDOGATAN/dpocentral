@@ -7,6 +7,7 @@ import { ExpertEngagementStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, writerProcedure } from "../../trpc";
 import prisma from "@/lib/prisma";
+import { BLOCKED_EMAIL_MESSAGES, isBlockedEnquiryEmail } from "@/lib/email-policy";
 import {
   searchExperts,
   getExpertById,
@@ -142,6 +143,10 @@ export const expertsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // E-mail policy, enquiry scope (src/lib/email-policy.ts): rule 1 only.
+      if (isBlockedEnquiryEmail(input.requesterEmail)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: BLOCKED_EMAIL_MESSAGES.en });
+      }
       // 1. Submit to Dealroom (or mock)
       const result = await contactExpert(input);
 

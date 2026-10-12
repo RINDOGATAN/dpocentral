@@ -18,6 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { brand } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { useNamesEuHosting } from "@/components/region-provider";
+import { isBlockedEnquiryEmail } from "@/lib/email-policy";
+import { EmailNotAcceptedNote } from "@/components/ui/email-not-accepted";
 
 export type AnswerChoice = "shared_eu" | "managed" | "own_hardware";
 export type RequestChoice = "managed" | "own_hardware";
@@ -121,6 +123,7 @@ export function SafeguardsRequestForm({
   const [userCount, setUserCount] = useState<UserCountBand | null>(null);
   const [message, setMessage] = useState("");
   const [invalid, setInvalid] = useState(false);
+  const [emailRefused, setEmailRefused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +138,12 @@ export function SafeguardsRequestForm({
       return;
     }
     setInvalid(false);
+    // E-mail policy, enquiry scope: the server refuses it too.
+    if (isBlockedEnquiryEmail(email)) {
+      setEmailRefused(true);
+      return;
+    }
+    setEmailRefused(false);
     onSubmit({
       name: name.trim(),
       email: email.trim(),
@@ -178,6 +187,7 @@ export function SafeguardsRequestForm({
             {t("emailHint")}
           </p>
         )}
+        <EmailNotAcceptedNote show={emailRefused} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">

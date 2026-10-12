@@ -11,6 +11,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, organizationProcedure, adminOrgProcedure } from "../../trpc";
 import { isHostedDeployment } from "@/lib/hosted";
+import { BLOCKED_EMAIL_MESSAGES, isBlockedEnquiryEmail } from "@/lib/email-policy";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import {
   MAX_OPEN_REQUESTS_PER_ORG,
@@ -126,6 +127,10 @@ export const safeguardsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       assertHosted();
+      // E-mail policy, enquiry scope (src/lib/email-policy.ts): rule 1 only.
+      if (isBlockedEnquiryEmail(input.email)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: BLOCKED_EMAIL_MESSAGES.en });
+      }
 
       const open = await ctx.prisma.safeguardsRequest.count({
         where: { organizationId: ctx.organization.id, status: "open" },

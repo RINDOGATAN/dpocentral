@@ -16,6 +16,7 @@ import { invalidInputMessage, newErrorReference, sessionEndedMessage, unexpected
 import { logger } from "@/lib/logger";
 import { localizeServerMessage } from "@/lib/server-error-messages";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { BLOCKED_EMAIL_MESSAGE_KEY, BLOCKED_EMAIL_MESSAGES } from "@/lib/email-policy";
 import {
   assertPilotCapacity,
   assertPilotWritable,
@@ -111,6 +112,12 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         message = formatUserError(error, "An unexpected error occurred. Please try again.");
       }
     }
+    // The e-mail policy refusal carries its key so a form can place the
+    // sentence under its e-mail field (src/lib/email-policy.ts).
+    const messageKey =
+      error.code === "BAD_REQUEST" && error.message === BLOCKED_EMAIL_MESSAGES.en
+        ? BLOCKED_EMAIL_MESSAGE_KEY
+        : null;
     // Refusals are written in English; the reader gets them in their language.
     message = localizeServerMessage(message, locale());
     // tRPC adds the stack whenever NODE_ENV is not "production" (a mis-set
@@ -123,6 +130,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       data: {
         ...dataWithoutStack,
         reference,
+        ...(messageKey ? { messageKey } : {}),
         zodError:
           process.env.NODE_ENV === "development" && error.cause instanceof ZodError
             ? error.cause.flatten()

@@ -378,3 +378,23 @@ describe("the purge", () => {
     });
   });
 });
+
+describe("e-mail policy, enquiry scope (rule 1 only)", () => {
+  it("refuses a dotted Gmail address before storing anything", async () => {
+    await expect(
+      as("creator", "OWNER").submitRequest({ ...REQUEST, email: "A.B.C.D@GMAIL.COM" })
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: "Please use your work e-mail address, or a different personal address. We can't accept this one.",
+    });
+    expect(mocks.prisma.safeguardsRequest.create).not.toHaveBeenCalled();
+  });
+
+  it("keeps hotmail and aol open, so a prospect can still reach us", async () => {
+    for (const email of ["prospect@hotmail.com", "PROSPECT@AOL.CO.UK"]) {
+      await expect(as("creator", "OWNER").submitRequest({ ...REQUEST, email })).resolves.toMatchObject({
+        stored: true,
+      });
+    }
+  });
+});

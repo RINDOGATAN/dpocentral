@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import { formatDateIn } from "@/lib/utils";
 import { useNamesEuHosting } from "@/components/region-provider";
 import {
@@ -75,7 +76,9 @@ export function SafeguardsSettingsCard({
       refresh();
     },
     onError: (err) =>
-      setFormError(err.data?.code === "CONFLICT" ? t("form.alreadyOpen") : t("form.sendError")),
+      setFormError(isEmailNotAcceptedError(err)
+          ? err.message
+          : err.data?.code === "CONFLICT" ? t("form.alreadyOpen") : t("form.sendError")),
   });
 
   if (!status?.hosted) return null;

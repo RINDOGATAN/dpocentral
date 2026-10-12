@@ -182,3 +182,17 @@ describe("a request for technical help", () => {
     expect(query.select.expertEmail).toBeUndefined();
   });
 });
+
+describe("e-mail policy, enquiry scope (rule 1 only)", () => {
+  it("refuses a dotted Gmail address before anything is sent", async () => {
+    await expect(
+      caller().contact({ ...request, requesterEmail: "b.ake.r.miche.ll.eba.hpc.y.jx@gmail.com" })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it("keeps hotmail and aol open", async () => {
+    await expect(caller().contact({ ...request, requesterEmail: "asker@hotmail.com" })).resolves.toBeDefined();
+    await expect(caller().contact({ ...request, requesterEmail: "ASKER@AOL.COM" })).resolves.toBeDefined();
+  });
+});

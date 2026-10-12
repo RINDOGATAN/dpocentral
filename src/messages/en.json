@@ -2560,6 +2560,7 @@
     "deleteEntitlementDesc": "Delete this entitlement ({name})? Linked organizations will lose access immediately. This cannot be undone."
   },
   "auth": {
+    "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
     "signIn": "Sign In",
     "signOut": "Sign Out",
     "signUp": "Sign Up",
@@ -2599,6 +2600,7 @@
       "Default": "Sign-in failed. Please try again."
     },
     "authErrorPage": {
+      "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
       "title": "Authentication Error",
       "titleAccountExists": "Account Already Exists",
       "body": "Something went wrong during sign-in. The link may have expired or already been used.",
@@ -9657,6 +9659,7 @@
   },
   "serverErrors": {
     "exact": {
+      "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
       "dsarReadRestricted": "Rights requests are open to privacy officers, admins and owners, and to a member assigned to one of the request's tasks",
       "aCustomerWithThisEmailAlreadyExists": "A customer with this email already exists",
       "aDepartmentCannotBeItsOwnParent": "A department cannot be its own parent.",

@@ -375,3 +375,25 @@ function dayStart(): string {
   const now = Date.now();
   return new Date(Math.floor(now / 86_400_000) * 86_400_000).toISOString();
 }
+
+it("stays open to every address: the e-mail policy never applies to the rights-request form", async () => {
+  mocks.prisma.organization.findUnique.mockResolvedValue({
+    id: "org-acme",
+    name: "Acme",
+    slug: "acme",
+    dsarIntakeForms: [{ id: "form-1", isActive: true }],
+    jurisdictions: [{ isPrimary: true, jurisdiction: { dsarDeadlineDays: 30 } }],
+  });
+  mocks.prisma.dSARRequest.create.mockResolvedValue({ id: "req-1", publicId: "DSAR-PUBLIC-1" });
+
+  for (const requesterEmail of [
+    "b.ake.r.miche.ll.eba.hpc.y.jx@gmail.com",
+    "SOMEONE@HOTMAIL.COM",
+    "x@aol.co.uk",
+  ]) {
+    mocks.counters.clear();
+    await expect(anon().submitPublic({ ...validSubmission(), requesterEmail })).resolves.toMatchObject({
+      publicId: "DSAR-PUBLIC-1",
+    });
+  }
+});

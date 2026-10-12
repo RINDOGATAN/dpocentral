@@ -18,6 +18,8 @@ import { isHostedDeployment } from "@/lib/hosted";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
 import { emailConfigured, googleConfigured, localSignInAllowed } from "@/lib/sign-in-methods";
 import { getCookieLocale } from "@/i18n/server-locale";
+import { refusesNewAccountEmail } from "@/lib/email-policy-server";
+import { BLOCKED_EMAIL_MESSAGE_KEY } from "@/lib/email-policy";
 import { defaultLocale, type Locale } from "@/i18n/config";
 import enMessages from "@/messages/en.json";
 import esMessages from "@/messages/es.json";
@@ -112,6 +114,8 @@ export const authOptions: NextAuthOptions = {
                 return null;
               }
               if (!credentials?.email) return null;
+              // E-mail policy: a refused address opens no new account.
+              if (await refusesNewAccountEmail(prisma, credentials.email)) return null;
 
               // Find or create user for dev mode
               let user = await prisma.user.findUnique({
@@ -209,6 +213,12 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user }) {
+      // E-mail policy (src/lib/email-policy.ts): a refused address opens no
+      // new account, by e-mail link or by Google. Existing accounts keep
+      // signing in. The error page shows the one approved sentence.
+      if (await refusesNewAccountEmail(prisma, user.email)) {
+        return `/auth-error?error=${BLOCKED_EMAIL_MESSAGE_KEY}`;
+      }
       // Auto-join organization by email domain
       // Wrapped in try/catch so sign-in succeeds even if auto-join fails
       try {

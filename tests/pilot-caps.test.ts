@@ -556,3 +556,29 @@ describe("the transition flag the pilot bar reads (11 Oct 2026)", () => {
     expect(isTransitionPilot({ pilotStartedAt: new Date("2026-10-20T00:00:00Z") } as never)).toBe(false);
   });
 });
+
+describe("e-mail policy on invitations (both rules)", () => {
+  const invite = (email: string) =>
+    callerWithRole("OWNER").addMember({ organizationId: "org-1", email, role: "MEMBER" });
+
+  it.each(["new@hotmail.com", "NEW@AOL.DE", "a.b.c.d@gmail.com"])(
+    "refuses an invitation to %s with no account yet",
+    async (email) => {
+      mocks.prisma.user.findUnique.mockResolvedValue(null);
+      await expect(invite(email)).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: "Please use your work e-mail address, or a different personal address. We can't accept this one.",
+      });
+      expect(mocks.prisma.organization.findUnique).not.toHaveBeenCalledWith(
+        expect.objectContaining({ select: { name: true, settings: true } })
+      );
+      expect(mocks.prisma.organizationMember.create).not.toHaveBeenCalled();
+    }
+  );
+
+  it("does not refuse a usual address", async () => {
+    mocks.prisma.user.findUnique.mockResolvedValue(null);
+    const outcome = await invite("first.last@gmail.com").catch((e: Error) => e);
+    expect((outcome as Error)?.message ?? "").not.toContain("We can't accept this one");
+  });
+});

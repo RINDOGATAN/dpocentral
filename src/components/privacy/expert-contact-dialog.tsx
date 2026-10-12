@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { EmailNotAcceptedNote, isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import { useOrganization } from "@/lib/organization-context";
 
 interface ExpertContactDialogProps {
@@ -130,6 +131,7 @@ export function ExpertContactDialog({
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                  <EmailNotAcceptedNote show={isEmailNotAcceptedError(contactMutation.error)} />
                 </div>
               </div>
               <div className="space-y-1.5">
@@ -160,7 +162,7 @@ export function ExpertContactDialog({
                   rows={3}
                 />
               </div>
-              {contactMutation.error && (
+              {contactMutation.error && !isEmailNotAcceptedError(contactMutation.error) && (
                 <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2">
                   <p className="text-xs text-destructive">
                     {t("errorMessage")}
