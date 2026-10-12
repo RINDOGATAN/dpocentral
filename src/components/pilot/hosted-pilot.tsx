@@ -69,6 +69,7 @@ export function PilotEndBar({
   endsOn,
   pricingUrl,
   transition = false,
+  upgradeHref = null,
 }: {
   state: PilotEndBarState;
   /** The end date, already written out in the reader's language. */
@@ -76,6 +77,8 @@ export function PilotEndBar({
   pricingUrl: string;
   /** A pilot begun before the window was shortened: "Free until {date}". */
   transition?: boolean;
+  /** The checkout route for "Move to the paid plan"; only for an owner or admin, with the switch on. */
+  upgradeHref?: string | null;
 }) {
   const t = useTranslations("pilot.endBar");
   const price = pilotEndBarPrice(useLocale(), useDisplayCurrency());
@@ -107,6 +110,18 @@ export function PilotEndBar({
         >
           {t("pricing")}
         </a>
+        {upgradeHref && (
+          <>
+            {" "}
+            <a
+              href={upgradeHref}
+              data-testid="pilot-upgrade-link"
+              className="ml-1 inline-block rounded-full border border-primary px-2.5 py-0.5 font-medium text-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              {t("upgrade")}
+            </a>
+          </>
+        )}
       </p>
       {state === "trial" && (
         <button
@@ -128,9 +143,12 @@ export function PilotEndBar({
  * window and the Cloud Plan's price for the whole pilot, the stronger end
  * wording in the last days, the read-only line once the window is over.
  * Nothing on the paid plan or on the kit. Reads the same status as the
- * Settings card, so the two never disagree.
+ * Settings card, so the two never disagree. With `upgrade` (the automatic
+ * upgrade switched on), an owner or admin of the selected organisation also
+ * sees "Move to the paid plan", which opens the plan's checkout for that
+ * organisation; other members never see it.
  */
-export function HostedPilotEndBar() {
+export function HostedPilotEndBar({ upgrade = false }: { upgrade?: boolean }) {
   const locale = useLocale();
   const organization = useSelectedOrganizationOrNull();
   const onPaidPlan = organization?.plan === "EU_CLOUD";
@@ -140,6 +158,7 @@ export function HostedPilotEndBar() {
   );
   if (!organization || onPaidPlan) return null;
   const state = pilotEndBarState(status);
+  const canUpgrade = upgrade && (organization.role === "OWNER" || organization.role === "ADMIN");
   const onPilot = status && status.hosted && !status.paid ? status : null;
   const endsAt = onPilot ? onPilot.endsAt : null;
   return (
@@ -148,6 +167,7 @@ export function HostedPilotEndBar() {
       endsOn={endsAt ? pilotEndBarDate(endsAt, locale) : null}
       pricingUrl={pilotEndBarPricingUrl(locale)}
       transition={!!onPilot?.transition}
+      upgradeHref={canUpgrade ? `/api/plan/checkout?org=${encodeURIComponent(organization.id)}` : null}
     />
   );
 }

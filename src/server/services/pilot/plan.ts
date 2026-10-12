@@ -113,6 +113,41 @@ function same(a: PlanState, b: PlanState): boolean {
 
 const iso = (d: Date | null) => (d ? d.toISOString() : null);
 
+/**
+ * The audit-trail entry of a plan change (action PLAN_CHANGE), shared by the
+ * operator's script and the automatic upgrade (plan-sync.ts) so both write the
+ * same shape. The operator's note is never copied into it, only whether it
+ * changed, because the organisation's owners can read the audit trail.
+ */
+export function planChangeAuditData(
+  organizationId: string,
+  before: PlanState,
+  after: PlanState,
+  metadata: Record<string, string>
+) {
+  return {
+    organizationId,
+    userId: null,
+    entityType: "Organization",
+    entityId: organizationId,
+    action: PLAN_CHANGE,
+    changes: {
+      before: {
+        plan: before.plan,
+        planStartedAt: iso(before.planStartedAt),
+        planRenewsAt: iso(before.planRenewsAt),
+      },
+      after: {
+        plan: after.plan,
+        planStartedAt: iso(after.planStartedAt),
+        planRenewsAt: iso(after.planRenewsAt),
+      },
+      planNoteChanged: before.planNote !== after.planNote,
+    },
+    metadata,
+  };
+}
+
 export async function setOrganizationPlan(
   db: SetPlanDb,
   input: SetPlanInput,
@@ -153,27 +188,10 @@ export async function setOrganizationPlan(
   await db.$transaction(async (tx) => {
     await tx.organization.update({ where: { id: row.id }, data: after });
     await tx.auditLog.create({
-      data: {
-        organizationId: row.id,
-        userId: null,
-        entityType: "Organization",
-        entityId: row.id,
-        action: PLAN_CHANGE,
-        changes: {
-          before: {
-            plan: before.plan,
-            planStartedAt: iso(before.planStartedAt),
-            planRenewsAt: iso(before.planRenewsAt),
-          },
-          after: {
-            plan: after.plan,
-            planStartedAt: iso(after.planStartedAt),
-            planRenewsAt: iso(after.planRenewsAt),
-          },
-          planNoteChanged: before.planNote !== after.planNote,
-        },
-        metadata: { source: "scripts/set-org-plan.ts", operator: input.operator },
-      },
+      data: planChangeAuditData(row.id, before, after, {
+        source: "scripts/set-org-plan.ts",
+        operator: input.operator,
+      }),
     });
   });
 

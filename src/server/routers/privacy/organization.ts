@@ -60,9 +60,14 @@ export async function availableSlug(
   });
 }
 
-/** The organisation without the operator's plan reference (planNote). */
-function withoutPlanNote<T extends { planNote?: string | null }>(org: T): Omit<T, "planNote"> {
-  const { planNote: _planNote, ...rest } = org;
+/**
+ * The organisation without the operator's plan references (planNote, and the
+ * Stripe subscription recorded by the automatic upgrade).
+ */
+function withoutPlanNote<
+  T extends { planNote?: string | null; planStripeSubscriptionId?: string | null },
+>(org: T): Omit<T, "planNote" | "planStripeSubscriptionId"> {
+  const { planNote: _planNote, planStripeSubscriptionId: _sub, ...rest } = org;
   return rest;
 }
 

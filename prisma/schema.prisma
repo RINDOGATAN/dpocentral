@@ -149,6 +149,11 @@ model Organization {
   planStartedAt DateTime?
   planRenewsAt  DateTime?
   planNote      String?
+  // The Stripe subscription that pays for the plan, recorded by the automatic
+  // upgrade (src/server/services/pilot/plan-sync.ts) so that the subscription's
+  // end returns the organisation to the pilot. Null when the plan was set by an
+  // operator; such an organisation is never downgraded automatically.
+  planStripeSubscriptionId String?
 
   // Hosted service: the rights-request (DSAR) add-on of an organisation on the
   // paid plan (src/server/services/dsar/module.ts). ACTIVE opens the module
@@ -198,6 +203,7 @@ model Organization {
   // Programme portability: which imported record came from which source record
   programmeImportRecords ProgrammeImportRecord[]
 
+  @@index([planStripeSubscriptionId])
   @@map("organizations")
 }
 
