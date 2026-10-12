@@ -1297,6 +1297,12 @@ export const dataInventoryRouter = createTRPCRouter({
         include: {
           processingActivity: true,
           jurisdiction: true,
+          // The transfer's latest TIA, for the start / continue / view action.
+          assessments: {
+            select: { id: true, status: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
       });
 
@@ -1346,6 +1352,7 @@ export const dataInventoryRouter = createTRPCRouter({
           sccExpiryDate: transfer.sccExpiryDate,
           tiaCompleted: transfer.tiaCompleted,
           supplementaryMeasures: transfer.supplementaryMeasures,
+          tia: transfer.assessments[0] ?? null,
         },
         isAdequateCountry: isAdequate,
         adequacyDecision,

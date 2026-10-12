@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,9 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { useFormatPrice } from "@/components/region-provider";
 import { formatDateIn } from "@/lib/utils";
+import { NewActivityDialog } from "@/components/privacy/new-activity-dialog";
+import { TemplateBadge } from "@/components/privacy/template-badge";
+import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
 
 const LEGAL_BASES = new Set([
   "CONSENT",
@@ -65,8 +69,6 @@ function formatArray(arr: unknown): string {
   return String(arr ?? "");
 }
 
-/** The data inventory, on its activities tab, with the new-activity form open. */
-const NEW_ACTIVITY_HREF = "/privacy/data-inventory?tab=activities&new=activity";
 
 export default function ProcessingActivitiesPage() {
   const formatPrice = useFormatPrice();
@@ -77,6 +79,7 @@ export default function ProcessingActivitiesPage() {
   const { canWrite } = useOrgRole();
   const t = useTranslations("pages.processingActivities");
   const tBasis = useTranslations("pages.dataInventory.legalBasis");
+  const tInv = useTranslations("pages.dataInventory");
   const locale = useLocale();
   const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
 
@@ -88,9 +91,30 @@ export default function ProcessingActivitiesPage() {
   const hosted = useHostedPilot();
   const hasRopaAccess = hosted || (ropaAccess?.hasAccess ?? false);
 
-  const { data: activitiesData, isLoading } = trpc.dataInventory.listActivities.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: !!organization?.id }
+  // Activities are created and listed here (their one home); `?new=activity`
+  // opens the form, once, for a person allowed to write.
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const wantsNewActivity = searchParams.get("new") === "activity";
+  const [activityDialogOpen, setActivityDialogOpen] = useState(false);
+  useEffect(() => {
+    if (wantsNewActivity && canWrite) {
+      setActivityDialogOpen(true);
+      router.replace("/privacy/data-inventory/processing-activities", { scroll: false });
+    }
+  }, [wantsNewActivity, canWrite, router]);
+
+  const {
+    data: activitiesPages,
+    isLoading,
+    hasNextPage: hasMoreActivities,
+    fetchNextPage: fetchMoreActivities,
+    isFetchingNextPage: fetchingMoreActivities,
+  } = trpc.dataInventory.listActivities.useInfiniteQuery(
+    // The search runs on the server too, so it finds activities beyond the
+    // first page.
+    { organizationId: organization?.id ?? "", limit: 50, search: searchQuery.trim() || undefined },
+    { enabled: !!organization?.id, placeholderData: (prev) => prev, getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
   const { refetch: fetchROPA } = trpc.dataInventory.exportROPA.useQuery(
@@ -98,7 +122,7 @@ export default function ProcessingActivitiesPage() {
     { enabled: false }
   );
 
-  const activities = activitiesData?.activities ?? [];
+  const activities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
 
   async function handleExport(format: "csv" | "json") {
     setIsExporting(true);
@@ -212,17 +236,17 @@ export default function ProcessingActivitiesPage() {
               <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{t("perMonth", { price: formatPrice(9) })}</Badge>
             </Button>
           )}
-          {/* The new-activity form lives on the data inventory: open it there. */}
           {canWrite && (
-            <Button asChild>
-              <Link href={NEW_ACTIVITY_HREF}>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("addActivity")}
-              </Link>
+            <Button onClick={() => setActivityDialogOpen(true)} data-testid="ropa-add-activity">
+              <Plus className="w-4 h-4 mr-2" />
+              {t("addActivity")}
             </Button>
           )}
         </div>
       </div>
+
+      {/* Drafts the quick start or a template made: they count once confirmed. */}
+      <DraftsNotice />
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -302,6 +326,8 @@ export default function ProcessingActivitiesPage() {
                         {!activity.isActive && (
                           <Badge variant="secondary">{t("inactive")}</Badge>
                         )}
+                        <TemplateBadge metadata={activity.metadata} className="text-xs" />
+                        <DraftBadge record={activity} className="text-xs" />
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
                         {activity.purpose}
@@ -340,6 +366,18 @@ export default function ProcessingActivitiesPage() {
               </Card>
             </Link>
           ))}
+          {hasMoreActivities && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => fetchMoreActivities()}
+                disabled={fetchingMoreActivities}
+              >
+                {fetchingMoreActivities && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                {tInv("loadMore")}
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <Card>
@@ -348,16 +386,16 @@ export default function ProcessingActivitiesPage() {
             <p>{t("empty.title")}</p>
             <p className="text-sm mb-4">{t("empty.body")}</p>
             {canWrite && (
-              <Button asChild>
-                <Link href={NEW_ACTIVITY_HREF}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("addActivity")}
-                </Link>
+              <Button onClick={() => setActivityDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("addActivity")}
               </Button>
             )}
           </CardContent>
         </Card>
       )}
+
+      <NewActivityDialog open={activityDialogOpen} onOpenChange={setActivityDialogOpen} />
 
       {/* ROPA Info */}
       <Card>

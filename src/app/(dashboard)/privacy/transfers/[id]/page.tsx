@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,11 +21,13 @@ import {
   ArrowRight,
   Loader2,
   ClipboardCheck,
+  Shield,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useOrgRole } from "@/lib/use-org-role";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 import { formatDateIn } from "@/lib/utils";
 
@@ -54,6 +56,9 @@ export default function TransferDetailPage() {
   const t = useTranslations("pages.transfers.detail");
   const tStatus = useTranslations("pages.transfers.status_option");
   const tToasts = useTranslations("toasts");
+  const tInv = useTranslations("pages.dataInventory");
+  const router = useRouter();
+  const { canWrite } = useOrgRole();
   const locale = useLocale();
 
   const utils = trpc.useUtils();
@@ -74,6 +79,11 @@ export default function TransferDetailPage() {
       utils.dataInventory.getTransferStats.invalidate();
       toast.success(tToasts("transfer.complianceUpdated"));
     },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const createTia = trpc.assessment.createForTransfer.useMutation({
+    onSuccess: (assessment) => router.push(`/privacy/assessments/${assessment.id}`),
     onError: (e) => toast.error(e.message),
   });
 
@@ -158,12 +168,38 @@ export default function TransferDetailPage() {
             </div>
           </div>
         </div>
-        <Link href={`/privacy/transfers/${id}/edit`} className="shrink-0">
-          <Button variant="outline" size="sm">
-            <Edit className="w-4 h-4 mr-2" />
-            {t("edit")}
-          </Button>
-        </Link>
+        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+          {/* The transfer impact assessment: start it here, or open it. */}
+          {transfer.tia ? (
+            <Link href={`/privacy/assessments/${transfer.tia.id}`}>
+              <Button variant="outline" size="sm" data-testid="transfer-tia">
+                <Shield className="w-4 h-4 mr-2" />
+                {transfer.tia.status === "APPROVED" ? tInv("transfer.viewTia") : tInv("transfer.continueTia")}
+              </Button>
+            </Link>
+          ) : canWrite ? (
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="transfer-tia"
+              disabled={createTia.isPending}
+              onClick={() => createTia.mutate({ organizationId: orgId, dataTransferId: id })}
+            >
+              {createTia.isPending ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Shield className="w-4 h-4 mr-2" />
+              )}
+              {tInv("transfer.startTia")}
+            </Button>
+          ) : null}
+          <Link href={`/privacy/transfers/${id}/edit`}>
+            <Button variant="outline" size="sm">
+              <Edit className="w-4 h-4 mr-2" />
+              {t("edit")}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Adequacy notice */}
