@@ -3656,7 +3656,8 @@
     "disclosure": {
       "title": "Divulgación responsable",
       "body": "Si descubres una vulnerabilidad de seguridad, comunícala de forma responsable. No abras una incidencia pública. Ponte en contacto directamente con nosotros a través de la dirección de correo electrónico indicada en el repositorio."
-    }
+    },
+    "stackLink": "Medidas comunes a todas las herramientas de TODO.LAW"
   },
   "errors": {
     "generic": "Se ha producido un error. Por favor, inténtalo de nuevo.",

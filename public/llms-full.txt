@@ -4,14 +4,14 @@
 
 DPO Central is an open-core GDPR privacy management platform built by TODO.LAW for startups and organizations that handle personal data. It replaces spreadsheets and fragmented workflows with five integrated privacy modules in one unified dashboard. On the hosted service, the rights-request (DSAR) module is offered separately, when available.
 
-Hosted pilot: https://dpocentral.todo.law (free, with limits, for test records; every module included)
+Hosted pilot: https://dpocentral.todo.law (free, with limits; real client data accepted: all our sub-processors have the necessary safeguards and certifications; every module included)
 Plans and prices: https://www.todo.law/pricing
 Managed instance or your own hardware: https://www.todo.law/run
 Company: TODO.LAW (https://todo.law)
 License: Open Core: AGPL-3.0 (core) + premium modules on your own hardware, on quotation
 Source: https://github.com/RINDOGATAN/dpocentral
 
-En español: el servicio alojado empieza con un piloto gratuito y con límites, para registros de prueba; incluye todos los módulos. Para datos reales, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propio hardware (https://www.todo.law/es/garantias-alojamiento-certificaciones). Los módulos premium: en tu propio hardware, bajo presupuesto. En el servicio alojado, el módulo de ejercicio de derechos se ofrecerá por separado, cuando esté disponible.
+En español: el servicio alojado empieza con un piloto gratuito y con límites, que puedes usar con datos reales de clientes: todos nuestros subencargados cuentan con las certificaciones y garantías necesarias. Incluye todos los módulos. Para quitar los límites, contrata el Plan nube UE (1.800 € al año o 179 € al mes por organización), una instancia gestionada o tu propio hardware (https://www.todo.law/es/garantias-alojamiento-certificaciones). Los módulos premium: en tu propio hardware, bajo presupuesto. En el servicio alojado, el módulo de ejercicio de derechos se ofrecerá por separado, cuando esté disponible.
 
 ## Precios (página en español)
 
@@ -153,7 +153,7 @@ cost. Limits: one organization per account; 15 days of editing from your
 first sign-in, then read-only with export (every export stays available); a
 ceiling on records per
 organization (for example 25 systems, 50 vendors, 100 data subject
-requests). The pilot is for test records. For real data, choose the paid
+requests). You can use the pilot with real client data: all our sub-processors have the necessary safeguards and certifications. To lift the limits, choose the paid
 Cloud Plan (no editing window and no record ceiling; plans and prices:
 https://www.todo.law/pricing), a managed instance (on quotation), or your own hardware
 (https://www.todo.law/run).

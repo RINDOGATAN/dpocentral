@@ -20,7 +20,7 @@ branch.
 | Schema changes | Applied by the hosted build (`prisma migrate deploy`) | Applied by the one-shot migrator on the next boot |
 | Secrets | Platform environment, set by the maintainer | `.env` beside the compose file, set by the firm (`chmod 600`) |
 | Who can sign in | Anyone with a Google account or an e-mail address | Whoever reaches the port; the firm's network is the outer gate |
-| Data it is meant to hold | Demonstration and training data only: no security certification, not for real client data | The firm's real records |
+| Data it is meant to hold | Real client data, within the pilot's limits: all our sub-processors have the necessary safeguards and certifications | The firm's real records |
 
 ## Hosted service
 
