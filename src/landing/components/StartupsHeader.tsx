@@ -49,6 +49,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
   // before the language switch, as on the other suite landings.
   const pricingHref = `#${PRICING_ANCHOR[locale]}`;
   const pricingLabel = PRICING_COPY[locale].nav;
+  // "Security measures" / "Medidas de seguridad", next to Pricing: the same
+  // page the footer's security link opens.
+  const securityHref = "/security";
 
   return (
     <header ref={headerRef} className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
@@ -79,6 +82,13 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
               className="px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               {pricingLabel}
+            </a>
+            <a
+              href={securityHref}
+              data-testid="nav-security"
+              className="px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              {t("header.security")}
             </a>
             <button
               type="button"
@@ -118,6 +128,14 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
                 className="text-sm font-medium text-foreground px-2 py-2"
               >
                 {pricingLabel}
+              </a>
+              <a
+                href={securityHref}
+                onClick={closeMenu}
+                data-testid="nav-security-phone"
+                className="text-sm font-medium text-foreground px-2 py-2"
+              >
+                {t("header.security")}
               </a>
               <button
                 type="button"
