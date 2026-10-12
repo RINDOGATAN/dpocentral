@@ -56,20 +56,20 @@ describe("landing hero", () => {
     const page = read("src/landing/components/StartupProductPage.tsx");
     expect(page).not.toContain('t("hero.ai")');
     expect(page).not.toContain('t("hero.welcome")');
-    expect(page).toContain('{t("hero.subtitle")}');
+    expect(page).toContain('t("hero.subtitle").split("\\n\\n")');
     for (const d of [es, en]) expect(d["hero.welcome"]).toBeUndefined();
     expect(es["hero.card"]).toMatch(/Listo para volar en unos pocos minutos\.$/);
     expect(en["hero.card"]).toMatch(/Ready to fly in a few minutes\.$/);
   });
 
-  // Owner, 11 Oct 2026: the subtitle no longer repeats the sign-up card's list of
-  // modules; it introduces the setup wizard and says the program can be moved.
+  // The subtitle introduces the setup wizard and, in a second paragraph, says the
+  // program can be moved; it does not repeat the sign-up card's list of modules.
   it("introduces the setup wizard in both subtitles", () => {
     expect(en["hero.subtitle"]).toBe(
-      "Use our setup wizard to put together a privacy program in minutes: select your industry and top vendors and let the magic happen. You can migrate it to other hosting alternatives or to an enterprise platform at any time.",
+      "Use our setup wizard to put together a privacy program in minutes: select your industry and top vendors and let the magic happen.\n\nYou can migrate it to other hosting alternatives or to an enterprise platform at any time.",
     );
     expect(es["hero.subtitle"]).toBe(
-      "Usa nuestro asistente de configuración para montar un programa de protección de datos en unos pocos minutos: selecciona tu sector, tus proveedores principales y las decisiones clave. Podrás exportarlo a otra modalidad de alojamiento o a una plataforma de terceros cuando quieras.",
+      "Usa nuestro asistente de configuración para montar un programa de protección de datos en unos pocos minutos: selecciona tu sector, tus proveedores principales y las decisiones clave.\n\nPodrás exportarlo a otra modalidad de alojamiento o a una plataforma de terceros cuando quieras.",
     );
     expect(es["hero.subtitle"]).not.toMatch(/startups|[—–]|\busted\b|vosotr/i);
     // The card keeps its own line, so the two no longer say the same thing.
