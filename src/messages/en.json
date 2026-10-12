@@ -9464,7 +9464,7 @@
     "deadlines": {
       "heading": "Deadlines of your laws",
       "period": "{law}: {period} from receipt.",
-      "periodWithExtension": "{law}: {period} from receipt, extendable by {extension}.",
+      "periodWithExtension": "{law}: {period} from receipt, extendable by a further {extension}.",
       "none": "No law declared yet: new requests take the GDPR's one month, extendable by two further months. Declare your laws in What applies.",
       "ccpaFifteen": "CCPA: requests to opt out of sale or sharing and to limit the use of sensitive personal information, as soon as feasibly possible and no later than 15 business days.",
       "ccpaConfirm": "CCPA: confirm receipt of a request to know, delete or correct within 10 business days.",

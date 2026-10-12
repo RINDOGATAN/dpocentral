@@ -9464,7 +9464,7 @@
     "deadlines": {
       "heading": "Plazos de tus leyes",
       "period": "{law}: {period} desde la recepción.",
-      "periodWithExtension": "{law}: {period} desde la recepción, prorrogable {extension}.",
+      "periodWithExtension": "{law}: {period} desde la recepción, prorrogable otros {extension}.",
       "none": "Aún no has declarado ninguna ley: las solicitudes nuevas siguen el mes del RGPD, prorrogable otros dos meses. Declara tus leyes en Qué se te aplica.",
       "ccpaFifteen": "CCPA: las solicitudes de exclusión de la venta o el intercambio y de limitación del uso de la información personal sensible, lo antes posible y, como máximo, en 15 días hábiles.",
       "ccpaConfirm": "CCPA: confirma la recepción de una solicitud de saber, eliminar o corregir en un plazo de 10 días hábiles.",
