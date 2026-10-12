@@ -17,10 +17,10 @@ const mocks = vi.hoisted(() => ({
     organizationMember: { findUnique: vi.fn() },
     dataAsset: { count: vi.fn(), findFirst: vi.fn() },
     dataElement: { count: vi.fn() },
-    processingActivity: { count: vi.fn(), create: vi.fn(), findFirst: vi.fn() },
-    processingActivityAsset: { deleteMany: vi.fn(), create: vi.fn() },
+    processingActivity: { count: vi.fn(), create: vi.fn(), findFirst: vi.fn(), findMany: vi.fn() },
+    processingActivityAsset: { deleteMany: vi.fn(), create: vi.fn(), findMany: vi.fn() },
     processingActivityAssetElement: { createMany: vi.fn() },
-    dataFlow: { create: vi.fn(), updateMany: vi.fn(), findFirst: vi.fn(), findMany: vi.fn() },
+    dataFlow: { create: vi.fn(), updateMany: vi.fn(), findFirst: vi.fn(), findMany: vi.fn(), deleteMany: vi.fn() },
     dataTransfer: { create: vi.fn() },
     auditLog: { create: vi.fn() },
   },
@@ -74,6 +74,9 @@ beforeEach(() => {
   mocks.prisma.dataFlow.updateMany.mockResolvedValue({ count: 1 });
   mocks.prisma.dataFlow.findFirst.mockResolvedValue({ id: "flow-a1" });
   mocks.prisma.dataFlow.findMany.mockResolvedValue([]);
+  mocks.prisma.dataFlow.deleteMany.mockResolvedValue({ count: 0 });
+  mocks.prisma.processingActivityAsset.findMany.mockResolvedValue([]);
+  mocks.prisma.processingActivity.findMany.mockResolvedValue([]);
   mocks.prisma.dataTransfer.create.mockResolvedValue({ id: "transfer-new" });
 });
 

@@ -3913,6 +3913,7 @@
         "leadMulti": "Los flujos de datos de extremo a extremo se dividen en {count} grupos para mantener la legibilidad a esta escala. Cada página muestra un grupo de actividades de tratamiento.",
         "showingCount": "Mostrando {filtered} de {original} activos",
         "orphansDropped": "{count, plural, one {# huérfano filtrado} other {# huérfanos filtrados}} (sin flujos ni enlace a actividades)",
+        "nonProductionDropped": "{count, plural, one {# activo que no está en producción se ha omitido} other {# activos que no están en producción se han omitido}} con sus flujos",
         "assetTypes": "Tipos de activo",
         "clusterOverview": "Visión general",
         "clusterUnassigned": "Sin asignar",

@@ -54,6 +54,11 @@ export interface FlowInputResult {
   filteredAssetCount: number;
   /** Number of assets dropped because they had no flows and no activity links. */
   orphansDropped: number;
+  /**
+   * Number of assets left out only because they are not in production (they
+   * do take part in a flow or an activity). Their flows are left out with them.
+   */
+  nonProductionDropped: number;
 }
 
 export interface FlowInputLabels {
@@ -92,7 +97,8 @@ export function buildFlowGraphInputs(
     return participates.has(a.id);
   });
   const keptIds = new Set(kept.map((a) => a.id));
-  const orphansDropped = assets.length - kept.length;
+  const orphansDropped = assets.filter((a) => !participates.has(a.id)).length;
+  const nonProductionDropped = assets.length - kept.length - orphansDropped;
 
   // 3. Drop edges that point to excluded assets
   const filteredEdges = edges.filter(
@@ -153,6 +159,7 @@ export function buildFlowGraphInputs(
       originalAssetCount: assets.length,
       filteredAssetCount: kept.length,
       orphansDropped,
+      nonProductionDropped,
     };
   }
 
@@ -202,5 +209,6 @@ export function buildFlowGraphInputs(
     originalAssetCount: assets.length,
     filteredAssetCount: kept.length,
     orphansDropped,
+    nonProductionDropped,
   };
 }

@@ -75,8 +75,10 @@ export function DataFlowVisualization({
   const [editingFlow, setEditingFlow] = useState<FlowData | null>(null);
 
   // Fetch data
+  // The largest page the procedure serves: the add-flow sheet offers every
+  // system (the default page of 50 left the rest out of reach).
   const { data: assetsData, isLoading: assetsLoading } = trpc.dataInventory.listAssets.useQuery(
-    { organizationId },
+    { organizationId, limit: 500 },
     { enabled: !!organizationId }
   );
 

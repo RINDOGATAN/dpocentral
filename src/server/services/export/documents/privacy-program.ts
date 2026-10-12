@@ -238,6 +238,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
         flowOriginalCount: flowResult.originalAssetCount,
         flowFilteredCount: flowResult.filteredAssetCount,
         flowOrphansDropped: flowResult.orphansDropped,
+        flowNonProductionDropped: flowResult.nonProductionDropped,
       }),
       args.draftNote,
     ),
