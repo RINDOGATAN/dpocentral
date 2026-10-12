@@ -14,11 +14,11 @@ import {
   Prisma,
 } from "@prisma/client";
 import {
-  findMappingForCategory,
-  GENERIC_VENDOR_MAPPING,
   requiresTransferSafeguards,
+  vendorMappingFor,
   type VendorDataMapping,
 } from "../../../config/vendor-data-mappings";
+import { VENDOR_QUICKSTART_TEXT } from "../../../config/vendor-data-mappings-es";
 import {
   defaultReturnFlowFrequency,
   getLocalizedTemplateById,
@@ -144,9 +144,10 @@ export const quickstartRouter = createTRPCRouter({
   // Detect Vendor.Watch portfolio for the current user
   // ──────────────────────────────────────────────────
   getPortfolio: organizationProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx }) => {
+    .input(z.object({ organizationId: z.string(), locale: z.enum(["en", "es"]).optional() }))
+    .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+      const locale = input.locale ?? pilotLocale(localeFromCookieGetter(ctx.getCookie));
       const empty = { hasPortfolio: false as const, vendors: [], slugs: [] };
 
       // VwPortfolioVendor.accountId = NextAuth User.id (shared DB)
@@ -200,8 +201,7 @@ export const quickstartRouter = createTRPCRouter({
         .map((pv) => {
           const catalog = catalogBySlug.get(pv.vendorSlug);
           if (!catalog) return null;
-          const mapping =
-            findMappingForCategory(catalog.category, catalog.subcategory) ?? GENERIC_VENDOR_MAPPING;
+          const mapping = vendorMappingFor(catalog.category, catalog.subcategory, locale);
           return {
             slug: pv.vendorSlug,
             name: catalog.name,
@@ -240,9 +240,12 @@ export const quickstartRouter = createTRPCRouter({
         organizationId: z.string(),
         vendorSlugs: z.array(z.string()).min(1).max(20),
         fromPortfolio: z.boolean().default(false),
+        /** The screen's language, for the records' text; the locale cookie when absent. */
+        locale: z.enum(["en", "es"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
+      const locale = input.locale ?? pilotLocale(localeFromCookieGetter(ctx.getCookie));
       if (input.fromPortfolio) {
         // Validate slugs belong to the user's VW portfolio
         const portfolioVendors = await ctx.prisma.vwPortfolioVendor.findMany({
@@ -332,8 +335,7 @@ export const quickstartRouter = createTRPCRouter({
 
       const previews: VendorPreviewItem[] = [];
       for (const vendor of catalogVendors) {
-        const mapping =
-          findMappingForCategory(vendor.category, vendor.subcategory) ?? GENERIC_VENDOR_MAPPING;
+        const mapping = vendorMappingFor(vendor.category, vendor.subcategory, locale);
         const preview = buildVendorPreview(vendor, mapping);
         previews.push(preview);
       }
@@ -490,6 +492,7 @@ export const quickstartRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
       const pilotLang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       const templateLang = input.locale ?? pilotLang;
+      const vendorText = VENDOR_QUICKSTART_TEXT[templateLang];
       const skipAssets = new Set(input.skipAssetNames);
       const skipActivities = new Set(input.skipActivityNames);
 
@@ -655,9 +658,11 @@ export const quickstartRouter = createTRPCRouter({
           // Skip existing vendors
           if (existingVendorNames.has(catalogVendor.name)) continue;
 
-          const mapping =
-            findMappingForCategory(catalogVendor.category, catalogVendor.subcategory) ??
-            GENERIC_VENDOR_MAPPING;
+          const mapping = vendorMappingFor(
+            catalogVendor.category,
+            catalogVendor.subcategory,
+            templateLang,
+          );
 
           // Create vendor
           const vendor = await tx.vendor.create({
@@ -779,7 +784,7 @@ export const quickstartRouter = createTRPCRouter({
                 data: {
                   organizationId: orgId,
                   name: activityName,
-                  description: `Auto-generated from ${catalogVendor.name} vendor import`,
+                  description: vendorText.activityDescription(catalogVendor.name),
                   purpose: mapping.activity.purpose,
                   legalBasis: mapping.activity.legalBasis,
                   dataSubjects: mapping.activity.dataSubjects,
@@ -822,13 +827,12 @@ export const quickstartRouter = createTRPCRouter({
                   data: nonEuLocations.map((country) => ({
                     organizationId: orgId,
                     processingActivityId: activity.id,
-                    name: `Transfer to ${catalogVendor.name} (${country})`,
-                    description: `Data transfer to ${catalogVendor.name} servers in ${country}`,
+                    name: vendorText.transferName(catalogVendor.name, country),
+                    description: vendorText.transferDescription(catalogVendor.name, country),
                     destinationCountry: country,
                     destinationOrg: catalogVendor.name,
                     mechanism: TransferMechanism.STANDARD_CONTRACTUAL_CLAUSES,
-                    safeguards:
-                      "Standard Contractual Clauses (SCCs) with supplementary measures",
+                    safeguards: vendorText.transferSafeguards,
                     isActive: true,
                   })),
                 });
@@ -862,9 +866,11 @@ export const quickstartRouter = createTRPCRouter({
         }[] = [];
         for (const catalogVendor of catalogVendors) {
           if (existingVendorNames.has(catalogVendor.name)) continue;
-          const mapping =
-            findMappingForCategory(catalogVendor.category, catalogVendor.subcategory) ??
-            GENERIC_VENDOR_MAPPING;
+          const mapping = vendorMappingFor(
+            catalogVendor.category,
+            catalogVendor.subcategory,
+            templateLang,
+          );
           const assetName = `${catalogVendor.name} (${mapping.label})`;
           const assetId = assetNameToId.get(assetName);
           if (assetId) {
@@ -879,9 +885,20 @@ export const quickstartRouter = createTRPCRouter({
 
         if (vendorAssetFlows.length > 0) {
           // Find or create the internal systems asset
-          const internalAssetName = `${ctx.organization.name} Internal Systems`;
+          // One internal-systems record per organisation, whichever language
+          // an earlier run wrote it in.
+          const internalAssetName = vendorText.internalSystemsName(ctx.organization.name);
           let internalAsset = await tx.dataAsset.findFirst({
-            where: { organizationId: orgId, name: internalAssetName },
+            where: {
+              organizationId: orgId,
+              name: {
+                in: [
+                  internalAssetName,
+                  VENDOR_QUICKSTART_TEXT.en.internalSystemsName(ctx.organization.name),
+                  VENDOR_QUICKSTART_TEXT.es.internalSystemsName(ctx.organization.name),
+                ],
+              },
+            },
           });
 
           if (!internalAsset) {
@@ -889,9 +906,9 @@ export const quickstartRouter = createTRPCRouter({
               data: {
                 organizationId: orgId,
                 name: internalAssetName,
-                description: "Primary internal systems that process and share data with third-party services",
+                description: vendorText.internalSystemsDescription,
                 type: "APPLICATION",
-                hostingType: "On-premise / Cloud",
+                hostingType: vendorText.internalSystemsHosting,
                 isProduction: true,
                 // Drafted like every other quick-start record: "To confirm"
                 // until a person confirms it (template-items/drafts.ts).
@@ -916,8 +933,8 @@ export const quickstartRouter = createTRPCRouter({
             const outbound = await tx.dataFlow.create({
               data: {
                 organizationId: orgId,
-                name: `Data flow to ${vaf.vendorName}`,
-                description: `Automated data sharing with ${vaf.vendorName}`,
+                name: vendorText.flowTo(vaf.vendorName),
+                description: vendorText.flowToDescription(vaf.vendorName),
                 sourceAssetId: internalAsset.id,
                 destinationAssetId: vaf.assetId,
                 dataCategories: vaf.categories,
@@ -932,7 +949,7 @@ export const quickstartRouter = createTRPCRouter({
               const inbound = await tx.dataFlow.create({
                 data: {
                   organizationId: orgId,
-                  name: `Data flow from ${vaf.vendorName}`,
+                  name: vendorText.flowFrom(vaf.vendorName),
                   description: vaf.returnFlow.description,
                   sourceAssetId: vaf.assetId,
                   destinationAssetId: internalAsset.id,
@@ -957,7 +974,11 @@ export const quickstartRouter = createTRPCRouter({
             vendorId: hrVendor.vendorId,
             vendorName: hrVendor.vendorName,
             assessmentType: "DPIA",
-            reason: `Auto-generated: ${hrVendor.vendorName} flagged as high-risk during quickstart import${hrVendor.hasTransfers ? " (includes international transfers)" : ""}`,
+            reason:
+              templateLang === "es"
+                ? `Creada automáticamente: el inicio rápido marcó ${hrVendor.vendorName} como de alto riesgo${hrVendor.hasTransfers ? " (incluye transferencias internacionales)" : ""}`
+                : `Auto-generated: ${hrVendor.vendorName} flagged as high-risk during quickstart import${hrVendor.hasTransfers ? " (includes international transfers)" : ""}`,
+            locale: templateLang,
           });
           if (result.created) {
             counts.assessments++;

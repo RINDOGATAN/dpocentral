@@ -9,6 +9,7 @@ import {
   upsertSystemQuestionnaire,
   upsertSystemTemplate,
 } from "../src/lib/seed-system-content";
+import { VENDOR_QUESTIONNAIRE_V1 } from "../src/config/vendor-questionnaires";
 
 const prisma = new PrismaClient();
 
@@ -506,66 +507,7 @@ async function main() {
   );
 
   // Seed Vendor Questionnaire Template
-  const vendorQuestionnaire = {
-    name: "Standard Vendor Security Questionnaire",
-    description: "A comprehensive questionnaire for vendor due diligence. This template is informational, not legal advice. Verify outputs with qualified counsel.",
-    version: "1.0",
-    isSystem: true,
-    isActive: true,
-    sections: [
-      {
-        id: "sec1",
-        title: "Organization & Governance",
-        questions: [
-          { id: "org1", text: "Do you have a dedicated information security team?", type: "boolean" },
-          { id: "org2", text: "Do you have documented security policies?", type: "boolean" },
-          { id: "org3", text: "How often are security policies reviewed?", type: "select", options: ["Annually", "Semi-annually", "Quarterly", "Ad-hoc", "Never"] },
-          { id: "org4", text: "Do you have a Data Protection Officer (DPO)?", type: "boolean" },
-        ],
-      },
-      {
-        id: "sec2",
-        title: "Data Protection",
-        questions: [
-          { id: "dp1", text: "Do you encrypt personal data at rest?", type: "boolean" },
-          { id: "dp2", text: "Do you encrypt personal data in transit?", type: "boolean" },
-          { id: "dp3", text: "What encryption standards do you use?", type: "text" },
-          { id: "dp4", text: "Do you have data retention and deletion policies?", type: "boolean" },
-          { id: "dp5", text: "Can you support DSAR (data subject access request) fulfillment?", type: "boolean" },
-        ],
-      },
-      {
-        id: "sec3",
-        title: "Access Control",
-        questions: [
-          { id: "ac1", text: "Do you implement role-based access control?", type: "boolean" },
-          { id: "ac2", text: "Do you require multi-factor authentication?", type: "boolean" },
-          { id: "ac3", text: "How often are access rights reviewed?", type: "select", options: ["Monthly", "Quarterly", "Annually", "Upon role change", "Never"] },
-          { id: "ac4", text: "Do you maintain access logs?", type: "boolean" },
-        ],
-      },
-      {
-        id: "sec4",
-        title: "Incident Response",
-        questions: [
-          { id: "ir1", text: "Do you have a documented incident response plan?", type: "boolean" },
-          { id: "ir2", text: "Within what timeframe would you notify us of a data breach?", type: "select", options: ["24 hours", "48 hours", "72 hours", "1 week", "No commitment"] },
-          { id: "ir3", text: "Have you experienced any data breaches in the past 3 years?", type: "boolean" },
-          { id: "ir4", text: "Do you conduct incident response drills?", type: "boolean" },
-        ],
-      },
-      {
-        id: "sec5",
-        title: "Subprocessors",
-        questions: [
-          { id: "sp1", text: "Do you use subprocessors to process personal data?", type: "boolean" },
-          { id: "sp2", text: "Can you provide a list of current subprocessors?", type: "boolean" },
-          { id: "sp3", text: "Do you have data processing agreements with all subprocessors?", type: "boolean" },
-          { id: "sp4", text: "Will you notify us before engaging new subprocessors?", type: "boolean" },
-        ],
-      },
-    ],
-  };
+  const vendorQuestionnaire = VENDOR_QUESTIONNAIRE_V1;
 
   // Version 1.0 here; scripts/seed-vendor-questionnaire.ts carries the current
   // 2.0. The guarded upsert never downgrades, so running this seed after that

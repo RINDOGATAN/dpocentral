@@ -198,7 +198,7 @@ export default function QuickstartPage() {
   // Fetch Vendor.Watch portfolio (always — used for both VW flow and dashboard detection)
   const { data: portfolio, isLoading: portfolioLoading } =
     trpc.quickstart.getPortfolio.useQuery(
-      { organizationId: orgId },
+      { organizationId: orgId, locale: templateLocale },
       { enabled: !!orgId }
     );
 
@@ -267,7 +267,7 @@ export default function QuickstartPage() {
   const isPortfolioFlow = fromVendorWatch && portfolio?.hasPortfolio === true;
 
   const { data: vendorPreview } = trpc.quickstart.previewVendorImport.useQuery(
-    { organizationId: orgId, vendorSlugs: selectedSlugs, fromPortfolio: isPortfolioFlow },
+    { organizationId: orgId, vendorSlugs: selectedSlugs, fromPortfolio: isPortfolioFlow, locale: templateLocale },
     { enabled: !!orgId && selectedSlugs.length > 0 && (step === "vendors" || step === "review") }
   );
 

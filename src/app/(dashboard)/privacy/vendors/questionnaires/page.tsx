@@ -18,7 +18,8 @@ import {
   ChevronUp,
   Globe,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { QUESTION_TYPE_LABELS } from "@/config/vendor-questionnaires-es";
 import { desnake } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -27,9 +28,11 @@ export default function VendorQuestionnairesPage() {
   const { organization } = useOrganization();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const t = useTranslations("pages.vendorQuestionnaires");
+  const locale = useLocale() === "es" ? "es" : "en";
+  const typeLabel = (type: string) => QUESTION_TYPE_LABELS[locale][type] ?? desnake(type);
 
   const { data: questionnaires, isLoading } = trpc.vendor.listQuestionnaires.useQuery(
-    { organizationId: organization?.id ?? "" },
+    { organizationId: organization?.id ?? "", locale },
     {
       enabled: !!organization?.id,
       refetchOnWindowFocus: false,
@@ -158,7 +161,7 @@ export default function VendorQuestionnairesPage() {
                                       variant="outline"
                                       className="text-[10px] px-1.5 py-0 shrink-0 mt-0.5"
                                     >
-                                      {desnake(q.type)}
+                                      {typeLabel(q.type)}
                                     </Badge>
                                     <span className="text-muted-foreground">{q.text}</span>
                                   </li>

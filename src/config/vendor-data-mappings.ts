@@ -11,6 +11,8 @@
  */
 
 import type { DataCategory, DataAssetType, LegalBasis, DataSensitivity } from "@prisma/client";
+import { VENDOR_DATA_MAPPINGS_ES } from "./vendor-data-mappings-es";
+import { FREQUENCY_LABEL_KEYS } from "../components/privacy/data-flow/flow-labels";
 
 // ============================================================
 // TYPES
@@ -875,4 +877,58 @@ export const GENERIC_VENDOR_MAPPING: VendorDataMapping = {
  */
 export function requiresTransferSafeguards(countryCode: string): boolean {
   return !EU_ADEQUATE_COUNTRIES.includes(countryCode.toUpperCase());
+}
+
+export type VendorMappingLocale = "en" | "es";
+
+/**
+ * The mapping's text in the screen's language. English is the source; for
+ * Spanish every user-visible string is looked up in VENDOR_DATA_MAPPINGS_ES.
+ * Enums, catalogue categories and the frequencies the app stores in English
+ * (labelled at display through FREQUENCY_LABEL_KEYS) stay as they are.
+ */
+export function localizeVendorMapping(
+  mapping: VendorDataMapping,
+  locale: VendorMappingLocale,
+): VendorDataMapping {
+  if (locale !== "es") return mapping;
+  const tr = (s: string) => VENDOR_DATA_MAPPINGS_ES[s] ?? s;
+  const freq = (s: string) => (s in FREQUENCY_LABEL_KEYS ? s : tr(s));
+  return {
+    ...mapping,
+    label: tr(mapping.label),
+    asset: {
+      ...mapping.asset,
+      hostingType: tr(mapping.asset.hostingType),
+      description: tr(mapping.asset.description),
+    },
+    elements: mapping.elements.map((e) => ({ ...e, name: tr(e.name) })),
+    activity: {
+      ...mapping.activity,
+      name: tr(mapping.activity.name),
+      purpose: tr(mapping.activity.purpose),
+      dataSubjects: mapping.activity.dataSubjects.map(tr),
+      recipients: mapping.activity.recipients.map(tr),
+      retentionPeriod: tr(mapping.activity.retentionPeriod),
+    },
+    returnFlow: mapping.returnFlow
+      ? {
+          ...mapping.returnFlow,
+          description: tr(mapping.returnFlow.description),
+          frequency: mapping.returnFlow.frequency ? freq(mapping.returnFlow.frequency) : undefined,
+        }
+      : undefined,
+  };
+}
+
+/** The mapping for a catalogue vendor, in the screen's language. */
+export function vendorMappingFor(
+  catalogCategory: string,
+  subcategory: string | null | undefined,
+  locale: VendorMappingLocale,
+): VendorDataMapping {
+  return localizeVendorMapping(
+    findMappingForCategory(catalogCategory, subcategory) ?? GENERIC_VENDOR_MAPPING,
+    locale,
+  );
 }
