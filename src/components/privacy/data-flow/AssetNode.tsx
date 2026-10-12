@@ -20,7 +20,6 @@ import type { AssetNodeData } from "./useDataFlowGraph";
 import {
   ASSET_TYPE_COLOR,
   SENSITIVITY_COLOR,
-  abbrevCategory,
 } from "./flow-palette";
 
 const assetTypeIcons: Record<string, typeof Database> = {
@@ -40,6 +39,8 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
   // Type label comes from the shared asset-type messages; flow-palette.ts
   // stays colours-only so it never carries untranslatable copy.
   const tAssetType = useTranslations("pages.newAsset.assetType");
+  const tAbbr = useTranslations("dataFlow.abbr");
+  const tCategory = useTranslations("enums.dataCategory");
   const {
     asset,
     incomingFlows,
@@ -166,9 +167,9 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
                     backgroundColor: c.bg,
                     color: c.fg,
                   }}
-                  title={cat.replace(/_/g, " ").toLowerCase()}
+                  title={tCategory.has(cat as never) ? tCategory(cat as never) : cat}
                 >
-                  {abbrevCategory(cat)}
+                  {tAbbr.has(cat as never) ? tAbbr(cat as never) : cat.slice(0, 3)}
                 </span>
               );
             })}

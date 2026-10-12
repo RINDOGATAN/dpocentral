@@ -31,7 +31,7 @@ import {
   Box,
 } from "lucide-react";
 import type { FlowData } from "./useDataFlowGraph";
-import { FREQUENCY_LABEL_KEYS } from "./CreateFlowSheet";
+import { frequencyLabel, isGeneratedFlow, LEGACY_GENERATED_DESCRIPTION } from "./flow-labels";
 
 const assetTypeIcons: Record<string, typeof Database> = {
   DATABASE: Server,
@@ -83,7 +83,10 @@ export function FlowDetailsPanel({
             )}
           </SheetTitle>
           <SheetDescription>
-            {flow.description || tFlow("details.noDescription")}
+            {isGeneratedFlow(flow.metadata) &&
+            (!flow.description || LEGACY_GENERATED_DESCRIPTION.test(flow.description))
+              ? tFlow("details.generated")
+              : flow.description || tFlow("details.noDescription")}
           </SheetDescription>
         </SheetHeader>
 
@@ -144,9 +147,7 @@ export function FlowDetailsPanel({
                   <div>
                     <p className="text-sm text-muted-foreground">{tFlow("sheet.frequency")}</p>
                     <p className="text-sm font-medium">
-                      {FREQUENCY_LABEL_KEYS[flow.frequency]
-                        ? tFlow(`frequencyOptions.${FREQUENCY_LABEL_KEYS[flow.frequency]}`)
-                        : flow.frequency}
+                      {frequencyLabel(flow.frequency, (k) => tFlow(`frequencyOptions.${k}` as never))}
                     </p>
                   </div>
                 </div>

@@ -55,6 +55,8 @@ export interface BuildDotOptions {
   clusters?: PdfFlowCluster[];
   /** Layout direction. LR is the default; TB works better for tall lists. */
   rankdir?: "LR" | "TB";
+  /** The asset type as the reader says it (defaults to the type code in words). */
+  typeLabel?: (type: string) => string;
 }
 
 // ---------------------------------------------------------------------------
@@ -111,7 +113,7 @@ export function buildDotSource(
   edges: PdfFlowEdge[],
   options: BuildDotOptions = {}
 ): string {
-  const { title, clusters, rankdir = "LR" } = options;
+  const { title, clusters, rankdir = "LR", typeLabel } = options;
 
   // Restrict to assets that participate in at least one flow OR appear in a cluster
   const usedIds = new Set<string>();
@@ -145,7 +147,7 @@ export function buildDotSource(
   function renderNode(asset: PdfFlowAsset, indent: string): string {
     const c = colorFor(asset.type);
     const name = htmlEscape(truncate(asset.name, 36));
-    const type = htmlEscape(truncate(typeDisplay(asset.type), 24));
+    const type = htmlEscape(truncate(typeLabel ? typeLabel(asset.type) : typeDisplay(asset.type), 24));
     const label = `<<font color="${c.text}" point-size="11"><b>${name}</b></font><br/><font color="${c.text}" point-size="8">${type}</font>>`;
     return `${indent}${nodeId(asset.id)} [label=${label}, fillcolor="${c.fill}", color="${c.border}"];`;
   }

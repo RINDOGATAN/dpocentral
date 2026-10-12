@@ -285,10 +285,10 @@ export default function DataInventoryPage() {
           <TabsTrigger value="activities" className="text-xs sm:text-sm">
             {t("tabs.activities", { count: processingActivities.length })}
           </TabsTrigger>
-          <TabsTrigger value="flows" className="text-xs sm:text-sm hidden sm:inline-flex">
+          <TabsTrigger value="flows" className="text-xs sm:text-sm">
             {t("tabs.flows")}
           </TabsTrigger>
-          <TabsTrigger value="transfers" className="text-xs sm:text-sm hidden sm:inline-flex">
+          <TabsTrigger value="transfers" className="text-xs sm:text-sm">
             {transfers?.length
               ? t("tabs.transfersWithCount", { count: transfers.length })
               : t("tabs.transfers")}
