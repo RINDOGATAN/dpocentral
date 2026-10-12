@@ -45,6 +45,7 @@ import { PageHeader } from "@/components/privacy/page-header";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 import { formatDateIn } from "@/lib/utils";
+import { isCountryCode, normaliseCountryCode } from "@/lib/country-code";
 const MECHANISM_KEYS = [
   "ADEQUACY_DECISION", "STANDARD_CONTRACTUAL_CLAUSES", "BINDING_CORPORATE_RULES",
   "DEROGATION", "CERTIFICATION", "CODE_OF_CONDUCT", "OTHER",
@@ -284,7 +285,7 @@ export default function TransfersListPage() {
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
-              if (!form.name || !form.destinationCountry || !form.mechanism) return;
+              if (!form.name || !isCountryCode(form.destinationCountry) || !form.mechanism) return;
               createTransfer.mutate({
                 organizationId: orgId,
                 name: form.name,
@@ -313,9 +314,13 @@ export default function TransfersListPage() {
                   id="country"
                   placeholder={t("countryPlaceholder")}
                   value={form.destinationCountry}
-                  onChange={(e) => setForm({ ...form, destinationCountry: e.target.value })}
+                  onChange={(e) => setForm({ ...form, destinationCountry: normaliseCountryCode(e.target.value) })}
+                  maxLength={2}
+                  autoCapitalize="characters"
+                  aria-describedby="country-hint"
                   required
                 />
+                <p id="country-hint" className="text-xs text-muted-foreground">{t("countryHint")}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="org">{t("orgLabel")}</Label>
@@ -377,7 +382,7 @@ export default function TransfersListPage() {
                 disabled={
                   createTransfer.isPending ||
                   !form.name ||
-                  !form.destinationCountry ||
+                  !isCountryCode(form.destinationCountry) ||
                   !form.mechanism
                 }
               >

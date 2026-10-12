@@ -534,7 +534,7 @@ export default function DataAssetDetailPage() {
                               <p className="font-medium">{link.processingActivity.name}</p>
                               <p className="text-xs text-muted-foreground">
                                 {enumLabel("legalBasis", link.processingActivity.legalBasis)}
-                                {link.processingActivity.purpose && ` — ${link.processingActivity.purpose}`}
+                                {link.processingActivity.purpose && ` · ${link.processingActivity.purpose}`}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
@@ -739,7 +739,7 @@ export default function DataAssetDetailPage() {
                       >
                         <p className="text-sm font-medium truncate">{act.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {act.legalBasis ? tList(`legalBasis.${act.legalBasis}` as `legalBasis.CONSENT` | `legalBasis.CONTRACT` | `legalBasis.LEGAL_OBLIGATION` | `legalBasis.VITAL_INTERESTS` | `legalBasis.PUBLIC_TASK` | `legalBasis.LEGITIMATE_INTERESTS`) : ""} — {act.purpose}
+                          {act.legalBasis ? tList(`legalBasis.${act.legalBasis}` as `legalBasis.CONSENT` | `legalBasis.CONTRACT` | `legalBasis.LEGAL_OBLIGATION` | `legalBasis.VITAL_INTERESTS` | `legalBasis.PUBLIC_TASK` | `legalBasis.LEGITIMATE_INTERESTS`) : ""} · {act.purpose}
                         </p>
                       </label>
                       {isSelected && elements.length > 0 && (
