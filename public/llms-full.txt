@@ -17,7 +17,7 @@ En español: el servicio alojado empieza con un piloto gratuito y con límites, 
 
 - [Precios en la página en español](https://dpocentral.todo.law/?lang=es#precios)
 - Piloto gratuito: gratis; 15 días de edición; después, solo lectura con exportación.
-- Plan nube UE: 1.800 € al año (o 179 € al mes). DPO Central, AI Sentinel y VendorWatch; sin límite de usuarios ni de registros; datos en la UE (Fráncfort). Sin IVA español (inversión del sujeto pasivo para empresas de la UE).
+- Plan nube UE: 1.800 € al año (o 179 € al mes). DPO Central, AI Sentinel y VendorWatch; sin límite de usuarios ni de registros; datos en la UE (Fráncfort).
 - Condiciones: https://www.todo.law/es/legal/condiciones-plan-nube-ue
 - Subencargados: https://www.todo.law/es/legal/subencargados-plan-nube-ue
 - ¿Instancia gestionada o tu propio hardware? Escríbenos: https://www.todo.law/es/contact/managed

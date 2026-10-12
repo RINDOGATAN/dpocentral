@@ -16,12 +16,14 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import StartupsHeader from "@/landing/components/StartupsHeader";
 import PricingSection from "@/landing/components/PricingSection";
 import LandingSections from "@/landing/components/LandingSections";
-import { PLAN_PAYMENT_LINK, PRICING_COPY, PRICING_PILOT_DAYS } from "@/landing/config/pricing";
+import { PLAN_PAYMENT_LINK, PRICING_COPY, PRICING_LEGAL_URL, PRICING_PILOT_DAYS } from "@/landing/config/pricing";
 import { PILOT_DAYS } from "@/server/services/pilot/caps";
 
 type L = "en" | "es";
@@ -143,5 +145,48 @@ describe("pricing block", () => {
     const all = JSON.stringify(PRICING_COPY) + text(section("en")) + text(section("es"));
     expect(all).not.toMatch(/[—–]|--/);
     expect(text(section("es"))).not.toMatch(/\busted\b/i);
+  });
+});
+
+describe("pricing block: legal links, no tax (owner, 11 Oct 2026)", () => {
+  const LINKS = {
+    en: {
+      terms: ["Terms", "https://www.todo.law/legal/eu-cloud-plan-terms"],
+      subprocessors: ["Sub-processors", "https://www.todo.law/legal/eu-cloud-plan-subprocessors"],
+    },
+    es: {
+      terms: ["Condiciones", "https://www.todo.law/es/legal/condiciones-plan-nube-ue"],
+      subprocessors: ["Subencargados", "https://www.todo.law/es/legal/subencargados-plan-nube-ue"],
+    },
+  } as const;
+
+  it.each(["en", "es"] as const)("%s: one small line under the price row with the terms and sub-processor links", (locale) => {
+    const html = section(locale);
+    const line = html.match(/<p[^>]*data-testid="pricing-legal"[^>]*>([\s\S]*?)<\/p>/);
+    expect(line).not.toBeNull();
+    expect(html.match(/data-testid="pricing-legal"/g)?.length).toBe(1);
+    // Under the price row, before the buttons.
+    expect(html.indexOf('data-testid="pricing-legal"')).toBeGreaterThan(html.indexOf('data-testid="pricing-price"'));
+    expect(html.indexOf('data-testid="pricing-legal"')).toBeLessThan(html.indexOf('data-testid="pricing-start"'));
+    for (const key of ["terms", "subprocessors"] as const) {
+      const [label, href] = LINKS[locale][key];
+      expect(PRICING_LEGAL_URL[locale][key]).toBe(href);
+      const a = line![1].match(new RegExp(`<a([^>]*data-testid="pricing-${key}"[^>]*)>([^<]*)</a>`));
+      expect(a?.[1]).toContain(`href="${href}"`);
+      expect(a?.[2]).toBe(label);
+      // Same tab.
+      expect(a?.[1]).not.toContain("target=");
+    }
+    expect(text(line![1]).trim()).toBe(`${LINKS[locale].terms[0]} · ${LINKS[locale].subprocessors[0]}`);
+  });
+
+  it.each(["en", "es"] as const)("%s: never mentions VAT, IVA, reverse charge or tax", (locale) => {
+    const all = JSON.stringify(PRICING_COPY[locale]) + text(section(locale));
+    expect(all).not.toMatch(/\bVAT\b|\bIVA\b|reverse.?charge|inversión del sujeto|sujeto pasivo|\btax(es)?\b|impuestos?|tributos?/i);
+  });
+
+  it.each(["llms.txt", "llms-full.txt"])("public/%s never mentions VAT, IVA or reverse charge", (file) => {
+    const body = readFileSync(join(process.cwd(), "public", file), "utf8");
+    expect(body).not.toMatch(/\bVAT\b|\bIVA\b|reverse.?charge|inversión del sujeto|sujeto pasivo/i);
   });
 });
