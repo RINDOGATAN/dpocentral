@@ -415,6 +415,12 @@ export const organizationRouter = createTRPCRouter({
       }
 
       const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
+      // E-mail policy (src/lib/email-policy.ts): both rules apply to every
+      // invitation, whether or not an account exists for the address (a
+      // refused address can no longer sign in).
+      if (isBlockedAccountEmail(input.email)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: BLOCKED_EMAIL_MESSAGES.en });
+      }
       // Find user by email
       const user = await ctx.prisma.user.findUnique({
         where: { email: input.email },
@@ -424,11 +430,6 @@ export const organizationRouter = createTRPCRouter({
       // organisation and e-mail it; the membership is created at their first
       // sign-in (src/server/services/members/invitations.ts).
       if (!user) {
-        // E-mail policy (src/lib/email-policy.ts): an invitation opens a new
-        // account, so both rules apply. An existing account is not refused.
-        if (isBlockedAccountEmail(input.email)) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: BLOCKED_EMAIL_MESSAGES.en });
-        }
         if (input.role === OrganizationRole.OWNER && ctx.membership.role !== "OWNER") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can invite an owner" });
         }

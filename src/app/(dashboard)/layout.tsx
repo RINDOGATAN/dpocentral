@@ -18,6 +18,12 @@ export default async function DashboardLayout({
 }) {
   const session = await getServerSession(authOptions);
 
+  // E-mail policy: a session carried over from a sibling app for a refused
+  // address is not accepted here (src/lib/auth.ts, jwt callback).
+  if (session?.emailNotAccepted) {
+    redirect("/auth-error?error=email_not_accepted");
+  }
+
   if (!session) {
     // A signed-in session lasts 12 hours; once it ends (or was never there)
     // the visitor is sent to sign-in with a plain reason and comes back to the

@@ -3,6 +3,8 @@ import { UserType } from "@prisma/client";
 
 declare module "next-auth" {
   interface Session {
+    /** A sibling app's session for an address the e-mail policy refuses. */
+    emailNotAccepted?: boolean;
     user: {
       id: string;
       userType?: UserType | null;
@@ -17,5 +19,7 @@ declare module "next-auth/jwt" {
     userType?: UserType | null;
     /** Stamped by this product's own sign-in; never trusted from a sibling. */
     dpoSignIn?: boolean;
+    /** Set when a sibling's token carried an address the e-mail policy refuses. */
+    emailNotAccepted?: boolean;
   }
 }
