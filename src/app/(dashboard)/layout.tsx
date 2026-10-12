@@ -8,7 +8,8 @@ import { authOptions } from "@/lib/auth";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { SignedInPilotBanner } from "@/components/pilot/pilot-shell";
 import { MENU_COOKIE, parseMenuCollapsed } from "@/lib/menu-cookie";
-import { upgradeLinkFor } from "@/lib/plan-upgrade";
+import { inAppPlanOffer } from "@/lib/plan-upgrade";
+import { ChargeCurrencyProvider } from "@/components/region-provider";
 
 export default async function DashboardLayout({
   children,
@@ -32,19 +33,21 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const menuCollapsed = parseMenuCollapsed(cookieStore.get(MENU_COOKIE)?.value);
 
-  // "Move to the paid plan" in the pilot banner: only with the automatic
-  // upgrade switched on and a payment link set for the viewer's currency,
-  // decided here from the request headers (src/lib/plan-upgrade.ts).
-  const upgrade = upgradeLinkFor(await headers()) !== null;
+  // One decision from the request headers (src/lib/plan-upgrade.ts): the
+  // currency the customer will be charged, which every in-app price hint
+  // shows, and whether "Move to the paid plan" is offered (automatic upgrade
+  // switched on and a payment link set for that same currency).
+  const offer = inAppPlanOffer(await headers());
+  const upgrade = offer.link !== null;
 
   return (
-    <>
+    <ChargeCurrencyProvider currency={offer.currency}>
       {/* The pilot bar, only once a person is signed in: for the whole pilot,
           the stronger wording in its last days, and once it is read-only. */}
       <SignedInPilotBanner upgrade={upgrade} />
       <DashboardShell menuCollapsed={menuCollapsed}>
         {children}
       </DashboardShell>
-    </>
+    </ChargeCurrencyProvider>
   );
 }

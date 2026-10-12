@@ -76,21 +76,17 @@ describe("the rule", () => {
 });
 
 describe("checkout currency", () => {
-  it("charges what the page showed", () => {
-    expect(checkoutCurrency({ locale: "en", country: "DE" })).toBe("EUR");
-    expect(checkoutCurrency({ locale: "en", country: "GB" })).toBe("USD");
-    expect(checkoutCurrency({ locale: "en", country: "CH" })).toBe("USD");
-    expect(checkoutCurrency({ locale: "en", country: null })).toBe("USD");
-    expect(checkoutCurrency({ locale: "es", country: "MX" })).toBe("EUR");
-    expect(checkoutCurrency({ locale: "es", country: "US" })).toBe("EUR");
+  it("charges the request's charge currency, whatever the language", () => {
+    expect(checkoutCurrency({ charge: "EUR" })).toBe("EUR");
+    expect(checkoutCurrency({ charge: "USD" })).toBe("USD");
   });
 
   it("keeps a customer's stored billing currency", () => {
-    expect(checkoutCurrency({ stored: "eur", locale: "en", country: "US" })).toBe("EUR");
-    expect(checkoutCurrency({ stored: "usd", locale: "es", country: "ES" })).toBe("USD");
-    // An unknown stored value falls back to the rule.
-    expect(checkoutCurrency({ stored: "gbp", locale: "en", country: "GB" })).toBe("USD");
-    expect(checkoutCurrency({ stored: null, locale: "en", country: "IE" })).toBe("EUR");
+    expect(checkoutCurrency({ stored: "eur", charge: "USD" })).toBe("EUR");
+    expect(checkoutCurrency({ stored: "usd", charge: "EUR" })).toBe("USD");
+    // An unknown stored value falls back to the charge currency.
+    expect(checkoutCurrency({ stored: "gbp", charge: "USD" })).toBe("USD");
+    expect(checkoutCurrency({ stored: null, charge: "EUR" })).toBe("EUR");
   });
 });
 
@@ -164,7 +160,7 @@ describe("pilot bar price", () => {
     expect(pilotEndBarPrice("en", "USD")).toBe("$179 a month or $1,800 a year");
     expect(pilotEndBarPrice("en", "EUR")).toBe("€179 a month or €1,800 a year");
     expect(pilotEndBarPrice("es", "EUR")).toBe("179 € al mes o 1.800 € al año");
-    expect(pilotEndBarPrice("es", "USD")).toBe("179 € al mes o 1.800 € al año");
+    expect(pilotEndBarPrice("es", "USD")).toBe("179 US$ al mes o 1.800 US$ al año");
   });
 });
 
@@ -176,8 +172,8 @@ describe("in-app prices", () => {
     ["en", true, "€9"],
     ["en", false, "$9"],
     ["es", true, "€9"],
-    ["es", false, "€9"],
-  ] as const)("%s, EU %s -> %s", (locale, eu, expected) => {
+    ["es", false, "$9"],
+  ] as const)("%s, EU %s -> %s (the charge currency, not the language's)", (locale, eu, expected) => {
     expect(text(wrap(locale, eu, createElement(Price)))).toContain(expected);
   });
 });

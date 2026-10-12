@@ -57,16 +57,29 @@ export function paymentLinkFor(currency: PlanCurrency, env: Env = process.env): 
 }
 
 /**
- * The payment link the in-app upgrade would use for this request, or null
- * when it cannot be offered: not the hosted service, switched off, no secret,
- * or no link set for the visitor's currency.
+ * The in-app plan offer for a request: the currency the customer will be
+ * charged and the payment link "Move to the paid plan" would use (null when
+ * it cannot be offered: not the hosted service, switched off, no secret, or
+ * no link set for that currency). The signed-in layout hands `currency` to
+ * every in-app price hint (ChargeCurrencyProvider), and the checkout route
+ * follows `link`, so the hint and the button come from this one decision
+ * and cannot disagree.
  */
+export function inAppPlanOffer(
+  headers: { get(name: string): string | null },
+  env: Env = process.env
+): { currency: PlanCurrency; link: string | null } {
+  const currency = planCurrencyFromHeaders(headers);
+  const offered = isHostedDeployment(env) && autoUpgradeEnabled(env) && planSyncSecret(env) !== null;
+  return { currency, link: offered ? paymentLinkFor(currency, env) : null };
+}
+
+/** The payment link the in-app upgrade would use for this request, or null (see inAppPlanOffer). */
 export function upgradeLinkFor(
   headers: { get(name: string): string | null },
   env: Env = process.env
 ): string | null {
-  if (!isHostedDeployment(env) || !autoUpgradeEnabled(env) || planSyncSecret(env) === null) return null;
-  return paymentLinkFor(planCurrencyFromHeaders(headers), env);
+  return inAppPlanOffer(headers, env).link;
 }
 
 function referenceSignature(secret: string, app: string, orgId: string): string {

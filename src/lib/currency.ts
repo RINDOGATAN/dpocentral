@@ -2,10 +2,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Currency helpers. The rule (EU member states see euros, every other
- * visitor US dollars, Spanish pages always euros) lives in src/lib/region.ts;
- * React components take the page's currency from useDisplayCurrency /
- * useFormatPrice (src/components/region-provider.tsx).
+ * Currency helpers. The rule lives in src/lib/region.ts: the public pages
+ * show euros to EU visitors and on Spanish pages, US dollars otherwise;
+ * inside the product every price is in the currency the customer will be
+ * charged (euros only in the 27 EU states, whatever the language), from
+ * src/lib/plan-currency.ts. React components inside the product take it from
+ * useChargeCurrency / useFormatPrice / usePriceInSentence
+ * (src/components/region-provider.tsx).
  */
 
 import { CURRENCY_COOKIE, type Currency } from "./region";
@@ -30,12 +33,18 @@ export function formatPrice(amount: number, currency: Currency = getCurrency()):
 }
 
 /**
- * A price written for a sentence in the page's language: Spanish pages
- * always in euros, after the amount ("1.800 €"); English pages in the
- * region's currency ("€1,800" or "$1,800").
+ * A price written for a sentence in the page's language, in the given
+ * currency. Spanish writes the amount first ("1.800 €", "1.800 US$": "US$"
+ * because "$" alone reads as a local peso in much of the Spanish-speaking
+ * world); English writes the symbol first ("€1,800", "$1,800"). The caller
+ * chooses the currency: inside the product it is the charge currency
+ * (src/lib/plan-currency.ts), whatever the language.
  */
 export function formatPriceIn(amount: number, locale: string | null | undefined, currency: Currency): string {
-  if (locale?.toLowerCase().startsWith("es")) return `${amount.toLocaleString("es-ES", { useGrouping: "always" } as Intl.NumberFormatOptions)} €`;
+  if (locale?.toLowerCase().startsWith("es")) {
+    const n = amount.toLocaleString("es-ES", { useGrouping: "always" } as Intl.NumberFormatOptions);
+    return currency === "USD" ? `${n} US$` : `${n} €`;
+  }
   const n = amount.toLocaleString("en-US");
   return currency === "USD" ? `$${n}` : `€${n}`;
 }

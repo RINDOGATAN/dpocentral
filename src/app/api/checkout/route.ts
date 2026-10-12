@@ -12,9 +12,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
-import { getLocale } from "next-intl/server";
 import { createCheckoutSession, createCustomer, getCustomer } from "@/lib/stripe";
-import { checkoutCurrency, COUNTRY_HEADER } from "@/lib/region";
+import { checkoutCurrency } from "@/lib/region";
+import { planCurrencyFromHeaders } from "@/lib/plan-currency";
 import { features } from "@/config/features";
 import { logger } from "@/lib/logger";
 
@@ -184,9 +184,9 @@ export async function POST(request: NextRequest) {
       stripeCustomerId = stripeCustomer.id;
     }
 
-    // The currency the page showed (src/lib/region.ts: Spanish pages and EU
-    // visitors in euros, everyone else in US dollars), unless the Stripe
-    // customer already has a billing currency, which Stripe keeps fixed.
+    // The charge currency the in-app hints showed (euros only in the 27 EU
+    // states, whatever the language: src/lib/plan-currency.ts), unless the
+    // Stripe customer already has a billing currency, which Stripe keeps fixed.
     let storedCurrency: string | null = null;
     if (stripeCustomerId) {
       const existing = await getCustomer(stripeCustomerId);
@@ -194,8 +194,7 @@ export async function POST(request: NextRequest) {
     }
     const currency = checkoutCurrency({
       stored: storedCurrency,
-      locale: await getLocale(),
-      country: request.headers.get(COUNTRY_HEADER),
+      charge: planCurrencyFromHeaders(request.headers),
     });
     const isUSD = currency === "USD";
     const usdPriceId = process.env.STRIPE_PRICE_ID_USD;

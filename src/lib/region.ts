@@ -8,7 +8,9 @@
  *   - a visitor in one of the 27 EU member states sees euros;
  *   - every other visitor (including the UK, Switzerland, Norway, Iceland,
  *     Liechtenstein, and requests with no country header) sees US dollars;
- *   - Spanish pages always show euros, whatever the country.
+ *   - Spanish public pages always show euros, whatever the country;
+ *   - inside the product (signed-in screens) every price is in the currency
+ *     the customer will be charged: the region's, whatever the language.
  *
  * Copy that names EU hosting in English is shown only when `isEuCountry` is
  * true. Pure: no Next.js imports, so it runs in the edge middleware, on the
@@ -57,16 +59,17 @@ export function currencyFor(locale: string | null | undefined, eu: boolean): Cur
 }
 
 /**
- * The currency a checkout charges: the customer's stored billing currency
- * when there is one (a billing account keeps one currency), otherwise the
- * currency the page showed for this locale and country.
+ * The currency an in-app checkout charges: the customer's stored billing
+ * currency when there is one (a billing account keeps one currency),
+ * otherwise the request's charge currency (euros only in the 27 EU states,
+ * whatever the language: planCurrencyFromHeaders in src/lib/plan-currency.ts),
+ * the same currency every in-app price hint shows.
  */
 export function checkoutCurrency(input: {
   stored?: string | null;
-  locale: string | null | undefined;
-  country: string | null | undefined;
+  charge: Currency;
 }): Currency {
-  return parseCurrency(input.stored) ?? currencyFor(input.locale, isEuCountry(input.country));
+  return parseCurrency(input.stored) ?? input.charge;
 }
 
 /** Reads a stored billing currency ("usd", "EUR"...) into a Currency, or null. */
