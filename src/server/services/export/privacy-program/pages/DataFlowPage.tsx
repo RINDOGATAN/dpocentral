@@ -81,6 +81,7 @@ export function DataFlowPage({
   filteredCount,
   originalCount,
   orphansDropped,
+  nonProductionDropped = 0,
   sectionNumber,
   t,
   tEnum,
@@ -91,6 +92,7 @@ export function DataFlowPage({
   filteredCount: number;
   originalCount: number;
   orphansDropped: number;
+  nonProductionDropped?: number;
   sectionNumber?: string;
   t: PdfT;
   tEnum: PdfT;
@@ -101,6 +103,10 @@ export function DataFlowPage({
   const orphanPart =
     orphansDropped > 0
       ? ` · ${t("flowMap.orphansDropped", { count: orphansDropped })}`
+      : "";
+  const nonProductionPart =
+    nonProductionDropped > 0
+      ? ` · ${t("flowMap.nonProductionDropped", { count: nonProductionDropped })}`
       : "";
 
   return (
@@ -118,7 +124,8 @@ export function DataFlowPage({
 
       <Text style={s.notice}>
         {t("flowMap.showingCount", { filtered: filteredCount, original: originalCount })}
-        {orphanPart}.
+        {orphanPart}
+        {nonProductionPart}.
       </Text>
 
       {/* Asset type legend (rendered once on the first page) */}

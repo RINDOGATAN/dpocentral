@@ -117,7 +117,7 @@ async function getLayoutedElements(
   return { nodes: layoutedNodes, edges };
 }
 
-function buildNodesAndEdges(
+export function buildNodesAndEdges(
   mode: "all" | "asset",
   assetId: string | undefined,
   assets: AssetData[],
@@ -150,8 +150,14 @@ function buildNodesAndEdges(
     });
   }
 
-  // Build asset map for quick lookup
+  // Build asset map for quick lookup. Every flow carries both of its ends, so
+  // a system missing from `assets` (a paged or department-limited list) still
+  // gets its node: an edge is never dropped for want of one.
   const assetMap = new Map(assets.map((a) => [a.id, a]));
+  for (const f of relevantFlows) {
+    if (!assetMap.has(f.sourceAssetId)) assetMap.set(f.sourceAssetId, f.sourceAsset);
+    if (!assetMap.has(f.destinationAssetId)) assetMap.set(f.destinationAssetId, f.destinationAsset);
+  }
 
   // Calculate flow counts + per-asset category aggregation
   const incomingFlowCounts = new Map<string, number>();

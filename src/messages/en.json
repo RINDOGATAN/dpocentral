@@ -3913,6 +3913,7 @@
         "leadMulti": "End-to-end data flows are split across {count} cluster groups to stay legible at this scale. Each page shows one group of processing activities.",
         "showingCount": "Showing {filtered} of {original} assets",
         "orphansDropped": "{count, plural, one {# orphaned} other {# orphaned}} (no flows, no activity link) filtered out",
+        "nonProductionDropped": "{count, plural, one {# not in production} other {# not in production}} left out with their flows",
         "assetTypes": "Asset Types",
         "clusterOverview": "Overview",
         "clusterUnassigned": "Unassigned",

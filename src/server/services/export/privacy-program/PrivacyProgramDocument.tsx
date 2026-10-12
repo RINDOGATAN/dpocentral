@@ -28,6 +28,7 @@ export interface PrivacyProgramDocumentProps {
   flowOriginalCount?: number;
   flowFilteredCount?: number;
   flowOrphansDropped?: number;
+  flowNonProductionDropped?: number;
 }
 
 export function PrivacyProgramDocument({
@@ -42,6 +43,7 @@ export function PrivacyProgramDocument({
   flowOriginalCount = 0,
   flowFilteredCount = 0,
   flowOrphansDropped = 0,
+  flowNonProductionDropped = 0,
 }: PrivacyProgramDocumentProps) {
   const hasAi = input.aiSystems.length > 0;
   // Flow Map is section 05 when there's no AI page, else 06. Both keys live in the
@@ -64,6 +66,7 @@ export function PrivacyProgramDocument({
           originalCount={flowOriginalCount}
           filteredCount={flowFilteredCount}
           orphansDropped={flowOrphansDropped}
+          nonProductionDropped={flowNonProductionDropped}
           sectionNumber={t(flowSectionKey)}
           t={t}
           tEnum={tEnum}
