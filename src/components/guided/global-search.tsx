@@ -10,6 +10,8 @@
  *
  * On a phone the box opens from a magnifier button as a row under the bar.
  * Keyboard: arrows move through the results, Enter opens one, Escape closes.
+ * The input stays a plain search box (not role="combobox"), so a page's own
+ * first combobox is still its first form control.
  */
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
@@ -132,11 +134,7 @@ export function GlobalSearch({ className }: { className?: string }) {
         onKeyDown={onKeyDown}
         placeholder={t("placeholder")}
         aria-label={t("label")}
-        role="combobox"
-        aria-expanded={showPanel}
         aria-controls={listId}
-        aria-autocomplete="list"
-        aria-activedescendant={showPanel && flat[active] ? `${listId}-${active}` : undefined}
         maxLength={100}
         className="h-9 w-full rounded-md border border-input bg-background pl-8 pr-8 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         data-testid="global-search-input"
