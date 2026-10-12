@@ -361,6 +361,23 @@ export default function NewAssessmentPage() {
         </Card>
       )}
 
+      {/* The other way to start a DPIA: drafted from a recorded processing
+          activity (the auto-fill wizard), offered as soon as DPIA is the
+          type. Not offered once the pilot's free DPIAs are used up. */}
+      {selectedType === "DPIA" && !(dpiaQuota && dpiaQuota.remaining <= 0) && (
+        <Link
+          href="/privacy/assessments/auto-fill"
+          className="flex items-start gap-2 rounded-md border border-border bg-card px-4 py-3 text-sm hover:border-primary/50 hover:bg-muted/50 transition-colors min-h-[44px]"
+          data-testid="dpia-auto-fill-link"
+        >
+          <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+          <span>
+            <span className="font-medium text-primary">{tp("autoFillLink")}</span>
+            <span className="block text-xs text-muted-foreground">{tp("autoFillHint")}</span>
+          </span>
+        </Link>
+      )}
+
       {/* Step 2: Template picker (only if multiple templates for this type) */}
       {selectedType && templates && templates.length > 1 && (
         <Card>
@@ -477,22 +494,6 @@ export default function NewAssessmentPage() {
                 <StatusNote tone="info" data-testid="dpia-form-free-note">
                   <DpiaFreeNote detail className="text-sm text-foreground" />
                 </StatusNote>
-              )}
-              {/* The other way to start a DPIA: drafted from a recorded
-                  processing activity (the auto-fill wizard). Not offered once
-                  the pilot's free DPIAs are used up. */}
-              {selectedType === "DPIA" && !(dpiaQuota && dpiaQuota.remaining <= 0) && (
-                <Link
-                  href="/privacy/assessments/auto-fill"
-                  className="flex items-start gap-2 rounded-md border border-border px-3 py-2 text-sm hover:border-primary/50 hover:bg-muted/50 transition-colors min-h-[44px]"
-                  data-testid="dpia-auto-fill-link"
-                >
-                  <Sparkles className="w-4 h-4 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
-                  <span>
-                    <span className="font-medium text-primary">{tp("autoFillLink")}</span>
-                    <span className="block text-xs text-muted-foreground">{tp("autoFillHint")}</span>
-                  </span>
-                </Link>
               )}
               <div className="space-y-2">
                 <Label htmlFor="name">{tp("name")}</Label>

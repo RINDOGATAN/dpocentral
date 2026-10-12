@@ -32,6 +32,8 @@ describe("U3: the auto-fill wizard can be reached", () => {
     const page = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
     expect(page).toContain('href="/privacy/assessments/auto-fill"');
     expect(page).toMatch(/selectedType === "DPIA" && !\(dpiaQuota && dpiaQuota\.remaining <= 0\)/);
+    // Offered before the template step, not only on the final form.
+    expect(page.indexOf('data-testid="dpia-auto-fill-link"')).toBeLessThan(page.indexOf("Step 2: Template picker"));
   });
 
   it("is linked from each activity's page with the activity chosen, for writers", () => {
