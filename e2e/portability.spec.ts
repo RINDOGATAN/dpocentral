@@ -35,10 +35,10 @@ test("take the programme out, bring it into an empty organisation, add a registe
   const a = await source.newPage();
   await signInWithNewOrganisation(a, `porta-${project}-${stamp}@example.com`, `Portability A ${project} ${stamp}`);
   await a.goto("/privacy/data-inventory/new");
-  await a.getByLabel(/asset name/i).fill(assetName);
+  await a.getByLabel(/system name/i).fill(assetName);
   await a.getByRole("combobox").first().click();
   await a.getByRole("option").first().click();
-  await a.getByRole("button", { name: /create asset/i }).click();
+  await a.getByRole("button", { name: /create system/i }).click();
   await a.waitForURL(/\/privacy\/data-inventory$/);
 
   await a.goto("/privacy/settings");

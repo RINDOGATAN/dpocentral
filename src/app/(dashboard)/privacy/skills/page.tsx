@@ -4,6 +4,7 @@
 
 import { useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { formatDateIn } from "@/lib/utils";
 import { toast } from "sonner";
 import {
   KeyRound,
@@ -276,7 +277,7 @@ export default function SkillsPage() {
                             <span>
                               {pkg.entitlement.expiresAt
                                 ? t("expires", {
-                                    date: new Date(pkg.entitlement.expiresAt).toLocaleDateString(locale),
+                                    date: formatDateIn(pkg.entitlement.expiresAt, locale),
                                   })
                                 : t("perpetual")}
                             </span>

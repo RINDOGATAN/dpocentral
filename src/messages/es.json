@@ -432,8 +432,8 @@
       }
     },
     "editAsset": {
-      "title": "Editar activo de datos",
-      "subtitle": "Actualiza los datos de este activo",
+      "title": "Editar sistema",
+      "subtitle": "Actualiza los datos de este sistema",
       "saving": "Guardando...",
       "save": "Guardar cambios"
     },
@@ -485,7 +485,7 @@
       "personalDataToggle": "Este elemento contiene datos personales",
       "specialCategoryToggle": "Categorías especiales de datos (art. 9 RGPD)",
       "errorPrefix": "Error: {message}",
-      "backToAsset": "← Volver al activo principal",
+      "backToAsset": "← Volver al sistema principal",
       "category_option": {
         "IDENTIFIERS": "Identificadores",
         "DEMOGRAPHICS": "Datos demográficos",
@@ -614,8 +614,8 @@
     },
     "transfers": {
       "list": {
-        "title": "Transferencias internacionales",
-        "subtitle": "Gestiona las transferencias internacionales de datos conforme al capítulo V del RGPD (arts. 44 a 49).",
+        "title": "Transferencias",
+        "subtitle": "Transferencias internacionales de datos y la garantía en que se basa cada una, conforme al capítulo V del RGPD (arts. 44 a 49)",
         "add": "Añadir transferencia",
         "addFirst": "Añade tu primera transferencia",
         "total": "Total",
@@ -706,16 +706,16 @@
       "empty": "Aún no hay plantillas de cuestionario configuradas."
     },
     "newAsset": {
-      "title": "Añadir activo de datos",
+      "title": "Añadir sistema",
       "subtitle": "Registra un nuevo sistema o almacén de datos",
-      "details": "Datos del activo",
-      "detailsSubtitle": "Proporciona información sobre el activo de datos",
-      "name": "Nombre del activo *",
+      "details": "Datos del sistema",
+      "detailsSubtitle": "Proporciona información sobre el sistema",
+      "name": "Nombre del sistema *",
       "namePlaceholder": "p. ej., Base de datos de clientes",
-      "type": "Tipo de activo *",
+      "type": "Tipo de sistema *",
       "typePlaceholder": "Selecciona el tipo",
       "description": "Descripción",
-      "descriptionPlaceholder": "Describe el activo y su finalidad...",
+      "descriptionPlaceholder": "Describe el sistema y su finalidad...",
       "owner": "Responsable / Departamento",
       "ownerPlaceholder": "p. ej., Ingeniería",
       "location": "Ubicación",
@@ -727,7 +727,7 @@
       "production": "Entorno de producción",
       "errorPrefix": "Error: {message}",
       "creating": "Creando...",
-      "submit": "Crear activo",
+      "submit": "Crear sistema",
       "assetType": {
         "DATABASE": "Base de datos",
         "APPLICATION": "Aplicación",
@@ -967,28 +967,28 @@
       "retentionPeriod": "Plazo de conservación",
       "automatedDecisionMaking": "Decisiones automatizadas",
       "recipients": "Destinatarios",
-      "linkedAssets": "Activos de datos vinculados ({count})",
+      "linkedAssets": "Sistemas vinculados ({count})",
       "generateFlows": "Generar flujos",
-      "manageAssets": "Gestionar activos",
+      "manageAssets": "Gestionar sistemas",
       "elementCount": "{count, plural, one {# elemento} other {# elementos}}",
       "elementCountOf": "{count}/{total} elementos",
       "notLinked": "+{count} sin vincular",
-      "noLinkedAssets": "No hay activos de datos vinculados a esta actividad",
+      "noLinkedAssets": "No hay sistemas vinculados a esta actividad",
       "transfers": "Transferencias de datos ({count})",
       "assessments": "Evaluaciones ({count})",
       "linkDialog": {
-        "title": "Vincular activos de datos",
-        "description": "Selecciona qué activos y elementos de datos trata esta actividad.",
+        "title": "Vincular sistemas",
+        "description": "Selecciona qué sistemas y elementos de datos trata esta actividad.",
         "assetMeta": "{type}: {count, plural, one {# elemento} other {# elementos}}",
         "hide": "Ocultar",
         "elements": "Elementos",
         "allElements": "Todos los elementos",
-        "noAssets": "Todavía no hay activos de datos en esta organización",
-        "selected": "{count, plural, one {# activo seleccionado} other {# activos seleccionados}}"
+        "noAssets": "Todavía no hay sistemas en esta organización",
+        "selected": "{count, plural, one {# sistema seleccionado} other {# sistemas seleccionados}}"
       }
     },
     "assetDetail": {
-      "notFound": "Activo no encontrado",
+      "notFound": "Sistema no encontrado",
       "back": "Volver al inventario",
       "production": "Producción",
       "edit": "Editar",
@@ -1016,7 +1016,7 @@
       },
       "elements": {
         "title": "Elementos de datos",
-        "subtitle": "Campos y puntos de datos almacenados en este activo",
+        "subtitle": "Campos y puntos de datos almacenados en este sistema",
         "addElement": "Añadir elemento",
         "personalData": "Datos personales",
         "emptyTitle": "Aún no hay elementos de datos definidos",
@@ -1024,7 +1024,7 @@
       },
       "activities": {
         "title": "Actividades de tratamiento vinculadas",
-        "subtitle": "Actividades que utilizan datos de este activo",
+        "subtitle": "Actividades que utilizan datos de este sistema",
         "manage": "Gestionar actividades",
         "elementCount": "{used, plural, one {# elemento} other {# elementos}}",
         "elementCountFiltered": "{used}/{total} {used, plural, one {elemento} other {elementos}}",
@@ -1033,7 +1033,7 @@
       },
       "addElement": {
         "title": "Añadir elemento de datos",
-        "subtitle": "Añade un nuevo campo o elemento de datos a este activo",
+        "subtitle": "Añade un nuevo campo o elemento de datos a este sistema",
         "nameLabel": "Nombre del elemento *",
         "namePlaceholder": "p. ej., email_address, phone_number",
         "descLabel": "Descripción",
@@ -1050,7 +1050,7 @@
       },
       "linkActivities": {
         "title": "Vincular actividades de tratamiento",
-        "subtitle": "Selecciona qué actividades usan datos de este activo y qué elementos tratan.",
+        "subtitle": "Selecciona qué actividades usan datos de este sistema y qué elementos tratan.",
         "elements": "Elementos",
         "hide": "Ocultar",
         "allElements": "Todos los elementos",
@@ -1426,7 +1426,7 @@
         "assignedTo": "Asignada a: {name}",
         "unassigned": "Sin asignar",
         "empty": "Aún no hay tareas",
-        "emptySub": "Añade tareas o genéralas automáticamente a partir de los activos de datos",
+        "emptySub": "Añade tareas o genéralas automáticamente a partir de los sistemas",
         "status": {
           "PENDING": "Pendiente",
           "IN_PROGRESS": "En curso",
@@ -1556,7 +1556,7 @@
       "limitedTitle": "El inicio rápido es para toda la organización",
       "limitedBody": "El inicio rápido prepara toda la organización, y tu acceso se limita a tu departamento. Un administrador puede ponerlo en marcha.",
       "limitedBack": "Volver a la vista general",
-      "title": "Asistente del programa de privacidad",
+      "title": "Inicio rápido",
       "subtitle": "Inicia rápidamente tu programa de privacidad",
       "programName": {
         "label": "Nombre del programa",
@@ -1603,10 +1603,10 @@
         "best": "Recomendado",
         "or": "o elige una opción",
         "vendorCardTitle": "Importar desde el catálogo de proveedores",
-        "vendorCardDesc": "Selecciona los proveedores que utilizas y genera automáticamente activos de datos, elementos y actividades de tratamiento a partir de su perfil de datos conocido.",
+        "vendorCardDesc": "Selecciona los proveedores que utilizas y genera automáticamente sistemas, elementos y actividades de tratamiento a partir de su perfil de datos conocido.",
         "industryCardTitle": "Comenzar con una plantilla sectorial",
-        "industryCardDesc": "Elige tu sector y obtén un programa de privacidad preconfigurado con activos de datos, actividades de tratamiento y flujos de datos habituales.",
-        "tagAssets": "Activos de datos",
+        "industryCardDesc": "Elige tu sector y obtén un programa de privacidad preconfigurado con sistemas, actividades de tratamiento y flujos de datos habituales.",
+        "tagAssets": "Sistemas",
         "tagElements": "Elementos de datos",
         "tagActivities": "Actividades de tratamiento",
         "tagTransfers": "Transferencias de datos",
@@ -1626,12 +1626,12 @@
         "verified": "Verificado",
         "gdpr": "RGPD",
         "previewTitle": "Vista previa de importación",
-        "previewSummary": "{vendors} proveedores, {assets} activos, {elements} elementos, {activities} actividades",
-        "previewSummaryWithTransfers": "{vendors} proveedores, {assets} activos, {elements} elementos, {activities} actividades, {transfers} transferencias de datos",
+        "previewSummary": "{vendors} proveedores, {assets} sistemas, {elements} elementos, {activities} actividades",
+        "previewSummaryWithTransfers": "{vendors} proveedores, {assets} sistemas, {elements} elementos, {activities} actividades, {transfers} transferencias de datos",
         "alreadyExists": "Ya existe",
         "highRisk": "Riesgo alto",
         "willCreate": "Se creará:",
-        "assetCount": "{count, plural, one {# activo} other {# activos}}",
+        "assetCount": "{count, plural, one {# sistema} other {# sistemas}}",
         "elementCount": "{count, plural, one {# elemento} other {# elementos}}",
         "activityCount": "{count, plural, one {# actividad} other {# actividades}}",
         "transferCount": "{count, plural, one {# transferencia} other {# transferencias}}",
@@ -1643,14 +1643,14 @@
         "title": "Seleccionar sector",
         "subtitle": "Elige la plantilla que mejor se adapte a tu organización.",
         "back": "Atrás",
-        "templateAssets": "{count, plural, one {# activo} other {# activos}}",
+        "templateAssets": "{count, plural, one {# sistema} other {# sistemas}}",
         "templateActivities": "{count, plural, one {# actividad} other {# actividades}}",
         "templateFlows": "{count, plural, one {# flujo} other {# flujos}}",
         "previewTitle": "Vista previa de la plantilla {name}",
-        "previewSummary": "{assets} activos, {elements} elementos, {activities} actividades, {flows} flujos",
+        "previewSummary": "{assets} sistemas, {elements} elementos, {activities} actividades, {flows} flujos",
         "collapse": "Contraer",
         "expand": "Expandir",
-        "dataAssets": "Activos de datos",
+        "dataAssets": "Sistemas",
         "exists": "Existe",
         "elementsList": "{count, plural, one {# elemento} other {# elementos}}: {list}",
         "processingActivities": "Actividades de tratamiento",
@@ -1664,7 +1664,7 @@
         "back": "Atrás",
         "stats": {
           "vendors": "Proveedores",
-          "assets": "Activos de datos",
+          "assets": "Sistemas",
           "elements": "Elementos de datos",
           "activities": "Actividades",
           "flows": "Flujos de datos",
@@ -1672,7 +1672,7 @@
           "aiSystems": "Sistemas de IA"
         },
         "nondestructiveTitle": "Operación no destructiva",
-        "nondestructiveBody": "Solo se crearán registros nuevos. Los activos, proveedores y actividades de tratamiento existentes no se modificarán. Los duplicados se omiten automáticamente.",
+        "nondestructiveBody": "Solo se crearán registros nuevos. Los sistemas, proveedores y actividades de tratamiento existentes no se modificarán. Los duplicados se omiten automáticamente.",
         "vendorImport": "Importación de proveedores",
         "vendorMeta": "{count, plural, one {# elemento} other {# elementos}}, 1 actividad",
         "vendorMetaWithTransfers": "{count, plural, one {# elemento} other {# elementos}}, 1 actividad, {transfers, plural, one {# transferencia} other {# transferencias}}",
@@ -1690,13 +1690,13 @@
         "forProgramme": "El programa {name}",
         "createdListTitle": "Qué se ha creado",
         "createdListVendors": "Proveedores",
-        "createdListAssets": "Activos de datos",
+        "createdListAssets": "Sistemas",
         "createdListActivities": "Actividades de tratamiento",
         "createdListFlows": "Flujos de datos",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
         "cardDataInventory": "Inventario de datos",
-        "cardDataInventoryDesc": "Ver activos y elementos",
+        "cardDataInventoryDesc": "Ver sistemas y elementos",
         "cardActivities": "Actividades de tratamiento",
         "cardActivitiesDesc": "Ver actividades y RAT",
         "cardVendors": "Proveedores",
@@ -1708,8 +1708,8 @@
       }
     },
     "reports": {
-      "title": "Panel de cumplimiento",
-      "subtitle": "Postura de cumplimiento del programa de privacidad",
+      "title": "Informes",
+      "subtitle": "Panel de cumplimiento: en qué punto está tu programa de privacidad",
       "saveSnapshot": "Guardar instantánea",
       "regulatoryReport": "Informe regulatorio",
       "score": {
@@ -1724,7 +1724,7 @@
         "outOf": "/ 100",
         "unrated": "Sin evaluar",
         "unratedRing": "Sin evaluar",
-        "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade activos de datos, evaluaciones, solicitudes de derechos, incidentes o proveedores y la puntuación aparecerá aquí.",
+        "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade sistemas, evaluaciones, solicitudes de derechos, incidentes o proveedores y la puntuación aparecerá aquí.",
         "partialSubtitle": "Calculada sobre {rated} de {total} áreas ({pct} % de la ponderación). No se da ninguna valoración hasta que todas las áreas tengan datos; las áreas sin datos quedan fuera en lugar de contarse como conformes.",
         "areasWithData": "Datos en {rated} de {total} áreas",
         "value": "{score} / 100",
@@ -1753,13 +1753,13 @@
           "openSevereIncidents": "{count, plural, one {# incidente crítico o alto abierto} other {# incidentes críticos o altos abiertos}}",
           "draftAssessments": "{count, plural, one {# evaluación todavía en borrador} other {# evaluaciones todavía en borrador}}",
           "contractsExpiring": "{count, plural, one {# contrato con un proveedor vence en los próximos 30 días} other {# contratos con proveedores vencen en los próximos 30 días}}",
-          "assetsWithoutActivity": "{count, plural, one {# activo de datos sin vincular a ninguna actividad de tratamiento} other {# activos de datos sin vincular a ninguna actividad de tratamiento}}"
+          "assetsWithoutActivity": "{count, plural, one {# sistema sin vincular a ninguna actividad de tratamiento} other {# sistemas sin vincular a ninguna actividad de tratamiento}}"
         }
       },
       "modules": {
         "heading": "Detalles de los módulos",
         "dataInventory": "Inventario de datos",
-        "assets": "Activos",
+        "assets": "Sistemas",
         "elements": "Elementos",
         "activities": "Actividades",
         "flows": "Flujos",
@@ -1789,8 +1789,8 @@
       }
     },
     "regulations": {
-      "title": "Centro normativo",
-      "subtitle": "Sigue la normativa de privacidad aplicable y los requisitos de cumplimiento",
+      "title": "Qué se te aplica",
+      "subtitle": "Las jurisdicciones y leyes de privacidad que se te aplican, y sus requisitos (centro normativo)",
       "exportReport": "Exportar informe",
       "wizard": "Asistente de aplicabilidad",
       "tabs": {
@@ -1846,7 +1846,7 @@
       }
     },
     "aiSystems": {
-      "title": "Registro de gobernanza de IA",
+      "title": "Sistemas de IA",
       "subtitle": "Los sistemas de IA que usan datos personales, para un registro de privacidad completo. Su gobernanza se realiza en AI Sentinel.",
       "register": "Registrar sistema de IA",
       "search": "Buscar sistemas de IA...",
@@ -1910,8 +1910,8 @@
       "syncedWithSentinel": "Sincronizado con AI Sentinel"
     },
     "incidents": {
-      "title": "Gestión de incidentes",
-      "subtitle": "Supervisa incidentes de seguridad y brechas",
+      "title": "Registro de brechas",
+      "subtitle": "Incidentes de seguridad y brechas de datos personales (gestión de incidentes)",
       "exportRegister": "Exportar registro",
       "exportPdf": "Descargar como PDF",
       "exportCsv": "Descargar como CSV",
@@ -1970,8 +1970,8 @@
       "emptyFiltered": "Ningún incidente coincide con estos filtros"
     },
     "vendors": {
-      "title": "Gestión de proveedores",
-      "subtitle": "Gestiona proveedores externos y encargados del tratamiento",
+      "title": "Proveedores y encargados",
+      "subtitle": "Los proveedores externos y los encargados que tratan datos personales por ti (gestión de proveedores)",
       "exportRegister": "Exportar registro",
       "exportPdf": "Descargar como PDF",
       "exportCsv": "Descargar como CSV",
@@ -2105,11 +2105,11 @@
       "subtitle": "Gestiona tu cuenta, organización y equipo.",
       "templateItems": {
         "title": "Eliminar todos los elementos de plantilla",
-        "lead": "El inicio rápido y las plantillas sectoriales crean proveedores, activos de datos y actividades de tratamiento de ejemplo para empezar. Esto elimina, en un solo paso, los que nadie ha editado. Se conserva todo lo que hayas abierto y modificado.",
+        "lead": "El inicio rápido y las plantillas sectoriales crean proveedores, sistemas y actividades de tratamiento de ejemplo para empezar. Esto elimina, en un solo paso, los que nadie ha editado. Se conserva todo lo que hayas abierto y modificado.",
         "count": "Se {remove, plural, one {eliminaría # elemento} other {eliminarían # elementos}} y se {keep, plural, one {conservaría #} other {conservarían #}}.",
         "keptNote": "Los registros creados antes del 28 de septiembre de 2026 se conservan.",
         "vendors": "proveedores",
-        "dataAssets": "activos de datos",
+        "dataAssets": "sistemas",
         "processingActivities": "actividades de tratamiento",
         "button": "Eliminar todos los elementos de plantilla",
         "confirm": "Sí, eliminar {count}",
@@ -2245,8 +2245,8 @@
       }
     },
     "dsar": {
-      "title": "Ejercicio de derechos",
-      "subtitle": "Gestiona y supervisa las solicitudes de ejercicio de derechos",
+      "title": "Solicitudes de derechos",
+      "subtitle": "Solicitudes de ejercicio de derechos de los interesados y sus plazos",
       "exportReport": "Exportar informe",
       "settings": "Ajustes",
       "comingSoon": "Próximamente",
@@ -2322,18 +2322,18 @@
     },
     "dataInventory": {
       "title": "Inventario de datos",
-      "subtitle": "Gestiona activos de datos y actividades de tratamiento",
+      "subtitle": "Tus sistemas: dónde se guardan los datos personales y los elementos de datos de cada uno",
       "export": "Exportar",
       "exportPrivacyProgram": "Informe del programa de privacidad",
       "exportRopa": "Exportar RAT",
-      "addAsset": "Añadir activo",
+      "addAsset": "Añadir sistema",
       "addAssetShort": "Añadir",
       "addActivity": "Añadir actividad",
       "addTransfer": "Añadir transferencia",
-      "search": "Buscar activos...",
+      "search": "Buscar sistemas...",
       "filters": "Filtros",
       "tabs": {
-        "assets": "Activos ({count})",
+        "assets": "Sistemas ({count})",
         "activities": "Actividades ({count})",
         "flows": "Flujos de datos",
         "transfers": "Transferencias",
@@ -2348,14 +2348,14 @@
       "activity": {
         "noBasis": "Sin base jurídica",
         "noSubjects": "Sin interesados",
-        "assetsCount": "{count, plural, one {# activo} other {# activos}}",
+        "assetsCount": "{count, plural, one {# sistema} other {# sistemas}}",
         "details": "Detalles",
         "viewDetails": "Ver detalles"
       },
       "loadMore": "Cargar más",
       "emptyAssets": {
-        "title": "Aún no hay activos de datos",
-        "subtitle": "Comienza añadiendo tu primer activo de datos"
+        "title": "Aún no hay sistemas",
+        "subtitle": "Comienza añadiendo tu primer sistema"
       },
       "emptyActivities": {
         "title": "Aún no hay actividades de tratamiento",
@@ -2433,8 +2433,8 @@
     },
     "processingActivities": {
       "back": "Volver",
-      "title": "Actividades de tratamiento",
-      "subtitle": "Registro de actividades de tratamiento (RAT) para el cumplimiento del RGPD",
+      "title": "Registro de actividades",
+      "subtitle": "Tus actividades de tratamiento: el registro de actividades de tratamiento (RAT, artículo 30 del RGPD)",
       "exportRopa": "Exportar RAT",
       "downloadPdf": "Descargar en PDF",
       "downloadCsv": "Descargar en CSV",
@@ -2449,7 +2449,7 @@
       },
       "searchPlaceholder": "Buscar actividades...",
       "inactive": "Inactiva",
-      "assetsCount": "{count, plural, one {# activo de datos} other {# activos de datos}}",
+      "assetsCount": "{count, plural, one {# sistema} other {# sistemas}}",
       "subjectTypesCount": "{count, plural, one {# tipo de interesado} other {# tipos de interesados}}",
       "categoriesCount": "{count, plural, one {# categoría de datos} other {# categorías de datos}}",
       "dataSubjects": "Interesados",
@@ -2510,12 +2510,12 @@
       "retentionDays": "{days, plural, one {# día} other {# días}}",
       "notSpecified": "Sin especificar",
       "legalBasis": "Base jurídica",
-      "parentAsset": "Activo principal",
+      "parentAsset": "Sistema principal",
       "linkedTitle": "Actividades de tratamiento vinculadas",
       "linkedDescription": "Actividades que tratan expresamente este elemento de datos",
       "inactive": "Inactiva",
       "noLinked": "No hay actividades de tratamiento vinculadas a este elemento",
-      "noLinkedHint": "Abre el activo principal y usa «Gestionar actividades» para vincular una"
+      "noLinkedHint": "Abre el sistema principal y usa «Gestionar actividades» para vincular una"
     },
     "regulationsWizard": {
       "title": "Asistente de aplicabilidad",
@@ -2531,12 +2531,12 @@
     }
   },
   "confirms": {
-    "deleteAssetTitle": "¿Eliminar activo?",
-    "deleteAssetDesc": "Se eliminará el activo y todos sus elementos vinculados de forma permanente. Esta acción no se puede deshacer.",
+    "deleteAssetTitle": "¿Eliminar sistema?",
+    "deleteAssetDesc": "Se eliminará el sistema y todos sus elementos vinculados de forma permanente. Esta acción no se puede deshacer.",
     "deleteElementTitle": "¿Eliminar elemento?",
     "deleteElementDesc": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
     "deleteVendorTitle": "¿Eliminar proveedor?",
-    "deleteVendorDesc": "Se eliminará el proveedor y se desvinculará de los activos o actividades asociados. Esta acción no se puede deshacer.",
+    "deleteVendorDesc": "Se eliminará el proveedor y se desvinculará de los sistemas o actividades asociados. Esta acción no se puede deshacer.",
     "deleteFlowTitle": "¿Eliminar flujo de datos?",
     "deleteFlowDesc": "¿Eliminar el flujo «{name}»? Esta acción no se puede deshacer.",
     "deleteEntitlementTitle": "¿Eliminar habilitación?",
@@ -2641,9 +2641,9 @@
       "namePlaceholder": "p. ej., Sincronización de usuarios con analítica",
       "description": "Descripción",
       "descriptionPlaceholder": "Describe la finalidad de este flujo de datos",
-      "source": "Activo de origen *",
+      "source": "Sistema de origen *",
       "sourcePlaceholder": "Selecciona el sistema de origen",
-      "destination": "Activo de destino *",
+      "destination": "Sistema de destino *",
       "destinationPlaceholder": "Selecciona el sistema de destino",
       "categories": "Categorías de datos",
       "categoriesSelected": "{count} seleccionadas",
@@ -2662,15 +2662,15 @@
     },
     "empty": {
       "loading": "Cargando la visualización de flujos de datos…",
-      "noAssetsTitle": "No se han encontrado activos de datos",
-      "noAssetsBody": "Añade primero activos de datos para visualizar los flujos",
+      "noAssetsTitle": "No se han encontrado sistemas",
+      "noAssetsBody": "Añade primero sistemas para visualizar los flujos",
       "noFlowsTitle": "Todavía no hay flujos de datos definidos",
       "noFlowsBody": "Crea flujos para visualizar cómo se mueven los datos entre sistemas",
-      "noAssetFlowsTitle": "No hay flujos de datos conectados a este activo",
-      "noAssetFlowsBody": "Crea un flujo para conectar este activo con otros sistemas"
+      "noAssetFlowsTitle": "No hay flujos de datos conectados a este sistema",
+      "noAssetFlowsBody": "Crea un flujo para conectar este sistema con otros sistemas"
     },
     "actions": {
-      "addAsset": "Añadir activo",
+      "addAsset": "Añadir sistema",
       "addFlow": "Añadir flujo"
     },
     "frequencyOptions": {
@@ -2955,7 +2955,7 @@
       "OrganizationMember": "Miembro del equipo",
       "OrganizationJurisdiction": "Jurisdicción",
       "OrganizationAiSettings": "Ajustes de IA",
-      "DataAsset": "Activo de datos",
+      "DataAsset": "Sistema",
       "ProcessingActivity": "Actividad de tratamiento",
       "DataFlow": "Flujo de datos",
       "DataTransfer": "Transferencia",
@@ -3083,7 +3083,7 @@
     "recentActivity": "Actividad reciente",
     "quickActions": "Acciones rápidas",
     "metrics": {
-      "totalAssets": "Total de activos",
+      "totalAssets": "Total de sistemas",
       "activeRequests": "Solicitudes activas",
       "pendingAssessments": "Evaluaciones pendientes",
       "openIncidents": "Incidentes abiertos"
@@ -3091,15 +3091,15 @@
   },
   "dataInventory": {
     "title": "Inventario de datos",
-    "assets": "Activos de datos",
+    "assets": "Sistemas",
     "elements": "Elementos de datos",
     "activities": "Actividades de tratamiento",
     "flows": "Flujos de datos",
     "transfers": "Transferencias de datos",
-    "newAsset": "Nuevo activo",
+    "newAsset": "Nuevo sistema",
     "newElement": "Nuevo elemento",
     "newActivity": "Nueva actividad",
-    "assetType": "Tipo de activo",
+    "assetType": "Tipo de sistema",
     "sensitivity": "Sensibilidad",
     "owner": "Responsable",
     "location": "Ubicación"
@@ -3682,9 +3682,9 @@
       "deleteFailed": "No se ha podido eliminar el flujo de datos"
     },
     "asset": {
-      "created": "Activo de datos creado",
-      "updated": "Activo de datos actualizado",
-      "deleted": "Activo eliminado",
+      "created": "Sistema creado",
+      "updated": "Sistema actualizado",
+      "deleted": "Sistema eliminado",
       "elementAdded": "Elemento de datos añadido",
       "elementUpdated": "Elemento de datos actualizado",
       "elementDeleted": "Elemento eliminado",
@@ -3695,8 +3695,8 @@
       "created": "Actividad de tratamiento creada",
       "updated": "Actividad de tratamiento actualizada",
       "deleted": "Actividad de tratamiento eliminada",
-      "assetsLinked": "Activos enlazados actualizados",
-      "assetsLinkedWithFlows": "Activos vinculados: se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}",
+      "assetsLinked": "Sistemas enlazados actualizados",
+      "assetsLinkedWithFlows": "Sistemas vinculados: se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}",
       "flowsGenerated": "Se {count, plural, one {ha generado # nuevo flujo de datos} other {han generado # nuevos flujos de datos}}",
       "noNewFlows": "No hay nuevos flujos que generar: el grafo existente ya cubre esta actividad"
     },
@@ -3731,7 +3731,7 @@
       "statusUpdated": "Estado de la solicitud actualizado",
       "taskAdded": "Tarea añadida",
       "taskUpdated": "Tarea actualizada",
-      "tasksGenerated": "Tareas generadas a partir de los activos de datos",
+      "tasksGenerated": "Tareas generadas a partir de los sistemas",
       "messageSent": "Mensaje enviado"
     },
     "assessment": {
@@ -3763,7 +3763,7 @@
       "selectTemplate": "Selecciona una plantilla de sector",
       "createdSummary": "Creado: {summary}",
       "createdVendors": "{count, plural, one {# proveedor} other {# proveedores}}",
-      "createdAssets": "{count, plural, one {# activo} other {# activos}}",
+      "createdAssets": "{count, plural, one {# sistema} other {# sistemas}}",
       "createdActivities": "{count, plural, one {# actividad} other {# actividades}}"
     }
   },
@@ -4615,7 +4615,7 @@
       "dataInventory": {
         "label": "Inventario de datos",
         "items": {
-          "assets": "Activos de datos",
+          "assets": "Sistemas",
           "elements": "Elementos de datos",
           "activities": "Actividades de tratamiento",
           "flows": "Flujos de datos",
@@ -4783,11 +4783,11 @@
         "description": "Pon en marcha todo tu programa de privacidad en minutos en lugar de construirlo desde cero.",
         "importVendors": {
           "title": "Importar desde proveedores",
-          "desc": "Selecciona en el catálogo los proveedores que ya utilizas o importa hasta 5 gratis desde tu cartera de Vendor.Watch. El asistente genera automáticamente los activos de datos, elementos de datos, actividades de tratamiento y transferencias internacionales de cada proveedor."
+          "desc": "Selecciona en el catálogo los proveedores que ya utilizas o importa hasta 5 gratis desde tu cartera de Vendor.Watch. El asistente genera automáticamente los sistemas, elementos de datos, actividades de tratamiento y transferencias internacionales de cada proveedor."
         },
         "industryTemplate": {
           "title": "Plantilla por sector",
-          "desc": "Elige tu sector (comercio electrónico, SaaS, salud, fintech, medios o servicios profesionales) y obtén una estructura predefinida de activos, actividades y flujos de datos."
+          "desc": "Elige tu sector (comercio electrónico, SaaS, salud, fintech, medios o servicios profesionales) y obtén una estructura predefinida de sistemas, actividades y flujos de datos."
         },
         "vendorWatchTitle": "Integración con Vendor.Watch",
         "vendorWatchBody": "Si tienes una cartera en Vendor.Watch, el asistente detecta automáticamente tus proveedores y los preselecciona, sin búsquedas manuales. Puedes importar hasta 5 proveedores gratis.",
@@ -4938,7 +4938,7 @@
           },
           "fill": {
             "title": "Rellena los detalles del proyecto",
-            "description": "Indica el nombre, la descripción, las actividades de tratamiento relacionadas y los activos de datos."
+            "description": "Indica el nombre, la descripción, las actividades de tratamiento relacionadas y los sistemas."
           },
           "answer": {
             "title": "Responde las preguntas de la evaluación",
@@ -5172,9 +5172,9 @@
       "title": "Inventario de datos",
       "subtitle": "El módulo Inventario de datos es la base de tu programa de privacidad. Recoge qué datos personales tienes, por dónde circulan y cómo se tratan, y constituye la base de tu registro de actividades de tratamiento (RAT).",
       "assets": {
-        "title": "Activos de datos",
-        "description": "Los activos de datos representan sistemas, bases de datos o aplicaciones que almacenan datos personales.",
-        "mockupTitle": "Tarjetas de activo",
+        "title": "Sistemas",
+        "description": "Los sistemas son las bases de datos, aplicaciones y servicios que almacenan datos personales.",
+        "mockupTitle": "Tarjetas de sistema",
         "elementsLabel": "{count} elementos de datos",
         "activitiesLabel": "{count} actividades",
         "steps": {
@@ -5183,20 +5183,20 @@
             "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Inventario de datos."
           },
           "add": {
-            "title": "Pulsa «Añadir activo»",
-            "description": "Usa el botón de la esquina superior derecha para abrir el formulario de creación de activo."
+            "title": "Pulsa «Añadir sistema»",
+            "description": "Usa el botón de la esquina superior derecha para abrir el formulario de creación de sistema."
           },
           "details": {
             "title": "Rellena los detalles",
-            "description": "Introduce el nombre del activo, el tipo (Base de datos, Aplicación, Servicio en la nube, etc.), la descripción y el responsable de los datos."
+            "description": "Introduce el nombre del sistema, el tipo (Base de datos, Aplicación, Servicio en la nube, etc.), la descripción y el responsable de los datos."
           },
           "link": {
             "title": "Vincula elementos de datos",
-            "description": "Añade los elementos de datos personales que almacena este activo (consulta la sección Elementos de datos)."
+            "description": "Añade los elementos de datos personales que almacena este sistema (consulta la sección Elementos de datos)."
           },
           "save": {
-            "title": "Guarda el activo",
-            "description": "El activo aparecerá en tu inventario y podrá vincularse a actividades de tratamiento."
+            "title": "Guarda el sistema",
+            "description": "El sistema aparecerá en tu inventario y podrá vincularse a actividades de tratamiento."
           }
         }
       },
@@ -5216,7 +5216,7 @@
       },
       "activities": {
         "title": "Actividades de tratamiento",
-        "description": "Las actividades de tratamiento describen cómo y por qué se usan los datos personales. Cada actividad se vincula a activos, elementos y una base jurídica.",
+        "description": "Las actividades de tratamiento describen cómo y por qué se usan los datos personales. Cada actividad se vincula a sistemas, elementos y una base jurídica.",
         "mockupTitle": "Tarjeta de actividad de tratamiento",
         "sampleTitle": "Correspondencia de atención al cliente",
         "sampleDesc": "Tratamiento de incidencias de soporte y seguimientos",
@@ -5225,7 +5225,7 @@
           "name": "Nombre completo",
           "history": "Historial de soporte"
         },
-        "assetsLabel": "2 activos",
+        "assetsLabel": "2 sistemas",
         "elementsLabel": "3 elementos de datos",
         "retentionLabel": "Conservación: 3 años",
         "calloutTitle": "Base jurídica",
@@ -5233,7 +5233,7 @@
       },
       "flows": {
         "title": "Flujos de datos",
-        "description": "Los flujos de datos muestran cómo circulan los datos personales entre activos y se generan automáticamente a partir de los vínculos de tus actividades de tratamiento.",
+        "description": "Los flujos de datos muestran cómo circulan los datos personales entre sistemas y se generan automáticamente a partir de los vínculos de tus actividades de tratamiento.",
         "mockupTitle": "Diagrama de flujo de datos",
         "nodes": {
           "crm": "CRM",
@@ -5241,11 +5241,11 @@
           "analytics": "Analítica (UE)"
         },
         "body1Bold": "No necesitas dibujar el grafo.",
-        "body1Rest": " Cada vez que vinculas una actividad de tratamiento a dos o más activos (desde el botón ",
-        "body1ManageAssets": "Gestionar activos",
+        "body1Rest": " Cada vez que vinculas una actividad de tratamiento a dos o más sistemas (desde el botón ",
+        "body1ManageAssets": "Gestionar sistemas",
         "body1Mid": " en la página de detalle de la actividad, o desde ",
         "body1ManageActivities": "Gestionar actividades",
-        "body1End": " en la página de detalle del activo), el sistema crea automáticamente registros de flujo de datos que los conectan en un orden lógico, según la posición habitual de cada tipo de activo en una canalización de datos (primero las aplicaciones de entrada, luego los servicios de ingesta, después las bases de datos, después el almacenamiento de archivos y, por último, los destinos de terceros).",
+        "body1End": " en la página de la actividad), DPO Central crea automáticamente registros de flujo de datos que los conectan en un orden lógico, según la posición habitual de cada tipo de sistema en una canalización de datos (primero las aplicaciones de entrada, luego los servicios de ingesta, después las bases de datos, después el almacenamiento de archivos y, por último, los destinos de terceros).",
         "body2Start": "Puedes volver a generar los flujos en cualquier momento con el botón ",
         "body2GenerateFlows": "Generar flujos",
         "body2End": " en la página de detalle de una actividad. Los flujos existentes no se duplican: lo que hayas editado a mano se conserva y solo se añaden las conexiones nuevas.",
@@ -5263,7 +5263,7 @@
         "warningTitle": "Cumplimiento tras Schrems II",
         "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de las transferencias (EIT) detecta riesgos, pueden ser necesarias garantías adicionales. Consulta la sección Funciones Premium para las EIT.",
         "tipTitle": "Exportar el RAT",
-        "tipBody": "Puedes exportar tu registro de actividades de tratamiento (RAT) completo desde la vista de listado del Inventario de datos. La exportación incluye todos los activos, elementos, actividades, bases jurídicas y registros de transferencia."
+        "tipBody": "Puedes exportar tu registro de actividades de tratamiento (RAT) completo desde la vista de listado del Inventario de datos. La exportación incluye todos los sistemas, elementos, actividades, bases jurídicas y registros de transferencia."
       },
       "nav": {
         "previous": "Inicio rápido",
@@ -5291,7 +5291,7 @@
           },
           "scope": {
             "title": "Evalúa el alcance",
-            "description": "Determina qué activos de datos y actividades de tratamiento son relevantes para la solicitud."
+            "description": "Determina qué sistemas y actividades de tratamiento son relevantes para la solicitud."
           },
           "assign": {
             "title": "Asigna tareas",
@@ -5360,18 +5360,18 @@
     },
     "quickstart": {
       "title": "Asistente de inicio rápido",
-      "subtitle": "Pon en marcha todo tu programa de privacidad en minutos. El asistente de inicio rápido crea activos de datos, elementos de datos, actividades de tratamiento, flujos de datos y registros de proveedores según tu sector y las herramientas que usas.",
+      "subtitle": "Pon en marcha todo tu programa de privacidad en minutos. El asistente de inicio rápido crea sistemas, elementos de datos, actividades de tratamiento, flujos de datos y registros de proveedores según tu sector y las herramientas que usas.",
       "openWizard": "Abrir asistente de inicio rápido",
       "howItWorks": {
         "title": "Cómo funciona",
         "description": "El asistente ofrece dos rutas complementarias que pueden usarse juntas.",
         "importVendors": {
           "title": "Importar desde proveedores",
-          "desc": "Selecciona proveedores del catálogo (o impórtalos desde tu cartera de Vendor.Watch). Para cada proveedor, el asistente genera automáticamente un activo de datos, elementos de datos, una actividad de tratamiento y registros de transferencias internacionales según el perfil de datos conocido del proveedor."
+          "desc": "Selecciona proveedores del catálogo (o impórtalos desde tu cartera de Vendor.Watch). Para cada proveedor, el asistente genera automáticamente un sistema, elementos de datos, una actividad de tratamiento y registros de transferencias internacionales según el perfil de datos conocido del proveedor."
         },
         "industryTemplate": {
           "title": "Plantilla por sector",
-          "desc": "Elige tu sector y obtén una estructura predefinida de activos de datos, actividades de tratamiento y flujos de datos. Cada plantilla está diseñada por profesionales de privacidad para reflejar los patrones comunes de tratamiento de datos de ese sector."
+          "desc": "Elige tu sector y obtén una estructura predefinida de sistemas, actividades de tratamiento y flujos de datos. Cada plantilla está diseñada por profesionales de privacidad para reflejar los patrones comunes de tratamiento de datos de ese sector."
         },
         "nonDestructiveTitle": "No destructivo",
         "nonDestructiveBody": "El asistente solo crea registros nuevos. Nunca modifica ni elimina datos existentes y omite duplicados automáticamente. Puedes usarlo varias veces sin problema."
@@ -5383,12 +5383,12 @@
         "mockupTitle": "Qué se crea por proveedor",
         "items": {
           "asset": {
-            "label": "Activo de datos",
-            "desc": "Un activo por proveedor, con el tipo según la categoría (p. ej., Servicio en la nube, Aplicación)"
+            "label": "Sistema",
+            "desc": "Un sistema por proveedor, con el tipo según la categoría (p. ej., Servicio en la nube, Aplicación)"
           },
           "elements": {
             "label": "Elementos de datos",
-            "desc": "De 3 a 10 elementos por activo: identificadores, datos de comportamiento, datos financieros, etc."
+            "desc": "De 3 a 10 elementos por sistema: identificadores, datos de comportamiento, datos financieros, etc."
           },
           "activity": {
             "label": "Actividad de tratamiento",
@@ -5405,12 +5405,12 @@
       "industryTemplates": {
         "title": "Plantillas por sector",
         "description": "Cada plantilla proporciona una estructura completa de programa de privacidad adaptada a tu sector.",
-        "intro": "Selecciona tu sector para generar automáticamente activos de datos (con elementos de datos), actividades de tratamiento (con bases jurídicas) y flujos de datos entre sistemas. Todos los registros se pueden personalizar tras la creación.",
-        "assetsSection": "Activos de datos",
+        "intro": "Selecciona tu sector para generar automáticamente sistemas (con elementos de datos), actividades de tratamiento (con bases jurídicas) y flujos de datos entre sistemas. Todos los registros se pueden personalizar tras la creación.",
+        "assetsSection": "Sistemas",
         "activitiesSection": "Actividades de tratamiento",
         "flowsSection": "Flujos de datos",
         "badges": {
-          "assets": "{count} activos",
+          "assets": "{count} sistemas",
           "elements": "{count} elementos",
           "activities": "{count} actividades",
           "flows": "{count} flujos",
@@ -5605,7 +5605,7 @@
           },
           "inventory": {
             "label": "Inventario de datos",
-            "desc": "Relaciona las fuentes de datos de entrenamiento con tu inventario de datos. Controla qué activos de datos alimentan cada sistema de IA."
+            "desc": "Relaciona las fuentes de datos de entrenamiento con tu inventario de datos. Controla qué sistemas alimentan cada sistema de IA."
           }
         }
       },
@@ -5926,8 +5926,8 @@
         "items": {
           "inventory": {
             "module": "Inventario de datos",
-            "metric": "Activos con actividades de tratamiento vinculadas",
-            "example": "El 85 % de los activos tiene al menos una actividad"
+            "metric": "Sistemas con actividades de tratamiento vinculadas",
+            "example": "El 85 % de los sistemas tiene al menos una actividad"
           },
           "dsar": {
             "module": "Ejercicio de derechos",
@@ -6015,7 +6015,7 @@
         "allPdfsTitle": "Los informes en PDF de cada módulo:",
         "allPdfs": {
           "inventoryLabel": "Inventario de datos",
-          "inventoryDesc": ": activos, elementos, transferencias y un mapa de flujos de datos generado",
+          "inventoryDesc": ": sistemas, elementos, transferencias y un mapa de flujos de datos generado",
           "ropaLabel": "RAT",
           "ropaDesc": " (premium): registro del artículo 30 del RGPD con grupos de flujos por actividad",
           "vendorLabel": "Registro de proveedores",
@@ -6032,7 +6032,7 @@
           "regulatoryDesc": ": jurisdicciones aplicadas y estado de cumplimiento"
         },
         "flowTipTitle": "Mapa de flujos de datos en los PDF",
-        "flowTipBody": "Los PDF del inventario de datos y del RAT incluyen un diagrama con disposición automática de cómo se mueven los datos entre tus activos, con nodos coloreados por tipo de activo y conexiones etiquetadas con las categorías de datos y la frecuencia. La versión del RAT agrupa los activos en recuadros por actividad de tratamiento. No hay que dibujar nada: se genera a partir de tus vínculos entre actividades y activos.",
+        "flowTipBody": "Los PDF del inventario de datos y del RAT incluyen un diagrama con disposición automática de cómo se mueven los datos entre tus sistemas, con nodos coloreados por tipo de sistema y conexiones etiquetadas con las categorías de datos y la frecuencia. La versión del RAT agrupa los sistemas en recuadros por actividad de tratamiento. No hay que dibujar nada: se genera a partir de tus vínculos entre actividades y sistemas.",
         "premiumTitle": "Exportación del RAT",
         "premiumBody": "La exportación en PDF del RAT está incluida en el piloto alojado y en tu propia instancia, como el resto de los informes PDF."
       },
@@ -6067,7 +6067,7 @@
           },
           "preview": {
             "title": "Previsualiza el contexto de datos",
-            "description": "Revisa el contexto agregado: activos vinculados, número de elementos de datos, transferencias activas y proveedores asociados. Estos son los datos que usará el asistente."
+            "description": "Revisa el contexto agregado: sistemas vinculados, número de elementos de datos, transferencias activas y proveedores asociados. Estos son los datos que usará el asistente."
           },
           "review": {
             "title": "Revisa y edita las respuestas",
@@ -6337,7 +6337,7 @@
         },
         "step3": {
           "label": "Construye tu inventario de datos",
-          "desc": "Registra activos de datos, elementos y actividades de tratamiento"
+          "desc": "Registra sistemas, elementos y actividades de tratamiento"
         },
         "step4": {
           "label": "Empieza a gestionar la privacidad",
@@ -6374,7 +6374,7 @@
       "modules": {
         "inventory": {
           "title": "Inventario de datos",
-          "description": "Lleva el control de activos de datos, elementos, actividades de tratamiento y transferencias internacionales. Genera automáticamente tu registro de actividades de tratamiento (RAT)."
+          "description": "Lleva el control de sistemas, elementos, actividades de tratamiento y transferencias internacionales. Genera automáticamente tu registro de actividades de tratamiento (RAT)."
         },
         "dsar": {
           "title": "Ejercicio de derechos",
@@ -6415,7 +6415,7 @@
           },
           "inventory": {
             "name": "Inventario de datos",
-            "desc": "Registro de activos con elementos de datos, flujos y transferencias"
+            "desc": "Registro de sistemas con elementos de datos, flujos y transferencias"
           },
           "ropa": {
             "name": "RAT",
@@ -6479,14 +6479,14 @@
     },
     "publicDataInventory": {
       "metaTitle": "Inventario de datos y RAT",
-      "metaDescription": "Lleva el control de activos de datos, elementos, actividades de tratamiento y transferencias internacionales. Genera automáticamente tu registro de actividades de tratamiento (RAT) conforme al RGPD.",
+      "metaDescription": "Lleva el control de sistemas, elementos, actividades de tratamiento y transferencias internacionales. Genera automáticamente tu registro de actividades de tratamiento (RAT) conforme al RGPD.",
       "ogTitle": "Inventario de datos y RAT | DPO CENTRAL",
-      "ogDescription": "Mapea tu panorama de datos: activos, elementos, actividades de tratamiento, flujos de datos y transferencias internacionales, con generación automática del RAT.",
+      "ogDescription": "Mapea tu panorama de datos: sistemas, elementos, actividades de tratamiento, flujos de datos y transferencias internacionales, con generación automática del RAT.",
       "title": "Inventario de datos",
-      "subtitle": "Mapea el panorama de datos de tu organización. Lleva el control de cada activo, elemento de datos, actividad de tratamiento y transferencia internacional para mantener completo tu registro de actividades de tratamiento (RAT).",
+      "subtitle": "Mapea el panorama de datos de tu organización. Lleva el control de cada sistema, elemento de datos, actividad de tratamiento y transferencia internacional para mantener completo tu registro de actividades de tratamiento (RAT).",
       "assets": {
-        "title": "Activos de datos",
-        "intro": "Los activos de datos representan los sistemas, aplicaciones y bases de datos que almacenan o tratan datos personales. Cada activo registra su tipo, responsable, elementos de datos asociados y actividades de tratamiento.",
+        "title": "Sistemas",
+        "intro": "Los sistemas son las aplicaciones, bases de datos y servicios que almacenan o tratan datos personales. Cada sistema registra su tipo, responsable, elementos de datos asociados y actividades de tratamiento.",
         "items": {
           "DATABASE": {
             "example": "Base de datos de clientes",
@@ -6517,17 +6517,17 @@
       "elements": {
         "title": "Elementos de datos",
         "intro": "Los elementos de datos describen las categorías concretas de datos personales que trata tu organización. Cada elemento tiene una clasificación de sensibilidad que va de Público a Categoría especial.",
-        "examples": "Algunos ejemplos son nombre completo, dirección de correo, dirección IP, historial médico, datos biométricos e información financiera. Vincula elementos a activos para entender exactamente dónde reside cada tipo de dato personal."
+        "examples": "Algunos ejemplos son nombre completo, dirección de correo, dirección IP, historial médico, datos biométricos e información financiera. Vincula elementos a sistemas para entender exactamente dónde reside cada tipo de dato personal."
       },
       "activities": {
         "title": "Actividades de tratamiento",
         "intro": "Documenta cada actividad de tratamiento con su base jurídica, finalidad, categorías de datos y plazo de conservación. Esto constituye el núcleo de tu RAT.",
         "legalBasesLabel": "Bases jurídicas",
-        "outro": "Cada actividad registra el responsable del tratamiento, el encargado del tratamiento, las categorías de interesados y si hay decisiones automatizadas. Las actividades se vinculan a activos y elementos de datos para una trazabilidad completa."
+        "outro": "Cada actividad registra el responsable del tratamiento, el encargado del tratamiento, las categorías de interesados y si hay decisiones automatizadas. Las actividades se vinculan a sistemas y elementos de datos para una trazabilidad completa."
       },
       "flows": {
         "title": "Flujos de datos",
-        "intro": "Visualiza cómo se mueven los datos personales por tu organización usando el diagrama interactivo de flujos. Mapea las transferencias origen-destino entre activos, departamentos y terceros.",
+        "intro": "Visualiza cómo se mueven los datos personales por tu organización usando el diagrama interactivo de flujos. Mapea las transferencias origen-destino entre sistemas, departamentos y terceros.",
         "steps": {
           "collection": {
             "label": "Recogida",
@@ -6566,7 +6566,7 @@
         }
       },
       "howTo": {
-        "title": "Cómo añadir un activo de datos",
+        "title": "Cómo añadir un sistema",
         "actorDpo": "DPD",
         "steps": {
           "navigate": {
@@ -6574,23 +6574,23 @@
             "description": "En el menú de la izquierda, abre la fase 3, Conoce tus datos, y elige Inventario de datos."
           },
           "click": {
-            "title": "Pulsa «Añadir activo»",
-            "description": "Pulsa el botón «Añadir activo» en la esquina superior derecha de la lista de activos."
+            "title": "Pulsa «Añadir sistema»",
+            "description": "Pulsa el botón «Añadir sistema» en la esquina superior derecha de la lista de sistemas."
           },
           "fill": {
-            "title": "Rellena los detalles del activo",
+            "title": "Rellena los detalles del sistema",
             "description": "Introduce el nombre, tipo, responsable, descripción y elementos de datos asociados.",
-            "detail1": "Selecciona el tipo de activo (base de datos, aplicación, servicio en la nube, etc.)",
+            "detail1": "Selecciona el tipo de sistema (base de datos, aplicación, servicio en la nube, etc.)",
             "detail2": "Asigna un responsable de datos entre los miembros de tu organización",
-            "detail3": "Vincula los elementos de datos relevantes a este activo"
+            "detail3": "Vincula los elementos de datos relevantes a este sistema"
           },
           "link": {
             "title": "Vincula actividades de tratamiento",
-            "description": "Asocia el activo con sus actividades de tratamiento y bases jurídicas."
+            "description": "Asocia el sistema con sus actividades de tratamiento y bases jurídicas."
           },
           "save": {
             "title": "Revisa y guarda",
-            "description": "Revisa todos los detalles y guarda. El activo aparecerá en tu inventario y en el diagrama de flujos."
+            "description": "Revisa todos los detalles y guarda. El sistema aparecerá en tu inventario y en el diagrama de flujos."
           }
         }
       },
@@ -6598,7 +6598,7 @@
         "title": "Exportaciones PDF",
         "intro": "Exporta tu inventario de datos y tu RAT como PDF con formato profesional para reguladores, auditores o revisiones internas de gobernanza.",
         "inventoryTitle": "Informe de inventario de datos",
-        "inventoryDesc": "Inventario completo de activos con elementos de datos por activo (categoría, sensibilidad, conservación), flujos de datos entre sistemas y detalles de transferencias internacionales con sus mecanismos de salvaguarda.",
+        "inventoryDesc": "Inventario completo de sistemas con elementos de datos por sistema (categoría, sensibilidad, conservación), flujos de datos entre sistemas y detalles de transferencias internacionales con sus mecanismos de salvaguarda.",
         "ropaTitle": "Exportación del RAT",
         "ropaDesc": "Registro de actividades de tratamiento conforme al artículo 30 del RGPD: finalidad del tratamiento, base jurídica, interesados, destinatarios, conservación, sistemas vinculados y transferencias internacionales por actividad."
       }
@@ -9193,7 +9193,7 @@
       "dataInventory": {
         "label": "Inventario de datos",
         "why": "Averigua qué datos personales tienes y dónde residen.",
-        "do": "Registra tus activos de datos: los sistemas y almacenes con datos personales."
+        "do": "Registra tus sistemas: las aplicaciones, bases de datos y almacenes con datos personales."
       },
       "ropa": {
         "label": "Registro de actividades",
@@ -9585,7 +9585,7 @@
       "contractNotFound": "No se ha encontrado el contrato.",
       "customerNotFound": "No se ha encontrado el cliente.",
       "dsarRequestNotFound": "No se ha encontrado la solicitud de ejercicio de derechos.",
-      "dataAssetNotFound": "No se ha encontrado el activo de datos.",
+      "dataAssetNotFound": "No se ha encontrado el sistema.",
       "dataElementNotFound": "No se ha encontrado el elemento de datos.",
       "dataFlowNotFound": "No se ha encontrado el flujo de datos.",
       "dataTransferNotFound": "No se ha encontrado la transferencia de datos.",
@@ -9606,7 +9606,7 @@
       "noAiSystemsFoundToExport": "No hay sistemas de IA que exportar.",
       "noSlackWebhookUrlConfiguredPleaseSaveA": "No hay ninguna URL de webhook de Slack configurada. Guarda primero una URL de webhook.",
       "noBillingCustomerFoundForThisOrganization": "No se ha encontrado ningún cliente de facturación para esta organización.",
-      "noComplianceDataToSnapshotYetAddData": "Todavía no hay datos de cumplimiento para la instantánea. Añade primero activos de datos, evaluaciones, solicitudes de derechos, incidentes o proveedores.",
+      "noComplianceDataToSnapshotYetAddData": "Todavía no hay datos de cumplimiento para la instantánea. Añade primero sistemas, evaluaciones, solicitudes de derechos, incidentes o proveedores.",
       "noUserFoundWithThisEmailTheyMust": "No hay ningún usuario con este correo electrónico. Primero tiene que registrarse.",
       "notificationNotFound": "No se ha encontrado la notificación.",
       "onlyAnOwnerOrAnAdminOfBoth": "Solo un propietario o un administrador de ambas organizaciones puede copiar una plantilla.",
@@ -9740,7 +9740,7 @@
     "approverOnly": "Solo los propietarios, los administradores y los responsables de privacidad pueden confirmar registros. Puedes abrir cada uno para revisarlo.",
     "selectOne": "Seleccionar {name}",
     "kind": {
-      "dataAsset": "Activos de datos",
+      "dataAsset": "Sistemas",
       "processingActivity": "Actividades de tratamiento",
       "vendor": "Proveedores"
     }

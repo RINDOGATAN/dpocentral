@@ -208,9 +208,9 @@ test("a pilot user walks the product end to end", async ({ page, context, baseUR
   const assetName = `Smoke asset ${stamp}`;
   await step("data asset: create", async () => {
     await page.goto("/privacy/data-inventory/new");
-    await page.getByLabel(/asset name/i).fill(assetName);
+    await page.getByLabel(/system name/i).fill(assetName);
     await choose(page.getByRole("combobox").first());
-    await saveAndSee(/create asset/i);
+    await saveAndSee(/create system/i);
     await page.waitForURL(/\/privacy\/data-inventory$/);
     await expect(page.getByText(assetName).first()).toBeVisible();
   });

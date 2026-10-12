@@ -5,7 +5,7 @@
  * Copy found in a walk of the product in both languages:
  *
  * C1 risk indicators on the compliance page are worded in the reader's language
- * C2 counts read "1 data asset", not "1 data assets"
+ * C2 counts read "1 system", not "1 systems"
  * C3 one name in Spanish for "What applies" ("Qué se te aplica")
  * C4 the Spanish sign-in sentence agrees in gender
  * C5 the DPIA hint points at the list below it; no "rules of European Union"
@@ -54,9 +54,9 @@ describe("C1: risk indicators", () => {
 });
 
 describe("C2: counts agree with their number", () => {
-  it("reads 1 data asset, 2 data assets", () => {
-    expect(tEn("pages.processingActivities.assetsCount", { count: 1 })).toBe("1 data asset");
-    expect(tEn("pages.processingActivities.assetsCount", { count: 2 })).toBe("2 data assets");
+  it("reads 1 system, 2 systems", () => {
+    expect(tEn("pages.processingActivities.assetsCount", { count: 1 })).toBe("1 system");
+    expect(tEn("pages.processingActivities.assetsCount", { count: 2 })).toBe("2 systems");
     expect(tEn("pages.processingActivities.subjectTypesCount", { count: 1 })).toBe("1 subject type");
     expect(tEn("pages.processingActivities.categoriesCount", { count: 1 })).toBe("1 data category");
     expect(tEn("pages.elementDetail.retentionDays", { days: 1 })).toBe("1 day");

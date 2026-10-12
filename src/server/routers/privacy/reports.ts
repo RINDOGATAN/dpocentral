@@ -311,7 +311,7 @@ export const reportsRouter = createTRPCRouter({
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message:
-            "No compliance data to snapshot yet. Add data assets, assessments, DSARs, incidents or vendors first.",
+            "No compliance data to snapshot yet. Add systems, assessments, DSARs, incidents or vendors first.",
         });
       }
 
