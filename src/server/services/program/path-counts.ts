@@ -85,7 +85,7 @@ export async function loadPathCounts(
         fields: true,
       },
     }),
-    prisma.incident.count({ where: org }),
+    prisma.incident.count({ where: { ...org, recordedInErrorAt: null } }),
     // The AI systems table is optional on some deployments (the quick start
     // guards its creation the same way); an unreadable table counts as none.
     prisma.aISystem.count({ where: org }).catch(() => 0),

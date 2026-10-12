@@ -83,7 +83,7 @@ export async function collectNeedsAction(
           })
         : null,
       prisma.incident.count({
-        where: {
+        where: { recordedInErrorAt: null,
           organizationId,
           notificationRequired: true,
           status: { notIn: [...CLOSED_INCIDENT] },
@@ -93,7 +93,7 @@ export async function collectNeedsAction(
       // marked as requiring notification (false is also the default for an
       // incident logged with no detail) and no notification recorded.
       prisma.incident.count({
-        where: {
+        where: { recordedInErrorAt: null,
           organizationId,
           notificationRequired: false,
           status: { notIn: [...CLOSED_INCIDENT] },

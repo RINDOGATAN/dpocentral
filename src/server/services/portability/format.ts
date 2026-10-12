@@ -606,6 +606,8 @@ export const Incident = d(
     lessonsLearned: text("Lessons learned.", "Lecciones aprendidas."),
     notificationRequired: bool("Notification to an authority is required.", "Hay que notificar a una autoridad."),
     notificationDeadline: date("Deadline to notify.", "Plazo para notificar."),
+    recordedInErrorAt: date("When it was marked as recorded in error (kept, left out of every count).", "Cuándo se marcó como registrada por error (se conserva, no cuenta en ningún recuento)."),
+    recordedInErrorReason: text("Why it was recorded in error.", "Por qué se registró por error."),
     timeline: list(IncidentTimelineEntry, "The timeline.", "La cronología."),
     tasks: list(IncidentTask, "The tasks.", "Las tareas."),
     notifications: list(IncidentNotification, "The notifications.", "Las notificaciones."),

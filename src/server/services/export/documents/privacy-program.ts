@@ -87,7 +87,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
         })
       : [],
     prisma.incident.count({
-      where: { organizationId, status: { notIn: ["CLOSED", "FALSE_POSITIVE"] } },
+      where: { recordedInErrorAt: null, organizationId, status: { notIn: ["CLOSED", "FALSE_POSITIVE"] } },
     }),
     prisma.assessment.count({
       where: {

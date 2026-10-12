@@ -372,6 +372,61 @@ export const incidentRouter = createTRPCRouter({
       return updated;
     }),
 
+  // Mark an incident as recorded in error (a test, a duplicate), or undo it.
+  // Owners and admins. The incident stays in the register, marked, and
+  // leaves every count and figure; incidents are never deleted. A timeline
+  // entry and an audit entry record who, when and why.
+  setRecordedInError: adminOrgProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        recordedInError: z.boolean(),
+        reason: z.string().trim().max(2000).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const incident = await ctx.prisma.incident.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { id: true, recordedInErrorAt: true },
+      });
+      if (!incident) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Incident not found" });
+      }
+      if (input.recordedInError && !input.reason) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Say why the incident was recorded in error" });
+      }
+      const now = new Date();
+      const data = input.recordedInError
+        ? { recordedInErrorAt: now, recordedInErrorById: ctx.session.user.id, recordedInErrorReason: input.reason ?? null }
+        : { recordedInErrorAt: null, recordedInErrorById: null, recordedInErrorReason: null };
+      await ctx.prisma.incident.updateMany({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        data,
+      });
+      await ctx.prisma.incidentTimelineEntry.create({
+        data: {
+          incidentId: input.id,
+          title: input.recordedInError ? "Marked as recorded in error" : "No longer marked as recorded in error",
+          description: input.recordedInError ? input.reason : undefined,
+          entryType: "STATUS_CHANGE",
+          createdById: ctx.session.user.id,
+          metadata: { recordedInError: input.recordedInError },
+        },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Incident",
+          entityId: input.id,
+          action: input.recordedInError ? "RECORDED_IN_ERROR" : "RECORDED_IN_ERROR_UNDONE",
+          changes: input.recordedInError ? { reason: input.reason } : undefined,
+        },
+      });
+      return { success: true };
+    }),
+
   // ============================================================
   // NOTIFICATIONS
   // ============================================================
@@ -866,27 +921,27 @@ export const incidentRouter = createTRPCRouter({
         recentIncidents,
       ] = await Promise.all([
         ctx.prisma.incident.count({
-          where: { organizationId: ctx.organization.id },
+          where: { recordedInErrorAt: null, organizationId: ctx.organization.id },
         }),
         ctx.prisma.incident.count({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: ctx.organization.id,
             status: { notIn: ["CLOSED", "FALSE_POSITIVE"] },
           },
         }),
         ctx.prisma.incident.groupBy({
           by: ["severity"],
-          where: { organizationId: ctx.organization.id },
+          where: { recordedInErrorAt: null, organizationId: ctx.organization.id },
           _count: true,
         }),
         ctx.prisma.incident.groupBy({
           by: ["type"],
-          where: { organizationId: ctx.organization.id },
+          where: { recordedInErrorAt: null, organizationId: ctx.organization.id },
           _count: true,
         }),
         ctx.prisma.incident.groupBy({
           by: ["status"],
-          where: { organizationId: ctx.organization.id },
+          where: { recordedInErrorAt: null, organizationId: ctx.organization.id },
           _count: true,
         }),
         ctx.prisma.incidentNotification.count({
@@ -897,7 +952,7 @@ export const incidentRouter = createTRPCRouter({
           },
         }),
         ctx.prisma.incident.count({
-          where: {
+          where: { recordedInErrorAt: null,
             organizationId: ctx.organization.id,
             discoveredAt: { gte: thirtyDaysAgo },
           },

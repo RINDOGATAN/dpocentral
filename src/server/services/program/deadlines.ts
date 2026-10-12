@@ -40,7 +40,7 @@ export async function loadDeadlines(
   now: Date = new Date(),
 ): Promise<Deadline[]> {
   const incidents = await prisma.incident.findMany({
-    where: {
+    where: { recordedInErrorAt: null,
       organizationId,
       status: { notIn: [...CLOSED_INCIDENT] },
       // Nothing sent yet: once a notification is sent the clock has been met.

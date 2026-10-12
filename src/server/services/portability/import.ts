@@ -883,6 +883,8 @@ async function buildPlan(db: Db, doc: ProgrammeDoc, opts: ImportOptions): Promis
       lessonsLearned: orNull(i.lessonsLearned),
       notificationRequired: i.notificationRequired ?? false,
       notificationDeadline: asDate(i.notificationDeadline),
+      recordedInErrorAt: asDate(i.recordedInErrorAt),
+      recordedInErrorReason: orNull(i.recordedInErrorReason),
       metadata: meta(i.metadata, i.id, { reference: i.reference ?? null }),
     });
     for (const t of i.timeline) {

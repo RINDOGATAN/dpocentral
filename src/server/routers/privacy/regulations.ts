@@ -388,7 +388,7 @@ export const regulationsRouter = createTRPCRouter({
         isDsarModuleEnabled()
           ? ctx.prisma.dSARIntakeForm.count({ where: { organizationId: orgId, isActive: true } })
           : 0,
-        ctx.prisma.incident.count({ where: { organizationId: orgId } }),
+        ctx.prisma.incident.count({ where: { recordedInErrorAt: null, organizationId: orgId } }),
         ctx.prisma.vendor.count({
           where: { organizationId: orgId, status: { in: ["ACTIVE", "UNDER_REVIEW"] } },
         }),

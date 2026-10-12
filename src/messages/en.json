@@ -1087,6 +1087,7 @@
       }
     },
     "incidentDetail": {
+      "recordedInError": {"action": "Recorded in error", "undo": "Undo \"recorded in error\"", "dialogTitle": "Mark as recorded in error?", "dialogBody": "For an entry made by mistake, such as a test or a duplicate. The incident is not deleted: it stays in the breach register, marked, with your reason, and leaves every count and report figure. You can undo this.", "reasonLabel": "Why was it recorded in error?", "reasonPlaceholder": "For example: a duplicate of another incident, or a test entry", "confirm": "Mark as recorded in error", "marked": "Incident marked as recorded in error", "undone": "Incident counted again", "noticeTitle": "Recorded in error on {date}", "noticeReason": "Reason: {reason}.", "noticeBody": "It stays in the breach register, marked, and is left out of every count.", "badge": "Recorded in error"},
       "notFound": "Incident not found",
       "back": "Back to Incidents",
       "close": "Close Incident",
@@ -2960,6 +2961,8 @@
       "INVITE": "Invitation created",
       "INVITE_CANCELLED": "Invitation cancelled",
       "JOIN_BY_INVITATION": "Joined by invitation",
+      "RECORDED_IN_ERROR": "Recorded in error",
+      "RECORDED_IN_ERROR_UNDONE": "No longer recorded in error",
       "TASKS_GENERATED": "Tasks generated",
       "PII_REDACTED": "Personal data redacted",
       "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",
@@ -4466,6 +4469,7 @@
       }
     },
     "breachRegister": {
+      "recordedInErrorPrefix": "[Recorded in error]",
       "pageTitle": "Breach Register",
       "coverTitle": "Breach / Incident Register",
       "coverSubtitle": "GDPR Article 33(5)",
@@ -10146,6 +10150,8 @@
       "INVITE": "Invitation created",
       "INVITE_CANCELLED": "Invitation cancelled",
       "JOIN_BY_INVITATION": "Joined by invitation",
+      "RECORDED_IN_ERROR": "Recorded in error",
+      "RECORDED_IN_ERROR_UNDONE": "No longer recorded in error",
       "TASKS_GENERATED": "Tasks generated",
       "PII_REDACTED": "Personal data redacted",
       "PII_AUTO_REDACTED": "Personal data redacted at the end of the retention period",

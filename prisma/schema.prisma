@@ -1090,6 +1090,13 @@ model Incident {
   notificationRequired Boolean   @default(false)
   notificationDeadline DateTime?
 
+  // Recorded in error: an entry made by mistake (a test, a duplicate). The
+  // breach register keeps it, marked, but it leaves every count and figure.
+  // Incidents are never deleted. Set and cleared by owners and admins.
+  recordedInErrorAt     DateTime?
+  recordedInErrorById   String?
+  recordedInErrorReason String?   @db.Text
+
   metadata  Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
