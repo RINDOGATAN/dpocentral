@@ -6,7 +6,7 @@
  * level, the guide takes the highest level any answer asks for and picks one way at that
  * level. Unanswered questions count as the lightest answer.
  *
- *   Level 0  In the TODO.LAW cloud
+ *   Level 0  TODO.LAW cloud
  *   Level 1  Managed instance (Asturias, Spain; open-weight models can run on the instance)
  *   Level 2  Your own hardware
  *
@@ -14,7 +14,8 @@
  * storefront and the other product landings (see the CANONICAL WIZARD CONTENT note above
  * COPY, and safeguards.canonical.test.ts). The copy is worded to be true for every product:
  * AI features are off until an administrator turns them on, and while off there is no AI
- * call at all; the copy names no hosting location for the cloud.
+ * call at all. The one line that differs per product is the cloud's hosting location
+ * (HOSTING, outside the canonical content).
  * Copy rules: no prices, no certification logos, no competitor names, no long dashes.
  */
 
@@ -32,16 +33,6 @@ type Level = 0 | 1 | 2;
 export const WAY_INDEX: Record<Locale, Partial<Record<WayId, number>>> = {
   es: { cloud: 0, managed: 1, deploy: 2 },
   en: { cloud: 0, managed: 1, deploy: 2 },
-};
-
-/**
- * The name of each way offered here: the ways boxes' own titles (es.ways.w1..w3.title and
- * the English boxes). Kept out of COPY, which is shared word for word with the storefront
- * and the other landings; each page names a way as its own box does.
- */
-export const WAY_NAMES: Record<Locale, Partial<Record<WayId, string>>> = {
-  en: { cloud: "In the TODO.LAW cloud", managed: "Managed virtual server", deploy: "Your own hardware" },
-  es: { cloud: "En la nube de TODO.LAW", managed: "Servidor virtual gestionado", deploy: "Tu propio hardware" },
 };
 
 /** Lightest to strictest: "one step stricter / lighter" follows this order. */
@@ -181,8 +172,8 @@ export function recommend(answers: Answers, locale: Locale): Recommendation | nu
 
 /*
  * CANONICAL WIZARD CONTENT. The questions (QUESTIONS), the tick matrix for the three ways
- * (MET: cloud, managed, deploy) and everything below (COPY) are identical, word for word,
- * in four places, and must change together:
+ * (MET: cloud, managed, deploy), the names of the three ways (WAY_NAMES) and everything
+ * below (COPY) are identical, word for word, in four places, and must change together:
  *   - todolaw          src/content/safeguards.ts
  *   - dpocentral       src/landing/content/safeguards.ts
  *   - aisentinel       src/landing/config/safeguards.ts
@@ -190,6 +181,22 @@ export function recommend(answers: Answers, locale: Locale): Recommendation | nu
  * A test next to this file hashes the normalised content (SHA-256) and fails when it
  * changes alone: edit all four copies, then update the hash in all four tests.
  */
+
+/** The names of the three ways, the same on every site, in the guide and on the ways boxes. */
+export type GuideWay = "cloud" | "managed" | "deploy";
+export const WAY_NAMES: Record<Locale, Record<GuideWay, string>> = {
+  en: { cloud: "TODO.LAW cloud", managed: "Managed instance", deploy: "Your own hardware" },
+  es: { cloud: "En la nube de TODO.LAW", managed: "Instancia gestionada", deploy: "Tu propio hardware" },
+};
+
+/**
+ * The cloud's hosting location: one line each site fills in (HOSTING, after COPY), shown
+ * under the cloud's summary. It is not part of the canonical content. EU hosting is named
+ * only on Spanish pages or to visitors in the EU, never to other visitors; null shows nothing.
+ */
+export type HostingLine = { es: string | null; enEu: string | null; enOther: string | null };
+export const hostingLine = (h: HostingLine, locale: Locale, eu: boolean): string | null =>
+  locale === "es" ? h.es : eu ? h.enEu : h.enOther;
 
 type Notes = Partial<Record<WayId, string>>;
 
@@ -402,4 +409,14 @@ export const COPY: Record<Locale, SafeguardsCopy> = {
         "Instalado en tus propios servidores, con nuestra asistencia presencial o remota. Los registros se quedan dentro de tu perímetro, bajo tus propios controles. Para las funciones de IA, podemos configurar un modelo de pesos abiertos alojado en tus servidores, si tienen capacidad, o tu propia clave.",
     },
   },
+};
+
+/**
+ * This site's hosting line for the cloud (not canonical: each copy fills in its own).
+ * Checked 12 Oct 2026: vercel.json pins the functions to fra1 (Frankfurt) and the database is in Frankfurt.
+ */
+export const HOSTING: HostingLine = {
+  es: "En la nube de TODO.LAW, DPO Central funciona y guarda los datos en la UE (Fráncfort).",
+  enEu: "On the TODO.LAW cloud, DPO Central runs and stores its data in the EU (Frankfurt).",
+  enOther: null,
 };

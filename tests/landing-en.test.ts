@@ -131,7 +131,7 @@ describe("English sections", () => {
   // stay on the storefront's Run it your way page only.
   it("offer three ways, as on the English storefront", () => {
     const titles = [1, 2, 3].map((n) => en[`en.ways.w${n}.title`]);
-    expect(titles).toEqual(["In the TODO.LAW cloud", "Managed virtual server", "Your own hardware"]);
+    expect(titles).toEqual(["TODO.LAW cloud", "Managed instance", "Your own hardware"]);
     expect(en["en.ways.w4.title"]).toBeUndefined();
     expect(en["en.ways.sub"]).toBe("Three hosting options, with different safeguards and levels of control.");
     expect(html).not.toMatch(/self-install kit|TODO\.LAW hardware|Law-Firm-in-a-Box|github\.com\/RINDOGATAN\/todolaw-suite/);

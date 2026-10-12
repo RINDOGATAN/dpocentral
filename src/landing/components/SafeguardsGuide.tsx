@@ -10,7 +10,8 @@
  * offer three ways (cloud, managed, deployment), as the boxes do.
  * `onRecommend` hands the recommended box's position (or null) to the ways
  * section, which marks the box; `boxId` gives the anchor of a box, so the
- * result links to it.
+ * result links to it. The cloud's result carries this product's hosting line
+ * (HOSTING), shown in Spanish or to visitors in the EU only.
  */
 
 import { useEffect, useId, useState, type MouseEvent } from "react";
@@ -19,13 +20,17 @@ import {
   QUESTIONS,
   WAY_INDEX,
   WAY_NAMES,
+  HOSTING,
+  hostingLine,
   optionsFor,
   recommend,
   type Answers,
   type Locale,
   type QuestionId,
+  type GuideWay,
   type WayId,
 } from "../content/safeguards";
+import { useIsEu } from "@/components/region-provider";
 
 interface SafeguardsGuideProps {
   locale: Locale;
@@ -45,7 +50,9 @@ export default function SafeguardsGuide({ locale, boxId, onRecommend }: Safeguar
     onRecommend?.(recIndex);
   }, [recIndex, onRecommend]);
 
-  const name = (w: WayId) => WAY_NAMES[locale][w] ?? w;
+  const name = (w: WayId) => WAY_NAMES[locale][w as GuideWay] ?? w;
+  // The cloud's hosting line: EU hosting is named in Spanish or to EU visitors only.
+  const hosting = hostingLine(HOSTING, locale, useIsEu());
   const set = (q: QuestionId, v: string) => setAnswers((a) => ({ ...a, [q]: v }));
   const headingId = `${uid}-h`;
   const panelId = `${uid}-panel`;
@@ -183,7 +190,12 @@ export default function SafeguardsGuide({ locale, boxId, onRecommend }: Safeguar
               </div>
               {rec && (
                 <>
-                  <p className="text-muted-foreground text-[0.93rem] mt-0 mb-4">{c.summaries[rec.way]}</p>
+                  <p className={`text-muted-foreground text-[0.93rem] mt-0 ${rec.way === "cloud" && hosting ? "mb-2" : "mb-4"}`}>{c.summaries[rec.way]}</p>
+                  {rec.way === "cloud" && hosting && (
+                    <p data-testid="safeguards-hosting" className="text-muted-foreground text-[0.93rem] mt-0 mb-4">
+                      {hosting}
+                    </p>
+                  )}
                   <p className="text-xs uppercase tracking-wider text-accent m-0 mb-2">{c.meets}</p>
                   {rec.checks.length === 0 ? (
                     <p className="text-muted-foreground text-[0.93rem] mt-0 mb-4">{c.none}</p>
