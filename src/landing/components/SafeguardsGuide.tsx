@@ -18,6 +18,7 @@ import {
   COPY,
   QUESTIONS,
   WAY_INDEX,
+  WAY_NAMES,
   optionsFor,
   recommend,
   type Answers,
@@ -44,7 +45,7 @@ export default function SafeguardsGuide({ locale, boxId, onRecommend }: Safeguar
     onRecommend?.(recIndex);
   }, [recIndex, onRecommend]);
 
-  const name = (w: WayId) => c.names[w] ?? w;
+  const name = (w: WayId) => WAY_NAMES[locale][w] ?? w;
   const set = (q: QuestionId, v: string) => setAnswers((a) => ({ ...a, [q]: v }));
   const headingId = `${uid}-h`;
   const panelId = `${uid}-panel`;
