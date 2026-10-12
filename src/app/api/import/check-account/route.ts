@@ -3,7 +3,7 @@
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { validateImportApiKey } from "@/lib/import-auth";
+import { checkImportIdentity, validateImportApiKey } from "@/lib/import-auth";
 
 /**
  * Cross-app account probe. vendor.watch calls this before an export to tell
@@ -27,6 +27,9 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  const identityRefused = checkImportIdentity(request, userEmail);
+  if (identityRefused) return identityRefused;
 
   const user = await prisma.user.findUnique({
     where: { email: userEmail },

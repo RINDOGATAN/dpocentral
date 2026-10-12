@@ -3,7 +3,7 @@
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { validateImportApiKey } from "@/lib/import-auth";
+import { checkImportIdentity, validateImportApiKey } from "@/lib/import-auth";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 
 /**
@@ -42,6 +42,9 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  const identityRefused = checkImportIdentity(request, userEmail);
+  if (identityRefused) return identityRefused;
 
   if (!Array.isArray(vendors) || vendors.length === 0) {
     return NextResponse.json(
