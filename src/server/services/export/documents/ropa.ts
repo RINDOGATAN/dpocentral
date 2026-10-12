@@ -7,7 +7,8 @@ import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { RopaDocument } from "@/server/services/export/ropa/RopaDocument";
-import { ropaToCSV } from "@/server/services/privacy/ropaGenerator";
+import { ROPA_CSV_KEYS, ropaToCSV } from "@/server/services/privacy/ropaGenerator";
+import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import {
   renderFlowGraphPng,
@@ -96,7 +97,7 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
   }
 
   if (format === "csv") {
-    return { data: ropaToCSV(entries), filename: `${base}.csv`, contentType: CSV };
+    return { data: ropaToCSV(entries, await csvLabelsFor("ropa", ROPA_CSV_KEYS, locale)), filename: `${base}.csv`, contentType: CSV };
   }
 
   // ─── Build the per-activity cluster flow graph ───────────────────────

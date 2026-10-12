@@ -6,7 +6,8 @@
 import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { VendorRegisterDocument } from "@/server/services/export/vendor-register/VendorRegisterDocument";
-import { vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
+import { VENDOR_CSV_KEYS, vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
+import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
@@ -69,7 +70,7 @@ export async function buildVendorRegisterExport(args: ExportArgs): Promise<Expor
   }
 
   if (format === "csv") {
-    return { data: vendorsToCSV(data), filename: `${base}.csv`, contentType: CSV };
+    return { data: vendorsToCSV(data, await csvLabelsFor("vendors", VENDOR_CSV_KEYS, locale)), filename: `${base}.csv`, contentType: CSV };
   }
 
   const buffer = await withPdfLocale(locale, () => renderToBuffer(

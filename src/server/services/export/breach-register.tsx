@@ -18,6 +18,7 @@ import {
   fmtDateTime,
 } from "./pdf-styles";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
 
 export interface IncidentExportData {
   id: string;
@@ -305,42 +306,73 @@ export function BreachRegisterReport({
   );
 }
 
-export function incidentsToCSV(incidents: IncidentExportData[]): string {
-  const headers = [
-    "ID",
-    "Title",
-    "Type",
-    "Severity",
-    "Status",
-    "Description",
-    "Discovered At",
-    "Discovered By",
-    "Affected Records",
-    "Affected Subjects",
-    "Data Categories",
-    "Contained At",
-    "Root Cause",
-    "Resolved At",
-    "Notification Required",
-    "Notification Deadline",
-  ];
+export const BREACH_CSV_KEYS = [
+  "id",
+  "title",
+  "type",
+  "severity",
+  "status",
+  "description",
+  "discoveredAt",
+  "discoveredBy",
+  "affectedRecords",
+  "affectedSubjects",
+  "dataCategories",
+  "containedAt",
+  "rootCause",
+  "resolvedAt",
+  "notificationRequired",
+  "notificationDeadline",
+] as const;
+export type BreachCsvKey = (typeof BREACH_CSV_KEYS)[number];
+
+/** The English CSV: column names as they have always been, raw codes. */
+export const BREACH_CSV_EN: CsvLabels<BreachCsvKey> = {
+  headers: {
+    id: "ID",
+    title: "Title",
+    type: "Type",
+    severity: "Severity",
+    status: "Status",
+    description: "Description",
+    discoveredAt: "Discovered At",
+    discoveredBy: "Discovered By",
+    affectedRecords: "Affected Records",
+    affectedSubjects: "Affected Subjects",
+    dataCategories: "Data Categories",
+    containedAt: "Contained At",
+    rootCause: "Root Cause",
+    resolvedAt: "Resolved At",
+    notificationRequired: "Notification Required",
+    notificationDeadline: "Notification Deadline",
+  },
+  words: CSV_WORDS_EN,
+  code: rawCode,
+};
+
+export function incidentsToCSV(
+  incidents: IncidentExportData[],
+  labels: CsvLabels<BreachCsvKey> = BREACH_CSV_EN,
+): string {
+  const { headers: h, words: w, code } = labels;
+  const headers = BREACH_CSV_KEYS.map((k) => h[k]);
 
   const rows = incidents.map((inc) => [
     inc.publicId,
     inc.title,
-    inc.type,
-    inc.severity,
-    inc.status,
+    code("incidentType", inc.type),
+    code("incidentSeverity", inc.severity),
+    code("incidentStatus", inc.status),
     inc.description,
     fmtDateTime(inc.discoveredAt),
     inc.discoveredBy || "",
     inc.affectedRecords != null ? String(inc.affectedRecords) : "",
     inc.affectedSubjects.join("; "),
-    inc.dataCategories.join("; "),
+    inc.dataCategories.map((c) => code("dataCategory", c)).join("; "),
     fmtDateTime(inc.containedAt),
     inc.rootCause || "",
     fmtDateTime(inc.resolvedAt),
-    inc.notificationRequired ? "Yes" : "No",
+    inc.notificationRequired ? w.yes : w.no,
     fmtDateTime(inc.notificationDeadline),
   ]);
 

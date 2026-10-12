@@ -7,6 +7,8 @@
  * Exports processing activities to various formats for compliance reporting.
  */
 
+import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
+
 export interface ROPAEntry {
   name: string;
   description?: string | null;
@@ -39,36 +41,61 @@ export interface ROPAEntry {
   nextReview?: Date | null;
 }
 
+export const ROPA_CSV_KEYS = [
+  "activity",
+  "purpose",
+  "legalBasis",
+  "dataSubjects",
+  "dataCategories",
+  "recipients",
+  "retentionPeriod",
+  "automatedDecisions",
+  "systems",
+  "transfers",
+  "lastReviewed",
+  "nextReview",
+] as const;
+export type RopaCsvKey = (typeof ROPA_CSV_KEYS)[number];
+
+/** The English CSV: column names as they have always been, raw codes. */
+export const ROPA_CSV_EN: CsvLabels<RopaCsvKey> = {
+  headers: {
+    activity: "Processing Activity",
+    purpose: "Purpose",
+    legalBasis: "Legal Basis",
+    dataSubjects: "Data Subjects",
+    dataCategories: "Data Categories",
+    recipients: "Recipients",
+    retentionPeriod: "Retention Period",
+    automatedDecisions: "Automated Decision Making",
+    systems: "Systems",
+    transfers: "International Transfers",
+    lastReviewed: "Last Reviewed",
+    nextReview: "Next Review",
+  },
+  words: CSV_WORDS_EN,
+  code: rawCode,
+};
+
 /**
- * Convert ROPA data to CSV format
+ * Convert ROPA data to CSV format. Without `labels` the file is the English
+ * one; with them, column names, fixed words and codes come from `labels`.
  */
-export function ropaToCSV(entries: ROPAEntry[]): string {
-  const headers = [
-    "Processing Activity",
-    "Purpose",
-    "Legal Basis",
-    "Data Subjects",
-    "Data Categories",
-    "Recipients",
-    "Retention Period",
-    "Automated Decision Making",
-    "Systems",
-    "International Transfers",
-    "Last Reviewed",
-    "Next Review",
-  ];
+export function ropaToCSV(entries: ROPAEntry[], labels: CsvLabels<RopaCsvKey> = ROPA_CSV_EN): string {
+  const { headers: h, words: w, code } = labels;
+  const headers = ROPA_CSV_KEYS.map((k) => h[k]);
 
   const rows = entries.map(entry => [
     entry.name,
     entry.purpose,
-    `${entry.legalBasis}${entry.legalBasisDetail ? ` - ${entry.legalBasisDetail}` : ""}`,
+    `${code("legalBasis", entry.legalBasis)}${entry.legalBasisDetail ? ` - ${entry.legalBasisDetail}` : ""}`,
     entry.dataSubjects.join("; "),
-    entry.dataCategories.join("; "),
+    entry.dataCategories.map((c) => code("dataCategory", c)).join("; "),
     entry.recipients.join("; "),
-    entry.retentionPeriod || "Not specified",
-    entry.automatedDecisionMaking ? `Yes - ${entry.automatedDecisionDetail || ""}` : "No",
+    entry.retentionPeriod || w.notSpecified,
+    entry.automatedDecisionMaking ? `${w.yes} - ${entry.automatedDecisionDetail || ""}` : w.no,
     entry.systems.map(s => s.name).join("; "),
-    entry.transfers.map(t => `${t.destination} (${t.mechanism})`).join("; ") || "None",
+    entry.transfers.map(t => `${t.destination} (${code("transferMechanism", t.mechanism)})`).join("; ") || w.none,
     entry.lastReviewed ? new Date(entry.lastReviewed).toISOString().split("T")[0] : "",
     entry.nextReview ? new Date(entry.nextReview).toISOString().split("T")[0] : "",
   ]);
