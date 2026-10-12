@@ -196,6 +196,7 @@ export default function EditActivityPage() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  maxLength={200}
                   required
                 />
               </div>

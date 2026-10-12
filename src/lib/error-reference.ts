@@ -40,3 +40,15 @@ export function unexpectedFailureMessage(locale: "en" | "es", reference: string)
     ? `Algo ha fallado por nuestra parte y no se ha podido completar. Vuelve a intentarlo en un momento. Si vuelve a ocurrir, avísanos desde «Comentarios» indicando la referencia ${reference}.`
     : `Something went wrong on our side, so this could not be completed. Please try again in a moment. If it happens again, tell us through Feedback and quote the reference ${reference}.`;
 }
+
+/**
+ * What a person reads when the server no longer recognises their session
+ * (signed out elsewhere, or the session expired while a form was open),
+ * instead of the bare code "UNAUTHORIZED". The form stays as it was, so
+ * signing in again in another tab keeps what was typed.
+ */
+export function sessionEndedMessage(locale: "en" | "es"): string {
+  return locale === "es"
+    ? "Tu sesión ha terminado. Vuelve a iniciar sesión en otra pestaña y guarda de nuevo: lo que has escrito aquí se conserva."
+    : "Your session has ended. Sign in again in another tab, then save again: what you typed here is kept.";
+}
