@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { isDsarModuleEnabled } from "@/config/features";
+import { DRAFT_WHERE, countDrafts } from "@/server/services/template-items/drafts";
 
 // Helper to compute compliance score from all modules
 /** The risk indicators the compliance page can show, by key. */
@@ -49,16 +50,18 @@ async function computeComplianceScore(
     criticalOpenIncidents,
     draftAssessments,
     contractsExpiringSoon,
+    drafts,
   ] = await Promise.all([
-    // ROPA: total assets
+    // ROPA: confirmed systems (a drafted record counts once a person confirms it)
     prisma.dataAsset.count({
-      where: { organizationId },
+      where: { organizationId, NOT: DRAFT_WHERE },
     }),
-    // ROPA: assets with at least one processing activity linked
+    // ROPA: confirmed systems linked to at least one confirmed processing activity
     prisma.dataAsset.count({
       where: {
         organizationId,
-        processingActivityAssets: { some: {} },
+        NOT: DRAFT_WHERE,
+        processingActivityAssets: { some: { processingActivity: { NOT: DRAFT_WHERE } } },
       },
     }),
     // Assessment: total
@@ -112,15 +115,16 @@ async function computeComplianceScore(
         ],
       },
     }),
-    // Vendor: active vendors
+    // Vendor: active, confirmed vendors
     prisma.vendor.count({
-      where: { organizationId, status: "ACTIVE" },
+      where: { organizationId, status: "ACTIVE", NOT: DRAFT_WHERE },
     }),
     // Vendor: assessed in last 12 months
     prisma.vendor.count({
       where: {
         organizationId,
         status: "ACTIVE",
+        NOT: DRAFT_WHERE,
         lastAssessedAt: { gte: twelveMonthsAgo },
       },
     }),
@@ -165,6 +169,8 @@ async function computeComplianceScore(
         },
       },
     }),
+    // Drafted records (quick start, templates, imports) left out of the score
+    countDrafts(prisma, organizationId),
   ]);
 
   // Calculate individual scores (0-100), or null when there is nothing to judge.
@@ -242,6 +248,11 @@ async function computeComplianceScore(
     coverage,
     /** False when the rights-request module is not part of this plan. */
     dsarModule: dsarOn,
+    /**
+     * Drafted records nobody has confirmed yet: they are left out of every
+     * figure above, and the page says how many are waiting.
+     */
+    draftsExcluded: drafts.total,
     breakdown: {
       ropa: { score: ropaScore, total: totalAssets, compliant: assetsWithActivities },
       assessment: { score: assessmentScore, total: totalAssessments, compliant: approvedAssessments },

@@ -32,6 +32,11 @@ import { toneForScore } from "@/config/status-tone";
 import { isDsarModuleEnabled } from "@/config/features";
 import { ProgramFigureLine, ProgramFigureParts, useProgramFigure } from "@/components/guided/program-figure";
 import { ProgressBar } from "@/components/guided/progress-ring";
+import { DocumentsPanel } from "@/components/guided/guided-dashboard";
+import { useProgrammeOverview } from "@/components/guided/use-programme-overview";
+import { useMemberScope } from "@/lib/use-member-scope";
+import { useDsarAccess } from "@/lib/use-dsar-access";
+import Link from "next/link";
 
 function ModuleBreakdownCard({
   label,
@@ -101,6 +106,9 @@ export default function ReportsPage() {
   // The one programme figure (src/components/guided/path.ts, programFigure).
   const { figure } = useProgramFigure();
   const dsarOn = isDsarModuleEnabled();
+  const { orgWide } = useMemberScope();
+  const { canHandle: canHandleDsars } = useDsarAccess();
+  const { overview } = useProgrammeOverview();
 
   const { data: complianceData, isLoading: isLoadingScore } =
     trpc.reports.getComplianceScore.useQuery(
@@ -253,6 +261,14 @@ export default function ReportsPage() {
                 </>
               )}
             </p>
+            {(complianceData?.draftsExcluded ?? 0) > 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="reports-drafts-excluded">
+                {tp("score.draftsExcluded", { count: complianceData!.draftsExcluded })}{" "}
+                <Link href="/privacy/review" className="font-medium text-primary underline-offset-4 hover:underline">
+                  {tp("score.reviewDrafts")}
+                </Link>
+              </p>
+            )}
             {score !== null && trendData && trendData.length > 1 && (
               <div className="flex items-center gap-2 text-sm">
                 {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
@@ -277,6 +293,10 @@ export default function ReportsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* The documents the programme can produce today, as on the Overview:
+          a member limited to departments does not see the organisation's. */}
+      {orgWide && <DocumentsPanel overview={overview} hideDsar={canHandleDsars === false} />}
 
       {/* Module Breakdown Grid */}
       {breakdown && (

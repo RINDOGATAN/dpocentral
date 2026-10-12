@@ -808,7 +808,11 @@
         "exportHint": "Puedes exportar en cualquier momento. Mientras quede algo pendiente, el documento se marca como borrador y enumera lo que falta en su primera página.",
         "jump": "Ir al paso que lo responde",
         "californiaNotRequired": "No se cumple ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento. Las preguntas siguientes se responden a efectos de constancia.",
-        "submitHint": "Responde las preguntas que aparecen a continuación antes de enviar esta evaluación a revisión."
+        "submitHint": "Responde las preguntas que aparecen a continuación antes de enviar esta evaluación a revisión.",
+        "collapsedBoth": "{questions, plural, one {# pregunta pendiente} other {# preguntas pendientes}} y {requirements, plural, one {# requisito pendiente} other {# requisitos pendientes}}",
+        "collapsedQuestions": "{questions, plural, one {# pregunta pendiente} other {# preguntas pendientes}}",
+        "show": "Mostrar",
+        "hide": "Ocultar"
       },
       "notFound": "Evaluación no encontrada",
       "back": "Volver a evaluaciones",
@@ -1723,7 +1727,9 @@
         "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade activos de datos, evaluaciones, solicitudes de derechos, incidentes o proveedores y la puntuación aparecerá aquí.",
         "partialSubtitle": "Calculada sobre {rated} de {total} áreas ({pct} % de la ponderación). No se da ninguna valoración hasta que todas las áreas tengan datos; las áreas sin datos quedan fuera en lugar de contarse como conformes.",
         "areasWithData": "Datos en {rated} de {total} áreas",
-        "value": "{score} / 100"
+        "value": "{score} / 100",
+        "draftsExcluded": "{count, plural, one {# registro en borrador queda fuera de estas cifras hasta que una persona lo confirme.} other {# registros en borrador quedan fuera de estas cifras hasta que una persona los confirme.}}",
+        "reviewDrafts": "Revisar y confirmar"
       },
       "breakdown": {
         "heading": "Desglose de cumplimiento por módulo",
@@ -1740,7 +1746,7 @@
       "risk": {
         "title": "Indicadores de riesgo",
         "subtitle": "Aspectos que requieren atención",
-        "noneTitle": "No se han detectado indicadores de riesgo. ¡Buen trabajo!",
+        "noneTitle": "No se han detectado indicadores de riesgo.",
         "items": {
           "overdueDsars": "{count, plural, one {# solicitud de derechos vencida} other {# solicitudes de derechos vencidas}}",
           "highRiskVendorsUnassessed": "{count, plural, one {# proveedor de riesgo alto sin evaluación} other {# proveedores de riesgo alto sin evaluación}}",

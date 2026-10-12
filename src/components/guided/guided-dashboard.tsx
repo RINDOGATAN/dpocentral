@@ -225,10 +225,10 @@ function AreasCard({
 }
 
 // ---------------------------------------------------------------------------
-// Documents you can produce today
+// Documents you can produce today (also on the Reports page)
 // ---------------------------------------------------------------------------
 
-function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOverview | null; hideDsar: boolean }) {
+export function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOverview | null; hideDsar: boolean }) {
   const t = useTranslations("documentRegister");
   const rows = overview ? panelRows(overview.documents) : null;
   const produced = rows?.produced.filter((row) => !(hideDsar && row.entry.stepId === "dsar")) ?? [];

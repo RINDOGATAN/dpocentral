@@ -808,7 +808,11 @@
         "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
         "jump": "Go to the step that answers this",
         "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
-        "submitHint": "Answer the questions listed below before you send this assessment for review."
+        "submitHint": "Answer the questions listed below before you send this assessment for review.",
+        "collapsedBoth": "{questions, plural, one {# question} other {# questions}} and {requirements, plural, one {# requirement} other {# requirements}} outstanding",
+        "collapsedQuestions": "{questions, plural, one {# question} other {# questions}} outstanding",
+        "show": "Show",
+        "hide": "Hide"
       },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
@@ -1723,7 +1727,9 @@
         "unratedSubtitle": "No module has data to score yet. Add data assets, assessments, DSARs, incidents or vendors and the score will appear here.",
         "partialSubtitle": "Based on {rated} of {total} areas ({pct}% of the weighting). No rating is given until every area has data; areas with no data are left out rather than counted as compliant.",
         "areasWithData": "Data in {rated} of {total} areas",
-        "value": "{score} / 100"
+        "value": "{score} / 100",
+        "draftsExcluded": "{count, plural, one {# drafted record is left out of these figures until a person confirms it.} other {# drafted records are left out of these figures until a person confirms them.}}",
+        "reviewDrafts": "Review and confirm"
       },
       "breakdown": {
         "heading": "Module Compliance Breakdown",
@@ -1740,7 +1746,7 @@
       "risk": {
         "title": "Risk Indicators",
         "subtitle": "Actionable items requiring attention",
-        "noneTitle": "No risk indicators detected. Great job!",
+        "noneTitle": "No risk indicators detected.",
         "items": {
           "overdueDsars": "{count, plural, one {# overdue rights request} other {# overdue rights requests}}",
           "highRiskVendorsUnassessed": "{count, plural, one {# high-risk vendor without an assessment} other {# high-risk vendors without an assessment}}",
