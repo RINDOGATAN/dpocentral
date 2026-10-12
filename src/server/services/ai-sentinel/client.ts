@@ -7,10 +7,15 @@
  * Follows the Dealroom client pattern: env var check, isConfigured(),
  * graceful no-op when not configured.
  *
- * Auth: x-api-key header (same as VW → AIS, validated against VW_IMPORT_API_KEYS on AIS side).
+ * Auth: x-api-key header (same as VW → AIS, validated against VW_IMPORT_API_KEYS on AIS side)
+ * identifies this application. When AI_SENTINEL_IDENTITY_SECRET is set, each
+ * call also carries x-import-identity: a five-minute signed statement of the
+ * signed-in person (src/lib/import-identity.ts). Every caller passes the
+ * e-mail of the server-side session (src/server/routers/privacy/aiGovernance.ts).
  */
 
 import { logger } from "@/lib/logger";
+import { IMPORT_IDENTITY_HEADER, signImportIdentity } from "@/lib/import-identity";
 import type {
   DPCSystemPayload,
   ExportResult,
@@ -20,6 +25,33 @@ import type {
 
 const AI_SENTINEL_API_URL = process.env.AI_SENTINEL_API_URL;
 const AI_SENTINEL_API_KEY = process.env.AI_SENTINEL_API_KEY;
+
+/** Issuer and audience of the identity statement sent to AI Sentinel. */
+const IDENTITY_ISSUER = "dpocentral";
+const IDENTITY_AUDIENCE = "aisentinel-import";
+
+/**
+ * Request headers for an AI Sentinel import call made for `userEmail`.
+ * The identity statement is added only when the secret is configured (read
+ * at call time) and there is a person to name; otherwise the call is sent
+ * exactly as before.
+ */
+export function aiSentinelHeaders(userEmail: string): Record<string, string> {
+  const headers: Record<string, string> = {
+    "x-api-key": AI_SENTINEL_API_KEY ?? "",
+    "Content-Type": "application/json",
+  };
+  const secret = process.env.AI_SENTINEL_IDENTITY_SECRET?.trim();
+  if (secret && userEmail.trim()) {
+    headers[IMPORT_IDENTITY_HEADER] = signImportIdentity({
+      issuer: IDENTITY_ISSUER,
+      audience: IDENTITY_AUDIENCE,
+      email: userEmail,
+      secret,
+    });
+  }
+  return headers;
+}
 
 /**
  * Whether the AI Sentinel integration is configured (env vars present).
@@ -41,10 +73,7 @@ export async function checkAiSentinelAccount(
   try {
     const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/check-account`, {
       method: "POST",
-      headers: {
-        "x-api-key": AI_SENTINEL_API_KEY!,
-        "Content-Type": "application/json",
-      },
+      headers: aiSentinelHeaders(email),
       // AI Sentinel's import routes all take the account as `userEmail`.
       body: JSON.stringify({ userEmail: email }),
     });
@@ -76,10 +105,7 @@ export async function exportAISystems(
   try {
     const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/dpc-ai-systems`, {
       method: "POST",
-      headers: {
-        "x-api-key": AI_SENTINEL_API_KEY!,
-        "Content-Type": "application/json",
-      },
+      headers: aiSentinelHeaders(userEmail),
       body: JSON.stringify({ userEmail, systems }),
     });
 
@@ -112,10 +138,7 @@ export async function getAiSentinelSystemStatus(
   try {
     const res = await fetch(`${AI_SENTINEL_API_URL}/api/import/ai-system-status`, {
       method: "POST",
-      headers: {
-        "x-api-key": AI_SENTINEL_API_KEY!,
-        "Content-Type": "application/json",
-      },
+      headers: aiSentinelHeaders(userEmail),
       body: JSON.stringify({ userEmail, aisSystemId }),
     });
 
