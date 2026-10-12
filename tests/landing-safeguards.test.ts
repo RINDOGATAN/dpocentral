@@ -121,7 +121,7 @@ describe("real data in Spanish (es): the Plan nube UE", () => {
     expect(recommend({ data: "special" }, "es")!.down).toEqual({ way: "cloud", missing: ["data:special"] });
   });
 
-  it("the Spanish cloud result carries the owner's text,", () => {
+  it("the Spanish cloud result carries the approved text,", () => {
     const ai = "los datos del registro que se redacta";
     expect(COPY.es.summaries.cloud).toBe(
       "Lo alojamos nosotros, con los datos en la UE (Fráncfort). Puedes probarlo con el piloto gratuito y con límites, solo con datos de prueba, o contratar el Plan nube UE para datos reales. Es un servicio compartido (los registros de cada organización están separados). Si activas las funciones de IA, " + ai + " van al proveedor de IA externo configurado en el servicio, que puede estar fuera de la UE.",

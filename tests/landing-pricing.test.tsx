@@ -148,7 +148,7 @@ describe("pricing block", () => {
   });
 });
 
-describe("pricing block: legal links, no tax (owner, 11 Oct 2026)", () => {
+describe("pricing block: legal links, no tax", () => {
   const LINKS = {
     en: {
       terms: ["Terms", "https://www.todo.law/legal/eu-cloud-plan-terms"],
