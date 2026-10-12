@@ -723,6 +723,36 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Link assets to activity (with optional element-level granularity)
+  // Delete a processing activity (owners and admins). Its links to systems
+  // go with it (cascade); transfers and assessments that pointed at it are
+  // kept and lose the link (SetNull); the flows generated from it go too.
+  deleteActivity: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const activity = await ctx.prisma.processingActivity.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { id: true, name: true },
+      });
+      if (!activity) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Processing activity not found" });
+      }
+      await ctx.prisma.processingActivity.deleteMany({
+        where: { id: input.id, organizationId: ctx.organization.id },
+      });
+      await syncGeneratedFlows(ctx.prisma, ctx.organization.id, [input.id]);
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "ProcessingActivity",
+          entityId: input.id,
+          action: "DELETE",
+          changes: { name: activity.name },
+        },
+      });
+      return { success: true };
+    }),
+
   linkAssets: writerProcedure
     .input(
       z.object({
@@ -1304,6 +1334,34 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Update transfer compliance details
+  // Delete a transfer record (owners and admins). Assessments that pointed
+  // at it are kept and lose the link (SetNull).
+  deleteTransfer: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const transfer = await ctx.prisma.dataTransfer.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { id: true, name: true },
+      });
+      if (!transfer) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Transfer not found" });
+      }
+      await ctx.prisma.dataTransfer.deleteMany({
+        where: { id: input.id, organizationId: ctx.organization.id },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataTransfer",
+          entityId: input.id,
+          action: "DELETE",
+          changes: { name: transfer.name },
+        },
+      });
+      return { success: true };
+    }),
+
   updateTransferCompliance: writerProcedure
     .input(
       z.object({

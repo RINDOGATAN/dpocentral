@@ -3,7 +3,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { DeleteRecordButton } from "@/components/privacy/delete-record-button";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,17 @@ export default function ActivityDetailPage() {
   const [expandedAssets, setExpandedAssets] = useState<Set<string>>(new Set());
 
   const utils = trpc.useUtils();
+  const router = useRouter();
+  const tConfirm = useTranslations("confirms");
+  const deleteActivity = trpc.dataInventory.deleteActivity.useMutation({
+    onSuccess: () => {
+      toast.success(t("activity.deleted"));
+      utils.dataInventory.listActivities.invalidate();
+      utils.dataInventory.listFlows.invalidate();
+      router.push("/privacy/data-inventory/processing-activities");
+    },
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
+  });
 
   const { data: activity, isLoading } = trpc.dataInventory.getActivity.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -244,6 +256,13 @@ export default function ActivityDetailPage() {
               {tp("edit")}
             </Button>
           </Link>
+          <DeleteRecordButton
+            title={tConfirm("deleteActivityTitle")}
+            description={tConfirm("deleteActivityDesc", { name: activity.name })}
+            pending={deleteActivity.isPending}
+            onConfirm={() => organization && deleteActivity.mutate({ organizationId: organization.id, id: activity.id })}
+            testId="delete-activity"
+          />
           </>
         }
       />

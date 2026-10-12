@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, organizationProcedure, protectedProcedure, writerProcedure, officerProcedure } from "../../trpc";
+import { createTRPCRouter, organizationProcedure, protectedProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { AssessmentType, AssessmentStatus, RiskLevel, MitigationStatus, ApprovalStatus } from "@prisma/client";
 import {
@@ -74,6 +74,9 @@ function calculateRiskScore(responses: any[], template: any): { score: number; l
 
   return { score, level };
 }
+
+/** Assessments not yet submitted: the only ones that can be deleted. */
+export const DELETABLE_ASSESSMENT_STATUSES: AssessmentStatus[] = [AssessmentStatus.DRAFT, AssessmentStatus.IN_PROGRESS];
 
 export const assessmentRouter = createTRPCRouter({
   // ============================================================
@@ -515,6 +518,44 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   // Save response
+  // Delete a draft assessment, one not yet submitted (DRAFT or IN_PROGRESS),
+  // for owners and admins. Submitted, approved or rejected assessments are kept: they are the record of a decision. Its
+  // answers, measures, approvals and versions go with it (cascade). On the
+  // hosted pilot the free-DPIA count is of DPIAs created, so deleting a
+  // draft does not give one back (services/pilot/caps.ts).
+  delete: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { id: true, name: true, status: true },
+      });
+      if (!assessment) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+      if (!DELETABLE_ASSESSMENT_STATUSES.includes(assessment.status)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Only a draft assessment can be deleted" });
+      }
+      await ctx.prisma.aISystem.updateMany({
+        where: { organizationId: ctx.organization.id, assessmentId: input.id },
+        data: { assessmentId: null },
+      });
+      await ctx.prisma.assessment.deleteMany({
+        where: { id: input.id, organizationId: ctx.organization.id, status: { in: DELETABLE_ASSESSMENT_STATUSES } },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Assessment",
+          entityId: input.id,
+          action: "DELETE",
+          changes: { name: assessment.name },
+        },
+      });
+      return { success: true };
+    }),
+
   saveResponse: writerProcedure
     .input(
       z.object({

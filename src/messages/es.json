@@ -2542,6 +2542,12 @@
     "deleteVendorDesc": "Se eliminará el proveedor y se desvinculará de los sistemas o actividades asociados. Esta acción no se puede deshacer.",
     "deleteFlowTitle": "¿Eliminar flujo de datos?",
     "deleteFlowDesc": "¿Eliminar el flujo «{name}»? Esta acción no se puede deshacer.",
+    "deleteActivityTitle": "¿Eliminar la actividad de tratamiento?",
+    "deleteActivityDesc": "¿Eliminar «{name}»? Se eliminan también sus vínculos con sistemas y los flujos propuestos a partir de ellos. Las transferencias y evaluaciones que la mencionan se conservan. No se puede deshacer.",
+    "deleteTransferTitle": "¿Eliminar la transferencia?",
+    "deleteTransferDesc": "¿Eliminar «{name}»? Las evaluaciones que la mencionan se conservan. No se puede deshacer.",
+    "deleteAssessmentTitle": "¿Eliminar la evaluación en borrador?",
+    "deleteAssessmentDesc": "¿Eliminar «{name}» con sus respuestas? Solo se pueden eliminar los borradores. No se puede deshacer.",
     "deleteEntitlementTitle": "¿Eliminar habilitación?",
     "deleteEntitlementDesc": "¿Eliminar esta habilitación ({name})? Las organizaciones vinculadas perderán el acceso de inmediato. Esta acción no se puede deshacer."
   },
@@ -3721,7 +3727,8 @@
     "transfer": {
       "created": "Transferencia creada",
       "updated": "Transferencia actualizada",
-      "complianceUpdated": "Cumplimiento actualizado"
+      "complianceUpdated": "Cumplimiento actualizado",
+      "deleted": "Transferencia eliminada"
     },
     "incident": {
       "created": "Incidencia registrada",
@@ -3754,7 +3761,8 @@
       "mitigationUpdated": "Mitigación actualizada",
       "templateCloned": "Plantilla clonada correctamente",
       "autoFillAllSaved": "Evaluación creada con todas las respuestas ya rellenadas",
-      "autoFillPartialSaved": "Evaluación creada, pero solo se han guardado {saved} de {total} respuestas"
+      "autoFillPartialSaved": "Evaluación creada, pero solo se han guardado {saved} de {total} respuestas",
+      "deleted": "Evaluación eliminada"
     },
     "aiSystem": {
       "registered": "Sistema de IA registrado",
@@ -6379,7 +6387,7 @@
         "title": "Piloto alojado",
         "intro": "Piloto alojado: gratuito, para probar el producto con registros de prueba, dentro de los límites que se detallan a continuación.",
         "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
-        "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
+        "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Una organización puede tener como máximo:",
         "oneOrganization": "Una cuenta pertenece a una sola organización.",

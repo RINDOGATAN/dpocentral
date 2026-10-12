@@ -28,6 +28,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { useOrgRole } from "@/lib/use-org-role";
+import { DeleteRecordButton } from "@/components/privacy/delete-record-button";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 import { formatDateIn } from "@/lib/utils";
 
@@ -62,6 +63,15 @@ export default function TransferDetailPage() {
   const locale = useLocale();
 
   const utils = trpc.useUtils();
+  const tConfirm = useTranslations("confirms");
+  const deleteTransfer = trpc.dataInventory.deleteTransfer.useMutation({
+    onSuccess: () => {
+      toast.success(tToasts("transfer.deleted"));
+      utils.dataInventory.listTransfers.invalidate();
+      router.push("/privacy/transfers");
+    },
+    onError: (error) => toast.error(error.message || tToasts("generic.somethingWentWrong")),
+  });
 
   const { data: checklistData, isLoading: checklistLoading } =
     trpc.dataInventory.getTransferComplianceChecklist.useQuery(
@@ -199,6 +209,13 @@ export default function TransferDetailPage() {
               {t("edit")}
             </Button>
           </Link>
+          <DeleteRecordButton
+            title={tConfirm("deleteTransferTitle")}
+            description={tConfirm("deleteTransferDesc", { name: transfer.name })}
+            pending={deleteTransfer.isPending}
+            onConfirm={() => deleteTransfer.mutate({ organizationId: orgId, id })}
+            testId="delete-transfer"
+          />
         </div>
       </div>
 

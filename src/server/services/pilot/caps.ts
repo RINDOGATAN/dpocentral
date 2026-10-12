@@ -299,8 +299,8 @@ export const SEE_PLANS_LABEL: Record<Locale, string> = {
 export function dpiaCapMessage(locale: Locale): string {
   const plans = `${SEE_PLANS_LABEL[locale]}: ${PLANS_URL[locale]}`;
   return locale === "es"
-    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
-    : `This organization has already created the ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time, so another cannot be created. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
+    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
+    : `This organization has already created the ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time, so another cannot be created. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
 }
 
 // ── A pilot limit reached: one audit row, read as a count ───────────────
