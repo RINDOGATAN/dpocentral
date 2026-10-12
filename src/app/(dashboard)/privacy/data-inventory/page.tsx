@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,6 +104,9 @@ const INITIAL_ACTIVITY_FORM = {
   dataSubjects: "",
 };
 
+/** The tabs an address can open directly (`?tab=activities`). */
+const INVENTORY_TABS = ["assets", "activities", "flows", "transfers"] as const;
+
 const INITIAL_TRANSFER_FORM = {
   name: "",
   destinationCountry: "",
@@ -128,6 +131,19 @@ export default function DataInventoryPage() {
   const [activityForm, setActivityForm] = useState(INITIAL_ACTIVITY_FORM);
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
   const [transferForm, setTransferForm] = useState(INITIAL_TRANSFER_FORM);
+  // `?tab=` opens a tab directly (links from other pages, such as the records
+  // of processing); `?new=activity` also opens the new-activity form, once,
+  // for a person allowed to write.
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const initialTab = (INVENTORY_TABS as readonly string[]).includes(tabParam ?? "") ? tabParam! : "assets";
+  const wantsNewActivity = searchParams.get("new") === "activity";
+  useEffect(() => {
+    if (wantsNewActivity && canWrite) {
+      setActivityDialogOpen(true);
+      router.replace("/privacy/data-inventory?tab=activities", { scroll: false });
+    }
+  }, [wantsNewActivity, canWrite, router]);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -282,7 +298,7 @@ export default function DataInventoryPage() {
       />
 
       {/* Tabs */}
-      <Tabs defaultValue="assets">
+      <Tabs defaultValue={initialTab}>
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="assets" className="text-xs sm:text-sm">
             {/* More systems than this page holds: say so instead of a short count. */}
