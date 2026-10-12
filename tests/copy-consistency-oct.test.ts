@@ -11,6 +11,7 @@
  * C5 the DPIA hint points at the list below it; no "rules of European Union"
  * C6 no "bootstrap" jargon; no "industria" in Spanish
  * C7 the landing's email field is required (a blank submit is not sent)
+ * C8 the assessments help names a step that exists
  */
 
 import { describe, it, expect } from "vitest";
@@ -93,5 +94,13 @@ describe("C7: the landing's sign-up email", () => {
     const page = read("src/landing/components/StartupProductPage.tsx");
     expect(page.match(/type="email"\s+required/g)?.length).toBe(2);
     expect(page).toContain("if (!emailInput.trim()) return;");
+  });
+});
+
+describe("C8: the assessments help names a step that exists", () => {
+  it("does not send people to a screening the product does not have", () => {
+    const help = read("src/config/help/pages.ts");
+    expect(help).not.toContain("start a DPIA from the screening");
+    expect(help).toContain("choose New Assessment, then a DPIA, and link it to that activity");
   });
 });
