@@ -2295,7 +2295,9 @@
         "ERASURE": "Erasure",
         "PORTABILITY": "Portability",
         "OBJECTION": "Objection",
-        "RESTRICTION": "Restriction"
+        "RESTRICTION": "Restriction",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
       },
       "status": {
         "SUBMITTED": "Submitted",
@@ -2812,7 +2814,9 @@
       "RESTRICTION": "Restriction",
       "AUTOMATED_DECISION": "Automated decision",
       "WITHDRAW_CONSENT": "Withdraw consent",
-      "OTHER": "Other"
+      "OTHER": "Other",
+      "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+      "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
     },
     "dsarStatus": {
       "SUBMITTED": "Submitted",
@@ -3375,7 +3379,9 @@
         "RESTRICTION": "Processing Restriction Request",
         "AUTOMATED_DECISION": "Automated Decision Review",
         "WITHDRAW_CONSENT": "Consent Withdrawal",
-        "OTHER": "Data Subject Request"
+        "OTHER": "Data Subject Request",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
       },
       "withdraw": {
         "button": "Withdraw this request",
@@ -4468,7 +4474,9 @@
         "RESTRICTION": "Restriction of Processing",
         "WITHDRAW_CONSENT": "Withdraw Consent",
         "AUTOMATED_DECISION": "Automated Decision Review",
-        "OTHER": "Other"
+        "OTHER": "Other",
+        "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
       }
     },
     "breachRegister": {
@@ -9452,7 +9460,20 @@
       "reopen": "Reopen it any time from the help button."
     },
     "expertsLine": "Need a hand? Experts can help with setup, deployment and compliance work.",
-    "expertsLink": "Find an expert"
+    "expertsLink": "Find an expert",
+    "deadlines": {
+      "heading": "Deadlines of your laws",
+      "period": "{law}: {period} from receipt.",
+      "periodWithExtension": "{law}: {period} from receipt, extendable by {extension}.",
+      "none": "No law declared yet: new requests take the GDPR's one month, extendable by two further months. Declare your laws in What applies.",
+      "ccpaFifteen": "CCPA: requests to opt out of sale or sharing and to limit the use of sensitive personal information, as soon as feasibly possible and no later than 15 business days.",
+      "ccpaConfirm": "CCPA: confirm receipt of a request to know, delete or correct within 10 business days.",
+      "strictest": "With several laws, a new request takes the deadline of your primary jurisdiction, or the earliest of them when none is primary.",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "months": "{count, plural, one {# month} other {# months}}",
+      "businessDays": "{count, plural, one {# business day} other {# business days}}",
+      "loading": "Reading your laws..."
+    }
   },
   "portfolio": {
     "title": "All clients",
@@ -10207,5 +10228,32 @@
       "incident": "Incidents",
       "request": "Rights requests"
     }
+  },
+  "ccpaRequests": {
+    "groupCcpa": "California (CCPA)",
+    "groupOther": "GDPR and other laws",
+    "clockNote": "The 45-day period starts on the day the request is received, even while identity is being verified. Confirm receipt within 10 business days and say how the request will be handled and when to expect an answer.",
+    "know": {
+      "label": "Right to know",
+      "desc": "What personal information the business collected, used, sold or shared about the consumer, including the specific pieces."
+    },
+    "delete": {
+      "label": "Right to delete",
+      "desc": "Delete the personal information the business collected from the consumer."
+    },
+    "correct": {
+      "label": "Right to correct",
+      "desc": "Correct inaccurate personal information the business maintains about the consumer."
+    },
+    "clock45": "45 calendar days from receipt; extendable once by 45 more days when reasonably necessary, if the consumer is told within the first 45 days.",
+    "optOut": {
+      "label": "Opt out of sale or sharing",
+      "desc": "Stop selling or sharing the consumer's personal information. The business may not require a verifiable consumer request."
+    },
+    "limit": {
+      "label": "Limit use of sensitive personal information",
+      "desc": "Limit the use and disclosure of the consumer's sensitive personal information. The business may not require a verifiable consumer request."
+    },
+    "clock15": "As soon as feasibly possible and no later than 15 business days from receipt; no extension."
   }
 }

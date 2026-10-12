@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure, organizationProcedure, officerProced
 import { TRPCError } from "@trpc/server";
 import { DSARType, DSARStatus, DSARTaskStatus, CommunicationDirection } from "@prisma/client";
 import { addDays } from "date-fns";
-import { daysUntilDue as daysLeft, dsarExtensionState, dsarSlaStatus } from "@/lib/dsar-deadline";
+import { daysUntilDue as daysLeft, dsarExtensionState, dsarRuleForType, dsarSlaStatus } from "@/lib/dsar-deadline";
 import { calculateDSARDueDate, orgDsarRule } from "@/server/services/privacy/slaCalculator";
 import { sanitizeCss } from "@/lib/sanitize";
 import { sendDSARConfirmationEmail } from "@/server/services/dsar/sendConfirmationEmail";
@@ -197,7 +197,10 @@ export const dsarRouter = createTRPCRouter({
         where: { organizationId: ctx.organization.id },
         ...DSAR_RULE_JURISDICTIONS,
       });
-      const extension = dsarExtensionState(request, orgDsarRule(jurisdictions, request.receivedAt));
+      const extension = dsarExtensionState(
+        request,
+        dsarRuleForType(request.type, orgDsarRule(jurisdictions, request.receivedAt))
+      );
 
       // Spain, LOPDGDD art. 13.3: an access request made again within six
       // months may be treated as repetitive. Staff are told; nothing is
@@ -254,7 +257,11 @@ export const dsarRouter = createTRPCRouter({
         ...DSAR_RULE_JURISDICTIONS,
       });
       const receivedAt = new Date();
-      const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(jurisdictions, receivedAt));
+      // CCPA opt-out and limit requests run on their own 15-business-day clock.
+      const dueDate = calculateDSARDueDate(
+        receivedAt,
+        dsarRuleForType(input.type, orgDsarRule(jurisdictions, receivedAt))
+      );
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {
@@ -391,7 +398,10 @@ export const dsarRouter = createTRPCRouter({
           ...DSAR_RULE_JURISDICTIONS,
         });
         // One statutory extension per request, never on a closed one.
-        const state = dsarExtensionState(request, orgDsarRule(jurisdictions, request.receivedAt));
+        const state = dsarExtensionState(
+          request,
+          dsarRuleForType(request.type, orgDsarRule(jurisdictions, request.receivedAt))
+        );
         if (!state.allowed) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -918,7 +928,10 @@ export const dsarRouter = createTRPCRouter({
       await assertWithinDailyLimits(ctx.prisma, org.id, ctx.clientIp);
 
       const receivedAt = new Date();
-      const dueDate = calculateDSARDueDate(receivedAt, orgDsarRule(org.jurisdictions, receivedAt));
+      const dueDate = calculateDSARDueDate(
+        receivedAt,
+        dsarRuleForType(input.type, orgDsarRule(org.jurisdictions, receivedAt))
+      );
 
       const request = await ctx.prisma.dSARRequest.create({
         data: {

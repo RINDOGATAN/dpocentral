@@ -647,6 +647,8 @@ enum DSARType {
   RESTRICTION // Right to restrict processing
   AUTOMATED_DECISION // Rights re: automated decisions
   WITHDRAW_CONSENT
+  OPT_OUT_SALE_SHARING // CCPA: opt out of sale or sharing (Civ. Code 1798.120)
+  LIMIT_SENSITIVE_PI // CCPA: limit use of sensitive personal information (Civ. Code 1798.121)
   OTHER
 }
 
