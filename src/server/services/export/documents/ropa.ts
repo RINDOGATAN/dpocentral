@@ -3,6 +3,7 @@
 
 /** The records of processing (ROPA), as PDF or CSV. See ./context.ts. */
 
+import { isDraftFlow } from "@/server/services/data-flows/auto-flows";
 import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
@@ -105,13 +106,16 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
   // touches. Assets shared across activities are placed in the cluster
   // of the first activity (alphabetical) that references them, so the
   // graph stays readable while inter-cluster edges still show sharing.
-  const flows = await prisma.dataFlow.findMany({
-    where: { organizationId },
-    include: {
-      sourceAsset: { select: { id: true, name: true, type: true } },
-      destinationAsset: { select: { id: true, name: true, type: true } },
-    },
-  });
+  // Generated flows still to confirm are drafts: left out of the report.
+  const flows = (
+    await prisma.dataFlow.findMany({
+      where: { organizationId },
+      include: {
+        sourceAsset: { select: { id: true, name: true, type: true } },
+        destinationAsset: { select: { id: true, name: true, type: true } },
+      },
+    })
+  ).filter((f) => !isDraftFlow(f.metadata));
 
   const assetMap = new Map<string, PdfFlowAsset>();
   for (const a of activities) {

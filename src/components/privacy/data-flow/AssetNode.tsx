@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { memo } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react";
 import {
@@ -15,6 +16,8 @@ import {
   Box,
   ArrowDownLeft,
   ArrowUpRight,
+  Globe2,
+  MapPin,
 } from "lucide-react";
 import type { AssetNodeData } from "./useDataFlowGraph";
 import {
@@ -150,6 +153,40 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
             </span>
           )}
         </div>
+
+        {/* Location, and the transfers outside the EEA placed on this system */}
+        {(asset.location || asset.transfersOutsideEea) && (
+          <div className="px-3 pb-2 flex flex-col gap-1">
+            {asset.location && (
+              <p
+                className="flex items-center gap-1 text-[10px] leading-tight"
+                style={{ color: "#475569" }}
+                data-testid="node-location"
+              >
+                <MapPin className="w-3 h-3 shrink-0" aria-hidden />
+                <span className="sr-only">{t("location")}: </span>
+                <span className="truncate">{asset.location}</span>
+              </p>
+            )}
+            {asset.transfersOutsideEea && (
+              <Link
+                href={
+                  asset.transfersOutsideEea.transferIds.length === 1
+                    ? `/privacy/transfers/${asset.transfersOutsideEea.transferIds[0]}`
+                    : "/privacy/transfers"
+                }
+                className="nodrag nopan self-start flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 hover:underline"
+                style={{ backgroundColor: "#fef3c7", color: "#92400e" }}
+                title={t("outsideEeaTitle", { count: asset.transfersOutsideEea.transferIds.length })}
+                onClick={(e) => e.stopPropagation()}
+                data-testid="node-transfer-marker"
+              >
+                <Globe2 className="w-3 h-3 shrink-0" aria-hidden />
+                {t("outsideEea", { countries: asset.transfersOutsideEea.countries.join(", ") })}
+              </Link>
+            )}
+          </div>
+        )}
 
         {/* Data category chip preview */}
         {topCategories.length > 0 && (
