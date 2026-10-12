@@ -243,7 +243,9 @@ export function buildNodesAndEdges(
       source: flow.sourceAssetId,
       target: flow.destinationAssetId,
       type: "flowEdge",
-      animated: flow.isAutomated,
+      // Dashes mean "generated from an activity" (the AUTO-GEN filter); an
+      // automated flow is said so in its details, not with moving dashes.
+      animated: false,
       data: {
         flow,
         label: flow.name,

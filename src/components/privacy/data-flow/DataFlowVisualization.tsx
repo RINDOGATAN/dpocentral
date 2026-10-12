@@ -469,7 +469,8 @@ export function DataFlowVisualization({
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             fitView
-            fitViewOptions={{ padding: 0.2 }}
+            // Room at the top for the filter toolbar, so it never covers a node.
+            fitViewOptions={{ padding: { top: "72px", right: "40px", bottom: "40px", left: "40px" } }}
             minZoom={0.1}
             maxZoom={2}
             defaultEdgeOptions={{
@@ -489,16 +490,18 @@ export function DataFlowVisualization({
               style={{ borderRadius: 0 }}
             />
             {mode === "all" && (
+              // Light like the canvas it summarises (the app may be dark);
+              // left out on a phone, where it would cover most of the map.
               <MiniMap
-                nodeColor="hsl(var(--primary))"
-                maskColor="hsl(var(--background) / 0.8)"
-                className="!bg-card !border-border"
-                style={{ borderRadius: 0 }}
+                nodeColor="#94a3b8"
+                maskColor="rgba(226, 232, 240, 0.55)"
+                className="!hidden sm:!block"
+                style={{ borderRadius: 0, backgroundColor: "#ffffff", border: "1px solid #e2e8f0" }}
               />
             )}
 
             {/* Filter toolbar (left) */}
-            <Panel position="top-left" className="max-w-[calc(100%-140px)]">
+            <Panel position="top-left" className="max-w-[calc(100%-72px)] sm:max-w-[calc(100%-140px)]">
               <FlowFilterToolbar
                 filters={filters}
                 onChange={setFilters}
@@ -513,9 +516,11 @@ export function DataFlowVisualization({
                 size="sm"
                 variant="outline"
                 onClick={() => setIsCreateFlowOpen(true)}
+                aria-label={tFlow("actions.addFlow")}
               >
-                <Plus className="w-4 h-4 mr-2" />
-                {tFlow("actions.addFlow")}
+                <Plus className="w-4 h-4 sm:mr-2" />
+                {/* Icon only on a phone, where the filters need the width. */}
+                <span className="hidden sm:inline">{tFlow("actions.addFlow")}</span>
               </Button>
             </Panel>
 

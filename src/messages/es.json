@@ -2665,7 +2665,9 @@
       "weekly": "Semanal",
       "monthly": "Mensual",
       "onDemand": "Bajo demanda",
-      "batch": "Por lotes"
+      "batch": "Por lotes",
+      "continuous": "Continua",
+      "onRequest": "Bajo petición"
     },
     "details": {
       "automated": "Automatizado",
@@ -2675,7 +2677,28 @@
       "title": "Detalles del flujo",
       "volume": "Volumen",
       "encryption": "Cifrado",
-      "noDetails": "Sin más detalles"
+      "noDetails": "Sin más detalles",
+      "generated": "Creado automáticamente a partir de los sistemas vinculados a una actividad de tratamiento. Edítalo para conservarlo como propio."
+    },
+    "abbr": {
+      "IDENTIFIERS": "ID",
+      "DEMOGRAPHICS": "DEM",
+      "FINANCIAL": "FIN",
+      "HEALTH": "SAL",
+      "BIOMETRIC": "BIO",
+      "LOCATION": "UBI",
+      "BEHAVIORAL": "COM",
+      "EMPLOYMENT": "LAB",
+      "EDUCATION": "ACA",
+      "POLITICAL": "POL",
+      "RELIGIOUS": "REL",
+      "GENETIC": "GEN",
+      "SEXUAL_ORIENTATION": "SEX",
+      "CRIMINAL": "PEN",
+      "OTHER": "OTR"
+    },
+    "edge": {
+      "fallback": "Flujo"
     }
   },
   "metadata": {

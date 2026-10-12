@@ -10,6 +10,7 @@ import type { ProgramInput } from "@/server/services/export/privacy-program/data
 import { buildFlowGraphInputs } from "@/server/services/export/privacy-program/flow-input";
 import type { FlowPageBatch } from "@/server/services/export/privacy-program/pages/DataFlowPage";
 import { renderFlowGraphPng } from "@/server/services/export/flow-graph-pdf";
+import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
@@ -157,6 +158,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
   };
 
   // ── Build flow-map batches with production + participation filter ────────
+  const flowLabels = await pdfFlowLabels(locale);
   const flowResult = buildFlowGraphInputs(
     assets.map((a) => ({
       id: a.id,
@@ -184,6 +186,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
       unassigned: t("flowMap.clusterUnassigned"),
       overview: t("flowMap.clusterOverview"),
       moreSuffix: (count) => ` ${t("flowMap.clusterMoreSuffix", { count })}`,
+      edgeLabel: flowLabels.edgeLabel,
     }
   );
 
@@ -195,6 +198,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
               rankdir: "LR",
               clusters: b.clusters.length > 0 ? b.clusters : undefined,
               fitWidth: 720,
+              typeLabel: flowLabels.typeLabel,
             })
           : null;
       const assetTypes = [...new Set(b.assets.map((a) => a.type))];

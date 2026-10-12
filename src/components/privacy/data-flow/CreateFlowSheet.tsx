@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { FREQUENCY_LABEL_KEYS } from "./flow-labels";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
@@ -78,18 +79,12 @@ const frequencyOptions = [
   "Monthly",
   "On-demand",
   "Batch",
+  "Continuous",
+  "On request",
 ];
 
 /** Stored frequency values (English) and the message key that labels each. */
-export const FREQUENCY_LABEL_KEYS: Record<string, string> = {
-  "Real-time": "realTime",
-  Hourly: "hourly",
-  Daily: "daily",
-  Weekly: "weekly",
-  Monthly: "monthly",
-  "On-demand": "onDemand",
-  Batch: "batch",
-};
+export { FREQUENCY_LABEL_KEYS };
 
 interface CreateFlowSheetProps {
   isOpen: boolean;

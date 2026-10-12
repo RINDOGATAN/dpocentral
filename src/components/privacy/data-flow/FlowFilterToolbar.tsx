@@ -79,7 +79,7 @@ export function FlowFilterToolbar({
 
   return (
     <div
-      className="flex items-center gap-2 shadow-sm px-2 py-1.5 text-xs"
+      className="flex flex-wrap items-center gap-2 shadow-sm px-2 py-1.5 text-xs"
       style={{
         backgroundColor: "#ffffff",
         border: "1px solid #e2e8f0",
@@ -87,7 +87,7 @@ export function FlowFilterToolbar({
       }}
     >
       {/* Sensitivity filter pills */}
-      <div className="flex items-center gap-1">
+      <div className="flex flex-wrap items-center gap-1">
         {SENSITIVITY_BUTTONS.map((b) => {
           const active = filters.sensitivity === b.key;
           return (
