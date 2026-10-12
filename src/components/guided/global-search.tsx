@@ -67,8 +67,6 @@ export function GlobalSearch({ className }: { className?: string }) {
   }, [data, enabled]);
   const flat = useMemo(() => groups.flatMap((g) => g.hits), [groups]);
 
-  useEffect(() => setActive(0), [term]);
-
   // Close on a click outside.
   useEffect(() => {
     function onDown(e: MouseEvent) {
@@ -127,6 +125,7 @@ export function GlobalSearch({ className }: { className?: string }) {
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
+          setActive(0);
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
