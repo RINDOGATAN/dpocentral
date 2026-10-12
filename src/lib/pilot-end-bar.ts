@@ -16,6 +16,7 @@
  * src/components/pilot/hosted-pilot.tsx feeds it the Settings card's status.
  */
 
+import { formatPriceIn } from "./currency";
 import type { Currency } from "./region";
 
 /** How many days before the end of the editing window the bar appears. */
@@ -68,14 +69,20 @@ export function pilotEndBarPricingUrl(locale: string | undefined): string {
     : PILOT_END_BAR_PRICING_URL.en;
 }
 
+/** The Cloud Plan's amounts (the currency is the charge currency). */
+export const CLOUD_PLAN_AMOUNTS = { month: 179, year: 1800 } as const;
+
 /**
- * The Cloud Plan's price as the bar writes it: Spanish always in euros;
- * English in euros for EU visitors and US dollars for everyone else
- * (src/lib/region.ts).
+ * The Cloud Plan's price as the bar writes it, in the currency the customer
+ * will be charged (the same decision as "Move to the paid plan":
+ * src/lib/plan-currency.ts), whatever the interface language.
  */
 export function pilotEndBarPrice(locale: string | undefined, currency: Currency): string {
-  if (locale?.toLowerCase().startsWith("es")) return "179 € al mes o 1.800 € al año";
-  return currency === "EUR" ? "€179 a month or €1,800 a year" : "$179 a month or $1,800 a year";
+  const month = formatPriceIn(CLOUD_PLAN_AMOUNTS.month, locale, currency);
+  const year = formatPriceIn(CLOUD_PLAN_AMOUNTS.year, locale, currency);
+  return locale?.toLowerCase().startsWith("es")
+    ? `${month} al mes o ${year} al año`
+    : `${month} a month or ${year} a year`;
 }
 
 /** The end date as the bar writes it: "26 October 2026" / "26 de octubre de 2026". */

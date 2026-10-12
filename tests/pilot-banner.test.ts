@@ -29,6 +29,8 @@ const mocks = vi.hoisted(() => ({
     | null,
   status: undefined as unknown,
   queried: [] as unknown[],
+  /** The request's country header (null: none, which charges US dollars). */
+  country: null as string | null,
 }));
 
 // The bar reads the selected organisation and the Settings card's status.
@@ -60,7 +62,9 @@ vi.mock("next/navigation", () => ({
 // test here; a request scope is not set up, so stub both.
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => ({ get: () => undefined })),
-  headers: vi.fn(async () => ({ get: () => null })),
+  headers: vi.fn(async () => ({
+    get: (name: string) => (name === "x-vercel-ip-country" ? mocks.country : null),
+  })),
 }));
 // The shell itself (navigation, organisation hooks) is not under test here.
 vi.mock("@/components/dashboard-shell", () => ({
@@ -110,6 +114,7 @@ afterEach(() => {
   mocks.organization = { id: "org-1", name: "Org", slug: "org", plan: "PILOT" };
   mocks.status = undefined;
   mocks.queried = [];
+  mocks.country = null;
 });
 
 describe("when the bar shows", () => {
@@ -157,8 +162,9 @@ describe("the bar on signed-in pages", () => {
     }
   });
 
-  it("shows the free window and the Plan nube UE's price for the whole pilot, in Castilian (euros)", async () => {
+  it("shows the free window and the Plan nube UE's price for the whole pilot, in Castilian (euros in the EU)", async () => {
     hosted();
+    mocks.country = "ES";
     vi.useFakeTimers({ now: new Date("2026-10-13T09:00:00Z"), toFake: ["Date"] });
     try {
       mocks.status = pilotStatus(new Date("2026-10-28T09:00:00Z"));
@@ -176,6 +182,7 @@ describe("the bar on signed-in pages", () => {
 
   it("tells a pilot begun before the shorter window its real end date, without '15 days', in both languages", async () => {
     hosted();
+    mocks.country = "US";
     vi.useFakeTimers({ now: new Date("2026-10-13T09:00:00Z"), toFake: ["Date"] });
     try {
       mocks.status = pilotStatus(new Date("2026-10-27T00:00:00Z"), false, true);
@@ -184,6 +191,7 @@ describe("the bar on signed-in pages", () => {
         "Free until 27 October 2026. Then export your program or keep going on the Cloud Plan: $179 a month or $1,800 a year."
       );
       expect(en).not.toContain("15 days");
+      mocks.country = "FR";
       const es = await renderSignedIn("es");
       expect(es).toContain(
         "Gratis hasta el 27 de octubre de 2026. Después, exporta tu programa o sigue con el Plan nube UE: 179 € al mes o 1.800 € al año."

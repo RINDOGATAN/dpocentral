@@ -364,7 +364,8 @@ describe("the add-on's words", () => {
     expect(DSAR_ADDON_MONTHLY_PRICE).toBe(49);
     expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "en", "USD")).toBe("$49");
     expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "en", "EUR")).toBe("€49");
-    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "es", "USD")).toBe("49 €");
+    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "es", "USD")).toBe("49 US$");
+    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "es", "EUR")).toBe("49 €");
     expect(formatPriceIn(1800, "es", "EUR")).toBe("1.800 €");
     expect(formatPriceIn(1800, "en", "USD")).toBe("$1,800");
   });

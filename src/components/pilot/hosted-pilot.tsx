@@ -15,7 +15,7 @@ import {
   type PilotEndBarState,
 } from "@/lib/pilot-end-bar";
 import { PILOT_DAYS } from "@/server/services/pilot/limits";
-import { useDisplayCurrency } from "@/components/region-provider";
+import { useChargeCurrency } from "@/components/region-provider";
 
 // Whether this deployment is the hosted pilot. Resolved on the server
 // (src/lib/hosted.ts) and handed down from the root layout.
@@ -81,7 +81,9 @@ export function PilotEndBar({
   upgradeHref?: string | null;
 }) {
   const t = useTranslations("pilot.endBar");
-  const price = pilotEndBarPrice(useLocale(), useDisplayCurrency());
+  // The currency the customer will be charged, the same decision as the
+  // "Move to the paid plan" link (inAppPlanOffer), whatever the language.
+  const price = pilotEndBarPrice(useLocale(), useChargeCurrency());
   // The trial bar may be closed for the session; the ending and read-only bars stay.
   const dismissed = useSyncExternalStore(subscribeDismissed, readDismissed, () => false);
   if (state === "hidden") return null;
