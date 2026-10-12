@@ -35,6 +35,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { formatDateIn } from "@/lib/utils";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
+import { EmailNotAcceptedNote, isEmailNotAcceptedError } from "@/components/ui/email-not-accepted";
 import { useUserType } from "@/lib/use-user-type";
 import { useOrganization } from "@/lib/organization-context";
 import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
@@ -160,7 +161,10 @@ export default function SettingsPage() {
       setInviteEmail("");
       setInviteRole("MEMBER");
     },
-    onError: (e) => toast.error(e.message),
+    // The e-mail policy refusal shows under the field, not as a toast.
+    onError: (e) => {
+      if (!isEmailNotAcceptedError(e)) toast.error(e.message);
+    },
   });
 
   const updateMember = trpc.organization.updateMember.useMutation({
@@ -423,7 +427,10 @@ export default function SettingsPage() {
                     type="email"
                     placeholder={tMembers("inviteEmailPlaceholder")}
                     value={inviteEmail}
-                    onChange={(e) => setInviteEmail(e.target.value)}
+                    onChange={(e) => {
+                      setInviteEmail(e.target.value);
+                      if (addMember.error) addMember.reset();
+                    }}
                     className="flex-1"
                   />
                 <Select
@@ -461,6 +468,7 @@ export default function SettingsPage() {
                   {tMembers("add")}
                 </Button>
                 </div>
+                <EmailNotAcceptedNote show={isEmailNotAcceptedError(addMember.error)} />
                 <p className="text-xs text-muted-foreground">{tMembers("inviteHelp")}</p>
               </div>
             )}

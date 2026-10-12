@@ -14,6 +14,7 @@ import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { PILOT_DAYS } from "@/server/services/pilot/limits";
 import { StatusNote } from "@/components/ui/status-note";
 import type { SignInMethods } from "@/lib/sign-in-methods";
+import { BLOCKED_EMAIL_MESSAGE_KEY } from "@/lib/email-policy";
 
 /**
  * The sign-in form. Shows only the methods the server offers (`methods`, from
@@ -34,6 +35,9 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
   const [isDevLoading, setIsDevLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The server refused the address (src/lib/email-policy.ts): one calm
+  // sentence under the e-mail field, no code.
+  const [emailRefused, setEmailRefused] = useState(false);
   const searchParams = useSearchParams();
   // Set by the sign-out walk when it lands the user back here.
   const signedOut = searchParams.get("signedOut") === "1";
@@ -41,7 +45,10 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
   // Capture OAuth errors from next-auth redirect (e.g. ?error=OAuthAccountNotLinked)
   useEffect(() => {
     const authError = searchParams.get("error");
-    if (authError) {
+    if (authError === BLOCKED_EMAIL_MESSAGE_KEY) {
+      setEmailRefused(true);
+      setIsGoogleLoading(false);
+    } else if (authError) {
       const knownCodes = ["OAuthAccountNotLinked", "OAuthCallback", "OAuthSignin"] as const;
       const code = (knownCodes as readonly string[]).includes(authError)
         ? (authError as (typeof knownCodes)[number])
@@ -55,6 +62,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setEmailRefused(false);
 
     try {
       const result = await signIn("email", {
@@ -63,7 +71,9 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
         callbackUrl: "/privacy",
       });
 
-      if (result?.error) {
+      if (result?.error === BLOCKED_EMAIL_MESSAGE_KEY) {
+        setEmailRefused(true);
+      } else if (result?.error) {
         setError(t("failedToSendLink"));
       } else {
         setIsEmailSent(true);
@@ -90,6 +100,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
     e.preventDefault();
     setIsDevLoading(true);
     setError(null);
+    setEmailRefused(false);
 
     try {
       const result = await signIn("dev-credentials", {
@@ -98,7 +109,10 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
         callbackUrl: "/privacy",
       });
 
-      if (result?.error) {
+      if (result?.error === BLOCKED_EMAIL_MESSAGE_KEY) {
+        setEmailRefused(true);
+        setIsDevLoading(false);
+      } else if (result?.error) {
         setError(t("devSignInFailed"));
         setIsDevLoading(false);
       } else {
@@ -180,6 +194,11 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
                 autoFocus
                 required
               />
+              {emailRefused && (
+                <p data-testid="email-not-accepted" className="text-sm text-muted-foreground">
+                  {t("emailNotAccepted")}
+                </p>
+              )}
               {error && (
                 <StatusNote tone="danger" className="border">
                   {error}
@@ -226,6 +245,11 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
               required
               autoFocus={!isDev}
             />
+            {emailRefused && !isDev && (
+              <p data-testid="email-not-accepted" className="text-sm text-muted-foreground">
+                {t("emailNotAccepted")}
+              </p>
+            )}
           </div>
 
           {/* When the local form is shown, the error renders there instead */}
@@ -269,7 +293,11 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
           </p>
           ) : (
             // Google alone: its error has no form above to show in.
-            error && (
+            emailRefused ? (
+              <p data-testid="email-not-accepted" className="text-sm text-muted-foreground text-center mb-4">
+                {t("emailNotAccepted")}
+              </p>
+            ) : error && (
               <StatusNote tone="danger" className="border mb-4">
                 {error}
               </StatusNote>

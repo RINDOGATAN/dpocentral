@@ -27,6 +27,7 @@ import {
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
+import { BLOCKED_EMAIL_MESSAGES, isBlockedAccountEmail } from "@/lib/email-policy";
 import {
   departmentScopeConditions,
   loadBusinessUnitScope,
@@ -401,6 +402,11 @@ export const organizationRouter = createTRPCRouter({
       // organisation and e-mail it; the membership is created at their first
       // sign-in (src/server/services/members/invitations.ts).
       if (!user) {
+        // E-mail policy (src/lib/email-policy.ts): an invitation opens a new
+        // account, so both rules apply. An existing account is not refused.
+        if (isBlockedAccountEmail(input.email)) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: BLOCKED_EMAIL_MESSAGES.en });
+        }
         if (input.role === OrganizationRole.OWNER && ctx.membership.role !== "OWNER") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can invite an owner" });
         }
