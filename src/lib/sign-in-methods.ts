@@ -23,6 +23,22 @@ export function googleConfigured(env: Env = process.env): boolean {
   return !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET;
 }
 
+/**
+ * The local (passwordless credentials) sign-in takes any e-mail address with
+ * no second factor. It is meant for dev mode and for a self-hosted install
+ * behind the firm's own network, never for the hosted service: whatever the
+ * build flag says, it is refused when the server runs as the hosting
+ * provider's production deployment (VERCEL_ENV=production), the same runtime
+ * rule AI Sentinel and Dealroom apply. Read at call time, so the refusal
+ * follows the runtime environment, not the build.
+ */
+export function localSignInAllowed(
+  env: Env = process.env,
+  devAuthEnabled: boolean = features.devAuthEnabled,
+): boolean {
+  return devAuthEnabled && env.VERCEL_ENV !== "production";
+}
+
 /** The e-mail magic link: a mail key is set. */
 export function emailConfigured(env: Env = process.env): boolean {
   return !!env.RESEND_API_KEY;
@@ -47,7 +63,7 @@ export function signInMethods(
   flags: Pick<typeof features, "devAuthEnabled" | "emailAuthEnabled" | "googleAuthEnabled"> = features,
 ): SignInMethods {
   return {
-    local: flags.devAuthEnabled,
+    local: localSignInAllowed(env, flags.devAuthEnabled),
     email: flags.emailAuthEnabled && emailConfigured(env),
     google: flags.googleAuthEnabled && googleConfigured(env),
   };
