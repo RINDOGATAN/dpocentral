@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
+import { formatDateIn } from "@/lib/utils";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useUserType } from "@/lib/use-user-type";
@@ -135,9 +136,26 @@ export default function SettingsPage() {
   const [inviteRole, setInviteRole] = useState<OrganizationRole>("MEMBER");
   const [memberToRemove, setMemberToRemove] = useState<{ id: string; name: string } | null>(null);
 
-  const addMember = trpc.organization.addMember.useMutation({
+  const { data: invitations } = trpc.organization.listInvitations.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId && isAdmin }
+  );
+  const cancelInvitation = trpc.organization.cancelInvitation.useMutation({
     onSuccess: () => {
-      toast.success(tMembers("added"));
+      toast.success(tMembers("inviteCancelled"));
+      utils.organization.listInvitations.invalidate();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+  const addMember = trpc.organization.addMember.useMutation({
+    onSuccess: (result, vars) => {
+      if (result.invited) {
+        if (result.emailSent) toast.success(tMembers("invitedSent", { email: vars.email }));
+        else toast.info(tMembers("invitedNoEmail", { url: result.signInUrl }), { duration: 15000 });
+        utils.organization.listInvitations.invalidate();
+      } else {
+        toast.success(tMembers("added"));
+      }
       utils.organization.getById.invalidate();
       setInviteEmail("");
       setInviteRole("MEMBER");
@@ -444,6 +462,32 @@ export default function SettingsPage() {
                 </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">{tMembers("inviteHelp")}</p>
+              </div>
+            )}
+
+            {isAdmin && invitations && invitations.length > 0 && (
+              <div className="space-y-2" data-testid="pending-invitations">
+                <p className="text-sm font-medium">{tMembers("pendingTitle")}</p>
+                {invitations.map((inv) => (
+                  <div key={inv.email} className="flex items-center justify-between gap-2 p-2 border border-dashed rounded-md">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm truncate">{inv.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {enumLabel("role", inv.role)} · {tMembers("pendingSince", { date: formatDateIn(new Date(inv.invitedAt), locale) })}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={tMembers("cancelInviteAria", { email: inv.email })}
+                      title={tMembers("cancelInvite")}
+                      onClick={() => cancelInvitation.mutate({ organizationId: orgId, email: inv.email })}
+                      disabled={cancelInvitation.isPending}
+                    >
+                      <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive" />
+                    </Button>
+                  </div>
+                ))}
               </div>
             )}
 

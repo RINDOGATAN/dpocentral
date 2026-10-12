@@ -2,11 +2,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { signupRegionSettings } from "@/server/services/org-region";
+import { normEmail, pendingInvitesOf, settingsWithInvite, settingsWithoutInvite } from "@/server/services/members/invitations";
+import { invitationSignInUrl, sendInvitationEmail } from "@/server/services/members/invitation-email";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import { OrganizationRole, UserType } from "@prisma/client";
+import { OrganizationRole, UserType, type Prisma } from "@prisma/client";
 import {
   isPublicEmailDomain,
   ownerProvenEmailOf,
@@ -21,6 +23,7 @@ import {
   assertOneOrganizationPerAccount,
   getPilotStatus,
   pilotLocale,
+  assertPilotCapacity,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
@@ -388,16 +391,55 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       // Find user by email
       const user = await ctx.prisma.user.findUnique({
         where: { email: input.email },
       });
 
+      // Nobody has signed in with this address yet: keep an invitation on the
+      // organisation and e-mail it; the membership is created at their first
+      // sign-in (src/server/services/members/invitations.ts).
       if (!user) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "No user found with this email. They must sign up first.",
+        if (input.role === OrganizationRole.OWNER && ctx.membership.role !== "OWNER") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can invite an owner" });
+        }
+        const org = await ctx.prisma.organization.findUnique({
+          where: { id: ctx.organization.id },
+          select: { name: true, settings: true },
         });
+        const pending = pendingInvitesOf(org?.settings).filter((i) => normEmail(i.email) !== normEmail(input.email));
+        // Hosted pilot: pending invitations hold a place under the members cap.
+        await assertPilotCapacity(ctx.prisma, ctx.organization, "members", 1 + pending.length, locale);
+        const invite = {
+          email: normEmail(input.email),
+          role: input.role,
+          invitedAt: new Date().toISOString(),
+          invitedById: ctx.session.user.id,
+        };
+        await ctx.prisma.organization.update({
+          where: { id: ctx.organization.id },
+          data: { settings: settingsWithInvite(org?.settings, invite) as Prisma.InputJsonValue },
+        });
+        const emailSent = await sendInvitationEmail({
+          to: invite.email,
+          orgName: org?.name ?? "",
+          inviterName: ctx.session.user.name || ctx.session.user.email || "",
+          role: input.role,
+          locale,
+          signInUrl: invitationSignInUrl(),
+        });
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId: ctx.organization.id,
+            userId: ctx.session.user.id,
+            entityType: "OrganizationMember",
+            entityId: ctx.organization.id,
+            action: "INVITE",
+            changes: { email: invite.email, role: input.role, emailSent },
+          },
+        });
+        return { invited: true as const, emailSent, signInUrl: invitationSignInUrl() };
       }
 
       // Check if already a member
@@ -457,7 +499,45 @@ export const organizationRouter = createTRPCRouter({
         },
       });
 
-      return membership;
+      return { invited: false as const, membership };
+    }),
+
+  // Invitations waiting for the person's first sign-in (owners and admins).
+  listInvitations: adminOrgProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: { id: ctx.organization.id },
+        select: { settings: true },
+      });
+      return pendingInvitesOf(org?.settings).map((i) => ({ email: i.email, role: i.role, invitedAt: i.invitedAt }));
+    }),
+
+  // Cancel an invitation that has not been accepted yet (owners and admins).
+  cancelInvitation: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), email: z.string().email() }))
+    .mutation(async ({ ctx, input }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: { id: ctx.organization.id },
+        select: { settings: true },
+      });
+      const had = pendingInvitesOf(org?.settings).some((i) => normEmail(i.email) === normEmail(input.email));
+      if (!had) throw new TRPCError({ code: "NOT_FOUND", message: "Invitation not found" });
+      await ctx.prisma.organization.update({
+        where: { id: ctx.organization.id },
+        data: { settings: settingsWithoutInvite(org?.settings, input.email) as Prisma.InputJsonValue },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "OrganizationMember",
+          entityId: ctx.organization.id,
+          action: "INVITE_CANCELLED",
+          changes: { email: normEmail(input.email) },
+        },
+      });
+      return { success: true };
     }),
 
   // Update a member's role (procedure gate: OWNER/ADMIN; handler additionally

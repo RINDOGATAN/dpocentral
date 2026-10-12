@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { acceptPendingInvitations } from "@/server/services/members/invitations";
 import { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
@@ -274,6 +275,9 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        // Invitations waiting for this address become memberships now
+        // (src/server/services/members/invitations.ts). Never blocks sign-in.
+        await acceptPendingInvitations(prisma, user.id, user.email);
         // Stamped ONLY by a sign-in this product performed itself. A sibling's
         // token may say who the person is; it never carries this claim, and
         // platform-admin rights require it (src/server/trpc.ts).
