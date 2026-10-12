@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { transferMarkers } from "@/server/services/data-flows/transfer-markers";
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
 import { markConfirmed } from "@/server/services/template-items/mark";
@@ -17,6 +18,8 @@ import {
   generateFlowsForActivity,
   syncGeneratedFlows,
   takenOverMetadata,
+  isDraftFlow,
+  confirmedMetadata,
 } from "@/server/services/data-flows/auto-flows";
 
 // Generated flows (activity -> chain of its systems): see
@@ -931,6 +934,37 @@ export const dataInventoryRouter = createTRPCRouter({
       });
     }),
 
+  // The map's transfer markers: which systems send data outside the EEA,
+  // from the transfer records (src/server/services/data-flows/transfer-markers.ts).
+  mapTransferMarkers: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      const organizationId = ctx.organization.id;
+      const [assets, transfers] = await Promise.all([
+        ctx.prisma.dataAsset.findMany({
+          where: { organizationId },
+          select: { id: true, name: true, vendor: true, type: true },
+        }),
+        ctx.prisma.dataTransfer.findMany({
+          where: { organizationId, isActive: true },
+          select: { id: true, destinationCountry: true, destinationOrg: true, processingActivityId: true, isActive: true },
+          orderBy: { createdAt: "asc" },
+        }),
+      ]);
+      const activityIds = [...new Set(transfers.map((t) => t.processingActivityId).filter((id): id is string => !!id))];
+      const links = activityIds.length
+        ? await ctx.prisma.processingActivityAsset.findMany({
+            where: { processingActivityId: { in: activityIds }, processingActivity: { organizationId } },
+            select: { processingActivityId: true, dataAssetId: true },
+          })
+        : [];
+      const activityAssets = new Map<string, string[]>();
+      for (const l of links) {
+        activityAssets.set(l.processingActivityId, [...(activityAssets.get(l.processingActivityId) ?? []), l.dataAssetId]);
+      }
+      return transferMarkers(assets, transfers, activityAssets);
+    }),
+
   // Get a single data flow
   getFlow: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
@@ -1088,6 +1122,38 @@ export const dataInventoryRouter = createTRPCRouter({
     }),
 
   // Delete data flow
+  // Confirm a generated flow as it is (a draft "to confirm"): it becomes the
+  // organisation's own flow, is drawn solid and appears in the PDF reports.
+  confirmFlow: writerProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const current = await ctx.prisma.dataFlow.findFirst({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        select: { metadata: true },
+      });
+      if (!current) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Data flow not found" });
+      }
+      if (!isDraftFlow(current.metadata)) return { success: true, changed: false };
+
+      await ctx.prisma.dataFlow.updateMany({
+        where: { id: input.id, organizationId: ctx.organization.id },
+        data: {
+          metadata: confirmedMetadata(current.metadata, ctx.session.user.id, new Date()) as Prisma.InputJsonValue,
+        },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "DataFlow",
+          entityId: input.id,
+          action: "CONFIRM",
+        },
+      });
+      return { success: true, changed: true };
+    }),
+
   deleteFlow: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {

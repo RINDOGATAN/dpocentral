@@ -89,6 +89,11 @@ export function DataFlowVisualization({
     { enabled: !!organizationId }
   );
 
+  const { data: transferMarkerRows } = trpc.dataInventory.mapTransferMarkers.useQuery(
+    { organizationId },
+    { enabled: !!organizationId }
+  );
+
   const utils = trpc.useUtils();
 
   const createFlow = trpc.dataInventory.createFlow.useMutation({
@@ -121,9 +126,23 @@ export function DataFlowVisualization({
     onError: (error) => toast.error(error.message || t("dataFlow.deleteFailed")),
   });
 
+  const confirmFlow = trpc.dataInventory.confirmFlow.useMutation({
+    onSuccess: () => {
+      toast.success(tFlow("details.confirmed"));
+      utils.dataInventory.listFlows.invalidate();
+      setIsFlowPanelOpen(false);
+      setSelectedFlow(null);
+    },
+    onError: (error) => toast.error(error.message || t("dataFlow.updateFailed")),
+  });
+
   const dataLoading = assetsLoading || flowsLoading;
 
   // Transform assets to our format
+  const markerByAsset = useMemo(
+    () => new Map((transferMarkerRows ?? []).map((m) => [m.assetId, { transferIds: m.transferIds, countries: m.countries }])),
+    [transferMarkerRows]
+  );
   const assets: AssetData[] = useMemo(() => {
     return (assetsData?.assets ?? []).map((a) => ({
       id: a.id,
@@ -135,8 +154,9 @@ export function DataFlowVisualization({
       hostingType: a.hostingType,
       vendor: a.vendor,
       isProduction: a.isProduction,
+      transfersOutsideEea: markerByAsset.get(a.id) ?? null,
     }));
-  }, [assetsData]);
+  }, [assetsData, markerByAsset]);
 
   // Transform flows to our format
   const flows: FlowData[] = useMemo(() => {
@@ -571,6 +591,8 @@ export function DataFlowVisualization({
         }}
         onEdit={canWrite ? handleEditFlow : undefined}
         onDelete={isAdmin ? handleDeleteFlow : undefined}
+        onConfirm={canWrite ? (flow) => confirmFlow.mutate({ organizationId, id: flow.id }) : undefined}
+        confirming={confirmFlow.isPending}
       />
 
       {/* Create Flow Sheet */}

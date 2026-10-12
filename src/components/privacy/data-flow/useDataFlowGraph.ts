@@ -36,6 +36,8 @@ export interface AssetData {
   hostingType?: string | null;
   vendor?: string | null;
   isProduction: boolean;
+  /** Transfers outside the EEA placed on this system (map marker). */
+  transfersOutsideEea?: { transferIds: string[]; countries: string[] } | null;
 }
 
 export interface AssetNodeData extends Record<string, unknown> {
