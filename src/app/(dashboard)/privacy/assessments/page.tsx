@@ -34,6 +34,7 @@ import { LicenceLock } from "@/components/premium/licence-lock";
 import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 
 import { formatDateIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
   IN_PROGRESS: "border-primary text-primary",
@@ -53,6 +54,7 @@ export default function AssessmentsPage() {
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("assessments");
   const { label: enumLabel } = useEnumLabels();
   const { organization } = useOrganization();
+  const { canWrite } = useOrgRole();
 
   const { data: assessmentsData, isLoading } = trpc.assessment.list.useQuery(
     { organizationId: organization?.id ?? "", search: filters.q || undefined },
@@ -135,13 +137,15 @@ export default function AssessmentsPage() {
               <span className="hidden sm:inline">{t("templates")}</span>
             </Button>
           </Link>
-          <Link href="/privacy/assessments/new" className="flex-1 sm:flex-none">
-            <Button className="w-full sm:w-auto">
-              <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">{t("newAssessment")}</span>
-              <span className="sm:hidden">{t("newAssessmentShort")}</span>
-            </Button>
-          </Link>
+          {canWrite && (
+            <Link href="/privacy/assessments/new" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t("newAssessment")}</span>
+                <span className="sm:hidden">{t("newAssessmentShort")}</span>
+              </Button>
+            </Link>
+          )}
           </>
         }
       />
@@ -285,12 +289,14 @@ export default function AssessmentsPage() {
             <ClipboardCheck className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>{t("emptyAll.title")}</p>
             <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
-            <Link href="/privacy/assessments/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("newAssessment")}
-              </Button>
-            </Link>
+            {canWrite && (
+              <Link href="/privacy/assessments/new">
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("newAssessment")}
+                </Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
       ) : (

@@ -47,6 +47,7 @@ import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForRiskTier } from "@/config/status-tone";
 
 import { formatDateIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
@@ -65,6 +66,7 @@ export default function VendorsPage() {
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("vendors");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
+  const { canWrite } = useOrgRole();
 
   const {
     data: vendorsPages,
@@ -152,13 +154,15 @@ export default function VendorsPage() {
               <span className="hidden sm:inline">{t("questionnaires")}</span>
             </Button>
           </Link>
-          <Link href="/privacy/vendors/new" className="flex-1 sm:flex-none">
-            <Button className="w-full sm:w-auto">
-              <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">{t("addVendor")}</span>
-              <span className="sm:hidden">{t("addVendorShort")}</span>
-            </Button>
-          </Link>
+          {canWrite && (
+            <Link href="/privacy/vendors/new" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t("addVendor")}</span>
+                <span className="sm:hidden">{t("addVendorShort")}</span>
+              </Button>
+            </Link>
+          )}
           </>
         }
       />
@@ -213,12 +217,14 @@ export default function VendorsPage() {
                   </p>
                 </div>
               </div>
-              <Link href="/privacy/vendors/new?catalog=true">
-                <Button className="w-full sm:w-auto">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {t("catalog.addFromCatalog")}
-                </Button>
-              </Link>
+              {canWrite && (
+                <Link href="/privacy/vendors/new?catalog=true">
+                  <Button className="w-full sm:w-auto">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {t("catalog.addFromCatalog")}
+                  </Button>
+                </Link>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -340,12 +346,14 @@ export default function VendorsPage() {
             <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>{t("emptyAll.title")}</p>
             <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
-            <Link href="/privacy/vendors/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("addVendor")}
-              </Button>
-            </Link>
+            {canWrite && (
+              <Link href="/privacy/vendors/new">
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("addVendor")}
+                </Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
       ) : (

@@ -61,6 +61,7 @@ import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { useOrgRole } from "@/lib/use-org-role";
 
 
 const DataFlowVisualization = dynamic(
@@ -119,6 +120,7 @@ export default function DataInventoryPage() {
   const tAssetType = useTranslations("pages.newAsset.assetType");
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("data-inventory");
   const { organization } = useOrganization();
+  const { canWrite } = useOrgRole();
   const router = useRouter();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [activityDialogOpen, setActivityDialogOpen] = useState(false);
@@ -252,13 +254,15 @@ export default function DataInventoryPage() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/privacy/data-inventory/new" className="flex-1 sm:flex-none">
-            <Button className="w-full sm:w-auto">
-              <Plus className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">{t("addAsset")}</span>
-              <span className="sm:hidden">{t("addAssetShort")}</span>
-            </Button>
-          </Link>
+          {canWrite && (
+            <Link href="/privacy/data-inventory/new" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t("addAsset")}</span>
+                <span className="sm:hidden">{t("addAssetShort")}</span>
+              </Button>
+            </Link>
+          )}
           </>
         }
       />
@@ -357,12 +361,14 @@ export default function DataInventoryPage() {
                 <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{t("emptyAssets.title")}</p>
                 <p className="text-sm mb-4">{t("emptyAssets.subtitle")}</p>
-                <Link href="/privacy/data-inventory/new">
-                  <Button>
-                    <Plus className="w-4 h-4 mr-2" />
-                    {t("addAsset")}
-                  </Button>
-                </Link>
+                {canWrite && (
+                  <Link href="/privacy/data-inventory/new">
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      {t("addAsset")}
+                    </Button>
+                  </Link>
+                )}
               </CardContent>
             </Card>
           )}
@@ -373,12 +379,14 @@ export default function DataInventoryPage() {
             <ListPageSkeleton />
           ) : processingActivities.length > 0 ? (
             <>
-              <div className="flex justify-end mb-3">
-                <Button onClick={() => setActivityDialogOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("addActivity")}
-                </Button>
-              </div>
+              {canWrite && (
+                <div className="flex justify-end mb-3">
+                  <Button onClick={() => setActivityDialogOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    {t("addActivity")}
+                  </Button>
+                </div>
+              )}
               <div className="flex flex-col gap-4">
                 {processingActivities.map((activity) => (
                   <Link key={activity.id} href={`/privacy/data-inventory/activities/${activity.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
@@ -448,10 +456,12 @@ export default function DataInventoryPage() {
                 <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>{t("emptyActivities.title")}</p>
                 <p className="text-sm mb-4">{t("emptyActivities.subtitle")}</p>
-                <Button onClick={() => setActivityDialogOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("addActivity")}
-                </Button>
+                {canWrite && (
+                  <Button onClick={() => setActivityDialogOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    {t("addActivity")}
+                  </Button>
+                )}
               </CardContent>
             </Card>
           )}
