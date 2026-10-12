@@ -8,7 +8,8 @@
  * left-aligned title over a short "Product | Price" table): one row (what is
  * offered | what it costs), the "Start free" button and a small "Subscribe"
  * link, then one quiet line to the contact wizard. Under the price row, one
- * small line links the plan's terms and sub-processors (same tab); the block
+ * small line links the plan's terms and sub-processors (same tab; for the
+ * dollar plan, also the DPA); the block
  * says nothing about tax.
  * Copy and links: src/landing/config/pricing.ts. The same component, copy
  * and classes are on AI Sentinel's landing.
@@ -17,12 +18,13 @@
  * header link jumps to it and nothing shifts.
  */
 
+import { Fragment } from "react";
 import {
   PLAN_PAYMENT_LINK,
   PRICING_ANCHOR,
   PRICING_CONTACT_URL,
   PRICING_COPY,
-  PRICING_LEGAL_URL,
+  pricingLegalLinks,
   PRICING_PILOT_DAYS,
 } from "../config/pricing";
 import type { LandingLocale } from "../config/storefront";
@@ -36,7 +38,6 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
   // Spanish: euros; English: euros in the EU, US dollars elsewhere (src/lib/region.ts).
   const currency = currencyFor(locale, useIsEu());
   const c = PRICING_COPY[locale];
-  const legal = PRICING_LEGAL_URL[locale];
   const quiet = "underline underline-offset-4 hover:text-foreground transition-colors";
   const anchor = PRICING_ANCHOR[locale];
   const other = PRICING_ANCHOR[locale === "en" ? "es" : "en"];
@@ -77,13 +78,14 @@ export default function PricingSection({ locale }: { locale: LandingLocale }) {
             </tbody>
           </table>
           <p className="px-5 sm:px-6 pb-4 sm:-mt-2 text-xs text-muted-foreground font-body" data-testid="pricing-legal">
-            <a href={legal.terms} className={quiet} data-testid="pricing-terms">
-              {c.legal.terms}
-            </a>
-            <span aria-hidden="true"> · </span>
-            <a href={legal.subprocessors} className={quiet} data-testid="pricing-subprocessors">
-              {c.legal.subprocessors}
-            </a>
+            {pricingLegalLinks(locale, currency).map(({ key, href }, i) => (
+              <Fragment key={key}>
+                {i > 0 && <span aria-hidden="true"> · </span>}
+                <a href={href} className={quiet} data-testid={`pricing-${key}`}>
+                  {c.legal[key]}
+                </a>
+              </Fragment>
+            ))}
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border px-5 sm:px-6 py-5">
             <a href="/sign-in" className="btn-primary" data-testid="pricing-start">

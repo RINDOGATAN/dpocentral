@@ -17,7 +17,7 @@
  * in Spanish ("en la nube UE").
  *
  * Under the price row, one small line links the plan's terms and its
- * sub-processors on the storefront; the block says
+ * sub-processors on the storefront (for the dollar plan, also the DPA; see pricingLegalLinks); the block says
  * nothing about tax.
  *
  * Payment links: the euro link is the storefront's (src/content/plan-nube-ue.ts),
@@ -44,7 +44,7 @@ export const PRICING_CONTACT_URL: Record<LandingLocale, string> = {
   es: `${STOREFRONT_URL}/es/contact/managed`,
 };
 
-/** The plan's terms and sub-processor pages on the storefront, per language. */
+/** The plan's terms and sub-processor pages on the storefront, per language (the euro plan). */
 export const PRICING_LEGAL_URL: Record<LandingLocale, { terms: string; subprocessors: string }> = {
   en: {
     terms: `${STOREFRONT_URL}/legal/eu-cloud-plan-terms`,
@@ -55,6 +55,27 @@ export const PRICING_LEGAL_URL: Record<LandingLocale, { terms: string; subproces
     subprocessors: `${STOREFRONT_URL}/es/legal/subencargados-plan-nube-ue`,
   },
 };
+
+/**
+ * The plan sold in US dollars (English page, outside the 27 EU states): its own terms
+ * (English only) and the processing agreement and sub-processor list it shares with the
+ * euro plan.
+ */
+export const CLOUD_PLAN_LEGAL_URL = {
+  terms: `${STOREFRONT_URL}/legal/cloud-plan-terms`,
+  dpa: `${STOREFRONT_URL}/legal/eu-cloud-plan-dpa`,
+  subprocessors: `${STOREFRONT_URL}/legal/eu-cloud-plan-subprocessors`,
+} as const;
+
+export type PricingLegalKey = "terms" | "dpa" | "subprocessors";
+
+/** The legal links under the price row, for the currency the page shows. */
+export function pricingLegalLinks(locale: LandingLocale, currency: Currency): { key: PricingLegalKey; href: string }[] {
+  if (locale === "en" && currency === "USD") {
+    return (["terms", "dpa", "subprocessors"] as const).map((key) => ({ key, href: CLOUD_PLAN_LEGAL_URL[key] }));
+  }
+  return (["terms", "subprocessors"] as const).map((key) => ({ key, href: PRICING_LEGAL_URL[locale][key] }));
+}
 
 /** The pilot's days, as the caps enforce them. */
 export const PRICING_PILOT_DAYS = PILOT_DAYS;
@@ -70,8 +91,8 @@ export interface PricingCopy {
   price: (days: number, currency: Currency) => string;
   start: string;
   subscribe: string;
-  /** The small line under the price row: the two legal links' labels. */
-  legal: { terms: string; subprocessors: string };
+  /** The small line under the price row: the legal links' labels. */
+  legal: Record<PricingLegalKey, string>;
   /** The quiet line: the question, then the linked request. */
   contact: { question: string; link: string };
 }
@@ -91,7 +112,7 @@ export const PRICING_COPY: Record<LandingLocale, PricingCopy> = {
     price: (days, currency) => `Start free (${days}-day trial), then ${PLAN_PRICE_EN[currency]}`,
     start: "Start free",
     subscribe: "Subscribe",
-    legal: { terms: "Terms", subprocessors: "Sub-processors" },
+    legal: { terms: "Terms", dpa: "DPA", subprocessors: "Sub-processors" },
     contact: { question: "Managed instance or your own hardware?", link: "Get a quotation." },
   },
   es: {
@@ -102,7 +123,7 @@ export const PRICING_COPY: Record<LandingLocale, PricingCopy> = {
     price: (days) => `Empieza gratis (${days} días de prueba); después, 179 € al mes o 1.800 € al año`,
     start: "Empieza gratis",
     subscribe: "Contratar",
-    legal: { terms: "Condiciones", subprocessors: "Subencargados" },
+    legal: { terms: "Condiciones", dpa: "Encargo del tratamiento", subprocessors: "Subencargados" },
     contact: { question: "¿Instancia gestionada o tu propio hardware?", link: "Solicita una oferta." },
   },
 };

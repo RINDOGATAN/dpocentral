@@ -22,6 +22,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import StartupsHeader from "@/landing/components/StartupsHeader";
 import PricingSection from "@/landing/components/PricingSection";
+import { RegionProvider } from "@/components/region-provider";
 import LandingSections from "@/landing/components/LandingSections";
 import { PLAN_PAYMENT_LINK, PRICING_COPY, PRICING_LEGAL_URL, PRICING_PILOT_DAYS } from "@/landing/config/pricing";
 import { PILOT_DAYS } from "@/server/services/pilot/caps";
@@ -150,35 +151,59 @@ describe("pricing block", () => {
 });
 
 describe("pricing block: legal links, no tax", () => {
-  const LINKS = {
-    en: {
-      terms: ["Terms", "https://www.todo.law/legal/eu-cloud-plan-terms"],
-      subprocessors: ["Sub-processors", "https://www.todo.law/legal/eu-cloud-plan-subprocessors"],
+  // The page's currency picks the documents: the dollar plan (English, outside the EU) links
+  // its own terms, the DPA and the sub-processor list; the euro plan keeps its terms and list.
+  const CASES = {
+    "en, dollars": {
+      html: () => section("en"),
+      links: [
+        ["terms", "Terms", "https://www.todo.law/legal/cloud-plan-terms"],
+        ["dpa", "DPA", "https://www.todo.law/legal/eu-cloud-plan-dpa"],
+        ["subprocessors", "Sub-processors", "https://www.todo.law/legal/eu-cloud-plan-subprocessors"],
+      ],
+    },
+    "en, euros (EU visitor)": {
+      html: () => renderToStaticMarkup(
+        <RegionProvider eu>
+          <PricingSection locale="en" />
+        </RegionProvider>,
+      ),
+      links: [
+        ["terms", "Terms", "https://www.todo.law/legal/eu-cloud-plan-terms"],
+        ["subprocessors", "Sub-processors", "https://www.todo.law/legal/eu-cloud-plan-subprocessors"],
+      ],
     },
     es: {
-      terms: ["Condiciones", "https://www.todo.law/es/legal/condiciones-plan-nube-ue"],
-      subprocessors: ["Subencargados", "https://www.todo.law/es/legal/subencargados-plan-nube-ue"],
+      html: () => section("es"),
+      links: [
+        ["terms", "Condiciones", "https://www.todo.law/es/legal/condiciones-plan-nube-ue"],
+        ["subprocessors", "Subencargados", "https://www.todo.law/es/legal/subencargados-plan-nube-ue"],
+      ],
     },
   } as const;
 
-  it.each(["en", "es"] as const)("%s: one small line under the price row with the terms and sub-processor links", (locale) => {
-    const html = section(locale);
+  it.each(Object.keys(CASES) as (keyof typeof CASES)[])("%s: one small line under the price row with the plan's legal links", (name) => {
+    const { html: render, links } = CASES[name];
+    const html = render();
     const line = html.match(/<p[^>]*data-testid="pricing-legal"[^>]*>([\s\S]*?)<\/p>/);
     expect(line).not.toBeNull();
     expect(html.match(/data-testid="pricing-legal"/g)?.length).toBe(1);
     // Under the price row, before the buttons.
     expect(html.indexOf('data-testid="pricing-legal"')).toBeGreaterThan(html.indexOf('data-testid="pricing-price"'));
     expect(html.indexOf('data-testid="pricing-legal"')).toBeLessThan(html.indexOf('data-testid="pricing-start"'));
-    for (const key of ["terms", "subprocessors"] as const) {
-      const [label, href] = LINKS[locale][key];
-      expect(PRICING_LEGAL_URL[locale][key]).toBe(href);
+    for (const [key, label, href] of links) {
       const a = line![1].match(new RegExp(`<a([^>]*data-testid="pricing-${key}"[^>]*)>([^<]*)</a>`));
       expect(a?.[1]).toContain(`href="${href}"`);
       expect(a?.[2]).toBe(label);
       // Same tab.
       expect(a?.[1]).not.toContain("target=");
     }
-    expect(text(line![1]).trim()).toBe(`${LINKS[locale].terms[0]} · ${LINKS[locale].subprocessors[0]}`);
+    expect(text(line![1]).trim()).toBe(links.map(([, label]) => label).join(" · "));
+  });
+
+  it("keeps the euro plan's documents in PRICING_LEGAL_URL", () => {
+    expect(PRICING_LEGAL_URL.en.terms).toBe("https://www.todo.law/legal/eu-cloud-plan-terms");
+    expect(PRICING_LEGAL_URL.es.terms).toBe("https://www.todo.law/es/legal/condiciones-plan-nube-ue");
   });
 
   it.each(["en", "es"] as const)("%s: never mentions VAT, IVA, reverse charge or tax", (locale) => {
