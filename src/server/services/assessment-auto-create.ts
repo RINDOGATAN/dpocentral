@@ -27,6 +27,20 @@ interface AutoCreateParams {
   vendorName?: string;
   assessmentType: AssessmentType;
   reason: string;
+  /** Language of the draft's name and description; English when absent. */
+  locale?: "en" | "es";
+}
+
+/** The draft's name before the vendor, in the given language. */
+function autoAssessmentTypeName(type: AssessmentType, locale: "en" | "es"): string {
+  if (locale === "es") {
+    if (type === "LIA") return "Evaluación del interés legítimo";
+    if (type === "DPIA") return "Evaluación de impacto relativa a la protección de datos (EIPD)";
+    return `Evaluación ${type}`;
+  }
+  if (type === "LIA") return "Legitimate Interests Assessment";
+  if (type === "DPIA") return "Data Protection Impact Assessment";
+  return `${type} Assessment`;
 }
 
 interface AutoCreateResult {
@@ -52,6 +66,7 @@ export async function createAssessmentFromActivity(
     vendorName,
     assessmentType,
     reason,
+    locale = "en",
   } = params;
 
   // The DPIA needs no licence on the pilot tier, but it counts against the
@@ -62,7 +77,10 @@ export async function createAssessmentFromActivity(
       return createAssessmentFromActivity({
         ...params,
         assessmentType: "LIA",
-        reason: `${reason} (LIA fallback: the pilot tier's free DPIAs are used)`,
+        reason:
+          locale === "es"
+            ? `${reason} (evaluación del interés legítimo en su lugar: ya se han usado las EIPD gratuitas del piloto)`
+            : `${reason} (LIA fallback: the pilot tier's free DPIAs are used)`,
       });
     }
   } else if (isPremiumAssessmentType(assessmentType)) {
@@ -76,7 +94,10 @@ export async function createAssessmentFromActivity(
         return createAssessmentFromActivity({
           ...params,
           assessmentType: "LIA",
-          reason: `${reason} (LIA fallback — DPIA requires premium license)`,
+          reason:
+            locale === "es"
+              ? `${reason} (evaluación del interés legítimo en su lugar: la EIPD necesita una licencia)`
+              : `${reason} (LIA fallback: DPIA requires premium license)`,
         });
       }
       return {
@@ -109,14 +130,14 @@ export async function createAssessmentFromActivity(
   }
 
   // Build assessment name
-  const typeName = assessmentType === "LIA"
-    ? "Legitimate Interests Assessment"
-    : assessmentType === "DPIA"
-      ? "Data Protection Impact Assessment"
-      : `${assessmentType} Assessment`;
+  const typeName = autoAssessmentTypeName(assessmentType, locale);
   const name = vendorName ? recordName(typeName, vendorName) : typeName;
-  // A draft created before 11 Oct 2026 carries the older name.
-  const names = vendorName ? [name, legacyRecordName(typeName, vendorName)] : [name];
+  // A draft created before 11 Oct 2026 carries the older name; one created in
+  // the other language counts as the same draft.
+  const otherTypeName = autoAssessmentTypeName(assessmentType, locale === "es" ? "en" : "es");
+  const names = vendorName
+    ? [name, legacyRecordName(typeName, vendorName), recordName(otherTypeName, vendorName), legacyRecordName(otherTypeName, vendorName)]
+    : [name, otherTypeName];
 
   // Check for duplicate
   const existing = await tx.assessment.findFirst({

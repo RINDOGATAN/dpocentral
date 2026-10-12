@@ -2,6 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
+import { localizeQuestionnaire } from "@/config/vendor-questionnaires-es";
+import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { markConfirmed } from "@/server/services/template-items/mark";
 import { TRPCError } from "@trpc/server";
@@ -697,9 +699,12 @@ export const vendorRouter = createTRPCRouter({
 
   // List questionnaire templates
   listQuestionnaires: organizationProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx }) => {
-      return ctx.prisma.vendorQuestionnaire.findMany({
+    .input(z.object({ organizationId: z.string(), locale: z.enum(["en", "es"]).optional() }))
+    .query(async ({ ctx, input }) => {
+      // The built-in questionnaire is stored in English and shown in the
+      // reader's language (src/config/vendor-questionnaires-es.ts).
+      const locale = input.locale ?? (localeFromCookieGetter(ctx.getCookie) === "es" ? "es" : "en");
+      const rows = await ctx.prisma.vendorQuestionnaire.findMany({
         where: {
           OR: [
             { organizationId: ctx.organization.id },
@@ -709,6 +714,7 @@ export const vendorRouter = createTRPCRouter({
         },
         orderBy: [{ isSystem: "desc" }, { name: "asc" }],
       });
+      return rows.map((q) => localizeQuestionnaire(q, locale));
     }),
 
   // Note: vendor self-reported compliance questionnaires (the public "vendor
