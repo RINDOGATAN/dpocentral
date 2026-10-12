@@ -3,6 +3,7 @@
 
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type Session, getServerSession } from "next-auth";
+import { COUNTRY_HEADER } from "@/lib/region";
 import { cookies } from "next/headers";
 import superjson from "superjson";
 import { ZodError } from "zod";
@@ -34,6 +35,12 @@ interface CreateContextOptions {
    * Used only for the public form's daily limit, and only as a keyed hash.
    */
   clientIp?: string | null;
+  /**
+   * The visitor's country as the hosting platform reports it (two letters),
+   * else null. Used only to record whether a new organisation was created
+   * from the EU (src/server/services/org-region.ts).
+   */
+  country?: string | null;
 }
 
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
@@ -42,6 +49,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     prisma,
     getCookie: opts.getCookie,
     clientIp: opts.clientIp ?? null,
+    country: opts.country ?? null,
   };
 };
 
@@ -62,6 +70,7 @@ export const createTRPCContext = async (opts: { req: Request }) => {
     session,
     getCookie: (name: string) => cookieStore.get(name)?.value,
     clientIp: clientIpOf(opts.req),
+    country: opts.req.headers.get(COUNTRY_HEADER)?.trim() || null,
   });
 };
 

@@ -28,3 +28,14 @@ export function getCurrency(): Currency {
 export function formatPrice(amount: number, currency: Currency = getCurrency()): string {
   return currency === "USD" ? `$${amount}` : `€${amount}`;
 }
+
+/**
+ * A price written for a sentence in the page's language: Spanish pages
+ * always in euros, after the amount ("1.800 €"); English pages in the
+ * region's currency ("€1,800" or "$1,800").
+ */
+export function formatPriceIn(amount: number, locale: string | null | undefined, currency: Currency): string {
+  if (locale?.toLowerCase().startsWith("es")) return `${amount.toLocaleString("es-ES", { useGrouping: "always" } as Intl.NumberFormatOptions)} €`;
+  const n = amount.toLocaleString("en-US");
+  return currency === "USD" ? `$${n}` : `€${n}`;
+}

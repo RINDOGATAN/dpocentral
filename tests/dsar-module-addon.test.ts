@@ -17,6 +17,7 @@
  * Prisma is module-mocked.
  */
 
+import { formatPriceIn } from "@/lib/currency";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -51,7 +52,7 @@ import { dsarRouter } from "@/server/routers/privacy/dsar";
 import { issueFormToken } from "@/server/services/dsar/public-intake-guard";
 import {
   countPublicFormRequests,
-  DSAR_ADDON_PRICE_LINE,
+  DSAR_ADDON_MONTHLY_PRICE,
   DSAR_PUBLIC_SUBMISSION,
   dsarModuleGate,
   effectiveRetentionDays,
@@ -357,11 +358,15 @@ describe("retention", () => {
 });
 
 describe("the add-on's words", () => {
-  it("states the price in US dollars in English and in euros in Spanish", () => {
-    expect(en.dsarModule.addOnLine).toBe(DSAR_ADDON_PRICE_LINE.en);
-    expect(es.dsarModule.addOnLine).toBe(DSAR_ADDON_PRICE_LINE.es);
-    expect(en.dsarModule.addOnLine).toBe("Available as an add-on: $49 a month");
-    expect(es.dsarModule.addOnLine).toBe("Disponible como complemento: 49 € al mes");
+  it("takes the price as a parameter, in the currency of the region rule", () => {
+    expect(en.dsarModule.addOnLine).toBe("Available as an add-on: {price} a month");
+    expect(es.dsarModule.addOnLine).toBe("Disponible como complemento: {price} al mes");
+    expect(DSAR_ADDON_MONTHLY_PRICE).toBe(49);
+    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "en", "USD")).toBe("$49");
+    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "en", "EUR")).toBe("€49");
+    expect(formatPriceIn(DSAR_ADDON_MONTHLY_PRICE, "es", "USD")).toBe("49 €");
+    expect(formatPriceIn(1800, "es", "EUR")).toBe("1.800 €");
+    expect(formatPriceIn(1800, "en", "USD")).toBe("$1,800");
   });
 
   it("no longer claims an ID upload the form never asks for", () => {

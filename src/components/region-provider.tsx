@@ -12,7 +12,7 @@
 import { createContext, useCallback, useContext } from "react";
 import { useLocale } from "next-intl";
 import { currencyFor, type Currency } from "@/lib/region";
-import { formatPrice } from "@/lib/currency";
+import { formatPrice, formatPriceIn } from "@/lib/currency";
 
 const RegionContext = createContext(false);
 
@@ -39,6 +39,13 @@ export function useNamesEuHosting(): boolean {
   const eu = useIsEu();
   const locale = useLocale();
   return eu || locale.toLowerCase().startsWith("es");
+}
+
+/** A price for a sentence in the page's language ("49 €", "€49", "$49"). */
+export function usePriceInSentence(): (amount: number) => string {
+  const currency = useDisplayCurrency();
+  const locale = useLocale();
+  return useCallback((amount: number) => formatPriceIn(amount, locale, currency), [locale, currency]);
 }
 
 /** formatPrice bound to the page's currency. */

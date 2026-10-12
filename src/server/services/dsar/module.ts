@@ -39,11 +39,8 @@ export const PAID_PUBLIC_REQUESTS_PER_MONTH = 10;
 /** The time zone of the calendar month. */
 export const DSAR_MONTH_TIME_ZONE = "Europe/Madrid";
 
-/** The add-on's price as the menu states it: euros in Spanish, US dollars in English. */
-export const DSAR_ADDON_PRICE_LINE = {
-  en: "Available as an add-on: $49 a month",
-  es: "Disponible como complemento: 49 € al mes",
-} as const;
+/** The add-on's monthly price; the messages take it as {price}. */
+export { DSAR_ADDON_MONTHLY_PRICE } from "@/lib/dsar-addon";
 
 /** The organisation audit-log action of a request received through the public form. */
 export const DSAR_PUBLIC_SUBMISSION = "DSAR_PUBLIC_SUBMISSION";
