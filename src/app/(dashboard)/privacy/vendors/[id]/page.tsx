@@ -56,6 +56,8 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { toneChip } from "@/config/status-palette";
 
 import { formatDateIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
+import { websiteHost, websiteHref } from "@/lib/website";
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
@@ -75,6 +77,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const { canWrite, isAdmin } = useOrgRole();
   const t = useTranslations("toasts");
   const locale = useLocale();
   const tp = useTranslations("pages.vendorDetail");
@@ -256,11 +259,15 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
         </div>
         <div className="flex flex-wrap gap-2">
           <ConfirmDraftButton kind="vendor" id={vendor.id} record={vendor} />
-          <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
-            {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-            {tp("delete")}
-          </Button>
-          <Button onClick={openEditDialog}>{tp("edit")}</Button>
+          {isAdmin && (
+            <Button variant="outline" onClick={handleDelete} disabled={deleteVendor.isPending}>
+              {deleteVendor.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              {tp("delete")}
+            </Button>
+          )}
+          {canWrite && (
+            <Button onClick={openEditDialog}>{tp("edit")}</Button>
+          )}
         </div>
       </div>
 
@@ -274,12 +281,12 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
             </div>
             {vendor.website ? (
               <a
-                href={vendor.website}
+                href={websiteHref(vendor.website)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline flex items-center gap-1"
               >
-                {new URL(vendor.website).hostname}
+                {websiteHost(vendor.website)}
                 <ExternalLink className="w-3 h-3" />
               </a>
             ) : (

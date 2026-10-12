@@ -36,6 +36,7 @@ import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneForRiskTier } from "@/config/status-tone";
 
 import { formatDateIn, formatNumberIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
 // Severity goes through the shared tones. The old map printed CRITICAL as
 // white on mid grey, 2.59 to 1, and told the four levels apart by weight alone.
 
@@ -54,6 +55,7 @@ export default function IncidentsPage() {
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("incidents");
   const { organization } = useOrganization();
+  const { isOfficer } = useOrgRole();
 
   const {
     data: incidentsPages,
@@ -129,12 +131,14 @@ export default function IncidentsPage() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/privacy/incidents/new" className="flex-1 sm:flex-none">
-            <Button className="w-full sm:w-auto">
-              <Plus className="w-4 h-4 mr-2" />
-              {t("reportIncident")}
-            </Button>
-          </Link>
+          {isOfficer && (
+            <Link href="/privacy/incidents/new" className="flex-1 sm:flex-none">
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 mr-2" />
+                {t("reportIncident")}
+              </Button>
+            </Link>
+          )}
           </>
         }
       />
@@ -275,12 +279,14 @@ export default function IncidentsPage() {
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>{t("emptyAll.title")}</p>
             <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
-            <Link href="/privacy/incidents/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("reportIncident")}
-              </Button>
-            </Link>
+            {isOfficer && (
+              <Link href="/privacy/incidents/new">
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("reportIncident")}
+                </Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
       ) : (

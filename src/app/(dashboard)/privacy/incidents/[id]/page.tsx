@@ -55,6 +55,7 @@ import { breachWindowEnd } from "@/lib/breach-window";
 import { parseDateInput } from "@/lib/date-input";
 
 import { formatDateIn, formatDateTimeIn, formatNumberIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
 const severityColors: Record<string, string> = {
   LOW: "border-primary text-primary",
   MEDIUM: "border-muted-foreground text-muted-foreground",
@@ -97,6 +98,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const { id } = use(params);
   const router = useRouter();
   const { organization } = useOrganization();
+  const { isOfficer } = useOrgRole();
   const t = useTranslations("toasts");
   const locale = useLocale();
   const tp = useTranslations("pages.incidentDetail");
@@ -286,12 +288,14 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link href={`/privacy/incidents/${id}/edit`}>
-            <Button variant="outline">
-              <Edit className="w-4 h-4 mr-2" />
-              {tCommon("edit")}
-            </Button>
-          </Link>
+          {isOfficer && (
+            <Link href={`/privacy/incidents/${id}/edit`}>
+              <Button variant="outline">
+                <Edit className="w-4 h-4 mr-2" />
+                {tCommon("edit")}
+              </Button>
+            </Link>
+          )}
           {incident.status !== "CLOSED" && incident.status !== "FALSE_POSITIVE" && (
             <Button
               variant="outline"

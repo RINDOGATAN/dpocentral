@@ -41,6 +41,7 @@ import {
   type AssetNode as AssetNodeType,
   type FlowEdge as FlowEdgeType,
 } from "./useDataFlowGraph";
+import { useOrgRole } from "@/lib/use-org-role";
 
 const nodeTypes = {
   assetNode: AssetNode,
@@ -64,6 +65,7 @@ export function DataFlowVisualization({
   height = "500px",
 }: DataFlowVisualizationProps) {
   const router = useRouter();
+  const { canWrite, isAdmin } = useOrgRole();
   const t = useTranslations("toasts");
   const tFlow = useTranslations("dataFlow");
   const tConfirm = useTranslations("confirms");
@@ -409,18 +411,22 @@ export function DataFlowVisualization({
           <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <p>{tFlow("empty.noFlowsTitle")}</p>
           <p className="text-sm mb-4">{tFlow("empty.noFlowsBody")}</p>
-          <Button onClick={() => setIsCreateFlowOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            {tFlow("sheet.createFlow")}
-          </Button>
-          <CreateFlowSheet
-            isOpen={isCreateFlowOpen}
-            onClose={() => setIsCreateFlowOpen(false)}
-            assets={assets}
-            onSubmit={handleCreateFlow}
-            isSubmitting={createFlow.isPending}
-            error={createFlow.error?.message}
-          />
+          {canWrite && (
+            <>
+            <Button onClick={() => setIsCreateFlowOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {tFlow("sheet.createFlow")}
+            </Button>
+            <CreateFlowSheet
+              isOpen={isCreateFlowOpen}
+              onClose={() => setIsCreateFlowOpen(false)}
+              assets={assets}
+              onSubmit={handleCreateFlow}
+              isSubmitting={createFlow.isPending}
+              error={createFlow.error?.message}
+            />
+            </>
+          )}
         </CardContent>
       </Card>
     );
@@ -434,10 +440,12 @@ export function DataFlowVisualization({
           <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
           <p>{tFlow("empty.noAssetFlowsTitle")}</p>
           <p className="text-sm mb-4">{tFlow("empty.noAssetFlowsBody")}</p>
-          <Button onClick={() => setIsCreateFlowOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            {tFlow("sheet.createFlow")}
-          </Button>
+          {canWrite && (
+            <Button onClick={() => setIsCreateFlowOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {tFlow("sheet.createFlow")}
+            </Button>
+          )}
           <CreateFlowSheet
             isOpen={isCreateFlowOpen}
             onClose={() => setIsCreateFlowOpen(false)}
@@ -512,6 +520,7 @@ export function DataFlowVisualization({
 
             {/* Add-flow CTA (right) */}
             <Panel position="top-right" className="flex gap-2">
+              {canWrite && (
               <Button
                 size="sm"
                 variant="outline"
@@ -522,6 +531,7 @@ export function DataFlowVisualization({
                 {/* Icon only on a phone, where the filters need the width. */}
                 <span className="hidden sm:inline">{tFlow("actions.addFlow")}</span>
               </Button>
+              )}
             </Panel>
 
             {/* SVG markers — one arrowhead per sensitivity class */}
@@ -559,8 +569,8 @@ export function DataFlowVisualization({
           setIsFlowPanelOpen(false);
           setSelectedFlow(null);
         }}
-        onEdit={handleEditFlow}
-        onDelete={handleDeleteFlow}
+        onEdit={canWrite ? handleEditFlow : undefined}
+        onDelete={isAdmin ? handleDeleteFlow : undefined}
       />
 
       {/* Create Flow Sheet */}

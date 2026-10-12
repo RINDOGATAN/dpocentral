@@ -61,6 +61,7 @@ import { useEnumLabels } from "@/lib/enum-labels";
 import { toneForSensitivity } from "@/config/status-tone";
 
 import { formatDateIn } from "@/lib/utils";
+import { useOrgRole } from "@/lib/use-org-role";
 const DataFlowVisualization = dynamic(
   () => import("@/components/privacy/data-flow/DataFlowVisualization").then((m) => m.DataFlowVisualization),
   { loading: () => <div className="flex items-center justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div> }
@@ -101,6 +102,7 @@ export default function DataAssetDetailPage() {
   const tabParam = useSearchParams().get("tab");
   const initialTab = tabParam === "activities" || tabParam === "flows" ? tabParam : "elements";
   const { organization } = useOrganization();
+  const { canWrite, isAdmin } = useOrgRole();
   const t = useTranslations("toasts");
   const locale = useLocale();
   const tConfirm = useTranslations("confirms");
@@ -348,22 +350,26 @@ export default function DataAssetDetailPage() {
         actions={
           <>
             <ConfirmDraftButton kind="dataAsset" id={asset.id} record={asset} />
-            <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
-              <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                {tp("edit")}
+            {canWrite && (
+              <Link href={`/privacy/data-inventory/${asset.id}/edit`}>
+                <Button variant="outline" size="sm">
+                  <Edit className="w-4 h-4 mr-2" />
+                  {tp("edit")}
+                </Button>
+              </Link>
+            )}
+            {isAdmin && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-destructive"
+                onClick={handleDelete}
+                disabled={deleteAsset.isPending}
+              >
+                {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                {tp("delete")}
               </Button>
-            </Link>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-destructive"
-              onClick={handleDelete}
-              disabled={deleteAsset.isPending}
-            >
-              {deleteAsset.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-              {tp("delete")}
-            </Button>
+            )}
           </>
         }
       />
@@ -434,10 +440,12 @@ export default function DataAssetDetailPage() {
                 <CardTitle>{tp("elements.title")}</CardTitle>
                 <CardDescription>{tp("elements.subtitle")}</CardDescription>
               </div>
-              <Button size="sm" onClick={() => setIsAddElementOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                {tp("elements.addElement")}
-              </Button>
+              {canWrite && (
+                <Button size="sm" onClick={() => setIsAddElementOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {tp("elements.addElement")}
+                </Button>
+              )}
             </CardHeader>
             <CardContent>
               {asset.dataElements && asset.dataElements.length > 0 ? (
@@ -464,14 +472,16 @@ export default function DataAssetDetailPage() {
                         {element.isPersonalData && (
                           <Badge variant="outline" className="hidden sm:inline-flex">{tp("elements.personalData")}</Badge>
                         )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive ml-auto"
-                          onClick={() => handleDeleteElement(element.id, element.name)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {isAdmin && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-9 w-9 p-0 text-muted-foreground hover:text-destructive ml-auto"
+                            onClick={() => handleDeleteElement(element.id, element.name)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}
