@@ -23,6 +23,8 @@ vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: 
 import {
   endPhrase,
   isEuroMarket,
+  planPrice,
+  reminderCurrency,
   pilotReminderKind,
   pilotRemindersEnabled,
   reminderLocale,
@@ -46,6 +48,7 @@ interface Org {
   plan: "PILOT" | "EU_CLOUD";
   pilotStartedAt: Date | null;
   regions: string[];
+  settings?: Record<string, unknown> | null;
   members: { role: Role; email: string; locale: string | null }[];
 }
 
@@ -59,6 +62,7 @@ function makeDb(orgs: Org[]) {
         name: o.name,
         plan: o.plan,
         pilotStartedAt: o.pilotStartedAt,
+        settings: o.settings ?? null,
         jurisdictions: o.regions.map((region) => ({ jurisdiction: { region } })),
         members: o.members.map((m) => ({ role: m.role, user: { email: m.email, locale: m.locale } })),
       }))
@@ -245,8 +249,40 @@ describe("language", () => {
     expect(byTo["es@example.com"].subject).toBe("Tu piloto de DPO Central termina en 5 días");
     expect(byTo["es@example.com"].text).toContain("1.800 € al año o 179 € al mes");
     expect(byTo["es@example.com"].text).toContain("https://www.todo.law/es/contact/managed");
-    expect(byTo["en@example.com"].text).toContain("$1,800 a year or $179 a month");
+    // No region recorded: the organisation's declared market (EU only) gives euros.
+    expect(byTo["en@example.com"].text).toContain("€1,800 a year or €179 a month");
     expect(byTo["en@example.com"].text).toContain("https://www.todo.law/pricing");
+  });
+
+  it("states the price by the region rule: Spanish in euros, English by the region recorded at creation", async () => {
+    const members = [
+      { role: "OWNER" as const, email: "es@example.com", locale: "es" },
+      { role: "ADMIN" as const, email: "en@example.com", locale: "en" },
+    ];
+    for (const [settings, regions, en] of [
+      [{ signupRegion: "OTHER" }, ["EU"], "$1,800 a year or $179 a month"],
+      [{ signupRegion: "EU" }, ["US-CA"], "€1,800 a year or €179 a month"],
+      [null, ["US-CA"], "$1,800 a year or $179 a month"],
+      [null, ["EU", "US-CA"], "$1,800 a year or $179 a month"],
+    ] as const) {
+      const db = makeDb([fresh({ regions: [...regions], settings: settings ? { ...settings } : null, members })]);
+      const { mailer, sent } = makeMailer();
+      await runPilotReminders(asDb(db), mailer, run("2026-10-24"), ON);
+      const byTo = Object.fromEntries(sent.map((m) => [m.to, m]));
+      expect(byTo["es@example.com"].text).toContain("1.800 € al año o 179 € al mes");
+      expect(byTo["en@example.com"].text).toContain(en);
+    }
+  });
+
+  it("reminderCurrency and planPrice", () => {
+    expect(reminderCurrency("es", { signupRegion: "OTHER" }, false)).toBe("EUR");
+    expect(reminderCurrency("en", { signupRegion: "EU" }, false)).toBe("EUR");
+    expect(reminderCurrency("en", { signupRegion: "OTHER" }, true)).toBe("USD");
+    expect(reminderCurrency("en", null, true)).toBe("EUR");
+    expect(reminderCurrency("en", {}, false)).toBe("USD");
+    expect(planPrice("en", "USD")).toBe("$1,800 a year or $179 a month");
+    expect(planPrice("en", "EUR")).toBe("€1,800 a year or €179 a month");
+    expect(planPrice("es", "EUR")).toBe("1.800 € al año o 179 € al mes");
   });
 });
 

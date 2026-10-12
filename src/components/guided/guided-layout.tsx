@@ -66,6 +66,8 @@ import { NewOrganizationDialog } from "@/components/privacy/new-organization-dia
 import { trpc } from "@/lib/trpc";
 import { lockedStepIds } from "@/lib/menu-locks";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { usePriceInSentence } from "@/components/region-provider";
+import { DSAR_ADDON_MONTHLY_PRICE } from "@/lib/dsar-addon";
 
 const OVERVIEW = { href: "/privacy", icon: LayoutDashboard };
 /** The path a department-limited member sees: no quick start. */
@@ -105,6 +107,7 @@ export function GuidedLayout({
   // requests (src/lib/dsar-access.ts).
   const { canHandle: canHandleDsars } = useDsarAccess();
   const tm = useTranslations("dsarModule");
+  const priceInSentence = usePriceInSentence();
   const { data: dsarAccess } = trpc.dsar.moduleAccess.useQuery(
     { organizationId: organization?.id ?? "" },
     { enabled: !!organization?.id && canHandleDsars === true && isDsarModuleEnabled(), refetchOnWindowFocus: false },
@@ -150,7 +153,7 @@ export function GuidedLayout({
   if (inventoryNote) stepNotes.dataInventory = inventoryNote;
   // Hosted paid plan without the rights-request add-on: the step stays in the
   // menu with its price line (src/server/services/dsar/module.ts).
-  if (dsarAccess?.gate === "inactive") stepNotes.dsar = tm("addOnLine");
+  if (dsarAccess?.gate === "inactive") stepNotes.dsar = tm("addOnLine", { price: priceInSentence(DSAR_ADDON_MONTHLY_PRICE) });
   const missing = notYetEntries({ dsarEnabled: isDsarModuleEnabled() });
   // A lock beside a step that leads to a premium type the organisation is not
   // entitled to, by the pages' own rule; never on the hosted pilot, which

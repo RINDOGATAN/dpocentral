@@ -40,6 +40,9 @@ import { logger } from "@/lib/logger";
 import { isHostedDeployment, managedUrl, PILOT_EXPORT_PATH, plansUrl } from "@/lib/hosted";
 import { internalInboxAddresses, escapeHtml } from "@/server/services/notifications/internal-inbox";
 import { isPaidPlan, PAID_PLAN, pilotEndsAt, pilotLocale } from "./caps";
+import { formatPriceIn } from "@/lib/currency";
+import type { Currency } from "@/lib/region";
+import { signupRegionOf } from "@/server/services/org-region";
 
 type Locale = "en" | "es";
 
@@ -125,14 +128,35 @@ export function endPhrase(endsAt: Date, locale: Locale): string {
     : `on ${longDate(endsAt, locale)} at ${time} UTC`;
 }
 
-/** The paid plan's price, in the currency of the e-mail's language. */
-export const PLAN_PRICE: Record<Locale, string> = {
-  en: "$1,800 a year or $179 a month",
-  es: "1.800 € al año o 179 € al mes",
-};
+/** The paid plan's yearly and monthly amounts (the currency is chosen per e-mail). */
+export const PLAN_AMOUNTS = { year: 1800, month: 179 } as const;
+
+/**
+ * The currency of a reminder, by the same rule as the pages
+ * (src/lib/region.ts): Spanish e-mails in euros; English e-mails in euros
+ * when the organisation was created from one of the 27 EU member states
+ * (Organization.settings.signupRegion, recorded on the hosted service), US
+ * dollars otherwise. An organisation created before the region was recorded
+ * falls back to its declared market (an EU jurisdiction and no US one).
+ */
+export function reminderCurrency(locale: Locale, settings: unknown, euroMarket: boolean): Currency {
+  if (locale === "es") return "EUR";
+  const region = signupRegionOf(settings);
+  if (region) return region === "EU" ? "EUR" : "USD";
+  return euroMarket ? "EUR" : "USD";
+}
+
+/** The paid plan's price as the e-mail writes it. */
+export function planPrice(locale: Locale, currency: Currency): string {
+  const year = formatPriceIn(PLAN_AMOUNTS.year, locale, currency);
+  const month = formatPriceIn(PLAN_AMOUNTS.month, locale, currency);
+  return locale === "es" ? `${year} al año o ${month} al mes` : `${year} a year or ${month} a month`;
+}
 
 export interface PilotReminderEmailInput {
   locale: Locale;
+  /** Defaults to the language's rule with no region known: EUR in Spanish, USD in English. */
+  currency?: Currency;
   kind: PilotReminderKind;
   orgName: string;
   endsAt: Date;
@@ -170,7 +194,7 @@ export function pilotReminderCopy(input: PilotReminderEmailInput) {
       keepGoing: "Para seguir trabajando:",
       options: [
         {
-          text: `Plan nube UE: ${PLAN_PRICE.es}. Levanta los límites del piloto y conserva tus registros tal como están. Activamos el plan de pago en tu organización tras el pago.`,
+          text: `Plan nube UE: ${planPrice("es", "EUR")}. Levanta los límites del piloto y conserva tus registros tal como están. Activamos el plan de pago en tu organización tras el pago.`,
           label: "Ver precios",
           url: plansUrl("es"),
         },
@@ -196,7 +220,7 @@ export function pilotReminderCopy(input: PilotReminderEmailInput) {
     keepGoing: "To keep working:",
     options: [
       {
-        text: `Cloud Plan: ${PLAN_PRICE.en}. It lifts the pilot's limits and keeps your records as they are. We activate the paid plan on your organization after payment.`,
+        text: `Cloud Plan: ${planPrice("en", input.currency ?? "USD")}. It lifts the pilot's limits and keeps your records as they are. We activate the paid plan on your organization after payment.`,
         label: "See pricing",
         url: plansUrl("en"),
       },
@@ -334,6 +358,7 @@ export async function runPilotReminders(
       name: true,
       plan: true,
       pilotStartedAt: true,
+      settings: true,
       jurisdictions: { select: { jurisdiction: { select: { region: true } } } },
       members: {
         where: { role: { in: [...PILOT_REMINDER_ROLES] } },
@@ -385,7 +410,8 @@ export async function runPilotReminders(
 
     let delivered = 0;
     for (const r of recipients) {
-      const mail = renderPilotReminderEmail({ locale: r.locale, kind, orgName: org.name, endsAt });
+      const currency = reminderCurrency(r.locale, org.settings, euro);
+      const mail = renderPilotReminderEmail({ locale: r.locale, currency, kind, orgName: org.name, endsAt });
       try {
         await mailer.send({ to: r.email, replyTo, ...mail });
         delivered++;

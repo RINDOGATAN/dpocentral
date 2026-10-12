@@ -7,6 +7,8 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { plansUrl } from "@/lib/hosted";
 import { StatusNote } from "@/components/ui/status-note";
+import { usePriceInSentence } from "@/components/region-provider";
+import { DSAR_ADDON_MONTHLY_PRICE } from "@/lib/dsar-addon";
 
 /**
  * Above every page of the rights-request module (hosted service only):
@@ -19,6 +21,7 @@ import { StatusNote } from "@/components/ui/status-note";
 export function DsarModuleAccessNote() {
   const t = useTranslations("dsarModule");
   const locale = useLocale();
+  const price = usePriceInSentence();
   const { organization } = useOrganization();
   const { data: access } = trpc.dsar.moduleAccess.useQuery(
     { organizationId: organization?.id ?? "" },
@@ -29,7 +32,7 @@ export function DsarModuleAccessNote() {
   if (access.gate === "inactive") {
     return (
       <StatusNote tone="info" title={t("addOnTitle")} className="mb-6" data-testid="dsar-module-addon">
-        {t("addOnBody")}{" "}
+        {t("addOnBody", { price: price(DSAR_ADDON_MONTHLY_PRICE) })}{" "}
         <a className="underline underline-offset-4 text-primary" href={plansUrl(locale)}>
           {t("addOnLink")}
         </a>

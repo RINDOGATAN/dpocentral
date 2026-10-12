@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { signupRegionSettings } from "@/server/services/org-region";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, organizationProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
@@ -186,6 +187,9 @@ export const organizationRouter = createTRPCRouter({
           // Hosted service: the creator sees the welcome card (safeguards
           // question) on the first visit to /privacy. Never on the kit.
           welcomeUserId: isHostedDeployment() ? ctx.session.user.id : null,
+          // Hosted service: whether it was created from the EU, for the
+          // currency of e-mails sent without a visitor.
+          settings: signupRegionSettings(ctx.country, isHostedDeployment()),
           members: {
             create: {
               userId: ctx.session.user.id,
