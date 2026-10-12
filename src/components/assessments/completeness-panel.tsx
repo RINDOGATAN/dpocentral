@@ -8,10 +8,16 @@
  *
  * It reads the same module the export reads (src/lib/assessment-completeness.ts),
  * so the panel and the exported document never disagree.
+ *
+ * While nothing is answered yet the list would be every question of the
+ * assessment, so it opens folded into one line ("30 questions and 8
+ * requirements outstanding · Show"), leaving the first question on the first
+ * screen. A refusal to submit opens it (`openSignal`).
  */
 
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertCircle, ArrowRight, CheckCircle2, Scale } from "lucide-react";
+import { AlertCircle, ArrowRight, CheckCircle2, ChevronDown, ChevronUp, Scale } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FRAMEWORK_LABELS } from "@/config/assessment-frameworks";
 import type { Completeness } from "@/lib/assessment-completeness";
@@ -19,11 +25,25 @@ import type { Completeness } from "@/lib/assessment-completeness";
 export function CompletenessPanel({
   completeness,
   onJump,
+  nothingAnswered = false,
+  openSignal = 0,
 }: {
   completeness: Completeness;
   onJump: (sectionId: string, questionId: string) => void;
+  /** No answer saved yet: the list starts folded. */
+  nothingAnswered?: boolean;
+  /** Changes when the page wants the list shown (a refused submit). */
+  openSignal?: number;
 }) {
   const t = useTranslations("pages.assessmentDetail.completeness");
+  // Folded when the page opens on an assessment with no answer, and kept
+  // folded as the first answers come in, until the reader opens it: the list
+  // would otherwise jump in above the question being answered.
+  const [startedFolded] = useState(nothingAnswered);
+  const [folded, setFolded] = useState(nothingAnswered);
+  useEffect(() => {
+    if (openSignal > 0) setFolded(false);
+  }, [openSignal]);
   const lang = useLocale() === "es" ? "es" : "en";
   const {
     outstandingQuestions,
@@ -82,6 +102,28 @@ export function CompletenessPanel({
 
         {complete ? (
           <p className="text-sm text-muted-foreground">{t("allDone")}</p>
+        ) : folded ? (
+          <button
+            type="button"
+            onClick={() => setFolded(false)}
+            aria-expanded={false}
+            data-testid="completeness-collapsed"
+            className="text-left text-sm flex items-center gap-1.5 min-h-[44px] hover:text-primary transition-colors"
+          >
+            <span>
+              {outstandingRequirements.length > 0
+                ? t("collapsedBoth", {
+                    questions: outstandingQuestions.length,
+                    requirements: outstandingRequirements.length,
+                  })
+                : t("collapsedQuestions", { questions: outstandingQuestions.length })}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span className="font-medium text-primary flex items-center gap-0.5">
+              {t("show")}
+              <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
+            </span>
+          </button>
         ) : (
           <>
             {outstandingQuestions.length > 0 && (
@@ -152,6 +194,17 @@ export function CompletenessPanel({
             )}
 
             <p className="text-xs text-muted-foreground">{t("exportHint")}</p>
+            {startedFolded && (
+              <button
+                type="button"
+                onClick={() => setFolded(true)}
+                aria-expanded={true}
+                className="text-sm font-medium text-primary flex items-center gap-0.5 min-h-[44px]"
+              >
+                {t("hide")}
+                <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            )}
           </>
         )}
       </CardContent>

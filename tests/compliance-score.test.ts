@@ -22,6 +22,7 @@ const mocks = vi.hoisted(() => ({
     dSARRequest: { count: vi.fn() },
     incident: { count: vi.fn() },
     vendor: { count: vi.fn() },
+    processingActivity: { count: vi.fn() },
     vendorContract: { count: vi.fn() },
     complianceSnapshot: { upsert: vi.fn() },
     auditLog: { create: vi.fn() },
@@ -58,6 +59,8 @@ function queueCounts(opts: {
   incidents?: [number, number, number];
   vendors?: [number, number, number];
   contracts?: number;
+  /** Drafted records waiting for confirmation: systems, activities, vendors. */
+  drafts?: [number, number, number];
 }) {
   const {
     assets = [0, 0],
@@ -66,6 +69,7 @@ function queueCounts(opts: {
     incidents = [0, 0, 0],
     vendors = [0, 0, 0],
     contracts = 0,
+    drafts = [0, 0, 0],
   } = opts;
 
   assets.forEach((n) => mocks.prisma.dataAsset.count.mockResolvedValueOnce(n));
@@ -74,6 +78,10 @@ function queueCounts(opts: {
   incidents.forEach((n) => mocks.prisma.incident.count.mockResolvedValueOnce(n));
   vendors.forEach((n) => mocks.prisma.vendor.count.mockResolvedValueOnce(n));
   mocks.prisma.vendorContract.count.mockResolvedValueOnce(contracts);
+  // countDrafts runs last: one more count each for systems, activities, vendors.
+  mocks.prisma.dataAsset.count.mockResolvedValueOnce(drafts[0]);
+  mocks.prisma.processingActivity.count.mockResolvedValueOnce(drafts[1]);
+  mocks.prisma.vendor.count.mockResolvedValueOnce(drafts[2]);
 }
 
 function caller() {
@@ -158,6 +166,22 @@ describe("compliance score: empty modules are unrated, not compliant", () => {
 
     expect(result.score).toBe(0);
     expect(result.breakdown.ropa.score).toBe(0);
+  });
+});
+
+describe("compliance score: drafts are left out until confirmed", () => {
+  it("counts only confirmed systems and vendors, and says how many drafts wait", async () => {
+    // A quick start drafted everything: the confirmed counts are zero, so
+    // nothing is rated and nothing reads as compliant.
+    queueCounts({ assets: [0, 0], vendors: [0, 0, 0], drafts: [5, 4, 3] });
+    const result = await caller().getComplianceScore({ organizationId: ORG.id });
+
+    expect(result.score).toBeNull();
+    expect(result.draftsExcluded).toBe(12);
+    const assetWhere = mocks.prisma.dataAsset.count.mock.calls[0][0].where;
+    expect(assetWhere.NOT).toMatchObject({ confirmedAt: null });
+    const vendorWhere = mocks.prisma.vendor.count.mock.calls[0][0].where;
+    expect(vendorWhere.NOT).toMatchObject({ confirmedAt: null });
   });
 });
 

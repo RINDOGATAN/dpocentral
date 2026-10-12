@@ -144,6 +144,8 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // Where a refused submission sends the reader: the list of what is missing,
   // each item a link to the field that answers it.
   const completenessRef = useRef<HTMLDivElement | null>(null);
+  // Bumped when a refused submit wants the outstanding list shown.
+  const [completenessOpenSignal, setCompletenessOpenSignal] = useState(0);
 
   // Mitigation dialog state
   const [addMitigationOpen, setAddMitigationOpen] = useState(false);
@@ -204,6 +206,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   // the reader to the list of them, where every item links to its field.
   const showWhatIsMissing = useCallback((message: string) => {
     toast.error(message || t("generic.somethingWentWrong"));
+    setCompletenessOpenSignal((n) => n + 1);
     completenessRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [t]);
 
@@ -897,7 +900,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
 
       {/* What is still outstanding, each item a link to the step that answers it */}
       <div ref={completenessRef}>
-        <CompletenessPanel completeness={completeness} onJump={jumpToQuestion} />
+        <CompletenessPanel
+          completeness={completeness}
+          onJump={jumpToQuestion}
+          nothingAnswered={(assessment?.responses?.length ?? 0) === 0}
+          openSignal={completenessOpenSignal}
+        />
       </div>
 
       {/* Quick Stats */}
