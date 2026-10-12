@@ -3701,7 +3701,7 @@
       "assetsLinked": "Sistemas enlazados actualizados",
       "assetsLinkedWithFlows": "Sistemas vinculados: se {count, plural, one {ha generado # flujo de datos automáticamente} other {han generado # flujos de datos automáticamente}}",
       "flowsGenerated": "Se {count, plural, one {ha generado # nuevo flujo de datos} other {han generado # nuevos flujos de datos}}",
-      "noNewFlows": "No hay nuevos flujos que generar: el grafo existente ya cubre esta actividad"
+      "noNewFlows": "No hay nuevos flujos que generar: el mapa existente ya cubre esta actividad"
     },
     "vendor": {
       "created": "Proveedor creado",
@@ -3963,10 +3963,10 @@
       "flowMap": {
         "sectionNumber": "Sección 06",
         "title": "Mapa de flujos de datos",
-        "leadSingle": "Activos de producción que participan en al menos un flujo de datos o actividad de tratamiento. Los nodos están codificados por color según el tipo de activo; las aristas discontinuas se generan automáticamente a partir de enlaces actividad-activo y las continuas son flujos registrados explícitamente.",
+        "leadSingle": "Activos de producción que participan en al menos un flujo de datos o actividad de tratamiento. Los nodos están codificados por color según el tipo de activo; las líneas discontinuas se generan automáticamente a partir de enlaces actividad-activo y las continuas son flujos registrados explícitamente.",
         "leadMulti": "Los flujos de datos de extremo a extremo se dividen en {count} grupos para mantener la legibilidad a esta escala. Cada página muestra un grupo de actividades de tratamiento.",
         "showingCount": "Mostrando {filtered} de {original} activos",
-        "orphansDropped": "{count, plural, one {# huérfano filtrado} other {# huérfanos filtrados}} (sin flujos ni enlace a actividades)",
+        "orphansDropped": "{count, plural, one {# sistema sin flujos ni actividad omitido} other {# sistemas sin flujos ni actividad omitidos}}",
         "nonProductionDropped": "{count, plural, one {# activo que no está en producción se ha omitido} other {# activos que no están en producción se han omitido}} con sus flujos",
         "assetTypes": "Tipos de activo",
         "clusterOverview": "Visión general",
@@ -3998,7 +3998,7 @@
       },
       "byLegalBasis": "Por base jurídica",
       "dataFlowMap": "Mapa de flujos de datos",
-      "dataFlowMapLead": "Cada actividad de tratamiento se muestra como un clúster con borde que contiene los activos a los que accede. Las aristas discontinuas se generaron automáticamente a partir de los enlaces actividad-activo; las continuas son explícitas.",
+      "dataFlowMapLead": "Cada actividad de tratamiento se muestra como un grupo con borde que contiene los activos a los que accede. Las líneas discontinuas se generaron automáticamente a partir de los enlaces actividad-activo; las continuas son explícitas.",
       "processingActivities": "Actividades de tratamiento",
       "incomplete": "INCOMPLETA",
       "activity": {
@@ -5243,7 +5243,7 @@
           "marketing": "Marketing",
           "analytics": "Analítica (UE)"
         },
-        "body1Bold": "No necesitas dibujar el grafo.",
+        "body1Bold": "No necesitas dibujar el mapa.",
         "body1Rest": " Cada vez que vinculas una actividad de tratamiento a dos o más sistemas (desde el botón ",
         "body1ManageAssets": "Gestionar sistemas",
         "body1Mid": " en la página de detalle de la actividad, o desde ",
@@ -5253,7 +5253,7 @@
         "body2GenerateFlows": "Generar flujos",
         "body2End": " en la página de detalle de una actividad. Los flujos existentes no se duplican: lo que hayas editado a mano se conserva y solo se añaden las conexiones nuevas.",
         "tipTitle": "Flujos bidireccionales",
-        "tipBody": "Muchos sistemas reales son bidireccionales (un CRM recibe y devuelve datos de clientes). Las correspondencias de proveedores del inicio rápido y las plantillas por sector ya marcan los pares bidireccionales habituales, y el grafo dibuja las aristas de ida y de vuelta como curvas separadas para que no se solapen."
+        "tipBody": "Muchos sistemas reales son bidireccionales (un CRM recibe y devuelve datos de clientes). Las correspondencias de proveedores del inicio rápido y las plantillas por sector ya marcan los pares bidireccionales habituales, y el mapa dibuja las líneas de ida y de vuelta como curvas separadas para que no se solapen."
       },
       "transfers": {
         "title": "Transferencias internacionales",

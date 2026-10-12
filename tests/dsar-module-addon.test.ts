@@ -271,13 +271,11 @@ describe("the public form on the hosted service", () => {
   describe("paid plan without the add-on", () => {
     beforeEach(() => mocks.prisma.organization.findUnique.mockResolvedValue(org(PAID_INACTIVE)));
 
-    it("answers the form exactly as for an organisation with no form", async () => {
-      const inactive = await anon().getPublicForm({ orgSlug: "acme" }).catch((e) => e);
-      mocks.prisma.organization.findUnique.mockResolvedValue(null);
-      const unknown = await anon().getPublicForm({ orgSlug: "acme" }).catch((e) => e);
-      expect(inactive.code).toBe("NOT_FOUND");
-      expect(inactive.code).toBe(unknown.code);
-      expect(inactive.message).toBe(unknown.message);
+    it("shows the form as not taking requests, with the privacy contact e-mail", async () => {
+      await expect(anon().getPublicForm({ orgSlug: "acme" })).resolves.toMatchObject({
+        accepting: false,
+        contactEmail: "privacy@acme.example",
+      });
     });
 
     it("refuses a submission without creating anything", async () => {
