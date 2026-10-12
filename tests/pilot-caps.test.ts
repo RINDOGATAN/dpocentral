@@ -32,7 +32,7 @@ const mocks = vi.hoisted(() => {
         findMany: vi.fn().mockResolvedValue([]),
       },
       user: { findUnique: vi.fn() },
-      auditLog: { create: vi.fn() },
+      auditLog: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
       dataAsset: { ...counter(), findMany: vi.fn().mockResolvedValue([]) },
       dataElement: counter(),
       processingActivity: { ...counter(), findMany: vi.fn().mockResolvedValue([]) },
@@ -209,6 +209,67 @@ describe("the data processing agreement is accepted when a pilot organisation is
     expect(PILOT_DPA.version).toBe("1.1");
     expect(PILOT_DPA.href.en).toBe("https://www.todo.law/legal/eu-cloud-plan-dpa");
     expect(PILOT_DPA.href.es).toBe("https://www.todo.law/es/legal/encargo-tratamiento-plan-nube-ue");
+  });
+});
+
+describe("an organisation with no acceptance on record is asked once", () => {
+  const dpaEntries = () =>
+    mocks.prisma.auditLog.create.mock.calls
+      .map((c: unknown[]) => (c[0] as { data: { action: string } }).data)
+      .filter((d: { action: string }) => d.action === PILOT_DPA_ACTION);
+
+  it("asks an organisation opened before acceptance was asked, and lets an owner or admin accept", async () => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([]);
+    const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
+    expect(status).toEqual({ required: true, canAccept: true });
+    const admin = await callerWithRole("ADMIN").getDpaStatus({ organizationId: "org-1" });
+    expect(admin.canAccept).toBe(true);
+  });
+
+  it("shows a member the need without letting them accept", async () => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([]);
+    const status = await callerWithRole("MEMBER").getDpaStatus({ organizationId: "org-1" });
+    expect(status).toEqual({ required: true, canAccept: false });
+    await expect(
+      callerWithRole("MEMBER").acceptDpa({ organizationId: "org-1", accept: true })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(dpaEntries()).toHaveLength(0);
+  });
+
+  it("records the acceptance as the same entry as at opening, even once the pilot is read-only", async () => {
+    hosted();
+    setNow(PILOT_DAYS + 5);
+    mocks.prisma.auditLog.findMany.mockResolvedValue([]);
+    await callerWithRole("ADMIN").acceptDpa({ organizationId: "org-1", accept: true });
+    const entries = dpaEntries() as unknown as Array<{ organizationId: string; userId: string; changes: Record<string, string> }>;
+    expect(entries).toHaveLength(1);
+    expect(entries[0].organizationId).toBe("org-1");
+    expect(entries[0].userId).toBe("user-1");
+    expect(entries[0].changes.dpaVersion).toBe(PILOT_DPA.version);
+  });
+
+  it("asks nothing once the current version is on record, and records nothing twice", async () => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([{ changes: { dpaVersion: PILOT_DPA.version } }]);
+    const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
+    expect(status.required).toBe(false);
+    await callerWithRole("OWNER").acceptDpa({ organizationId: "org-1", accept: true });
+    expect(dpaEntries()).toHaveLength(0);
+  });
+
+  it("asks again when only an earlier version is on record", async () => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([{ changes: { dpaVersion: "1.0" } }]);
+    const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
+    expect(status.required).toBe(true);
+  });
+
+  it("never asks on the kit", async () => {
+    kit();
+    const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
+    expect(status).toEqual({ required: false, canAccept: false });
   });
 });
 

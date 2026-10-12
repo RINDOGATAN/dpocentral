@@ -3106,7 +3106,11 @@
     "createOrganization": "Create Organization",
     "creating": "Creating...",
     "switchOrg": "Switch Organization",
-    "dpaAccept": "I accept the <link>data processing agreement</link> (version {version}) for this organization. It covers the free pilot and the EU Cloud Plan."
+    "dpaAccept": "I accept the <link>data processing agreement</link> (version {version}) for this organization. It covers the free pilot and both Cloud Plans.",
+    "dpaStepTitle": "Data processing agreement",
+    "dpaStepBody": "Before you continue, accept the data processing agreement for {name} on behalf of the organization. You only need to do this once.",
+    "dpaStepContinue": "Accept and continue",
+    "dpaPendingNote": "An owner or administrator of this organization needs to accept the <link>data processing agreement</link> (version {version})."
   },
   "quickstart": {
     "recommended": "Recommended: Complete Setup",

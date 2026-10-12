@@ -76,6 +76,20 @@ function withoutPlanNote<
   return rest;
 }
 
+/** Whether the organisation has an acceptance of the current agreement on record. */
+async function hasAcceptedCurrentDpa(
+  prisma: { auditLog: { findMany: (args: object) => Promise<Array<{ changes: unknown }>> } },
+  organizationId: string
+): Promise<boolean> {
+  const entries = await prisma.auditLog.findMany({
+    where: { organizationId, action: PILOT_DPA_ACTION },
+    select: { changes: true },
+  });
+  return entries.some(
+    (e) => (e.changes as { dpaVersion?: unknown } | null)?.dpaVersion === PILOT_DPA.version
+  );
+}
+
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -156,6 +170,44 @@ export const organizationRouter = createTRPCRouter({
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       return getPilotStatus(ctx.prisma, ctx.organization);
+    }),
+
+  // Hosted: whether this organisation still has to accept the current data
+  // processing agreement (src/config/pilot-dpa.ts). Organisations opened
+  // before acceptance was asked at opening have no entry for it and are asked
+  // once, at the next sign-in. An owner or administrator accepts on behalf of
+  // the organisation; other members only see a note. Never asked on the kit.
+  getDpaStatus: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ ctx }) => {
+      if (!isHostedDeployment()) return { required: false, canAccept: false };
+      const accepted = await hasAcceptedCurrentDpa(ctx.prisma, ctx.organization.id);
+      return {
+        required: !accepted,
+        canAccept: ctx.membership.role === "OWNER" || ctx.membership.role === "ADMIN",
+      };
+    }),
+
+  // Hosted: an owner or administrator accepts the current agreement for an
+  // organisation that has no acceptance of it on record. Recorded as the same
+  // audit-trail entry as at opening. Accepting twice records nothing new.
+  acceptDpa: adminOrgProcedure
+    .input(z.object({ organizationId: z.string(), accept: z.literal(true) }))
+    .mutation(async ({ ctx }) => {
+      if (!isHostedDeployment()) return { accepted: false };
+      if (await hasAcceptedCurrentDpa(ctx.prisma, ctx.organization.id)) return { accepted: true };
+      const lang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Organization",
+          entityId: ctx.organization.id,
+          action: PILOT_DPA_ACTION,
+          changes: { dpaVersion: PILOT_DPA.version, locale: lang, document: PILOT_DPA.href[lang] },
+        },
+      });
+      return { accepted: true };
     }),
 
   // Create a new organization

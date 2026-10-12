@@ -80,7 +80,11 @@
     "createOrganization": "Creer l'organisation",
     "creating": "Creation...",
     "switchOrg": "Changer d'organisation",
-    "dpaAccept": "J'accepte l'<link>accord de traitement des données</link> (version {version}) pour cette organisation. Il couvre le pilote gratuit et l'EU Cloud Plan."
+    "dpaAccept": "J'accepte l'<link>accord de traitement des données</link> (version {version}) pour cette organisation. Il couvre le pilote gratuit et les deux Cloud Plans.",
+    "dpaStepTitle": "Accord de traitement des données",
+    "dpaStepBody": "Avant de continuer, acceptez l'accord de traitement des données pour {name} au nom de l'organisation. Cette étape n'est demandée qu'une fois.",
+    "dpaStepContinue": "Accepter et continuer",
+    "dpaPendingNote": "Un propriétaire ou un administrateur de cette organisation doit accepter l'<link>accord de traitement des données</link> (version {version})."
   },
   "dashboard": {
     "title": "Tableau de bord confidentialite",

@@ -186,6 +186,9 @@ export const READ_ONLY_ALLOWED_PATHS = new Set<string>([
   // to talk about a managed server or its own hardware.
   "safeguards.setChoice",
   "safeguards.submitRequest",
+  // Accepting the data processing agreement changes no programme record; an
+  // organisation whose editing window has ended may still accept it.
+  "organization.acceptDpa",
 ]);
 
 type Locale = "en" | "es";

@@ -17,6 +17,8 @@ import { sellingEnabled } from "@/lib/premium-gate";
 import { brand } from "@/config/brand";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { GuidedLayout } from "@/components/guided/guided-layout";
+import { trpc } from "@/lib/trpc";
+import { DpaAcceptanceStep, DpaPendingNote } from "@/components/pilot/dpa-accept";
 
 export function DashboardShell({
   children,
@@ -30,8 +32,18 @@ export function DashboardShell({
   const { needsOnboarding, isLoading: userTypeLoading } = useUserType();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const tCommon = useTranslations("common");
+  const hosted = useHostedPilot();
+  // Hosted: an organisation with no acceptance of the current data processing
+  // agreement on record (one opened before it was asked at opening) is asked
+  // once. An owner or administrator sees the acceptance step; other members
+  // see a note and are not blocked. If the check fails, nothing is blocked.
+  const dpa = trpc.organization.getDpaStatus.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: hosted && !!organization, retry: false }
+  );
+  const dpaLoading = hosted && !!organization && dpa.isLoading;
 
-  if (orgLoading || userTypeLoading) {
+  if (orgLoading || userTypeLoading || dpaLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-muted-foreground">{tCommon("loading")}</div>
@@ -52,11 +64,22 @@ export function DashboardShell({
     return <OrganizationSetup />;
   }
 
+  if (organization && dpa.data?.required && dpa.data.canAccept) {
+    return (
+      <DpaAcceptanceStep
+        organizationId={organization.id}
+        organizationName={organization.name}
+        onAccepted={() => void dpa.refetch()}
+      />
+    );
+  }
+
   // The one layout (Guided; Classic was retired): the
   // privacy program path as a left menu, with the footer and the feedback
   // dialog below.
   return (
     <>
+      {dpa.data?.required && !dpa.data.canAccept && <DpaPendingNote />}
       <GuidedLayout
         footer={<DashboardFooter />}
         initialCollapsed={menuCollapsed}

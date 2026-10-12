@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { UserType } from "@prisma/client";
 import { organizationSlug } from "@/lib/organization-slug";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
 
 const personas = [
   {
@@ -38,6 +40,10 @@ export function OnboardingWelcome() {
   const [selectedType, setSelectedType] = useState<UserType | null>(null);
   const [orgName, setOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Hosted pilot: the data processing agreement is accepted when the
+  // organisation is opened (src/config/pilot-dpa.ts). Never asked on the kit.
+  const hosted = useHostedPilot();
+  const [acceptDpa, setAcceptDpa] = useState(false);
   const { refreshSession } = useUserType();
   const { setOrganization, refetchOrganizations } = useOrganization();
 
@@ -49,12 +55,13 @@ export function OnboardingWelcome() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedType || !orgName.trim()) return;
+    if (hosted && !acceptDpa) return;
 
     setIsSubmitting(true);
     try {
       await setUserType.mutateAsync({ userType: selectedType });
       const slug = generateSlug(orgName);
-      const org = await createOrg.mutateAsync({ name: orgName.trim(), slug, creatorType: selectedType });
+      const org = await createOrg.mutateAsync({ name: orgName.trim(), slug, creatorType: selectedType, acceptDpa: hosted ? acceptDpa : undefined });
       setOrganization(org);
       refetchOrganizations();
       await refreshSession();
@@ -66,7 +73,7 @@ export function OnboardingWelcome() {
     }
   };
 
-  const canSubmit = selectedType && orgName.trim().length > 0 && !isSubmitting;
+  const canSubmit = selectedType && orgName.trim().length > 0 && !isSubmitting && (!hosted || acceptDpa);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -138,6 +145,10 @@ export function OnboardingWelcome() {
               required
             />
           </div>
+
+          {hosted && (
+            <DpaAcceptCheckbox id="onboarding-accept-dpa" checked={acceptDpa} onCheckedChange={setAcceptDpa} />
+          )}
 
           <Button
             type="submit"
