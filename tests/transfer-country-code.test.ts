@@ -25,8 +25,8 @@ describe("country code", () => {
     expect(isCountryCode("India")).toBe(false);
   });
 
-  it("both transfer forms use it and explain it", () => {
-    for (const f of ["src/app/(dashboard)/privacy/transfers/page.tsx", "src/app/(dashboard)/privacy/data-inventory/page.tsx"]) {
+  it("the transfer form (on Transfers, its one home) uses it and explains it", () => {
+    for (const f of ["src/app/(dashboard)/privacy/transfers/page.tsx"]) {
       const s = src(f);
       expect(s).toContain("normaliseCountryCode(e.target.value)");
       expect(s).toContain("isCountryCode(");
@@ -41,6 +41,6 @@ describe("inventory tab counts", () => {
   it("add a plus sign while more pages exist", () => {
     const s = src("src/app/(dashboard)/privacy/data-inventory/page.tsx");
     expect(s).toContain("hasMoreAssets ? `${dataAssets.length}+`");
-    expect(s).toContain("hasMoreActivities ? `${processingActivities.length}+`");
+    expect(s).toContain("hasMoreActivities ? `${activitiesCount}+`");
   });
 });

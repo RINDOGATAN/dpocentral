@@ -32,8 +32,7 @@ describe("R1: one submission at a time", () => {
   it.each([
     ["src/app/(dashboard)/privacy/dsar/new/page.tsx", "submitLock"],
     ["src/app/(dashboard)/privacy/transfers/page.tsx", "submitLock"],
-    ["src/app/(dashboard)/privacy/data-inventory/page.tsx", "activityLock"],
-    ["src/app/(dashboard)/privacy/data-inventory/page.tsx", "transferLock"],
+    ["src/components/privacy/new-activity-dialog.tsx", "activityLock"],
   ])("%s guards its create with %s", (file, lock) => {
     const src = read(file);
     expect(src).toContain(`if (!${lock}.acquire()) return;`);
@@ -60,7 +59,7 @@ describe("R3: name length", () => {
     "src/app/(dashboard)/privacy/data-inventory/new/page.tsx",
     "src/app/(dashboard)/privacy/data-inventory/[id]/edit/page.tsx",
     "src/app/(dashboard)/privacy/data-inventory/activities/[id]/edit/page.tsx",
-    "src/app/(dashboard)/privacy/data-inventory/page.tsx",
+    "src/components/privacy/new-activity-dialog.tsx",
   ])("%s caps the name at the server's 200 characters", (file) => {
     expect(read(file)).toContain("maxLength={200}");
   });

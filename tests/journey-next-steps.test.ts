@@ -4,10 +4,10 @@
 /**
  * Next steps a first-time user follows:
  *
- * J1 "Add Activity" on the records of processing opens the new-activity form
- *    (it lives on the data inventory) instead of doing nothing
- * J2 the data inventory opens the tab an address names (?tab=) and the
- *    new-activity form on ?new=activity
+ * J1 "Add Activity" on the records of processing opens the new-activity form,
+ *    which lives there (activities have one home)
+ * J2 the data inventory opens the tab an address names (?tab=); the old
+ *    activities and transfers tabs, and ?new=activity, go to their pages
  * J3 after "Stage N complete. Next: <stage>", the step band's button leads to
  *    the step that sentence names
  * J4 the quick start review counts the flows it will create (a two-way flow
@@ -27,15 +27,15 @@ const read = (p: string) => readFileSync(path.join(process.cwd(), p), "utf8");
 describe("J1: Add Activity on the records of processing", () => {
   const page = read("src/app/(dashboard)/privacy/data-inventory/processing-activities/page.tsx");
 
-  it("links to the data inventory with the new-activity form open", () => {
-    expect(page).toContain('"/privacy/data-inventory?tab=activities&new=activity"');
-    const links = page.match(/<Link href=\{NEW_ACTIVITY_HREF\}>/g) ?? [];
-    expect(links.length).toBe(2);
+  it("opens the new-activity form on this page", () => {
+    expect(page).toContain("<NewActivityDialog open={activityDialogOpen} onOpenChange={setActivityDialogOpen} />");
+    expect(page.match(/onClick=\{\(\) => setActivityDialogOpen\(true\)\}/g)?.length).toBe(2);
   });
 
-  it("is shown only to people who may write", () => {
+  it("is shown only to people who may write, and opens on ?new=activity for them", () => {
     expect(page).toContain("const { canWrite } = useOrgRole();");
-    expect(page.match(/\{canWrite && \(\s*<Button asChild>/g)?.length).toBe(2);
+    expect(page.match(/\{canWrite && \(\s*<Button onClick=\{\(\) => setActivityDialogOpen\(true\)\}/g)?.length).toBe(2);
+    expect(page).toContain("if (wantsNewActivity && canWrite)");
   });
 
   it("leaves no Add Activity button without an action", () => {
@@ -47,14 +47,14 @@ describe("J2: the data inventory follows its address", () => {
   const page = read("src/app/(dashboard)/privacy/data-inventory/page.tsx");
 
   it("opens the tab named by ?tab=", () => {
-    expect(page).toContain('const INVENTORY_TABS = ["assets", "activities", "flows", "transfers"] as const;');
+    expect(page).toContain('const INVENTORY_TABS = ["assets", "flows"] as const;');
     expect(page).toContain("<Tabs defaultValue={initialTab}>");
   });
 
-  it("opens the new-activity form once on ?new=activity, for writers only", () => {
-    expect(page).toContain('searchParams.get("new") === "activity"');
-    expect(page).toContain("if (wantsNewActivity && canWrite)");
-    expect(page).toContain('router.replace("/privacy/data-inventory?tab=activities"');
+  it("sends the old activities and transfers addresses to their pages", () => {
+    expect(page).toContain('tabParam === "activities" || wantsNewActivity');
+    expect(page).toContain("router.replace(wantsNewActivity ? `${ACTIVITIES_HREF}?new=activity` : ACTIVITIES_HREF)");
+    expect(page).toContain("router.replace(TRANSFERS_HREF)");
   });
 });
 

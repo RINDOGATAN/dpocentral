@@ -84,7 +84,7 @@ const TRANSFER_TIA_REQUIREMENT: JurisdictionRequirement = {
   title: "Complete a TIA for each international data transfer",
   description:
     "When personal data leaves the regulated territory, a Transfer Impact Assessment (Schrems II) is required for non-adequate destinations.",
-  actionHref: "/privacy/data-inventory?tab=transfers",
+  actionHref: "/privacy/transfers",
 };
 
 /**
