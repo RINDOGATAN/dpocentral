@@ -12,6 +12,8 @@
  *    the step that sentence names
  * J4 the quick start review counts the flows it will create (a two-way flow
  *    is two)
+ * J5 "Start from another client" is offered only when there is a client to
+ *    copy from
  */
 
 import { describe, it, expect } from "vitest";
@@ -93,5 +95,14 @@ describe("J4: the quick start review counts the flows it will create", () => {
     const router = read("src/server/routers/privacy/quickstart.ts");
     expect(router).toContain("flows: flowRecordCount(template.flows)");
     expect(router).toContain("flowCount: flowRecordCount(t.flows)");
+  });
+});
+
+describe("J5: Start from another client only when there is one", () => {
+  it("hides the card for a person with no other client to copy from", () => {
+    const page = read("src/app/(dashboard)/privacy/quickstart/page.tsx");
+    expect(page).toContain("trpc.clientTemplate.sources.useQuery(");
+    expect(page).toContain("const canCopyFromAnother = (copySources?.length ?? 0) > 0;");
+    expect(page).toContain("{canCopyFromAnother && (");
   });
 });
