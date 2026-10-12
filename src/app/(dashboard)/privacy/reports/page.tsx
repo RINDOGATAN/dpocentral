@@ -361,13 +361,13 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {riskIndicators.map((indicator, i) => (
+              {riskIndicators.map((indicator) => (
                 <div
-                  key={i}
+                  key={indicator.key}
                   className={`flex items-center gap-3 text-sm p-2 rounded border ${toneBorder("warning")} ${toneTint("warning")}`}
                 >
                   <AlertTriangle className={`w-4 h-4 shrink-0 ${toneMark("warning")}`} />
-                  <span>{indicator}</span>
+                  <span>{tp(`risk.items.${indicator.key}`, { count: indicator.count })}</span>
                 </div>
               ))}
             </div>

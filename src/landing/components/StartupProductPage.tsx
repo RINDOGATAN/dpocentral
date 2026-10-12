@@ -155,6 +155,9 @@ const StartupProductPage = ({
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    // The field is required; a blank address never reaches the provider,
+    // whose refusal would read as "email sign-in is not available".
+    if (!emailInput.trim()) return;
     setError("");
     setSending(true);
     try {
@@ -299,6 +302,8 @@ const StartupProductPage = ({
                       <form onSubmit={handleMagicLink} className="space-y-4">
                         <input
                           type="email"
+                          required
+                          autoComplete="email"
                           value={emailInput}
                           onChange={(e) => setEmailInput(e.target.value)}
                           placeholder="you@startup.com"
@@ -336,6 +341,8 @@ const StartupProductPage = ({
                       <form onSubmit={handleMagicLink} className="space-y-4">
                         <input
                           type="email"
+                          required
+                          autoComplete="email"
                           value={emailInput}
                           onChange={(e) => setEmailInput(e.target.value)}
                           placeholder="you@startup.com"

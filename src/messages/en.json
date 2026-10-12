@@ -745,8 +745,8 @@
       }
     },
     "newDsar": {
-      "title": "New DSAR Request",
-      "subtitle": "Log a data subject access request",
+      "title": "New Rights Request",
+      "subtitle": "Log a request from a person exercising their privacy rights",
       "type": {
         "title": "Request Type",
         "subtitle": "Select the type of data subject request",
@@ -804,11 +804,11 @@
         "requirementsTitle": "Requirements still outstanding ({count})",
         "frameworkPartial": "{framework}: {covered} of {total} requirements covered.",
         "frameworkComplete": "{framework}: every requirement covered ({total} of {total}).",
-        "notConforming": "This assessment does not yet conform to the rules of {framework}.",
+        "notConforming": "This assessment does not yet conform to those rules.",
         "exportHint": "You can export at any time. While anything is outstanding the document is marked a draft and lists what is missing on its first page.",
         "jump": "Go to the step that answers this",
         "californiaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing. The questions below are answered for the record.",
-        "submitHint": "Answer the questions listed above before you send this assessment for review."
+        "submitHint": "Answer the questions listed below before you send this assessment for review."
       },
       "notFound": "Assessment not found",
       "back": "Back to Assessments",
@@ -1595,7 +1595,7 @@
         "vendorMeta": "{category} · {label} · {count, plural, one {# data element} other {# data elements}}"
       },
       "choose": {
-        "intro": "Choose how you want to bootstrap your privacy program. You can use both options together.",
+        "intro": "Choose how you want to set up your privacy program. You can use both options together.",
         "best": "Best",
         "or": "or choose individually",
         "vendorCardTitle": "Import from Vendor Catalog",
@@ -1690,7 +1690,7 @@
         "createdListActivities": "Processing activities",
         "createdListFlows": "Data flows",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
-        "createdBody": "Your privacy program has been bootstrapped. Explore your new records and customize them as needed.",
+        "createdBody": "Your privacy program is set up. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
         "cardDataInventoryDesc": "View assets & elements",
         "cardActivities": "Processing Activities",
@@ -1740,7 +1740,15 @@
       "risk": {
         "title": "Risk Indicators",
         "subtitle": "Actionable items requiring attention",
-        "noneTitle": "No risk indicators detected. Great job!"
+        "noneTitle": "No risk indicators detected. Great job!",
+        "items": {
+          "overdueDsars": "{count, plural, one {# overdue rights request} other {# overdue rights requests}}",
+          "highRiskVendorsUnassessed": "{count, plural, one {# high-risk vendor without an assessment} other {# high-risk vendors without an assessment}}",
+          "openSevereIncidents": "{count, plural, one {# open critical or high incident} other {# open critical or high incidents}}",
+          "draftAssessments": "{count, plural, one {# assessment still in draft} other {# assessments still in draft}}",
+          "contractsExpiring": "{count, plural, one {# vendor contract expiring within 30 days} other {# vendor contracts expiring within 30 days}}",
+          "assetsWithoutActivity": "{count, plural, one {# data asset not linked to a processing activity} other {# data assets not linked to a processing activity}}"
+        }
       },
       "modules": {
         "heading": "Module Details",
@@ -2435,9 +2443,9 @@
       },
       "searchPlaceholder": "Search activities...",
       "inactive": "Inactive",
-      "assetsCount": "{count} data assets",
-      "subjectTypesCount": "{count} subject types",
-      "categoriesCount": "{count} data categories",
+      "assetsCount": "{count, plural, one {# data asset} other {# data assets}}",
+      "subjectTypesCount": "{count, plural, one {# subject type} other {# subject types}}",
+      "categoriesCount": "{count, plural, one {# data category} other {# data categories}}",
       "dataSubjects": "Data Subjects",
       "empty": {
         "title": "No processing activities found",
@@ -2493,7 +2501,7 @@
       "overview": "Overview",
       "noDescription": "No description provided",
       "retention": "Retention",
-      "retentionDays": "{days} days",
+      "retentionDays": "{days, plural, one {# day} other {# days}}",
       "notSpecified": "Not specified",
       "legalBasis": "Legal Basis",
       "parentAsset": "Parent Asset",
@@ -2966,7 +2974,7 @@
     "getOnMarketplace": "Get it on the marketplace",
     "errorCheckout": "Couldn't start checkout. Please try again.",
     "errorGeneric": "Something went wrong. Please try again.",
-    "multiTitle": "Enable {count} Features",
+    "multiTitle": "{count, plural, one {Enable # Feature} other {Enable # Features}}",
     "multiContactBody": "Contact us to enable these features for your organization.",
     "multiBody": "Add these features to your organization.",
     "multiRedirecting": "Redirecting to payment...",
@@ -4033,7 +4041,7 @@
       "conformanceOutstanding": "Outstanding",
       "conformanceNotAnswered": "Not asked in this assessment",
       "conformanceComplete": "{framework}: every requirement covered ({covered} of {total}).",
-      "conformancePartial": "{framework}: {covered} of {total} requirements covered. This assessment does not conform to the rules of {framework} until the rest are answered.",
+      "conformancePartial": "{framework}: {covered} of {total} requirements covered. This assessment does not conform to those rules until the rest are answered.",
       "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
       "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
       "coverGenerated": "Generated: {date}",
@@ -4766,7 +4774,7 @@
       },
       "quickstart": {
         "title": "Quickstart Wizard",
-        "description": "Bootstrap your entire privacy program in minutes instead of building everything from scratch.",
+        "description": "Set up your entire privacy program in minutes instead of building everything from scratch.",
         "importVendors": {
           "title": "Import from Vendors",
           "desc": "Select vendors you already use from the catalog, or import up to 5 for free from your Vendor.Watch portfolio. The wizard auto-generates data assets, data elements, processing activities, and cross-border transfers for each vendor."
@@ -5346,7 +5354,7 @@
     },
     "quickstart": {
       "title": "Quickstart Wizard",
-      "subtitle": "Bootstrap your entire privacy program in minutes. The quickstart wizard creates data assets, data elements, processing activities, data flows, and vendor records based on your industry and the tools you use.",
+      "subtitle": "Set up your entire privacy program in minutes. The quickstart wizard creates data assets, data elements, processing activities, data flows, and vendor records based on your industry and the tools you use.",
       "openWizard": "Open Quickstart Wizard",
       "howItWorks": {
         "title": "How It Works",
@@ -5431,7 +5439,7 @@
       },
       "afterQuickstart": {
         "title": "After Quickstart",
-        "description": "What to do once your privacy program is bootstrapped.",
+        "description": "What to do once your privacy program is set up.",
         "intro": "The quickstart gives you a solid foundation. After running it, you should:",
         "items": {
           "review": {

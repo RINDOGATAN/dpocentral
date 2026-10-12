@@ -178,7 +178,7 @@ describe("a finished assessment", () => {
     const { text } = build("en", responses);
     expect(text).toContain("European Union: every requirement covered (8 of 8).");
     expect(text).toContain(
-      "California: 11 of 12 requirements covered. This assessment does not conform to the rules of California until the rest are answered."
+      "California: 11 of 12 requirements covered. This assessment does not conform to those rules until the rest are answered."
     );
   });
 
