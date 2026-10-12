@@ -10095,5 +10095,20 @@
     "action": "Cualquier cambio en la solicitud, en una tarea o en un mensaje la conserva.",
     "ctaText": "Abrir la solicitud",
     "whyYou": "Recibes este correo porque eres propietario o administrador de {orgName}."
+  },
+  "search": {
+    "label": "Buscar en el programa por nombre",
+    "placeholder": "Buscar por nombre",
+    "results": "Resultados de la búsqueda",
+    "noResults": "No hay nada con ese nombre.",
+    "namesOnly": "Busca solo en los nombres: sistemas, actividades, proveedores, evaluaciones, incidentes y solicitudes.",
+    "kinds": {
+      "system": "Sistemas",
+      "activity": "Actividades de tratamiento",
+      "vendor": "Proveedores",
+      "assessment": "Evaluaciones",
+      "incident": "Incidentes",
+      "request": "Solicitudes de derechos"
+    }
   }
 }

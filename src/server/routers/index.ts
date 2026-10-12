@@ -32,11 +32,13 @@ import { skillsRouter } from "./skills";
 import { diagnosticsRouter } from "./diagnostics";
 import { auditRouter } from "./privacy/audit";
 import { safeguardsRouter } from "./privacy/safeguards";
+import { searchRouter } from "./privacy/search";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
   dataInventory: dataInventoryRouter,
   dsar: dsarRouter,
+  search: searchRouter,
   assessment: assessmentRouter,
   incident: incidentRouter,
   vendor: vendorRouter,

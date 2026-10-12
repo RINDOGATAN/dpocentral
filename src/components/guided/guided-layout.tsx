@@ -53,6 +53,7 @@ import { currentStepId, nextStep, numberedStageCount, overallProgress, stageNumb
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { useAuditAccess } from "@/lib/use-audit-access";
 import { PathMenu } from "./path-menu";
+import { GlobalSearch } from "./global-search";
 import { DepartmentSwitch } from "./department-switch";
 import { StepBand } from "./step-band";
 import { ProgressBar } from "./progress-ring";
@@ -189,6 +190,9 @@ export function GuidedLayout({
                   bar at 360 px; the name returns once there is room. */}
               <BrandMark nameClassName="hidden sm:inline" />
             </Link>
+          </div>
+          <div className="flex min-w-0 flex-1 justify-end sm:justify-center">
+            <GlobalSearch />
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <PageHelpButton />
