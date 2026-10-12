@@ -33,6 +33,13 @@ function looksLikeLicense(x: unknown): x is Record<string, unknown> {
 export default function SkillsPage() {
   const formatPrice = useFormatPrice();
   const t = useTranslations("skills");
+  // Package names are stored in English; known packages are named in the
+  // reader's language (skills.names, keyed by the last part of the skill id).
+  const tNames = useTranslations("skills.names");
+  const packageName = (pkg: { skillId: string; displayName: string }) => {
+    const key = pkg.skillId.split(".").pop() ?? "";
+    return tNames.has(key as never) ? tNames(key as never) : pkg.displayName;
+  };
   const locale = useLocale();
   const { organization } = useOrganization();
   const hosted = useHostedPilot();
@@ -262,7 +269,7 @@ export default function SkillsPage() {
                 <li key={pkg.id}>
                   <Card className={`flex items-center justify-between gap-3 p-4 ${isComingSoon ? "opacity-60" : ""}`}>
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-medium">{pkg.displayName}</div>
+                      <div className="truncate text-sm font-medium">{packageName(pkg)}</div>
                       <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                         {active && pkg.entitlement ? (
                           <>

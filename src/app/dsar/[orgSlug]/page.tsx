@@ -22,7 +22,8 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Shield, CheckCircle2, Loader2, AlertTriangle, Copy, Check } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { sanitizeCss } from "@/lib/sanitize";
-import { localizedIntakeText } from "@/lib/dsar-default-intake";
+import { DEFAULT_INTAKE_TEXT, localizedIntakeText } from "@/lib/dsar-default-intake";
+import { withoutFinalStop } from "@/lib/sentence";
 import { DSARType } from "@prisma/client";
 import { StatusNote } from "@/components/ui/status-note";
 
@@ -139,7 +140,7 @@ export default function PublicDSARPage() {
                       </a>
                     ),
                   })
-                : t("closed.withoutContact", { orgName: formConfig.orgName })}
+                : t("closed.withoutContact", { orgName: withoutFinalStop(formConfig.orgName) })}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -232,7 +233,11 @@ export default function PublicDSARPage() {
           </div>
           <h1 className="text-2xl font-semibold">{words.title}</h1>
           <p className="text-muted-foreground mt-1">
-            {words.description || t("header.fallbackDescription", { orgName: formConfig.orgName })}
+            {/* The seeded description does not name the organisation; the
+                fallback does, so a requester sees whom they are writing to. */}
+            {formConfig.description === DEFAULT_INTAKE_TEXT.description || !words.description
+              ? t("header.fallbackDescription", { orgName: formConfig.orgName })
+              : words.description}
           </p>
         </div>
 

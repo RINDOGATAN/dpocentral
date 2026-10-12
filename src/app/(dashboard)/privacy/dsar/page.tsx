@@ -21,6 +21,7 @@ import {
 import { COMING_SOON_SKILL_IDS, SKILL_PACKAGE_IDS } from "@/config/skill-packages";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { trpc } from "@/lib/trpc";
+import { useDsarCanAddRequests } from "@/components/privacy/dsar-module-access-note";
 import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
@@ -55,6 +56,7 @@ export default function DSARPage() {
   // the requests on which they hold a task (src/lib/dsar-access.ts).
   const { canHandle } = useDsarAccess();
   const restricted = canHandle === false;
+  const canAdd = useDsarCanAddRequests();
 
   const {
     data: dsarPages,
@@ -146,7 +148,7 @@ export default function DSARPage() {
               </Button>
             </Link>
           )}
-          {!restricted && (
+          {!restricted && canAdd && (
             <Link href="/privacy/dsar/new" className="flex-1 sm:flex-none">
               <Button className="w-full sm:w-auto">
                 <Plus className="w-4 h-4 sm:mr-2" />
@@ -351,13 +353,17 @@ export default function DSARPage() {
           <CardContent className="py-8 text-center text-muted-foreground">
             <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>{t("emptyAll.title")}</p>
-            <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
-            <Link href="/privacy/dsar/new">
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("newRequest")}
-              </Button>
-            </Link>
+            {canAdd && (
+              <>
+                <p className="text-sm mb-4">{t("emptyAll.subtitle")}</p>
+                <Link href="/privacy/dsar/new">
+                  <Button>
+                    <Plus className="w-4 h-4 mr-2" />
+                    {t("newRequest")}
+                  </Button>
+                </Link>
+              </>
+            )}
           </CardContent>
         </Card>
       ) : (
