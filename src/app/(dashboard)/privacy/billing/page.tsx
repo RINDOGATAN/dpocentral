@@ -4,6 +4,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { formatDateIn } from "@/lib/utils";
 import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -32,6 +34,7 @@ import { toneMark } from "@/config/status-palette";
 export default function BillingPage() {
   const formatPrice = useFormatPrice();
   const router = useRouter();
+  const locale = useLocale();
   const { organization } = useOrganization();
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
@@ -108,7 +111,7 @@ export default function BillingPage() {
       entitlementId: entitlement?.id ?? null,
       stripeSubscriptionId: entitlement?.stripeSubscriptionId ?? null,
       renewsAt: entitlement?.expiresAt
-        ? new Date(entitlement.expiresAt).toLocaleDateString()
+        ? formatDateIn(entitlement.expiresAt, locale)
         : null,
     };
   });

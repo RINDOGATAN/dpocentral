@@ -432,8 +432,8 @@
       }
     },
     "editAsset": {
-      "title": "Edit Data Asset",
-      "subtitle": "Update this data asset's details",
+      "title": "Edit System",
+      "subtitle": "Update this system's details",
       "saving": "Saving...",
       "save": "Save Changes"
     },
@@ -485,7 +485,7 @@
       "personalDataToggle": "This element contains personal data",
       "specialCategoryToggle": "Special category data (GDPR Art. 9)",
       "errorPrefix": "Error: {message}",
-      "backToAsset": "← Back to parent asset",
+      "backToAsset": "← Back to parent system",
       "category_option": {
         "IDENTIFIERS": "Identifiers",
         "DEMOGRAPHICS": "Demographics",
@@ -614,8 +614,8 @@
     },
     "transfers": {
       "list": {
-        "title": "International Transfers",
-        "subtitle": "Manage cross-border data transfers under GDPR Chapter V (Art. 44–49).",
+        "title": "Transfers",
+        "subtitle": "International (cross-border) data transfers and the safeguard each relies on, under GDPR Chapter V (Art. 44 to 49)",
         "add": "Add Transfer",
         "addFirst": "Add your first transfer",
         "total": "Total",
@@ -706,16 +706,16 @@
       "empty": "No questionnaire templates configured yet."
     },
     "newAsset": {
-      "title": "Add Data Asset",
+      "title": "Add System",
       "subtitle": "Register a new system or data store",
-      "details": "Asset Details",
-      "detailsSubtitle": "Provide information about the data asset",
-      "name": "Asset Name *",
+      "details": "System Details",
+      "detailsSubtitle": "Provide information about the system",
+      "name": "System Name *",
       "namePlaceholder": "e.g., Customer Database",
-      "type": "Asset Type *",
+      "type": "System Type *",
       "typePlaceholder": "Select type",
       "description": "Description",
-      "descriptionPlaceholder": "Describe the asset and its purpose...",
+      "descriptionPlaceholder": "Describe the system and its purpose...",
       "owner": "Owner/Department",
       "ownerPlaceholder": "e.g., Engineering",
       "location": "Location",
@@ -727,7 +727,7 @@
       "production": "Production environment",
       "errorPrefix": "Error: {message}",
       "creating": "Creating...",
-      "submit": "Create Asset",
+      "submit": "Create System",
       "assetType": {
         "DATABASE": "Database",
         "APPLICATION": "Application",
@@ -967,28 +967,28 @@
       "retentionPeriod": "Retention Period",
       "automatedDecisionMaking": "Automated Decision-Making",
       "recipients": "Recipients",
-      "linkedAssets": "Linked Data Assets ({count})",
+      "linkedAssets": "Linked Systems ({count})",
       "generateFlows": "Generate Flows",
-      "manageAssets": "Manage Assets",
+      "manageAssets": "Manage Systems",
       "elementCount": "{count, plural, one {# element} other {# elements}}",
       "elementCountOf": "{count}/{total} elements",
       "notLinked": "+{count} not linked",
-      "noLinkedAssets": "No data assets linked to this activity",
+      "noLinkedAssets": "No systems linked to this activity",
       "transfers": "Data Transfers ({count})",
       "assessments": "Assessments ({count})",
       "linkDialog": {
-        "title": "Link Data Assets",
-        "description": "Select which data assets and elements are processed by this activity.",
+        "title": "Link Systems",
+        "description": "Select which systems and elements are processed by this activity.",
         "assetMeta": "{type}: {count, plural, one {# element} other {# elements}}",
         "hide": "Hide",
         "elements": "Elements",
         "allElements": "All elements",
-        "noAssets": "No data assets in this organization yet",
-        "selected": "{count, plural, one {# asset selected} other {# assets selected}}"
+        "noAssets": "No systems in this organization yet",
+        "selected": "{count, plural, one {# system selected} other {# systems selected}}"
       }
     },
     "assetDetail": {
-      "notFound": "Asset not found",
+      "notFound": "System not found",
       "back": "Back to Inventory",
       "production": "Production",
       "edit": "Edit",
@@ -1016,7 +1016,7 @@
       },
       "elements": {
         "title": "Data Elements",
-        "subtitle": "Fields and data points stored in this asset",
+        "subtitle": "Fields and data points stored in this system",
         "addElement": "Add Element",
         "personalData": "Personal Data",
         "emptyTitle": "No data elements defined yet",
@@ -1024,7 +1024,7 @@
       },
       "activities": {
         "title": "Linked Processing Activities",
-        "subtitle": "Activities that use data from this asset",
+        "subtitle": "Activities that use data from this system",
         "manage": "Manage Activities",
         "elementCount": "{used, plural, one {# element} other {# elements}}",
         "elementCountFiltered": "{used}/{total} {used, plural, one {element} other {elements}}",
@@ -1033,7 +1033,7 @@
       },
       "addElement": {
         "title": "Add Data Element",
-        "subtitle": "Add a new data field or element to this asset",
+        "subtitle": "Add a new data field or element to this system",
         "nameLabel": "Element Name *",
         "namePlaceholder": "e.g., email_address, phone_number",
         "descLabel": "Description",
@@ -1050,7 +1050,7 @@
       },
       "linkActivities": {
         "title": "Link Processing Activities",
-        "subtitle": "Select which activities use data from this asset, and which elements they process.",
+        "subtitle": "Select which activities use data from this system, and which elements they process.",
         "elements": "Elements",
         "hide": "Hide",
         "allElements": "All elements",
@@ -1426,7 +1426,7 @@
         "assignedTo": "Assigned to: {name}",
         "unassigned": "Unassigned",
         "empty": "No tasks yet",
-        "emptySub": "Add tasks or auto-generate from data assets",
+        "emptySub": "Add tasks or auto-generate from systems",
         "status": {
           "PENDING": "Pending",
           "IN_PROGRESS": "In Progress",
@@ -1556,7 +1556,7 @@
       "limitedTitle": "The quick start is for the whole organization",
       "limitedBody": "The quick start sets up the whole organization, and your access is limited to your department. An administrator can run it.",
       "limitedBack": "Back to the overview",
-      "title": "Privacy Program Quickstart",
+      "title": "Quick start",
       "subtitle": "Get a head start on your privacy program",
       "programName": {
         "label": "Program name",
@@ -1603,10 +1603,10 @@
         "best": "Best",
         "or": "or choose individually",
         "vendorCardTitle": "Import from Vendor Catalog",
-        "vendorCardDesc": "Select vendors you use and auto-generate data assets, elements, and processing activities from their known data profiles.",
+        "vendorCardDesc": "Select vendors you use and auto-generate systems, elements, and processing activities from their known data profiles.",
         "industryCardTitle": "Start from Industry Template",
-        "industryCardDesc": "Pick your industry and get a pre-built privacy program with common data assets, processing activities, and data flows.",
-        "tagAssets": "Data Assets",
+        "industryCardDesc": "Pick your industry and get a pre-built privacy program with common systems, processing activities, and data flows.",
+        "tagAssets": "Systems",
         "tagElements": "Data Elements",
         "tagActivities": "Processing Activities",
         "tagTransfers": "Data Transfers",
@@ -1626,12 +1626,12 @@
         "verified": "Verified",
         "gdpr": "GDPR",
         "previewTitle": "Import Preview",
-        "previewSummary": "{vendors} vendors, {assets} assets, {elements} elements, {activities} activities",
-        "previewSummaryWithTransfers": "{vendors} vendors, {assets} assets, {elements} elements, {activities} activities, {transfers} data transfers",
+        "previewSummary": "{vendors} vendors, {assets} systems, {elements} elements, {activities} activities",
+        "previewSummaryWithTransfers": "{vendors} vendors, {assets} systems, {elements} elements, {activities} activities, {transfers} data transfers",
         "alreadyExists": "Already exists",
         "highRisk": "High Risk",
         "willCreate": "Will create:",
-        "assetCount": "{count, plural, one {# Asset} other {# Assets}}",
+        "assetCount": "{count, plural, one {# System} other {# Systems}}",
         "elementCount": "{count, plural, one {# Element} other {# Elements}}",
         "activityCount": "{count, plural, one {# Activity} other {# Activities}}",
         "transferCount": "{count, plural, one {# Transfer} other {# Transfers}}",
@@ -1643,14 +1643,14 @@
         "title": "Select Industry",
         "subtitle": "Choose the template that best matches your organization.",
         "back": "Back",
-        "templateAssets": "{count, plural, one {# asset} other {# assets}}",
+        "templateAssets": "{count, plural, one {# system} other {# systems}}",
         "templateActivities": "{count, plural, one {# activity} other {# activities}}",
         "templateFlows": "{count, plural, one {# flow} other {# flows}}",
         "previewTitle": "{name} Template Preview",
-        "previewSummary": "{assets} assets, {elements} elements, {activities} activities, {flows} flows",
+        "previewSummary": "{assets} systems, {elements} elements, {activities} activities, {flows} flows",
         "collapse": "Collapse",
         "expand": "Expand",
-        "dataAssets": "Data Assets",
+        "dataAssets": "Systems",
         "exists": "Exists",
         "elementsList": "{count, plural, one {# element} other {# elements}}: {list}",
         "processingActivities": "Processing Activities",
@@ -1664,7 +1664,7 @@
         "back": "Back",
         "stats": {
           "vendors": "Vendors",
-          "assets": "Data Assets",
+          "assets": "Systems",
           "elements": "Data Elements",
           "activities": "Activities",
           "flows": "Data Flows",
@@ -1672,7 +1672,7 @@
           "aiSystems": "AI Systems"
         },
         "nondestructiveTitle": "Non-destructive operation",
-        "nondestructiveBody": "This will only create new records. Existing data assets, vendors, and processing activities will not be modified. Duplicates are automatically skipped.",
+        "nondestructiveBody": "This will only create new records. Existing systems, vendors, and processing activities will not be modified. Duplicates are automatically skipped.",
         "vendorImport": "Vendor Import",
         "vendorMeta": "{count, plural, one {# element} other {# elements}}, 1 activity",
         "vendorMetaWithTransfers": "{count, plural, one {# element} other {# elements}}, 1 activity, {transfers, plural, one {# transfer} other {# transfers}}",
@@ -1690,13 +1690,13 @@
         "forProgramme": "The {name} program",
         "createdListTitle": "What was created",
         "createdListVendors": "Vendors",
-        "createdListAssets": "Data assets",
+        "createdListAssets": "Systems",
         "createdListActivities": "Processing activities",
         "createdListFlows": "Data flows",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program is set up. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
-        "cardDataInventoryDesc": "View assets & elements",
+        "cardDataInventoryDesc": "View systems & elements",
         "cardActivities": "Processing Activities",
         "cardActivitiesDesc": "View activities & ROPA",
         "cardVendors": "Vendors",
@@ -1708,8 +1708,8 @@
       }
     },
     "reports": {
-      "title": "Compliance Dashboard",
-      "subtitle": "Privacy program compliance posture",
+      "title": "Reports",
+      "subtitle": "Compliance dashboard: where your privacy program stands",
       "saveSnapshot": "Save Snapshot",
       "regulatoryReport": "Regulatory Report",
       "score": {
@@ -1724,7 +1724,7 @@
         "outOf": "/ 100",
         "unrated": "Not yet rated",
         "unratedRing": "Not rated",
-        "unratedSubtitle": "No module has data to score yet. Add data assets, assessments, DSARs, incidents or vendors and the score will appear here.",
+        "unratedSubtitle": "No module has data to score yet. Add systems, assessments, DSARs, incidents or vendors and the score will appear here.",
         "partialSubtitle": "Based on {rated} of {total} areas ({pct}% of the weighting). No rating is given until every area has data; areas with no data are left out rather than counted as compliant.",
         "areasWithData": "Data in {rated} of {total} areas",
         "value": "{score} / 100",
@@ -1753,13 +1753,13 @@
           "openSevereIncidents": "{count, plural, one {# open critical or high incident} other {# open critical or high incidents}}",
           "draftAssessments": "{count, plural, one {# assessment still in draft} other {# assessments still in draft}}",
           "contractsExpiring": "{count, plural, one {# vendor contract expiring within 30 days} other {# vendor contracts expiring within 30 days}}",
-          "assetsWithoutActivity": "{count, plural, one {# data asset not linked to a processing activity} other {# data assets not linked to a processing activity}}"
+          "assetsWithoutActivity": "{count, plural, one {# system not linked to a processing activity} other {# systems not linked to a processing activity}}"
         }
       },
       "modules": {
         "heading": "Module Details",
         "dataInventory": "Data Inventory",
-        "assets": "Assets",
+        "assets": "Systems",
         "elements": "Elements",
         "activities": "Activities",
         "flows": "Flows",
@@ -1789,8 +1789,8 @@
       }
     },
     "regulations": {
-      "title": "Regulation Hub",
-      "subtitle": "Track applicable privacy regulations and compliance requirements",
+      "title": "What applies",
+      "subtitle": "The jurisdictions and privacy laws that apply to you, and their requirements (regulation hub)",
       "exportReport": "Export Report",
       "wizard": "Applicability Wizard",
       "tabs": {
@@ -1846,7 +1846,7 @@
       }
     },
     "aiSystems": {
-      "title": "AI Governance Register",
+      "title": "AI systems",
       "subtitle": "The AI systems that use personal data, for complete privacy records. Their governance is done in AI Sentinel.",
       "register": "Register AI System",
       "search": "Search AI systems...",
@@ -1910,8 +1910,8 @@
       "syncedWithSentinel": "Synced with AI Sentinel"
     },
     "incidents": {
-      "title": "Incident Management",
-      "subtitle": "Track security incidents and breaches",
+      "title": "Breach register",
+      "subtitle": "Security incidents and personal data breaches (incident management)",
       "exportRegister": "Export Register",
       "exportPdf": "Download as PDF",
       "exportCsv": "Download as CSV",
@@ -1970,8 +1970,8 @@
       "emptyFiltered": "No incidents match these filters"
     },
     "vendors": {
-      "title": "Vendor Management",
-      "subtitle": "Manage third-party vendors and data processors",
+      "title": "Vendors and processors",
+      "subtitle": "Third-party vendors and the processors that handle personal data for you (vendor management)",
       "exportRegister": "Export Register",
       "exportPdf": "Download as PDF",
       "exportCsv": "Download as CSV",
@@ -2105,11 +2105,11 @@
       "subtitle": "Manage your account, organization, and team.",
       "templateItems": {
         "title": "Remove all template items",
-        "lead": "The quick start and the industry templates create example vendors, data assets and processing activities to get you started. This removes the ones nobody has edited, in one step. Anything you have opened and changed is kept.",
+        "lead": "The quick start and the industry templates create example vendors, systems and processing activities to get you started. This removes the ones nobody has edited, in one step. Anything you have opened and changed is kept.",
         "count": "{remove, plural, one {# item} other {# items}} would be removed and {keep} kept.",
         "keptNote": "Records created before 28 September 2026 are kept.",
         "vendors": "vendors",
-        "dataAssets": "data assets",
+        "dataAssets": "systems",
         "processingActivities": "processing activities",
         "button": "Remove all template items",
         "confirm": "Yes, remove {count}",
@@ -2245,8 +2245,8 @@
       }
     },
     "dsar": {
-      "title": "Data Subject Requests",
-      "subtitle": "Manage and track DSARs",
+      "title": "Rights requests",
+      "subtitle": "Data subject requests (DSARs) and their deadlines",
       "exportReport": "Export Report",
       "settings": "Settings",
       "comingSoon": "Coming Soon",
@@ -2321,19 +2321,19 @@
       }
     },
     "dataInventory": {
-      "title": "Data Inventory",
-      "subtitle": "Manage data assets and processing activities",
+      "title": "Data inventory",
+      "subtitle": "Your systems: where personal data is held, and the data elements in each",
       "export": "Export",
       "exportPrivacyProgram": "Privacy Program Report",
       "exportRopa": "ROPA Export",
-      "addAsset": "Add Asset",
+      "addAsset": "Add System",
       "addAssetShort": "Add",
       "addActivity": "Add Activity",
       "addTransfer": "Add Transfer",
-      "search": "Search assets...",
+      "search": "Search systems...",
       "filters": "Filters",
       "tabs": {
-        "assets": "Assets ({count})",
+        "assets": "Systems ({count})",
         "activities": "Activities ({count})",
         "flows": "Data Flows",
         "transfers": "Transfers",
@@ -2348,14 +2348,14 @@
       "activity": {
         "noBasis": "No basis",
         "noSubjects": "No subjects",
-        "assetsCount": "{count, plural, one {# asset} other {# assets}}",
+        "assetsCount": "{count, plural, one {# system} other {# systems}}",
         "details": "Details",
         "viewDetails": "View Details"
       },
       "loadMore": "Load More",
       "emptyAssets": {
-        "title": "No data assets yet",
-        "subtitle": "Start by adding your first data asset"
+        "title": "No systems yet",
+        "subtitle": "Start by adding your first system"
       },
       "emptyActivities": {
         "title": "No processing activities yet",
@@ -2433,8 +2433,8 @@
     },
     "processingActivities": {
       "back": "Back",
-      "title": "Processing Activities",
-      "subtitle": "Record of Processing Activities (ROPA) for GDPR compliance",
+      "title": "Records of processing",
+      "subtitle": "Your processing activities: the record of processing activities (ROPA, GDPR Article 30)",
       "exportRopa": "Export ROPA",
       "downloadPdf": "Download as PDF",
       "downloadCsv": "Download as CSV",
@@ -2449,7 +2449,7 @@
       },
       "searchPlaceholder": "Search activities...",
       "inactive": "Inactive",
-      "assetsCount": "{count, plural, one {# data asset} other {# data assets}}",
+      "assetsCount": "{count, plural, one {# system} other {# systems}}",
       "subjectTypesCount": "{count, plural, one {# subject type} other {# subject types}}",
       "categoriesCount": "{count, plural, one {# data category} other {# data categories}}",
       "dataSubjects": "Data Subjects",
@@ -2510,12 +2510,12 @@
       "retentionDays": "{days, plural, one {# day} other {# days}}",
       "notSpecified": "Not specified",
       "legalBasis": "Legal Basis",
-      "parentAsset": "Parent Asset",
+      "parentAsset": "Parent System",
       "linkedTitle": "Linked Processing Activities",
       "linkedDescription": "Activities that explicitly process this data element",
       "inactive": "Inactive",
       "noLinked": "No processing activities linked to this element",
-      "noLinkedHint": "Open the parent asset and use “Manage Activities” to link one"
+      "noLinkedHint": "Open the parent system and use “Manage Activities” to link one"
     },
     "regulationsWizard": {
       "title": "Applicability Wizard",
@@ -2531,12 +2531,12 @@
     }
   },
   "confirms": {
-    "deleteAssetTitle": "Delete asset?",
-    "deleteAssetDesc": "This will permanently delete the asset and all linked elements. This cannot be undone.",
+    "deleteAssetTitle": "Delete system?",
+    "deleteAssetDesc": "This will permanently delete the system and all linked elements. This cannot be undone.",
     "deleteElementTitle": "Delete element?",
     "deleteElementDesc": "Delete \"{name}\"? This cannot be undone.",
     "deleteVendorTitle": "Delete vendor?",
-    "deleteVendorDesc": "This will remove the vendor and unlink it from any assets or activities. This cannot be undone.",
+    "deleteVendorDesc": "This will remove the vendor and unlink it from any systems or activities. This cannot be undone.",
     "deleteFlowTitle": "Delete data flow?",
     "deleteFlowDesc": "Delete flow \"{name}\"? This cannot be undone.",
     "deleteEntitlementTitle": "Delete entitlement?",
@@ -2641,9 +2641,9 @@
       "namePlaceholder": "e.g., User sync to analytics",
       "description": "Description",
       "descriptionPlaceholder": "Describe the purpose of this data flow",
-      "source": "Source Asset *",
+      "source": "Source System *",
       "sourcePlaceholder": "Select source system",
-      "destination": "Destination Asset *",
+      "destination": "Destination System *",
       "destinationPlaceholder": "Select destination system",
       "categories": "Data Categories",
       "categoriesSelected": "{count} selected",
@@ -2662,15 +2662,15 @@
     },
     "empty": {
       "loading": "Loading data flow visualization…",
-      "noAssetsTitle": "No data assets found",
-      "noAssetsBody": "Add data assets first to visualize data flows",
+      "noAssetsTitle": "No systems found",
+      "noAssetsBody": "Add systems first to visualize data flows",
       "noFlowsTitle": "No data flows defined yet",
       "noFlowsBody": "Create flows to visualize how data moves between systems",
-      "noAssetFlowsTitle": "No data flows connected to this asset",
-      "noAssetFlowsBody": "Create a flow to connect this asset to other systems"
+      "noAssetFlowsTitle": "No data flows connected to this system",
+      "noAssetFlowsBody": "Create a flow to connect this system to other systems"
     },
     "actions": {
-      "addAsset": "Add Asset",
+      "addAsset": "Add System",
       "addFlow": "Add Flow"
     },
     "frequencyOptions": {
@@ -2955,7 +2955,7 @@
       "OrganizationMember": "Team member",
       "OrganizationJurisdiction": "Jurisdiction",
       "OrganizationAiSettings": "AI settings",
-      "DataAsset": "Data asset",
+      "DataAsset": "System",
       "ProcessingActivity": "Processing activity",
       "DataFlow": "Data flow",
       "DataTransfer": "Transfer",
@@ -3083,7 +3083,7 @@
     "recentActivity": "Recent Activity",
     "quickActions": "Quick Actions",
     "metrics": {
-      "totalAssets": "Total Assets",
+      "totalAssets": "Total Systems",
       "activeRequests": "Active Requests",
       "pendingAssessments": "Pending Assessments",
       "openIncidents": "Open Incidents"
@@ -3091,15 +3091,15 @@
   },
   "dataInventory": {
     "title": "Data Inventory",
-    "assets": "Data Assets",
+    "assets": "Systems",
     "elements": "Data Elements",
     "activities": "Processing Activities",
     "flows": "Data Flows",
     "transfers": "Data Transfers",
-    "newAsset": "New Asset",
+    "newAsset": "New System",
     "newElement": "New Element",
     "newActivity": "New Activity",
-    "assetType": "Asset Type",
+    "assetType": "System Type",
     "sensitivity": "Sensitivity",
     "owner": "Owner",
     "location": "Location"
@@ -3682,9 +3682,9 @@
       "deleteFailed": "Failed to delete data flow"
     },
     "asset": {
-      "created": "Data asset created",
-      "updated": "Data asset updated",
-      "deleted": "Asset deleted",
+      "created": "System created",
+      "updated": "System updated",
+      "deleted": "System deleted",
       "elementAdded": "Data element added",
       "elementUpdated": "Data element updated",
       "elementDeleted": "Element deleted",
@@ -3695,8 +3695,8 @@
       "created": "Processing activity created",
       "updated": "Processing activity updated",
       "deleted": "Processing activity deleted",
-      "assetsLinked": "Linked assets updated",
-      "assetsLinkedWithFlows": "Linked assets: auto-generated {count, plural, one {# data flow} other {# data flows}}",
+      "assetsLinked": "Linked systems updated",
+      "assetsLinkedWithFlows": "Linked systems: auto-generated {count, plural, one {# data flow} other {# data flows}}",
       "flowsGenerated": "{count, plural, one {Generated # new data flow} other {Generated # new data flows}}",
       "noNewFlows": "No new flows to generate: the existing graph already covers this activity"
     },
@@ -3731,7 +3731,7 @@
       "statusUpdated": "Request status updated",
       "taskAdded": "Task added",
       "taskUpdated": "Task updated",
-      "tasksGenerated": "Tasks generated from data assets",
+      "tasksGenerated": "Tasks generated from systems",
       "messageSent": "Message sent"
     },
     "assessment": {
@@ -3763,7 +3763,7 @@
       "selectTemplate": "Select an industry template",
       "createdSummary": "Created {summary}",
       "createdVendors": "{count, plural, one {# vendor} other {# vendors}}",
-      "createdAssets": "{count, plural, one {# asset} other {# assets}}",
+      "createdAssets": "{count, plural, one {# system} other {# systems}}",
       "createdActivities": "{count, plural, one {# activity} other {# activities}}"
     }
   },
@@ -4615,7 +4615,7 @@
       "dataInventory": {
         "label": "Data Inventory",
         "items": {
-          "assets": "Assets",
+          "assets": "Systems",
           "elements": "Data Elements",
           "activities": "Processing Activities",
           "flows": "Data Flows",
@@ -4783,11 +4783,11 @@
         "description": "Set up your entire privacy program in minutes instead of building everything from scratch.",
         "importVendors": {
           "title": "Import from Vendors",
-          "desc": "Select vendors you already use from the catalog, or import up to 5 for free from your Vendor.Watch portfolio. The wizard auto-generates data assets, data elements, processing activities, and cross-border transfers for each vendor."
+          "desc": "Select vendors you already use from the catalog, or import up to 5 for free from your Vendor.Watch portfolio. The wizard auto-generates systems, data elements, processing activities, and cross-border transfers for each vendor."
         },
         "industryTemplate": {
           "title": "Industry Template",
-          "desc": "Pick your industry (E-commerce, SaaS, Healthcare, Fintech, Media, or Professional Services) and get a pre-built scaffold of assets, activities, and data flows."
+          "desc": "Pick your industry (E-commerce, SaaS, Healthcare, Fintech, Media, or Professional Services) and get a pre-built scaffold of systems, activities, and data flows."
         },
         "vendorWatchTitle": "Vendor.Watch integration",
         "vendorWatchBody": "If you have a Vendor.Watch portfolio, the quickstart wizard automatically detects your vendors and pre-selects them, with no manual searching. Up to 5 vendors can be imported for free.",
@@ -4938,7 +4938,7 @@
           },
           "fill": {
             "title": "Fill in project details",
-            "description": "Provide the assessment name, description, related processing activities, and data assets."
+            "description": "Provide the assessment name, description, related processing activities, and systems."
           },
           "answer": {
             "title": "Answer assessment questions",
@@ -5172,9 +5172,9 @@
       "title": "Data Inventory",
       "subtitle": "The Data Inventory module is the foundation of your privacy program. It tracks what personal data you hold, where it flows, and how it's processed, and it forms the basis for your Record of Processing Activities (ROPA).",
       "assets": {
-        "title": "Data Assets",
-        "description": "Data assets represent systems, databases, or applications that store personal data.",
-        "mockupTitle": "Asset Cards",
+        "title": "Systems",
+        "description": "Systems are the databases, applications and services that store personal data.",
+        "mockupTitle": "System Cards",
         "elementsLabel": "{count} data elements",
         "activitiesLabel": "{count} activities",
         "steps": {
@@ -5183,20 +5183,20 @@
             "description": "In the left menu, open stage 3, Know your data, and choose Data inventory."
           },
           "add": {
-            "title": "Click 'Add Asset'",
-            "description": "Use the button in the top-right to open the asset creation form."
+            "title": "Click 'Add System'",
+            "description": "Use the button in the top-right to open the system creation form."
           },
           "details": {
             "title": "Fill in details",
-            "description": "Enter the asset name, type (Database, Application, Cloud Service, etc.), description, and data owner."
+            "description": "Enter the system name, type (Database, Application, Cloud Service, etc.), description, and data owner."
           },
           "link": {
             "title": "Link data elements",
-            "description": "Add the personal data elements this asset stores (see Data Elements section)."
+            "description": "Add the personal data elements this system stores (see Data Elements section)."
           },
           "save": {
-            "title": "Save the asset",
-            "description": "The asset will appear in your inventory and can be linked to processing activities."
+            "title": "Save the system",
+            "description": "The system will appear in your inventory and can be linked to processing activities."
           }
         }
       },
@@ -5216,7 +5216,7 @@
       },
       "activities": {
         "title": "Processing Activities",
-        "description": "Processing activities describe how and why personal data is used. Each activity links to assets, elements, and a legal basis.",
+        "description": "Processing activities describe how and why personal data is used. Each activity links to systems, elements, and a legal basis.",
         "mockupTitle": "Processing Activity Card",
         "sampleTitle": "Customer Support Correspondence",
         "sampleDesc": "Processing support tickets and follow-ups",
@@ -5225,7 +5225,7 @@
           "name": "Full Name",
           "history": "Support History"
         },
-        "assetsLabel": "2 assets",
+        "assetsLabel": "2 systems",
         "elementsLabel": "3 data elements",
         "retentionLabel": "Retention: 3 years",
         "calloutTitle": "Legal Basis",
@@ -5233,7 +5233,7 @@
       },
       "flows": {
         "title": "Data Flows",
-        "description": "Data flows visualize how personal data moves between assets. They are auto-generated from your processing activity links.",
+        "description": "Data flows visualize how personal data moves between systems. They are auto-generated from your processing activity links.",
         "mockupTitle": "Data Flow Diagram",
         "nodes": {
           "crm": "CRM",
@@ -5241,11 +5241,11 @@
           "analytics": "Analytics (EU)"
         },
         "body1Bold": "You don't have to draw the graph.",
-        "body1Rest": " Whenever you link a processing activity to two or more assets (via the ",
-        "body1ManageAssets": "Manage Assets",
+        "body1Rest": " Whenever you link a processing activity to two or more systems (via the ",
+        "body1ManageAssets": "Manage Systems",
         "body1Mid": " button on the activity detail page, or ",
         "body1ManageActivities": "Manage Activities",
-        "body1End": " on the asset detail page), the system automatically creates DataFlow records connecting them in a sensible order, based on the typical position of each asset type in a data pipeline (input applications first, then ingest services, then databases, then file storage, then third-party sinks).",
+        "body1End": " on the activity's page), DPO Central automatically creates DataFlow records connecting them in a sensible order, based on the typical position of each system type in a data pipeline (input applications first, then ingest services, then databases, then file storage, then third-party sinks).",
         "body2Start": "You can re-trigger generation at any time with the ",
         "body2GenerateFlows": "Generate Flows",
         "body2End": " button on an activity detail page. Existing flows are deduped: anything you've manually edited is preserved, and only new connections are added.",
@@ -5263,7 +5263,7 @@
         "warningTitle": "Schrems II compliance",
         "warningBody": "International transfers require a valid transfer mechanism. If your Transfer Impact Assessment (TIA) identifies risks, additional safeguards may be needed. See the Premium Features section for TIA assessments.",
         "tipTitle": "ROPA Export",
-        "tipBody": "You can export your complete Record of Processing Activities (ROPA) from the Data Inventory list view. The export includes all assets, elements, activities, legal bases, and transfer records."
+        "tipBody": "You can export your complete Record of Processing Activities (ROPA) from the Data Inventory list view. The export includes all systems, elements, activities, legal bases, and transfer records."
       },
       "nav": {
         "previous": "Quickstart",
@@ -5291,7 +5291,7 @@
           },
           "scope": {
             "title": "Assess scope",
-            "description": "Determine which data assets and processing activities are relevant to the request."
+            "description": "Determine which systems and processing activities are relevant to the request."
           },
           "assign": {
             "title": "Assign tasks",
@@ -5360,18 +5360,18 @@
     },
     "quickstart": {
       "title": "Quickstart Wizard",
-      "subtitle": "Set up your entire privacy program in minutes. The quickstart wizard creates data assets, data elements, processing activities, data flows, and vendor records based on your industry and the tools you use.",
+      "subtitle": "Set up your entire privacy program in minutes. The quickstart wizard creates systems, data elements, processing activities, data flows, and vendor records based on your industry and the tools you use.",
       "openWizard": "Open Quickstart Wizard",
       "howItWorks": {
         "title": "How It Works",
         "description": "The wizard offers two complementary paths that can be used together.",
         "importVendors": {
           "title": "Import from Vendors",
-          "desc": "Select vendors from the catalog (or import from your Vendor.Watch portfolio). For each vendor, the wizard auto-generates a data asset, data elements, a processing activity, and cross-border transfer records based on the vendor's known data profile."
+          "desc": "Select vendors from the catalog (or import from your Vendor.Watch portfolio). For each vendor, the wizard auto-generates a system, data elements, a processing activity, and cross-border transfer records based on the vendor's known data profile."
         },
         "industryTemplate": {
           "title": "Industry Template",
-          "desc": "Pick your industry and get a pre-built scaffold of data assets, processing activities, and data flows. Each template is designed by privacy professionals to reflect common data processing patterns for that sector."
+          "desc": "Pick your industry and get a pre-built scaffold of systems, processing activities, and data flows. Each template is designed by privacy professionals to reflect common data processing patterns for that sector."
         },
         "nonDestructiveTitle": "Non-destructive",
         "nonDestructiveBody": "The quickstart only creates new records. It never modifies or deletes existing data and automatically skips duplicates. You can run it multiple times safely."
@@ -5383,12 +5383,12 @@
         "mockupTitle": "What gets created per vendor",
         "items": {
           "asset": {
-            "label": "Data Asset",
-            "desc": "One asset per vendor, typed by category (e.g. Cloud Service, Application)"
+            "label": "System",
+            "desc": "One system per vendor, typed by category (e.g. Cloud Service, Application)"
           },
           "elements": {
             "label": "Data Elements",
-            "desc": "3–10 elements per asset: identifiers, behavioral data, financial data, etc."
+            "desc": "3–10 elements per system: identifiers, behavioral data, financial data, etc."
           },
           "activity": {
             "label": "Processing Activity",
@@ -5405,12 +5405,12 @@
       "industryTemplates": {
         "title": "Industry Templates",
         "description": "Each template provides a complete privacy program scaffold tailored to your sector.",
-        "intro": "Select your industry to auto-generate data assets (with data elements), processing activities (with legal bases), and data flows between systems. All records can be customized after creation.",
-        "assetsSection": "Data Assets",
+        "intro": "Select your industry to auto-generate systems (with data elements), processing activities (with legal bases), and data flows between systems. All records can be customized after creation.",
+        "assetsSection": "Systems",
         "activitiesSection": "Processing Activities",
         "flowsSection": "Data Flows",
         "badges": {
-          "assets": "{count} assets",
+          "assets": "{count} systems",
           "elements": "{count} elements",
           "activities": "{count} activities",
           "flows": "{count} flows",
@@ -5605,7 +5605,7 @@
           },
           "inventory": {
             "label": "Data Inventory",
-            "desc": "Map training data sources to your data inventory. Track which data assets feed into each AI system."
+            "desc": "Map training data sources to your data inventory. Track which systems feed into each AI system."
           }
         }
       },
@@ -5926,8 +5926,8 @@
         "items": {
           "inventory": {
             "module": "Data Inventory",
-            "metric": "Assets with linked processing activities",
-            "example": "85% of assets have at least one activity"
+            "metric": "Systems with linked processing activities",
+            "example": "85% of systems have at least one activity"
           },
           "dsar": {
             "module": "DSAR",
@@ -6015,7 +6015,7 @@
         "allPdfsTitle": "The PDF reports on each module:",
         "allPdfs": {
           "inventoryLabel": "Data Inventory",
-          "inventoryDesc": ": assets, elements, transfers, and a rendered Data Flow Map",
+          "inventoryDesc": ": systems, elements, transfers, and a rendered Data Flow Map",
           "ropaLabel": "ROPA",
           "ropaDesc": " (premium): GDPR Article 30 record with per-activity flow clusters",
           "vendorLabel": "Vendor Register",
@@ -6032,7 +6032,7 @@
           "regulatoryDesc": ": applied jurisdictions and compliance posture"
         },
         "flowTipTitle": "Data Flow Map in PDFs",
-        "flowTipBody": "The Data Inventory and ROPA PDFs render an automatically laid-out diagram of how data moves between your assets, with nodes color-coded by asset type and edges labeled with the data categories and frequency. The ROPA version groups assets into bordered clusters per processing activity. No drawing is needed: it is generated from your activity-asset links.",
+        "flowTipBody": "The Data Inventory and ROPA PDFs render an automatically laid-out diagram of how data moves between your systems, with nodes color-coded by system type and edges labeled with the data categories and frequency. The ROPA version groups systems into bordered clusters per processing activity. No drawing is needed: it is generated from your activity-system links.",
         "premiumTitle": "ROPA export",
         "premiumBody": "The ROPA PDF export is included on the hosted pilot and on your own instance, like every other PDF report."
       },
@@ -6067,7 +6067,7 @@
           },
           "preview": {
             "title": "Preview Data Context",
-            "description": "Review the aggregated context: linked assets, data element counts, active transfers, and associated vendors. This is the data the wizard will draw from."
+            "description": "Review the aggregated context: linked systems, data element counts, active transfers, and associated vendors. This is the data the wizard will draw from."
           },
           "review": {
             "title": "Review & Edit Responses",
@@ -6337,7 +6337,7 @@
         },
         "step3": {
           "label": "Build your data inventory",
-          "desc": "Register data assets, elements, and processing activities"
+          "desc": "Register systems, elements, and processing activities"
         },
         "step4": {
           "label": "Start managing privacy",
@@ -6374,7 +6374,7 @@
       "modules": {
         "inventory": {
           "title": "Data Inventory",
-          "description": "Track data assets, elements, processing activities, and cross-border transfers. Generate your Record of Processing Activities (ROPA) automatically."
+          "description": "Track systems, elements, processing activities, and cross-border transfers. Generate your Record of Processing Activities (ROPA) automatically."
         },
         "dsar": {
           "title": "DSAR Management",
@@ -6415,7 +6415,7 @@
           },
           "inventory": {
             "name": "Data Inventory",
-            "desc": "Asset register with data elements, flows, and transfers"
+            "desc": "System register with data elements, flows, and transfers"
           },
           "ropa": {
             "name": "ROPA",
@@ -6479,14 +6479,14 @@
     },
     "publicDataInventory": {
       "metaTitle": "Data Inventory & ROPA",
-      "metaDescription": "Track data assets, elements, processing activities, and cross-border transfers. Generate your GDPR Record of Processing Activities (ROPA) automatically.",
+      "metaDescription": "Track systems, elements, processing activities, and cross-border transfers. Generate your GDPR Record of Processing Activities (ROPA) automatically.",
       "ogTitle": "Data Inventory & ROPA | DPO CENTRAL",
-      "ogDescription": "Map your data landscape: assets, elements, processing activities, data flows, and cross-border transfers with automatic ROPA generation.",
+      "ogDescription": "Map your data landscape: systems, elements, processing activities, data flows, and cross-border transfers with automatic ROPA generation.",
       "title": "Data Inventory",
-      "subtitle": "Map your organization's data landscape. Track every asset, data element, processing activity, and cross-border transfer to maintain a complete Record of Processing Activities (ROPA).",
+      "subtitle": "Map your organization's data landscape. Track every system, data element, processing activity, and cross-border transfer to maintain a complete Record of Processing Activities (ROPA).",
       "assets": {
-        "title": "Data Assets",
-        "intro": "Data assets represent the systems, applications, and databases that store or process personal data. Each asset records its type, owner, associated data elements, and processing activities.",
+        "title": "Systems",
+        "intro": "Systems are the applications, databases and services that store or process personal data. Each system records its type, owner, associated data elements, and processing activities.",
         "items": {
           "DATABASE": {
             "example": "Customer Database",
@@ -6517,17 +6517,17 @@
       "elements": {
         "title": "Data Elements",
         "intro": "Data elements describe the specific categories of personal data your organization processes. Each element has a sensitivity classification ranging from Public to Special Category.",
-        "examples": "Examples include full name, email address, IP address, health records, biometric data, and financial information. Link elements to assets to understand exactly where each type of personal data resides."
+        "examples": "Examples include full name, email address, IP address, health records, biometric data, and financial information. Link elements to systems to understand exactly where each type of personal data resides."
       },
       "activities": {
         "title": "Processing Activities",
         "intro": "Document every processing activity with its legal basis, purpose, data categories, and retention period. This forms the core of your ROPA.",
         "legalBasesLabel": "Legal Bases",
-        "outro": "Each activity records the controller, processor, categories of data subjects, and whether automated decision-making is involved. Activities link to data assets and elements for full traceability."
+        "outro": "Each activity records the controller, processor, categories of data subjects, and whether automated decision-making is involved. Activities link to systems and elements for full traceability."
       },
       "flows": {
         "title": "Data Flows",
-        "intro": "Visualize how personal data moves through your organization using the interactive data flow diagram. Map source-to-destination transfers between assets, departments, and third parties.",
+        "intro": "Visualize how personal data moves through your organization using the interactive data flow diagram. Map source-to-destination transfers between systems, departments, and third parties.",
         "steps": {
           "collection": {
             "label": "Collection",
@@ -6566,7 +6566,7 @@
         }
       },
       "howTo": {
-        "title": "How to Add a Data Asset",
+        "title": "How to Add a System",
         "actorDpo": "DPO",
         "steps": {
           "navigate": {
@@ -6574,23 +6574,23 @@
             "description": "In the left menu, open stage 3, Know your data, and choose Data inventory."
           },
           "click": {
-            "title": "Click Add Asset",
-            "description": "Click the 'Add Asset' button in the top right corner of the assets list."
+            "title": "Click Add System",
+            "description": "Click the 'Add System' button in the top right corner of the systems list."
           },
           "fill": {
-            "title": "Fill in Asset Details",
-            "description": "Enter the asset name, type, owner, description, and associated data elements.",
-            "detail1": "Select the asset type (Database, Application, Cloud Service, etc.)",
+            "title": "Fill in System Details",
+            "description": "Enter the system name, type, owner, description, and associated data elements.",
+            "detail1": "Select the system type (Database, Application, Cloud Service, etc.)",
             "detail2": "Assign a data owner from your organization members",
-            "detail3": "Link relevant data elements to this asset"
+            "detail3": "Link relevant data elements to this system"
           },
           "link": {
             "title": "Link Processing Activities",
-            "description": "Associate the asset with its processing activities and legal bases."
+            "description": "Associate the system with its processing activities and legal bases."
           },
           "save": {
             "title": "Review and Save",
-            "description": "Review all details and save. The asset will appear in your data inventory and data flow diagram."
+            "description": "Review all details and save. The system will appear in your data inventory and data flow diagram."
           }
         }
       },
@@ -6598,7 +6598,7 @@
         "title": "PDF Exports",
         "intro": "Export your data inventory and ROPA as professionally formatted PDFs for regulators, auditors, or internal governance reviews.",
         "inventoryTitle": "Data Inventory Report",
-        "inventoryDesc": "Complete asset inventory with data elements per asset (category, sensitivity, retention), data flows between systems, and international transfer details with safeguard mechanisms.",
+        "inventoryDesc": "Complete system inventory with data elements per system (category, sensitivity, retention), data flows between systems, and international transfer details with safeguard mechanisms.",
         "ropaTitle": "ROPA Export",
         "ropaDesc": "Record of Processing Activities per GDPR Article 30: processing purpose, legal basis, data subjects, recipients, retention, linked systems, and international transfers per activity."
       }
@@ -9193,7 +9193,7 @@
       "dataInventory": {
         "label": "Data inventory",
         "why": "Know what personal data you hold and where it lives.",
-        "do": "Record your data assets: the systems and stores that hold personal data."
+        "do": "Record your systems: the applications, databases and stores that hold personal data."
       },
       "ropa": {
         "label": "Records of processing",
@@ -9585,7 +9585,7 @@
       "contractNotFound": "Contract not found",
       "customerNotFound": "Customer not found",
       "dsarRequestNotFound": "DSAR request not found",
-      "dataAssetNotFound": "Data asset not found",
+      "dataAssetNotFound": "System not found",
       "dataElementNotFound": "Data element not found",
       "dataFlowNotFound": "Data flow not found",
       "dataTransferNotFound": "Data transfer not found",
@@ -9606,7 +9606,7 @@
       "noAiSystemsFoundToExport": "No AI systems found to export",
       "noSlackWebhookUrlConfiguredPleaseSaveA": "No Slack webhook URL configured. Please save a webhook URL first.",
       "noBillingCustomerFoundForThisOrganization": "No billing customer found for this organization",
-      "noComplianceDataToSnapshotYetAddData": "No compliance data to snapshot yet. Add data assets, assessments, DSARs, incidents or vendors first.",
+      "noComplianceDataToSnapshotYetAddData": "No compliance data to snapshot yet. Add systems, assessments, DSARs, incidents or vendors first.",
       "noUserFoundWithThisEmailTheyMust": "No user found with this email. They must sign up first.",
       "notificationNotFound": "Notification not found",
       "onlyAnOwnerOrAnAdminOfBoth": "Only an owner or an admin of both organizations can copy a template",
@@ -9740,7 +9740,7 @@
     "approverOnly": "Only owners, admins and privacy officers can confirm records. You can open each one to review it.",
     "selectOne": "Select {name}",
     "kind": {
-      "dataAsset": "Data assets",
+      "dataAsset": "Systems",
       "processingActivity": "Processing activities",
       "vendor": "Vendors"
     }

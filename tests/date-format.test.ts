@@ -10,7 +10,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { formatDateTimeIn } from "@/lib/utils";
+import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
 
 const WHEN = "2026-09-28T11:34:49Z";
 
@@ -30,6 +30,21 @@ describe("formatDateTimeIn", () => {
       expect(formatDateTimeIn(WHEN, locale, "UTC")).not.toContain(":49");
     }
     expect(formatDateTimeIn(WHEN, "fr", "UTC")).toBe(formatDateTimeIn(WHEN, "en", "UTC"));
+  });
+});
+
+describe("formatDateIn", () => {
+  // A day-first numeric date (12/10/2026) reads as 10 December to a US
+  // reader: the month is written as a word in both languages.
+  it("writes the month as a word in English and in Spanish", () => {
+    expect(formatDateIn("2026-10-12T10:00:00Z", "en", "UTC")).toBe("12 Oct 2026");
+    expect(formatDateIn("2026-10-12T10:00:00Z", "es", "UTC")).toBe("12 oct 2026");
+  });
+
+  it("never writes a numeric date", () => {
+    for (const locale of ["en", "es"]) {
+      expect(formatDateIn(WHEN, locale, "UTC")).not.toMatch(/\d{1,2}\/\d{1,2}\//);
+    }
   });
 });
 

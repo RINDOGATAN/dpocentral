@@ -55,15 +55,16 @@ export function formatDateTimeIn(
 }
 
 /**
- * A date in the interface's language, as numbers, day first
- * ("28/09/2026" in both languages). Use instead of a bare
- * toLocaleDateString(), which follows the browser and not the interface.
+ * A date in the interface's language, with the month written as a word
+ * ("12 Oct 2026" / "12 oct 2026"), so no reader can take the day for the
+ * month (12/10 reads as 10 December in the United States). Use instead of a
+ * bare toLocaleDateString(), which follows the browser and not the interface.
  */
 export function formatDateIn(date: Date | string, locale: string, timeZone?: string): string {
   return new Date(date).toLocaleDateString(DATE_LOCALE[locale] ?? DATE_LOCALE.en, {
     year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+    month: "short",
+    day: "numeric",
     ...(timeZone ? { timeZone } : {}),
   });
 }
