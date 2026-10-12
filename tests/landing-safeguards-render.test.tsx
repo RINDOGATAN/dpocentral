@@ -15,7 +15,7 @@ import { readFileSync } from "fs";
 import path from "path";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import LandingSections from "@/landing/components/LandingSections";
-import { COPY, QUESTIONS, optionsFor, type Locale } from "@/landing/content/safeguards";
+import { COPY, QUESTIONS, WAY_NAMES, optionsFor, type Locale } from "@/landing/content/safeguards";
 
 const ROOT = path.resolve(__dirname, "..");
 const dict = (l: Locale) =>
@@ -95,11 +95,11 @@ describe("safeguards guide, Spanish", () => {
     expect(marked("es")).toEqual([]);
 
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.special }));
-    expect(status.textContent).toContain(c.names.managed!);
+    expect(status.textContent).toContain(WAY_NAMES.es.managed!);
     expect(marked("es")).toEqual([es["es.ways.w2.title"]]);
 
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.servers }));
-    expect(status.textContent).toContain(c.names.deploy!);
+    expect(status.textContent).toContain(WAY_NAMES.es.deploy!);
     expect(marked("es")).toEqual([es["es.ways.w3.title"]]);
     const see = within(g).getByRole("link", { name: new RegExp(c.see) });
     expect(see.getAttribute("href")).toBe(`#${boxes("es")[2].id}`);
@@ -125,7 +125,7 @@ describe("safeguards guide, Spanish", () => {
     const bar = within(g).getByTestId("safeguards-bar");
     expect(bar.className).toMatch(/\blg:hidden\b/);
     expect(bar.className).toMatch(/\bsticky\b/);
-    expect(bar.textContent).toContain(c.names.managed!);
+    expect(bar.textContent).toContain(WAY_NAMES.es.managed!);
     // It does not announce: only the card's status is live.
     expect(bar.closest("[aria-live]")).toBeNull();
     expect(bar.querySelector("[aria-live], [role=status]")).toBeNull();
@@ -139,14 +139,14 @@ describe("safeguards guide, Spanish", () => {
     expect(document.activeElement).toBe(card);
   });
 
-  it("names the cloud as its box does, hosted in the EU, with the AI provider caveat", () => {
+  it("names the cloud as its box does, with real data accepted and the AI provider caveat", () => {
     mount("es");
     const g = guide(c.heading);
     fireEvent.click(within(g).getByRole("button", { name: c.open }));
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.loc.options.any }));
     expect(within(g).getByRole("status").textContent).toContain(es["es.ways.w1.title"]);
-    expect(g.textContent).toContain("Lo alojamos nosotros, con los datos en la UE (Fráncfort).");
-    expect(g.textContent).toContain("contratar el Plan nube UE para datos reales.");
+    expect(g.textContent).toContain(c.questions.loc.options.any);
+    expect(g.textContent).toContain("Puedes empezar gratis y usarlo con datos reales de clientes");
     expect(g.textContent).toContain("que puede estar fuera de la UE.");
     expect(waysSection("es").textContent).toContain("Garantías y alojamiento");
   });
@@ -190,8 +190,10 @@ describe("safeguards guide, English", () => {
     expect(status.textContent).toContain(title(1));
     expect(marked("en")).toEqual([title(1)]);
 
-    // Managed.
+    // Real client data stays on the cloud; special categories go to managed.
     fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.real }));
+    expect(status.textContent).toContain(title(1));
+    fireEvent.click(within(g).getByRole("radio", { name: c.questions.data.options.special }));
     expect(status.textContent).toContain(title(2));
     expect(marked("en")).toEqual([title(2)]);
 
