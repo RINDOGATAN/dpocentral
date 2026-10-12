@@ -250,7 +250,9 @@
         "VENDOR": "Evaluación de riesgo del proveedor",
         "VENDOR_short": "Proveedor",
         "VENDOR_desc": "Evalúa los riesgos de privacidad y seguridad asociados a proveedores externos."
-      }
+      },
+      "autoFillLink": "Redactar una EIPD a partir de una actividad de tratamiento",
+      "autoFillHint": "Las respuestas se redactan a partir de una actividad que ya registraste; las revisas antes de crear la evaluación."
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "La plantilla de EIPD no está instalada",
@@ -985,7 +987,8 @@
         "allElements": "Todos los elementos",
         "noAssets": "Todavía no hay sistemas en esta organización",
         "selected": "{count, plural, one {# sistema seleccionado} other {# sistemas seleccionados}}"
-      }
+      },
+      "draftDpia": "Redactar una EIPD"
     },
     "assetDetail": {
       "notFound": "Sistema no encontrado",

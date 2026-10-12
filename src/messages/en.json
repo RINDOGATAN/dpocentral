@@ -250,7 +250,9 @@
         "VENDOR": "Vendor Risk Assessment",
         "VENDOR_short": "Vendor",
         "VENDOR_desc": "Evaluate privacy and security risks associated with third-party vendors."
-      }
+      },
+      "autoFillLink": "Draft a DPIA from a processing activity",
+      "autoFillHint": "The answers are drafted from an activity you already recorded; you review them before the assessment is created."
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "The DPIA template is not installed",
@@ -985,7 +987,8 @@
         "allElements": "All elements",
         "noAssets": "No systems in this organization yet",
         "selected": "{count, plural, one {# system selected} other {# systems selected}}"
-      }
+      },
+      "draftDpia": "Draft a DPIA"
     },
     "assetDetail": {
       "notFound": "System not found",

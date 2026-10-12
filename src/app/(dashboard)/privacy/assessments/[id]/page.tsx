@@ -62,6 +62,7 @@ import { StatusChip } from "@/components/ui/status-chip";
 import { toneChip } from "@/config/status-palette";
 import type { StatusTone } from "@/config/status-tone";
 import { getRisksAddressedByPet } from "@/config/pet-risk-mappings";
+import { FRAMEWORK_QUESTION_ID } from "@/config/assessment-frameworks";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
 import {
@@ -903,7 +904,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         <CompletenessPanel
           completeness={completeness}
           onJump={jumpToQuestion}
-          nothingAnswered={(assessment?.responses?.length ?? 0) === 0}
+          // The frameworks preselected from the declared jurisdictions are not
+          // the person's answer yet: the list still opens folded.
+          nothingAnswered={(assessment?.responses ?? []).every(
+            (r: { questionId: string }) => r.questionId === FRAMEWORK_QUESTION_ID
+          )}
           openSignal={completenessOpenSignal}
         />
       </div>

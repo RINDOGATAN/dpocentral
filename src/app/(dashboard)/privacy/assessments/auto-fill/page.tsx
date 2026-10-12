@@ -25,7 +25,7 @@ import {
   Edit3,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
@@ -33,6 +33,8 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { autoFillTemplate } from "@/lib/auto-fill-template";
+import { DpiaFreeNote, useDpiaQuota } from "@/components/pilot/dpia-free-note";
+import { StatusNote } from "@/components/ui/status-note";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 type WizardStep = "select" | "preview" | "review" | "create";
@@ -47,7 +49,11 @@ export default function DpiaAutoFillPage() {
   const tAutoFill = useTranslations("pages.dpiaAutoFill");
   const hosted = useHostedPilot();
   const [step, setStep] = useState<WizardStep>("select");
-  const [selectedActivityId, setSelectedActivityId] = useState<string>("");
+  // Reached from an activity's page (?activity=<id>): that activity is chosen.
+  const searchParams = useSearchParams();
+  const [selectedActivityId, setSelectedActivityId] = useState<string>(
+    () => searchParams.get("activity") ?? ""
+  );
   const [selectedVendorId, setSelectedVendorId] = useState<string>("");
   const [editedResponses, setEditedResponses] = useState<Record<string, string>>({});
   const [isCreating, setIsCreating] = useState(false);
@@ -115,6 +121,12 @@ export default function DpiaAutoFillPage() {
   // Create assessment mutation
   const createAssessment = trpc.assessment.create.useMutation();
   const saveResponse = trpc.assessment.saveResponse.useMutation();
+
+  // The pilot tier's free DPIAs (null off the pilot tier). When they are used
+  // up the wizard says so before any work is done; the server still refuses
+  // a third at creation (assertPilotDpiaQuota).
+  const dpiaQuota = useDpiaQuota();
+  const dpiaQuotaUsedUp = !!dpiaQuota && dpiaQuota.remaining <= 0;
 
   // The hosted pilot opens every type; the kit shows the licence notice until
   // a DPIA template is installed.
@@ -240,6 +252,11 @@ export default function DpiaAutoFillPage() {
             <CardDescription>{tAutoFill("selectSubtitle")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {dpiaQuota && (
+              <StatusNote tone={dpiaQuotaUsedUp ? "warning" : "info"} data-testid="auto-fill-dpia-quota">
+                <DpiaFreeNote detail className="text-sm text-foreground" />
+              </StatusNote>
+            )}
             <div>
               <label className="text-sm font-medium mb-2 block">
                 {tAutoFill("activityLabel")}
@@ -281,7 +298,7 @@ export default function DpiaAutoFillPage() {
 
             <div className="flex justify-end pt-4">
               <Button
-                disabled={!selectedActivityId}
+                disabled={!selectedActivityId || dpiaQuotaUsedUp}
                 onClick={() => setStep("preview")}
               >
                 {tAutoFill("next")} <ArrowRight className="w-4 h-4 ml-2" />
