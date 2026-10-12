@@ -624,6 +624,15 @@ describe("e-mail policy on invitations (both rules)", () => {
     }
   );
 
+  it.each(["old@hotmail.com", "a.b.c.d@gmail.com"])(
+    "refuses an invitation to %s even when an account exists",
+    async (email) => {
+      mocks.prisma.user.findUnique.mockResolvedValue({ id: "u-9", email });
+      await expect(invite(email)).rejects.toMatchObject({ code: "BAD_REQUEST" });
+      expect(mocks.prisma.organizationMember.create).not.toHaveBeenCalled();
+    }
+  );
+
   it("does not refuse a usual address", async () => {
     mocks.prisma.user.findUnique.mockResolvedValue(null);
     const outcome = await invite("first.last@gmail.com").catch((e: Error) => e);

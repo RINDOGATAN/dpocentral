@@ -18,7 +18,7 @@ import { isHostedDeployment } from "@/lib/hosted";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
 import { emailConfigured, googleConfigured, localSignInAllowed } from "@/lib/sign-in-methods";
 import { getCookieLocale } from "@/i18n/server-locale";
-import { refusesNewAccountEmail } from "@/lib/email-policy-server";
+import { refusesAccountEmail } from "@/lib/email-policy-server";
 import { BLOCKED_EMAIL_MESSAGE_KEY } from "@/lib/email-policy";
 import { defaultLocale, type Locale } from "@/i18n/config";
 import enMessages from "@/messages/en.json";
@@ -114,8 +114,8 @@ export const authOptions: NextAuthOptions = {
                 return null;
               }
               if (!credentials?.email) return null;
-              // E-mail policy: a refused address opens no new account.
-              if (await refusesNewAccountEmail(prisma, credentials.email)) return null;
+              // E-mail policy: a refused address may not sign in at all.
+              if (refusesAccountEmail(credentials.email)) return null;
 
               // Find or create user for dev mode
               let user = await prisma.user.findUnique({
@@ -213,10 +213,10 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user }) {
-      // E-mail policy (src/lib/email-policy.ts): a refused address opens no
-      // new account, by e-mail link or by Google. Existing accounts keep
-      // signing in. The error page shows the one approved sentence.
-      if (await refusesNewAccountEmail(prisma, user.email)) {
+      // E-mail policy (src/lib/email-policy.ts): a refused address may not
+      // sign in, by e-mail link or by Google, existing account or not. The
+      // error page shows the one approved sentence.
+      if (refusesAccountEmail(user.email)) {
         return `/auth-error?error=${BLOCKED_EMAIL_MESSAGE_KEY}`;
       }
       // Auto-join organization by email domain
@@ -275,6 +275,7 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async session({ session, token }) {
+      if (token.emailNotAccepted) session.emailNotAccepted = true;
       if (session.user && token.sub) {
         session.user.id = token.sub;
         session.user.userType = token.userType ?? null;
@@ -309,6 +310,20 @@ export const authOptions: NextAuthOptions = {
       // Re-anchoring by email covers both cases; a token with no email to
       // re-anchor with is cleared so it reads as signed out rather than
       // reaching Prisma with a nonexistent user id (FK violations).
+      // E-mail policy: a session for a refused address is not honoured,
+      // whether it was carried over from a sibling app or minted here before
+      // the policy. No local account is minted and nothing stored changes; the
+      // token reads as signed out and the dashboard sends the visitor to the
+      // error page with the one approved sentence.
+      if (!user && token.email && refusesAccountEmail(token.email)) {
+        token.sub = undefined;
+        token.id = undefined;
+        token.dpoSignIn = false;
+        token.userType = undefined;
+        token.emailNotAccepted = true;
+        return token;
+      }
+
       if (!user) {
         const claimedId = token.sub ?? (token.id as string | undefined);
         const existing = claimedId

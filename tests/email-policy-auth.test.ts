@@ -7,7 +7,11 @@
  *    before next-auth runs (so no e-mail is sent, no account is made);
  *  - the signIn callback (Google, and the e-mail link as a second line)
  *    redirects to the error page with the key;
- *  - an address that already has an account is never refused.
+ *  - an address that already has an account is refused too (existing
+ *    accounts are locked out; stored data is not changed);
+ *  - a session carried over from a sibling app for a refused address is not
+ *    honoured: no local account is minted and the session carries the flag
+ *    the dashboard uses to send the visitor to the error page.
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -88,10 +92,13 @@ describe("the e-mail link and local sign-in", () => {
     }
   );
 
-  it("lets an existing account keep signing in", async () => {
+  it("refuses an existing account too", async () => {
     mocks.prisma.user.findFirst.mockResolvedValue({ id: "u-1" });
+    mocks.prisma.user.findUnique.mockResolvedValue({ id: "u-1" });
     const res = await POST(post("/api/auth/signin/email", "old@hotmail.com"), {});
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("email_not_accepted");
+    expect(mocks.nextAuthHandler).not.toHaveBeenCalled();
   });
 });
 
@@ -109,13 +116,51 @@ describe("the signIn callback (Google)", () => {
     expect(result).toBe("/auth-error?error=email_not_accepted");
   });
 
-  it("accepts a usual address and an existing account", async () => {
+  it("accepts a usual address", async () => {
     expect(
       await signInCallback({ user: { id: "g-1", email: "first.last@gmail.com" }, account: { provider: "google" } })
     ).toBe(true);
+  });
+
+  it("refuses an existing account with a refused address", async () => {
     mocks.prisma.user.findFirst.mockResolvedValue({ id: "u-1" });
+    mocks.prisma.user.findUnique.mockResolvedValue({ id: "u-1" });
     expect(
       await signInCallback({ user: { id: "u-1", email: "old@aol.com" }, account: { provider: "google" } })
-    ).toBe(true);
+    ).toBe("/auth-error?error=email_not_accepted");
+  });
+});
+
+const jwtCallback = authOptions.callbacks!.jwt! as unknown as (args: unknown) => Promise<Record<string, unknown>>;
+const sessionCallback = authOptions.callbacks!.session! as unknown as (args: unknown) => Promise<Record<string, unknown>>;
+
+describe("a session carried over from a sibling app", () => {
+  it.each(["X@HOTMAIL.COM", "a.b.c.d@gmail.com", "x@aol.de"])(
+    "is not honoured for %s and mints no local account",
+    async (email) => {
+      const token = await jwtCallback({ token: { sub: "sibling-1", email }, user: undefined });
+      expect(token.sub).toBeUndefined();
+      expect(token.id).toBeUndefined();
+      expect(token.dpoSignIn).toBe(false);
+      expect(token.emailNotAccepted).toBe(true);
+      expect(mocks.prisma.user.create).not.toHaveBeenCalled();
+      const session = await sessionCallback({ session: { user: { email } }, token });
+      expect(session.emailNotAccepted).toBe(true);
+      expect((session.user as { id?: string }).id).toBeUndefined();
+    }
+  );
+
+  it("is not honoured for an address that already has a local account", async () => {
+    mocks.prisma.user.findUnique.mockResolvedValue({ id: "u-1", userType: null });
+    const token = await jwtCallback({ token: { sub: "u-1", email: "old@hotmail.com" }, user: undefined });
+    expect(token.sub).toBeUndefined();
+    expect(token.emailNotAccepted).toBe(true);
+  });
+
+  it("is carried over as before for a usual address", async () => {
+    mocks.prisma.user.findUnique.mockResolvedValue({ id: "u-1", userType: null });
+    const token = await jwtCallback({ token: { sub: "u-1", email: "first.last@gmail.com" }, user: undefined });
+    expect(token.sub).toBe("u-1");
+    expect(token.emailNotAccepted).toBeUndefined();
   });
 });

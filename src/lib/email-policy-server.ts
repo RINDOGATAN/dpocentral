@@ -8,9 +8,9 @@
  * forms use rule 1 only. The public rights-request form never uses either:
  * a data subject may write from any address.
  *
- * Existing accounts are left alone: an address that already has an account
- * keeps signing in. Only an address with no account yet is refused, so the
- * policy applies to new accounts and stored data is never touched.
+ * Existing accounts are refused too: an address that fails the account rule
+ * can no longer sign in, whether or not an account exists for it. Stored data
+ * is never touched (nothing is deleted or edited).
  */
 
 import { NextResponse } from "next/server";
@@ -25,24 +25,9 @@ import {
 /** The English refusal; the tRPC formatter localises it (serverErrors.exact.emailNotAccepted). */
 export const EMAIL_NOT_ACCEPTED_MESSAGE = BLOCKED_EMAIL_MESSAGES.en;
 
-/** The one query the policy needs (any Prisma client, extended or not). */
-type UserLookup = {
-  user: {
-    findFirst(args: {
-      where: { email: { equals: string; mode: "insensitive" } };
-      select: { id: true };
-    }): PromiseLike<{ id: string } | null>;
-  };
-};
-
-/** True when the address may not open a NEW account (no account exists for it yet). */
-export async function refusesNewAccountEmail(prisma: UserLookup, email: unknown): Promise<boolean> {
-  if (!isBlockedAccountEmail(email)) return false;
-  const existing = await prisma.user.findFirst({
-    where: { email: { equals: String(email).trim(), mode: "insensitive" } },
-    select: { id: true },
-  });
-  return !existing;
+/** True when the address may not sign in, sign up or be invited (both rules). */
+export function refusesAccountEmail(email: unknown): boolean {
+  return isBlockedAccountEmail(email);
 }
 
 /**
