@@ -69,21 +69,16 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe.each(routes)("$name identity guard", ({ name, call, body }) => {
-  it("keeps today's behaviour when no receiver secret is configured", async () => {
+  it("refuses every call when no receiver secret is configured", async () => {
     vi.stubEnv("IMPORT_IDENTITY_SECRETS", "");
-    expect((await call(req(name, body))).status).toBe(200);
-    // A header cannot be checked without a secret, so it is ignored.
-    expect((await call(req(name, body, "not.a.token"))).status).toBe(200);
+    expect((await call(req(name, body))).status).toBe(401);
+    expect((await call(req(name, body, token()))).status).toBe(401);
+    expect(userFindUnique).not.toHaveBeenCalled();
+    expect(ensureDpoUser).not.toHaveBeenCalled();
   });
 
-  it("accepts a call without a statement while it is not required", async () => {
+  it("refuses a call without a statement", async () => {
     vi.stubEnv("IMPORT_IDENTITY_SECRETS", SECRET);
-    expect((await call(req(name, body))).status).toBe(200);
-  });
-
-  it("refuses a call without a statement once required", async () => {
-    vi.stubEnv("IMPORT_IDENTITY_SECRETS", SECRET);
-    vi.stubEnv("IMPORT_IDENTITY_REQUIRED", "true");
     const res = await call(req(name, body));
     expect(res.status).toBe(401);
     expect(userFindUnique).not.toHaveBeenCalled();
@@ -92,7 +87,6 @@ describe.each(routes)("$name identity guard", ({ name, call, body }) => {
 
   it("accepts a valid statement for the named account (case-insensitive)", async () => {
     vi.stubEnv("IMPORT_IDENTITY_SECRETS", `old, ${SECRET}`);
-    vi.stubEnv("IMPORT_IDENTITY_REQUIRED", "true");
     expect((await call(req(name, body, token()))).status).toBe(200);
   });
 
