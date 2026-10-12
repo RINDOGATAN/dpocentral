@@ -255,7 +255,7 @@ const P = {
     level: "info",
     code: "people_unmatched",
     en: `${n} person(s) named in the file are not members here. Records keep their content; who did what is left empty for them. Invite them and later imports will match them.`,
-    es: `${n} persona(s) citadas en el archivo no son miembros aquí. Los registros conservan su contenido; queda vacío quién hizo qué en su caso. Invítalas y las próximas importaciones las reconocerán.`,
+    es: `${n} persona(s) citadas en el archivo no son miembros aquí. Los registros conservan su contenido; queda vacío quién ha hecho qué en su caso. Invítalas y las próximas importaciones las reconocerán.`,
   }),
   history: (): ImportProblem => ({
     level: "info",

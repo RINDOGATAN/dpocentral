@@ -406,7 +406,7 @@ const STATIC: Record<JurisdictionCode, { consentModel: BiText; consentToVerify: 
     obligations: US_STATE_OBLIGATIONS("OCPA", [
       DPA_REQUIRED("OCPA"),
       ob(
-        bi("Give consumers the list of specific third parties that received their data", "Facilitar a los consumidores la lista de terceros concretos que recibieron sus datos"),
+        bi("Give consumers the list of specific third parties that received their data", "Facilitar a los consumidores la lista de terceros concretos que han recibido sus datos"),
         CATALOGUE("OCPA")
       ),
     ]),

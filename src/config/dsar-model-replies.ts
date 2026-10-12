@@ -70,7 +70,7 @@ function favourable(
 
 const ERASURE_DONE = {
   en: "You asked us to erase your personal data. We have erased it from our systems and told the recipients to whom we had disclosed it, unless this proved impossible or involved disproportionate effort (Article 19 GDPR).",
-  es: "Nos pediste que suprimiéramos tus datos personales. Los hemos suprimido de nuestros sistemas y lo hemos comunicado a los destinatarios a los que los habíamos comunicado, salvo que haya sido imposible o haya exigido un esfuerzo desproporcionado (artículo 19 del RGPD).",
+  es: "Nos has pedido que suprimamos tus datos personales. Los hemos suprimido de nuestros sistemas y lo hemos comunicado a los destinatarios a los que los habíamos comunicado, salvo que haya sido imposible o haya exigido un esfuerzo desproporcionado (artículo 19 del RGPD).",
 };
 
 const ERASURE_BLOCKED = {
@@ -218,11 +218,11 @@ Un saludo,
   // 5. Favourable replies, one per right
   favourable("favourable-access", ["ACCESS"], {
     en: "You asked for access to your personal data. You can download a copy of the data we hold about you from your request's page: {status_link}. The copy comes with the information the law requires: why we use your data, which categories of data we hold, who receives it, how long we keep it, where it came from, whether it is transferred outside the European Union and with what safeguards, and whether we make automated decisions about you: {details}. You also have the rights to rectification, erasure, restriction, objection and portability.",
-    es: "Nos pediste acceso a tus datos personales. Puedes descargar una copia de los datos que tenemos sobre ti en la página de tu solicitud: {status_link}. La copia va acompañada de la información que exige la ley: para qué usamos tus datos, qué categorías de datos tenemos, quién los recibe, cuánto tiempo los conservamos, de dónde proceden, si se transfieren fuera de la Unión Europea y con qué garantías, y si tomamos decisiones automatizadas sobre ti: {details}. También tienes los derechos de rectificación, supresión, limitación, oposición y portabilidad.",
+    es: "Nos has pedido acceso a tus datos personales. Puedes descargar una copia de los datos que tenemos sobre ti en la página de tu solicitud: {status_link}. La copia va acompañada de la información que exige la ley: para qué usamos tus datos, qué categorías de datos tenemos, quién los recibe, cuánto tiempo los conservamos, de dónde proceden, si se transfieren fuera de la Unión Europea y con qué garantías, y si tomamos decisiones automatizadas sobre ti: {details}. También tienes los derechos de rectificación, supresión, limitación, oposición y portabilidad.",
   }),
   favourable("favourable-rectification", ["RECTIFICATION"], {
     en: "You asked us to correct your personal data. We have made these changes: {data_changed}. We have also told the recipients to whom we had disclosed the data, unless this proved impossible or involved disproportionate effort (Article 19 GDPR).",
-    es: "Nos pediste que corrigiéramos tus datos personales. Hemos hecho estos cambios: {data_changed}. También lo hemos comunicado a los destinatarios a los que habíamos comunicado los datos, salvo que haya sido imposible o haya exigido un esfuerzo desproporcionado (artículo 19 del RGPD).",
+    es: "Nos has pedido que corrijamos tus datos personales. Hemos hecho estos cambios: {data_changed}. También lo hemos comunicado a los destinatarios a los que habíamos comunicado los datos, salvo que haya sido imposible o haya exigido un esfuerzo desproporcionado (artículo 19 del RGPD).",
   }),
   favourable("favourable-erasure", ["ERASURE"], ERASURE_DONE),
   // The same, with the second paragraph: some data kept blocked (Article 32 LOPDGDD).
@@ -232,15 +232,15 @@ Un saludo,
   }),
   favourable("favourable-objection", ["OBJECTION"], {
     en: "You objected to our use of your personal data for {details}. We have stopped using your data for that purpose. Where the objection concerns direct marketing, we will not use your data for it again.",
-    es: "Te opusiste a que usáramos tus datos personales para {details}. Hemos dejado de usar tus datos para ese fin. Si la oposición se refiere a mercadotecnia directa, no volveremos a usar tus datos para ello.",
+    es: "Te has opuesto a que usemos tus datos personales para {details}. Hemos dejado de usar tus datos para ese fin. Si la oposición se refiere a mercadotecnia directa, no volveremos a usar tus datos para ello.",
   }),
   favourable("favourable-restriction", ["RESTRICTION"], {
     en: "You asked us to restrict the use of your personal data. From now on we only store it and do not use it for anything else, except with your consent, to establish, exercise or defend legal claims, to protect the rights of another person, or for important reasons of public interest. We will tell you before the restriction is lifted. Details: {details}.",
-    es: "Nos pediste que limitáramos el uso de tus datos personales. Desde ahora solo los conservamos y no los usamos para nada más, salvo con tu consentimiento, para formular, ejercer o defender reclamaciones, para proteger los derechos de otra persona o por razones importantes de interés público. Te avisaremos antes de levantar la limitación. Detalles: {details}.",
+    es: "Nos has pedido que limitemos el uso de tus datos personales. Desde ahora solo los conservamos y no los usamos para nada más, salvo con tu consentimiento, para formular, ejercer o defender reclamaciones, para proteger los derechos de otra persona o por razones importantes de interés público. Te avisaremos antes de levantar la limitación. Detalles: {details}.",
   }),
   favourable("favourable-portability", ["PORTABILITY"], {
     en: "You asked to receive the personal data you gave us in a portable format. You can download it, in a structured, commonly used and machine-readable format, from your request's page: {status_link}. If you asked us to send it directly to another organization, we have done so where technically possible: {details}.",
-    es: "Nos pediste recibir en un formato portable los datos personales que nos facilitaste. Puedes descargarlos, en un formato estructurado, de uso común y de lectura mecánica, en la página de tu solicitud: {status_link}. Si nos pediste que los enviáramos directamente a otra organización, lo hemos hecho cuando ha sido técnicamente posible: {details}.",
+    es: "Nos has pedido recibir en un formato portable los datos personales que nos has facilitado. Puedes descargarlos, en un formato estructurado, de uso común y de lectura mecánica, en la página de tu solicitud: {status_link}. Si nos has pedido que los enviemos directamente a otra organización, lo hemos hecho cuando ha sido técnicamente posible: {details}.",
   }),
   // 6. Repetitive request (access more than once in six months)
   {

@@ -111,7 +111,7 @@ const EXTRA_QUESTIONS: Record<string, BiQuestion[]> = {
       },
       help: {
         en: "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9).",
-        es: "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9.",
+        es: "Anota qué se ha preguntado, quién ha respondido y qué ha resultado de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9.",
       },
     },
   ],
@@ -242,7 +242,7 @@ const CALIFORNIA_CONTENT_SECTION: BiSection = {
       required: true,
       text: {
         en: "Names and positions of the people who prepared, reviewed and approved this assessment",
-        es: "Nombres y cargos de quienes prepararon, revisaron y aprobaron esta evaluación",
+        es: "Nombres y cargos de quienes han preparado, revisado y aprobado esta evaluación",
       },
       help: {
         en: "Source: 11 CCR 7152(a)(8).",

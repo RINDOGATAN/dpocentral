@@ -18,7 +18,12 @@
  *     extension are not words and pass);
  *   - "retención": data retention in the RGPD sense is «conservación»;
  *   - an English-style article citation ("art. 6(1)(f)"): Spanish writes
- *     "art. 6.1.f)", "art. 32.1 del RGPD", "arts. 13 y 14".
+ *     "art. 6.1.f)", "art. 32.1 del RGPD", "arts. 13 y 14";
+ *   - a simple past for a recent or undated action ("No se pudo", "que
+ *     recibiste", "Se guardó"): Castilian uses the present perfect ("No se ha
+ *     podido", "que has recibido", "Se ha guardado"). The simple past stays
+ *     only where the sentence states a finished time ("venció el {date}"),
+ *     so the list holds forms that are never dated in this product.
  *
  * The Latin American list is deliberately narrow and matches whole word
  * forms only, so valid Castilian words are not caught ("datos agregados",
@@ -88,6 +93,10 @@ const RETENCION = /\bretenci[oó]n(es)?\b/i;
 /** Article citations in Spanish style: "art. 6.1.f)", never "art. 6(1)(f)". */
 const PAREN_CITATION = /\b(arts?\.|art[ií]culos?)\s?\d+\(\d+\)|\(\d+\)\([a-z]\)/i;
 
+/** Recent or undated actions take the present perfect in Castilian. */
+const SIMPLE_PAST =
+  /(?<!\p{L})(no se pudo|no se pudieron|se (?:guardó|envió|eliminó|actualizó|copió|importaron|unió)|(?:recibiste|descargaste|registraste|enviaste|hiciste|observaste|respondiste|consultaste|comunicaste|documentaste|pediste|facilitaste|guardaste|declaraste|confirmaste|creaste|elegiste|marcaste|opusiste))(?!\p{L})/iu;
+
 describe("Spanish copy", () => {
   it("scans the app bundle and the landing bundles", () => {
     expect(BUNDLES.length).toBeGreaterThan(1);
@@ -133,6 +142,10 @@ describe("Spanish copy", () => {
       expect(es.filter(([, t]) => PAREN_CITATION.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
     });
 
+    it(`${bundle.name} uses the present perfect for recent actions`, () => {
+      expect(es.filter(([, t]) => SIMPLE_PAST.test(t)).map(([k, t]) => `${k}: ${t}`)).toEqual([]);
+    });
+
     it(`${bundle.name} uses no Latin American vocabulary`, () => {
       const found = es.flatMap(([k, t]) =>
         LATAM.filter(({ pattern }) => pattern.test(t)).map(({ term }) => `${k}: ${term}`)
@@ -163,5 +176,11 @@ describe("Spanish copy", () => {
     expect(PAREN_CITATION.test("Interés legítimo (art. 6.1.f))")).toBe(false);
     expect(PAREN_CITATION.test("art. 32.1 del RGPD; arts. 13 y 14")).toBe(false);
     expect(PAREN_CITATION.test("11 CCR 7152(a)(1) a (3)")).toBe(false);
+    expect(SIMPLE_PAST.test("No se pudo guardar")).toBe(true);
+    expect(SIMPLE_PAST.test("el archivo que recibiste")).toBe(true);
+    expect(SIMPLE_PAST.test("Se guardó el perfil")).toBe(true);
+    expect(SIMPLE_PAST.test("No se ha podido guardar")).toBe(false);
+    expect(SIMPLE_PAST.test("el archivo que has recibido")).toBe(false);
+    expect(SIMPLE_PAST.test("El plazo venció el 3 de mayo")).toBe(false);
   });
 });

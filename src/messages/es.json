@@ -25,7 +25,7 @@
     "submitCurrent": "Copiar a este cliente",
     "submitNew": "Crear y copiar",
     "done": "Copiado como borradores",
-    "failed": "No se pudo completar la copia",
+    "failed": "No se ha podido completar la copia",
     "resultSummary": "Copiado a {client} como borradores.",
     "resultStarted": "Cada registro copiado queda marcado como copia de plantilla hasta que alguien lo revise aquí.",
     "resultFlaggedTitle": "Revisa si estos registros mencionan al otro cliente",
@@ -252,7 +252,7 @@
         "VENDOR_desc": "Evalúa los riesgos de privacidad y seguridad asociados a proveedores externos."
       },
       "autoFillLink": "Redactar una EIPD a partir de una actividad de tratamiento",
-      "autoFillHint": "Las respuestas se redactan a partir de una actividad que ya registraste; las revisas antes de crear la evaluación."
+      "autoFillHint": "Las respuestas se redactan a partir de una actividad que ya has registrado; las revisas antes de crear la evaluación."
     },
     "dpiaAutoFill": {
       "licenceNoticeTitle": "La plantilla de EIPD no está instalada",
@@ -348,7 +348,7 @@
       "highSeverityTitle": "Gravedad alta o crítica seleccionada",
       "highSeverityBody": "Este incidente puede requerir notificación a la autoridad de control en un plazo de 72 horas (RGPD) u otros plazos.",
       "details": "Datos del incidente",
-      "detailsSubtitle": "Describe el incidente y cómo se descubrió",
+      "detailsSubtitle": "Describe el incidente y cómo se ha descubierto",
       "incidentTitle": "Título del incidente *",
       "titlePlaceholder": "Breve descripción del incidente",
       "type": "Tipo de incidente *",
@@ -361,9 +361,9 @@
       "discoverySubtitle": "¿Cuándo y cómo se descubrió el incidente?",
       "discoveredAt": "Fecha de descubrimiento *",
       "discoveryMethod": "Método de descubrimiento",
-      "discoveryMethodPlaceholder": "¿Cómo se descubrió?",
+      "discoveryMethodPlaceholder": "¿Cómo se ha descubierto?",
       "discoveredBy": "Descubierto por",
-      "discoveredByPlaceholder": "Nombre o rol de la persona o sistema que lo descubrió",
+      "discoveredByPlaceholder": "Nombre o rol de la persona o sistema que lo ha descubierto",
       "impact": "Evaluación del impacto",
       "impactSubtitle": "Estima el alcance y la naturaleza de los datos afectados",
       "affectedRecords": "Registros afectados estimados",
@@ -467,11 +467,11 @@
       "rootCauseCategory": "Categoría de causa raíz",
       "rootCauseCategoryPlaceholder": "p. ej., error humano, mala configuración",
       "rootCause": "Causa raíz",
-      "rootCausePlaceholder": "Análisis detallado de qué causó este incidente",
+      "rootCausePlaceholder": "Análisis detallado de qué ha causado este incidente",
       "containmentActions": "Acciones de contención",
       "containmentActionsPlaceholder": "Acciones tomadas para contener el incidente",
       "resolutionNotes": "Notas de resolución",
-      "resolutionNotesPlaceholder": "Cómo se resolvió el incidente",
+      "resolutionNotesPlaceholder": "Cómo se ha resuelto el incidente",
       "lessonsLearned": "Lecciones aprendidas",
       "lessonsLearnedPlaceholder": "Qué haremos de otra forma en adelante",
       "errorPrefix": "Error: {message}"
@@ -1087,7 +1087,7 @@
       }
     },
     "incidentDetail": {
-      "recordedInError": {"action": "Registrada por error", "undo": "Deshacer «registrada por error»", "dialogTitle": "¿Marcar como registrada por error?", "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.", "reasonLabel": "¿Por qué se registró por error?", "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba", "confirm": "Marcar como registrada por error", "marked": "Incidencia marcada como registrada por error", "undone": "La incidencia vuelve a contar", "noticeTitle": "Registrada por error el {date}", "noticeReason": "Motivo: {reason}.", "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.", "badge": "Registrada por error"},
+      "recordedInError": {"action": "Registrada por error", "undo": "Deshacer «registrada por error»", "dialogTitle": "¿Marcar como registrada por error?", "dialogBody": "Para una entrada hecha por equivocación, como una prueba o un duplicado. La incidencia no se elimina: se conserva en el registro de brechas, marcada y con tu motivo, y deja de contar en todos los recuentos y cifras de los informes. Puedes deshacerlo.", "reasonLabel": "¿Por qué se ha registrado por error?", "reasonPlaceholder": "Por ejemplo: duplica otra incidencia, o es una entrada de prueba", "confirm": "Marcar como registrada por error", "marked": "Incidencia marcada como registrada por error", "undone": "La incidencia vuelve a contar", "noticeTitle": "Registrada por error el {date}", "noticeReason": "Motivo: {reason}.", "noticeBody": "Se conserva en el registro de brechas, marcada, y no cuenta en ningún recuento.", "badge": "Registrada por error"},
       "notFound": "Incidente no encontrado",
       "back": "Volver a incidentes",
       "close": "Cerrar incidente",
@@ -1165,7 +1165,7 @@
         "titleLabel": "Título",
         "titlePlaceholder": "Resumen breve de la entrada",
         "descLabel": "Descripción",
-        "descPlaceholder": "Detalles: qué ocurrió, quién intervino, qué pruebas hay",
+        "descPlaceholder": "Detalles: qué ha ocurrido, quién ha intervenido, qué pruebas hay",
         "submit": "Añadir entrada",
         "type": {
           "OBSERVATION": "Observación",
@@ -1221,7 +1221,7 @@
         "title": "Generar DPA + evaluación de impacto de las transferencias",
         "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El contrato de encargo del tratamiento (anexos I a IV) y, para transferencias a terceros países, una EIT independiente se generan a partir de tus respuestas confirmadas.",
         "loading": "Analizando los datos del proveedor…",
-        "notesTitle": "Cómo se precargaron estos datos",
+        "notesTitle": "Cómo se han precargado estos datos",
         "sectionAgreement": "Acuerdo y partes",
         "languageLabel": "Idioma del documento",
         "effectiveDateLabel": "Fecha de efectos",
@@ -1473,7 +1473,7 @@
       },
       "repeatAccess": {
         "title": "Solicitud de acceso repetida",
-        "body": "Esta dirección de correo hizo {count, plural, one {otra solicitud de acceso} other {otras # solicitudes de acceso}} en los seis meses anteriores a esta (la última, el {date}). Según el artículo 13.3 de la LOPDGDD, el ejercicio del derecho de acceso más de una vez en seis meses puede considerarse repetitivo, salvo que exista causa legítima. La decisión es tuya."
+        "body": "Esta dirección de correo ha hecho {count, plural, one {otra solicitud de acceso} other {otras # solicitudes de acceso}} en los seis meses anteriores a esta (la última, el {date}). Según el artículo 13.3 de la LOPDGDD, el ejercicio del derecho de acceso más de una vez en seis meses puede considerarse repetitivo, salvo que exista causa legítima. La decisión es tuya."
       },
       "modelReplies": {
         "label": "Respuesta modelo",
@@ -2187,7 +2187,7 @@
           "lead": "Descarga todo lo que tu organización ha introducido en DPO Central, en un formato abierto y documentado que otra plataforma puede leer y que DPO Central puede volver a importar.",
           "contents": "El ZIP contiene programme.json (todo el programa, con su esquema JSON), una tabla CSV por registro para hojas de cálculo y una explicación de cada campo en español y en inglés. DPO Central guarda los documentos como enlaces: los enlaces están en el archivo.",
           "includeRights": "Incluir las solicitudes de derechos",
-          "includeRightsWarning": "El archivo contendrá entonces datos personales de quienes hicieron las solicitudes (nombres, datos de contacto, mensajes). Márcalo solo si las necesitas y guarda el archivo con cuidado.",
+          "includeRightsWarning": "El archivo contendrá entonces datos personales de quienes han hecho las solicitudes (nombres, datos de contacto, mensajes). Márcalo solo si las necesitas y guarda el archivo con cuidado.",
           "button": "Descargar el programa",
           "started": "La descarga ha empezado."
         },
@@ -2206,14 +2206,14 @@
             "vendors": "Proveedores"
           },
           "includeRights": "Importar también las solicitudes de derechos",
-          "includeRightsWarning": "Contienen datos personales de quienes las hicieron. Márcalo solo si esta organización debe tenerlas.",
+          "includeRightsWarning": "Contienen datos personales de quienes las han hecho. Márcalo solo si esta organización debe tenerlas.",
           "check": "Comprobar el archivo",
           "checking": "Comprobando...",
           "recheck": "Volver a comprobar con estas columnas",
           "importButton": "Importar como borradores",
           "importing": "Importando...",
           "done": "{count, plural, one {# registro importado como borrador por confirmar.} other {# registros importados como borradores por confirmar.}}",
-          "nothingNew": "No hay nada nuevo que importar: estos registros ya se importaron.",
+          "nothingNew": "No hay nada nuevo que importar: estos registros ya se han importado.",
           "review": "Revisar y confirmar",
           "summaryTitle": "Qué hará la importación",
           "colRegister": "Registro",
@@ -2966,7 +2966,7 @@
       "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
       "INVITE": "Invitación creada",
       "INVITE_CANCELLED": "Invitación cancelada",
-      "JOIN_BY_INVITATION": "Se unió por invitación",
+      "JOIN_BY_INVITATION": "Se ha unido por invitación",
       "RECORDED_IN_ERROR": "Registrada por error",
       "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
       "TASKS_GENERATED": "Tareas generadas",
@@ -3012,7 +3012,7 @@
     "marketplaceBody": "{skill} es un módulo premium del catálogo de módulos de todo.law. Cómpralo allí y después instala el archivo .skill descargado en tu página Módulos para activarlo en tu organización.",
     "installOnSkills": "Instalar en la página Módulos",
     "getOnMarketplace": "Conseguirlo en el catálogo de módulos",
-    "errorCheckout": "No se pudo iniciar el pago. Inténtalo de nuevo.",
+    "errorCheckout": "No se ha podido iniciar el pago. Inténtalo de nuevo.",
     "errorGeneric": "Algo ha salido mal. Inténtalo de nuevo.",
     "multiTitle": "{count, plural, one {Activar # función} other {Activar # funciones}}",
     "multiContactBody": "Ponte en contacto con nosotros para activar estas funciones en tu organización.",
@@ -3025,18 +3025,18 @@
     "title": "Módulos",
     "subtitle": "Módulos premium comprados en TODO.LAW. Sube el archivo de licencia de tu correo de confirmación para activarlos en esta organización: se verifica localmente, sin necesidad de conexión.",
     "activateTitle": "Activar con un archivo de licencia",
-    "activateHint": "Elige el archivo .license.json que recibiste tras la compra. Solo los propietarios y administradores de la organización pueden activarlos.",
+    "activateHint": "Elige el archivo .license.json que has recibido tras la compra. Solo los propietarios y administradores de la organización pueden activarlos.",
     "chooseFile": "Elegir archivo de licencia",
     "activate": "Activar módulo",
     "activating": "Activando…",
     "badFile": "Ese archivo no es una licencia válida. Usa el .license.json de tu correo de compra.",
     "installTitle": "Instalar un paquete de módulo",
-    "installHint": "Elige el paquete .skill que descargaste del catálogo de módulos de todo.law. Añade el contenido premium de evaluación (por ejemplo, la EIPD) a esta instalación. Solo los propietarios y administradores de la organización pueden instalar paquetes.",
+    "installHint": "Elige el paquete .skill que has descargado del catálogo de módulos de todo.law. Añade el contenido premium de evaluación (por ejemplo, la EIPD) a esta instalación. Solo los propietarios y administradores de la organización pueden instalar paquetes.",
     "chooseSkillFile": "Elegir archivo .skill",
     "installAction": "Instalar",
     "installing": "Instalando…",
     "skillInstalled": "Módulo {type} instalado.",
-    "badSkillFile": "No se pudo leer ese archivo. Usa el paquete .skill del catálogo de módulos.",
+    "badSkillFile": "No se ha podido leer ese archivo. Usa el paquete .skill del catálogo de módulos.",
     "activated": "{name} activado.",
     "packagesTitle": "Módulos disponibles",
     "packagesNone": "No hay paquetes de módulos instalados.",
@@ -6422,7 +6422,7 @@
       },
       "support": {
         "title": "Cuando algo falla",
-        "report": "Para notificar un problema, usa «Comentarios» en la parte superior de cualquier página una vez iniciada la sesión. Indica qué estabas haciendo y qué viste. En el servicio alojado, todos los mensajes llegan al equipo en su revisión diaria.",
+        "report": "Para notificar un problema, usa «Comentarios» en la parte superior de cualquier página una vez iniciada la sesión. Indica qué estabas haciendo y qué has visto. En el servicio alojado, todos los mensajes llegan al equipo en su revisión diaria.",
         "reference": "Cuando una página o una acción falla, ves una referencia, por ejemplo E-3F9A01C2 o una serie de cifras. Indícala en tu mensaje junto con lo que estabas haciendo: un fallo en el servidor queda registrado con esa referencia, lo que nos permite encontrar su causa exacta. La referencia no contiene nada sobre ti ni sobre tus registros.",
         "exports": "Las exportaciones están siempre disponibles. Si una página falla, tus registros no se ven afectados, y todos los informes y exportaciones de datos se pueden seguir descargando."
       },
@@ -7212,7 +7212,7 @@
           "triage": {
             "title": "Triaje e investigación",
             "description": "El responsable de privacidad revisa la comunicación, asigna un nivel de gravedad e inicia la investigación.",
-            "detail1": "Determinar el alcance: qué datos se vieron afectados y cuántos interesados",
+            "detail1": "Determinar el alcance: qué datos se han visto afectados y cuántos interesados",
             "detail2": "Identificar la causa raíz y, en su caso, el vector de ataque",
             "detail3": "Evaluar si es necesario notificar a la autoridad de control"
           },
@@ -7277,7 +7277,7 @@
           "desc": "El anexo II solo enumera medidas de seguridad confirmadas con pruebas reales de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la EIT, no las garantías sobre las MTO. Las declaraciones del importador (solicitudes de las autoridades públicas, historial de brechas) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la EIT documenta un riesgo residual salvo que exista al menos una medida complementaria técnica."
         },
         "afterTitle": "Tras la generación",
-        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se pactaron compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
+        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se han pactado compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
       },
       "metaTitle": "Gestión de proveedores",
       "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, niveles de riesgo, plantillas de diligencia debida, perfiles de Vendor.Watch y revisiones periódicas.",
@@ -7640,7 +7640,7 @@
         },
         "liav2_3_2": {
           "text": "¿Esperaría razonablemente el interesado este tratamiento?",
-          "helpText": "Las expectativas razonables dependen de la relación y de cómo se recabaron los datos. Cuanto menos esperado, más difícil de justificar el interés. Ejemplo: «Claramente esperado: los clientes esperan controles de fraude en los pagos». Fuente: RGPD, considerando 47.",
+          "helpText": "Las expectativas razonables dependen de la relación y de cómo se han recabado los datos. Cuanto menos esperado, más difícil de justificar el interés. Ejemplo: «Claramente esperado: los clientes esperan controles de fraude en los pagos». Fuente: RGPD, considerando 47.",
           "options": [
             "Claramente esperado",
             "Probablemente esperado",
@@ -8336,7 +8336,7 @@
           ]
         },
         "q8_7": {
-          "text": "Nombres y cargos de quienes prepararon, revisaron y aprobaron esta evaluación",
+          "text": "Nombres y cargos de quienes han preparado, revisado y aprobado esta evaluación",
           "helpText": "Fuente: 11 CCR 7152(a)(8)."
         },
         "q8_8": {
@@ -8380,7 +8380,7 @@
         },
         "q4_3": {
           "text": "La opinión de los interesados o de sus representantes, o el motivo por el que no se ha recabado",
-          "helpText": "Anota qué se preguntó, quién respondió y qué resultó de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9."
+          "helpText": "Anota qué se ha preguntado, quién ha respondido y qué ha resultado de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9."
         },
         "q7_4": {
           "text": "Cuándo se revisará esta evaluación y qué cambio del riesgo adelanta la revisión",
@@ -8770,7 +8770,7 @@
           ]
         },
         "q3_2": {
-          "text": "¿Qué alternativas se han considerado y por qué se descartaron?",
+          "text": "¿Qué alternativas se han considerado y por qué se han descartado?",
           "helpText": "Describe las alternativas menos intrusivas evaluadas y explica por qué el enfoque elegido es necesario."
         },
         "q3_3": {
@@ -9749,7 +9749,7 @@
       "taskNotFound": "No se ha encontrado la tarea.",
       "templateNotFoundOrNotAccessible": "No se ha encontrado la plantilla o no tienes acceso a ella.",
       "templateNotFound": "No se ha encontrado la plantilla.",
-      "thisEntitlementWasNotPurchasedViaStripeAnd": "Este derecho de uso no se adquirió a través de Stripe y no puedes cancelarlo por tu cuenta.",
+      "thisEntitlementWasNotPurchasedViaStripeAnd": "Este derecho de uso no se ha adquirido a través de Stripe y no puedes cancelarlo por tu cuenta.",
       "thisOrganisationCouldNotBeCreatedPleaseTry": "No se ha podido crear esta organización. Vuelve a intentarlo con un nombre algo distinto.",
       "theDeadlineAlreadyRunsToTheLongestPeriod": "El plazo ya llega al máximo que permite la norma.",
       "thePrimaryJurisdictionsLawAllowsNoExtension": "La norma de la jurisdicción principal no permite prórrogas.",
@@ -10174,7 +10174,7 @@
       "DEADLINE_REMINDER_SENT": "Recordatorio de plazo enviado",
       "INVITE": "Invitación creada",
       "INVITE_CANCELLED": "Invitación cancelada",
-      "JOIN_BY_INVITATION": "Se unió por invitación",
+      "JOIN_BY_INVITATION": "Se ha unido por invitación",
       "RECORDED_IN_ERROR": "Registrada por error",
       "RECORDED_IN_ERROR_UNDONE": "Ya no consta como registrada por error",
       "TASKS_GENERATED": "Tareas generadas",
