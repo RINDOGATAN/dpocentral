@@ -10239,7 +10239,7 @@
     },
     "delete": {
       "label": "Right to delete",
-      "desc": "Delete the personal information the business collected from the consumer."
+      "desc": "Delete the personal information the business holds about the consumer."
     },
     "correct": {
       "label": "Right to correct",

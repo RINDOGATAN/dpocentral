@@ -10239,7 +10239,7 @@
     },
     "delete": {
       "label": "Derecho de eliminación",
-      "desc": "Eliminar la información personal que la empresa recogió del consumidor."
+      "desc": "Eliminar la información personal que la empresa ostenta sobre el consumidor."
     },
     "correct": {
       "label": "Derecho de corrección",
