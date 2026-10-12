@@ -3656,7 +3656,8 @@
     "disclosure": {
       "title": "Responsible Disclosure",
       "body": "If you discover a security vulnerability, please report it responsibly. Do not open a public issue. Contact us directly at the email address listed in the repository."
-    }
+    },
+    "stackLink": "Measures common to the whole TODO.LAW stack"
   },
   "errors": {
     "generic": "An error occurred. Please try again.",

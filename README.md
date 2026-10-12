@@ -60,13 +60,15 @@ One codebase, two postures, switched by environment only:
 - **Sovereign** (self-hosted): local passwordless auth, no Stripe, optional
   OpenAI-compatible LLM gateway, your brand via `NEXT_PUBLIC_BRAND_*`.
 - **Hosted pilot** (cloud): Google OAuth / magic links. A free pilot with
-  limits, for test records: every module is included, one
+  limits. You can start free and use it with real client data: all our
+  sub-processors have the necessary safeguards and certifications. Every module
+  is included, one
   organization per account, 15 days of editing from your first sign-in, then
   read-only with export, two impact assessments (DPIAs) per organization, and a
   ceiling on records per organization (for example 25 systems, 50 vendors).
   Exports are never limited. The
   full list is in the documentation, under "Hosted pilot" (`/docs#hosted-pilot`).
-  For real data, choose the paid Cloud Plan (<https://www.todo.law/pricing>),
+  To lift the limits, choose the paid Cloud Plan (<https://www.todo.law/pricing>),
   a managed instance, or your own hardware (<https://www.todo.law/run>).
 
 Premium modules cost $60 a year each in the kit (your own instance), activated

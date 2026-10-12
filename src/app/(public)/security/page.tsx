@@ -19,7 +19,7 @@ import {
   Fingerprint,
   Mail,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toneChip } from "@/config/status-palette";
@@ -176,11 +176,19 @@ const statDefs = [
 
 export default function SecurityPage() {
   const t = useTranslations("security");
+  const locale = useLocale();
+  // The measures every TODO.LAW product shares live on one storefront page.
+  const stackUrl = locale === "es" ? "https://www.todo.law/es/seguridad" : "https://www.todo.law/security";
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12">
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <div className="space-y-6">
+        <p className="text-sm">
+          <a href={stackUrl} className="text-primary hover:underline">
+            {t("stackLink")} →
+          </a>
+        </p>
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/15 border border-primary/20">
