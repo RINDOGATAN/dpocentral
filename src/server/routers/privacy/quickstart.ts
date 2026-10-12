@@ -23,6 +23,7 @@ import {
   defaultReturnFlowFrequency,
   getLocalizedTemplateById,
   getLocalizedTemplates,
+  flowRecordCount,
   returnFlowName,
   type IndustryTemplate,
 } from "../../../config/industry-templates";
@@ -442,7 +443,9 @@ export const quickstartRouter = createTRPCRouter({
           activities: template.activities.filter(
             (a) => !existingActivityNames.has(a.name)
           ).length,
-          flows: template.flows.length,
+          // A two-way flow is created as two flows (out and back): count both,
+          // so the review promises what the build creates.
+          flows: flowRecordCount(template.flows),
         },
       };
     }),
@@ -461,7 +464,7 @@ export const quickstartRouter = createTRPCRouter({
         icon: t.icon,
         assetCount: t.assets.length,
         activityCount: t.activities.length,
-        flowCount: t.flows.length,
+        flowCount: flowRecordCount(t.flows),
       }));
     }),
 

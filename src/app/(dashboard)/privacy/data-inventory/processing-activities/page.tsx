@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { useOrgRole } from "@/lib/use-org-role";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { useFormatPrice } from "@/components/region-provider";
@@ -64,12 +65,16 @@ function formatArray(arr: unknown): string {
   return String(arr ?? "");
 }
 
+/** The data inventory, on its activities tab, with the new-activity form open. */
+const NEW_ACTIVITY_HREF = "/privacy/data-inventory?tab=activities&new=activity";
+
 export default function ProcessingActivitiesPage() {
   const formatPrice = useFormatPrice();
   const [searchQuery, setSearchQuery] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
+  const { canWrite } = useOrgRole();
   const t = useTranslations("pages.processingActivities");
   const tBasis = useTranslations("pages.dataInventory.legalBasis");
   const locale = useLocale();
@@ -207,10 +212,15 @@ export default function ProcessingActivitiesPage() {
               <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{t("perMonth", { price: formatPrice(9) })}</Badge>
             </Button>
           )}
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            {t("addActivity")}
-          </Button>
+          {/* The new-activity form lives on the data inventory: open it there. */}
+          {canWrite && (
+            <Button asChild>
+              <Link href={NEW_ACTIVITY_HREF}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("addActivity")}
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -337,10 +347,14 @@ export default function ProcessingActivitiesPage() {
             <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>{t("empty.title")}</p>
             <p className="text-sm mb-4">{t("empty.body")}</p>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {t("addActivity")}
-            </Button>
+            {canWrite && (
+              <Button asChild>
+                <Link href={NEW_ACTIVITY_HREF}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("addActivity")}
+                </Link>
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}

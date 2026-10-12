@@ -114,6 +114,14 @@ export default function QuickstartPage() {
   // "Start from another client" — copy a programme from one of the user's other
   // clients into the one open now, as drafts (directive stage 2b).
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
+  // "Start from another client" is offered only when there is one to copy
+  // from (a client where this person is an owner or an admin). Without one,
+  // the card opened a dialog that could only say so.
+  const { data: copySources } = trpc.clientTemplate.sources.useQuery(
+    { excludeOrganizationId: organization?.id },
+    { enabled: !!organization?.id },
+  );
+  const canCopyFromAnother = (copySources?.length ?? 0) > 0;
 
   // Detect if user arrived from Vendor.Watch
   const fromVendorWatch = searchParams.get("from") === "vendorwatch";
@@ -837,6 +845,7 @@ export default function QuickstartPage() {
 
           {/* Start from another client — a consultant's shortcut, opens the
               copy dialog rather than advancing the wizard. */}
+          {canCopyFromAnother && (
           <Card
             className={`cursor-pointer transition-all hover:border-primary/50 ${CARD_BUTTON_FOCUS}`}
             {...cardButton(() => setCopyDialogOpen(true), { label: tct("titleCurrent") })}
@@ -852,6 +861,7 @@ export default function QuickstartPage() {
               <ArrowRight className="w-5 h-5 text-primary shrink-0" />
             </CardContent>
           </Card>
+          )}
 
           <DeploymentExpertCta />
 

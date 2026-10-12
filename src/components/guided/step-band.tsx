@@ -25,6 +25,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { useOrganization } from "@/lib/organization-context";
 import { DPO_CENTRAL_PATH } from "./path-config";
 import {
+  nextStep,
   stageAfterCelebration,
   stageNumber,
   stageToCelebrate,
@@ -89,7 +90,12 @@ export function StepBand({
   }, [storageKey, remember]);
 
   if (!place) return null;
-  const { current, following } = place;
+  const { current } = place;
+  // After "Stage N complete. Next: <stage>", the button leads to the step that
+  // sentence names (the first step not done, wherever it is), not to the step
+  // that happens to follow this page, which may already be done.
+  const ahead = celebrate !== null && statuses ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
+  const following = celebrate !== null ? (ahead ? { step: ahead.step } : null) : place.following;
   const stages = DPO_CENTRAL_PATH.stages;
 
   return (

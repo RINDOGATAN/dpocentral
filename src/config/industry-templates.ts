@@ -958,6 +958,14 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
 // HELPERS
 // ============================================================
 
+/**
+ * The flows a template creates: one per flow, and two for a flow with a
+ * return flow (out and back), as the quick start builds them.
+ */
+export function flowRecordCount(flows: readonly Pick<IndustryFlow, "returnFlow">[]): number {
+  return flows.reduce((sum, f) => sum + (f.returnFlow ? 2 : 1), 0);
+}
+
 export function getTemplateById(id: string): IndustryTemplate | undefined {
   return INDUSTRY_TEMPLATES.find(t => t.id === id);
 }
