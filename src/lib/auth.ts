@@ -15,7 +15,7 @@ import { emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
-import { emailConfigured, googleConfigured } from "@/lib/sign-in-methods";
+import { emailConfigured, googleConfigured, localSignInAllowed } from "@/lib/sign-in-methods";
 import { getCookieLocale } from "@/i18n/server-locale";
 import { defaultLocale, type Locale } from "@/i18n/config";
 import enMessages from "@/messages/en.json";
@@ -95,7 +95,9 @@ export const authOptions: NextAuthOptions = {
     // Local credentials provider: dev mode, and sovereign/self-hosted
     // deployments (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true — no external
     // OAuth/mailer required behind the firm's own network).
-    ...(features.devAuthEnabled
+    // Never on the hosted service (src/lib/sign-in-methods.ts), checked
+    // when the providers are registered and again on every attempt.
+    ...(localSignInAllowed()
       ? [
           CredentialsProvider({
             id: "dev-credentials",
@@ -104,6 +106,10 @@ export const authOptions: NextAuthOptions = {
               email: { label: "Email", type: "email", placeholder: "dev@example.com" },
             },
             async authorize(credentials) {
+              if (!localSignInAllowed()) {
+                logger.error("Local sign-in refused on the hosted production deployment");
+                return null;
+              }
               if (!credentials?.email) return null;
 
               // Find or create user for dev mode
