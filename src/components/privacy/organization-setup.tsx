@@ -11,7 +11,10 @@ import { Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { brand } from "@/config/brand";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { PILOT_DPA, pilotDpaHref } from "@/config/pilot-dpa";
 import { organizationSlug } from "@/lib/organization-slug";
 
 
@@ -19,6 +22,11 @@ export function OrganizationSetup() {
   const t = useTranslations("organization");
   const [name, setName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Hosted pilot: the data processing agreement is accepted when the
+  // organisation is opened (src/config/pilot-dpa.ts). Never asked on the kit.
+  const hosted = useHostedPilot();
+  const locale = useLocale();
+  const [acceptDpa, setAcceptDpa] = useState(false);
   const { setOrganization, refetchOrganizations } = useOrganization();
 
   const createOrg = trpc.organization.create.useMutation({
@@ -33,11 +41,12 @@ export function OrganizationSetup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
+    if (hosted && !acceptDpa) return;
 
     setIsSubmitting(true);
     try {
       const slug = generateSlug(name);
-      await createOrg.mutateAsync({ name: name.trim(), slug });
+      await createOrg.mutateAsync({ name: name.trim(), slug, acceptDpa: hosted ? acceptDpa : undefined });
     } catch (error) {
       console.error("Failed to create organization:", error);
     } finally {
@@ -70,7 +79,36 @@ export function OrganizationSetup() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isSubmitting || !name.trim()}>
+            {hosted && (
+              <div className="flex items-start gap-2" data-testid="pilot-dpa-accept">
+                <Checkbox
+                  id="accept-dpa"
+                  checked={acceptDpa}
+                  onCheckedChange={(v) => setAcceptDpa(v === true)}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="accept-dpa" className="text-sm font-normal leading-snug">
+                  {t.rich("dpaAccept", {
+                    version: PILOT_DPA.version,
+                    link: (chunks) => (
+                      <a
+                        href={pilotDpaHref(locale)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline text-primary"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                  })}
+                </Label>
+              </div>
+            )}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || !name.trim() || (hosted && !acceptDpa)}
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

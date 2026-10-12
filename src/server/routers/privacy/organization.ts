@@ -28,6 +28,7 @@ import {
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
 import { BLOCKED_EMAIL_MESSAGES, isBlockedAccountEmail } from "@/lib/email-policy";
+import { PILOT_DPA, PILOT_DPA_ACTION, PILOT_DPA_REQUIRED } from "@/config/pilot-dpa";
 import {
   departmentScopeConditions,
   loadBusinessUnitScope,
@@ -168,15 +169,21 @@ export const organizationRouter = createTRPCRouter({
         slug: z.string().max(200),
         domain: z.string().optional(),
         creatorType: z.nativeEnum(UserType).optional(),
+        // Hosted pilot: the data processing agreement (src/config/pilot-dpa.ts)
+        // is accepted when the organisation is opened. Ignored on the kit.
+        acceptDpa: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const lang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       // Hosted pilot: one organisation per account (no-op on the kit)
-      await assertOneOrganizationPerAccount(
-        ctx.prisma,
-        ctx.session.user.id,
-        pilotLocale(localeFromCookieGetter(ctx.getCookie))
-      );
+      await assertOneOrganizationPerAccount(ctx.prisma, ctx.session.user.id, lang);
+
+      // Hosted pilot: no organisation is opened without accepting the agreement.
+      const hosted = isHostedDeployment();
+      if (hosted && input.acceptDpa !== true) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: PILOT_DPA_REQUIRED[lang] });
+      }
 
       const slug = await availableSlug(ctx.prisma, input.slug);
 
@@ -222,6 +229,21 @@ export const organizationRouter = createTRPCRouter({
           changes: { name: input.name, slug },
         },
       });
+
+      // The record of the acceptance: which agreement, in which language; the
+      // entry's own date and user say when and who.
+      if (hosted) {
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId: organization.id,
+            userId: ctx.session.user.id,
+            entityType: "Organization",
+            entityId: organization.id,
+            action: PILOT_DPA_ACTION,
+            changes: { dpaVersion: PILOT_DPA.version, locale: lang, document: PILOT_DPA.href[lang] },
+          },
+        });
+      }
 
       // Seed a default DSAR intake form so the public portal works out of the
       // box. Not when the rights-request module is left out of this plan

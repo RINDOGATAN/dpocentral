@@ -3101,7 +3101,8 @@
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "createOrganization": "Create Organization",
     "creating": "Creating...",
-    "switchOrg": "Switch Organization"
+    "switchOrg": "Switch Organization",
+    "dpaAccept": "I accept the <link>data processing agreement</link> (version {version}) for this organization. It covers the free pilot and the EU Cloud Plan."
   },
   "quickstart": {
     "recommended": "Recommended: Complete Setup",
@@ -6262,7 +6263,7 @@
       "cardBodyPrefix": "In the kit (your own instance), premium modules cost ",
       "cardBodyMid": " a year each and are activated offline with a license file. On the hosted pilot every module is included at no cost, within the pilot limits.",
       "cardSelfService": " Enable any feature instantly from the billing page.",
-      "cardContact": " For real client data, move to the paid plan, or ask for a managed instance or your own hardware on quotation.",
+      "cardContact": " You can start free and use it with real client data: all our sub-processors have the necessary safeguards and certifications. To work without limits, move to the paid plan, or ask for a managed instance or your own hardware on quotation.",
       "menuLock": "On your own instance, a small lock shows where a premium assessment type needs a license this organization does not have: beside Vendor due diligence in the menu, and beside the DPIA option in Assessments and in the type picker. The hosted pilot never shows a lock.",
       "badgeLabel": "Premium module",
       "viewAddons": "View Add-ons",
@@ -6401,7 +6402,7 @@
       "heroSubtitle": "One place to run a privacy program: data inventory, rights requests, assessments, incidents and vendors. For firms and consultants who run programs for their clients, and for in-house teams.",
       "hostedPilot": {
         "title": "Hosted pilot",
-        "intro": "Hosted pilot: free, to try the product with test records, within the limits set out below.",
+        "intro": "Hosted pilot: free, within the limits set out below. You can start free and use it with real client data: all our sub-processors have the necessary safeguards and certifications.",
         "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
         "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",

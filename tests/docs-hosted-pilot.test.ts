@@ -5,7 +5,7 @@
  * The public documentation carries a "Hosted pilot" section, early on the
  * overview page, in English and in Castilian Spanish. It says what the hosted
  * service allows (the editing window, the impact assessments, the record
- * ceilings) and where real data belongs (a paid plan or a managed instance), it states
+ * ceilings), that real client data may be used (as on the landing), it states
  * that exports are never limited, and the banner's "see docs" link lands on it.
  * The figures are read from the pilot configuration, so the page cannot state
  * a number the product does not enforce.
@@ -51,10 +51,13 @@ describe("the hosted pilot documentation", () => {
       }
       expect(s.window).toContain("{days}");
       expect(s.assessments).toContain("{assessments}");
-      // The intro names test records and the limits only;
+      // The intro names the limits and, as the landing does, that real client data may be used;
       // the next paragraph ("run") carries the paid plan and the quotation. No "no safeguards" line.
-      expect(s.intro).toMatch(locale === "es" ? /registros de prueba, dentro de los límites/ : /test records, within the limits set out below\./);
-      expect(s.intro).not.toMatch(/For real data|Para datos reales|capped|con límites/);
+      expect(s.intro).toMatch(locale === "es" ? /dentro de los límites/ : /within the limits set out below\./);
+      expect(s.intro).toContain(locale === "es"
+        ? "Puedes empezar gratis y usarlo con datos reales de clientes: todos nuestros subencargados cuentan con las certificaciones y garantías necesarias."
+        : "You can start free and use it with real client data: all our sub-processors have the necessary safeguards and certifications.");
+      expect(s.intro).not.toMatch(/For real data|Para datos reales|test records|registros de prueba|capped|con límites/);
       // The paid plan lifts the limits; the prices stay on the pricing page, never in the app.
       expect(s.run).toMatch(locale === "es" ? /plan de pago/ : /paid plan/);
       expect(s.run).not.toMatch(/[€$]\s?\d|\d\s?[€$]/);
