@@ -215,7 +215,7 @@
       "system": "Sistema",
       "sectionsCount": "{count, plural, one {# sección} other {# secciones}}",
       "noTemplatesTitle": "No hay plantillas disponibles",
-      "noTemplatesBody": "No se ha encontrado una plantilla para {name}. Lanza el script de carga inicial de plantillas o crea una plantilla primero.",
+      "noTemplatesBody": "Todavía no hay una plantilla de {name} en esta instalación. Instala el módulo que la contiene desde Módulos o elige otro tipo.",
       "chooseDifferent": "Elegir otro tipo",
       "details": "Datos de la evaluación",
       "usingTemplate": "Plantilla: {name}",
@@ -328,7 +328,7 @@
       "clonePrompt": "Nombre de la copia:",
       "cloneSuffix": "{name} (copia)",
       "noSystemTitle": "No hay ninguna plantilla incluida instalada",
-      "noSystemBody": "Lanza la carga inicial de contenido para crear las plantillas incluidas.",
+      "noSystemBody": "Las plantillas incluidas aún no están instaladas. Se cargan al instalar o actualizar la instalación.",
       "noCustomTitle": "Todavía no tienes ninguna plantilla propia",
       "noCustomBody": "Copia una plantilla incluida para empezar la tuya. La copia pertenece a tu organización y se puede responder desde el primer momento.",
       "aboutTitle": "Sobre estas plantillas",
@@ -3003,7 +3003,19 @@
     "expires": "Caduca el {date}",
     "perpetual": "Licencia perpetua",
     "activations": "{used} de {max} activaciones usadas",
-    "perMonth": "/mes"
+    "perMonth": "/mes",
+    "names": {
+      "vendor-catalog": "Catálogo de proveedores",
+      "dpia": "Evaluación de impacto relativa a la protección de datos",
+      "pia": "Evaluación de impacto en la privacidad",
+      "tia": "Evaluación de impacto de las transferencias",
+      "vendor": "Evaluación de riesgo del proveedor",
+      "lia": "Evaluación del interés legítimo",
+      "custom": "Evaluación personalizada",
+      "ropa-export": "Exportación del RAT",
+      "dsar-portal": "Portal público de solicitudes de derechos",
+      "complete": "Conjunto completo de evaluaciones"
+    }
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
@@ -3172,7 +3184,8 @@
       "cancel": "Cancelar",
       "saving": "Guardando...",
       "save": "Guardar cambios",
-      "errorPrefix": "Error: {message}"
+      "errorPrefix": "Error: {message}",
+      "saved": "Configuración guardada"
     }
   },
   "dsarPublic": {
@@ -9688,7 +9701,9 @@
     "pilotUsage": "Piloto: {used} de {limit} solicitudes por el formulario público.",
     "monthUsage": "Este mes: {used} de {limit} solicitudes por el formulario público.",
     "limitReached": "El formulario público no admite solicitudes ahora; en su lugar muestra tu correo de contacto de privacidad.",
-    "staffNote": "Las solicitudes que registras tú no cuentan."
+    "staffNote": "Las solicitudes que registras tú no cuentan.",
+    "addOnNoNew": "Podrás añadir solicitudes nuevas cuando las solicitudes de derechos formen parte de tu plan.",
+    "backToRequests": "Volver a las solicitudes"
   },
   "drafts": {
     "badge": "Por confirmar",

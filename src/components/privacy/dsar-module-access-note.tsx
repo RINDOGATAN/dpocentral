@@ -48,3 +48,17 @@ export function DsarModuleAccessNote() {
     </p>
   );
 }
+
+/**
+ * False while the hosted paid plan has no rights-request add-on: the server
+ * refuses new requests then (src/server/services/dsar/module.ts), so the
+ * buttons that add one are not offered. True otherwise, and while loading.
+ */
+export function useDsarCanAddRequests(): boolean {
+  const { organization } = useOrganization();
+  const { data: access } = trpc.dsar.moduleAccess.useQuery(
+    { organizationId: organization?.id ?? "" },
+    { enabled: !!organization?.id, refetchOnWindowFocus: false }
+  );
+  return access?.gate !== "inactive";
+}

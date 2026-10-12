@@ -82,6 +82,9 @@ export default function DSARSettingsPage() {
   const saveSettings = trpc.dsar.upsertIntakeForm.useMutation({
     onSuccess: () => {
       setIsSaving(false);
+      // The page stays put after saving: say that it worked.
+      toast.success(t("actions.saved"));
+      void utils.dsar.getIntakeForm.invalidate();
     },
     onError: (error) => {
       console.error("Failed to save settings:", error);

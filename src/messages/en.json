@@ -215,7 +215,7 @@
       "system": "System",
       "sectionsCount": "{count, plural, one {# section} other {# sections}}",
       "noTemplatesTitle": "No templates available",
-      "noTemplatesBody": "No template found for {name}. Run the template seed script or create a template first.",
+      "noTemplatesBody": "There is no {name} template on this installation yet. Install the module that contains it from Skills, or choose another type.",
       "chooseDifferent": "Choose a different type",
       "details": "Assessment Details",
       "usingTemplate": "Using template: {name}",
@@ -328,7 +328,7 @@
       "clonePrompt": "Name for the copy:",
       "cloneSuffix": "{name} (copy)",
       "noSystemTitle": "No built-in template is installed",
-      "noSystemBody": "Run the content seed to write the built-in templates.",
+      "noSystemBody": "The built-in templates are not installed yet. They are loaded when the installation is set up or updated.",
       "noCustomTitle": "You have no template of your own yet",
       "noCustomBody": "Copy a built-in template to start one. The copy belongs to your organization and can be answered straight away.",
       "aboutTitle": "About these templates",
@@ -3003,7 +3003,19 @@
     "expires": "Expires {date}",
     "perpetual": "Perpetual license",
     "activations": "{used} of {max} activations used",
-    "perMonth": "/mo"
+    "perMonth": "/mo",
+    "names": {
+      "vendor-catalog": "Vendor Catalog",
+      "dpia": "Data Protection Impact Assessment",
+      "pia": "Privacy Impact Assessment",
+      "tia": "Transfer Impact Assessment",
+      "vendor": "Vendor Risk Assessment",
+      "lia": "Legitimate Interest Assessment",
+      "custom": "Custom Assessment",
+      "ropa-export": "ROPA Export",
+      "dsar-portal": "DSAR Public Portal",
+      "complete": "Complete Assessment Suite"
+    }
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
@@ -3172,7 +3184,8 @@
       "cancel": "Cancel",
       "saving": "Saving...",
       "save": "Save Settings",
-      "errorPrefix": "Error: {message}"
+      "errorPrefix": "Error: {message}",
+      "saved": "Settings saved"
     }
   },
   "dsarPublic": {
@@ -9688,7 +9701,9 @@
     "pilotUsage": "Pilot: {used} of {limit} requests through the public form.",
     "monthUsage": "This month: {used} of {limit} requests through the public form.",
     "limitReached": "The public form is not taking requests now; it shows your privacy contact e-mail instead.",
-    "staffNote": "Requests you enter yourself do not count."
+    "staffNote": "Requests you enter yourself do not count.",
+    "addOnNoNew": "New requests can be added once rights requests are part of your plan.",
+    "backToRequests": "Back to requests"
   },
   "drafts": {
     "badge": "To confirm",
