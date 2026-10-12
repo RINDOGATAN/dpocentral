@@ -10095,5 +10095,20 @@
     "action": "Any change to the request, a task or a message keeps it.",
     "ctaText": "Open the request",
     "whyYou": "You receive this because you are an owner or administrator of {orgName}."
+  },
+  "search": {
+    "label": "Search the program by name",
+    "placeholder": "Search by name",
+    "results": "Search results",
+    "noResults": "Nothing found with that name.",
+    "namesOnly": "Searches names only: systems, activities, vendors, assessments, incidents and requests.",
+    "kinds": {
+      "system": "Systems",
+      "activity": "Processing activities",
+      "vendor": "Vendors",
+      "assessment": "Assessments",
+      "incident": "Incidents",
+      "request": "Rights requests"
+    }
   }
 }
