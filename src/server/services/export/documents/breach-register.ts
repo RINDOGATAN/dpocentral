@@ -5,8 +5,9 @@
 
 import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { BreachRegisterReport, incidentsToCSV } from "@/server/services/export/breach-register";
+import { BREACH_CSV_KEYS, BreachRegisterReport, incidentsToCSV } from "@/server/services/export/breach-register";
 import type { IncidentExportData } from "@/server/services/export/breach-register";
+import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
@@ -82,7 +83,7 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
   }
 
   if (format === "csv") {
-    return { data: incidentsToCSV(data), filename: `${base}.csv`, contentType: CSV };
+    return { data: incidentsToCSV(data, await csvLabelsFor("breaches", BREACH_CSV_KEYS, locale)), filename: `${base}.csv`, contentType: CSV };
   }
 
   const buffer = await withPdfLocale(locale, () => renderToBuffer(

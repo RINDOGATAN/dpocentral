@@ -81,6 +81,12 @@ export default function ProcessingActivitiesPage() {
   const tBasis = useTranslations("pages.dataInventory.legalBasis");
   const tInv = useTranslations("pages.dataInventory");
   const locale = useLocale();
+  const tEnum = useTranslations("enums");
+  // English CSVs keep the stored codes; other languages get the screen labels.
+  const csvCode = (kind: "legalBasis" | "dataCategory" | "transferMechanism", value: string) => {
+    const key = `${kind}.${value}`;
+    return locale !== "en" && tEnum.has(key as never) ? tEnum(key as never) : value;
+  };
   const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
@@ -145,14 +151,16 @@ export default function ProcessingActivitiesPage() {
           entry.name,
           entry.description ?? "",
           entry.purpose,
-          entry.legalBasis,
+          csvCode("legalBasis", entry.legalBasis),
           entry.legalBasisDetail ?? "",
           formatArray(entry.dataSubjects),
-          formatArray(entry.dataCategories),
+          Array.isArray(entry.dataCategories)
+            ? entry.dataCategories.map((c) => csvCode("dataCategory", String(c))).join("; ")
+            : formatArray(entry.dataCategories),
           formatArray(entry.recipients),
           entry.retentionPeriod ?? "",
           entry.systems.map((s) => s.name).join("; "),
-          entry.transfers.map((t) => `${t.destination} (${t.mechanism})`).join("; "),
+          entry.transfers.map((t) => `${t.destination} (${csvCode("transferMechanism", t.mechanism)})`).join("; "),
           entry.lastReviewed ? formatDateIn(entry.lastReviewed, locale) : "",
         ]);
         content = [

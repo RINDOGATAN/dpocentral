@@ -6,6 +6,8 @@
  * routes can pull only the export format they need.
  */
 
+import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
+
 export interface VendorCsvRow {
   id: string;
   name: string;
@@ -36,43 +38,70 @@ function fmtDate(d: Date | null | undefined): string {
   return new Date(d).toISOString().split("T")[0]!;
 }
 
-export function vendorsToCSV(vendors: VendorCsvRow[]): string {
-  const headers = [
-    "Name",
-    "Status",
-    "Risk Tier",
-    "Risk Score",
-    "Website",
-    "Primary Contact",
-    "Contact Email",
-    "Categories",
-    "Data Processed",
-    "Countries",
-    "Certifications",
-    "Last Assessed",
-    "Next Review",
-    "Contract Names",
-    "DPA Status",
-  ];
+export const VENDOR_CSV_KEYS = [
+  "name",
+  "status",
+  "riskTier",
+  "riskScore",
+  "website",
+  "primaryContact",
+  "contactEmail",
+  "categories",
+  "dataProcessed",
+  "countries",
+  "certifications",
+  "lastAssessed",
+  "nextReview",
+  "contractNames",
+  "dpaStatus",
+] as const;
+export type VendorCsvKey = (typeof VENDOR_CSV_KEYS)[number];
+
+/** The English CSV: column names as they have always been, raw codes. */
+export const VENDOR_CSV_EN: CsvLabels<VendorCsvKey> = {
+  headers: {
+    name: "Name",
+    status: "Status",
+    riskTier: "Risk Tier",
+    riskScore: "Risk Score",
+    website: "Website",
+    primaryContact: "Primary Contact",
+    contactEmail: "Contact Email",
+    categories: "Categories",
+    dataProcessed: "Data Processed",
+    countries: "Countries",
+    certifications: "Certifications",
+    lastAssessed: "Last Assessed",
+    nextReview: "Next Review",
+    contractNames: "Contract Names",
+    dpaStatus: "DPA Status",
+  },
+  words: CSV_WORDS_EN,
+  code: rawCode,
+};
+
+export function vendorsToCSV(vendors: VendorCsvRow[], labels: CsvLabels<VendorCsvKey> = VENDOR_CSV_EN): string {
+  const { headers: h, words: w, code } = labels;
+  const headers = VENDOR_CSV_KEYS.map((k) => h[k]);
 
   const rows = vendors.map((v) => {
     const dpa = v.contracts.find((c) => c.type === "DPA");
     return [
       v.name,
-      v.status,
-      v.riskTier ?? "",
+      code("vendorStatus", v.status),
+      v.riskTier ? code("riskLevel", v.riskTier) : "",
       v.riskScore != null ? String(v.riskScore) : "",
       v.website ?? "",
       v.primaryContact ?? "",
       v.contactEmail ?? "",
       v.categories.join("; "),
-      v.dataProcessed.join("; "),
+      v.dataProcessed.map((d) => code("dataCategory", d)).join("; "),
       v.countries.join("; "),
       v.certifications.join("; "),
       fmtDate(v.lastAssessedAt),
       fmtDate(v.nextReviewAt),
       v.contracts.map((c) => c.name).join("; "),
-      dpa ? dpa.status : "No DPA",
+      dpa ? code("contractStatus", dpa.status) : w.noDpa,
     ];
   });
 

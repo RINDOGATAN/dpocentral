@@ -4573,6 +4573,64 @@
     "chrome": {
       "generatedBy": "Generado con DPO Central",
       "noRecords": "Sin registros"
+    },
+    "csv": {
+      "words": {
+        "notSpecified": "Sin especificar",
+        "yes": "Sí",
+        "no": "No",
+        "none": "Ninguna",
+        "noDpa": "Sin DPA"
+      },
+      "ropa": {
+        "activity": "Actividad de tratamiento",
+        "purpose": "Finalidad",
+        "legalBasis": "Base jurídica",
+        "dataSubjects": "Interesados",
+        "dataCategories": "Categorías de datos",
+        "recipients": "Destinatarios",
+        "retentionPeriod": "Plazo de conservación",
+        "automatedDecisions": "Decisiones automatizadas",
+        "systems": "Sistemas",
+        "transfers": "Transferencias internacionales",
+        "lastReviewed": "Última revisión",
+        "nextReview": "Próxima revisión"
+      },
+      "vendors": {
+        "name": "Nombre",
+        "status": "Estado",
+        "riskTier": "Nivel de riesgo",
+        "riskScore": "Puntuación de riesgo",
+        "website": "Sitio web",
+        "primaryContact": "Contacto principal",
+        "contactEmail": "Correo electrónico de contacto",
+        "categories": "Categorías",
+        "dataProcessed": "Datos tratados",
+        "countries": "Países",
+        "certifications": "Certificaciones",
+        "lastAssessed": "Última evaluación",
+        "nextReview": "Próxima revisión",
+        "contractNames": "Contratos",
+        "dpaStatus": "Estado del DPA"
+      },
+      "breaches": {
+        "id": "ID",
+        "title": "Título",
+        "type": "Tipo",
+        "severity": "Gravedad",
+        "status": "Estado",
+        "description": "Descripción",
+        "discoveredAt": "Descubierta el",
+        "discoveredBy": "Descubierta por",
+        "affectedRecords": "Registros afectados",
+        "affectedSubjects": "Interesados afectados",
+        "dataCategories": "Categorías de datos",
+        "containedAt": "Contenida el",
+        "rootCause": "Causa raíz",
+        "resolvedAt": "Resuelta el",
+        "notificationRequired": "¿Requiere notificación a la autoridad de control?",
+        "notificationDeadline": "Plazo de notificación"
+      }
     }
   },
   "docs": {
