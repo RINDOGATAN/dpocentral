@@ -2542,6 +2542,12 @@
     "deleteVendorDesc": "This will remove the vendor and unlink it from any systems or activities. This cannot be undone.",
     "deleteFlowTitle": "Delete data flow?",
     "deleteFlowDesc": "Delete flow \"{name}\"? This cannot be undone.",
+    "deleteActivityTitle": "Delete processing activity?",
+    "deleteActivityDesc": "Delete \"{name}\"? Its links to systems and the flows suggested from them go with it. Transfers and assessments that refer to it are kept. This cannot be undone.",
+    "deleteTransferTitle": "Delete transfer?",
+    "deleteTransferDesc": "Delete \"{name}\"? Assessments that refer to it are kept. This cannot be undone.",
+    "deleteAssessmentTitle": "Delete draft assessment?",
+    "deleteAssessmentDesc": "Delete \"{name}\" with its answers? Only drafts can be deleted. This cannot be undone.",
     "deleteEntitlementTitle": "Delete entitlement?",
     "deleteEntitlementDesc": "Delete this entitlement ({name})? Linked organizations will lose access immediately. This cannot be undone."
   },
@@ -3721,7 +3727,8 @@
     "transfer": {
       "created": "Transfer created",
       "updated": "Transfer updated",
-      "complianceUpdated": "Compliance updated"
+      "complianceUpdated": "Compliance updated",
+      "deleted": "Transfer deleted"
     },
     "incident": {
       "created": "Incident reported",
@@ -3754,7 +3761,8 @@
       "mitigationUpdated": "Mitigation updated",
       "templateCloned": "Template cloned successfully",
       "autoFillAllSaved": "Assessment created with all responses pre-filled",
-      "autoFillPartialSaved": "Assessment created but only {saved} of {total} responses were saved"
+      "autoFillPartialSaved": "Assessment created but only {saved} of {total} responses were saved",
+      "deleted": "Assessment deleted"
     },
     "aiSystem": {
       "registered": "AI system registered",
@@ -6379,7 +6387,7 @@
         "title": "Hosted pilot",
         "intro": "Hosted pilot: free, to try the product with test records, within the limits set out below.",
         "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
-        "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting one does not free a place. The ones already there can still be edited, submitted, approved and exported.",
+        "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "An organization can hold up to:",
         "oneOrganization": "An account belongs to one organization.",

@@ -55,6 +55,7 @@ import {
   XCircle,
   UserCheck,
 } from "lucide-react";
+import { DeleteRecordButton } from "@/components/privacy/delete-record-button";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -202,6 +203,15 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   );
 
   const utils = trpc.useUtils();
+  const tConfirmDelete = useTranslations("confirms");
+  const deleteAssessment = trpc.assessment.delete.useMutation({
+    onSuccess: () => {
+      toast.success(t("assessment.deleted"));
+      utils.assessment.list.invalidate();
+      router.push("/privacy/assessments");
+    },
+    onError: (error) => toast.error(error.message || t("generic.somethingWentWrong")),
+  });
 
   // A refusal names the questions that are missing (server side) and takes
   // the reader to the list of them, where every item links to its field.
@@ -876,6 +886,15 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               {submitAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
               {tp("submitReview")}
             </Button>
+          )}
+          {(assessment.status === "DRAFT" || assessment.status === "IN_PROGRESS") && (
+            <DeleteRecordButton
+              title={tConfirmDelete("deleteAssessmentTitle")}
+              description={tConfirmDelete("deleteAssessmentDesc", { name: assessment.name })}
+              pending={deleteAssessment.isPending}
+              onConfirm={() => deleteAssessment.mutate({ organizationId: organization?.id ?? "", id })}
+              testId="delete-assessment"
+            />
           )}
         </div>
       </div>

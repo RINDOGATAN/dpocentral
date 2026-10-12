@@ -178,8 +178,8 @@ describe("DPIAs on the hosted pilot tier", () => {
   });
 
   it("says that deleting does not free a place", () => {
-    expect(dpiaCapMessage("en")).toMatch(/deleting one does not free a place/i);
-    expect(dpiaCapMessage("es")).toMatch(/borrar una no libera plaza/i);
+    expect(dpiaCapMessage("en")).toMatch(/deleting a draft DPIA does not free a place/i);
+    expect(dpiaCapMessage("es")).toMatch(/borrar una EIPD en borrador no libera plaza/i);
   });
 
   it("does not let a deletion free a place", async () => {
