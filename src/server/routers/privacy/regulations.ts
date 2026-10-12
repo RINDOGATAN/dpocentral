@@ -206,8 +206,7 @@ export const regulationsRouter = createTRPCRouter({
       return { jurisdiction, orgJurisdiction };
     }),
 
-  // "Where does your organisation operate?" (the quick start's first step,
-  // owner's decision d8): the organisation's places become exactly the ones
+  // "Where does your organisation operate?" (the quick start's first step): the organisation's places become exactly the ones
   // chosen. Only the places the picker offers are touched
   // (src/config/jurisdiction-places.ts): an AI-governance entry declared on the
   // "What applies" page is never removed from here. At least one place: an

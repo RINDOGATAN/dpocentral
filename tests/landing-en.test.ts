@@ -46,7 +46,7 @@ const shown = Object.entries(en).filter(
     k.startsWith("cta.")
 );
 
-describe("English copy, after the owner's review", () => {
+describe("English copy", () => {
   it("says one subscription covers the three tools", () => {
     expect(en["en.suite.heading.prefix"] + en["en.suite.heading.accent"]).toBe("Three tools, one subscription");
     expect(en["en.suite.sub"]).toMatch(/One subscription/);
@@ -62,8 +62,7 @@ describe("English copy, after the owner's review", () => {
     }
   });
 
-  // The hosting intro is the owner's own line since 10 Oct 2026; no comparisons anywhere.
-  // Owner, 11 Oct 2026: the hero subtitle says the program can be migrated "to an
+  // No comparisons anywhere. The hero subtitle says the program can be migrated "to an
   // enterprise platform" (a way out, not a comparison); only that phrase is allowed.
   it("positions DPO Central calmly and without comparisons", () => {
     for (const [k, v] of shown) {
@@ -116,7 +115,7 @@ describe("English sections", () => {
       expect(v, k).not.toMatch(/\bthe (first|only)\b|\b(leading|best|unrivaled|world-class|revolutionary)\b/i);
       expect(v, k).not.toMatch(/\bexecute\b/i);
     }
-    // The only images are the customer logos (draft, 11 Oct 2026), above the footer.
+    // The only images are the customer logos, above the footer.
     expect((html.match(/<img /g) ?? []).length).toBe((html.match(/src="\/images\/clients\//g) ?? []).length);
     expect(html).toContain(">Trusted by</h2>");
   });
@@ -128,7 +127,7 @@ describe("English sections", () => {
     }
   });
 
-  // Three ways, as on the English storefront since 10 Oct 2026 (owner): the kit and the Box
+  // Three ways, as on the English storefront: the kit and the Box
   // stay on the storefront's Run it your way page only.
   it("offer three ways, as on the English storefront", () => {
     const titles = [1, 2, 3].map((n) => en[`en.ways.w${n}.title`]);
@@ -139,7 +138,7 @@ describe("English sections", () => {
     for (const t of titles) expect(html).toContain(t.replace("&", "&amp;"));
     expect(en["en.ways.label"]).toBe("Safeguards and hosting");
     expect(en["en.ways.heading.prefix"] + en["en.ways.heading.accent"]).toBe("Tailored to your needs");
-    // Portability now sits on the cloud box (owner, 10 Oct 2026).
+    // Portability now sits on the cloud box.
     expect(en["en.ways.w1.desc"]).toMatch(/take your program elsewhere whenever you like with a simple export/);
   });
 

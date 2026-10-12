@@ -116,7 +116,7 @@ describe("the shape of the path", () => {
       "/privacy/clients",
     ]);
     // The entries of the retired Classic top bar plus Settings (Classic was
-    // retired on 9 October 2026, decision d11). Every one must stay reachable
+    // retired). Every one must stay reachable
     // from the one layout.
     const classic = [
       "/privacy/data-inventory",

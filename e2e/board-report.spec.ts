@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report (owner's decision d12, 9 October 2026), seen in a browser:
+ * The board report, seen in a browser:
  * an organisation with one confirmed step and a few records of the last
  * quarter (written straight into the local test database, so the walk is
  * skipped against any other database). It checks:

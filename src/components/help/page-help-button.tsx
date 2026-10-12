@@ -147,8 +147,7 @@ export function PageHelpButton() {
             </Section>
           )}
 
-          {/* The one line left of the dashboard's two expert banners (owner's
-              decision d7, 9 October 2026). */}
+          {/* The one line left of the dashboard's two expert banners. */}
           {features.expertDirectoryEnabled && (
             <p className="text-muted-foreground leading-relaxed" data-testid="help-experts-line">
               {t("expertsLine")}{" "}

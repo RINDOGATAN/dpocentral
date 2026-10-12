@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Honest progress (the owner's decisions of 9 October 2026, step 2 of the
+ * Honest progress (step 2 of the
  * clarity work):
  *
  * - d2 Drafts count once confirmed: a record the quick start, a template or

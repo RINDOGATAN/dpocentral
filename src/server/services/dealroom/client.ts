@@ -29,7 +29,7 @@ export type { ExpertProfile };
 
 // ---------------------------------------------------------------------------
 // The contact address of a person in the directory is ours to hold, never
-// ours to hand out (owner's decision, 2026-09-20). No user may see it, in a
+// ours to hand out. No user may see it, in a
 // card, in a detail panel, in an export or in any API response, and no request
 // is mailed to it from this product: every request goes to our own inbox and
 // we contact the person ourselves.
@@ -73,9 +73,9 @@ interface DirectorySearchResult {
   offset: number;
 }
 
-// Lawyer services are not offered through this platform (2026-07 decision), so
+// Lawyer services are not offered through this platform, so
 // the "legal" label is stripped from every profile before it is shown. It is a
-// label strip only: since 2026-09-20 the allow-list below decides who appears,
+// label strip only: the allow-list below decides who appears,
 // and a permitted person is never dropped for carrying that label.
 const EXCLUDED_EXPERT_TYPE = "legal";
 
@@ -89,7 +89,7 @@ function stripLegalType(expert: ExpertProfile): ExpertProfile {
 
 // ---------------------------------------------------------------------------
 // The allow-list. Exactly one person may appear in the directory of people
-// available for technical help (owner's decision, 2026-09-20).
+// available for technical help.
 //
 // This is enforced at the point the list is READ, not only in the local list,
 // so a name added to the upstream directory — however plausible, however real
@@ -97,8 +97,8 @@ function stripLegalType(expert: ExpertProfile): ExpertProfile {
 // is on the name, case- and whitespace-insensitive, because the upstream id
 // is not ours to rely on.
 //
-// Removing this filter, or widening it, needs the owner's decision. Do not
-// widen it to make a test or a demo look better.
+// Removing this filter, or widening it, is a deliberate change reviewed on its
+// own. Do not widen it to make a test or a demo look better.
 // ---------------------------------------------------------------------------
 const PERMITTED_DIRECTORY_NAMES = new Set(["steve crowley"]);
 

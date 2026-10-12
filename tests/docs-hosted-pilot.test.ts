@@ -51,7 +51,7 @@ describe("the hosted pilot documentation", () => {
       }
       expect(s.window).toContain("{days}");
       expect(s.assessments).toContain("{assessments}");
-      // Owner, 11 Oct 2026 (consistency review DPC-1): the intro names test records and the limits only;
+      // The intro names test records and the limits only;
       // the next paragraph ("run") carries the paid plan and the quotation. No "no safeguards" line.
       expect(s.intro).toMatch(locale === "es" ? /registros de prueba, dentro de los límites/ : /test records, within the limits set out below\./);
       expect(s.intro).not.toMatch(/For real data|Para datos reales|capped|con límites/);

@@ -46,7 +46,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
 
   const menuLabel = t(isMenuOpen ? "header.menuClose" : "header.menuOpen");
   // "Pricing" / "Precios", to the landing's pricing block: the last link
-  // before the language switch, as on the other suite landings (owner, 11 Oct 2026).
+  // before the language switch, as on the other suite landings.
   const pricingHref = `#${PRICING_ANCHOR[locale]}`;
   const pricingLabel = PRICING_COPY[locale].nav;
 

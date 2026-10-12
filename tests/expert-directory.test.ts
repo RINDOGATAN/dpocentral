@@ -3,7 +3,7 @@
 
 /**
  * The directory of people available for technical help lists exactly one
- * person (owner's decision, 2026-09-20). No invented person may reach a user.
+ * person. No invented person may reach a user.
  *
  * These tests cover both sources the directory can be served from:
  *   - the local list, when no directory service is configured;

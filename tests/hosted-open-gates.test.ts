@@ -373,7 +373,7 @@ describe("reaching a new DPIA", () => {
   it("takes two clicks from the dashboard: the documents panel, then Create", () => {
     // The dashboard's documents panel links the DPIA's missing input straight
     // to the form with the type chosen (the Classic quick action it replaces
-    // was retired with Classic, decision d11).
+    // was retired with Classic).
     const register = readFileSync(
       path.resolve(__dirname, "..", "src/config/document-register.ts"),
       "utf8"
@@ -411,8 +411,7 @@ describe("creating a premium assessment", () => {
   });
 
   // Stripe on outside the hosted pilot, no licence: the organisation is on the
-  // pilot tier for DPIAs (two free for a limited time, owner's decision of 29
-  // September 2026). The premium gate stays for the other types.
+  // pilot tier for DPIAs (two free for a limited time). The premium gate stays for the other types.
   it("a DPIA is allowed where Stripe is on and no licence exists, up to two", async () => {
     kit();
     mocks.prisma.skillPackage.findFirst.mockResolvedValue(null);

@@ -5,8 +5,7 @@
 /**
  * "Review and confirm": every record the quick start, a template or another
  * client's copy drafted for this organisation and nobody has confirmed yet.
- * They count towards the programme once a person confirms them (owner's
- * decision d2, 9 October 2026; as AI Sentinel's review queue).
+ * They count towards the programme once a person confirms them (as AI Sentinel's review queue).
  *
  * Each row opens the record (to check or correct it; editing confirms it too)
  * and has its own Confirm button; "Select all" and "Confirm selected" confirm

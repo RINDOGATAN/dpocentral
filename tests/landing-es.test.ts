@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The public landing after the owner's review of October 2026:
+ * The public landing:
  *
  *   - the header carries the designer logo (the shared BrandMark), not the
  *     improvised house-symbol lockup, and no "a TODO.LAW product" line;
@@ -14,7 +14,7 @@
  *   - the Spanish sections show no price, and the three videos ship with a
  *     poster, both formats and Spanish captions;
  *   - customer logos render nothing while the configured list is empty; the
- *     draft list (11 Oct 2026) carries ten clean, sized files.
+ *     draft list carries ten clean, sized files.
  */
 
 import { describe, it, expect } from "vitest";
@@ -50,7 +50,7 @@ describe("landing header logo", () => {
 });
 
 describe("landing hero", () => {
-  // Owner, 10 Oct 2026: the generic welcome line is gone and the product summary is back
+  // The generic welcome line is gone and the product summary is back
   // under the title; the sign-up card carries its own short line (hero.card).
   it("shows the product summary under the title, with no welcome or AI sentence", () => {
     const page = read("src/landing/components/StartupProductPage.tsx");

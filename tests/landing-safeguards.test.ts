@@ -3,8 +3,8 @@
 
 /**
  * The landing's safeguards guide, ported from the storefront (todolaw PR #59): the level
- * table of the owner's mockup (10 Oct 2026), every answer row and every level-to-way row,
- * in both markets, plus the copy rules and DPO Central's own product facts.
+ * table of the mockup, every answer row and every level-to-way row,
+ * in both locales, plus the copy rules and DPO Central's own product facts.
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -40,7 +40,7 @@ const ROWS: [keyof Answers, string, number][] = [
   ["ai", "none", 0],
   ["ai", "ext", 0],
   ["ai", "key", 1],
-  // Owner, 10 Oct 2026: the managed instance runs open-weight models, so level 1.
+  // The managed instance runs open-weight models, so level 1.
   ["ai", "local", 1],
   ["iso", "yes", 1],
   ["iso", "no", 0],
@@ -52,7 +52,7 @@ const ROWS: [keyof Answers, string, number][] = [
 
 describe.each(LOCALES)("level table (%s)", (locale) => {
   it.each(ROWS)("%s = %s sets level %i", (q, v, level) => {
-    // Spanish, from 10 Oct 2026: real data goes to the cloud with the Plan nube UE (level 0).
+    // Spanish: real data goes to the cloud with the Plan nube UE (level 0).
     const expected = locale === "es" && q === "data" && v === "real" ? 0 : level;
     expect(levelOf({ [q]: v }, locale)).toBe(expected);
   });
@@ -88,7 +88,7 @@ describe.each(LOCALES)("level table (%s)", (locale) => {
     for (const q of QUESTIONS) for (const o of optionsFor(q, locale)) expect(c.questions[q.id].options[o.value]).toBeTruthy();
     for (const w of LADDER[locale]) expect(c.summaries[w]).toBeTruthy();
     for (const w of LADDER[locale]) expect(c.names[w]).toBeTruthy();
-    // Every requirement reachable in this market has a label and a note for every way it can be shown against.
+    // Every requirement reachable in this locale has a label and a note for every way it can be shown against.
     for (const q of QUESTIONS)
       for (const o of optionsFor(q, locale))
         for (const k of requirementsOf({ [q.id]: o.value }, locale)) {
@@ -98,7 +98,7 @@ describe.each(LOCALES)("level table (%s)", (locale) => {
   });
 });
 
-describe("real data in Spain: the Plan nube UE", () => {
+describe("real data in Spanish (es): the Plan nube UE", () => {
   it("real data sets level 0 (cloud), special categories stay at level 1 (managed)", () => {
     expect(levelOf({ data: "real" }, "es")).toBe(0);
     expect(pickWay({ data: "real" }, "es")).toBe("cloud");
@@ -130,7 +130,7 @@ describe("real data in Spain: the Plan nube UE", () => {
   });
 });
 
-describe("level 2 in Spain: three ways only", () => {
+describe("level 2 in Spanish (es): three ways only", () => {
   it.each([
     [{ loc: "servers" }],
     [{ cert: "yes" }],
@@ -163,8 +163,8 @@ describe("level 2 in Spain: three ways only", () => {
   });
 });
 
-// Three ways in English too since 10 Oct 2026 (owner): no kit or Box on the landing.
-describe("level 2 in English: three ways, as in Spain", () => {
+// Three ways in English too: no kit or Box on the landing.
+describe("level 2 in English: three ways, as in Spanish", () => {
   it("leads every strict answer to your own hardware, whatever the IT answer", () => {
     expect(levelOf({ loc: "office" }, "en")).toBe(2);
     for (const a of [{ loc: "servers", it: "yes" }, { loc: "servers", it: "no" }, { loc: "office", it: "no" }, { cert: "yes", it: "yes" }, { loc: "servers" }] as const) {
@@ -206,7 +206,7 @@ describe("copy rules", () => {
   });
 
   it("managed: hosted in Asturias, open-weight models on the instance; the cloud states pilot and shared, with no certification line", () => {
-    // Owner's wording of 10 Oct 2026, identical on the storefront and AI Sentinel.
+    // Same wording as on the storefront and AI Sentinel.
     expect(COPY.en.summaries.managed).toBe(
       "An isolated instance we run for your organization alone, hosted in Asturias, Spain. Your records stay on that instance. AI features stay off until you turn them on, and can use open-weight models hosted on the instance itself, so the text does not leave it, or your own provider key."
     );
@@ -221,7 +221,7 @@ describe("copy rules", () => {
     for (const l of LOCALES) expect(all(l)).not.toMatch(/Your data stays on (that instance|your servers|your hardware)|Tus datos se quedan/);
     expect(COPY.en.summaries.cloud).toMatch(/capped pilot[\s\S]*test records[\s\S]*shared[\s\S]*no service level/);
     expect(COPY.es.summaries.cloud).toMatch(/piloto[\s\S]*con límites[\s\S]*datos de prueba[\s\S]*Plan nube UE[\s\S]*datos reales[\s\S]*compartido/);
-    // No "no certification" line anywhere in the guide (owner, 10 Oct 2026): we always have an answer.
+    // No "no certification" line anywhere in the guide: we always have an answer.
     for (const l of LOCALES) expect(all(l)).not.toMatch(/independent certification|security certification|certificación independiente|certificación de seguridad/i);
     // No six-week engagement, training or runbook for your own hardware in English either.
     expect(all("en")).not.toMatch(/[Ss]ix weeks|train your people|runbook|\$15/);
@@ -232,7 +232,7 @@ describe("copy rules", () => {
     // "served from the United States" is not true here.
     expect(JSON.parse(readFileSync(path.join(ROOT, "vercel.json"), "utf8")).regions).toEqual(["fra1"]);
     for (const l of LOCALES) expect(all(l)).not.toMatch(/United States|Estados Unidos|\bUS\b|\bEE\.? ?UU\.?\b/);
-    // English names no hosting region (owner, 11 Oct 2026: no mention of EU hosting to US visitors).
+    // English names no hosting region (no mention of EU hosting to US visitors).
     expect(COPY.en.summaries.cloud).toMatch(/^Hosted by us\./);
     expect(COPY.en.summaries.cloud).toMatch(/go to the external AI provider set up on the service\.$/);
     expect(all("en")).not.toMatch(/\bEU\b|Frankfurt|Europe/);
@@ -250,7 +250,7 @@ describe("copy rules", () => {
     for (const [w, i] of Object.entries(WAY_INDEX.es)) expect(COPY.es.names[w as keyof typeof COPY.es.names]).toBe(es[`es.ways.w${i! + 1}.title`]);
     // The box: installed on the organization's equipment, data stays on its premises.
     expect(es["es.ways.w3.desc"]).toMatch(/equipo de tu organización[\s\S]*no salen de tus instalaciones/);
-    // The guide's answer (owner, 10 Oct 2026): installed on your own servers with our
+    // The guide's answer: installed on your own servers with our
     // assistance; no six-week engagement, training or price on the Spanish site.
     expect(COPY.es.summaries.deploy).toMatch(/^La suite instalada en tus propios servidores, con nuestra asistencia presencial o remota\./);
     expect(COPY.es.summaries.deploy).toMatch(/se quedan en tus instalaciones/);

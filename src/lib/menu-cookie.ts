@@ -3,8 +3,7 @@
 
 /**
  * The dashboard has one layout, Guided: a left menu that walks the privacy
- * program path. The Classic layout (top-bar menus) was retired on 9 October
- * 2026 (owner's decision d11).
+ * program path. The Classic layout (top-bar menus) was retired.
  *
  * - `dpc_menu=collapsed` shrinks the left menu to icons (a per-browser choice).
  * - The old `dpc_skin` cookie is left where a browser holds it and is never

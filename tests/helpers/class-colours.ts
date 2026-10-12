@@ -278,7 +278,7 @@ export function pairsInString(value: string): { pairs: Pair[]; unknown: string[]
 }
 
 /**
- * Status hues used as text on a dark surface: the thing the owner ruled out.
+ * Status hues used as text on a dark surface, which is not allowed.
  * A hue is allowed only as a chip, that is, dark text on a light tint named in
  * the same string.
  */

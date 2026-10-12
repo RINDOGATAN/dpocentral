@@ -106,7 +106,7 @@ export default async function DocsOverviewPage() {
             <p className="mt-2">{t("hostedPilot.oneOrganization")}</p>
           </div>
           <p>{t("hostedPilot.exports")}</p>
-          {/* Owner, 11 Oct 2026: the paid plan and the quotation live here, not in the intro (no "no safeguards" line). */}
+          {/* The paid plan and the quotation live here, not in the intro (no "no safeguards" line). */}
           <p>{t("hostedPilot.run")}</p>
           <p>
             <a href={plansUrl(locale)} className="text-primary font-medium hover:underline">
@@ -116,7 +116,7 @@ export default async function DocsOverviewPage() {
         </div>
       </section>
 
-      {/* Where it runs: the three hosting options, in the landing's own words (owner, 10 Oct 2026) */}
+      {/* Where it runs: the three hosting options, in the landing's own words */}
       <section id="hosting" className="scroll-mt-24">
         <h2 className="text-xl font-semibold text-foreground mb-2">{t("hosting.title")}</h2>
         <p className="text-sm text-muted-foreground mb-4">{t("hosting.intro")}</p>

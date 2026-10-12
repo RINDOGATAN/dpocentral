@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * "All clients": the consultant's firm view (owner's decision d9, 9 October
- * 2026). One row per client organisation the member belongs to:
+ * "All clients": the consultant's firm view. One row per client organisation the member belongs to:
  *
  *   client | confirmed figure | the six areas in words | documents ready |
  *   next deadline | next action

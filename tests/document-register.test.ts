@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The document register and the Guided dashboard (owner's decisions d4 to d7,
- * 9 October 2026):
+ * The document register and the Guided dashboard:
  *
  * - d4 one register lists every document DPO Central can produce (the
  *   inventory's eleven) and the ones it does not produce yet, each with one of
@@ -177,7 +176,7 @@ describe("d4: the register", () => {
       }
     }
     expect(es.documentRegister.items.ropa).not.toBe(en.documentRegister.items.ropa);
-    // The owner's words (d5, d6).
+    // The exact wording of the register lines.
     expect(en.documentRegister.needs.replace("{input}", en.documentRegister.inputs.dpiaModule)).toBe(
       "needs: the DPIA module",
     );
@@ -386,7 +385,7 @@ describe("d7: the Guided dashboard", () => {
   const home = read("src/app/(dashboard)/privacy/page.tsx");
   const guided = read("src/components/guided/guided-dashboard.tsx");
 
-  it("is the only dashboard (Classic retired, decision d11)", () => {
+  it("is the only dashboard (Classic retired)", () => {
     expect(home).toContain("<GuidedDashboard fromQuickstart={fromQuickstart} />");
     expect(home.match(/<GuidedDashboard /g)).toHaveLength(1);
   });

@@ -4,7 +4,7 @@
 /**
  * THE PROGRAMME FORMAT, version 1.0 ("dpocentral-programme/1.0").
  *
- * Customers are never locked in (owner's decision, 9 October 2026; it is also
+ * Customers are never locked in (it is also
  * how DPO Central meets the switching and export duties of the EU Data Act,
  * Chapter VI). A whole privacy programme leaves as one open, documented,
  * machine-readable file (programme.json, inside the export ZIP) and comes back

@@ -3,8 +3,7 @@
 
 /**
  * The document pack: every document of the register in the "ready" state, in
- * one ZIP and in the reader's language (owner's decisions, 9 October 2026,
- * step 5), built the way AI Sentinel builds its programme pack:
+ * one ZIP and in the reader's language, built the way AI Sentinel builds its programme pack:
  *
  *   00-INDEX.md            each document, its state, its date and its file;
  *                          then what is not in the pack and why

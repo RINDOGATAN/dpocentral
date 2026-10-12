@@ -20,7 +20,7 @@ import { LANDING_SEO } from "@/config/seo";
 /**
  * The landing, in the language the server chose (`?lang=`, the cookie, then
  * Accept-Language: src/config/seo.ts). Nothing switches after load, so the first
- * paint is the final text (owner, 10 Oct 2026); only the toggle changes it.
+ * paint is the final text; only the toggle changes it.
  */
 export default function LandingPage({ initialLocale = "en" }: { initialLocale?: "en" | "es" }) {
   const [locale, setLocale] = useState<"en" | "es">(initialLocale);
@@ -110,7 +110,7 @@ export default function LandingPage({ initialLocale = "en" }: { initialLocale?: 
 
   const socialProofs = [t("social.s1"), t("social.s2"), t("social.s3")];
 
-  // The lighter framer-motion build (owner's performance review, 10 Oct 2026): `m`
+  // The lighter framer-motion build, for load performance: `m`
   // components with the DOM animation features only; `strict` fails on a full `motion`.
   return (
     <LazyMotion features={domAnimation} strict>

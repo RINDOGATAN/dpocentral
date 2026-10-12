@@ -191,7 +191,7 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    // A signed-in session lasts 12 hours from sign-in (owner's decision); once
+    // A signed-in session lasts 12 hours from sign-in; once
     // it ends the visitor is sent to sign-in with a safe return path (see the
     // dashboard layout). The JWT below carries the same lifetime, so the token
     // can never outlive the session it stands for.

@@ -157,7 +157,7 @@ export default function middleware(request: NextRequest) {
     return notFound;
   }
 
-  // The Classic layout is retired (owner's decision d11): the old `?skin=`
+  // The Classic layout is retired: the old `?skin=`
   // parameter is dropped from dashboard addresses, so an old bookmark or demo
   // link opens the same page in the one layout (src/lib/menu-cookie.ts). The
   // `dpc_skin` cookie is left as it is and never read.

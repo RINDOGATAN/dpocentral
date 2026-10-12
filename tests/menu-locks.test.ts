@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The menu's locks (owner's decision, 9 October 2026, with the retirement of
+ * The menu's locks (with the retirement of
  * Classic): a small lock beside a step that leads to a premium type the
  * organisation is not entitled to, only where licences are enforced, by the
  * pages' own rule, with an accessible label and no price.

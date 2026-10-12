@@ -248,7 +248,7 @@ describe("F7: a blank client can be added in the Guided layout", () => {
 
   it("is the same dialog the left menu's organisation switcher opens, for everyone", () => {
     // Classic's dashboard switcher offered "New Organization" to every person;
-    // since Classic was retired (decision d11) the left menu's switcher does.
+    // since Classic was retired the left menu's switcher does.
     const layout = read("src/components/guided/guided-layout.tsx");
     expect(layout).toContain("<NewOrganizationDialog");
     expect(layout).toContain('isProfessional ? t("addClient") : t("newOrganization")');

@@ -121,7 +121,7 @@ export function PilotEndBar({
 }
 
 /**
- * The pilot bar for the selected organisation (owner, 11 Oct 2026): the free
+ * The pilot bar for the selected organisation: the free
  * window and the Cloud Plan's price for the whole pilot, the stronger end
  * wording in the last days, the read-only line once the window is over.
  * Nothing on the paid plan or on the kit. Reads the same status as the

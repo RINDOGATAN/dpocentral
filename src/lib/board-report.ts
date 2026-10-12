@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * THE BOARD REPORT (owner's decision d12, 9 October 2026): a short, plain
+ * THE BOARD REPORT: a short, plain
  * report a DPO gives to the board or to management, for a chosen period, from
  * data already in DPO Central (no AI, no new data entry beyond the DPO's own
  * comment). Neutral facts: no legal advice and no claim that anything

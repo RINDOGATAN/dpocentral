@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * THE DOCUMENT REGISTER (owner's decisions d4 and d5, 9 October 2026): every
+ * THE DOCUMENT REGISTER: every
  * document DPO Central can produce, and the ones it does not produce yet, in
  * one list. The dashboard's "Documents you can produce today" panel and the
  * quiet line under each step of the Guided menu both read this file (through
@@ -20,7 +20,7 @@
  *
  * The rules read `DocumentFacts`: counts only, filled by the server
  * (src/server/services/program/document-facts.ts). Drafts count once a person
- * confirms them (decision d2): a record the quick start or a template made and
+ * confirms them: a record the quick start or a template made and
  * nobody confirmed is a gap, never content.
  *
  * Pure: no React, no Prisma, no Next. Tested in tests/document-register.test.ts.
@@ -40,7 +40,7 @@ export interface DocumentFacts extends PathCounts {
   /** Of those, approved. */
   dpiaApproved: number;
   /**
-   * Whether a new DPIA can be started here (decision d5):
+   * Whether a new DPIA can be started here:
    * - `available`   the DPIA template is installed (or the pilot still has free ones)
    * - `module`      self-hosted without the DPIA module installed
    * - `quotaUsed`   hosted, after the two free DPIAs
@@ -318,7 +318,7 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
   },
 
   {
-    // Owner's decision d12, 9 October 2026: the first missing document.
+    // The board report: the first missing document.
     id: "boardReport",
     stepId: "audits",
     href: "/privacy/board-report",

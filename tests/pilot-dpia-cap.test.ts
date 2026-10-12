@@ -3,7 +3,7 @@
 
 /**
  * The pilot tier includes two DPIAs per organisation, free for a limited time
- * (the owner's decision of 29 September 2026; it was three).
+ * (it was three).
  *
  * The second is created like any other; the third is refused on the server
  * with a message that says so plainly, that deleting one does not free a
@@ -163,7 +163,7 @@ describe("DPIAs on the hosted pilot tier", () => {
     const note = read("src/components/pilot/dpia-free-note.tsx");
     expect(note).toContain("href={plansUrl(locale)}");
     // The type card and the form carry the note (the Classic dashboard's
-    // quick action that also carried it was retired, decision d11).
+    // quick action that also carried it was retired).
     const form = read("src/app/(dashboard)/privacy/assessments/new/page.tsx");
     expect(form.match(/<DpiaFreeNote/g)?.length).toBe(2);
   });

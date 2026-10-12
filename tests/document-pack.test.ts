@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The document pack (owner's decisions, 9 October 2026, step 5): one ZIP of
+ * The document pack: one ZIP of
  * every ready document, the drafts too on request (marked DRAFT / BORRADOR in
  * their file names, their gaps on their first page), an index and an
  * integrity manifest, built the way AI Sentinel builds its programme pack.

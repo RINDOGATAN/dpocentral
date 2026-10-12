@@ -3,7 +3,7 @@
 
 /**
  * The landing's pricing block, reached from the header's "Pricing" /
- * "Precios" link (#pricing, #precios). Third version (owner, 11 Oct 2026):
+ * "Precios" link (#pricing, #precios). Third version:
  * one simple block in both languages, matching the storefront home's (a
  * left-aligned title over a short "Product | Price" table): one row (what is
  * offered | what it costs), the "Start free" button and a small "Subscribe"

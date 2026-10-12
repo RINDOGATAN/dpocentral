@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Which steps of the menu carry a small lock (owner's decision, 9 October
- * 2026, with the retirement of Classic): a step that leads to a premium
+ * Which steps of the menu carry a small lock (with the retirement of Classic): a step that leads to a premium
  * assessment type (`premiumType` in path-config.ts) while the organisation is
  * not entitled to it, by the same rule the pages use (isAssessmentTypeLocked:
  * never on the hosted pilot; on the kit, locked until the type's template is

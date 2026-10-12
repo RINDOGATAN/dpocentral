@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The rights-request module per organisation on the hosted service (owner's
- * decisions of 11 October 2026; src/server/services/dsar/module.ts):
+ * The rights-request module per organisation on the hosted service
+ * (src/server/services/dsar/module.ts):
  *
  *  - the kit is never limited;
  *  - a pilot organisation: 3 public-form requests in total;

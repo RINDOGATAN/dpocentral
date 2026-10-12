@@ -1,5 +1,5 @@
 /**
- * The pilot bar (owner, 11 Oct 2026, second version). It is shown only once a
+ * The pilot bar (second version). It is shown only once a
  * person is signed in: the dashboard layout mounts it at the top
  * (src/components/pilot/pilot-shell.tsx, SignedInPilotBanner). For the whole
  * pilot, the free window, its end date and the Cloud Plan's price in the
@@ -350,7 +350,7 @@ describe("the bar on public pages", () => {
 });
 
 describe("hosted pilot messages", () => {
-  it("states only the editing terms on the sign-in screen, in both languages (owner, 11 Oct 2026)", () => {
+  it("states only the editing terms on the sign-in screen, in both languages", () => {
     expect(en.pilot.signIn).toBe(
       "Free pilot: {days} days of editing from your first sign-in, then read-only with export."
     );

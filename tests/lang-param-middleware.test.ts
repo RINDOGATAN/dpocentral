@@ -3,7 +3,7 @@
  * public docs, through the real middleware (src/middleware.ts): the language
  * is recorded in the `locale` cookie and forwarded on the request, so the
  * first render is already in that language. The storefront's Spanish footer
- * links to /docs?lang=es (consistency review, 11 Oct 2026, c14).
+ * links to /docs?lang=es.
  */
 
 import { describe, it, expect, vi } from "vitest";

@@ -3,22 +3,21 @@
 
 /**
  * The safeguards guide on the landing, ported from the storefront's guide
- * (todolaw PR #59, owner's mockup of 10 Oct 2026): six questions, each answer
+ * (todolaw PR #59): six questions, each answer
  * sets a minimum level, the guide takes the highest level any answer asks for
  * and picks one way at that level. Unanswered questions count as the lightest
  * answer. The logic and the questions are the storefront's, unchanged.
  *
  *   Level 0  Cloud
  *   Level 1  Managed
- *   Level 2  Spain: Deployment (no kit, no hardware in this market).
+ *   Level 2  Spanish (es): Deployment (no kit, no hardware).
  *            English: IT team -> the kit; no IT team and (office or local models only)
  *            -> the Box; otherwise -> Deployment and training.
  *
- * Copy rules: no prices, no certification logos, no competitor names, no long dashes.
- * The classifier sentence of the mockup is left out until it has a claims-register row
- * (owner's open question 5).
+ * Copy rules: no prices, no certification logos, no third-party names, no long dashes.
+ * The classifier sentence of the mockup is left out.
  *
- * Owner's decision of 10 Oct 2026: the managed instance is hosted in Gijón (Asturias,
+ * The managed instance is hosted in Gijón (Asturias,
  * Spain) and can run open-weight models on the instance itself, so "Never: local models
  * only" sets level 1 (managed), not 2; own servers or the office stay at level 2. Same
  * wording as the storefront's and AI Sentinel's guides.
@@ -30,7 +29,7 @@
  *     (services/ai/posture.ts requireAi, routers/privacy/ai.ts setPosture).
  *   - The cloud is hosted in the EU (database in Frankfurt, functions in fra1:
  *     vercel.json, PR #96), and only the Spanish copy says so: the English copy
- *     names no hosting region (owner, 11 Oct 2026: no mention of EU hosting to US
+ *     names no hosting region (no mention of EU hosting to US
  *     visitors; the English landing does not know the visitor's country).
  *   - Spanish names are the boxes' own titles; "Tu propio hardware" is the
  *     customer's own equipment, not the TODO.LAW Box, and the deployment copy follows
@@ -45,8 +44,8 @@ type Level = 0 | 1 | 2;
 
 /**
  * The position of each way among this landing's ways boxes, per language
- * (LandingSections SETUP: cloud, managed, own hardware in both languages since
- * 10 Oct 2026), so the result marks its box.
+ * (LandingSections SETUP: cloud, managed, own hardware in both languages),
+ * so the result marks its box.
  */
 export const WAY_INDEX: Record<Locale, Partial<Record<WayId, number>>> = {
   es: { cloud: 0, managed: 1, deploy: 2 },
@@ -110,7 +109,7 @@ export const QUESTIONS: { id: QuestionId; options: Option[] }[] = [
   },
 ];
 
-/** The options a visitor in this market is offered. */
+/** The options a visitor in this locale is offered. */
 export const optionsFor = (q: (typeof QUESTIONS)[number], locale: Locale) => q.options.filter((o) => !o.only || o.only === locale);
 
 /** The answers that are requirements, and which ways meet them (the tick matrix). */
@@ -140,7 +139,7 @@ export function levelOf(answers: Answers, locale: Locale): Level {
   return level;
 }
 
-/** The way that meets the answers, from the ways offered in this market. */
+/** The way that meets the answers, from the ways offered in this locale. */
 export function pickWay(answers: Answers, locale: Locale): WayId {
   const level = levelOf(answers, locale);
   if (level === 0) return "cloud";
@@ -159,7 +158,7 @@ export function requirementsOf(answers: Answers, locale: Locale): SafeguardKey[]
 }
 
 /**
- * Spanish market, from 10 Oct 2026: the Plan nube UE (paid cloud plan) accepts real data,
+ * Spanish locale (es): the Plan nube UE (paid cloud plan) accepts real data,
  * so the cloud meets "data:real" there. Special categories and professional secrecy stay
  * with the managed instance.
  */

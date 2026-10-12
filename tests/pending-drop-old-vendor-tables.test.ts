@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The drop of the seven old vendor tables (owner's decision of 29 September
- * 2026) is written but waits in prisma/pending-migrations/ until the dump is
+ * The drop of the seven old vendor tables is written but waits in prisma/pending-migrations/ until the dump is
  * taken: nothing may apply it on its own. These checks keep it that way, and
  * keep the code free of the tables it drops.
  */

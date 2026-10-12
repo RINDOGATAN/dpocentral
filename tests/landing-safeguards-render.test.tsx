@@ -77,7 +77,7 @@ describe("safeguards guide, Spanish", () => {
     expect(toggle.textContent).toBe(c.close);
     expect(document.getElementById(toggle.getAttribute("aria-controls")!)).not.toBeNull();
     expect(screen.queryByRole("dialog")).toBeNull();
-    // Six questions, each a group of labelled radio buttons; no "inside our office" in Spain.
+    // Six questions, each a group of labelled radio buttons; no "inside our office" in Spanish (es).
     expect(within(g).getAllByRole("group")).toHaveLength(6);
     expect(within(g).getAllByRole("radio")).toHaveLength(QUESTIONS.reduce((n, q) => n + optionsFor(q, "es").length, 0));
     expect(within(g).getByRole("radio", { name: c.questions.loc.options.servers })).toBeTruthy();
@@ -174,7 +174,7 @@ describe("safeguards guide, Spanish", () => {
 describe("safeguards guide, English", () => {
   const c = COPY.en;
 
-  // Three boxes and three ways in English too since 10 Oct 2026 (owner).
+  // Three boxes and three ways in English too.
   it("keeps the three boxes and offers the three ways", () => {
     mount("en");
     expect(boxes("en")).toHaveLength(3);

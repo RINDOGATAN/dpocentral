@@ -52,7 +52,7 @@ export function DashboardShell({
     return <OrganizationSetup />;
   }
 
-  // The one layout (Guided; Classic was retired on 9 October 2026): the
+  // The one layout (Guided; Classic was retired): the
   // privacy program path as a left menu, with the footer and the feedback
   // dialog below.
   return (

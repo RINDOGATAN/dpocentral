@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The document register and the Guided dashboard (owner's decisions d4 to d7,
- * 9 October 2026), seen in a browser at three moments of one organisation:
+ * The document register and the Guided dashboard, seen in a browser at three moments of one organisation:
  * empty, after the quick start, and after confirming the drafts and filling
  * records (a breach and a rights request are written straight into the local
  * test database, so the walk is skipped against any other database).
@@ -12,7 +11,7 @@
  * the menu's line under each step says the same, the six area tiles carry the
  * menu's state words, and the dashboard has none of the removed pieces. Then
  * a browser that still holds the retired Classic cookie gets the same
- * dashboard (Classic was retired, decision d11).
+ * dashboard (Classic was retired).
  *
  * Runs in any project (desktop or phone width, any engine). DR_LOCALE=es walks
  * it in Spanish; DR_SHOTS=<dir> saves a screenshot at each stop.

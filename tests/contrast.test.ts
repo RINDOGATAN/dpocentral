@@ -277,7 +277,7 @@ describe("colour never carries meaning on its own", () => {
   const files = sweepFiles();
 
   it("no status hue is used as text on a dark surface", () => {
-    // The owner ruled this out: a headline, a date line, a metric number or a
+    // Not allowed: a headline, a date line, a metric number or a
     // link tinted red, green or amber on a near black card. A hue may only be
     // a chip, which is dark text on a light tint, or a mark, which is an icon
     // or a border. The tone palette is the only place that decides which.

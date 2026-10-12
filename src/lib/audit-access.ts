@@ -3,7 +3,7 @@
 
 /**
  * Who reads the organisation's audit trail, and what an entry shows
- * (owner's decision, 9 October 2026, mirroring AI Sentinel's audit trail).
+ * (mirroring AI Sentinel's audit trail).
  *
  * The trail says who did what and when: it is a record about colleagues as
  * much as about records, so only the roles that run the programme read it:

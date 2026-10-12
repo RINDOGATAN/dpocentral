@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The deadlines at risk the dashboard shows (owner's decision d7): the 72-hour
+ * The deadlines at risk the dashboard shows: the 72-hour
  * window of each open breach still waiting for a decision or a notification,
  * and the rights requests due soonest. Dates and short references only; no
  * name, no content leaves the database. The plan's next milestone is worked

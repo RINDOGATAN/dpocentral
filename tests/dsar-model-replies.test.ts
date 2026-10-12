@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Model replies to rights requests (owner's approval, 11 October 2026):
+ * Model replies to rights requests:
  * the approved texts, chosen by type and language, the placeholders the app
  * fills, and the rule that a message still holding a placeholder is not sent.
  */

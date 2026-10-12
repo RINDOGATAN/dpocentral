@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Guided dashboard: the programme at one glance (owner's decisions d4, d5
- * and d7, 9 October 2026). Subtract before adding: what it shows replaces the
+ * The Guided dashboard: the programme at one glance. Subtract before adding: what it shows replaces the
  * two expert banners (one line stays in Help), the four counters (now six
  * area tiles), and the Recent activity and Quick actions cards (folded into
  * "Next three actions").
@@ -17,7 +16,7 @@
  * Every reading comes from src/lib/programme-overview.ts over the document
  * register (src/config/document-register.ts) and the path, the same readings
  * the Guided menu makes, so the two cannot disagree. Since Classic was
- * retired (9 October 2026, decision d11) this is the only dashboard.
+ * retired this is the only dashboard.
  */
 
 import { useState } from "react";
@@ -277,7 +276,7 @@ function DocumentsPanel({ overview, hideDsar }: { overview: ProgrammeOverview | 
 }
 
 /**
- * "Download ready documents" (owner's decisions, 9 October 2026, step 5):
+ * "Download ready documents":
  * one ZIP of every ready document, with an index and an integrity manifest
  * (/api/export/document-pack). With "Include drafts" the drafts go in too,
  * marked DRAFT in their file names, their gaps on their first page.

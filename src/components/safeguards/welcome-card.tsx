@@ -3,8 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The first-visit welcome card (hosted service only; owner's decisions O1 to
- * O3, 9 October 2026). Shown once, to the person who created the
+ * The first-visit welcome card (hosted service only). Shown once, to the person who created the
  * organisation, on the first visit to /privacy and before the quick start.
  * The server decides who sees it (safeguards.getWelcome).
  *

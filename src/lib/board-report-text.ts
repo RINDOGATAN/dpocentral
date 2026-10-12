@@ -138,7 +138,7 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       : board("comment.savedNoName", { date: date(comment.savedAt) })
     : null;
 
-  // "At a glance": the main figures, from the same data (owner, 9 October 2026).
+  // "At a glance": the main figures, from the same data.
   const ratio = (n: number, d: number) => (d > 0 ? Math.min(1, n / d) : null);
   const of = (total: number) => board("kpi.ofTotal", { total });
   const notifiable = incidents.notifiedWithin72h + incidents.notifiedLate + incidents.notNotifiedYet;

@@ -5,8 +5,7 @@
 /**
  * The dashboard: the programme at one glance (src/components/guided/
  * guided-dashboard.tsx). The Classic dashboard, with its counters, queues,
- * quick actions and its own client switcher, was retired on 9 October 2026
- * (owner's decision d11); the switcher and "New organization" live in the
+ * quick actions and its own client switcher, was retired; the switcher and "New organization" live in the
  * left menu's organisation block.
  */
 

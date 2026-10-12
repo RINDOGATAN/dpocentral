@@ -70,7 +70,7 @@ export default function AssessmentsPage() {
   );
 
   // The DPIA option carries the licence lock that used to sit on the menu's
-  // Assessments step (owner's decision, 9 October 2026): same rule, never on
+  // Assessments step: same rule, never on
   // the hosted pilot, nothing shown until the answer arrives.
   const hosted = useHostedPilot();
   const { data: entitledData } = trpc.assessment.getEntitledTypes.useQuery(

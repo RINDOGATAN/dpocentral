@@ -42,7 +42,7 @@ export const clientsRouter = createTRPCRouter({
           organizationSlug: membership.organization.slug,
           role: membership.role,
         };
-        // The firm view's columns (owner's decision d9): the documents, what
+        // The firm view's columns: the documents, what
         // needs action and the deadlines, read exactly as the client's own
         // dashboard reads them (programPath.overview). A member limited to
         // departments gets none of the organisation-wide figures, as on the

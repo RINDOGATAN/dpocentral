@@ -52,7 +52,7 @@ import type { PlanWindow } from "./plan";
 /**
  * What the rules read. Counts only: nothing here names a record.
  *
- * Drafts (owner's decision d2, 9 October 2026): a data asset, a processing
+ * Drafts: a data asset, a processing
  * activity or a vendor that the quick start, an industry template or "Start
  * from another client" created is a draft until a person confirms it
  * (src/server/services/template-items/drafts.ts). The `...Drafts` counts are
@@ -262,7 +262,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "assessments",
           href: "/privacy/assessments",
           icon: ClipboardCheck,
-          // No lock on the step (owner's decision, 9 October 2026): most
+          // No lock on the step: most
           // assessments here need no licence. Where the DPIA is not licensed,
           // the lock sits on the DPIA option inside the assessments page and
           // the type picker instead (src/components/premium/licence-lock.tsx).
@@ -342,7 +342,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
           rule: "Done when at least one incident (breach) is recorded: the register and the 72-hour clock are in use.",
           status: (c) => (c.incidents > 0 ? "done" : "todo"),
         },
-        // The board report (owner's decision d12, 9 October 2026): a short
+        // The board report: a short
         // report to the board or management for a period, from data already
         // here. Optional, so it never changes the programme figure and is
         // never offered as the next step; last in the stage.
@@ -367,7 +367,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },
     { id: "incomplete", href: "/privacy/incomplete", icon: ClipboardList },
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
-    // The organisation's audit trail (owner's decision, 9 October 2026, as
+    // The organisation's audit trail (as
     // AI Sentinel has it): owners, admins and privacy officers only
     // (src/lib/audit-access.ts), so the menu leaves it out for anyone else.
     ...(auditTrail

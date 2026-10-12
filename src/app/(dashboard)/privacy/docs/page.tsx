@@ -28,7 +28,7 @@ import { isDsarModuleEnabled } from "@/config/features";
 /**
  * Getting started: the dashboard, the documents panel, the next actions and
  * deadlines, the quick start, the menu and the roles, as the product shows
- * them since the Classic layout was retired (9 October 2026). Stage, step,
+ * them since the Classic layout was retired. Stage, step,
  * state and list names are read from the product's own translations (the
  * `guided`, `views` and `documentRegister` namespaces), and the stages from
  * the path itself, so the guide names what the screens name.

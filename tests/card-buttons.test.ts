@@ -82,7 +82,7 @@ describe("the pages", () => {
   });
 
   it("a client row or card opens through a real button named by the client", () => {
-    // The firm view (owner's decision d9): a table on wide screens, one card
+    // The firm view: a table on wide screens, one card
     // per client on a phone; neither the row nor the card is clickable as a
     // whole, the client's name is the button.
     const src = read("src/app/(dashboard)/privacy/clients/page.tsx");

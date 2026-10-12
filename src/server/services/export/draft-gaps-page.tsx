@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * A draft's gaps on its first page (owner's decision d4, 9 October 2026:
- * "draft (gaps on page one)"). The assessment report has always listed what
+ * A draft's gaps on its first page ("draft (gaps on page one)"). The assessment report has always listed what
  * is outstanding on its cover; every other generated PDF gets this generic
  * page in front of it when it goes out as a draft in the document pack. The
  * gaps are the register's own (src/config/document-register.ts), in words, so

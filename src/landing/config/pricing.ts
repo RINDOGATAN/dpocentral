@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The landing's pricing block (owner, 11 Oct 2026, third version): one
+ * The landing's pricing block (third version): one
  * simple block, right under the hosting block, in both languages, matching
  * the storefront home's pricing block. A title, one row (what is offered |
  * what it costs), a "Start free" button to the existing sign-up, a small

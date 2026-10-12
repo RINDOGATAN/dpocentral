@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The board report's data (owner's decision d12, 9 October 2026), assembled
+ * The board report's data, assembled
  * once for the page and for the PDF (src/lib/board-report.ts holds the shape
  * and the readings). Everything is read from what DPO Central already holds,
  * scoped to the organisation; counts, dates and the people's names that own

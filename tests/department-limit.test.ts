@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * A member limited to one department (the owner's decision of 29 September
- * 2026): the selector shows the department, never "Whole organisation"; the
+ * A member limited to one department: the selector shows the department, never "Whole organisation"; the
  * quick start, the organisation-wide progress and the organisation-wide
  * actions are not shown, in the sidebar or on the Guided home. The server
  * refuses the quick start to them and narrows the home's inventory counts.
@@ -149,7 +148,7 @@ describe("the sidebar and the Guided home", () => {
     expect(home).toContain("if (!orgWide || !isEmptyOrg || fromQuickstart || quickstartSeen !== false) return;");
     // A limited member is never held on the loading line either.
     expect(home).toContain("(limited === null || orgWide) &&");
-    // The dashboard (decision d7): the organisation's figure, areas, documents and
+    // The dashboard: the organisation's figure, areas, documents and
     // next actions only for a member who sees the whole organisation.
     const guided = read("src/components/guided/guided-dashboard.tsx");
     expect(guided).toContain("const { orgWide } = useMemberScope()");

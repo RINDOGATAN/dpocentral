@@ -3,8 +3,7 @@
 
 /**
  * Drafts router: the records the quick start, a template or another client's
- * copy drafted, and the person's confirmation of them (owner's decision d2,
- * 9 October 2026; the rule is in src/server/services/template-items/drafts.ts).
+ * copy drafted, and the person's confirmation of them (the rule is in src/server/services/template-items/drafts.ts).
  *
  * - `summary` and `list` are reads, for every member (a viewer may see what is
  *   waiting; only some roles may confirm it).

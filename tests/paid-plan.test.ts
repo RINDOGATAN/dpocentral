@@ -363,7 +363,7 @@ describe("set-org-plan", () => {
         startedAt: new Date("2026-10-12T00:00:00Z"),
         renewsAt: new Date("2027-10-12T00:00:00Z"),
         note: "in_secret",
-        operator: "conductor",
+        operator: "admin",
         dryRun: false,
       },
       NOW
@@ -389,7 +389,7 @@ describe("set-org-plan", () => {
         after: { plan: "EU_CLOUD", planStartedAt: "2026-10-12T00:00:00.000Z" },
         planNoteChanged: true,
       },
-      metadata: { source: "scripts/set-org-plan.ts", operator: "conductor" },
+      metadata: { source: "scripts/set-org-plan.ts", operator: "admin" },
     });
     expect(JSON.stringify(audit)).not.toContain("in_secret");
   });

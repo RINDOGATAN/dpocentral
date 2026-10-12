@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The first-visit welcome card and its safeguards question (owner's
- * decisions O1 to O3, 9 October 2026):
+ * The first-visit welcome card and its safeguards question:
  *
  *  - who sees it: the organisation's creator on the hosted service, once,
  *    while unanswered; never a colleague, never on the kit;

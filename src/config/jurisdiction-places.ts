@@ -3,8 +3,7 @@
 
 /**
  * "Where does your organisation operate?": the quick start's first step offers
- * the places of the jurisdiction catalog (owner's decision d8, 9 October 2026,
- * as AI Sentinel's quick start does), so "What applies" is done once the quick
+ * the places of the jurisdiction catalog (as AI Sentinel's quick start does), so "What applies" is done once the quick
  * start is.
  *
  * One choice per data-protection law of the catalog, labelled by its place

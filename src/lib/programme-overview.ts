@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * How the Guided dashboard and the Guided menu read the programme (owner's
- * decisions d4, d6 and d7, 9 October 2026). Pure, and the only place these
+ * How the Guided dashboard and the Guided menu read the programme. Pure, and the only place these
  * readings are made, so the dashboard's documents panel, its six area tiles,
  * its "Next three actions" and the menu's state words and document lines can
  * never disagree:
@@ -172,7 +171,7 @@ function firstOpenStep<C>(stage: PathStage<C>, statuses: PathStatuses): PathStep
 }
 
 /**
- * One tile per stage (owner's decision d7: six area tiles, each with its state
+ * One tile per stage (six area tiles, each with its state
  * and its next action). The state word is the menu's; the action is the work
  * waiting in the stage, else confirming its drafts, else its first open step.
  */
@@ -215,7 +214,7 @@ export type NextAction =
   | { kind: "step"; step: PathStep<unknown>; stageIndex: number; toConfirm: boolean };
 
 /**
- * "Next three actions" (owner's decision d7, folding in Recent activity and
+ * "Next three actions" (folding in Recent activity and
  * Quick actions): what waits for a person first, most urgent first, then the
  * path's open steps in order. A step met only by drafts is left out when
  * confirming the drafts is already on the list.
@@ -250,7 +249,7 @@ export function nextActions<C>(
 }
 
 // ---------------------------------------------------------------------------
-// Deadlines and the firm view (owner's decision d9)
+// Deadlines and the firm view
 // ---------------------------------------------------------------------------
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -300,7 +299,7 @@ export function nearestDeadline(
 }
 
 /**
- * The firm view's order (owner's decision d9): by the nearest deadline, the
+ * The firm view's order: by the nearest deadline, the
  * soonest (or most overdue) first; the clients with no deadline after them,
  * by name.
  */

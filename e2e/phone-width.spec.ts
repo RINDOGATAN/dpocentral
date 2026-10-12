@@ -94,7 +94,7 @@ test("the Guided screens fit a 390 px phone", async ({ page }, testInfo) => {
   await expect(page.getByTestId("record-header")).toBeVisible();
   await expectNoSidewaysScroll(page, "asset page");
 
-  // The Guided home: the six areas and the documents panel (decision d7
+  // The Guided home: the six areas and the documents panel (they
   // replaced the counters), the records of processing drafted by the quick start.
   await page.goto("/privacy");
   await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(6);

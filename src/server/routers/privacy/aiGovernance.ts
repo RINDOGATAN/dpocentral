@@ -15,8 +15,7 @@ import {
 import type { DPCSystemPayload } from "../../services/ai-sentinel/types";
 
 /**
- * AI systems are read-only in DPO Central (the owner's decision, 27 Sep 2026:
- * "show AI systems read-only with 'Govern this in AI Sentinel'"). Their
+ * AI systems are read-only in DPO Central ("show AI systems read-only with 'Govern this in AI Sentinel'"). Their
  * governance — risk classification, oversight, conformity — lives in AI
  * Sentinel. The list and details stay readable, the register is filled from
  * vendor onboarding so the privacy records are complete, and systems can still

@@ -2,14 +2,14 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Honest progress (the owner's decisions of 9 October 2026), seen in a
+ * Honest progress, seen in a
  * browser:
  *
- * - the quick start's first step asks where the organisation operates (d8);
+ * - the quick start's first step asks where the organisation operates;
  * - after the quick start the records it made are drafts "to confirm" and the
- *   programme figure stays low (d2);
+ *   programme figure stays low;
  * - the same figure, in the same words, on the dashboard, the menu, All
- *   clients and Reports, with no "Strong / Moderate" label on partial data (d3);
+ *   clients and Reports, with no "Strong / Moderate" label on partial data;
  * - confirming one record, then the rest together, raises the figure
  *   everywhere;
  * - the incidents list shows the short INC- reference, the incident tabs fit

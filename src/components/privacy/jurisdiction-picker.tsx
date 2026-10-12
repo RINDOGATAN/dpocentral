@@ -5,7 +5,7 @@
 /**
  * "Where does your organisation operate?": the places of the jurisdiction
  * catalog as three groups of check boxes (Europe, United States, rest of the
- * world). Used by the quick start's first step (owner's decision d8), as AI
+ * world). Used by the quick start's first step, as AI
  * Sentinel's quick start uses its own picker. The list of places and their
  * names are in src/config/jurisdiction-places.ts.
  */

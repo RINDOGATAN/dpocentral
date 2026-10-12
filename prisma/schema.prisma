@@ -1957,7 +1957,7 @@ model SafeguardsRequest {
   @@map("safeguards_requests")
 }
 
-// Programme portability (owner's decision, 9 October 2026; the EU Data Act,
+// Programme portability (the EU Data Act,
 // Chapter VI): src/server/services/portability. One row per record an import
 // created, keyed by where it came from, so running the same import twice
 // creates nothing the second time and a later import can point at records an

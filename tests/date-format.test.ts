@@ -34,7 +34,7 @@ describe("formatDateTimeIn", () => {
 });
 
 describe("deadlines on the home", () => {
-  // Classic's Recent activity card was retired (decision d11); the dashboard's
+  // Classic's Recent activity card was retired; the dashboard's
   // dates are its deadlines, in the interface's language.
   it("formats with the interface's language", () => {
     const home = readFileSync(
