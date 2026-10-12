@@ -10,6 +10,8 @@
  *    new-activity form on ?new=activity
  * J3 after "Stage N complete. Next: <stage>", the step band's button leads to
  *    the step that sentence names
+ * J4 the quick start review counts the flows it will create (a two-way flow
+ *    is two)
  */
 
 import { describe, it, expect } from "vitest";
@@ -75,5 +77,21 @@ describe("J3: the step band's button after a stage is complete", () => {
     const band = read("src/components/guided/step-band.tsx");
     expect(band).toContain("nextStep(DPO_CENTRAL_PATH, statuses)");
     expect(band).toContain("celebrate !== null ? (ahead ? { step: ahead.step } : null) : place.following");
+  });
+});
+
+describe("J4: the quick start review counts the flows it will create", () => {
+  it("counts a two-way flow twice", async () => {
+    const { getLocalizedTemplates, flowRecordCount } = await import("@/config/industry-templates");
+    const ecommerce = getLocalizedTemplates("en").find((t) => /commerce/i.test(t.name))!;
+    const withReturn = ecommerce.flows.filter((f) => f.returnFlow).length;
+    expect(withReturn).toBeGreaterThan(0);
+    expect(flowRecordCount(ecommerce.flows)).toBe(ecommerce.flows.length + withReturn);
+  });
+
+  it("is what the review and the template list read", () => {
+    const router = read("src/server/routers/privacy/quickstart.ts");
+    expect(router).toContain("flows: flowRecordCount(template.flows)");
+    expect(router).toContain("flowCount: flowRecordCount(t.flows)");
   });
 });
