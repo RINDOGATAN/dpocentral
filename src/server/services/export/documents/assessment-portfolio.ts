@@ -15,6 +15,7 @@ import { assessmentProgress } from "@/server/services/assessment/progress";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 
 export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -23,7 +24,7 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
   const assessments = await prisma.assessment.findMany({
     where: { organizationId },
     include: {
-      template: { select: { type: true, name: true, version: true, sections: true } },
+      template: { select: { type: true, name: true, version: true, sections: true, scoringLogic: true } },
       processingActivity: { select: { name: true } },
       vendor: { select: { name: true } },
       mitigations: { select: { status: true } },
@@ -51,6 +52,9 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
       a.responses
     );
 
+    // Risk figures derived from the answers, as the app shows them.
+    const risk = withDerivedRisk(a, a.template, a.responses);
+
     const mitigationCount = a.mitigations.length;
     const mitigationsCompleted = a.mitigations.filter(
       (m) => m.status === "IMPLEMENTED" || m.status === "VERIFIED"
@@ -60,8 +64,8 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
       id: a.id,
       name: a.name,
       status: a.status,
-      riskLevel: a.riskLevel,
-      riskScore: a.riskScore,
+      riskLevel: risk.riskLevel,
+      riskScore: risk.riskScore,
       startedAt: a.startedAt,
       submittedAt: a.submittedAt,
       completedAt: a.completedAt,

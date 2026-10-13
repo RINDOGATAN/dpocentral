@@ -6,6 +6,18 @@ All notable changes to DPO Central are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **Assessment risk score and level come from the answers**. The score averaged a per-answer
+  `riskScore` that templates never fill, so every assessment showed 0% and "Low". It is now
+  derived in `src/server/services/assessment/risk-score.ts`: weighted indicator answers
+  (the template's `riskWeight`, or the weights listed there for the v2 LIA, TIA, PIA and
+  Custom templates), and, where the assessment records its own conclusion (DPIA residual risk,
+  PIA overall risk, Custom overall risk, TIA likelihood by severity), that conclusion sets the
+  level and the score stays inside its band. Computed on display (detail, list, statistics,
+  reports, vendor and transfer views, exports), so assessments scored earlier show correctly
+  with no stored change and no migration.
+
 ### Changed
 
 - **The hosted pilot's editing window is 15 days, not 90**. One constant,

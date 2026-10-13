@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, protectedProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
-import { AssessmentType, AssessmentStatus, RiskLevel, MitigationStatus, ApprovalStatus } from "@prisma/client";
+import { AssessmentType, AssessmentStatus, MitigationStatus, ApprovalStatus } from "@prisma/client";
 import {
   checkAssessmentEntitlement,
   isPremiumAssessmentType,
@@ -30,7 +30,7 @@ import {
   describeUnanswered,
   unansweredRequired,
 } from "../../services/assessment/progress";
-import { computeHealthAdtechResult, isHealthAdtechTemplate } from "@/lib/health-adtech/results";
+import { calculateRiskScore, withDerivedRisk } from "../../services/assessment/risk-score";
 import {
   AUTO_FILL_TARGETS,
   LEGAL_BASIS_OPTIONS,
@@ -41,40 +41,6 @@ import { assertIdsInOrg } from "../../org-ownership";
 import { preselectDpiaFrameworks } from "../../services/assessment/framework-preselect";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
 import { tiaRecordDescription, tiaRecordName } from "@/lib/record-name";
-
-// Risk scoring service
-function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
-  // The health-data advertising template derives its level from its own
-  // result (residual risk, five-factor band, blocking findings).
-  if (isHealthAdtechTemplate(template)) {
-    const result = computeHealthAdtechResult(responses);
-    if (result.riskLevel && result.riskScore != null) {
-      return { score: result.riskScore, level: RiskLevel[result.riskLevel] };
-    }
-    return { score: 0, level: RiskLevel.LOW };
-  }
-
-  if (!responses.length) return { score: 0, level: RiskLevel.LOW };
-
-  let totalWeight = 0;
-  let weightedSum = 0;
-
-  for (const response of responses) {
-    const weight = response.riskScore ?? 0;
-    weightedSum += weight;
-    totalWeight += 1;
-  }
-
-  const score = totalWeight > 0 ? Math.round((weightedSum / totalWeight) * 100) : 0;
-
-  let level: RiskLevel;
-  if (score <= 25) level = RiskLevel.LOW;
-  else if (score <= 50) level = RiskLevel.MEDIUM;
-  else if (score <= 75) level = RiskLevel.HIGH;
-  else level = RiskLevel.CRITICAL;
-
-  return { score, level };
-}
 
 /** Assessments not yet submitted: the only ones that can be deleted. */
 export const DELETABLE_ASSESSMENT_STATUSES: AssessmentStatus[] = [AssessmentStatus.DRAFT, AssessmentStatus.IN_PROGRESS];
@@ -233,7 +199,7 @@ export const assessmentRouter = createTRPCRouter({
         },
         include: {
           template: {
-            select: { id: true, name: true, type: true },
+            select: { id: true, name: true, type: true, sections: true, scoringLogic: true },
           },
           processingActivity: {
             select: { id: true, name: true },
@@ -241,6 +207,7 @@ export const assessmentRouter = createTRPCRouter({
           vendor: {
             select: { id: true, name: true },
           },
+          responses: { select: { questionId: true, response: true } },
           _count: {
             select: {
               responses: true,
@@ -260,7 +227,15 @@ export const assessmentRouter = createTRPCRouter({
         nextCursor = nextItem?.id;
       }
 
-      return { assessments, nextCursor };
+      // Risk figures are derived from the answers; the template's sections and
+      // the answers are loaded for that only and not returned.
+      return {
+        assessments: assessments.map(({ responses, template, ...a }) => ({
+          ...withDerivedRisk(a, template, responses),
+          template: template && { id: template.id, name: template.name, type: template.type },
+        })),
+        nextCursor,
+      };
     }),
 
   // Get assessment by ID
@@ -329,7 +304,11 @@ export const assessmentRouter = createTRPCRouter({
         assessment.responses
       );
 
-      return { ...assessment, completionPercentage, totalQuestions };
+      return {
+        ...withDerivedRisk(assessment, template, assessment.responses),
+        completionPercentage,
+        totalQuestions,
+      };
     }),
 
   // Create assessment
@@ -1237,20 +1216,28 @@ export const assessmentRouter = createTRPCRouter({
           where: { organizationId: ctx.organization.id },
           _count: true,
         }),
-        ctx.prisma.assessment.groupBy({
-          by: ["riskLevel"],
+        ctx.prisma.assessment.findMany({
           where: {
             organizationId: ctx.organization.id,
             riskLevel: { not: null },
           },
-          _count: true,
+          select: {
+            riskLevel: true,
+            riskScore: true,
+            template: { select: { type: true, sections: true, scoringLogic: true } },
+            responses: { select: { questionId: true, response: true } },
+          },
         }),
       ]);
 
       return {
         total,
         byStatus: byStatus.reduce((acc, s) => ({ ...acc, [s.status]: s._count }), {}),
-        byRiskLevel: byRiskLevel.reduce((acc, r) => ({ ...acc, [r.riskLevel!]: r._count }), {}),
+        byRiskLevel: byRiskLevel.reduce<Record<string, number>>((acc, a) => {
+          const level = withDerivedRisk(a, a.template, a.responses).riskLevel!;
+          acc[level] = (acc[level] ?? 0) + 1;
+          return acc;
+        }, {}),
         templateCount: byType.length,
       };
     }),

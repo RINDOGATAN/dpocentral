@@ -5,6 +5,7 @@ import { transferMarkers } from "@/server/services/data-flows/transfer-markers";
 import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProcedure } from "../../trpc";
 import { markConfirmed } from "@/server/services/template-items/mark";
+import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 import { TRPCError } from "@trpc/server";
 import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism, Prisma } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
@@ -1219,19 +1220,34 @@ export const dataInventoryRouter = createTRPCRouter({
   listTransfers: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
-      return ctx.prisma.dataTransfer.findMany({
+      const transfers = await ctx.prisma.dataTransfer.findMany({
         where: { organizationId: ctx.organization.id },
         include: {
           processingActivity: true,
           jurisdiction: true,
           assessments: {
-            select: { id: true, status: true, riskLevel: true, completedAt: true },
+            select: {
+              id: true,
+              status: true,
+              riskLevel: true,
+              riskScore: true,
+              completedAt: true,
+              template: { select: { type: true, sections: true, scoringLogic: true } },
+              responses: { select: { questionId: true, response: true } },
+            },
             orderBy: { createdAt: "desc" },
             take: 1,
           },
         },
         orderBy: { name: "asc" },
       });
+      // Risk level derived from the assessment's answers.
+      return transfers.map((t) => ({
+        ...t,
+        assessments: t.assessments.map(({ template, responses, ...a }) =>
+          withDerivedRisk(a, template, responses)
+        ),
+      }));
     }),
 
   // Create data transfer
