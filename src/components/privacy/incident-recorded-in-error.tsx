@@ -41,7 +41,7 @@ export function IncidentRecordedInErrorNotice({
   if (!recordedInErrorAt) return null;
   return (
     <StatusNote tone="info" title={t("noticeTitle", { date: formatDateIn(new Date(recordedInErrorAt), locale) })} data-testid="incident-recorded-in-error">
-      {reason ? t("noticeReason", { reason }) : null} {t("noticeBody")}
+      {reason ? t("noticeReason", { reason: reason.trim().replace(/[.]+$/, "") }) : null} {t("noticeBody")}
     </StatusNote>
   );
 }

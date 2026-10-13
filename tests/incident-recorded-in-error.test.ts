@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
     incident: { findFirst: vi.fn(), updateMany: vi.fn(), delete: vi.fn(), deleteMany: vi.fn(), count: vi.fn(), groupBy: vi.fn() },
-    incidentNotification: { count: vi.fn() },
+    incidentNotification: { count: vi.fn(), findFirst: vi.fn(), update: vi.fn() },
     incidentTimelineEntry: { create: vi.fn() },
     auditLog: { create: vi.fn() },
   },
@@ -94,5 +94,44 @@ describe("counts", () => {
       expect(args.where).toMatchObject({ recordedInErrorAt: null });
     }
     expect(mocks.prisma.incident.count).toHaveBeenCalled();
+  });
+
+  it("getStats leaves notifications of incidents recorded in error out of the overdue count", async () => {
+    await as("VIEWER").getStats({ organizationId: "org-1" });
+    const { where } = mocks.prisma.incidentNotification.count.mock.calls[0][0];
+    expect(where.incident).toEqual({ organizationId: "org-1", recordedInErrorAt: null });
+  });
+});
+
+describe("updateNotification sentAt", () => {
+  beforeEach(() => {
+    mocks.prisma.incidentNotification.findFirst.mockResolvedValue({
+      id: "n-1", incidentId: "inc-1", recipientType: "DPA", incident: { organizationId: "org-1" },
+    });
+    mocks.prisma.incidentNotification.update.mockResolvedValue({ id: "n-1" });
+  });
+
+  it("records the time a notification sent earlier was actually sent", async () => {
+    const sentAt = new Date(Date.now() - 20 * 864e5);
+    await as("PRIVACY_OFFICER").updateNotification({ organizationId: "org-1", id: "n-1", status: "SENT", sentAt });
+    expect(mocks.prisma.incidentNotification.update.mock.calls[0][0].data.sentAt).toEqual(sentAt);
+    expect(mocks.prisma.incidentTimelineEntry.create.mock.calls[0][0].data.timestamp).toEqual(sentAt);
+  });
+
+  it("uses the current time when none is given", async () => {
+    await as("PRIVACY_OFFICER").updateNotification({ organizationId: "org-1", id: "n-1", status: "SENT" });
+    const { sentAt } = mocks.prisma.incidentNotification.update.mock.calls[0][0].data;
+    expect(Math.abs(sentAt.getTime() - Date.now())).toBeLessThan(5000);
+  });
+
+  it("refuses a time in the future, or a time without the status SENT", async () => {
+    const future = new Date(Date.now() + 864e5);
+    await expect(
+      as("PRIVACY_OFFICER").updateNotification({ organizationId: "org-1", id: "n-1", status: "SENT", sentAt: future }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      as("PRIVACY_OFFICER").updateNotification({ organizationId: "org-1", id: "n-1", status: "PENDING", sentAt: new Date() }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(mocks.prisma.incidentNotification.update).not.toHaveBeenCalled();
   });
 });
