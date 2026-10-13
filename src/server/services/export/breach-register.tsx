@@ -294,7 +294,7 @@ export function BreachRegisterReport({
                   colWidths={[1.5, 3, 1.5]}
                   rows={inc.timeline.map((ev) => [
                     fmtDateTime(ev.timestamp),
-                    `${ev.title}${ev.description ? ` — ${ev.description}` : ""}`,
+                    `${ev.title}${ev.description ? `: ${ev.description}` : ""}`,
                     ev.user?.name || tr("timelineSystem"),
                   ])}
                 />

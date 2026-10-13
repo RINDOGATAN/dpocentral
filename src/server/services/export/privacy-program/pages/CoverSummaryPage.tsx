@@ -3,6 +3,7 @@
 
 import React from "react";
 import { View, Text, StyleSheet } from "@react-pdf/renderer";
+import { pdfChrome } from "../../pdf-locale";
 import {
   CoverFrame,
   StatTile,
@@ -119,7 +120,7 @@ export function CoverSummaryPage({
         <StatTile value={hero.vendorCount} label={t("cover.stats.vendors")} />
         {hero.showDsar && (
         <StatTile
-          value={hero.dsarOnTimePct ?? "—"}
+          value={hero.dsarOnTimePct ?? pdfChrome().notStated}
           suffix={hero.dsarOnTimePct !== null ? "%" : undefined}
           label={t("cover.stats.dsarsOnTime")}
           tone={

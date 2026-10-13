@@ -34,6 +34,8 @@ export interface PdfChrome {
   disclaimer: string;
   generatedBy: string;
   noRecords: string;
+  /** A value the record does not hold, where a cell or a figure needs words. */
+  notStated: string;
   /** "Generated {date}" on a cover. */
   generated: (date: string) => string;
   confidentialBody: string;
@@ -44,6 +46,7 @@ function chrome(m: typeof en): PdfChrome {
     disclaimer: m.footer.disclaimer,
     generatedBy: m.pdf.chrome.generatedBy,
     noRecords: m.pdf.chrome.noRecords,
+    notStated: m.pdf.chrome.notStated,
     generated: (date) => m.pdf.common.generated.replace("{date}", date),
     confidentialBody: m.pdf.common.confidentialBody,
   };

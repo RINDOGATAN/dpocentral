@@ -81,7 +81,7 @@ const s = StyleSheet.create({
 });
 
 function fmtDate(d: Date | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "";
   return new Date(d).toISOString().split("T")[0]!;
 }
 
@@ -237,22 +237,22 @@ export function VendorRegisterDocument({
                   <PillBadge key="r" tone={toneForRiskTier(v.riskTier)} uppercase>
                     {tEnum(`riskTier.${v.riskTier}`).toUpperCase()}
                   </PillBadge>
-                ) : "—",
-                v.countries.join(", ") || "—",
+                ) : "",
+                v.countries.join(", ") || "",
                 v.certifications.length > 0 ? (
                   <View key="c" style={s.certRow}>
                     {v.certifications.slice(0, 4).map((c, ci) => (
                       <CategoryChip key={ci} label={c} />
                     ))}
                   </View>
-                ) : "—",
+                ) : "",
                 dpa ? (
                   <PillBadge key="d" tone="success" uppercase>
                     {tEnum(`contractStatus.${dpa.status}`).toUpperCase()}
                   </PillBadge>
                 ) : v.status === "ACTIVE" ? (
                   <PillBadge key="d" tone="danger" uppercase>{t("dpaMissing")}</PillBadge>
-                ) : "—",
+                ) : "",
                 fmtDate(v.nextReviewAt),
               ];
             })}

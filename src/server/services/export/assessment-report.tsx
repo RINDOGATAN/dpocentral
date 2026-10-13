@@ -578,12 +578,12 @@ export function AssessmentReport({
                             ? "HIGH"
                             : "CRITICAL";
                     return [
-                      section?.title ?? "—",
+                      section?.title ?? "",
                       question?.text
                         ? question.text.length > 60
                           ? question.text.slice(0, 57) + "..."
                           : question.text
-                        : "—",
+                        : "",
                       r.riskScore!.toFixed(1),
                       level,
                     ];

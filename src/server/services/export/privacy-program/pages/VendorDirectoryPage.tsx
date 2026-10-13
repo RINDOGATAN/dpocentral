@@ -119,15 +119,15 @@ export function VendorDirectoryPage({
               <PillBadge key="r" tone={toneForRiskTier(v.riskTier)} uppercase>
                 {tEnum(`riskTier.${v.riskTier}`).toUpperCase()}
               </PillBadge>
-            ) : "—",
-            v.countries.join(", ") || "—",
+            ) : "",
+            v.countries.join(", ") || "",
             v.certifications.length > 0 ? (
               <View key="c" style={s.certRow}>
                 {v.certifications.slice(0, 4).map((c, ci) => (
                   <CategoryChip key={ci} label={c} />
                 ))}
               </View>
-            ) : "—",
+            ) : "",
             v.hasDpa ? (
               <PillBadge key="d" tone="success" uppercase>
                 {v.dpaStatus
@@ -138,10 +138,10 @@ export function VendorDirectoryPage({
               <PillBadge key="d" tone="danger" uppercase>
                 {t("vendors.dpaMissing")}
               </PillBadge>
-            ) : "—",
+            ) : "",
             v.nextReview
               ? new Date(v.nextReview).toISOString().split("T")[0]
-              : "—",
+              : "",
           ])}
         />
       ))}

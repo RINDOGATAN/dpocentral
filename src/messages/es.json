@@ -4682,7 +4682,8 @@
     },
     "chrome": {
       "generatedBy": "Generado con DPO Central",
-      "noRecords": "Sin registros"
+      "noRecords": "Sin registros",
+      "notStated": "No consta"
     },
     "csv": {
       "words": {

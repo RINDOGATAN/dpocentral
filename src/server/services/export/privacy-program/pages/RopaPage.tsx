@@ -21,7 +21,7 @@ import {
 } from "../data-mapping";
 
 function fmtDate(d: Date | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "";
   return new Date(d).toISOString().split("T")[0]!;
 }
 
@@ -123,10 +123,10 @@ export function RopaPage({
             a.name,
             tEnum(`legalBasis.${a.legalBasis}`),
             a.systemCount,
-            a.transferCount || "—",
+            a.transferCount || "",
             a.automatedDecisionMaking ? (
               <PillBadge tone="warning" uppercase key="adm">{t("ropa.admYes")}</PillBadge>
-            ) : "—",
+            ) : "",
             overdue ? (
               <PillBadge tone="danger" uppercase key="due">{fmtDate(a.nextReview)}</PillBadge>
             ) : fmtDate(a.nextReview),
