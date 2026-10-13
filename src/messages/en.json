@@ -3106,7 +3106,7 @@
     "createOrganization": "Create Organization",
     "creating": "Creating...",
     "switchOrg": "Switch Organization",
-    "dpaAccept": "I accept the <link>data processing agreement</link> (version {version}) for this organization. It covers the free pilot and both Cloud Plans.",
+    "dpaAccept": "I accept the <link>data processing agreement</link>",
     "dpaStepTitle": "Data processing agreement",
     "dpaStepBody": "Before you continue, accept the data processing agreement for {name} on behalf of the organization. You only need to do this once.",
     "dpaStepContinue": "Accept and continue",

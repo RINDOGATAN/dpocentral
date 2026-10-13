@@ -37,20 +37,23 @@ export function DpaAcceptCheckbox({
         onCheckedChange={(v) => onCheckedChange(v === true)}
         className="mt-0.5"
       />
-      <Label htmlFor={id} className="text-sm font-normal leading-snug">
-        {t.rich("dpaAccept", {
-          version: PILOT_DPA.version,
-          link: (chunks) => (
-            <a
-              href={pilotDpaHref(locale)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-primary"
-            >
-              {chunks}
-            </a>
-          ),
-        })}
+      {/* The Label is a flex container: one inline span keeps the sentence a single
+          flowing line instead of separate flex items. */}
+      <Label htmlFor={id} className="block text-sm font-normal leading-snug">
+        <span>
+          {t.rich("dpaAccept", {
+            link: (chunks) => (
+              <a
+                href={pilotDpaHref(locale)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-primary"
+              >
+                {chunks}
+              </a>
+            ),
+          })}
+        </span>
       </Label>
     </div>
   );
