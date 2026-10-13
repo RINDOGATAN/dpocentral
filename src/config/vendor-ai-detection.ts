@@ -10,7 +10,7 @@
  */
 
 import type { AIRiskLevel } from "@prisma/client";
-import { aiSystemRecordName } from "@/lib/record-name";
+import { aiSystemDefaultPurpose, aiSystemRecordDescription, aiSystemRecordName } from "@/lib/record-name";
 
 // ============================================================
 // TYPES
@@ -169,8 +169,8 @@ function deriveModelType(catalog: VendorCatalogAIFields): string | null {
 
 /**
  * Maps VendorCatalog AI fields to an AISystem create payload.
- * Returns null if the vendor is not AI-capable. The name is written in
- * `locale`, the language of the screen that ran the import.
+ * Returns null if the vendor is not AI-capable. The name and description are
+ * written in `locale`, the language of the screen that ran the import.
  */
 export function buildAISystemFromCatalog(
   catalog: VendorCatalogAIFields,
@@ -181,16 +181,13 @@ export function buildAISystemFromCatalog(
   if (!isAiCapableVendor(catalog)) return null;
 
   const riskLevel = deriveRiskLevel(catalog);
-  const capsStr = catalog.aiCapabilities.length > 0
-    ? catalog.aiCapabilities.slice(0, 3).join(", ")
-    : "AI capabilities";
 
   return {
     name: aiSystemRecordName(vendorName, locale),
-    description: `Auto-registered from vendor catalog import. ${vendorName} provides ${capsStr}.`,
+    description: aiSystemRecordDescription(vendorName, catalog.aiCapabilities, locale),
     purpose: catalog.aiCapabilities.length > 0
       ? catalog.aiCapabilities.join("; ")
-      : `AI-powered ${catalog.category} services`,
+      : aiSystemDefaultPurpose(catalog.category, locale),
     riskLevel,
     category: catalog.subcategory ?? catalog.category,
     modelType: deriveModelType(catalog),

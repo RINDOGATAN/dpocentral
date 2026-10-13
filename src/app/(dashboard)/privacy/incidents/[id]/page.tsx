@@ -46,6 +46,7 @@ import { IncidentStatus, TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
+import { parseReportedDescription, parseSystemTimelineTitle } from "@/lib/incident-timeline";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
@@ -106,6 +107,39 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
   const tList = useTranslations("pages.incidents");
   const tCommon = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
+  const recipientLabel = (type: string) =>
+    tp.has(`notifications.recipient.${type}`)
+      ? tp(`notifications.recipient.${type}` as "notifications.recipient.DPA")
+      : type;
+  // Entries the router writes by itself are stored in English; show them in the viewer's language.
+  const shownTimelineTitle = (title: string) => {
+    const parsed = parseSystemTimelineTitle(title);
+    if (!parsed) return title;
+    switch (parsed.kind) {
+      case "reported":
+        return tp("timeline.system.reported");
+      case "markedInError":
+        return tp("timeline.system.markedInError");
+      case "unmarkedInError":
+        return tp("timeline.system.unmarkedInError");
+      case "statusChanged":
+        return tp("timeline.system.statusChanged", { status: enumLabel("incidentStatus", parsed.status) });
+      case "notificationCreated":
+        return tp("timeline.system.notificationCreated", {
+          recipient: recipientLabel(parsed.recipient),
+          jurisdiction: parsed.jurisdiction,
+        });
+      case "notificationStatus":
+        return tp("timeline.system.notificationStatus", {
+          recipient: recipientLabel(parsed.recipient),
+          status: enumLabel("notificationStatus", parsed.status),
+        });
+    }
+  };
+  const shownTimelineDescription = (description: string) => {
+    const reportedTitle = parseReportedDescription(description);
+    return reportedTitle === null ? description : tp("timeline.system.reportedBody", { title: reportedTitle });
+  };
 
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<IncidentStatus | "">("");
@@ -462,7 +496,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                   <div className="flex flex-wrap gap-2">
                     {(incident.dataCategories as string[]).map((cat) => (
                       <Badge key={cat} variant="outline">
-                        {cat.replace("_", " ")}
+                        {enumLabel("dataCategory", cat)}
                       </Badge>
                     ))}
                   </div>
@@ -518,7 +552,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">{entry.title}</span>
+                          <span className="font-medium">{shownTimelineTitle(entry.title)}</span>
                           <Badge variant="outline" className="text-xs">
                             {/* The router also writes STATUS_CHANGE and NOTIFICATION, and the
                                 entry type is free text: an unknown type shows as written. */}
@@ -528,12 +562,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {entry.description}
+                          {entry.description ? shownTimelineDescription(entry.description) : null}
                         </p>
                         <p className="text-xs text-muted-foreground mt-2">
                           <Clock className="inline w-3 h-3 mr-1" />
                           {formatDateTimeIn(new Date(entry.timestamp), locale)}
-                          {entry.createdBy && tp("timeline.createdBy", { name: entry.createdBy.name ?? "" })}
+                          {entry.createdBy?.name && tp("timeline.createdBy", { name: entry.createdBy.name })}
                         </p>
                       </div>
                     </div>
@@ -630,7 +664,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <Bell className="w-4 h-4 text-primary" />
-                            <span className="font-medium">{notification.recipientType}</span>
+                            <span className="font-medium">{recipientLabel(notification.recipientType)}</span>
                             <Badge variant="outline">{enumLabel("notificationStatus", notification.status)}</Badge>
                             {pastDue && <Badge variant="destructive">{tp("notifications.overdue")}</Badge>}
                           </div>

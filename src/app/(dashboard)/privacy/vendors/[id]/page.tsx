@@ -127,7 +127,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const tConfirm = useTranslations("confirms");
   const tCommon = useTranslations("common");
-  const { label: enumLabel } = useEnumLabels();
+  const { label: enumLabel, vendorCategory } = useEnumLabels();
   // Shared DataCategory labels — vendor records can carry any of the 15 enum
   // values, so this covers the whole enum rather than a single form's subset.
   const tDataCategory = useTranslations("enums.dataCategory");
@@ -253,7 +253,7 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
               <DraftBadge record={vendor} className="text-xs" />
             </div>
             <p className="text-muted-foreground break-words">
-              {(vendor.categories as string[])?.join(" - ") || tp("noCategories")}
+              {(vendor.categories as string[])?.map(vendorCategory).join(" - ") || tp("noCategories")}
             </p>
           </div>
         </div>

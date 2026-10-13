@@ -33,7 +33,11 @@ export async function csvLabelsFor<H extends string>(
   };
   const code = (kind: CsvEnumKind, value: string): string => {
     const key = `${kind}.${value}`;
-    return tEnum.has(key as never) ? tEnum(key as never) : value;
+    if (tEnum.has(key as never)) return tEnum(key as never);
+    // A quick-start vendor holds the catalog's category name, not a code.
+    const catalogKey = `vendorCatalogCategory.${value.replace(/[^A-Za-z0-9]+/g, "_")}`;
+    if (kind === "vendorCategory" && tEnum.has(catalogKey as never)) return tEnum(catalogKey as never);
+    return value;
   };
   return { headers, words, code };
 }

@@ -44,7 +44,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
-import { displayAiSystemName } from "@/lib/record-name";
+import { displayAiSystemDescription, displayAiSystemName } from "@/lib/record-name";
 import { PageHeader } from "@/components/privacy/page-header";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
@@ -396,7 +396,7 @@ export default function AISystemsPage() {
                       </div>
                       {system.description && (
                         <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
-                          {system.description}
+                          {displayAiSystemDescription(system.description, locale)}
                         </p>
                       )}
                       <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">

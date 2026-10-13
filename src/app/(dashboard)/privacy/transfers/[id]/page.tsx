@@ -32,6 +32,15 @@ import { DeleteRecordButton } from "@/components/privacy/delete-record-button";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 import { formatDateIn } from "@/lib/utils";
 
+/** The country's name in `locale` (Intl), or undefined when the runtime has none. */
+function regionName(code: string, locale: string): string | undefined {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code.toUpperCase());
+  } catch {
+    return undefined;
+  }
+}
+
 const statusColors: Record<string, string> = {
   COMPLIANT: "border-primary text-primary bg-primary/5",
   NEEDS_REVIEW: `border-transparent ${toneChip("warning")}`,
@@ -228,12 +237,16 @@ export default function TransferDetailPage() {
               <p className="font-medium">{t("adequacyTitle")}</p>
               <p className="text-sm text-muted-foreground">
                 {t("adequacyBody", {
-                  country: adequacyDecision.country,
-                  date: adequacyDecision.decisionDate,
+                  country: regionName(adequacyDecision.countryCode, locale) ?? adequacyDecision.country,
+                  date: formatDateIn(new Date(adequacyDecision.decisionDate), locale),
                 })}
                 {adequacyDecision.isPartial && t("adequacyPartial")}
                 {adequacyDecision.notes && (
-                  <span className="block mt-1 italic">{adequacyDecision.notes}</span>
+                  <span className="block mt-1 italic">
+                    {t.has(`adequacyNotes.${adequacyDecision.countryCode}`)
+                      ? t(`adequacyNotes.${adequacyDecision.countryCode}` as "adequacyNotes.US")
+                      : adequacyDecision.notes}
+                  </span>
                 )}
               </p>
             </div>

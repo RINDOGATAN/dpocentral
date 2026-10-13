@@ -15,6 +15,7 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { PET_RISK_MAPPINGS, detectRisksFromText } from "@/config/pet-risk-mappings";
 import { buildAutoFillContext } from "../../services/privacy/autoFillContext";
+import { dpiaAutoFillText } from "../../services/privacy/dpia-auto-fill-text";
 import { requireAi, assertAiRateLimit, recordGeneration, markAccepted, postureLane } from "../../services/ai/posture";
 import { generateRiskNarrative } from "../../services/ai/assessment-generator";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
@@ -39,7 +40,7 @@ import {
 import { assertIdsInOrg } from "../../org-ownership";
 import { preselectDpiaFrameworks } from "../../services/assessment/framework-preselect";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
-import { recordName } from "@/lib/record-name";
+import { tiaRecordDescription, tiaRecordName } from "@/lib/record-name";
 
 // Risk scoring service
 function calculateRiskScore(responses: any[], template: any): { score: number; level: RiskLevel } {
@@ -497,8 +498,8 @@ export const assessmentRouter = createTRPCRouter({
           templateId: template.id,
           dataTransferId: transfer.id,
           processingActivityId: transfer.processingActivityId ?? undefined,
-          name: recordName("TIA", transfer.name),
-          description: `Transfer Impact Assessment for transfer to ${transfer.destinationCountry}.`,
+          name: tiaRecordName(transfer.name, localeFromCookieGetter(ctx.getCookie)),
+          description: tiaRecordDescription(transfer.destinationCountry, localeFromCookieGetter(ctx.getCookie)),
           status: AssessmentStatus.DRAFT,
         },
       });
@@ -1312,12 +1313,14 @@ export const assessmentRouter = createTRPCRouter({
         source: string
       ) => suggestions.push({ ...target, suggestedResponse, confidence, source });
 
+      const text = dpiaAutoFillText(localeFromCookieGetter(ctx.getCookie));
+
       // Purpose of the processing
       suggest(
         AUTO_FILL_TARGETS.purpose,
-        `${activity.name}: ${activity.purpose || activity.description || "Processing activity as part of organizational operations."}`,
+        `${activity.name}: ${activity.purpose || activity.description || text.purposeFallback}`,
         "high",
-        "Processing activity purpose"
+        text.source.purpose
       );
 
       // Legal basis, as the exact option the question offers
@@ -1329,7 +1332,7 @@ export const assessmentRouter = createTRPCRouter({
           AUTO_FILL_TARGETS.legalBasis,
           legalBasisOption,
           "high",
-          "Processing activity legal basis"
+          text.source.legalBasis
         );
       }
 
@@ -1339,13 +1342,13 @@ export const assessmentRouter = createTRPCRouter({
         const categories = [...new Set(elements.map((e) => e.category))];
         suggest(
           AUTO_FILL_TARGETS.dataCategories,
-          `Data categories processed: ${categories.join(", ")}. Specific data elements include: ${elements.map((e) => e.name).join(", ")}.${
-            specialCat.length > 0
-              ? ` Special category data is processed: ${specialCat.map((e) => e.name).join(", ")}. Additional safeguards are required under Art. 9 GDPR.`
-              : ""
-          }`,
+          text.dataCategories(
+            categories,
+            elements.map((e) => e.name),
+            specialCat.map((e) => e.name)
+          ),
           "high",
-          "Linked data elements"
+          text.source.elements
         );
 
         if (specialCat.length > 0) {
@@ -1353,36 +1356,24 @@ export const assessmentRouter = createTRPCRouter({
             AUTO_FILL_TARGETS.sensitivity,
             SENSITIVITY_SPECIAL_CATEGORY,
             "high",
-            "Special category data elements"
+            text.source.specialElements
           );
-          suggest(AUTO_FILL_TARGETS.specialCategory, "Yes", "high", "Special category data elements");
+          suggest(AUTO_FILL_TARGETS.specialCategory, "Yes", "high", text.source.specialElements);
         }
       }
 
       // Recipients, and the vendor that processes the data
       const recipientLines = [
-        ...(activity.recipients.length > 0
-          ? [`Data recipients: ${activity.recipients.join(", ")}.`]
-          : []),
-        ...(vendor
-          ? [
-              `Data is processed by ${vendor.name}.${
-                vendor.certifications.length > 0
-                  ? ` ${vendor.name} holds: ${vendor.certifications.join(", ")}.`
-                  : ""
-              }`,
-            ]
-          : []),
-        ...(activity.dataSubjects.length > 0
-          ? [`Data subjects affected: ${activity.dataSubjects.join(", ")}.`]
-          : []),
+        ...(activity.recipients.length > 0 ? [text.recipients(activity.recipients)] : []),
+        ...(vendor ? [text.processedBy(vendor.name, vendor.certifications)] : []),
+        ...(activity.dataSubjects.length > 0 ? [text.dataSubjects(activity.dataSubjects)] : []),
       ];
       if (recipientLines.length > 0) {
         suggest(
           AUTO_FILL_TARGETS.recipients,
           recipientLines.join(" "),
           "high",
-          "Processing activity recipients"
+          text.source.recipients
         );
       }
 
@@ -1390,49 +1381,44 @@ export const assessmentRouter = createTRPCRouter({
       if (activity.retentionPeriod) {
         suggest(
           AUTO_FILL_TARGETS.retention,
-          `Data retention period: ${activity.retentionPeriod}${activity.retentionDays ? ` (${activity.retentionDays} days)` : ""}. Data is deleted or anonymized after the retention period expires.`,
+          text.retention(activity.retentionPeriod, activity.retentionDays ?? null),
           "high",
-          "Processing activity retention policy"
+          text.source.retention
         );
       }
 
       // International transfers
       if (transfers.length > 0) {
-        const transferSummary = transfers
-          .map((t) => `${t.destinationCountry} (${t.mechanism.replace(/_/g, " ")})`)
-          .join("; ");
         suggest(
           AUTO_FILL_TARGETS.transfers,
-          `International data transfers: ${transferSummary}. ${transfers.some((t) => t.safeguards) ? "Safeguards include: " + transfers.filter((t) => t.safeguards).map((t) => t.safeguards).join("; ") + "." : "Appropriate safeguards must be verified."}`,
+          text.transfers(transfers),
           "medium",
-          "Data transfer records"
+          text.source.transfers
         );
       }
 
       // Data minimisation
       suggest(
         AUTO_FILL_TARGETS.minimisation,
-        `The processing of ${elements.length} data elements across ${assets.length} system(s) is necessary to achieve the stated purpose: ${activity.purpose || activity.name}. Data minimization has been considered. Only data elements essential to the processing purpose are collected.`,
+        text.minimisation(elements.length, assets.length, activity.purpose || activity.name),
         "medium",
-        "Activity and data element analysis"
+        text.source.minimisation
       );
 
       // Risks to data subjects
       const hasTransfers = transfers.length > 0;
       const isLargeScale = elements.length > 10;
-      const riskFactors = [
-        ...(specialCat.length > 0 ? ["special category data processed"] : []),
-        ...(hasTransfers ? [`international transfers to ${transfers.length} destination(s)`] : []),
-        ...(isLargeScale ? ["large-scale data processing"] : []),
-      ];
+      const hasRiskFactors = specialCat.length > 0 || hasTransfers || isLargeScale;
 
       suggest(
         AUTO_FILL_TARGETS.risks,
-        riskFactors.length > 0
-          ? `Risk factors identified: ${riskFactors.join(", ")}. Mitigation measures should address each factor. Overall risk level requires assessment against the likelihood and severity of harm to data subjects.`
-          : "No elevated risk factors identified based on available data. Standard data protection measures apply.",
-        riskFactors.length > 0 ? "medium" : "low",
-        "Automated risk factor analysis"
+        text.risks({
+          specialCategory: specialCat.length > 0,
+          transferDestinations: transfers.length,
+          largeScale: isLargeScale,
+        }),
+        hasRiskFactors ? "medium" : "low",
+        text.source.risks
       );
       const hasSpecialData = specialCat.length > 0;
 

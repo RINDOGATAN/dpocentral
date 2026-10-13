@@ -16,6 +16,7 @@ import {
 } from "./pdf-styles";
 import { Page } from "@react-pdf/renderer";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { pdfEnumLabel } from "@/server/services/export/pdf-locale";
 
 // ── Types ────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ export interface DSARPerformanceData {
 // ── Helpers ──────────────────────────────────────────────
 
 function statusLabel(status: string): string {
-  return status.replace(/_/g, " ");
+  return pdfEnumLabel("dsarStatus", status);
 }
 
 // English fallback map — used when no `t` prop is supplied.
@@ -131,6 +132,8 @@ const EN_FALLBACK: Record<string, string> = {
   "agingColumns.risk": "Risk Level",
   riskCritical: "Critical: likely overdue",
   riskAtRisk: "At risk",
+  slaStatusMeeting: "Meeting",
+  slaStatusNoData: "No data",
   riskOnTrack: "On track",
   "dsarTypes.ACCESS": "Access (Right of Access)",
   "dsarTypes.ERASURE": "Erasure (Right to be Forgotten)",
@@ -294,7 +297,13 @@ export function DSARPerformanceReport({
               stats.avgResolutionDays > 0
                 ? tr("slaDays", { days: stats.avgResolutionDays })
                 : tr("stats.notAvailable"),
-              j.status,
+              j.status === "Meeting"
+                ? tr("slaStatusMeeting")
+                : j.status === "At risk"
+                  ? tr("riskAtRisk")
+                  : j.status === "No data"
+                    ? tr("slaStatusNoData")
+                    : j.status,
             ])}
           />
         </ContentPage>

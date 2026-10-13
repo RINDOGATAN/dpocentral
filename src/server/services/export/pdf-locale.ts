@@ -55,3 +55,18 @@ export const PDF_CHROME: Record<PdfLocale, PdfChrome> = { en: chrome(en), es: ch
 export function pdfChrome(): PdfChrome {
   return PDF_CHROME[store.getStore() ?? "en"];
 }
+
+type EnumGroups = Record<string, Record<string, string>>;
+const PDF_ENUMS: Record<PdfLocale, EnumGroups> = {
+  en: en.enums as unknown as EnumGroups,
+  es: es.enums as unknown as EnumGroups,
+};
+
+/**
+ * An enum value (DRAFT, IN_PROGRESS, LOW, ...) in the language of the report
+ * being rendered, from the `enums` message group `kind`. A value with no label
+ * is de-snaked ("IN_PROGRESS" -> "IN PROGRESS"), as the reports did before.
+ */
+export function pdfEnumLabel(kind: string, value: string): string {
+  return PDF_ENUMS[store.getStore() ?? "en"][kind]?.[value] ?? value.replace(/_/g, " ");
+}

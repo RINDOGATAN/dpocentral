@@ -646,6 +646,13 @@
         "adequacyTitle": "Adequacy decision in force",
         "adequacyBody": "{country} has an EU adequacy decision (adopted {date}).",
         "adequacyPartial": " ⚠ Partial: see notes.",
+        "adequacyNotes": {
+          "CA": "Limited to recipients subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organizations.",
+          "JP": "Based on the Act on Protection of Personal Information (APPI) with supplementary rules for EU-sourced data.",
+          "KR": "Based on the Personal Information Protection Act (PIPA) as amended in 2020.",
+          "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission in July 2025; valid until December 2031.",
+          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov."
+        },
         "complianceStatus": "Compliance Status",
         "suggestedFromData": "Suggested from current data: <b>{status}</b>",
         "schremsTitle": "Schrems II Checklist",
@@ -1132,7 +1139,16 @@
       "timeline": {
         "addEntry": "Add Entry",
         "empty": "No timeline entries yet",
-        "createdBy": " by {name}"
+        "createdBy": " by {name}",
+        "system": {
+          "reported": "Incident Reported",
+          "reportedBody": "Incident \"{title}\" was reported",
+          "statusChanged": "Status changed to {status}",
+          "notificationCreated": "{recipient} notification created ({jurisdiction})",
+          "notificationStatus": "{recipient} notification {status}",
+          "markedInError": "Marked as recorded in error",
+          "unmarkedInError": "No longer marked as recorded in error"
+        }
       },
       "tasks": {
         "addTask": "Add Task",
@@ -1145,7 +1161,13 @@
         "empty": "No notifications created",
         "createDpa": "Create DPA Notification",
         "create": "Create Notification",
-        "voluntaryHint": "No notification is required for this incident. You can still create one voluntarily."
+        "voluntaryHint": "No notification is required for this incident. You can still create one voluntarily.",
+        "recipient": {
+          "DPA": "DPA",
+          "DATA_SUBJECT": "Data subjects",
+          "LAW_ENFORCEMENT": "Law enforcement",
+          "INTERNAL": "Internal"
+        }
       },
       "documents": {
         "title": "Document uploads coming soon",
@@ -1502,6 +1524,9 @@
       }
     },
     "aiSystemDetail": {
+      "modelSource": {
+        "vendor-declared": "vendor-declared"
+      },
       "notFound": "AI system not found",
       "back": "Back",
       "linked": "AI Sentinel Linked",
@@ -2297,7 +2322,10 @@
         "OBJECTION": "Objection",
         "RESTRICTION": "Restriction",
         "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
-        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
+        "LIMIT_SENSITIVE_PI": "Limit sensitive personal information",
+        "AUTOMATED_DECISION": "Automated decision",
+        "WITHDRAW_CONSENT": "Withdraw consent",
+        "OTHER": "Other"
       },
       "status": {
         "SUBMITTED": "Submitted",
@@ -2765,6 +2793,42 @@
     }
   },
   "enums": {
+    "vendorCategory": {
+      "CLOUD_SERVICES": "Cloud Services",
+      "DATA_PROCESSING": "Data Processing",
+      "ANALYTICS": "Analytics",
+      "MARKETING": "Marketing",
+      "HR_SERVICES": "HR Services",
+      "PAYMENT_PROCESSING": "Payment Processing",
+      "CUSTOMER_SUPPORT": "Customer Support",
+      "IT_SECURITY": "IT Security",
+      "LEGAL": "Legal",
+      "OTHER": "Other"
+    },
+    "vendorCatalogCategory": {
+      "Cloud_Infrastructure": "Cloud Infrastructure",
+      "Data_Warehouse_Integration": "Data Warehouse & Integration",
+      "Analytics_BI": "Analytics & BI",
+      "Customer_Data_Platform": "Customer Data Platform",
+      "CRM_Sales": "CRM & Sales",
+      "Marketing_Automation": "Marketing Automation",
+      "Advertising": "Advertising",
+      "Content_Management": "Content Management",
+      "E_commerce": "E-commerce",
+      "Payment_Processing": "Payment Processing",
+      "Communication": "Communication",
+      "Customer_Support": "Customer Support",
+      "Personalization_Engagement": "Personalization & Engagement",
+      "HR_People": "HR & People",
+      "Productivity_Collaboration": "Productivity & Collaboration",
+      "Developer_Tools": "Developer Tools",
+      "Security_Identity": "Security & Identity",
+      "Privacy_Consent": "Privacy & Consent",
+      "AI_Machine_Learning": "AI & Machine Learning",
+      "Legal_Compliance": "Legal & Compliance",
+      "Design_Creative": "Design & Creative",
+      "Surveys_Research": "Surveys & Research"
+    },
     "dataCategory": {
       "IDENTIFIERS": "Identifiers",
       "DEMOGRAPHICS": "Demographics",
@@ -4468,6 +4532,8 @@
       },
       "riskCritical": "Critical: likely overdue",
       "riskAtRisk": "At risk",
+      "slaStatusMeeting": "Meeting",
+      "slaStatusNoData": "No data",
       "riskOnTrack": "On track",
       "dsarTypes": {
         "ACCESS": "Access (Right of Access)",
