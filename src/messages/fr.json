@@ -80,7 +80,7 @@
     "createOrganization": "Creer l'organisation",
     "creating": "Creation...",
     "switchOrg": "Changer d'organisation",
-    "dpaAccept": "J'accepte l'<link>accord de traitement des données</link> (version {version}) pour cette organisation. Il couvre le pilote gratuit et les deux Cloud Plans.",
+    "dpaAccept": "J'accepte l'<link>accord de traitement des données</link>",
     "dpaStepTitle": "Accord de traitement des données",
     "dpaStepBody": "Avant de continuer, acceptez l'accord de traitement des données pour {name} au nom de l'organisation. Cette étape n'est demandée qu'une fois.",
     "dpaStepContinue": "Accepter et continuer",
