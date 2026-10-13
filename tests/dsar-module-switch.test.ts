@@ -75,6 +75,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/prisma", () => ({ default: mocks.prisma, prisma: mocks.prisma }));
 vi.mock("@auth/prisma-adapter", () => ({ PrismaAdapter: () => ({}) }));
 vi.mock("@/lib/auth", () => ({ authOptions: {} }));
+vi.mock("@/i18n/server-locale", () => ({ getCookieLocale: async () => null }));
 vi.mock("next-auth", () => ({ getServerSession: vi.fn() }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined }) }));
 vi.mock("@/lib/security", () => ({ getSecurityModule: () => null }));

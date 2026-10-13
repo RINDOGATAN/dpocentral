@@ -160,7 +160,9 @@ describe("the single assessment export", () => {
       const res = await single(locale);
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("application/pdf");
-      expect(res.headers.get("Content-Disposition")).toContain("Assessment-DPIA-");
+      expect(res.headers.get("Content-Disposition")).toContain(
+        locale === "es" ? "Evaluacion-DPIA-" : "Assessment-DPIA-",
+      );
       const body = new Uint8Array(await res.arrayBuffer());
       expect(body.byteLength).toBeGreaterThan(1000);
       expect(String.fromCharCode(...body.slice(0, 5))).toBe("%PDF-");
