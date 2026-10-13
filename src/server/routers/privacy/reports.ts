@@ -6,6 +6,7 @@ import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../
 import { TRPCError } from "@trpc/server";
 import { isDsarModuleEnabled } from "@/config/features";
 import { DRAFT_WHERE, countDrafts } from "@/server/services/template-items/drafts";
+import { scoredAssessmentsWithDerivedRisk } from "@/server/services/assessment/risk-score";
 
 // Helper to compute compliance score from all modules
 /** The risk indicators the compliance page can show, by key. */
@@ -434,9 +435,9 @@ export const reportsRouter = createTRPCRouter({
         ctx.prisma.assessment.count({ where: { organizationId: orgId, status: "DRAFT" } }),
         ctx.prisma.assessment.count({ where: { organizationId: orgId, status: "IN_PROGRESS" } }),
         ctx.prisma.assessment.count({ where: { organizationId: orgId, status: "APPROVED" } }),
-        ctx.prisma.assessment.count({
-          where: { organizationId: orgId, riskLevel: { in: ["HIGH", "CRITICAL"] } },
-        }),
+        scoredAssessmentsWithDerivedRisk(ctx.prisma, orgId).then(
+          (rows) => rows.filter((a) => a.riskLevel === "HIGH" || a.riskLevel === "CRITICAL").length
+        ),
         // Incident
         ctx.prisma.incident.count({ where: { recordedInErrorAt: null, organizationId: orgId } }),
         ctx.prisma.incident.count({
@@ -564,12 +565,13 @@ export const reportsRouter = createTRPCRouter({
       const [complianceScore, moduleStats, trend, recentActivities] = await Promise.all([
         computeComplianceScore(ctx.prisma, orgId),
         // Inline module stats query for board report (reuses same logic)
-        ctx.prisma.assessment.findMany({
-          where: { organizationId: orgId, riskLevel: { in: ["HIGH", "CRITICAL"] } },
-          select: { id: true, name: true, riskLevel: true, riskScore: true, status: true },
-          orderBy: { riskScore: "desc" },
-          take: 5,
-        }),
+        scoredAssessmentsWithDerivedRisk(ctx.prisma, orgId).then((rows) =>
+          rows
+            .filter((a) => a.riskLevel === "HIGH" || a.riskLevel === "CRITICAL")
+            .sort((a, b) => b.riskScore - a.riskScore)
+            .slice(0, 5)
+            .map(({ id, name, riskLevel, riskScore, status }) => ({ id, name, riskLevel, riskScore, status }))
+        ),
         ctx.prisma.complianceSnapshot.findMany({
           where: { organizationId: orgId },
           orderBy: { month: "asc" },

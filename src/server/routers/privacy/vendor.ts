@@ -6,6 +6,7 @@ import { localizeQuestionnaire } from "@/config/vendor-questionnaires-es";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { createTRPCRouter, organizationProcedure, writerProcedure, officerProcedure, adminOrgProcedure } from "../../trpc";
 import { markConfirmed } from "@/server/services/template-items/mark";
+import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 import { TRPCError } from "@trpc/server";
 import {
   assembleDpa,
@@ -131,8 +132,9 @@ export const vendorRouter = createTRPCRouter({
           assessments: {
             include: {
               template: {
-                select: { id: true, name: true, type: true },
+                select: { id: true, name: true, type: true, sections: true, scoringLogic: true },
               },
+              responses: { select: { questionId: true, response: true } },
             },
             orderBy: { createdAt: "desc" },
           },
@@ -146,7 +148,14 @@ export const vendorRouter = createTRPCRouter({
         });
       }
 
-      return vendor;
+      // Risk figures are derived from each assessment's answers.
+      return {
+        ...vendor,
+        assessments: vendor.assessments.map(({ responses, template, ...a }) => ({
+          ...withDerivedRisk(a, template, responses),
+          template: template && { id: template.id, name: template.name, type: template.type },
+        })),
+      };
     }),
 
   // Create vendor

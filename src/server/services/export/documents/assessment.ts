@@ -31,6 +31,7 @@ import {
   sectionsForLocale,
   templateMetaForLocale,
 } from "@/server/services/assessment/template-locales";
+import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 import { PDF, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
@@ -112,13 +113,16 @@ export async function buildAssessmentExport(
     t: t as unknown as PdfT,
   });
 
+  // Risk figures derived from the answers, as the app shows them.
+  const risk = withDerivedRisk(assessment, assessment.template, assessment.responses);
+
   const data: AssessmentExportData = {
     id: assessment.id,
     name: assessment.name,
     description: assessment.description,
     status: assessment.status,
-    riskLevel: assessment.riskLevel,
-    riskScore: assessment.riskScore,
+    riskLevel: risk.riskLevel,
+    riskScore: risk.riskScore,
     startedAt: assessment.startedAt,
     submittedAt: assessment.submittedAt,
     completedAt: assessment.completedAt,
