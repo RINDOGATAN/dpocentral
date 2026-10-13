@@ -9,8 +9,9 @@
  * English catalog, which remains the source of truth.
  *
  * Law names: the official Spanish name where one exists (RGPD, Reglamento
- * de IA, the Mexican and Argentine laws); every other law keeps its official
- * name, with the description in Spanish. tests/jurisdiction-catalog-es.test.ts
+ * de IA, the Mexican and Argentine laws) and a Spanish rendering of the US
+ * state laws (the short name keeps the official acronym); every other law
+ * keeps its official name, with the description in Spanish. tests/jurisdiction-catalog-es.test.ts
  * checks that every code and question has an entry of the same shape.
  */
 
@@ -101,6 +102,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
 
   // ---------------------------------------------------------- US STATES
   CCPA: {
+    name: "Ley de Privacidad del Consumidor de California (modificada por la CPRA)",
     regionLabel: us("California"),
     description:
       "La ley general de privacidad de los consumidores de California. Las modificaciones de la CPRA (en vigor desde enero de 2023) ampliaron la CCPA y crearon la Agencia de Protección de la Privacidad de California (CPPA), con derechos como la rectificación y la limitación del uso de la información personal sensible.",
@@ -120,6 +122,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Hasta 2500 USD por infracción no intencionada; 7500 USD por infracción intencionada o que afecte a menores",
   },
   VCDPA: {
+    name: "Ley de Protección de Datos del Consumidor de Virginia",
     regionLabel: us("Virginia"),
     description:
       "La ley general de privacidad de los consumidores de Virginia, que otorga a los residentes derechos sobre sus datos personales e impone obligaciones a los responsables del tratamiento.",
@@ -138,6 +141,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 7500 USD por infracción; la aplicación corresponde en exclusiva al fiscal general del estado (Attorney General)",
   },
   CPA: {
+    name: "Ley de Privacidad de Colorado",
     regionLabel: us("Colorado"),
     description:
       "La ley de privacidad de los consumidores de Colorado, que reconoce los mecanismos universales de exclusión voluntaria y exige evaluaciones de protección de datos.",
@@ -156,6 +160,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 20.000 USD por infracción, conforme a la Colorado Consumer Protection Act",
   },
   CTDPA: {
+    name: "Ley de Privacidad de Datos de Connecticut",
     regionLabel: us("Connecticut"),
     description:
       "La ley de privacidad de los datos de los consumidores de Connecticut, que exige evaluaciones de protección de datos y el reconocimiento de los mecanismos universales de exclusión voluntaria.",
@@ -170,6 +175,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 5000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General) conforme a la CUTPA",
   },
   UCPA: {
+    name: "Ley de Privacidad del Consumidor de Utah",
     regionLabel: us("Utah"),
     description:
       "La ley de privacidad de los consumidores de Utah, favorable a las empresas, con un ámbito más reducido y sin obligación de realizar evaluaciones de protección de datos.",
@@ -188,6 +194,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   ICDPA: {
+    name: "Ley de Protección de Datos del Consumidor de Iowa",
     regionLabel: us("Iowa"),
     description:
       "La ley de protección de datos de los consumidores de Iowa, con un plazo de subsanación de 90 días y derechos de los consumidores más limitados que en otras leyes estatales.",
@@ -202,6 +209,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   TDPSA: {
+    name: "Ley de Privacidad y Seguridad de Datos de Texas",
     regionLabel: us("Texas"),
     description:
       "La ley general de privacidad de los consumidores de Texas, de aplicación amplia (sin umbral de ingresos), que exige evaluaciones de protección de datos.",
@@ -220,6 +228,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 25.000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General)",
   },
   FDBR: {
+    name: "Carta de Derechos Digitales de Florida",
     regionLabel: us("Florida"),
     description:
       "La ley de privacidad de los consumidores de Florida, dirigida a las grandes empresas, con disposiciones especiales sobre los datos de menores y las empresas tecnológicas.",
@@ -238,6 +247,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 50.000 USD por infracción; el triple de la indemnización por las infracciones que afecten a menores",
   },
   MCDPA: {
+    name: "Ley de Privacidad de Datos del Consumidor de Montana",
     regionLabel: us("Montana"),
     description:
       "La ley de privacidad de los datos de los consumidores de Montana, con el umbral de población más bajo entre las leyes estatales de privacidad de EE. UU. (50.000 consumidores).",
@@ -252,6 +262,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   OCPA: {
+    name: "Ley de Privacidad del Consumidor de Oregón",
     regionLabel: us("Oregón"),
     description:
       "La ley de privacidad de los consumidores de Oregón, de aplicación amplia, que incluye a las entidades sin ánimo de lucro y reconoce derechos sólidos a los consumidores.",
@@ -266,6 +277,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   TIPA: {
+    name: "Ley de Protección de la Información de Tennessee",
     regionLabel: us("Tennessee"),
     description:
       "La ley de protección de datos de los consumidores de Tennessee, con una defensa afirmativa para las organizaciones que siguen el NIST Privacy Framework.",
@@ -284,6 +296,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   INDPA: {
+    name: "Ley de Protección de Datos del Consumidor de Indiana",
     regionLabel: us("Indiana"),
     description:
       "La ley de protección de datos de los consumidores de Indiana, con los derechos habituales de los consumidores y un plazo de subsanación de 30 días.",
@@ -298,6 +311,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   KCDPA: {
+    name: "Ley de Protección de Datos del Consumidor de Kentucky",
     regionLabel: us("Kentucky"),
     description:
       "La ley de protección de datos de los consumidores de Kentucky, muy próxima a la VCDPA de Virginia, con los derechos habituales de los consumidores.",
@@ -312,6 +326,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: US_AG,
   },
   NJDPA: {
+    name: "Ley de Privacidad de Datos de Nueva Jersey",
     regionLabel: us("Nueva Jersey"),
     description:
       "La ley general de privacidad de los datos de Nueva Jersey, con una definición amplia de los datos sensibles que incluye los datos financieros y la afiliación sindical.",
@@ -330,6 +345,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 10.000 USD por la primera infracción; 20.000 USD por las siguientes",
   },
   NHDPA: {
+    name: "Ley de Privacidad de Datos de Nuevo Hampshire",
     regionLabel: us("Nuevo Hampshire"),
     description:
       "La ley de privacidad de los datos de los consumidores de Nuevo Hampshire, con los derechos y protecciones habituales, inspirada en la CTDPA de Connecticut.",
@@ -344,6 +360,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 10.000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General)",
   },
   DPDPA: {
+    name: "Ley de Privacidad de Datos Personales de Delaware",
     regionLabel: us("Delaware"),
     description:
       "La ley general de privacidad de los consumidores de Delaware, con derechos sólidos de los consumidores y aplicable a las entidades sin ánimo de lucro.",
@@ -358,6 +375,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 10.000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General)",
   },
   MNDPA: {
+    name: "Ley de Privacidad de Datos del Consumidor de Minnesota",
     regionLabel: us("Minnesota"),
     description:
       "La ley general de privacidad de Minnesota, con derechos sólidos de los consumidores, incluidas protecciones frente a la elaboración de perfiles y una acción privada para determinadas infracciones.",
@@ -372,6 +390,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
     penalties: "Hasta 7500 USD por infracción; acción privada limitada para determinadas infracciones",
   },
   MODPA: {
+    name: "Ley de Privacidad de Datos en Línea de Maryland",
     regionLabel: us("Maryland"),
     description:
       "La ley de privacidad de los consumidores de Maryland, exigente, que prohíbe la venta de datos sensibles, con requisitos estrictos de minimización de datos y protecciones para los menores.",
@@ -387,6 +406,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Hasta 10.000 USD por infracción y 25.000 USD por las siguientes; la aplicación corresponde al fiscal general del estado (Attorney General)",
   },
   NEDPA: {
+    name: "Ley de Privacidad de Datos de Nebraska",
     regionLabel: us("Nebraska"),
     description:
       "La ley de protección de datos de los consumidores de Nebraska, de aplicación amplia (sin umbral de ingresos ni de volumen), inspirada en la TDPSA de Texas.",

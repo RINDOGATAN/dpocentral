@@ -16,8 +16,9 @@ import {
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { JURISDICTION_CATALOG_ES } from "@/config/jurisdiction-catalog-es";
 
 export async function buildDsarPerformanceExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -28,7 +29,10 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
     where: { organizationId, isPrimary: true },
     include: { jurisdiction: { select: { name: true, code: true, dsarDeadlineDays: true } } },
   });
-  const primaryName = primaryJurisdiction?.jurisdiction.name ?? null;
+  // The law's name in the report's language (the stored name is English).
+  const lawName = (j: { code: string; name: string }) =>
+    (locale === "es" ? JURISDICTION_CATALOG_ES[j.code]?.name : undefined) ?? j.name;
+  const primaryName = primaryJurisdiction ? lawName(primaryJurisdiction.jurisdiction) : null;
   const primaryDeadlineDays = primaryJurisdiction?.jurisdiction.dsarDeadlineDays ?? 30;
   const primaryDeadlineMonths = primaryJurisdiction
     ? dsarMonths(primaryJurisdiction.jurisdiction.code, primaryJurisdiction.jurisdiction.dsarDeadlineDays)
@@ -119,7 +123,7 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
     include: { jurisdiction: { select: { name: true, code: true, dsarDeadlineDays: true } } },
   });
   const jurisdictionSLA = orgJurisdictions.map((oj) => ({
-    name: oj.jurisdiction.name,
+    name: lawName(oj.jurisdiction),
     deadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,
     deadlineMonths: dsarMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays),
     status:
@@ -196,7 +200,7 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
     withDraftGapsPage(DSARPerformanceReport({ data: reportData, t, locale }), args.draftNote))
   );
 
-  const filename = `DSAR-Performance-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
+  const filename = `${fileTitle("DSAR-Performance", locale)}-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
 
   if (args.audit) {
     await prisma.auditLog.create({

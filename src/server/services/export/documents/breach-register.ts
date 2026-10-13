@@ -9,7 +9,7 @@ import { BREACH_CSV_KEYS, BreachRegisterReport, incidentsToCSV } from "@/server/
 import type { IncidentExportData } from "@/server/services/export/breach-register";
 import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildBreachRegisterExport(args: ExportArgs): Promise<ExportFile> {
@@ -69,7 +69,7 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
     })),
   }));
 
-  const base = `Breach-Register-${nameForFile(orgName)}-${today()}`;
+  const base = `${fileTitle("Breach-Register", locale)}-${nameForFile(orgName)}-${today()}`;
 
   if (args.audit) {
     await prisma.auditLog.create({

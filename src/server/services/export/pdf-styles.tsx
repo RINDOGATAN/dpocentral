@@ -859,7 +859,7 @@ export function DataTable({
               key={ci}
               style={[s.tableCell, { flex: widths[ci] / totalFlex }]}
             >
-              {cell ?? "—"}
+              {cell ?? ""}
             </Text>
           ))}
         </View>
@@ -877,7 +877,7 @@ export function DataTable({
 
 /** `kind` names the `enums` message group that labels `level` (risk levels by default). */
 export function RiskBadge({ level, kind = "riskLevel" }: { level: string | null | undefined; kind?: string }) {
-  if (!level) return <Text style={s.badge}>—</Text>;
+  if (!level) return <Text style={s.badge}></Text>;
   const colors = RISK_COLORS[level] || { bg: "#e5e7eb", color: "#374151" };
   return (
     <Text style={[s.badge, { backgroundColor: colors.bg, color: colors.color }]}>
@@ -1002,7 +1002,7 @@ const RISK_SWATCH: Record<string, string> = {
 };
 
 export function InlineRiskDot({ level }: { level: string | null | undefined }) {
-  if (!level) return <Text style={{ fontSize: 8, color: MUTED }}>—</Text>;
+  if (!level) return <Text style={{ fontSize: 8, color: MUTED }}></Text>;
   const color = RISK_SWATCH[level] || "#9ca3af";
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -1053,13 +1053,13 @@ export function AccentSectionHeader({
 }
 
 export function fmtDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "";
   const date = typeof d === "string" ? new Date(d) : d;
   return date.toISOString().split("T")[0];
 }
 
 export function fmtDateTime(d: Date | string | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "";
   const date = typeof d === "string" ? new Date(d) : d;
   return `${date.toISOString().split("T")[0]} ${date.toTimeString().slice(0, 5)}`;
 }

@@ -364,7 +364,7 @@ export function AssessmentPortfolioReport({
             a.name.length > 40 ? a.name.slice(0, 37) + "..." : a.name,
             pdfEnumLabel("assessmentType", a.templateType),
             statusLabel(a.status),
-            a.riskLevel ? pdfEnumLabel("riskLevel", a.riskLevel) : "—",
+            a.riskLevel ? pdfEnumLabel("riskLevel", a.riskLevel) : "",
             `${a.completionPercentage}%`,
             fmtDate(a.dueDate),
           ])}

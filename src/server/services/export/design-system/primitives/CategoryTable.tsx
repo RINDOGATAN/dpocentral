@@ -141,7 +141,7 @@ export function CategoryTable({
                 >
                   {isString ? (
                     <Text style={[s.dataCell, { textAlign: col.align ?? "left" }]}>
-                      {cell ?? "—"}
+                      {cell ?? ""}
                     </Text>
                   ) : (
                     cell

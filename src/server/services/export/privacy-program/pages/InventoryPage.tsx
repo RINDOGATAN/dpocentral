@@ -117,8 +117,8 @@ export function InventoryPage({
         rows={input.assets.map((a) => [
           a.name,
           tEnum(`assetType.${a.type}`),
-          a.owner ?? "—",
-          a.location ?? "—",
+          a.owner ?? "",
+          a.location ?? "",
           a.elementCount,
           a.personalCount,
           a.specialCatCount,

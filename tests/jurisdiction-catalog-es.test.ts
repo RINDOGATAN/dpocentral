@@ -40,12 +40,14 @@ describe("jurisdiction catalog in Spanish", () => {
     expect(APPLICABILITY_QUESTIONS.filter((q) => !APPLICABILITY_QUESTIONS_ES[q.id]).map((q) => q.id)).toEqual([]);
   });
 
-  it("uses the official Spanish names of the EU laws", () => {
+  it("uses the official Spanish names of the EU laws and Spanish names for the US state laws", () => {
     const gdpr = localizeJurisdiction(JURISDICTION_CATALOG.find((j) => j.code === "GDPR")!, "es");
     expect(gdpr.name).toBe("Reglamento General de Protección de Datos (RGPD)");
     expect(gdpr.shortName).toBe("RGPD");
     const ccpa = localizeJurisdiction(JURISDICTION_CATALOG.find((j) => j.code === "CCPA")!, "es");
-    expect(ccpa.name).toBe("California Consumer Privacy Act (as amended by CPRA)");
+    expect(ccpa.name).toBe("Ley de Privacidad del Consumidor de California (modificada por la CPRA)");
+    expect(ccpa.shortName).toBe("CCPA/CPRA");
+    expect(ccpa.code).toBe("CCPA");
     expect(ccpa.regionLabel).toBe("EE. UU. (California)");
   });
 

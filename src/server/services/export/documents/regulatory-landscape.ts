@@ -18,7 +18,7 @@ import { fmtDate } from "@/server/services/export/pdf-styles";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<ExportFile> {
@@ -214,7 +214,7 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
     withDraftGapsPage(RegulatoryLandscapeReport({ data: reportData, t, locale }), args.draftNote))
   );
 
-  const filename = `Regulatory-Landscape-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
+  const filename = `${fileTitle("Regulatory-Landscape", locale)}-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
 
   if (args.audit) {
     await prisma.auditLog.create({

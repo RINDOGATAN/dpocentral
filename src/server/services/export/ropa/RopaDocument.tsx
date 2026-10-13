@@ -134,7 +134,7 @@ const s = StyleSheet.create({
 });
 
 function fmtDate(d: Date | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "";
   return new Date(d).toISOString().split("T")[0]!;
 }
 
@@ -210,8 +210,8 @@ function ActivityBlock({
           rows={entry.systems.map((sys) => [
             sys.name,
             tEnum(`assetType.${sys.type}`),
-            sys.location ?? "—",
-            sys.elements.map((e) => e.name).join(", ") || "—",
+            sys.location ?? "",
+            sys.elements.map((e) => e.name).join(", ") || "",
           ])}
         />
       )}
@@ -227,9 +227,9 @@ function ActivityBlock({
           ]}
           rows={entry.transfers.map((tr) => [
             tr.destination,
-            tr.organization ?? "—",
-            tr.mechanism ?? "—",
-            tr.safeguards ?? "—",
+            tr.organization ?? "",
+            tr.mechanism ?? "",
+            tr.safeguards ?? "",
           ])}
         />
       )}

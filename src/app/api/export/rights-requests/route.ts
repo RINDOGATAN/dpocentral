@@ -4,6 +4,7 @@
 import { getSessionToken } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
+import { fileTitle, resolveExportLocale } from "@/server/services/export/documents/context";
 
 /** The roles that may take the organisation's rights-request records away. */
 const RIGHTS_REQUEST_EXPORT_ROLES = ["OWNER", "ADMIN"] as const;
@@ -80,10 +81,11 @@ export async function GET(request: Request) {
     };
 
     const date = new Date().toISOString().split("T")[0];
+    const locale = await resolveExportLocale(searchParams.get("locale"));
     return new Response(JSON.stringify(body, null, 2), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Content-Disposition": `attachment; filename="${org.slug}-rights-requests-${date}.json"`,
+        "Content-Disposition": `attachment; filename="${org.slug}-${fileTitle("rights-requests", locale)}-${date}.json"`,
         "Cache-Control": "no-store",
       },
     });

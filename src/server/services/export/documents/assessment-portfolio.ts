@@ -13,7 +13,7 @@ import {
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { assessmentProgress } from "@/server/services/assessment/progress";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 
@@ -136,7 +136,7 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
     withDraftGapsPage(AssessmentPortfolioReport({ data: reportData, t, locale }), args.draftNote))
   );
 
-  const filename = `Assessment-Portfolio-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
+  const filename = `${fileTitle("Assessment-Portfolio", locale)}-${nameForFile(orgName)}-${fmtDate(new Date())}.pdf`;
 
   if (args.audit) {
     await prisma.auditLog.create({

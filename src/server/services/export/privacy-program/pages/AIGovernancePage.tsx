@@ -124,7 +124,7 @@ export function AIGovernancePage({
         ]}
         rows={input.aiSystems.map((sys) => [
           sys.name,
-          sys.category ?? "—",
+          sys.category ?? "",
           (() => {
             const label = tEnum(`aiRisk.${sys.riskLevel}`).toUpperCase();
             switch (sys.riskLevel) {
@@ -140,8 +140,8 @@ export function AIGovernancePage({
                 return label;
             }
           })(),
-          sys.euAiActRole ?? "—",
-          sys.provider ?? "—",
+          sys.euAiActRole ?? "",
+          sys.provider ?? "",
           sys.euAiActCompliant === true ? (
             <PillBadge key="c" tone="success" uppercase>{t("ai.statusCompliant")}</PillBadge>
           ) : sys.euAiActCompliant === false ? (

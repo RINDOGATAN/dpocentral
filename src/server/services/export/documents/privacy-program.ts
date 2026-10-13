@@ -14,7 +14,7 @@ import { renderFlowGraphPng } from "@/server/services/export/flow-graph-pdf";
 import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
+import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 import { displayAiSystemName } from "@/lib/record-name";
 
@@ -254,7 +254,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
 
   return {
     data: new Uint8Array(buffer),
-    filename: `Privacy-Program-${nameForFile(orgName)}-${dateStr}.pdf`,
+    filename: `${fileTitle("Privacy-Program", locale)}-${nameForFile(orgName)}-${dateStr}.pdf`,
     contentType: PDF,
   };
 }

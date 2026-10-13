@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import React from "react";
+import { pdfChrome } from "./pdf-locale";
 import { Document, View, Text } from "@react-pdf/renderer";
 import {
   ContentPage,
@@ -313,11 +314,11 @@ export function RegulatoryLandscapeReport({
           <StatCard value={jurisdictions.length} label={tr("stats.appliedFrameworks")} />
           <StatCard value={`${data.complianceScore}%`} label={tr("stats.complianceScore")} />
           <StatCard
-            value={strictestDsar ?? "—"}
+            value={strictestDsar ?? pdfChrome().notStated}
             label={tr("stats.strictestDsar")}
           />
           <StatCard
-            value={strictestBreachHours != null ? formatHours(strictestBreachHours, tr) : "—"}
+            value={strictestBreachHours != null ? formatHours(strictestBreachHours, tr) : pdfChrome().notStated}
             label={tr("stats.strictestBreach")}
           />
         </View>
@@ -484,7 +485,7 @@ export function RegulatoryLandscapeReport({
             .map((j) => [
               j.name,
               formatHours(j.breachNotificationHours, tr),
-              j.dpaName || "—",
+              j.dpaName || "",
             ])}
         />
       </ContentPage>
@@ -522,7 +523,7 @@ export function RegulatoryLandscapeReport({
                 tr2.country,
                 String(tr2.count),
                 tr2.hasAdequacy ? tr("yes") : tr("no"),
-                tr2.mechanisms.join(", ") || "—",
+                tr2.mechanisms.join(", ") || "",
               ])}
           />
         </ContentPage>
@@ -559,7 +560,7 @@ export function RegulatoryLandscapeReport({
               .map((v) => [
                 v.country,
                 String(v.vendorCount),
-                v.highRiskCount > 0 ? String(v.highRiskCount) : "—",
+                v.highRiskCount > 0 ? String(v.highRiskCount) : "",
               ])}
           />
         </ContentPage>

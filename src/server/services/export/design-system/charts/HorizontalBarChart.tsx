@@ -110,7 +110,7 @@ export function HorizontalBarChart({
             </View>
             {showPercentage && (
               <Text style={s.percentText}>
-                {total > 0 ? `${Math.round(pct * 100)}%` : "—"}
+                {total > 0 ? `${Math.round(pct * 100)}%` : ""}
               </Text>
             )}
           </View>
