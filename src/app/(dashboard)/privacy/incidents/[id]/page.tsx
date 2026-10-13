@@ -300,8 +300,9 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
             <h1 className="text-2xl font-semibold mt-1 break-words">{incident.title}</h1>
             {/* The 72-hour clock while nobody has decided on notifying: open,
                 not marked as requiring notification (the banner below covers
-                that case) and no notification recorded. */}
-            {incident.status !== "CLOSED" &&
+                that case), not recorded in error and no notification recorded. */}
+            {!incident.recordedInErrorAt &&
+              incident.status !== "CLOSED" &&
               incident.status !== "FALSE_POSITIVE" &&
               !incident.notificationRequired &&
               !incident.notifications?.length &&
@@ -369,7 +370,7 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
       />
 
       {/* Notification Banner */}
-      {incident.notificationRequired && !incident.notifications?.length && (() => {
+      {incident.notificationRequired && !incident.recordedInErrorAt && !incident.notifications?.length && (() => {
         const deadline = incident.notificationDeadline ? new Date(incident.notificationDeadline) : null;
         const pastDue = deadline ? deadline.getTime() < Date.now() : false;
         return (

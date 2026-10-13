@@ -496,10 +496,13 @@ export const incidentRouter = createTRPCRouter({
         content: z.string().optional().nullable(),
         referenceNumber: z.string().optional().nullable(),
         notes: z.string().optional().nullable(),
+        // When a notification made earlier is recorded after the fact: the
+        // moment it was actually sent. Only with status SENT; never in the future.
+        sentAt: z.coerce.date().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, organizationId, ...data } = input;
+      const { id, organizationId, sentAt, ...data } = input;
 
       const notification = await ctx.prisma.incidentNotification.findFirst({
         where: { id },
@@ -514,8 +517,14 @@ export const incidentRouter = createTRPCRouter({
       }
 
       const updateData: any = { ...data };
+      if (sentAt && input.status !== NotificationStatus.SENT) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "A sending time is recorded only with the status SENT." });
+      }
+      if (sentAt && sentAt.getTime() > Date.now() + 60_000) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "The sending time cannot be in the future." });
+      }
       if (input.status === NotificationStatus.SENT) {
-        updateData.sentAt = new Date();
+        updateData.sentAt = sentAt ?? new Date();
       } else if (input.status === NotificationStatus.ACKNOWLEDGED) {
         updateData.acknowledgedAt = new Date();
       }
@@ -535,6 +544,7 @@ export const incidentRouter = createTRPCRouter({
             description: input.notes,
             entryType: "NOTIFICATION",
             createdById: ctx.session.user.id,
+            ...(sentAt ? { timestamp: sentAt } : {}),
           },
         });
       }
@@ -946,7 +956,7 @@ export const incidentRouter = createTRPCRouter({
         }),
         ctx.prisma.incidentNotification.count({
           where: {
-            incident: { organizationId: ctx.organization.id },
+            incident: { organizationId: ctx.organization.id, recordedInErrorAt: null },
             status: "PENDING",
             deadline: { lt: now },
           },
