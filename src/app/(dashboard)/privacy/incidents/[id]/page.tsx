@@ -672,6 +672,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
                           <p className={`text-sm mt-1 ${pastDue ? "text-destructive" : "text-muted-foreground"}`}>
                             {tp("notifications.due", { date: formatDateTimeIn(deadline, locale) })}
                           </p>
+                          {notification.sentAt && (
+                            <p className="text-sm text-muted-foreground">
+                              {tp("notifications.sent", { date: formatDateTimeIn(new Date(notification.sentAt), locale) })}
+                            </p>
+                          )}
                         </div>
                         {editingNotifId !== notification.id && (
                           <Button

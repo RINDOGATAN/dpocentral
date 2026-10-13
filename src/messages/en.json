@@ -1157,6 +1157,7 @@
       },
       "notifications": {
         "due": "Due: {date}",
+        "sent": "Sent on {date}",
         "overdue": "OVERDUE",
         "empty": "No notifications created",
         "createDpa": "Create DPA Notification",

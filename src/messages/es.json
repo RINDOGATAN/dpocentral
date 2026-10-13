@@ -1157,6 +1157,7 @@
       },
       "notifications": {
         "due": "Vence: {date}",
+        "sent": "Enviada el {date}",
         "overdue": "VENCIDA",
         "empty": "No se han creado notificaciones",
         "createDpa": "Crear notificación a la autoridad de control",
