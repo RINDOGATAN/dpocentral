@@ -55,7 +55,7 @@ export interface TransferInput {
 }
 
 // ---------------------------------------------------------------------------
-// Adequacy Decisions (as of 2025-07)
+// Adequacy Decisions (as of 2025-12)
 // ---------------------------------------------------------------------------
 
 export const ADEQUACY_DECISIONS: AdequacyDecision[] = [
@@ -143,7 +143,7 @@ export const ADEQUACY_DECISIONS: AdequacyDecision[] = [
     decisionDate: "2021-06-28",
     isPartial: false,
     notes:
-      "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission in July 2025; valid until December 2031.",
+      "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission on 19 December 2025; valid until 27 December 2031.",
   },
   {
     country: "Uruguay",

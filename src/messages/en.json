@@ -650,7 +650,7 @@
           "CA": "Limited to recipients subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organizations.",
           "JP": "Based on the Act on Protection of Personal Information (APPI) with supplementary rules for EU-sourced data.",
           "KR": "Based on the Personal Information Protection Act (PIPA) as amended in 2020.",
-          "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission in July 2025; valid until December 2031.",
+          "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission on 19 December 2025; valid until 27 December 2031.",
           "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov."
         },
         "complianceStatus": "Compliance Status",
