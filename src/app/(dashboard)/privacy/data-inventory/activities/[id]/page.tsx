@@ -32,7 +32,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { displayAssessmentDescription, displayAssessmentName } from "@/lib/record-name";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -49,6 +50,7 @@ export default function ActivityDetailPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.activityDetail");
   const tc = useTranslations("common");
+  const locale = useLocale();
   const { label: enumLabel } = useEnumLabels();
   const { canWrite } = useOrgRole();
   // The pilot's free DPIAs (null off the pilot tier): no offer once used up.
@@ -328,7 +330,7 @@ export default function ActivityDetailPage() {
               <div className="flex flex-wrap gap-2">
                 {categories.map((cat) => (
                   <Badge key={cat} variant="secondary" className="text-xs">
-                    {cat.replace("_", " ")}
+                    {enumLabel("dataCategory", cat)}
                   </Badge>
                 ))}
               </div>
@@ -526,9 +528,9 @@ export default function ActivityDetailPage() {
                 >
                   <div className="flex items-center justify-between p-2 -mx-2 rounded hover:bg-muted/50 transition-colors">
                     <div>
-                      <p className="text-sm font-medium">{assessment.name}</p>
+                      <p className="text-sm font-medium">{displayAssessmentName(assessment.name, locale)}</p>
                       {assessment.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-1">{assessment.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-1">{displayAssessmentDescription(assessment.description, locale)}</p>
                       )}
                     </div>
                     <Badge variant="outline" className="text-xs">
@@ -619,7 +621,7 @@ export default function ActivityDetailPage() {
                                 variant={el.isSpecialCategory ? "destructive" : "secondary"}
                                 className="text-[10px] px-1 py-0 shrink-0"
                               >
-                                {el.category?.replace("_", " ")}
+                                {enumLabel("dataCategory", el.category)}
                               </Badge>
                             </label>
                           );

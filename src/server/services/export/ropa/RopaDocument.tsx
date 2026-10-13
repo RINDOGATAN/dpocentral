@@ -159,7 +159,7 @@ function ActivityBlock({
   const legalBasisLabel = (() => {
     const translated = tEnum(`legalBasis.${entry.legalBasis}`);
     return entry.legalBasisDetail
-      ? `${translated} — ${entry.legalBasisDetail}`
+      ? `${translated}: ${entry.legalBasisDetail}`
       : translated;
   })();
 

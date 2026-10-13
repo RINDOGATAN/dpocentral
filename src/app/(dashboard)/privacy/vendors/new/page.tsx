@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 
@@ -77,6 +78,7 @@ function NewVendorPageContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newVendor");
+  const { vendorCategory } = useEnumLabels();
   const tCommon = useTranslations("common");
 
   // Catalog mode state
@@ -318,7 +320,7 @@ function NewVendorPageContent() {
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {selectedCatalogVendor.category}
+                        {vendorCategory(selectedCatalogVendor.category)}
                       </p>
                     </div>
                   </div>
@@ -438,7 +440,7 @@ function NewVendorPageContent() {
                               )}
                             </div>
                             <p className="text-sm text-muted-foreground truncate">
-                              {vendor.category}{vendor.subcategory ? ` / ${vendor.subcategory}` : ""}
+                              {vendorCategory(vendor.category)}{vendor.subcategory ? ` / ${vendor.subcategory}` : ""}
                               {vendor.description && ` • ${vendor.description.substring(0, 50)}...`}
                             </p>
                           </div>

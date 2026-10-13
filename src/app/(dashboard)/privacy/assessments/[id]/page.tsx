@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { displayAssessmentName } from "@/lib/record-name";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { useTranslatedSections } from "@/lib/template-i18n";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -843,7 +844,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 </Badge>
               )}
             </div>
-            <h1 className="text-2xl font-semibold mt-1 break-words">{assessment.name}</h1>
+            <h1 className="text-2xl font-semibold mt-1 break-words">{displayAssessmentName(assessment.name, locale)}</h1>
             <p className="text-muted-foreground break-words">
               {typeKeys[template?.type ?? ""] ? tAssessments(`types.${typeKeys[template?.type ?? ""]}`) : template?.name}
             </p>

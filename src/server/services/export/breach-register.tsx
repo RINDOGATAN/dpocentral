@@ -208,8 +208,8 @@ export function BreachRegisterReport({
               {i + 1}. {inc.title}
             </SectionTitle>
             <View style={[s.row, { gap: 8, marginBottom: 8 }]}>
-              <RiskBadge level={inc.severity} />
-              <StatusBadge status={inc.status} />
+              <RiskBadge level={inc.severity} kind="incidentSeverity" />
+              <StatusBadge status={inc.status} kind="incidentStatus" />
             </View>
 
             <MetadataBlock

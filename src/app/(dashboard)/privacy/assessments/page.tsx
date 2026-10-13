@@ -35,6 +35,8 @@ import { isAssessmentTypeLocked } from "@/lib/premium-gate";
 
 import { formatDateIn } from "@/lib/utils";
 import { useOrgRole } from "@/lib/use-org-role";
+import { useTemplateMeta } from "@/lib/template-i18n";
+import { displayAssessmentName } from "@/lib/record-name";
 const statusColors: Record<string, string> = {
   DRAFT: "border-muted-foreground text-muted-foreground",
   IN_PROGRESS: "border-primary text-primary",
@@ -53,6 +55,7 @@ export default function AssessmentsPage() {
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("assessments");
   const { label: enumLabel } = useEnumLabels();
+  const templateMeta = useTemplateMeta();
   const { organization } = useOrganization();
   const { canWrite } = useOrgRole();
 
@@ -203,7 +206,7 @@ export default function AssessmentsPage() {
                   {/* Mobile Layout - Stacked */}
                   <div className="flex flex-col gap-2 sm:hidden">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-medium text-sm">{assessment.name}</span>
+                      <span className="font-medium text-sm">{displayAssessmentName(assessment.name, locale)}</span>
                       <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[assessment.status] || ""}`}>
                         {t(`status.${assessment.status}`)}
                       </Badge>
@@ -219,7 +222,7 @@ export default function AssessmentsPage() {
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {assessment.template?.name || t("card.templateUnknown")}
+                      {(assessment.template ? templateMeta(assessment.template).name : "") || t("card.templateUnknown")}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{t("card.responsesShort", { count: assessment._count?.responses ?? 0 })}</span>
@@ -248,7 +251,7 @@ export default function AssessmentsPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium">{assessment.name}</span>
+                        <span className="font-medium">{displayAssessmentName(assessment.name, locale)}</span>
                         <Badge variant="outline">{enumLabel("assessmentType", assessment.template?.type)}</Badge>
                         <Badge variant="outline" className={statusColors[assessment.status] || ""}>
                           {t(`status.${assessment.status}`)}
@@ -260,7 +263,7 @@ export default function AssessmentsPage() {
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {t("card.templatePrefix", { name: assessment.template?.name || t("card.templateUnknown") })}
+                        {t("card.templatePrefix", { name: (assessment.template ? templateMeta(assessment.template).name : "") || t("card.templateUnknown") })}
                       </p>
                     </div>
 

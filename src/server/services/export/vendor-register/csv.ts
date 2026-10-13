@@ -94,7 +94,7 @@ export function vendorsToCSV(vendors: VendorCsvRow[], labels: CsvLabels<VendorCs
       v.website ?? "",
       v.primaryContact ?? "",
       v.contactEmail ?? "",
-      v.categories.join("; "),
+      v.categories.map((c) => code("vendorCategory", c)).join("; "),
       v.dataProcessed.map((d) => code("dataCategory", d)).join("; "),
       v.countries.join("; "),
       v.certifications.join("; "),

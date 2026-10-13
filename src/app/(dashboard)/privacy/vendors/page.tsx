@@ -48,6 +48,7 @@ import { toneForRiskTier } from "@/config/status-tone";
 
 import { formatDateIn } from "@/lib/utils";
 import { useOrgRole } from "@/lib/use-org-role";
+import { useEnumLabels } from "@/lib/enum-labels";
 const statusColors: Record<string, string> = {
   PROSPECTIVE: "border-muted-foreground text-muted-foreground",
   ACTIVE: "border-primary bg-primary text-primary-foreground",
@@ -62,6 +63,7 @@ const statusColors: Record<string, string> = {
 export default function VendorsPage() {
   const formatPrice = useFormatPrice();
   const t = useTranslations("pages.vendors");
+  const { label: enumLabel, vendorCategory } = useEnumLabels();
   const locale = useLocale();
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("vendors");
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -305,7 +307,7 @@ export default function VendorsPage() {
                   </div>
                   <CardTitle className="mt-3">{vendor.name}</CardTitle>
                   <CardDescription>
-                    {(vendor.categories as string[])?.join(" - ") || t("card.noCategories")}
+                    {(vendor.categories as string[])?.map(vendorCategory).join(" - ") || t("card.noCategories")}
                   </CardDescription>
                   <TemplateBadge metadata={vendor.metadata} className="mt-1 w-fit text-xs" />
                   <DraftBadge record={vendor} className="mt-1 w-fit text-xs" />
@@ -317,7 +319,7 @@ export default function VendorsPage() {
                       <div className="flex flex-wrap gap-1">
                         {(vendor.dataProcessed as string[]).slice(0, 3).map((data) => (
                           <Badge key={data} variant="outline" className="text-xs">
-                            {data.replace("_", " ")}
+                            {enumLabel("dataCategory", data)}
                           </Badge>
                         ))}
                         {(vendor.dataProcessed as string[]).length > 3 && (

@@ -19,6 +19,7 @@ export type CsvEnumKind =
   | "vendorStatus"
   | "riskLevel"
   | "contractStatus"
+  | "vendorCategory"
   | "incidentType"
   | "incidentSeverity"
   | "incidentStatus";
@@ -30,6 +31,7 @@ export const CSV_ENUM_KINDS: readonly CsvEnumKind[] = [
   "vendorStatus",
   "riskLevel",
   "contractStatus",
+  "vendorCategory",
   "incidentType",
   "incidentSeverity",
   "incidentStatus",

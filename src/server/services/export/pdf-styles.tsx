@@ -4,7 +4,7 @@
 import React from "react";
 import path from "node:path";
 import { Page, View, Text, StyleSheet, Font } from "@react-pdf/renderer";
-import { pdfChrome } from "@/server/services/export/pdf-locale";
+import { pdfChrome, pdfEnumLabel } from "@/server/services/export/pdf-locale";
 
 // ── Register Inter font family ────────────────────────────────────────
 const fontsDir = path.join(process.cwd(), "src/server/services/export/fonts");
@@ -875,21 +875,23 @@ export function DataTable({
   );
 }
 
-export function RiskBadge({ level }: { level: string | null | undefined }) {
+/** `kind` names the `enums` message group that labels `level` (risk levels by default). */
+export function RiskBadge({ level, kind = "riskLevel" }: { level: string | null | undefined; kind?: string }) {
   if (!level) return <Text style={s.badge}>—</Text>;
   const colors = RISK_COLORS[level] || { bg: "#e5e7eb", color: "#374151" };
   return (
     <Text style={[s.badge, { backgroundColor: colors.bg, color: colors.color }]}>
-      {level}
+      {pdfEnumLabel(kind, level)}
     </Text>
   );
 }
 
-export function StatusBadge({ status }: { status: string }) {
+/** `kind` names the `enums` message group that labels `status` in the report's language. */
+export function StatusBadge({ status, kind }: { status: string; kind?: string }) {
   const colors = STATUS_COLORS[status] || { bg: "#e5e7eb", color: "#374151" };
   return (
     <Text style={[s.badge, { backgroundColor: colors.bg, color: colors.color }]}>
-      {status.replace(/_/g, " ")}
+      {kind ? pdfEnumLabel(kind, status) : status.replace(/_/g, " ")}
     </Text>
   );
 }

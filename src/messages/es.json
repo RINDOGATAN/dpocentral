@@ -646,6 +646,13 @@
         "adequacyTitle": "Decisión de adecuación en vigor",
         "adequacyBody": "{country} cuenta con una decisión de adecuación de la UE (adoptada el {date}).",
         "adequacyPartial": " ⚠ Parcial: consulta las notas.",
+        "adequacyNotes": {
+          "CA": "Solo cubre a los destinatarios sujetos a la Personal Information Protection and Electronic Documents Act (PIPEDA). No cubre a todas las organizaciones canadienses.",
+          "JP": "Se basa en la Act on the Protection of Personal Information (APPI), con normas complementarias para los datos procedentes de la UE.",
+          "KR": "Se basa en la Personal Information Protection Act (PIPA), en su versión modificada de 2020.",
+          "GB": "Decisión de adecuación adoptada tras el Brexit con arreglo al art. 45 del RGPD. Renovada por la Comisión Europea en julio de 2025; vigente hasta diciembre de 2031.",
+          "US": "Marco de Privacidad de Datos UE-EE. UU. (DPF). Solo cubre a las organizaciones estadounidenses que se autocertifican en el DPF. Comprueba la certificación del destinatario en dataprivacyframework.gov."
+        },
         "complianceStatus": "Estado de cumplimiento",
         "suggestedFromData": "Sugerido a partir de los datos actuales: <b>{status}</b>",
         "schremsTitle": "Lista de comprobación Schrems II",
@@ -1132,7 +1139,16 @@
       "timeline": {
         "addEntry": "Añadir entrada",
         "empty": "Aún no hay entradas en la cronología",
-        "createdBy": " por {name}"
+        "createdBy": " por {name}",
+        "system": {
+          "reported": "Incidente registrado",
+          "reportedBody": "Se ha registrado el incidente «{title}»",
+          "statusChanged": "Cambio de estado: {status}",
+          "notificationCreated": "Notificación creada: {recipient}{jurisdiction, select, other {}}",
+          "notificationStatus": "Notificación ({recipient}): {status}",
+          "markedInError": "Marcada como registrada por error",
+          "unmarkedInError": "Ya no está marcada como registrada por error"
+        }
       },
       "tasks": {
         "addTask": "Añadir tarea",
@@ -1145,7 +1161,13 @@
         "empty": "No se han creado notificaciones",
         "createDpa": "Crear notificación a la autoridad de control",
         "create": "Crear notificación",
-        "voluntaryHint": "Este incidente no requiere notificación; aun así, puedes crear una de forma voluntaria."
+        "voluntaryHint": "Este incidente no requiere notificación; aun así, puedes crear una de forma voluntaria.",
+        "recipient": {
+          "DPA": "Autoridad de control",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        }
       },
       "documents": {
         "title": "Próximamente: subida de documentos",
@@ -1502,6 +1524,9 @@
       }
     },
     "aiSystemDetail": {
+      "modelSource": {
+        "vendor-declared": "declarado por el proveedor"
+      },
       "notFound": "Sistema de IA no encontrado",
       "back": "Atrás",
       "linked": "Vinculado a AI Sentinel",
@@ -2297,7 +2322,10 @@
         "OBJECTION": "Oposición",
         "RESTRICTION": "Limitación",
         "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
-        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
+        "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible",
+        "AUTOMATED_DECISION": "Decisión automatizada",
+        "WITHDRAW_CONSENT": "Retirada del consentimiento",
+        "OTHER": "Otro"
       },
       "status": {
         "SUBMITTED": "Recibida",
@@ -2765,6 +2793,42 @@
     }
   },
   "enums": {
+    "vendorCategory": {
+      "CLOUD_SERVICES": "Servicios en la nube",
+      "DATA_PROCESSING": "Tratamiento de datos",
+      "ANALYTICS": "Analítica",
+      "MARKETING": "Marketing",
+      "HR_SERVICES": "Servicios de RR. HH.",
+      "PAYMENT_PROCESSING": "Procesamiento de pagos",
+      "CUSTOMER_SUPPORT": "Atención al cliente",
+      "IT_SECURITY": "Seguridad informática",
+      "LEGAL": "Jurídico",
+      "OTHER": "Otros"
+    },
+    "vendorCatalogCategory": {
+      "Cloud_Infrastructure": "Infraestructura en la nube",
+      "Data_Warehouse_Integration": "Almacén e integración de datos",
+      "Analytics_BI": "Analítica e inteligencia de negocio",
+      "Customer_Data_Platform": "Plataforma de datos de clientes",
+      "CRM_Sales": "CRM y ventas",
+      "Marketing_Automation": "Automatización del marketing",
+      "Advertising": "Publicidad",
+      "Content_Management": "Gestión de contenidos",
+      "E_commerce": "Comercio electrónico",
+      "Payment_Processing": "Procesamiento de pagos",
+      "Communication": "Comunicaciones",
+      "Customer_Support": "Atención al cliente",
+      "Personalization_Engagement": "Personalización y fidelización",
+      "HR_People": "RR. HH. y personas",
+      "Productivity_Collaboration": "Productividad y colaboración",
+      "Developer_Tools": "Herramientas para desarrolladores",
+      "Security_Identity": "Seguridad e identidad",
+      "Privacy_Consent": "Privacidad y consentimiento",
+      "AI_Machine_Learning": "IA y aprendizaje automático",
+      "Legal_Compliance": "Jurídico y cumplimiento",
+      "Design_Creative": "Diseño y creatividad",
+      "Surveys_Research": "Encuestas e investigación"
+    },
     "dataCategory": {
       "IDENTIFIERS": "Identificadores",
       "DEMOGRAPHICS": "Datos demográficos",
@@ -4468,6 +4532,8 @@
       },
       "riskCritical": "Crítico: probablemente fuera de plazo",
       "riskAtRisk": "En riesgo",
+      "slaStatusMeeting": "Se cumple",
+      "slaStatusNoData": "Sin datos",
       "riskOnTrack": "En plazo",
       "dsarTypes": {
         "ACCESS": "Acceso (Derecho de acceso)",

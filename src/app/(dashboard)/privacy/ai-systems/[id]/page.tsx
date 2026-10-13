@@ -24,7 +24,8 @@ import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
 import { useLocale, useTranslations } from "next-intl";
-import { displayAiSystemName } from "@/lib/record-name";
+import { displayAiSystemDescription, displayAiSystemName, displayAiSystemPurpose } from "@/lib/record-name";
+import { useEnumLabels } from "@/lib/enum-labels";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForAiRiskLevel } from "@/config/status-tone";
@@ -38,6 +39,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   const t = useTranslations("pages.aiSystemDetail");
   const tList = useTranslations("pages.aiSystems");
   const locale = useLocale();
+  const { vendorCategory } = useEnumLabels();
 
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
     { organizationId: orgId, id },
@@ -136,7 +138,9 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
                         <Badge variant="secondary" className="text-xs">{model.type}</Badge>
                       )}
                       {model.source && (
-                        <Badge variant="outline" className="text-xs">{model.source}</Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {t.has(`modelSource.${model.source}`) ? t(`modelSource.${model.source}` as "modelSource.vendor-declared") : model.source}
+                        </Badge>
                       )}
                       {model.euAiActRiskTier && (
                         <StatusChip tone={toneForAiRiskLevel(model.euAiActRiskTier)} className="text-xs">
@@ -162,13 +166,13 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
             {system.description && (
               <div>
                 <span className="text-muted-foreground">{t("details.description")}</span>
-                <p className="mt-1">{system.description}</p>
+                <p className="mt-1">{displayAiSystemDescription(system.description, locale)}</p>
               </div>
             )}
             {system.purpose && (
               <div>
                 <span className="text-muted-foreground">{t("details.purpose")}</span>
-                <p className="mt-1">{system.purpose}</p>
+                <p className="mt-1">{displayAiSystemPurpose(system.purpose, locale, vendorCategory)}</p>
               </div>
             )}
             {system.category && (

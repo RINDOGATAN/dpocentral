@@ -18,6 +18,7 @@ import {
 } from "./pdf-styles";
 import { Page } from "@react-pdf/renderer";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { pdfEnumLabel } from "@/server/services/export/pdf-locale";
 
 // ── Types ────────────────────────────────────────────────
 
@@ -73,7 +74,7 @@ const STATUS_ORDER = [
 ];
 
 function statusLabel(status: string): string {
-  return status.replace(/_/g, " ");
+  return pdfEnumLabel("assessmentStatus", status);
 }
 
 // Compact fallback — values mirror the en.json entries so unmigrated callers still render English.
@@ -251,7 +252,7 @@ export function AssessmentPortfolioReport({
             {
               label: tr("meta.typesUsed"),
               value:
-                Object.keys(stats.byType).filter((k) => stats.byType[k] > 0).join(", ") ||
+                Object.keys(stats.byType).filter((k) => stats.byType[k] > 0).map((k) => pdfEnumLabel("assessmentType", k)).join(", ") ||
                 tr("meta.typesUsedNone"),
             },
             { label: tr("meta.totalMitigations"), value: String(stats.totalMitigations) },
@@ -361,9 +362,9 @@ export function AssessmentPortfolioReport({
           colWidths={[3, 1, 1.5, 1, 1, 1.2]}
           rows={assessments.map((a) => [
             a.name.length > 40 ? a.name.slice(0, 37) + "..." : a.name,
-            a.templateType,
+            pdfEnumLabel("assessmentType", a.templateType),
             statusLabel(a.status),
-            a.riskLevel || "—",
+            a.riskLevel ? pdfEnumLabel("riskLevel", a.riskLevel) : "—",
             `${a.completionPercentage}%`,
             fmtDate(a.dueDate),
           ])}
@@ -384,7 +385,7 @@ export function AssessmentPortfolioReport({
                   <View style={[s.row, { marginBottom: 4, gap: 8 }]}>
                     <Text style={s.questionText}>{a.name}</Text>
                     <RiskBadge level={a.riskLevel} />
-                    <StatusBadge status={a.status} />
+                    <StatusBadge status={a.status} kind="assessmentStatus" />
                   </View>
                   <MetadataBlock
                     items={[
@@ -427,7 +428,7 @@ export function AssessmentPortfolioReport({
                     : 0;
                   return [
                     a.name.length > 35 ? a.name.slice(0, 32) + "..." : a.name,
-                    a.templateType,
+                    pdfEnumLabel("assessmentType", a.templateType),
                     statusLabel(a.status),
                     fmtDate(a.dueDate),
                     `${daysOver}d`,
@@ -485,7 +486,7 @@ export function AssessmentPortfolioReport({
               .filter((a) => a.mitigationCount > 0)
               .map((a) => [
                 a.name.length > 35 ? a.name.slice(0, 32) + "..." : a.name,
-                a.templateType,
+                pdfEnumLabel("assessmentType", a.templateType),
                 String(a.mitigationCount),
                 String(a.mitigationsCompleted),
                 `${a.mitigationCount > 0 ? Math.round((a.mitigationsCompleted / a.mitigationCount) * 100) : 0}%`,
@@ -504,10 +505,10 @@ export function AssessmentPortfolioReport({
           {items.map((a) => (
             <View key={a.id} style={s.questionCard} wrap={false}>
               <View style={[s.row, { marginBottom: 4, gap: 6 }]}>
-                <Text style={s.questionNumber}>{a.templateType}</Text>
+                <Text style={s.questionNumber}>{pdfEnumLabel("assessmentType", a.templateType)}</Text>
                 <Text style={[s.questionText, { flex: 1 }]}>{a.name}</Text>
                 {a.riskLevel && <RiskBadge level={a.riskLevel} />}
-                <StatusBadge status={a.status} />
+                <StatusBadge status={a.status} kind="assessmentStatus" />
               </View>
               <View style={{ marginTop: 4 }}>
                 <View style={s.row}>

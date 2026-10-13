@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 
 /** The enum groups keyed under the `enums` message namespace. */
 export type EnumKind =
+  | "dataCategory"
   | "assessmentType"
   | "assessmentStatus"
   | "approvalStatus"
@@ -68,5 +69,18 @@ export function useEnumLabels() {
     return t.has(key) ? t(key) : desnake(value);
   };
 
-  return { label, desnake };
+  /**
+   * Localise a vendor category. A vendor holds either a canonical code
+   * (CLOUD_SERVICES, from the vendor form) or the catalog's category name
+   * ("Cloud Infrastructure", from the quick start). Any other value was typed
+   * by a person and is shown as stored.
+   */
+  const vendorCategory = (value?: string | null): string => {
+    if (!value) return "";
+    if (t.has(`vendorCategory.${value}`)) return t(`vendorCategory.${value}`);
+    const catalogKey = `vendorCatalogCategory.${value.replace(/[^A-Za-z0-9]+/g, "_")}`;
+    return t.has(catalogKey) ? t(catalogKey) : value;
+  };
+
+  return { label, desnake, vendorCategory };
 }
