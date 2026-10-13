@@ -67,6 +67,26 @@ export function nameForFile(name: string): string {
   );
 }
 
+/**
+ * The leading words of an export's file name in the document's language.
+ * Spanish names drop accents so the file name stays plain ASCII.
+ */
+const FILE_TITLES_ES: Record<string, string> = {
+  "Assessment": "Evaluacion",
+  "Assessment-Portfolio": "Cartera-de-Evaluaciones",
+  "Breach-Register": "Registro-de-Brechas",
+  "DSAR-Performance": "Rendimiento-Solicitudes-de-Derechos",
+  "Privacy-Program": "Programa-de-Privacidad",
+  "Regulatory-Landscape": "Panorama-Normativo",
+  "ROPA": "Registro-de-Actividades",
+  "Vendor-Register": "Registro-de-Proveedores",
+  "rights-requests": "solicitudes-de-derechos",
+};
+
+export function fileTitle(title: string, locale: string | null | undefined): string {
+  return locale === "es" ? (FILE_TITLES_ES[title] ?? title) : title;
+}
+
 export function today(): string {
   return new Date().toISOString().split("T")[0]!;
 }

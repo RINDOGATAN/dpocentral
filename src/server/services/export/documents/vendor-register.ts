@@ -9,7 +9,7 @@ import { VendorRegisterDocument } from "@/server/services/export/vendor-register
 import { VENDOR_CSV_KEYS, vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
 import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildVendorRegisterExport(args: ExportArgs): Promise<ExportFile> {
@@ -54,7 +54,7 @@ export async function buildVendorRegisterExport(args: ExportArgs): Promise<Expor
     })),
   }));
 
-  const base = `Vendor-Register-${nameForFile(orgName)}-${today()}`;
+  const base = `${fileTitle("Vendor-Register", locale)}-${nameForFile(orgName)}-${today()}`;
 
   if (args.audit) {
     await prisma.auditLog.create({

@@ -32,7 +32,7 @@ import {
   templateMetaForLocale,
 } from "@/server/services/assessment/template-locales";
 import { withDerivedRisk } from "@/server/services/assessment/risk-score";
-import { PDF, type ExportFile } from "./context";
+import { PDF, fileTitle, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 /** What the report reads of an assessment. */
@@ -62,8 +62,11 @@ export type AssessmentForExport = Prisma.AssessmentGetPayload<{ include: typeof 
 };
 
 /** The assessment's file name, the same in the single download and the pack. */
-export function assessmentFileName(assessment: { name: string; template: { type: string } }): string {
-  return `Assessment-${assessment.template.type}-${assessment.name.replace(/[^a-zA-Z0-9]/g, "-")}-${fmtDate(new Date())}.pdf`;
+export function assessmentFileName(
+  assessment: { name: string; template: { type: string } },
+  locale?: string,
+): string {
+  return `${fileTitle("Assessment", locale)}-${assessment.template.type}-${assessment.name.replace(/[^a-zA-Z0-9]/g, "-")}-${fmtDate(new Date())}.pdf`;
 }
 
 export async function buildAssessmentExport(
@@ -183,7 +186,7 @@ export async function buildAssessmentExport(
   );
   return {
     data: new Uint8Array(buffer),
-    filename: assessmentFileName(assessment),
+    filename: assessmentFileName(assessment, locale),
     contentType: PDF,
     draft: !!draft,
   };

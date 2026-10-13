@@ -18,7 +18,7 @@ import {
   type PdfFlowCluster,
 } from "@/server/services/export/flow-graph-pdf";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { CSV, PDF, nameForFile, today, type ExportArgs, type ExportFile } from "./context";
+import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
@@ -82,7 +82,7 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
   }));
 
   const dateStr = today();
-  const base = `ROPA-${nameForFile(orgName)}-${dateStr}`;
+  const base = `${fileTitle("ROPA", locale)}-${nameForFile(orgName)}-${dateStr}`;
 
   if (args.audit) {
     await prisma.auditLog.create({

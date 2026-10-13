@@ -211,7 +211,9 @@ describe("the portfolio export", () => {
       const res = await portfolio(locale);
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Type")).toBe("application/pdf");
-      expect(res.headers.get("Content-Disposition")).toContain("Assessment-Portfolio-");
+      expect(res.headers.get("Content-Disposition")).toContain(
+        locale === "es" ? "Cartera-de-Evaluaciones-" : "Assessment-Portfolio-",
+      );
       const body = new Uint8Array(await res.arrayBuffer());
       expect(String.fromCharCode(...body.slice(0, 5))).toBe("%PDF-");
       expect(mocks.prisma.auditLog.create).toHaveBeenCalledWith(
