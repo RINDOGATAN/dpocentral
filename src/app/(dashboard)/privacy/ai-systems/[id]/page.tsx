@@ -23,7 +23,8 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { features } from "@/config/features";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { displayAiSystemName } from "@/lib/record-name";
 import { StatusChip } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 import { toneForAiRiskLevel } from "@/config/status-tone";
@@ -36,6 +37,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
   const orgId = organization?.id ?? "";
   const t = useTranslations("pages.aiSystemDetail");
   const tList = useTranslations("pages.aiSystems");
+  const locale = useLocale();
 
   const { data: system, isLoading } = trpc.aiGovernance.getById.useQuery(
     { organizationId: orgId, id },
@@ -90,7 +92,7 @@ export default function AISystemDetailPage({ params }: { params: Promise<{ id: s
           <div className="min-w-0">
             <h1 className="text-2xl font-semibold flex items-center gap-2 min-w-0">
               <Bot className="w-6 h-6 shrink-0" />
-              <span className="truncate">{system.name}</span>
+              <span className="truncate">{displayAiSystemName(system.name, locale)}</span>
             </h1>
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>

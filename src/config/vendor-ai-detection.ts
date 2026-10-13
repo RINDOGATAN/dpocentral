@@ -10,7 +10,7 @@
  */
 
 import type { AIRiskLevel } from "@prisma/client";
-import { recordName } from "@/lib/record-name";
+import { aiSystemRecordName } from "@/lib/record-name";
 
 // ============================================================
 // TYPES
@@ -169,12 +169,14 @@ function deriveModelType(catalog: VendorCatalogAIFields): string | null {
 
 /**
  * Maps VendorCatalog AI fields to an AISystem create payload.
- * Returns null if the vendor is not AI-capable.
+ * Returns null if the vendor is not AI-capable. The name is written in
+ * `locale`, the language of the screen that ran the import.
  */
 export function buildAISystemFromCatalog(
   catalog: VendorCatalogAIFields,
   vendorId: string,
   vendorName: string,
+  locale: string = "en",
 ): AISystemCreateData | null {
   if (!isAiCapableVendor(catalog)) return null;
 
@@ -184,7 +186,7 @@ export function buildAISystemFromCatalog(
     : "AI capabilities";
 
   return {
-    name: recordName("AI System", vendorName),
+    name: aiSystemRecordName(vendorName, locale),
     description: `Auto-registered from vendor catalog import. ${vendorName} provides ${capsStr}.`,
     purpose: catalog.aiCapabilities.length > 0
       ? catalog.aiCapabilities.join("; ")

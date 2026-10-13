@@ -16,6 +16,7 @@ import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { displayAiSystemName } from "@/lib/record-name";
 
 export async function buildPrivacyProgramExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
@@ -139,7 +140,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     }),
     aiSystems: aiSystems.map((s) => ({
       id: s.id,
-      name: s.name,
+      name: displayAiSystemName(s.name, locale),
       category: s.category,
       riskLevel: s.riskLevel,
       status: s.status,
