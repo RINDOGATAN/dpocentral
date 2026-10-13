@@ -722,6 +722,7 @@ export const quickstartRouter = createTRPCRouter({
             },
             vendor.id,
             catalogVendor.name,
+            templateLang,
           );
           if (aiSystemData) {
             pendingAiSystems.push({ data: aiSystemData, catalogSlug: catalogVendor.slug });

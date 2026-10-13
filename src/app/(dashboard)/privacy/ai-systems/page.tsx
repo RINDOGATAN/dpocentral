@@ -38,12 +38,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
 import { SortControl } from "@/components/privacy/sort-control";
 import { sortByListSort, DEFAULT_LIST_SORT, type ListSort } from "@/lib/list-sort";
+import { displayAiSystemName } from "@/lib/record-name";
 import { PageHeader } from "@/components/privacy/page-header";
 import { useDebounce } from "@/hooks/use-debounce";
 import { features } from "@/config/features";
@@ -70,6 +71,7 @@ export default function AISystemsPage() {
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.aiSystems");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -190,7 +192,7 @@ export default function AISystemsPage() {
                         onCheckedChange={() => toggleExportId(system.id)}
                       />
                       <div className="flex-1 min-w-0">
-                        <span className="text-sm font-medium">{system.name}</span>
+                        <span className="text-sm font-medium">{displayAiSystemName(system.name, locale)}</span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <StatusChip tone={toneForAiRiskLevel(system.riskLevel)} className="text-[10px]">
                             {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
@@ -376,7 +378,7 @@ export default function AISystemsPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium">{system.name}</span>
+                        <span className="font-medium">{displayAiSystemName(system.name, locale)}</span>
                         <StatusChip tone={toneForAiRiskLevel(system.riskLevel)}>
                           {tp(`riskLevel.${system.riskLevel}` as `riskLevel.UNACCEPTABLE` | `riskLevel.HIGH_RISK` | `riskLevel.LIMITED` | `riskLevel.MINIMAL`)}
                         </StatusChip>
