@@ -18,6 +18,7 @@ import type { UserType } from "@prisma/client";
 import { organizationSlug } from "@/lib/organization-slug";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
+import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
 
 const personas = [
   {
@@ -104,12 +105,15 @@ export function OnboardingWelcome() {
                 return (
                   <Card
                     key={persona.type}
-                    className={`cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all ${CARD_BUTTON_FOCUS} ${
                       isSelected
                         ? "border-primary ring-1 ring-primary"
                         : "hover:border-muted-foreground/50"
                     }`}
-                    onClick={() => setSelectedType(persona.type)}
+                    {...cardButton(() => setSelectedType(persona.type), {
+                      label: t(persona.titleKey),
+                      pressed: isSelected,
+                    })}
                   >
                     <CardContent className="p-4 flex items-center gap-4">
                       <div

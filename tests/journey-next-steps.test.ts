@@ -93,7 +93,9 @@ describe("J4: the quick start review counts the flows it will create", () => {
 
   it("is what the review and the template list read", () => {
     const router = read("src/server/routers/privacy/quickstart.ts");
-    expect(router).toContain("flows: flowRecordCount(template.flows)");
+    // The review counts each two-way flow twice, less any direction already
+    // recorded (src/server/services/program/quickstart-flows.ts).
+    expect(router).toContain("flows: newTemplateFlowCount(template.flows, existingAssetIds, existingFlowPairs)");
     expect(router).toContain("flowCount: flowRecordCount(t.flows)");
   });
 });

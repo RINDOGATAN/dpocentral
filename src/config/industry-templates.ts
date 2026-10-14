@@ -569,8 +569,8 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
   // ─────────────────────────────────────────────────
   {
     id: "fintech",
-    name: "Fintech",
-    description: "Financial technology with KYC, transaction processing, and regulatory reporting",
+    name: "Financial services and fintech",
+    description: "Bank, payments or financial technology firm with KYC, transaction processing, and regulatory reporting",
     icon: "Landmark",
     assets: [
       {

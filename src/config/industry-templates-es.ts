@@ -262,9 +262,9 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Estado de las reclamaciones, denegaciones, pagos registrados y saldo del paciente que se devuelven a la historia clínica",
 
   // ── Fintech ──────────────────────────────────────
-  "Fintech": "Fintech",
-  "Financial technology with KYC, transaction processing, and regulatory reporting":
-    "Tecnología financiera con identificación de clientes (KYC), tramitación de operaciones e información a los reguladores",
+  "Financial services and fintech": "Servicios financieros y fintech",
+  "Bank, payments or financial technology firm with KYC, transaction processing, and regulatory reporting":
+    "Banca, pagos o tecnología financiera con identificación de clientes (KYC), tramitación de operaciones e información a los reguladores",
   "KYC/Identity Verification System": "Sistema de KYC y verificación de identidad",
   "Know Your Customer platform for identity verification and AML screening":
     "Plataforma de diligencia debida (KYC) para verificar la identidad y aplicar los controles de prevención del blanqueo",

@@ -29,7 +29,7 @@ const mocks = vi.hoisted(() => ({
     dataElement: { createMany: vi.fn() },
     processingActivity: { findMany: vi.fn(), create: vi.fn() },
     processingActivityAsset: { create: vi.fn() },
-    dataFlow: { create: vi.fn() },
+    dataFlow: { create: vi.fn(), findMany: vi.fn() },
     dataTransfer: { createMany: vi.fn() },
     auditLog: { create: vi.fn(), createMany: vi.fn() },
     organization: { findUnique: vi.fn(), update: vi.fn() },
@@ -73,6 +73,7 @@ beforeEach(() => {
   p.dataAsset.create.mockImplementation(made("asset"));
   p.processingActivity.create.mockImplementation(made("activity"));
   p.dataFlow.create.mockImplementation(made("flow"));
+  p.dataFlow.findMany.mockResolvedValue([]);
   p.$transaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn(p));
 });
 
@@ -176,5 +177,33 @@ describe("the result screen", () => {
       expect(s.createdListActivities).toBeTruthy();
       expect(s.createdListFlows).toBeTruthy();
     }
+  });
+});
+
+describe("quickstart.execute run again with the same template", () => {
+  it("adds no flow already recorded between the same two systems", async () => {
+    const p = mocks.prisma;
+    // Every template system exists already, and every flow between them too.
+    const ids = new Map(TEMPLATE.assets.map((a, i) => [a.name, `asset-${i}`] as const));
+    p.dataAsset.findMany.mockResolvedValue(TEMPLATE.assets.map((a) => ({ name: a.name })));
+    p.dataAsset.findFirst.mockImplementation(async ({ where }: { where: { name: string } }) =>
+      ids.has(where.name) ? { id: ids.get(where.name) } : null,
+    );
+    const pairs = TEMPLATE.flows.flatMap((f) => {
+      const a = ids.get(f.sourceAssetName)!;
+      const b = ids.get(f.destAssetName)!;
+      return f.returnFlow
+        ? [{ sourceAssetId: a, destinationAssetId: b }, { sourceAssetId: b, destinationAssetId: a }]
+        : [{ sourceAssetId: a, destinationAssetId: b }];
+    });
+    p.dataFlow.findMany.mockResolvedValue(pairs);
+
+    const result = await callerFor(quickstartRouter, sessionFor("user-1")).execute({
+      organizationId: ORG.id,
+      industryId: TEMPLATE.id,
+      locale: "en",
+    });
+    expect(result.flows).toBe(0);
+    expect(p.dataFlow.create).not.toHaveBeenCalled();
   });
 });

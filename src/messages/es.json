@@ -1651,6 +1651,8 @@
         "back": "Atrás",
         "selectedSuffix": "{count} seleccionados",
         "searchPlaceholder": "Busca un proveedor",
+        "examples": "Por ejemplo:",
+        "remove": "Quitar {name}",
         "searching": "Buscando...",
         "noResults": "No se han encontrado proveedores para «{query}»",
         "verified": "Verificado",
@@ -5603,8 +5605,8 @@
             "description": "Proveedor sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo"
           },
           "fintech": {
-            "name": "Fintech",
-            "description": "Tecnología financiera con KYC, procesamiento de transacciones e informes regulatorios"
+            "name": "Servicios financieros y fintech",
+            "description": "Banca, pagos o tecnología financiera con identificación de clientes (KYC), tramitación de operaciones e información a los reguladores"
           },
           "media": {
             "name": "Medios / Edición",
@@ -9615,9 +9617,11 @@
     },
     "appliesTitle": "Lo que se te aplica",
     "appliesEmpty": "De momento tus respuestas no activan nada. Añade dónde operas o responde más preguntas.",
+    "appliesNoneCheckBelow": "Con tus respuestas actuales, nada se aplica con seguridad. Debajo tienes lo que conviene comprobar.",
     "checkTitle": "Conviene comprobar",
     "whyLabel": "Por qué",
     "noJurisdictions": "Añade dónde operas en la página «Qué se te aplica», para poder mostrar las leyes que dependen del lugar.",
+    "noJurisdictionsAbove": "Elige arriba dónde opera tu organización para ver las leyes que dependen del lugar.",
     "editableNote": "Esto es orientación, no asesoramiento jurídico, y la correspondencia aún está en revisión. Puedes cambiar tus respuestas cuando quieras.",
     "items": {
       "gdpr": "RGPD (UE)",

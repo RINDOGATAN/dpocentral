@@ -39,6 +39,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Check,
   ExternalLink,
   ShieldCheck,
   Bot,
@@ -91,6 +92,18 @@ type WizardStep = "applies" | "welcome" | "choose" | "vendors" | "industry" | "r
 // PAGE COMPONENT
 // ============================================================
 
+/** Common names offered before the first catalogue search (all in the catalogue). */
+const VENDOR_SEARCH_EXAMPLES = [
+  "Microsoft 365",
+  "Google Workspace",
+  "Salesforce",
+  "HubSpot",
+  "Stripe",
+  "Mailchimp",
+  "Slack",
+  "Zoom",
+] as const;
+
 export default function QuickstartPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -109,7 +122,7 @@ export default function QuickstartPage() {
   // Not offered to a member limited to departments (src/lib/department-limit.ts);
   // the server refuses quickstart.execute to them as well.
   const { limited } = useMemberScope();
-  const { label: enumLabel } = useEnumLabels();
+  const { label: enumLabel, vendorCategory } = useEnumLabels();
 
   // "Start from another client" — copy a programme from one of the user's other
   // clients into the one open now, as drafts (directive stage 2b).
@@ -148,6 +161,7 @@ export default function QuickstartPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
   const [searchFocused, setSearchFocused] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Industry selection
   const [selectedIndustryId, setSelectedIndustryId] = useState<string | null>(null);
@@ -387,7 +401,9 @@ export default function QuickstartPage() {
     activities:
       (vendorPreview?.totals.activities ?? 0) +
       (industryPreview?.totals.activities ?? 0),
-    flows: industryPreview?.totals.flows ?? 0,
+    flows:
+      (vendorPreview?.totals.flows ?? 0) +
+      (industryPreview?.totals.flows ?? 0),
     transfers: vendorPreview?.totals.transfers ?? 0,
     aiSystems: vendorPreview?.totals.aiSystems ?? 0,
   };
@@ -538,6 +554,7 @@ export default function QuickstartPage() {
                 <ApplicabilityResult
                   jurisdictionCodes={resultCodes}
                   answers={applicabilityValue}
+                  placesAbove
                 />
               </div>
             </CardContent>
@@ -632,7 +649,7 @@ export default function QuickstartPage() {
                                 )}
                               </div>
                               <span className="text-xs text-muted-foreground">
-                                {tp("welcome.vendorMeta", { category: v!.category, label: v!.mappingLabel, count: v!.elementCount })}
+                                {tp("welcome.vendorMeta", { category: vendorCategory(v!.category), label: v!.mappingLabel, count: v!.elementCount })}
                               </span>
                             </div>
                           </div>
@@ -908,8 +925,10 @@ export default function QuickstartPage() {
                   >
                     {vendor?.vendorName ?? slug}
                     <button
+                      type="button"
                       onClick={() => removeVendorSlug(slug)}
                       className="ml-1 hover:bg-muted rounded"
+                      aria-label={tp("vendors.remove", { name: vendor?.vendorName ?? slug })}
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -926,6 +945,7 @@ export default function QuickstartPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
+              ref={searchInputRef}
               value={vendorSearch}
               onChange={(e) => handleSearchChange(e.target.value)}
               onFocus={() => setSearchFocused(true)}
@@ -951,12 +971,22 @@ export default function QuickstartPage() {
                         className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors border-b last:border-b-0 flex items-center gap-3 ${
                           isSelected ? "bg-primary/5" : ""
                         }`}
+                        aria-pressed={isSelected}
                         onMouseDown={(e) => {
                           e.preventDefault();
                           toggleVendorSlug(vendor.slug);
                         }}
                       >
-                        <Checkbox checked={isSelected} />
+                        {/* A drawn box, not a Checkbox: that is a button, and a
+                            button inside this row's button is invalid HTML. */}
+                        <span
+                          aria-hidden="true"
+                          className={`flex size-4 shrink-0 items-center justify-center rounded-sm border ${
+                            isSelected ? "border-primary bg-primary text-primary-foreground" : "border-primary/60"
+                          }`}
+                        >
+                          {isSelected && <Check className="size-3" />}
+                        </span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-sm truncate">
@@ -973,7 +1003,7 @@ export default function QuickstartPage() {
                           </div>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-xs text-muted-foreground">
-                              {vendor.category}
+                              {vendorCategory(vendor.category)}
                             </span>
                             {vendor.gdprCompliant && (
                               <Badge variant="outline" className="text-xs">
@@ -998,6 +1028,29 @@ export default function QuickstartPage() {
               </div>
             )}
           </div>
+
+          {/* Before the first search: a few names to start from, so the empty
+              catalogue search is not a blank box. A name only fills the search. */}
+          {!vendorSearch && selectedSlugs.length === 0 && (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted-foreground">{tp("vendors.examples")}</span>
+              {VENDOR_SEARCH_EXAMPLES.map((name) => (
+                <Button
+                  key={name}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={() => {
+                    handleSearchChange(name);
+                    searchInputRef.current?.focus();
+                  }}
+                >
+                  {name}
+                </Button>
+              ))}
+            </div>
+          )}
 
           {/* Vendor preview */}
           {vendorPreview && vendorPreview.previews.length > 0 && (
@@ -1039,7 +1092,7 @@ export default function QuickstartPage() {
                             {p.vendorName}
                           </span>
                           <Badge variant="outline" className="text-xs">
-                            {p.category}
+                            {vendorCategory(p.category)}
                           </Badge>
                         </div>
                         {isExisting && (
@@ -1363,7 +1416,7 @@ export default function QuickstartPage() {
                 label: tp("review.stats.flows"),
                 count: reviewTotals.flows,
                 icon: ArrowRightLeft,
-                show: useIndustry,
+                show: useIndustry || reviewTotals.flows > 0,
               },
               {
                 label: tp("review.stats.transfers"),
@@ -1406,7 +1459,7 @@ export default function QuickstartPage() {
           </Card>
 
           {/* What's included */}
-          {useVendors && vendorPreview && (
+          {useVendors && vendorPreview && vendorPreview.totals.vendors > 0 && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
@@ -1452,7 +1505,7 @@ export default function QuickstartPage() {
             </Card>
           )}
 
-          {useIndustry && industryPreview && (
+          {useIndustry && industryPreview && industryPreview.assets.some((a) => !a.alreadyExists) && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
