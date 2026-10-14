@@ -38,6 +38,7 @@ import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { isHostedDeployment } from "@/lib/hosted";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { quickstartSettingsAfterRun } from "@/server/services/program/quickstart-settings";
+import { flowPairKey, newTemplateFlowCount } from "@/server/services/program/quickstart-flows";
 
 // Capped resources a quickstart batch can add.
 const PILOT_BATCH_RESOURCES: PilotResource[] = [
@@ -75,6 +76,8 @@ interface VendorPreviewItem {
   privacyTechnologies: string[];
   isAiCapable: boolean;
   aiCapabilities: string[];
+  /** The build also draws a flow back from this vendor (vendor-data-mappings). */
+  hasReturnFlow: boolean;
 }
 
 function buildVendorPreview(
@@ -132,6 +135,7 @@ function buildVendorPreview(
     privacyTechnologies: catalogVendor.privacyTechnologies || [],
     isAiCapable: isAiCapableVendor(aiFields),
     aiCapabilities: catalogVendor.aiCapabilities ?? [],
+    hasReturnFlow: !!mapping.returnFlow,
   };
 }
 
@@ -344,14 +348,39 @@ export const quickstartRouter = createTRPCRouter({
         (p) => !existingVendorNames.has(p.vendorName)
       );
 
+      // What execute adds around the vendors' own records, so the review
+      // promises what the build creates: the one internal-systems record (once
+      // per organisation, whichever language an earlier run wrote it in),
+      // and a flow to each new vendor plus a return flow where its mapping has
+      // one.
+      const orgName = ctx.organization.name;
+      const internalAsset =
+        newPreviews.length > 0
+          ? await ctx.prisma.dataAsset.findFirst({
+              where: {
+                organizationId: ctx.organization.id,
+                name: {
+                  in: [
+                    VENDOR_QUICKSTART_TEXT.en.internalSystemsName(orgName),
+                    VENDOR_QUICKSTART_TEXT.es.internalSystemsName(orgName),
+                  ],
+                },
+              },
+              select: { id: true },
+            })
+          : null;
+      const internalAssetToCreate = newPreviews.length > 0 && !internalAsset ? 1 : 0;
+      const flows = newPreviews.reduce((sum, p) => sum + (p.hasReturnFlow ? 2 : 1), 0);
+
       return {
         previews,
         existingVendorNames: Array.from(existingVendorNames),
         totals: {
           vendors: newPreviews.length,
-          assets: newPreviews.length,
+          assets: newPreviews.length + internalAssetToCreate,
           elements: newPreviews.reduce((sum, p) => sum + p.elementCount, 0),
           activities: newPreviews.length,
+          flows,
           transfers: newPreviews.reduce((sum, p) => sum + p.transfers.length, 0),
           aiSystems: newPreviews.filter((p) => p.isAiCapable).length,
         },
@@ -391,9 +420,23 @@ export const quickstartRouter = createTRPCRouter({
           organizationId: ctx.organization.id,
           name: { in: template.assets.map((a) => a.name) },
         },
-        select: { name: true },
+        select: { id: true, name: true },
       });
       const existingAssetNames = new Set(existingAssets.map((a) => a.name));
+      const existingAssetIds = new Map(existingAssets.map((a) => [a.name, a.id] as const));
+      const existingFlowPairs = new Set(
+        existingAssets.length > 0
+          ? (
+              await ctx.prisma.dataFlow.findMany({
+                where: {
+                  organizationId: ctx.organization.id,
+                  sourceAssetId: { in: existingAssets.map((a) => a.id) },
+                },
+                select: { sourceAssetId: true, destinationAssetId: true },
+              })
+            ).map((f) => flowPairKey(f.sourceAssetId, f.destinationAssetId))
+          : [],
+      );
 
       const existingActivities = await ctx.prisma.processingActivity.findMany({
         where: {
@@ -446,8 +489,9 @@ export const quickstartRouter = createTRPCRouter({
             (a) => !existingActivityNames.has(a.name)
           ).length,
           // A two-way flow is created as two flows (out and back): count both,
-          // so the review promises what the build creates.
-          flows: flowRecordCount(template.flows),
+          // less any direction already recorded, so the review promises what
+          // the build creates.
+          flows: newTemplateFlowCount(template.flows, existingAssetIds, existingFlowPairs),
         },
       };
     }),
@@ -1108,11 +1152,23 @@ export const quickstartRouter = createTRPCRouter({
             }
           }
 
-          // Create data flows (and reverse flows where the template marks them bidirectional)
+          // Create data flows (and reverse flows where the template marks them
+          // bidirectional). A flow already recorded between the same two
+          // systems in the same direction is skipped, so running the quick
+          // start again with the same template adds no duplicate flows.
+          const existingFlowPairs = new Set(
+            (
+              await tx.dataFlow.findMany({
+                where: { organizationId: orgId },
+                select: { sourceAssetId: true, destinationAssetId: true },
+              })
+            ).map((f) => flowPairKey(f.sourceAssetId, f.destinationAssetId)),
+          );
           for (const templateFlow of template.flows) {
             const sourceId = assetNameToId.get(templateFlow.sourceAssetName);
             const destId = assetNameToId.get(templateFlow.destAssetName);
-            if (sourceId && destId) {
+            if (sourceId && destId && !existingFlowPairs.has(flowPairKey(sourceId, destId))) {
+              existingFlowPairs.add(flowPairKey(sourceId, destId));
               const flow = await tx.dataFlow.create({
                 data: {
                   organizationId: orgId,
@@ -1128,7 +1184,8 @@ export const quickstartRouter = createTRPCRouter({
               counts.flows++;
               created.flows.push({ id: flow.id, name: flow.name, sourceAssetId: flow.sourceAssetId });
 
-              if (templateFlow.returnFlow) {
+              if (templateFlow.returnFlow && !existingFlowPairs.has(flowPairKey(destId, sourceId))) {
+                existingFlowPairs.add(flowPairKey(destId, sourceId));
                 const back = await tx.dataFlow.create({
                   data: {
                     organizationId: orgId,

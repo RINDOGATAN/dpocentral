@@ -1651,6 +1651,8 @@
         "back": "Back",
         "selectedSuffix": "{count} selected",
         "searchPlaceholder": "Search for a vendor",
+        "examples": "For example:",
+        "remove": "Remove {name}",
         "searching": "Searching...",
         "noResults": "No vendors found for \"{query}\"",
         "verified": "Verified",
@@ -5603,8 +5605,8 @@
             "description": "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance"
           },
           "fintech": {
-            "name": "Fintech",
-            "description": "Financial technology with KYC, transaction processing, and regulatory reporting"
+            "name": "Financial services and fintech",
+            "description": "Bank, payments or financial technology firm with KYC, transaction processing, and regulatory reporting"
           },
           "media": {
             "name": "Media / Publishing",
@@ -9615,9 +9617,11 @@
     },
     "appliesTitle": "These apply to you",
     "appliesEmpty": "Nothing applies yet from your answers. Add where you operate, or answer more questions.",
+    "appliesNoneCheckBelow": "From your answers so far, nothing applies for certain. Below is what is worth checking.",
     "checkTitle": "Worth checking",
     "whyLabel": "Why",
     "noJurisdictions": "Add where you operate on the What applies page, so the laws that depend on a place can be shown.",
+    "noJurisdictionsAbove": "Choose above where your organization operates to see the laws that depend on a place.",
     "editableNote": "This is guidance, not legal advice, and the mapping is still under review. You can change your answers at any time.",
     "items": {
       "gdpr": "GDPR (EU)",

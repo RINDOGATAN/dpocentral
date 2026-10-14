@@ -157,9 +157,12 @@ function ItemLine({ item }: { item: ApplicabilityItem }) {
 export function ApplicabilityResult({
   jurisdictionCodes,
   answers,
+  placesAbove = false,
 }: {
   jurisdictionCodes: readonly string[];
   answers: ApplicabilityAnswers;
+  /** The places picker is on the same screen, above this result (the quick start). */
+  placesAbove?: boolean;
 }) {
   const t = useTranslations("applicability");
   const items = evaluateApplicability(jurisdictionCodes, answers);
@@ -180,7 +183,9 @@ export function ApplicabilityResult({
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-muted-foreground">{t("appliesEmpty")}</p>
+          <p className="text-xs text-muted-foreground">
+            {check.length > 0 ? t("appliesNoneCheckBelow") : t("appliesEmpty")}
+          </p>
         )}
       </div>
       {check.length > 0 && (
@@ -194,7 +199,9 @@ export function ApplicabilityResult({
         </div>
       )}
       {jurisdictionCodes.length === 0 && (
-        <p className="text-xs text-muted-foreground">{t("noJurisdictions")}</p>
+        <p className="text-xs text-muted-foreground">
+          {placesAbove ? t("noJurisdictionsAbove") : t("noJurisdictions")}
+        </p>
       )}
       <p className="text-xs text-muted-foreground border-t border-border pt-3">{t("editableNote")}</p>
     </div>

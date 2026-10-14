@@ -303,13 +303,18 @@ export function GuidedLayout({
           <main className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 min-w-0 flex-1">
             {/* Keyed by the organisation and the address: a "stage complete"
                 message lasts for the page it was shown on. */}
-            <StepBand
-              key={`${organization?.id ?? ""}:${pathname}?${search}`}
-              stepId={stepId}
-              // No "stage complete" for a limited member: that is the whole
-              // organisation's progress.
-              statuses={orgWide ? statuses : null}
-            />
+            {/* Not over the quick start: the wizard has its own steps, and the
+                band's "Next step" there led out of it, losing the choices
+                made so far. */}
+            {pathname !== "/privacy/quickstart" && (
+              <StepBand
+                key={`${organization?.id ?? ""}:${pathname}?${search}`}
+                stepId={stepId}
+                // No "stage complete" for a limited member: that is the whole
+                // organisation's progress.
+                statuses={orgWide ? statuses : null}
+              />
+            )}
             {children}
           </main>
           {footer}
