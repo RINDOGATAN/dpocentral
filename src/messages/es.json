@@ -5609,7 +5609,7 @@
           },
           "healthcare": {
             "name": "Salud",
-            "description": "Proveedor sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo"
+            "description": "Proveedor sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo. Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso."
           },
           "fintech": {
             "name": "Servicios financieros y fintech",

@@ -46,7 +46,7 @@ vi.mock("@/lib/security", () => ({ getSecurityModule: () => null }));
 vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() } }));
 
 import { quickstartRouter } from "@/server/routers/privacy/quickstart";
-import { INDUSTRY_TEMPLATES } from "@/config/industry-templates";
+import { INDUSTRY_TEMPLATES, getLocalizedTemplateById, lowerFirstInSentence } from "@/config/industry-templates";
 import { callerFor, sessionFor } from "./helpers";
 
 const ORG = { id: "org-1", name: "Org", slug: "org", pilotStartedAt: null };
@@ -146,8 +146,8 @@ describe("quickstart.execute on a Spanish screen", () => {
     expect(result.created.assets.map((a) => a.name)).toContain("Base de datos de clientes");
     expect(result.created.activities.map((a) => a.name)).toContain("Gestión de cuentas de clientes");
     const flowNames = result.created.flows.map((f) => f.name);
-    expect(flowNames).toContain("De clientes a pedidos");
-    expect(flowNames).toContain("De sistema de gestión de pedidos a base de datos de clientes");
+    expect(flowNames).toContain("De los clientes a los pedidos");
+    expect(flowNames).toContain("Del sistema de gestión de pedidos a la base de datos de clientes");
     expect(flowNames.some((n) => / to /.test(n))).toBe(false);
   });
 });
@@ -206,4 +206,59 @@ describe("quickstart.execute run again with the same template", () => {
     expect(result.flows).toBe(0);
     expect(p.dataFlow.create).not.toHaveBeenCalled();
   });
+});
+
+describe("quickstart.execute run again in Spanish after the flow names gained their articles", () => {
+  // The Spanish names template flows carried before they gained articles
+  // ("De clientes a pedidos"; return flows "De sistema … a base …"). An
+  // organisation that ran the quick start then holds these.
+  const LEGACY_FORWARD_ES: Record<string, string> = {
+    "Customer to Orders": "De clientes a pedidos",
+    "Orders to Payment": "De pedidos a pagos",
+    "Customer to Marketing": "De clientes a marketing",
+    "User Actions to Logs": "De acciones de usuario a registros",
+    "User to Billing": "De usuarios a facturación",
+    "User to Analytics": "De usuarios a analítica",
+    "EHR to Patient Portal": "De la historia clínica al portal del paciente",
+    "EHR to Billing": "De la historia clínica a facturación",
+    "KYC to Account": "De KYC a la cuenta",
+    "Transactions to Monitoring": "De operaciones a seguimiento",
+    "Subscribers to Ad Platform": "De suscriptores a la plataforma publicitaria",
+    "Subscribers to Newsletter": "De suscriptores a boletines",
+    "Client to Projects": "De clientes a proyectos",
+    "Projects to Documents": "De proyectos a gestión documental",
+  };
+  const legacyReturn = (from: string, to: string) =>
+    `De ${lowerFirstInSentence(from)} a ${lowerFirstInSentence(to)}`;
+
+  for (const base of INDUSTRY_TEMPLATES) {
+    it(`adds no flow for the ${base.id} template when the old names are recorded`, async () => {
+      const t = getLocalizedTemplateById(base.id, "es")!;
+      const p = mocks.prisma;
+      const ids = new Map(t.assets.map((a, i) => [a.name, `asset-${i}`] as const));
+      p.dataAsset.findMany.mockResolvedValue(t.assets.map((a) => ({ name: a.name })));
+      p.dataAsset.findFirst.mockImplementation(async ({ where }: { where: { name: string } }) =>
+        ids.has(where.name) ? { id: ids.get(where.name) } : null,
+      );
+      p.processingActivity.findMany.mockResolvedValue(t.activities.map((a) => ({ name: a.name })));
+      const recorded = t.flows.flatMap((f, i) => {
+        const a = ids.get(f.sourceAssetName)!;
+        const b = ids.get(f.destAssetName)!;
+        const out = { name: LEGACY_FORWARD_ES[base.flows[i].name], sourceAssetId: a, destinationAssetId: b };
+        expect(out.name).toBeTruthy();
+        return f.returnFlow
+          ? [out, { name: legacyReturn(f.destAssetName, f.sourceAssetName), sourceAssetId: b, destinationAssetId: a }]
+          : [out];
+      });
+      p.dataFlow.findMany.mockResolvedValue(recorded);
+
+      const result = await callerFor(quickstartRouter, sessionFor("user-1")).execute({
+        organizationId: ORG.id,
+        industryId: base.id,
+        locale: "es",
+      });
+      expect(result.flows).toBe(0);
+      expect(p.dataFlow.create).not.toHaveBeenCalled();
+    });
+  }
 });

@@ -100,16 +100,16 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Seguimiento de los patrones de uso del sitio web para mejorar la experiencia de usuario y la tasa de conversión",
   "Analyze website traffic and user behavior to optimize the shopping experience":
     "Analizar el tráfico del sitio web y el comportamiento de los usuarios para optimizar la experiencia de compra",
-  "Customer to Orders": "De clientes a pedidos",
+  "Customer to Orders": "De los clientes a los pedidos",
   "Customer profile data flows to order system during checkout":
     "Los datos del perfil del cliente pasan al sistema de pedidos durante la compra",
   "Order references and lifetime value updates posted back to customer profile":
     "Referencias de pedidos y valor acumulado del cliente que se devuelven a su perfil",
-  "Orders to Payment": "De pedidos a pagos",
+  "Orders to Payment": "De los pedidos a los pagos",
   "Order payment details sent to payment processor": "Datos de pago del pedido enviados al proveedor de pagos",
   "Payment confirmations, settlement reports, refunds, and chargebacks posted back to orders":
     "Confirmaciones de pago, informes de liquidación, reembolsos y retrocesos que se devuelven a los pedidos",
-  "Customer to Marketing": "De clientes a marketing",
+  "Customer to Marketing": "De los clientes al marketing",
   "Customer segments synced to marketing platform for campaigns":
     "Segmentos de clientes sincronizados con la plataforma de marketing para las campañas",
   "Campaign engagement: opens, clicks, unsubscribes, conversions per customer":
@@ -177,21 +177,23 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Seguimiento del uso de las funciones, medición de la adopción y pruebas A/B",
   "Analyze product usage patterns to improve features, fix usability issues, and guide product roadmap":
     "Analizar los patrones de uso del producto para mejorar las funciones, corregir problemas de usabilidad y orientar la hoja de ruta",
-  "User Actions to Logs": "De acciones de usuario a registros",
+  "User Actions to Logs": "De las acciones de usuario a los registros",
   "Application events and errors sent to centralized logging":
     "Eventos y errores de la aplicación enviados al sistema centralizado de registros",
-  "User to Billing": "De usuarios a facturación",
+  "User to Billing": "De los usuarios a la facturación",
   "Account data synced to billing system for subscription management":
     "Datos de la cuenta sincronizados con el sistema de facturación para gestionar la suscripción",
   "Subscription state, invoice status, dunning events, and renewal updates pushed back to user records":
     "Estado de la suscripción, estado de las facturas, avisos de impago y renovaciones que se devuelven a los registros de usuario",
-  "User to Analytics": "De usuarios a analítica",
+  "User to Analytics": "De los usuarios a la analítica",
   "Product usage events streamed to analytics platform": "Eventos de uso del producto enviados de forma continua a la plataforma de analítica",
 
   // ── Healthcare ───────────────────────────────────
   "Healthcare": "Sanidad",
-  "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance":
-    "Prestador sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo",
+  "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance. Illustrative example: check the legal basis for your case.":
+    "Prestador sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo. Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
+  "Illustrative example: check the legal basis for your case.":
+    "Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
   "Electronic Health Records (EHR)": "Historia clínica electrónica (HCE)",
   "Primary clinical system storing patient medical records":
     "Sistema clínico principal con la historia clínica de los pacientes",
@@ -255,7 +257,7 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Información clínica puesta a disposición del paciente a través del portal",
   "Patient-submitted data: appointment requests, secure messages, intake forms, self-reported symptoms":
     "Datos enviados por el paciente: solicitudes de cita, mensajes seguros, formularios de admisión y síntomas que comunica",
-  "EHR to Billing": "De la historia clínica a facturación",
+  "EHR to Billing": "De la historia clínica a la facturación",
   "Clinical encounter data sent to billing system for claims processing":
     "Datos de la asistencia enviados al sistema de facturación para tramitar las reclamaciones",
   "Claim status, denials, payment posting, and patient balance updates returned to EHR":
@@ -318,10 +320,10 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
   "5 years after filing": "5 años desde la comunicación",
   "Financial regulators": "Reguladores financieros",
   "Law enforcement (on request)": "Fuerzas y cuerpos de seguridad (a petición)",
-  "KYC to Account": "De KYC a la cuenta",
+  "KYC to Account": "Del KYC a la cuenta",
   "Verified identity data provisioned to customer account":
     "Datos de identidad verificados que se incorporan a la cuenta del cliente",
-  "Transactions to Monitoring": "De operaciones a seguimiento",
+  "Transactions to Monitoring": "De las operaciones al seguimiento",
   "Transaction data fed to regulatory monitoring system":
     "Datos de las operaciones que alimentan el sistema de seguimiento regulatorio",
 
@@ -382,10 +384,10 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Recomendación de artículos y contenidos según el historial de lectura",
   "Provide personalized content recommendations to improve reader engagement and satisfaction":
     "Ofrecer recomendaciones de contenidos personalizadas para mejorar la interacción y la satisfacción de los lectores",
-  "Subscribers to Ad Platform": "De suscriptores a la plataforma publicitaria",
+  "Subscribers to Ad Platform": "De los suscriptores a la plataforma publicitaria",
   "Audience segments shared with ad tech for targeting":
     "Segmentos de audiencia compartidos con la plataforma publicitaria para la segmentación",
-  "Subscribers to Newsletter": "De suscriptores a boletines",
+  "Subscribers to Newsletter": "De los suscriptores a los boletines",
   "Subscriber data synced to newsletter platform": "Datos de suscriptores sincronizados con la plataforma de boletines",
   "Newsletter engagement: opens, clicks, bounces, and unsubscribe events per recipient":
     "Interacción con los boletines: aperturas, clics, rebotes y bajas por destinatario",
@@ -449,12 +451,49 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
   "Contractors": "Profesionales externos",
   "Payroll provider": "Proveedor de nóminas",
   "Benefits providers": "Proveedores de beneficios sociales",
-  "Client to Projects": "De clientes a proyectos",
+  "Client to Projects": "De los clientes a los proyectos",
   "Client data referenced in project management for engagement delivery":
     "Datos de clientes a los que se hace referencia en la gestión de proyectos para prestar el encargo",
   "Project status, time spent, engagement notes, and billable hours posted back to client record":
     "Estado del proyecto, tiempo dedicado, notas del encargo y horas facturables que se devuelven a la ficha del cliente",
-  "Projects to Documents": "De proyectos a gestión documental",
+  "Projects to Documents": "De los proyectos a la gestión documental",
   "Project deliverables and files stored in document management":
     "Entregables y archivos del proyecto guardados en la gestión documental",
+};
+
+/**
+ * The definite article each Spanish system name takes, keyed by the Spanish
+ * name. A return flow is named "Del sistema … a la base …": the article sets
+ * the contraction (de + el = del, a + el = al). Every system of every template
+ * has an entry (tests/industry-templates-es.test.ts fails otherwise).
+ */
+export type SpanishArticle = "el" | "la" | "los" | "las";
+
+export const INDUSTRY_TEMPLATE_ASSET_ARTICLES_ES: Record<string, SpanishArticle> = {
+  "Base de datos de clientes": "la",
+  "Sistema de gestión de pedidos": "el",
+  "Plataforma de marketing": "la",
+  "Analítica web": "la",
+  "Pasarela de pago": "la",
+  "Base de datos de usuarios": "la",
+  "Registros de la aplicación": "los",
+  "Sistema de incidencias de soporte": "el",
+  "Sistema de facturación": "el",
+  "Analítica de producto": "la",
+  "Historia clínica electrónica (HCE)": "la",
+  "Portal del paciente": "el",
+  "Sistema de facturación y aseguradoras": "el",
+  "Sistema de recursos humanos del personal": "el",
+  "Sistema de KYC y verificación de identidad": "el",
+  "Libro de operaciones": "el",
+  "Sistema de cuentas de clientes": "el",
+  "Sistema de información a los reguladores": "el",
+  "Base de datos de suscriptores": "la",
+  "Gestor de contenidos": "el",
+  "Plataforma de tecnología publicitaria": "la",
+  "Plataforma de boletines": "la",
+  "Base de datos de clientes (CRM)": "la",
+  "Sistema de gestión de proyectos": "el",
+  "Sistema de recursos humanos y nóminas": "el",
+  "Gestión documental": "la",
 };

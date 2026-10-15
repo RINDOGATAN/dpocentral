@@ -9,7 +9,7 @@
  */
 
 import type { DataAssetType, DataCategory, DataSensitivity, LegalBasis } from "@prisma/client";
-import { INDUSTRY_TEMPLATES_ES } from "./industry-templates-es";
+import { INDUSTRY_TEMPLATES_ES, INDUSTRY_TEMPLATE_ASSET_ARTICLES_ES } from "./industry-templates-es";
 
 // ============================================================
 // TYPES
@@ -43,6 +43,12 @@ export interface IndustryActivity {
   retentionDays?: number;
   /** Names of assets this activity uses (cross-references IndustryAsset.name) */
   assetNames: string[];
+  /**
+   * One plain line shown beside the legal basis where the template's choice
+   * is an example to check rather than a default (the healthcare template's
+   * vital interests for patient care).
+   */
+  legalBasisNote?: string;
 }
 
 export interface IndustryFlow {
@@ -434,7 +440,8 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
   {
     id: "healthcare",
     name: "Healthcare",
-    description: "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance",
+    description:
+      "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance. Illustrative example: check the legal basis for your case.",
     icon: "Heart",
     assets: [
       {
@@ -499,6 +506,7 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         description: "Recording and managing patient clinical data for treatment purposes",
         purpose: "Provide healthcare services, record diagnoses and treatments, and maintain continuity of care",
         legalBasis: "VITAL_INTERESTS",
+        legalBasisNote: "Illustrative example: check the legal basis for your case.",
         dataSubjects: ["Patients"],
         categories: ["IDENTIFIERS", "HEALTH", "DEMOGRAPHICS"],
         recipients: ["Healthcare providers", "Referring specialists"],
@@ -1003,6 +1011,7 @@ export function localizeTemplate(template: IndustryTemplate, locale: TemplateLoc
       recipients: a.recipients.map(tr),
       retentionPeriod: tr(a.retentionPeriod),
       assetNames: a.assetNames.map(tr),
+      legalBasisNote: a.legalBasisNote ? tr(a.legalBasisNote) : undefined,
     })),
     flows: template.flows.map((f) => ({
       ...f,
@@ -1041,11 +1050,25 @@ export function lowerFirstInSentence(name: string): string {
   return /^\p{Lu}\p{Ll}/u.test(name) ? name.charAt(0).toLowerCase() + name.slice(1) : name;
 }
 
+/**
+ * A Spanish system name after "de" or "a", with its article and the
+ * contraction it forms: "del sistema", "de la base", "al portal", "a los
+ * registros". A name with no known article (not a template system) is left
+ * bare, as before.
+ */
+function withSpanishArticle(preposition: "de" | "a", name: string): string {
+  const article = INDUSTRY_TEMPLATE_ASSET_ARTICLES_ES[name];
+  const lower = lowerFirstInSentence(name);
+  if (!article) return `${preposition} ${lower}`;
+  if (article === "el") return `${preposition === "de" ? "del" : "al"} ${lower}`;
+  return `${preposition} ${article} ${lower}`;
+}
+
 /** Name of the inbound flow a bidirectional template flow generates. */
 export function returnFlowName(fromAssetName: string, toAssetName: string, locale: TemplateLocale): string {
-  return locale === "es"
-    ? `De ${lowerFirstInSentence(fromAssetName)} a ${lowerFirstInSentence(toAssetName)}`
-    : `${fromAssetName} to ${toAssetName}`;
+  if (locale !== "es") return `${fromAssetName} to ${toAssetName}`;
+  const from = withSpanishArticle("de", fromAssetName);
+  return `${from.charAt(0).toUpperCase()}${from.slice(1)} ${withSpanishArticle("a", toAssetName)}`;
 }
 
 /** Frequency used when a return flow does not set one. */

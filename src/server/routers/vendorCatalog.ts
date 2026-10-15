@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { dedupeCatalogRows } from "@/lib/vendor-catalog-display";
 
 // Vendor catalog is now owned by Vendor.Watch.
 // DPO Central retains read-only access for vendor form autofill.
@@ -19,7 +20,10 @@ export const vendorCatalogRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.vendorCatalog.findMany({
+      // A vendor recorded twice in the catalogue (same website, same name)
+      // shows once, as its richer record (lib/vendor-catalog-display.ts). A
+      // few extra rows are read so the list still fills the limit.
+      const rows = await ctx.prisma.vendorCatalog.findMany({
         where: {
           AND: [
             input.category ? { category: input.category } : {},
@@ -36,8 +40,9 @@ export const vendorCatalogRouter = createTRPCRouter({
           { isVerified: "desc" },
           { name: "asc" },
         ],
-        take: input.limit,
+        take: input.limit + 10,
       });
+      return dedupeCatalogRows(rows).slice(0, input.limit);
     }),
 
   // Get single vendor by slug

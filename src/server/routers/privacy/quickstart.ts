@@ -469,6 +469,7 @@ export const quickstartRouter = createTRPCRouter({
           name: a.name,
           purpose: a.purpose,
           legalBasis: a.legalBasis,
+          legalBasisNote: a.legalBasisNote ?? null,
           assetNames: a.assetNames,
           alreadyExists: existingActivityNames.has(a.name),
         })),

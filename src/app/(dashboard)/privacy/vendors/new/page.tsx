@@ -30,7 +30,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { catalogDescriptionFor } from "@/lib/vendor-catalog-display";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -78,6 +79,7 @@ function NewVendorPageContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("toasts");
   const tp = useTranslations("pages.newVendor");
+  const locale = useLocale();
   const { vendorCategory } = useEnumLabels();
   const tCommon = useTranslations("common");
 
@@ -441,7 +443,7 @@ function NewVendorPageContent() {
                             </div>
                             <p className="text-sm text-muted-foreground truncate">
                               {vendorCategory(vendor.category)}{vendor.subcategory ? ` / ${vendor.subcategory}` : ""}
-                              {vendor.description && ` • ${vendor.description.substring(0, 50)}...`}
+                              {vendor.description && catalogDescriptionFor(vendor.description, locale) && ` • ${vendor.description.substring(0, 50)}...`}
                             </p>
                           </div>
                           <div className="flex gap-1 shrink-0">

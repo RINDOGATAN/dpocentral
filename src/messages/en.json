@@ -5609,7 +5609,7 @@
           },
           "healthcare": {
             "name": "Healthcare",
-            "description": "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance"
+            "description": "Healthcare provider or health-tech with patient data, EHR, and regulatory compliance. Illustrative example: check the legal basis for your case."
           },
           "fintech": {
             "name": "Financial services and fintech",

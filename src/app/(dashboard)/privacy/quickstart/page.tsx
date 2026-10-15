@@ -6,6 +6,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
+import { catalogDescriptionFor } from "@/lib/vendor-catalog-display";
 import {
   Card,
   CardContent,
@@ -1013,7 +1014,7 @@ export default function QuickstartPage() {
                               </Badge>
                             )}
                           </div>
-                          {vendor.description && (
+                          {catalogDescriptionFor(vendor.description, templateLocale) && (
                             <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
                               {vendor.description}
                             </p>
@@ -1321,6 +1322,9 @@ export default function QuickstartPage() {
                           <p className="text-xs text-muted-foreground mt-1">
                             {a.purpose}
                           </p>
+                          {a.legalBasisNote && (
+                            <p className="text-xs text-muted-foreground mt-1">{a.legalBasisNote}</p>
+                          )}
                         </div>
                       ))}
                     </div>
