@@ -48,6 +48,8 @@ import {
   type CopyPart,
 } from "@/config/client-template";
 import { isDsarModuleEnabled } from "@/config/features";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
 
 /** Where a flagged item opens in the new client, by part. */
 const ITEM_HREF: Record<CopyPart, ((id: string) => string) | null> = {
@@ -88,6 +90,10 @@ export function CopyFromClientDialog({
   const [parts, setParts] = useState<CopyPart[]>([...DEFAULT_PARTS]);
   const [acknowledged, setAcknowledged] = useState(false);
   const [newName, setNewName] = useState("");
+  // Hosted service: a new client is opened only with the data processing
+  // agreement accepted, as on the first-run screen (the server requires it).
+  const hosted = useHostedPilot();
+  const [acceptDpa, setAcceptDpa] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   // The new client, once created: a retry after a failed copy reuses it
   // rather than creating a second one.
@@ -124,6 +130,7 @@ export function CopyFromClientDialog({
     setParts([...DEFAULT_PARTS]);
     setAcknowledged(false);
     setNewName("");
+    setAcceptDpa(false);
     setResult(null);
     setCreated(null);
   };
@@ -144,7 +151,11 @@ export function CopyFromClientDialog({
         if (!target) {
           // The server makes the slug unique; it is only an internal handle.
           const base = slugify(targetName);
-          const org = await createOrg.mutateAsync({ name: targetName, slug: base.length >= 2 ? base : "client" });
+          const org = await createOrg.mutateAsync({
+            name: targetName,
+            slug: base.length >= 2 ? base : "client",
+            acceptDpa: hosted ? acceptDpa : undefined,
+          });
           target = { id: org.id, name: org.name, slug: org.slug };
           setCreated(target);
           void utils.clients.listClients.invalidate();
@@ -190,6 +201,7 @@ export function CopyFromClientDialog({
     !!preview &&
     total > 0 &&
     (!intoNew || targetName.length > 0) &&
+    (!intoNew || !hosted || acceptDpa || !!created) &&
     (flagged.length === 0 || acknowledged) &&
     !busy;
 
@@ -265,6 +277,9 @@ export function CopyFromClientDialog({
                   placeholder={t("newNamePlaceholder")}
                   onChange={(e) => setNewName(e.target.value)}
                 />
+                {hosted && !created && (
+                  <DpaAcceptCheckbox id="copy-new-accept-dpa" checked={acceptDpa} onCheckedChange={setAcceptDpa} />
+                )}
               </div>
             ) : (
               <div className="space-y-2">

@@ -19,6 +19,7 @@ import {
   PILOT_LIMITS,
   RESOURCE_LABELS,
   PILOT_WINDOW_SHORTENED_AT,
+  ORGANIZATIONS_PER_ACCOUNT,
   type PilotResource,
 } from "./limits";
 
@@ -29,6 +30,7 @@ export {
   PILOT_LIMITS,
   PILOT_WINDOW_SHORTENED_AT,
   RESOURCE_LABELS,
+  ORGANIZATIONS_PER_ACCOUNT,
   type PilotResource,
 };
 
@@ -37,7 +39,7 @@ export {
  *
  * The hosted service is a free pilot. Every module is open to every
  * organisation, and these caps apply:
- *   - one organisation per account;
+ *   - up to ORGANIZATIONS_PER_ACCOUNT organisations per account;
  *   - edits for PILOT_DAYS from the organisation's first sign-in after the
  *     pilot went live, then read-only (exports stay available: they are GET
  *     routes under /api/export);
@@ -202,7 +204,7 @@ function exportUrl(): string {
 }
 
 export function pilotMessage(
-  kind: "readOnly" | "ceiling" | "oneOrganization",
+  kind: "readOnly" | "ceiling" | "organizationLimit" | "organizationLimitInvitee",
   locale: Locale,
   resource?: PilotResource
 ): string {
@@ -214,10 +216,17 @@ export function pilotMessage(
       ? `Esta organización piloto es de solo lectura: el periodo de edición del piloto ha terminado. Puedes seguir exportando todo lo que has creado (${exp}) o pasar al plan de pago (${plans}).`
       : `This pilot organization is read-only: the pilot's editing window has ended. You can still export everything you created (${exp}) or move to the paid plan (${plans}).`;
   }
-  if (kind === "oneOrganization") {
+  if (kind === "organizationLimit") {
+    const n = ORGANIZATIONS_PER_ACCOUNT;
     return locale === "es"
-      ? `El piloto alojado admite una organización por cuenta. Para gestionar más, pide una instancia gestionada (${managed}). Puedes exportar lo que ya tienes (${exp}).`
-      : `The hosted pilot allows one organization per account. To manage more, ask for a managed instance (${managed}). You can export what you already have (${exp}).`;
+      ? `Una cuenta del servicio alojado puede gestionar hasta ${n} organizaciones, y la tuya ya tiene ${n}. Para gestionar más, pide una instancia gestionada (${managed}). Puedes exportar lo que ya tienes (${exp}).`
+      : `An account on the hosted service can manage up to ${n} organizations, and yours already has ${n}. To manage more, ask for a managed instance (${managed}). You can export what you already have (${exp}).`;
+  }
+  if (kind === "organizationLimitInvitee") {
+    const n = ORGANIZATIONS_PER_ACCOUNT;
+    return locale === "es"
+      ? `La persona a la que invitas ya pertenece a ${n} organizaciones, el máximo para una cuenta del servicio alojado. Para gestionar más, pide una instancia gestionada (${managed}).`
+      : `The person you are inviting already belongs to ${n} organizations, the most an account can have on the hosted service. To manage more, ask for a managed instance (${managed}).`;
   }
   const r = resource ?? "dataAssets";
   const limit = PILOT_LIMITS[r];
@@ -501,14 +510,28 @@ export async function hasPilotRoom(
 }
 
 /**
- * Hosted pilot: an account may belong to one organisation. Throws when the
- * user already has a membership. `joining` is the organisation the account
- * is being added to, when there is one: an organisation on the paid plan may
- * add a person who already belongs to another. Creating a new organisation
+ * Hosted service: how many organisations the account belongs to, and whether
+ * it may open or join one more. Always open on the kit (`limited: false`).
+ */
+export async function organizationCapacity(
+  db: { organizationMember: CountDelegate },
+  userId: string
+): Promise<{ limited: false } | { limited: true; limit: number; used: number; canAdd: boolean }> {
+  if (!isHostedDeployment()) return { limited: false };
+  const used = await db.organizationMember.count({ where: { userId } });
+  return { limited: true, limit: ORGANIZATIONS_PER_ACCOUNT, used, canAdd: used < ORGANIZATIONS_PER_ACCOUNT };
+}
+
+/**
+ * Hosted service: an account may belong to up to ORGANIZATIONS_PER_ACCOUNT
+ * organisations. Throws when the user already has that many memberships.
+ * `joining` is the organisation the account is being added to, when there is
+ * one: an organisation on the paid plan may add a person whatever they belong
+ * to, and the message then speaks of the invitee. Creating a new organisation
  * passes none, so the rule still applies there (a new organisation starts on
  * the pilot).
  */
-export async function assertOneOrganizationPerAccount(
+export async function assertOrganizationsPerAccount(
   db: { organizationMember: CountDelegate },
   userId: string,
   locale: Locale = "en",
@@ -516,11 +539,11 @@ export async function assertOneOrganizationPerAccount(
 ): Promise<void> {
   if (!isHostedDeployment()) return;
   if (isPaidPlan(joining)) return;
-  const memberships = await db.organizationMember.count({ where: { userId } });
-  if (memberships > 0) {
+  const capacity = await organizationCapacity(db, userId);
+  if (capacity.limited && !capacity.canAdd) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: pilotMessage("oneOrganization", locale),
+      message: pilotMessage(joining ? "organizationLimitInvitee" : "organizationLimit", locale),
     });
   }
 }

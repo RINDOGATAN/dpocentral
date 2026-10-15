@@ -26,7 +26,7 @@ type Section = {
   assessments: string;
   ceilingsTitle: string;
   ceilingsIntro: string;
-  oneOrganization: string;
+  organizationsPerAccount: string;
   exports: string;
   run: string;
 };
@@ -51,6 +51,7 @@ describe("the hosted pilot documentation", () => {
       }
       expect(s.window).toContain("{days}");
       expect(s.assessments).toContain("{assessments}");
+      expect(s.organizationsPerAccount).toContain("{organizations}");
       // The intro names the limits and, as the landing does, that real client data may be used;
       // the next paragraph ("run") carries the paid plan and the quotation. No "no safeguards" line.
       expect(s.intro).toMatch(locale === "es" ? /dentro de los límites/ : /within the limits set out below\./);
@@ -103,6 +104,7 @@ describe("the hosted pilot documentation", () => {
     expect(PAGE).toContain("PILOT_DPIA_LIMIT");
     expect(PAGE).toContain("PILOT_LIMITS");
     expect(PAGE).toContain("RESOURCE_LABELS");
+    expect(PAGE).toContain("ORGANIZATIONS_PER_ACCOUNT");
     // Nothing in the copy hard-codes a figure the configuration owns.
     for (const s of [section(en), section(es)]) {
       expect(s.window).not.toContain(String(PILOT_DAYS));

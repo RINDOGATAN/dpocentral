@@ -14,11 +14,11 @@ import type { SystemQuestionnaireSection } from "./vendor-questionnaires";
 export const VENDOR_QUESTIONNAIRES_ES: Record<string, string> = {
   // ── Names and descriptions ───────────────────────
   "Standard Vendor Security Questionnaire": "Cuestionario estándar de seguridad para proveedores",
-  "A comprehensive questionnaire for vendor due diligence. This template is informational, not legal advice. Verify outputs with qualified counsel.":
-    "Un cuestionario completo para la diligencia debida de proveedores. Esta plantilla es informativa y no constituye asesoramiento jurídico. Verifica los resultados con un profesional cualificado.",
+  "A comprehensive questionnaire for vendor due diligence.":
+    "Un cuestionario completo para la diligencia debida de proveedores.",
   "Vendor Security & Privacy Assessment": "Evaluación de seguridad y privacidad de proveedores",
-  "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance. This template is informational, not legal advice. Verify outputs with qualified counsel.":
-    "Cuestionario completo de diligencia debida basado en SIG, CAIQ y los requisitos del artículo 28 del RGPD. Abarca gobierno, protección de datos, control de acceso, respuesta a incidentes, subencargados, transferencias internacionales, continuidad del negocio y cumplimiento. Esta plantilla es informativa y no constituye asesoramiento jurídico. Verifica los resultados con un profesional cualificado.",
+  "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance.":
+    "Cuestionario completo de diligencia debida basado en SIG, CAIQ y los requisitos del artículo 28 del RGPD. Abarca gobierno, protección de datos, control de acceso, respuesta a incidentes, subencargados, transferencias internacionales, continuidad del negocio y cumplimiento.",
 
   // ── Section titles and descriptions ──────────────
   "Organization & Governance": "Organización y gobierno",
@@ -272,7 +272,21 @@ interface ShownQuestionnaire {
  * is shown in Spanish, anything else (a questionnaire an organisation wrote)
  * as written. English returns the row unchanged.
  */
+/**
+ * Descriptions an earlier version stored in installs' rows, mapped to today's
+ * English text, so a stored row reads the current wording in both languages.
+ */
+export const VENDOR_QUESTIONNAIRE_EARLIER_DESCRIPTIONS: Record<string, string> = {
+  "A comprehensive questionnaire for vendor due diligence. This template is informational, not legal advice. Verify outputs with qualified counsel.":
+    "A comprehensive questionnaire for vendor due diligence.",
+  "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance. This template is informational, not legal advice. Verify outputs with qualified counsel.":
+    "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance.",
+};
+
 export function localizeQuestionnaire<T extends ShownQuestionnaire>(q: T, locale: "en" | "es"): T {
+  if (q.description && VENDOR_QUESTIONNAIRE_EARLIER_DESCRIPTIONS[q.description]) {
+    q = { ...q, description: VENDOR_QUESTIONNAIRE_EARLIER_DESCRIPTIONS[q.description] };
+  }
   if (locale !== "es") return q;
   const tr = (s: string) => VENDOR_QUESTIONNAIRES_ES[s] ?? s;
   const sections = Array.isArray(q.sections)

@@ -7,6 +7,11 @@
  * from the left menu's organisation switcher ("New organization" or "Add a
  * client") and by "Add a client" on All clients. Starting a client from
  * another one is a different dialog (copy-from-client-dialog.tsx).
+ *
+ * On the hosted service it asks for the data processing agreement, as the
+ * first-run screen does, and an account that already has the most
+ * organisations it may have (ORGANIZATIONS_PER_ACCOUNT) reads the reason
+ * instead of the form. The server enforces both either way.
  */
 
 import { useState } from "react";
@@ -19,6 +24,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { organizationSlug } from "@/lib/organization-slug";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
 
 export { organizationSlug };
 
@@ -37,6 +44,10 @@ export function NewOrganizationDialog({
   const tCommon = useTranslations("common");
   const { setOrganization, refetchOrganizations } = useOrganization();
   const [name, setName] = useState("");
+  const hosted = useHostedPilot();
+  const [acceptDpa, setAcceptDpa] = useState(false);
+  const capacity = trpc.organization.capacity.useQuery(undefined, { enabled: open && hosted });
+  const atLimit = hosted && capacity.data?.limited === true && !capacity.data.canAdd;
 
   const createOrg = trpc.organization.create.useMutation({
     onSuccess: (org) => {
@@ -44,6 +55,8 @@ export function NewOrganizationDialog({
       refetchOrganizations();
       onOpenChange(false);
       setName("");
+      setAcceptDpa(false);
+      void capacity.refetch();
       toast.success(t("organization.created", { name: org.name }));
       onCreated?.();
     },
@@ -54,8 +67,12 @@ export function NewOrganizationDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    createOrg.mutate({ name: name.trim(), slug: organizationSlug(name) });
+    if (!name.trim() || (hosted && !acceptDpa)) return;
+    createOrg.mutate({
+      name: name.trim(),
+      slug: organizationSlug(name),
+      acceptDpa: hosted ? acceptDpa : undefined,
+    });
   };
 
   return (
@@ -64,6 +81,18 @@ export function NewOrganizationDialog({
         <DialogHeader>
           <DialogTitle>{tp("newOrgDialog.title")}</DialogTitle>
         </DialogHeader>
+        {atLimit ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground" data-testid="organization-limit">
+              {capacity.data?.message}
+            </p>
+            <div className="flex justify-end">
+              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+                {tCommon("close")}
+              </Button>
+            </div>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="new-org-name">{tp("newOrgDialog.nameLabel")}</Label>
@@ -76,15 +105,19 @@ export function NewOrganizationDialog({
               required
             />
           </div>
+          {hosted && (
+            <DpaAcceptCheckbox id="new-org-accept-dpa" checked={acceptDpa} onCheckedChange={setAcceptDpa} />
+          )}
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
               {tCommon("cancel")}
             </Button>
-            <Button type="submit" disabled={createOrg.isPending || !name.trim()}>
+            <Button type="submit" disabled={createOrg.isPending || !name.trim() || (hosted && !acceptDpa)}>
               {createOrg.isPending ? tp("newOrgDialog.creating") : tp("newOrgDialog.create")}
             </Button>
           </div>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   );

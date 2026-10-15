@@ -250,13 +250,25 @@ describe("d4: the states", () => {
     expect(of("dpia")).toEqual({ state: "draft", gaps: [{ key: "notApproved", count: 1 }] });
   });
 
-  it("d5: the DPIA needs the module where it is not installed, and after the two free ones", () => {
+  it("d5: the DPIA needs the module where it is not installed (self-hosted)", () => {
     const dpia = DOCUMENT_REGISTER.find((d) => d.id === "dpia")!;
     expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "module" })).toEqual({ state: "needsInput", input: "dpiaModule" });
-    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed" })).toEqual({
+    // Hosted: every module is included. After the quick start has drafted the
+    // free DPIAs, the line reads the DPIAs held, never "needs the module".
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 0 })).toEqual({
+      state: "draft",
+      gaps: [{ key: "notApproved", count: 2 }],
+    });
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 1 })).toEqual({
+      state: "ready",
+    });
+    // Only with no DPIA held and the free ones used is a plan named.
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 0, dpiaApproved: 0 })).toEqual({
       state: "needsInput",
       input: "dpiaModuleHosted",
     });
+    expect(en.documentRegister.inputs.dpiaModuleHosted).toBe("a plan to create another DPIA");
+    expect(es.documentRegister.inputs.dpiaModuleHosted).toBe("un plan para crear otra EIPD");
     expect(INPUTS.dpiaModule.href).toBe("/privacy/skills");
     expect(INPUTS.dpiaModuleHosted).toEqual({ href: "plans", external: true });
     // The server reads access by the same rule as the assessment type grid.

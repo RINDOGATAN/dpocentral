@@ -3142,7 +3142,7 @@
   },
   "footer": {
     "serviceBy": "{brandName} es un servicio de {companyName}.",
-    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
+    "disclaimer": "DPO Central ofrece herramientas y plantillas informativas. Verifica los resultados con un abogado cualificado antes de utilizarlos.",
     "userGuide": "Documentación",
     "sourceAndLicence": "Código fuente y licencia",
     "billing": "Facturación",
@@ -4167,7 +4167,7 @@
       "conformanceComplete": "{framework}: todos los requisitos cubiertos ({covered} de {total}).",
       "conformancePartial": "{framework}: {covered} de {total} requisitos cubiertos. Esta evaluación no cumple esas normas hasta que se respondan los demás.",
       "conformanceCaliforniaNotRequired": "No se da ninguna actividad desencadenante, por lo que 11 CCR 7150(b) no exige una evaluación de riesgos de California para este tratamiento.",
-      "conformanceDisclaimer": "Esta tabla recoge qué requisitos cubren las respuestas. No es un dictamen jurídico ni constituye asesoramiento jurídico.",
+      "conformanceDisclaimer": "Esta tabla recoge qué requisitos cubren las respuestas.",
       "coverGenerated": "Generado: {date}",
       "coverConfidential": "CONFIDENCIAL: este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse al personal autorizado y, previa solicitud, a las autoridades de control.",
       "executiveSummary": "Resumen ejecutivo",
@@ -6193,7 +6193,7 @@
           "actions": "Las tres próximas acciones, con un responsable y una fecha",
           "comment": "Tu comentario, guardado con el informe de ese periodo"
         },
-        "disclaimer": "El informe recoge hechos registrados en DPO Central. No es asesoramiento jurídico y no afirma que la organización cumpla ninguna ley.",
+        "disclaimer": "El informe recoge hechos registrados en DPO Central. No afirma que la organización cumpla ninguna ley.",
         "allPdfsTitle": "Los informes en PDF de cada módulo:",
         "allPdfs": {
           "inventoryLabel": "Inventario de datos",
@@ -6496,7 +6496,7 @@
         "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Una organización puede tener como máximo:",
-        "oneOrganization": "Una cuenta pertenece a una sola organización.",
+        "organizationsPerAccount": "Una cuenta puede gestionar hasta {organizations} organizaciones, cada una con su propio periodo de edición, sus propios límites de registros y sus propias EIPD gratuitas.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
         "run": "Con el plan de pago no se aplica ninguno de estos límites y tus registros se conservan: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios. Una instancia gestionada o tu propio hardware, previo presupuesto.",
         "plansLink": "Ver los planes"
@@ -7174,7 +7174,7 @@
           "requirement": "Requisito"
         },
         "note": "Las filas siguientes son los requisitos que el producto controla hoy. En el informe cada una lleva además su estado, cubierto o pendiente, y el paso de la evaluación que lo responde.",
-        "disclaimer": "DPO Central ofrece herramientas y plantillas informativas, no asesoramiento jurídico. Verifica el resultado con un abogado cualificado antes de basarte en él."
+        "disclaimer": "DPO Central ofrece herramientas y plantillas informativas. Verifica el resultado con un abogado cualificado antes de basarte en él."
       },
       "exports": {
         "title": "Exportaciones PDF",
@@ -7358,7 +7358,7 @@
           "desc": "El anexo II solo enumera medidas de seguridad confirmadas con pruebas reales de auditoría: las certificaciones por sí solas justifican la salvaguarda de revisión de auditorías en la EIT, no las garantías sobre las MTO. Las declaraciones del importador (solicitudes de las autoridades públicas, historial de brechas) quedan en «desconocido» salvo que el propio proveedor haya respondido. Y conforme a las Recomendaciones 01/2020 del CEPD, la conclusión de la EIT documenta un riesgo residual salvo que exista al menos una medida complementaria técnica."
         },
         "afterTitle": "Tras la generación",
-        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se han pactado compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado; no constituyen asesoramiento jurídico."
+        "afterDesc": "El contrato de encargo del tratamiento generado implica un calendario de cumplimiento: la reevaluación de la EIT a los 12 meses, el informe anual de transparencia cuando se han pactado compromisos sobre el acceso de las autoridades públicas y las cadencias propias de las MTO confirmadas. La entrada más próxima adelanta automáticamente la fecha de la próxima revisión del proveedor. Los documentos generados son plantillas para que los revise un abogado cualificado."
       },
       "metaTitle": "Gestión de proveedores",
       "metaDescription": "Mantén tu registro de proveedores con seguimiento de contratos, niveles de riesgo, plantillas de diligencia debida, perfiles de Vendor.Watch y revisiones periódicas.",
@@ -7518,7 +7518,7 @@
   },
   "healthAdtechReport": {
     "title": "Resultado por jurisdicción",
-    "subtitle": "Sigue las jurisdicciones seleccionadas en «Alcance y análisis de umbral». Las afirmaciones marcadas [por verificar] aún no están confirmadas; es un borrador para que lo revise un abogado, no asesoramiento jurídico.",
+    "subtitle": "Sigue las jurisdicciones seleccionadas en «Alcance y análisis de umbral». Las afirmaciones marcadas [por verificar] aún no están confirmadas; es un borrador para que lo revise un abogado.",
     "noJurisdictions": "Selecciona las jurisdicciones en «Alcance y análisis de umbral» para ver el modelo de consentimiento y las obligaciones de cada una.",
     "jurisdiction": "Jurisdicción",
     "consentModel": "Modelo de consentimiento",
@@ -7777,7 +7777,7 @@
       "template": {
         "system-lia-template-v2": {
           "name": "Evaluación del interés legítimo",
-          "description": "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer. Esta plantilla es informativa y no constituye asesoramiento jurídico; verifícala con un profesional cualificado."
+          "description": "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer."
         }
       }
     },
@@ -7884,7 +7884,7 @@
       "template": {
         "system-custom-template-v2": {
           "name": "Evaluación personalizada",
-          "description": "Una evaluación flexible para revisiones de privacidad personalizadas, con una respuesta de riesgo estructurada y espacio para una justificación escrita. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado."
+          "description": "Una evaluación flexible para revisiones de privacidad personalizadas, con una respuesta de riesgo estructurada y espacio para una justificación escrita."
         }
       }
     },
@@ -8272,7 +8272,7 @@
       "template": {
         "system-tia-template-v2": {
           "name": "Evaluación de impacto de las transferencias (EIT)",
-          "description": "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado."
+          "description": "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas."
         }
       }
     },
@@ -8952,7 +8952,7 @@
       "template": {
         "system-pia-template-v2": {
           "name": "Evaluación de impacto en la privacidad",
-          "description": "Una revisión amplia de la privacidad de una actividad de tratamiento: los datos, las finalidades, la base jurídica, la conservación, los destinatarios, los derechos de las personas y la seguridad, con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado."
+          "description": "Una revisión amplia de la privacidad de una actividad de tratamiento: los datos, las finalidades, la base jurídica, la conservación, los destinatarios, los derechos de las personas y la seguridad, con respuestas estructuradas."
         }
       },
       "section": {
@@ -9974,7 +9974,7 @@
       "assessment": "una evaluación",
       "dpiaStart": "empezar una EIPD",
       "dpiaModule": "el módulo de EIPD",
-      "dpiaModuleHosted": "el módulo de EIPD",
+      "dpiaModuleHosted": "un plan para crear otra EIPD",
       "dpaFacts": "los datos del contrato con un proveedor",
       "incident": "un incidente registrado",
       "aiAssist": "la asistencia de IA activada",
@@ -10074,7 +10074,7 @@
     "periodLine": "Periodo: del {from} al {to}",
     "generatedLine": "Generado el {date}",
     "scopeNote": "Los incidentes y las solicitudes de derechos se cuentan dentro del periodo. Las demás cifras son las de la fecha de generación.",
-    "disclaimer": "Este informe recoge hechos registrados en DPO Central. No es asesoramiento jurídico ni afirma que la organización cumpla ninguna norma.",
+    "disclaimer": "Este informe recoge hechos registrados en DPO Central. No afirma que la organización cumpla ninguna norma.",
     "download": "Descargar PDF",
     "downloadLabel": "Descargar el informe ejecutivo en PDF en {language}",
     "downloadOther": "PDF en {language}",

@@ -16,7 +16,7 @@
 
 import type { OrganizationRole, Prisma } from "@prisma/client";
 import { isHostedDeployment } from "@/lib/hosted";
-import { isPaidPlan } from "@/server/services/pilot/caps";
+import { isPaidPlan, ORGANIZATIONS_PER_ACCOUNT } from "@/server/services/pilot/caps";
 import { logger } from "@/lib/logger";
 
 export interface PendingInvite {
@@ -71,9 +71,10 @@ type Db = any;
 /**
  * At sign-in: every organisation holding an invitation for this address
  * gets a membership with the invited role, and the invitation is removed.
- * On the hosted pilot the one-organisation-per-account rule still applies:
- * an account that already belongs to an organisation is not added to a
- * pilot organisation (the invitation stays until it is cancelled).
+ * On the hosted service the organisations-per-account rule still applies:
+ * an account that already belongs to ORGANIZATIONS_PER_ACCOUNT organisations
+ * is not added to a pilot organisation (the invitation stays until it is
+ * cancelled).
  * Never throws: a failure is logged and sign-in goes on.
  */
 export async function acceptPendingInvitations(db: Db, userId: string, email: string | null | undefined): Promise<number> {
@@ -94,7 +95,7 @@ export async function acceptPendingInvitations(db: Db, userId: string, email: st
       if (!existing) {
         if (isHostedDeployment() && !isPaidPlan(org as never)) {
           const memberships = await db.organizationMember.count({ where: { userId } });
-          if (memberships > 0) continue;
+          if (memberships >= ORGANIZATIONS_PER_ACCOUNT) continue;
         }
         const membership = await db.organizationMember.create({
           data: {

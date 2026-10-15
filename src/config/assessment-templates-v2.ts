@@ -130,8 +130,8 @@ const liaV2: V2Template = {
   version: "2.0",
   name: L("Legitimate Interest Assessment", "Evaluación del interés legítimo"),
   description: L(
-    "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read. This template is informational, not legal advice; verify with qualified counsel.",
-    "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer. Esta plantilla es informativa y no constituye asesoramiento jurídico; verifícala con un profesional cualificado.",
+    "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read.",
+    "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer.",
   ),
   sections: [
     {
@@ -355,8 +355,8 @@ const tiaV2: V2Template = {
   version: "2.0",
   name: L("Transfer Impact Assessment", "Evaluación de impacto de las transferencias (EIT)"),
   description: L(
-    "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers. Informational, not legal advice; verify with qualified counsel.",
-    "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
+    "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers.",
+    "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas.",
   ),
   sections: [
     {
@@ -693,8 +693,8 @@ const piaV2: V2Template = {
   version: "2.0",
   name: L("Privacy Impact Assessment", "Evaluación de impacto en la privacidad"),
   description: L(
-    "A broad privacy review of a processing activity: the data, the purposes, the lawful basis, retention, recipients, the rights of individuals and security, with structured answers. Informational, not legal advice; verify with qualified counsel.",
-    "Una revisión amplia de la privacidad de una actividad de tratamiento: los datos, las finalidades, la base jurídica, la conservación, los destinatarios, los derechos de las personas y la seguridad, con respuestas estructuradas. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
+    "A broad privacy review of a processing activity: the data, the purposes, the lawful basis, retention, recipients, the rights of individuals and security, with structured answers.",
+    "Una revisión amplia de la privacidad de una actividad de tratamiento: los datos, las finalidades, la base jurídica, la conservación, los destinatarios, los derechos de las personas y la seguridad, con respuestas estructuradas.",
   ),
   sections: [
     {
@@ -979,8 +979,8 @@ const customV2: V2Template = {
   version: "2.0",
   name: L("Custom Assessment", "Evaluación personalizada"),
   description: L(
-    "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale. Informational, not legal advice; verify with qualified counsel.",
-    "Una evaluación flexible para revisiones de privacidad personalizadas, con una respuesta de riesgo estructurada y espacio para una justificación escrita. Informativo, no asesoramiento jurídico; verifícalo con un profesional cualificado.",
+    "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale.",
+    "Una evaluación flexible para revisiones de privacidad personalizadas, con una respuesta de riesgo estructurada y espacio para una justificación escrita.",
   ),
   sections: [
     {

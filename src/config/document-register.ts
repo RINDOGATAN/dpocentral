@@ -227,18 +227,18 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     stepId: "assessments",
     href: "/privacy/assessments",
     formats: ["pdf"],
-    needs: "The DPIA module: on the self-hosted kit, its template installed from a signed module; on the hosted service, two are free per organization.",
-    rule: "Needs the DPIA module where it is not installed (self-hosted) or after the two free ones (hosted). Otherwise needs a DPIA to be started; draft while none is approved; ready once one is.",
+    needs: "On the self-hosted kit, the DPIA module (its template installed from a signed module); on the hosted service every module is included, and the DPIA only needs one to be started.",
+    rule: "Needs the DPIA module where it is not installed (self-hosted). Otherwise the DPIAs already held decide: draft while none is approved, ready once one is. With none held, needs a DPIA to be started, or, on the hosted pilot after its free DPIAs are used, a plan to create another.",
     evaluate: (f) =>
       f.dpiaAccess === "module"
         ? needs("dpiaModule")
-        : f.dpiaAccess === "quotaUsed"
-          ? needs("dpiaModuleHosted")
-          : f.dpiaAssessments === 0
-            ? needs("dpiaStart")
-            : f.dpiaApproved > 0
-              ? ready()
-              : draftOrReady([{ key: "notApproved", count: f.dpiaAssessments - f.dpiaApproved }]),
+        : f.dpiaAssessments > 0
+          ? f.dpiaApproved > 0
+            ? ready()
+            : draftOrReady([{ key: "notApproved", count: f.dpiaAssessments - f.dpiaApproved }])
+          : f.dpiaAccess === "quotaUsed"
+            ? needs("dpiaModuleHosted")
+            : needs("dpiaStart"),
   },
   {
     id: "assessmentPortfolio",

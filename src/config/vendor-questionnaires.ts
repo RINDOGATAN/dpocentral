@@ -37,7 +37,7 @@ export const SYSTEM_VENDOR_QUESTIONNAIRE_ID = "system-vendor-questionnaire";
 
 export const VENDOR_QUESTIONNAIRE_V1 = {
   name: "Standard Vendor Security Questionnaire",
-  description: "A comprehensive questionnaire for vendor due diligence. This template is informational, not legal advice. Verify outputs with qualified counsel.",
+  description: "A comprehensive questionnaire for vendor due diligence.",
   version: "1.0",
   isSystem: true,
   isActive: true,
@@ -99,7 +99,7 @@ export const VENDOR_QUESTIONNAIRE_V1 = {
 export const VENDOR_QUESTIONNAIRE_V2 = {
   name: "Vendor Security & Privacy Assessment",
   description:
-    "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance. This template is informational, not legal advice. Verify outputs with qualified counsel.",
+    "Comprehensive due diligence questionnaire based on SIG, CAIQ, and GDPR Article 28 requirements. Covers governance, data protection, access control, incident response, subprocessors, international transfers, business continuity, and compliance.",
   version: "2.0",
   isSystem: true,
   isActive: true,
