@@ -1725,6 +1725,9 @@
         "createdListAssets": "Sistemas",
         "createdListActivities": "Actividades de tratamiento",
         "createdListFlows": "Flujos de datos",
+        "createdListAlso": "Además",
+        "createdAssessments": "{count, plural, one {# evaluación de impacto (DPIA) en borrador} other {# evaluaciones de impacto (DPIA) en borrador}}",
+        "createdTransfers": "{count, plural, one {# transferencia internacional} other {# transferencias internacionales}}",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
         "cardDataInventory": "Inventario de datos",
@@ -2025,9 +2028,8 @@
       },
       "catalog": {
         "title": "Catálogo de proveedores",
-        "subtitle": "Busca en un catálogo inicial de encargados habituales de MarTech, IA y SaaS",
+        "subtitle": "Proveedores habituales con sus datos ya rellenados, listos para añadirlos a tu lista y revisarlos",
         "lockedSubtitle": "Accede a un catálogo inicial de encargados habituales para agilizar el alta de proveedores. Las entradas no están auditadas: evalúa cada proveedor antes de confiar en los datos del catálogo",
-        "active": "Activo",
         "addFromCatalog": "Añadir desde el catálogo",
         "perMonth": "/mes",
         "enable": "Activar",
@@ -2752,6 +2754,11 @@
         "generatedConfirmed": "Creado a partir de los sistemas vinculados a una actividad de tratamiento, y confirmado.",
         "confirm": "Confirmar flujo",
         "confirmed": "Flujo confirmado"
+    },
+    "legend": {
+      "title": "Leyenda",
+      "inbound": "flujos de entrada",
+      "outbound": "flujos de salida"
     },
     "abbr": {
       "IDENTIFIERS": "ID",

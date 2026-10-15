@@ -149,10 +149,19 @@ describe("d2: drafts count once confirmed", () => {
       expect(src, page).toMatch(/<ConfirmDraftButton kind="/);
       expect(src, page).toMatch(/<DraftBadge record=/);
     }
-    for (const page of ["src/app/(dashboard)/privacy/vendors/page.tsx", "src/app/(dashboard)/privacy/data-inventory/page.tsx"]) {
+    // The lists mark each draft; the count and the way to confirm them are on
+    // the overview (needs action) and the review page, not repeated on every list.
+    for (const page of [
+      "src/app/(dashboard)/privacy/vendors/page.tsx",
+      "src/app/(dashboard)/privacy/data-inventory/page.tsx",
+      "src/app/(dashboard)/privacy/data-inventory/processing-activities/page.tsx",
+      "src/app/(dashboard)/privacy/quickstart/page.tsx",
+    ]) {
       const src = read(page);
-      expect(src, page).toMatch(/<DraftsNotice \/>/);
-      expect(src, page).toMatch(/<DraftBadge record=/);
+      expect(src, page).not.toMatch(/<DraftsNotice/);
+    }
+    for (const page of ["src/app/(dashboard)/privacy/vendors/page.tsx", "src/app/(dashboard)/privacy/data-inventory/page.tsx"]) {
+      expect(read(page), page).toMatch(/<DraftBadge record=/);
     }
     const review = read("src/app/(dashboard)/privacy/review/page.tsx");
     expect(review).toMatch(/trpc\.drafts\.confirm\.useMutation/);

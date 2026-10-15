@@ -1725,6 +1725,9 @@
         "createdListAssets": "Systems",
         "createdListActivities": "Processing activities",
         "createdListFlows": "Data flows",
+        "createdListAlso": "Also",
+        "createdAssessments": "{count, plural, one {# draft impact assessment (DPIA)} other {# draft impact assessments (DPIA)}}",
+        "createdTransfers": "{count, plural, one {# international transfer} other {# international transfers}}",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
         "createdBody": "Your privacy program is set up. Explore your new records and customize them as needed.",
         "cardDataInventory": "Data Inventory",
@@ -2025,9 +2028,8 @@
       },
       "catalog": {
         "title": "Vendor Catalog",
-        "subtitle": "Search a starter catalog of common MarTech, AI, and SaaS processors",
+        "subtitle": "Common vendors with their details already filled in, ready to add to your list and check",
         "lockedSubtitle": "Get access to a starter catalog of common processors to speed up vendor intake. Entries are not audited: assess each vendor before relying on catalog data",
-        "active": "Active",
         "addFromCatalog": "Add from Catalog",
         "perMonth": "/mo",
         "enable": "Enable",
@@ -2752,6 +2754,11 @@
         "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
         "confirm": "Confirm flow",
         "confirmed": "Flow confirmed"
+    },
+    "legend": {
+      "title": "Key",
+      "inbound": "incoming flows",
+      "outbound": "outgoing flows"
     },
     "abbr": {
       "IDENTIFIERS": "ID",

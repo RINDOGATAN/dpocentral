@@ -52,6 +52,50 @@ export function classifyCategories(categories: string[] | null | undefined): Sen
 }
 
 /**
+ * The colour class of one category chip on a node (and in the legend):
+ * special category, personal, or general. Never "none" for a real category.
+ */
+export function chipSensitivity(category: string): Exclude<Sensitivity, "none"> {
+  if (SPECIAL_CATEGORIES.has(category)) return "special";
+  if (SENSITIVE_CATEGORIES.has(category)) return "sensitive";
+  return "general";
+}
+
+/** The data categories in the order of the schema's DataCategory enum. */
+export const DATA_CATEGORY_ORDER = [
+  "IDENTIFIERS",
+  "DEMOGRAPHICS",
+  "FINANCIAL",
+  "HEALTH",
+  "BIOMETRIC",
+  "LOCATION",
+  "BEHAVIORAL",
+  "EMPLOYMENT",
+  "EDUCATION",
+  "POLITICAL",
+  "RELIGIOUS",
+  "GENETIC",
+  "SEXUAL_ORIENTATION",
+  "CRIMINAL",
+  "OTHER",
+] as const;
+
+/**
+ * The categories a map shows, once each, in the order of the data category
+ * list, so the legend reads the same way every time.
+ */
+export function legendCategories(
+  flows: readonly { dataCategories?: readonly string[] | null }[],
+  order: readonly string[] = DATA_CATEGORY_ORDER,
+): string[] {
+  const seen = new Set<string>();
+  for (const f of flows) for (const c of f.dataCategories ?? []) seen.add(c);
+  const known = order.filter((c) => seen.has(c));
+  const unknown = [...seen].filter((c) => !order.includes(c)).sort();
+  return [...known, ...unknown];
+}
+
+/**
  * Frequency → stroke width in pixels.
  * Strings are free-form in the schema, so we match on common words.
  */

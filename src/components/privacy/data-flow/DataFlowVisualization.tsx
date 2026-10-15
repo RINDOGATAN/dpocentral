@@ -32,7 +32,8 @@ import {
   DEFAULT_FILTERS,
   type FlowFilters,
 } from "./FlowFilterToolbar";
-import { classifyCategories } from "./flow-palette";
+import { classifyCategories, legendCategories } from "./flow-palette";
+import { FlowLegend } from "./FlowLegend";
 import { DataCategory } from "@prisma/client";
 import {
   useDataFlowGraph,
@@ -196,6 +197,12 @@ export function DataFlowVisualization({
       },
     }));
   }, [flowsData]);
+
+  // The categories the map shows, for the key under it.
+  const shownCategories = useMemo(
+    () => legendCategories(flows),
+    [flows]
+  );
 
   // Build graph
   const { nodes: graphNodes, edges: graphEdges, isLoading: graphLoading } = useDataFlowGraph({
@@ -580,6 +587,7 @@ export function DataFlowVisualization({
           </ReactFlow>
         </div>
       </Card>
+      <FlowLegend categories={shownCategories} />
 
       {/* Flow Details Panel */}
       <FlowDetailsPanel

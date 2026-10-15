@@ -120,10 +120,9 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await page.getByRole("button", { name: /^(review|revisar)$/i }).click();
   await page.getByRole("button", { name: /build my privacy program|construir mi programa de privacidad/i }).click();
 
-  // The result says the records are drafts, with the way to confirm them.
+  // The result lists every record made; the drafts count is on the overview.
   const created = page.getByTestId("quickstart-created");
   await expect(created).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByTestId("drafts-notice")).toBeVisible();
   await shot(page, "02-quickstart-result", project);
   const hrefs = await created.getByRole("link").evaluateAll((links) =>
     links.map((a) => (a as HTMLAnchorElement).getAttribute("href") ?? ""),
@@ -146,7 +145,6 @@ test("drafts count once confirmed, and one figure everywhere", async ({ page, co
   await expectNoSidewaysScroll(page, "all clients");
   await shot(page, "05-clients-drafts", project);
   await page.goto("/privacy/data-inventory");
-  await expect(page.getByTestId("drafts-notice")).toBeVisible();
   await expect(page.getByTestId("draft-badge").first()).toBeVisible();
 
   // Confirm one record on its own page.
