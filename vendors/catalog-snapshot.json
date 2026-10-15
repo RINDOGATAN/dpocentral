@@ -9581,7 +9581,7 @@
       "website": "https://www.bigcommerce.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": "https://security.bigcommerce.com/",
-      "dpaUrl": "https://security.bigcommerce.com/?inviteToken=eyJhbGciOiJIUzUxMiJ9.eyJpbnZpdGVyRW1haWwiOiJycm9zc0B1cy5zcXVhcmUtZW5peC5jb20iLCJpbnZpdGVyQWNjb3VudElkIjoiMzg1YTRlMWQtNmZkMy00ZDM4LWI3NTgtNTczY2UzZTU1ZjQ3IiwicmVxdWVzdEFjY2Vzc1VybCI6Imh0dHBzOi8vc2VjdXJpdHkuYmlnY29tbWVyY2UuY29tLz9sb2dpblJlcXVlc3Q9dHJ1ZSIsInN1YiI6InZncnVuZHlAdXMuc3F1YXJlLWVuaXguY29tIiwiaWF0IjoxNzg4MjkxODg4LCJpc3MiOiJodHRwczovL2FwcC5zYWZlYmFzZS5pbyIsImF1ZCI6Imh0dHBzOi8vYXBwLnNhZmViYXNlLmlvL2FjY291bnQvaW52aXRlZC9hY2NlcHQiLCJleHAiOjE3OTA4ODM4ODh9.9i5cmdsqBv79K6M1cQLMXVIxrg9s11WvGkW6OyMto9_rMik3B5z9J98myv_BbHDhe5nGSYHDlkn-cKSL6KYfEQ&itemName=data_security&itemUid=c4223a81-5840-4e11-ac9f-2b812794a67e&loginRequest=true&source=click",
+      "dpaUrl": null,
       "securityPageUrl": "https://security.bigcommerce.com/",
       "certifications": [
         "PCI DSS",
