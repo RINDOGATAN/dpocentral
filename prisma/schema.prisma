@@ -37,6 +37,8 @@ model User {
 
   // Organization relations
   organizationMemberships OrganizationMember[]
+  // Hosted service: the organisations this account pays for (one plan for all)
+  billedOrganizations Organization[] @relation("OrganizationBillingOwner")
 
   // Saved list views (a personal preference kept per organisation)
   savedViews SavedView[]
@@ -155,6 +157,16 @@ model Organization {
   // operator; such an organisation is never downgraded automatically.
   planStripeSubscriptionId String?
 
+  // Hosted service: the billing owner, the account that created the
+  // organisation. One customer pays once: every organisation with the same
+  // billing owner shares one plan, one pilot window (pilotStartedAt) and one
+  // set of pilot allowances (src/server/services/pilot/umbrella.ts). The plan
+  // columns above and pilotStartedAt are kept equal across those
+  // organisations: a new one copies them, and every write applies to all of
+  // them. Null when the account is gone: the organisation then stands alone.
+  billingOwnerId String?
+  billingOwner   User?   @relation("OrganizationBillingOwner", fields: [billingOwnerId], references: [id], onDelete: SetNull)
+
   // Hosted service: the rights-request (DSAR) add-on of an organisation on the
   // paid plan (src/server/services/dsar/module.ts). ACTIVE opens the module
   // (10 public-form requests per calendar month, Europe/Madrid); NONE,
@@ -204,6 +216,7 @@ model Organization {
   programmeImportRecords ProgrammeImportRecord[]
 
   @@index([planStripeSubscriptionId])
+  @@index([billingOwnerId])
   @@map("organizations")
 }
 

@@ -62,10 +62,12 @@ One codebase, two postures, switched by environment only:
 - **Hosted pilot** (cloud): Google OAuth / magic links. A free pilot with
   limits. You can start free and use it with real client data: all our
   sub-processors have the necessary safeguards and certifications. Every module
-  is included, one
-  organization per account, 15 days of editing from your first sign-in, then
-  read-only with export, two impact assessments (DPIAs) per organization, and a
-  ceiling on records per organization (for example 25 systems, 50 vendors).
+  is included, up to five
+  organizations per account, which share one free period and one set of
+  limits: 15 days of editing from your first sign-in, then read-only with
+  export, two impact assessments (DPIAs), and a ceiling on records (for
+  example 25 systems, 50 vendors). One paid plan covers all the organizations
+  of an account.
   Exports are never limited. The
   full list is in the documentation, under "Hosted pilot" (`/docs#hosted-pilot`).
   To lift the limits, choose the paid Cloud Plan (<https://www.todo.law/pricing>),

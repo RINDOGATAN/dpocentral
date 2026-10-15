@@ -18,7 +18,7 @@ const mocks = vi.hoisted(() => {
   const counter = () => ({ count: vi.fn().mockResolvedValue(0) });
   return {
     prisma: {
-      organization: { findUnique: vi.fn(), create: vi.fn(), updateMany: vi.fn() },
+      organization: { findUnique: vi.fn(), findMany: vi.fn().mockResolvedValue([]), create: vi.fn(), updateMany: vi.fn() },
       organizationMember: {
         findUnique: vi.fn(),
         findFirst: vi.fn(),
@@ -306,6 +306,29 @@ describe("organisations per account", () => {
       await orgCaller().create({ name: `Client ${held + 1}`, slug: `client-${held + 1}`, acceptDpa: true });
       expect(mocks.prisma.organization.create, `with ${held} held`).toHaveBeenCalled();
     }
+  });
+
+  it("bills a new organisation to its creator and joins the creator's window and plan", async () => {
+    hosted();
+    const firstStart = new Date(CREATED.getTime() - 3 * DAY);
+    mocks.prisma.organizationMember.count.mockResolvedValue(1);
+    mocks.prisma.organization.findMany.mockResolvedValueOnce([
+      { plan: "PILOT", planStartedAt: null, planRenewsAt: null, planStripeSubscriptionId: null, pilotStartedAt: firstStart },
+    ]);
+    await orgCaller().create({ name: "Client 2", slug: "client-2", acceptDpa: true });
+    expect(mocks.prisma.organization.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { billingOwnerId: "user-1" } })
+    );
+    const data = mocks.prisma.organization.create.mock.calls[0][0].data;
+    expect(data).toMatchObject({ billingOwnerId: "user-1", plan: "PILOT", pilotStartedAt: firstStart });
+  });
+
+  it("an account's first organisation starts its own window", async () => {
+    hosted();
+    await orgCaller().create({ name: "First", slug: "first", acceptDpa: true });
+    const data = mocks.prisma.organization.create.mock.calls[0][0].data;
+    expect(data.billingOwnerId).toBe("user-1");
+    expect(data).not.toHaveProperty("pilotStartedAt");
   });
 
   it("still asks for the agreement for a second organisation", async () => {

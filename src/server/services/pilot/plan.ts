@@ -13,11 +13,17 @@
  * operator; the audit entry says only whether it changed, because the
  * organisation's owners can read its audit trail.
  *
+ * One plan per paying customer: the change applies to every organisation of
+ * the named organisation's group (same billing owner, umbrella.ts), each with
+ * its own audit entry. The operator's note is kept on the named organisation
+ * only.
+ *
  * A dry run computes and returns the same before and after, and writes
  * nothing.
  */
 
 import type { PrismaClient } from "@prisma/client";
+import { groupWhere } from "./umbrella";
 
 export const PLANS = ["PILOT", "EU_CLOUD"] as const;
 export type Plan = (typeof PLANS)[number];
@@ -32,7 +38,12 @@ export type PlanState = {
   planNote: string | null;
 };
 
-export type PlanOrgRow = PlanState & { id: string; slug: string; name: string };
+export type PlanOrgRow = PlanState & {
+  id: string;
+  slug: string;
+  name: string;
+  billingOwnerId?: string | null;
+};
 
 export interface SetPlanInput {
   /** Organisation id or slug. */
@@ -53,6 +64,8 @@ export interface SetPlanResult {
   after: PlanState;
   changed: boolean;
   written: boolean;
+  /** The other organisations of the group whose plan this changes (or would, on a dry run). */
+  groupChanged: number;
 }
 
 /** The Prisma client (tests pass a stand-in). */
@@ -167,6 +180,7 @@ export async function setOrganizationPlan(
       planStartedAt: true,
       planRenewsAt: true,
       planNote: true,
+      billingOwnerId: true,
     },
   });
   if (!row) throw new PlanInputError(`No organization with the id or slug "${key}".`);
@@ -178,22 +192,49 @@ export async function setOrganizationPlan(
     planNote: row.planNote,
   };
   const after = resolvePlanState(before, input, now);
-  const changed = !same(before, after);
   const organization = { id: row.id, slug: row.slug, name: row.name };
 
-  if (input.dryRun || !changed) {
-    return { organization, before, after, changed, written: false };
+  // The rest of the group follows the named organisation's plan and dates;
+  // each keeps its own note.
+  const siblings = row.billingOwnerId
+    ? (
+        await db.organization.findMany({
+          where: groupWhere(row),
+          select: { id: true, plan: true, planStartedAt: true, planRenewsAt: true, planNote: true },
+        })
+      ).filter((o) => o.id !== row.id)
+    : [];
+  const siblingChanges = siblings
+    .map((o) => {
+      const b: PlanState = {
+        plan: o.plan,
+        planStartedAt: o.planStartedAt,
+        planRenewsAt: o.planRenewsAt,
+        planNote: o.planNote,
+      };
+      const a: PlanState = { ...after, planNote: o.planNote };
+      return { id: o.id, before: b, after: a };
+    })
+    .filter((c) => !same(c.before, c.after));
+
+  const changed = !same(before, after);
+  const groupChanged = siblingChanges.length;
+
+  if (input.dryRun || (!changed && groupChanged === 0)) {
+    return { organization, before, after, changed, written: false, groupChanged };
   }
 
+  const metadata = { source: "scripts/set-org-plan.ts", operator: input.operator };
   await db.$transaction(async (tx) => {
-    await tx.organization.update({ where: { id: row.id }, data: after });
-    await tx.auditLog.create({
-      data: planChangeAuditData(row.id, before, after, {
-        source: "scripts/set-org-plan.ts",
-        operator: input.operator,
-      }),
-    });
+    if (changed) {
+      await tx.organization.update({ where: { id: row.id }, data: after });
+      await tx.auditLog.create({ data: planChangeAuditData(row.id, before, after, metadata) });
+    }
+    for (const c of siblingChanges) {
+      await tx.organization.update({ where: { id: c.id }, data: c.after });
+      await tx.auditLog.create({ data: planChangeAuditData(c.id, c.before, c.after, metadata) });
+    }
   });
 
-  return { organization, before, after, changed, written: true };
+  return { organization, before, after, changed, written: true, groupChanged };
 }

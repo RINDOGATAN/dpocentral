@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Sets an organisation's hosted plan. Operator use only: there is no screen
+ * Sets an organisation's hosted plan, and with it the plan of every other
+ * organisation of the same paying customer (same billing owner). Operator use only: there is no screen
  * for it, and nothing in the app sells the plan (payment is collected
  * outside the app, by a payment link or an invoice).
  *
@@ -105,9 +106,14 @@ async function main(): Promise<number> {
     console.log(`Organisation: ${o.name} (id ${o.id}, slug ${o.slug})`);
     console.log(show("Before", result.before));
     console.log(show("After", result.after));
-    if (!result.changed) console.log("Nothing to change.");
+    if (result.groupChanged > 0) {
+      console.log(
+        `Same customer: ${result.groupChanged} other organisation(s) of the group take the same plan and dates.`
+      );
+    }
+    if (!result.changed && result.groupChanged === 0) console.log("Nothing to change.");
     else if (input.dryRun) console.log("Dry run: nothing written.");
-    else console.log("Written, with one audit-trail entry (PLAN_CHANGE).");
+    else console.log("Written, with one audit-trail entry (PLAN_CHANGE) per organisation changed.");
     return 0;
   } catch (err) {
     if (err instanceof PlanInputError) {

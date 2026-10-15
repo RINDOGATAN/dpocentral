@@ -150,6 +150,11 @@ export function PilotStatusCard({ organizationId }: { organizationId: string }) 
 
         <div>
           <h3 className="text-sm font-medium mb-2">{t("settings.limitsTitle")}</h3>
+          {status.organizations > 1 && (
+            <p className="text-sm text-muted-foreground mb-2" data-testid="pilot-shared-limits">
+              {t("settings.shared", { count: status.organizations })}
+            </p>
+          )}
           <ul className="grid gap-1 sm:grid-cols-2 text-sm">
             {status.usage.map((u) => (
               <li key={u.resource} className="flex justify-between gap-4">

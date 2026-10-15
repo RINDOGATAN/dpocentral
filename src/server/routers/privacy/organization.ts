@@ -28,6 +28,7 @@ import {
   assertPilotCapacity,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
+import { GROUP_STATE_SELECT, inheritedGroupState } from "@/server/services/pilot/umbrella";
 import { isHostedDeployment } from "@/lib/hosted";
 import { BLOCKED_EMAIL_MESSAGES, isBlockedAccountEmail } from "@/lib/email-policy";
 import { PILOT_DPA, PILOT_DPA_ACTION, PILOT_DPA_REQUIRED } from "@/config/pilot-dpa";
@@ -259,11 +260,33 @@ export const organizationRouter = createTRPCRouter({
         await provenEmailOf(ctx.prisma, ctx.session.user.id)
       );
 
+      // Hosted service: the creator is the billing owner, and a new
+      // organisation joins the creator's group: same plan, same pilot window
+      // (never a fresh one), same shared allowances (pilot/umbrella.ts).
+      const group = hosted
+        ? inheritedGroupState(
+            await ctx.prisma.organization.findMany({
+              where: { billingOwnerId: ctx.session.user.id },
+              select: GROUP_STATE_SELECT,
+            })
+          )
+        : null;
+
       const organization = await ctx.prisma.organization.create({
         data: {
           name: input.name,
           slug,
           domain,
+          billingOwnerId: ctx.session.user.id,
+          ...(group
+            ? {
+                plan: group.plan as "PILOT" | "EU_CLOUD",
+                planStartedAt: group.planStartedAt,
+                planRenewsAt: group.planRenewsAt,
+                planStripeSubscriptionId: group.planStripeSubscriptionId,
+                pilotStartedAt: group.pilotStartedAt,
+              }
+            : {}),
           // Hosted service: the creator sees the welcome card (safeguards
           // question) on the first visit to /privacy. Never on the kit.
           welcomeUserId: isHostedDeployment() ? ctx.session.user.id : null,

@@ -24,8 +24,9 @@ type Org = {
   planNote: string | null;
   planStripeSubscriptionId: string | null;
   pilotStartedAt: Date | null;
+  billingOwnerId?: string | null;
 };
-type Member = { organizationId: string; email: string; role: string };
+type Member = { organizationId: string; email: string; role: string; userId?: string };
 
 const state = vi.hoisted(() => ({
   orgs: new Map<string, Org>(),
@@ -44,6 +45,7 @@ const fakeDb = vi.hoisted(() => {
     planRenewsAt: o.planRenewsAt,
     planNote: o.planNote,
     planStripeSubscriptionId: o.planStripeSubscriptionId,
+    billingOwnerId: o.billingOwnerId ?? null,
   });
   const tx = {
     organization: {
@@ -64,9 +66,19 @@ const fakeDb = vi.hoisted(() => {
   };
   return {
     organization: {
-      findMany: async ({ where }: { where: { planStripeSubscriptionId: string } }) =>
+      findMany: async ({
+        where,
+      }: {
+        where: { planStripeSubscriptionId?: string; billingOwnerId?: string; id?: string };
+      }) =>
         [...state.orgs.values()]
-          .filter((o) => o.planStripeSubscriptionId === where.planStripeSubscriptionId)
+          .filter((o) =>
+            "planStripeSubscriptionId" in where
+              ? o.planStripeSubscriptionId === where.planStripeSubscriptionId
+              : "billingOwnerId" in where
+                ? (o.billingOwnerId ?? null) === where.billingOwnerId
+                : o.id === where.id
+          )
           .map(pick),
       findUnique: async ({ where }: { where: { id: string } }) => {
         const o = state.orgs.get(where.id);
@@ -85,7 +97,11 @@ const fakeDb = vi.hoisted(() => {
               where.role.in.includes(m.role) &&
               m.email.toLowerCase() === where.user.email.equals.toLowerCase()
           )
-          .map((m) => ({ organizationId: m.organizationId })),
+          .map((m) => ({
+            organizationId: m.organizationId,
+            userId: m.userId ?? `user:${m.email.toLowerCase()}`,
+            organization: { billingOwnerId: state.orgs.get(m.organizationId)?.billingOwnerId ?? null },
+          })),
       // The checkout route's lookup.
       findFirst: async ({ where }: { where: { organizationId: string; user: { email: string } } }) => {
         const m = state.members.find(
@@ -319,7 +335,7 @@ describe("POST /api/plan/stripe-sync: payment", () => {
     expect(state.updates).toBe(0);
   });
 
-  it("does not guess between several organisations, nor count a plain member", async () => {
+  it("does not guess between several customers, nor count a plain member", async () => {
     org("cmorg1");
     org("cmorg2");
     org("cmorg3");
@@ -329,7 +345,7 @@ describe("POST /api/plan/stripe-sync: payment", () => {
       { organizationId: "cmorg3", email: "member@example.test", role: "MEMBER" }
     );
     let body = await (await post(notice())).json();
-    expect(body.results[0].reason).toBe("several-organisations");
+    expect(body.results[0].reason).toBe("several-customers");
     body = await (await post(notice({ customerEmail: "member@example.test" }))).json();
     expect(body.results[0].reason).toBe("no-account");
     expect(state.updates).toBe(0);
@@ -383,6 +399,96 @@ describe("POST /api/plan/stripe-sync: the end of the subscription", () => {
     const body = await (await post(notice({ kind: "ended", periodEnd: null }))).json();
     expect(body.results[0]).toMatchObject({ organizationId: null, reason: "no-organisation-for-subscription" });
     expect(state.orgs.get("cmorg1")!.plan).toBe("EU_CLOUD");
+  });
+});
+
+describe("POST /api/plan/stripe-sync: one plan per customer", () => {
+  const group = () => {
+    org("cmorg1", { billingOwnerId: "consultant" });
+    org("cmorg2", { billingOwnerId: "consultant" });
+    org("cmorg3", { billingOwnerId: "consultant" });
+    org("cmclient", { billingOwnerId: "client-owner" });
+  };
+
+  it("a reference to any organisation of the customer covers all of them, one audit entry each", async () => {
+    group();
+    const body = await (await post(notice({ clientReferenceId: signOrgReference("cmorg2", SECRET) }))).json();
+    expect(body.results.map((r: { organizationId: string }) => r.organizationId).sort()).toEqual([
+      "cmorg1",
+      "cmorg2",
+      "cmorg3",
+    ]);
+    for (const id of ["cmorg1", "cmorg2", "cmorg3"]) {
+      expect(state.orgs.get(id)).toMatchObject({ plan: "EU_CLOUD", planStripeSubscriptionId: "sub_A" });
+    }
+    expect(new Set(["cmorg1", "cmorg2", "cmorg3"].map((id) => state.orgs.get(id)!.planStartedAt!.getTime())).size).toBe(1);
+    expect(state.orgs.get("cmclient")!.plan).toBe("PILOT");
+    expect(state.audits).toHaveLength(3);
+  });
+
+  it("a payer who administers several organisations of one customer resolves to that customer", async () => {
+    group();
+    state.members.push(
+      { organizationId: "cmorg1", email: "owner@example.test", role: "OWNER", userId: "consultant" },
+      { organizationId: "cmorg2", email: "owner@example.test", role: "OWNER", userId: "consultant" },
+      { organizationId: "cmorg3", email: "owner@example.test", role: "ADMIN", userId: "consultant" },
+      // Also an administrator of a client's own organisation: not theirs to pay for.
+      { organizationId: "cmclient", email: "owner@example.test", role: "ADMIN", userId: "consultant" }
+    );
+    const body = await (await post(notice())).json();
+    expect(body.results).toHaveLength(3);
+    expect(body.results.every((r: { rule: string; changed: boolean }) => r.rule === "email" && r.changed)).toBe(true);
+    expect(state.orgs.get("cmclient")!.plan).toBe("PILOT");
+  });
+
+  it("an administrator who pays for a customer they do not own resolves to that one customer", async () => {
+    group();
+    state.members.push(
+      { organizationId: "cmorg1", email: "staff@example.test", role: "ADMIN", userId: "staff" },
+      { organizationId: "cmorg3", email: "staff@example.test", role: "ADMIN", userId: "staff" }
+    );
+    const body = await (await post(notice({ customerEmail: "staff@example.test" }))).json();
+    expect(body.results).toHaveLength(3);
+    expect(state.orgs.get("cmorg2")!.plan).toBe("EU_CLOUD");
+  });
+
+  it("a renewal also covers an organisation the customer created since", async () => {
+    group();
+    await post(notice({ clientReferenceId: signOrgReference("cmorg1", SECRET) }));
+    org("cmorg4", { billingOwnerId: "consultant" });
+    const next = "2028-10-11T10:00:00.000Z";
+    await post(notice({ eventId: "evt_2", eventType: "invoice.paid", periodEnd: next }));
+    for (const id of ["cmorg1", "cmorg2", "cmorg3", "cmorg4"]) {
+      expect(state.orgs.get(id)).toMatchObject({ plan: "EU_CLOUD", planStripeSubscriptionId: "sub_A" });
+      expect(state.orgs.get(id)!.planRenewsAt?.toISOString()).toBe(next);
+    }
+  });
+
+  it("the end of the subscription returns every organisation of the customer to the pilot", async () => {
+    group();
+    await post(notice({ clientReferenceId: signOrgReference("cmorg1", SECRET) }));
+    await post(notice({ kind: "ended", eventType: "customer.subscription.deleted", periodEnd: null }));
+    for (const id of ["cmorg1", "cmorg2", "cmorg3"]) expect(state.orgs.get(id)!.plan).toBe("PILOT");
+  });
+
+  it("does not attach a second subscription to a customer already paying", async () => {
+    group();
+    state.orgs.get("cmorg3")!.plan = "EU_CLOUD";
+    state.orgs.get("cmorg3")!.planStripeSubscriptionId = "sub_OTHER";
+    const body = await (await post(notice({ clientReferenceId: signOrgReference("cmorg1", SECRET) }))).json();
+    expect(body.results[0]).toMatchObject({ changed: false, reason: "already-paid-other-subscription" });
+    expect(state.orgs.get("cmorg1")!.plan).toBe("PILOT");
+  });
+
+  it("checkout refuses a second payment when another organisation of the customer is paid", async () => {
+    group();
+    state.orgs.get("cmorg2")!.plan = "EU_CLOUD";
+    state.members.push({ organizationId: "cmorg1", email: "owner@example.test", role: "OWNER", userId: "consultant" });
+    state.sessionEmail = "owner@example.test";
+    const res = await checkout(
+      new Request("http://localhost/api/plan/checkout?org=cmorg1", { headers: { "x-vercel-ip-country": "ES" } })
+    );
+    expect(res.status).toBe(409);
   });
 });
 
