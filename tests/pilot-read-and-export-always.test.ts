@@ -158,6 +158,8 @@ function firmAtEveryCeiling(daysIntoPilot: number) {
     slug: "firm",
     createdAt: STARTED,
     pilotStartedAt: STARTED,
+    // A group of one: the organisation's creator has no other organisation.
+    billingOwnerId: null,
     domain: null,
     settings: null,
   };

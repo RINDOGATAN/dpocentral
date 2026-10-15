@@ -44,7 +44,7 @@ export type PilotResource =
   | "aiSystems"
   | "members";
 
-/** Records ceiling per organisation on the hosted pilot. */
+/** Records ceiling on the hosted pilot, per paying customer (all their organisations together). */
 export const PILOT_LIMITS: Record<PilotResource, number> = {
   dataAssets: 25,
   dataElements: 250,
@@ -80,7 +80,8 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
 
 /**
  * Impact assessments (type DPIA) an organisation on the pilot tier may create:
- * free for a limited time, two per organisation (which replaced the earlier three). The pilot tier is the
+ * free for a limited time, two per paying customer, shared by all the
+ * organisations of the same billing owner (which replaced the earlier three per organisation). The pilot tier is the
  * hosted service, and, on a build that sells licences, any organisation with
  * no DPIA licence (isDpiaPilotTier in services/licensing/entitlement.ts). The
  * overall records ceiling (PILOT_LIMITS.assessments) still applies on the
@@ -91,7 +92,8 @@ export const PILOT_DPIA_LIMIT = 2;
 /**
  * Organisations one account may belong to on the hosted service (it was one).
  * Five, so that a consultant acting as external DPO can keep each client
- * apart. Each organisation keeps its own plan, editing window, records
- * ceiling and free DPIAs: the limits above are per organisation.
+ * apart. One customer pays once: the organisations an account creates share
+ * one plan, one editing window, the records ceilings above and the free DPIAs
+ * (services/pilot/umbrella.ts).
  */
 export const ORGANIZATIONS_PER_ACCOUNT = 5;

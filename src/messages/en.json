@@ -311,10 +311,10 @@
       "recordDescription": "Auto-filled from processing activity data"
     },
     "trialAssessments": {
-      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per organization on the pilot tier",
+      "freeNote": "Free for a limited time: {limit, plural, =2 {two} other {#}} DPIAs per account on the pilot tier, shared by all its organizations",
       "freeBadge": "Free for a limited time",
-      "remaining": "This organization has {remaining} of the {limit} free DPIAs left.",
-      "usedUp": "This organization has created its {limit} free DPIAs. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan.",
+      "remaining": "{remaining} of the {limit} free DPIAs are left, counted across all the organizations of the same account.",
+      "usedUp": "The {limit} free DPIAs have been created, counted across all the organizations of the same account. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan.",
       "seePlans": "See the plans"
     },
     "assessmentTemplates": {
@@ -6492,11 +6492,11 @@
       "hostedPilot": {
         "title": "Hosted pilot",
         "intro": "Hosted pilot: free, within the limits set out below. You can start free and use it with real client data: all our sub-processors have the necessary safeguards and certifications.",
-        "window": "Editing lasts {days} days from the organization's first sign-in, and the count never starts before the day the service went live. After that the organization becomes read-only: nothing is removed, and everything can still be exported.",
-        "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
+        "window": "Editing lasts {days} days from the first sign-in to any of your organizations, and the count never starts before the day the service went live. The period is the same for every organization you create, whenever you create it: a new organization does not start or extend it. After that your organizations become read-only: nothing is removed, and everything can still be exported.",
+        "assessments": "For a limited time, an account may create {assessments} DPIAs free of charge, across all its organizations. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
-        "ceilingsIntro": "An organization can hold up to:",
-        "organizationsPerAccount": "An account can manage up to {organizations} organizations, each with its own editing window, record ceilings and free DPIAs.",
+        "ceilingsIntro": "Your organizations together can hold up to:",
+        "organizationsPerAccount": "An account can manage up to {organizations} organizations. They share one editing period, one set of record ceilings and the free DPIAs, and one paid plan covers them all: you pay once, at the same price.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
         "run": "On the paid plan none of these limits apply and your records are kept: there is no editing window and no record ceiling. The plans and their prices are on the pricing page. A managed instance or your own hardware is available on quotation.",
         "plansLink": "See the plans"
@@ -9253,11 +9253,12 @@
     },
     "settings": {
       "summary": "Pilot: {days, plural, one {# day} other {# days}} left, {used} of {limit} systems",
-      "description": "The hosted service is a free pilot. Every module is included, within the limits below. {days} days of editing from your first sign-in, then read-only with export.",
+      "description": "The hosted service is a free pilot. Every module is included, within the limits below, which all the organizations of the same account share. {days} days of editing from your first sign-in, then read-only with export.",
       "readOnly": "The pilot has ended. This organization is read-only. You can still export everything you created.",
       "limitReached": "You have reached a pilot limit. You can no longer add records of that kind here.",
       "waysOut": "To keep working without limits, <run>move to the paid plan</run>. To take your records with you, <export>export them</export>.",
       "limitsTitle": "Limits",
+      "shared": "These figures cover all {count} organizations of the same account.",
       "usage": "{used} of {limit}",
       "resources": {
         "dataAssets": "Systems",
@@ -9287,7 +9288,7 @@
       },
       "paid": {
         "title": "Cloud Plan",
-        "description": "Your organization is on the Cloud Plan. The pilot limits and the editing window do not apply.",
+        "description": "This organization is on the Cloud Plan, as are the other organizations of the same account. The pilot limits and the editing window do not apply.",
         "renews": "Renews on {date}."
       }
     }

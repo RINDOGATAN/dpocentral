@@ -368,6 +368,12 @@ export async function runPilotReminders(
   });
 
   const replyTo = internalInboxAddresses();
+  // The organisations of one paying customer share one window, so they come
+  // due together: each address gets one e-mail per reminder, not one per
+  // organisation. Every organisation still gets its marker.
+  const mailed = new Set<string>();
+  const mailKey = (email: string, kind: string, endsAt: Date) =>
+    `${email.toLowerCase()}|${kind}|${endsAt.toISOString()}`;
 
   for (const org of orgs) {
     if (isPaidPlan(org)) continue;
@@ -408,12 +414,19 @@ export async function runPilotReminders(
       continue;
     }
 
+    const fresh = recipients.filter((r) => !mailed.has(mailKey(r.email, kind, endsAt)));
+    if (fresh.length === 0) {
+      summary.alreadySent++;
+      continue;
+    }
+
     let delivered = 0;
-    for (const r of recipients) {
+    for (const r of fresh) {
       const currency = reminderCurrency(r.locale, org.settings, euro);
       const mail = renderPilotReminderEmail({ locale: r.locale, currency, kind, orgName: org.name, endsAt });
       try {
         await mailer.send({ to: r.email, replyTo, ...mail });
+        mailed.add(mailKey(r.email, kind, endsAt));
         delivered++;
       } catch (err) {
         logger.error("Pilot reminder e-mail failed", err, { organizationId: org.id, kind });

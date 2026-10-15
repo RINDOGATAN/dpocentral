@@ -22,6 +22,7 @@ import {
   ORGANIZATIONS_PER_ACCOUNT,
   type PilotResource,
 } from "./limits";
+import { groupOrganizationIds, groupWhere } from "./umbrella";
 
 export {
   PILOT_DAYS,
@@ -44,6 +45,9 @@ export {
  *     pilot went live, then read-only (exports stay available: they are GET
  *     routes under /api/export);
  *   - a ceiling on the records an organisation can hold (PILOT_LIMITS).
+ * The window, the ceilings and the free DPIAs belong to the paying customer,
+ * not to each organisation: every organisation with the same billing owner
+ * shares one window and counts towards the same ceilings (umbrella.ts).
  * The self-hosted kit is never capped: every function here is a no-op unless
  * isHostedDeployment() is true.
  *
@@ -59,9 +63,7 @@ export {
  * the database), or the organisation row the caller already holds (its plan
  * is used as it is; a row without one counts as the pilot).
  */
-export type OrgRef = string | ({ id: string } & PlanOrg);
-
-const orgId = (org: OrgRef) => (typeof org === "string" ? org : org.id);
+export type OrgRef = string | ({ id: string; billingOwnerId?: string | null } & PlanOrg);
 
 async function onPaidPlan(db: PlanLookupDb, org: OrgRef): Promise<boolean> {
   return typeof org === "string" ? organizationOnPaidPlan(db, org) : isPaidPlan(org);
@@ -80,10 +82,10 @@ export function isPaidPlan(org: PlanOrg | null | undefined): boolean {
 
 type PlanLookupDb = {
   organization?: {
-    findUnique: (args: {
-      where: { id: string };
-      select: { plan: true };
-    }) => Promise<{ plan: string | null } | null>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    findUnique: (args: any) => Promise<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    findMany?: (args: any) => Promise<any>;
   };
 };
 
@@ -116,7 +118,19 @@ export const PILOT_CLOCK_START = new Date("2026-10-01T00:00:00Z");
  */
 export type PilotClockOrg = { pilotStartedAt: Date | null } & PlanOrg;
 
+/** The organisation ids a count covers: one id, or the ids of a group. */
+type Scope = string | { in: string[] };
+
+const scopeOf = (ids: string[]): Scope => (ids.length === 1 ? ids[0] : { in: ids });
+
 type CountDelegate = { count: (args: { where: object }) => Promise<number> };
+type MemberDelegate = CountDelegate & {
+  findMany?: (args: {
+    where: object;
+    distinct: ["userId"];
+    select: { userId: true };
+  }) => Promise<{ userId: string }[]>;
+};
 
 /** The Prisma models the caps count; satisfied by the client and by a transaction. */
 export type PilotDb = {
@@ -132,10 +146,10 @@ export type PilotDb = {
   assessmentTemplate: CountDelegate;
   incident: CountDelegate;
   aISystem: CountDelegate;
-  organizationMember: CountDelegate;
+  organizationMember: MemberDelegate;
 } & PlanLookupDb;
 
-const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: string) => Promise<number>> = {
+const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: Scope) => Promise<number>> = {
   dataAssets: (db, organizationId) => db.dataAsset.count({ where: { organizationId } }),
   dataElements: (db, organizationId) => db.dataElement.count({ where: { organizationId } }),
   processingActivities: (db, organizationId) =>
@@ -151,8 +165,26 @@ const COUNTERS: Record<PilotResource, (db: PilotDb, organizationId: string) => P
     db.assessmentTemplate.count({ where: { organizationId } }),
   incidents: (db, organizationId) => db.incident.count({ where: { organizationId } }),
   aiSystems: (db, organizationId) => db.aISystem.count({ where: { organizationId } }),
-  members: (db, organizationId) => db.organizationMember.count({ where: { organizationId } }),
+  // Across a group, a person who belongs to several of its organisations
+  // (the consultant who runs them all) counts once.
+  members: async (db, organizationId) => {
+    if (typeof organizationId !== "string" && typeof db.organizationMember.findMany === "function") {
+      const people = await db.organizationMember.findMany({
+        where: { organizationId },
+        distinct: ["userId"],
+        select: { userId: true },
+      });
+      return people.length;
+    }
+    return db.organizationMember.count({ where: { organizationId } });
+  },
 };
+
+/** The count of `resource` over the whole group of `organization`. */
+async function groupCount(db: PilotDb, organization: OrgRef, resource: PilotResource): Promise<number> {
+  const ids = await groupOrganizationIds(db, organization);
+  return COUNTERS[resource](db, scopeOf(ids));
+}
 
 /**
  * tRPC mutations that add one record of a capped resource. Mutations that add
@@ -232,8 +264,8 @@ export function pilotMessage(
   const limit = PILOT_LIMITS[r];
   const label = RESOURCE_LABELS[r][locale];
   return locale === "es"
-    ? `Has alcanzado el límite del piloto: ${limit} ${label}. Para seguir, pasa al plan de pago (${plans}) o exporta tus registros (${exp}).`
-    : `You have reached the pilot limit of ${limit} ${label}. To continue, move to the paid plan (${plans}) or export your records (${exp}).`;
+    ? `Has alcanzado el límite del piloto: ${limit} ${label}, contados entre todas las organizaciones de la misma cuenta. Para seguir, pasa al plan de pago (${plans}) o exporta tus registros (${exp}).`
+    : `You have reached the pilot limit of ${limit} ${label}, counted across all the organizations of the same account. To continue, move to the paid plan (${plans}) or export your records (${exp}).`;
 }
 
 // ── Impact assessments on the pilot tier ─────────────────────────────────
@@ -249,12 +281,17 @@ export function pilotMessage(
 export type DpiaCountDb = {
   auditLog: { count: (args: { where: object }) => Promise<number> };
   assessment: { count: (args: { where: object }) => Promise<number> };
-};
+} & PlanLookupDb;
 
+/**
+ * The DPIAs created by the whole group of `organization` (the two free DPIAs
+ * are the paying customer's, not each organisation's).
+ */
 export async function countDpiaCreated(
   db: DpiaCountDb,
-  organizationId: string
+  organization: string
 ): Promise<number> {
+  const organizationId = scopeOf(await groupOrganizationIds(db, organization));
   const [logged, held] = await Promise.all([
     db.auditLog.count({
       where: {
@@ -311,8 +348,8 @@ export const SEE_PLANS_LABEL: Record<Locale, string> = {
 export function dpiaCapMessage(locale: Locale): string {
   const plans = `${SEE_PLANS_LABEL[locale]}: ${PLANS_URL[locale]}`;
   return locale === "es"
-    ? `Esta organización ya ha creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
-    : `This organization has already created the ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time, so another cannot be created. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
+    ? `Ya se han creado las ${PILOT_DPIA_LIMIT} EIPD gratuitas por tiempo limitado que incluye el nivel piloto, contadas entre todas las organizaciones de la misma cuenta, así que no se puede crear otra. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan. ${plans}`
+    : `The ${PILOT_DPIA_LIMIT} DPIAs that the pilot tier includes free for a limited time have already been created, counted across all the organizations of the same account, so another cannot be created. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported. Creating more needs a plan. ${plans}`;
 }
 
 // ── A pilot limit reached: one audit row, read as a count ───────────────
@@ -433,30 +470,49 @@ export function isPilotReadOnly(org: PilotClockOrg, now: Date = new Date()): boo
 }
 
 /**
- * Records the organisation's first sign-in after the pilot went live. Called
- * when a signed-in member reaches the organisation (src/server/trpc.ts). A
- * no-op on the kit, before PILOT_CLOCK_START, and once a start is recorded.
- * Sets `org.pilotStartedAt` in place so the rest of the request sees it. The
- * update only matches a null column, so a concurrent request cannot move a
+ * Records the first sign-in after the pilot went live, which starts the
+ * editing window of the organisation's whole group (one window per paying
+ * customer, umbrella.ts). Called when a signed-in member reaches the
+ * organisation (src/server/trpc.ts). A no-op on the kit, before
+ * PILOT_CLOCK_START, and once a start is recorded. When another organisation
+ * of the group has already started, its start is taken, so a later
+ * organisation never restarts or extends the window. Sets
+ * `org.pilotStartedAt` in place so the rest of the request sees it. The
+ * update only matches null columns, so a concurrent request cannot move a
  * recorded start.
  */
 export async function recordPilotFirstSignIn(
   db: {
     organization: {
       updateMany: (args: { where: object; data: object }) => Promise<unknown>;
+      findFirst?: (args: {
+        where: object;
+        orderBy: { pilotStartedAt: "asc" };
+        select: { pilotStartedAt: true };
+      }) => Promise<{ pilotStartedAt: Date | null } | null>;
     };
   },
-  org: { id: string } & PilotClockOrg,
+  org: { id: string; billingOwnerId?: string | null } & PilotClockOrg,
   now: Date = new Date()
 ): Promise<void> {
   if (!isHostedDeployment()) return;
   if (org.pilotStartedAt) return;
   if (now.getTime() < PILOT_CLOCK_START.getTime()) return;
+  const group = groupWhere(org);
+  let start = now;
+  if (org.billingOwnerId && typeof db.organization.findFirst === "function") {
+    const earlier = await db.organization.findFirst({
+      where: { ...group, pilotStartedAt: { not: null } },
+      orderBy: { pilotStartedAt: "asc" },
+      select: { pilotStartedAt: true },
+    });
+    if (earlier?.pilotStartedAt) start = new Date(earlier.pilotStartedAt);
+  }
   await db.organization.updateMany({
-    where: { id: org.id, pilotStartedAt: null },
-    data: { pilotStartedAt: now },
+    where: { ...group, pilotStartedAt: null },
+    data: { pilotStartedAt: start },
   });
-  org.pilotStartedAt = now;
+  org.pilotStartedAt = start;
 }
 
 /** Throws FORBIDDEN on the hosted pilot once the organisation is read-only. */
@@ -486,8 +542,7 @@ export async function assertPilotCapacity(
 ): Promise<void> {
   if (!isHostedDeployment()) return;
   if (await onPaidPlan(db, organization)) return;
-  const organizationId = orgId(organization);
-  const used = await COUNTERS[resource](db, organizationId);
+  const used = await groupCount(db, organization, resource);
   if (used + adding > PILOT_LIMITS[resource]) {
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -504,8 +559,7 @@ export async function hasPilotRoom(
 ): Promise<boolean> {
   if (!isHostedDeployment()) return true;
   if (await onPaidPlan(db, organization)) return true;
-  const organizationId = orgId(organization);
-  const used = await COUNTERS[resource](db, organizationId);
+  const used = await groupCount(db, organization, resource);
   return used < PILOT_LIMITS[resource];
 }
 
@@ -580,23 +634,27 @@ export type PilotStatus =
       readOnly: boolean;
       /** Begun before the window was shortened (11 Oct 2026): the bar says "Free until {date}". */
       transition: boolean;
+      /** Organisations sharing this window and these limits (the group; 1 when alone). */
+      organizations: number;
+      /** Counted over the whole group. */
       usage: { resource: PilotResource; used: number; limit: number }[];
     };
 
 export async function getPilotStatus(
   db: PilotDb,
-  org: { id: string; planRenewsAt?: Date | null } & PilotClockOrg,
+  org: { id: string; planRenewsAt?: Date | null; billingOwnerId?: string | null } & PilotClockOrg,
   now: Date = new Date()
 ): Promise<PilotStatus> {
   if (!isHostedDeployment()) return { hosted: false };
   if (isPaidPlan(org)) {
     return { hosted: true, paid: true, plan: PAID_PLAN, renewsAt: org.planRenewsAt ?? null };
   }
+  const ids = await groupOrganizationIds(db, org);
   const usage = await Promise.all(
     // Rights requests are not listed when the module is not part of this plan.
     STATUS_RESOURCES.filter((r) => r !== "dsarRequests" || isDsarModuleEnabled()).map(async (resource) => ({
       resource,
-      used: await COUNTERS[resource](db, org.id),
+      used: await COUNTERS[resource](db, scopeOf(ids)),
       limit: PILOT_LIMITS[resource],
     }))
   );
@@ -609,6 +667,7 @@ export async function getPilotStatus(
     endsAt: pilotEndsAt(org),
     readOnly: isPilotReadOnly(org, now),
     transition: isTransitionPilot(org),
+    organizations: ids.length,
     usage,
   };
 }

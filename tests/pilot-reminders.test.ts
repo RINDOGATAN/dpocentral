@@ -192,6 +192,25 @@ describe("never twice", () => {
   });
 });
 
+describe("one customer, several organisations", () => {
+  it("sends each address one e-mail per reminder, and marks every organisation", async () => {
+    const consultant = { role: "OWNER" as Role, email: "consultant@example.com", locale: "en" };
+    const db = makeDb([
+      fresh({ id: "org-a", name: "Client A", members: [consultant] }),
+      fresh({ id: "org-b", name: "Client B", members: [consultant, { role: "ADMIN", email: "staff@example.com", locale: "en" }] }),
+      fresh({ id: "org-c", name: "Client C", members: [consultant] }),
+    ]);
+    const { mailer, sent } = makeMailer();
+    const summary = await runPilotReminders(asDb(db), mailer, run("2026-10-24"), ON);
+    expect(sent.map((m) => m.to).sort()).toEqual(["consultant@example.com", "staff@example.com"]);
+    expect(summary.errors).toBe(0);
+    expect(db.rows.size).toBe(3);
+    const again = await runPilotReminders(asDb(db), mailer, new Date(run("2026-10-24").getTime() + 3600_000), ON);
+    expect(again.sent).toBe(0);
+    expect(sent).toHaveLength(2);
+  });
+});
+
 describe("recipients", () => {
   it("are the owners and administrators only", async () => {
     const db = makeDb([

@@ -24,6 +24,7 @@ const mocks = vi.hoisted(() => ({
     user: { findUnique: vi.fn(), update: vi.fn() },
     organization: {
       findUnique: vi.fn(),
+      findMany: vi.fn().mockResolvedValue([]),
       create: vi.fn(),
       update: vi.fn(),
       updateMany: vi.fn(),

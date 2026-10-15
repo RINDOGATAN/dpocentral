@@ -311,10 +311,10 @@
       "recordDescription": "Redactada automáticamente a partir de los datos de la actividad de tratamiento"
     },
     "trialAssessments": {
-      "freeNote": "Gratis por tiempo limitado: {limit, plural, =2 {dos} other {#}} EIPD por organización en el nivel piloto",
+      "freeNote": "Gratis por tiempo limitado: {limit, plural, =2 {dos} other {#}} EIPD por cuenta en el nivel piloto, compartidas entre todas sus organizaciones",
       "freeBadge": "Gratis por tiempo limitado",
-      "remaining": "A esta organización le quedan {remaining} de las {limit} EIPD gratuitas.",
-      "usedUp": "Esta organización ya ha creado sus {limit} EIPD gratuitas. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan.",
+      "remaining": "Quedan {remaining} de las {limit} EIPD gratuitas, contadas entre todas las organizaciones de la misma cuenta.",
+      "usedUp": "Ya se han creado las {limit} EIPD gratuitas, contadas entre todas las organizaciones de la misma cuenta. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando. Para crear más, hace falta un plan.",
       "seePlans": "Consulta los planes"
     },
     "assessmentTemplates": {
@@ -6492,11 +6492,11 @@
       "hostedPilot": {
         "title": "Piloto alojado",
         "intro": "Piloto alojado: gratuito, dentro de los límites que se detallan a continuación. Puedes empezar gratis y usarlo con datos reales de clientes: todos nuestros subencargados cuentan con las certificaciones y garantías necesarias.",
-        "window": "La edición dura {days} días desde el primer inicio de sesión de la organización, y la cuenta nunca empieza antes del día en que el servicio entró en funcionamiento. Después, la organización pasa a solo lectura: no se borra nada y todo se puede seguir exportando.",
-        "assessments": "Por tiempo limitado, cada organización puede crear {assessments} EIPD gratuitas. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
+        "window": "La edición dura {days} días desde el primer inicio de sesión en cualquiera de tus organizaciones, y el plazo nunca empieza antes del día en que el servicio entró en funcionamiento. El plazo es el mismo para todas las organizaciones que crees, en cualquier momento: una organización nueva no lo inicia ni lo alarga. Después, tus organizaciones pasan a solo lectura: no se borra nada y todo se puede seguir exportando.",
+        "assessments": "Por tiempo limitado, una cuenta puede crear {assessments} EIPD gratuitas, entre todas sus organizaciones. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
-        "ceilingsIntro": "Una organización puede tener como máximo:",
-        "organizationsPerAccount": "Una cuenta puede gestionar hasta {organizations} organizaciones, cada una con su propio periodo de edición, sus propios límites de registros y sus propias EIPD gratuitas.",
+        "ceilingsIntro": "Tus organizaciones, en conjunto, pueden tener como máximo:",
+        "organizationsPerAccount": "Una cuenta puede gestionar hasta {organizations} organizaciones. Comparten un mismo periodo de edición, los mismos límites de registros y las EIPD gratuitas, y un solo plan de pago las cubre todas: pagas una vez, al mismo precio.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
         "run": "Con el plan de pago no se aplica ninguno de estos límites y tus registros se conservan: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios. Una instancia gestionada o tu propio hardware, previo presupuesto.",
         "plansLink": "Ver los planes"
@@ -9253,11 +9253,12 @@
     },
     "settings": {
       "summary": "Piloto: {days, plural, one {queda # día} other {quedan # días}}, {used} de {limit} sistemas",
-      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos, dentro de los límites que ves abajo. {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
+      "description": "El servicio alojado es un piloto gratuito. Incluye todos los módulos, dentro de los límites que ves abajo, que comparten todas las organizaciones de la misma cuenta. {days} días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
       "readOnly": "El piloto ha terminado. Esta organización es de solo lectura. Puedes seguir exportando todo lo que has creado.",
       "limitReached": "Has alcanzado un límite del piloto. Ya no puedes añadir aquí registros de ese tipo.",
       "waysOut": "Para seguir trabajando sin límites, <run>pasa al plan de pago</run>. Para llevarte tus registros, <export>expórtalos</export>.",
       "limitsTitle": "Límites",
+      "shared": "Estas cifras cubren las {count} organizaciones de la misma cuenta.",
       "usage": "{used} de {limit}",
       "resources": {
         "dataAssets": "Sistemas",
@@ -9287,7 +9288,7 @@
       },
       "paid": {
         "title": "Plan nube UE",
-        "description": "Tu organización tiene el plan nube UE. No se le aplican los límites del piloto ni el plazo de edición.",
+        "description": "Esta organización tiene el plan nube UE, igual que las demás organizaciones de la misma cuenta. No se les aplican los límites del piloto ni el plazo de edición.",
         "renews": "Se renueva el {date}."
       }
     }

@@ -135,7 +135,7 @@ describe("DPIAs on the hosted pilot tier", () => {
       code: "FORBIDDEN",
       message: expect.stringContaining("See the plans: https://www.todo.law/pricing"),
     });
-    await expect(createDpia()).rejects.toThrow(/already created the 2 DPIAs/);
+    await expect(createDpia()).rejects.toThrow(/The 2 DPIAs that the pilot tier includes free for a limited time have already been created/);
     expect(mocks.prisma.assessment.create).not.toHaveBeenCalled();
   });
 
