@@ -59,7 +59,7 @@ const EN_FALLBACK: Record<string, string> = {
   conformanceCaliforniaNotRequired:
     "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
   conformanceDisclaimer:
-    "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
+    "This table records which requirements the answers cover.",
   sectionComplete: "Complete",
   questionRequired: "REQUIRED",
   notAnswered: "Not yet answered",

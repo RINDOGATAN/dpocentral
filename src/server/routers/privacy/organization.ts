@@ -20,9 +20,11 @@ import { isDsarModuleEnabled } from "@/config/features";
 import { planTemplateRemoval, removeTemplateItems } from "@/server/services/template-items/remove";
 import { logger } from "@/lib/logger";
 import {
-  assertOneOrganizationPerAccount,
+  assertOrganizationsPerAccount,
+  organizationCapacity,
   getPilotStatus,
   pilotLocale,
+  pilotMessage,
   assertPilotCapacity,
 } from "@/server/services/pilot/caps";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
@@ -92,6 +94,15 @@ async function hasAcceptedCurrentDpa(
 
 export const organizationRouter = createTRPCRouter({
   // List all organizations the user belongs to
+  // Hosted service: whether this account may open another organisation, and
+  // the message to show when it may not. Always open on the kit.
+  capacity: protectedProcedure.query(async ({ ctx }) => {
+    const capacity = await organizationCapacity(ctx.prisma, ctx.session.user.id);
+    if (!capacity.limited || capacity.canAdd) return { ...capacity, message: null };
+    const lang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
+    return { ...capacity, message: pilotMessage("organizationLimit", lang) };
+  }),
+
   list: protectedProcedure.query(async ({ ctx }) => {
     const memberships = await ctx.prisma.organizationMember.findMany({
       where: { userId: ctx.session.user.id },
@@ -228,8 +239,9 @@ export const organizationRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const lang = pilotLocale(localeFromCookieGetter(ctx.getCookie));
-      // Hosted pilot: one organisation per account (no-op on the kit)
-      await assertOneOrganizationPerAccount(ctx.prisma, ctx.session.user.id, lang);
+      // Hosted service: up to ORGANIZATIONS_PER_ACCOUNT organisations per
+      // account (no-op on the kit)
+      await assertOrganizationsPerAccount(ctx.prisma, ctx.session.user.id, lang);
 
       // Hosted pilot: no organisation is opened without accepting the agreement.
       const hosted = isHostedDeployment();
@@ -540,9 +552,10 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
-      // Hosted pilot: the invitee may not already belong to another organisation
-      // (lifted when this organisation is on the paid EU cloud plan)
-      await assertOneOrganizationPerAccount(
+      // Hosted service: the invitee may not already belong to the most
+      // organisations an account may have (lifted when this organisation is on
+      // the paid EU cloud plan)
+      await assertOrganizationsPerAccount(
         ctx.prisma,
         user.id,
         pilotLocale(localeFromCookieGetter(ctx.getCookie)),

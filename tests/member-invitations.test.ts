@@ -59,12 +59,22 @@ describe("acceptPendingInvitations", () => {
     expect(pendingInvitesOf(db.organization.update.mock.calls[0][0].data.settings)).toEqual([]);
   });
 
-  it("hosted pilot: an account already in an organisation is not added, the invitation stays", async () => {
+  it("hosted pilot: an account already in another organisation is still added (up to five)", async () => {
     vi.stubEnv("VERCEL_ENV", "production");
     const settings = settingsWithInvite({}, inv("ana@example.test"));
     db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
     db.organizationMember.findUnique.mockResolvedValue(null);
-    db.organizationMember.count.mockResolvedValue(1);
+    db.organizationMember.count.mockResolvedValue(4);
+    expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(1);
+    expect(db.organizationMember.create).toHaveBeenCalled();
+  });
+
+  it("hosted pilot: an account already in five organisations is not added, the invitation stays", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    const settings = settingsWithInvite({}, inv("ana@example.test"));
+    db.organization.findMany.mockResolvedValue([{ id: "org-1", plan: "PILOT", settings }]);
+    db.organizationMember.findUnique.mockResolvedValue(null);
+    db.organizationMember.count.mockResolvedValue(5);
     expect(await acceptPendingInvitations(db, "u-ana", "ana@example.test")).toBe(0);
     expect(db.organizationMember.create).not.toHaveBeenCalled();
     expect(db.organization.update).not.toHaveBeenCalled();

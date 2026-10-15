@@ -15,6 +15,7 @@ import { logger } from "@/lib/logger";
 import { emailDomainOf, findAutoJoinOrganization } from "@/lib/org-domain";
 import { ensureDpoUser } from "@/lib/jit-provisioning";
 import { isHostedDeployment } from "@/lib/hosted";
+import { ORGANIZATIONS_PER_ACCOUNT } from "@/server/services/pilot/limits";
 import { sessionTokenCookieName } from "@/lib/session-cookie";
 import { emailConfigured, googleConfigured, localSignInAllowed } from "@/lib/sign-in-methods";
 import { getCookieLocale } from "@/i18n/server-locale";
@@ -239,11 +240,12 @@ export const authOptions: NextAuthOptions = {
               },
             });
 
-            // Hosted pilot: one organisation per account, so an account that
-            // already belongs to one is not auto-joined to another.
+            // Hosted service: an account that already belongs to the most
+            // organisations it may have is not auto-joined to another.
             const pilotBlocksJoin =
               isHostedDeployment() &&
-              (await prisma.organizationMember.count({ where: { userId: user.id } })) > 0;
+              (await prisma.organizationMember.count({ where: { userId: user.id } })) >=
+                ORGANIZATIONS_PER_ACCOUNT;
 
             if (!existingMembership && !pilotBlocksJoin) {
               // Auto-add user as MEMBER

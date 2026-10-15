@@ -18,6 +18,7 @@ import {
   PILOT_DPIA_LIMIT,
   PILOT_LIMITS,
   RESOURCE_LABELS,
+  ORGANIZATIONS_PER_ACCOUNT,
   pilotLocale,
   type PilotResource,
 } from "@/server/services/pilot/caps";
@@ -103,7 +104,7 @@ export default async function DocsOverviewPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-2">{t("hostedPilot.oneOrganization")}</p>
+            <p className="mt-2">{t("hostedPilot.organizationsPerAccount", { organizations: ORGANIZATIONS_PER_ACCOUNT })}</p>
           </div>
           <p>{t("hostedPilot.exports")}</p>
           {/* The paid plan and the quotation live here, not in the intro (no "no safeguards" line). */}

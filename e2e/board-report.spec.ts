@@ -220,7 +220,7 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await expect(page.getByTestId("board-assessments")).toContainText(es ? "EIPD" : "DPIA");
   await expect(page.getByTestId("board-risks").locator("li").first()).toBeVisible();
   await expect(page.getByTestId("board-action").first()).toBeVisible();
-  await expect(page.getByTestId("board-disclaimer")).toContainText(es ? "No es asesoramiento jurídico" : "not legal advice");
+  await expect(page.getByTestId("board-disclaimer")).toContainText(es ? "No afirma que la organización cumpla" : "does not state that the organization complies");
   await expect(report).not.toContainText(/\bcompliant\b|\bcumple\b/i);
   await expectNoSidewaysScroll(page, "board report");
   await shot(page, "01-board-report", project);

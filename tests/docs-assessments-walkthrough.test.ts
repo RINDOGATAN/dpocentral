@@ -62,10 +62,9 @@ describe("the public DPIA walkthrough", () => {
       expect(d.exports.individualFeatures.draft).toBeTruthy();
     });
 
-    it(`keeps the disclaimer in ${locale}`, () => {
-      expect(d.conformance.disclaimer).toMatch(
-        locale === "es" ? /no asesoramiento jur[ií]dico/i : /not legal advice/i
-      );
+    it(`keeps the disclaimer, without saying "not legal advice", in ${locale}`, () => {
+      expect(d.conformance.disclaimer).toMatch(locale === "es" ? /abogado cualificado/i : /qualified counsel/i);
+      expect(d.conformance.disclaimer).not.toMatch(/legal advice|asesoramiento jur[ií]dico/i);
     });
 
     it(`says the hosted service opens every type in ${locale}`, () => {

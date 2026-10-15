@@ -5,7 +5,7 @@
  * The paid EU cloud plan (Organization.plan = EU_CLOUD) lifts the hosted
  * pilot's limits for one organisation: the records ceilings, the
  * editing window, the two free DPIAs, the members ceiling and the
- * one-organisation rule for people it adds. A PILOT organisation keeps every
+ * organisations-per-account rule for people it adds. A PILOT organisation keeps every
  * limit, and the self-hosted kit is unchanged. The operator's script
  * (scripts/set-org-plan.ts) prints before and after, writes nothing on a dry
  * run, and writes the change with one audit entry otherwise.
@@ -60,7 +60,7 @@ vi.mock("@/lib/logger", () => ({ logger: { info: vi.fn(), warn: vi.fn(), error: 
 
 import { organizationRouter } from "@/server/routers/privacy/organization";
 import {
-  assertOneOrganizationPerAccount,
+  assertOrganizationsPerAccount,
   assertPilotCapacity,
   assertPilotWritable,
   getPilotStatus,
@@ -226,22 +226,22 @@ describe("the free DPIAs", () => {
   });
 });
 
-describe("one organisation per account", () => {
-  it("lets an EU_CLOUD organisation add a person who belongs elsewhere", async () => {
+describe("organisations per account", () => {
+  it("lets an EU_CLOUD organisation add a person who already has the most organisations", async () => {
     hosted();
-    mocks.prisma.organizationMember.count.mockResolvedValue(1);
+    mocks.prisma.organizationMember.count.mockResolvedValue(5);
     await expect(
-      assertOneOrganizationPerAccount(db(), "user-2", "en", { plan: "EU_CLOUD" })
+      assertOrganizationsPerAccount(db(), "user-2", "en", { plan: "EU_CLOUD" })
     ).resolves.toBeUndefined();
     await expect(
-      assertOneOrganizationPerAccount(db(), "user-2", "en", { plan: "PILOT" })
+      assertOrganizationsPerAccount(db(), "user-2", "en", { plan: "PILOT" })
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
-  it("still applies when a member of a paid organisation creates another one", async () => {
+  it("still applies when a member of a paid organisation creates a sixth one", async () => {
     hosted();
-    mocks.prisma.organizationMember.count.mockResolvedValue(1);
-    await expect(assertOneOrganizationPerAccount(db(), "user-1", "en")).rejects.toMatchObject({
+    mocks.prisma.organizationMember.count.mockResolvedValue(5);
+    await expect(assertOrganizationsPerAccount(db(), "user-1", "en")).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
   });

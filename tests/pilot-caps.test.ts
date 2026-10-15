@@ -3,7 +3,7 @@
  * src/server/trpc.ts and the organization / dsar routers).
  *
  * On the hosted service (VERCEL_ENV=production or a todo.law cookie domain):
- *   - one organisation per account;
+ *   - up to five organisations per account;
  *   - after the editing window (PILOT_DAYS) the organisation is read-only (mutations
  *     refused) while reads and exports keep working;
  *   - creates are refused at the records ceiling.
@@ -88,6 +88,8 @@ import {
   pilotDaysLeft,
   pilotEndsAt,
   pilotStart,
+  pilotMessage,
+  ORGANIZATIONS_PER_ACCOUNT,
   type PilotDb,
 } from "@/server/services/pilot/caps";
 import { checkSkillEntitlement } from "@/server/services/licensing/entitlement";
@@ -273,21 +275,79 @@ describe("an organisation with no acceptance on record is asked once", () => {
   });
 });
 
-describe("one organisation per account", () => {
-  const create = () => orgCaller().create({ name: "Second", slug: "second" });
+describe("organisations per account", () => {
+  const create = () => orgCaller().create({ name: "Sixth", slug: "sixth", acceptDpa: true });
 
-  it("refuses a second organisation on the hosted pilot", async () => {
+  it("is five on the hosted service", () => {
+    expect(ORGANIZATIONS_PER_ACCOUNT).toBe(5);
+  });
+
+  it("refuses a sixth organisation on the hosted service, with a plain message", async () => {
     hosted();
-    mocks.prisma.organizationMember.count.mockResolvedValue(1);
-    await expect(create()).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(create()).rejects.toThrow("https://www.todo.law/contact/managed");
+    mocks.prisma.organizationMember.count.mockResolvedValue(5);
+    const err = await create().catch((e) => e);
+    expect(err).toMatchObject({ code: "FORBIDDEN" });
+    expect(err.message).toContain("up to 5 organizations");
+    expect(err.message).toContain("https://www.todo.law/contact/managed");
     expect(mocks.prisma.organization.create).not.toHaveBeenCalled();
   });
 
-  it("allows the first organisation on the hosted pilot", async () => {
+  it("allows the first organisation on the hosted service", async () => {
     hosted();
     await orgCaller().create({ name: "First", slug: "first", acceptDpa: true });
     expect(mocks.prisma.organization.create).toHaveBeenCalled();
+  });
+
+  it("allows a second to a fifth organisation on the hosted service", async () => {
+    for (const held of [1, 2, 3, 4]) {
+      hosted();
+      mocks.prisma.organization.create.mockClear();
+      mocks.prisma.organizationMember.count.mockResolvedValue(held);
+      await orgCaller().create({ name: `Client ${held + 1}`, slug: `client-${held + 1}`, acceptDpa: true });
+      expect(mocks.prisma.organization.create, `with ${held} held`).toHaveBeenCalled();
+    }
+  });
+
+  it("still asks for the agreement for a second organisation", async () => {
+    hosted();
+    mocks.prisma.organizationMember.count.mockResolvedValue(1);
+    await expect(orgCaller().create({ name: "Second", slug: "second" })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    expect(mocks.prisma.organization.create).not.toHaveBeenCalled();
+  });
+
+  it("reports the capacity and the message at the limit, in Spanish too", async () => {
+    hosted();
+    mocks.prisma.organizationMember.count.mockResolvedValue(2);
+    expect(await orgCaller().capacity()).toEqual({ limited: true, limit: 5, used: 2, canAdd: true, message: null });
+    mocks.prisma.organizationMember.count.mockResolvedValue(5);
+    const full = await orgCaller().capacity();
+    expect(full).toMatchObject({ limited: true, used: 5, canAdd: false });
+    expect(full.message).toContain("up to 5 organizations");
+    expect(pilotMessage("organizationLimit", "es")).toContain("hasta 5 organizaciones, y la tuya ya tiene 5");
+    expect(pilotMessage("organizationLimitInvitee", "es")).toContain("ya pertenece a 5 organizaciones");
+    for (const m of [pilotMessage("organizationLimit", "es"), pilotMessage("organizationLimitInvitee", "es")]) {
+      expect(m).not.toMatch(/[—–]|\busted\b/);
+    }
+  });
+
+  it("reports no limit on the kit", async () => {
+    kit();
+    expect(await orgCaller().capacity()).toEqual({ limited: false, message: null });
+  });
+
+  it("asks for the agreement and shows the limit in the dialogs that add an organisation", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = (p: string) => readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
+    const dialog = src("src/components/privacy/new-organization-dialog.tsx");
+    expect(dialog).toContain("DpaAcceptCheckbox");
+    expect(dialog).toContain("acceptDpa: hosted ? acceptDpa : undefined");
+    expect(dialog).toContain("trpc.organization.capacity.useQuery");
+    expect(dialog).toContain('data-testid="organization-limit"');
+    const copy = src("src/components/privacy/copy-from-client-dialog.tsx");
+    expect(copy).toContain("DpaAcceptCheckbox");
+    expect(copy).toContain("acceptDpa: hosted ? acceptDpa : undefined");
   });
 
   it("does not limit organisations on the kit", async () => {
@@ -528,11 +588,11 @@ describe("records ceiling", () => {
     expect(mocks.prisma.organizationMember.create).toHaveBeenCalled();
   });
 
-  it("refuses an invitee who already belongs to another organisation", async () => {
+  it("refuses an invitee who already belongs to five organisations", async () => {
     hosted();
     mocks.prisma.organizationMember.count.mockImplementation(
       async ({ where }: { where: { organizationId?: string } }) =>
-        where.organizationId ? 1 : 1
+        where.organizationId ? 1 : 5
     );
     mocks.prisma.organizationMember.findUnique
       .mockResolvedValueOnce({
@@ -543,7 +603,7 @@ describe("records ceiling", () => {
         organization: ORG,
       })
       .mockResolvedValueOnce(null);
-    await expect(addMember()).rejects.toThrow("one organization per account");
+    await expect(addMember()).rejects.toThrow("already belongs to 5 organizations");
     expect(mocks.prisma.organizationMember.create).not.toHaveBeenCalled();
   });
 

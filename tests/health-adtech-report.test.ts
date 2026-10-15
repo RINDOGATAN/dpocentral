@@ -224,16 +224,18 @@ describe("the age of the sources", () => {
   /**
    * The template's description is now one sentence, because it is the card
    * text, so the notice lives where the marks are read: the report's own
-   * subtitle. Both bundles carry it, and it still names counsel and refuses to
-   * be legal advice.
+   * subtitle. Both bundles carry it and name counsel; "not legal advice" is
+   * assumed and no longer said (owner's decision, 15 Oct 2026).
    */
   it("keeps the unconfirmed marks, and says so where they are printed", () => {
     const subtitle = (bundle: unknown) =>
       (bundle as { healthAdtechReport: { subtitle: string } }).healthAdtechReport.subtitle;
     expect(subtitle(en)).toContain("[to verify]");
-    expect(subtitle(en)).toMatch(/draft for review by counsel, not legal advice/i);
+    expect(subtitle(en)).toMatch(/draft for review by counsel\./i);
+    expect(subtitle(en)).not.toMatch(/legal advice/i);
     expect(subtitle(es)).toContain("[por verificar]");
-    expect(subtitle(es)).toMatch(/borrador para que lo revise un abogado, no asesoramiento jurídico/i);
+    expect(subtitle(es)).toMatch(/borrador para que lo revise un abogado\./i);
+    expect(subtitle(es)).not.toMatch(/asesoramiento jur/i);
   });
 
   it("keeps the card sentence to one sentence, with both citations", () => {

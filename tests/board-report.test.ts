@@ -462,8 +462,12 @@ describe("the words, the same on the page and in the PDF", () => {
       expect(all.toLowerCase()).not.toMatch(/\bcompliant\b|\bconforme\b|\bcumple\b/);
       expect(all).not.toMatch(/\busted\b/i);
     }
-    expect(en.boardReport.disclaimer).toContain("not legal advice");
-    expect(es.boardReport.disclaimer).toContain("No es asesoramiento jurídico");
+    // "Not legal advice" is assumed (owner's decision, 15 Oct 2026): the
+    // disclaimer only says the report claims no compliance.
+    expect(en.boardReport.disclaimer).toContain("does not state that the organization complies");
+    expect(es.boardReport.disclaimer).toContain("No afirma que la organización cumpla");
+    expect(en.boardReport.disclaimer).not.toMatch(/legal advice/i);
+    expect(es.boardReport.disclaimer).not.toMatch(/asesoramiento jur/i);
   });
 
   it("names the report 'Executive report' / 'Informe ejecutivo' everywhere, the board still named in the subtitle", () => {

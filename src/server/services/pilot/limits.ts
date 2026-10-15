@@ -87,3 +87,11 @@ export const RESOURCE_LABELS: Record<PilotResource, Record<Locale, string>> = {
  * hosted service; this narrower rule bites first.
  */
 export const PILOT_DPIA_LIMIT = 2;
+
+/**
+ * Organisations one account may belong to on the hosted service (it was one).
+ * Five, so that a consultant acting as external DPO can keep each client
+ * apart. Each organisation keeps its own plan, editing window, records
+ * ceiling and free DPIAs: the limits above are per organisation.
+ */
+export const ORGANIZATIONS_PER_ACCOUNT = 5;

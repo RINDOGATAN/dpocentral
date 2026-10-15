@@ -3142,7 +3142,7 @@
   },
   "footer": {
     "serviceBy": "{brandName} is a {companyName} service.",
-    "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs.",
+    "disclaimer": "DPO Central provides informational tools and templates. Verify with qualified counsel before relying on outputs.",
     "userGuide": "Docs",
     "sourceAndLicence": "Source & license",
     "billing": "Billing",
@@ -4167,7 +4167,7 @@
       "conformanceComplete": "{framework}: every requirement covered ({covered} of {total}).",
       "conformancePartial": "{framework}: {covered} of {total} requirements covered. This assessment does not conform to those rules until the rest are answered.",
       "conformanceCaliforniaNotRequired": "No triggering activity applies, so 11 CCR 7150(b) does not require a California risk assessment for this processing.",
-      "conformanceDisclaimer": "This table records which requirements the answers cover. It is not a legal opinion and not legal advice.",
+      "conformanceDisclaimer": "This table records which requirements the answers cover.",
       "coverGenerated": "Generated: {date}",
       "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
@@ -6193,7 +6193,7 @@
           "actions": "The next three actions, with an owner and a date",
           "comment": "Your comment, saved with the report for that period"
         },
-        "disclaimer": "The report states facts recorded in DPO Central. It is not legal advice and does not state that the organization complies with any law.",
+        "disclaimer": "The report states facts recorded in DPO Central. It does not state that the organization complies with any law.",
         "allPdfsTitle": "The PDF reports on each module:",
         "allPdfs": {
           "inventoryLabel": "Data Inventory",
@@ -6496,7 +6496,7 @@
         "assessments": "For a limited time, an organization may create {assessments} DPIAs free of charge. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "An organization can hold up to:",
-        "oneOrganization": "An account belongs to one organization.",
+        "organizationsPerAccount": "An account can manage up to {organizations} organizations, each with its own editing window, record ceilings and free DPIAs.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
         "run": "On the paid plan none of these limits apply and your records are kept: there is no editing window and no record ceiling. The plans and their prices are on the pricing page. A managed instance or your own hardware is available on quotation.",
         "plansLink": "See the plans"
@@ -7174,7 +7174,7 @@
           "requirement": "Requirement"
         },
         "note": "The rows below are the requirements the product tracks today. In the report each one also carries its status, covered or outstanding, and the step of the assessment that answers it.",
-        "disclaimer": "DPO Central provides informational tools and templates, not legal advice. Verify with qualified counsel before relying on outputs."
+        "disclaimer": "DPO Central provides informational tools and templates. Verify with qualified counsel before relying on outputs."
       },
       "exports": {
         "title": "PDF Exports",
@@ -7358,7 +7358,7 @@
           "desc": "Annex II lists only security measures confirmed against actual audit evidence: certifications alone justify the audits-review safeguard in the TIA, not TOMs warranties. Importer declarations (government requests, breach history) default to “unknown” unless the vendor itself answered. And per EDPB Recommendations 01/2020, the TIA conclusion documents residual risk unless at least one technical supplementary measure is in place."
         },
         "afterTitle": "After generation",
-        "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review, not legal advice."
+        "afterDesc": "The produced DPA implies a compliance calendar: the 12-month TIA re-evaluation, the annual transparency report where government-access commitments were agreed, and the confirmed TOMs' own cadences. The earliest entry automatically pulls the vendor's next review date forward. Generated documents are templates for qualified counsel to review."
       },
       "metaTitle": "Vendor Management",
       "metaDescription": "Maintain your vendor register with contract tracking, risk tiers, due-diligence templates, Vendor.Watch profiles and periodic reviews.",
@@ -7518,7 +7518,7 @@
   },
   "healthAdtechReport": {
     "title": "Result by jurisdiction",
-    "subtitle": "Follows the jurisdictions selected under \"Scope and threshold analysis\". Statements marked [to verify] are not yet confirmed; this is a draft for review by counsel, not legal advice.",
+    "subtitle": "Follows the jurisdictions selected under \"Scope and threshold analysis\". Statements marked [to verify] are not yet confirmed; this is a draft for review by counsel.",
     "noJurisdictions": "Select the jurisdictions under \"Scope and threshold analysis\" to see the consent model and the obligations for each.",
     "jurisdiction": "Jurisdiction",
     "consentModel": "Consent model",
@@ -7777,7 +7777,7 @@
       "template": {
         "system-lia-template-v2": {
           "name": "Legitimate Interest Assessment",
-          "description": "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read. This template is informational, not legal advice; verify with qualified counsel."
+          "description": "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read."
         }
       }
     },
@@ -7884,7 +7884,7 @@
       "template": {
         "system-custom-template-v2": {
           "name": "Custom Assessment",
-          "description": "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale. Informational, not legal advice; verify with qualified counsel."
+          "description": "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale."
         }
       }
     },
@@ -8272,7 +8272,7 @@
       "template": {
         "system-tia-template-v2": {
           "name": "Transfer Impact Assessment",
-          "description": "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers. Informational, not legal advice; verify with qualified counsel."
+          "description": "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers."
         }
       }
     },
@@ -8952,7 +8952,7 @@
       "template": {
         "system-pia-template-v2": {
           "name": "Privacy Impact Assessment",
-          "description": "A broad privacy review of a processing activity: the data, the purposes, the lawful basis, retention, recipients, the rights of individuals and security, with structured answers. Informational, not legal advice; verify with qualified counsel."
+          "description": "A broad privacy review of a processing activity: the data, the purposes, the lawful basis, retention, recipients, the rights of individuals and security, with structured answers."
         }
       },
       "section": {
@@ -9629,7 +9629,7 @@
     "whyLabel": "Why",
     "noJurisdictions": "Add where you operate on the What applies page, so the laws that depend on a place can be shown.",
     "noJurisdictionsAbove": "Choose above where your organization operates to see the laws that depend on a place.",
-    "editableNote": "This is guidance, not legal advice, and the mapping is still under review. You can change your answers at any time.",
+    "editableNote": "Guidance only, with the mapping still under review. You can change your answers at any time.",
     "items": {
       "gdpr": "GDPR (EU)",
       "ukGdpr": "UK GDPR",
@@ -9974,7 +9974,7 @@
       "assessment": "an assessment",
       "dpiaStart": "a DPIA to be started",
       "dpiaModule": "the DPIA module",
-      "dpiaModuleHosted": "the DPIA module",
+      "dpiaModuleHosted": "a plan to create another DPIA",
       "dpaFacts": "contract facts for a vendor",
       "incident": "an incident logged",
       "aiAssist": "AI assistance switched on",
@@ -10074,7 +10074,7 @@
     "periodLine": "Period: {from} to {to}",
     "generatedLine": "Generated on {date}",
     "scopeNote": "Incidents and rights requests are counted for the period. Every other figure is as on the date generated.",
-    "disclaimer": "This report states facts recorded in DPO Central. It is not legal advice and does not state that the organization complies with any law.",
+    "disclaimer": "This report states facts recorded in DPO Central. It does not state that the organization complies with any law.",
     "download": "Download PDF",
     "downloadLabel": "Download the executive report as PDF in {language}",
     "downloadOther": "PDF in {language}",
