@@ -56,6 +56,7 @@ interface CatalogVendor {
   category: string;
   subcategory: string | null;
   description: string | null;
+  descriptionEs?: string | null;
   website: string | null;
   privacyPolicyUrl: string | null;
   trustCenterUrl: string | null;
@@ -183,7 +184,8 @@ function NewVendorPageContent() {
     setFormData({
       ...formData,
       name: vendor.name,
-      description: vendor.description || "",
+      // A Spanish screen takes the Spanish text when the catalogue has one.
+      description: (locale === "es" && vendor.descriptionEs) || vendor.description || "",
       website: vendor.website || "",
       categories: [mappedCategory],
       countries: vendor.dataLocations || [],
@@ -443,7 +445,7 @@ function NewVendorPageContent() {
                             </div>
                             <p className="text-sm text-muted-foreground truncate">
                               {vendorCategory(vendor.category)}{vendor.subcategory ? ` / ${vendor.subcategory}` : ""}
-                              {vendor.description && catalogDescriptionFor(vendor.description, locale) && ` • ${vendor.description.substring(0, 50)}...`}
+                              {catalogDescriptionFor(vendor, locale) && ` • ${catalogDescriptionFor(vendor, locale)!.substring(0, 50)}...`}
                             </p>
                           </div>
                           <div className="flex gap-1 shrink-0">

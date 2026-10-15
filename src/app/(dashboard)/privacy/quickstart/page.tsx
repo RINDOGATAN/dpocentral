@@ -1014,9 +1014,9 @@ export default function QuickstartPage() {
                               </Badge>
                             )}
                           </div>
-                          {catalogDescriptionFor(vendor.description, templateLocale) && (
+                          {catalogDescriptionFor(vendor, templateLocale) && (
                             <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                              {vendor.description}
+                              {catalogDescriptionFor(vendor, templateLocale)}
                             </p>
                           )}
                         </div>

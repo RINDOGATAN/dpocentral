@@ -4,8 +4,8 @@
 /**
  * Catalogue search shows a vendor recorded twice (same website, same name)
  * once, as its richer record, and keeps two products of one company apart.
- * Spanish screens show no catalogue description, since the catalogue holds
- * English descriptions only.
+ * Spanish screens show the catalogue's Spanish description, and none when a
+ * vendor has no Spanish text.
  */
 
 import { describe, it, expect } from "vitest";
@@ -85,16 +85,25 @@ describe("dedupeCatalogRows", () => {
 });
 
 describe("catalogDescriptionFor", () => {
-  it("shows the English description on English screens only", () => {
-    expect(catalogDescriptionFor("A vendor", "en")).toBe("A vendor");
-    expect(catalogDescriptionFor("A vendor", "es")).toBeNull();
-    expect(catalogDescriptionFor(null, "en")).toBeNull();
+  it("shows the English description on English screens and the Spanish one on Spanish screens", () => {
+    const v = { description: "A vendor", descriptionEs: "Un proveedor" };
+    expect(catalogDescriptionFor(v, "en")).toBe("A vendor");
+    expect(catalogDescriptionFor(v, "es")).toBe("Un proveedor");
+    expect(catalogDescriptionFor(v, "de")).toBeNull();
+  });
+
+  it("never shows English on a Spanish screen, and tolerates rows without the Spanish field", () => {
+    expect(catalogDescriptionFor({ description: "A vendor" }, "es")).toBeNull();
+    expect(catalogDescriptionFor({ description: "A vendor", descriptionEs: null }, "es")).toBeNull();
+    expect(catalogDescriptionFor({ description: "A vendor", descriptionEs: "" }, "es")).toBeNull();
+    expect(catalogDescriptionFor({ description: null }, "en")).toBeNull();
   });
 
   it("is used by both catalogue search lists", () => {
     for (const file of ["quickstart/page.tsx", "vendors/new/page.tsx"]) {
       const src = readFileSync(path.resolve(__dirname, "../src/app/(dashboard)/privacy", file), "utf8");
-      expect(src, file).toContain("catalogDescriptionFor(vendor.description");
+      expect(src, file).toMatch(/catalogDescriptionFor\(vendor, (templateLocale|locale)\)/);
+      expect(src, file).not.toContain("catalogDescriptionFor(vendor.description");
     }
   });
 });

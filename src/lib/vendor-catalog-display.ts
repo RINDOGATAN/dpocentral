@@ -89,10 +89,17 @@ export function dedupeCatalogRows<T extends DedupeCatalogRow>(rows: readonly T[]
 }
 
 /**
- * The catalogue's vendor description for a screen in `locale`, or null. The
- * catalogue holds descriptions in English only (there is no Spanish field), so
- * a Spanish screen shows none rather than an English line in Spanish text.
+ * The catalogue's vendor description for a screen in `locale`, or null. English
+ * screens show `description`; Spanish screens show `descriptionEs`, the
+ * catalogue's Spanish text, and nothing when a vendor has none (never an
+ * English line in Spanish text). Other locales have no catalogue text yet.
+ * Tolerates rows and snapshots without the Spanish field.
  */
-export function catalogDescriptionFor(description: string | null | undefined, locale: string): string | null {
-  return locale === "en" && description ? description : null;
+export function catalogDescriptionFor(
+  vendor: { description?: string | null; descriptionEs?: string | null },
+  locale: string
+): string | null {
+  if (locale === "en") return vendor.description || null;
+  if (locale === "es") return vendor.descriptionEs || null;
+  return null;
 }

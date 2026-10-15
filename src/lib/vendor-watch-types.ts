@@ -23,6 +23,8 @@ export interface VendorWatchVendor {
   category: string;
   subcategory: string | null;
   description: string | null;
+  /** Spanish description. Optional: absent from older snapshots, null when the catalogue has none. */
+  descriptionEs?: string | null;
   tags: string[];
   website: string | null;
   privacyPolicyUrl: string | null;
