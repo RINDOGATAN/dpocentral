@@ -14,7 +14,7 @@ import {
   returnFlowName,
   type IndustryTemplate,
 } from "@/config/industry-templates";
-import { INDUSTRY_TEMPLATES_ES } from "@/config/industry-templates-es";
+import { INDUSTRY_TEMPLATES_ES, INDUSTRY_TEMPLATE_ASSET_ARTICLES_ES } from "@/config/industry-templates-es";
 
 function visibleStrings(t: IndustryTemplate): string[] {
   const out: string[] = [t.name, t.description];
@@ -23,6 +23,7 @@ function visibleStrings(t: IndustryTemplate): string[] {
   }
   for (const a of t.activities) {
     out.push(a.name, a.description, a.purpose, a.retentionPeriod, ...a.dataSubjects, ...a.recipients, ...a.assetNames);
+    if (a.legalBasisNote) out.push(a.legalBasisNote);
   }
   for (const f of t.flows) {
     out.push(f.name, f.description, f.frequency, f.sourceAssetName, f.destAssetName);
@@ -70,9 +71,61 @@ describe("industry templates in Spanish", () => {
     expect(returnFlowName("A", "B", "en")).toBe("A to B");
     expect(returnFlowName("A", "B", "es")).toBe("De A a B");
     expect(returnFlowName("Sistema de gestión de pedidos", "Base de datos de clientes", "es")).toBe(
-      "De sistema de gestión de pedidos a base de datos de clientes",
+      "Del sistema de gestión de pedidos a la base de datos de clientes",
     );
     expect(returnFlowName("CRM", "SAP Business One", "es")).toBe("De CRM a SAP Business One");
     expect(returnFlowName("Stripe", "Base de datos", "en")).toBe("Stripe to Base de datos");
+  });
+
+  it("every Spanish system name has its article", () => {
+    const names = INDUSTRY_TEMPLATES.flatMap((t) => localizeTemplate(t, "es").assets.map((a) => a.name));
+    expect(names.filter((n) => !(n in INDUSTRY_TEMPLATE_ASSET_ARTICLES_ES))).toEqual([]);
+  });
+
+  it("return flows take the article and contraction of each system", () => {
+    expect(returnFlowName("Portal del paciente", "Historia clínica electrónica (HCE)", "es")).toBe(
+      "Del portal del paciente a la historia clínica electrónica (HCE)",
+    );
+    expect(returnFlowName("Pasarela de pago", "Sistema de gestión de pedidos", "es")).toBe(
+      "De la pasarela de pago al sistema de gestión de pedidos",
+    );
+    expect(returnFlowName("Plataforma de boletines", "Registros de la aplicación", "es")).toBe(
+      "De la plataforma de boletines a los registros de la aplicación",
+    );
+    expect(returnFlowName("Portal del paciente", "Historia clínica electrónica (HCE)", "en")).toBe(
+      "Portal del paciente to Historia clínica electrónica (HCE)",
+    );
+  });
+
+  it("every Spanish flow name carries its articles", () => {
+    const names = INDUSTRY_TEMPLATES.flatMap((t) => {
+      const es = localizeTemplate(t, "es");
+      return es.flows.flatMap((f) =>
+        f.returnFlow ? [f.name, returnFlowName(f.destAssetName, f.sourceAssetName, "es")] : [f.name],
+      );
+    });
+    expect(names.length).toBeGreaterThan(0);
+    // "De " is followed by an article ("De la", "De los", "De las") or is the
+    // contraction "Del"; the destination is introduced by "a la/los/las" or "al".
+    for (const n of names) {
+      expect(n).toMatch(/^(Del |De (la|los|las) )/);
+      expect(n).toMatch(/ (al|a (la|los|las)) /);
+    }
+  });
+});
+
+describe("the healthcare template's legal basis", () => {
+  const healthcare = INDUSTRY_TEMPLATES.find((t) => t.id === "healthcare")!;
+  const care = healthcare.activities.find((a) => a.name === "Patient Care & Treatment")!;
+
+  it("keeps vital interests, marked as an example to check, in both languages", () => {
+    expect(care.legalBasis).toBe("VITAL_INTERESTS");
+    expect(care.legalBasisNote).toBe("Illustrative example: check the legal basis for your case.");
+    expect(healthcare.description).toContain("Illustrative example: check the legal basis for your case.");
+    const es = localizeTemplate(healthcare, "es");
+    expect(es.activities.find((a) => a.legalBasis === "VITAL_INTERESTS")?.legalBasisNote).toBe(
+      "Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
+    );
+    expect(es.description).toContain("Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.");
   });
 });
