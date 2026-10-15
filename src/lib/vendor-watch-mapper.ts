@@ -48,6 +48,8 @@ export function mapVendorToUpsert(v: VendorWatchVendor) {
     category: v.category,
     subcategory: v.subcategory,
     description: v.description,
+    // Older snapshots carry no Spanish field: leave the column as it is then.
+    ...("descriptionEs" in v ? { descriptionEs: v.descriptionEs ?? null } : {}),
     tags: v.tags || [],
     website: v.website,
     privacyPolicyUrl: httpUrlOrNull(v.privacyPolicyUrl),
