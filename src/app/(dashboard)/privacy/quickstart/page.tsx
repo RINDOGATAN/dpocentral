@@ -51,11 +51,9 @@ import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
 import { useEnumLabels } from "@/lib/enum-labels";
-import { ExpertHelpCta } from "@/components/privacy/expert-help-cta";
-import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta";
+import { pickVendor } from "@/lib/quickstart-vendor-pick";
 import { ApplicabilityQuestions, ApplicabilityResult } from "@/components/privacy/applicability-check";
 import { JurisdictionPicker } from "@/components/privacy/jurisdiction-picker";
-import { DraftsNotice } from "@/components/privacy/draft-confirm";
 import { isPlaceCode } from "@/config/jurisdiction-places";
 import { CopyFromClientDialog } from "@/components/privacy/copy-from-client-dialog";
 import {
@@ -180,6 +178,7 @@ export default function QuickstartPage() {
     elements: number;
     flows: number;
     transfers: number;
+    assessments?: number;
     aiSystems?: number;
     created?: {
       vendors: CreatedRecord[];
@@ -319,10 +318,15 @@ export default function QuickstartPage() {
 
   // ─── HANDLERS ─────────────────────────────────────
 
+  // Adding a vendor clears the search box (src/lib/quickstart-vendor-pick.ts).
   const toggleVendorSlug = (slug: string) => {
-    setSelectedSlugs((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
+    const next = pickVendor(selectedSlugs, slug);
+    setSelectedSlugs(next.selected);
+    if (next.clearSearch) {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      setVendorSearch("");
+      setDebouncedSearch("");
+    }
   };
 
   const removeVendorSlug = (slug: string) => {
@@ -879,8 +883,6 @@ export default function QuickstartPage() {
             </CardContent>
           </Card>
           )}
-
-          <DeploymentExpertCta />
 
           <div className="flex justify-end">
             <Button
@@ -1582,10 +1584,6 @@ export default function QuickstartPage() {
             </CardContent>
           </Card>
 
-          {/* The records just made are drafts: they count towards the
-              programme once a person confirms them. */}
-          {!nothingCreated && <DraftsNotice />}
-
           {/* What was created: every record the server made, by name, each
               linked to its own page. A data flow has no page of its own, so
               it opens the flows tab of the asset it starts from. */}
@@ -1619,7 +1617,23 @@ export default function QuickstartPage() {
                 })),
               },
             ].filter((g) => g.items.length > 0);
-            if (groups.length === 0) return null;
+            // Records made alongside, by count: the DPIA drafts for high-risk
+            // vendors and the international transfers, each linked to its list.
+            const extras = [
+              {
+                key: "assessments",
+                label: tp("success.createdAssessments", { count: executionResult.assessments ?? 0 }),
+                count: executionResult.assessments ?? 0,
+                href: "/privacy/assessments",
+              },
+              {
+                key: "transfers",
+                label: tp("success.createdTransfers", { count: executionResult.transfers }),
+                count: executionResult.transfers,
+                href: "/privacy/transfers",
+              },
+            ].filter((x) => x.count > 0);
+            if (groups.length === 0 && extras.length === 0) return null;
             return (
               <Card data-testid="quickstart-created">
                 <CardHeader className="pb-2">
@@ -1645,12 +1659,29 @@ export default function QuickstartPage() {
                       </ul>
                     </div>
                   ))}
+                  {extras.length > 0 && (
+                    <div data-testid="quickstart-created-extras">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">
+                        {tp("success.createdListAlso")}
+                      </p>
+                      <ul className="flex flex-wrap gap-1.5">
+                        {extras.map((x) => (
+                          <li key={x.key}>
+                            <Link
+                              href={x.href}
+                              className="inline-block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                              <Badge variant="outline" className="hover:border-primary/50">{x.label}</Badge>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
           })()}
-
-          <ExpertHelpCta context="quickstart" />
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/privacy/data-inventory">

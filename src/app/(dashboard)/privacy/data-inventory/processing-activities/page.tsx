@@ -37,7 +37,7 @@ import { useFormatPrice } from "@/components/region-provider";
 import { formatDateIn } from "@/lib/utils";
 import { NewActivityDialog } from "@/components/privacy/new-activity-dialog";
 import { TemplateBadge } from "@/components/privacy/template-badge";
-import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
+import { DraftBadge } from "@/components/privacy/draft-confirm";
 
 const LEGAL_BASES = new Set([
   "CONSENT",
@@ -252,9 +252,6 @@ export default function ProcessingActivitiesPage() {
           )}
         </div>
       </div>
-
-      {/* Drafts the quick start or a template made: they count once confirmed. */}
-      <DraftsNotice />
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">

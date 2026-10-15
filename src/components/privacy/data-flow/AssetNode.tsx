@@ -23,6 +23,7 @@ import type { AssetNodeData } from "./useDataFlowGraph";
 import {
   ASSET_TYPE_COLOR,
   SENSITIVITY_COLOR,
+  chipSensitivity,
 } from "./flow-palette";
 
 const assetTypeIcons: Record<string, typeof Database> = {
@@ -193,9 +194,7 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
           <div className="px-3 pb-2 flex items-center gap-1 flex-wrap">
             {topCategories.map((cat) => {
               const c =
-                SENSITIVITY_COLOR[
-                  classifyByCategoryInline(cat)
-                ];
+                SENSITIVITY_COLOR[chipSensitivity(cat)];
               return (
                 <span
                   key={cat}
@@ -238,25 +237,6 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
       </div>
     </div>
   );
-}
-
-// Local, safer classification for single-category chips (avoids over-tagging "general")
-function classifyByCategoryInline(
-  cat: string
-): "special" | "sensitive" | "general" | "none" {
-  const special = new Set([
-    "HEALTH",
-    "BIOMETRIC",
-    "GENETIC",
-    "POLITICAL",
-    "RELIGIOUS",
-    "SEXUAL_ORIENTATION",
-    "CRIMINAL",
-  ]);
-  const sensitive = new Set(["IDENTIFIERS", "FINANCIAL"]);
-  if (special.has(cat)) return "special";
-  if (sensitive.has(cat)) return "sensitive";
-  return "general";
 }
 
 export const AssetNode = memo(AssetNodeComponent);

@@ -40,7 +40,7 @@ import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
-import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
+import { DraftBadge } from "@/components/privacy/draft-confirm";
 import { PageHeader } from "@/components/privacy/page-header";
 import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
@@ -210,10 +210,7 @@ export default function VendorsPage() {
                   <Database className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
-                    <Badge className="bg-primary">{t("catalog.active")}</Badge>
-                  </div>
+                  <h3 className="font-semibold text-sm sm:text-base">{t("catalog.title")}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground">
                     {t("catalog.subtitle")}
                   </p>
@@ -268,9 +265,8 @@ export default function VendorsPage() {
         </Card>
       )}
 
-      {/* Filters, search, sort and saved views (all in the URL) */}
-      {/* Drafts the quick start or a template made: they count once confirmed. */}
-      <DraftsNotice />
+      {/* Filters, search, sort and saved views (all in the URL). The drafts
+          notice lives on the overview and the review page only. */}
 
       <ListFilterBar
         def={def}
@@ -367,7 +363,8 @@ export default function VendorsPage() {
         </Card>
       )}
 
-      <ExpertHelpCta context="vendor" />
+      {/* Not on an empty list: there the next step is adding a vendor. */}
+      {stats.total > 0 && <ExpertHelpCta context="vendor" />}
 
       {/* Enable Feature Modal */}
       <EnableFeatureModal

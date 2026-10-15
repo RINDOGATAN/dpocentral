@@ -37,7 +37,7 @@ import { ListFilterBar } from "@/components/privacy/list-filter-bar";
 import { useListFilters } from "@/lib/use-list-filters";
 import { sortByListSort, DEFAULT_LIST_SORT } from "@/lib/list-sort";
 import { TemplateBadge } from "@/components/privacy/template-badge";
-import { DraftBadge, DraftsNotice } from "@/components/privacy/draft-confirm";
+import { DraftBadge } from "@/components/privacy/draft-confirm";
 import { PageHeader } from "@/components/privacy/page-header";
 import { ListPageSkeleton } from "@/components/skeletons/list-page-skeleton";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -192,9 +192,8 @@ export default function DataInventoryPage() {
         }
       />
 
-      {/* Filters, search, sort, department and saved views (all in the URL) */}
-      {/* Drafts the quick start or a template made: they count once confirmed. */}
-      <DraftsNotice />
+      {/* Filters, search, sort, department and saved views (all in the URL).
+          The drafts notice lives on the overview and the review page only. */}
 
       <ListFilterBar
         def={def}

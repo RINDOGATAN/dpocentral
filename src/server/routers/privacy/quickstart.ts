@@ -11,6 +11,7 @@ import {
   LegalBasis,
   TransferMechanism,
   VendorStatus,
+  VendorRiskTier,
   Prisma,
 } from "@prisma/client";
 import {
@@ -715,7 +716,12 @@ export const quickstartRouter = createTRPCRouter({
               name: catalogVendor.name,
               description: catalogVendor.description,
               website: catalogVendor.website,
-              status: VendorStatus.PROSPECTIVE,
+              // The person picked vendors they use, so the record is active,
+              // and it carries the risk the preview showed ("High risk").
+              // Vendors already recorded are skipped above, so a re-run never
+              // changes their status or risk.
+              status: VendorStatus.ACTIVE,
+              riskTier: mapping.isHighRisk ? VendorRiskTier.HIGH : null,
               categories: [catalogVendor.category],
               dataProcessed: mapping.elements
                 .filter((e) => e.isPersonalData)
