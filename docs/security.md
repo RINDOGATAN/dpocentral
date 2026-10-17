@@ -49,7 +49,7 @@ clears this host only. Turn it on once each sibling serves
 returns: a hop to a product that does not serve it would end the sign-out on
 that product's error page. The rules are in `src/lib/suite-logout.ts`.
 
-**Pilot limits.** Up to five organisations per account, 15 days of editing
+**Pilot limits.** 15 days of editing
 from the first sign-in, then read-only with export, and a records ceiling.
 The window, the ceilings and the free DPIAs belong to the account that
 created the organisations (the billing owner) and are shared by all of them;

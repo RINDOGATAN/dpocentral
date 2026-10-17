@@ -6496,7 +6496,6 @@
         "assessments": "Por tiempo limitado, una cuenta puede crear {assessments} EIPD gratuitas, entre todas sus organizaciones. Se cuentan las EIPD creadas, así que borrar una EIPD en borrador no libera plaza. Las que ya existen se pueden seguir editando, presentando, aprobando y exportando.",
         "ceilingsTitle": "Límites de registros",
         "ceilingsIntro": "Tus organizaciones, en conjunto, pueden tener como máximo:",
-        "organizationsPerAccount": "Una cuenta puede gestionar hasta {organizations} organizaciones. Comparten un mismo periodo de edición, los mismos límites de registros y las EIPD gratuitas, y un solo plan de pago las cubre todas: pagas una vez, al mismo precio.",
         "exports": "Las exportaciones no tienen límite en ningún momento. Todos los informes y exportaciones de datos siguen disponibles mientras se puede editar y también después de que la organización pase a solo lectura.",
         "run": "Con el plan de pago no se aplica ninguno de estos límites y tus registros se conservan: no hay plazo de edición ni tope de registros. Los planes y sus precios están en la página de precios. Una instancia gestionada o tu propio hardware, previo presupuesto.",
         "plansLink": "Ver los planes"

@@ -6496,7 +6496,6 @@
         "assessments": "For a limited time, an account may create {assessments} DPIAs free of charge, across all its organizations. The count is of the DPIAs created, so deleting a draft DPIA does not free a place. The ones already there can still be edited, submitted, approved and exported.",
         "ceilingsTitle": "Record ceilings",
         "ceilingsIntro": "Your organizations together can hold up to:",
-        "organizationsPerAccount": "An account can manage up to {organizations} organizations. They share one editing period, one set of record ceilings and the free DPIAs, and one paid plan covers them all: you pay once, at the same price.",
         "exports": "Exports are not limited, at any stage. Every report and data export stays available while editing is open and after the organization becomes read-only.",
         "run": "On the paid plan none of these limits apply and your records are kept: there is no editing window and no record ceiling. The plans and their prices are on the pricing page. A managed instance or your own hardware is available on quotation.",
         "plansLink": "See the plans"
