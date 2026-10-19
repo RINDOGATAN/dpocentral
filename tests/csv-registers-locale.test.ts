@@ -2,9 +2,11 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Human-facing CSV registers (records of processing, vendors, breaches): the
- * English file is unchanged (English column names, raw codes); a Spanish
- * export has Spanish column names and the screens' labels for every code.
+ * Human-facing CSV registers (vendors, breaches): the English file is
+ * unchanged (English column names, raw codes); a Spanish export has Spanish
+ * column names and the screens' labels for every code. The record of
+ * processing has its own table, with labels in both languages
+ * (tests/ropa-record.test.ts).
  */
 
 import { describe, expect, it, vi } from "vitest";
@@ -21,27 +23,8 @@ vi.mock("next-intl/server", async () => {
 
 import en from "@/messages/en.json";
 import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
-import { ROPA_CSV_EN, ROPA_CSV_KEYS, ropaToCSV, type ROPAEntry } from "@/server/services/privacy/ropaGenerator";
 import { VENDOR_CSV_EN, VENDOR_CSV_KEYS, vendorsToCSV, type VendorCsvRow } from "@/server/services/export/vendor-register/csv";
 import { BREACH_CSV_EN, BREACH_CSV_KEYS, incidentsToCSV, type IncidentExportData } from "@/server/services/export/breach-register";
-
-const entry: ROPAEntry = {
-  name: "Payroll",
-  purpose: "Pay staff",
-  legalBasis: "CONTRACT",
-  legalBasisDetail: null,
-  dataSubjects: ["Employees"],
-  dataCategories: ["IDENTIFIERS", "FINANCIAL"],
-  recipients: ["Bank"],
-  retentionPeriod: null,
-  automatedDecisionMaking: true,
-  automatedDecisionDetail: "Scoring",
-  systems: [{ name: "HR app", type: "APPLICATION", elements: [] }],
-  transfers: [{ destination: "US", mechanism: "STANDARD_CONTRACTUAL_CLAUSES" }],
-  lastReviewed: new Date("2026-01-02T00:00:00Z"),
-  nextReview: null,
-};
-const noTransfer: ROPAEntry = { ...entry, name: "Marketing", automatedDecisionMaking: false, transfers: [] };
 
 const vendor: VendorCsvRow = {
   id: "v1",
@@ -94,26 +77,14 @@ const lines = (csv: string) => csv.split("\n");
 
 describe("English CSV registers are unchanged", () => {
   it("English locale gives no labels, so the generators keep their own text", async () => {
-    expect(await csvLabelsFor("ropa", ROPA_CSV_KEYS, "en")).toBeUndefined();
+    expect(await csvLabelsFor("vendors", VENDOR_CSV_KEYS, "en")).toBeUndefined();
   });
 
   it("the English catalogue matches the built-in English text", () => {
     const m = (en as unknown as { pdf: { csv: Record<string, Record<string, string>> } }).pdf.csv;
-    expect(m.ropa).toEqual(ROPA_CSV_EN.headers);
     expect(m.vendors).toEqual(VENDOR_CSV_EN.headers);
     expect(m.breaches).toEqual(BREACH_CSV_EN.headers);
-    expect(m.words).toEqual(ROPA_CSV_EN.words);
-  });
-
-  it("records of processing", () => {
-    const out = lines(ropaToCSV([entry, noTransfer]));
-    expect(out[0]).toBe(
-      "Processing Activity,Purpose,Legal Basis,Data Subjects,Data Categories,Recipients,Retention Period,Automated Decision Making,Systems,International Transfers,Last Reviewed,Next Review",
-    );
-    expect(out[1]).toBe(
-      '"Payroll","Pay staff","CONTRACT","Employees","IDENTIFIERS; FINANCIAL","Bank","Not specified","Yes - Scoring","HR app","US (STANDARD_CONTRACTUAL_CLAUSES)","2026-01-02",""',
-    );
-    expect(out[2]).toContain('"No","HR app","None"');
+    expect(m.words).toEqual(VENDOR_CSV_EN.words);
   });
 
   it("vendor register", () => {
@@ -139,18 +110,6 @@ describe("English CSV registers are unchanged", () => {
 });
 
 describe("Spanish CSV registers", () => {
-  it("records of processing: Spanish columns and codes", async () => {
-    const labels = await csvLabelsFor("ropa", ROPA_CSV_KEYS, "es");
-    const out = lines(ropaToCSV([entry, noTransfer], labels));
-    expect(out[0]).toBe(
-      "Actividad de tratamiento,Finalidad,Base jurídica,Interesados,Categorías de datos,Destinatarios,Plazo de conservación,Decisiones automatizadas,Sistemas,Transferencias internacionales,Última revisión,Próxima revisión",
-    );
-    expect(out[1]).toBe(
-      '"Payroll","Pay staff","Contrato","Employees","Identificadores; Datos financieros","Bank","Sin especificar","Sí - Scoring","HR app","US (Cláusulas contractuales tipo)","2026-01-02",""',
-    );
-    expect(out[2]).toContain('"No","HR app","Ninguna"');
-  });
-
   it("vendor register: Spanish columns and codes", async () => {
     const labels = await csvLabelsFor("vendors", VENDOR_CSV_KEYS, "es");
     const out = lines(vendorsToCSV([vendor, vendorNoDpa], labels));
@@ -175,9 +134,8 @@ describe("Spanish CSV registers", () => {
   });
 
   it("no raw upper-case code is left in a Spanish file", async () => {
-    const ropa = ropaToCSV([entry], await csvLabelsFor("ropa", ROPA_CSV_KEYS, "es"));
     const vend = vendorsToCSV([vendor], await csvLabelsFor("vendors", VENDOR_CSV_KEYS, "es"));
     const brea = incidentsToCSV([incident], await csvLabelsFor("breaches", BREACH_CSV_KEYS, "es"));
-    for (const csv of [ropa, vend, brea]) expect(csv).not.toMatch(/\b[A-Z]{3,}_[A-Z_]+\b|"(CONTRACT|IDENTIFIERS|ACTIVE|HIGH|HEALTH)"/);
+    for (const csv of [vend, brea]) expect(csv).not.toMatch(/\b[A-Z]{3,}_[A-Z_]+\b|"(CONTRACT|IDENTIFIERS|ACTIVE|HIGH|HEALTH)"/);
   });
 });

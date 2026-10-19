@@ -143,6 +143,8 @@ export async function collectIncompleteRecords(
   const records = await prisma.processingActivity.findMany({
     where: {
       organizationId,
+      // Inactive activities are not in the record, so they are not incomplete.
+      isActive: true,
       ...(deptConditions.length > 0 ? { AND: deptConditions } : {}),
     } as never,
     orderBy: { updatedAt: "desc" },

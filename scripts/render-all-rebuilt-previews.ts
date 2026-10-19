@@ -23,6 +23,9 @@ import { RopaDocument } from "../src/server/services/export/ropa/RopaDocument";
 import { VendorRegisterDocument } from "../src/server/services/export/vendor-register/VendorRegisterDocument";
 import type { VendorCsvRow } from "../src/server/services/export/vendor-register/csv";
 import type { ROPAEntry } from "../src/server/services/privacy/ropaGenerator";
+import { loadRopaData } from "../src/server/services/export/ropa/record-data";
+import { ropaTextFrom } from "../src/server/services/export/ropa/record-text";
+import type { Locale } from "../src/i18n/config";
 import enMessages from "../src/messages/en.json";
 import esMessages from "../src/messages/es.json";
 
@@ -157,29 +160,13 @@ async function main() {
   }
 
   // ── ROPA ──────────────────────────────────────────────────────────────────
-  const ropaEntries: ROPAEntry[] = ropaActivities.map((activity) => ({
-    name: activity.name,
-    description: activity.description,
-    purpose: activity.purpose,
-    legalBasis: activity.legalBasis,
-    legalBasisDetail: activity.legalBasisDetail,
-    dataSubjects: activity.dataSubjects,
-    dataCategories: activity.categories,
-    recipients: activity.recipients,
-    retentionPeriod: activity.retentionPeriod,
-    automatedDecisionMaking: activity.automatedDecisionMaking,
-    automatedDecisionDetail: activity.automatedDecisionDetail,
-    systems: activity.assets.map((a) => {
-      const effective = a.linkedElements.length > 0 ? a.linkedElements.map((le) => le.dataElement) : a.dataAsset.dataElements;
-      return {
-        name: a.dataAsset.name, type: a.dataAsset.type, location: a.dataAsset.location,
-        elements: effective.map((e) => ({ name: e.name, category: e.category, sensitivity: e.sensitivity })),
-      };
-    }),
-    transfers: activity.transfers.map((t) => ({ destination: t.destinationCountry, organization: t.destinationOrg, mechanism: t.mechanism, safeguards: t.safeguards })),
-    lastReviewed: activity.lastReviewedAt,
-    nextReview: activity.nextReviewAt,
-  }));
+  const ropaData = await loadRopaData(prisma as never, org.id);
+  const ropaEntries: ROPAEntry[] = ropaData.entries;
+  const ropaX = ropaTextFrom(
+    localeArg as Locale,
+    createTranslator({ locale: localeArg, messages, namespace: "pdf.ropaRecord" }) as never,
+    createTranslator({ locale: localeArg, messages, namespace: "enums" }) as never,
+  );
 
   // ROPA cluster graph (legacy approach — all activities)
   const ropaAssetMap = new Map<string, PdfFlowAsset>();
@@ -207,6 +194,9 @@ async function main() {
       tCommon,
       tEnum,
       locale: localeArg,
+      controller: ropaData.controller,
+      unassignedTransfers: ropaData.unassignedTransfers,
+      x: ropaX,
     }));
     const path = join(OUTPUT_DIR, `ROPA-${safeName}-${localeArg}-${fmtDate(now)}.pdf`);
     writeFileSync(path, buffer);

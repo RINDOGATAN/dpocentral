@@ -74,6 +74,7 @@ export default function DataInventoryPage() {
   // Asset type labels live with the create-asset form; reuse them rather than
   // rendering the raw enum, which showed as English on the Spanish UI.
   const tAssetType = useTranslations("pages.newAsset.assetType");
+  const tRecords = useTranslations("pages.processingActivities");
   const { def, filters, setFilter, applyAll, clearAll } = useListFilters("data-inventory");
   const { organization } = useOrganization();
   const { canWrite } = useOrgRole();
@@ -327,7 +328,7 @@ export default function DataInventoryPage() {
         onClose={() => setUpgradeModalOpen(false)}
         organizationId={organization?.id ?? ""}
         skillPackageId="skill-ropa-export"
-        skillName="ROPA Export"
+        skillName={tRecords("skillName")}
       />
     </div>
   );

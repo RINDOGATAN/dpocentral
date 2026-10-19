@@ -574,7 +574,30 @@
         "VITAL_INTERESTS": "Intereses vitales",
         "PUBLIC_TASK": "Misión de interés público",
         "LEGITIMATE_INTERESTS": "Interés legítimo"
-      }
+      },
+      "roleAndSecurity": "Condición y seguridad",
+      "roleAndSecuritySubtitle": "Cómo participas en este tratamiento y cómo se protegen los datos (artículo 30 del RGPD)",
+      "role": "Tu condición",
+      "role_option": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado (por cuenta de otro responsable)"
+      },
+      "roleHelp": "Como encargado, la actividad pasa al RAT como encargado (artículo 30.2) en lugar del RAT como responsable.",
+      "jointControllerDetails": "Corresponsable: nombre y datos de contacto",
+      "jointControllerDetailsPlaceholder": "Por ejemplo: Empresa Socia, S.L., privacidad@socia.example",
+      "clientHelp": "El responsable por cuenta del cual realizas este tratamiento.",
+      "clientControllerName": "Responsable",
+      "clientControllerContact": "Datos de contacto del responsable",
+      "clientRepresentative": "Representante del responsable en la Unión",
+      "clientDpo": "Delegado de protección de datos del responsable",
+      "securityMeasures": "Medidas técnicas y organizativas de seguridad",
+      "securityMeasuresPlaceholder": "Por ejemplo: cifrado en reposo y en tránsito, acceso por perfiles, registros conservados 12 meses",
+      "securityMeasuresHelp": "Déjalo vacío para usar la descripción general de la organización.",
+      "securityMeasuresLink": "Editar la descripción general",
+      "lastReviewedAt": "Última revisión",
+      "nextReviewAt": "Próxima revisión",
+      "reviewHelp": "Ambas fechas aparecen en el RAT. Una actividad que nunca se ha revisado cuenta como pendiente de revisión."
     },
     "editAiSystemExt": {
       "basics": "Información básica",
@@ -995,7 +1018,22 @@
         "noAssets": "Todavía no hay sistemas en esta organización",
         "selected": "{count, plural, one {# sistema seleccionado} other {# sistemas seleccionados}}"
       },
-      "draftDpia": "Redactar una EIPD"
+      "draftDpia": "Redactar una EIPD",
+      "retentionDays": "{count, plural, one {# día} other {# días}}",
+      "notSpecified": "Sin especificar",
+      "role": "Condición en el tratamiento",
+      "roleOption": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado (por cuenta de otro responsable)"
+      },
+      "jointController": "Corresponsable del tratamiento",
+      "clientController": "Responsable por cuenta del cual se trata",
+      "securityMeasures": "Medidas de seguridad",
+      "securityInherited": "Se aplica la descripción general de las medidas de seguridad de la organización.",
+      "lastReviewed": "Última revisión",
+      "nextReview": "Próxima revisión",
+      "neverReviewed": "Nunca se ha revisado"
     },
     "assetDetail": {
       "notFound": "Sistema no encontrado",
@@ -2523,24 +2561,12 @@
           "notOccasional": "Tratamiento que no es ocasional",
           "specialCategory": "Tratamiento que incluye categorías especiales de datos",
           "criminal": "Tratamiento que incluye datos relativos a condenas penales"
-        }
+        },
+        "controllerDetailsLink": "Responsable, delegado de protección de datos, representante y medidas de seguridad: indícalos en Ajustes"
       },
       "skillName": "Exportación del RAT",
-      "csv": {
-        "name": "Nombre de la actividad",
-        "description": "Descripción",
-        "purpose": "Finalidad",
-        "legalBasis": "Base jurídica",
-        "legalBasisDetail": "Detalle de la base jurídica",
-        "dataSubjects": "Interesados",
-        "dataCategories": "Categorías de datos",
-        "recipients": "Destinatarios",
-        "retention": "Plazo de conservación",
-        "systems": "Sistemas",
-        "transfers": "Transferencias internacionales",
-        "lastReviewed": "Última revisión",
-        "fileName": "RAT"
-      }
+      "downloadXlsx": "Descargar en Excel (XLSX)",
+      "processorRecord": "RAT como encargado (artículo 30.2)"
     },
     "elementDetail": {
       "notFound": "No se ha encontrado el elemento de datos",
@@ -4101,7 +4127,7 @@
       }
     },
     "ropaReport": {
-      "eyebrow": "Registro de actividades",
+      "eyebrow": "Registro de actividades de tratamiento (RAT)",
       "coverTitle": "Registro de actividades de tratamiento",
       "coverSubtitle": "Registro del artículo 30",
       "coverReference": "RGPD · Artículo 30",
@@ -4109,7 +4135,8 @@
         "processingActivities": "Actividades de tratamiento",
         "intlTransfers": "Transferencias int.",
         "automatedDecisions": "Decisiones automatizadas",
-        "needingReview": "Pendientes de revisión"
+        "needingReview": "Pendientes de revisión",
+        "incomplete": "Incompletas"
       },
       "byLegalBasis": "Por base jurídica",
       "dataFlowMap": "Mapa de flujos de datos",
@@ -4143,7 +4170,26 @@
           "mechanism": "Mecanismo",
           "safeguards": "Garantías"
         },
-        "warningPrefix": "Aviso: "
+        "warningPrefix": "Aviso: ",
+        "description": "Descripción",
+        "role": "Condición en el tratamiento",
+        "jointController": "Corresponsable del tratamiento",
+        "securityMeasures": "Medidas de seguridad",
+        "securityInherited": "Se aplica la descripción general de las medidas de seguridad (ver arriba).",
+        "processingCategories": "Categorías de tratamientos efectuados"
+      },
+      "securityTitle": "Medidas de seguridad",
+      "securityLead": "Descripción general de las medidas técnicas y organizativas de seguridad (artículo 32 del RGPD), que se aplica a cada actividad que no describe las suyas.",
+      "unassignedTransfers": "Transferencias no vinculadas a una actividad",
+      "unassignedTransfersLead": "Transferencias internacionales registradas en la organización que aún no están vinculadas a una actividad de tratamiento. Vincula cada una a su actividad.",
+      "empty": "No hay actividades de tratamiento activas como responsable.",
+      "processor": {
+        "eyebrow": "RAT como encargado",
+        "coverTitle": "Registro de actividades de tratamiento como encargado",
+        "coverSubtitle": "Registro del artículo 30.2",
+        "coverReference": "RGPD · Artículo 30.2",
+        "activities": "Tratamientos efectuados por cuenta de cada responsable",
+        "empty": "No hay actividades de tratamiento activas como encargado."
       }
     },
     "assessmentReport": {
@@ -4703,20 +4749,6 @@
         "none": "Ninguna",
         "noDpa": "Sin DPA"
       },
-      "ropa": {
-        "activity": "Actividad de tratamiento",
-        "purpose": "Finalidad",
-        "legalBasis": "Base jurídica",
-        "dataSubjects": "Interesados",
-        "dataCategories": "Categorías de datos",
-        "recipients": "Destinatarios",
-        "retentionPeriod": "Plazo de conservación",
-        "automatedDecisions": "Decisiones automatizadas",
-        "systems": "Sistemas",
-        "transfers": "Transferencias internacionales",
-        "lastReviewed": "Última revisión",
-        "nextReview": "Próxima revisión"
-      },
       "vendors": {
         "name": "Nombre",
         "status": "Estado",
@@ -4751,6 +4783,88 @@
         "resolvedAt": "Resuelta el",
         "notificationRequired": "¿Requiere notificación a la autoridad de control?",
         "notificationDeadline": "Plazo de notificación"
+      }
+    },
+    "ropaRecord": {
+      "role": {
+        "CONTROLLER": "Responsable",
+        "JOINT_CONTROLLER": "Corresponsable",
+        "PROCESSOR": "Encargado"
+      },
+      "controller": {
+        "title": "Responsable del tratamiento (artículo 30.1.a del RGPD)",
+        "processorTitle": "Encargado del tratamiento (artículo 30.2.a del RGPD)",
+        "name": "Responsable del tratamiento",
+        "processorName": "Encargado del tratamiento",
+        "taxId": "NIF",
+        "address": "Dirección",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "dpo": "Delegado de protección de datos",
+        "representative": "Representante en la Unión (artículo 27)",
+        "securityMeasures": "Descripción general de las medidas de seguridad"
+      },
+      "columns": {
+        "activity": "Actividad de tratamiento",
+        "controller": "Responsable del tratamiento",
+        "controllerContact": "Datos de contacto del responsable",
+        "jointController": "Corresponsable del tratamiento",
+        "dpo": "Delegado de protección de datos",
+        "representative": "Representante en la Unión",
+        "purpose": "Fines del tratamiento",
+        "legalBasis": "Base jurídica",
+        "dataSubjects": "Categorías de interesados",
+        "dataCategories": "Categorías de datos personales",
+        "specialCategories": "Categorías especiales (artículos 9 y 10)",
+        "recipients": "Categorías de destinatarios",
+        "transfers": "Transferencias internacionales y garantías",
+        "retention": "Plazos previstos de supresión",
+        "security": "Medidas técnicas y organizativas de seguridad",
+        "role": "Condición en el tratamiento",
+        "description": "Descripción",
+        "automatedDecisions": "Decisiones automatizadas",
+        "systems": "Sistemas",
+        "lastReviewed": "Última revisión",
+        "nextReview": "Próxima revisión",
+        "processor": "Encargado del tratamiento",
+        "processorContact": "Datos de contacto del encargado",
+        "clientController": "Responsable por cuenta del cual se trata",
+        "clientControllerContact": "Datos de contacto del responsable",
+        "clientRepresentative": "Representante del responsable",
+        "clientDpo": "Delegado de protección de datos del responsable",
+        "processingCategories": "Categorías de tratamientos efectuados"
+      },
+      "warnings": {
+        "retentionMissing": "Plazo de conservación sin especificar",
+        "recipientsMissing": "Sin destinatarios indicados",
+        "dataSubjectsMissing": "Sin categorías de interesados",
+        "categoriesMissing": "Sin categorías de datos personales",
+        "securityMissing": "Sin descripción de las medidas de seguridad",
+        "noSystems": "Sin sistemas vinculados",
+        "neverReviewed": "Nunca se ha revisado",
+        "reviewOverdue": "La fecha de revisión ha pasado",
+        "automatedNoDetail": "Decisiones automatizadas sin detalles",
+        "clientControllerMissing": "No se ha indicado el responsable por cuenta del cual se trata"
+      },
+      "words": {
+        "notSpecified": "Sin especificar",
+        "notDesignated": "No designado",
+        "yes": "Sí",
+        "no": "No",
+        "none": "Ninguno",
+        "noTransfers": "Sin transferencias internacionales",
+        "neverReviewed": "Nunca se ha revisado",
+        "days": "{count, plural, one {# día} other {# días}}",
+        "tiaDone": "Evaluación de impacto de la transferencia realizada",
+        "tiaOn": "Evaluación de impacto de la transferencia realizada el {date}"
+      },
+      "sheets": {
+        "record": "RAT",
+        "processorRecord": "RAT como encargado",
+        "controller": "Responsable",
+        "processor": "Encargado",
+        "field": "Campo",
+        "value": "Valor"
       }
     }
   },
@@ -10338,5 +10452,45 @@
       "desc": "Limitar el uso y la comunicación de la información personal sensible del consumidor. La empresa no puede exigir una solicitud verificable del consumidor."
     },
     "clock15": "Lo antes posible y, como máximo, en 15 días hábiles desde la recepción; sin prórroga."
+  },
+  "controllerDetails": {
+    "title": "Datos del responsable para el RAT",
+    "description": "Aparecen en la portada de cada registro de actividades de tratamiento (artículo 30 del RGPD). Como encargado, los mismos datos te identifican en el RAT como encargado.",
+    "groups": {
+      "controller": "Responsable del tratamiento",
+      "dpo": "Delegado de protección de datos",
+      "representative": "Representante en la Unión",
+      "security": "Medidas de seguridad"
+    },
+    "fields": {
+      "controllerLegalName": "Nombre o razón social",
+      "controllerTaxId": "NIF",
+      "controllerAddress": "Dirección",
+      "controllerEmail": "Correo electrónico de contacto",
+      "controllerPhone": "Teléfono",
+      "dpoName": "Nombre",
+      "dpoContact": "Datos de contacto",
+      "euRepresentativeName": "Nombre",
+      "euRepresentativeContact": "Datos de contacto",
+      "securityMeasures": "Descripción general de las medidas técnicas y organizativas"
+    },
+    "placeholders": {
+      "controllerLegalName": "Empresa de Ejemplo, S.L.",
+      "controllerTaxId": "Por ejemplo: B12345678",
+      "controllerAddress": "Calle, número, código postal, ciudad, país",
+      "controllerEmail": "privacidad@ejemplo.es",
+      "controllerPhone": "+34 900 000 000",
+      "dpoName": "Déjalo vacío si no hay delegado de protección de datos designado",
+      "dpoContact": "Correo electrónico, teléfono o dirección",
+      "euRepresentativeName": "Déjalo vacío si no es necesario",
+      "euRepresentativeContact": "Correo electrónico, teléfono o dirección",
+      "securityMeasures": "Por ejemplo: cifrado, control de acceso por perfiles, copias de seguridad, formación del personal, procedimiento de incidentes"
+    },
+    "prefilled": "Rellenado con lo que DPO Central ya sabe. Revísalo y guárdalo.",
+    "representativeHelp": "Solo para un responsable establecido fuera de la Unión (artículo 27 del RGPD).",
+    "securityHelp": "Se aplica a cada actividad que no describe sus propias medidas (artículos 30.1.g y 32 del RGPD).",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "saved": "Se han guardado los datos del responsable"
   }
 }

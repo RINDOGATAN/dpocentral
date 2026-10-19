@@ -180,6 +180,25 @@ model Organization {
   dsarModuleSubscriptionId String?
   dsarModuleRenewsAt       DateTime?
 
+  // Record of processing (GDPR Art. 30(1)(a) and 30(2)(a)): who the controller
+  // is and how to reach it, its data protection officer and its representative
+  // in the Union (Art. 27). Printed on the cover of every record of processing
+  // export. Null until filled in settings; the exports then fall back to the
+  // organisation's name and the rights-request form's contact address.
+  // securityMeasures is the general description of the technical and
+  // organisational measures (Art. 30(1)(g) and 30(2)(d)) that every activity
+  // inherits unless it has its own.
+  controllerLegalName     String?
+  controllerTaxId         String?
+  controllerAddress       String? @db.Text
+  controllerEmail         String?
+  controllerPhone         String?
+  dpoName                 String?
+  dpoContact              String? @db.Text
+  euRepresentativeName    String?
+  euRepresentativeContact String? @db.Text
+  securityMeasures        String? @db.Text
+
   // Relations
   members              OrganizationMember[]
   jurisdictions        OrganizationJurisdiction[]
@@ -505,6 +524,13 @@ model DataElement {
   @@map("data_elements")
 }
 
+/// How the organisation takes part in a processing activity (GDPR Art. 30).
+enum ProcessingRole {
+  CONTROLLER
+  JOINT_CONTROLLER
+  PROCESSOR
+}
+
 enum LegalBasis {
   CONSENT
   CONTRACT
@@ -530,6 +556,22 @@ model ProcessingActivity {
   automatedDecisionMaking Boolean        @default(false)
   automatedDecisionDetail String?        @db.Text
   isActive                Boolean        @default(true)
+  // Art. 30: whether the organisation carries out this activity as controller
+  // (alone or jointly) or as processor on behalf of another controller. A
+  // processor activity belongs in the processor record (Art. 30(2)), not in
+  // the controller record (Art. 30(1)).
+  role                    ProcessingRole @default(CONTROLLER)
+  // Joint controller (Art. 26): name and contact details.
+  jointControllerDetails  String?        @db.Text
+  // Art. 30(1)(g) / 30(2)(d): null means the organisation's general
+  // description (Organization.securityMeasures) applies.
+  securityMeasures        String?        @db.Text
+  // Art. 30(2)(a), processor activities only: the controller on whose behalf
+  // the organisation acts, its representative and its data protection officer.
+  clientControllerName    String?
+  clientControllerContact String?        @db.Text
+  clientRepresentative    String?        @db.Text
+  clientDpo               String?        @db.Text
   businessUnitId          String? // Owning department (nullable; SetNull on delete)
   lastReviewedAt          DateTime?
   nextReviewAt            DateTime?

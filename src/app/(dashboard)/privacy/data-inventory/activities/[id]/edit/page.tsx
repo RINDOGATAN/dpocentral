@@ -30,6 +30,9 @@ const LEGAL_BASIS_KEYS = [
   "PUBLIC_TASK", "LEGITIMATE_INTERESTS",
 ] as const;
 
+const ROLE_KEYS = ["CONTROLLER", "JOINT_CONTROLLER", "PROCESSOR"] as const;
+type Role = (typeof ROLE_KEYS)[number];
+
 const DATA_CATEGORY_KEYS = [
   "IDENTIFIERS", "DEMOGRAPHICS", "FINANCIAL", "HEALTH", "BIOMETRIC",
   "LOCATION", "BEHAVIORAL", "EMPLOYMENT", "EDUCATION", "POLITICAL",
@@ -48,6 +51,7 @@ export default function EditActivityPage() {
   const tCommon = useTranslations("common");
   const tLegal = useTranslations("pages.editActivityExt.legalBasis_option");
   const tCat = useTranslations("pages.editActivityExt.category_option");
+  const tRole = useTranslations("pages.editActivityExt.role_option");
 
   const initializedRef = useRef(false);
   const [formData, setFormData] = useState({
@@ -64,6 +68,15 @@ export default function EditActivityPage() {
     automatedDecisionMaking: false,
     automatedDecisionDetail: "",
     isActive: true,
+    role: "CONTROLLER" as Role,
+    jointControllerDetails: "",
+    securityMeasures: "",
+    clientControllerName: "",
+    clientControllerContact: "",
+    clientRepresentative: "",
+    clientDpo: "",
+    lastReviewedAt: "",
+    nextReviewAt: "",
   });
   const [newSubject, setNewSubject] = useState("");
   const [newRecipient, setNewRecipient] = useState("");
@@ -90,6 +103,16 @@ export default function EditActivityPage() {
         automatedDecisionMaking: activity.automatedDecisionMaking ?? false,
         automatedDecisionDetail: activity.automatedDecisionDetail || "",
         isActive: activity.isActive ?? true,
+        role: (activity.role as Role) ?? "CONTROLLER",
+        jointControllerDetails: activity.jointControllerDetails || "",
+        securityMeasures: activity.securityMeasures || "",
+        clientControllerName: activity.clientControllerName || "",
+        clientControllerContact: activity.clientControllerContact || "",
+        clientRepresentative: activity.clientRepresentative || "",
+        clientDpo: activity.clientDpo || "",
+        // Date-only values, read in UTC so the day never moves.
+        lastReviewedAt: activity.lastReviewedAt ? new Date(activity.lastReviewedAt).toISOString().slice(0, 10) : "",
+        nextReviewAt: activity.nextReviewAt ? new Date(activity.nextReviewAt).toISOString().slice(0, 10) : "",
       });
     }
   }, [activity]);
@@ -129,6 +152,15 @@ export default function EditActivityPage() {
       automatedDecisionMaking: formData.automatedDecisionMaking,
       automatedDecisionDetail: formData.automatedDecisionDetail || null,
       isActive: formData.isActive,
+      role: formData.role,
+      jointControllerDetails: formData.role === "JOINT_CONTROLLER" ? formData.jointControllerDetails || null : null,
+      securityMeasures: formData.securityMeasures || null,
+      clientControllerName: formData.role === "PROCESSOR" ? formData.clientControllerName || null : null,
+      clientControllerContact: formData.role === "PROCESSOR" ? formData.clientControllerContact || null : null,
+      clientRepresentative: formData.role === "PROCESSOR" ? formData.clientRepresentative || null : null,
+      clientDpo: formData.role === "PROCESSOR" ? formData.clientDpo || null : null,
+      lastReviewedAt: formData.lastReviewedAt || null,
+      nextReviewAt: formData.nextReviewAt || null,
     });
   };
 
@@ -372,6 +404,27 @@ export default function EditActivityPage() {
                 />
               </div>
             )}
+            <div className="grid gap-4 md:grid-cols-2 pt-2 border-t">
+              <div className="space-y-2">
+                <Label htmlFor="lastReviewedAt">{tExt("lastReviewedAt")}</Label>
+                <Input
+                  id="lastReviewedAt"
+                  type="date"
+                  value={formData.lastReviewedAt}
+                  onChange={(e) => setFormData({ ...formData, lastReviewedAt: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="nextReviewAt">{tExt("nextReviewAt")}</Label>
+                <Input
+                  id="nextReviewAt"
+                  type="date"
+                  value={formData.nextReviewAt}
+                  onChange={(e) => setFormData({ ...formData, nextReviewAt: e.target.value })}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground md:col-span-2">{tExt("reviewHelp")}</p>
+            </div>
             <div className="flex items-center space-x-2 pt-2 border-t">
               <Switch
                 id="isActive"
@@ -379,6 +432,105 @@ export default function EditActivityPage() {
                 onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
               />
               <Label htmlFor="isActive">{tExt("isActive")}</Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{tExt("roleAndSecurity")}</CardTitle>
+            <CardDescription>{tExt("roleAndSecuritySubtitle")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="role">{tExt("role")}</Label>
+              <Select
+                value={formData.role}
+                onValueChange={(value) => setFormData({ ...formData, role: value as Role })}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ROLE_KEYS.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {tRole(value)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{tExt("roleHelp")}</p>
+            </div>
+            {formData.role === "JOINT_CONTROLLER" && (
+              <div className="space-y-2">
+                <Label htmlFor="jointControllerDetails">{tExt("jointControllerDetails")}</Label>
+                <Textarea
+                  id="jointControllerDetails"
+                  rows={2}
+                  maxLength={5000}
+                  placeholder={tExt("jointControllerDetailsPlaceholder")}
+                  value={formData.jointControllerDetails}
+                  onChange={(e) => setFormData({ ...formData, jointControllerDetails: e.target.value })}
+                />
+              </div>
+            )}
+            {formData.role === "PROCESSOR" && (
+              <div className="grid gap-4 md:grid-cols-2">
+                <p className="text-xs text-muted-foreground md:col-span-2">{tExt("clientHelp")}</p>
+                <div className="space-y-2">
+                  <Label htmlFor="clientControllerName">{tExt("clientControllerName")}</Label>
+                  <Input
+                    id="clientControllerName"
+                    maxLength={300}
+                    value={formData.clientControllerName}
+                    onChange={(e) => setFormData({ ...formData, clientControllerName: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientControllerContact">{tExt("clientControllerContact")}</Label>
+                  <Input
+                    id="clientControllerContact"
+                    maxLength={5000}
+                    value={formData.clientControllerContact}
+                    onChange={(e) => setFormData({ ...formData, clientControllerContact: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientRepresentative">{tExt("clientRepresentative")}</Label>
+                  <Input
+                    id="clientRepresentative"
+                    maxLength={5000}
+                    value={formData.clientRepresentative}
+                    onChange={(e) => setFormData({ ...formData, clientRepresentative: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientDpo">{tExt("clientDpo")}</Label>
+                  <Input
+                    id="clientDpo"
+                    maxLength={5000}
+                    value={formData.clientDpo}
+                    onChange={(e) => setFormData({ ...formData, clientDpo: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="securityMeasures">{tExt("securityMeasures")}</Label>
+              <Textarea
+                id="securityMeasures"
+                rows={4}
+                maxLength={5000}
+                placeholder={tExt("securityMeasuresPlaceholder")}
+                value={formData.securityMeasures}
+                onChange={(e) => setFormData({ ...formData, securityMeasures: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                {tExt("securityMeasuresHelp")}{" "}
+                <Link href="/privacy/settings#controller-details" className="underline">
+                  {tExt("securityMeasuresLink")}
+                </Link>
+              </p>
             </div>
           </CardContent>
         </Card>
