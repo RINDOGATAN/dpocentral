@@ -17,11 +17,18 @@
 // tests/assessment-frameworks.test.ts fails if the two drift apart. The v2
 // sections keep their existing bundle entries untouched.
 //
+// v3.1 asks for the legitimate interest pursued when the legal basis is
+// Art. 6(1)(f) (Art. 35(7)(a)), and for the date and outcome of the prior
+// consultation when the answers say one is required (Art. 36). Likelihood and
+// severity use one four-level scale, as the risk register does.
+//
 // Every legal statement names its primary source. This is a draft for review
 // by counsel, not legal advice.
 
 import {
   CA_OPTION,
+  CONSULTATION_RECORD_QUESTION_ID,
+  LEGITIMATE_INTEREST_QUESTION_ID,
   CCPA_TRIGGERS,
   CCPA_TRIGGER_QUESTION_ID,
   EU_OPTION,
@@ -32,7 +39,7 @@ import {
 import type { ShowIf } from "@/lib/assessment-conditions";
 
 export const DPIA_TEMPLATE_ID = "system-dpia-template";
-export const DPIA_TEMPLATE_VERSION = "3.0";
+export const DPIA_TEMPLATE_VERSION = "3.1";
 
 // ── Conditions ───────────────────────────────────────────────────────────
 
@@ -97,8 +104,28 @@ const SCOPE_SECTION: BiSection = {
   ],
 };
 
+/** Stored options the v3.1 conditions name (the v2 wording, kept as stored). */
+const LEGITIMATE_INTERESTS_OPTION = "Legitimate interests (Art. 6(1)(f))";
+const CONSULTATION_REQUIRED_OPTION = "Yes \u2014 high residual risk that cannot be sufficiently mitigated";
+
 /** Questions added to sections the template already had. */
 const EXTRA_QUESTIONS: Record<string, BiQuestion[]> = {
+  s1: [
+    {
+      id: LEGITIMATE_INTEREST_QUESTION_ID,
+      type: "textarea",
+      required: true,
+      showIf: { questionId: "q1_3", anyOf: [LEGITIMATE_INTERESTS_OPTION] },
+      text: {
+        en: "The legitimate interest pursued",
+        es: "El interés legítimo perseguido",
+      },
+      help: {
+        en: "Name the interest, whose interest it is (yours or a third party's) and why the processing is needed for it. Source: Regulation (EU) 2016/679, Article 35(7)(a).",
+        es: "Indica el interés, de quién es (tuyo o de un tercero) y por qué el tratamiento es necesario para él. Fuente: Reglamento (UE) 2016/679, artículo 35.7.a).",
+      },
+    },
+  ],
   s4: [
     {
       id: "q4_3",
@@ -116,6 +143,20 @@ const EXTRA_QUESTIONS: Record<string, BiQuestion[]> = {
     },
   ],
   s7: [
+    {
+      id: CONSULTATION_RECORD_QUESTION_ID,
+      type: "textarea",
+      required: true,
+      showIf: { questionId: "q7_2", anyOf: [CONSULTATION_REQUIRED_OPTION] },
+      text: {
+        en: "Prior consultation with the supervisory authority: date of the request, and the outcome or its status",
+        es: "Consulta previa a la autoridad de control: fecha de la solicitud y resultado o estado en que se encuentra",
+      },
+      help: {
+        en: "The processing may not start until the authority has answered or the period of Article 36(2) has passed. Record the date the consultation was sent, the authority, and its written advice once received. Source: Regulation (EU) 2016/679, Article 36(1) and (2).",
+        es: "El tratamiento no puede empezar hasta que la autoridad haya respondido o haya transcurrido el plazo del artículo 36.2. Anota la fecha de envío de la consulta, la autoridad y su asesoramiento por escrito cuando lo recibas. Fuente: Reglamento (UE) 2016/679, artículo 36.1 y 36.2.",
+      },
+    },
     {
       id: "q7_4",
       type: "textarea",
@@ -374,7 +415,7 @@ const CALIFORNIA_TIMETABLE_SECTION: BiSection = {
 const TEMPLATE_META: { name: BiText; description: BiText } = {
   name: {
     en: "Data Protection Impact Assessment (generic)",
-    es: "Evaluación de impacto relativa a la protección de datos (genérica)",
+    es: "Evaluación de Impacto relativa a la Protección de Datos (genérica)",
   },
   description: {
     en: "A DPIA that follows the framework you choose at the start: the European rules, the Californian risk assessment rules, or both.",
@@ -684,7 +725,7 @@ const baseSections = [
         type: "textarea",
         required: true,
         helpText:
-          "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N — Title: Description. Likelihood: X. Severity: Y.",
+          "For each risk: describe the source and the rights affected, and grade its likelihood and its severity on the same four levels (Negligible / Limited / Significant / Maximum). Then add each risk to the risk register, where it is graded before and after the measures.",
       },
     ],
   },
