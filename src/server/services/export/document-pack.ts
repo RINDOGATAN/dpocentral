@@ -44,7 +44,9 @@ import { buildBreachRegisterExport } from "./documents/breach-register";
 import { buildPrivacyProgramExport } from "./documents/privacy-program";
 import { buildBoardReportExport } from "./documents/board-report";
 import { ASSESSMENT_EXPORT_INCLUDE, buildAssessmentExport } from "./documents/assessment";
+import { assessmentNameWithoutType, assessmentTypeShort } from "@/lib/assessment-file-name";
 import { buildDpaExport } from "./documents/dpa";
+import { pdfDate } from "./pdf-locale";
 
 type Builder = (args: ExportArgs) => Promise<ExportFile>;
 
@@ -137,7 +139,7 @@ export async function buildDocumentPack(
             intro: t("draftNote.intro"),
             gapsTitle: t("draftNote.gapsTitle"),
             gaps,
-            generated: t("draftNote.generated", { date: today }),
+            generated: t("draftNote.generated", { date: pdfDate(now, "long", locale) }),
           }
         : null;
       const files: string[] = [];
@@ -187,13 +189,17 @@ export async function buildDocumentPack(
         const file = await buildAssessmentExport({ ...assessment, template: assessment.template }, locale);
         const isDraft = assessment.status !== "APPROVED";
         const typeLabel = ta(`assessmentTypes.${assessment.template.type}`);
-        let base = `${isDraft ? `${draftMark}-` : ""}${fileSlug(`${typeLabel} ${assessment.name}`)}`;
+        // The short type name (EIPD in Spanish) and the name without its own
+        // leading type code, so a file name never says "dpia" in Spanish.
+        let base = `${isDraft ? `${draftMark}-` : ""}${fileSlug(
+          `${assessmentTypeShort(assessment.template.type, locale)} ${assessmentNameWithoutType(assessment.name)}`
+        )}`;
         for (let i = 2; used.has(base); i++) base = `${base}-${i}`;
         used.add(base);
         const fileName = `${dir}/${base}.pdf`;
         entries.push({ name: fileName, data: file.data });
         rows.push({
-          name: t("assessmentName", { type: typeLabel, name: assessment.name }),
+          name: t("assessmentName", { type: typeLabel, name: assessmentNameWithoutType(assessment.name) }),
           state: isDraft ? "draft" : "ready",
           gaps: isDraft ? [t("assessmentGaps")] : [],
           date: day(assessment.completedAt ?? assessment.updatedAt),
@@ -257,7 +263,7 @@ export async function buildDocumentPack(
   const index = [
     `# ${t("index.title", { org: orgName })}`,
     "",
-    t("index.generated", { date: today }),
+    t("index.generated", { date: pdfDate(now, "long", locale) }),
     "",
     includeDrafts ? t("index.withDrafts") : t("index.readyOnly"),
     "",
@@ -266,7 +272,7 @@ export async function buildDocumentPack(
     `| ${t("index.colDocument")} | ${t("index.colState")} | ${t("index.colDate")} | ${t("index.colFile")} |`,
     "|---|---|---|---|",
     ...rows.map(
-      (r) => `| ${mdCell(r.name)} | ${mdCell(stateWord(r))} | ${r.date} | ${r.files.map((f) => `\`${f}\``).join(", ")} |`,
+      (r) => `| ${mdCell(r.name)} | ${mdCell(stateWord(r))} | ${pdfDate(r.date, "short", locale)} | ${r.files.map((f) => `\`${f}\``).join(", ")} |`,
     ),
     ...(rows.length === 0 ? [`| ${t("index.empty")} | | | |`] : []),
     "",

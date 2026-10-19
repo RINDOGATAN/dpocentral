@@ -24,22 +24,28 @@ import { locales, localeNames, localeShortNames, type Locale } from "@/i18n/conf
 import { writeLocaleCookie } from "@/i18n/locale-cookie";
 import { features } from "@/config/features";
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({
+  onChange,
+}: {
+  /** Called with the chosen language after the cookie is written (signed-in screens save it on the account). */
+  onChange?: (locale: Locale) => void;
+} = {}) {
   // Don't render if i18n is disabled - must check before hooks
   if (!features.i18nEnabled) {
     return null;
   }
 
-  return <LanguageSwitcherInner />;
+  return <LanguageSwitcherInner onChange={onChange} />;
 }
 
-function LanguageSwitcherInner() {
+function LanguageSwitcherInner({ onChange }: { onChange?: (locale: Locale) => void }) {
   const locale = useLocale() as Locale;
   const router = useRouter();
 
   const handleLocaleChange = (newLocale: Locale) => {
     // Set locale cookie and reload to apply server-side
     writeLocaleCookie(newLocale);
+    onChange?.(newLocale);
     router.refresh();
   };
 

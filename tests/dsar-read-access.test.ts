@@ -256,8 +256,10 @@ describe("aggregate figures stay open to every member", () => {
   });
 });
 
-describe("the organisation's JSON export follows the same rule", () => {
+describe("the organisation's JSON export: owners and admins only, every request, on the audit trail", () => {
   async function exportAs(role: string) {
+    const p0 = mocks.prisma as unknown as Record<string, Record<string, unknown>>;
+    p0.businessUnitMember = { findMany: vi.fn().mockResolvedValue([]) };
     mocks.prisma.organizationMember.findFirst.mockResolvedValue({
       id: "member-a",
       userId: "user-a",
@@ -276,25 +278,19 @@ describe("the organisation's JSON export follows the same rule", () => {
     }
     const { GET } = await import("@/app/api/export/organization-data/route");
     const res = await GET(new Request("http://localhost/api/export/organization-data?organizationId=org-a"));
-    return (await res.json()) as { dsarRequests: { id: string }[] };
+    return { status: res.status, body: (await res.json()) as { dsarRequests: { id: string }[] } };
   }
 
-  it.each(["OWNER", "ADMIN"])("%s exports every request", async (role) => {
-    const body = await exportAs(role);
+  it.each(["OWNER", "ADMIN"])("%s exports every request, and the download is audited", async (role) => {
+    mocks.prisma.auditLog.create.mockClear();
+    const { status, body } = await exportAs(role);
+    expect(status).toBe(200);
     expect(body.dsarRequests.map((r) => r.id)).toEqual(["dsar-assigned", "dsar-other"]);
+    expect(mocks.prisma.auditLog.create.mock.calls[0][0].data.action).toBe("EXPORT_ORGANIZATION_DATA");
   });
 
-  // The full file (every register, member e-mails) is for owners and admins.
-  it.each(["PRIVACY_OFFICER", ...OTHERS])("%s cannot download the full organisation file", async (role) => {
-    mocks.prisma.organizationMember.findFirst.mockResolvedValue({
-      id: "member-a",
-      userId: "user-a",
-      organizationId: "org-a",
-      role,
-      organization: { id: "org-a", name: "Org A", slug: "org-a", domain: null, settings: null, createdAt: new Date() },
-    });
-    const { GET } = await import("@/app/api/export/organization-data/route");
-    const res = await GET(new Request("http://localhost/api/export/organization-data?organizationId=org-a"));
-    expect(res.status).toBe(403);
+  it.each(["PRIVACY_OFFICER", ...OTHERS])("%s may not download the full file", async (role) => {
+    const { status } = await exportAs(role);
+    expect(status).toBe(403);
   });
 });

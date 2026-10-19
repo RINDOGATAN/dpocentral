@@ -13,6 +13,7 @@ import { locales, defaultLocale, type Locale } from "./i18n/config";
 import { LOCALE_COOKIE, langParamLocale, localeCookieCleanup, localeCookieWrites } from "./i18n/locale-cookie";
 import {
   authLimiter,
+  authReadLimiter,
   checkoutLimiter,
   cronLimiter,
   dsarPublicLimiter,
@@ -34,6 +35,7 @@ import { COUNTRY_HEADER, CURRENCY_COOKIE, regionCurrency } from "./lib/region";
 const limiters: Record<LimitedRoute, RateLimiter> = {
   magicLink: magicLinkLimiter,
   signIn: signInLimiter,
+  authRead: authReadLimiter,
   auth: authLimiter,
   checkout: checkoutLimiter,
   dsarPublic: dsarPublicLimiter,

@@ -376,7 +376,7 @@
       },
       "hint": {
         "en": "Only relevant for US-established processors. Verify at dataprivacyframework.gov. With an active certification, transfers rely on the 2023 adequacy decision and the SCCs are agreed as a fallback.",
-        "es": "Solo relevante para encargados establecidos en EE.UU. Verifíquelo en dataprivacyframework.gov. Con certificación activa, las transferencias se amparan en la decisión de adecuación de 2023 y las CCT quedan pactadas como mecanismo subsidiario."
+        "es": "Solo relevante para encargados establecidos en EE. UU. Compruébalo en dataprivacyframework.gov. Con certificación activa, las transferencias se amparan en la decisión de adecuación de 2023 y las CCT quedan pactadas como mecanismo subsidiario."
       },
       "options": [
         "no",

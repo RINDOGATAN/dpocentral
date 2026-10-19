@@ -22,6 +22,7 @@ import { draftTotal, loadPathCounts } from "@/server/services/program/path-count
 import { loadPlanStart } from "@/server/services/program/plan-start";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { loadDeadlines } from "@/server/services/program/deadlines";
+import { loadReviewsDue } from "@/server/services/program/reviews-due";
 import { evaluateRegister, registerFor, stepRecordCounts } from "@/config/document-register";
 import { isDsarModuleEnabled } from "@/config/features";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
@@ -44,6 +45,8 @@ export const programPathRouter = createTRPCRouter({
         // Records drafted for this organisation and not yet confirmed: what
         // "Review and confirm" holds (services/template-items/drafts.ts).
         drafts: draftTotal(counts),
+        // For a step started but not done: the fields that would finish it.
+        missing: counts.missing ?? {},
       };
     }),
 
@@ -61,15 +64,17 @@ export const programPathRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
       if (!scope.all) {
-        return { limited: true as const, documents: [], needsAction: [], deadlines: [] };
+        return { limited: true as const, documents: [], needsAction: [], deadlines: [], reviews: [] };
       }
-      const [facts, needsAction, deadlines] = await Promise.all([
+      const [facts, needsAction, deadlines, reviews] = await Promise.all([
         loadDocumentFacts(ctx.prisma, ctx.organization.id),
         collectNeedsAction(ctx.prisma, ctx.organization.id, scope),
         loadDeadlines(ctx.prisma, ctx.organization.id, {
           role: ctx.membership.role,
           userId: ctx.session.user.id,
         }),
+        // Reviews of activities and vendors due within 30 days, or overdue.
+        loadReviewsDue(ctx.prisma, ctx.organization.id),
       ]);
       return {
         limited: false as const,
@@ -77,6 +82,7 @@ export const programPathRouter = createTRPCRouter({
         recordCounts: stepRecordCounts(facts),
         needsAction: needsAction.items,
         deadlines,
+        reviews,
       };
     }),
 });

@@ -39,7 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { AccountLanguageSwitcher, AccountLocaleSync } from "@/components/account-locale";
 import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { MENU_COOKIE, cookieAssignment } from "@/lib/menu-cookie";
@@ -209,7 +209,7 @@ export function GuidedLayout({
               <MessageSquareWarning className="w-4 h-4" />
               <span className="sr-only">{tn("feedback")}</span>
             </Button>
-            <LanguageSwitcher />
+            <AccountLanguageSwitcher />
             <AccountMenu onFeedback={onFeedback} />
           </div>
         </div>

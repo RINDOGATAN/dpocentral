@@ -53,7 +53,8 @@ type OptionQuestion = { id: string; type?: unknown; options?: string[] };
 
 /**
  * Formats saved answers in the given language: options matched by position
- * across languages, lists joined with "; ", Yes/No translated. Free text is
+ * across languages, lists joined with "; ", yes/no answers (true/false or
+ * "Yes"/"No") printed as the report's Yes/No. Free text is
  * printed as saved.
  */
 export function answerFormatter(
@@ -76,7 +77,11 @@ export function answerFormatter(
     const baseId = questionId.split("::")[0];
     const q = stored.get(baseId);
     if (q?.type === "boolean") {
-      return text === "Yes" ? labels.yes : text === "No" ? labels.no : text;
+      // Stored as a JSON boolean by the app, or as "Yes"/"No" text by older
+      // seeds and imports, in either language.
+      const yes = raw === true || /^(yes|true|s[ií])$/i.test(text.trim());
+      const no = raw === false || /^(no|false)$/i.test(text.trim());
+      return yes ? labels.yes : no ? labels.no : text;
     }
     if (!q?.options) return text;
     return localizeValues(

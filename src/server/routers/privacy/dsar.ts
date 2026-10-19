@@ -17,6 +17,7 @@ import { canHandleDsars } from "@/lib/dsar-access";
 import { dsarReadFilter, recordDsarView } from "@/server/services/dsar/access";
 import { redactDsarRequest } from "@/server/services/dsar/redact";
 import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
+import { requestRefSearchTail } from "@/lib/request-ref";
 import {
   acceptsPublicRequest,
   DSAR_MODULE_MESSAGES,
@@ -111,6 +112,10 @@ export const dsarRouter = createTRPCRouter({
               { requesterName: { contains: input.search, mode: "insensitive" } },
               { requesterEmail: { contains: input.search, mode: "insensitive" } },
               { publicId: { contains: input.search, mode: "insensitive" } },
+              // The reference shown on screen (REQ-ABC123): match its tail.
+              ...(requestRefSearchTail(input.search)
+                ? [{ publicId: { endsWith: requestRefSearchTail(input.search)!, mode: "insensitive" as const } }]
+                : []),
             ],
           }),
         },

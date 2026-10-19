@@ -711,8 +711,7 @@ describe("export still allowed once read-only", () => {
     hosted();
     setNow(PILOT_DAYS + 60);
     mocks.getToken.mockResolvedValue({ email: "user-1@test.example" });
-    // The full file is for owners and admins (a viewer is refused: see
-    // export-and-billing-roles.test.ts); read-only never takes it away.
+    // The full file is for owners and admins (the programme export's rule).
     mocks.prisma.organizationMember.findFirst.mockResolvedValue({
       id: "member-1",
       role: "OWNER",

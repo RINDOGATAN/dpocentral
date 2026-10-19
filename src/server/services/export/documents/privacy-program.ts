@@ -15,16 +15,27 @@ import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
-import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { pdfDate, withPdfLocale } from "@/server/services/export/pdf-locale";
 import { displayAiSystemName } from "@/lib/record-name";
+import { displayedDpa, dpaDisplayStatus, hasDpaInForce } from "@/lib/vendor-contracts";
+import { dsarOnTime } from "@/lib/dsar-on-time";
+import { isDraftRecord } from "@/lib/drafts";
 
 export async function buildPrivacyProgramExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
-  const [t, tCommon, tEnum] = await Promise.all([
+  const [t, tCommon, tEnum, tEnums] = await Promise.all([
     getTranslations({ locale, namespace: "pdf.privacyProgram" }),
     getTranslations({ locale, namespace: "pdf.common" }),
     getTranslations({ locale, namespace: "pdf.enum" }),
+    getTranslations({ locale, namespace: "enums" }),
   ]);
+  // A vendor category as the vendor register prints it: a code, or the catalogue's name.
+  const categoryLabel = (value: string): string => {
+    const key = `vendorCategory.${value}`;
+    if (tEnums.has(key as never)) return tEnums(key as never);
+    const catalogKey = `vendorCatalogCategory.${value.replace(/[^A-Za-z0-9]+/g, "_")}`;
+    return tEnums.has(catalogKey as never) ? tEnums(catalogKey as never) : value;
+  };
 
   const now = new Date();
   const dsarOn = isDsarModuleEnabled();
@@ -36,8 +47,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     aiSystems,
     flows,
     openDsars,
-    overdueDsars,
-    completedDsars,
+    dsarTiming,
     openIncidents,
     activeAssessments,
   ] = await Promise.all([
@@ -73,18 +83,9 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
         })
       : 0,
     dsarOn
-      ? prisma.dSARRequest.count({
-          where: {
-            organizationId,
-            status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
-            dueDate: { lt: now },
-          },
-        })
-      : 0,
-    dsarOn
       ? prisma.dSARRequest.findMany({
-          where: { organizationId, status: "COMPLETED" },
-          select: { dueDate: true, updatedAt: true },
+          where: { organizationId },
+          select: { status: true, dueDate: true, extendedDueDate: true, completedAt: true, updatedAt: true },
         })
       : [],
     prisma.incident.count({
@@ -98,9 +99,8 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     }),
   ]);
 
-  const completedDsarsOnTime = completedDsars.filter(
-    (d) => !d.dueDate || d.updatedAt <= d.dueDate
-  ).length;
+  // The shared on-time measure (src/lib/dsar-on-time.ts): open overdue requests count against it.
+  const onTime = dsarOnTime(dsarTiming, now);
 
   const input: ProgramInput = {
     assets: assets.map((a) => ({
@@ -124,17 +124,18 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
       nextReview: a.nextReviewAt,
     })),
     vendors: vendors.map((v) => {
-      const dpa = v.contracts.find((c) => c.type === "DPA");
+      const dpa = displayedDpa(v.contracts, now);
       return {
         id: v.id,
         name: v.name,
         status: v.status,
         riskTier: v.riskTier,
-        categories: v.categories,
+        categories: v.categories.map(categoryLabel),
         countries: v.countries,
         certifications: v.certifications,
-        hasDpa: !!dpa,
-        dpaStatus: dpa ? dpa.status.replace(/_/g, " ") : null,
+        hasDpa: hasDpaInForce(v.contracts, now),
+        dpaStatus: dpa ? dpaDisplayStatus(dpa, now) : null,
+        isDraft: isDraftRecord(v),
         nextReview: v.nextReviewAt,
       };
     }),
@@ -151,9 +152,9 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     })),
     counts: {
       openDsars,
-      overdueDsars,
-      completedDsarsOnTime,
-      completedDsarsTotal: completedDsars.length,
+      overdueDsars: onTime.openOverdue,
+      completedDsarsOnTime: onTime.completedOnTime,
+      completedDsarsTotal: onTime.measured,
       openIncidents,
       activeAssessments,
     },
@@ -236,7 +237,7 @@ export async function buildPrivacyProgramExport(args: ExportArgs): Promise<Expor
     withDraftGapsPage(
       PrivacyProgramDocument({
         orgName,
-        date: dateStr,
+        date: pdfDate(now, "long", locale),
         input,
         t,
         tCommon,

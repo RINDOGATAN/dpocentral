@@ -14,7 +14,11 @@ import {
 } from "@/server/services/export/regulatory-landscape-report";
 import { JURISDICTION_CATALOG, localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { EU_ADEQUATE_COUNTRIES } from "@/config/vendor-data-mappings";
+import { adequacyCoverage, getAdequacyDecision } from "@/config/transfer-compliance-rules";
+import { canonicalCountryCode } from "@/lib/country-code";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { pdfDate } from "@/server/services/export/pdf-locale";
+import { dsarOnTime } from "@/lib/dsar-on-time";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 import { isDsarModuleEnabled } from "@/config/features";
 import { withDraftGapsPage } from "../draft-gaps-page";
@@ -42,6 +46,8 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
       code: oj.jurisdiction.code,
       name: catalogEntry?.name ?? oj.jurisdiction.name,
       region: catalogEntry?.region ?? oj.jurisdiction.region ?? "",
+      // The region in the report's language (the Spanish catalogue's label); English keeps the code.
+      regionLabel: locale === "es" ? catalogEntry?.regionLabel : undefined,
       country: catalogEntry?.country ?? "",
       dsarDeadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,
       dsarDeadlineMonths: dsarMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays),
@@ -67,14 +73,13 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
   const dsarAll = dsarOn
     ? await prisma.dSARRequest.findMany({
         where: { organizationId },
-        select: { status: true, receivedAt: true, completedAt: true, dueDate: true },
+        select: { status: true, receivedAt: true, completedAt: true, dueDate: true, extendedDueDate: true, updatedAt: true },
       })
     : [];
   const dsarTotal = dsarAll.length;
-  const dsarCompleted = dsarAll.filter((d) => d.status === "COMPLETED").length;
-  const dsarOverdue = dsarAll.filter(
-    (d) => d.dueDate && new Date(d.dueDate) < new Date() && d.status !== "COMPLETED" && d.status !== "CANCELLED"
-  ).length;
+  // The shared on-time measure (src/lib/dsar-on-time.ts), as every other report prints it.
+  const dsarTiming = dsarOnTime(dsarAll, new Date());
+  const dsarOverdue = dsarTiming.openOverdue;
   const completedWithDates = dsarAll.filter((d) => d.status === "COMPLETED" && d.completedAt);
   const avgDsarDays = completedWithDates.length > 0
     ? Math.round(
@@ -111,10 +116,8 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
     (v) => v.riskTier === "HIGH" || v.riskTier === "CRITICAL"
   ).length;
 
-  // DSAR on-time rate
-  const dsarOnTimeRate = dsarTotal > 0
-    ? Math.round(((dsarCompleted) / Math.max(dsarTotal, 1)) * 100)
-    : 100;
+  // DSAR on-time rate: null when nothing can be measured yet.
+  const dsarOnTimeRate = dsarTiming.rate;
 
   // ── Transfer Exposure by Country ───────────────────────
   const transfers = await prisma.dataTransfer.findMany({
@@ -122,24 +125,39 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
     select: { destinationCountry: true, mechanism: true },
   });
 
+  const tMechanism = await getTranslations({ locale, namespace: "enums.transferMechanism" });
   const transferMap = new Map<string, { count: number; mechanisms: Set<string> }>();
   for (const t of transfers) {
-    const country = t.destinationCountry || "Unknown";
+    const country = canonicalCountryCode(t.destinationCountry) || ""; // printed as "not stated"
     if (!transferMap.has(country)) {
       transferMap.set(country, { count: 0, mechanisms: new Set() });
     }
     const entry = transferMap.get(country)!;
     entry.count++;
-    if (t.mechanism) entry.mechanisms.add(t.mechanism.replace(/_/g, " "));
+    if (t.mechanism) {
+      entry.mechanisms.add(
+        tMechanism.has(t.mechanism as never) ? tMechanism(t.mechanism as never) : t.mechanism.replace(/_/g, " ")
+      );
+    }
   }
 
+  // A partial decision (US under the DPF, Canada under PIPEDA) is neither a
+  // plain yes nor a no: it covers certain recipients only.
   const transfersByCountry: TransferExposure[] = Array.from(transferMap.entries()).map(
-    ([country, data]) => ({
-      country,
-      count: data.count,
-      mechanisms: Array.from(data.mechanisms),
-      hasAdequacy: adequateSet.has(country),
-    })
+    ([country, data]) => {
+      const coverage = adequacyCoverage(country);
+      const scope = getAdequacyDecision(country)?.partialScope;
+      return {
+        country,
+        count: data.count,
+        mechanisms: Array.from(data.mechanisms),
+        hasAdequacy: adequateSet.has(country),
+        adequacyLabel:
+          coverage === "PARTIAL_UNCONFIRMED" && scope
+            ? t(`adequacyPartial.${scope}`)
+            : undefined,
+      };
+    }
   );
 
   // ── Vendor Exposure by Country ─────────────────────────
@@ -168,7 +186,7 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
   // ── Compliance Score (simplified) ──────────────────────
   const ropaScore = activityCount > 0 ? Math.min(100, Math.round((activityCount / Math.max(assetCount, 1)) * 100)) : 0;
   const assessmentScore = assessmentTotal > 0 ? Math.round((assessmentApproved / assessmentTotal) * 100) : 0;
-  const dsarScore = dsarTotal > 0 ? Math.max(0, dsarOnTimeRate) : 100;
+  const dsarScore = dsarOnTimeRate ?? 100;
   const incidentScore = incidentTotal > 0 ? Math.round(((incidentTotal - incidentOpen) / incidentTotal) * 100) : 100;
   const vendorScore = vendorTotal > 0 ? Math.round(((vendorTotal - vendorHighRisk) / vendorTotal) * 100) : 100;
   // Without the rights-request module its 25% share is left out and the
@@ -184,7 +202,7 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
   // ── Build Report Data ──────────────────────────────────
   const reportData: RegulatoryLandscapeData = {
     organization: { name: orgName },
-    generatedAt: fmtDate(new Date()),
+    generatedAt: pdfDate(new Date(), "long", locale),
     jurisdictions,
     complianceScore,
     moduleStats: {
@@ -204,8 +222,14 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
     },
     transfersByCountry,
     vendorsByCountry,
-    dsarOnTimeRate: Math.max(0, Math.min(100, dsarOnTimeRate)),
-    breachNotificationCompliance: 100, // placeholder — requires incident-notification join
+    dsarOnTimeRate,
+    dsarStatus:
+      dsarTiming.measured === 0
+        ? "noData"
+        : dsarTiming.completedLate + dsarTiming.openOverdue > 0
+          ? "notMet"
+          : "meeting",
+    breachNotificationCompliance: 100, // not printed; kept for the data shape
     dsarModule: dsarOn,
   };
 

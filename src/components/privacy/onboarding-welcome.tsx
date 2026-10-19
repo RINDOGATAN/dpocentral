@@ -19,6 +19,8 @@ import { organizationSlug } from "@/lib/organization-slug";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
 import { cardButton, CARD_BUTTON_FOCUS } from "@/lib/card-button";
+import { useRouter } from "next/navigation";
+import { AccountLanguageSwitcher } from "@/components/account-locale";
 
 const personas = [
   {
@@ -38,7 +40,11 @@ const personas = [
 export function OnboardingWelcome() {
   const t = useTranslations("onboarding");
   const tToasts = useTranslations("toasts");
-  const [selectedType, setSelectedType] = useState<UserType | null>(null);
+  // Preselected: most people set up their own organisation. A privacy
+  // professional changes it with one click.
+  const [selectedType, setSelectedType] = useState<UserType | null>("BUSINESS_OWNER");
+  const router = useRouter();
+  const professional = selectedType === "PRIVACY_PROFESSIONAL";
   const [orgName, setOrgName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Hosted pilot: the data processing agreement is accepted when the
@@ -66,9 +72,15 @@ export function OnboardingWelcome() {
       setOrganization(org);
       refetchOrganizations();
       await refreshSession();
+      // A privacy professional works across clients: the organisation just
+      // created is the first client, and the firm view is where they work.
+      if (selectedType === "PRIVACY_PROFESSIONAL") router.push("/privacy/clients");
     } catch (error) {
       console.error("Onboarding failed:", error);
-      toast.error(tToasts("generic.somethingWentWrong"));
+      // The server's message is written for the person (a limit, the
+      // agreement); fall back to the generic one only when there is none.
+      const message = error instanceof Error && error.message ? error.message : null;
+      toast.error(message ?? tToasts("generic.somethingWentWrong"));
     } finally {
       setIsSubmitting(false);
     }
@@ -79,6 +91,11 @@ export function OnboardingWelcome() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-6">
+        {/* The first screen after sign-in also offers the language; the
+            choice is saved on the account as well as in this browser. */}
+        <div className="flex justify-end text-sm text-muted-foreground" data-testid="onboarding-language">
+          <AccountLanguageSwitcher />
+        </div>
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
@@ -140,14 +157,20 @@ export function OnboardingWelcome() {
 
           {/* Organization name */}
           <div className="space-y-2">
-            <Label htmlFor="onboarding-org-name">{t("orgName")}</Label>
+            <Label htmlFor="onboarding-org-name">{professional ? t("clientName") : t("orgName")}</Label>
             <Input
               id="onboarding-org-name"
-              placeholder={t("orgNamePlaceholder")}
+              placeholder={professional ? t("clientNamePlaceholder") : t("orgNamePlaceholder")}
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
+              aria-describedby={professional ? "onboarding-client-hint" : undefined}
               required
             />
+            {professional && (
+              <p id="onboarding-client-hint" className="text-xs text-muted-foreground">
+                {t("clientNameHint")}
+              </p>
+            )}
           </div>
 
           {hosted && (

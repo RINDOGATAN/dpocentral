@@ -3,9 +3,9 @@
 
 /**
  * The in-app data flow map draws exactly the recorded flows: one node per
- * system at either end of a flow (even when the system list it was given is
- * a partial page), no node without a flow, one edge per flow, source to
- * destination.
+ * system of the organisation (with or without a flow), plus any system at
+ * either end of a flow (even when the system list it was given is a partial
+ * page), one edge per flow, source to destination.
  */
 import { describe, expect, it } from "vitest";
 import { buildNodesAndEdges, type AssetData, type FlowData } from "@/components/privacy/data-flow/useDataFlowGraph";
@@ -18,9 +18,10 @@ const flow = (id: string, s: AssetData, d: AssetData, cats: string[] = ["IDENTIF
 describe("buildNodesAndEdges", () => {
   const a = asset("a"), b = asset("b", "DATABASE"), c = asset("c", "THIRD_PARTY"), lonely = asset("lonely");
 
-  it("has one node per system in a flow and one edge per flow", () => {
+  it("has one node per system, with or without a flow, and one edge per flow", () => {
     const { nodes, edges } = buildNodesAndEdges("all", undefined, [a, b, c, lonely], [flow("f1", a, b), flow("f2", b, c)]);
-    expect(nodes.map((n) => n.id).sort()).toEqual(["a", "b", "c"]);
+    expect(nodes.map((n) => n.id).sort()).toEqual(["a", "b", "c", "lonely"]);
+    expect(nodes.find((n) => n.id === "lonely")?.data.isIsolated).toBe(true);
     expect(edges.map((e) => [e.id, e.source, e.target])).toEqual([["f1", "a", "b"], ["f2", "b", "c"]]);
   });
 

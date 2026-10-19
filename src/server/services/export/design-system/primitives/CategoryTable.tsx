@@ -92,66 +92,68 @@ export function CategoryTable({
   const totalFlex = columns.reduce((n, c) => n + c.width, 0);
   const chrome = pdfChrome();
   const empty = emptyText ?? `${chrome.noRecords}.`;
+  const renderRow = (row: React.ReactNode[], ri: number) => (
+    <View key={ri} style={s.dataRow} wrap={false}>
+      {row.map((cell, ci) => {
+        const col = columns[ci]!;
+        const isString = typeof cell === "string" || typeof cell === "number";
+        return (
+          <View
+            key={ci}
+            style={{
+              flex: col.width / totalFlex,
+              paddingHorizontal: tokens.space[2],
+              flexDirection: "row",
+              justifyContent:
+                col.align === "right"
+                  ? "flex-end"
+                  : col.align === "center"
+                    ? "center"
+                    : "flex-start",
+            }}
+          >
+            {isString ? (
+              <Text style={[s.dataCell, { textAlign: col.align ?? "left" }]}>
+                {cell ?? ""}
+              </Text>
+            ) : (
+              cell
+            )}
+          </View>
+        );
+      })}
+    </View>
+  );
   return (
     <View style={s.wrap}>
-      {category && (
-        <View style={s.categoryHeader}>
-          <Text style={s.categoryTitle}>{category}</Text>
-          {count !== undefined && <Text style={s.categoryCount}>({count})</Text>}
-        </View>
-      )}
-      <View style={s.headerRow}>
-        {columns.map((c, i) => (
-          <Text
-            key={i}
-            style={[
-              s.headerCell,
-              {
-                flex: c.width / totalFlex,
-                textAlign: c.align ?? "left",
-              },
-            ]}
-          >
-            {c.header}
-          </Text>
-        ))}
-      </View>
-      {rows.length === 0 ? (
-        <Text style={s.emptyState}>{empty}</Text>
-      ) : (
-        rows.map((row, ri) => (
-          <View key={ri} style={s.dataRow} wrap={false}>
-            {row.map((cell, ci) => {
-              const col = columns[ci]!;
-              const isString = typeof cell === "string" || typeof cell === "number";
-              return (
-                <View
-                  key={ci}
-                  style={{
-                    flex: col.width / totalFlex,
-                    paddingHorizontal: tokens.space[2],
-                    flexDirection: "row",
-                    justifyContent:
-                      col.align === "right"
-                        ? "flex-end"
-                        : col.align === "center"
-                          ? "center"
-                          : "flex-start",
-                  }}
-                >
-                  {isString ? (
-                    <Text style={[s.dataCell, { textAlign: col.align ?? "left" }]}>
-                      {cell ?? ""}
-                    </Text>
-                  ) : (
-                    cell
-                  )}
-                </View>
-              );
-            })}
+      {/* The heading, the column titles and the first row stay together: a heading is never left alone at a page's foot. */}
+      <View wrap={false}>
+        {category && (
+          <View style={s.categoryHeader}>
+            <Text style={s.categoryTitle}>{category}</Text>
+            {count !== undefined && <Text style={s.categoryCount}>({count})</Text>}
           </View>
-        ))
-      )}
+        )}
+        <View style={s.headerRow}>
+          {columns.map((c, i) => (
+            <Text
+              key={i}
+              style={[
+                s.headerCell,
+                {
+                  flex: c.width / totalFlex,
+                  textAlign: c.align ?? "left",
+                },
+              ]}
+            >
+              {/* Upper-cased here as well as by the style, so the line is measured at the width it prints. */}
+              {c.header.toUpperCase()}
+            </Text>
+          ))}
+        </View>
+        {rows.length === 0 ? <Text style={s.emptyState}>{empty}</Text> : renderRow(rows[0]!, 0)}
+      </View>
+      {rows.slice(1).map((row, i) => renderRow(row, i + 1))}
     </View>
   );
 }

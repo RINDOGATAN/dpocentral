@@ -111,7 +111,9 @@ async function verifyExports(orgSlug: string, orgName: string): Promise<void> {
     check(`${orgSlug}: DPIA PDF size`, size > 10_000, `${(size / 1024).toFixed(1)} KB`);
   }
 
-  // Check ROPA PDF
+  // Check ROPA PDF: written by scripts/render-all-rebuilt-previews.ts (Step 2),
+  // which produces the record of processing since it moved to the design-system
+  // report; scripts/export-demo-docs.ts no longer writes one.
   const ropaPdfs = files.filter((f) => f.startsWith("ROPA-") && f.includes(safeName.substring(0, 10)));
   check(`${orgSlug}: ROPA PDF`, ropaPdfs.length >= 1, `${ropaPdfs.length} ROPA files`);
 }
@@ -136,7 +138,10 @@ async function main() {
 
   // Step 2: Export Meridian docs
   console.log("\n═══ Step 2: Export Meridian Documents ═══");
-  const meridianExported = run("npx tsx scripts/export-demo-docs.ts", "export-demo-docs");
+  const meridianExported =
+    run("npx tsx scripts/export-demo-docs.ts", "export-demo-docs") &&
+    // The record of processing, programme report and vendor register.
+    run('npx tsx scripts/render-all-rebuilt-previews.ts "Meridian Retail Group"', "render-all-rebuilt-previews");
   check("meridian: export", meridianExported, meridianExported ? "Exported OK" : "Export failed");
 
   if (meridianExported) {

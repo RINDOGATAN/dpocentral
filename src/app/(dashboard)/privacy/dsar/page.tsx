@@ -34,6 +34,7 @@ import { StatusChip, StatusMark } from "@/components/ui/status-chip";
 import { toneMark } from "@/config/status-palette";
 
 import { formatDateIn } from "@/lib/utils";
+import { formatRequestRef } from "@/lib/request-ref";
 const statusColors: Record<string, string> = {
   SUBMITTED: "border-primary text-primary",
   IDENTITY_PENDING: "border-muted-foreground text-muted-foreground",
@@ -227,7 +228,7 @@ export default function DSARPage() {
                   <div className="flex flex-col gap-3 sm:hidden">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2 flex-wrap min-w-0">
-                        <span className="font-medium font-mono text-primary text-sm break-all min-w-0">{request.publicId}</span>
+                        <span className="font-medium font-mono text-primary text-sm break-all min-w-0" title={request.publicId}>{formatRequestRef(request.publicId, locale)}</span>
                         <Badge variant="outline" className="text-xs">{t(`type.${request.type}`)}</Badge>
                       </div>
                       <Badge variant="outline" className={`text-xs shrink-0 ${statusColors[request.status] || ""}`}>
@@ -286,7 +287,7 @@ export default function DSARPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium font-mono text-primary">{request.publicId}</span>
+                        <span className="font-medium font-mono text-primary" title={request.publicId}>{formatRequestRef(request.publicId, locale)}</span>
                         <Badge variant="outline">{t(`type.${request.type}`)}</Badge>
                         <Badge variant="outline" className={statusColors[request.status] || ""}>
                           {t(`status.${request.status}`)}

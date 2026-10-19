@@ -8,20 +8,21 @@ import { dsarReadFilter } from "@/server/services/dsar/access";
 import { isDsarModuleEnabled } from "@/config/features";
 import { canExportProgramme } from "@/server/services/portability/access";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
-import { exportableOrganizationSettings } from "@/server/services/export/organization-settings";
+import { exportedSettings } from "@/server/services/portability/organization-settings";
 
 /**
  * GET /api/export/organization-data?organizationId=...
  *
- * Every record the organisation holds, as one JSON file, with the names and
- * e-mail addresses of its members. Owners and admins only, and only those who
- * see the whole organisation (a member limited to departments is refused: the
- * file is not split by department). Rights requests still follow the reading
- * rule of the DSAR module (src/lib/dsar-access.ts). Each download is recorded
- * in the audit trail (EXPORT_ORGANIZATION_DATA: who, when, what) before the
- * file is sent. Only the allow-listed organisation settings leave
- * (exportableOrganizationSettings): pending invitations and integration secrets
- * stay behind. It is a GET route, so it stays available when a hosted pilot
+ * Every record the organisation holds, as one JSON file, incident
+ * notifications and members' addresses included. Owners and admins who see
+ * the whole organisation may download it (the programme export's rule,
+ * src/server/services/portability/access.ts; a member limited to departments
+ * is refused, the file is not split by department). Each download is recorded
+ * in the audit trail (EXPORT_ORGANIZATION_DATA: who, when, section counts)
+ * before the file is sent. Only the listed organisation settings leave
+ * (exportedSettings): pending invitations and integration secrets stay
+ * behind. Rights requests follow the reading rule of the DSAR module
+ * (src/lib/dsar-access.ts). It is a GET route, so it stays available when a hosted pilot
  * organisation has become read-only: the pilot's promise is that everything
  * created there can be taken to the user's own instance.
  *
@@ -149,7 +150,7 @@ export async function GET(request: Request) {
         name: org.name,
         slug: org.slug,
         domain: org.domain,
-        settings: exportableOrganizationSettings(org.settings),
+        settings: exportedSettings(org.settings),
         createdAt: org.createdAt,
       },
       members,
@@ -170,8 +171,8 @@ export async function GET(request: Request) {
     return new Response(JSON.stringify(body, null, 2), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Content-Disposition": `attachment; filename="${org.slug}-export-${date}.json"`,
         "Cache-Control": "no-store",
+        "Content-Disposition": `attachment; filename="${org.slug}-export-${date}.json"`,
       },
     });
   } catch (err) {

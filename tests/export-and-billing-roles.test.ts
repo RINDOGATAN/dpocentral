@@ -65,7 +65,7 @@ import { GET as exportOrganizationData } from "@/app/api/export/organization-dat
 import { GET as exportRightsRequests } from "@/app/api/export/rights-requests/route";
 import { POST as billingPortal } from "@/app/api/billing/portal/route";
 import { POST as checkout } from "@/app/api/checkout/route";
-import { exportableOrganizationSettings } from "@/server/services/export/organization-settings";
+import { exportedSettings } from "@/server/services/portability/organization-settings";
 
 const ROLES = ["OWNER", "ADMIN", "PRIVACY_OFFICER", "MEMBER", "VIEWER"] as const;
 const ADMINS = ["OWNER", "ADMIN"] as const;
@@ -161,10 +161,10 @@ describe("the full organisation export", () => {
     expect(text).not.toContain("hooks.slack.example");
   });
 
-  it("exportableOrganizationSettings handles empty and odd values", () => {
-    expect(exportableOrganizationSettings(null)).toBeNull();
-    expect(exportableOrganizationSettings([1, 2])).toBeNull();
-    expect(exportableOrganizationSettings({ slackWebhookUrl: "x" })).toEqual({});
+  it("exportedSettings handles empty and odd values", () => {
+    expect(exportedSettings(null)).toEqual({});
+    expect(exportedSettings([1, 2])).toEqual({});
+    expect(exportedSettings({ slackWebhookUrl: "x", templateCopy: { a: 1 } })).toEqual({ templateCopy: { a: 1 } });
   });
 });
 

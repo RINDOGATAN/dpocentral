@@ -11,6 +11,8 @@ import { isDsarModuleEnabled } from "@/config/features";
 import { evaluateRegister, registerFor, type EvaluatedDocument } from "@/config/document-register";
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { loadDeadlines, type Deadline } from "@/server/services/program/deadlines";
+import { loadNextRequestDue, loadReviewsDue, type ReviewDue } from "@/server/services/program/reviews-due";
+import { dsarReadFilter } from "@/server/services/dsar/access";
 import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { collectNeedsAction } from "@/server/services/views/queries";
 import type { NeedsActionItem } from "@/lib/needs-action";
@@ -52,6 +54,8 @@ export const clientsRouter = createTRPCRouter({
           documents: [] as EvaluatedDocument[],
           needsAction: [] as NeedsActionItem[],
           deadlines: [] as Deadline[],
+          reviews: [] as ReviewDue[],
+          nextRequestDue: null as Deadline | null,
         };
 
         const now = new Date();
@@ -135,11 +139,19 @@ export const clientsRouter = createTRPCRouter({
                 loadDocumentFacts(ctx.prisma, orgId),
                 collectNeedsAction(ctx.prisma, orgId, scope),
                 loadDeadlines(ctx.prisma, orgId, { role: membership.role, userId }),
-              ]).then(([facts, needsAction, deadlines]) => ({
+                loadReviewsDue(ctx.prisma, orgId, now),
+                // The nearest open request however far away, so the row never
+                // reads "None" while a request is due in 32 days.
+                dsarOn
+                  ? loadNextRequestDue(ctx.prisma, orgId, dsarReadFilter(membership.role, userId))
+                  : null,
+              ]).then(([facts, needsAction, deadlines, reviews, nextRequestDue]) => ({
                 limited: false,
                 documents: evaluateRegister(registerFor({ dsarEnabled: dsarOn }), facts),
                 needsAction: needsAction.items,
                 deadlines,
+                reviews,
+                nextRequestDue: nextRequestDue as Deadline | null,
               }))
             : { ...noOverview, limited: true };
 

@@ -33,11 +33,10 @@ type ExportLink = { key: string; path: string; format: string | null };
  * instead (GET /api/export/rights-requests).
  */
 export function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
-  // The full organisation file (every register, member e-mails) is for owners
-  // and admins only; the route refuses anyone else.
-  const visible: ExportLink[] = isAdmin ? [...ALL_EXPORTS] : ALL_EXPORTS.filter((e) => e.key !== "all");
-  if (dsarOn) return visible;
-  const rest: ExportLink[] = visible.filter((e) => e.key !== "dsarPerformance");
+  // The full JSON file is for owners and admins (GET /api/export/organization-data).
+  const offered: ExportLink[] = ALL_EXPORTS.filter((e) => isAdmin || e.key !== "all");
+  if (dsarOn) return offered;
+  const rest: ExportLink[] = offered.filter((e) => e.key !== "dsarPerformance");
   return isAdmin
     ? [...rest, { key: "rightsRequests", path: "rights-requests", format: null }]
     : rest;

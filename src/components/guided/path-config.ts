@@ -35,6 +35,7 @@ import {
   LifeBuoy,
   ListChecks,
   Megaphone,
+  Network,
   Rocket,
   Scale,
   ScrollText,
@@ -66,10 +67,17 @@ export interface PathCounts {
   dataAssets: number;
   /** Of those, drafts not yet confirmed. */
   dataAssetsDrafts: number;
+  /** Confirmed data assets that record the personal data they hold (one data element or more). */
+  dataAssetsComplete: number;
   /** Processing activities (records of processing / ROPA), drafts included. */
   processingActivities: number;
   /** Of those, drafts not yet confirmed. */
   processingActivitiesDrafts: number;
+  /**
+   * Confirmed processing activities with the minimum record fields: data
+   * subjects, data categories and retention (src/lib/record-completeness.ts).
+   */
+  processingActivitiesComplete: number;
   /** Operating jurisdictions declared for the organisation. */
   jurisdictions: number;
 
@@ -77,12 +85,22 @@ export interface PathCounts {
   vendors: number;
   /** Of those, drafts not yet confirmed. */
   vendorsDrafts: number;
-  /** Vendors with a completed due-diligence assessment (approved, vendor-linked). */
+  /** Confirmed vendors in use, with the data they process and where (missingVendorFields). */
+  vendorsComplete: number;
+  /** Vendors with an approved vendor (due-diligence) assessment. */
   vendorsAssessed: number;
-  /** Vendor-linked assessments in any state. */
+  /**
+   * Vendor (due-diligence) assessments, leaving out drafts the quick start
+   * made on its own that nobody has opened and answered yet.
+   */
   vendorAssessments: number;
 
+  /**
+   * Risk assessments (DPIA and PIA), leaving out untouched automatic drafts.
+   * A vendor review or a legitimate-interest assessment is not counted here.
+   */
   assessments: number;
+  /** Risk assessments (DPIA and PIA) approved. */
   assessmentsApproved: number;
   /** Legitimate-interest assessments (an LIA template) in any state. */
   liaAssessments: number;
@@ -92,6 +110,12 @@ export interface PathCounts {
   transfers: number;
   /** Of those, transfers recorded on a processing activity that is still a draft. */
   transfersDrafts: number;
+  /**
+   * Transfers not on a draft activity whose compliance status has been
+   * recorded (compliant, needs review or not compliant; "pending" is not a
+   * recorded assessment).
+   */
+  transfersComplete: number;
 
   /** Data-subject requests received. */
   dsarRequests: number;
@@ -113,17 +137,27 @@ export interface PathCounts {
    * Optional: absent reads as none.
    */
   boardReportsSaved?: number;
+
+  /**
+   * For a step not yet done though records exist: the fields still missing on
+   * the record closest to complete, so the page can say what finishes the
+   * step. Field names only, never a record. Optional: absent reads as none.
+   */
+  missing?: Partial<Record<"dataInventory" | "ropa" | "vendors" | "transfers", string[]>>;
 }
 
 export const EMPTY_PATH_COUNTS: PathCounts = {
   quickstartCompleted: false,
   dataAssets: 0,
   dataAssetsDrafts: 0,
+  dataAssetsComplete: 0,
   processingActivities: 0,
   processingActivitiesDrafts: 0,
+  processingActivitiesComplete: 0,
   jurisdictions: 0,
   vendors: 0,
   vendorsDrafts: 0,
+  vendorsComplete: 0,
   vendorsAssessed: 0,
   vendorAssessments: 0,
   assessments: 0,
@@ -132,6 +166,7 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
   liaApproved: 0,
   transfers: 0,
   transfersDrafts: 0,
+  transfersComplete: 0,
   dsarRequests: 0,
   dsarIntakeConfigured: false,
   incidents: 0,
@@ -142,15 +177,19 @@ export const EMPTY_PATH_COUNTS: PathCounts = {
 const confirmed = (total: number, drafts: number) => Math.max(0, total - drafts);
 
 /**
- * The status of a step that is met by "at least one record": done when one is
- * confirmed, to confirm when there are only drafts, otherwise `otherwise`.
+ * The status of a step that is met by "at least one usable record": done when
+ * one confirmed record carries the step's minimum fields; started when records
+ * are confirmed but none is complete yet (one bare record is not a register);
+ * to confirm when there are only drafts; otherwise `otherwise`.
  */
 function recordStep(
   total: number,
   drafts: number,
+  complete: number,
   otherwise: "started" | "todo" = "todo",
 ): "done" | "toConfirm" | "started" | "todo" {
-  if (confirmed(total, drafts) > 0) return "done";
+  if (complete > 0) return "done";
+  if (confirmed(total, drafts) > 0) return "started";
   if (total > 0) return "toConfirm";
   return otherwise;
 }
@@ -220,8 +259,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "dataInventory",
           href: "/privacy/data-inventory",
           icon: Database,
-          rule: "Done when at least one data asset is confirmed (entered by a person, or drafted and then confirmed). To confirm when only drafts exist. Started never: an inventory is either begun or not.",
-          status: (c) => recordStep(c.dataAssets, c.dataAssetsDrafts),
+          rule: "Done when at least one confirmed data asset (entered by a person, or drafted and then confirmed) records the personal data it holds (one data element or more). Started when assets are confirmed but none records its data yet. To confirm when only drafts exist.",
+          status: (c) => recordStep(c.dataAssets, c.dataAssetsDrafts, c.dataAssetsComplete),
         },
         {
           id: "ropa",
@@ -229,16 +268,21 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // An activity's own page (and its edit page) is this step, not 3.1.
           alsoAt: ["/privacy/data-inventory/activities"],
           icon: ClipboardList,
-          rule: "Done when at least one processing activity (record of processing) is confirmed. To confirm when only drafts exist. Started when a data asset exists without one.",
+          rule: "Done when at least one confirmed processing activity (record of processing) has its data subjects, data categories and retention (the legal basis is required at creation). Started when activities are confirmed but none has these yet, or when a data asset exists without an activity. To confirm when only drafts exist.",
           status: (c) =>
-            recordStep(c.processingActivities, c.processingActivitiesDrafts, c.dataAssets > 0 ? "started" : "todo"),
+            recordStep(
+              c.processingActivities,
+              c.processingActivitiesDrafts,
+              c.processingActivitiesComplete,
+              c.dataAssets > 0 ? "started" : "todo",
+            ),
         },
         {
           id: "vendors",
           href: "/privacy/vendors",
           icon: Building2,
-          rule: "Done when at least one vendor is confirmed (the vendor catalog is the way to add one). To confirm when only drafts exist.",
-          status: (c) => recordStep(c.vendors, c.vendorsDrafts),
+          rule: "Done when at least one confirmed vendor is in use (not only a prospect) and records the personal data it processes and the countries where it processes them (the vendor catalog fills these). Started when vendors are confirmed but none has these yet. To confirm when only drafts exist.",
+          status: (c) => recordStep(c.vendors, c.vendorsDrafts, c.vendorsComplete),
         },
         // Last in the stage, read-only and never counted: it appears only when
         // the organisation actually has an AI system, and links to the list
@@ -266,7 +310,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // assessments here need no licence. Where the DPIA is not licensed,
           // the lock sits on the DPIA option inside the assessments page and
           // the type picker instead (src/components/premium/licence-lock.tsx).
-          rule: "Done when at least one assessment is approved (DPIA, PIA and screening). Started when any assessment exists.",
+          rule: "Done when at least one risk assessment (DPIA or PIA) is approved; a vendor review or a legitimate-interest assessment does not count. Started when a risk assessment exists, leaving out drafts the quick start made on its own that nobody has answered yet.",
           status: (c) =>
             c.assessmentsApproved > 0 ? "done" : c.assessments > 0 ? "started" : "todo",
         },
@@ -274,8 +318,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "transfers",
           href: "/privacy/transfers",
           icon: Globe,
-          rule: "Done when at least one cross-border transfer is recorded with its mechanism on a confirmed processing activity. To confirm when every transfer sits on a draft activity. Started never.",
-          status: (c) => recordStep(c.transfers, c.transfersDrafts),
+          rule: "Done when at least one cross-border transfer, not on a draft activity, has its mechanism and a recorded compliance status (compliant, needs review or not compliant; pending is not yet an assessment). Started when transfers exist but none has a recorded status. To confirm when every transfer sits on a draft activity.",
+          status: (c) => recordStep(c.transfers, c.transfersDrafts, c.transfersComplete),
         },
         {
           id: "vendorDueDiligence",
@@ -286,7 +330,7 @@ const FULL_PATH: PathConfig<PathCounts> = {
           // Vendor assessments are a premium type on the kit.
           premiumType: "VENDOR",
           icon: FileCheck2,
-          rule: "Done when every vendor has a completed due-diligence assessment. Started when any vendor assessment exists.",
+          rule: "Done when every vendor has an approved vendor (due-diligence) assessment. Started when a vendor assessment exists, leaving out untouched automatic drafts; a DPIA linked to a vendor is not a due-diligence review.",
           status: (c) =>
             c.vendors > 0 && c.vendorsAssessed >= c.vendors
               ? "done"
@@ -318,9 +362,18 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "dsar",
           href: "/privacy/dsar",
           icon: FileText,
-          rule: "Done when at least one rights request has been received. Started when the org has set up its intake past the auto-seeded default (the surface is ready to receive). Not started for a new org that has only the seeded form and no requests.",
+          // A request cannot be made to arrive, so readiness is the bar: the
+          // step is met ("ready when needed") once the intake is set up, and
+          // a logged request alone does not stand in for that set-up.
+          rule: "Ready when needed (met) once the org has set up its intake past the auto-seeded default; done when, in addition, a rights request has been received. Started when requests exist but the intake is still the default. Not started for a new org that has only the seeded form and no requests.",
           status: (c) =>
-            c.dsarRequests > 0 ? "done" : c.dsarIntakeConfigured ? "started" : "todo",
+            c.dsarIntakeConfigured
+              ? c.dsarRequests > 0
+                ? "done"
+                : "ready"
+              : c.dsarRequests > 0
+                ? "started"
+                : "todo",
         },
         {
           id: "notices",
@@ -339,8 +392,11 @@ const FULL_PATH: PathConfig<PathCounts> = {
           id: "incidents",
           href: "/privacy/incidents",
           icon: AlertTriangle,
-          rule: "Done when at least one incident (breach) is recorded: the register and the 72-hour clock are in use.",
-          status: (c) => (c.incidents > 0 ? "done" : "todo"),
+          // A breach cannot be made to happen, so readiness is the bar: the
+          // register is ready when needed once the record of processing says
+          // which data and people a breach would touch (Art. 33(3)(a)).
+          rule: "Done when at least one incident (breach) is recorded. Ready when needed (met) once one processing activity is complete (the record names the data and people a breach would affect). Not started before.",
+          status: (c) => (c.incidents > 0 ? "done" : c.processingActivitiesComplete > 0 ? "ready" : "todo"),
         },
         // The board report: a short
         // report to the board or management for a period, from data already
@@ -367,6 +423,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },
     { id: "incomplete", href: "/privacy/incomplete", icon: ClipboardList },
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
+    // The data map, as a page of its own (it is also a tab of Data inventory).
+    { id: "dataMap", href: "/privacy/data-map", icon: Network },
     // The organisation's audit trail (as
     // AI Sentinel has it): owners, admins and privacy officers only
     // (src/lib/audit-access.ts), so the menu leaves it out for anyone else.

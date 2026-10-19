@@ -336,7 +336,7 @@ export function CopyFromClientDialog({
                         <span className="flex items-baseline justify-between gap-3">
                           <span className="text-sm">{t(`parts.${p}.label`)}</span>
                           <span className="text-xs tabular-nums text-muted-foreground shrink-0">
-                            {count === undefined ? "–" : count}
+                            {count === undefined ? "…" : count}
                           </span>
                         </span>
                         <span className="block text-xs text-muted-foreground">

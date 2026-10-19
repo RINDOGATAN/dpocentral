@@ -42,7 +42,8 @@ Guidelines:
 - Assess likelihood (Remote, Possible, Likely) and severity (Minimal, Significant, Severe, Critical) for each risk.
 - Recommend specific mitigation measures for each identified risk.
 - If special category data or international transfers are involved, emphasize the heightened obligations.
-- Keep the narrative concise but thorough — aim for 400-600 words.
+- Keep the narrative concise but thorough: aim for 400 to 600 words.
+- Do not use long dashes; use a colon, a comma or parentheses.
 - Do not invent facts; only assess what is provided in the context.`;
 }
 
@@ -65,7 +66,7 @@ export function buildDpiaUserPrompt(context: AutoFillContext): string {
 
   if (context.activity.automatedDecisionMaking) {
     parts.push(
-      `**Automated Decision-Making:** Yes${context.activity.automatedDecisionDetails ? ` — ${context.activity.automatedDecisionDetails}` : ""}`
+      `**Automated Decision-Making:** Yes${context.activity.automatedDecisionDetails ? ` (${context.activity.automatedDecisionDetails})` : ""}`
     );
   }
 

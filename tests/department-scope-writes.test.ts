@@ -26,6 +26,7 @@ const H = vi.hoisted(() => {
     dataFlow: [],
     dataTransfer: [],
     processingActivityAsset: [],
+    vendor: [],
   };
   // relation name -> [table, foreign key]
   const RELATIONS: Record<string, [string, string]> = {

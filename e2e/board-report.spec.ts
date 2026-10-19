@@ -3,7 +3,7 @@
 
 /**
  * The board report, seen in a browser:
- * an organisation with one confirmed step and a few records of the last
+ * an organisation with a vendor in use (a Know-your-data step) and a few records of the last
  * quarter (written straight into the local test database, so the walk is
  * skipped against any other database). It checks:
  *
@@ -83,10 +83,11 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await page.goto("/privacy");
   await expect(page.getByTestId("doc-boardReport")).toHaveAttribute("data-state", "needsInput");
   await expect(page.getByTestId("doc-boardReport")).toContainText(
-    es ? "un paso confirmado en la ruta" : "a confirmed step on the path",
+    es ? "un sistema, una actividad o un proveedor confirmados y completos" : "a complete, confirmed system, activity or vendor",
   );
 
-  // One confirmed step: where the organisation operates.
+  // Set-up steps first (where the organisation operates); a Know-your-data
+  // step (a vendor in use, with its data and countries) gives the report content.
   await page.goto("/privacy/quickstart");
   await expect(page.getByTestId("jurisdiction-picker")).toBeVisible();
   await page.locator("#quickstart-place-GDPR").click();
@@ -139,7 +140,14 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
       },
     });
     const dpaVendor = await prisma.vendor.create({
-      data: { organizationId: org.id, name: `Board mailer ${stamp}`, status: "ACTIVE", riskTier: "MEDIUM" },
+      data: {
+        organizationId: org.id,
+        name: `Board mailer ${stamp}`,
+        status: "ACTIVE",
+        riskTier: "MEDIUM",
+        dataProcessed: ["IDENTIFIERS"],
+        countries: ["DE"],
+      },
     });
     await prisma.vendorContract.create({
       data: { vendorId: dpaVendor.id, type: "DPA", status: "ACTIVE", name: "DPA" },
@@ -197,13 +205,14 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await expect(page.getByTestId("board-period-line")).toContainText(es ? "Periodo: del 1 de" : "Period: 1 ");
   await expect(page.getByTestId("board-figure")).toContainText(es ? "pasos confirmados" : "steps confirmed");
   await expect(page.getByRole("heading", { level: 1, name: es ? "Informe ejecutivo" : "Executive report" })).toBeVisible();
-  // At a glance: one breach of two notifiable within 72 hours, one request of one on time, one vendor of two with a DPA.
+  // At a glance: one breach of two notifiable within 72 hours; one request of two on time (the open request
+  // past its deadline counts against the rate, src/lib/dsar-on-time.ts); one vendor of two in use with a DPA in force.
   const kpis = page.getByTestId("board-kpis");
   await expect(kpis).toContainText(es ? "De un vistazo" : "At a glance");
   await expect(page.getByTestId("board-kpi-breaches-value")).toHaveText("1");
   await expect(page.getByTestId("board-kpi-breaches")).toContainText(es ? "de 2" : "of 2");
   await expect(page.getByTestId("board-kpi-breaches-flag")).toContainText(es ? "1 fuera de plazo o sin notificar" : "1 late or not notified yet");
-  await expect(page.getByTestId("board-kpi-rights")).toContainText(es ? "de 1" : "of 1");
+  await expect(page.getByTestId("board-kpi-rights")).toContainText(es ? "de 2" : "of 2");
   await expect(page.getByTestId("board-kpi-rights-flag")).toBeVisible();
   await expect(page.getByTestId("board-kpi-vendors-flag")).toContainText(
     es ? "1 de riesgo alto o crítico sin ese contrato" : "1 high or critical risk without one",
@@ -212,11 +221,14 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   const incidents = page.getByTestId("board-incidents");
   await expect(incidents).toContainText(es ? "Notificados a la autoridad en 72 horas" : "Notified to the authority within 72 hours");
   const incidentValues = await incidents.locator("dd").allInnerTexts();
-  expect(incidentValues.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "1"]);
+  // The last row is the backlog on the day generated: breach B, open and still to notify.
+  expect(incidentValues.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "1", "1"]);
   const rights = await page.getByTestId("board-rights").locator("dd").allInnerTexts();
-  expect(rights.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "0", "0"]);
+  // The last row is the backlog on the day generated: the erasure request, open and overdue.
+  expect(rights.map((v) => v.trim())).toEqual(["2", "1", "0", "1", "0", "0", "1"]);
   const vendors = await page.getByTestId("board-vendors").locator("dd").allInnerTexts();
-  expect(vendors.map((v) => v.trim())).toEqual(["2", "1", "1"]);
+  // Confirmed, in use, in use with a DPA in force, in use at high risk without one.
+  expect(vendors.map((v) => v.trim())).toEqual(["2", "2", "1", "1"]);
   await expect(page.getByTestId("board-assessments")).toContainText(es ? "EIPD" : "DPIA");
   await expect(page.getByTestId("board-risks").locator("li").first()).toBeVisible();
   await expect(page.getByTestId("board-action").first()).toBeVisible();

@@ -208,22 +208,25 @@ function maxLevel(a: RiskLevel, b: RiskLevel): RiskLevel {
   return LEVELS.indexOf(a) >= LEVELS.indexOf(b) ? a : b;
 }
 
-/**
- * The derived risk of an assessment, or null when no answer it holds is
- * scored (nothing to derive a figure from).
- */
-export function deriveAssessmentRisk(
-  template: RiskTemplate,
-  responses: ReadonlyArray<RiskResponse>
-): RiskResult | null {
-  if (isHealthAdtechTemplate(template)) {
-    const result = computeHealthAdtechResult(responses);
-    if (result.riskLevel && result.riskScore != null) {
-      return { score: result.riskScore, level: RiskLevel[result.riskLevel] };
-    }
-    return null;
-  }
+interface RiskParts {
+  /** Weighted indicator score, 0 to 100, before any conclusion; null when nothing is scored. */
+  indicatorScore: number | null;
+  /** The level the assessment itself concludes (residual or overall), or null. */
+  conclusion: RiskLevel | null;
+}
 
+/**
+ * Questions that record the risk after measures (the DPIA's residual level
+ * and its prior-consultation answer). They are left out of the inherent
+ * score, which measures the processing before any measure.
+ */
+const AFTER_MEASURES = new Set(["q7_1", "q7_2"]);
+
+function riskParts(
+  template: RiskTemplate,
+  responses: ReadonlyArray<RiskResponse>,
+  inherentOnly = false
+): RiskParts {
   const stored = sectionsOf(template);
   const answers = answerMapFrom(responses.filter((r) => !r.questionId.includes("::")));
   const localized = allLocalizedSections(template.type, stored);
@@ -258,6 +261,7 @@ export function deriveAssessmentRisk(
     const indicator = INDICATORS[q.id];
     const weight = indicator?.weight ?? (typeof q.riskWeight === "number" ? q.riskWeight : 0);
     if (!(weight > 0)) continue;
+    if (inherentOnly && AFTER_MEASURES.has(q.id)) continue;
     const value = choice(q);
     if (value == null) continue;
 
@@ -302,6 +306,26 @@ export function deriveAssessmentRisk(
       break;
     }
   }
+  return { indicatorScore, conclusion };
+}
+
+/**
+ * The derived risk of an assessment, or null when no answer it holds is
+ * scored (nothing to derive a figure from).
+ */
+export function deriveAssessmentRisk(
+  template: RiskTemplate,
+  responses: ReadonlyArray<RiskResponse>
+): RiskResult | null {
+  if (isHealthAdtechTemplate(template)) {
+    const result = computeHealthAdtechResult(responses);
+    if (result.riskLevel && result.riskScore != null) {
+      return { score: result.riskScore, level: RiskLevel[result.riskLevel] };
+    }
+    return null;
+  }
+
+  const { indicatorScore, conclusion } = riskParts(template, responses);
 
   if (conclusion) {
     const band = LEVEL_BANDS[conclusion];
@@ -315,25 +339,71 @@ export function deriveAssessmentRisk(
   return { score: indicatorScore, level: levelForScore(indicatorScore) };
 }
 
-/** The value stored when an assessment is scored (submit, approve). */
+/**
+ * The value stored when an assessment is scored (submit, approve). Null when
+ * nothing the assessment holds is scored: it is stored as "not assessed",
+ * never as a low risk.
+ */
 export function calculateRiskScore(
   responses: ReadonlyArray<RiskResponse>,
   template: RiskTemplate
-): RiskResult {
-  return deriveAssessmentRisk(template, responses) ?? { score: 0, level: RiskLevel.LOW };
+): RiskResult | null {
+  return deriveAssessmentRisk(template, responses);
+}
+
+export interface InherentResidual {
+  /** Indicator score before measures, 0 to 100, not bent to the conclusion. */
+  inherentScore: number | null;
+  /** The higher of the indicator band and the register's highest inherent level. */
+  inherentLevel: RiskLevel | null;
+  /** The higher of the stated residual level and the register's highest residual level. */
+  residualLevel: RiskLevel | null;
+}
+
+/**
+ * Inherent and residual risk, kept apart (GDPR Art. 35(7)(c)). The inherent
+ * figure comes from the indicators and the register's grades before
+ * measures; the residual one from the level the assessment states after
+ * measures and the register's grades after them.
+ */
+export function inherentAndResidual(
+  template: RiskTemplate,
+  responses: ReadonlyArray<RiskResponse>,
+  register?: { inherent: RiskLevel | null; residual: RiskLevel | null }
+): InherentResidual {
+  if (isHealthAdtechTemplate(template)) {
+    const derived = deriveAssessmentRisk(template, responses);
+    return { inherentScore: derived?.score ?? null, inherentLevel: derived?.level ?? null, residualLevel: null };
+  }
+  const { indicatorScore } = riskParts(template, responses, true);
+  // Only the DPIA states its residual level after measures (q7_1); the other
+  // templates' conclusions are overall ratings and are not called residual.
+  const conclusion = template.type === "DPIA" ? riskParts(template, responses).conclusion : null;
+  const indicatorLevel = indicatorScore == null ? null : levelForScore(indicatorScore);
+  const pick = (a: RiskLevel | null, b: RiskLevel | null | undefined) =>
+    a && b ? maxLevel(a, b) : (a ?? b ?? null);
+  return {
+    inherentScore: indicatorScore,
+    inherentLevel: pick(indicatorLevel, register?.inherent),
+    residualLevel: pick(conclusion, register?.residual),
+  };
 }
 
 /**
  * The assessment with its risk figures derived from its answers. Only an
  * assessment already scored (a stored level) is rescored, so a draft stays
  * unscored; one scored before this derivation existed shows the derived
- * figures without any stored change.
+ * figures without any stored change. An assessment whose figures were frozen
+ * at approval (`riskFrozenAt`) keeps the stored figures: a later change to
+ * the scoring never changes what was approved.
  */
 export function withDerivedRisk<
-  A extends { riskLevel: RiskLevel | null; riskScore: number | null },
+  A extends { riskLevel: RiskLevel | null; riskScore: number | null; riskFrozenAt?: Date | null },
 >(assessment: A, template: RiskTemplate | null | undefined, responses: ReadonlyArray<RiskResponse>): A {
+  if (assessment.riskFrozenAt) return assessment;
   if (assessment.riskLevel == null || !template) return assessment;
   const derived = calculateRiskScore(responses, template);
+  if (!derived) return assessment;
   return { ...assessment, riskScore: derived.score, riskLevel: derived.level };
 }
 
@@ -353,12 +423,19 @@ export async function scoredAssessmentsWithDerivedRisk(
       status: true,
       riskLevel: true,
       riskScore: true,
+      riskFrozenAt: true,
       template: { select: { type: true, sections: true, scoringLogic: true } },
       responses: { select: { questionId: true, response: true } },
     },
   });
   return rows.map(({ template, responses, ...a }) => {
     const derived = withDerivedRisk(a, template, responses);
-    return { ...derived, riskLevel: derived.riskLevel!, riskScore: derived.riskScore ?? 0 };
+    return {
+      id: derived.id,
+      name: derived.name,
+      status: derived.status,
+      riskLevel: derived.riskLevel!,
+      riskScore: derived.riskScore ?? 0,
+    };
   });
 }

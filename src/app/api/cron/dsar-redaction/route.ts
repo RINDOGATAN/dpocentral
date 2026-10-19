@@ -40,7 +40,7 @@ export async function GET(request: Request) {
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
-    logger.warn("DSAR redaction cron called but CRON_SECRET is not set — refusing to run");
+    logger.warn("DSAR redaction cron called but CRON_SECRET is not set; refusing to run");
     return NextResponse.json(
       { error: "Cron disabled: CRON_SECRET is not configured" },
       { status: 503 }

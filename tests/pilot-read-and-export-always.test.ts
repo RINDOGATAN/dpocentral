@@ -60,6 +60,8 @@ const prisma = vi.hoisted(() => {
             // The export writes its audit entry (EXPORT_ORGANIZATION_DATA).
             if (name === "auditLog" && method === "create") return {};
             if (method === "findUnique" || method === "findFirst") return state.organization;
+            // An export writes its own audit entry, read-only firm or not.
+            if (name === "auditLog" && method === "create") return {};
           }
           void args;
           throw new Error("handler reached (test stand-in)");

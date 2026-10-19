@@ -127,7 +127,8 @@ per route class, keyed by client address (`src/lib/rate-limit.ts`,
 |---|---|
 | Sign-in steps (credential and OAuth callbacks, magic-link consumption) | 10 per minute |
 | Magic-link e-mail requests | 5 per 15 minutes |
-| Other `/api/auth` traffic (session, csrf, providers, sign-out) | 30 per minute |
+| Session, CSRF and provider reads, client error log (polled on every page load) | 600 per minute |
+| Other `/api/auth` traffic (sign-out, sign-in page render) | 30 per minute |
 | Checkout and billing portal | 10 per minute |
 | Public DSAR intake and withdrawal | 5 per 10 minutes |
 | Other public procedures (request status, public form, feedback) | 30 per minute |

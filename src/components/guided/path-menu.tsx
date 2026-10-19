@@ -29,6 +29,7 @@ import {
   stageOpenByDefault,
   stageProgress,
   stageWord,
+  isStepMet,
   type PathConfig,
   type PathStage,
   type PathStatuses,
@@ -106,7 +107,7 @@ const FOCUS =
 /** Where a stage's icon leads when the menu shows icons only: its first step not done. */
 function stageTarget<C>(stage: PathStage<C>, statuses: PathStatuses | null): string | null {
   const open = stage.steps.find(
-    (s) => s.href && isCounted(s) && isShown(s, statuses) && statuses?.[s.id] !== "done",
+    (s) => s.href && isCounted(s) && isShown(s, statuses) && !isStepMet(statuses?.[s.id]),
   );
   return (open ?? stage.steps.find((s) => s.href))?.href ?? null;
 }
@@ -536,7 +537,7 @@ function StepMark({
   const text = optional && status === "todo" ? t("stepStatus.optional") : t(`stepStatus.${status}`);
   return (
     <span className="inline-flex size-3.5 shrink-0" title={text}>
-      {status === "done" ? (
+      {status === "done" || status === "ready" ? (
         <span className="flex size-3.5 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <Check className="size-2.5" strokeWidth={3} aria-hidden="true" />
         </span>

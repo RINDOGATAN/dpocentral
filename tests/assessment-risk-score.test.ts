@@ -15,10 +15,13 @@ import { ASSESSMENT_TEMPLATES_V2, serializeSections } from "@/config/assessment-
 import {
   INDICATORS,
   LEVEL_QUESTIONS,
-  calculateRiskScore,
+  calculateRiskScore as calculateNullable,
   deriveAssessmentRisk,
   withDerivedRisk,
 } from "@/server/services/assessment/risk-score";
+
+/** The figures of an assessment that has something scored. */
+const calculateRiskScore = (...args: Parameters<typeof calculateNullable>) => calculateNullable(...args)!;
 
 const dpia = { type: "DPIA", sections: dpiaTemplateData.sections, scoringLogic: dpiaTemplateData.scoringLogic };
 
@@ -89,7 +92,8 @@ describe("DPIA risk score", () => {
 
   it("has nothing to derive from free text alone", () => {
     expect(deriveAssessmentRisk(dpia, answers({ q1_1: "Description only." }))).toBeNull();
-    expect(calculateRiskScore([], dpia)).toEqual({ score: 0, level: "LOW" });
+    // Nothing scored is "not assessed", never a low risk.
+    expect(calculateNullable([], dpia)).toBeNull();
   });
 });
 

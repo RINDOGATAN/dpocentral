@@ -272,6 +272,25 @@ export const organizationRouter = createTRPCRouter({
           )
         : null;
 
+      // Hosted service: the safeguards question (how the service should run)
+      // is asked once per account, not again for each client a consultant
+      // adds: only when this person has neither answered it nor been asked it
+      // in another organisation.
+      const askedBefore = hosted
+        ? (
+            await ctx.prisma.organization.findMany({
+              where: {
+                OR: [
+                  { safeguardsChoiceById: ctx.session.user.id },
+                  { welcomeUserId: ctx.session.user.id },
+                ],
+              },
+              select: { id: true },
+              take: 1,
+            })
+          ).length
+        : 0;
+
       const organization = await ctx.prisma.organization.create({
         data: {
           name: input.name,
@@ -289,7 +308,7 @@ export const organizationRouter = createTRPCRouter({
             : {}),
           // Hosted service: the creator sees the welcome card (safeguards
           // question) on the first visit to /privacy. Never on the kit.
-          welcomeUserId: isHostedDeployment() ? ctx.session.user.id : null,
+          welcomeUserId: hosted && askedBefore === 0 ? ctx.session.user.id : null,
           // Hosted service: whether it was created from the EU, for the
           // currency of e-mails sent without a visitor.
           settings: signupRegionSettings(ctx.country, isHostedDeployment()),

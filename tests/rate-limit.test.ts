@@ -117,9 +117,12 @@ describe("classifyRequest", () => {
     ["GET", "/api/auth/callback/email", "signIn"], // magic-link consumption
     ["POST", "/api/auth/signin/google", "signIn"],
     ["GET", "/api/auth/dev-login", "signIn"],
-    ["GET", "/api/auth/session", "auth"],
-    ["GET", "/api/auth/csrf", "auth"],
-    ["GET", "/api/auth/providers", "auth"],
+    ["GET", "/api/auth/session", "authRead"],
+    ["POST", "/api/auth/session", "authRead"], // session update from the client
+    ["GET", "/api/auth/csrf", "authRead"],
+    ["GET", "/api/auth/providers", "authRead"],
+    ["POST", "/api/auth/_log", "authRead"],
+    ["POST", "/api/auth/csrf", "auth"], // not a read the client makes
     ["POST", "/api/auth/signout", "auth"],
     ["POST", "/api/checkout", "checkout"],
     ["POST", "/api/billing/portal", "checkout"],

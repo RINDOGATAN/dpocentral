@@ -32,11 +32,12 @@ const sccStatusTone: Record<string, StatusTone> = {
 const adequacyCountries: { key: string; year: string }[] = [
   { key: "Andorra", year: "2010" },
   { key: "Argentina", year: "2003" },
+  { key: "Brazil", year: "2026" },
   { key: "Canada", year: "2001" },
   { key: "Israel", year: "2011" },
   { key: "Japan", year: "2019" },
   { key: "NewZealand", year: "2012" },
-  { key: "SouthKorea", year: "2022" },
+  { key: "SouthKorea", year: "2021" },
   { key: "Switzerland", year: "2000" },
   { key: "UK", year: "2021" },
   { key: "Uruguay", year: "2012" },

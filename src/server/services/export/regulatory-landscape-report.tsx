@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import React from "react";
-import { pdfChrome } from "./pdf-locale";
+import { currentPdfLocale, pdfChrome } from "./pdf-locale";
 import { Document, View, Text } from "@react-pdf/renderer";
 import {
   ContentPage,
@@ -26,6 +26,8 @@ export interface AppliedJurisdiction {
   code: string;
   name: string;
   region: string;
+  /** The region in the report's language, where the catalogue has one. */
+  regionLabel?: string;
   country: string;
   dsarDeadlineDays: number;
   /** Set when the law states the period in calendar months (GDPR: 1). */
@@ -42,8 +44,11 @@ export interface AppliedJurisdiction {
 export interface TransferExposure {
   country: string;
   count: number;
+  /** Transfer mechanisms, already in the report's language. */
   mechanisms: string[];
   hasAdequacy: boolean;
+  /** The adequacy cell in the reader's language ("Partial (...)" for the US and Canada). */
+  adequacyLabel?: string;
 }
 
 export interface VendorExposure {
@@ -82,7 +87,10 @@ export interface RegulatoryLandscapeData {
   vendorsByCountry: VendorExposure[];
 
   // Deadline compliance
-  dsarOnTimeRate: number; // 0-100
+  /** 0-100 (src/lib/dsar-on-time.ts), or null when nothing can be measured yet. */
+  dsarOnTimeRate: number | null;
+  /** The shared measure read as a status; every jurisdiction shows it. */
+  dsarStatus?: "meeting" | "notMet" | "noData";
   breachNotificationCompliance: number; // 0-100
 
   /**
@@ -97,7 +105,8 @@ export interface RegulatoryLandscapeData {
 // ── Helpers ──────────────────────────────────────────────
 
 function regionLabel(region: string): string {
-  // Regions are country/bloc codes — not translated, they're ISO-ish identifiers
+  // English names of the catalogue's region codes; Spanish reports use the
+  // catalogue's Spanish label (AppliedJurisdiction.regionLabel).
   if (region === "EU" || region.startsWith("EU")) return "European Union";
   if (region === "UK") return "United Kingdom";
   if (region.startsWith("US")) return "United States";
@@ -110,6 +119,22 @@ function regionLabel(region: string): string {
   if (region === "IN") return "India";
   if (region === "SG") return "Singapore";
   return region;
+}
+
+function regionOf(j: AppliedJurisdiction): string {
+  return j.regionLabel ?? regionLabel(j.region);
+}
+
+/** A two-letter country code as a country name in the report's language; anything else as stored. */
+function countryName(code: string): string {
+  if (!code) return pdfChrome().notStated;
+  if (!/^[A-Z]{2}$/.test(code)) return code;
+  try {
+    const names = new Intl.DisplayNames([currentPdfLocale() === "es" ? "es-ES" : "en-GB"], { type: "region" });
+    return names.of(code) ?? code;
+  } catch {
+    return code;
+  }
 }
 
 function categoryLabel(cat: string, tr: PdfT): string {
@@ -131,11 +156,10 @@ function formatDsarDeadline(j: AppliedJurisdiction, tr: PdfT): string {
     : tr("slaDays", { days: j.dsarDeadlineDays });
 }
 
+/** A breach deadline in hours, as the law states it (GDPR: 72 hours, never "3 days"). */
 function formatHours(hours: number, tr: PdfT): string {
   if (hours === 0) return tr("noDeadline");
-  if (hours < 24) return tr("hours", { hours });
-  const days = hours / 24;
-  return days === 1 ? tr("dayOne") : tr("days", { days });
+  return tr("hours", { hours });
 }
 
 // English fallback map (keys scoped to pdf.regulatoryLandscape)
@@ -161,6 +185,8 @@ const EN_FALLBACK: Record<string, string> = {
   "stats.operatingCountries": "Operating Countries",
   "stats.highRiskVendors": "High-Risk Vendors",
   "stats.notAvailable": "N/A",
+  healthDsarOnTimeNone: "DSAR on-time completion: nothing to measure yet",
+  statusNotMet: "Not met",
   "meta.organization": "Organization",
   "meta.reportDate": "Report Date",
   "meta.dataAssets": "Data Assets",
@@ -259,6 +285,7 @@ export function RegulatoryLandscapeReport({
 }) {
   const tr: PdfT = t ?? fallbackT;
   const showDsar = data.dsarModule !== false;
+  const percent = (n: number) => (locale?.startsWith("es") ? `${n}\u00a0%` : `${n}%`);
   const orgName = data.organization.name;
   const date = data.generatedAt;
   const jurisdictions = data.jurisdictions;
@@ -266,7 +293,7 @@ export function RegulatoryLandscapeReport({
   // Group jurisdictions by region
   const byRegion = new Map<string, AppliedJurisdiction[]>();
   for (const j of jurisdictions) {
-    const region = regionLabel(j.region);
+    const region = regionOf(j);
     if (!byRegion.has(region)) byRegion.set(region, []);
     byRegion.get(region)!.push(j);
   }
@@ -312,7 +339,7 @@ export function RegulatoryLandscapeReport({
 
         <View style={s.statsGrid}>
           <StatCard value={jurisdictions.length} label={tr("stats.appliedFrameworks")} />
-          <StatCard value={`${data.complianceScore}%`} label={tr("stats.complianceScore")} />
+          <StatCard value={percent(data.complianceScore)} label={tr("stats.complianceScore")} />
           <StatCard
             value={strictestDsar ?? pdfChrome().notStated}
             label={tr("stats.strictestDsar")}
@@ -341,7 +368,9 @@ export function RegulatoryLandscapeReport({
           <Text style={s.calloutTitle}>{tr("programHealth")}</Text>
           {showDsar && (
           <Text style={s.calloutText}>
-            {"\u2022"}  {tr("healthDsarOnTime", { rate: data.dsarOnTimeRate })}
+            {"\u2022"}  {data.dsarOnTimeRate != null
+              ? tr("healthDsarOnTime", { rate: data.dsarOnTimeRate })
+              : tr("healthDsarOnTimeNone")}
           </Text>
           )}
           <Text style={s.calloutText}>
@@ -387,11 +416,11 @@ export function RegulatoryLandscapeReport({
           colWidths={[3, 1.5, 1.5, 1, 1.2, 0.8]}
           rows={jurisdictions.map((j) => [
             j.name,
-            regionLabel(j.region),
+            regionOf(j),
             categoryLabel(j.category, tr),
             formatDsarDeadline(j, tr),
             j.breachNotificationHours > 0
-              ? `${j.breachNotificationHours}h`
+              ? formatHours(j.breachNotificationHours, tr)
               : tr("stats.notAvailable"),
             j.isPrimary ? tr("yes") : "",
           ])}
@@ -429,11 +458,14 @@ export function RegulatoryLandscapeReport({
         <>
         <View style={s.statsGrid}>
           <StatCard value={data.moduleStats.dsarTotal} label={tr("stats.totalDsars")} />
-          <StatCard value={`${data.dsarOnTimeRate}%`} label={tr("stats.onTimeRate")} />
+          <StatCard
+            value={data.dsarOnTimeRate != null ? percent(data.dsarOnTimeRate) : tr("stats.notAvailable")}
+            label={tr("stats.onTimeRate")}
+          />
           <StatCard
             value={
               data.moduleStats.dsarAvgDays > 0
-                ? `${data.moduleStats.dsarAvgDays}d`
+                ? tr("days", { days: data.moduleStats.dsarAvgDays })
                 : tr("stats.notAvailable")
             }
             label={tr("stats.avgResolution")}
@@ -456,10 +488,11 @@ export function RegulatoryLandscapeReport({
           rows={jurisdictions.map((j) => [
             j.name,
             formatDsarDeadline(j, tr),
-            data.moduleStats.dsarAvgDays > 0 && data.moduleStats.dsarAvgDays <= j.dsarDeadlineDays
+            // Each request carries its own deadline; the status reads the shared on-time measure.
+            data.dsarStatus === "meeting"
               ? tr("statusMeeting")
-              : data.moduleStats.dsarAvgDays > j.dsarDeadlineDays
-                ? tr("statusAtRisk")
+              : data.dsarStatus === "notMet"
+                ? tr("statusNotMet")
                 : tr("statusNoData"),
           ])}
         />
@@ -520,9 +553,10 @@ export function RegulatoryLandscapeReport({
             rows={data.transfersByCountry
               .sort((a, b) => b.count - a.count)
               .map((tr2) => [
-                tr2.country,
+                countryName(tr2.country),
                 String(tr2.count),
-                tr2.hasAdequacy ? tr("yes") : tr("no"),
+                tr2.adequacyLabel ?? (tr2.hasAdequacy ? tr("yes") : tr("no")),
+                // Already in the report's language (the builder translates the mechanism codes).
                 tr2.mechanisms.join(", ") || "",
               ])}
           />
@@ -558,7 +592,7 @@ export function RegulatoryLandscapeReport({
             rows={data.vendorsByCountry
               .sort((a, b) => b.vendorCount - a.vendorCount)
               .map((v) => [
-                v.country,
+                countryName(v.country),
                 String(v.vendorCount),
                 v.highRiskCount > 0 ? String(v.highRiskCount) : "",
               ])}

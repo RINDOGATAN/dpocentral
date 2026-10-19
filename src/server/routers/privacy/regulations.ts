@@ -5,6 +5,8 @@ import { z } from "zod";
 import { createTRPCRouter, organizationProcedure, writerProcedure } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { dsarDeadlineMonths } from "@/server/services/privacy/slaCalculator";
+import { DRAFT_WHERE } from "@/server/services/template-items/drafts";
+import { dpaInForceWhere } from "@/lib/vendor-contracts";
 import { DSAR_MODULE_OFF_MESSAGE, isDsarModuleEnabled } from "@/config/features";
 
 export const regulationsRouter = createTRPCRouter({
@@ -360,6 +362,7 @@ export const regulationsRouter = createTRPCRouter({
       const orgId = ctx.organization.id;
       const [
         activitiesCount,
+        draftActivitiesCount,
         approvedDpiaCount,
         inProgressDpiaCount,
         intakeFormCount,
@@ -370,7 +373,9 @@ export const regulationsRouter = createTRPCRouter({
         transferCount,
         transferTiaDoneCount,
       ] = await Promise.all([
-        ctx.prisma.processingActivity.count({ where: { organizationId: orgId } }),
+        // The record counts once confirmed: active activities a person has confirmed.
+        ctx.prisma.processingActivity.count({ where: { organizationId: orgId, isActive: true, NOT: DRAFT_WHERE } }),
+        ctx.prisma.processingActivity.count({ where: { organizationId: orgId, isActive: true, ...DRAFT_WHERE } }),
         ctx.prisma.assessment.count({
           where: {
             organizationId: orgId,
@@ -390,13 +395,15 @@ export const regulationsRouter = createTRPCRouter({
           : 0,
         ctx.prisma.incident.count({ where: { recordedInErrorAt: null, organizationId: orgId } }),
         ctx.prisma.vendor.count({
-          where: { organizationId: orgId, status: { in: ["ACTIVE", "UNDER_REVIEW"] } },
+          where: { organizationId: orgId, status: { in: ["ACTIVE", "UNDER_REVIEW"] }, NOT: DRAFT_WHERE },
         }),
+        // A processor contract in force, as the vendor register counts it (src/lib/vendor-contracts.ts).
         ctx.prisma.vendor.count({
           where: {
             organizationId: orgId,
             status: { in: ["ACTIVE", "UNDER_REVIEW"] },
-            contracts: { some: { type: "DPA" } },
+            NOT: DRAFT_WHERE,
+            contracts: { some: dpaInForceWhere(new Date()) },
           },
         }),
         ctx.prisma.aISystem.count({ where: { organizationId: orgId } }),
@@ -407,51 +414,76 @@ export const regulationsRouter = createTRPCRouter({
       ]);
 
       type Status = "satisfied" | "partial" | "missing";
-      const computeStatus = (id: string): { status: Status; detail: string } => {
+      // `detailKey` names a message under pages.regulations.checklist (the page
+      // translates it with `detailValues`); `detail` is the same in English, for
+      // any other reader.
+      type Detail = { status: Status; detail: string; detailKey: string; detailValues?: Record<string, number> };
+      const computeStatus = (id: string): Detail => {
         switch (id) {
           case "ropa":
-            return activitiesCount === 0
-              ? { status: "missing", detail: "No processing activities recorded" }
-              : { status: "satisfied", detail: `${activitiesCount} activities` };
+            if (activitiesCount === 0 && draftActivitiesCount === 0) {
+              return { status: "missing", detail: "No active processing activities recorded", detailKey: "detailRopaNone" };
+            }
+            if (draftActivitiesCount > 0) {
+              return {
+                status: "partial",
+                detail: `${activitiesCount} confirmed, ${draftActivitiesCount} drafted to confirm`,
+                detailKey: "detailRopaDrafts",
+                detailValues: { confirmed: activitiesCount, drafts: draftActivitiesCount },
+              };
+            }
+            return {
+              status: "satisfied",
+              detail: `${activitiesCount} active activities`,
+              detailKey: "detailRopaCount",
+              detailValues: { count: activitiesCount },
+            };
           case "dpia":
-            if (approvedDpiaCount > 0) return { status: "satisfied", detail: `${approvedDpiaCount} approved` };
-            if (inProgressDpiaCount > 0) return { status: "partial", detail: `${inProgressDpiaCount} in progress` };
-            return { status: "missing", detail: "No DPIA on file" };
+            if (approvedDpiaCount > 0) {
+              return { status: "satisfied", detail: `${approvedDpiaCount} approved`, detailKey: "detailDpiaApproved", detailValues: { count: approvedDpiaCount } };
+            }
+            if (inProgressDpiaCount > 0) {
+              return { status: "partial", detail: `${inProgressDpiaCount} in progress`, detailKey: "detailDpiaInProgress", detailValues: { count: inProgressDpiaCount } };
+            }
+            return { status: "missing", detail: "No DPIA on file", detailKey: "detailDpiaNone" };
           case "dsar-portal":
             // Without the rights-request module the requirement stays on the
             // list (the law still asks for it) but this tool does not meet it.
-            if (!isDsarModuleEnabled()) return { status: "missing", detail: DSAR_MODULE_OFF_MESSAGE };
+            if (!isDsarModuleEnabled()) return { status: "missing", detail: DSAR_MODULE_OFF_MESSAGE, detailKey: "detailDsarOff" };
             return intakeFormCount === 0
-              ? { status: "missing", detail: "Public intake form not configured" }
-              : { status: "satisfied", detail: "Public portal active" };
+              ? { status: "missing", detail: "Public intake form not configured", detailKey: "detailDsarNoForm" }
+              : { status: "satisfied", detail: "Public portal active", detailKey: "detailDsarActive" };
           case "incident-response":
             return incidentCount === 0
-              ? { status: "missing", detail: "No incident workflow yet" }
-              : { status: "satisfied", detail: `${incidentCount} incident records` };
-          case "vendor-dpas":
-            if (activeVendorCount === 0) return { status: "missing", detail: "No active vendors recorded" };
-            if (vendorsWithDpaCount === activeVendorCount) {
-              return { status: "satisfied", detail: `${vendorsWithDpaCount}/${activeVendorCount} vendors with DPA` };
-            }
+              ? { status: "missing", detail: "No incident workflow yet", detailKey: "detailIncidentNone" }
+              : { status: "satisfied", detail: `${incidentCount} incident records`, detailKey: "detailIncidentCount", detailValues: { count: incidentCount } };
+          case "vendor-dpas": {
+            if (activeVendorCount === 0) return { status: "missing", detail: "No active vendors recorded", detailKey: "detailVendorNone" };
+            const counts = { withDpa: vendorsWithDpaCount, total: activeVendorCount };
+            const detail = `${vendorsWithDpaCount}/${activeVendorCount} vendors with a DPA in force`;
             return {
-              status: "partial",
-              detail: `${vendorsWithDpaCount}/${activeVendorCount} vendors with DPA`,
+              status: vendorsWithDpaCount === activeVendorCount ? "satisfied" : "partial",
+              detail,
+              detailKey: "detailVendorCount",
+              detailValues: counts,
             };
-          case "transfer-tia":
-            if (transferCount === 0) return { status: "satisfied", detail: "No cross-border transfers" };
-            if (transferTiaDoneCount === transferCount) {
-              return { status: "satisfied", detail: `${transferTiaDoneCount}/${transferCount} TIAs complete` };
-            }
+          }
+          case "transfer-tia": {
+            if (transferCount === 0) return { status: "satisfied", detail: "No cross-border transfers", detailKey: "detailTransferNone" };
+            const counts = { done: transferTiaDoneCount, total: transferCount };
             return {
-              status: "partial",
+              status: transferTiaDoneCount === transferCount ? "satisfied" : "partial",
               detail: `${transferTiaDoneCount}/${transferCount} TIAs complete`,
+              detailKey: "detailTransferCount",
+              detailValues: counts,
             };
+          }
           case "ai-system-register":
             return aiSystemCount === 0
-              ? { status: "missing", detail: "No AI systems registered" }
-              : { status: "satisfied", detail: `${aiSystemCount} systems registered` };
+              ? { status: "missing", detail: "No AI systems registered", detailKey: "detailAiNone" }
+              : { status: "satisfied", detail: `${aiSystemCount} systems registered`, detailKey: "detailAiCount", detailValues: { count: aiSystemCount } };
           default:
-            return { status: "missing", detail: "" };
+            return { status: "missing", detail: "", detailKey: "" };
         }
       };
 

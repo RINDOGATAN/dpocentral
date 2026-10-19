@@ -88,6 +88,7 @@ export type ApplicabilityReason =
   | "children"
   | "largeVolume"
   | "thresholds"
+  | "twoCriteria"
   | "answerUnsure";
 
 export interface ApplicabilityItem {
@@ -212,13 +213,22 @@ export function evaluateApplicability(
   }
 
   // ─── A DPIA is likely (Art. 35) ────────────────────
+  // Large-scale systematic monitoring of a public area is an Art. 35(3)(c)
+  // case on its own. Special category data and vulnerable data subjects
+  // (children) are each one of the nine criteria of the EDPB guidelines
+  // (WP248 rev.01), which usually call for a DPIA when two or more are met:
+  // both together apply; one alone is a check, since the others (large
+  // scale, profiling, matching datasets...) are not asked here.
   if (has(EU_GDPR_CODES) || has(UK_GDPR_CODES)) {
     const reasons: ApplicabilityReason[] = [];
     if (answers.largeScaleMonitoring === "YES") reasons.push("largeScaleMonitoring");
     if (answers.sensitiveData === "YES") reasons.push("sensitiveData");
     if (answers.children === "YES") reasons.push("children");
-    if (reasons.length > 0) {
+    const criteria = reasons.filter((r) => r !== "largeScaleMonitoring").length;
+    if (answers.largeScaleMonitoring === "YES" || criteria >= 2) {
       items.push({ id: "dpiaLikely", kind: "duty", state: "applies", reasons });
+    } else if (criteria === 1) {
+      items.push({ id: "dpiaLikely", kind: "duty", state: "check", reasons: [...reasons, "twoCriteria"] });
     } else if (
       answers.largeScaleMonitoring === "UNSURE" ||
       answers.sensitiveData === "UNSURE" ||

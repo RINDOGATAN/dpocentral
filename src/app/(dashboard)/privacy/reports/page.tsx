@@ -37,6 +37,7 @@ import { useProgrammeOverview } from "@/components/guided/use-programme-overview
 import { useMemberScope } from "@/lib/use-member-scope";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import Link from "next/link";
+import { scoreHints } from "@/lib/score-hints";
 
 function ModuleBreakdownCard({
   label,
@@ -155,6 +156,7 @@ export default function ReportsPage() {
     score === null
       ? tp("score.unrated")
       : score >= 80 ? tp("score.strong") : score >= 60 ? tp("score.moderate") : tp("score.needsAttention");
+  const hints = breakdown ? scoreHints(breakdown, { dsarOn: complianceData?.dsarModule ?? dsarOn }) : [];
   const scoreBadgeVariant =
     score === null ? "outline" : score >= 80 ? "default" : score >= 60 ? "secondary" : "destructive";
 
@@ -232,35 +234,40 @@ export default function ReportsPage() {
                 </span>
               )}
             </div>
+            {/* The number is shown only when every area has data: a figure
+                built from one area of five reads as a verdict it cannot give
+                (100 / 100 next to "no rating is given"). */}
             <p className="text-sm text-muted-foreground">
               {score === null ? (
                 tp("score.unratedSubtitle")
-              ) : (
+              ) : fullCoverage ? (
                 <>
-                  <span className="font-medium text-foreground tabular-nums">
+                  <span className="font-medium text-foreground tabular-nums" data-testid="reports-score-value">
                     {tp("score.value", { score })}
-                  </span>
-                  {fullCoverage ? (
-                    <>
-                      {" "}
-                      <Badge variant={scoreBadgeVariant as any} data-testid="reports-score-label">
-                        {scoreLabel}
-                      </Badge>{" "}
-                      {tp("score.subtitle")}
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      {tp("score.partialSubtitle", {
-                        rated: coverage!.ratedModules,
-                        total: coverage!.totalModules,
-                        pct: coverage!.ratedWeightPct,
-                      })}
-                    </>
-                  )}
+                  </span>{" "}
+                  <Badge variant={scoreBadgeVariant as any} data-testid="reports-score-label">
+                    {scoreLabel}
+                  </Badge>{" "}
+                  {tp("score.subtitle")}
                 </>
+              ) : (
+                tp("score.withheld", { rated: coverage!.ratedModules, total: coverage!.totalModules })
               )}
             </p>
+            {hints.length > 0 && (
+              <div className="pt-1" data-testid="reports-raise">
+                <p className="text-sm font-medium">{tp("score.raiseTitle")}</p>
+                <ul className="mt-1 space-y-1 text-sm">
+                  {hints.map((h) => (
+                    <li key={h.area}>
+                      <Link href={h.href} className="text-primary underline-offset-4 hover:underline">
+                        {tp(`raise.${h.area}.${h.kind}`, { count: h.count })}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {(complianceData?.draftsExcluded ?? 0) > 0 && (
               <p className="text-sm text-muted-foreground" data-testid="reports-drafts-excluded">
                 {tp("score.draftsExcluded", { count: complianceData!.draftsExcluded })}{" "}
@@ -269,7 +276,7 @@ export default function ReportsPage() {
                 </Link>
               </p>
             )}
-            {score !== null && trendData && trendData.length > 1 && (
+            {score !== null && fullCoverage && trendData && trendData.length > 1 && (
               <div className="flex items-center gap-2 text-sm">
                 {trendData[trendData.length - 1].score >= trendData[trendData.length - 2].score ? (
                   <>
