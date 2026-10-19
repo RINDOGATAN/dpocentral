@@ -83,7 +83,7 @@ export const clientsRouter = createTRPCRouter({
               ? ctx.prisma.dSARRequest.count({
                   where: {
                     organizationId: orgId,
-                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                    status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
                   },
                 })
               : 0,
@@ -91,7 +91,7 @@ export const clientsRouter = createTRPCRouter({
               ? ctx.prisma.dSARRequest.count({
                   where: {
                     organizationId: orgId,
-                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                    status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
                     dueDate: { lt: now },
                   },
                 })
@@ -100,7 +100,7 @@ export const clientsRouter = createTRPCRouter({
               ? ctx.prisma.dSARRequest.count({
                   where: {
                     organizationId: orgId,
-                    status: { notIn: ["COMPLETED", "REJECTED"] },
+                    status: { notIn: ["COMPLETED", "REJECTED", "CANCELLED"] },
                     dueDate: { gte: now, lt: dueSoonCutoff },
                   },
                 })

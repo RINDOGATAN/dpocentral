@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { formatDateIn } from "@/lib/utils";
 import { Loader2, CheckCircle2, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -35,6 +35,7 @@ export default function BillingPage() {
   const formatPrice = useFormatPrice();
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("pages.billing");
   const { organization } = useOrganization();
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
@@ -154,16 +155,14 @@ export default function BillingPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Billing</h1>
-        <p className="text-muted-foreground">
-          Manage your add-on features
-        </p>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       {/* Add-on features table */}
       <Card>
         <CardHeader>
-          <CardTitle>Add-on Features</CardTitle>
+          <CardTitle>{t("addOnsTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -177,13 +176,13 @@ export default function BillingPage() {
                         selectedIds.size === inactiveRows.length
                       }
                       onCheckedChange={toggleSelectAll}
-                      aria-label="Select all inactive features"
+                      aria-label={t("selectAll")}
                     />
                   </TableHead>
                 )}
-                <TableHead>Feature</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Details</TableHead>
+                <TableHead>{t("columns.feature")}</TableHead>
+                <TableHead>{t("columns.status")}</TableHead>
+                <TableHead>{t("columns.details")}</TableHead>
                 {features.selfServiceUpgrade && (
                   <TableHead className="w-24"></TableHead>
                 )}
@@ -198,7 +197,7 @@ export default function BillingPage() {
                         <Checkbox
                           checked={selectedIds.has(row.id)}
                           onCheckedChange={() => toggleSelect(row.id)}
-                          aria-label={`Select ${row.name}`}
+                          aria-label={t("selectOne", { name: row.name })}
                         />
                       ) : null}
                     </TableCell>
@@ -208,15 +207,15 @@ export default function BillingPage() {
                     {row.isComingSoon ? (
                       <div className="flex items-center gap-1.5">
                         <Clock className={`h-4 w-4 ${toneMark("warning")}`} />
-                        <StatusChip tone="warning" hideIcon className="text-[10px] px-1.5 py-0">Coming Soon</StatusChip>
+                        <StatusChip tone="warning" hideIcon className="text-[10px] px-1.5 py-0">{t("comingSoon")}</StatusChip>
                       </div>
                     ) : row.isActive ? (
                       <div className="flex items-center gap-1.5">
                         <CheckCircle2 className="h-4 w-4 text-primary" />
-                        <span className="text-sm">Active</span>
+                        <span className="text-sm">{t("active")}</span>
                       </div>
                     ) : (
-                      <span className="text-sm text-muted-foreground">Inactive</span>
+                      <span className="text-sm text-muted-foreground">{t("inactive")}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -225,16 +224,16 @@ export default function BillingPage() {
                     ) : row.isActive ? (
                       row.renewsAt ? (
                         <span className="text-sm text-muted-foreground">
-                          Renews {row.renewsAt}
+                          {t("renews", { date: row.renewsAt })}
                         </span>
                       ) : (
                         <StatusChip tone="success" className="text-xs">
-                          Active
+                          {t("active")}
                         </StatusChip>
                       )
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{formatPrice(9)}/mo</span>
+                        <span className="text-sm text-muted-foreground">{t("perMonth", { price: formatPrice(9) })}</span>
                         {features.selfServiceUpgrade && (
                           <Button
                             variant="outline"
@@ -243,7 +242,7 @@ export default function BillingPage() {
                               setEnableSkill({ id: row.id, name: row.name })
                             }
                           >
-                            Enable
+                            {t("enable")}
                           </Button>
                         )}
                       </div>
@@ -263,7 +262,7 @@ export default function BillingPage() {
                             })
                           }
                         >
-                          Cancel
+                          {t("cancel")}
                         </Button>
                       )}
                     </TableCell>
@@ -277,11 +276,10 @@ export default function BillingPage() {
           {features.selfServiceUpgrade && selectedIds.size > 0 && (
             <div className="mt-4 flex items-center justify-between rounded-lg border p-3">
               <p className="text-sm text-muted-foreground">
-                {selectedIds.size} feature{selectedIds.size !== 1 ? "s" : ""} selected
-                &mdash; {formatPrice(selectedIds.size * 9)}/month
+                {t("selected", { count: selectedIds.size, price: formatPrice(selectedIds.size * 9) })}
               </p>
               <Button size="sm" onClick={handleEnableSelected}>
-                Enable Selected ({selectedIds.size})
+                {t("enableSelected", { count: selectedIds.size })}
               </Button>
             </div>
           )}
@@ -292,13 +290,10 @@ export default function BillingPage() {
       {activeCount > 0 && (
         <div className="text-sm text-muted-foreground">
           <p>
-            Your current monthly total:{" "}
+            {t("monthlyTotal")}{" "}
             <span className="font-semibold text-foreground">{formatPrice(monthlyTotal)}</span>
           </p>
-          <p>
-            Based on {activeCount} active add-on{activeCount !== 1 ? "s" : ""} at
-            {formatPrice(9)}/month each.
-          </p>
+          <p>{t("basedOn", { count: activeCount, price: formatPrice(9) })}</p>
         </div>
       )}
 
@@ -307,8 +302,10 @@ export default function BillingPage() {
         <Card className="border-destructive">
           <CardContent className="pt-6">
             <p className="text-sm">
-              Cancel <span className="font-semibold">{cancelSkill.name}</span>?
-              You&apos;ll lose access immediately and receive a prorated credit.
+              {t.rich("cancelConfirm", {
+                name: cancelSkill.name,
+                b: (chunks) => <span className="font-semibold">{chunks}</span>,
+              })}
             </p>
             <div className="mt-4 flex gap-2">
               <Button
@@ -317,7 +314,7 @@ export default function BillingPage() {
                 onClick={() => setCancelSkill(null)}
                 disabled={cancelFeature.isPending}
               >
-                Keep Feature
+                {t("keep")}
               </Button>
               <Button
                 variant="destructive"
@@ -333,7 +330,7 @@ export default function BillingPage() {
                 {cancelFeature.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-1" />
                 ) : null}
-                Confirm Cancellation
+                {t("confirmCancel")}
               </Button>
             </div>
           </CardContent>

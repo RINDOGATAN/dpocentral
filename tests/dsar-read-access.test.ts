@@ -9,8 +9,8 @@
  *
  * Every member keeps the aggregate figures (getStats). Each opening of a
  * request writes a "VIEWED" entry in DSARAuditLog (who, when), at most one per
- * person and request every five minutes. The organisation's JSON export
- * follows the same rule.
+ * person and request every five minutes. The organisation's JSON export is
+ * for owners and admins only.
  *
  * Prisma is module-mocked: we assert on the filters the router issues and on
  * what it writes. The mocked findFirst/findMany honour the assignee filter so
@@ -27,6 +27,7 @@ const mocks = vi.hoisted(() => ({
     dSARAuditLog: { findFirst: vi.fn(), create: vi.fn() },
     dSARIntakeForm: { findMany: vi.fn(), findFirst: vi.fn(async () => null) },
     auditLog: { create: vi.fn() },
+    businessUnitMember: { findMany: vi.fn(async () => []) },
     user: { update: vi.fn() },
   },
   token: { email: "user-a@test.example" } as { email?: string } | null,

@@ -57,6 +57,8 @@ const prisma = vi.hoisted(() => {
           if (name === "organization" && method === "updateMany") return { count: 0 };
           if (state.exportRows) {
             if (method === "findMany") return [];
+            // The export writes its audit entry (EXPORT_ORGANIZATION_DATA).
+            if (name === "auditLog" && method === "create") return {};
             if (method === "findUnique" || method === "findFirst") return state.organization;
             // An export writes its own audit entry, read-only firm or not.
             if (name === "auditLog" && method === "create") return {};

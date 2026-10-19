@@ -194,6 +194,11 @@ export const authLimiter = rateLimit({ limit: 30, windowMs: 60 * 1000 }, "AUTH")
 export const checkoutLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 }, "CHECKOUT");
 /** Public DSAR intake and withdrawal (unauthenticated). 5 per 10 minutes. */
 export const dsarPublicLimiter = rateLimit({ limit: 5, windowMs: 10 * 60 * 1000 }, "DSAR_PUBLIC");
+/**
+ * Other unauthenticated tRPC procedures: the rights-request status page, the
+ * public form's configuration and in-app feedback. 30 per minute.
+ */
+export const publicReadLimiter = rateLimit({ limit: 30, windowMs: 60 * 1000 }, "PUBLIC_READ");
 /** PDF export endpoints, keyed by user e-mail (renderToBuffer is expensive). 10 per minute. */
 export const exportLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 }, "EXPORT");
 /** Public health probe. 60 per minute; the route also caches its database probe. */

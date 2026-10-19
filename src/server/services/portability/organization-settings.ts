@@ -8,7 +8,7 @@
  * members), integration secrets such as a webhook URL, and any key added
  * later until it is listed here.
  */
-export const EXPORTED_SETTINGS_KEYS = ["programName", "quickstart", "applicability", "boardReport", "posture"] as const;
+export const EXPORTED_SETTINGS_KEYS = ["programName", "quickstart", "applicability", "boardReport", "posture", "templateCopy"] as const;
 
 export function exportedSettings(settings: unknown): Record<string, unknown> {
   if (!settings || typeof settings !== "object" || Array.isArray(settings)) return {};

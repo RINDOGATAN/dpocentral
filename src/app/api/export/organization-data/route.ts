@@ -16,10 +16,13 @@ import { exportedSettings } from "@/server/services/portability/organization-set
  * Every record the organisation holds, as one JSON file, incident
  * notifications and members' addresses included. Owners and admins who see
  * the whole organisation may download it (the programme export's rule,
- * src/server/services/portability/access.ts), and each download is written to
- * the audit trail. Rights requests follow the reading rule of the DSAR module
- * (src/lib/dsar-access.ts), so the owners and admins who may download the
- * file get all of them. It is a GET route, so it stays available when a hosted pilot
+ * src/server/services/portability/access.ts; a member limited to departments
+ * is refused, the file is not split by department). Each download is recorded
+ * in the audit trail (EXPORT_ORGANIZATION_DATA: who, when, section counts)
+ * before the file is sent. Only the listed organisation settings leave
+ * (exportedSettings): pending invitations and integration secrets stay
+ * behind. Rights requests follow the reading rule of the DSAR module
+ * (src/lib/dsar-access.ts). It is a GET route, so it stays available when a hosted pilot
  * organisation has become read-only: the pilot's promise is that everything
  * created there can be taken to the user's own instance.
  *
@@ -115,6 +118,31 @@ export async function GET(request: Request) {
     ]);
 
     const org = membership.organization;
+    const sections = {
+      members: members.length,
+      jurisdictions: jurisdictions.length,
+      dataAssets: dataAssets.length,
+      processingActivities: processingActivities.length,
+      dataFlows: dataFlows.length,
+      dataTransfers: dataTransfers.length,
+      ...(dsarOn ? { dsarIntakeForms: dsarIntakeForms?.length ?? 0, dsarRequests: dsarRequests?.length ?? 0 } : {}),
+      assessmentTemplates: assessmentTemplates.length,
+      assessments: assessments.length,
+      incidents: incidents.length,
+      vendors: vendors.length,
+      aiSystems: aiSystems.length,
+    };
+    await prisma.auditLog.create({
+      data: {
+        organizationId,
+        userId: membership.userId,
+        entityType: "Organization",
+        entityId: organizationId,
+        action: "EXPORT_ORGANIZATION_DATA",
+        changes: { format: "json", rightsRequests: dsarOn, sections },
+      },
+    });
+
     const body = {
       exportedAt: new Date().toISOString(),
       organization: {
@@ -138,17 +166,6 @@ export async function GET(request: Request) {
       vendors,
       aiSystems,
     };
-
-    await prisma.auditLog.create({
-      data: {
-        organizationId,
-        userId: membership.userId,
-        entityType: "Organization",
-        entityId: organizationId,
-        action: "EXPORT_ORGANIZATION_DATA",
-        changes: { format: "json", rightsRequests: dsarOn },
-      },
-    });
 
     const date = new Date().toISOString().split("T")[0];
     return new Response(JSON.stringify(body, null, 2), {

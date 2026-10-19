@@ -18,6 +18,10 @@ import { useOrganization } from "@/lib/organization-context";
 import { useDsarAccess } from "@/lib/use-dsar-access";
 import { DsarRestrictedNotice } from "@/components/privacy/dsar-restricted-notice";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
+import { DEFAULT_INTAKE_TEXT, localizedIntakeText, storedIntakeText } from "@/lib/dsar-default-intake";
+
+/** The internal name the seeded form carries (server/services/dsar/defaultIntakeForm.ts). */
+const SEEDED_FORM_NAME = "DSAR Intake Form";
 
 const dsarTypeValues = [
   "ACCESS",
@@ -36,19 +40,23 @@ export default function DSARSettingsPage() {
   const t = useTranslations("dsarSettings");
   const tTypes = useTranslations("dsarPublic.status.typeLabels");
   const tDesc = useTranslations("dsarSettings.typeDescriptions");
+  // The seeded public wording, in the member's language (the portal shows it
+  // in each visitor's language; see src/lib/dsar-default-intake.ts).
+  const tPublic = useTranslations("dsarPublic.form");
+  const defaults = localizedIntakeText(DEFAULT_INTAKE_TEXT, tPublic);
   const [isSaving, setIsSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const initializedRef = useRef(false);
 
   const [formData, setFormData] = useState({
-    name: "DSAR Intake Form",
+    name: t("defaultFormName"),
     slug: "request",
-    title: "Data Subject Request",
-    description: "Submit a request regarding your personal data",
+    title: defaults.title,
+    description: defaults.description ?? "",
     enabledTypes: ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"] as string[],
     customCss: "",
-    thankYouMessage: "Thank you for your request. We will process it within the legally required timeframe.",
+    thankYouMessage: defaults.thankYouMessage ?? "",
     privacyNoticeUrl: "",
     privacyContactEmail: "",
     retentionDays: 90,
@@ -95,14 +103,23 @@ export default function DSARSettingsPage() {
   useEffect(() => {
     if (existingForm && !initializedRef.current) {
       initializedRef.current = true;
+      // Untouched seeded wording is shown in the member's language.
+      const shown = localizedIntakeText(
+        {
+          title: existingForm.title || DEFAULT_INTAKE_TEXT.title,
+          description: existingForm.description || DEFAULT_INTAKE_TEXT.description,
+          thankYouMessage: existingForm.thankYouMessage || DEFAULT_INTAKE_TEXT.thankYouMessage,
+        },
+        tPublic
+      );
       setFormData({
-        name: existingForm.name || "DSAR Intake Form",
+        name: !existingForm.name || existingForm.name === SEEDED_FORM_NAME ? t("defaultFormName") : existingForm.name,
         slug: existingForm.slug || "request",
-        title: existingForm.title || "Data Subject Request",
-        description: existingForm.description || "Submit a request regarding your personal data",
+        title: shown.title,
+        description: shown.description ?? "",
         enabledTypes: (existingForm.enabledTypes as string[]) || ["ACCESS", "RECTIFICATION", "ERASURE", "PORTABILITY"],
         customCss: existingForm.customCss || "",
-        thankYouMessage: existingForm.thankYouMessage || "Thank you for your request. We will process it within the legally required timeframe.",
+        thankYouMessage: shown.thankYouMessage ?? "",
         privacyNoticeUrl: existingForm.privacyNoticeUrl || "",
         privacyContactEmail: existingForm.privacyContactEmail || "",
         retentionDays: existingForm.retentionDays ?? 90,
@@ -112,24 +129,26 @@ export default function DSARSettingsPage() {
         setPreservedFields(existingForm.fields as unknown[]);
       }
     }
-  }, [existingForm]);
+  }, [existingForm, tPublic, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!organization?.id) return;
 
     setIsSaving(true);
+    // The seeded wording, saved unchanged, is stored as the English original.
+    const words = storedIntakeText(formData, tPublic);
 
     saveSettings.mutate({
       organizationId: organization.id,
-      name: formData.name,
+      name: formData.name === t("defaultFormName") ? SEEDED_FORM_NAME : formData.name,
       slug: formData.slug,
-      title: formData.title,
-      description: formData.description,
+      title: words.title,
+      description: words.description,
       fields: preservedFields,
       enabledTypes: formData.enabledTypes as any[],
       customCss: formData.customCss || undefined,
-      thankYouMessage: formData.thankYouMessage || undefined,
+      thankYouMessage: words.thankYouMessage || undefined,
       privacyNoticeUrl: formData.privacyNoticeUrl || undefined,
       privacyContactEmail: formData.privacyContactEmail.trim(),
       retentionDays: Number.isFinite(formData.retentionDays) ? formData.retentionDays : 90,

@@ -13,6 +13,8 @@ import type { OrganizationRole } from "@prisma/client";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
+    // No department limit: the caller sees the whole organisation.
+    businessUnitMember: { findMany: vi.fn(async () => []) },
     processingActivity: { findFirst: vi.fn(), deleteMany: vi.fn() },
     dataTransfer: { findFirst: vi.fn(), deleteMany: vi.fn() },
     assessment: { findFirst: vi.fn(), deleteMany: vi.fn() },

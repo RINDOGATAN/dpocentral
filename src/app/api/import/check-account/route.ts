@@ -18,8 +18,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const userEmail = body.userEmail;
+  let body: { userEmail?: unknown } | null;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  const userEmail = body?.userEmail;
 
   if (!userEmail || typeof userEmail !== "string") {
     return NextResponse.json(

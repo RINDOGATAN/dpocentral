@@ -12,8 +12,16 @@ import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, ProcessingRol
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
 import { assertIdsInOrg } from "../../org-ownership";
 import {
+  businessUnitScopeWhere,
+  departmentForNewRecord,
   departmentScopeConditions,
+  elementScopeWhere,
+  flowScopeWhere,
   loadBusinessUnitScope,
+  mayUseDepartment,
+  scopeAnd,
+  transferScopeWhere,
+  type BusinessUnitScope,
 } from "@/server/services/business-units/scope";
 import type { Db } from "@/lib/prisma";
 import {
@@ -56,6 +64,35 @@ async function resolveBusinessUnitId(
     throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown department." });
   }
   return businessUnitId;
+}
+
+// Department scope (src/server/services/business-units/scope.ts): a member
+// limited to departments reads and writes only the systems, records, elements,
+// flows and transfers of those departments, on every procedure below, not only
+// on the lists.
+const OUTSIDE_DEPARTMENT = "That department is outside your access.";
+const CHOOSE_DEPARTMENT = "Choose one of your departments for this record.";
+const TRANSFER_NEEDS_ACTIVITY = "Link this transfer to a processing activity of your department.";
+
+function scopeOf(ctx: { prisma: Pick<Db, "businessUnitMember">; membership: { id: string } }): Promise<BusinessUnitScope> {
+  return loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+}
+
+/** The department a new record goes to, or a refusal (see departmentForNewRecord). */
+function newRecordDepartment(scope: BusinessUnitScope, requested: string | null | undefined) {
+  const r = departmentForNewRecord(scope, requested);
+  if (!r.ok) {
+    throw r.reason === "outside"
+      ? new TRPCError({ code: "FORBIDDEN", message: OUTSIDE_DEPARTMENT })
+      : new TRPCError({ code: "BAD_REQUEST", message: CHOOSE_DEPARTMENT });
+  }
+  return r.businessUnitId;
+}
+
+function assertMayUseDepartment(scope: BusinessUnitScope, businessUnitId: string | null | undefined) {
+  if (!mayUseDepartment(scope, businessUnitId)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: OUTSIDE_DEPARTMENT });
+  }
 }
 
 /**
@@ -206,10 +243,11 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const businessUnitId = await resolveBusinessUnitId(
         ctx.prisma,
         ctx.organization.id,
-        input.businessUnitId,
+        newRecordDepartment(scope, input.businessUnitId),
       );
       const asset = await ctx.prisma.dataAsset.create({
         data: {
@@ -261,13 +299,15 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, metadata, businessUnitId, ...restData } = input;
+      const scope = await scopeOf(ctx);
 
       if (businessUnitId !== undefined) {
+        assertMayUseDepartment(scope, businessUnitId);
         await resolveBusinessUnitId(ctx.prisma, ctx.organization.id, businessUnitId);
       }
 
       const asset = await ctx.prisma.dataAsset.updateMany({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...scopeAnd(scope) },
         data: {
           ...restData,
           ...(businessUnitId !== undefined && { businessUnitId }),
@@ -313,13 +353,14 @@ export const dataInventoryRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // The activities this system belongs to: their generated chains close
       // the gap it leaves (A -> B -> C becomes A -> C).
+      const scope = await scopeOf(ctx);
       const linkedActivities = await ctx.prisma.processingActivityAsset.findMany({
         where: { dataAssetId: input.id, processingActivity: { organizationId: ctx.organization.id } },
         select: { processingActivityId: true },
       });
 
       const asset = await ctx.prisma.dataAsset.deleteMany({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...scopeAnd(scope) },
       });
 
       if (asset.count === 0) {
@@ -358,8 +399,9 @@ export const dataInventoryRouter = createTRPCRouter({
   getElement: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const element = await ctx.prisma.dataElement.findFirst({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...elementScopeWhere(scope) },
         include: {
           dataAsset: {
             select: { id: true, name: true, type: true, vendor: true },
@@ -375,6 +417,7 @@ export const dataInventoryRouter = createTRPCRouter({
                       purpose: true,
                       legalBasis: true,
                       isActive: true,
+                      businessUnitId: true,
                     },
                   },
                 },
@@ -391,10 +434,15 @@ export const dataInventoryRouter = createTRPCRouter({
         });
       }
 
-      const linkedActivities = element.activityAssetLinks.map((link) => ({
-        linkId: link.id,
-        activity: link.processingActivityAsset.processingActivity,
-      }));
+      // Only the records the member may see (a limited member's system can be
+      // used by another department's record).
+      const linkedActivities = element.activityAssetLinks
+        .filter((link) => scope.all || mayUseDepartment(scope, link.processingActivityAsset.processingActivity.businessUnitId))
+        .map((link) => {
+          const { businessUnitId: _bu, ...activity } = link.processingActivityAsset.processingActivity;
+          void _bu;
+          return { linkId: link.id, activity };
+        });
 
       return {
         id: element.id,
@@ -430,9 +478,10 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Verify asset belongs to org
+      // Verify asset belongs to org (and to the member's departments)
+      const scope = await scopeOf(ctx);
       const asset = await ctx.prisma.dataAsset.findFirst({
-        where: { id: input.dataAssetId, organizationId: ctx.organization.id },
+        where: { id: input.dataAssetId, organizationId: ctx.organization.id, ...scopeAnd(scope) },
       });
 
       if (!asset) {
@@ -478,9 +527,10 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, ...data } = input;
+      const scope = await scopeOf(ctx);
 
       const element = await ctx.prisma.dataElement.updateMany({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...elementScopeWhere(scope) },
         data,
       });
 
@@ -501,8 +551,9 @@ export const dataInventoryRouter = createTRPCRouter({
   deleteElement: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const element = await ctx.prisma.dataElement.deleteMany({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...elementScopeWhere(scope) },
       });
 
       if (element.count === 0) {
@@ -641,19 +692,21 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { assetIds, organizationId: _orgId, businessUnitId, ...data } = input;
+      const scope = await scopeOf(ctx);
 
-      // Every linked asset must belong to the caller's organisation
+      // Every linked asset must belong to the caller's organisation (and to
+      // the member's departments)
       await assertIdsInOrg(
         ctx.prisma.dataAsset,
         assetIds,
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Data asset"
       );
 
       const resolvedBusinessUnitId = await resolveBusinessUnitId(
         ctx.prisma,
         ctx.organization.id,
-        businessUnitId,
+        newRecordDepartment(scope, businessUnitId),
       );
 
       const activity = await ctx.prisma.processingActivity.create({
@@ -718,13 +771,16 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, businessUnitId, ...data } = input;
+      const scope = await scopeOf(ctx);
 
       if (businessUnitId !== undefined) {
+        // A limited member may not move a record out of their departments.
+        assertMayUseDepartment(scope, businessUnitId);
         await resolveBusinessUnitId(ctx.prisma, ctx.organization.id, businessUnitId);
       }
 
       const activity = await ctx.prisma.processingActivity.updateMany({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...scopeAnd(scope) },
         data: {
           ...data,
           ...(businessUnitId !== undefined && { businessUnitId }),
@@ -776,8 +832,9 @@ export const dataInventoryRouter = createTRPCRouter({
   deleteActivity: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const activity = await ctx.prisma.processingActivity.findFirst({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...scopeAnd(scope) },
         select: { id: true, name: true },
       });
       if (!activity) {
@@ -814,9 +871,10 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Verify activity belongs to org
+      // Verify activity belongs to org (and to the member's departments)
+      const scope = await scopeOf(ctx);
       const activity = await ctx.prisma.processingActivity.findFirst({
-        where: { id: input.activityId, organizationId: ctx.organization.id },
+        where: { id: input.activityId, organizationId: ctx.organization.id, ...scopeAnd(scope) },
       });
 
       if (!activity) {
@@ -831,7 +889,7 @@ export const dataInventoryRouter = createTRPCRouter({
       await assertIdsInOrg(
         ctx.prisma.dataAsset,
         input.assets.map((a) => a.assetId),
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Data asset"
       );
       for (const { assetId, elementIds } of input.assets) {
@@ -843,9 +901,12 @@ export const dataInventoryRouter = createTRPCRouter({
         );
       }
 
-      // Remove existing links (cascade deletes element links)
+      // Remove existing links (cascade deletes element links). A limited
+      // member replaces only the links to systems they can see; links to
+      // other departments' systems stay.
+      const assetInScope = businessUnitScopeWhere(scope);
       await ctx.prisma.processingActivityAsset.deleteMany({
-        where: { processingActivityId: input.activityId },
+        where: { processingActivityId: input.activityId, ...(assetInScope ? { dataAsset: assetInScope } : {}) },
       });
 
       // Create asset links with optional element-level specificity
@@ -893,8 +954,9 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const asset = await ctx.prisma.dataAsset.findFirst({
-        where: { id: input.assetId, organizationId: ctx.organization.id },
+        where: { id: input.assetId, organizationId: ctx.organization.id, ...scopeAnd(scope) },
       });
 
       if (!asset) {
@@ -909,7 +971,7 @@ export const dataInventoryRouter = createTRPCRouter({
       await assertIdsInOrg(
         ctx.prisma.processingActivity,
         input.activities.map((a) => a.activityId),
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Processing activity"
       );
       await assertIdsInOrg(
@@ -920,14 +982,17 @@ export const dataInventoryRouter = createTRPCRouter({
       );
 
       // Activities this asset was linked to before: their chains change too.
+      // A limited member replaces only the links to records they can see.
+      const activityInScope = businessUnitScopeWhere(scope);
+      const linkScope = activityInScope ? { processingActivity: activityInScope } : {};
       const previous = await ctx.prisma.processingActivityAsset.findMany({
-        where: { dataAssetId: input.assetId },
+        where: { dataAssetId: input.assetId, ...linkScope },
         select: { processingActivityId: true },
       });
 
       // Remove existing links for this asset (cascade deletes element links)
       await ctx.prisma.processingActivityAsset.deleteMany({
-        where: { dataAssetId: input.assetId },
+        where: { dataAssetId: input.assetId, ...linkScope },
       });
 
       // Create activity links with optional element-level specificity
@@ -966,6 +1031,14 @@ export const dataInventoryRouter = createTRPCRouter({
   regenerateFlows: writerProcedure
     .input(z.object({ organizationId: z.string(), activityId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
+      const activity = await ctx.prisma.processingActivity.findFirst({
+        where: { id: input.activityId, organizationId: ctx.organization.id, ...scopeAnd(scope) },
+        select: { id: true },
+      });
+      if (!activity) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Processing activity not found" });
+      }
       const flowsCreated = await generateFlowsForActivity(
         ctx.prisma,
         ctx.organization.id,
@@ -978,8 +1051,9 @@ export const dataInventoryRouter = createTRPCRouter({
   regenerateAllFlows: writerProcedure
     .input(z.object({ organizationId: z.string() }))
     .mutation(async ({ ctx }) => {
+      const scope = await scopeOf(ctx);
       const activities = await ctx.prisma.processingActivity.findMany({
-        where: { organizationId: ctx.organization.id, isActive: true },
+        where: { organizationId: ctx.organization.id, isActive: true, ...scopeAnd(scope) },
         select: { id: true },
       });
       let flowsCreated = 0;
@@ -1001,8 +1075,9 @@ export const dataInventoryRouter = createTRPCRouter({
   listFlows: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
+      const scope = await scopeOf(ctx);
       return ctx.prisma.dataFlow.findMany({
-        where: { organizationId: ctx.organization.id },
+        where: { organizationId: ctx.organization.id, ...flowScopeWhere(scope) },
         include: {
           sourceAsset: true,
           destinationAsset: true,
@@ -1018,13 +1093,14 @@ export const dataInventoryRouter = createTRPCRouter({
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
       const organizationId = ctx.organization.id;
+      const scope = await scopeOf(ctx);
       const [assets, transfers, vendors] = await Promise.all([
         ctx.prisma.dataAsset.findMany({
-          where: { organizationId },
+          where: { organizationId, ...scopeAnd(scope) },
           select: { id: true, name: true, vendor: true, type: true },
         }),
         ctx.prisma.dataTransfer.findMany({
-          where: { organizationId, isActive: true },
+          where: { organizationId, isActive: true, ...transferScopeWhere(scope) },
           select: {
             id: true,
             name: true,
@@ -1066,10 +1142,12 @@ export const dataInventoryRouter = createTRPCRouter({
   getFlow: organizationProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const flow = await ctx.prisma.dataFlow.findFirst({
         where: {
           id: input.id,
           organizationId: ctx.organization.id,
+          ...flowScopeWhere(scope),
         },
         include: {
           sourceAsset: true,
@@ -1107,11 +1185,13 @@ export const dataInventoryRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Both ends of the flow must belong to the caller's organisation
+      // Both ends of the flow must belong to the caller's organisation (and
+      // to the member's departments)
+      const scope = await scopeOf(ctx);
       await assertIdsInOrg(
         ctx.prisma.dataAsset,
         [input.sourceAssetId, input.destinationAssetId],
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Data asset"
       );
 
@@ -1192,18 +1272,20 @@ export const dataInventoryRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, ...data } = input;
 
-      // A re-pointed end must belong to the caller's organisation
+      // A re-pointed end must belong to the caller's organisation (and to
+      // the member's departments)
+      const scope = await scopeOf(ctx);
       await assertIdsInOrg(
         ctx.prisma.dataAsset,
         [input.sourceAssetId, input.destinationAssetId],
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Data asset"
       );
 
       // A generated flow that a person edits becomes theirs: it is no
       // longer removed or redrawn when the activity's systems change.
       const current = await ctx.prisma.dataFlow.findFirst({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...flowScopeWhere(scope) },
         select: { metadata: true, sourceAssetId: true, destinationAssetId: true },
       });
       // A flow never starts and ends at the same system.
@@ -1215,7 +1297,7 @@ export const dataInventoryRouter = createTRPCRouter({
       const metadata = current ? takenOverMetadata(current.metadata) : undefined;
 
       const flow = await ctx.prisma.dataFlow.updateMany({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...flowScopeWhere(scope) },
         data: {
           ...data,
           ...(metadata !== undefined && metadata !== current?.metadata
@@ -1257,8 +1339,9 @@ export const dataInventoryRouter = createTRPCRouter({
   confirmFlow: writerProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const current = await ctx.prisma.dataFlow.findFirst({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...flowScopeWhere(scope) },
         select: { metadata: true },
       });
       if (!current) {
@@ -1287,8 +1370,9 @@ export const dataInventoryRouter = createTRPCRouter({
   deleteFlow: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const flow = await ctx.prisma.dataFlow.deleteMany({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...flowScopeWhere(scope) },
       });
 
       if (flow.count === 0) {
@@ -1319,8 +1403,9 @@ export const dataInventoryRouter = createTRPCRouter({
   listTransfers: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
+      const scope = await scopeOf(ctx);
       const transfers = await ctx.prisma.dataTransfer.findMany({
-        where: { organizationId: ctx.organization.id },
+        where: { organizationId: ctx.organization.id, ...transferScopeWhere(scope) },
         include: {
           processingActivity: true,
           jurisdiction: true,
@@ -1373,12 +1458,18 @@ export const dataInventoryRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // The linked activity and vendor must belong to the caller's
-      // organisation (jurisdictions are global reference rows, not
-      // organisation data)
+      // organisation, and the activity to the member's departments
+      // (jurisdictions are global reference rows, not organisation data). A
+      // limited member's transfer must name one of their records, or they
+      // could not see it afterwards.
+      const scope = await scopeOf(ctx);
+      if (!scope.all && !input.processingActivityId) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: TRANSFER_NEEDS_ACTIVITY });
+      }
       await assertIdsInOrg(
         ctx.prisma.processingActivity,
         [input.processingActivityId],
-        { organizationId: ctx.organization.id },
+        { organizationId: ctx.organization.id, ...scopeAnd(scope) },
         "Processing activity"
       );
       await assertIdsInOrg(
@@ -1465,8 +1556,9 @@ export const dataInventoryRouter = createTRPCRouter({
   getTransferStats: organizationProcedure
     .input(z.object({ organizationId: z.string() }))
     .query(async ({ ctx }) => {
+      const scope = await scopeOf(ctx);
       const transfers = await ctx.prisma.dataTransfer.findMany({
-        where: { organizationId: ctx.organization.id, isActive: true },
+        where: { organizationId: ctx.organization.id, isActive: true, ...transferScopeWhere(scope) },
         select: {
           id: true,
           destinationCountry: true,
@@ -1510,8 +1602,9 @@ export const dataInventoryRouter = createTRPCRouter({
   deleteTransfer: adminOrgProcedure
     .input(z.object({ organizationId: z.string(), id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const transfer = await ctx.prisma.dataTransfer.findFirst({
-        where: { id: input.id, organizationId: ctx.organization.id },
+        where: { id: input.id, organizationId: ctx.organization.id, ...transferScopeWhere(scope) },
         select: { id: true, name: true },
       });
       if (!transfer) {
@@ -1577,8 +1670,9 @@ export const dataInventoryRouter = createTRPCRouter({
           : {}),
       };
 
+      const scope = await scopeOf(ctx);
       const transfer = await ctx.prisma.dataTransfer.findFirst({
-        where: { id, organizationId: ctx.organization.id },
+        where: { id, organizationId: ctx.organization.id, ...transferScopeWhere(scope) },
       });
 
       if (!transfer) {
@@ -1615,8 +1709,9 @@ export const dataInventoryRouter = createTRPCRouter({
   getTransferComplianceChecklist: organizationProcedure
     .input(z.object({ organizationId: z.string(), transferId: z.string() }))
     .query(async ({ ctx, input }) => {
+      const scope = await scopeOf(ctx);
       const transfer = await ctx.prisma.dataTransfer.findFirst({
-        where: { id: input.transferId, organizationId: ctx.organization.id },
+        where: { id: input.transferId, organizationId: ctx.organization.id, ...transferScopeWhere(scope) },
         include: {
           processingActivity: true,
           jurisdiction: true,
@@ -1723,10 +1818,12 @@ export const dataInventoryRouter = createTRPCRouter({
         });
       }
 
+      const scope = await scopeOf(ctx);
       const activities = await ctx.prisma.processingActivity.findMany({
         where: {
           organizationId: ctx.organization.id,
           isActive: true,
+          ...scopeAnd(scope),
         },
         include: {
           assets: {

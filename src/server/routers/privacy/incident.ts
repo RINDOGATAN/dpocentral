@@ -14,7 +14,7 @@ import {
   DataCategory,
   DocumentType,
 } from "@prisma/client";
-import { addHours } from "date-fns";
+import type { Db } from "@/lib/prisma";
 import { requireAi, assertAiRateLimit, recordGeneration, postureLane } from "../../services/ai/posture";
 import { chatComplete } from "../../services/ai/llm-door";
 import {
@@ -23,13 +23,44 @@ import {
 } from "../../services/ai/prompts/breach-notification";
 import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { assertIdsInOrg, assertUsersAreMembers } from "../../org-ownership";
+import {
+  mergeNotificationFacts,
+  notificationDeadlineFor,
+  notificationRequiredFor,
+  recomputeNotification,
+  touchesNotificationFacts,
+  TIMELINE_DEADLINE_RECALCULATED,
+  TIMELINE_NO_LONGER_REQUIRED,
+  TIMELINE_NOW_REQUIRED,
+} from "../../services/incidents/notification-assessment";
 
 // Calculate notification deadline based on jurisdiction
-function calculateNotificationDeadline(
+const calculateNotificationDeadline = notificationDeadlineFor;
+
+type IncidentDb = Pick<Db, "organizationJurisdiction" | "incidentNotification">;
+
+/** One PENDING notification to the authority per jurisdiction of the organisation. */
+async function createPendingAuthorityNotifications(
+  prisma: IncidentDb,
+  organizationId: string,
+  incidentId: string,
   discoveredAt: Date,
-  breachNotificationHours: number
-): Date {
-  return addHours(discoveredAt, breachNotificationHours);
+): Promise<void> {
+  const orgJurisdictions = await prisma.organizationJurisdiction.findMany({
+    where: { organizationId },
+    include: { jurisdiction: true },
+  });
+  for (const oj of orgJurisdictions) {
+    await prisma.incidentNotification.create({
+      data: {
+        incidentId,
+        jurisdictionId: oj.jurisdictionId,
+        recipientType: "DPA",
+        status: NotificationStatus.PENDING,
+        deadline: calculateNotificationDeadline(discoveredAt, oj.jurisdiction.breachNotificationHours),
+      },
+    });
+  }
 }
 
 export const incidentRouter = createTRPCRouter({
@@ -165,14 +196,8 @@ export const incidentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Determine if notification is required based on severity and data types
-      const hasSpecialCategory = input.dataCategories.some((cat) =>
-        ["HEALTH", "BIOMETRIC", "GENETIC", "POLITICAL", "RELIGIOUS", "SEXUAL_ORIENTATION", "CRIMINAL"].includes(cat)
-      );
-      const notificationRequired =
-        input.severity === IncidentSeverity.HIGH ||
-        input.severity === IncidentSeverity.CRITICAL ||
-        hasSpecialCategory ||
-        (input.affectedRecords !== undefined && input.affectedRecords >= 500);
+      // (the same rule `update` applies when these facts change).
+      const notificationRequired = notificationRequiredFor(input);
 
       // Calculate notification deadline if jurisdiction specified
       let notificationDeadline: Date | undefined;
@@ -225,27 +250,7 @@ export const incidentRouter = createTRPCRouter({
 
       // Auto-create notification records for applicable jurisdictions
       if (notificationRequired) {
-        const orgJurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
-          where: { organizationId: ctx.organization.id },
-          include: { jurisdiction: true },
-        });
-
-        for (const oj of orgJurisdictions) {
-          const deadline = calculateNotificationDeadline(
-            input.discoveredAt,
-            oj.jurisdiction.breachNotificationHours
-          );
-
-          await ctx.prisma.incidentNotification.create({
-            data: {
-              incidentId: incident.id,
-              jurisdictionId: oj.jurisdictionId,
-              recipientType: "DPA",
-              status: NotificationStatus.PENDING,
-              deadline,
-            },
-          });
-        }
+        await createPendingAuthorityNotifications(ctx.prisma, ctx.organization.id, incident.id, input.discoveredAt);
       }
 
       await ctx.prisma.auditLog.create({
@@ -288,10 +293,48 @@ export const incidentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, organizationId, ...data } = input;
+      void organizationId;
+
+      const stored = await ctx.prisma.incident.findFirst({
+        where: { id, organizationId: ctx.organization.id },
+        select: {
+          severity: true,
+          dataCategories: true,
+          affectedRecords: true,
+          discoveredAt: true,
+          jurisdictionId: true,
+          notificationRequired: true,
+          notificationDeadline: true,
+          notifications: { select: { id: true, jurisdictionId: true, status: true, deadline: true } },
+        },
+      });
+      if (!stored) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Incident not found",
+        });
+      }
+
+      // GDPR Art. 33: the flag and the deadline follow the facts. Recompute
+      // them whenever this update changes severity, data categories, records
+      // affected, discovery time or jurisdiction.
+      const recompute = touchesNotificationFacts(data);
+      let derived: { notificationRequired: boolean; notificationDeadline: Date | null } | null = null;
+      let merged: ReturnType<typeof mergeNotificationFacts> | null = null;
+      if (recompute) {
+        merged = mergeNotificationFacts(stored, data);
+        const jurisdiction = merged.jurisdictionId
+          ? await ctx.prisma.jurisdiction.findUnique({
+              where: { id: merged.jurisdictionId },
+              select: { breachNotificationHours: true },
+            })
+          : null;
+        derived = recomputeNotification(merged, jurisdiction?.breachNotificationHours ?? null);
+      }
 
       const incident = await ctx.prisma.incident.updateMany({
         where: { id, organizationId: ctx.organization.id },
-        data,
+        data: derived ? { ...data, ...derived } : data,
       });
 
       if (incident.count === 0) {
@@ -301,6 +344,63 @@ export const incidentRouter = createTRPCRouter({
         });
       }
 
+      if (derived && merged) {
+        // Newly required and nothing recorded yet: the PENDING authority
+        // notifications `create` would have made.
+        if (derived.notificationRequired && stored.notifications.length === 0) {
+          await createPendingAuthorityNotifications(ctx.prisma, ctx.organization.id, id, merged.discoveredAt);
+        }
+        // A corrected discovery time moves the deadline of every notification
+        // still PENDING (one already drafted, sent or acknowledged keeps its own).
+        let deadlineMoved =
+          (stored.notificationDeadline?.getTime() ?? null) !== (derived.notificationDeadline?.getTime() ?? null);
+        if (merged.discoveredAt.getTime() !== stored.discoveredAt.getTime()) {
+          const pending = stored.notifications.filter((n) => n.status === NotificationStatus.PENDING);
+          if (pending.length > 0) {
+            const hours = new Map(
+              (
+                await ctx.prisma.jurisdiction.findMany({
+                  where: { id: { in: [...new Set(pending.map((n) => n.jurisdictionId))] } },
+                  select: { id: true, breachNotificationHours: true },
+                })
+              ).map((j) => [j.id, j.breachNotificationHours]),
+            );
+            for (const n of pending) {
+              const h = hours.get(n.jurisdictionId);
+              if (h === undefined) continue;
+              const deadline = notificationDeadlineFor(merged.discoveredAt, h);
+              if (deadline.getTime() === n.deadline.getTime()) continue;
+              await ctx.prisma.incidentNotification.updateMany({
+                where: { id: n.id, incidentId: id, status: NotificationStatus.PENDING },
+                data: { deadline },
+              });
+              deadlineMoved = true;
+            }
+          }
+        }
+        if (derived.notificationRequired !== stored.notificationRequired) {
+          await ctx.prisma.incidentTimelineEntry.create({
+            data: {
+              incidentId: id,
+              title: derived.notificationRequired ? TIMELINE_NOW_REQUIRED : TIMELINE_NO_LONGER_REQUIRED,
+              entryType: "STATUS_CHANGE",
+              createdById: ctx.session.user.id,
+              metadata: { notificationRequired: derived.notificationRequired },
+            },
+          });
+        } else if (deadlineMoved) {
+          await ctx.prisma.incidentTimelineEntry.create({
+            data: {
+              incidentId: id,
+              title: TIMELINE_DEADLINE_RECALCULATED,
+              entryType: "STATUS_CHANGE",
+              createdById: ctx.session.user.id,
+              metadata: { notificationDeadline: derived.notificationDeadline?.toISOString() ?? null },
+            },
+          });
+        }
+      }
+
       await ctx.prisma.auditLog.create({
         data: {
           organizationId: ctx.organization.id,
@@ -308,7 +408,9 @@ export const incidentRouter = createTRPCRouter({
           entityType: "Incident",
           entityId: id,
           action: "UPDATE",
-          changes: data,
+          changes: derived
+            ? { ...data, notificationRequired: derived.notificationRequired, notificationDeadline: derived.notificationDeadline }
+            : data,
         },
       });
 

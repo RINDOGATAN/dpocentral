@@ -15,7 +15,9 @@ const RIGHTS_REQUEST_EXPORT_ROLES = ["OWNER", "ADMIN"] as const;
  * Every rights-request (DSAR) record the organisation holds, as one JSON file:
  * the requests with their tasks, messages, reminders and module audit trail,
  * the public intake forms, and the general audit entries about requests.
- * Owners and admins only.
+ * Owners and admins only. Each download is recorded in the audit trail
+ * (EXPORT_RIGHTS_REQUESTS) before the file is sent: the file holds the
+ * requesters' personal data.
  *
  * Available whether or not the rights-request module is part of this plan
  * (NEXT_PUBLIC_DSAR_ENABLED, src/config/features.ts): when the module is
@@ -74,7 +76,13 @@ export async function GET(request: Request) {
         entityType: "Organization",
         entityId: organizationId,
         action: "EXPORT_RIGHTS_REQUESTS",
-        changes: { format: "json", count: dsarRequests.length },
+        changes: {
+          format: "json",
+          count: dsarRequests.length,
+          dsarRequests: dsarRequests.length,
+          dsarIntakeForms: dsarIntakeForms.length,
+          auditEntries: auditEntries.length,
+        },
       },
     });
 

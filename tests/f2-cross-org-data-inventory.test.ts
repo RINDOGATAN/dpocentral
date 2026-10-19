@@ -15,6 +15,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mocks = vi.hoisted(() => ({
   prisma: {
     organizationMember: { findUnique: vi.fn() },
+    // No department limit: the caller sees the whole organisation.
+    businessUnitMember: { findMany: vi.fn(async () => []) },
     dataAsset: { count: vi.fn(), findFirst: vi.fn() },
     dataElement: { count: vi.fn() },
     processingActivity: { count: vi.fn(), create: vi.fn(), findFirst: vi.fn(), findMany: vi.fn() },

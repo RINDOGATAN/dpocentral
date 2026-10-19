@@ -6,7 +6,7 @@
  *
  * "Take your programme with you": the whole programme as a ZIP in the open
  * programme format (src/server/services/portability), streamed as it is made.
- * Owners and admins only. Rights requests (personal data of the people who
+ * Owners and admins who see the whole organisation only. Rights requests (personal data of the people who
  * made them) are added only when both flags are sent: the separate box in
  * Settings that says so. The export is recorded in the audit trail
  * (EXPORT_PROGRAMME) before the first byte is sent.
@@ -29,6 +29,7 @@ import { nameForFile, resolveExportLocale, today } from "@/server/services/expor
 import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import { evaluateRegister, registerFor } from "@/config/document-register";
 import { logger } from "@/lib/logger";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
 
 export const maxDuration = 60;
 
@@ -63,6 +64,11 @@ export async function GET(request: Request) {
       include: { organization: true },
     });
     if (!membership || !canExportProgramme(membership.role)) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+    // The whole programme: not for an admin limited to departments.
+    const scope = await loadBusinessUnitScope(prisma, membership.id);
+    if (!scope.all) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 

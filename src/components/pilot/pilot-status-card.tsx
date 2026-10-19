@@ -26,12 +26,13 @@ const ALL_EXPORTS = [
 type ExportLink = { key: string; path: string; format: string | null };
 
 /**
- * The exports offered. Without the rights-request module
+ * The exports offered. The full organisation file is offered to owners and
+ * admins only. Without the rights-request module
  * (NEXT_PUBLIC_DSAR_ENABLED=false) its report goes, and owners and admins get
  * the download of the rights-request records the organisation already holds
  * instead (GET /api/export/rights-requests).
  */
-function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
+export function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
   // The full JSON file is for owners and admins (GET /api/export/organization-data).
   const offered: ExportLink[] = ALL_EXPORTS.filter((e) => isAdmin || e.key !== "all");
   if (dsarOn) return offered;

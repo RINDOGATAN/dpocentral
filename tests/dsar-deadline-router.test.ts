@@ -252,9 +252,39 @@ describe("extendDeadline", () => {
   });
 
   it("explicit extensionDays still adds days to the current due date", async () => {
+    primary("GDPR", 30);
     existing(d(2026, 1, 1), d(2026, 2, 1));
     await caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 10, reason: "x" });
     expect(mocks.prisma.dSARRequest.update.mock.calls[0][0].data.dueDate).toEqual(d(2026, 2, 11));
-    expect(mocks.prisma.organizationJurisdiction.findMany).not.toHaveBeenCalled();
+  });
+
+  it("explicit extensionDays cannot go past the law's ceiling", async () => {
+    primary("GDPR", 30);
+    // Received 31 Jan, due 28 Feb: the GDPR ceiling is 30 Apr.
+    existing(d(2026, 1, 31), d(2026, 2, 28));
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 90, reason: "x" })
+    ).rejects.toThrow(/longest period/);
+    expect(mocks.prisma.dSARRequest.update).not.toHaveBeenCalled();
+  });
+
+  it("explicit extensionDays is refused on a closed or already extended request", async () => {
+    primary("GDPR", 30);
+    mocks.prisma.dSARRequest.findFirst.mockResolvedValue({
+      id: "dsar-1",
+      organizationId: "org-a",
+      status: "COMPLETED",
+      receivedAt: d(2026, 1, 31),
+      dueDate: d(2026, 2, 28),
+      extendedDueDate: null,
+    });
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 5, reason: "x" })
+    ).rejects.toThrow(/closed/);
+    existing(d(2026, 1, 31), d(2026, 4, 30));
+    await expect(
+      caller().extendDeadline({ organizationId: "org-a", id: "dsar-1", extensionDays: 5, reason: "x" })
+    ).rejects.toThrow(/longest period/);
+    expect(mocks.prisma.dSARRequest.update).not.toHaveBeenCalled();
   });
 });

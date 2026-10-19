@@ -1334,7 +1334,10 @@
           "notificationCreated": "{recipient} notification created ({jurisdiction})",
           "notificationStatus": "{recipient} notification {status}",
           "markedInError": "Marked as recorded in error",
-          "unmarkedInError": "No longer marked as recorded in error"
+          "unmarkedInError": "No longer marked as recorded in error",
+          "notificationNowRequired": "Notification to the authority now marked as required",
+          "notificationNoLongerRequired": "Notification to the authority no longer marked as required",
+          "notificationDeadlineRecalculated": "Notification deadline recalculated"
         }
       },
       "tasks": {
@@ -2798,6 +2801,32 @@
       "applying": "Applying...",
       "applyAll": "Apply All"
     },
+    "billing": {
+      "title": "Billing",
+      "subtitle": "Manage your add-on features",
+      "addOnsTitle": "Add-on Features",
+      "selectAll": "Select all inactive features",
+      "selectOne": "Select {name}",
+      "columns": {
+        "feature": "Feature",
+        "status": "Status",
+        "details": "Details"
+      },
+      "comingSoon": "Coming Soon",
+      "active": "Active",
+      "inactive": "Inactive",
+      "renews": "Renews {date}",
+      "perMonth": "{price}/mo",
+      "enable": "Enable",
+      "cancel": "Cancel",
+      "selected": "{count, plural, one {# feature selected} other {# features selected}}: {price}/month",
+      "enableSelected": "Enable Selected ({count})",
+      "monthlyTotal": "Your current monthly total:",
+      "basedOn": "{count, plural, one {Based on # active add-on at {price}/month each.} other {Based on # active add-ons at {price}/month each.}}",
+      "cancelConfirm": "Cancel <b>{name}</b>? You will lose access immediately and receive a prorated credit.",
+      "keep": "Keep Feature",
+      "confirmCancel": "Confirm Cancellation"
+    },
     "dataMap": {
       "title": "Data map",
       "subtitle": "Your systems, the data flows between them, the vendors and the transfers outside the EEA with their safeguard and status.",
@@ -3361,7 +3390,10 @@
       "SENT": "Sent",
       "NOT_REQUIRED": "Not required",
       "OVERDUE": "Overdue",
-      "ACKNOWLEDGED": "Acknowledged"
+      "ACKNOWLEDGED": "Acknowledged",
+      "DRAFTED": "Drafted",
+      "FOLLOW_UP_REQUIRED": "Follow-up required",
+      "CLOSED": "Closed"
     },
     "reviewType": {
       "SECURITY": "Security",
@@ -3668,7 +3700,8 @@
       "save": "Save Settings",
       "errorPrefix": "Error: {message}",
       "saved": "Settings saved"
-    }
+    },
+    "defaultFormName": "DSAR Intake Form"
   },
   "dsarPublic": {
     "form": {
@@ -5057,19 +5090,31 @@
         "rootCause": "Root Cause",
         "lessonsLearned": "Lessons Learned",
         "dpaNotifications": "DPA Notifications",
-        "timeline": "Timeline"
+        "timeline": "Timeline",
+        "notifications": "Notifications",
+        "resolutionNotes": "Resolution notes"
       },
       "notificationColumns": {
         "jurisdiction": "Jurisdiction",
         "status": "Status",
-        "date": "Date"
+        "date": "Date",
+        "recipient": "Recipient",
+        "deadline": "Deadline",
+        "reference": "Reference",
+        "recipientType": {
+          "DPA": "Supervisory authority",
+          "DATA_SUBJECT": "Affected data subjects",
+          "LAW_ENFORCEMENT": "Law enforcement",
+          "INTERNAL": "Internal stakeholders"
+        }
       },
       "timelineColumns": {
         "timestamp": "Timestamp",
         "event": "Event",
         "by": "By"
       },
-      "timelineSystem": "System"
+      "timelineSystem": "System",
+      "overdue": "Notification deadline passed and the authority has not been notified"
     },
     "vendorRegister": {
       "eyebrow": "Vendor Register",
@@ -10384,6 +10429,11 @@
       "onlyCompletedCancelledOrRejectedRequestsCanBe": "Only completed, canceled, or rejected requests can be redacted",
       "onlyOwnersAndAdminsCanManageDepartments": "Only owners and admins can manage departments.",
       "onlyOwnersCanChangeMemberRoles": "Only owners can change member roles",
+      "onlyOwnersCanInviteAnOwner": "Only owners can invite an owner",
+      "onlyOwnersCanRemoveAnOwner": "Only owners can remove an owner",
+      "thatDepartmentIsOutsideYourAccess": "That department is outside your access.",
+      "chooseOneOfYourDepartments": "Choose one of your departments for this record.",
+      "linkTransferToYourActivity": "Link this transfer to a processing activity of your department.",
       "organizationIdIsRequired": "Organization ID is required",
       "organizationNotFound": "Organization not found",
       "organizationOrIntakeFormNotFound": "Organization or intake form not found",
@@ -10442,7 +10492,16 @@
       "dsarIntakeOrgBusy": "This form is receiving an unusual number of requests today. Please try again tomorrow, or contact the organization directly.",
       "dsarModuleInactiveCreate": "The rights-request module is not active for this organization. It is available as an add-on; the requests already held stay available.",
       "dsarFormClosed": "This form is not taking requests at the moment. Please contact the organization directly.",
-      "dsarUnfilledPlaceholders": "Complete every placeholder in braces in the message before sending it."
+      "dsarUnfilledPlaceholders": "Complete every placeholder in braces in the message before sending it.",
+      "onlyADraftAssessmentCanBeDeleted": "Only a draft assessment can be deleted",
+      "invalidPeriod": "Invalid period",
+      "hostedServiceQuestionOnly": "This question belongs to the hosted service only.",
+      "safeguardsRequestAlreadyReceived": "We already have your request and will write to you.",
+      "sayWhyRecordedInError": "Say why the incident was recorded in error",
+      "sendingTimeOnlyWithSent": "A sending time is recorded only with the status SENT.",
+      "sendingTimeNotInFuture": "The sending time cannot be in the future.",
+      "invitationNotFound": "Invitation not found",
+      "webAddressOnly": "Use a web address that starts with https:// or http://."
     },
     "pattern": {
       "freeSlotsPortfolio": "You can import up to 5 vendors for free from your Vendor.Watch portfolio. You have {remaining, plural, one {# free slot} other {# free slots}} remaining. Subscribe to the Vendor Catalog add-on to import more.",
