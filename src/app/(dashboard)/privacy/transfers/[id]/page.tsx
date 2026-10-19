@@ -67,6 +67,7 @@ export default function TransferDetailPage() {
   const tStatus = useTranslations("pages.transfers.status_option");
   const tToasts = useTranslations("toasts");
   const tInv = useTranslations("pages.dataInventory");
+  const tTransfers = useTranslations("pages.transfers.adequacy");
   const router = useRouter();
   const { canWrite } = useOrgRole();
   const locale = useLocale();
@@ -116,8 +117,9 @@ export default function TransferDetailPage() {
     );
   }
 
-  const { transfer, isAdequateCountry, adequacyDecision, checklist, supplementaryMeasures } =
+  const { transfer, isAdequateCountry, adequacyDecision, adequacyCoverage, checklist, supplementaryMeasures } =
     checklistData;
+  const tAdq = tTransfers;
 
   const supplementaryMeasuresObj = (transfer.supplementaryMeasures as Record<string, boolean> | null) ?? {};
   const enabledMeasures = Object.keys(supplementaryMeasuresObj).filter(
@@ -159,8 +161,12 @@ export default function TransferDetailPage() {
             <h1 className="text-xl sm:text-2xl font-semibold truncate">{transfer.name}</h1>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
               <Badge variant="outline">
-                → {transfer.destinationCountry}
-                {transfer.destinationOrg ? ` · ${transfer.destinationOrg}` : ""}
+                → {regionName(transfer.destinationCountry, locale) ?? transfer.destinationCountry} ({transfer.destinationCountry})
+                {transfer.vendorName
+                  ? ` · ${transfer.vendorName}`
+                  : transfer.destinationOrg
+                    ? ` · ${transfer.destinationOrg}`
+                    : ""}
               </Badge>
               <Badge variant="outline">{tMech(transfer.mechanism as any)}</Badge>
               <Badge variant="outline" className={statusColors[status] || ""}>
@@ -169,11 +175,19 @@ export default function TransferDetailPage() {
                   ? tStatus(status as typeof STATUS_KEYS[number])
                   : status}
               </Badge>
-              {isAdequateCountry && (
-                <Badge variant="outline" className="border-primary text-primary">
+              {adequacyCoverage === "EEA" ? (
+                <Badge variant="outline" className="border-primary text-primary" data-testid="coverage-badge">
+                  {t("withinEea")}
+                </Badge>
+              ) : adequacyCoverage === "FULL" || adequacyCoverage === "PARTIAL_CONFIRMED" ? (
+                <Badge variant="outline" className="border-primary text-primary" data-testid="coverage-badge">
                   {t("adequateCountry")}
                 </Badge>
-              )}
+              ) : adequacyCoverage === "PARTIAL_UNCONFIRMED" ? (
+                <Badge variant="outline" className={`border-transparent ${toneChip("warning")}`} data-testid="coverage-badge">
+                  {t("partialUnconfirmedBadge")}
+                </Badge>
+              ) : null}
               {transfer.tiaCompleted ? (
                 <Badge variant="outline" className="border-primary text-primary">
                   <ClipboardCheck className="w-3 h-3 mr-1" />
@@ -185,6 +199,23 @@ export default function TransferDetailPage() {
                 </Badge>
               )}
             </div>
+            <p className="mt-1.5 text-xs text-muted-foreground" data-testid="transfer-links">
+              {transfer.processingActivityId ? (
+                <Link href={`/privacy/data-inventory/activities/${transfer.processingActivityId}`} className="hover:underline">
+                  {t("activityLink", { name: transfer.processingActivityName ?? "" })}
+                </Link>
+              ) : (
+                t("noActivity")
+              )}
+              {" · "}
+              {transfer.vendorId ? (
+                <Link href={`/privacy/vendors/${transfer.vendorId}`} className="hover:underline">
+                  {t("vendorLink", { name: transfer.vendorName ?? "" })}
+                </Link>
+              ) : (
+                t("noVendor")
+              )}
+            </p>
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap justify-end gap-2">
@@ -228,6 +259,29 @@ export default function TransferDetailPage() {
         </div>
       </div>
 
+      {/* Partial adequacy not recorded as covering this recipient */}
+      {adequacyCoverage === "PARTIAL_UNCONFIRMED" && adequacyDecision && (
+        <Card className={`${toneBorder("warning")} ${toneTint("warning")}`} data-testid="partial-adequacy-notice">
+          <CardContent className="py-4 flex items-start gap-3">
+            <AlertTriangle className={`w-5 h-5 shrink-0 mt-0.5 ${toneMark("warning")}`} />
+            <div className="text-sm">
+              <p className="font-medium">
+                {tAdq("partialTitle", {
+                  country: regionName(adequacyDecision.countryCode, locale) ?? adequacyDecision.country,
+                })}
+              </p>
+              <p className="text-muted-foreground">
+                {tAdq(`partialBody.${adequacyDecision.partialScope ?? "DPF"}` as "partialBody.DPF")}{" "}
+                {t("partialUnconfirmedBody")}
+              </p>
+              <Link href={`/privacy/transfers/${id}/edit`} className="mt-1 inline-block underline">
+                {t("recordScope")}
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Adequacy notice */}
       {isAdequateCountry && adequacyDecision && (
         <Card className="border-primary/40 bg-primary/5">
@@ -240,7 +294,15 @@ export default function TransferDetailPage() {
                   country: regionName(adequacyDecision.countryCode, locale) ?? adequacyDecision.country,
                   date: formatDateIn(new Date(adequacyDecision.decisionDate), locale),
                 })}
-                {adequacyDecision.isPartial && t("adequacyPartial")}
+                {adequacyDecision.isPartial && (
+                  <span className="block mt-1" data-testid="scope-recorded">
+                    {tAdq(`scopeRecorded.${adequacyDecision.partialScope ?? "DPF"}` as "scopeRecorded.DPF")}
+                    {transfer.adequacyScopeCheckedAt
+                      ? ` ${t("scopeCheckedOn", { date: formatDateIn(new Date(transfer.adequacyScopeCheckedAt), locale) })}`
+                      : ""}
+                    {transfer.adequacyScopeReference ? ` ${t("scopeReference", { reference: transfer.adequacyScopeReference })}` : ""}
+                  </span>
+                )}
                 {adequacyDecision.notes && (
                   <span className="block mt-1 italic">
                     {t.has(`adequacyNotes.${adequacyDecision.countryCode}`)

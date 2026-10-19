@@ -1,4 +1,26 @@
 {
+  "assessmentWorkflow": {
+    "errors": {
+      "approvedLocked": "Esta evaluación está aprobada y ya no puede modificarse. Un propietario, administrador o responsable de privacidad puede abrir una nueva revisión.",
+      "frozenPendingApproval": "La evaluación está pendiente de aprobación, así que sus respuestas, riesgos y medidas no pueden cambiar ahora.",
+      "reviewersOnly": "La evaluación está en revisión: ahora solo puede modificarla un propietario, administrador o responsable de privacidad.",
+      "submitStatus": "Solo puede enviarse una evaluación en borrador, en curso o rechazada.",
+      "requestApprovalStatus": "Solo puede solicitarse la aprobación cuando la evaluación se ha enviado a revisión.",
+      "approverMember": "Quien aprueba debe ser miembro de la organización.",
+      "approverRole": "Quien aprueba debe ser propietario, administrador o responsable de privacidad de la organización.",
+      "approvalDecided": "Esta aprobación ya se ha decidido y una decisión no puede cambiarse. Abre una nueva revisión.",
+      "notAwaitingApproval": "La evaluación no está pendiente de aprobación.",
+      "art36HighResidual": "El riesgo residual es alto o crítico, pero las respuestas indican que no hace falta la consulta previa. El artículo 36.1 del RGPD obliga a consultar a la autoridad de control antes de iniciar el tratamiento: corrige antes el riesgo residual o la respuesta sobre la consulta.",
+      "art36Undecided": "Todavía está en estudio si hace falta la consulta previa a la autoridad de control. Decídelo antes (artículo 36 del RGPD).",
+      "stillToAnswer": "Falta por responder ({count}): {list}",
+      "andMore": "y {count} más",
+      "singleUserOnly": "Enviar y aprobar solo está disponible en una organización con un único miembro. Usa el envío habitual.",
+      "riskNoMeasure": "Un riesgo solo puede cerrarse cuando al menos una medida lo aborda.",
+      "riskNoResidual": "Gradúa la probabilidad y la gravedad residuales antes de cerrar el riesgo.",
+      "riskNotInAssessment": "El riesgo al que se refiere esta medida no forma parte de esta evaluación.",
+      "reopenStatus": "Solo puede reabrirse como nueva revisión una evaluación aprobada."
+    }
+  },
   "clientTemplate": {
     "titleCurrent": "Empezar desde otro cliente",
     "titleNew": "Crear un cliente nuevo a partir de este",
@@ -249,7 +271,7 @@
         "CUSTOM": "Evaluación personalizada",
         "CUSTOM_short": "Personalizada",
         "CUSTOM_desc": "Plantilla de evaluación flexible para revisiones y evaluaciones de privacidad personalizadas.",
-        "DPIA": "Evaluación de impacto relativa a la protección de datos",
+        "DPIA": "Evaluación de Impacto relativa a la Protección de Datos",
         "DPIA_short": "EIPD",
         "DPIA_desc": "Evaluación exhaustiva para actividades de tratamiento de alto riesgo conforme al artículo 35 del RGPD.",
         "PIA": "Evaluación de impacto en la privacidad",
@@ -681,11 +703,12 @@
         "adequacyBody": "{country} cuenta con una decisión de adecuación de la UE (adoptada el {date}).",
         "adequacyPartial": " ⚠ Parcial: consulta las notas.",
         "adequacyNotes": {
-          "CA": "Solo cubre a los destinatarios sujetos a la Personal Information Protection and Electronic Documents Act (PIPEDA). No cubre a todas las organizaciones canadienses.",
+          "CA": "Solo cubre a las organizaciones comerciales sujetas a la Personal Information Protection and Electronic Documents Act (PIPEDA). No cubre a todas las organizaciones canadienses.",
           "JP": "Se basa en la Act on the Protection of Personal Information (APPI), con normas complementarias para los datos procedentes de la UE.",
-          "KR": "Se basa en la Personal Information Protection Act (PIPA), en su versión modificada de 2020.",
+          "KR": "Se basa en la Personal Information Protection Act (PIPA). La Comisión la ha confirmado en su primera revisión, de julio de 2026.",
           "GB": "Decisión de adecuación adoptada tras el Brexit con arreglo al art. 45 del RGPD. Renovada por la Comisión Europea el 19 de diciembre de 2025; vigente hasta el 27 de diciembre de 2031.",
-          "US": "Marco de Privacidad de Datos UE-EE. UU. (DPF). Solo cubre a las organizaciones estadounidenses que se autocertifican en el DPF. Comprueba la certificación del destinatario en dataprivacyframework.gov."
+          "US": "Marco de Privacidad de Datos UE-EE. UU. (DPF). Solo cubre a las organizaciones estadounidenses que se autocertifican en el DPF. Comprueba la certificación del destinatario en dataprivacyframework.gov.",
+          "BR": "Se basa en la Ley General de Protección de Datos (LGPD). Cubre los sectores público y privado; excluye las transferencias realizadas solo con fines de seguridad pública, defensa nacional, seguridad del Estado o investigación y enjuiciamiento penal."
         },
         "complianceStatus": "Estado de cumplimiento",
         "suggestedFromData": "Sugerido a partir de los datos actuales: <b>{status}</b>",
@@ -704,7 +727,17 @@
         "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
         "tiaPendingTitle": "Evaluación de impacto de las transferencias (EIT) pendiente",
         "tiaPendingBody": "Schrems II exige evaluar las leyes de vigilancia del país de destino y la eficacia de tus salvaguardas.",
-        "startTia": "Iniciar EIT"
+        "startTia": "Iniciar EIT",
+        "withinEea": "Dentro del EEE (no es una transferencia restringida)",
+        "partialUnconfirmedBadge": "Adecuación parcial: sin confirmar",
+        "partialUnconfirmedBody": "Este registro no indica que el destinatario esté dentro de ese ámbito, así que la decisión no cubre la transferencia: se aplica la garantía registrada abajo (con CCT, hace falta una evaluación de impacto de la transferencia).",
+        "recordScope": "Registrar la situación del destinatario",
+        "scopeCheckedOn": "Comprobado el {date}.",
+        "scopeReference": "Referencia: {reference}",
+        "activityLink": "Actividad de tratamiento: {name}",
+        "noActivity": "Sin actividad de tratamiento vinculada",
+        "vendorLink": "Proveedor: {name}",
+        "noVendor": "Sin proveedor vinculado"
       },
       "edit": {
         "title": "Editar cumplimiento de la transferencia",
@@ -723,13 +756,42 @@
         "safeguardsPlaceholder": "p. ej., CCT de la UE de 2021, módulo 2 + cifrado en reposo + EIPD",
         "saving": "Guardando...",
         "save": "Guardar cambios",
-        "errorPrefix": "Error: {message}"
+        "errorPrefix": "Error: {message}",
+        "links": "Actividad y proveedor",
+        "linksSubtitle": "La actividad de tratamiento a la que pertenece la transferencia (así aparece en el Registro de Actividades de Tratamiento) y el proveedor que recibe los datos.",
+        "adequacyScope": "Decisión de adecuación parcial"
       },
       "status_option": {
         "COMPLIANT": "Conforme",
         "NEEDS_REVIEW": "Requiere revisión",
         "NON_COMPLIANT": "No conforme",
         "PENDING": "Pendiente"
+      },
+      "adequacy": {
+        "withinEea": "{country} está en el EEE: no es una transferencia internacional restringida y no necesita garantías del capítulo V.",
+        "none": "{country} no tiene decisión de adecuación de la UE: elige una garantía (por ejemplo, CCT) y completa una evaluación de impacto de la transferencia.",
+        "full": "{country} tiene una decisión de adecuación de la UE: esta transferencia no necesita más garantías.",
+        "partialTitle": "{country}: la decisión de adecuación solo cubre a algunos destinatarios",
+        "partialBody": {
+          "DPF": "La decisión UE-EE. UU. solo cubre a los destinatarios certificados en el Marco de Privacidad de Datos UE-EE. UU. (comprueba la lista en dataprivacyframework.gov).",
+          "PIPEDA": "La decisión sobre Canadá solo cubre a las organizaciones comerciales sujetas a la PIPEDA (Personal Information Protection and Electronic Documents Act)."
+        },
+        "scopeQuestion": {
+          "DPF": "El destinatario está certificado en el Marco de Privacidad de Datos UE-EE. UU. (inscripción activa comprobada en la lista del DPF)",
+          "PIPEDA": "El destinatario es una organización comercial sujeta a la PIPEDA"
+        },
+        "scopeReference": {
+          "DPF": "Inscripción en la lista del DPF (enlace o referencia)",
+          "PIPEDA": "Fundamento de la sujeción a la PIPEDA (opcional)"
+        },
+        "scopeReferencePlaceholder": {
+          "DPF": "p. ej., https://www.dataprivacyframework.gov/list",
+          "PIPEDA": "p. ej., empresa privada de ámbito federal"
+        },
+        "scopeRecorded": {
+          "DPF": "Destinatario registrado como certificado en el Marco de Privacidad de Datos UE-EE. UU.",
+          "PIPEDA": "Destinatario registrado como organización comercial sujeta a la PIPEDA."
+        }
       }
     },
     "vendorQuestionnaires": {
@@ -840,7 +902,73 @@
       "submit": "Crear solicitud"
     },
     "assessmentDetail": {
+      "reviewDue": {
+        "title": "Revisión pendiente",
+        "intro": "La actividad de tratamiento ha cambiado desde que se aprobó esta evaluación. Revísala y abre una nueva revisión si el riesgo ha cambiado (art. 35.11 del RGPD).",
+        "reasons": {
+          "SPECIAL_CATEGORY": "Nuevas categorías especiales de datos",
+          "RECIPIENT": "Nuevo destinatario",
+          "SYSTEM": "Nuevo sistema",
+          "TRANSFER": "Nueva transferencia internacional",
+          "PURPOSE": "Ha cambiado la finalidad",
+          "LEGAL_BASIS": "Ha cambiado la base jurídica",
+          "AUTOMATED_DECISION": "Se han añadido decisiones automatizadas",
+          "ACTIVITY_CHANGED": "Actividad modificada después de la aprobación"
+        }
+      },
+      "frozenNotice": {
+        "PENDING_APPROVAL": "Pendiente de aprobación: las respuestas quedan bloqueadas hasta que se tome una decisión.",
+        "PENDING_REVIEW": "En revisión: ahora solo un propietario, administrador o responsable de privacidad puede cambiar las respuestas.",
+        "APPROVED": "Aprobada: esta versión es la que consta. Abre una nueva revisión para modificarla."
+      },
+      "reopen": {
+        "button": "Abrir una nueva revisión",
+        "done": "Se ha abierto una nueva revisión. La versión aprobada se conserva en el historial."
+      },
+      "riskRegister": {
+        "intro": "Una fila por cada riesgo para los derechos y libertades de los interesados (art. 35.7.c) del RGPD). Gradúa la probabilidad y la gravedad de cada riesgo antes de las medidas y después de ellas, y vincula las medidas que lo abordan.",
+        "inherentMax": "Riesgo inherente más alto",
+        "residualMax": "Riesgo residual más alto",
+        "unsupported": "Al menos un riesgo baja dos o más niveles sin ninguna medida implantada. Revisa las graduaciones residuales o el estado de sus medidas.",
+        "empty": "Todavía no se ha introducido ningún riesgo.",
+        "add": "Añadir un riesgo",
+        "edit": "Editar",
+        "delete": "Eliminar riesgo",
+        "save": "Guardar riesgo",
+        "cancel": "Cancelar",
+        "close": "Cerrar riesgo",
+        "reopen": "Reabrir riesgo",
+        "closeNeedsMeasure": "Vincula al menos una medida antes de cerrar este riesgo.",
+        "closeNeedsResidual": "Gradúa la probabilidad y la gravedad residuales antes de cerrar este riesgo.",
+        "rightsAffected": "Derechos afectados",
+        "rightsPlaceholder": "Por ejemplo: intimidad, no discriminación, libertad de expresión",
+        "titleLabel": "Riesgo",
+        "titlePlaceholder": "Por ejemplo: acceso no autorizado a los perfiles de clientes",
+        "descriptionLabel": "Origen y descripción",
+        "beforeMeasures": "Antes de las medidas (inherente)",
+        "afterMeasures": "Después de las medidas (residual)",
+        "likelihood": "Probabilidad",
+        "severity": "Gravedad",
+        "choose": "Elige",
+        "notGraded": "Sin graduar",
+        "inherentPair": "Inherente: {level} (P{likelihood} × G{severity})",
+        "residualPair": "Residual: {level} (P{likelihood} × G{severity})",
+        "residualNotGraded": "Residual: sin graduar",
+        "measuresTitle": "Medidas que lo abordan ({count})",
+        "noMeasures": "Todavía no hay ninguna medida vinculada a este riesgo.",
+        "measurePlaceholder": "Nueva medida para este riesgo",
+        "addMeasure": "Añadir medida",
+        "grades": {
+          "1": "Despreciable",
+          "2": "Limitada",
+          "3": "Significativa",
+          "4": "Máxima"
+        }
+      },
       "completeness": {
+        "priorConsultationRequired": "Es necesaria la consulta previa a la autoridad de control antes de iniciar el tratamiento (artículo 36.1 del RGPD).",
+        "art36Undecided": "Todavía está en estudio si hace falta la consulta previa a la autoridad de control. Decídelo antes (artículo 36 del RGPD).",
+        "art36HighResidual": "El riesgo residual es alto o crítico, pero las respuestas indican que no hace falta la consulta previa. El artículo 36.1 del RGPD obliga a consultar a la autoridad de control antes de iniciar el tratamiento: corrige antes el riesgo residual o la respuesta sobre la consulta.",
         "title": "Qué queda pendiente",
         "allDone": "Se ha respondido a todo lo que necesita esta evaluación.",
         "questionsTitle": "Preguntas por responder ({count})",
@@ -868,14 +996,17 @@
         "answered": "{answered} de {total} preguntas respondidas"
       },
       "stats": {
+        "notAssessed": "Sin evaluar",
+        "inherentResidual": "Inherente {inherent} · residual {residual}",
         "sections": "Secciones",
         "questions": "Preguntas",
         "mitigations": "Mitigaciones",
         "riskScore": "Puntuación de riesgo",
-        "riskScoreScale": "0–25 Bajo · 26–50 Medio · 51–75 Alto · 76–100 Crítico",
+        "riskScoreScale": "0 a 25 Bajo · 26 a 50 Medio · 51 a 75 Alto · 76 a 100 Crítico",
         "noScore": "-"
       },
       "tabs": {
+        "risksWithCount": "Riesgos ({count})",
         "questions": "Preguntas",
         "mitigationsWithCount": "Mitigaciones ({count})",
         "approvalsWithCount": "Aprobaciones ({count})",
@@ -927,6 +1058,12 @@
         "empty": "No se han solicitado aprobaciones"
       },
       "history": {
+        "notes": {
+          "SUBMITTED": "Enviada a revisión",
+          "APPROVED": "Aprobada",
+          "AUTO_APPROVED": "Enviada y aprobada (organización con un único miembro)",
+          "REOPENED": "Reabierta como nueva revisión"
+        },
         "version": "Versión {n}",
         "empty": "Sin historial de versiones"
       },
@@ -1776,7 +1913,7 @@
         "createdListActivities": "Actividades de tratamiento",
         "createdListFlows": "Flujos de datos",
         "createdListAlso": "Además",
-        "createdAssessments": "{count, plural, one {# evaluación de impacto (DPIA) en borrador} other {# evaluaciones de impacto (DPIA) en borrador}}",
+        "createdAssessments": "{count, plural, one {# Evaluación de Impacto relativa a la Protección de Datos (EIPD) en borrador} other {# Evaluaciones de Impacto relativas a la Protección de Datos (EIPD) en borrador}}",
         "createdTransfers": "{count, plural, one {# transferencia internacional} other {# transferencias internacionales}}",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
         "createdBody": "Hemos redactado tus primeros registros. Cuentan en tu programa cuando los revisas y confirmas.",
@@ -1941,7 +2078,7 @@
         "reqRopa": "Mantén un registro de actividades de tratamiento (RAT)",
         "reqRopaDesc": "Documenta todas las actividades de tratamiento de tu organización, incluyendo finalidad, base jurídica y categorías de datos.",
         "reqDpia": "Realiza una EIPD para los tratamientos de alto riesgo",
-        "reqDpiaDesc": "Documenta una evaluación de impacto relativa a la protección de datos (EIPD) para todo tratamiento que pueda entrañar un alto riesgo para los interesados.",
+        "reqDpiaDesc": "Documenta una Evaluación de Impacto relativa a la Protección de Datos (EIPD) para todo tratamiento que pueda entrañar un alto riesgo para los interesados.",
         "reqDsarPortal": "Ofrece un canal público para el ejercicio de derechos",
         "reqDsarPortalDesc": "Configura un formulario de recepción para que los interesados puedan presentar solicitudes de acceso, rectificación, supresión, etc.",
         "reqIncidentResponse": "Establece un proceso de respuesta a brechas",
@@ -2205,7 +2342,7 @@
         "useTemplate": "Usar plantilla",
         "lia": "Evaluación del interés legítimo",
         "custom": "Evaluación personalizada",
-        "dpia": "Evaluación de impacto relativa a la protección de datos"
+        "dpia": "Evaluación de Impacto relativa a la Protección de Datos"
       }
     },
     "settings": {
@@ -2512,7 +2649,7 @@
         "nameLabel": "Nombre de la transferencia",
         "namePlaceholder": "p. ej., Datos de clientes al proveedor de analítica de EE. UU.",
         "countryLabel": "País de destino",
-        "countryPlaceholder": "p. ej., US, IN, GB",
+        "countryPlaceholder": "Elige un país",
         "orgLabel": "Organización receptora",
         "orgPlaceholder": "p. ej., Stripe Inc.",
         "mechanismLabel": "Mecanismo de transferencia",
@@ -2521,7 +2658,13 @@
         "safeguardsPlaceholder": "p. ej., CCT UE (2021) + medidas complementarias",
         "descriptionLabel": "Descripción",
         "create": "Crear",
-        "countryHint": "Código de país de dos letras (ISO 3166), por ejemplo IN para India."
+        "countryHint": "Se guarda con su código ISO 3166 de dos letras (por ejemplo, IN para India).",
+        "vendorLabel": "Proveedor",
+        "vendorPlaceholder": "Elige un proveedor",
+        "noneOption": "Ninguno",
+        "activityLabel": "Actividad de tratamiento",
+        "activityPlaceholder": "Elige una actividad",
+        "activityHint": "Vinculada a una actividad, la transferencia aparece en su entrada del RAT (art. 30.1.e)."
       },
       "legalBasis": {
         "CONSENT": "Consentimiento",
@@ -2636,6 +2779,11 @@
       "revise": "Revisar respuestas",
       "applying": "Aplicando...",
       "applyAll": "Aplicar todas"
+    },
+    "dataMap": {
+      "title": "Mapa de datos",
+      "subtitle": "Tus sistemas, los flujos de datos entre ellos, los proveedores y las transferencias fuera del EEE con su garantía y su estado.",
+      "transfers": "Transferencias"
     }
   },
   "confirms": {
@@ -2732,16 +2880,19 @@
   "dataFlow": {
     "filters": {
       "all": "Todos",
-      "special": "Cat. especial",
-      "personal": "Personales",
-      "general": "Generales",
+      "special": "Cat. especiales",
+      "personal": "Mayor riesgo",
+      "general": "Otros personales",
       "autoGen": "Por confirmar",
       "showAutoGenerated": "Mostrar flujos por confirmar",
       "hideAutoGenerated": "Ocultar flujos por confirmar",
       "categories": "Categorías",
       "clearCategories": "Borrar categorías",
       "clearAll": "Borrar todos los filtros",
-      "flowCount": "{shown} / {total} flujos"
+      "flowCount": "{shown} / {total} flujos",
+      "unclassified": "Sin categoría",
+      "activity": "Actividad",
+      "allActivities": "Todas las actividades"
     },
     "node": {
       "production": "PROD",
@@ -2750,7 +2901,17 @@
       "outbound": "sal.",
       "location": "Ubicación",
       "outsideEea": "Fuera del EEE: {countries}",
-      "outsideEeaTitle": "{count, plural, one {Abrir el registro de la transferencia} other {Abrir los # registros de transferencias}}"
+      "outsideEeaTitle": "{count, plural, one {Abrir el registro de la transferencia} other {Abrir los # registros de transferencias}}",
+      "transferLine": "{country}: {mechanism} ({status})",
+      "noMechanism": "Sin garantía registrada",
+      "outsideEeaStatus": "Fuera del EEE: {countries} · {status}",
+      "unrecorded": "Sin registro de transferencia: {countries}",
+      "unrecordedTitle": "El proveedor opera o almacena datos en estos países fuera del EEE y ningún registro de transferencia los cubre. Abre Transferencias para registrarla.",
+      "moreCategories": "{count, plural, one {# categoría más} other {# categorías más}}",
+      "noFlows": "Aún no hay flujos registrados",
+      "vendor": "Proveedor",
+      "outsideEeaCountry": "{count, plural, one {# transferencia fuera del EEE} other {# transferencias fuera del EEE}}",
+      "suggestedStatus": "{status} (sugerido)"
     },
     "sheet": {
       "createTitle": "Crear flujo de datos",
@@ -2768,13 +2929,13 @@
       "categories": "Categorías de datos",
       "categoriesSelected": "{count} seleccionadas",
       "frequency": "Frecuencia",
-      "frequencyPlaceholder": "Con qué frecuencia se transfieren los datos",
+      "frequencyPlaceholder": "Con qué frecuencia circulan los datos",
       "volume": "Volumen de datos",
       "volumePlaceholder": "p. ej., ~10.000 registros/día",
       "encryption": "Método de cifrado",
       "encryptionPlaceholder": "p. ej., TLS 1.3, AES-256",
       "cancel": "Cancelar",
-      "automated": "Transferencia automatizada",
+      "automated": "Flujo automatizado",
       "saving": "Guardando…",
       "creating": "Creando…",
       "saveChanges": "Guardar cambios",
@@ -2787,7 +2948,8 @@
       "noFlowsTitle": "Todavía no hay flujos de datos definidos",
       "noFlowsBody": "Crea flujos para visualizar cómo se mueven los datos entre sistemas",
       "noAssetFlowsTitle": "No hay flujos de datos conectados a este sistema",
-      "noAssetFlowsBody": "Crea un flujo para conectar este sistema con otros sistemas"
+      "noAssetFlowsBody": "Crea un flujo para conectar este sistema con otros sistemas",
+      "noFlowsHint": "Se muestran tus sistemas. Añade un flujo entre dos de ellos, o vincula sistemas a una actividad de tratamiento para obtener flujos propuestos que confirmar."
     },
     "actions": {
       "addAsset": "Añadir sistema",
@@ -2816,12 +2978,25 @@
       "generated": "Propuesto a partir de los sistemas vinculados a una actividad de tratamiento. Es un borrador, que no aparece en los informes PDF, hasta que lo confirmes o lo edites.",
         "generatedConfirmed": "Creado a partir de los sistemas vinculados a una actividad de tratamiento, y confirmado.",
         "confirm": "Confirmar flujo",
-        "confirmed": "Flujo confirmado"
+        "confirmed": "Flujo confirmado",
+        "draftBadge": "Por confirmar",
+        "transfersTitle": "Transferencias fuera del EEE desde el destino"
     },
     "legend": {
       "title": "Leyenda",
       "inbound": "flujos de entrada",
-      "outbound": "flujos de salida"
+      "outbound": "flujos de salida",
+      "lineSpecial": "categorías especiales (arts. 9 y 10)",
+      "lineHigherRisk": "datos personales de mayor riesgo",
+      "lineOther": "otros datos personales",
+      "lineUnclassified": "sin categoría registrada",
+      "dashed": "flujo por confirmar (propuesto a partir de una actividad)",
+      "thickness": "línea más gruesa: más frecuente",
+      "stripe": "Tipo de sistema",
+      "transfers": "Transferencias",
+      "transferLine": "transferencia a un país fuera del EEE (garantía y estado en la etiqueta)",
+      "outsideEeaShort": "Fuera del EEE",
+      "unrecorded": "país del proveedor sin registro de transferencia"
     },
     "abbr": {
       "IDENTIFIERS": "ID",
@@ -2841,7 +3016,25 @@
       "OTHER": "OTR"
     },
     "edge": {
-      "fallback": "Flujo"
+      "fallback": "Flujo",
+      "open": "Abrir el flujo {name}"
+    },
+    "summary": {
+      "counts": "{systems, plural, one {# sistema} other {# sistemas}} ({isolated} sin flujos) · {flows, plural, one {# flujo} other {# flujos}} · {transfers, plural, one {# transferencia} other {# transferencias}} fuera del EEE a {countries, plural, one {# país} other {# países}} · {vendors, plural, one {# proveedor} other {# proveedores}} sin sistema"
+    },
+    "view": {
+      "label": "Vista",
+      "map": "Mapa",
+      "list": "Lista",
+      "canvasLabel": "Mapa de datos con {systems} sistemas y {flows} flujos. Usa el tabulador para moverte entre sistemas y flujos, e Intro para abrir uno. La vista de lista muestra los mismos registros."
+    },
+    "list": {
+      "flowsTitle": "{count, plural, one {# flujo} other {# flujos}}",
+      "systemsTitle": "{count, plural, one {# sistema} other {# sistemas}}",
+      "transfersTitle": "{count, plural, one {# transferencia fuera del EEE} other {# transferencias fuera del EEE}}",
+      "vendorsTitle": "{count, plural, one {# proveedor sin sistema} other {# proveedores sin sistema}}",
+      "to": "a",
+      "flowCounts": "{inbound} de entrada, {outbound} de salida"
     }
   },
   "metadata": {
@@ -2866,6 +3059,18 @@
     }
   },
   "enums": {
+    "assessmentRiskStatus": {
+      "OPEN": "Abierto",
+      "CLOSED": "Cerrado"
+    },
+    "mitigationStatus": {
+      "IDENTIFIED": "Identificada",
+      "PLANNED": "Planificada",
+      "IN_PROGRESS": "En curso",
+      "IMPLEMENTED": "Implementada",
+      "VERIFIED": "Verificada",
+      "NOT_REQUIRED": "No requerida"
+    },
     "vendorCategory": {
       "CLOUD_SERVICES": "Servicios en la nube",
       "DATA_PROCESSING": "Tratamiento de datos",
@@ -3092,6 +3297,7 @@
       "VIEWER": "Lector"
     },
     "auditAction": {
+      "REOPEN": "Reabierta como nueva revisión",
       "CREATE": "Creado",
       "UPDATE": "Actualizado",
       "DELETE": "Eliminado",
@@ -3192,7 +3398,7 @@
     "perMonth": "/mes",
     "names": {
       "vendor-catalog": "Catálogo de proveedores",
-      "dpia": "Evaluación de impacto relativa a la protección de datos",
+      "dpia": "Evaluación de Impacto relativa a la Protección de Datos",
       "pia": "Evaluación de impacto en la privacidad",
       "tia": "Evaluación de impacto de las transferencias",
       "vendor": "Evaluación de riesgo del proveedor",
@@ -3582,7 +3788,7 @@
     "pendingReview": "Pendiente de revisión",
     "approved": "Aprobada",
     "types": {
-      "dpia": "Evaluación de impacto relativa a la protección de datos",
+      "dpia": "Evaluación de Impacto relativa a la Protección de Datos",
       "pia": "Evaluación de impacto en la privacidad",
       "tia": "Evaluación de impacto de las transferencias",
       "lia": "Evaluación del interés legítimo",
@@ -4233,6 +4439,56 @@
       }
     },
     "assessmentReport": {
+      "signOff": {
+        "templateVersion": "Versión de la plantilla",
+        "approvedVersion": "Versión aprobada",
+        "preparedBy": "Elaborada por",
+        "dpoAdvice": "Asesoramiento del delegado de protección de datos (art. 35.2 del RGPD)",
+        "consultation": "Consulta previa (art. 36 del RGPD)",
+        "consultationRecord": "Consulta: fecha y resultado",
+        "review": "Revisión (art. 35.11 del RGPD)",
+        "decision": "Decisión",
+        "decidedOn": "Fecha de la decisión",
+        "signatures": "Firmas",
+        "forController": "Por el responsable del tratamiento",
+        "dpo": "Delegado de protección de datos",
+        "nameAndPosition": "Nombre y cargo",
+        "signature": "Firma",
+        "date": "Fecha"
+      },
+      "grades": {
+        "1": "Despreciable",
+        "2": "Limitada",
+        "3": "Significativa",
+        "4": "Máxima"
+      },
+      "registerColumns": {
+        "risk": "Riesgo",
+        "rights": "Derechos afectados",
+        "inherent": "Inherente",
+        "measures": "Medidas",
+        "residual": "Residual",
+        "status": "Estado"
+      },
+      "notRecorded": "Sin registrar",
+      "signOffTitle": "Conclusión y firma",
+      "matrixSeverity": "Gravedad",
+      "matrixLikelihood": "Probabilidad",
+      "matrixIntro": "Cada celda indica cuántos riesgos se sitúan en ella antes de las medidas y, tras la barra, después de ellas.",
+      "matrixTitle": "Matriz de riesgos",
+      "registerUnsupported": "Riesgo residual reducido en dos o más niveles sin ninguna medida implantada: {risks}.",
+      "registerPair": "{level} (P{likelihood} × G{severity})",
+      "registerNotGraded": "Sin graduar",
+      "registerEmpty": "No se ha introducido ningún riesgo en el registro de riesgos.",
+      "registerIntro": "Una fila por cada riesgo para los derechos y libertades de los interesados, graduado en probabilidad (P) y gravedad (G) antes de las medidas (inherente) y después de ellas (residual). Escala: 1 despreciable, 2 limitada, 3 significativa, 4 máxima.",
+      "registerTitle": "Registro de riesgos",
+      "conformanceRuleNotMet": "Respondido, no se cumple",
+      "conformanceArt36Undecided": "Todavía está en estudio si hace falta la consulta previa (art. 36 del RGPD).",
+      "conformanceArt36HighResidual": "El riesgo residual es alto o crítico, pero las respuestas indican que no hace falta la consulta previa: el art. 36.1 del RGPD la exige.",
+      "conformancePriorConsultation": "Es necesaria la consulta previa a la autoridad de control antes de iniciar el tratamiento (art. 36.1 del RGPD).",
+      "approvedLaterRequirements": "Añadido a la plantilla después de esta aprobación, pendiente de responder en una nueva revisión:",
+      "approvedIntro": "Este documento recoge la evaluación tal como se aprobó.",
+      "approvedTitle": "Aprobada el {date}",
       "draftMark": "Borrador",
       "draftTitle": "Este documento es un borrador",
       "draftIntro": "Los elementos siguientes siguen pendientes, por lo que todas las páginas de este documento se marcan como borrador. Respóndelos en la aplicación y vuelve a exportar para obtener una versión definitiva.",
@@ -4258,6 +4514,7 @@
       "coverConfidential": "CONFIDENCIAL: este documento contiene información sensible sobre prácticas de protección de datos. Su distribución debe limitarse al personal autorizado y, previa solicitud, a las autoridades de control.",
       "executiveSummary": "Resumen ejecutivo",
       "stats": {
+        "notAssessed": "Sin evaluar",
         "riskLevel": "Nivel de riesgo",
         "completion": "Completitud",
         "questionsAnswered": "Preguntas respondidas",
@@ -4286,6 +4543,8 @@
       "noteLabel": "Nota:",
       "riskAssessmentSummary": "Resumen de evaluación de riesgos",
       "stats2": {
+        "residualRisk": "Riesgo residual (tras las medidas)",
+        "inherentRisk": "Riesgo inherente (antes de las medidas)",
         "overallRiskLevel": "Nivel de riesgo general",
         "riskScore": "Puntuación de riesgo",
         "scoredQuestions": "Preguntas puntuadas"
@@ -4325,14 +4584,19 @@
       },
       "approvalLevel": "Nivel {n}",
       "assessmentTypes": {
-        "DPIA": "Evaluación de impacto relativa a la protección de datos",
+        "DPIA": "Evaluación de Impacto relativa a la Protección de Datos",
         "PIA": "Evaluación de impacto en la privacidad",
-        "TIA": "Evaluación de impacto de las transferencias",
+        "TIA": "Evaluación de impacto de la transferencia",
         "LIA": "Evaluación del interés legítimo",
         "VENDOR": "Evaluación de riesgos de proveedores",
         "CUSTOM": "Evaluación personalizada"
       },
       "articleRefs": {
+        "CUSTOM": "",
+        "PIA": "",
+        "VENDOR": "RGPD, artículo 28",
+        "TIA": "RGPD, capítulo V (artículos 44 a 49)",
+        "LIA": "RGPD, artículo 6.1.f)",
         "DPIA": "RGPD, artículo 35.7"
       }
     },
@@ -4444,7 +4708,7 @@
         "completed": "Completada:"
       },
       "assessmentTypes": {
-        "DPIA": "Evaluación de impacto relativa a la protección de datos",
+        "DPIA": "Evaluación de Impacto relativa a la Protección de Datos",
         "PIA": "Evaluación de impacto en la privacidad",
         "TIA": "Evaluación de impacto de las transferencias",
         "LIA": "Evaluación del interés legítimo",
@@ -4554,6 +4818,10 @@
         "sectoral": "Sectorial",
         "ai_governance": "Gobernanza de la IA",
         "emerging": "Emergente"
+      },
+      "adequacyPartial": {
+        "DPF": "Parcial (solo destinatarios certificados en el DPF)",
+        "PIPEDA": "Parcial (solo organizaciones sujetas a la PIPEDA)"
       }
     },
     "dsarPerformance": {
@@ -5250,7 +5518,7 @@
         "descs": {
           "LIA": "Evalúa las pruebas de ponderación del interés legítimo",
           "CUSTOM": "Crea tu propia evaluación desde cero",
-          "DPIA": "Evaluación de impacto relativa a la protección de datos del artículo 35 del RGPD",
+          "DPIA": "Evaluación de Impacto relativa a la Protección de Datos del artículo 35 del RGPD",
           "PIA": "Análisis más amplio del impacto en la privacidad",
           "TIA": "Análisis del impacto de las transferencias (Schrems II)",
           "VENDOR": "Evaluación de riesgo de proveedores externos"
@@ -6062,7 +6330,8 @@
           "Switzerland": "Suiza",
           "UK": "Reino Unido",
           "Uruguay": "Uruguay",
-          "USA": "EE. UU. (Marco de Privacidad de Datos UE-EE. UU.)"
+          "USA": "EE. UU. (solo destinatarios certificados, Marco de Privacidad de Datos)",
+          "Brazil": "Brasil"
         }
       },
       "supplementaryMeasures": {
@@ -6512,7 +6781,7 @@
       "viewAddons": "Ver complementos",
       "runYourOwn": "Ver los planes",
       "dpia": {
-        "title": "EIPD: evaluación de impacto relativa a la protección de datos",
+        "title": "EIPD: Evaluación de Impacto relativa a la Protección de Datos",
         "description": "Exigida por el artículo 35 del RGPD cuando sea probable que el tratamiento entrañe un alto riesgo para las personas.",
         "badge": "Cumplimiento del artículo 35 del RGPD",
         "whenTitle": "¿Cuándo se exige una EIPD?",
@@ -7221,7 +7490,7 @@
             "desc": "Plantilla flexible para una revisión de privacidad que no cubre ninguno de los demás tipos"
           },
           "DPIA": {
-            "name": "Evaluación de impacto relativa a la protección de datos (EIPD)",
+            "name": "Evaluación de Impacto relativa a la Protección de Datos (EIPD)",
             "desc": "Obligatoria según el artículo 35 del RGPD para los tratamientos de alto riesgo"
           },
           "TIA": {
@@ -7283,7 +7552,7 @@
         "steps": {
           "start": {
             "title": "Empieza una EIPD desde Evaluaciones",
-            "description": "En el menú, abre la fase 4, Evalúa el riesgo, y elige Evaluaciones. Elige la plantilla Evaluación de impacto relativa a la protección de datos, o Nueva evaluación y el tipo EIPD. En tu propia instancia, un candado junto a la EIPD indica que su licencia no está instalada."
+            "description": "En el menú, abre la fase 4, Evalúa el riesgo, y elige Evaluaciones. Elige la plantilla Evaluación de Impacto relativa a la Protección de Datos, o Nueva evaluación y el tipo EIPD. En tu propia instancia, un candado junto a la EIPD indica que su licencia no está instalada."
           },
           "create": {
             "title": "Ponle nombre y créala",
@@ -7928,6 +8197,10 @@
         }
       },
       "template": {
+        "system-lia-template": {
+          "name": "Evaluación del interés legítimo",
+          "description": "Documenta y pondera el interés legítimo frente a los derechos de los interesados (artículo 6.1.f) del RGPD)."
+        },
         "system-lia-template-v2": {
           "name": "Evaluación del interés legítimo",
           "description": "La prueba en tres partes del interés legítimo del artículo 6.1.f) del RGPD (finalidad, necesidad y ponderación), con respuestas estructuradas que una autoridad de control puede leer."
@@ -8035,6 +8308,10 @@
         }
       },
       "template": {
+        "system-custom-template": {
+          "name": "Evaluación personalizada",
+          "description": "Una plantilla de evaluación flexible para revisiones y evaluaciones de privacidad a medida."
+        },
         "system-custom-template-v2": {
           "name": "Evaluación personalizada",
           "description": "Una evaluación flexible para revisiones de privacidad personalizadas, con una respuesta de riesgo estructurada y espacio para una justificación escrita."
@@ -8423,6 +8700,10 @@
         }
       },
       "template": {
+        "system-tia-template": {
+          "name": "Evaluación de impacto de la transferencia (EIT)",
+          "description": "Evalúa los riesgos de transferir datos personales a un tercer país y determina si se necesitan medidas complementarias para garantizar un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II)."
+        },
         "system-tia-template-v2": {
           "name": "Evaluación de impacto de las transferencias (EIT)",
           "description": "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas."
@@ -8432,7 +8713,7 @@
     "dpia": {
       "template": {
         "system-dpia-template": {
-          "name": "Evaluación de impacto relativa a la protección de datos (genérica)",
+          "name": "Evaluación de Impacto relativa a la Protección de Datos (genérica)",
           "description": "Una EIPD que sigue el marco que elijas al principio: las normas europeas, las normas californianas de evaluación de riesgos o ambas."
         },
         "system-dpia-health-adtech-template": {
@@ -8612,9 +8893,17 @@
             "Todavía no"
           ]
         },
+        "q1_7": {
+          "text": "El interés legítimo perseguido",
+          "helpText": "Indica el interés, de quién es (tuyo o de un tercero) y por qué el tratamiento es necesario para él. Fuente: Reglamento (UE) 2016/679, artículo 35.7.a)."
+        },
         "q4_3": {
           "text": "La opinión de los interesados o de sus representantes, o el motivo por el que no se ha recabado",
           "helpText": "Anota qué se ha preguntado, quién ha respondido y qué ha resultado de ello. Si no procede recabar esa opinión, anota por qué. Fuente: Reglamento (UE) 2016/679, artículo 35.9."
+        },
+        "q7_5": {
+          "text": "Consulta previa a la autoridad de control: fecha de la solicitud y resultado o estado en que se encuentra",
+          "helpText": "El tratamiento no puede empezar hasta que la autoridad haya respondido o haya transcurrido el plazo del artículo 36.2. Anota la fecha de envío de la consulta, la autoridad y su asesoramiento por escrito cuando lo recibas. Fuente: Reglamento (UE) 2016/679, artículo 36.1 y 36.2."
         },
         "q7_4": {
           "text": "Cuándo se revisará esta evaluación y qué cambio del riesgo adelanta la revisión",
@@ -9044,7 +9333,7 @@
         },
         "q5_6": {
           "text": "Describe los riesgos identificados para los interesados, con la probabilidad y la gravedad de cada uno",
-          "helpText": "Para cada riesgo: describe el origen, los derechos afectados, la probabilidad (Remota / Posible / Probable) y la gravedad (Mínima / Significativa / Grave / Crítica). Usa el formato: Riesgo N. Título: descripción. Probabilidad: X. Gravedad: Y."
+          "helpText": "Para cada riesgo: describe el origen y los derechos afectados, y gradúa su probabilidad y su gravedad en los mismos cuatro niveles (Despreciable / Limitada / Significativa / Máxima). Después añade cada riesgo al registro de riesgos, donde se gradúa antes y después de las medidas."
         },
         "q6_1": {
           "text": "Medidas técnicas implantadas o previstas",
@@ -9599,7 +9888,8 @@
       "skills": "Módulos",
       "billing": "Facturación",
       "help": "Ayuda y documentación",
-      "settings": "Ajustes"
+      "settings": "Ajustes",
+      "dataMap": "Mapa de datos"
     },
     "nextStep": {
       "title": "Siguiente paso",
@@ -9816,6 +10106,7 @@
       "usStates": "Leyes de privacidad de estados de EE. UU."
     },
     "reasons": {
+      "twoCriteria": "Según las directrices del CEPD, suele exigirse una EIPD cuando se cumplen dos o más criterios de alto riesgo, por ejemplo categorías especiales de datos a gran escala, elaboración de perfiles o interesados vulnerables. Revisa la actividad.",
       "operatesEu": "Operas en la UE.",
       "operatesUk": "Operas en el Reino Unido.",
       "operatesCalifornia": "Operas en California.",
@@ -10416,6 +10707,7 @@
       "Checkout": "Facturación"
     },
     "actions": {
+      "REOPEN": "Reabierta como nueva revisión",
       "CREATE": "Creado",
       "UPDATE": "Actualizado",
       "DELETE": "Eliminado",

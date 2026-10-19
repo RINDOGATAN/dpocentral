@@ -1,4 +1,26 @@
 {
+  "assessmentWorkflow": {
+    "errors": {
+      "approvedLocked": "This assessment is approved and can no longer be changed. An owner, administrator or privacy officer can open a new revision.",
+      "frozenPendingApproval": "The assessment is awaiting approval, so its answers, risks and measures cannot change now.",
+      "reviewersOnly": "The assessment is under review: only an owner, administrator or privacy officer can change it now.",
+      "submitStatus": "Only an assessment that is a draft, in progress or rejected can be submitted.",
+      "requestApprovalStatus": "Approval can only be requested once the assessment has been submitted for review.",
+      "approverMember": "The approver must be a member of the organization.",
+      "approverRole": "The approver must be an owner, administrator or privacy officer of the organization.",
+      "approvalDecided": "This approval has already been decided, and a decision cannot be changed. Open a new revision instead.",
+      "notAwaitingApproval": "The assessment is not awaiting approval.",
+      "art36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed. Article 36(1) GDPR requires consulting the supervisory authority before the processing starts: correct the residual risk or the consultation answer first.",
+      "art36Undecided": "Whether prior consultation with the supervisory authority is required is still under consideration. Decide it (Article 36 GDPR) first.",
+      "stillToAnswer": "Still to answer ({count}): {list}",
+      "andMore": "and {count} more",
+      "singleUserOnly": "Submit and approve is only available in an organization with a single member. Use the standard submission instead.",
+      "riskNoMeasure": "A risk can only be closed once at least one measure addresses it.",
+      "riskNoResidual": "Grade the residual likelihood and severity before closing the risk.",
+      "riskNotInAssessment": "The risk this measure addresses is not part of this assessment.",
+      "reopenStatus": "Only an approved assessment can be reopened as a new revision."
+    }
+  },
   "clientTemplate": {
     "titleCurrent": "Start from another client",
     "titleNew": "Start a new client from this one",
@@ -681,11 +703,12 @@
         "adequacyBody": "{country} has an EU adequacy decision (adopted {date}).",
         "adequacyPartial": " ⚠ Partial: see notes.",
         "adequacyNotes": {
-          "CA": "Limited to recipients subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organizations.",
+          "CA": "Limited to commercial organisations subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organisations.",
           "JP": "Based on the Act on Protection of Personal Information (APPI) with supplementary rules for EU-sourced data.",
-          "KR": "Based on the Personal Information Protection Act (PIPA) as amended in 2020.",
+          "KR": "Based on the Personal Information Protection Act (PIPA). Confirmed by the Commission's first review in July 2026.",
           "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission on 19 December 2025; valid until 27 December 2031.",
-          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov."
+          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov.",
+          "BR": "Based on the General Data Protection Law (LGPD). Covers the public and private sectors; excludes transfers made only for public security, national defence, state security or criminal investigation and prosecution."
         },
         "complianceStatus": "Compliance Status",
         "suggestedFromData": "Suggested from current data: <b>{status}</b>",
@@ -704,7 +727,17 @@
         "sccRemaining": "{count, plural, one {# day remaining.} other {# days remaining.}}",
         "tiaPendingTitle": "Transfer Impact Assessment pending",
         "tiaPendingBody": "Schrems II requires an assessment of the destination country's surveillance laws and the effectiveness of your safeguards.",
-        "startTia": "Start TIA"
+        "startTia": "Start TIA",
+        "withinEea": "Within the EEA (not a restricted transfer)",
+        "partialUnconfirmedBadge": "Partial adequacy: not confirmed",
+        "partialUnconfirmedBody": "This record does not say the recipient is within that scope, so the decision does not cover the transfer: the safeguard recorded below applies (with SCCs, a transfer impact assessment is needed).",
+        "recordScope": "Record the recipient's status",
+        "scopeCheckedOn": "Checked on {date}.",
+        "scopeReference": "Reference: {reference}",
+        "activityLink": "Processing activity: {name}",
+        "noActivity": "No processing activity linked",
+        "vendorLink": "Vendor: {name}",
+        "noVendor": "No vendor linked"
       },
       "edit": {
         "title": "Edit Transfer Compliance",
@@ -723,13 +756,42 @@
         "safeguardsPlaceholder": "e.g., EU SCCs 2021 module 2 + encryption at rest + DPIA",
         "saving": "Saving...",
         "save": "Save Changes",
-        "errorPrefix": "Error: {message}"
+        "errorPrefix": "Error: {message}",
+        "links": "Activity and vendor",
+        "linksSubtitle": "The processing activity the transfer belongs to (it then appears in the record of processing) and the vendor that receives the data.",
+        "adequacyScope": "Partial adequacy decision"
       },
       "status_option": {
         "COMPLIANT": "Compliant",
         "NEEDS_REVIEW": "Needs Review",
         "NON_COMPLIANT": "Non-Compliant",
         "PENDING": "Pending"
+      },
+      "adequacy": {
+        "withinEea": "{country} is in the EEA: not a restricted transfer, no Chapter V safeguard needed.",
+        "none": "{country} has no EU adequacy decision: choose a safeguard (for example SCCs) and complete a transfer impact assessment.",
+        "full": "{country} has an EU adequacy decision: no further safeguard is needed for this transfer.",
+        "partialTitle": "{country}: the adequacy decision covers some recipients only",
+        "partialBody": {
+          "DPF": "The EU-US decision covers only recipients certified under the EU-US Data Privacy Framework (check the list at dataprivacyframework.gov).",
+          "PIPEDA": "The decision for Canada covers only commercial organisations subject to PIPEDA (the Personal Information Protection and Electronic Documents Act)."
+        },
+        "scopeQuestion": {
+          "DPF": "The recipient is certified under the EU-US Data Privacy Framework (active entry checked on the DPF list)",
+          "PIPEDA": "The recipient is a commercial organisation subject to PIPEDA"
+        },
+        "scopeReference": {
+          "DPF": "DPF list entry (link or reference)",
+          "PIPEDA": "Basis for PIPEDA coverage (optional)"
+        },
+        "scopeReferencePlaceholder": {
+          "DPF": "e.g. https://www.dataprivacyframework.gov/list",
+          "PIPEDA": "e.g. federally regulated private-sector company"
+        },
+        "scopeRecorded": {
+          "DPF": "Recipient recorded as certified under the EU-US Data Privacy Framework.",
+          "PIPEDA": "Recipient recorded as a commercial organisation subject to PIPEDA."
+        }
       }
     },
     "vendorQuestionnaires": {
@@ -840,7 +902,73 @@
       "submit": "Create Request"
     },
     "assessmentDetail": {
+      "reviewDue": {
+        "title": "Review due",
+        "intro": "The processing activity has changed since this assessment was approved. Review it and open a new revision if the risk has changed (Art. 35(11) GDPR).",
+        "reasons": {
+          "SPECIAL_CATEGORY": "New special category data",
+          "RECIPIENT": "New recipient",
+          "SYSTEM": "New system",
+          "TRANSFER": "New international transfer",
+          "PURPOSE": "Purpose changed",
+          "LEGAL_BASIS": "Legal basis changed",
+          "AUTOMATED_DECISION": "Automated decision-making added",
+          "ACTIVITY_CHANGED": "Activity edited after the approval"
+        }
+      },
+      "frozenNotice": {
+        "PENDING_APPROVAL": "Awaiting approval: the answers are frozen until a decision is taken.",
+        "PENDING_REVIEW": "Under review: only an owner, administrator or privacy officer can change the answers now.",
+        "APPROVED": "Approved: this version is the record. Open a new revision to change it."
+      },
+      "reopen": {
+        "button": "Open a new revision",
+        "done": "A new revision is open. The approved version stays in the history."
+      },
+      "riskRegister": {
+        "intro": "One row per risk to the rights and freedoms of data subjects (Art. 35(7)(c) GDPR). Grade each risk for likelihood and severity before the measures and after them, and link the measures that address it.",
+        "inherentMax": "Highest inherent risk",
+        "residualMax": "Highest residual risk",
+        "unsupported": "At least one risk is lowered by two or more levels with no implemented measure. Check the residual grades or the status of its measures.",
+        "empty": "No risk has been entered yet.",
+        "add": "Add a risk",
+        "edit": "Edit",
+        "delete": "Delete risk",
+        "save": "Save risk",
+        "cancel": "Cancel",
+        "close": "Close risk",
+        "reopen": "Reopen risk",
+        "closeNeedsMeasure": "Link at least one measure before closing this risk.",
+        "closeNeedsResidual": "Grade the residual likelihood and severity before closing this risk.",
+        "rightsAffected": "Rights affected",
+        "rightsPlaceholder": "For example: privacy, non-discrimination, freedom of expression",
+        "titleLabel": "Risk",
+        "titlePlaceholder": "For example: unauthorised access to customer profiles",
+        "descriptionLabel": "Source and description",
+        "beforeMeasures": "Before the measures (inherent)",
+        "afterMeasures": "After the measures (residual)",
+        "likelihood": "Likelihood",
+        "severity": "Severity",
+        "choose": "Choose",
+        "notGraded": "Not graded",
+        "inherentPair": "Inherent: {level} (L{likelihood} × S{severity})",
+        "residualPair": "Residual: {level} (L{likelihood} × S{severity})",
+        "residualNotGraded": "Residual: not graded",
+        "measuresTitle": "Measures that address it ({count})",
+        "noMeasures": "No measure is linked to this risk yet.",
+        "measurePlaceholder": "New measure for this risk",
+        "addMeasure": "Add measure",
+        "grades": {
+          "1": "Negligible",
+          "2": "Limited",
+          "3": "Significant",
+          "4": "Maximum"
+        }
+      },
       "completeness": {
+        "priorConsultationRequired": "Prior consultation with the supervisory authority is required before the processing starts (Article 36(1) GDPR).",
+        "art36Undecided": "Whether prior consultation with the supervisory authority is required is still under consideration. Decide it (Article 36 GDPR) first.",
+        "art36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed. Article 36(1) GDPR requires consulting the supervisory authority before the processing starts: correct the residual risk or the consultation answer first.",
         "title": "What is still outstanding",
         "allDone": "Everything this assessment needs has been answered.",
         "questionsTitle": "Questions still to answer ({count})",
@@ -868,14 +996,17 @@
         "answered": "{answered} of {total} questions answered"
       },
       "stats": {
+        "notAssessed": "Not assessed",
+        "inherentResidual": "Inherent {inherent} · residual {residual}",
         "sections": "Sections",
         "questions": "Questions",
         "mitigations": "Mitigations",
         "riskScore": "Risk Score",
-        "riskScoreScale": "0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical",
+        "riskScoreScale": "0 to 25 Low · 26 to 50 Medium · 51 to 75 High · 76 to 100 Critical",
         "noScore": "-"
       },
       "tabs": {
+        "risksWithCount": "Risks ({count})",
         "questions": "Questions",
         "mitigationsWithCount": "Mitigations ({count})",
         "approvalsWithCount": "Approvals ({count})",
@@ -927,6 +1058,12 @@
         "empty": "No approvals requested"
       },
       "history": {
+        "notes": {
+          "SUBMITTED": "Submitted for review",
+          "APPROVED": "Approved",
+          "AUTO_APPROVED": "Submitted and approved (organization with a single member)",
+          "REOPENED": "Reopened as a new revision"
+        },
         "version": "Version {n}",
         "empty": "No version history"
       },
@@ -2483,7 +2620,7 @@
       },
       "emptyTransfers": {
         "title": "No international transfers recorded",
-        "subtitle": "Document cross-border data transfers and safeguards (Art. 44–49 GDPR)"
+        "subtitle": "Document cross-border data transfers and safeguards (GDPR Art. 44 to 49)"
       },
       "transfer": {
         "tiaCompleted": "TIA completed",
@@ -2508,11 +2645,11 @@
       },
       "transferDialog": {
         "title": "Add International Transfer",
-        "description": "Record a cross-border data transfer under GDPR Art. 44–49.",
+        "description": "Record a cross-border data transfer under GDPR Art. 44 to 49.",
         "nameLabel": "Transfer Name",
         "namePlaceholder": "e.g. Customer data to US analytics provider",
         "countryLabel": "Destination Country",
-        "countryPlaceholder": "e.g. US, IN, GB",
+        "countryPlaceholder": "Choose a country",
         "orgLabel": "Receiving Organization",
         "orgPlaceholder": "e.g. Stripe Inc.",
         "mechanismLabel": "Transfer Mechanism",
@@ -2521,7 +2658,13 @@
         "safeguardsPlaceholder": "e.g. EU SCCs (2021) + supplementary measures",
         "descriptionLabel": "Description",
         "create": "Create",
-        "countryHint": "Two-letter country code (ISO 3166), for example IN for India."
+        "countryHint": "Stored as its ISO 3166 two-letter code (for example IN for India).",
+        "vendorLabel": "Vendor",
+        "vendorPlaceholder": "Choose a vendor",
+        "noneOption": "None",
+        "activityLabel": "Processing activity",
+        "activityPlaceholder": "Choose an activity",
+        "activityHint": "Linked to an activity, the transfer appears in its record of processing (Art. 30(1)(e))."
       },
       "legalBasis": {
         "CONSENT": "Consent",
@@ -2636,6 +2779,11 @@
       "revise": "Revise Answers",
       "applying": "Applying...",
       "applyAll": "Apply All"
+    },
+    "dataMap": {
+      "title": "Data map",
+      "subtitle": "Your systems, the data flows between them, the vendors and the transfers outside the EEA with their safeguard and status.",
+      "transfers": "Transfers"
     }
   },
   "confirms": {
@@ -2733,15 +2881,18 @@
     "filters": {
       "all": "All",
       "special": "Special cat.",
-      "personal": "Personal",
-      "general": "General",
+      "personal": "Higher risk",
+      "general": "Other personal",
       "autoGen": "To confirm",
       "showAutoGenerated": "Show flows to confirm",
       "hideAutoGenerated": "Hide flows to confirm",
       "categories": "Categories",
       "clearCategories": "Clear categories",
       "clearAll": "Clear all filters",
-      "flowCount": "{shown} / {total} flows"
+      "flowCount": "{shown} / {total} flows",
+      "unclassified": "Uncategorised",
+      "activity": "Activity",
+      "allActivities": "All activities"
     },
     "node": {
       "production": "PROD",
@@ -2750,7 +2901,17 @@
       "outbound": "out",
       "location": "Location",
       "outsideEea": "Outside the EEA: {countries}",
-      "outsideEeaTitle": "{count, plural, one {Open the transfer record} other {Open the # transfer records}}"
+      "outsideEeaTitle": "{count, plural, one {Open the transfer record} other {Open the # transfer records}}",
+      "transferLine": "{country}: {mechanism} ({status})",
+      "noMechanism": "No safeguard recorded",
+      "outsideEeaStatus": "Outside the EEA: {countries} · {status}",
+      "unrecorded": "No transfer record: {countries}",
+      "unrecordedTitle": "The vendor operates or stores data in these countries outside the EEA, and no transfer record covers them. Open Transfers to record one.",
+      "moreCategories": "{count, plural, one {# more category} other {# more categories}}",
+      "noFlows": "No flow recorded yet",
+      "vendor": "Vendor",
+      "outsideEeaCountry": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "suggestedStatus": "{status} (suggested)"
     },
     "sheet": {
       "createTitle": "Create Data Flow",
@@ -2768,13 +2929,13 @@
       "categories": "Data Categories",
       "categoriesSelected": "{count} selected",
       "frequency": "Frequency",
-      "frequencyPlaceholder": "How often data is transferred",
+      "frequencyPlaceholder": "How often the data moves",
       "volume": "Data Volume",
       "volumePlaceholder": "e.g., ~10,000 records/day",
       "encryption": "Encryption Method",
       "encryptionPlaceholder": "e.g., TLS 1.3, AES-256",
       "cancel": "Cancel",
-      "automated": "Automated Transfer",
+      "automated": "Automated flow",
       "saving": "Saving…",
       "creating": "Creating…",
       "saveChanges": "Save Changes",
@@ -2787,7 +2948,8 @@
       "noFlowsTitle": "No data flows defined yet",
       "noFlowsBody": "Create flows to visualize how data moves between systems",
       "noAssetFlowsTitle": "No data flows connected to this system",
-      "noAssetFlowsBody": "Create a flow to connect this system to other systems"
+      "noAssetFlowsBody": "Create a flow to connect this system to other systems",
+      "noFlowsHint": "Your systems are shown. Add a flow between two of them, or link systems to a processing activity to get draft flows to confirm."
     },
     "actions": {
       "addAsset": "Add System",
@@ -2816,12 +2978,25 @@
       "generated": "Suggested from the systems linked to a processing activity. It is a draft, left out of the PDF reports, until you confirm it or edit it.",
         "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
         "confirm": "Confirm flow",
-        "confirmed": "Flow confirmed"
+        "confirmed": "Flow confirmed",
+        "draftBadge": "To confirm",
+        "transfersTitle": "Transfers outside the EEA from the destination"
     },
     "legend": {
       "title": "Key",
       "inbound": "incoming flows",
-      "outbound": "outgoing flows"
+      "outbound": "outgoing flows",
+      "lineSpecial": "special categories (Arts. 9 and 10)",
+      "lineHigherRisk": "higher-risk personal data",
+      "lineOther": "other personal data",
+      "lineUnclassified": "no category recorded",
+      "dashed": "flow to confirm (suggested from an activity)",
+      "thickness": "thicker line: more frequent",
+      "stripe": "System type",
+      "transfers": "Transfers",
+      "transferLine": "transfer to a country outside the EEA (safeguard and status on the label)",
+      "outsideEeaShort": "Outside EEA",
+      "unrecorded": "vendor country with no transfer record"
     },
     "abbr": {
       "IDENTIFIERS": "ID",
@@ -2841,7 +3016,25 @@
       "OTHER": "OTH"
     },
     "edge": {
-      "fallback": "Flow"
+      "fallback": "Flow",
+      "open": "Open the flow {name}"
+    },
+    "summary": {
+      "counts": "{systems, plural, one {# system} other {# systems}} ({isolated} without flows) · {flows, plural, one {# flow} other {# flows}} · {transfers, plural, one {# transfer} other {# transfers}} outside the EEA to {countries, plural, one {# country} other {# countries}} · {vendors, plural, one {# vendor} other {# vendors}} with no system"
+    },
+    "view": {
+      "label": "View",
+      "map": "Map",
+      "list": "List",
+      "canvasLabel": "Data map with {systems} systems and {flows} flows. Use Tab to move between systems and flows, and Enter to open one. The list view shows the same records."
+    },
+    "list": {
+      "flowsTitle": "{count, plural, one {# flow} other {# flows}}",
+      "systemsTitle": "{count, plural, one {# system} other {# systems}}",
+      "transfersTitle": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "vendorsTitle": "{count, plural, one {# vendor with no system} other {# vendors with no system}}",
+      "to": "to",
+      "flowCounts": "{inbound} incoming, {outbound} outgoing"
     }
   },
   "metadata": {
@@ -2866,6 +3059,18 @@
     }
   },
   "enums": {
+    "assessmentRiskStatus": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
+    "mitigationStatus": {
+      "IDENTIFIED": "Identified",
+      "PLANNED": "Planned",
+      "IN_PROGRESS": "In progress",
+      "IMPLEMENTED": "Implemented",
+      "VERIFIED": "Verified",
+      "NOT_REQUIRED": "Not required"
+    },
     "vendorCategory": {
       "CLOUD_SERVICES": "Cloud Services",
       "DATA_PROCESSING": "Data Processing",
@@ -3092,6 +3297,7 @@
       "VIEWER": "Viewer"
     },
     "auditAction": {
+      "REOPEN": "Reopened as a new revision",
       "CREATE": "Created",
       "UPDATE": "Updated",
       "DELETE": "Deleted",
@@ -4233,6 +4439,56 @@
       }
     },
     "assessmentReport": {
+      "signOff": {
+        "templateVersion": "Template version",
+        "approvedVersion": "Approved version",
+        "preparedBy": "Prepared by",
+        "dpoAdvice": "Advice of the data protection officer (Art. 35(2) GDPR)",
+        "consultation": "Prior consultation (Art. 36 GDPR)",
+        "consultationRecord": "Consultation: date and outcome",
+        "review": "Review (Art. 35(11) GDPR)",
+        "decision": "Decision",
+        "decidedOn": "Decided on",
+        "signatures": "Signatures",
+        "forController": "For the controller",
+        "dpo": "Data protection officer",
+        "nameAndPosition": "Name and position",
+        "signature": "Signature",
+        "date": "Date"
+      },
+      "grades": {
+        "1": "Negligible",
+        "2": "Limited",
+        "3": "Significant",
+        "4": "Maximum"
+      },
+      "registerColumns": {
+        "risk": "Risk",
+        "rights": "Rights affected",
+        "inherent": "Inherent",
+        "measures": "Measures",
+        "residual": "Residual",
+        "status": "Status"
+      },
+      "notRecorded": "Not recorded",
+      "signOffTitle": "Conclusion and sign-off",
+      "matrixSeverity": "Severity",
+      "matrixLikelihood": "Likelihood",
+      "matrixIntro": "Each cell shows how many risks sit there before the measures and, after the slash, after them.",
+      "matrixTitle": "Risk matrix",
+      "registerUnsupported": "Residual risk lowered by two or more levels with no implemented measure: {risks}.",
+      "registerPair": "{level} (L{likelihood} × S{severity})",
+      "registerNotGraded": "Not graded",
+      "registerEmpty": "No risk has been entered in the risk register.",
+      "registerIntro": "One row per risk to the rights and freedoms of data subjects, graded for likelihood (L) and severity (S) before the measures (inherent) and after them (residual). Scale: 1 negligible, 2 limited, 3 significant, 4 maximum.",
+      "registerTitle": "Risk register",
+      "conformanceRuleNotMet": "Answered, not met",
+      "conformanceArt36Undecided": "Whether prior consultation is required (Art. 36 GDPR) is still under consideration.",
+      "conformanceArt36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed: Art. 36(1) GDPR requires it.",
+      "conformancePriorConsultation": "Prior consultation with the supervisory authority is required before the processing starts (Art. 36(1) GDPR).",
+      "approvedLaterRequirements": "Added to the template after this approval, to be answered in a new revision:",
+      "approvedIntro": "This document records the assessment as it was approved.",
+      "approvedTitle": "Approved on {date}",
       "draftMark": "Draft",
       "draftTitle": "This document is a draft",
       "draftIntro": "The items below are still outstanding, so every page of this document is marked a draft. Answer them in the app and export again for a final version.",
@@ -4258,6 +4514,7 @@
       "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
+        "notAssessed": "Not assessed",
         "riskLevel": "Risk Level",
         "completion": "Completion",
         "questionsAnswered": "Questions Answered",
@@ -4286,6 +4543,8 @@
       "noteLabel": "Note:",
       "riskAssessmentSummary": "Risk Assessment Summary",
       "stats2": {
+        "residualRisk": "Residual risk (after measures)",
+        "inherentRisk": "Inherent risk (before measures)",
         "overallRiskLevel": "Overall Risk Level",
         "riskScore": "Risk Score",
         "scoredQuestions": "Scored Questions"
@@ -4333,6 +4592,11 @@
         "CUSTOM": "Custom Assessment"
       },
       "articleRefs": {
+        "CUSTOM": "",
+        "PIA": "",
+        "VENDOR": "GDPR Article 28",
+        "TIA": "GDPR Chapter V (Articles 44 to 49)",
+        "LIA": "GDPR Article 6(1)(f)",
         "DPIA": "GDPR Article 35(7)"
       }
     },
@@ -4554,6 +4818,10 @@
         "sectoral": "Sectoral",
         "ai_governance": "AI Governance",
         "emerging": "Emerging"
+      },
+      "adequacyPartial": {
+        "DPF": "Partial (DPF-certified recipients only)",
+        "PIPEDA": "Partial (PIPEDA-covered organisations only)"
       }
     },
     "dsarPerformance": {
@@ -6062,7 +6330,8 @@
           "Switzerland": "Switzerland",
           "UK": "United Kingdom",
           "Uruguay": "Uruguay",
-          "USA": "USA (Data Privacy Framework)"
+          "USA": "USA (certified recipients only, Data Privacy Framework)",
+          "Brazil": "Brazil"
         }
       },
       "supplementaryMeasures": {
@@ -7928,6 +8197,10 @@
         }
       },
       "template": {
+        "system-lia-template": {
+          "name": "Legitimate Interest Assessment",
+          "description": "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f))."
+        },
         "system-lia-template-v2": {
           "name": "Legitimate Interest Assessment",
           "description": "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read."
@@ -8035,6 +8308,10 @@
         }
       },
       "template": {
+        "system-custom-template": {
+          "name": "Custom Assessment",
+          "description": "A flexible assessment template for custom privacy reviews and evaluations."
+        },
         "system-custom-template-v2": {
           "name": "Custom Assessment",
           "description": "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale."
@@ -8423,6 +8700,10 @@
         }
       },
       "template": {
+        "system-tia-template": {
+          "name": "Transfer Impact Assessment (TIA)",
+          "description": "Assess the risks of transferring personal data to a third country and determine whether supplementary measures are needed to ensure an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II)."
+        },
         "system-tia-template-v2": {
           "name": "Transfer Impact Assessment",
           "description": "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers."
@@ -8612,9 +8893,17 @@
             "Not yet"
           ]
         },
+        "q1_7": {
+          "text": "The legitimate interest pursued",
+          "helpText": "Name the interest, whose interest it is (yours or a third party's) and why the processing is needed for it. Source: Regulation (EU) 2016/679, Article 35(7)(a)."
+        },
         "q4_3": {
           "text": "The views of data subjects or their representatives, or the reason for not seeking them",
           "helpText": "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9)."
+        },
+        "q7_5": {
+          "text": "Prior consultation with the supervisory authority: date of the request, and the outcome or its status",
+          "helpText": "The processing may not start until the authority has answered or the period of Article 36(2) has passed. Record the date the consultation was sent, the authority, and its written advice once received. Source: Regulation (EU) 2016/679, Article 36(1) and (2)."
         },
         "q7_4": {
           "text": "When this assessment will be reviewed, and the change in risk that brings the review forward",
@@ -9044,7 +9333,7 @@
         },
         "q5_6": {
           "text": "Describe the identified risks to data subjects, including likelihood and severity for each",
-          "helpText": "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N (Title): Description. Likelihood: X. Severity: Y."
+          "helpText": "For each risk: describe the source and the rights affected, and grade its likelihood and its severity on the same four levels (Negligible / Limited / Significant / Maximum). Then add each risk to the risk register, where it is graded before and after the measures."
         },
         "q6_1": {
           "text": "Technical measures in place or planned",
@@ -9599,7 +9888,8 @@
       "skills": "Skills",
       "billing": "Billing",
       "help": "Help and docs",
-      "settings": "Settings"
+      "settings": "Settings",
+      "dataMap": "Data map"
     },
     "nextStep": {
       "title": "Next step",
@@ -9816,6 +10106,7 @@
       "usStates": "US state privacy laws"
     },
     "reasons": {
+      "twoCriteria": "Under the EDPB guidelines a DPIA is usually required when two or more high-risk criteria are met, for example special category data on a large scale, profiling or vulnerable data subjects. Check the activity.",
       "operatesEu": "You operate in the EU.",
       "operatesUk": "You operate in the UK.",
       "operatesCalifornia": "You operate in California.",
@@ -10416,6 +10707,7 @@
       "Checkout": "Billing"
     },
     "actions": {
+      "REOPEN": "Reopened as a new revision",
       "CREATE": "Created",
       "UPDATE": "Updated",
       "DELETE": "Deleted",

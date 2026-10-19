@@ -77,6 +77,9 @@ import { isHealthAdtechTemplate } from "@/lib/health-adtech/results";
 import { legacyOptionLists, legacySections, localizeValues } from "@/lib/template-i18n-core";
 import { HealthAdtechSummary } from "@/components/assessments/health-adtech-summary";
 import { CompletenessPanel } from "@/components/assessments/completeness-panel";
+import { RiskRegister } from "@/components/assessments/risk-register";
+import { registerRows, registerSummary } from "@/lib/assessment-risk-register";
+import { canEditContent, isReviewerRole } from "@/lib/assessment-workflow";
 import { assessmentCompleteness } from "@/lib/assessment-completeness";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
 
@@ -191,6 +194,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   const members = (orgData as any)?.members;
   const memberCount = Array.isArray(members) ? members.length : -1;
   const isSingleUser = memberCount === 1;
+  const myRole: string | undefined = Array.isArray(members)
+    ? (members as Array<{ role: string; user?: { id: string } }>).find((m) => m.user?.id === currentUserId)?.role
+    : undefined;
 
   const { data: assessment, isLoading } = trpc.assessment.getById.useQuery(
     { organizationId: organization?.id ?? "", id },
@@ -329,6 +335,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       setRejectDialogOpen(false);
       setRejectComments("");
       setRejectApprovalId("");
+    },
+    onError: (error) => {
+      toast.error(error.message || t("generic.somethingWentWrong"));
+    },
+  });
+
+  const reopenAssessment = trpc.assessment.reopen.useMutation({
+    onSuccess: () => {
+      toast.success(tp("reopen.done"));
+      utils.assessment.getById.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || t("generic.somethingWentWrong"));
@@ -680,6 +696,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     assessment?.status === "IN_PROGRESS" ||
     assessment?.status === "DRAFT" ||
     assessment?.status === "REJECTED";
+  // Who may change the content now (src/lib/assessment-workflow.ts): frozen
+  // while approval is pending and once approved; reviewers only during review.
+  const canEdit = !!assessment && canEditContent(assessment.status, myRole);
 
   // Check if all REQUIRED questions are answered (mirrors server-side validation).
   // Uses expandedSections so repeatable instances' composite ids are counted.
@@ -729,8 +748,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
         templateId: template?.id,
         visibleSections: expandedSections,
         responses: assessment?.responses ?? [],
+        registerRisks: assessment?.risks?.length ?? 0,
+        registerResidual: registerSummary(
+          registerRows(assessment?.risks ?? [], assessment?.mitigations ?? [])
+        ).residual,
       }),
-    [template?.id, expandedSections, assessment?.responses]
+    [template?.id, expandedSections, assessment?.responses, assessment?.risks, assessment?.mitigations]
   );
 
   /** Jump to the step and field that answers an outstanding item. */
@@ -888,6 +911,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               {tp("submitReview")}
             </Button>
           )}
+          {assessment.status === "APPROVED" && isReviewerRole(myRole) && (
+            <Button
+              variant="outline"
+              onClick={() =>
+                reopenAssessment.mutate({ organizationId: organization?.id ?? "", assessmentId: id })
+              }
+              disabled={reopenAssessment.isPending}
+            >
+              {reopenAssessment.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Edit className="w-4 h-4 mr-2" />}
+              {tp("reopen.button")}
+            </Button>
+          )}
           {(assessment.status === "DRAFT" || assessment.status === "IN_PROGRESS") && (
             <DeleteRecordButton
               title={tConfirmDelete("deleteAssessmentTitle")}
@@ -916,8 +951,36 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               {tp("reviewRecipients")}
             </p>
           )}
+          {(assessment.status === "PENDING_APPROVAL" ||
+            assessment.status === "APPROVED" ||
+            (assessment.status === "PENDING_REVIEW" && !canEdit)) && (
+            <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5" data-testid="frozen-notice">
+              <Clock className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              {tp(`frozenNotice.${assessment.status}` as "frozenNotice.APPROVED")}
+            </p>
+          )}
         </CardContent>
       </Card>
+
+      {/* An approved assessment whose activity has changed since the approval */}
+      {(assessment.reviewDueReasons?.length ?? 0) > 0 && (
+        <Card className="border-amber-500/40" data-testid="review-due">
+          <CardContent className="py-4 space-y-2">
+            <p className="font-medium flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+              {tp("reviewDue.title")}
+            </p>
+            <p className="text-sm text-muted-foreground">{tp("reviewDue.intro")}</p>
+            <div className="flex flex-wrap gap-2">
+              {assessment.reviewDueReasons.map((reason: string) => (
+                <Badge key={reason} variant="outline">
+                  {tp(`reviewDue.reasons.${reason}` as "reviewDue.reasons.PURPOSE")}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* What is still outstanding, each item a link to the step that answers it */}
       <div ref={completenessRef}>
@@ -971,6 +1034,14 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <p className="font-medium text-xl">
               {assessment.riskScore !== null ? `${assessment.riskScore}%` : tp("stats.noScore")}
             </p>
+            {(assessment.inherentRiskLevel || assessment.residualRiskLevel) && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {tp("stats.inherentResidual", {
+                  inherent: assessment.inherentRiskLevel ? enumLabel("riskLevel", assessment.inherentRiskLevel) : tp("stats.notAssessed"),
+                  residual: assessment.residualRiskLevel ? enumLabel("riskLevel", assessment.residualRiskLevel) : tp("stats.notAssessed"),
+                })}
+              </p>
+            )}
             <p className="text-[11px] text-muted-foreground mt-1 leading-tight">
               {tp("stats.riskScoreScale")}
             </p>
@@ -982,6 +1053,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <Tabs defaultValue="questions">
         <TabsList>
           <TabsTrigger value="questions">{tp("tabs.questions")}</TabsTrigger>
+          {template?.type === "DPIA" && (
+            <TabsTrigger value="risks">
+              {tp("tabs.risksWithCount", { count: assessment.risks?.length ?? 0 })}
+            </TabsTrigger>
+          )}
           <TabsTrigger value="mitigations">
             {tp("tabs.mitigationsWithCount", { count: assessment.mitigations?.length ?? 0 })}
           </TabsTrigger>
@@ -1041,7 +1117,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           )}
                         </div>
                         <div className="flex items-center gap-2">
-                          {section._repeatable && section._canRemove && canSubmit && (
+                          {section._repeatable && section._canRemove && canEdit && (
                             <Button
                               variant="ghost"
                               size="sm"
@@ -1073,7 +1149,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           server-side; the draft only lands in this section's
                           target textarea via Insert. */}
                       {features.aiAssistEnabled &&
-                        canSubmit &&
+                        canEdit &&
                         aiNarrativeTarget?.sectionId === section.id &&
                         (assessment.processingActivity?.id ? (
                           <AiDraftPanel
@@ -1179,25 +1255,25 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     <div className="inline-flex rounded-lg border overflow-hidden">
                                       <button
                                         type="button"
-                                        disabled={!canSubmit}
+                                        disabled={!canEdit}
                                         onClick={() => handleAutoSave(question.id, section.id, question, "Yes")}
                                         className={`px-5 py-2.5 text-sm font-medium min-h-[44px] transition-colors ${
                                           responseValue === "Yes"
                                             ? "bg-primary text-primary-foreground"
                                             : "bg-background hover:bg-muted text-foreground"
-                                        } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        } ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
                                       >
                                         {tp("question.yes")}
                                       </button>
                                       <button
                                         type="button"
-                                        disabled={!canSubmit}
+                                        disabled={!canEdit}
                                         onClick={() => handleAutoSave(question.id, section.id, question, "No")}
                                         className={`px-5 py-2.5 text-sm font-medium min-h-[44px] transition-colors border-l ${
                                           responseValue === "No"
                                             ? "bg-primary text-primary-foreground"
                                             : "bg-background hover:bg-muted text-foreground"
-                                        } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        } ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
                                       >
                                         {tp("question.no")}
                                       </button>
@@ -1217,7 +1293,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                     <Select
                                       value={responseValue ? shownValues(question, [responseValue])[0] : ""}
                                       onValueChange={(value) => handleAutoSave(question.id, section.id, question, value)}
-                                      disabled={!canSubmit}
+                                      disabled={!canEdit}
                                     >
                                       <SelectTrigger className="w-full sm:w-[400px] min-h-[44px] text-sm">
                                         <SelectValue placeholder={tp("question.selectOption")} />
@@ -1253,11 +1329,11 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                               isChecked
                                                 ? "border-primary/50 bg-primary/5"
                                                 : "border-border hover:border-muted-foreground/50"
-                                            } ${!canSubmit ? "opacity-50 cursor-not-allowed" : ""}`}
+                                            } ${!canEdit ? "opacity-50 cursor-not-allowed" : ""}`}
                                           >
                                             <Checkbox
                                               checked={isChecked}
-                                              disabled={!canSubmit}
+                                              disabled={!canEdit}
                                               onCheckedChange={(checked) => {
                                                 const newValues = checked
                                                   ? [...currentValues, option]
@@ -1342,7 +1418,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                               </p>
                                             )}
                                           </div>
-                                          {canSubmit && (
+                                          {canEdit && (
                                             <Button
                                               variant="ghost"
                                               size="sm"
@@ -1354,7 +1430,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                                           )}
                                         </div>
                                       </div>
-                                    ) : canSubmit ? (
+                                    ) : canEdit ? (
                                       <Textarea
                                         placeholder={tp("question.responsePlaceholder")}
                                         rows={2}
@@ -1372,7 +1448,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       </div>
                     </CardContent>
                   </Card>
-                  {section._repeatable && section._isLastInstance && canSubmit && (
+                  {section._repeatable && section._isLastInstance && canEdit && (
                     <div className="mt-3">
                       <Button
                         variant="outline"
@@ -1399,6 +1475,18 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <HealthAdtechSummary responses={assessment.responses ?? []} />
           )}
         </TabsContent>
+
+        {template?.type === "DPIA" && (
+          <TabsContent value="risks" className="mt-4">
+            <RiskRegister
+              organizationId={organization?.id ?? ""}
+              assessmentId={id}
+              risks={assessment.risks ?? []}
+              measures={assessment.mitigations ?? []}
+              canEdit={canEdit}
+            />
+          </TabsContent>
+        )}
 
         <TabsContent value="mitigations" className="mt-4 space-y-4">
           {/* Vendor PETs Card */}
@@ -1471,19 +1559,22 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                           </p>
                         )}
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openUpdateDialog(mitigation)}
-                      >
-                        {tp("mitigations.update")}
-                      </Button>
+                      {canEdit && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openUpdateDialog(mitigation)}
+                        >
+                          {tp("mitigations.update")}
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
               ))}
               <Button
                 variant="outline"
+                disabled={!canEdit}
                 onClick={() => { setAddMitigationTab("manual"); setAddMitigationOpen(true); }}
               >
                 <Plus className="w-4 h-4 mr-1" />
@@ -1497,6 +1588,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 <p>{tp("mitigations.empty")}</p>
                 <Button
                   className="mt-4"
+                  disabled={!canEdit}
                   onClick={() => { setAddMitigationTab(hasSuggestions ? "suggested" : "manual"); setAddMitigationOpen(true); }}
                 >
                   <Plus className="w-4 h-4 mr-1" />
@@ -1616,7 +1708,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                       <div>
                         <span className="font-medium">{tp("history.version", { n: version.version })}</span>
                         <p className="text-sm text-muted-foreground">
-                          {version.changeNotes}
+                          {version.changeNotes?.startsWith("workflow:")
+                            ? tp(`history.notes.${version.changeNotes.slice("workflow:".length)}` as "history.notes.SUBMITTED")
+                            : version.changeNotes}
                         </p>
                       </div>
                       <span className="text-sm text-muted-foreground">
@@ -1802,11 +1896,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                   <SelectValue placeholder={tp("requestApproval.selectApprover")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {((orgData as any)?.members ?? []).map((member: any) => (
-                    <SelectItem key={member.user.id} value={member.user.id}>
-                      {member.user.name || member.user.email} ({member.role})
-                    </SelectItem>
-                  ))}
+                  {((orgData as any)?.members ?? [])
+                    .filter((member: { role: string }) => isReviewerRole(member.role))
+                    .map((member: any) => (
+                      <SelectItem key={member.user.id} value={member.user.id}>
+                        {member.user.name || member.user.email} ({enumLabel("role", member.role)})
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

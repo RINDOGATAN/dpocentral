@@ -7,6 +7,7 @@
 import { PrismaClient } from "@prisma/client";
 import { dpiaTemplateData, DPIA_TEMPLATE_ID } from "../../src/config/dpia-template-v2";
 import type { VerticalScenario } from "./types";
+import { completeApprovedDpias } from "./complete-approved-dpias";
 
 const d = (s: string) => new Date(s);
 
@@ -580,6 +581,7 @@ export async function seedScenario(
 
   console.log(`  Phase 5: Assessments...`);
   await seedAssessments(ctx, scenario);
+  await completeApprovedDpias(prisma, orgId);
   console.log(`    ${scenario.assessments.length} assessments`);
 
   console.log(`  Phase 6: Incidents...`);

@@ -109,6 +109,98 @@ export const CCPA_TRIGGER_QUESTION_ID = "q8_1";
 /** The option that means no trigger is met. */
 export const CCPA_NO_TRIGGER_OPTION = CCPA_TRIGGERS.en[CCPA_TRIGGERS.en.length - 1];
 
+// ── Residual risk and prior consultation (Art. 36) ──────────────────────
+
+/** The overall residual risk level after mitigations (select). */
+export const RESIDUAL_QUESTION_ID = "q7_1";
+/** Whether prior consultation with the supervisory authority is required (select). */
+export const CONSULTATION_QUESTION_ID = "q7_2";
+/** Date and outcome of the prior consultation, asked when it is required. */
+export const CONSULTATION_RECORD_QUESTION_ID = "q7_5";
+/** The legitimate interest pursued, asked when the legal basis is Art. 6(1)(f). */
+export const LEGITIMATE_INTEREST_QUESTION_ID = "q1_7";
+
+export type ResidualLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+const RESIDUAL_WORDS: Record<string, ResidualLevel> = {
+  low: "LOW",
+  bajo: "LOW",
+  medium: "MEDIUM",
+  medio: "MEDIUM",
+  high: "HIGH",
+  alto: "HIGH",
+  critical: "CRITICAL",
+  "crítico": "CRITICAL",
+  critico: "CRITICAL",
+};
+
+const RESIDUAL_RANK: ResidualLevel[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+
+/** The residual level the assessment states (q7_1), in any language. */
+export function residualAnswer(answers: AnswerMap): ResidualLevel | null {
+  const v = answerValues(answers[RESIDUAL_QUESTION_ID])[0]?.trim().toLowerCase();
+  return v ? (RESIDUAL_WORDS[v] ?? null) : null;
+}
+
+/** The higher of the stated residual level and the register's highest residual. */
+export function overallResidual(
+  answers: AnswerMap,
+  registerResidual?: ResidualLevel | null
+): ResidualLevel | null {
+  const stated = residualAnswer(answers);
+  const rank = (l: ResidualLevel | null | undefined) => (l ? RESIDUAL_RANK.indexOf(l) : -1);
+  return rank(registerResidual) > rank(stated) ? (registerResidual ?? null) : stated;
+}
+
+export function isHighResidual(level: ResidualLevel | null | undefined): boolean {
+  return level === "HIGH" || level === "CRITICAL";
+}
+
+export type ConsultationAnswer = "not-required" | "under-consideration" | "required";
+
+/**
+ * The answer to the prior-consultation question, by meaning. Options are
+ * matched by their first word, which is the same in every wording the
+ * template has had and in both languages ("No", "Under consideration" /
+ * "En estudio", "Yes" / "Sí").
+ */
+export function consultationAnswer(answers: AnswerMap): ConsultationAnswer | null {
+  const v = answerValues(answers[CONSULTATION_QUESTION_ID])[0]?.trim().toLowerCase();
+  if (!v) return null;
+  if (v.startsWith("under consideration") || v.startsWith("en estudio")) return "under-consideration";
+  if (v.startsWith("yes") || v.startsWith("sí") || v.startsWith("si")) return "required";
+  if (v.startsWith("no")) return "not-required";
+  return null;
+}
+
+/**
+ * A pair of answers that Article 36 does not allow to stand together, or
+ * null. Checked at submission and at approval:
+ *  - a high or critical residual risk with "no prior consultation needed"
+ *    (Art. 36(1): the controller shall consult where the risk remains high);
+ *  - "under consideration", which is no decision at all.
+ * Only for an assessment that shows the question (the European framework).
+ */
+export type Art36Conflict = "HIGH_RESIDUAL_NO_CONSULTATION" | "CONSULTATION_UNDECIDED";
+
+export function art36Conflict(
+  answers: AnswerMap,
+  registerResidual?: ResidualLevel | null
+): Art36Conflict | null {
+  if (!selectedFrameworks(answers).includes("EU_GDPR")) return null;
+  const consultation = consultationAnswer(answers);
+  if (consultation === "under-consideration") return "CONSULTATION_UNDECIDED";
+  if (consultation === "not-required" && isHighResidual(overallResidual(answers, registerResidual))) {
+    return "HIGH_RESIDUAL_NO_CONSULTATION";
+  }
+  return null;
+}
+
+/** True when the answers say prior consultation is required before processing. */
+export function priorConsultationRequired(answers: AnswerMap): boolean {
+  return selectedFrameworks(answers).includes("EU_GDPR") && consultationAnswer(answers) === "required";
+}
+
 // ── The requirement table ────────────────────────────────────────────────
 
 export interface FrameworkElement {
@@ -119,6 +211,21 @@ export interface FrameworkElement {
   label: BiText;
   /** Template questions whose answers cover this requirement. */
   questionIds: string[];
+  /**
+   * Where the content of the answers decides, not only their presence: the
+   * requirement is covered only when this returns true. Free-text answers
+   * cannot be judged and have no such rule.
+   */
+  satisfied?: (ctx: CoverageContext) => boolean;
+}
+
+/** What a content rule reads. */
+export interface CoverageContext {
+  answers: AnswerMap;
+  /** Rows of the structured risk register, when the caller knows it. */
+  registerRisks?: number;
+  /** Highest residual level of the register, when the caller knows it. */
+  registerResidual?: ResidualLevel | null;
 }
 
 /** Template this table describes (src/config/dpia-template-v2.ts). */
@@ -134,7 +241,7 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
       en: "A systematic description of the envisaged processing operations and the purposes, including where applicable the legitimate interest pursued",
       es: "Una descripción sistemática de las operaciones de tratamiento previstas y de los fines, incluido, en su caso, el interés legítimo perseguido",
     },
-    questionIds: ["q1_1", "q1_2", "q1_3", "q1_6"],
+    questionIds: ["q1_1", "q1_2", "q1_3", "q1_6", LEGITIMATE_INTEREST_QUESTION_ID],
   },
   {
     id: "gdpr_35_7_b",
@@ -155,6 +262,9 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
       es: "Una evaluación de los riesgos para los derechos y libertades de los interesados",
     },
     questionIds: ["q5_6"],
+    // The risks are graded one by one in the register (likelihood and
+    // severity per risk); a narrative alone does not grade them.
+    satisfied: ({ registerRisks }) => registerRisks == null || registerRisks > 0,
   },
   {
     id: "gdpr_35_7_d",
@@ -194,7 +304,16 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
       en: "Prior consultation with the supervisory authority where the residual risk remains high",
       es: "Consulta previa a la autoridad de control cuando el riesgo residual siga siendo alto",
     },
-    questionIds: ["q7_2"],
+    questionIds: ["q7_2", CONSULTATION_RECORD_QUESTION_ID],
+    // Covered when no consultation is needed and the residual risk is not
+    // high, or when the consultation is needed and is recorded. "Under
+    // consideration" never covers it.
+    satisfied: (ctx) => {
+      const consultation = consultationAnswer(ctx.answers);
+      if (consultation === "required") return answerValues(ctx.answers[CONSULTATION_RECORD_QUESTION_ID]).length > 0;
+      if (consultation !== "not-required") return false;
+      return !isHighResidual(overallResidual(ctx.answers, ctx.registerResidual));
+    },
   },
   {
     id: "gdpr_35_11",
@@ -287,6 +406,11 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
       es: "Si la empresa iniciará o continuará el tratamiento, ponderando los efectos negativos ya mitigados frente a los beneficios",
     },
     questionIds: ["q8_6"],
+    // "Not decided yet" is no decision.
+    satisfied: ({ answers }) => {
+      const v = answerValues(answers.q8_6)[0]?.trim().toLowerCase() ?? "";
+      return v !== "" && !v.startsWith("not decided") && !v.startsWith("aún sin decidir");
+    },
   },
   {
     id: "ccpa_7152_a_8",
@@ -327,6 +451,12 @@ export const DPIA_FRAMEWORK_ELEMENTS: FrameworkElement[] = [
       es: "Presentación a la agencia a más tardar el 1 de abril de 2028, la certificación de un directivo y el deber de facilitar la evaluación completa en un plazo de 30 días desde la solicitud",
     },
     questionIds: ["q9_3", "q9_4", "q9_5"],
+    // The full assessment must be available within 30 days: "No" or "Not
+    // yet" does not meet the duty.
+    satisfied: ({ answers }) => {
+      const v = answerValues(answers.q9_5)[0]?.trim().toLowerCase() ?? "";
+      return v === "yes" || v === "sí" || v === "si";
+    },
   },
 ];
 
@@ -418,6 +548,8 @@ export interface CoverageRow {
   covered: boolean;
   /** Questions of this element that are visible and still unanswered. */
   outstandingQuestionIds: string[];
+  /** Every question is answered but the answers do not meet the requirement. */
+  ruleNotMet: boolean;
   /** Where to jump to answer it: the first outstanding question, else the first. */
   sectionId: string | null;
   questionId: string | null;
@@ -432,14 +564,23 @@ export interface CoverageInput {
   visibleSections: ReadonlyArray<{ id: string; questions?: ReadonlyArray<{ id: string }> }>;
   /** Ids of the questions that have an answer. */
   answeredQuestionIds: ReadonlySet<string>;
+  /**
+   * The answers themselves, for the requirements whose content decides
+   * (`satisfied`). Without them only the presence of answers is checked.
+   */
+  answers?: AnswerMap;
+  registerRisks?: number;
+  registerResidual?: ResidualLevel | null;
 }
 
 /**
  * One row per requirement of the frameworks selected. A requirement is
  * covered when every one of its questions that the assessment actually shows
- * has an answer, and at least one of them does. A requirement whose questions
- * are all hidden is still listed, and outstanding: the product never claims
- * conformance with a requirement nothing answers.
+ * has an answer, at least one of them does, and (where the requirement has a
+ * content rule) the answers meet it: "prior consultation required" or
+ * "under consideration" does not cover Article 36. A requirement whose
+ * questions are all hidden is still listed, and outstanding: the product
+ * never claims conformance with a requirement nothing answers.
  */
 export function frameworkCoverage(input: CoverageInput): CoverageRow[] {
   const sectionOf = new Map<string, string>();
@@ -452,12 +593,22 @@ export function frameworkCoverage(input: CoverageInput): CoverageRow[] {
     .map((element) => {
       const visible = element.questionIds.filter((id) => sectionOf.has(id));
       const outstanding = visible.filter((id) => !input.answeredQuestionIds.has(id));
-      const covered = visible.length > 0 && outstanding.length === 0;
+      const answered = visible.length > 0 && outstanding.length === 0;
+      const meetsRule =
+        !element.satisfied ||
+        !input.answers ||
+        element.satisfied({
+          answers: input.answers,
+          registerRisks: input.registerRisks,
+          registerResidual: input.registerResidual,
+        });
+      const covered = answered && meetsRule;
       const target = outstanding[0] ?? visible[0] ?? null;
       return {
         element,
         covered,
         outstandingQuestionIds: outstanding,
+        ruleNotMet: answered && !meetsRule,
         sectionId: target ? (sectionOf.get(target) ?? null) : null,
         questionId: target,
       };

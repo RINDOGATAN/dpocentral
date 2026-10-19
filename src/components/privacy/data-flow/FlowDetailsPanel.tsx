@@ -31,7 +31,9 @@ import {
   HardDrive,
   Box,
 } from "lucide-react";
-import type { FlowData } from "./useDataFlowGraph";
+import Link from "next/link";
+import type { FlowData, TransferMarkerData } from "./useDataFlowGraph";
+import { TRANSFER_STATUS_COLOR } from "./flow-palette";
 import { frequencyLabel, isGeneratedFlow, LEGACY_GENERATED_DESCRIPTION } from "./flow-labels";
 
 const assetTypeIcons: Record<string, typeof Database> = {
@@ -55,6 +57,8 @@ interface FlowDetailsPanelProps {
   /** Confirm a generated flow still to confirm (shown only for those). */
   onConfirm?: (flow: FlowData) => void;
   confirming?: boolean;
+  /** The transfers outside the EEA recorded on the destination system. */
+  destinationTransfers?: TransferMarkerData | null;
 }
 
 export function FlowDetailsPanel({
@@ -65,8 +69,11 @@ export function FlowDetailsPanel({
   onDelete,
   onConfirm,
   confirming = false,
+  destinationTransfers,
 }: FlowDetailsPanelProps) {
   const tCategory = useTranslations("enums.dataCategory");
+  const tMech = useTranslations("pages.dataInventory.mechanism");
+  const tStatus = useTranslations("pages.transfers.status_option");
   const tFlow = useTranslations("dataFlow");
   const tCommon = useTranslations("common");
   const { label: enumLabel } = useEnumLabels();
@@ -86,6 +93,11 @@ export function FlowDetailsPanel({
               <Badge variant="outline" className="ml-2">
                 <Zap className="w-3 h-3 mr-1" />
                 {tFlow("details.automated")}
+              </Badge>
+            )}
+            {isDraft && (
+              <Badge variant="outline" data-testid="flow-draft-badge">
+                {tFlow("details.draftBadge")}
               </Badge>
             )}
           </SheetTitle>
@@ -123,6 +135,50 @@ export function FlowDetailsPanel({
               </div>
             </div>
           </div>
+
+          {/* Transfers outside the EEA recorded on the destination system */}
+          {destinationTransfers &&
+            ((destinationTransfers.transfers?.length ?? 0) > 0 ||
+              (destinationTransfers.unrecordedCountries?.length ?? 0) > 0) && (
+              <>
+                <Separator />
+                <div className="space-y-2" data-testid="flow-transfers">
+                  <h4 className="text-sm font-medium">{tFlow("details.transfersTitle")}</h4>
+                  <ul className="space-y-1.5">
+                    {(destinationTransfers.transfers ?? []).map((tr) => (
+                      <li key={tr.id} className="flex flex-wrap items-center gap-2 text-sm">
+                        <Link href={`/privacy/transfers/${tr.id}`} className="font-medium hover:underline">
+                          {tr.country}
+                        </Link>
+                        <span className="text-muted-foreground">
+                          {tr.mechanism && tMech.has(tr.mechanism as never)
+                            ? tMech(tr.mechanism as never)
+                            : tFlow("node.noMechanism")}
+                        </span>
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5"
+                          style={{
+                            backgroundColor: TRANSFER_STATUS_COLOR[tr.status].bg,
+                            color: TRANSFER_STATUS_COLOR[tr.status].fg,
+                          }}
+                        >
+                          {tr.suggested
+                            ? tFlow("node.suggestedStatus", { status: tStatus(tr.status) })
+                            : tStatus(tr.status)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  {(destinationTransfers.unrecordedCountries?.length ?? 0) > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {tFlow("node.unrecorded", {
+                        countries: (destinationTransfers.unrecordedCountries ?? []).join(", "),
+                      })}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
 
           <Separator />
 

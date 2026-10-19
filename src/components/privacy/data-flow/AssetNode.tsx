@@ -23,6 +23,7 @@ import type { AssetNodeData } from "./useDataFlowGraph";
 import {
   ASSET_TYPE_COLOR,
   SENSITIVITY_COLOR,
+  TRANSFER_STATUS_COLOR,
   chipSensitivity,
 } from "./flow-palette";
 
@@ -45,15 +46,34 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
   const tAssetType = useTranslations("pages.newAsset.assetType");
   const tAbbr = useTranslations("dataFlow.abbr");
   const tCategory = useTranslations("enums.dataCategory");
+  const tMech = useTranslations("pages.dataInventory.mechanism");
+  const tStatus = useTranslations("pages.transfers.status_option");
   const {
     asset,
     incomingFlows,
     outgoingFlows,
     topCategories,
+    moreCategories,
+    isIsolated,
     peakSensitivity,
     isFocused,
     isDimmed,
   } = data;
+  const marker = asset.transfersOutsideEea;
+  const hasRecordedTransfers = !!marker && marker.transferIds.length > 0;
+  const unrecorded = marker?.unrecordedCountries ?? [];
+  const markerStatus = marker?.worstStatus ?? "PENDING";
+  const markerColor = TRANSFER_STATUS_COLOR[markerStatus];
+  // One line per transfer: country, safeguard, status.
+  const markerDetail = (marker?.transfers ?? [])
+    .map((tr) =>
+      t("transferLine", {
+        country: tr.country,
+        mechanism: tr.mechanism && tMech.has(tr.mechanism as never) ? tMech(tr.mechanism as never) : t("noMechanism"),
+        status: tr.suggested ? t("suggestedStatus", { status: tStatus(tr.status) }) : tStatus(tr.status),
+      })
+    )
+    .join("\n");
 
   const Icon = assetTypeIcons[asset.type] || Box;
   const palette = ASSET_TYPE_COLOR[asset.type] ?? ASSET_TYPE_COLOR.OTHER;
@@ -156,7 +176,7 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
         </div>
 
         {/* Location, and the transfers outside the EEA placed on this system */}
-        {(asset.location || asset.transfersOutsideEea) && (
+        {(asset.location || hasRecordedTransfers || unrecorded.length > 0) && (
           <div className="px-3 pb-2 flex flex-col gap-1">
             {asset.location && (
               <p
@@ -169,21 +189,41 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
                 <span className="truncate">{asset.location}</span>
               </p>
             )}
-            {asset.transfersOutsideEea && (
+            {marker && hasRecordedTransfers && (
               <Link
                 href={
-                  asset.transfersOutsideEea.transferIds.length === 1
-                    ? `/privacy/transfers/${asset.transfersOutsideEea.transferIds[0]}`
+                  marker.transferIds.length === 1
+                    ? `/privacy/transfers/${marker.transferIds[0]}`
                     : "/privacy/transfers"
                 }
-                className="nodrag nopan self-start flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 hover:underline"
-                style={{ backgroundColor: "#fef3c7", color: "#92400e" }}
-                title={t("outsideEeaTitle", { count: asset.transfersOutsideEea.transferIds.length })}
+                className="nodrag nopan self-start flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 hover:underline max-w-full"
+                style={{ backgroundColor: markerColor.bg, color: markerColor.fg }}
+                title={[t("outsideEeaTitle", { count: marker.transferIds.length }), markerDetail].filter(Boolean).join("\n")}
                 onClick={(e) => e.stopPropagation()}
                 data-testid="node-transfer-marker"
+                data-status={markerStatus}
               >
                 <Globe2 className="w-3 h-3 shrink-0" aria-hidden />
-                {t("outsideEea", { countries: asset.transfersOutsideEea.countries.join(", ") })}
+                <span className="truncate">
+                  {t("outsideEeaStatus", {
+                    countries: marker.countries.join(", "),
+                    status: tStatus(markerStatus),
+                  })}
+                </span>
+                {markerDetail && <span className="sr-only">{markerDetail}</span>}
+              </Link>
+            )}
+            {unrecorded.length > 0 && (
+              <Link
+                href="/privacy/transfers"
+                className="nodrag nopan self-start flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 hover:underline max-w-full"
+                style={{ backgroundColor: "#ffffff", color: "#991b1b", border: "1px dashed #dc2626" }}
+                title={t("unrecordedTitle")}
+                onClick={(e) => e.stopPropagation()}
+                data-testid="node-unrecorded-transfer"
+              >
+                <Globe2 className="w-3 h-3 shrink-0" aria-hidden />
+                <span className="truncate">{t("unrecorded", { countries: unrecorded.join(", ") })}</span>
               </Link>
             )}
           </div>
@@ -209,6 +249,26 @@ function AssetNodeComponent({ data, selected }: AssetNodeProps) {
                 </span>
               );
             })}
+            {moreCategories > 0 && (
+              <span
+                className="text-[8px] font-bold px-1 py-0.5"
+                style={{ color: "#475569" }}
+                title={t("moreCategories", { count: moreCategories })}
+              >
+                +{moreCategories}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* A system no recorded flow touches */}
+        {isIsolated && (
+          <div
+            className="px-3 py-1.5 text-[10px] font-medium"
+            style={{ borderTop: "1px solid #e2e8f0", backgroundColor: "#f8fafc", color: "#64748b" }}
+            data-testid="node-no-flows"
+          >
+            {t("noFlows")}
           </div>
         )}
 

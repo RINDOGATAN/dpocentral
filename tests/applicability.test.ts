@@ -86,10 +86,18 @@ describe("evaluateApplicability", () => {
     expect(byId(items, "dpoRequired")?.state).toBe("check");
   });
 
-  it("marks a DPIA likely for monitoring, special category or children", () => {
-    for (const q of ["largeScaleMonitoring", "sensitiveData", "children"] as const) {
+  it("marks a DPIA likely for large-scale monitoring, or two of the EDPB criteria", () => {
+    const monitoring = evaluateApplicability(["GDPR"], answers({ actAsController: "YES", largeScaleMonitoring: "YES" }));
+    expect(byId(monitoring, "dpiaLikely")?.state).toBe("applies");
+    const both = evaluateApplicability(["GDPR"], answers({ actAsController: "YES", sensitiveData: "YES", children: "YES" }));
+    expect(byId(both, "dpiaLikely")?.state).toBe("applies");
+  });
+
+  it("only checks for a DPIA on one criterion alone (WP248: usually two or more)", () => {
+    for (const q of ["sensitiveData", "children"] as const) {
       const items = evaluateApplicability(["GDPR"], answers({ actAsController: "YES", [q]: "YES" }));
-      expect(byId(items, "dpiaLikely")?.state, q).toBe("applies");
+      expect(byId(items, "dpiaLikely")?.state, q).toBe("check");
+      expect(items.find((i) => i.id === "dpiaLikely")?.reasons, q).toContain("twoCriteria");
     }
   });
 
@@ -133,7 +141,7 @@ describe("the applicability i18n is complete in both locales", () => {
   const reasons = [
     "operatesEu", "operatesUk", "operatesCalifornia", "operatesUsStates", "controller",
     "processor", "roleUnsure", "publicAuthority", "largeScaleMonitoring", "sensitiveData",
-    "children", "largeVolume", "thresholds", "answerUnsure",
+    "children", "largeVolume", "thresholds", "twoCriteria", "answerUnsure",
   ];
   for (const [name, bundle] of [["en", en], ["es", es]] as const) {
     const a = (bundle as unknown as { applicability: Record<string, Record<string, unknown>> }).applicability;
