@@ -20,7 +20,15 @@ import {
 import type { PdfT } from "./privacy-program/data-mapping";
 import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
 import { pdfEnumLabel } from "./pdf-locale";
-import { breachWindowEnd } from "@/lib/breach-window";
+import { authorityNotificationAssessment, breachWindowEnd, type AuthorityNotificationAssessment } from "@/lib/breach-window";
+
+/** "Notify the authority?" in words: yes, no, or not yet assessed (src/lib/breach-window.ts). */
+export function assessmentWord(
+  a: AuthorityNotificationAssessment,
+  w: { yes: string; no: string; notAssessed: string },
+): string {
+  return a === "REQUIRED" ? w.yes : a === "NOT_REQUIRED" ? w.no : w.notAssessed;
+}
 
 /** Notification statuses that mean the authority has been told. */
 const NOTIFIED = ["SENT", "ACKNOWLEDGED"];
@@ -149,6 +157,7 @@ export function BreachRegisterReport({
         "meta.notificationDeadline": "Notification Deadline",
         "meta.yes": "Yes",
         "meta.no": "No",
+        "meta.notAssessed": "Not yet assessed",
         "overdue": "Notification deadline passed and the authority has not been notified",
         "subsections.description": "Description",
         "subsections.containmentActions": "Containment Actions",
@@ -278,7 +287,11 @@ export function BreachRegisterReport({
                 { label: tr("meta.resolvedAt"), value: fmtDateTime(inc.resolvedAt) },
                 {
                   label: tr("meta.notificationRequired"),
-                  value: inc.notificationRequired ? tr("meta.yes") : tr("meta.no"),
+                  value: assessmentWord(authorityNotificationAssessment(inc), {
+                    yes: tr("meta.yes"),
+                    no: tr("meta.no"),
+                    notAssessed: tr("meta.notAssessed"),
+                  }),
                 },
                 { label: tr("meta.notificationDeadline"), value: fmtDateTime(inc.notificationDeadline) },
               ]}
@@ -444,7 +457,7 @@ export function incidentsToCSV(
     fmtDateTime(inc.containedAt),
     inc.rootCause || "",
     fmtDateTime(inc.resolvedAt),
-    inc.notificationRequired ? w.yes : w.no,
+    assessmentWord(authorityNotificationAssessment(inc), w),
     fmtDateTime(inc.notificationDeadline),
   ]);
 

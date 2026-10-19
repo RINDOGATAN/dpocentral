@@ -45,8 +45,9 @@ export interface IndustryActivity {
   assetNames: string[];
   /**
    * One plain line shown beside the legal basis where the template's choice
-   * is an example to check rather than a default (the healthcare template's
-   * vital interests for patient care).
+   * depends on the organisation (the healthcare template's patient care:
+   * public task for public healthcare, contract for private care). The quick
+   * start also writes it to the activity's legal basis detail.
    */
   legalBasisNote?: string;
 }
@@ -505,8 +506,12 @@ export const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         name: "Patient Care & Treatment",
         description: "Recording and managing patient clinical data for treatment purposes",
         purpose: "Provide healthcare services, record diagnoses and treatments, and maintain continuity of care",
-        legalBasis: "VITAL_INTERESTS",
-        legalBasisNote: "Illustrative example: check the legal basis for your case.",
+        // Art. 6(1)(e) is the default (public healthcare); the private-care
+        // variant, Art. 6(1)(b), is named in the note, which is also written
+        // to the activity's legal basis detail. Both go with Art. 9(2)(h) and
+        // 9(3) for the health data.
+        legalBasis: "PUBLIC_TASK",
+        legalBasisNote: "Public healthcare: Art. 6(1)(e) GDPR (public task), with Art. 9(2)(h) and 9(3). Private care: Art. 6(1)(b) (contract) instead, with the same Art. 9(2)(h) and 9(3).",
         dataSubjects: ["Patients"],
         categories: ["IDENTIFIERS", "HEALTH", "DEMOGRAPHICS"],
         recipients: ["Healthcare providers", "Referring specialists"],

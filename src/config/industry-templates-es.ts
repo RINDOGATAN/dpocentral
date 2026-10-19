@@ -194,6 +194,8 @@ export const INDUSTRY_TEMPLATES_ES: Record<string, string> = {
     "Prestador sanitario o empresa de tecnología sanitaria con datos de pacientes, historia clínica electrónica y cumplimiento normativo. Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
   "Illustrative example: check the legal basis for your case.":
     "Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
+  "Public healthcare: Art. 6(1)(e) GDPR (public task), with Art. 9(2)(h) and 9(3). Private care: Art. 6(1)(b) (contract) instead, with the same Art. 9(2)(h) and 9(3).":
+    "Sanidad pública: art. 6.1.e) del RGPD (misión de interés público), junto con los arts. 9.2.h) y 9.3. Atención privada: en su lugar, art. 6.1.b) (contrato), con los mismos arts. 9.2.h) y 9.3.",
   "Electronic Health Records (EHR)": "Historia clínica electrónica (HCE)",
   "Primary clinical system storing patient medical records":
     "Sistema clínico principal con la historia clínica de los pacientes",

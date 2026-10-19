@@ -5,7 +5,7 @@
   },
   "preamble": {
     "en": "This Data Processing Agreement (\"DPA\") is entered into as of {effectiveDate} (\"Effective Date\") and forms part of any existing service agreement between the parties listed below.\n\nDATA CONTROLLER:\n{partyAName}, a company with its principal place of business at {partyAAddress} (\"Controller\")\n\nDATA PROCESSOR:\n{partyBName}, a company with its principal place of business at {partyBAddress} (\"Processor\")",
-    "es": "El presente Acuerdo de encargo de tratamiento de datos (\"ATD\") se formaliza con fecha {effectiveDate} (\"Fecha de Efectividad\") y forma parte de cualquier contrato de servicios vigente entre las partes que se indican a continuación.\n\nRESPONSABLE DEL TRATAMIENTO:\n{partyAName}, sociedad con domicilio social en {partyAAddress} (\"Responsable\")\n\nENCARGADO DEL TRATAMIENTO:\n{partyBName}, sociedad con domicilio social en {partyBAddress} (\"Encargado\")"
+    "es": "El presente Acuerdo de encargo de tratamiento de datos (\"ATD\") se formaliza con fecha {effectiveDate} (\"Fecha de entrada en vigor\") y forma parte de cualquier contrato de servicios vigente entre las partes que se indican a continuación.\n\nRESPONSABLE DEL TRATAMIENTO:\n{partyAName}, sociedad con domicilio social en {partyAAddress} (\"Responsable\")\n\nENCARGADO DEL TRATAMIENTO:\n{partyBName}, sociedad con domicilio social en {partyBAddress} (\"Encargado\")"
   },
   "background": {
     "en": "The Controller has engaged the Processor to provide certain services. In providing those services, the Processor will process Personal Data on behalf of the Controller. This DPA sets out the terms on which the Processor will process Personal Data on behalf of the Controller, as required by: (a) Article 28 of the EU General Data Protection Regulation (Regulation (EU) 2016/679) (\"EU GDPR\"); (b) the UK General Data Protection Regulation as incorporated into UK law and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025 (together, the \"UK GDPR\"); and (c) The California Consumer Privacy Act of 2018 and the California Privacy Rights Act of 2020 (\"CCPA/CPRA\"), where applicable.",
@@ -355,7 +355,7 @@
       },
       "text": {
         "en": "This DPA commences on the Effective Date and continues until all Personal Data is deleted or returned, or until the Principal Agreement terminates or expires.",
-        "es": "El presente ATD entrará en vigor en la Fecha de Efectividad y permanecerá vigente hasta que todos los Datos Personales hayan sido suprimidos o devueltos, o hasta que el Acuerdo Principal se resuelva o expire."
+        "es": "El presente ATD entrará en vigor en la Fecha de entrada en vigor y permanecerá vigente hasta que todos los Datos Personales hayan sido suprimidos o devueltos, o hasta que el Acuerdo Principal se resuelva o expire."
       }
     },
     {

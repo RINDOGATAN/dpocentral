@@ -17,7 +17,8 @@ import {
   Shield,
   ArrowRight,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { INDUSTRY_TEMPLATES_ES } from "@/config/industry-templates-es";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,10 +51,10 @@ const TEMPLATES = [
       { name: "Payment Gateway", type: "Third-Party", elements: 4 },
     ],
     activities: [
-      { name: "Customer Account Management", basis: "Contract" },
-      { name: "Order Processing & Fulfillment", basis: "Contract" },
-      { name: "Marketing & Promotions", basis: "Consent" },
-      { name: "Website Analytics & Optimization", basis: "Legitimate Interests" },
+      { name: "Customer Account Management", basis: "CONTRACT" as const },
+      { name: "Order Processing & Fulfillment", basis: "CONTRACT" as const },
+      { name: "Marketing & Promotions", basis: "CONSENT" as const },
+      { name: "Website Analytics & Optimization", basis: "LEGITIMATE_INTERESTS" as const },
     ],
     flows: ["Customer to Orders", "Orders to Payment", "Customer to Marketing"],
   },
@@ -68,11 +69,11 @@ const TEMPLATES = [
       { name: "Product Analytics", type: "Cloud Service", elements: 3 },
     ],
     activities: [
-      { name: "User Account Provisioning", basis: "Contract" },
-      { name: "Service Delivery & Processing", basis: "Contract" },
-      { name: "Subscription Billing", basis: "Contract" },
-      { name: "Customer Support", basis: "Contract" },
-      { name: "Product Analytics & Improvement", basis: "Legitimate Interests" },
+      { name: "User Account Provisioning", basis: "CONTRACT" as const },
+      { name: "Service Delivery & Processing", basis: "CONTRACT" as const },
+      { name: "Subscription Billing", basis: "CONTRACT" as const },
+      { name: "Customer Support", basis: "CONTRACT" as const },
+      { name: "Product Analytics & Improvement", basis: "LEGITIMATE_INTERESTS" as const },
     ],
     flows: ["User Actions to Logs", "User to Billing", "User to Analytics"],
   },
@@ -86,9 +87,9 @@ const TEMPLATES = [
       { name: "Staff HR System", type: "Application", elements: 4 },
     ],
     activities: [
-      { name: "Patient Care & Treatment", basis: "Vital Interests" },
-      { name: "Medical Billing & Insurance", basis: "Legal Obligation" },
-      { name: "Staff Employment Management", basis: "Contract" },
+      { name: "Patient Care & Treatment", basis: "PUBLIC_TASK" as const },
+      { name: "Medical Billing & Insurance", basis: "LEGAL_OBLIGATION" as const },
+      { name: "Staff Employment Management", basis: "CONTRACT" as const },
     ],
     flows: ["EHR to Patient Portal", "EHR to Billing"],
   },
@@ -102,9 +103,9 @@ const TEMPLATES = [
       { name: "Regulatory Reporting System", type: "Application", elements: 3 },
     ],
     activities: [
-      { name: "Customer Onboarding & KYC", basis: "Legal Obligation" },
-      { name: "Transaction Processing", basis: "Contract" },
-      { name: "AML Monitoring & Regulatory Reporting", basis: "Legal Obligation" },
+      { name: "Customer Onboarding & KYC", basis: "LEGAL_OBLIGATION" as const },
+      { name: "Transaction Processing", basis: "CONTRACT" as const },
+      { name: "AML Monitoring & Regulatory Reporting", basis: "LEGAL_OBLIGATION" as const },
     ],
     flows: ["KYC to Account", "Transactions to Monitoring"],
   },
@@ -118,10 +119,10 @@ const TEMPLATES = [
       { name: "Newsletter Platform", type: "Cloud Service", elements: 3 },
     ],
     activities: [
-      { name: "Subscription Management", basis: "Contract" },
-      { name: "Programmatic Advertising", basis: "Consent" },
-      { name: "Newsletter Distribution", basis: "Consent" },
-      { name: "Content Personalization", basis: "Legitimate Interests" },
+      { name: "Subscription Management", basis: "CONTRACT" as const },
+      { name: "Programmatic Advertising", basis: "CONSENT" as const },
+      { name: "Newsletter Distribution", basis: "CONSENT" as const },
+      { name: "Content Personalization", basis: "LEGITIMATE_INTERESTS" as const },
     ],
     flows: ["Subscribers to Ad Platform", "Subscribers to Newsletter"],
   },
@@ -135,9 +136,9 @@ const TEMPLATES = [
       { name: "Document Management", type: "Cloud Service", elements: 3 },
     ],
     activities: [
-      { name: "Client Relationship Management", basis: "Contract" },
-      { name: "Service Delivery & Project Work", basis: "Contract" },
-      { name: "Employee HR & Payroll", basis: "Contract" },
+      { name: "Client Relationship Management", basis: "CONTRACT" as const },
+      { name: "Service Delivery & Project Work", basis: "CONTRACT" as const },
+      { name: "Employee HR & Payroll", basis: "CONTRACT" as const },
     ],
     flows: ["Client to Projects", "Projects to Documents"],
   },
@@ -145,6 +146,10 @@ const TEMPLATES = [
 
 export default async function DocsQuickstartPage() {
   const t = await getTranslations("docs.quickstart");
+  const tBasis = await getTranslations("enums.legalBasis");
+  // Activity names in the screen's language, from the templates' own table.
+  const es = (await getLocale()) === "es";
+  const activityName = (name: string) => (es ? (INDUSTRY_TEMPLATES_ES[name] ?? name) : name);
 
   const vendorWatchItems = ["asset", "elements", "activity", "transfers"] as const;
   const afterItems = ["review", "legal", "vendors", "assessments"] as const;
@@ -281,8 +286,8 @@ export default async function DocsQuickstartPage() {
                       <div className="grid gap-1.5">
                         {template.activities.map((activity) => (
                           <div key={activity.name} className="flex items-center justify-between text-xs rounded border px-3 py-2">
-                            <span className="font-medium">{activity.name}</span>
-                            <Badge variant="outline" className="text-[10px] font-normal">{activity.basis}</Badge>
+                            <span className="font-medium">{activityName(activity.name)}</span>
+                            <Badge variant="outline" className="text-[10px] font-normal">{tBasis(activity.basis)}</Badge>
                           </div>
                         ))}
                       </div>

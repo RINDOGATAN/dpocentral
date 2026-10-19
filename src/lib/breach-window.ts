@@ -58,3 +58,26 @@ export function awaitsNotificationDecision(
   if (incident.notifications && incident.notifications.length > 0) return false;
   return breachWindowEnd(incident).getTime() > now.getTime();
 }
+
+/**
+ * The answer to "notify the authority?" as the breach register and the
+ * incident page show it. `notificationRequired` is false by default, so a
+ * false flag on its own is not an answer: a new incident that the rule does
+ * not flag reads "not yet assessed" until a notification record is made on it
+ * (sent, drafted or marked NOT_REQUIRED by a person). Derived from what the
+ * incident already holds, so existing incidents read the same way.
+ *
+ *   REQUIRED      the flag is set (the rule, or the facts as updated);
+ *   NOT_REQUIRED  not flagged, and a notification record exists;
+ *   NOT_ASSESSED  not flagged, and no notification recorded.
+ */
+export type AuthorityNotificationAssessment = "REQUIRED" | "NOT_REQUIRED" | "NOT_ASSESSED";
+
+export function authorityNotificationAssessment(incident: {
+  notificationRequired: boolean;
+  notifications?: readonly unknown[] | null;
+}): AuthorityNotificationAssessment {
+  if (incident.notificationRequired) return "REQUIRED";
+  if (incident.notifications && incident.notifications.length > 0) return "NOT_REQUIRED";
+  return "NOT_ASSESSED";
+}

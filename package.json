@@ -38,6 +38,7 @@
     "db:set-org-plan": "tsx scripts/assert-safe-db.ts && tsx scripts/set-org-plan.ts",
     "db:set-dsar-module": "tsx scripts/assert-safe-db.ts && tsx scripts/set-dsar-module.ts",
     "db:dsar-support-read": "tsx scripts/assert-safe-db.ts && tsx scripts/dsar-support-read.ts",
+    "db:recalculate-incident-notifications": "tsx scripts/assert-safe-db.ts && tsx scripts/recalculate-incident-notifications.ts",
     "demo:setup": "bash scripts/demo/setup-demo.sh",
     "demo:setup-all": "bash scripts/demo/setup-demo.sh --all",
     "catalog:verify": "tsx scripts/verify-catalog-snapshot.ts"

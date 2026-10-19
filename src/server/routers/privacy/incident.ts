@@ -14,7 +14,6 @@ import {
   DataCategory,
   DocumentType,
 } from "@prisma/client";
-import type { Db } from "@/lib/prisma";
 import { requireAi, assertAiRateLimit, recordGeneration, postureLane } from "../../services/ai/posture";
 import { chatComplete } from "../../services/ai/llm-door";
 import {
@@ -33,35 +32,10 @@ import {
   TIMELINE_NO_LONGER_REQUIRED,
   TIMELINE_NOW_REQUIRED,
 } from "../../services/incidents/notification-assessment";
+import { createPendingAuthorityNotifications } from "../../services/incidents/authority-notifications";
 
 // Calculate notification deadline based on jurisdiction
 const calculateNotificationDeadline = notificationDeadlineFor;
-
-type IncidentDb = Pick<Db, "organizationJurisdiction" | "incidentNotification">;
-
-/** One PENDING notification to the authority per jurisdiction of the organisation. */
-async function createPendingAuthorityNotifications(
-  prisma: IncidentDb,
-  organizationId: string,
-  incidentId: string,
-  discoveredAt: Date,
-): Promise<void> {
-  const orgJurisdictions = await prisma.organizationJurisdiction.findMany({
-    where: { organizationId },
-    include: { jurisdiction: true },
-  });
-  for (const oj of orgJurisdictions) {
-    await prisma.incidentNotification.create({
-      data: {
-        incidentId,
-        jurisdictionId: oj.jurisdictionId,
-        recipientType: "DPA",
-        status: NotificationStatus.PENDING,
-        deadline: calculateNotificationDeadline(discoveredAt, oj.jurisdiction.breachNotificationHours),
-      },
-    });
-  }
-}
 
 export const incidentRouter = createTRPCRouter({
   // ============================================================

@@ -81,7 +81,7 @@ export function deriveObligations(input: AssembleInput): DerivedObligation[] {
       firstDue: addMonths(effective, 12),
       label: {
         en: "Re-evaluate the Transfer Impact Assessment (Annex IV) and refresh the importer's declarations",
-        es: "Reevaluar la evaluación de impacto de las transferencias (Anexo IV) y renovar las declaraciones del importador",
+        es: "Reevaluar la evaluación de impacto de la transferencia (Anexo IV) y renovar las declaraciones del importador",
       },
     });
   }

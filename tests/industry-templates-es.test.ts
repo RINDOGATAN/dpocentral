@@ -8,6 +8,8 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import {
   INDUSTRY_TEMPLATES,
   localizeTemplate,
@@ -118,14 +120,24 @@ describe("the healthcare template's legal basis", () => {
   const healthcare = INDUSTRY_TEMPLATES.find((t) => t.id === "healthcare")!;
   const care = healthcare.activities.find((a) => a.name === "Patient Care & Treatment")!;
 
-  it("keeps vital interests, marked as an example to check, in both languages", () => {
-    expect(care.legalBasis).toBe("VITAL_INTERESTS");
-    expect(care.legalBasisNote).toBe("Illustrative example: check the legal basis for your case.");
+  it("uses public task (Art. 6(1)(e)), not vital interests, and names the private-care variant", () => {
+    expect(care.legalBasis).toBe("PUBLIC_TASK");
+    expect(care.legalBasisNote).toContain("Art. 6(1)(e)");
+    expect(care.legalBasisNote).toContain("Art. 6(1)(b)");
+    expect(care.legalBasisNote).toContain("Art. 9(2)(h) and 9(3)");
+    expect(healthcare.activities.some((a) => a.legalBasis === "VITAL_INTERESTS")).toBe(false);
     expect(healthcare.description).toContain("Illustrative example: check the legal basis for your case.");
     const es = localizeTemplate(healthcare, "es");
-    expect(es.activities.find((a) => a.legalBasis === "VITAL_INTERESTS")?.legalBasisNote).toBe(
-      "Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.",
-    );
+    const esCare = es.activities.find((a) => a.name === "Atención y tratamiento de pacientes")!;
+    expect(esCare.legalBasis).toBe("PUBLIC_TASK");
+    expect(esCare.legalBasisNote).toContain("art. 6.1.e)");
+    expect(esCare.legalBasisNote).toContain("art. 6.1.b)");
+    expect(esCare.legalBasisNote).toContain("arts. 9.2.h) y 9.3");
     expect(es.description).toContain("Ejemplo con fines ilustrativos: revisa la base jurídica para tu caso.");
+  });
+
+  it("the quick start writes the note to the activity's legal basis detail", () => {
+    const src = readFileSync(path.join(__dirname, "../src/server/routers/privacy/quickstart.ts"), "utf8");
+    expect(src).toContain("legalBasisDetail: templateActivity.legalBasisNote");
   });
 });

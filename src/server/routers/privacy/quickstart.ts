@@ -1146,6 +1146,9 @@ export const quickstartRouter = createTRPCRouter({
                 description: templateActivity.description,
                 purpose: templateActivity.purpose,
                 legalBasis: templateActivity.legalBasis,
+                // The template's note on the basis (for example the healthcare
+                // template's public and private variants) stays with the record.
+                legalBasisDetail: templateActivity.legalBasisNote,
                 dataSubjects: templateActivity.dataSubjects,
                 categories: templateActivity.categories,
                 recipients: templateActivity.recipients,

@@ -4,8 +4,8 @@
   "sourceRepo": "RINDOGATAN/deal-room",
   "sourceCommit": "fab23a9cf9d9949a0197827b717ff1a1d9211a43",
   "files": {
-    "dpa/clauses.json": "606dd42fbb75c32505fd771cb263bd64a003ab8ea7fa5550c2ae12e43bcc729f",
-    "dpa/boilerplate.json": "50476a87ccce009e992c39f74bd09d5f9c8b1bd4333cbcab6b09cb20387e2706",
+    "dpa/clauses.json": "c8f43cdec14746e45c7085ae4658b4d8ba2215c0bf51736388e76d84cde6a60d",
+    "dpa/boilerplate.json": "631b6971771ce5eefc6a8d1dfd0f18466f94ef19b35c87fcf739b5a804a11801",
     "dpa/parameters.json": "d7bf6b2fad48984869fe3e996536e13a3f884980697daebf80b595604201f64c",
     "dpa/metadata.json": "2d3a5ca542882826c7273070a2e424dda2c23430d9a3e3d9798cbdccaf7a9e4c",
     "derived-texts.json": "db9655b9994c4df9de4f567b8fa76ac315fa720b75833488a7c301180c599a4a"

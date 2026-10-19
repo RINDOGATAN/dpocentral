@@ -28,6 +28,7 @@ export async function csvLabelsFor<H extends string>(
     notSpecified: tWords("notSpecified"),
     yes: tWords("yes"),
     no: tWords("no"),
+    notAssessed: tWords("notAssessed"),
     none: tWords("none"),
     noDpa: tWords("noDpa"),
   };

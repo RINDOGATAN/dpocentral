@@ -145,7 +145,9 @@ export function OnboardingWelcome() {
                       <div>
                         <p className="font-medium">{t(persona.titleKey)}</p>
                         <p className="text-sm text-muted-foreground">
-                          {t(persona.descKey)}
+                          {/* Hosted: an account holds up to five organisations
+                              (ORGANIZATIONS_PER_ACCOUNT), so the adviser's line says so. */}
+                          {t(hosted && persona.descKey === "privacyProfessionalDesc" ? "privacyProfessionalDescHosted" : persona.descKey)}
                         </p>
                       </div>
                     </CardContent>
