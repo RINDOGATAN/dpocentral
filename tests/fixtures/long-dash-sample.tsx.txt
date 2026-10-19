@@ -1,0 +1,6 @@
+// A comment with a long dash — never rendered.
+/* Another — block comment. */
+export function Sample() {
+  const label = "Shown — to the reader"; // trailing comment — ignored
+  return <p>Also shown — here</p>;
+}

@@ -331,7 +331,7 @@ export const DPIA_AUTO_FILL_RULES: AutoFillRule[] = [
     condition: (ctx) => ctx.transfers.length > 0,
     generateResponse: (ctx) => {
       const lines = ctx.transfers.map((t) => {
-        let line = `- ${t.destinationCountry}: Transfer mechanism — ${t.mechanism}`;
+        let line = `- ${t.destinationCountry}: transfer mechanism ${t.mechanism}`;
         if (t.safeguards) {
           line += `. Safeguards: ${t.safeguards}`;
         }
@@ -409,7 +409,7 @@ export const DPIA_AUTO_FILL_RULES: AutoFillRule[] = [
       ).length;
       if (specialCount > 0) {
         riskFactors.push(
-          `Special category data is processed (${specialCount} element(s)) — this significantly increases risk to data subjects' fundamental rights.`
+          `Special category data is processed (${specialCount} element(s)): this significantly increases risk to data subjects' fundamental rights.`
         );
       }
 
@@ -418,13 +418,13 @@ export const DPIA_AUTO_FILL_RULES: AutoFillRule[] = [
           ctx.transfers.map((t) => t.destinationCountry)
         );
         riskFactors.push(
-          `International transfers to ${countries.length} country/countries (${formatList(countries)}) — transfer risk must be assessed per Schrems II requirements.`
+          `International transfers to ${countries.length} country/countries (${formatList(countries)}): transfer risk must be assessed per Schrems II requirements.`
         );
       }
 
       if (ctx.activity.automatedDecisionMaking) {
         riskFactors.push(
-          "Automated decision-making is involved — risk of algorithmic bias and lack of transparency."
+          "Automated decision-making is involved: risk of algorithmic bias and lack of transparency."
         );
       }
 
@@ -433,13 +433,13 @@ export const DPIA_AUTO_FILL_RULES: AutoFillRule[] = [
       );
       if (hasVulnerable) {
         riskFactors.push(
-          "Vulnerable data subjects are affected — heightened duty of care applies."
+          "Vulnerable data subjects are affected: heightened duty of care applies."
         );
       }
 
       if (ctx.elements.length > 10) {
         riskFactors.push(
-          `Large number of data elements (${ctx.elements.length}) — broader data scope increases exposure risk.`
+          `Large number of data elements (${ctx.elements.length}): broader data scope increases exposure risk.`
         );
       }
 

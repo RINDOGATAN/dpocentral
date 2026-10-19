@@ -123,9 +123,14 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
         : item.toConfirm
           ? board("actions.confirm", { step: guided(`steps.${item.stepId}.label`) })
           : board("actions.step", { step: guided(`steps.${item.stepId}.label`) });
+    const daysPast = action.date
+      ? Math.max(1, Math.floor((new Date(report.generatedAt).getTime() - new Date(`${action.date}T00:00:00.000Z`).getTime()) / 86_400_000))
+      : 0;
     const when = action.date
       ? action.dateSource === "deadline"
-        ? board("actions.deadline", { date: date(action.date) })
+        ? action.overdue
+          ? board("actions.overdue", { date: date(action.date), days: daysPast })
+          : board("actions.deadline", { date: date(action.date) })
         : board("actions.plan", { date: date(action.date) })
       : board("actions.noDate");
     return { action: label, owner: action.owner ?? board("actions.noOwner"), date: when };
@@ -143,7 +148,19 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
   const of = (total: number) => board("kpi.ofTotal", { total });
   const notifiable = incidents.notifiedWithin72h + incidents.notifiedLate + incidents.notNotifiedYet;
   const breachIssues = incidents.notifiedLate + incidents.notNotifiedYet;
-  const completed = rights ? rights.completedOnTime + rights.completedLate : 0;
+  // Still to notify on the date generated, from any period (the backlog a quiet period would hide).
+  const toNotifyNow = incidents.toNotifyNow ?? 0;
+  const breachFlag =
+    breachIssues > 0
+      ? board("kpi.breachesFlag", { count: breachIssues })
+      : toNotifyNow > 0
+        ? board("kpi.breachesBacklog", { count: toNotifyNow })
+        : null;
+  // The shared on-time measure (src/lib/dsar-on-time.ts): open overdue requests count against it.
+  const measured = rights ? rights.completedOnTime + rights.completedLate + rights.openOverdue : 0;
+  const overdueNow = rights ? (rights.overdueNow ?? rights.openOverdue) : 0;
+  const rightsFlag = overdueNow > 0 ? board("kpi.rightsFlag", { count: overdueNow }) : null;
+  const vendorBase = vendors.active ?? vendors.total;
   const tiles: Kpi[] = [
     {
       id: "documents",
@@ -160,20 +177,20 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
           of: of(notifiable),
           label: board("kpi.breaches"),
           ratio: ratio(incidents.notifiedWithin72h, notifiable),
-          flag: breachIssues > 0 ? board("kpi.breachesFlag", { count: breachIssues }) : null,
+          flag: breachFlag,
         }
-      : { id: "breaches", value: "0", of: null, label: board("kpi.breachesNone"), ratio: null, flag: null },
+      : { id: "breaches", value: "0", of: null, label: board("kpi.breachesNone"), ratio: null, flag: breachFlag },
   ];
   if (rights) {
     tiles.push(
-      completed > 0
+      measured > 0
         ? {
             id: "rights",
             value: num(rights.completedOnTime),
-            of: of(completed),
+            of: of(measured),
             label: board("kpi.rights"),
-            ratio: ratio(rights.completedOnTime, completed),
-            flag: rights.openOverdue > 0 ? board("kpi.rightsFlag", { count: rights.openOverdue }) : null,
+            ratio: ratio(rights.completedOnTime, measured),
+            flag: rightsFlag,
           }
         : {
             id: "rights",
@@ -181,18 +198,18 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
             of: null,
             label: board("kpi.rightsNone"),
             ratio: null,
-            flag: rights.openOverdue > 0 ? board("kpi.rightsFlag", { count: rights.openOverdue }) : null,
+            flag: rightsFlag,
           },
     );
   }
   tiles.push(
-    vendors.total > 0
+    vendorBase > 0
       ? {
           id: "vendors",
           value: num(vendors.withDpa),
-          of: of(vendors.total),
+          of: of(vendorBase),
           label: board("kpi.vendors"),
-          ratio: ratio(vendors.withDpa, vendors.total),
+          ratio: ratio(vendors.withDpa, vendorBase),
           flag: vendors.highRiskWithoutDpa > 0 ? board("kpi.vendorsFlag", { count: vendors.highRiskWithoutDpa }) : null,
         }
       : { id: "vendors", value: "0", of: null, label: board("kpi.vendorsNone"), ratio: null, flag: null },
@@ -243,6 +260,9 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
         { label: board("incidents.notifiedLate"), value: num(incidents.notifiedLate) },
         { label: board("incidents.notNotifiedYet"), value: num(incidents.notNotifiedYet) },
         { label: board("incidents.openNow"), value: num(incidents.openNow) },
+        ...(incidents.toNotifyNow != null
+          ? [{ label: board("incidents.toNotifyNow"), value: num(incidents.toNotifyNow) }]
+          : []),
       ],
     },
     rights: rights
@@ -255,6 +275,9 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
             { label: board("rights.openOverdue"), value: num(rights.openOverdue) },
             { label: board("rights.openInTime"), value: num(rights.openInTime) },
             { label: board("rights.closedOther"), value: num(rights.closedOther) },
+            ...(rights.overdueNow != null
+              ? [{ label: board("rights.overdueNow"), value: num(rights.overdueNow) }]
+              : []),
           ],
         }
       : null,
@@ -262,6 +285,7 @@ export function boardReportText(report: BoardReport, tr: BoardTranslators, local
       title: board("vendors.title"),
       rows: [
         { label: board("vendors.total"), value: num(vendors.total) },
+        ...(vendors.active != null ? [{ label: board("vendors.active"), value: num(vendors.active) }] : []),
         { label: board("vendors.withDpa"), value: num(vendors.withDpa) },
         { label: board("vendors.highRiskWithoutDpa"), value: num(vendors.highRiskWithoutDpa) },
       ],

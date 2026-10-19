@@ -11,7 +11,18 @@
 import { renderDpaPdf, renderTiaPdf } from "@/server/services/export/dpa/render";
 import { dpaSnapshotSchema } from "@/lib/dpa-engine/snapshot";
 import type { AssembleInput } from "@/lib/dpa-engine";
-import { PDF, type ExportFile } from "./context";
+import { PDF, nameForFile, type ExportFile } from "./context";
+
+/**
+ * The leading words of the file name, in the document's own language (the
+ * contract's, which may differ from the reader's): in Spanish the contrato
+ * de encargo del tratamiento and the evaluación de impacto de la
+ * transferencia (EIT), without accents so the name stays plain ASCII.
+ */
+export function dpaFileTitle(doc: "dpa" | "tia", language: string): string {
+  if (language === "es") return doc === "tia" ? "EIT" : "Contrato-de-encargo";
+  return doc === "tia" ? "TIA" : "DPA";
+}
 
 export interface DpaContractForExport {
   metadata: unknown;
@@ -56,10 +67,10 @@ export async function buildDpaExport(
   const rendered =
     doc === "tia" ? await renderTiaPdf(prepared.input, orgName) : await renderDpaPdf(prepared.input, orgName);
   if (!rendered) return null;
-  const slug = contract.vendor.name.replace(/[^a-zA-Z0-9]+/g, "-");
+  const slug = nameForFile(contract.vendor.name);
   return {
     data: new Uint8Array(rendered.buffer),
-    filename: `${doc === "tia" ? "TIA" : "DPA"}-${slug}-${prepared.effectiveDate}.pdf`,
+    filename: `${dpaFileTitle(doc, prepared.input.context.language)}-${slug}-${prepared.effectiveDate}.pdf`,
     contentType: PDF,
     effectiveDate: prepared.effectiveDate,
   };

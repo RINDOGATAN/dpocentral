@@ -7,6 +7,7 @@
  */
 
 import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
+import { displayedDpa, dpaDisplayStatus } from "@/lib/vendor-contracts";
 
 export interface VendorCsvRow {
   id: string;
@@ -19,6 +20,8 @@ export interface VendorCsvRow {
   primaryContact: string | null;
   contactEmail: string | null;
   categories: string[];
+  /** A drafted vendor nobody has confirmed: listed, not counted in the coverage. */
+  isDraft?: boolean;
   dataProcessed: string[];
   countries: string[];
   certifications: string[];
@@ -80,12 +83,26 @@ export const VENDOR_CSV_EN: CsvLabels<VendorCsvKey> = {
   code: rawCode,
 };
 
-export function vendorsToCSV(vendors: VendorCsvRow[], labels: CsvLabels<VendorCsvKey> = VENDOR_CSV_EN): string {
+/**
+ * One quoted cell. A value a spreadsheet would read as a formula (=, +, -, @,
+ * tab, carriage return) is prefixed with a quote, so opening the file never
+ * runs anything a vendor's name or website could carry.
+ */
+function cell(value: string): string {
+  const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  return `"${safe.replace(/"/g, '""')}"`;
+}
+
+export function vendorsToCSV(
+  vendors: VendorCsvRow[],
+  labels: CsvLabels<VendorCsvKey> = VENDOR_CSV_EN,
+  now: Date = new Date(),
+): string {
   const { headers: h, words: w, code } = labels;
   const headers = VENDOR_CSV_KEYS.map((k) => h[k]);
 
   const rows = vendors.map((v) => {
-    const dpa = v.contracts.find((c) => c.type === "DPA");
+    const dpa = displayedDpa(v.contracts, now);
     return [
       v.name,
       code("vendorStatus", v.status),
@@ -101,14 +118,14 @@ export function vendorsToCSV(vendors: VendorCsvRow[], labels: CsvLabels<VendorCs
       fmtDate(v.lastAssessedAt),
       fmtDate(v.nextReviewAt),
       v.contracts.map((c) => c.name).join("; "),
-      dpa ? code("contractStatus", dpa.status) : w.noDpa,
+      dpa ? code("contractStatus", dpaDisplayStatus(dpa, now)) : w.noDpa,
     ];
   });
 
   return [
     headers.join(","),
     ...rows.map((row) =>
-      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+      row.map((value) => cell(String(value))).join(",")
     ),
   ].join("\n");
 }

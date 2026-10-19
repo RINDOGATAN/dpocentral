@@ -22,6 +22,8 @@ import {
 } from "../design-system";
 import type { VendorCsvRow } from "./csv";
 import type { PdfT } from "../privacy-program/data-mapping";
+import { pdfChrome, pdfDate } from "../pdf-locale";
+import { displayedDpa, dpaCoverage, dpaDisplayStatus, dpaTone, isContractInForce } from "@/lib/vendor-contracts";
 
 const s = StyleSheet.create({
   coverTitle: {
@@ -80,11 +82,6 @@ const s = StyleSheet.create({
   },
 });
 
-function fmtDate(d: Date | null | undefined): string {
-  if (!d) return "";
-  return new Date(d).toISOString().split("T")[0]!;
-}
-
 function toneForCrit(tier: string): string {
   switch (tier) {
     case "CRITICAL": return "#dc2626";
@@ -102,6 +99,9 @@ export function VendorRegisterDocument({
   tCommon,
   tEnum,
   locale,
+  categoryLabel = (c: string) => c,
+  dataLabel = (d: string) => d,
+  now: props_now,
 }: {
   vendors: VendorCsvRow[];
   orgName: string;
@@ -113,24 +113,33 @@ export function VendorRegisterDocument({
   tEnum: PdfT;
   /** BCP-47 locale for PDF metadata. */
   locale?: string;
+  /** A category as the report prints it (the CSV's translation); the stored value by default. */
+  categoryLabel?: (category: string) => string;
+  /** A data category as the report prints it (the CSV's translation); the stored value by default. */
+  dataLabel?: (category: string) => string;
+  /** The day the figures are read on (tests pass a fixed one). */
+  now?: Date;
 }) {
-  const date = new Date().toISOString().split("T")[0]!;
+  const now = props_now ?? new Date();
+  const date = pdfDate(now, "long");
 
+  // Coverage as every report counts it (src/lib/vendor-contracts.ts): confirmed
+  // vendors in use, with a processor contract in force.
+  const coverage = dpaCoverage(vendors, now);
   const active = vendors.filter((v) => v.status === "ACTIVE").length;
-  const withDpa = vendors.filter((v) => v.status === "ACTIVE" && v.contracts.some((c) => c.type === "DPA")).length;
   const withCert = vendors.filter((v) => v.certifications.length > 0).length;
-  const now = new Date();
   const thirtyDays = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+  // Contracts in force today that end within 30 days.
   const expiringContracts = vendors.reduce((n, v) => {
     return n + v.contracts.filter(
-      (c) => c.endDate && new Date(c.endDate) <= thirtyDays && c.status === "ACTIVE"
+      (c) => c.endDate && new Date(c.endDate) <= thirtyDays && isContractInForce(c, now)
     ).length;
   }, 0);
 
   const critOrder = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
   const critCounts = new Map<string, number>();
   for (const v of vendors) {
-    const tier = v.riskTier ?? "—";
+    const tier = v.riskTier ?? "NONE";
     critCounts.set(tier, (critCounts.get(tier) ?? 0) + 1);
   }
   const critBars = critOrder.map((tier) => ({
@@ -152,7 +161,7 @@ export function VendorRegisterDocument({
   // Group by primary category
   const groups = new Map<string, VendorCsvRow[]>();
   for (const v of vendors) {
-    const cat = v.categories[0] ?? "Uncategorized";
+    const cat = v.categories[0] ? categoryLabel(v.categories[0]) : t("uncategorized");
     if (!groups.has(cat)) groups.set(cat, []);
     groups.get(cat)!.push(v);
   }
@@ -195,7 +204,7 @@ export function VendorRegisterDocument({
           </View>
           <View style={s.colHalf}>
             <Text style={s.subHeading}>{t("coverage")}</Text>
-            <MiniCoverageBar label={t("coverageDpa")} value={withDpa} total={active} />
+            <MiniCoverageBar label={t("coverageDpa")} value={coverage.withDpa} total={coverage.active} />
             <MiniCoverageBar label={t("coverageCertified")} value={withCert} total={vendors.length} />
           </View>
         </View>
@@ -203,7 +212,7 @@ export function VendorRegisterDocument({
         {certBreakdown.length > 0 && (
           <>
             <Text style={s.subHeading}>{t("certificationsTop")}</Text>
-            <HorizontalBarChart rows={certBreakdown} labelWidth={110} />
+            <HorizontalBarChart rows={certBreakdown} labelWidth={110} percentOf={vendors.length} />
           </>
         )}
       </CoverFrame>
@@ -216,16 +225,17 @@ export function VendorRegisterDocument({
             category={g.category}
             count={g.vendors.length}
             columns={[
-              { header: t("columns.vendor"), width: 2.3 },
+              { header: t("columns.vendor"), width: 1.8 },
               { header: t("columns.status"), width: 1.1 },
-              { header: t("columns.risk"), width: 1 },
-              { header: t("columns.countries"), width: 1.4 },
-              { header: t("columns.certifications"), width: 2 },
-              { header: t("columns.dpa"), width: 1 },
-              { header: t("columns.nextReview"), width: 1.1 },
+              { header: t("columns.risk"), width: 0.9 },
+              { header: t("columns.countries"), width: 1.1 },
+              { header: t("columns.certifications"), width: 1.8 },
+              { header: t("columns.dpa"), width: 1.4 },
+              { header: t("columns.nextReview"), width: 1.5 },
             ]}
             rows={g.vendors.map((v) => {
-              const dpa = v.contracts.find((c) => c.type === "DPA");
+              const dpa = displayedDpa(v.contracts, now);
+              const reviewPast = !!v.nextReviewAt && new Date(v.nextReviewAt).getTime() < now.getTime();
               return [
                 v.name,
                 (
@@ -247,17 +257,46 @@ export function VendorRegisterDocument({
                   </View>
                 ) : "",
                 dpa ? (
-                  <PillBadge key="d" tone="success" uppercase>
-                    {tEnum(`contractStatus.${dpa.status}`).toUpperCase()}
+                  <PillBadge key="d" tone={dpaTone(dpa, now)} uppercase>
+                    {tEnum(`contractStatus.${dpaDisplayStatus(dpa, now)}`).toUpperCase()}
                   </PillBadge>
                 ) : v.status === "ACTIVE" ? (
                   <PillBadge key="d" tone="danger" uppercase>{t("dpaMissing")}</PillBadge>
                 ) : "",
-                fmtDate(v.nextReviewAt),
+                reviewPast ? (
+                  <PillBadge key="n" tone="danger">{pdfDate(v.nextReviewAt)}</PillBadge>
+                ) : pdfDate(v.nextReviewAt),
               ];
             })}
           />
         ))}
+
+        {/* Art. 28 and Art. 30(1)(d)-(e): what each processor does with which data, where, under which contract. */}
+        <SectionHeading title={t("details")} lead={t("detailsLead")} />
+        <CategoryTable
+          columns={[
+            { header: t("columns.vendor"), width: 1.6 },
+            { header: t("columns.service"), width: 2.6 },
+            { header: t("columns.dataProcessed"), width: 2.2 },
+            { header: t("columns.countries"), width: 1.1 },
+            { header: t("columns.contract"), width: 1.8 },
+          ]}
+          rows={vendors.map((v) => {
+            const dpa = displayedDpa(v.contracts, now);
+            const span = dpa
+              ? [pdfDate(dpa.startDate), pdfDate(dpa.endDate)].filter(Boolean).join(t("dateRangeJoin"))
+              : "";
+            return [
+              v.name,
+              v.description ?? pdfChrome().notStated,
+              v.dataProcessed.length > 0 ? v.dataProcessed.map(dataLabel).join(", ") : pdfChrome().notStated,
+              v.countries.join(", ") || pdfChrome().notStated,
+              dpa
+                ? `${tEnum(`contractStatus.${dpaDisplayStatus(dpa, now)}`)}${span ? ` (${span})` : ""}`
+                : t("noDpa"),
+            ];
+          })}
+        />
       </PageFrame>
     </Document>
   );

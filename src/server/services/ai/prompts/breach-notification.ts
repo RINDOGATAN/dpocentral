@@ -93,7 +93,8 @@ Guidelines:
 - ${languageLine}
 - Formal, precise, factual tone; no speculation beyond what the context supports.
 - Do not invent facts; only use what is provided, with bracketed placeholders for gaps.
-- This is a DRAFT for review by the organization's privacy team — do not claim it has been sent or approved.
+- This is a DRAFT for review by the organization's privacy team: do not claim it has been sent or approved.
+- Do not use long dashes; use a colon, a comma or parentheses.
 - Keep it under 600 words.`;
 }
 

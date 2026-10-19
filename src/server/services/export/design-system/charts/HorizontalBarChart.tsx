@@ -67,6 +67,7 @@ export function HorizontalBarChart({
   showPercentage = true,
   showEmptyAsZero = true,
   labelWidth,
+  percentOf,
 }: {
   rows: BarRow[];
   max?: number;
@@ -74,8 +75,14 @@ export function HorizontalBarChart({
   /** If true, empty rows still render with a minimal empty track + "0" */
   showEmptyAsZero?: boolean;
   labelWidth?: number;
+  /**
+   * What the percentage is a share of. By default the sum of the rows; pass
+   * the population when one item can count in several rows (vendors holding
+   * several certifications), so each row reads as a share of that population.
+   */
+  percentOf?: number;
 }) {
-  const total = rows.reduce((n, r) => n + r.value, 0);
+  const total = percentOf ?? rows.reduce((n, r) => n + r.value, 0);
   const effectiveMax = max ?? Math.max(1, ...rows.map((r) => r.value));
   return (
     <View style={s.container}>

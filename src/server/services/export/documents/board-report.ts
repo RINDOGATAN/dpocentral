@@ -11,11 +11,10 @@ import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { presetPeriod, type BoardPeriod } from "@/lib/board-report";
 import { boardReportText } from "@/lib/board-report-text";
-import { fileSlug } from "@/lib/document-pack";
 import { loadBoardReport } from "@/server/services/program/board-report";
 import { BoardReportDocument } from "../board-report";
 import { withDraftGapsPage } from "../draft-gaps-page";
-import { PDF, type ExportArgs, type ExportFile } from "./context";
+import { PDF, nameForFile, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
 
 export async function buildBoardReportExport(args: ExportArgs & { period?: BoardPeriod }): Promise<ExportFile> {
@@ -68,7 +67,7 @@ export async function buildBoardReportExport(args: ExportArgs & { period?: Board
   );
   return {
     data: new Uint8Array(buffer),
-    filename: `${board("pdf.fileTitle")}-${fileSlug(orgName)}-${period.from}-${period.to}.pdf`,
+    filename: `${board("pdf.fileTitle")}-${nameForFile(orgName)}-${period.from}-${period.to}.pdf`,
     contentType: PDF,
   };
 }

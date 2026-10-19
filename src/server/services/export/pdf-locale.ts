@@ -73,3 +73,49 @@ const PDF_ENUMS: Record<PdfLocale, EnumGroups> = {
 export function pdfEnumLabel(kind: string, value: string): string {
   return PDF_ENUMS[store.getStore() ?? "en"][kind]?.[value] ?? value.replace(/_/g, " ");
 }
+
+/** The language of the report being rendered ("en" outside `withPdfLocale`). */
+export function currentPdfLocale(): PdfLocale {
+  return store.getStore() ?? "en";
+}
+
+/**
+ * A date as the reports print it, read in UTC so a date-only value never
+ * shifts by a day with the server's time zone:
+ *
+ * - `short` (the default): 19/10/2026 in Spanish, 2026-10-19 in English;
+ * - `long`: "19 de octubre de 2026" / "19 October 2026";
+ * - `month`: "oct. 2026" / "Oct 2026".
+ *
+ * The language is the report's (`withPdfLocale`), unless `locale` is given,
+ * for text built before the render. An empty or invalid value gives "".
+ * File names keep their ISO date and do not use this.
+ */
+export function pdfDate(
+  value: Date | string | null | undefined,
+  style: "short" | "long" | "month" = "short",
+  locale?: string | null,
+): string {
+  if (!value) return "";
+  const date = typeof value === "string" ? new Date(value.length === 10 ? `${value}T00:00:00.000Z` : value) : value;
+  if (Number.isNaN(date.getTime())) return "";
+  const lang = locale != null ? toPdfLocale(locale) : currentPdfLocale();
+  if (style === "short") {
+    const iso = date.toISOString().slice(0, 10);
+    if (lang === "en") return iso;
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  }
+  const options: Intl.DateTimeFormatOptions =
+    style === "long"
+      ? { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }
+      : { month: "short", year: "numeric", timeZone: "UTC" };
+  return new Intl.DateTimeFormat(lang === "es" ? "es-ES" : "en-GB", options).format(date);
+}
+
+/** A whole number with the report's thousands separator: 15.000 / 15,000. */
+export function pdfNumber(value: number, locale?: string | null): string {
+  const lang = locale != null ? toPdfLocale(locale) : currentPdfLocale();
+  // es-ES leaves four-digit numbers ungrouped by default; the reports group them ("2.500").
+  return new Intl.NumberFormat(lang === "es" ? "es-ES" : "en-GB", { useGrouping: "always" } as Intl.NumberFormatOptions).format(value);
+}

@@ -1,0 +1,30 @@
+{
+  "_comment": "String literals in src that may keep a long or en dash (tests/copy-long-dash.test.ts). This list may only shrink. src/lib/record-name.ts: the separator of record names written before 11 Oct 2026, kept to find them. src/config/dpia-template-v2.ts and src/config/vendor-questionnaires*.ts: text and answer options of the DPIA template and the vendor questionnaire; an option is stored as the answer itself, so changing the text would orphan existing answers. Clean them with a migration of the stored answers.",
+  "literals": [
+    "src/config/dpia-template-v2.ts: 1,000 – 10,000",
+    "src/config/dpia-template-v2.ts: 10,000 – 100,000",
+    "src/config/dpia-template-v2.ts: 100,000 – 1,000,000",
+    "src/config/dpia-template-v2.ts: Describe how data subject rights are facilitated — e.g. privacy notices, consent preference centers, data portability tools, opt-out mechanisms.",
+    "src/config/dpia-template-v2.ts: Essential — cannot achieve the purpose without it",
+    "src/config/dpia-template-v2.ts: Fully expected — directly related to the service they signed up for",
+    "src/config/dpia-template-v2.ts: Highly beneficial — significantly more effective than alternatives",
+    "src/config/dpia-template-v2.ts: Map how data moves through your systems — from collection to storage, processing, sharing, and deletion. Identify all recipients and processors.",
+    "src/config/dpia-template-v2.ts: No — residual risk has been sufficiently mitigated",
+    "src/config/dpia-template-v2.ts: Not clearly necessary — alternatives could achieve the same result",
+    "src/config/dpia-template-v2.ts: Possibly unexpected — not directly related to the primary service",
+    "src/config/dpia-template-v2.ts: Probably expected — a reasonable extension of the service",
+    "src/config/dpia-template-v2.ts: Somewhat beneficial — marginal improvement over alternatives",
+    "src/config/dpia-template-v2.ts: Under consideration — further analysis needed",
+    "src/config/dpia-template-v2.ts: Unexpected — data subjects would likely be surprised",
+    "src/config/dpia-template-v2.ts: Yes — high residual risk that cannot be sufficiently mitigated",
+    "src/config/vendor-questionnaires-es.ts: No — not required",
+    "src/config/vendor-questionnaires-es.ts: No — not yet started",
+    "src/config/vendor-questionnaires-es.ts: Yes — completed",
+    "src/config/vendor-questionnaires-es.ts: Yes — in progress",
+    "src/config/vendor-questionnaires.ts: No — not required",
+    "src/config/vendor-questionnaires.ts: No — not yet started",
+    "src/config/vendor-questionnaires.ts: Yes — completed",
+    "src/config/vendor-questionnaires.ts: Yes — in progress",
+    "src/lib/record-name.ts: —"
+  ]
+}

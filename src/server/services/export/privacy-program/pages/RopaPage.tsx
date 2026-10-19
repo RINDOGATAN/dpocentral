@@ -19,10 +19,10 @@ import {
   type ProgramInput,
   type PdfT,
 } from "../data-mapping";
+import { pdfDate } from "../../pdf-locale";
 
 function fmtDate(d: Date | null | undefined): string {
-  if (!d) return "";
-  return new Date(d).toISOString().split("T")[0]!;
+  return pdfDate(d);
 }
 
 const s = StyleSheet.create({

@@ -41,7 +41,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
   // ----------------------------------------------------------
   {
     id: "unacceptable_risk",
-    name: "Unacceptable Risk — Prohibited AI Practices",
+    name: "Unacceptable Risk: Prohibited AI Practices",
     description:
       "AI practices that are prohibited under Article 5 of the EU AI Act because they pose an unacceptable risk to fundamental rights, safety, and democratic values. These systems may not be placed on the market, put into service, or used in the EU.",
     useCases: [
@@ -54,7 +54,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
         category: "unacceptable_risk",
         annexReference: "Article 5(1)(c)",
         obligations: [
-          "Absolute prohibition — system may not be developed, placed on the market, or used in the EU",
+          "Absolute prohibition: system may not be developed, placed on the market, or used in the EU",
           "Existing systems must be withdrawn from the EU market",
           "No exceptions or derogations available",
         ],
@@ -132,7 +132,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
         obligations: [
           "Absolute prohibition on deployment of manipulative or deceptive AI techniques",
           "Systems must not exploit vulnerabilities of specific groups (age, disability, social situation)",
-          "No exceptions — development and distribution for EU use is prohibited",
+          "No exceptions: development and distribution for EU use is prohibited",
         ],
         examples: [
           "AI systems using imperceptible audio or visual cues to influence purchasing decisions",
@@ -230,7 +230,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "education_access",
-        name: "Education — Access and Admission",
+        name: "Education: Access and Admission",
         description:
           "AI systems used to determine access to or admission into educational and vocational training institutions.",
         riskLevel: "HIGH_RISK",
@@ -249,7 +249,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "education_assessment",
-        name: "Education — Assessment and Monitoring",
+        name: "Education: Assessment and Monitoring",
         description:
           "AI systems used to evaluate learning outcomes, including AI directing the learning process and monitoring student behavior during tests.",
         riskLevel: "HIGH_RISK",
@@ -268,7 +268,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "employment_recruitment",
-        name: "Employment — Recruitment and Selection",
+        name: "Employment: Recruitment and Selection",
         description:
           "AI systems used for recruitment, screening, filtering, or evaluating candidates in the hiring process.",
         riskLevel: "HIGH_RISK",
@@ -287,7 +287,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "employment_performance",
-        name: "Employment — Performance Evaluation and Task Allocation",
+        name: "Employment: Performance Evaluation and Task Allocation",
         description:
           "AI systems used to make or materially influence decisions on promotion, termination, task allocation, or monitoring/evaluating employee performance and behavior.",
         riskLevel: "HIGH_RISK",
@@ -306,7 +306,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "essential_services_credit",
-        name: "Access to Essential Services — Credit Scoring",
+        name: "Access to Essential Services: Credit Scoring",
         description:
           "AI systems used to evaluate the creditworthiness of individuals or establish their credit score, with the exception of fraud detection.",
         riskLevel: "HIGH_RISK",
@@ -325,7 +325,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "essential_services_insurance",
-        name: "Access to Essential Services — Insurance and Benefits",
+        name: "Access to Essential Services: Insurance and Benefits",
         description:
           "AI systems used for risk assessment and pricing in life and health insurance, and for evaluating eligibility for social benefits and services.",
         riskLevel: "HIGH_RISK",
@@ -344,7 +344,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "law_enforcement_evidence",
-        name: "Law Enforcement — Evidence Assessment",
+        name: "Law Enforcement: Evidence Assessment",
         description:
           "AI systems intended for use by law enforcement to assess the reliability of evidence in criminal investigations or prosecutions.",
         riskLevel: "HIGH_RISK",
@@ -363,7 +363,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "law_enforcement_risk",
-        name: "Law Enforcement — Individual Risk Assessment",
+        name: "Law Enforcement: Individual Risk Assessment",
         description:
           "AI systems used by law enforcement for assessing the risk of individuals offending or re-offending, or the risk of becoming a victim.",
         riskLevel: "HIGH_RISK",
@@ -382,7 +382,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "migration_document",
-        name: "Migration and Border — Document Verification",
+        name: "Migration and Border: Document Verification",
         description:
           "AI systems used to assist in the examination of applications for asylum, visa, and residence permits, and for document authenticity verification.",
         riskLevel: "HIGH_RISK",
@@ -401,7 +401,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "migration_risk",
-        name: "Migration and Border — Risk Assessment",
+        name: "Migration and Border: Risk Assessment",
         description:
           "AI systems used for assessing security, irregular migration, or health risks posed by individuals intending to enter or having entered the territory of a Member State.",
         riskLevel: "HIGH_RISK",
@@ -420,7 +420,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
       },
       {
         id: "justice_legal",
-        name: "Administration of Justice — Legal Interpretation",
+        name: "Administration of Justice: Legal Interpretation",
         description:
           "AI systems intended to assist judicial authorities in researching and interpreting facts and law and in applying the law to concrete facts, or in alternative dispute resolution.",
         riskLevel: "HIGH_RISK",
@@ -445,7 +445,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
   // ----------------------------------------------------------
   {
     id: "limited_risk",
-    name: "Limited Risk — Transparency Obligations",
+    name: "Limited Risk: Transparency Obligations",
     description:
       "AI systems that require specific transparency measures under Article 50. Users must be informed they are interacting with AI, and AI-generated content must be labeled as such.",
     useCases: [
@@ -533,7 +533,7 @@ export const AI_ACT_CATEGORIES: AIActCategory[] = [
   // ----------------------------------------------------------
   {
     id: "minimal_risk",
-    name: "Minimal Risk — No Specific Obligations",
+    name: "Minimal Risk: No Specific Obligations",
     description:
       "AI systems that pose minimal risk to fundamental rights or safety. The vast majority of AI systems in use today fall into this category. No specific regulatory obligations, though voluntary codes of conduct are encouraged.",
     useCases: [

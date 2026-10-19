@@ -11,12 +11,16 @@ import {
 } from "@/lib/dpa-engine";
 import { DpaDocument } from "./DpaDocument";
 import { TiaDocument } from "./TiaDocument";
+import { withPdfLocale } from "../pdf-locale";
 
 /** Assemble and render the signature-ready DPA. Also returns the model so
  *  callers can persist warnings/metadata alongside the PDF. */
 export async function renderDpaPdf(input: AssembleInput, orgName: string) {
   const model = assembleDpa(input);
-  const buffer = await renderToBuffer(<DpaDocument model={model} orgName={orgName} />);
+  // The shared footer and cover lines in the contract's language.
+  const buffer = await withPdfLocale(input.context.language, () =>
+    renderToBuffer(<DpaDocument model={model} orgName={orgName} />)
+  );
   return { model, buffer };
 }
 
@@ -29,8 +33,8 @@ export async function renderTiaPdf(input: AssembleInput, orgName: string) {
     input.context.producedDate ?? new Date(),
     input.context.language
   );
-  const buffer = await renderToBuffer(
-    <TiaDocument model={model} orgName={orgName} date={date} />
+  const buffer = await withPdfLocale(input.context.language, () =>
+    renderToBuffer(<TiaDocument model={model} orgName={orgName} date={date} />)
   );
   return { model, buffer };
 }

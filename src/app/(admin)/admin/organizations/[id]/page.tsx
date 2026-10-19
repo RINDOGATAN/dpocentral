@@ -242,7 +242,7 @@ export default function OrganizationDetailPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Domain</span>
-                    <span>{org.domain || "—"}</span>
+                    <span>{org.domain || "Not set"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Created</span>

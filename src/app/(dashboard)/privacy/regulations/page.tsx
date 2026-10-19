@@ -316,7 +316,9 @@ export default function RegulationsPage() {
                                   <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${iconClass}`} />
                                   <div className="flex-1 min-w-0">
                                     <p className="font-medium leading-tight">{t(`checklist.req${req.id.split("-").map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join("")}` as any)}</p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">{req.detail}</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">
+                                      {req.detailKey ? (t as unknown as (key: string, values?: Record<string, number>) => string)(`checklist.${req.detailKey}`, req.detailValues) : req.detail}
+                                    </p>
                                   </div>
                                   {req.status !== "satisfied" && (
                                     <Link href={req.actionHref} className="shrink-0">
