@@ -144,7 +144,9 @@ describe("the programme report and the regulatory landscape read the same measur
         assets: 0, activities: 0, dsarTotal: 4, dsarOverdue: 3, dsarAvgDays: 0, incidentTotal: 0, incidentOpen: 0,
         incidentCritical: 0, assessmentTotal: 0, assessmentApproved: 0, vendorTotal: 0, vendorHighRisk: 0, transferTotal: 1,
       },
-      transfersByCountry: [{ country: "US", count: 1, mechanisms: ["STANDARD_CONTRACTUAL_CLAUSES"], hasAdequacy: false, partialAdequacy: true }],
+      transfersByCountry: [
+        { country: "US", count: 1, mechanisms: ["Cláusulas contractuales tipo"], hasAdequacy: false, adequacyLabel: "Parcial (solo destinatarios certificados en el DPF)" },
+      ],
       vendorsByCountry: [],
       dsarOnTimeRate: null,
       dsarStatus: "notMet",
@@ -160,7 +162,7 @@ describe("the programme report and the regulatory landscape read the same measur
     expect(text).not.toContain("3 días");
     expect(text).toContain("Estados Unidos");
     expect(text).toContain("Cláusulas contractuales tipo");
-    expect(text).toContain("Parcial (solo destinatarios certificados");
+    expect(text).toContain("Parcial (solo destinatarios certificados en el DPF)");
     expect(text).not.toContain("European Union");
     expect(text).toContain("todavía no hay nada que medir");
   });

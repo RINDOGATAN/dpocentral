@@ -18,8 +18,12 @@ export const ASSET_TYPE_COLOR: Record<DataAssetType, { stripe: string; soft: str
 };
 
 /**
- * Data categories grouped by sensitivity (Article 9, regular PII, behavioural, etc.)
- * Drives edge colour and the "risk halo" on asset nodes.
+ * Data categories grouped by sensitivity. Drives edge colour and the "risk
+ * halo" on asset nodes. Every class is personal data:
+ *   - special: special categories (GDPR Art. 9) and criminal convictions
+ *     and offences (Art. 10);
+ *   - sensitive: personal data of higher risk (identifiers, financial);
+ *   - general: other personal data (location, behaviour, employment...).
  */
 export const SPECIAL_CATEGORIES = new Set([
   "HEALTH",
@@ -38,10 +42,24 @@ export const SENSITIVE_CATEGORIES = new Set([
 export type Sensitivity = "special" | "sensitive" | "general" | "none";
 
 export const SENSITIVITY_COLOR: Record<Sensitivity, { stroke: string; bg: string; fg: string; label: string }> = {
-  special:   { stroke: "#dc2626", bg: "#fef2f2", fg: "#991b1b", label: "Special cat." },
-  sensitive: { stroke: "#d97706", bg: "#fffbeb", fg: "#92400e", label: "Personal" },
-  general:   { stroke: "#2563eb", bg: "#eff6ff", fg: "#1e3a8a", label: "General" },
+  special:   { stroke: "#dc2626", bg: "#fef2f2", fg: "#991b1b", label: "Special categories (Arts. 9 and 10)" },
+  sensitive: { stroke: "#d97706", bg: "#fffbeb", fg: "#92400e", label: "Higher-risk personal data" },
+  general:   { stroke: "#2563eb", bg: "#eff6ff", fg: "#1e3a8a", label: "Other personal data" },
   none:      { stroke: "#94a3b8", bg: "#f8fafc", fg: "#475569", label: "Unclassified" },
+};
+
+/**
+ * Colours of a transfer marker on a system, by the transfer's compliance
+ * status (light canvas, so fixed colours rather than theme tokens).
+ */
+export const TRANSFER_STATUS_COLOR: Record<
+  "COMPLIANT" | "NEEDS_REVIEW" | "NON_COMPLIANT" | "PENDING",
+  { bg: string; fg: string }
+> = {
+  COMPLIANT: { bg: "#dcfce7", fg: "#166534" },
+  NEEDS_REVIEW: { bg: "#fef3c7", fg: "#92400e" },
+  NON_COMPLIANT: { bg: "#fee2e2", fg: "#991b1b" },
+  PENDING: { bg: "#f1f5f9", fg: "#334155" },
 };
 
 export function classifyCategories(categories: string[] | null | undefined): Sensitivity {
@@ -49,6 +67,13 @@ export function classifyCategories(categories: string[] | null | undefined): Sen
   if (categories.some((c) => SPECIAL_CATEGORIES.has(c))) return "special";
   if (categories.some((c) => SENSITIVE_CATEGORIES.has(c))) return "sensitive";
   return "general";
+}
+
+/** Sort key for a category: special 3, higher-risk 2, other 1, unknown 0. */
+export function sensitivityRank(category: string): number {
+  if (SPECIAL_CATEGORIES.has(category)) return 3;
+  if (SENSITIVE_CATEGORIES.has(category)) return 2;
+  return DATA_CATEGORY_ORDER.includes(category as (typeof DATA_CATEGORY_ORDER)[number]) ? 1 : 0;
 }
 
 /**

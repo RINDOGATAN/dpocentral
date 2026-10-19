@@ -14,6 +14,8 @@ import {
 } from "@/server/services/export/regulatory-landscape-report";
 import { JURISDICTION_CATALOG, localizeJurisdiction } from "@/config/jurisdiction-catalog";
 import { EU_ADEQUATE_COUNTRIES } from "@/config/vendor-data-mappings";
+import { adequacyCoverage, getAdequacyDecision } from "@/config/transfer-compliance-rules";
+import { canonicalCountryCode } from "@/lib/country-code";
 import { fmtDate } from "@/server/services/export/pdf-styles";
 import { pdfDate } from "@/server/services/export/pdf-locale";
 import { dsarOnTime } from "@/lib/dsar-on-time";
@@ -123,28 +125,39 @@ export async function buildRegulatoryLandscapeExport(args: ExportArgs): Promise<
     select: { destinationCountry: true, mechanism: true },
   });
 
+  const tMechanism = await getTranslations({ locale, namespace: "enums.transferMechanism" });
   const transferMap = new Map<string, { count: number; mechanisms: Set<string> }>();
   for (const t of transfers) {
-    const country = t.destinationCountry || ""; // printed as "not stated"
+    const country = canonicalCountryCode(t.destinationCountry) || ""; // printed as "not stated"
     if (!transferMap.has(country)) {
       transferMap.set(country, { count: 0, mechanisms: new Set() });
     }
     const entry = transferMap.get(country)!;
     entry.count++;
-    // The code; the report prints it in its language.
-    if (t.mechanism) entry.mechanisms.add(t.mechanism);
+    if (t.mechanism) {
+      entry.mechanisms.add(
+        tMechanism.has(t.mechanism as never) ? tMechanism(t.mechanism as never) : t.mechanism.replace(/_/g, " ")
+      );
+    }
   }
 
+  // A partial decision (US under the DPF, Canada under PIPEDA) is neither a
+  // plain yes nor a no: it covers certain recipients only.
   const transfersByCountry: TransferExposure[] = Array.from(transferMap.entries()).map(
-    ([country, data]) => ({
-      country,
-      count: data.count,
-      mechanisms: Array.from(data.mechanisms),
-      hasAdequacy: adequateSet.has(country),
-      // EU-US Data Privacy Framework (Commission decision of 10 July 2023):
-      // adequacy only for recipients certified under it.
-      partialAdequacy: !adequateSet.has(country) && country === "US",
-    })
+    ([country, data]) => {
+      const coverage = adequacyCoverage(country);
+      const scope = getAdequacyDecision(country)?.partialScope;
+      return {
+        country,
+        count: data.count,
+        mechanisms: Array.from(data.mechanisms),
+        hasAdequacy: adequateSet.has(country),
+        adequacyLabel:
+          coverage === "PARTIAL_UNCONFIRMED" && scope
+            ? t(`adequacyPartial.${scope}`)
+            : undefined,
+      };
+    }
   );
 
   // ── Vendor Exposure by Country ─────────────────────────

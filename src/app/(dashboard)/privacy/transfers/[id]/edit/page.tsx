@@ -23,6 +23,11 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
+import { TransferAdequacyFields } from "@/components/privacy/transfer-adequacy-fields";
+import { getAdequacyDecision } from "@/config/transfer-compliance-rules";
+
+/** "None" in the optional selects (Radix Select has no empty value). */
+const NONE = "__none__";
 
 const MECHANISM_KEYS = [
   "ADEQUACY_DECISION", "STANDARD_CONTRACTUAL_CLAUSES", "BINDING_CORPORATE_RULES",
@@ -42,6 +47,7 @@ export default function EditTransferPage() {
   const t = useTranslations("pages.transfers.edit");
   const tStatus = useTranslations("pages.transfers.status_option");
   const tToasts = useTranslations("toasts");
+  const tDialog = useTranslations("pages.dataInventory.transferDialog");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const initializedRef = useRef(false);
@@ -51,6 +57,10 @@ export default function EditTransferPage() {
     tiaDate: "",
     sccExpiryDate: "",
     complianceStatus: "PENDING" as string,
+    processingActivityId: "",
+    vendorId: "",
+    adequacyScopeConfirmed: null as boolean | null,
+    adequacyScopeReference: "",
   });
 
   // Note: createTransfer / updateTransfer don't share an updater for the basic
@@ -69,31 +79,36 @@ export default function EditTransferPage() {
       initializedRef.current = true;
       const t = checklistData.transfer;
       setFormData({
-        safeguards: "",
+        safeguards: t.safeguards ?? "",
         tiaCompleted: t.tiaCompleted ?? false,
         tiaDate: "",
         sccExpiryDate: t.sccExpiryDate
           ? new Date(t.sccExpiryDate).toISOString().split("T")[0]!
           : "",
         complianceStatus: t.complianceStatus || "PENDING",
+        processingActivityId: t.processingActivityId ?? "",
+        vendorId: t.vendorId ?? "",
+        adequacyScopeConfirmed: t.adequacyScopeConfirmed ?? null,
+        adequacyScopeReference: t.adequacyScopeReference ?? "",
       });
     }
   }, [checklistData]);
+
+  const { data: options } = trpc.dataInventory.transferFormOptions.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId }
+  );
 
   const utils = trpc.useUtils();
   const updateCompliance = trpc.dataInventory.updateTransferCompliance.useMutation({
     onSuccess: () => {
       toast.success(tToasts("transfer.updated"));
-      utils.dataInventory.listTransfers.invalidate();
-      utils.dataInventory.getTransferStats.invalidate();
-      utils.dataInventory.getTransferComplianceChecklist.invalidate({
-        organizationId: orgId,
-        transferId: id,
-      });
+      // Lists, counters, this record, the record of processing and the map.
+      utils.dataInventory.invalidate();
       router.push(`/privacy/transfers/${id}`);
     },
-    onError: (e) => {
-      toast.error(e.message);
+    onError: () => {
+      toast.error(tToasts("generic.somethingWentWrong"));
       setIsSubmitting(false);
     },
   });
@@ -102,6 +117,9 @@ export default function EditTransferPage() {
     e.preventDefault();
     if (!orgId) return;
     setIsSubmitting(true);
+    const partial =
+      !!checklistData?.transfer &&
+      getAdequacyDecision(checklistData.transfer.destinationCountry)?.isPartial === true;
     updateCompliance.mutate({
       organizationId: orgId,
       id,
@@ -109,7 +127,17 @@ export default function EditTransferPage() {
       tiaCompleted: formData.tiaCompleted,
       tiaDate: formData.tiaDate ? new Date(formData.tiaDate) : null,
       sccExpiryDate: formData.sccExpiryDate ? new Date(formData.sccExpiryDate) : null,
-      safeguards: formData.safeguards || undefined,
+      safeguards: formData.safeguards,
+      processingActivityId: formData.processingActivityId || null,
+      vendorId: formData.vendorId || null,
+      ...(partial
+        ? {
+            adequacyScopeConfirmed: formData.adequacyScopeConfirmed,
+            adequacyScopeReference: formData.adequacyScopeConfirmed
+              ? formData.adequacyScopeReference || null
+              : null,
+          }
+        : {}),
     });
   };
 
@@ -142,6 +170,69 @@ export default function EditTransferPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("links")}</CardTitle>
+            <CardDescription>{t("linksSubtitle")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-activity">{tDialog("activityLabel")}</Label>
+              <Select
+                value={formData.processingActivityId || NONE}
+                onValueChange={(v) => setFormData({ ...formData, processingActivityId: v === NONE ? "" : v })}
+              >
+                <SelectTrigger id="edit-activity" data-testid="transfer-activity">
+                  <SelectValue placeholder={tDialog("activityPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE}>{tDialog("noneOption")}</SelectItem>
+                  {(options?.activities ?? []).map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{tDialog("activityHint")}</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-vendor">{tDialog("vendorLabel")}</Label>
+              <Select
+                value={formData.vendorId || NONE}
+                onValueChange={(v) => setFormData({ ...formData, vendorId: v === NONE ? "" : v })}
+              >
+                <SelectTrigger id="edit-vendor" data-testid="transfer-vendor">
+                  <SelectValue placeholder={tDialog("vendorPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE}>{tDialog("noneOption")}</SelectItem>
+                  {(options?.vendors ?? []).map((v) => (
+                    <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
+        {getAdequacyDecision(transfer.destinationCountry)?.isPartial && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("adequacyScope")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TransferAdequacyFields
+                country={transfer.destinationCountry}
+                value={{
+                  adequacyScopeConfirmed: formData.adequacyScopeConfirmed,
+                  adequacyScopeReference: formData.adequacyScopeReference,
+                }}
+                onChange={(v) => setFormData({ ...formData, ...v })}
+                idPrefix="edit-transfer"
+              />
+            </CardContent>
+          </Card>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>{t("complianceStatus")}</CardTitle>

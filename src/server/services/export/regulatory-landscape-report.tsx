@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import React from "react";
-import { currentPdfLocale, pdfChrome, pdfEnumLabel } from "./pdf-locale";
+import { currentPdfLocale, pdfChrome } from "./pdf-locale";
 import { Document, View, Text } from "@react-pdf/renderer";
 import {
   ContentPage,
@@ -44,11 +44,11 @@ export interface AppliedJurisdiction {
 export interface TransferExposure {
   country: string;
   count: number;
-  /** Transfer mechanism codes (STANDARD_CONTRACTUAL_CLAUSES, ...), printed in the report's language. */
+  /** Transfer mechanisms, already in the report's language. */
   mechanisms: string[];
   hasAdequacy: boolean;
-  /** Adequacy only for certified recipients (the United States under the EU-US Data Privacy Framework). */
-  partialAdequacy?: boolean;
+  /** The adequacy cell in the reader's language ("Partial (...)" for the US and Canada). */
+  adequacyLabel?: string;
 }
 
 export interface VendorExposure {
@@ -186,7 +186,6 @@ const EN_FALLBACK: Record<string, string> = {
   "stats.highRiskVendors": "High-Risk Vendors",
   "stats.notAvailable": "N/A",
   healthDsarOnTimeNone: "DSAR on-time completion: nothing to measure yet",
-  partialAdequacy: "Partial (certified recipients only, EU-US Data Privacy Framework)",
   statusNotMet: "Not met",
   "meta.organization": "Organization",
   "meta.reportDate": "Report Date",
@@ -556,8 +555,9 @@ export function RegulatoryLandscapeReport({
               .map((tr2) => [
                 countryName(tr2.country),
                 String(tr2.count),
-                tr2.hasAdequacy ? tr("yes") : tr2.partialAdequacy ? tr("partialAdequacy") : tr("no"),
-                tr2.mechanisms.map((m) => pdfEnumLabel("transferMechanism", m)).join(", ") || "",
+                tr2.adequacyLabel ?? (tr2.hasAdequacy ? tr("yes") : tr("no")),
+                // Already in the report's language (the builder translates the mechanism codes).
+                tr2.mechanisms.join(", ") || "",
               ])}
           />
         </ContentPage>

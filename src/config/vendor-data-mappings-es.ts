@@ -375,6 +375,8 @@ export const VENDOR_QUICKSTART_TEXT = {
     transferDescription: (vendor: string, country: string) =>
       `Data transfer to ${vendor} servers in ${country}`,
     transferSafeguards: "Standard Contractual Clauses (SCCs) with supplementary measures",
+    transferSafeguardsDpf:
+      "The provider declares certification under the EU-US Data Privacy Framework (DPF). Check its entry on the DPF list (dataprivacyframework.gov) and record it on this transfer; until then the adequacy decision does not cover it.",
   },
   es: {
     internalSystemsName: (org: string) => `Sistemas internos de ${org}`,
@@ -390,5 +392,7 @@ export const VENDOR_QUICKSTART_TEXT = {
     transferDescription: (vendor: string, country: string) =>
       `Transferencia de datos a los servidores de ${vendor} en ${country}`,
     transferSafeguards: "Cláusulas contractuales tipo (CCT) con medidas complementarias",
+    transferSafeguardsDpf:
+      "El proveedor declara estar certificado en el Marco de Privacidad de Datos UE-EE. UU. (DPF). Comprueba su inscripción en la lista del DPF (dataprivacyframework.gov) y regístrala en esta transferencia; hasta entonces, la decisión de adecuación no la cubre.",
   },
 } as const;

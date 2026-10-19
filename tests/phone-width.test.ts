@@ -91,6 +91,10 @@ describe("no sideways scrolling at phone width, signed in", () => {
         "sits in a flex-wrap row beside a min-w-0 block, so it wraps before it pushes",
       "src/components/privacy/data-flow/AssetNode.tsx w-[220px]":
         "a node drawn on the flow canvas, which pans and zooms on its own",
+      "src/components/privacy/data-flow/TransferLayer.tsx w-[200px]":
+        "a vendor node drawn on the flow canvas, which pans and zooms on its own",
+      "src/components/privacy/data-flow/TransferLayer.tsx w-[180px]":
+        "a country node drawn on the flow canvas, which pans and zooms on its own",
     };
 
     const offenders: string[] = [];

@@ -46,7 +46,13 @@ import { PageHeader } from "@/components/privacy/page-header";
 import { toneBorder, toneChip, toneMark, toneTint } from "@/config/status-palette";
 
 import { formatDateIn } from "@/lib/utils";
-import { isCountryCode, normaliseCountryCode } from "@/lib/country-code";
+import { countryName, isIsoCountryCode } from "@/lib/country-code";
+import { CountryPicker } from "@/components/privacy/country-picker";
+import { TransferAdequacyFields } from "@/components/privacy/transfer-adequacy-fields";
+import { getAdequacyDecision } from "@/config/transfer-compliance-rules";
+
+/** "None" in the optional selects (Radix Select has no empty value). */
+const NONE = "__none__";
 const MECHANISM_KEYS = [
   "ADEQUACY_DECISION", "STANDARD_CONTRACTUAL_CLAUSES", "BINDING_CORPORATE_RULES",
   "DEROGATION", "CERTIFICATION", "CODE_OF_CONDUCT", "OTHER",
@@ -74,14 +80,19 @@ export default function TransfersListPage() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sort, setSort] = useState<ListSort>(DEFAULT_LIST_SORT);
-  const [form, setForm] = useState({
+  const emptyForm = {
     name: "",
     destinationCountry: "",
     destinationOrg: "",
     mechanism: "",
     safeguards: "",
     description: "",
-  });
+    processingActivityId: "",
+    vendorId: "",
+    adequacyScopeConfirmed: null as boolean | null,
+    adequacyScopeReference: "",
+  };
+  const [form, setForm] = useState(emptyForm);
 
   const utils = trpc.useUtils();
 
@@ -93,24 +104,21 @@ export default function TransfersListPage() {
     { organizationId: orgId },
     { enabled: !!orgId }
   );
+  const { data: options } = trpc.dataInventory.transferFormOptions.useQuery(
+    { organizationId: orgId },
+    { enabled: !!orgId && dialogOpen }
+  );
 
   const submitLock = useSubmitLock();
   const createTransfer = trpc.dataInventory.createTransfer.useMutation({
     onSuccess: () => {
       toast.success(tToasts("transfer.created"));
-      utils.dataInventory.listTransfers.invalidate();
-      utils.dataInventory.getTransferStats.invalidate();
+      // Lists, counters, the record of processing and the map's markers.
+      utils.dataInventory.invalidate();
       setDialogOpen(false);
-      setForm({
-        name: "",
-        destinationCountry: "",
-        destinationOrg: "",
-        mechanism: "",
-        safeguards: "",
-        description: "",
-      });
+      setForm(emptyForm);
     },
-    onError: (e) => toast.error(e.message),
+    onError: () => toast.error(tToasts("generic.somethingWentWrong")),
   });
 
   if (!orgId || isLoading) {
@@ -232,8 +240,12 @@ export default function TransfersListPage() {
                       <div className="min-w-0 flex-1">
                         <p className="font-medium truncate">{transfer.name}</p>
                         <p className="text-sm text-muted-foreground truncate">
-                          → {transfer.destinationCountry}
-                          {transfer.destinationOrg ? ` · ${transfer.destinationOrg}` : ""}
+                          → {countryName(transfer.destinationCountry, locale)} ({transfer.destinationCountry})
+                          {transfer.vendor
+                            ? ` · ${transfer.vendor.name}`
+                            : transfer.destinationOrg
+                              ? ` · ${transfer.destinationOrg}`
+                              : ""}
                           {transfer.processingActivity
                             ? ` · ${tList("linkedTo", { name: transfer.processingActivity.name })}`
                             : ""}
@@ -287,8 +299,9 @@ export default function TransfersListPage() {
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
-              if (!form.name || !isCountryCode(form.destinationCountry) || !form.mechanism) return;
+              if (!form.name || !isIsoCountryCode(form.destinationCountry) || !form.mechanism) return;
               if (!submitLock.acquire()) return;
+              const partial = getAdequacyDecision(form.destinationCountry)?.isPartial === true;
               createTransfer.mutate({
                 organizationId: orgId,
                 name: form.name,
@@ -297,6 +310,11 @@ export default function TransfersListPage() {
                 mechanism: form.mechanism as any,
                 safeguards: form.safeguards || undefined,
                 description: form.description || undefined,
+                processingActivityId: form.processingActivityId || undefined,
+                vendorId: form.vendorId || undefined,
+                adequacyScopeConfirmed: partial ? form.adequacyScopeConfirmed : undefined,
+                adequacyScopeReference:
+                  partial && form.adequacyScopeConfirmed ? form.adequacyScopeReference || undefined : undefined,
               }, { onSettled: submitLock.release });
             }}
           >
@@ -310,20 +328,54 @@ export default function TransfersListPage() {
                 required
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="country">{t("countryLabel")}</Label>
+              <CountryPicker
+                id="country"
+                value={form.destinationCountry}
+                onChange={(code) =>
+                  setForm({ ...form, destinationCountry: code, adequacyScopeConfirmed: null, adequacyScopeReference: "" })
+                }
+                placeholder={t("countryPlaceholder")}
+                ariaDescribedBy="country-hint"
+              />
+              <p id="country-hint" className="text-xs text-muted-foreground">{t("countryHint")}</p>
+              <TransferAdequacyFields
+                country={form.destinationCountry}
+                value={{
+                  adequacyScopeConfirmed: form.adequacyScopeConfirmed,
+                  adequacyScopeReference: form.adequacyScopeReference,
+                }}
+                onChange={(v) => setForm({ ...form, ...v })}
+                idPrefix="new-transfer"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label htmlFor="country">{t("countryLabel")}</Label>
-                <Input
-                  id="country"
-                  placeholder={t("countryPlaceholder")}
-                  value={form.destinationCountry}
-                  onChange={(e) => setForm({ ...form, destinationCountry: normaliseCountryCode(e.target.value) })}
-                  maxLength={2}
-                  autoCapitalize="characters"
-                  aria-describedby="country-hint"
-                  required
-                />
-                <p id="country-hint" className="text-xs text-muted-foreground">{t("countryHint")}</p>
+                <Label htmlFor="vendor">{t("vendorLabel")}</Label>
+                <Select
+                  value={form.vendorId || NONE}
+                  onValueChange={(v) => {
+                    const id = v === NONE ? "" : v;
+                    const vendor = options?.vendors.find((x) => x.id === id);
+                    setForm({
+                      ...form,
+                      vendorId: id,
+                      // The receiving organisation follows the vendor unless typed.
+                      destinationOrg: form.destinationOrg || vendor?.name || "",
+                    });
+                  }}
+                >
+                  <SelectTrigger id="vendor" data-testid="transfer-vendor">
+                    <SelectValue placeholder={t("vendorPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE}>{t("noneOption")}</SelectItem>
+                    {(options?.vendors ?? []).map((v) => (
+                      <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="org">{t("orgLabel")}</Label>
@@ -334,6 +386,24 @@ export default function TransfersListPage() {
                   onChange={(e) => setForm({ ...form, destinationOrg: e.target.value })}
                 />
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="activity">{t("activityLabel")}</Label>
+              <Select
+                value={form.processingActivityId || NONE}
+                onValueChange={(v) => setForm({ ...form, processingActivityId: v === NONE ? "" : v })}
+              >
+                <SelectTrigger id="activity" data-testid="transfer-activity">
+                  <SelectValue placeholder={t("activityPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE}>{t("noneOption")}</SelectItem>
+                  {(options?.activities ?? []).map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{t("activityHint")}</p>
             </div>
             <div className="space-y-2">
               <Label>{t("mechanismLabel")}</Label>
@@ -385,7 +455,7 @@ export default function TransfersListPage() {
                 disabled={
                   createTransfer.isPending ||
                   !form.name ||
-                  !isCountryCode(form.destinationCountry) ||
+                  !isIsoCountryCode(form.destinationCountry) ||
                   !form.mechanism
                 }
               >

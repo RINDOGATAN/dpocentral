@@ -35,6 +35,7 @@ import {
   LifeBuoy,
   ListChecks,
   Megaphone,
+  Network,
   Rocket,
   Scale,
   ScrollText,
@@ -367,6 +368,8 @@ const FULL_PATH: PathConfig<PathCounts> = {
     { id: "needsAction", href: "/privacy/needs-action", icon: ListChecks },
     { id: "incomplete", href: "/privacy/incomplete", icon: ClipboardList },
     { id: "reports", href: "/privacy/reports", icon: BarChart3 },
+    // The data map, as a page of its own (it is also a tab of Data inventory).
+    { id: "dataMap", href: "/privacy/data-map", icon: Network },
     // The organisation's audit trail (as
     // AI Sentinel has it): owners, admins and privacy officers only
     // (src/lib/audit-access.ts), so the menu leaves it out for anyone else.
