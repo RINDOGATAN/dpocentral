@@ -278,7 +278,7 @@
         "PIA": "Evaluación de impacto en la privacidad",
         "PIA_short": "PIA",
         "PIA_desc": "Evalúa los riesgos e impactos de privacidad de proyectos, sistemas o procesos.",
-        "TIA": "Evaluación de impacto de las transferencias",
+        "TIA": "Evaluación de impacto de la transferencia",
         "TIA_short": "EIT",
         "TIA_desc": "Evalúa los riesgos de las transferencias internacionales y las medidas complementarias necesarias.",
         "VENDOR": "Evaluación de riesgo del proveedor",
@@ -682,7 +682,7 @@
         "needsReview": "Requiere revisión",
         "nonCompliant": "No conforme",
         "expiring30d": "Caduca en 30 días",
-        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en CCT no tiene} other {<b>#</b> transferencias basadas en CCT no tienen}} aún evaluación de impacto de las transferencias (EIT). Tras Schrems II, las CCT exigen una EIT.",
+        "tiaWarning": "{count, plural, one {<b>#</b> transferencia basada en CCT no tiene} other {<b>#</b> transferencias basadas en CCT no tienen}} aún evaluación de impacto de la transferencia (EIT). Tras Schrems II, las CCT exigen una EIT.",
         "all": "Todas las transferencias",
         "allSubtitle": "Pulsa una transferencia para revisar los detalles de cumplimiento y la lista de comprobación de Schrems II.",
         "empty": "Aún no hay transferencias registradas",
@@ -726,7 +726,7 @@
         "sccExpired": "Estas cláusulas ya han caducado: renuévalas de inmediato.",
         "sccExpiringSoon": "{count, plural, one {Solo queda # día: programa la renovación.} other {Solo quedan # días: programa la renovación.}}",
         "sccRemaining": "{count, plural, one {# día restante.} other {# días restantes.}}",
-        "tiaPendingTitle": "Evaluación de impacto de las transferencias (EIT) pendiente",
+        "tiaPendingTitle": "Evaluación de impacto de la transferencia (EIT) pendiente",
         "tiaPendingBody": "Schrems II exige evaluar las leyes de vigilancia del país de destino y la eficacia de tus salvaguardas.",
         "startTia": "Iniciar EIT",
         "withinEea": "Dentro del EEE (no es una transferencia restringida)",
@@ -745,7 +745,7 @@
         "complianceStatus": "Estado de cumplimiento",
         "complianceStatusSubtitle": "Ajuste manual del estado de cumplimiento de la transferencia",
         "status": "Estado",
-        "tia": "Evaluación de impacto de las transferencias (EIT)",
+        "tia": "Evaluación de impacto de la transferencia (EIT)",
         "tiaSubtitle": "Obligatoria para transferencias basadas en CCT a jurisdicciones sin adecuación (Schrems II).",
         "tiaCompleted": "EIT completada",
         "tiaDate": "Fecha de finalización de la EIT",
@@ -1302,7 +1302,13 @@
         "unknown": "Desconocido",
         "affectedSubjects": "Interesados afectados",
         "subjectTypesCount": "{count, plural, one {# tipo} other {# tipos}}",
-        "notifications": "Notificaciones"
+        "notifications": "Notificaciones",
+        "notifyAuthority": "Notificar a la autoridad: {state}",
+        "notifyAuthorityState": {
+          "REQUIRED": "Sí",
+          "NOT_REQUIRED": "No",
+          "NOT_ASSESSED": "Aún sin evaluar"
+        }
       },
       "tabs": {
         "details": "Detalles",
@@ -2400,7 +2406,8 @@
         "businessOwner": "Empresa",
         "businessOwnerDesc": "Cumplimiento de privacidad para tu organización",
         "privacyProfessional": "Profesional de privacidad",
-        "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones"
+        "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
+        "privacyProfessionalDescHosted": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de hasta cinco organizaciones"
       },
       "language": {
         "title": "Idioma",
@@ -3514,7 +3521,7 @@
       "vendor-catalog": "Catálogo de proveedores",
       "dpia": "Evaluación de Impacto relativa a la Protección de Datos",
       "pia": "Evaluación de impacto en la privacidad",
-      "tia": "Evaluación de impacto de las transferencias",
+      "tia": "Evaluación de impacto de la transferencia",
       "vendor": "Evaluación de riesgo del proveedor",
       "lia": "Evaluación del interés legítimo",
       "custom": "Evaluación personalizada",
@@ -3544,6 +3551,7 @@
     "businessOwnerDesc": "Necesito cumplir la normativa de protección de datos en mi organización",
     "privacyProfessional": "Profesional de privacidad",
     "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
+    "privacyProfessionalDescHosted": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de hasta cinco organizaciones",
     "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
     "clientName": "Nombre de tu primer cliente",
@@ -3905,7 +3913,7 @@
     "types": {
       "dpia": "Evaluación de Impacto relativa a la Protección de Datos",
       "pia": "Evaluación de impacto en la privacidad",
-      "tia": "Evaluación de impacto de las transferencias",
+      "tia": "Evaluación de impacto de la transferencia",
       "lia": "Evaluación del interés legítimo",
       "vendor": "Evaluación de riesgo de proveedores",
       "custom": "Evaluación personalizada"
@@ -4828,7 +4836,7 @@
       "assessmentTypes": {
         "DPIA": "Evaluación de Impacto relativa a la Protección de Datos",
         "PIA": "Evaluación de impacto en la privacidad",
-        "TIA": "Evaluación de impacto de las transferencias",
+        "TIA": "Evaluación de impacto de la transferencia",
         "LIA": "Evaluación del interés legítimo",
         "VENDOR": "Evaluación de riesgos de proveedores",
         "CUSTOM": "Evaluación personalizada"
@@ -5082,7 +5090,8 @@
         "notificationRequired": "¿Requiere notificación a la autoridad de control?",
         "notificationDeadline": "Plazo de notificación",
         "yes": "Sí",
-        "no": "No"
+        "no": "No",
+        "notAssessed": "Aún sin evaluar"
       },
       "subsections": {
         "description": "Descripción",
@@ -5201,6 +5210,7 @@
         "notSpecified": "Sin especificar",
         "yes": "Sí",
         "no": "No",
+        "notAssessed": "Aún sin evaluar",
         "none": "Ninguna",
         "noDpa": "Sin contrato de encargo"
       },
@@ -5667,7 +5677,7 @@
           "CUSTOM": "Crea tu propia evaluación desde cero",
           "DPIA": "Evaluación de Impacto relativa a la Protección de Datos del artículo 35 del RGPD",
           "PIA": "Análisis más amplio del impacto en la privacidad",
-          "TIA": "Análisis del impacto de las transferencias (Schrems II)",
+          "TIA": "Evaluación de impacto de la transferencia (Schrems II)",
           "VENDOR": "Evaluación de riesgo de proveedores externos"
         },
         "calloutTitle": "Tipos de evaluación gratuitos y Premium",
@@ -6012,7 +6022,7 @@
           "UnderReview": "En revisión"
         },
         "warningTitle": "Cumplimiento tras Schrems II",
-        "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de las transferencias (EIT) detecta riesgos, pueden ser necesarias garantías adicionales. Consulta la sección Funciones Premium para las EIT.",
+        "warningBody": "Las transferencias internacionales requieren un mecanismo de transferencia válido. Si tu evaluación de impacto de la transferencia (EIT) detecta riesgos, pueden ser necesarias garantías adicionales. Consulta la sección Funciones Premium para las EIT.",
         "tipTitle": "Exportar el RAT",
         "tipBody": "Puedes exportar tu registro de actividades de tratamiento (RAT) completo desde la vista de listado del Inventario de datos. La exportación incluye todos los sistemas, elementos, actividades, bases jurídicas y registros de transferencia."
       },
@@ -6408,7 +6418,7 @@
           "tia": {
             "label": "Estado EIT",
             "value": "Al día",
-            "subtitle": "Evaluaciones de impacto de las transferencias"
+            "subtitle": "Evaluaciones de impacto de la transferencia"
           }
         }
       },
@@ -6423,7 +6433,7 @@
           "PENDING": "PENDIENTE"
         },
         "descriptions": {
-          "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o con CCT válidas y una evaluación de impacto de las transferencias completada. No hace falta ninguna acción.",
+          "COMPLIANT": "La transferencia cuenta con una decisión de adecuación o con CCT válidas y una evaluación de impacto de la transferencia completada. No hace falta ninguna acción.",
           "NEEDS_REVIEW": "Hay CCT en vigor, pero no se ha completado ninguna EIT o las medidas complementarias pueden estar desactualizadas. Se recomienda revisar.",
           "NON_COMPLIANT": "Las CCT han caducado o no hay ningún mecanismo de transferencia válido. Hace falta actuar de inmediato para evitar riesgos regulatorios.",
           "PENDING": "La transferencia se ha registrado pero aún no se ha evaluado. Completa la revisión de cumplimiento para asignarle un estado."
@@ -6451,7 +6461,7 @@
           },
           "procedural": {
             "title": "Completa los trámites",
-            "description": "Completa los trámites necesarios: firma las CCT, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de las transferencias (EIT)."
+            "description": "Completa los trámites necesarios: firma las CCT, obtén autorización cuando sea necesaria y documenta tu evaluación de impacto de la transferencia (EIT)."
           },
           "monitor": {
             "title": "Sigue la evolución",
@@ -6459,7 +6469,7 @@
           }
         },
         "warningTitle": "Las CCT por sí solas pueden no ser suficientes",
-        "warningBody": "En la sentencia Schrems II, el TJUE estableció que las cláusulas contractuales tipo deben complementarse con garantías adicionales cuando la legislación del país de destino no ofrezca una protección esencialmente equivalente. Completa siempre una evaluación de impacto de las transferencias junto con tus CCT."
+        "warningBody": "En la sentencia Schrems II, el TJUE estableció que las cláusulas contractuales tipo deben complementarse con garantías adicionales cuando la legislación del país de destino no ofrezca una protección esencialmente equivalente. Completa siempre una evaluación de impacto de la transferencia junto con tus CCT."
       },
       "adequacy": {
         "title": "Decisiones de adecuación",
@@ -6978,7 +6988,7 @@
         "infoContactSuffix": " para habilitar las evaluaciones PIA en tu organización."
       },
       "tia": {
-        "title": "EIT: evaluación de impacto de las transferencias",
+        "title": "EIT: evaluación de impacto de la transferencia",
         "description": "Evalúa los riesgos de las transferencias internacionales de datos tras la sentencia Schrems II.",
         "badge": "Cumplimiento Schrems II",
         "evalTitle": "La EIT evalúa:",
@@ -7641,7 +7651,7 @@
             "desc": "Obligatoria según el artículo 35 del RGPD para los tratamientos de alto riesgo"
           },
           "TIA": {
-            "name": "Evaluación de impacto de las transferencias (EIT)",
+            "name": "Evaluación de impacto de la transferencia (EIT)",
             "desc": "Evalúa salvaguardas para transferencias internacionales (Schrems II)"
           }
         }
@@ -7890,10 +7900,10 @@
     "publicVendors": {
       "dpa": {
         "title": "Generar un contrato de encargo (DPA) y una evaluación de impacto de la transferencia",
-        "intro": "DPO Central puede generar un contrato de encargo del tratamiento listo para firmar y una evaluación de impacto de las transferencias independiente para cualquier proveedor, a partir de tu propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o en español.",
+        "intro": "DPO Central puede generar un contrato de encargo del tratamiento listo para firmar y una evaluación de impacto de la transferencia independiente para cualquier proveedor, a partir de tu propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o en español.",
         "artifacts": {
           "dpaTitle": "Contrato de encargo del tratamiento (PDF)",
-          "dpaDesc": "Contrato entre responsable y encargado conforme al artículo 28, con términos negociados y anexos I a IV: descripción del tratamiento, medidas técnicas y organizativas (MTO), incorporación de las cláusulas contractuales tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la evaluación de impacto de las transferencias. Los anexos III y IV aparecen automáticamente cuando el encargado está establecido fuera del EEE o del Reino Unido.",
+          "dpaDesc": "Contrato entre responsable y encargado conforme al artículo 28, con términos negociados y anexos I a IV: descripción del tratamiento, medidas técnicas y organizativas (MTO), incorporación de las cláusulas contractuales tipo de la UE (con el Addendum del Reino Unido y las adaptaciones suizas) y la evaluación de impacto de la transferencia. Los anexos III y IV aparecen automáticamente cuando el encargado está establecido fuera del EEE o del Reino Unido.",
           "tiaTitle": "EIT independiente (PDF)",
           "tiaDesc": "El anexo IV reproducido sin modificaciones, precedido de un encabezado de identificación y listo para ponerlo a disposición de la autoridad de control que lo solicite conforme a la cláusula 14 de las CCT incorporadas. Sigue el marco de seis pasos de las Recomendaciones 01/2020 del CEPD."
         },
@@ -8852,7 +8862,7 @@
           "description": "Evalúa los riesgos de transferir datos personales a un tercer país y determina si se necesitan medidas complementarias para garantizar un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II)."
         },
         "system-tia-template-v2": {
-          "name": "Evaluación de impacto de las transferencias (EIT)",
+          "name": "Evaluación de impacto de la transferencia (EIT)",
           "description": "Evalúa una transferencia de datos personales a un tercer país y si se necesitan medidas complementarias para un nivel de protección esencialmente equivalente (Recomendaciones 01/2020 del CEPD, Schrems II), con respuestas estructuradas."
         }
       }
@@ -9642,11 +9652,11 @@
         },
         "piav2_3_3": {
           "text": "¿Se transfieren datos fuera de la UE o del EEE?",
-          "helpText": "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de las transferencias (la plantilla EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49."
+          "helpText": "Una transferencia a un tercer país necesita un instrumento de transferencia y, fuera de la adecuación, una evaluación de impacto de la transferencia (la plantilla EIT). Ejemplo: «Sí: nuestro proveedor de alojamiento está en Estados Unidos». Fuente: RGPD, arts. 44 a 49."
         },
         "piav2_3_4": {
           "text": "¿Qué instrumento de transferencia lo cubre y se ha hecho una EIT?",
-          "helpText": "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de las transferencias. Ejemplo: «Cláusulas contractuales tipo; EIT completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44."
+          "helpText": "Nombra el instrumento de transferencia e indica si se ha hecho una evaluación de impacto de la transferencia. Ejemplo: «Cláusulas contractuales tipo; EIT completada en mayo de 2026». Fuente: RGPD, arts. 46 y 44."
         },
         "piav2_4_1": {
           "text": "¿Se ha facilitado a las personas la información sobre privacidad que exigen los artículos 13 y 14?",
@@ -10628,6 +10638,7 @@
       "toConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}",
       "incomplete": "{count, plural, one {# registro sin un campo obligatorio} other {# registros sin algún campo obligatorio}}",
       "notApproved": "{count, plural, one {# sin aprobar} other {# sin aprobar}}",
+      "dpiaDraftsToReview": "{count, plural, one {# borrador de EIPD está pendiente de revisión} other {# borradores de EIPD están pendientes de revisión}}",
       "impactMissing": "{count, plural, one {# incidente sin impacto registrado} other {# incidentes sin impacto registrado}}",
       "openRequests": "{count, plural, one {# solicitud abierta, ninguna completada} other {# solicitudes abiertas, ninguna completada}}",
       "noRecords": "aún no hay registros confirmados"

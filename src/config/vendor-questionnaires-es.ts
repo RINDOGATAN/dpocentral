@@ -138,7 +138,7 @@ export const VENDOR_QUESTIONNAIRES_ES: Record<string, string> = {
   "What transfer mechanisms do you rely on for international data transfers?":
     "¿En qué mecanismos te apoyas para las transferencias internacionales de datos?",
   "Have you conducted a Transfer Impact Assessment (TIA) to evaluate the legal framework and surveillance risks in the recipient country?":
-    "¿Has realizado una evaluación de impacto de la transferencia (EIT) para valorar el marco jurídico y los riesgos de vigilancia en el país de destino?",
+    "¿Has realizado una Evaluación de impacto de la transferencia (EIT) para valorar el marco jurídico y los riesgos de vigilancia en el país de destino?",
   "Do you have a documented and tested business continuity and disaster recovery plan covering the systems that process our data?":
     "¿Tienes un plan de continuidad del negocio y recuperación ante desastres documentado y probado que cubra los sistemas que tratan nuestros datos?",
   "What are your Recovery Time Objective (RTO) and Recovery Point Objective (RPO) for the services provided to us?":

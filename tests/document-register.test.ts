@@ -21,6 +21,7 @@
 
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
+import { IntlMessageFormat } from "intl-messageformat";
 import path from "node:path";
 import en from "@/messages/en.json";
 import es from "@/messages/es.json";
@@ -247,17 +248,20 @@ describe("d4: the states", () => {
     expect(of("ropa")).toEqual({ state: "draft", gaps: [{ key: "incomplete", count: 2 }] });
     expect(of("breachRegister")).toEqual({ state: "draft", gaps: [{ key: "impactMissing", count: 1 }] });
     expect(of("assessmentReport")).toEqual({ state: "draft", gaps: [{ key: "notApproved", count: 2 }] });
-    expect(of("dpia")).toEqual({ state: "draft", gaps: [{ key: "notApproved", count: 1 }] });
+    expect(of("dpia")).toEqual({ state: "draft", gaps: [{ key: "dpiaDraftsToReview", count: 1 }] });
   });
 
   it("d5: the DPIA needs the module where it is not installed (self-hosted)", () => {
     const dpia = DOCUMENT_REGISTER.find((d) => d.id === "dpia")!;
-    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "module" })).toEqual({ state: "needsInput", input: "dpiaModule" });
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "module", dpiaAssessments: 0, dpiaApproved: 0 })).toEqual({
+      state: "needsInput",
+      input: "dpiaModule",
+    });
     // Hosted: every module is included. After the quick start has drafted the
     // free DPIAs, the line reads the DPIAs held, never "needs the module".
     expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 0 })).toEqual({
       state: "draft",
-      gaps: [{ key: "notApproved", count: 2 }],
+      gaps: [{ key: "dpiaDraftsToReview", count: 2 }],
     });
     expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "quotaUsed", dpiaAssessments: 2, dpiaApproved: 1 })).toEqual({
       state: "ready",
@@ -436,5 +440,28 @@ describe("d7: the Guided dashboard", () => {
     expect(words).not.toMatch(/\busted\b|\bsu programa\b/i);
     expect(words).not.toMatch(/[–—]/);
     expect(JSON.stringify(en.documentRegister)).not.toMatch(/[–—]/);
+  });
+});
+
+describe("the DPIA line points to the drafts held, whatever the module", () => {
+  const dpia = DOCUMENT_REGISTER.find((d) => d.id === "dpia")!;
+
+  it("self-hosted without the module: drafts held read as drafts waiting for review", () => {
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "module", dpiaAssessments: 2, dpiaApproved: 0 })).toEqual({
+      state: "draft",
+      gaps: [{ key: "dpiaDraftsToReview", count: 2 }],
+    });
+    expect(documentStatus(dpia, { ...FILLED, dpiaAccess: "module", dpiaAssessments: 2, dpiaApproved: 1 })).toEqual({
+      state: "ready",
+    });
+  });
+
+  it("says how many drafts wait, with plurals, in English and Spanish", () => {
+    const fmt = (msg: string, count: number) => new IntlMessageFormat(msg, "en").format({ count });
+    expect(fmt(en.documentRegister.gaps.dpiaDraftsToReview, 2)).toBe("2 DPIA drafts are waiting for review");
+    expect(fmt(en.documentRegister.gaps.dpiaDraftsToReview, 1)).toBe("1 DPIA draft is waiting for review");
+    const fmtEs = (msg: string, count: number) => new IntlMessageFormat(msg, "es").format({ count });
+    expect(fmtEs(es.documentRegister.gaps.dpiaDraftsToReview, 2)).toBe("2 borradores de EIPD están pendientes de revisión");
+    expect(fmtEs(es.documentRegister.gaps.dpiaDraftsToReview, 1)).toBe("1 borrador de EIPD está pendiente de revisión");
   });
 });

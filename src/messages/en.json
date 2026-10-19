@@ -1302,7 +1302,13 @@
         "unknown": "Unknown",
         "affectedSubjects": "Affected Subjects",
         "subjectTypesCount": "{count, plural, one {# type} other {# types}}",
-        "notifications": "Notifications"
+        "notifications": "Notifications",
+        "notifyAuthority": "Notify the authority: {state}",
+        "notifyAuthorityState": {
+          "REQUIRED": "Yes",
+          "NOT_REQUIRED": "No",
+          "NOT_ASSESSED": "Not yet assessed"
+        }
       },
       "tabs": {
         "details": "Details",
@@ -2400,7 +2406,8 @@
         "businessOwner": "Business Owner",
         "businessOwnerDesc": "Privacy compliance for your organization",
         "privacyProfessional": "Privacy Professional",
-        "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations"
+        "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
+        "privacyProfessionalDescHosted": "A law firm, a consultancy, or another adviser managing privacy for up to five organizations"
       },
       "language": {
         "title": "Language",
@@ -3544,6 +3551,7 @@
     "businessOwnerDesc": "I need privacy compliance for my organization",
     "privacyProfessional": "Privacy Professional",
     "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
+    "privacyProfessionalDescHosted": "A law firm, a consultancy, or another adviser managing privacy for up to five organizations",
     "orgName": "Organization Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
     "clientName": "Your first client's name",
@@ -5082,7 +5090,8 @@
         "notificationRequired": "DPA Notification Required",
         "notificationDeadline": "Notification Deadline",
         "yes": "Yes",
-        "no": "No"
+        "no": "No",
+        "notAssessed": "Not yet assessed"
       },
       "subsections": {
         "description": "Description",
@@ -5201,6 +5210,7 @@
         "notSpecified": "Not specified",
         "yes": "Yes",
         "no": "No",
+        "notAssessed": "Not yet assessed",
         "none": "None",
         "noDpa": "No DPA"
       },
@@ -10628,6 +10638,7 @@
       "toConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",
       "incomplete": "{count, plural, one {# record misses a required field} other {# records miss a required field}}",
       "notApproved": "{count, plural, one {# not approved yet} other {# not approved yet}}",
+      "dpiaDraftsToReview": "{count, plural, one {# DPIA draft is waiting for review} other {# DPIA drafts are waiting for review}}",
       "impactMissing": "{count, plural, one {# incident with no impact recorded} other {# incidents with no impact recorded}}",
       "openRequests": "{count, plural, one {# request open, none completed} other {# requests open, none completed}}",
       "noRecords": "no confirmed records yet"

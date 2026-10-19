@@ -52,7 +52,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { features } from "@/config/features";
 import { formatIncidentRef } from "@/lib/incident-ref";
-import { breachWindowEnd } from "@/lib/breach-window";
+import { authorityNotificationAssessment, breachWindowEnd } from "@/lib/breach-window";
 import { parseDateInput } from "@/lib/date-input";
 
 import { formatDateIn, formatDateTimeIn, formatNumberIn } from "@/lib/utils";
@@ -445,6 +445,11 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
               <span className="text-sm">{tp("stats.notifications")}</span>
             </div>
             <p className="font-medium text-xl">{incident.notifications?.length ?? 0}</p>
+            <p className="text-xs text-muted-foreground mt-1" data-testid="incident-notify-authority">
+              {tp("stats.notifyAuthority", {
+                state: tp(`stats.notifyAuthorityState.${authorityNotificationAssessment(incident)}`),
+              })}
+            </p>
           </CardContent>
         </Card>
       </div>

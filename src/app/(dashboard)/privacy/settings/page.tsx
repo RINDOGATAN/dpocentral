@@ -43,6 +43,7 @@ import { DeploymentExpertCta } from "@/components/privacy/deployment-expert-cta"
 import { AiPostureCard } from "@/components/ai/AiPostureCard";
 import { SafeguardsSettingsCard } from "@/components/safeguards/safeguards-settings-card";
 import { PilotStatusCard } from "@/components/pilot/pilot-status-card";
+import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { OrganizationRole, UserType } from "@prisma/client";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { writeLocaleCookie } from "@/i18n/locale-cookie";
@@ -61,6 +62,7 @@ export default function SettingsPage() {
   const tCommon = useTranslations("common");
   const tProfile = useTranslations("pages.settings.profile");
   const tAccountType = useTranslations("pages.settings.accountType");
+  const hosted = useHostedPilot();
   const tLang = useTranslations("pages.settings.language");
   const tOrg = useTranslations("pages.settings.organization");
   const tMembers = useTranslations("pages.settings.members");
@@ -269,7 +271,9 @@ export default function SettingsPage() {
               const description =
                 type === "BUSINESS_OWNER"
                   ? tAccountType("businessOwnerDesc")
-                  : tAccountType("privacyProfessionalDesc");
+                  : hosted
+                    ? tAccountType("privacyProfessionalDescHosted")
+                    : tAccountType("privacyProfessionalDesc");
               return (
                 <button
                   key={type}

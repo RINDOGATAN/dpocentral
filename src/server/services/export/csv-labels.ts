@@ -41,6 +41,8 @@ export interface CsvWords {
   notSpecified: string;
   yes: string;
   no: string;
+  /** A yes/no question nobody has answered yet (the breach register's "notify the authority?"). */
+  notAssessed: string;
   none: string;
   noDpa: string;
 }
@@ -56,6 +58,7 @@ export const CSV_WORDS_EN: CsvWords = {
   notSpecified: "Not specified",
   yes: "Yes",
   no: "No",
+  notAssessed: "Not yet assessed",
   none: "None",
   noDpa: "No DPA",
 };
