@@ -25,11 +25,11 @@ describe("country code", () => {
     expect(isCountryCode("India")).toBe(false);
   });
 
-  it("the transfer form (on Transfers, its one home) uses it and explains it", () => {
+  it("the transfer form (on Transfers, its one home) picks a country by name and explains the code", () => {
     for (const f of ["src/app/(dashboard)/privacy/transfers/page.tsx"]) {
       const s = src(f);
-      expect(s).toContain("normaliseCountryCode(e.target.value)");
-      expect(s).toContain("isCountryCode(");
+      expect(s).toContain("<CountryPicker");
+      expect(s).toContain("isIsoCountryCode(");
       expect(s).toContain("countryHint");
     }
     expect(en.pages.dataInventory.transferDialog.countryHint).toContain("ISO 3166");

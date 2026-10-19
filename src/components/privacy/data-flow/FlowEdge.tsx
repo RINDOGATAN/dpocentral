@@ -50,7 +50,11 @@ function FlowEdgeComponent({
   const baseWidth = strokeWidthForFrequency(flow?.frequency);
   const strokeWidth = selected ? baseWidth + 1.5 : baseWidth;
 
-  const curvature = isReturn ? 0.5 : isBidirectional ? -0.5 : 0.22;
+  // Flows joining the same two systems in the same direction bend further
+  // apart one by one, so none hides another.
+  const parallelIndex = data?.parallelIndex ?? 0;
+  const spread = parallelIndex * 0.3;
+  const curvature = isReturn ? 0.5 + spread : isBidirectional ? -0.5 - spread : 0.22 + spread;
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -77,7 +81,9 @@ function FlowEdgeComponent({
     flow?.name ||
     tEdge("fallback");
   // The two directions of a pair share a midpoint: lift one label, drop the other.
-  const labelOffset = isBidirectional ? (isReturn ? PAIR_LABEL_OFFSET : -PAIR_LABEL_OFFSET) : 0;
+  const labelOffset =
+    (isBidirectional ? (isReturn ? PAIR_LABEL_OFFSET : -PAIR_LABEL_OFFSET) : 0) +
+    (isReturn ? 1 : -1) * parallelIndex * PAIR_LABEL_OFFSET;
 
   return (
     <>
@@ -94,8 +100,14 @@ function FlowEdgeComponent({
         markerEnd={`url(#arrowhead-${sensitivity})`}
       />
       <EdgeLabelRenderer>
-        <div
-          className="absolute flex items-center gap-1 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider cursor-pointer transition-all duration-200"
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (flow) data?.onSelect?.(flow);
+          }}
+          aria-label={tEdge("open", { name: flow?.name ?? label })}
+          className="nodrag nopan absolute flex items-center gap-1 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY + labelOffset}px)`,
             pointerEvents: "all",
@@ -107,7 +119,7 @@ function FlowEdgeComponent({
           }}
         >
           {label}
-        </div>
+        </button>
       </EdgeLabelRenderer>
     </>
   );

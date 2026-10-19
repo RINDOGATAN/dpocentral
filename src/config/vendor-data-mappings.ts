@@ -12,6 +12,8 @@
 
 import type { DataCategory, DataAssetType, LegalBasis, DataSensitivity } from "@prisma/client";
 import { VENDOR_DATA_MAPPINGS_ES } from "./vendor-data-mappings-es";
+import { ADEQUACY_DECISIONS, EEA_COUNTRY_CODES, isEeaCountry } from "./transfer-compliance-rules";
+import { ISO_COUNTRY_CODES, canonicalCountryCode, isIsoCountryCode } from "../lib/country-code";
 import { FREQUENCY_LABEL_KEYS } from "../components/privacy/data-flow/flow-labels";
 
 // ============================================================
@@ -70,18 +72,121 @@ export interface VendorDataMapping {
 // EU ADEQUACY COUNTRIES
 // ============================================================
 
-/** Countries with EU adequacy decisions (safe for data transfers) */
-export const EU_ADEQUATE_COUNTRIES = [
-  // EU/EEA
-  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-  "PL", "PT", "RO", "SK", "SI", "ES", "SE",
-  // EEA
-  "IS", "LI", "NO",
-  // Adequacy decisions
-  "AD", "AR", "CA", "FO", "GG", "IL", "IM", "JP", "JE", "NZ",
-  "KR", "CH", "UY", "GB",
+/**
+ * Destinations a transfer to which needs no Chapter V safeguard of its own:
+ * the EEA and the countries with a full EU adequacy decision (one list,
+ * src/config/transfer-compliance-rules.ts). The United States and Canada
+ * are left out: their decisions are partial (DPF certification, PIPEDA
+ * coverage), so a transfer record is still needed to say which applies.
+ */
+export const EU_ADEQUATE_COUNTRIES: string[] = [
+  ...EEA_COUNTRY_CODES,
+  ...ADEQUACY_DECISIONS.filter((d) => !d.isPartial).map((d) => d.countryCode),
 ];
+
+/** Region words that mean "inside the EEA" in the vendor catalogue. */
+const EEA_REGION_WORDS = new Set([
+  "EU", "EEA", "EEE", "UE", "EUROPEAN UNION", "EUROPEAN ECONOMIC AREA", "UNION EUROPEA",
+]);
+
+/** Country names (English and Spanish) -> ISO code, built once from Intl. */
+let NAME_TO_CODE: Map<string, string> | null = null;
+function nameToCode(): Map<string, string> {
+  if (NAME_TO_CODE) return NAME_TO_CODE;
+  const map = new Map<string, string>();
+  for (const locale of ["en", "es"]) {
+    let names: Intl.DisplayNames | null = null;
+    try {
+      names = new Intl.DisplayNames([locale], { type: "region" });
+    } catch {
+      names = null;
+    }
+    if (!names) continue;
+    for (const code of ISO_COUNTRY_CODES) {
+      const n = names.of(code);
+      if (n && n !== code) map.set(n.toUpperCase(), code);
+    }
+  }
+  for (const [alias, code] of Object.entries({
+    USA: "US", "UNITED STATES OF AMERICA": "US", "U.S.": "US", "U.S.A.": "US",
+    UK: "GB", "GREAT BRITAIN": "GB", ENGLAND: "GB",
+    "SOUTH KOREA": "KR", KOREA: "KR",
+  })) {
+    map.set(alias, code);
+  }
+  NAME_TO_CODE = map;
+  return map;
+}
+
+/**
+ * What a catalogue "data location" is:
+ *   - EEA: inside the EEA ("EU", "EEA", "EU (Germany)", "Ireland", "DE"...);
+ *   - COUNTRY: one country outside it, as an ISO code ("US", "UK" -> GB,
+ *     "India (...)" -> IN, "United States (default endpoint)" -> US);
+ *   - UNRESOLVED: anything else ("APAC", "Customer-chosen region"...), to be
+ *     recorded by hand.
+ * The leading part before a bracket or a colon decides.
+ */
+export type CatalogLocation =
+  | { kind: "EEA" }
+  | { kind: "COUNTRY"; code: string }
+  | { kind: "UNRESOLVED"; raw: string };
+
+export function resolveCatalogLocation(raw: string): CatalogLocation {
+  const head = raw.split(/[(:]/)[0]!.trim().toUpperCase();
+  if (!head) return { kind: "UNRESOLVED", raw };
+  if (EEA_REGION_WORDS.has(head)) return { kind: "EEA" };
+  let code: string | undefined;
+  if (/^[A-Z]{2}$/.test(head)) {
+    const c = canonicalCountryCode(head);
+    code = isIsoCountryCode(c) ? c : undefined;
+  } else {
+    code = nameToCode().get(head);
+  }
+  if (!code) return { kind: "UNRESOLVED", raw };
+  return isEeaCountry(code) ? { kind: "EEA" } : { kind: "COUNTRY", code };
+}
+
+/**
+ * The transfers a vendor's catalogue locations call for: one per distinct
+ * country outside the EEA without a full adequacy decision (the US and
+ * Canada included, their decisions being partial), plus the locations that
+ * could not be read as a country.
+ */
+export function transferDestinationsFor(locations: readonly string[]): {
+  countries: string[];
+  unresolved: string[];
+} {
+  const countries = new Set<string>();
+  const unresolved: string[] = [];
+  for (const raw of locations) {
+    const loc = resolveCatalogLocation(raw);
+    if (loc.kind === "COUNTRY") {
+      if (requiresTransferSafeguards(loc.code)) countries.add(loc.code);
+    } else if (loc.kind === "UNRESOLVED") {
+      unresolved.push(loc.raw);
+    }
+  }
+  return { countries: [...countries], unresolved };
+}
+
+/**
+ * True when the catalogue vendor declares the EU-US Data Privacy Framework
+ * (its transfer safeguards or frameworks name it). A declaration only: the
+ * recipient's listing still has to be checked.
+ */
+export function declaresDpf(vendor: {
+  transferSafeguards?: string | null;
+  frameworks?: readonly string[] | null;
+  certifications?: readonly string[] | null;
+}): boolean {
+  const re = /\bDPF\b|data privacy framework/i;
+  return (
+    re.test(vendor.transferSafeguards ?? "") ||
+    (vendor.frameworks ?? []).some((f) => re.test(f)) ||
+    (vendor.certifications ?? []).some((c) => re.test(c))
+  );
+}
 
 // ============================================================
 // CATEGORY MAPPINGS
@@ -872,11 +977,12 @@ export const GENERIC_VENDOR_MAPPING: VendorDataMapping = {
 };
 
 /**
- * Check if a country code requires a data transfer record
- * (i.e., not in the EU adequacy list).
+ * Check if a country code requires a data transfer record with a safeguard:
+ * not in the EEA and without a full adequacy decision (aliases such as UK
+ * accepted). The US and Canada (partial decisions) do.
  */
 export function requiresTransferSafeguards(countryCode: string): boolean {
-  return !EU_ADEQUATE_COUNTRIES.includes(countryCode.toUpperCase());
+  return !EU_ADEQUATE_COUNTRIES.includes(canonicalCountryCode(countryCode));
 }
 
 export type VendorMappingLocale = "en" | "es";

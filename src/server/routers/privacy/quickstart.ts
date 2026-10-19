@@ -15,7 +15,8 @@ import {
   Prisma,
 } from "@prisma/client";
 import {
-  requiresTransferSafeguards,
+  declaresDpf,
+  transferDestinationsFor,
   vendorMappingFor,
   type VendorDataMapping,
 } from "../../../config/vendor-data-mappings";
@@ -88,6 +89,9 @@ function buildVendorPreview(
     category: string;
     subcategory?: string | null;
     dataLocations: string[];
+    transferSafeguards?: string | null;
+    frameworks?: string[];
+    certifications?: string[];
     privacyTechnologies?: string[];
     aiCapabilities?: string[];
     aiTechniques?: string[];
@@ -100,12 +104,18 @@ function buildVendorPreview(
   },
   mapping: VendorDataMapping
 ): VendorPreviewItem {
-  const transfers = (catalogVendor.dataLocations || [])
-    .filter(requiresTransferSafeguards)
-    .map((country) => ({
+  // Locations inside the EEA ("EU", "EEA", "EU (Germany)") or with a full
+  // adequacy decision ("UK" -> GB) need no transfer record; the US with a
+  // declared DPF certification is recorded under the adequacy decision (to
+  // be checked), every other destination under SCCs.
+  const dpf = declaresDpf(catalogVendor);
+  const transfers = transferDestinationsFor(catalogVendor.dataLocations || []).countries.map(
+    (country) => ({
       country,
-      mechanism: "Standard Contractual Clauses",
-    }));
+      mechanism:
+        country === "US" && dpf ? "ADEQUACY_DECISION" : "STANDARD_CONTRACTUAL_CLAUSES",
+    })
+  );
 
   const aiFields: VendorCatalogAIFields = {
     slug: catalogVendor.slug,
@@ -315,6 +325,8 @@ export const quickstartRouter = createTRPCRouter({
           website: true,
           dataLocations: true,
           certifications: true,
+          transferSafeguards: true,
+          frameworks: true,
           gdprCompliant: true,
           privacyTechnologies: true,
           aiCapabilities: true,
@@ -869,24 +881,38 @@ export const quickstartRouter = createTRPCRouter({
                 },
               });
 
-              // Create data transfers for non-EU countries
-              // Create data transfers for non-EU countries (batch)
-              const nonEuLocations = (
+              // Create data transfers (batch) for the destinations outside
+              // the EEA without a full adequacy decision. Catalogue locations
+              // are read as countries first ("EU" and "EEA" need no record,
+              // "UK" is GB and adequate, "India (...)" is IN). A US vendor
+              // that declares the EU-US Data Privacy Framework is recorded
+              // under the adequacy decision, with its certification still to
+              // be checked; the rest under SCCs.
+              const nonEuLocations = transferDestinationsFor(
                 catalogVendor.dataLocations || []
-              ).filter(requiresTransferSafeguards);
+              ).countries;
+              const dpf = declaresDpf(catalogVendor);
               if (nonEuLocations.length > 0) {
                 await tx.dataTransfer.createMany({
-                  data: nonEuLocations.map((country) => ({
-                    organizationId: orgId,
-                    processingActivityId: activity.id,
-                    name: vendorText.transferName(catalogVendor.name, country),
-                    description: vendorText.transferDescription(catalogVendor.name, country),
-                    destinationCountry: country,
-                    destinationOrg: catalogVendor.name,
-                    mechanism: TransferMechanism.STANDARD_CONTRACTUAL_CLAUSES,
-                    safeguards: vendorText.transferSafeguards,
-                    isActive: true,
-                  })),
+                  data: nonEuLocations.map((country) => {
+                    const underDpf = country === "US" && dpf;
+                    return {
+                      organizationId: orgId,
+                      processingActivityId: activity.id,
+                      vendorId: vendor.id,
+                      name: vendorText.transferName(catalogVendor.name, country),
+                      description: vendorText.transferDescription(catalogVendor.name, country),
+                      destinationCountry: country,
+                      destinationOrg: catalogVendor.name,
+                      mechanism: underDpf
+                        ? TransferMechanism.ADEQUACY_DECISION
+                        : TransferMechanism.STANDARD_CONTRACTUAL_CLAUSES,
+                      safeguards: underDpf
+                        ? vendorText.transferSafeguardsDpf
+                        : vendorText.transferSafeguards,
+                      isActive: true,
+                    };
+                  }),
                 });
                 counts.transfers += nonEuLocations.length;
               }

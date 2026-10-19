@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { FREQUENCY_LABEL_KEYS } from "./flow-labels";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { Button } from "@/components/ui/button";
@@ -143,15 +143,20 @@ export function CreateFlowSheet({
     initialData ?? emptyForm(defaultSourceId, defaultDestinationId)
   );
 
+  // Fill the form when the sheet opens, and only then: a failed save keeps
+  // what the person typed (the parent re-renders with fresh props).
+  const wasOpen = useRef(false);
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !wasOpen.current) {
       setForm(initialData ?? emptyForm(defaultSourceId, defaultDestinationId));
     }
+    wasOpen.current = isOpen;
   }, [isOpen, initialData, defaultSourceId, defaultDestinationId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.sourceAssetId || !form.destinationAssetId) return;
+    if (form.sourceAssetId === form.destinationAssetId) return;
     onSubmit(form);
   };
 
@@ -266,19 +271,25 @@ export function CreateFlowSheet({
                 const category = value as DataCategory;
                 const isSelected = form.dataCategories.includes(category);
                 return (
-                  <Badge
+                  <button
                     key={value}
-                    variant={isSelected ? "default" : "outline"}
-                    className={`cursor-pointer transition-colors ${
-                      isSelected ? "" : "hover:border-primary"
-                    }`}
+                    type="button"
+                    aria-pressed={isSelected}
                     onClick={() => toggleCategory(category)}
+                    className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    {tCategory(value as never)}
-                    {isSelected && (
-                      <X className="w-3 h-3 ml-1" />
-                    )}
-                  </Badge>
+                    <Badge
+                      variant={isSelected ? "default" : "outline"}
+                      className={`cursor-pointer transition-colors ${
+                        isSelected ? "" : "hover:border-primary"
+                      }`}
+                    >
+                      {tCategory(value as never)}
+                      {isSelected && (
+                        <X className="w-3 h-3 ml-1" aria-hidden />
+                      )}
+                    </Badge>
+                  </button>
                 );
               })}
             </div>
@@ -359,7 +370,8 @@ export function CreateFlowSheet({
                 isSubmitting ||
                 !form.name ||
                 !form.sourceAssetId ||
-                !form.destinationAssetId
+                !form.destinationAssetId ||
+                form.sourceAssetId === form.destinationAssetId
               }
             >
               {isSubmitting ? (

@@ -676,6 +676,16 @@ model DataTransfer {
   supplementaryMeasures  Json? // Supplementary measures documentation
   complianceStatus       String? // COMPLIANT, NEEDS_REVIEW, NON_COMPLIANT, PENDING
 
+  // Partial adequacy (US under the EU-US Data Privacy Framework, Canada under
+  // PIPEDA): the decision covers the transfer only when the recipient is
+  // within its scope. Null = not recorded (treated as not covered).
+  adequacyScopeConfirmed Boolean?
+  adequacyScopeReference String?   @db.Text // e.g. the DPF list entry checked
+  adequacyScopeCheckedAt DateTime?
+
+  // The vendor (processor or other recipient) that receives the data.
+  vendorId               String?
+
   metadata             Json?
   createdAt            DateTime          @default(now())
   updatedAt            DateTime          @updatedAt
@@ -683,9 +693,11 @@ model DataTransfer {
   organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   processingActivity ProcessingActivity? @relation(fields: [processingActivityId], references: [id], onDelete: SetNull)
   jurisdiction       Jurisdiction?       @relation(fields: [jurisdictionId], references: [id], onDelete: SetNull)
+  vendor             Vendor?             @relation(fields: [vendorId], references: [id], onDelete: SetNull)
   assessments        Assessment[]
 
   @@index([organizationId])
+  @@index([vendorId])
   @@map("data_transfers")
 }
 
@@ -1399,6 +1411,7 @@ model Vendor {
   reviews                VendorReview[]
   assessments            Assessment[]
   aiSystems              AISystem[]
+  transfers              DataTransfer[]
 
   @@index([organizationId])
   @@index([status])

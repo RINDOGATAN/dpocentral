@@ -39,7 +39,7 @@ describe("transferMarkers", () => {
       ],
       new Map()
     );
-    expect(m).toEqual([{ assetId: "mc", transferIds: ["t1", "t2"], countries: ["IN", "US"] }]);
+    expect(m).toMatchObject([{ assetId: "mc", transferIds: ["t1", "t2"], countries: ["IN", "US"] }]);
   });
 
   it("falls back to the activity's only external system, never to a guess among several", () => {
@@ -55,7 +55,8 @@ describe("transferMarkers", () => {
       ],
       links
     );
-    expect(m).toEqual([{ assetId: "pay", transferIds: ["t1"], countries: ["US"] }]);
+    expect(m).toMatchObject([{ assetId: "pay", transferIds: ["t1"], countries: ["US"] }]);
+    expect(m).toHaveLength(1);
   });
 
   it("ignores inactive transfers", () => {

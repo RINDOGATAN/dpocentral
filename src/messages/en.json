@@ -692,11 +692,12 @@
         "adequacyBody": "{country} has an EU adequacy decision (adopted {date}).",
         "adequacyPartial": " ⚠ Partial: see notes.",
         "adequacyNotes": {
-          "CA": "Limited to recipients subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organizations.",
+          "CA": "Limited to commercial organisations subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organisations.",
           "JP": "Based on the Act on Protection of Personal Information (APPI) with supplementary rules for EU-sourced data.",
-          "KR": "Based on the Personal Information Protection Act (PIPA) as amended in 2020.",
+          "KR": "Based on the Personal Information Protection Act (PIPA). Confirmed by the Commission's first review in July 2026.",
           "GB": "Adequacy decision adopted post-Brexit under GDPR Art. 45. Renewed by the European Commission on 19 December 2025; valid until 27 December 2031.",
-          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov."
+          "US": "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov.",
+          "BR": "Based on the General Data Protection Law (LGPD). Covers the public and private sectors; excludes transfers made only for public security, national defence, state security or criminal investigation and prosecution."
         },
         "complianceStatus": "Compliance Status",
         "suggestedFromData": "Suggested from current data: <b>{status}</b>",
@@ -715,7 +716,17 @@
         "sccRemaining": "{count, plural, one {# day remaining.} other {# days remaining.}}",
         "tiaPendingTitle": "Transfer Impact Assessment pending",
         "tiaPendingBody": "Schrems II requires an assessment of the destination country's surveillance laws and the effectiveness of your safeguards.",
-        "startTia": "Start TIA"
+        "startTia": "Start TIA",
+        "withinEea": "Within the EEA (not a restricted transfer)",
+        "partialUnconfirmedBadge": "Partial adequacy: not confirmed",
+        "partialUnconfirmedBody": "This record does not say the recipient is within that scope, so the decision does not cover the transfer: the safeguard recorded below applies (with SCCs, a transfer impact assessment is needed).",
+        "recordScope": "Record the recipient's status",
+        "scopeCheckedOn": "Checked on {date}.",
+        "scopeReference": "Reference: {reference}",
+        "activityLink": "Processing activity: {name}",
+        "noActivity": "No processing activity linked",
+        "vendorLink": "Vendor: {name}",
+        "noVendor": "No vendor linked"
       },
       "edit": {
         "title": "Edit Transfer Compliance",
@@ -734,13 +745,42 @@
         "safeguardsPlaceholder": "e.g., EU SCCs 2021 module 2 + encryption at rest + DPIA",
         "saving": "Saving...",
         "save": "Save Changes",
-        "errorPrefix": "Error: {message}"
+        "errorPrefix": "Error: {message}",
+        "links": "Activity and vendor",
+        "linksSubtitle": "The processing activity the transfer belongs to (it then appears in the record of processing) and the vendor that receives the data.",
+        "adequacyScope": "Partial adequacy decision"
       },
       "status_option": {
         "COMPLIANT": "Compliant",
         "NEEDS_REVIEW": "Needs Review",
         "NON_COMPLIANT": "Non-Compliant",
         "PENDING": "Pending"
+      },
+      "adequacy": {
+        "withinEea": "{country} is in the EEA: not a restricted transfer, no Chapter V safeguard needed.",
+        "none": "{country} has no EU adequacy decision: choose a safeguard (for example SCCs) and complete a transfer impact assessment.",
+        "full": "{country} has an EU adequacy decision: no further safeguard is needed for this transfer.",
+        "partialTitle": "{country}: the adequacy decision covers some recipients only",
+        "partialBody": {
+          "DPF": "The EU-US decision covers only recipients certified under the EU-US Data Privacy Framework (check the list at dataprivacyframework.gov).",
+          "PIPEDA": "The decision for Canada covers only commercial organisations subject to PIPEDA (the Personal Information Protection and Electronic Documents Act)."
+        },
+        "scopeQuestion": {
+          "DPF": "The recipient is certified under the EU-US Data Privacy Framework (active entry checked on the DPF list)",
+          "PIPEDA": "The recipient is a commercial organisation subject to PIPEDA"
+        },
+        "scopeReference": {
+          "DPF": "DPF list entry (link or reference)",
+          "PIPEDA": "Basis for PIPEDA coverage (optional)"
+        },
+        "scopeReferencePlaceholder": {
+          "DPF": "e.g. https://www.dataprivacyframework.gov/list",
+          "PIPEDA": "e.g. federally regulated private-sector company"
+        },
+        "scopeRecorded": {
+          "DPF": "Recipient recorded as certified under the EU-US Data Privacy Framework.",
+          "PIPEDA": "Recipient recorded as a commercial organisation subject to PIPEDA."
+        }
       }
     },
     "vendorQuestionnaires": {
@@ -951,7 +991,7 @@
         "questions": "Questions",
         "mitigations": "Mitigations",
         "riskScore": "Risk Score",
-        "riskScoreScale": "0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical",
+        "riskScoreScale": "0 to 25 Low · 26 to 50 Medium · 51 to 75 High · 76 to 100 Critical",
         "noScore": "-"
       },
       "tabs": {
@@ -2544,7 +2584,7 @@
       },
       "emptyTransfers": {
         "title": "No international transfers recorded",
-        "subtitle": "Document cross-border data transfers and safeguards (Art. 44–49 GDPR)"
+        "subtitle": "Document cross-border data transfers and safeguards (GDPR Art. 44 to 49)"
       },
       "transfer": {
         "tiaCompleted": "TIA completed",
@@ -2569,11 +2609,11 @@
       },
       "transferDialog": {
         "title": "Add International Transfer",
-        "description": "Record a cross-border data transfer under GDPR Art. 44–49.",
+        "description": "Record a cross-border data transfer under GDPR Art. 44 to 49.",
         "nameLabel": "Transfer Name",
         "namePlaceholder": "e.g. Customer data to US analytics provider",
         "countryLabel": "Destination Country",
-        "countryPlaceholder": "e.g. US, IN, GB",
+        "countryPlaceholder": "Choose a country",
         "orgLabel": "Receiving Organization",
         "orgPlaceholder": "e.g. Stripe Inc.",
         "mechanismLabel": "Transfer Mechanism",
@@ -2582,7 +2622,13 @@
         "safeguardsPlaceholder": "e.g. EU SCCs (2021) + supplementary measures",
         "descriptionLabel": "Description",
         "create": "Create",
-        "countryHint": "Two-letter country code (ISO 3166), for example IN for India."
+        "countryHint": "Stored as its ISO 3166 two-letter code (for example IN for India).",
+        "vendorLabel": "Vendor",
+        "vendorPlaceholder": "Choose a vendor",
+        "noneOption": "None",
+        "activityLabel": "Processing activity",
+        "activityPlaceholder": "Choose an activity",
+        "activityHint": "Linked to an activity, the transfer appears in its record of processing (Art. 30(1)(e))."
       },
       "legalBasis": {
         "CONSENT": "Consent",
@@ -2697,6 +2743,11 @@
       "revise": "Revise Answers",
       "applying": "Applying...",
       "applyAll": "Apply All"
+    },
+    "dataMap": {
+      "title": "Data map",
+      "subtitle": "Your systems, the data flows between them, the vendors and the transfers outside the EEA with their safeguard and status.",
+      "transfers": "Transfers"
     }
   },
   "confirms": {
@@ -2793,15 +2844,18 @@
     "filters": {
       "all": "All",
       "special": "Special cat.",
-      "personal": "Personal",
-      "general": "General",
+      "personal": "Higher risk",
+      "general": "Other personal",
       "autoGen": "To confirm",
       "showAutoGenerated": "Show flows to confirm",
       "hideAutoGenerated": "Hide flows to confirm",
       "categories": "Categories",
       "clearCategories": "Clear categories",
       "clearAll": "Clear all filters",
-      "flowCount": "{shown} / {total} flows"
+      "flowCount": "{shown} / {total} flows",
+      "unclassified": "Uncategorised",
+      "activity": "Activity",
+      "allActivities": "All activities"
     },
     "node": {
       "production": "PROD",
@@ -2810,7 +2864,17 @@
       "outbound": "out",
       "location": "Location",
       "outsideEea": "Outside the EEA: {countries}",
-      "outsideEeaTitle": "{count, plural, one {Open the transfer record} other {Open the # transfer records}}"
+      "outsideEeaTitle": "{count, plural, one {Open the transfer record} other {Open the # transfer records}}",
+      "transferLine": "{country}: {mechanism} ({status})",
+      "noMechanism": "No safeguard recorded",
+      "outsideEeaStatus": "Outside the EEA: {countries} · {status}",
+      "unrecorded": "No transfer record: {countries}",
+      "unrecordedTitle": "The vendor operates or stores data in these countries outside the EEA, and no transfer record covers them. Open Transfers to record one.",
+      "moreCategories": "{count, plural, one {# more category} other {# more categories}}",
+      "noFlows": "No flow recorded yet",
+      "vendor": "Vendor",
+      "outsideEeaCountry": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "suggestedStatus": "{status} (suggested)"
     },
     "sheet": {
       "createTitle": "Create Data Flow",
@@ -2828,13 +2892,13 @@
       "categories": "Data Categories",
       "categoriesSelected": "{count} selected",
       "frequency": "Frequency",
-      "frequencyPlaceholder": "How often data is transferred",
+      "frequencyPlaceholder": "How often the data moves",
       "volume": "Data Volume",
       "volumePlaceholder": "e.g., ~10,000 records/day",
       "encryption": "Encryption Method",
       "encryptionPlaceholder": "e.g., TLS 1.3, AES-256",
       "cancel": "Cancel",
-      "automated": "Automated Transfer",
+      "automated": "Automated flow",
       "saving": "Saving…",
       "creating": "Creating…",
       "saveChanges": "Save Changes",
@@ -2847,7 +2911,8 @@
       "noFlowsTitle": "No data flows defined yet",
       "noFlowsBody": "Create flows to visualize how data moves between systems",
       "noAssetFlowsTitle": "No data flows connected to this system",
-      "noAssetFlowsBody": "Create a flow to connect this system to other systems"
+      "noAssetFlowsBody": "Create a flow to connect this system to other systems",
+      "noFlowsHint": "Your systems are shown. Add a flow between two of them, or link systems to a processing activity to get draft flows to confirm."
     },
     "actions": {
       "addAsset": "Add System",
@@ -2876,12 +2941,25 @@
       "generated": "Suggested from the systems linked to a processing activity. It is a draft, left out of the PDF reports, until you confirm it or edit it.",
         "generatedConfirmed": "Created from the systems linked to a processing activity, and confirmed.",
         "confirm": "Confirm flow",
-        "confirmed": "Flow confirmed"
+        "confirmed": "Flow confirmed",
+        "draftBadge": "To confirm",
+        "transfersTitle": "Transfers outside the EEA from the destination"
     },
     "legend": {
       "title": "Key",
       "inbound": "incoming flows",
-      "outbound": "outgoing flows"
+      "outbound": "outgoing flows",
+      "lineSpecial": "special categories (Arts. 9 and 10)",
+      "lineHigherRisk": "higher-risk personal data",
+      "lineOther": "other personal data",
+      "lineUnclassified": "no category recorded",
+      "dashed": "flow to confirm (suggested from an activity)",
+      "thickness": "thicker line: more frequent",
+      "stripe": "System type",
+      "transfers": "Transfers",
+      "transferLine": "transfer to a country outside the EEA (safeguard and status on the label)",
+      "outsideEeaShort": "Outside EEA",
+      "unrecorded": "vendor country with no transfer record"
     },
     "abbr": {
       "IDENTIFIERS": "ID",
@@ -2901,7 +2979,25 @@
       "OTHER": "OTH"
     },
     "edge": {
-      "fallback": "Flow"
+      "fallback": "Flow",
+      "open": "Open the flow {name}"
+    },
+    "summary": {
+      "counts": "{systems, plural, one {# system} other {# systems}} ({isolated} without flows) · {flows, plural, one {# flow} other {# flows}} · {transfers, plural, one {# transfer} other {# transfers}} outside the EEA to {countries, plural, one {# country} other {# countries}} · {vendors, plural, one {# vendor} other {# vendors}} with no system"
+    },
+    "view": {
+      "label": "View",
+      "map": "Map",
+      "list": "List",
+      "canvasLabel": "Data map with {systems} systems and {flows} flows. Use Tab to move between systems and flows, and Enter to open one. The list view shows the same records."
+    },
+    "list": {
+      "flowsTitle": "{count, plural, one {# flow} other {# flows}}",
+      "systemsTitle": "{count, plural, one {# system} other {# systems}}",
+      "transfersTitle": "{count, plural, one {# transfer outside the EEA} other {# transfers outside the EEA}}",
+      "vendorsTitle": "{count, plural, one {# vendor with no system} other {# vendors with no system}}",
+      "to": "to",
+      "flowCounts": "{inbound} incoming, {outbound} outgoing"
     }
   },
   "metadata": {
@@ -4682,6 +4778,10 @@
         "sectoral": "Sectoral",
         "ai_governance": "AI Governance",
         "emerging": "Emerging"
+      },
+      "adequacyPartial": {
+        "DPF": "Partial (DPF-certified recipients only)",
+        "PIPEDA": "Partial (PIPEDA-covered organisations only)"
       }
     },
     "dsarPerformance": {
@@ -6190,7 +6290,8 @@
           "Switzerland": "Switzerland",
           "UK": "United Kingdom",
           "Uruguay": "Uruguay",
-          "USA": "USA (Data Privacy Framework)"
+          "USA": "USA (certified recipients only, Data Privacy Framework)",
+          "Brazil": "Brazil"
         }
       },
       "supplementaryMeasures": {
@@ -9746,7 +9847,8 @@
       "skills": "Skills",
       "billing": "Billing",
       "help": "Help and docs",
-      "settings": "Settings"
+      "settings": "Settings",
+      "dataMap": "Data map"
     },
     "nextStep": {
       "title": "Next step",

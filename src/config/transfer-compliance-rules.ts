@@ -11,17 +11,32 @@
  * AGPL-3.0 License - Part of the open-source core
  */
 
+import { EU_COUNTRIES } from "../lib/region";
+import { canonicalCountryCode } from "../lib/country-code";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+
+/**
+ * What a partial adequacy decision requires of the recipient before the
+ * decision covers the transfer:
+ *   - DPF: the US recipient is certified under the EU-US Data Privacy
+ *     Framework (listed as active at dataprivacyframework.gov);
+ *   - PIPEDA: the Canadian recipient is a commercial organisation subject to
+ *     the Personal Information Protection and Electronic Documents Act.
+ */
+export type PartialAdequacyScope = "DPF" | "PIPEDA";
 
 export interface AdequacyDecision {
   country: string;
   countryCode: string;
   /** Date the adequacy decision was adopted (ISO 8601) */
   decisionDate: string;
-  /** Whether the decision covers only certain types of transfers */
+  /** Whether the decision covers only certain recipients or transfers */
   isPartial: boolean;
+  /** For a partial decision: what must be true of the recipient. */
+  partialScope?: PartialAdequacyScope;
   notes?: string;
 }
 
@@ -52,32 +67,50 @@ export interface TransferInput {
   tiaCompleted: boolean;
   sccExpiryDate?: Date | null;
   supplementaryMeasures?: Record<string, unknown>;
+  /**
+   * For a destination with a partial adequacy decision: whether the record
+   * says the recipient is within its scope (DPF certification for the US,
+   * PIPEDA coverage for Canada). Unknown (null/undefined) counts as no.
+   */
+  adequacyScopeConfirmed?: boolean | null;
 }
 
 // ---------------------------------------------------------------------------
-// Adequacy Decisions (as of 2025-12)
+// Adequacy Decisions (European Commission list, checked October 2026)
 // ---------------------------------------------------------------------------
+// Not listed here: the adequacy decision for the European Patent
+// Organisation (July 2025), because it covers an international organisation,
+// not a country code a transfer record can name.
 
 export const ADEQUACY_DECISIONS: AdequacyDecision[] = [
   {
     country: "Andorra",
     countryCode: "AD",
-    decisionDate: "2010-10-21",
+    decisionDate: "2010-10-19",
     isPartial: false,
   },
   {
     country: "Argentina",
     countryCode: "AR",
-    decisionDate: "2003-07-05",
+    decisionDate: "2003-06-30",
     isPartial: false,
+  },
+  {
+    country: "Brazil",
+    countryCode: "BR",
+    decisionDate: "2026-01-26",
+    isPartial: false,
+    notes:
+      "Based on the General Data Protection Law (LGPD). Covers the public and private sectors; excludes transfers made only for public security, national defence, state security or criminal investigation and prosecution.",
   },
   {
     country: "Canada",
     countryCode: "CA",
     decisionDate: "2001-12-20",
     isPartial: true,
+    partialScope: "PIPEDA",
     notes:
-      "Limited to recipients subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organizations.",
+      "Limited to commercial organisations subject to the Personal Information Protection and Electronic Documents Act (PIPEDA). Does not cover all Canadian organisations.",
   },
   {
     country: "Faroe Islands",
@@ -126,10 +159,10 @@ export const ADEQUACY_DECISIONS: AdequacyDecision[] = [
   {
     country: "Republic of Korea",
     countryCode: "KR",
-    decisionDate: "2022-12-17",
+    decisionDate: "2021-12-17",
     isPartial: false,
     notes:
-      "Based on the Personal Information Protection Act (PIPA) as amended in 2020.",
+      "Based on the Personal Information Protection Act (PIPA). Confirmed by the Commission's first review in July 2026.",
   },
   {
     country: "Switzerland",
@@ -156,25 +189,28 @@ export const ADEQUACY_DECISIONS: AdequacyDecision[] = [
     countryCode: "US",
     decisionDate: "2023-07-10",
     isPartial: true,
+    partialScope: "DPF",
     notes:
-      "EU-US Data Privacy Framework (DPF). Only covers US organizations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov.",
+      "EU-US Data Privacy Framework (DPF). Only covers US organisations that self-certify under the DPF. Verify recipient certification at dataprivacyframework.gov.",
   },
 ];
 
-// Build a lookup set for fast adequacy checks
-const adequateCountryCodes = new Set(
-  ADEQUACY_DECISIONS.map((d) => d.countryCode.toUpperCase())
+const decisionsByCode = new Map(
+  ADEQUACY_DECISIONS.map((d) => [d.countryCode.toUpperCase(), d])
 );
 
-// Also include EEA countries (EU members + EEA) — transfers within EEA are not
-// restricted under GDPR Chapter V
-const EEA_COUNTRY_CODES = new Set([
-  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-  "PL", "PT", "RO", "SK", "SI", "ES", "SE",
-  // EEA (non-EU)
-  "IS", "LI", "NO",
-]);
+/**
+ * The EEA: the 27 EU member states (one list, src/lib/region.ts) plus
+ * Iceland, Liechtenstein and Norway. Transfers within it are not restricted
+ * under GDPR Chapter V.
+ */
+export const EEA_COUNTRY_CODES: readonly string[] = [...EU_COUNTRIES, "IS", "LI", "NO"];
+const EEA_SET = new Set(EEA_COUNTRY_CODES);
+
+/** True when the destination is in the EEA (aliases such as EL accepted). */
+export function isEeaCountry(countryCode: string | null | undefined): boolean {
+  return EEA_SET.has(canonicalCountryCode(countryCode));
+}
 
 // ---------------------------------------------------------------------------
 // Schrems II Checklist
@@ -419,11 +455,50 @@ export const SUPPLEMENTARY_MEASURES: SupplementaryMeasure[] = [
 // ---------------------------------------------------------------------------
 
 /**
- * Check if a country has an EU adequacy decision or is within the EEA.
+ * How far an adequacy decision covers a destination:
+ *   - EEA: not a restricted transfer at all;
+ *   - FULL: a full adequacy decision;
+ *   - PARTIAL_CONFIRMED: a partial decision, and the record says the
+ *     recipient is within its scope (e.g. DPF-certified);
+ *   - PARTIAL_UNCONFIRMED: a partial decision, scope not recorded: the
+ *     decision does not cover the transfer until it is;
+ *   - NONE: no adequacy decision.
  */
-export function isAdequateCountry(countryCode: string): boolean {
-  const code = countryCode.toUpperCase();
-  return EEA_COUNTRY_CODES.has(code) || adequateCountryCodes.has(code);
+export type AdequacyCoverage =
+  | "EEA"
+  | "FULL"
+  | "PARTIAL_CONFIRMED"
+  | "PARTIAL_UNCONFIRMED"
+  | "NONE";
+
+export function adequacyCoverage(
+  countryCode: string | null | undefined,
+  adequacyScopeConfirmed?: boolean | null
+): AdequacyCoverage {
+  const code = canonicalCountryCode(countryCode);
+  if (EEA_SET.has(code)) return "EEA";
+  const decision = decisionsByCode.get(code);
+  if (!decision) return "NONE";
+  if (!decision.isPartial) return "FULL";
+  return adequacyScopeConfirmed === true ? "PARTIAL_CONFIRMED" : "PARTIAL_UNCONFIRMED";
+}
+
+/** True when no Chapter V safeguard is needed: EEA, full adequacy, or a partial decision whose scope is recorded. */
+function coveredByAdequacy(coverage: AdequacyCoverage): boolean {
+  return coverage === "EEA" || coverage === "FULL" || coverage === "PARTIAL_CONFIRMED";
+}
+
+/**
+ * Check if a destination needs no Chapter V safeguard: within the EEA, a
+ * full adequacy decision, or a partial decision (US, Canada) whose scope the
+ * record confirms. A partial decision without that confirmation is not
+ * adequate for the transfer.
+ */
+export function isAdequateCountry(
+  countryCode: string,
+  adequacyScopeConfirmed?: boolean | null
+): boolean {
+  return coveredByAdequacy(adequacyCoverage(countryCode, adequacyScopeConfirmed));
 }
 
 /**
@@ -432,9 +507,27 @@ export function isAdequateCountry(countryCode: string): boolean {
 export function getAdequacyDecision(
   countryCode: string
 ): AdequacyDecision | undefined {
-  return ADEQUACY_DECISIONS.find(
-    (d) => d.countryCode.toUpperCase() === countryCode.toUpperCase()
-  );
+  return decisionsByCode.get(canonicalCountryCode(countryCode));
+}
+
+/** The kind of Chapter V tool a stored mechanism names. */
+type MechanismKind = "NONE" | "ADEQUACY" | "ART46" | "SCC" | "DEROGATION" | "OTHER";
+
+function mechanismKind(mechanism: string | null | undefined): MechanismKind {
+  const m = (mechanism ?? "").toUpperCase().replace(/[\s_-]+/g, "");
+  if (m === "" || m === "NONE") return "NONE";
+  if (m.includes("ADEQUACY") || m.includes("ART45")) return "ADEQUACY";
+  if (m.includes("SCC") || m.includes("STANDARDCONTRACTUAL")) return "SCC";
+  if (
+    m.includes("BCR") ||
+    m.includes("BINDINGCORPORATE") ||
+    m.includes("CERTIFICATION") ||
+    m.includes("CODEOFCONDUCT")
+  ) {
+    return "ART46";
+  }
+  if (m.includes("DEROGATION") || m.includes("ART49")) return "DEROGATION";
+  return "OTHER";
 }
 
 /**
@@ -442,84 +535,46 @@ export function getAdequacyDecision(
  *
  * Logic:
  * - EEA-internal transfer → COMPLIANT (not a restricted transfer)
- * - Adequacy decision → COMPLIANT (with note if partial)
- * - SCCs with completed TIA and valid expiry → COMPLIANT
- * - SCCs without TIA → NEEDS_REVIEW
- * - SCCs with expired expiry date → NON_COMPLIANT
- * - BCRs → COMPLIANT (assumes approved)
- * - Derogation → NEEDS_REVIEW (case-by-case)
- * - No mechanism identified → NON_COMPLIANT
- * - Any other state → PENDING
+ * - Full adequacy decision → COMPLIANT
+ * - Partial adequacy (US under the DPF, Canada under PIPEDA) → COMPLIANT
+ *   only when the record confirms the recipient is within the decision's
+ *   scope; otherwise the mechanism rules below apply
+ * - "Adequacy decision" stated but not covered → NEEDS_REVIEW
+ * - SCCs with an expired expiry date → NON_COMPLIANT
+ * - SCCs, BCRs, certification or code of conduct (Art. 46) without a
+ *   completed TIA → NEEDS_REVIEW; with one → COMPLIANT
+ * - Derogation (Art. 49) → NEEDS_REVIEW (case-by-case)
+ * - No mechanism → NON_COMPLIANT
+ * - Any other mechanism → PENDING
  */
 export function getTransferComplianceStatus(
   transfer: TransferInput
 ): TransferComplianceStatus {
-  const { mechanism, destinationCountry, tiaCompleted, sccExpiryDate, supplementaryMeasures } =
-    transfer;
+  const coverage = adequacyCoverage(
+    transfer.destinationCountry,
+    transfer.adequacyScopeConfirmed
+  );
+  if (coveredByAdequacy(coverage)) return "COMPLIANT";
 
-  const countryCode = destinationCountry.toUpperCase();
-  const mechanismNorm = mechanism.toUpperCase().replace(/[\s_-]+/g, "");
-
-  // EEA internal — not a restricted transfer
-  if (EEA_COUNTRY_CODES.has(countryCode)) {
-    return "COMPLIANT";
-  }
-
-  // Adequacy decision
-  if (
-    mechanismNorm.includes("ADEQUACY") ||
-    mechanismNorm.includes("ART45")
-  ) {
-    if (adequateCountryCodes.has(countryCode)) {
-      return "COMPLIANT";
-    }
-    // Claims adequacy but country is not on the list
-    return "NEEDS_REVIEW";
-  }
-
-  // If country is adequate regardless of stated mechanism
-  if (adequateCountryCodes.has(countryCode)) {
-    return "COMPLIANT";
-  }
-
-  // Standard Contractual Clauses
-  if (
-    mechanismNorm.includes("SCC") ||
-    mechanismNorm.includes("STANDARDCONTRACTUAL")
-  ) {
-    // Expired SCCs
-    if (sccExpiryDate && new Date(sccExpiryDate) < new Date()) {
+  switch (mechanismKind(transfer.mechanism)) {
+    case "NONE":
       return "NON_COMPLIANT";
-    }
-
-    // SCCs without TIA
-    if (!tiaCompleted) {
+    case "ADEQUACY":
+      // Adequacy claimed, but the country has none, or the recipient is not
+      // recorded as within a partial decision's scope.
       return "NEEDS_REVIEW";
-    }
-
-    // Valid SCCs + TIA completed
-    return "COMPLIANT";
+    case "SCC":
+      if (transfer.sccExpiryDate && new Date(transfer.sccExpiryDate) < new Date()) {
+        return "NON_COMPLIANT";
+      }
+      return transfer.tiaCompleted ? "COMPLIANT" : "NEEDS_REVIEW";
+    case "ART46":
+      return transfer.tiaCompleted ? "COMPLIANT" : "NEEDS_REVIEW";
+    case "DEROGATION":
+      return "NEEDS_REVIEW";
+    case "OTHER":
+      return "PENDING";
   }
-
-  // Binding Corporate Rules
-  if (mechanismNorm.includes("BCR")) {
-    return "COMPLIANT";
-  }
-
-  // Derogations (Art. 49)
-  if (
-    mechanismNorm.includes("DEROGATION") ||
-    mechanismNorm.includes("ART49")
-  ) {
-    return "NEEDS_REVIEW";
-  }
-
-  // No mechanism or unrecognized
-  if (!mechanism || mechanismNorm === "NONE" || mechanismNorm === "") {
-    return "NON_COMPLIANT";
-  }
-
-  return "PENDING";
 }
 
 /**
@@ -529,30 +584,34 @@ export function getTransferComplianceExplanation(
   transfer: TransferInput
 ): string {
   const status = getTransferComplianceStatus(transfer);
-  const countryCode = transfer.destinationCountry.toUpperCase();
+  const coverage = adequacyCoverage(
+    transfer.destinationCountry,
+    transfer.adequacyScopeConfirmed
+  );
 
-  if (EEA_COUNTRY_CODES.has(countryCode)) {
+  if (coverage === "EEA") {
     return "Transfer within the EEA: no Chapter V restrictions apply.";
   }
 
-  const decision = getAdequacyDecision(countryCode);
+  const decision = getAdequacyDecision(transfer.destinationCountry);
+  const kind = mechanismKind(transfer.mechanism);
 
   switch (status) {
     case "COMPLIANT":
-      if (decision) {
+      if (decision && coverage !== "PARTIAL_UNCONFIRMED") {
         const partialNote = decision.isPartial
-          ? ` Note: This is a partial adequacy decision: ${decision.notes ?? "verify scope of coverage."}`
+          ? " The record confirms the recipient is within the scope of this partial decision."
           : "";
         return `${decision.country} has an EU adequacy decision (adopted ${decision.decisionDate}).${partialNote}`;
       }
       return "Transfer mechanism and safeguards are in place and current.";
 
     case "NEEDS_REVIEW":
-      if (
-        transfer.mechanism.toUpperCase().includes("SCC") &&
-        !transfer.tiaCompleted
-      ) {
-        return "SCCs are in place but a Transfer Impact Assessment (TIA) has not been completed. A TIA is required following the Schrems II ruling.";
+      if (coverage === "PARTIAL_UNCONFIRMED" && kind === "ADEQUACY") {
+        return `The adequacy decision for ${decision?.country ?? transfer.destinationCountry} covers only some recipients. Record that the recipient is within its scope, or rely on another safeguard.`;
+      }
+      if ((kind === "SCC" || kind === "ART46") && !transfer.tiaCompleted) {
+        return "The safeguard is in place but a Transfer Impact Assessment (TIA) has not been completed. A TIA is required following the Schrems II ruling.";
       }
       return "Transfer mechanism requires further review to confirm compliance.";
 
