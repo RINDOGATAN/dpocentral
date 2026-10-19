@@ -10173,6 +10173,7 @@
         "breach-window": "Brechas por notificar",
         "breach-decision": "Brechas pendientes de decidir si se notifican",
         "assessment-approval": "Evaluaciones por aprobar",
+        "assessment-review": "Evaluaciones por revisar",
         "drafts-to-confirm": "Registros en borrador por confirmar"
       },
       "hint": {
@@ -10181,6 +10182,7 @@
         "breach-window": "Brechas abiertas que deben notificarse.",
         "breach-decision": "Brechas registradas en las últimas 72 horas sin ninguna notificación ni marca de que deban notificarse. Decide si hay que notificar antes de que venza el plazo.",
         "assessment-approval": "Evaluaciones enviadas para revisión o aprobación.",
+        "assessment-review": "Evaluaciones aprobadas cuya actividad de tratamiento ha cambiado desde la aprobación: revísalas (artículo 35.11 del RGPD).",
         "drafts-to-confirm": "Registros que ha redactado el inicio rápido o una plantilla. Cuentan para tu programa cuando una persona los confirma."
       }
     },

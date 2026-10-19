@@ -251,6 +251,7 @@ const RISK_PRIORITY: NeedsActionKind[] = [
   "dsar-due",
   "breach-decision",
   "review-due",
+  "assessment-review",
   "assessment-approval",
   "drafts-to-confirm",
 ];

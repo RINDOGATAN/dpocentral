@@ -339,3 +339,17 @@ describe("catalogue vendors", () => {
     expect(router).toMatch(/departmentScopeConditions\(scope\)/);
   });
 });
+
+describe("approved assessments due for review", () => {
+  it("are listed in Needs action, under Assess the risk, in both languages", async () => {
+    const { buildNeedsAction } = await import("@/lib/needs-action");
+    const { NEEDS_ACTION_STAGE } = await import("@/lib/programme-overview");
+    const items = buildNeedsAction({ reviewDue: 0, dsarDue: null, breachWindow: null, assessmentApproval: 0, assessmentReview: 2 });
+    expect(items).toEqual([{ kind: "assessment-review", count: 2, href: "/privacy/assessments" }]);
+    expect(NEEDS_ACTION_STAGE["assessment-review"]).toBe("assess");
+    expect(en.views.needsAction.kind["assessment-review"]).toBeTruthy();
+    expect(es.views.needsAction.hint["assessment-review"]).toMatch(/35\.11/);
+    // Gathered from the same query the assessment page uses.
+    expect(read("src/server/services/views/queries.ts")).toMatch(/reviewDueAssessments\(prisma, organizationId\)/);
+  });
+});

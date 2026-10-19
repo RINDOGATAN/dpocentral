@@ -10173,6 +10173,7 @@
         "breach-window": "Breaches to notify",
         "breach-decision": "Breaches waiting for a decision on notifying",
         "assessment-approval": "Assessments to approve",
+        "assessment-review": "Assessments to review",
         "drafts-to-confirm": "Drafted records to confirm"
       },
       "hint": {
@@ -10181,6 +10182,7 @@
         "breach-window": "Open breaches that must be notified.",
         "breach-decision": "Breaches logged in the last 72 hours with no notification recorded and not marked as requiring one. Decide whether to notify before the window ends.",
         "assessment-approval": "Assessments sent for review or approval.",
+        "assessment-review": "Approved assessments whose processing activity has changed since approval: review them (GDPR Art. 35(11)).",
         "drafts-to-confirm": "Records the quick start or a template drafted. They count towards your program once a person confirms them."
       }
     },

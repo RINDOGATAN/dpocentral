@@ -45,6 +45,7 @@ export const NEEDS_ACTION_STAGE: Record<NeedsActionKind, string | null> = {
   "breach-window": "respond",
   "breach-decision": "respond",
   "assessment-approval": "assess",
+  "assessment-review": "assess",
   // Drafts already show as "to confirm" on their own stages.
   "drafts-to-confirm": null,
 };
@@ -206,6 +207,7 @@ const NEEDS_ACTION_PRIORITY: NeedsActionKind[] = [
   "breach-decision",
   "dsar-due",
   "assessment-approval",
+  "assessment-review",
   "drafts-to-confirm",
   "review-due",
 ];
