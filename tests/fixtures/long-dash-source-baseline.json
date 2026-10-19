@@ -6,7 +6,6 @@
     "src/config/dpia-template-v2.ts: 100,000 – 1,000,000",
     "src/config/dpia-template-v2.ts: Describe how data subject rights are facilitated — e.g. privacy notices, consent preference centers, data portability tools, opt-out mechanisms.",
     "src/config/dpia-template-v2.ts: Essential — cannot achieve the purpose without it",
-    "src/config/dpia-template-v2.ts: For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N — Title: Description. Likelihood: X. Severity: Y.",
     "src/config/dpia-template-v2.ts: Fully expected — directly related to the service they signed up for",
     "src/config/dpia-template-v2.ts: Highly beneficial — significantly more effective than alternatives",
     "src/config/dpia-template-v2.ts: Map how data moves through your systems — from collection to storage, processing, sharing, and deletion. Identify all recipients and processors.",
