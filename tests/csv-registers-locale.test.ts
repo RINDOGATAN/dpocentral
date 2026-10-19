@@ -157,12 +157,12 @@ describe("Spanish CSV registers", () => {
     expect(out[0].split(",")).toEqual([
       "Nombre", "Estado", "Nivel de riesgo", "Puntuación de riesgo", "Sitio web", "Contacto principal",
       "Correo electrónico de contacto", "Categorías", "Datos tratados", "Países", "Certificaciones",
-      "Última evaluación", "Próxima revisión", "Contratos", "Estado del DPA",
+      "Última evaluación", "Próxima revisión", "Contratos", "Estado del contrato de encargo",
     ]);
     expect(out[1]).toContain('"Activo","Alto","70"');
     expect(out[1]).toContain('"Identificadores"');
     expect(out[1]).toMatch(/"Activo"$/);
-    expect(out[2]).toMatch(/"Sin DPA"$/);
+    expect(out[2]).toMatch(/"Sin contrato de encargo"$/);
   });
 
   it("breach register: Spanish columns and codes", async () => {

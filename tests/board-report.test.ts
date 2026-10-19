@@ -56,7 +56,7 @@ const mocks = vi.hoisted(() => ({
     organizationMember: { findMany: vi.fn() },
     organization: { findFirst: vi.fn(), update: vi.fn() },
     incident: { findMany: vi.fn(), count: vi.fn() },
-    dSARRequest: { findMany: vi.fn() },
+    dSARRequest: { findMany: vi.fn(), count: vi.fn() },
     vendor: { count: vi.fn() },
     assessment: { count: vi.fn() },
     user: { findUnique: vi.fn() },
@@ -244,7 +244,7 @@ function vendorCount({ where }: { where: Record<string, unknown> }) {
   const contracts = where.contracts as Record<string, unknown> | undefined;
   if (contracts?.some) return 2;
   if (contracts?.none) return 1;
-  return 3;
+  return where.status === "ACTIVE" ? 3 : 4; // in use, or confirmed (not terminated)
 }
 
 function assessmentCount({ where }: { where: { status: unknown; template: { type: string } } }) {
@@ -282,6 +282,7 @@ describe("loadBoardReport over a mocked database", () => {
       { discoveredAt: discovered, notificationRequired: false, notifications: [{ sentAt: null }] },
     ]);
     p.incident.count.mockResolvedValue(2);
+    p.dSARRequest.count.mockResolvedValue(3);
     p.dSARRequest.findMany.mockResolvedValue([
       { status: "COMPLETED", dueDate: new Date("2026-08-30T00:00:00Z"), extendedDueDate: null, completedAt: new Date("2026-08-20T00:00:00Z") },
       { status: "COMPLETED", dueDate: new Date("2026-08-30T00:00:00Z"), extendedDueDate: new Date("2026-10-30T00:00:00Z"), completedAt: new Date("2026-09-20T00:00:00Z") },
@@ -307,7 +308,11 @@ describe("loadBoardReport over a mocked database", () => {
 
   it("counts the period's incidents and their notification to the authority", async () => {
     const report = await load();
-    expect(report.incidents).toEqual({ inPeriod: 4, notifiedWithin72h: 1, notifiedLate: 1, notNotifiedYet: 1, openNow: 2 });
+    expect(report.incidents).toEqual({ inPeriod: 4, notifiedWithin72h: 1, notifiedLate: 1, notNotifiedYet: 1, openNow: 2, toNotifyNow: 2 });
+    // The backlog to notify is counted from any period: open, notifiable, nothing sent to the authority.
+    const backlog = mocks.prisma.incident.count.mock.calls.map((c) => c[0].where).find((w) => w.notificationRequired);
+    expect(backlog).toMatchObject({ notificationRequired: true, notifications: { none: { recipientType: "DPA", sentAt: { not: null } } } });
+    expect(backlog.discoveredAt).toBeUndefined();
     const where = mocks.prisma.incident.findMany.mock.calls[0][0].where;
     expect(where.organizationId).toBe("org-1");
     expect(where.discoveredAt).toEqual({ gte: new Date("2026-07-01T00:00:00Z"), lt: new Date("2026-10-01T00:00:00Z") });
@@ -315,7 +320,11 @@ describe("loadBoardReport over a mocked database", () => {
 
   it("counts the period's rights requests by their (extended) deadline", async () => {
     const report = await load();
-    expect(report.rights).toEqual({ received: 6, completedOnTime: 2, completedLate: 1, openOverdue: 1, openInTime: 1, closedOther: 1 });
+    expect(report.rights).toEqual({ received: 6, completedOnTime: 2, completedLate: 1, openOverdue: 1, openInTime: 1, closedOther: 1, overdueNow: 3 });
+    // Overdue on the day generated, from any period, by the extended deadline where there is one.
+    const overdue = mocks.prisma.dSARRequest.count.mock.calls[0][0].where;
+    expect(overdue.receivedAt).toBeUndefined();
+    expect(overdue.OR).toEqual([{ extendedDueDate: { lt: NOW } }, { extendedDueDate: null, dueDate: { lt: NOW } }]);
   });
 
   it("leaves rights requests out when the module is off, or for a member who does not handle them", async () => {
@@ -333,7 +342,15 @@ describe("loadBoardReport over a mocked database", () => {
 
   it("vendors, assessments, owner, comment and the programme", async () => {
     const report = await load();
-    expect(report.vendors).toEqual({ total: 3, withDpa: 2, highRiskWithoutDpa: 1, drafts: 1 });
+    expect(report.vendors).toEqual({ total: 4, active: 3, withDpa: 2, highRiskWithoutDpa: 1, drafts: 1 });
+    // A processor contract counts only while in force: ACTIVE or RENEWED, and not past its end date.
+    const withDpa = mocks.prisma.vendor.count.mock.calls.map((c) => c[0].where).find((w) => w.contracts?.some);
+    expect(withDpa.status).toBe("ACTIVE");
+    expect(withDpa.contracts.some).toEqual({
+      type: "DPA",
+      status: { in: ["ACTIVE", "RENEWED"] },
+      OR: [{ endDate: null }, { endDate: { gte: NOW } }],
+    });
     expect(report.assessments).toEqual({ dpiaApproved: 1, dpiaPending: 2, liaApproved: 0, liaPending: 1 });
     // The privacy officer holds the actions, ahead of the owner; no name, so the address.
     expect(report.actions[0].owner).toBe("dpo@example.test");
@@ -435,9 +452,9 @@ describe("the words, the same on the page and in the PDF", () => {
       { label: "Vendor register", value: "draft (1 record to confirm)" },
       { label: "Records of processing (ROPA)", value: "needs: a processing activity" },
     ]);
-    expect(text.risks.items).toEqual(["Rights requests due: 1", "Records of processing (ROPA): needs: a processing activity"]);
+    expect(text.risks.items).toEqual(["Rights requests overdue or due soon: 1", "Records of processing (ROPA): needs: a processing activity"]);
     expect(text.actions.rows).toEqual([
-      { action: "Rights requests due (1)", owner: "Dee Pio", date: "20 October 2026 (deadline)" },
+      { action: "Rights requests overdue or due soon (1)", owner: "Dee Pio", date: "20 October 2026 (deadline)" },
       { action: "Records of processing", owner: "Dee Pio", date: "30 October 2026 (plan)" },
       { action: "Vendors and processors: confirm the drafted records", owner: "Not named", date: "No date set" },
     ]);
@@ -489,13 +506,14 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(k.tiles.map((t) => [t.id, t.value, t.of, t.ratio, t.flag])).toEqual([
       ["documents", "2", "of 4", 0.5, null],
       ["breaches", "1", "of 2", 0.5, "1 late or not notified yet"],
-      ["rights", "3", "of 4", 0.75, "1 open and overdue"],
+      // On time over completed plus open and overdue (src/lib/dsar-on-time.ts): 3 of 5.
+      ["rights", "3", "of 5", 0.6, "1 open and overdue on the date generated"],
       ["vendors", "4", "of 6", 4 / 6, "1 high or critical risk without one"],
     ]);
     const es1 = boardReportText(SAMPLE, tr(es, "es"), "es").kpis;
     expect(es1.title).toBe("De un vistazo");
     expect(es1.tiles[1].label).toBe("brechas notificadas a la autoridad en 72 horas");
-    expect(es1.tiles[2].flag).toBe("1 abierta y vencida");
+    expect(es1.tiles[2].flag).toBe("1 abierta y vencida en la fecha de generación");
   });
 
   it("at a glance: no rights tile without the module; plain words when there is nothing to count", () => {
@@ -509,6 +527,44 @@ describe("the words, the same on the page and in the PDF", () => {
     expect(k.tiles.map((t) => t.id)).toEqual(["documents", "breaches", "vendors"]);
     expect(k.tiles[1]).toMatchObject({ value: "0", of: null, ratio: null, label: "no notifiable breaches in the period" });
     expect(k.tiles[2]).toMatchObject({ value: "0", of: null, ratio: null, label: "no confirmed vendors" });
+  });
+
+  it("shows the backlog a quiet period would hide, and says when a deadline has passed", () => {
+    const quiet: BoardReport = {
+      ...SAMPLE,
+      incidents: { inPeriod: 0, notifiedWithin72h: 0, notifiedLate: 0, notNotifiedYet: 0, openNow: 2, toNotifyNow: 1 },
+      rights: { received: 0, completedOnTime: 0, completedLate: 0, openOverdue: 0, openInTime: 0, closedOther: 0, overdueNow: 3 },
+      vendors: { total: 6, active: 5, withDpa: 4, highRiskWithoutDpa: 0, drafts: 0 },
+      actions: [
+        { item: { kind: "needsAction", needsKind: "dsar-due", count: 3 }, owner: "Dee Pio", date: "2026-02-15", dateSource: "deadline", overdue: true },
+      ],
+    };
+    const text = boardReportText(quiet, tr(en, "en"), "en");
+    const [, breaches, rights, vendors] = text.kpis.tiles;
+    expect(breaches).toMatchObject({ value: "0", label: "no notifiable breaches in the period", flag: "1 open breach still to notify (any period)" });
+    expect(rights).toMatchObject({ value: "0", label: "no rights requests completed or overdue in the period", flag: "3 open and overdue on the date generated" });
+    expect(vendors).toMatchObject({ value: "4", of: "of 5" });
+    expect(text.incidents.rows.at(-1)).toEqual({ label: "Open and still to notify on the date generated (from any period)", value: "1" });
+    expect(text.rights?.rows.at(-1)).toEqual({ label: "Open and overdue on the date generated (from any period)", value: "3" });
+    expect(text.actions.rows[0].date).toBe("15 February 2026 (overdue by 236 days)");
+    const textEs = boardReportText(quiet, tr(es, "es"), "es");
+    expect(textEs.actions.rows[0]).toEqual({
+      action: "Solicitudes de derechos vencidas o por vencer (3)",
+      owner: "Dee Pio",
+      date: "15 de febrero de 2026 (vencida hace 236 días)",
+    });
+    expect(textEs.kpis.tiles[1].flag).toBe("1 brecha abierta aún sin notificar (de cualquier periodo)");
+  });
+
+  it("marks an action whose deadline has passed as overdue", () => {
+    const actions = boardActions(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, { ...FACTS }), [{ kind: "dsar-due", count: 1, href: "/privacy/dsar" }], {
+      owner: null,
+      deadlines: [{ kind: "dsarDue", at: "2026-02-15T00:00:00.000Z", publicId: "r", href: "/privacy/dsar/r" }],
+      planStart: null,
+      windows: PLAN_WINDOWS,
+      now: NOW,
+    });
+    expect(actions[0]).toMatchObject({ date: "2026-02-15", dateSource: "deadline", overdue: true });
   });
 
   it("formats dates in UTC so a day never shifts", () => {

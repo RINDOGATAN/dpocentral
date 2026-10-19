@@ -89,8 +89,12 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
     ],
     penalties:
       "Up to EUR 20 million or 4% of global annual turnover, whichever is higher",
-    dpaName: "European Data Protection Board (EDPB)",
-    dpaUrl: "https://edpb.europa.eu",
+    // Art. 51 and 55-56: each Member State's national authority supervises,
+    // with the one of the main establishment leading cross-border cases. The
+    // EDPB coordinates them and is not itself a supervisory authority.
+    dpaName:
+      "The national supervisory authority of the Member State of your main establishment (in Spain, the Agencia Española de Protección de Datos, AEPD)",
+    dpaUrl: "https://www.edpb.europa.eu/about-edpb/about-edpb/members_en",
     category: "comprehensive",
   },
   {
@@ -182,7 +186,7 @@ export const JURISDICTION_CATALOG: JurisdictionEntry[] = [
       "Derive 50% or more of annual revenue from selling/sharing personal information",
     ],
     penalties:
-      "Up to $2,500 per unintentional violation; $7,500 per intentional violation or violations involving minors",
+      "Up to $2,663 per violation; $7,988 per intentional violation or violation involving minors (amounts adjusted for inflation from January 2025)",
     dpaName: "California Privacy Protection Agency (CPPA) and California Attorney General",
     dpaUrl: "https://cppa.ca.gov",
     category: "comprehensive",
@@ -1438,6 +1442,27 @@ export function getApplicableJurisdictions(
  * and matching keep working on the English catalog. `regionLabel` is what to
  * show for the region: the code in English, a name in Spanish.
  */
+/** A US state authority's name in Spanish, for the entries whose Spanish text does not set one. */
+const US_AUTHORITY_ES: [RegExp, (m: RegExpMatchArray) => string][] = [
+  [/^(.+) Attorney General$/, (m) => `Fiscal general de ${stateEs(m[1]!)}`],
+  [/^(.+) Department of Legal Affairs$/, (m) => `Departamento de Asuntos Jurídicos de ${stateEs(m[1]!)}`],
+  [/^(.+) Division of Consumer Affairs$/, (m) => `División de Asuntos del Consumidor de ${stateEs(m[1]!)}`],
+  [/^(.+) Department of Justice$/, (m) => `Departamento de Justicia de ${stateEs(m[1]!)}`],
+];
+
+function stateEs(state: string): string {
+  return state === "New Jersey" ? "Nueva Jersey" : state;
+}
+
+function authorityEs(name: string | undefined): string | undefined {
+  if (!name) return name;
+  for (const [pattern, render] of US_AUTHORITY_ES) {
+    const m = name.match(pattern);
+    if (m) return render(m);
+  }
+  return name;
+}
+
 export function localizeJurisdiction<T extends Pick<JurisdictionEntry, "code" | "region"> & Partial<JurisdictionEntry>>(
   entry: T,
   locale: string | null | undefined
@@ -1452,7 +1477,8 @@ export function localizeJurisdiction<T extends Pick<JurisdictionEntry, "code" | 
     ...(entry.keyRequirements !== undefined ? { keyRequirements: es.keyRequirements } : {}),
     ...(entry.applicabilityCriteria !== undefined ? { applicabilityCriteria: es.applicabilityCriteria } : {}),
     ...(entry.penalties !== undefined ? { penalties: es.penalties } : {}),
-    ...(entry.dpaName !== undefined ? { dpaName: es.dpaName ?? entry.dpaName } : {}),
+    ...(entry.dpaName !== undefined ? { dpaName: es.dpaName ?? authorityEs(entry.dpaName) } : {}),
+    ...(entry.dpaUrl !== undefined && es.dpaUrl ? { dpaUrl: es.dpaUrl } : {}),
     regionLabel: es.regionLabel,
   };
 }

@@ -11,15 +11,29 @@ import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { isDraftRecord } from "@/lib/drafts";
+
+/** The UTF-8 byte order mark, so spreadsheet programs read the accents right. */
+const BOM = "\uFEFF";
 
 export async function buildVendorRegisterExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
   const format = args.format ?? "pdf";
-  const [t, tCommon, tEnum] = await Promise.all([
+  const [t, tCommon, tEnum, tEnums] = await Promise.all([
     getTranslations({ locale, namespace: "pdf.vendorRegister" }),
     getTranslations({ locale, namespace: "pdf.common" }),
     getTranslations({ locale, namespace: "pdf.enum" }),
+    getTranslations({ locale, namespace: "enums" }),
   ]);
+  // Categories and data categories as the CSV translates them (csv-labels-i18n.ts):
+  // a code, or the catalogue's category name; anything else is printed as stored.
+  const label = (kind: "vendorCategory" | "dataCategory", value: string): string => {
+    const key = `${kind}.${value}`;
+    if (tEnums.has(key as never)) return tEnums(key as never);
+    const catalogKey = `vendorCatalogCategory.${value.replace(/[^A-Za-z0-9]+/g, "_")}`;
+    if (kind === "vendorCategory" && tEnums.has(catalogKey as never)) return tEnums(catalogKey as never);
+    return value;
+  };
 
   const vendors = await prisma.vendor.findMany({
     where: { organizationId },
@@ -40,6 +54,7 @@ export async function buildVendorRegisterExport(args: ExportArgs): Promise<Expor
     primaryContact: v.primaryContact,
     contactEmail: v.contactEmail,
     categories: v.categories,
+    isDraft: isDraftRecord(v),
     dataProcessed: v.dataProcessed,
     countries: v.countries,
     certifications: v.certifications,
@@ -70,12 +85,25 @@ export async function buildVendorRegisterExport(args: ExportArgs): Promise<Expor
   }
 
   if (format === "csv") {
-    return { data: vendorsToCSV(data, await csvLabelsFor("vendors", VENDOR_CSV_KEYS, locale)), filename: `${base}.csv`, contentType: CSV };
+    return {
+      data: BOM + vendorsToCSV(data, await csvLabelsFor("vendors", VENDOR_CSV_KEYS, locale)),
+      filename: `${base}.csv`,
+      contentType: CSV,
+    };
   }
 
   const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
-      VendorRegisterDocument({ vendors: data, orgName, t, tCommon, tEnum, locale }),
+      VendorRegisterDocument({
+        vendors: data,
+        orgName,
+        t,
+        tCommon,
+        tEnum,
+        locale,
+        categoryLabel: (c) => label("vendorCategory", c),
+        dataLabel: (d) => label("dataCategory", d),
+      }),
       args.draftNote,
     ))
   );

@@ -31,7 +31,7 @@ export async function loadSecurityModule(): Promise<SecurityModule | null> {
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "MODULE_NOT_FOUND") {
       console.log(
-        `${SECURITY_PACKAGE} not installed — security features use open-source defaults`
+        `${SECURITY_PACKAGE} not installed; security features use open-source defaults`
       );
     } else {
       console.warn(`Failed to load ${SECURITY_PACKAGE}:`, error);

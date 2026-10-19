@@ -45,6 +45,7 @@ import { buildPrivacyProgramExport } from "./documents/privacy-program";
 import { buildBoardReportExport } from "./documents/board-report";
 import { ASSESSMENT_EXPORT_INCLUDE, buildAssessmentExport } from "./documents/assessment";
 import { buildDpaExport } from "./documents/dpa";
+import { pdfDate } from "./pdf-locale";
 
 type Builder = (args: ExportArgs) => Promise<ExportFile>;
 
@@ -137,7 +138,7 @@ export async function buildDocumentPack(
             intro: t("draftNote.intro"),
             gapsTitle: t("draftNote.gapsTitle"),
             gaps,
-            generated: t("draftNote.generated", { date: today }),
+            generated: t("draftNote.generated", { date: pdfDate(now, "long", locale) }),
           }
         : null;
       const files: string[] = [];
@@ -257,7 +258,7 @@ export async function buildDocumentPack(
   const index = [
     `# ${t("index.title", { org: orgName })}`,
     "",
-    t("index.generated", { date: today }),
+    t("index.generated", { date: pdfDate(now, "long", locale) }),
     "",
     includeDrafts ? t("index.withDrafts") : t("index.readyOnly"),
     "",
@@ -266,7 +267,7 @@ export async function buildDocumentPack(
     `| ${t("index.colDocument")} | ${t("index.colState")} | ${t("index.colDate")} | ${t("index.colFile")} |`,
     "|---|---|---|---|",
     ...rows.map(
-      (r) => `| ${mdCell(r.name)} | ${mdCell(stateWord(r))} | ${r.date} | ${r.files.map((f) => `\`${f}\``).join(", ")} |`,
+      (r) => `| ${mdCell(r.name)} | ${mdCell(stateWord(r))} | ${pdfDate(r.date, "short", locale)} | ${r.files.map((f) => `\`${f}\``).join(", ")} |`,
     ),
     ...(rows.length === 0 ? [`| ${t("index.empty")} | | | |`] : []),
     "",

@@ -33,7 +33,8 @@ export interface DSARPerformanceData {
     completed: number;
     overdue: number;
     open: number;
-    onTimeRate: number; // 0-100
+    /** 0-100 (src/lib/dsar-on-time.ts), or null when nothing can be measured yet. */
+    onTimeRate: number | null;
     avgResolutionDays: number;
     completedLast30Days: number;
     redacted: number;
@@ -47,7 +48,7 @@ export interface DSARPerformanceData {
     name: string;
     deadlineDays: number;
     deadlineMonths?: number | null;
-    status: string; // "Meeting" | "At risk" | "No data"
+    status: string; // "Meeting" | "Not met" | "No data"
   }[];
 
   // Monthly trend (last 12 months)
@@ -57,7 +58,7 @@ export interface DSARPerformanceData {
     completed: number;
   }[];
 
-  // Aging of open requests
+  // Aging of open requests: "0-7", "7-14", "14-30", "30+" (days)
   aging: {
     band: string;
     count: number;
@@ -134,6 +135,11 @@ const EN_FALLBACK: Record<string, string> = {
   riskAtRisk: "At risk",
   slaStatusMeeting: "Meeting",
   slaStatusNoData: "No data",
+  slaStatusNotMet: "Not met",
+  "agingBands.d0to7": "0 to 7 days",
+  "agingBands.d7to14": "7 to 14 days",
+  "agingBands.d14to30": "14 to 30 days",
+  "agingBands.over30": "More than 30 days",
   riskOnTrack: "On track",
   "dsarTypes.ACCESS": "Access (Right of Access)",
   "dsarTypes.ERASURE": "Erasure (Right to be Forgotten)",
@@ -169,14 +175,17 @@ export function DSARPerformanceReport({
   const orgName = data.organization.name;
   const date = data.generatedAt;
   const { stats } = data;
-  const pct = (n: number) =>
-    stats.total > 0 ? `${Math.round((n / stats.total) * 100)}%` : "0%";
+  const percent = (n: number) => (locale?.startsWith("es") ? `${n}\u00a0%` : `${n}%`);
+  const pct = (n: number) => percent(stats.total > 0 ? Math.round((n / stats.total) * 100) : 0);
   const riskFor = (band: string) =>
-    band.includes("30+") || band.includes("45+")
+    band === "30+"
       ? tr("riskCritical")
-      : band.includes("14-")
+      : band === "14-30"
         ? tr("riskAtRisk")
         : tr("riskOnTrack");
+  const BAND_KEYS: Record<string, string> = { "0-7": "d0to7", "7-14": "d7to14", "14-30": "d14to30", "30+": "over30" };
+  const bandLabel = (band: string) => (BAND_KEYS[band] ? tr(`agingBands.${BAND_KEYS[band]}`) : band);
+  const rate = stats.onTimeRate;
 
   return (
     <Document language={locale}>
@@ -196,11 +205,11 @@ export function DSARPerformanceReport({
 
         <View style={s.statsGrid}>
           <StatCard value={stats.total} label={tr("stats.totalRequests")} />
-          <StatCard value={`${stats.onTimeRate}%`} label={tr("stats.onTimeRate")} />
+          <StatCard value={rate != null ? percent(rate) : tr("stats.notAvailable")} label={tr("stats.onTimeRate")} />
           <StatCard
             value={
               stats.avgResolutionDays > 0
-                ? `${stats.avgResolutionDays}d`
+                ? tr("slaDays", { days: stats.avgResolutionDays })
                 : tr("stats.notAvailable")
             }
             label={tr("stats.avgResolution")}
@@ -208,7 +217,7 @@ export function DSARPerformanceReport({
           <StatCard value={stats.overdue} label={tr("stats.overdue")} />
         </View>
 
-        <ProgressBar percent={stats.onTimeRate} />
+        {rate != null && <ProgressBar percent={rate} />}
 
         <MetadataBlock
           items={[
@@ -299,7 +308,9 @@ export function DSARPerformanceReport({
                 : tr("stats.notAvailable"),
               j.status === "Meeting"
                 ? tr("slaStatusMeeting")
-                : j.status === "At risk"
+                : j.status === "Not met"
+                  ? tr("slaStatusNotMet")
+                  : j.status === "At risk"
                   ? tr("riskAtRisk")
                   : j.status === "No data"
                     ? tr("slaStatusNoData")
@@ -341,7 +352,7 @@ export function DSARPerformanceReport({
 
           <View style={s.statsGrid}>
             {data.aging.map((band) => (
-              <StatCard key={band.band} value={band.count} label={band.band} />
+              <StatCard key={band.band} value={band.count} label={bandLabel(band.band)} />
             ))}
           </View>
 
@@ -354,7 +365,7 @@ export function DSARPerformanceReport({
               tr("agingColumns.risk"),
             ]}
             colWidths={[2, 1.5, 2]}
-            rows={data.aging.map((a) => [a.band, String(a.count), riskFor(a.band)])}
+            rows={data.aging.map((a) => [bandLabel(a.band), String(a.count), riskFor(a.band)])}
           />
         </ContentPage>
       )}

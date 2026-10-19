@@ -49,8 +49,12 @@ export interface RawVendor {
   categories: string[];
   countries: string[];
   certifications: string[];
+  /** Holds a processor contract in force (src/lib/vendor-contracts.ts). */
   hasDpa: boolean;
+  /** The status of the processor contract shown, if any (EXPIRED once its end date has passed). */
   dpaStatus: string | null;
+  /** A drafted vendor nobody has confirmed: listed, not counted in the coverage. */
+  isDraft?: boolean;
   nextReview: Date | null;
 }
 
@@ -69,7 +73,12 @@ export interface RawAISystem {
 export interface RawCounts {
   openDsars: number;
   overdueDsars: number;
+  /** Requests completed by their deadline (src/lib/dsar-on-time.ts). */
   completedDsarsOnTime: number;
+  /**
+   * Requests the on-time rate measures: completed (on time or late) plus open
+   * and overdue (src/lib/dsar-on-time.ts), so the rate matches every other report.
+   */
   completedDsarsTotal: number;
   openIncidents: number;
   activeAssessments: number;
@@ -91,6 +100,11 @@ export interface ProgramInput {
 
 // ─── Derived numbers ──────────────────────────────────────────────────────────
 
+/** A vendor the processor-contract coverage counts: in use and confirmed (src/lib/vendor-contracts.ts). */
+function isCounted(v: RawVendor): boolean {
+  return v.status === "ACTIVE" && !v.isDraft;
+}
+
 export function computeHeroStats(input: ProgramInput) {
   const { assets, activities, vendors, counts } = input;
   const dsarOnTimePct =
@@ -101,7 +115,7 @@ export function computeHeroStats(input: ProgramInput) {
     assetCount: assets.length,
     activityCount: activities.length,
     vendorCount: vendors.length,
-    dsarOnTimePct, // null when no completed DSARs yet
+    dsarOnTimePct, // null when there is nothing to measure yet
     showDsar: input.dsarModule !== false,
   };
 }
@@ -120,8 +134,8 @@ export function computeCoverageBars(
   const activitiesReviewedOnTime = activities.filter(
     (a) => a.nextReview && new Date(a.nextReview).getTime() >= now
   ).length;
-  const vendorsWithDpa = vendors.filter((v) => v.status === "ACTIVE" && v.hasDpa).length;
-  const activeVendors = vendors.filter((v) => v.status === "ACTIVE").length;
+  const vendorsWithDpa = vendors.filter((v) => isCounted(v) && v.hasDpa).length;
+  const activeVendors = vendors.filter(isCounted).length;
   return [
     { label: t("cover.coverage.assetsClassified"), value: assetsWithElements, total: assets.length },
     { label: t("cover.coverage.activitiesReviewed"), value: activitiesReviewedOnTime, total: activities.length },
@@ -145,8 +159,8 @@ export function computeKeyFindings(input: ProgramInput, t: PdfT): KeyFindingItem
   const overdueReview = activities.filter(
     (a) => a.nextReview && new Date(a.nextReview).getTime() < now
   ).length;
-  const vendorsMissingDpa = vendors.filter((v) => v.status === "ACTIVE" && !v.hasDpa).length;
-  const activeVendors = vendors.filter((v) => v.status === "ACTIVE").length;
+  const vendorsMissingDpa = vendors.filter((v) => isCounted(v) && !v.hasDpa).length;
+  const activeVendors = vendors.filter(isCounted).length;
   const highRiskVendors = vendors.filter(
     (v) => v.riskTier === "HIGH" || v.riskTier === "CRITICAL"
   ).length;
@@ -294,9 +308,10 @@ export function computeLegalBasisBars(
 export function computeVendorStats(input: ProgramInput) {
   const { vendors } = input;
   const active = vendors.filter((v) => v.status === "ACTIVE").length;
-  const withDpa = vendors.filter((v) => v.status === "ACTIVE" && v.hasDpa).length;
+  const withDpa = vendors.filter((v) => isCounted(v) && v.hasDpa).length;
+  const counted = vendors.filter(isCounted).length;
   const withCert = vendors.filter((v) => v.certifications.length > 0).length;
-  return { total: vendors.length, active, withDpa, withCert };
+  return { total: vendors.length, active, counted, withDpa, withCert };
 }
 
 export function computeCriticalityBars(
@@ -305,7 +320,7 @@ export function computeCriticalityBars(
 ): Array<{ label: string; value: number; color: string; labelColor: string }> {
   const counts = new Map<string, number>();
   for (const v of input.vendors) {
-    const tier = v.riskTier ?? "—";
+    const tier = v.riskTier ?? "NONE";
     counts.set(tier, (counts.get(tier) ?? 0) + 1);
   }
   const order = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
@@ -318,11 +333,12 @@ export function computeCriticalityBars(
 }
 
 export function groupVendorsByCategory(
-  input: ProgramInput
+  input: ProgramInput,
+  uncategorized = "Uncategorized",
 ): Array<{ category: string; vendors: RawVendor[] }> {
   const groups = new Map<string, RawVendor[]>();
   for (const v of input.vendors) {
-    const cat = v.categories[0] ?? "Uncategorized";
+    const cat = v.categories[0] ?? uncategorized;
     if (!groups.has(cat)) groups.set(cat, []);
     groups.get(cat)!.push(v);
   }

@@ -6,14 +6,20 @@ import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { dsarReadFilter } from "@/server/services/dsar/access";
 import { isDsarModuleEnabled } from "@/config/features";
+import { canExportProgramme } from "@/server/services/portability/access";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
+import { exportedSettings } from "@/server/services/portability/organization-settings";
 
 /**
  * GET /api/export/organization-data?organizationId=...
  *
- * Every record the organisation holds, as one JSON file. Any member may
- * download it; rights requests follow the reading rule of the DSAR module
- * (src/lib/dsar-access.ts): officers, admins and owners get all of them, any
- * other member only those on which they hold a task. It is a GET route, so it stays available when a hosted pilot
+ * Every record the organisation holds, as one JSON file, incident
+ * notifications and members' addresses included. Owners and admins who see
+ * the whole organisation may download it (the programme export's rule,
+ * src/server/services/portability/access.ts), and each download is written to
+ * the audit trail. Rights requests follow the reading rule of the DSAR module
+ * (src/lib/dsar-access.ts), so the owners and admins who may download the
+ * file get all of them. It is a GET route, so it stays available when a hosted pilot
  * organisation has become read-only: the pilot's promise is that everything
  * created there can be taken to the user's own instance.
  *
@@ -44,7 +50,11 @@ export async function GET(request: Request) {
       where: { organizationId, user: { email: userEmail } },
       include: { organization: true },
     });
-    if (!membership) {
+    if (!membership || !canExportProgramme(membership.role)) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+    const scope = await loadBusinessUnitScope(prisma, membership.id);
+    if (!scope.all) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -112,7 +122,7 @@ export async function GET(request: Request) {
         name: org.name,
         slug: org.slug,
         domain: org.domain,
-        settings: org.settings,
+        settings: exportedSettings(org.settings),
         createdAt: org.createdAt,
       },
       members,
@@ -129,10 +139,22 @@ export async function GET(request: Request) {
       aiSystems,
     };
 
+    await prisma.auditLog.create({
+      data: {
+        organizationId,
+        userId: membership.userId,
+        entityType: "Organization",
+        entityId: organizationId,
+        action: "EXPORT_ORGANIZATION_DATA",
+        changes: { format: "json", rightsRequests: dsarOn },
+      },
+    });
+
     const date = new Date().toISOString().split("T")[0];
     return new Response(JSON.stringify(body, null, 2), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
         "Content-Disposition": `attachment; filename="${org.slug}-export-${date}.json"`,
       },
     });

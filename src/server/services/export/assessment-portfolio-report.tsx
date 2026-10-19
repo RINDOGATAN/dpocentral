@@ -14,9 +14,9 @@ import {
   StatusBadge,
   s,
   PDF_COLORS,
-  fmtDate,
 } from "./pdf-styles";
 import { Page } from "@react-pdf/renderer";
+import { pdfDate } from "./pdf-locale";
 import type { PdfT } from "./privacy-program/data-mapping";
 import { pdfEnumLabel } from "@/server/services/export/pdf-locale";
 
@@ -361,12 +361,12 @@ export function AssessmentPortfolioReport({
           ]}
           colWidths={[3, 1, 1.5, 1, 1, 1.2]}
           rows={assessments.map((a) => [
-            a.name.length > 40 ? a.name.slice(0, 37) + "..." : a.name,
+            a.name,
             pdfEnumLabel("assessmentType", a.templateType),
             statusLabel(a.status),
             a.riskLevel ? pdfEnumLabel("riskLevel", a.riskLevel) : "",
             `${a.completionPercentage}%`,
-            fmtDate(a.dueDate),
+            pdfDate(a.dueDate),
           ])}
         />
       </ContentPage>
@@ -401,7 +401,7 @@ export function AssessmentPortfolioReport({
                           total: a.mitigationCount,
                         }),
                       },
-                      { label: tr("highRiskMeta.dueDate"), value: fmtDate(a.dueDate) },
+                      { label: tr("highRiskMeta.dueDate"), value: pdfDate(a.dueDate) },
                     ]}
                   />
                 </View>
@@ -427,10 +427,10 @@ export function AssessmentPortfolioReport({
                     ? Math.ceil((now.getTime() - new Date(a.dueDate).getTime()) / (1000 * 60 * 60 * 24))
                     : 0;
                   return [
-                    a.name.length > 35 ? a.name.slice(0, 32) + "..." : a.name,
+                    a.name,
                     pdfEnumLabel("assessmentType", a.templateType),
                     statusLabel(a.status),
-                    fmtDate(a.dueDate),
+                    pdfDate(a.dueDate),
                     `${daysOver}d`,
                   ];
                 })}
@@ -485,7 +485,7 @@ export function AssessmentPortfolioReport({
             rows={assessments
               .filter((a) => a.mitigationCount > 0)
               .map((a) => [
-                a.name.length > 35 ? a.name.slice(0, 32) + "..." : a.name,
+                a.name,
                 pdfEnumLabel("assessmentType", a.templateType),
                 String(a.mitigationCount),
                 String(a.mitigationsCompleted),
@@ -546,12 +546,12 @@ export function AssessmentPortfolioReport({
                 )}
                 <View style={s.row}>
                   <Text style={[s.metaLabel, { width: 100 }]}>{tr("assessmentMeta.started")}</Text>
-                  <Text style={s.metaValue}>{fmtDate(a.startedAt)}</Text>
+                  <Text style={s.metaValue}>{pdfDate(a.startedAt)}</Text>
                 </View>
                 {a.completedAt && (
                   <View style={s.row}>
                     <Text style={[s.metaLabel, { width: 100 }]}>{tr("assessmentMeta.completed")}</Text>
-                    <Text style={s.metaValue}>{fmtDate(a.completedAt)}</Text>
+                    <Text style={s.metaValue}>{pdfDate(a.completedAt)}</Text>
                   </View>
                 )}
               </View>

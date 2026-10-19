@@ -96,7 +96,8 @@
     "sortName": "Nombre (A-Z)",
     "fromTemplate": "De la plantilla {name}",
     "fromTemplateGeneric": "De una plantilla",
-    "fromQuickstart": "Del inicio rápido"
+    "fromQuickstart": "Del inicio rápido",
+    "notStated": "Sin indicar"
   },
   "pages": {
     "newVendor": {
@@ -110,7 +111,7 @@
         "verified": "Verificado",
         "website": "Sitio web",
         "privacyPolicy": "Política de privacidad",
-        "dpa": "DPA",
+        "dpa": "Contrato de encargo",
         "trustCenter": "Centro de confianza",
         "autoFilled": "Los campos del formulario se han rellenado a partir del catálogo. Revisa y edita lo que necesites.",
         "searchPlaceholder": "Busca un proveedor",
@@ -156,7 +157,7 @@
         "subtitle": "Datos de referencia del catálogo de proveedores (sin evaluar): verifícalos con el proveedor",
         "certifications": "Certificaciones",
         "privacyPolicyUrl": "URL de la política de privacidad",
-        "dpaUrl": "URL del DPA",
+        "dpaUrl": "URL del contrato de encargo",
         "trustCenterUrl": "URL del centro de confianza"
       },
       "errorPrefix": "Error: {message}",
@@ -838,7 +839,7 @@
         "questions": "Preguntas",
         "mitigations": "Mitigaciones",
         "riskScore": "Puntuación de riesgo",
-        "riskScoreScale": "0–25 Bajo · 26–50 Medio · 51–75 Alto · 76–100 Crítico",
+        "riskScoreScale": "0 a 25 Bajo · 26 a 50 Medio · 51 a 75 Alto · 76 a 100 Crítico",
         "noScore": "-"
       },
       "tabs": {
@@ -1239,9 +1240,9 @@
     },
     "vendorDetail": {
       "dpa": {
-        "produce": "Generar DPA + EIT",
+        "produce": "Generar contrato de encargo + EIT",
         "openTia": "EIT",
-        "title": "Generar DPA + evaluación de impacto de las transferencias",
+        "title": "Generar contrato de encargo del tratamiento + evaluación de impacto de la transferencia",
         "subtitle": "Revisa cada dato precargado antes de generar: se convierten en declaraciones de un documento firmable. El contrato de encargo del tratamiento (anexos I a IV) y, para transferencias a terceros países, una EIT independiente se generan a partir de tus respuestas confirmadas.",
         "loading": "Analizando los datos del proveedor…",
         "notesTitle": "Cómo se han precargado estos datos",
@@ -1269,7 +1270,7 @@
         "confirmIssue": "Confirmo que es exacto.",
         "warningsTitle": "Revisar antes de firmar",
         "successBody": "El contrato de encargo del tratamiento se ha generado y se ha guardado en este proveedor, pendiente de firma. Descarga los documentos abajo: seguirán disponibles en la lista de contratos.",
-        "downloadDpa": "Descargar DPA (PDF)",
+        "downloadDpa": "Descargar contrato de encargo (PDF)",
         "downloadTia": "Descargar EIT (PDF)",
         "generate": "Generar documentos",
         "generating": "Generando…",
@@ -1872,12 +1873,29 @@
         "reqDsarPortalDesc": "Configura un formulario de recepción para que los interesados puedan presentar solicitudes de acceso, rectificación, supresión, etc.",
         "reqIncidentResponse": "Establece un proceso de respuesta a brechas",
         "reqIncidentResponseDesc": "Documenta un flujo de respuesta a incidentes para que las brechas puedan clasificarse, contenerse y notificarse dentro de los plazos legales.",
-        "reqVendorDpas": "Firma un contrato de encargo del tratamiento (DPA) con cada encargado",
+        "reqVendorDpas": "Firma un contrato de encargo del tratamiento con cada encargado",
         "reqVendorDpasDesc": "Mantén un contrato de encargo del tratamiento con cada proveedor activo que trate datos personales por cuenta de tu organización.",
         "reqTransferTia": "Completa una EIT para cada transferencia internacional",
-        "reqTransferTiaDesc": "Cuando los datos personales salen del territorio regulado, se requiere una evaluación de impacto de las transferencias (EIT, Schrems II) para los destinos sin decisión de adecuación.",
+        "reqTransferTiaDesc": "Cuando los datos personales salen del territorio regulado, se requiere una evaluación de impacto de la transferencia (EIT, Schrems II) para los destinos sin decisión de adecuación.",
         "reqAiSystemRegister": "Mantén un registro de sistemas de IA",
-        "reqAiSystemRegisterDesc": "Documenta cada sistema de IA en uso, clasifica su nivel de riesgo y haz seguimiento de las obligaciones del proveedor o del responsable del despliegue."
+        "reqAiSystemRegisterDesc": "Documenta cada sistema de IA en uso, clasifica su nivel de riesgo y haz seguimiento de las obligaciones del proveedor o del responsable del despliegue.",
+        "detailRopaNone": "No hay actividades de tratamiento activas registradas",
+        "detailRopaCount": "{count, plural, one {# actividad activa} other {# actividades activas}}",
+        "detailRopaDrafts": "{confirmed} confirmadas y {drafts} en borrador pendientes de confirmar",
+        "detailDpiaApproved": "{count, plural, one {# aprobada} other {# aprobadas}}",
+        "detailDpiaInProgress": "{count} en curso",
+        "detailDpiaNone": "No hay ninguna EIPD",
+        "detailDsarOff": "Las solicitudes de derechos no están incluidas en este plan.",
+        "detailDsarNoForm": "El formulario público de recepción no está configurado",
+        "detailDsarActive": "Canal público activo",
+        "detailIncidentNone": "Todavía no hay ningún flujo de respuesta a incidentes",
+        "detailIncidentCount": "{count, plural, one {# incidente registrado} other {# incidentes registrados}}",
+        "detailVendorNone": "No hay proveedores activos registrados",
+        "detailVendorCount": "{withDpa}/{total} proveedores con contrato de encargo en vigor",
+        "detailTransferNone": "No hay transferencias internacionales",
+        "detailTransferCount": "{done}/{total} EIT completadas",
+        "detailAiNone": "No hay sistemas de IA registrados",
+        "detailAiCount": "{count, plural, one {# sistema registrado} other {# sistemas registrados}}"
       }
     },
     "aiSystems": {
@@ -2837,7 +2855,71 @@
       "AI_Machine_Learning": "IA y aprendizaje automático",
       "Legal_Compliance": "Jurídico y cumplimiento",
       "Design_Creative": "Diseño y creatividad",
-      "Surveys_Research": "Encuestas e investigación"
+      "Surveys_Research": "Encuestas e investigación",
+      "Collaboration": "Colaboración",
+      "Knowledge_Management": "Gestión del conocimiento",
+      "Data_Analytics": "Analítica de datos",
+      "Database_Hosting": "Alojamiento de bases de datos",
+      "Electronic_Health_Records": "Historia clínica electrónica",
+      "Project_Management": "Gestión de proyectos",
+      "Sales_Automation": "Automatización de ventas",
+      "Email_Marketing": "Marketing por correo electrónico",
+      "eSignature": "Firma electrónica",
+      "Advertising_Technology": "Tecnología publicitaria",
+      "Platform_as_a_Service": "Plataforma como servicio",
+      "Podcast_Hosting": "Alojamiento de pódcast",
+      "IT_Support": "Soporte informático",
+      "ERP": "ERP",
+      "AML_CFT": "Prevención del blanqueo de capitales",
+      "CRM": "CRM",
+      "Financial_Infrastructure": "Infraestructura financiera",
+      "Analytics": "Analítica",
+      "Video_Conferencing": "Videoconferencia",
+      "Content_Distribution": "Distribución de contenidos",
+      "Privacy_Technology": "Tecnología de privacidad",
+      "Cloud_Storage": "Almacenamiento en la nube",
+      "Insurance_Communication": "Comunicación de seguros",
+      "Crypto_Compliance": "Cumplimiento en criptoactivos",
+      "Financial_Management": "Gestión financiera",
+      "Telemedicine": "Telemedicina",
+      "Identity_Verification": "Verificación de identidad",
+      "Help_Desk": "Servicio de asistencia",
+      "E_commerce_Platform": "Plataforma de comercio electrónico",
+      "Managed_Services": "Servicios gestionados",
+      "DevOps": "DevOps",
+      "Billing": "Facturación",
+      "Accounting": "Contabilidad",
+      "Messaging": "Mensajería",
+      "Document_Management": "Gestión documental",
+      "Privacy": "Privacidad",
+      "Healthcare_Exchange": "Intercambio de información sanitaria",
+      "Medical_Imaging": "Imagen médica",
+      "Laboratory_Services": "Servicios de laboratorio",
+      "Video_Communication": "Comunicación por vídeo",
+      "Warehouse_Management": "Gestión de almacenes",
+      "Blockchain_Analytics": "Analítica de cadena de bloques",
+      "HR_Management": "Gestión de RR. HH.",
+      "Productivity": "Productividad",
+      "PACS": "PACS",
+      "Cloud_Platform": "Plataforma en la nube",
+      "Consent_Management": "Gestión del consentimiento",
+      "KYC_AML": "Diligencia debida de clientes y prevención del blanqueo",
+      "Diagnostics": "Diagnóstico",
+      "Contract_Management": "Gestión de contratos",
+      "Pharmacy_Management": "Gestión de farmacia",
+      "ITSM": "Gestión de servicios de TI",
+      "Compliance_Technology": "Tecnología de cumplimiento",
+      "Subscription_Management": "Gestión de suscripciones",
+      "SMS_Marketing": "Marketing por SMS",
+      "Communications": "Comunicaciones",
+      "Payroll": "Nóminas",
+      "Sales": "Ventas",
+      "Hosting": "Alojamiento",
+      "Fraud_Detection": "Detección del fraude",
+      "Ad_Serving": "Servicio de anuncios",
+      "Product_Intelligence": "Analítica de producto",
+      "Monitoring": "Monitorización",
+      "2FA_MFA": "Autenticación multifactor"
     },
     "dataCategory": {
       "IDENTIFIERS": "Identificadores",
@@ -2975,7 +3057,7 @@
       "TERMINATED": "Finalizado"
     },
     "contractType": {
-      "DPA": "DPA",
+      "DPA": "Contrato de encargo",
       "MSA": "MSA",
       "NDA": "NDA",
       "SCC": "CCT",
@@ -3779,8 +3861,8 @@
     "networkError": "Error de conexión. Por favor, comprueba tu conexión a internet."
   },
   "toasts": {
-    "dpaGeneratedNoTia": "DPA generado (este proveedor no requiere EIT)",
-    "dpaGenerated": "DPA y EIT generados",
+    "dpaGeneratedNoTia": "Contrato de encargo generado (este proveedor no requiere EIT)",
+    "dpaGenerated": "Contrato de encargo y EIT generados",
     "generic": {
       "somethingWentWrong": "Algo ha ido mal. Inténtalo de nuevo."
     },
@@ -3935,7 +4017,9 @@
         "ACTIVE": "En vigor",
         "EXPIRED": "Vencido",
         "TERMINATED": "Rescindido",
-        "PENDING": "Pendiente"
+        "PENDING": "Pendiente",
+        "PENDING_SIGNATURE": "Pendiente de firma",
+        "RENEWED": "Renovado"
       },
       "aiSystemStatus": {
         "DRAFT": "Borrador",
@@ -3982,7 +4066,7 @@
         "coverage": {
           "assetsClassified": "Activos clasificados",
           "activitiesReviewed": "Actividades revisadas",
-          "vendorsWithDpa": "Proveedores con DPA"
+          "vendorsWithDpa": "Proveedores activos con contrato de encargo en vigor"
         },
         "noFindings": "Sin hallazgos."
       },
@@ -4023,7 +4107,7 @@
           "systems": "Sistemas",
           "transfers": "Transf.",
           "adm": "ADM",
-          "nextReview": "Próx. revisión"
+          "nextReview": "Próxima revisión"
         },
         "empty": "No hay actividades de tratamiento registradas.",
         "admYes": "SÍ"
@@ -4034,7 +4118,7 @@
         "lead": "Todos los encargados y subencargados sujetos a las obligaciones del artículo 28. Se resume la categorización de riesgo y el estado del contrato de encargo del tratamiento; el registro completo figura a continuación por categoría.",
         "criticalityDistribution": "Distribución por criticidad",
         "coverage": "Cobertura",
-        "coverageDpa": "DPA en vigor",
+        "coverageDpa": "Contratos de encargo en vigor",
         "coverageActive": "Activos",
         "coverageCertified": "Certificados",
         "columns": {
@@ -4042,11 +4126,12 @@
           "risk": "Riesgo",
           "countries": "Países",
           "certifications": "Certificaciones",
-          "dpa": "DPA",
-          "nextReview": "Próx. revisión"
+          "dpa": "Contrato de encargo",
+          "nextReview": "Próxima revisión"
         },
         "dpaYes": "SÍ",
-        "dpaMissing": "FALTA"
+        "dpaMissing": "FALTA",
+        "uncategorized": "Sin categoría"
       },
       "ai": {
         "sectionNumber": "Sección 05",
@@ -4090,7 +4175,7 @@
       },
       "findings": {
         "overdueDsars": "{count, plural, one {# solicitud de ejercicio de derechos está} other {# solicitudes de ejercicio de derechos están}} fuera del plazo legal de respuesta.",
-        "vendorsMissingDpa": "{count, plural, one {# proveedor activo ({pct} %) no tiene} other {# proveedores activos ({pct} %) no tienen}} un contrato de encargo del tratamiento registrado.",
+        "vendorsMissingDpa": "{count, plural, one {# proveedor activo ({pct} %) no tiene} other {# proveedores activos ({pct} %) no tienen}} un contrato de encargo del tratamiento en vigor.",
         "highRiskVendors": "{count, plural, one {# proveedor está clasificado} other {# proveedores están clasificados}} como de riesgo alto o crítico; se recomienda una revisión de gobernanza.",
         "overdueReview": "{count, plural, one {# actividad de tratamiento tiene} other {# actividades de tratamiento tienen}} vencida la revisión periódica.",
         "specialCat": "{count, plural, one {# elemento de datos de categorías especiales está catalogado} other {# elementos de datos de categorías especiales están catalogados}}: se aplican las garantías del artículo 9.",
@@ -4381,7 +4466,7 @@
         "totalDsars": "Solicitudes de derechos",
         "onTimeRate": "Tasa en plazo",
         "avgResolution": "Resolución media",
-        "overdue": "Fuera de plazo",
+        "overdue": "Vencidas",
         "totalTransfers": "Transferencias totales",
         "destinationCountries": "Países de destino",
         "nonAdequate": "Sin adecuación",
@@ -4395,7 +4480,7 @@
         "reportDate": "Fecha del informe",
         "dataAssets": "Activos de datos",
         "processingActivities": "Actividades de tratamiento",
-        "activeVendors": "Proveedores activos",
+        "activeVendors": "Proveedores",
         "internationalTransfers": "Transferencias internacionales",
         "primaryJurisdiction": "Jurisdicción principal",
         "primaryJurisdictionNotSet": "Sin definir"
@@ -4468,7 +4553,10 @@
         "sectoral": "Sectorial",
         "ai_governance": "Gobernanza de la IA",
         "emerging": "Emergente"
-      }
+      },
+      "healthDsarOnTimeNone": "Solicitudes de derechos resueltas en plazo: todavía no hay nada que medir",
+      "partialAdequacy": "Parcial (solo destinatarios certificados en el Marco de Privacidad de Datos UE-EE. UU.)",
+      "statusNotMet": "No se cumple"
     },
     "dsarPerformance": {
       "pageTitle": "Rendimiento del ejercicio de derechos",
@@ -4481,7 +4569,7 @@
         "totalRequests": "Solicitudes totales",
         "onTimeRate": "Tasa en plazo",
         "avgResolution": "Resolución media",
-        "overdue": "Fuera de plazo",
+        "overdue": "Vencidas",
         "notAvailable": "N/D"
       },
       "meta": {
@@ -4516,7 +4604,7 @@
         "percentage": "Porcentaje"
       },
       "slaCompliance": "Cumplimiento de plazos por jurisdicción",
-      "slaDesc": "Los plazos de respuesta a las solicitudes de derechos varían según la jurisdicción. Cuando concurren varias jurisdicciones, prevalece el plazo más estricto. El tiempo medio de resolución se compara con el plazo de cada marco.",
+      "slaDesc": "Los plazos de respuesta a las solicitudes de derechos varían según la jurisdicción. Cuando concurren varias jurisdicciones, prevalece el plazo más estricto. Cada solicitud tiene su propio plazo: el estado indica «Se cumple» solo si todas las solicitudes medidas se han respondido dentro de él, y «No se cumple» si alguna se ha respondido tarde o sigue abierta con el plazo vencido.",
       "slaColumns": {
         "jurisdiction": "Jurisdicción",
         "deadline": "Plazo",
@@ -4545,6 +4633,12 @@
       "slaStatusMeeting": "Se cumple",
       "slaStatusNoData": "Sin datos",
       "riskOnTrack": "En plazo",
+      "agingBands": {
+        "d0to7": "De 0 a 7 días",
+        "d7to14": "De 7 a 14 días",
+        "d14to30": "De 14 a 30 días",
+        "over30": "Más de 30 días"
+      },
       "dsarTypes": {
         "ACCESS": "Acceso (Derecho de acceso)",
         "ERASURE": "Supresión (Derecho al olvido)",
@@ -4557,7 +4651,8 @@
         "OTHER": "Otros",
         "OPT_OUT_SALE_SHARING": "Exclusión de la venta o el intercambio",
         "LIMIT_SENSITIVE_PI": "Limitación de la información personal sensible"
-      }
+      },
+      "slaStatusNotMet": "No se cumple"
     },
     "breachRegister": {
       "recordedInErrorPrefix": "[Registrada por error]",
@@ -4636,7 +4731,7 @@
       },
       "criticality": "Criticidad",
       "coverage": "Cobertura",
-      "coverageDpa": "DPA en vigor",
+      "coverageDpa": "Contratos de encargo en vigor",
       "coverageCertified": "Certificados",
       "certificationsTop": "Certificaciones más frecuentes",
       "directory": "Directorio",
@@ -4647,10 +4742,18 @@
         "risk": "Riesgo",
         "countries": "Países",
         "certifications": "Certificaciones",
-        "dpa": "DPA",
-        "nextReview": "Próx. revisión"
+        "dpa": "Contrato de encargo",
+        "nextReview": "Próxima revisión",
+        "service": "Servicio",
+        "dataProcessed": "Datos tratados",
+        "contract": "Contrato de encargo"
       },
-      "dpaMissing": "FALTA"
+      "dpaMissing": "FALTA",
+      "uncategorized": "Sin categoría",
+      "details": "Detalle del tratamiento",
+      "detailsLead": "Qué hace cada proveedor, qué datos personales trata, dónde y qué contrato de encargo del tratamiento lo regula (artículos 28 y 30 del RGPD).",
+      "dateRangeJoin": " a ",
+      "noDpa": "Sin contrato de encargo"
     },
     "documentPack": {
       "fileTitle": "Paquete-de-documentos",
@@ -4701,7 +4804,7 @@
         "yes": "Sí",
         "no": "No",
         "none": "Ninguna",
-        "noDpa": "Sin DPA"
+        "noDpa": "Sin contrato de encargo"
       },
       "ropa": {
         "activity": "Actividad de tratamiento",
@@ -4732,7 +4835,7 @@
         "lastAssessed": "Última evaluación",
         "nextReview": "Próxima revisión",
         "contractNames": "Contratos",
-        "dpaStatus": "Estado del DPA"
+        "dpaStatus": "Estado del contrato de encargo"
       },
       "breaches": {
         "id": "ID",
@@ -5325,8 +5428,8 @@
         "calloutTitle": "Alertas de vencimiento de contrato",
         "calloutBody": "El sistema envía notificaciones por correo electrónico 90, 60 y 30 días antes del vencimiento de un contrato, para que tengas tiempo de renovar o renegociar las condiciones.",
         "types": {
-          "DPA": "DPA",
-          "DPA_SCC": "DPA + CCT"
+          "DPA": "Contrato de encargo",
+          "DPA_SCC": "Contrato de encargo + CCT"
         }
       },
       "questionnaires": {
@@ -7319,7 +7422,7 @@
     },
     "publicVendors": {
       "dpa": {
-        "title": "Generar un contrato de encargo (DPA) y una evaluación de impacto de las transferencias",
+        "title": "Generar un contrato de encargo (DPA) y una evaluación de impacto de la transferencia",
         "intro": "DPO Central puede generar un contrato de encargo del tratamiento listo para firmar y una evaluación de impacto de las transferencias independiente para cualquier proveedor, a partir de tu propio programa de privacidad: el registro de proveedores, los cuestionarios recibidos y las actividades de tratamiento que nombran al proveedor como destinatario. Los documentos se generan en inglés o en español.",
         "artifacts": {
           "dpaTitle": "Contrato de encargo del tratamiento (PDF)",
@@ -7329,8 +7432,8 @@
         },
         "steps": {
           "open": {
-            "title": "Abre el proveedor y elige «Generar DPA + EIT»",
-            "description": "En la página de detalle del proveedor, abre la pestaña Contratos y pulsa «Generar DPA + EIT». Disponible para propietarios, administradores y responsables de privacidad."
+            "title": "Abre el proveedor y elige «Generar contrato de encargo + EIT»",
+            "description": "En la página de detalle del proveedor, abre la pestaña Contratos y pulsa «Generar contrato de encargo + EIT». Disponible para propietarios, administradores y responsables de privacidad."
           },
           "review": {
             "title": "Revisa los datos precargados",
@@ -7454,7 +7557,7 @@
           },
           "contract": {
             "label": "Contrato",
-            "description": "Firma del DPA"
+            "description": "Firma del contrato de encargo"
           },
           "approved": {
             "label": "Aprobado",
@@ -9702,7 +9805,7 @@
       "deptNote": "Se muestra un departamento. Los elementos de toda la organización están en la lista completa.",
       "kind": {
         "review-due": "Revisiones pendientes",
-        "dsar-due": "Solicitudes de derechos por vencer",
+        "dsar-due": "Solicitudes de derechos vencidas o por vencer",
         "breach-window": "Brechas por notificar",
         "breach-decision": "Brechas pendientes de decidir si se notifican",
         "assessment-approval": "Evaluaciones por aprobar",
@@ -10102,7 +10205,8 @@
       "notifiedWithin72h": "Notificados a la autoridad en 72 horas",
       "notifiedLate": "Notificados a la autoridad después de 72 horas",
       "notNotifiedYet": "Marcados como notificables, aún sin notificar",
-      "openNow": "Abiertos en la fecha de generación (de cualquier periodo)"
+      "openNow": "Abiertos en la fecha de generación (de cualquier periodo)",
+      "toNotifyNow": "Abiertos y aún sin notificar en la fecha de generación (de cualquier periodo)"
     },
     "rights": {
       "title": "Solicitudes de derechos en el periodo",
@@ -10111,14 +10215,16 @@
       "completedLate": "Completadas fuera de plazo",
       "openOverdue": "Abiertas y vencidas",
       "openInTime": "Abiertas, dentro de plazo",
-      "closedOther": "Rechazadas o canceladas"
+      "closedOther": "Rechazadas o canceladas",
+      "overdueNow": "Abiertas y vencidas en la fecha de generación (de cualquier periodo)"
     },
     "vendors": {
       "title": "Proveedores",
       "total": "Proveedores confirmados",
-      "withDpa": "Con contrato de encargo del tratamiento",
-      "highRiskWithoutDpa": "De riesgo alto o crítico sin ese contrato",
-      "drafts": "{count, plural, one {# proveedor en borrador espera confirmación y no se cuenta.} other {# proveedores en borrador esperan confirmación y no se cuentan.}}"
+      "withDpa": "En uso, con contrato de encargo del tratamiento en vigor",
+      "highRiskWithoutDpa": "En uso, de riesgo alto o crítico sin ese contrato",
+      "drafts": "{count, plural, one {# proveedor en borrador espera confirmación y no se cuenta.} other {# proveedores en borrador esperan confirmación y no se cuentan.}}",
+      "active": "De ellos, en uso (activos)"
     },
     "assessments": {
       "title": "Evaluaciones",
@@ -10146,7 +10252,8 @@
       "deadline": "{date} (vencimiento)",
       "plan": "{date} (plan)",
       "ownerNote": "Responsable: la persona responsable de privacidad de la organización en DPO Central (o su propietario). Fecha: el vencimiento del propio registro o, si no lo tiene, el final del tramo de 30, 60 o 90 días del plan para esa área.",
-      "empty": "No queda nada por hacer en la ruta."
+      "empty": "No queda nada por hacer en la ruta.",
+      "overdue": "{date} (vencida hace {days, plural, one {# día} other {# días}})"
     },
     "comment": {
       "title": "Comentario del DPD",
@@ -10175,12 +10282,13 @@
       "breaches": "brechas notificadas a la autoridad en 72 horas",
       "breachesNone": "ninguna brecha notificable en el periodo",
       "breachesFlag": "{count, plural, one {# fuera de plazo o sin notificar} other {# fuera de plazo o sin notificar}}",
-      "rights": "solicitudes de derechos completadas en plazo",
-      "rightsNone": "ninguna solicitud completada en el periodo",
-      "rightsFlag": "{count, plural, one {# abierta y vencida} other {# abiertas y vencidas}}",
-      "vendors": "proveedores con contrato de encargo del tratamiento",
+      "rights": "solicitudes de derechos atendidas en plazo",
+      "rightsNone": "ninguna solicitud completada ni vencida en el periodo",
+      "rightsFlag": "{count, plural, one {# abierta y vencida en la fecha de generación} other {# abiertas y vencidas en la fecha de generación}}",
+      "vendors": "proveedores en uso con contrato de encargo del tratamiento en vigor",
       "vendorsNone": "ningún proveedor confirmado",
-      "vendorsFlag": "{count} de riesgo alto o crítico sin ese contrato"
+      "vendorsFlag": "{count} de riesgo alto o crítico sin ese contrato",
+      "breachesBacklog": "{count, plural, one {# brecha abierta aún sin notificar (de cualquier periodo)} other {# brechas abiertas aún sin notificar (de cualquier periodo)}}"
     }
   },
   "auditTrail": {
@@ -10282,7 +10390,9 @@
       "PILOT_LIMIT_REACHED": "Límite del piloto alcanzado",
       "CHECKOUT_INITIATED": "Pago iniciado",
       "RESPONSE_LINK_SET": "Enlace de respuesta añadido",
-      "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado"
+      "RESPONSE_LINK_CLEARED": "Enlace de respuesta quitado",
+      "EXPORT_ORGANIZATION_DATA": "Archivo completo de datos exportado",
+      "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas"
     }
   },
   "dsarGeneratedTask": {

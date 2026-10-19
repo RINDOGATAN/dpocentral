@@ -96,7 +96,8 @@
     "sortName": "Name (A-Z)",
     "fromTemplate": "From the {name} template",
     "fromTemplateGeneric": "From a template",
-    "fromQuickstart": "From quick start"
+    "fromQuickstart": "From quick start",
+    "notStated": "Not stated"
   },
   "pages": {
     "newVendor": {
@@ -838,7 +839,7 @@
         "questions": "Questions",
         "mitigations": "Mitigations",
         "riskScore": "Risk Score",
-        "riskScoreScale": "0–25 Low · 26–50 Medium · 51–75 High · 76–100 Critical",
+        "riskScoreScale": "0 to 25 Low · 26 to 50 Medium · 51 to 75 High · 76 to 100 Critical",
         "noScore": "-"
       },
       "tabs": {
@@ -1242,7 +1243,7 @@
         "produce": "Produce DPA + TIA",
         "openTia": "TIA",
         "title": "Produce DPA + Transfer Impact Assessment",
-        "subtitle": "Review every pre-filled fact before generating: they become representations in a signable document. The DPA (Annexes I–IV) and, for third-country transfers, a standalone TIA are generated from your confirmed answers.",
+        "subtitle": "Review every pre-filled fact before generating: they become representations in a signable document. The DPA (Annexes I to IV) and, for third-country transfers, a standalone TIA are generated from your confirmed answers.",
         "loading": "Mapping the vendor's data…",
         "notesTitle": "How these facts were pre-filled",
         "sectionAgreement": "Agreement & parties",
@@ -1877,7 +1878,24 @@
         "reqTransferTia": "Complete a TIA for each international data transfer",
         "reqTransferTiaDesc": "When personal data leaves the regulated territory, a Transfer Impact Assessment (Schrems II) is required for non-adequate destinations.",
         "reqAiSystemRegister": "Maintain an AI system register",
-        "reqAiSystemRegisterDesc": "Document each AI system in use, classify its risk tier, and track provider/deployer obligations."
+        "reqAiSystemRegisterDesc": "Document each AI system in use, classify its risk tier, and track provider/deployer obligations.",
+        "detailRopaNone": "No active processing activities recorded",
+        "detailRopaCount": "{count, plural, one {# active activity} other {# active activities}}",
+        "detailRopaDrafts": "{confirmed} confirmed, {drafts} drafted and waiting to be confirmed",
+        "detailDpiaApproved": "{count} approved",
+        "detailDpiaInProgress": "{count} in progress",
+        "detailDpiaNone": "No DPIA on file",
+        "detailDsarOff": "Rights requests are not included in this plan.",
+        "detailDsarNoForm": "Public intake form not configured",
+        "detailDsarActive": "Public portal active",
+        "detailIncidentNone": "No incident workflow yet",
+        "detailIncidentCount": "{count, plural, one {# incident record} other {# incident records}}",
+        "detailVendorNone": "No active vendors recorded",
+        "detailVendorCount": "{withDpa}/{total} vendors with a DPA in force",
+        "detailTransferNone": "No cross-border transfers",
+        "detailTransferCount": "{done}/{total} TIAs complete",
+        "detailAiNone": "No AI systems registered",
+        "detailAiCount": "{count, plural, one {# system registered} other {# systems registered}}"
       }
     },
     "aiSystems": {
@@ -2409,7 +2427,7 @@
       },
       "emptyTransfers": {
         "title": "No international transfers recorded",
-        "subtitle": "Document cross-border data transfers and safeguards (Art. 44–49 GDPR)"
+        "subtitle": "Document cross-border data transfers and safeguards (GDPR Articles 44 to 49)"
       },
       "transfer": {
         "tiaCompleted": "TIA completed",
@@ -2434,7 +2452,7 @@
       },
       "transferDialog": {
         "title": "Add International Transfer",
-        "description": "Record a cross-border data transfer under GDPR Art. 44–49.",
+        "description": "Record a cross-border data transfer under GDPR Articles 44 to 49.",
         "nameLabel": "Transfer Name",
         "namePlaceholder": "e.g. Customer data to US analytics provider",
         "countryLabel": "Destination Country",
@@ -2837,7 +2855,71 @@
       "AI_Machine_Learning": "AI & Machine Learning",
       "Legal_Compliance": "Legal & Compliance",
       "Design_Creative": "Design & Creative",
-      "Surveys_Research": "Surveys & Research"
+      "Surveys_Research": "Surveys & Research",
+      "Collaboration": "Collaboration",
+      "Knowledge_Management": "Knowledge Management",
+      "Data_Analytics": "Data Analytics",
+      "Database_Hosting": "Database Hosting",
+      "Electronic_Health_Records": "Electronic Health Records",
+      "Project_Management": "Project Management",
+      "Sales_Automation": "Sales Automation",
+      "Email_Marketing": "Email Marketing",
+      "eSignature": "eSignature",
+      "Advertising_Technology": "Advertising Technology",
+      "Platform_as_a_Service": "Platform as a Service",
+      "Podcast_Hosting": "Podcast Hosting",
+      "IT_Support": "IT Support",
+      "ERP": "ERP",
+      "AML_CFT": "AML/CFT",
+      "CRM": "CRM",
+      "Financial_Infrastructure": "Financial Infrastructure",
+      "Analytics": "Analytics",
+      "Video_Conferencing": "Video Conferencing",
+      "Content_Distribution": "Content Distribution",
+      "Privacy_Technology": "Privacy Technology",
+      "Cloud_Storage": "Cloud Storage",
+      "Insurance_Communication": "Insurance Communication",
+      "Crypto_Compliance": "Crypto Compliance",
+      "Financial_Management": "Financial Management",
+      "Telemedicine": "Telemedicine",
+      "Identity_Verification": "Identity Verification",
+      "Help_Desk": "Help Desk",
+      "E_commerce_Platform": "E-commerce Platform",
+      "Managed_Services": "Managed Services",
+      "DevOps": "DevOps",
+      "Billing": "Billing",
+      "Accounting": "Accounting",
+      "Messaging": "Messaging",
+      "Document_Management": "Document Management",
+      "Privacy": "Privacy",
+      "Healthcare_Exchange": "Healthcare Exchange",
+      "Medical_Imaging": "Medical Imaging",
+      "Laboratory_Services": "Laboratory Services",
+      "Video_Communication": "Video Communication",
+      "Warehouse_Management": "Warehouse Management",
+      "Blockchain_Analytics": "Blockchain Analytics",
+      "HR_Management": "HR Management",
+      "Productivity": "Productivity",
+      "PACS": "PACS",
+      "Cloud_Platform": "Cloud Platform",
+      "Consent_Management": "Consent Management",
+      "KYC_AML": "KYC/AML",
+      "Diagnostics": "Diagnostics",
+      "Contract_Management": "Contract Management",
+      "Pharmacy_Management": "Pharmacy Management",
+      "ITSM": "ITSM",
+      "Compliance_Technology": "Compliance Technology",
+      "Subscription_Management": "Subscription Management",
+      "SMS_Marketing": "SMS Marketing",
+      "Communications": "Communications",
+      "Payroll": "Payroll",
+      "Sales": "Sales",
+      "Hosting": "Hosting",
+      "Fraud_Detection": "Fraud Detection",
+      "Ad_Serving": "Ad Serving",
+      "Product_Intelligence": "Product Intelligence",
+      "Monitoring": "Monitoring",
+      "2FA_MFA": "2FA/MFA"
     },
     "dataCategory": {
       "IDENTIFIERS": "Identifiers",
@@ -3935,7 +4017,9 @@
         "ACTIVE": "Active",
         "EXPIRED": "Expired",
         "TERMINATED": "Terminated",
-        "PENDING": "Pending"
+        "PENDING": "Pending",
+        "PENDING_SIGNATURE": "Pending signature",
+        "RENEWED": "Renewed"
       },
       "aiSystemStatus": {
         "DRAFT": "Draft",
@@ -3982,7 +4066,7 @@
         "coverage": {
           "assetsClassified": "Assets classified",
           "activitiesReviewed": "Activities reviewed",
-          "vendorsWithDpa": "Vendors with DPA"
+          "vendorsWithDpa": "Active vendors with a DPA in force"
         },
         "noFindings": "No findings."
       },
@@ -4034,7 +4118,7 @@
         "lead": "All processors and sub-processors subject to Article 28 obligations. Risk tiering and DPA status are summarized below; the full register follows by category.",
         "criticalityDistribution": "Criticality Distribution",
         "coverage": "Coverage",
-        "coverageDpa": "DPA on file",
+        "coverageDpa": "DPA in force",
         "coverageActive": "Active",
         "coverageCertified": "Certified",
         "columns": {
@@ -4046,7 +4130,8 @@
           "nextReview": "Next Review"
         },
         "dpaYes": "YES",
-        "dpaMissing": "MISSING"
+        "dpaMissing": "MISSING",
+        "uncategorized": "Uncategorized"
       },
       "ai": {
         "sectionNumber": "Section 05",
@@ -4090,7 +4175,7 @@
       },
       "findings": {
         "overdueDsars": "{count, plural, one {# data-subject request is} other {# data-subject requests are}} past the statutory response deadline.",
-        "vendorsMissingDpa": "{count, plural, one {# active vendor ({pct}%) has} other {# active vendors ({pct}%) have}} no Data Processing Agreement on file.",
+        "vendorsMissingDpa": "{count, plural, one {# active vendor ({pct}%) has} other {# active vendors ({pct}%) have}} no data processing agreement in force.",
         "highRiskVendors": "{count, plural, one {# vendor is} other {# vendors are}} classified as high or critical risk: governance review recommended.",
         "overdueReview": "{count, plural, one {# processing activity is} other {# processing activities are}} overdue for periodic review.",
         "specialCat": "{count, plural, one {# special category data element is} other {# special category data elements are}} cataloged: Article 9 safeguards apply.",
@@ -4395,7 +4480,7 @@
         "reportDate": "Report Date",
         "dataAssets": "Data Assets",
         "processingActivities": "Processing Activities",
-        "activeVendors": "Active Vendors",
+        "activeVendors": "Vendors",
         "internationalTransfers": "International Transfers",
         "primaryJurisdiction": "Primary Jurisdiction",
         "primaryJurisdictionNotSet": "Not set"
@@ -4468,7 +4553,10 @@
         "sectoral": "Sectoral",
         "ai_governance": "AI Governance",
         "emerging": "Emerging"
-      }
+      },
+      "healthDsarOnTimeNone": "DSAR on-time completion: nothing to measure yet",
+      "partialAdequacy": "Partial (certified recipients only, EU-US Data Privacy Framework)",
+      "statusNotMet": "Not met"
     },
     "dsarPerformance": {
       "pageTitle": "DSAR Performance",
@@ -4516,7 +4604,7 @@
         "percentage": "Percentage"
       },
       "slaCompliance": "SLA Compliance by Jurisdiction",
-      "slaDesc": "DSAR response deadlines vary by jurisdiction. Where multiple jurisdictions apply, the strictest deadline should prevail. Average resolution time is compared against each framework's deadline.",
+      "slaDesc": "DSAR response deadlines vary by jurisdiction. Where multiple jurisdictions apply, the strictest deadline should prevail. Each request carries its own deadline: the status reads \"Meeting\" only when every request measured was answered by it, and \"Not met\" when any was answered late or is still open past it.",
       "slaColumns": {
         "jurisdiction": "Jurisdiction",
         "deadline": "Deadline",
@@ -4545,6 +4633,12 @@
       "slaStatusMeeting": "Meeting",
       "slaStatusNoData": "No data",
       "riskOnTrack": "On track",
+      "agingBands": {
+        "d0to7": "0 to 7 days",
+        "d7to14": "7 to 14 days",
+        "d14to30": "14 to 30 days",
+        "over30": "More than 30 days"
+      },
       "dsarTypes": {
         "ACCESS": "Access (Right of Access)",
         "ERASURE": "Erasure (Right to be Forgotten)",
@@ -4557,7 +4651,8 @@
         "OTHER": "Other",
         "OPT_OUT_SALE_SHARING": "Opt out of sale or sharing",
         "LIMIT_SENSITIVE_PI": "Limit sensitive personal information"
-      }
+      },
+      "slaStatusNotMet": "Not met"
     },
     "breachRegister": {
       "recordedInErrorPrefix": "[Recorded in error]",
@@ -4636,7 +4731,7 @@
       },
       "criticality": "Criticality",
       "coverage": "Coverage",
-      "coverageDpa": "DPA on file",
+      "coverageDpa": "DPA in force",
       "coverageCertified": "Certified",
       "certificationsTop": "Certifications: Top",
       "directory": "Directory",
@@ -4648,9 +4743,17 @@
         "countries": "Countries",
         "certifications": "Certifications",
         "dpa": "DPA",
-        "nextReview": "Next Review"
+        "nextReview": "Next Review",
+        "service": "Service",
+        "dataProcessed": "Data processed",
+        "contract": "Data processing agreement"
       },
-      "dpaMissing": "MISSING"
+      "dpaMissing": "MISSING",
+      "uncategorized": "Uncategorized",
+      "details": "Processing details",
+      "detailsLead": "What each vendor does, the personal data it processes, where, and the data processing agreement that governs it (GDPR Articles 28 and 30).",
+      "dateRangeJoin": " to ",
+      "noDpa": "No DPA"
     },
     "documentPack": {
       "fileTitle": "Document-Pack",
@@ -5570,7 +5673,7 @@
           },
           "elements": {
             "label": "Data Elements",
-            "desc": "3–10 elements per system: identifiers, behavioral data, financial data, etc."
+            "desc": "3 to 10 elements per system: identifiers, behavioral data, financial data, etc."
           },
           "activity": {
             "label": "Processing Activity",
@@ -9702,7 +9805,7 @@
       "deptNote": "Showing one department. Organization-wide items are on the full list.",
       "kind": {
         "review-due": "Reviews due",
-        "dsar-due": "Rights requests due",
+        "dsar-due": "Rights requests overdue or due soon",
         "breach-window": "Breaches to notify",
         "breach-decision": "Breaches waiting for a decision on notifying",
         "assessment-approval": "Assessments to approve",
@@ -10102,7 +10205,8 @@
       "notifiedWithin72h": "Notified to the authority within 72 hours",
       "notifiedLate": "Notified to the authority after 72 hours",
       "notNotifiedYet": "Marked as requiring notification, not notified yet",
-      "openNow": "Open on the date generated (from any period)"
+      "openNow": "Open on the date generated (from any period)",
+      "toNotifyNow": "Open and still to notify on the date generated (from any period)"
     },
     "rights": {
       "title": "Rights requests in the period",
@@ -10111,14 +10215,16 @@
       "completedLate": "Completed late",
       "openOverdue": "Open and overdue",
       "openInTime": "Open, within the deadline",
-      "closedOther": "Rejected or canceled"
+      "closedOther": "Rejected or canceled",
+      "overdueNow": "Open and overdue on the date generated (from any period)"
     },
     "vendors": {
       "title": "Vendors",
       "total": "Confirmed vendors",
-      "withDpa": "With a data processing agreement",
-      "highRiskWithoutDpa": "High or critical risk without one",
-      "drafts": "{count, plural, one {# drafted vendor waits to be confirmed and is not counted.} other {# drafted vendors wait to be confirmed and are not counted.}}"
+      "withDpa": "In use, with a data processing agreement in force",
+      "highRiskWithoutDpa": "In use, high or critical risk without one",
+      "drafts": "{count, plural, one {# drafted vendor waits to be confirmed and is not counted.} other {# drafted vendors wait to be confirmed and are not counted.}}",
+      "active": "Of those, in use (active)"
     },
     "assessments": {
       "title": "Assessments",
@@ -10146,7 +10252,8 @@
       "deadline": "{date} (deadline)",
       "plan": "{date} (plan)",
       "ownerNote": "Owner: the organization's privacy officer in DPO Central (or its owner). Date: the record's own deadline, or the end of the 30, 60 or 90-day window of the plan for that area.",
-      "empty": "Nothing left to do on the path."
+      "empty": "Nothing left to do on the path.",
+      "overdue": "{date} (overdue by {days, plural, one {# day} other {# days}})"
     },
     "comment": {
       "title": "DPO's comment",
@@ -10175,12 +10282,13 @@
       "breaches": "breaches notified to the authority within 72 hours",
       "breachesNone": "no notifiable breaches in the period",
       "breachesFlag": "{count} late or not notified yet",
-      "rights": "rights requests completed on time",
-      "rightsNone": "no rights requests completed in the period",
-      "rightsFlag": "{count} open and overdue",
-      "vendors": "vendors with a data processing agreement",
+      "rights": "rights requests answered on time",
+      "rightsNone": "no rights requests completed or overdue in the period",
+      "rightsFlag": "{count} open and overdue on the date generated",
+      "vendors": "vendors in use with a data processing agreement in force",
       "vendorsNone": "no confirmed vendors",
-      "vendorsFlag": "{count} high or critical risk without one"
+      "vendorsFlag": "{count} high or critical risk without one",
+      "breachesBacklog": "{count, plural, one {# open breach still to notify (any period)} other {# open breaches still to notify (any period)}}"
     }
   },
   "auditTrail": {
@@ -10282,7 +10390,9 @@
       "PILOT_LIMIT_REACHED": "Pilot limit reached",
       "CHECKOUT_INITIATED": "Checkout started",
       "RESPONSE_LINK_SET": "Response link set",
-      "RESPONSE_LINK_CLEARED": "Response link removed"
+      "RESPONSE_LINK_CLEARED": "Response link removed",
+      "EXPORT_ORGANIZATION_DATA": "Full data file exported",
+      "EXPORT_RIGHTS_REQUESTS": "Rights requests exported"
     }
   },
   "dsarGeneratedTask": {
