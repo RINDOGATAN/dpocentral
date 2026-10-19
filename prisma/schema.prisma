@@ -279,6 +279,7 @@ model OrganizationMember {
   businessUnitMemberships BusinessUnitMember[]
 
   @@unique([organizationId, userId])
+  @@index([userId])
   @@map("organization_members")
 }
 
@@ -563,6 +564,7 @@ model ProcessingActivityAsset {
   linkedElements     ProcessingActivityAssetElement[]
 
   @@unique([processingActivityId, dataAssetId])
+  @@index([dataAssetId])
   @@map("processing_activity_assets")
 }
 
@@ -781,6 +783,7 @@ model DSARTask {
   assignee    User?       @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
 
   @@index([dsarRequestId])
+  @@index([assigneeId])
   @@map("dsar_tasks")
 }
 
@@ -938,6 +941,8 @@ model Assessment {
   @@index([organizationId])
   @@index([status])
   @@index([dataTransferId])
+  @@index([processingActivityId])
+  @@index([vendorId])
   @@map("assessments")
 }
 
@@ -1379,6 +1384,7 @@ model VendorQuestionnaire {
 
   responses VendorQuestionnaireResponse[]
 
+  @@index([organizationId])
   @@map("vendor_questionnaires")
 }
 

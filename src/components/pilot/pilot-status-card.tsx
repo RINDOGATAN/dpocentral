@@ -26,14 +26,18 @@ const ALL_EXPORTS = [
 type ExportLink = { key: string; path: string; format: string | null };
 
 /**
- * The exports offered. Without the rights-request module
+ * The exports offered. The full organisation file is offered to owners and
+ * admins only. Without the rights-request module
  * (NEXT_PUBLIC_DSAR_ENABLED=false) its report goes, and owners and admins get
  * the download of the rights-request records the organisation already holds
  * instead (GET /api/export/rights-requests).
  */
-function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
-  if (dsarOn) return ALL_EXPORTS;
-  const rest: ExportLink[] = ALL_EXPORTS.filter((e) => e.key !== "dsarPerformance");
+export function exportsFor(dsarOn: boolean, isAdmin: boolean): readonly ExportLink[] {
+  // The full organisation file (every register, member e-mails) is for owners
+  // and admins only; the route refuses anyone else.
+  const visible: ExportLink[] = isAdmin ? [...ALL_EXPORTS] : ALL_EXPORTS.filter((e) => e.key !== "all");
+  if (dsarOn) return visible;
+  const rest: ExportLink[] = visible.filter((e) => e.key !== "dsarPerformance");
   return isAdmin
     ? [...rest, { key: "rightsRequests", path: "rights-requests", format: null }]
     : rest;

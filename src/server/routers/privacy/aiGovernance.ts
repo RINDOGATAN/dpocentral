@@ -310,10 +310,14 @@ export const aiGovernanceRouter = createTRPCRouter({
 
       const result = await exportAISystems(ctx.session.user.email ?? "", payloads);
 
-      // Update synced systems with AIS IDs
+      // Update synced systems with AIS IDs. The ids come back from the
+      // external service: only a system that was sent, and that belongs to
+      // this organisation, is written.
+      const sentIds = new Set(payloads.map((p) => p.dpoCentralSystemId));
       for (const mapping of result.mapped) {
-        await ctx.prisma.aISystem.update({
-          where: { id: mapping.dpcId },
+        if (!sentIds.has(mapping.dpcId)) continue;
+        await ctx.prisma.aISystem.updateMany({
+          where: { id: mapping.dpcId, organizationId: ctx.organization.id },
           data: {
             aiSentinelSystemId: mapping.aisId,
             aiSentinelSyncedAt: new Date(),

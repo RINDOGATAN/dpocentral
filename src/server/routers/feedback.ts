@@ -22,7 +22,7 @@ export const feedbackRouter = createTRPCRouter({
     .input(
       z.object({
         message: z.string().min(1).max(2000),
-        page: z.string().optional(),
+        page: z.string().max(500).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {

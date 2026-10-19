@@ -19,6 +19,32 @@ import {
 } from "./pdf-styles";
 import type { PdfT } from "./privacy-program/data-mapping";
 import { CSV_WORDS_EN, rawCode, type CsvLabels } from "@/server/services/export/csv-labels";
+import { pdfEnumLabel } from "./pdf-locale";
+import { breachWindowEnd } from "@/lib/breach-window";
+
+/** Notification statuses that mean the authority has been told. */
+const NOTIFIED = ["SENT", "ACKNOWLEDGED"];
+
+/**
+ * Notification to the authority is still owed: the incident is flagged and
+ * no notification to the supervisory authority (recipient DPA) has been
+ * sent or acknowledged, whether or not a notification row exists yet.
+ */
+export function authorityNotificationOwed(inc: Pick<IncidentExportData, "notificationRequired" | "notifications">): boolean {
+  return (
+    inc.notificationRequired &&
+    !inc.notifications.some((n) => (n.recipientType ?? "DPA") === "DPA" && NOTIFIED.includes(n.status))
+  );
+}
+
+/** Owed, and the deadline (the jurisdiction's, or 72 hours from discovery) has passed. */
+export function authorityNotificationOverdue(
+  inc: Pick<IncidentExportData, "notificationRequired" | "notifications" | "discoveredAt" | "notificationDeadline" | "status">,
+  now: Date,
+): boolean {
+  if (inc.status === "CLOSED" || inc.status === "FALSE_POSITIVE") return false;
+  return authorityNotificationOwed(inc) && breachWindowEnd(inc).getTime() < now.getTime();
+}
 
 export interface IncidentExportData {
   id: string;
@@ -47,7 +73,11 @@ export interface IncidentExportData {
   createdAt: Date;
   notifications: Array<{
     status: string;
+    /** DPA (the supervisory authority), DATA_SUBJECT, LAW_ENFORCEMENT, INTERNAL. */
+    recipientType?: string;
     notificationDate: Date | null;
+    deadline?: Date | null;
+    referenceNumber?: string | null;
     jurisdiction: { name: string; code: string };
   }>;
   timeline: Array<{
@@ -71,7 +101,14 @@ export function BreachRegisterReport({
   /** BCP-47 locale code applied as PDF metadata. */
   locale?: string;
 }) {
-  const date = fmtDate(new Date());
+  const now = new Date();
+  const date = fmtDate(now);
+  const num = (n: number) => n.toLocaleString(locale?.startsWith("es") ? "es-ES" : "en-US");
+  const recipient = (type: string | undefined) => {
+    const key = `notificationColumns.recipientType.${type ?? "DPA"}`;
+    const label = tr(key);
+    return label === key ? (type ?? "DPA").replace(/_/g, " ") : label;
+  };
 
   // English fallback so routes that haven't been migrated still render cleanly.
   const tr: PdfT =
@@ -112,11 +149,17 @@ export function BreachRegisterReport({
         "meta.notificationDeadline": "Notification Deadline",
         "meta.yes": "Yes",
         "meta.no": "No",
+        "overdue": "Notification deadline passed and the authority has not been notified",
         "subsections.description": "Description",
         "subsections.containmentActions": "Containment Actions",
         "subsections.rootCause": "Root Cause",
         "subsections.lessonsLearned": "Lessons Learned",
         "subsections.dpaNotifications": "DPA Notifications",
+        "subsections.notifications": "Notifications",
+        "subsections.resolutionNotes": "Resolution notes",
+        "notificationColumns.recipient": "Recipient",
+        "notificationColumns.deadline": "Deadline",
+        "notificationColumns.reference": "Reference",
         "subsections.timeline": "Timeline",
         "notificationColumns.jurisdiction": "Jurisdiction",
         "notificationColumns.status": "Status",
@@ -137,10 +180,9 @@ export function BreachRegisterReport({
   for (const inc of counted) {
     bySeverity[inc.severity] = (bySeverity[inc.severity] || 0) + 1;
     byStatus[inc.status] = (byStatus[inc.status] || 0) + 1;
-    if (
-      inc.notificationRequired &&
-      inc.notifications.some((n) => n.status === "PENDING" || n.status === "DRAFTED")
-    ) {
+    // Pending: flagged, and the authority not yet notified (no row yet, a
+    // row still pending or drafted, or one awaiting follow-up).
+    if (authorityNotificationOwed(inc)) {
       pendingNotifications++;
     }
   }
@@ -170,7 +212,7 @@ export function BreachRegisterReport({
               headers={[tr("statusColumns.status"), tr("statusColumns.count")]}
               colWidths={[3, 1]}
               rows={Object.entries(byStatus).map(([status, count]) => [
-                status.replace(/_/g, " "),
+                pdfEnumLabel("incidentStatus", status),
                 count,
               ])}
             />
@@ -191,13 +233,14 @@ export function BreachRegisterReport({
           ]}
           colWidths={[1.5, 3, 1.5, 1, 1.2, 1.5, 1.2]}
           rows={incidents.map((inc) => [
-            inc.publicId.slice(0, 8),
+            // The full reference: a cut one ("INC-2026") no longer tells incidents apart.
+            inc.publicId,
             inc.title,
-            inc.type.replace(/_/g, " "),
-            inc.severity,
-            inc.status.replace(/_/g, " "),
+            pdfEnumLabel("incidentType", inc.type),
+            pdfEnumLabel("incidentSeverity", inc.severity),
+            pdfEnumLabel("incidentStatus", inc.status),
             fmtDate(inc.discoveredAt),
-            inc.affectedRecords != null ? String(inc.affectedRecords) : tr("unknown"),
+            inc.affectedRecords != null ? num(inc.affectedRecords) : tr("unknown"),
           ])}
         />
 
@@ -211,20 +254,26 @@ export function BreachRegisterReport({
               <RiskBadge level={inc.severity} kind="incidentSeverity" />
               <StatusBadge status={inc.status} kind="incidentStatus" />
             </View>
+            {!inc.recordedInError && authorityNotificationOverdue(inc, now) && (
+              <Text style={[s.paragraph, { color: "#B91C1C", fontWeight: 700 }]}>{tr("overdue")}</Text>
+            )}
 
             <MetadataBlock
               items={[
                 { label: tr("meta.incidentId"), value: inc.publicId },
-                { label: tr("meta.type"), value: inc.type.replace(/_/g, " ") },
+                { label: tr("meta.type"), value: pdfEnumLabel("incidentType", inc.type) },
                 { label: tr("meta.discovered"), value: fmtDateTime(inc.discoveredAt) },
                 { label: tr("meta.discoveredBy"), value: inc.discoveredBy },
                 { label: tr("meta.discoveryMethod"), value: inc.discoveryMethod },
                 {
                   label: tr("meta.affectedRecords"),
-                  value: inc.affectedRecords != null ? String(inc.affectedRecords) : tr("unknown"),
+                  value: inc.affectedRecords != null ? num(inc.affectedRecords) : tr("unknown"),
                 },
                 { label: tr("meta.affectedSubjects"), value: inc.affectedSubjects.join(", ") || undefined },
-                { label: tr("meta.dataCategories"), value: inc.dataCategories.join(", ") || undefined },
+                {
+                  label: tr("meta.dataCategories"),
+                  value: inc.dataCategories.map((c) => pdfEnumLabel("dataCategory", c)).join(", ") || undefined,
+                },
                 { label: tr("meta.containedAt"), value: fmtDateTime(inc.containedAt) },
                 { label: tr("meta.resolvedAt"), value: fmtDateTime(inc.resolvedAt) },
                 {
@@ -256,6 +305,13 @@ export function BreachRegisterReport({
               </>
             )}
 
+            {inc.resolutionNotes && (
+              <>
+                <SectionSubtitle>{tr("subsections.resolutionNotes")}</SectionSubtitle>
+                <Text style={s.paragraph}>{inc.resolutionNotes}</Text>
+              </>
+            )}
+
             {inc.lessonsLearned && (
               <>
                 <SectionSubtitle>{tr("subsections.lessonsLearned")}</SectionSubtitle>
@@ -265,18 +321,26 @@ export function BreachRegisterReport({
 
             {inc.notifications.length > 0 && (
               <>
-                <SectionSubtitle>{tr("subsections.dpaNotifications")}</SectionSubtitle>
+                {/* Authority and data-subject notifications together, each row
+                    saying who it is addressed to. */}
+                <SectionSubtitle>{tr("subsections.notifications")}</SectionSubtitle>
                 <DataTable
                   headers={[
+                    tr("notificationColumns.recipient"),
                     tr("notificationColumns.jurisdiction"),
                     tr("notificationColumns.status"),
+                    tr("notificationColumns.deadline"),
                     tr("notificationColumns.date"),
+                    tr("notificationColumns.reference"),
                   ]}
-                  colWidths={[2, 1.5, 1.5]}
+                  colWidths={[1.6, 2, 1.2, 1.4, 1.2, 1.2]}
                   rows={inc.notifications.map((n) => [
+                    recipient(n.recipientType),
                     `${n.jurisdiction.name} (${n.jurisdiction.code})`,
-                    n.status.replace(/_/g, " "),
+                    pdfEnumLabel("notificationStatus", n.status),
+                    fmtDateTime(n.deadline ?? null),
                     fmtDate(n.notificationDate),
+                    n.referenceNumber ?? "",
                   ])}
                 />
               </>
@@ -353,6 +417,11 @@ export const BREACH_CSV_EN: CsvLabels<BreachCsvKey> = {
   code: rawCode,
 };
 
+/** A cell a spreadsheet would read as a formula is prefixed with a quote (as in the audit CSV). */
+function guardFormula(v: string): string {
+  return /^[=+\-@\t\r]/.test(v) ? `'${v}` : v;
+}
+
 export function incidentsToCSV(
   incidents: IncidentExportData[],
   labels: CsvLabels<BreachCsvKey> = BREACH_CSV_EN,
@@ -382,7 +451,7 @@ export function incidentsToCSV(
   return [
     headers.join(","),
     ...rows.map((row) =>
-      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+      row.map((cell) => `"${guardFormula(String(cell)).replace(/"/g, '""')}"`).join(",")
     ),
   ].join("\n");
 }

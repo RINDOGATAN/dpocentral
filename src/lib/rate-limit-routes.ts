@@ -13,7 +13,10 @@
  *               and the development-only /api/auth/dev-login
  *   auth        the rest of /api/auth (session, csrf, providers, signout)
  *   checkout    /api/checkout and /api/billing
- *   dsarPublic  the unauthenticated DSAR tRPC procedures
+ *   dsarPublic  the unauthenticated DSAR tRPC procedures that write
+ *               (submit, withdraw)
+ *   publicRead  the other unauthenticated tRPC procedures (dsar.checkStatus,
+ *               dsar.getPublicForm, feedback.submit)
  *   health      /api/health
  *   import      static-key routes: /api/import/* and /api/admin/sync-templates
  *   cron        /api/cron/*
@@ -30,6 +33,7 @@ export type LimitedRoute =
   | "auth"
   | "checkout"
   | "dsarPublic"
+  | "publicRead"
   | "health"
   | "import"
   | "cron";
@@ -68,6 +72,15 @@ export function classifyRequest(rawPathname: string, method: string): LimitedRou
     (pathname.includes("dsar.submitPublic") || pathname.includes("dsar.withdrawPublic"))
   ) {
     return "dsarPublic";
+  }
+
+  if (
+    pathname.startsWith("/api/trpc") &&
+    (pathname.includes("dsar.checkStatus") ||
+      pathname.includes("dsar.getPublicForm") ||
+      pathname.includes("feedback.submit"))
+  ) {
+    return "publicRead";
   }
 
   if (pathname === "/api/health") return "health";

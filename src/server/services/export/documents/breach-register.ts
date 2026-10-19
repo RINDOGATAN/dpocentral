@@ -10,12 +10,43 @@ import type { IncidentExportData } from "@/server/services/export/breach-registe
 import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
-import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import { pdfEnumLabel, withPdfLocale } from "@/server/services/export/pdf-locale";
+import { parseReportedDescription, parseSystemTimelineTitle } from "@/lib/incident-timeline";
+import { localizeJurisdiction } from "@/config/jurisdiction-catalog";
 
 export async function buildBreachRegisterExport(args: ExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
   const format = args.format ?? "pdf";
   const t = await getTranslations({ locale, namespace: "pdf.breachRegister" });
+  const tp = await getTranslations({ locale, namespace: "pages.incidentDetail" });
+  const enumLabel = (kind: string, value: string) =>
+    withPdfLocale(locale, () => pdfEnumLabel(kind, value));
+  const recipientLabel = (type: string) =>
+    tp.has(`notifications.recipient.${type}` as never) ? tp(`notifications.recipient.${type}` as never) : type;
+  const systemTimelineTitle = (title: string): string => {
+    const parsed = parseSystemTimelineTitle(title);
+    if (!parsed) return title;
+    switch (parsed.kind) {
+      case "statusChanged":
+        return tp("timeline.system.statusChanged", { status: enumLabel("incidentStatus", parsed.status) });
+      case "notificationCreated":
+        return tp("timeline.system.notificationCreated", {
+          recipient: recipientLabel(parsed.recipient),
+          jurisdiction: parsed.jurisdiction,
+        });
+      case "notificationStatus":
+        return tp("timeline.system.notificationStatus", {
+          recipient: recipientLabel(parsed.recipient),
+          status: enumLabel("notificationStatus", parsed.status),
+        });
+      default:
+        return tp(`timeline.system.${parsed.kind}` as never);
+    }
+  };
+  const systemTimelineDescription = (description: string): string => {
+    const reported = parseReportedDescription(description);
+    return reported === null ? description : tp("timeline.system.reportedBody", { title: reported });
+  };
 
   const incidents = await prisma.incident.findMany({
     where: { organizationId },
@@ -58,14 +89,22 @@ export async function buildBreachRegisterExport(args: ExportArgs): Promise<Expor
     createdAt: inc.createdAt,
     notifications: inc.notifications.map((n) => ({
       status: n.status,
+      recipientType: n.recipientType,
       notificationDate: n.sentAt,
-      jurisdiction: { name: n.jurisdiction.name, code: n.jurisdiction.code },
+      deadline: n.deadline,
+      referenceNumber: n.referenceNumber,
+      jurisdiction: {
+        name: localizeJurisdiction({ code: n.jurisdiction.code, region: "", name: n.jurisdiction.name }, locale).name,
+        code: n.jurisdiction.code,
+      },
     })),
-    timeline: inc.timeline.map((t) => ({
-      title: t.title,
-      description: t.description,
-      timestamp: t.timestamp,
-      user: t.createdBy,
+    // Entries the app writes itself are stored in English: shown in the
+    // report's language, as on the incident page.
+    timeline: inc.timeline.map((e) => ({
+      title: systemTimelineTitle(e.title),
+      description: e.description ? systemTimelineDescription(e.description) : e.description,
+      timestamp: e.timestamp,
+      user: e.createdBy,
     })),
   }));
 

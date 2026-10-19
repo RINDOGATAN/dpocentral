@@ -9,8 +9,8 @@
  *
  * Every member keeps the aggregate figures (getStats). Each opening of a
  * request writes a "VIEWED" entry in DSARAuditLog (who, when), at most one per
- * person and request every five minutes. The organisation's JSON export
- * follows the same rule.
+ * person and request every five minutes. The organisation's JSON export is
+ * for owners and admins only.
  *
  * Prisma is module-mocked: we assert on the filters the router issues and on
  * what it writes. The mocked findFirst/findMany honour the assignee filter so
@@ -27,6 +27,7 @@ const mocks = vi.hoisted(() => ({
     dSARAuditLog: { findFirst: vi.fn(), create: vi.fn() },
     dSARIntakeForm: { findMany: vi.fn(), findFirst: vi.fn(async () => null) },
     auditLog: { create: vi.fn() },
+    businessUnitMember: { findMany: vi.fn(async () => []) },
     user: { update: vi.fn() },
   },
   token: { email: "user-a@test.example" } as { email?: string } | null,
@@ -278,13 +279,22 @@ describe("the organisation's JSON export follows the same rule", () => {
     return (await res.json()) as { dsarRequests: { id: string }[] };
   }
 
-  it.each(HANDLERS)("%s exports every request", async (role) => {
+  it.each(["OWNER", "ADMIN"])("%s exports every request", async (role) => {
     const body = await exportAs(role);
     expect(body.dsarRequests.map((r) => r.id)).toEqual(["dsar-assigned", "dsar-other"]);
   });
 
-  it.each(OTHERS)("%s exports only the request with a task assigned to them", async (role) => {
-    const body = await exportAs(role);
-    expect(body.dsarRequests.map((r) => r.id)).toEqual(["dsar-assigned"]);
+  // The full file (every register, member e-mails) is for owners and admins.
+  it.each(["PRIVACY_OFFICER", ...OTHERS])("%s cannot download the full organisation file", async (role) => {
+    mocks.prisma.organizationMember.findFirst.mockResolvedValue({
+      id: "member-a",
+      userId: "user-a",
+      organizationId: "org-a",
+      role,
+      organization: { id: "org-a", name: "Org A", slug: "org-a", domain: null, settings: null, createdAt: new Date() },
+    });
+    const { GET } = await import("@/app/api/export/organization-data/route");
+    const res = await GET(new Request("http://localhost/api/export/organization-data?organizationId=org-a"));
+    expect(res.status).toBe(403);
   });
 });

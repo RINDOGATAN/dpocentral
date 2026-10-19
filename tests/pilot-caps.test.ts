@@ -32,6 +32,7 @@ const mocks = vi.hoisted(() => {
         findMany: vi.fn().mockResolvedValue([]),
       },
       user: { findUnique: vi.fn() },
+      businessUnitMember: { findMany: vi.fn().mockResolvedValue([]) },
       auditLog: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
       dataAsset: { ...counter(), findMany: vi.fn().mockResolvedValue([]) },
       dataElement: counter(),
@@ -710,8 +711,11 @@ describe("export still allowed once read-only", () => {
     hosted();
     setNow(PILOT_DAYS + 60);
     mocks.getToken.mockResolvedValue({ email: "user-1@test.example" });
+    // The full file is for owners and admins (a viewer is refused: see
+    // export-and-billing-roles.test.ts); read-only never takes it away.
     mocks.prisma.organizationMember.findFirst.mockResolvedValue({
-      role: "VIEWER",
+      id: "member-1",
+      role: "OWNER",
       organization: { ...ORG, domain: null, settings: null },
     });
     mocks.prisma.dataAsset.findMany.mockResolvedValue([{ id: "asset-1", name: "CRM" }]);

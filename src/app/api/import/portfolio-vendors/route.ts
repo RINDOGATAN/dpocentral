@@ -18,6 +18,9 @@ import { ensureDpoUser } from "@/lib/jit-provisioning";
  * imports from staging through the existing quickstart flow — we do NOT write
  * into DPO's `vendors` table directly.
  */
+/** One push is bounded: each vendor costs two queries. */
+export const MAX_VENDORS_PER_PUSH = 500;
+
 interface VendorPayload {
   slug: string;
   criticality?: string;
@@ -30,8 +33,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { userEmail, vendors } = body as {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  const { userEmail, vendors } = (body ?? {}) as {
     userEmail: string;
     vendors: VendorPayload[];
   };
@@ -50,6 +58,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "vendors array is required" },
       { status: 400 }
+    );
+  }
+
+  if (vendors.length > MAX_VENDORS_PER_PUSH) {
+    return NextResponse.json(
+      { error: `At most ${MAX_VENDORS_PER_PUSH} vendors per request` },
+      { status: 413 }
     );
   }
 

@@ -70,11 +70,22 @@ export function sanitizeStrings<T>(input: T): T {
  * — inert in a stylesheet, impossible to parse as a tag. Additionally,
  * `@import` and legacy `expression(` are removed: the first can pull
  * remote stylesheets (exfiltration channel), the second executed script
- * in old engines. Everything else is left alone — colors, fonts, layout
+ * in old engines. Every way of loading a resource from elsewhere (`url(`,
+ * `image-set(`, `src(`) is removed too, and backslash escapes with them, so
+ * the portal cannot be made to call a third party. Everything else is left alone — colors, fonts, layout
  * all work.
  */
 export function sanitizeCss(css: string): string {
   return css
+    // CSS escapes (\75 rl for "url") would let the removals below be dodged.
+    // The "\3c " this function writes for "<" is kept, so a second pass (the
+    // render) leaves the text as the first pass (the save) wrote it.
+    .replace(/\\(?!3c )/g, "")
+    // Anything that loads a resource from elsewhere (a tracking pixel, a
+    // remote font): url(), image-set(), src().
+    .replace(/url\s*\(/gi, "/* url removed */(")
+    .replace(/(?:-webkit-)?image-set\s*\(/gi, "/* image-set removed */(")
+    .replace(/\bsrc\s*\(/gi, "/* src removed */(")
     .replace(/</g, "\\3c ")
     .replace(/@import\b/gi, "/* @import removed */")
     .replace(/expression\s*\(/gi, "/* expression */(");

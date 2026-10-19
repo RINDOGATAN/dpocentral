@@ -15,7 +15,10 @@ export type SystemTimelineTitle =
   | { kind: "notificationCreated"; recipient: string; jurisdiction: string }
   | { kind: "notificationStatus"; recipient: string; status: string }
   | { kind: "markedInError" }
-  | { kind: "unmarkedInError" };
+  | { kind: "unmarkedInError" }
+  | { kind: "notificationNowRequired" }
+  | { kind: "notificationNoLongerRequired" }
+  | { kind: "notificationDeadlineRecalculated" };
 
 const RECIPIENT = "([A-Z][A-Z_]*)";
 
@@ -23,6 +26,12 @@ export function parseSystemTimelineTitle(title: string): SystemTimelineTitle | n
   if (title === "Incident Reported") return { kind: "reported" };
   if (title === "Marked as recorded in error") return { kind: "markedInError" };
   if (title === "No longer marked as recorded in error") return { kind: "unmarkedInError" };
+  // Written by incident.update when the facts behind the Art. 33 flag change
+  // (src/server/services/incidents/notification-assessment.ts).
+  if (title === "Notification to the authority now marked as required") return { kind: "notificationNowRequired" };
+  if (title === "Notification to the authority no longer marked as required")
+    return { kind: "notificationNoLongerRequired" };
+  if (title === "Notification deadline recalculated") return { kind: "notificationDeadlineRecalculated" };
   let m = /^Status changed to ([A-Z][A-Z_]*)$/.exec(title);
   if (m) return { kind: "statusChanged", status: m[1]! };
   m = new RegExp(`^${RECIPIENT} notification created \\(([\\s\\S]+)\\)$`).exec(title);

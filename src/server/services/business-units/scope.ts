@@ -76,3 +76,65 @@ export async function loadBusinessUnitScope(
   if (rows.length === 0) return { all: true };
   return { all: false, businessUnitIds: rows.map((r) => r.businessUnitId) };
 }
+
+/// `{ AND: [...] }` to spread into a DataAsset or ProcessingActivity `where`,
+/// or `{}` when the scope imposes nothing.
+export function scopeAnd(
+  scope: BusinessUnitScope,
+  requestedBusinessUnitId?: string,
+): { AND?: Array<Record<string, unknown>> } {
+  const conditions = departmentScopeConditions(scope, requestedBusinessUnitId);
+  return conditions.length > 0 ? { AND: conditions } : {};
+}
+
+/// A data element is in scope when its system is.
+export function elementScopeWhere(scope: BusinessUnitScope): { dataAsset?: { businessUnitId: { in: string[] } } } {
+  const s = businessUnitScopeWhere(scope);
+  return s ? { dataAsset: s } : {};
+}
+
+/// A data flow is in scope when both of its systems are: the flow carries the
+/// names of both ends, so one out-of-scope end would show a system the member
+/// may not see.
+export function flowScopeWhere(scope: BusinessUnitScope): {
+  sourceAsset?: { businessUnitId: { in: string[] } };
+  destinationAsset?: { businessUnitId: { in: string[] } };
+} {
+  const s = businessUnitScopeWhere(scope);
+  return s ? { sourceAsset: s, destinationAsset: s } : {};
+}
+
+/// A transfer is in scope when its processing activity is; a transfer linked
+/// to no activity belongs to no department and is not shown to a limited
+/// member (as an unassigned system is not).
+export function transferScopeWhere(scope: BusinessUnitScope): {
+  processingActivity?: { businessUnitId: { in: string[] } };
+} {
+  const s = businessUnitScopeWhere(scope);
+  return s ? { processingActivity: s } : {};
+}
+
+/// Whether a member with this scope may place a record in `businessUnitId`
+/// (null = no department). An unlimited member may place it anywhere; a
+/// limited member only in one of their departments.
+export function mayUseDepartment(scope: BusinessUnitScope, businessUnitId: string | null | undefined): boolean {
+  if (scope.all) return true;
+  return !!businessUnitId && scope.businessUnitIds.includes(businessUnitId);
+}
+
+/// The department a new record goes to. An unlimited member's choice stands
+/// (null allowed). A limited member's record must land in one of their
+/// departments: with no choice made it goes to their only department; with
+/// several, or with a department outside their set, it is refused (the member
+/// could not see the record afterwards). Returns the id, or an error key.
+export function departmentForNewRecord(
+  scope: BusinessUnitScope,
+  requested: string | null | undefined,
+): { ok: true; businessUnitId: string | null | undefined } | { ok: false; reason: "outside" | "choose" } {
+  if (scope.all) return { ok: true, businessUnitId: requested };
+  if (requested) {
+    return scope.businessUnitIds.includes(requested) ? { ok: true, businessUnitId: requested } : { ok: false, reason: "outside" };
+  }
+  if (scope.businessUnitIds.length === 1) return { ok: true, businessUnitId: scope.businessUnitIds[0] };
+  return { ok: false, reason: "choose" };
+}

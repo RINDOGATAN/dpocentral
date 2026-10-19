@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { NextRequest, NextResponse } from "next/server";
+import { sessionTokenCookieName } from "@/lib/session-cookie";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { encode } from "next-auth/jwt";
@@ -56,7 +57,8 @@ export async function GET(request: NextRequest) {
 
     // Set the session cookie
     response.cookies.set({
-      name: "next-auth.session-token",
+      // The name the session reader expects (app-prefixed under local auth).
+      name: sessionTokenCookieName() ?? "next-auth.session-token",
       value: token,
       httpOnly: true,
       sameSite: "lax",

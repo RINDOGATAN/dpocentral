@@ -6,6 +6,14 @@ import prisma from "@/lib/prisma";
 import { checkExportRateLimit, pdfErrorResponse } from "@/lib/api-export";
 import { buildPrivacyProgramExport } from "@/server/services/export/documents/privacy-program";
 import { fileResponse, resolveExportLocale } from "@/server/services/export/documents/context";
+import { loadBusinessUnitScope } from "@/server/services/business-units/scope";
+
+/**
+ * GET /api/export/privacy-program?organizationId=&locale=
+ * The privacy program report (every register and the data map). A member
+ * limited to departments gets no organisation-wide report, as with the board
+ * report and the document pack.
+ */
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -30,6 +38,10 @@ export async function GET(request: Request) {
       include: { organization: true },
     });
     if (!membership) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+    const scope = await loadBusinessUnitScope(prisma, membership.id);
+    if (!scope.all) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 

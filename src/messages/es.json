@@ -1147,7 +1147,10 @@
           "notificationCreated": "Notificación creada: {recipient}{jurisdiction, select, other {}}",
           "notificationStatus": "Notificación ({recipient}): {status}",
           "markedInError": "Marcada como registrada por error",
-          "unmarkedInError": "Ya no está marcada como registrada por error"
+          "unmarkedInError": "Ya no está marcada como registrada por error",
+          "notificationNowRequired": "La notificación a la autoridad está marcada ahora como obligatoria",
+          "notificationNoLongerRequired": "La notificación a la autoridad ya no está marcada como obligatoria",
+          "notificationDeadlineRecalculated": "Plazo de notificación recalculado"
         }
       },
       "tasks": {
@@ -2574,6 +2577,32 @@
       "revise": "Revisar respuestas",
       "applying": "Aplicando...",
       "applyAll": "Aplicar todas"
+    },
+    "billing": {
+      "title": "Facturación",
+      "subtitle": "Gestiona tus complementos",
+      "addOnsTitle": "Complementos",
+      "selectAll": "Seleccionar todos los complementos inactivos",
+      "selectOne": "Seleccionar {name}",
+      "columns": {
+        "feature": "Complemento",
+        "status": "Estado",
+        "details": "Detalles"
+      },
+      "comingSoon": "Próximamente",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "renews": "Se renueva el {date}",
+      "perMonth": "{price}/mes",
+      "enable": "Activar",
+      "cancel": "Cancelar",
+      "selected": "{count, plural, one {# complemento seleccionado} other {# complementos seleccionados}}: {price}/mes",
+      "enableSelected": "Activar seleccionados ({count})",
+      "monthlyTotal": "Tu total mensual actual:",
+      "basedOn": "{count, plural, one {Basado en # complemento activo a {price}/mes.} other {Basado en # complementos activos a {price}/mes cada uno.}}",
+      "cancelConfirm": "¿Cancelar <b>{name}</b>? Perderás el acceso de inmediato y recibirás un crédito prorrateado.",
+      "keep": "Mantener complemento",
+      "confirmCancel": "Confirmar cancelación"
     }
   },
   "confirms": {
@@ -3011,7 +3040,10 @@
       "SENT": "Enviada",
       "NOT_REQUIRED": "No requerida",
       "OVERDUE": "Vencida",
-      "ACKNOWLEDGED": "Confirmada"
+      "ACKNOWLEDGED": "Confirmada",
+      "DRAFTED": "Redactada",
+      "FOLLOW_UP_REQUIRED": "Requiere seguimiento",
+      "CLOSED": "Cerrada"
     },
     "reviewType": {
       "SECURITY": "Seguridad",
@@ -3314,7 +3346,8 @@
       "save": "Guardar cambios",
       "errorPrefix": "Error: {message}",
       "saved": "Configuración guardada"
-    }
+    },
+    "defaultFormName": "Formulario de solicitudes de derechos"
   },
   "dsarPublic": {
     "form": {
@@ -4609,19 +4642,31 @@
         "rootCause": "Causa raíz",
         "lessonsLearned": "Lecciones aprendidas",
         "dpaNotifications": "Notificaciones a la autoridad de control",
-        "timeline": "Cronología"
+        "timeline": "Cronología",
+        "notifications": "Notificaciones",
+        "resolutionNotes": "Notas de resolución"
       },
       "notificationColumns": {
         "jurisdiction": "Jurisdicción",
         "status": "Estado",
-        "date": "Fecha"
+        "date": "Fecha",
+        "recipient": "Destinatario",
+        "deadline": "Plazo",
+        "reference": "Referencia",
+        "recipientType": {
+          "DPA": "Autoridad de control",
+          "DATA_SUBJECT": "Interesados afectados",
+          "LAW_ENFORCEMENT": "Fuerzas y cuerpos de seguridad",
+          "INTERNAL": "Partes interesadas internas"
+        }
       },
       "timelineColumns": {
         "timestamp": "Fecha y hora",
         "event": "Evento",
         "by": "Por"
       },
-      "timelineSystem": "Sistema"
+      "timelineSystem": "Sistema",
+      "overdue": "El plazo de notificación ha vencido y no se ha notificado a la autoridad de control"
     },
     "vendorRegister": {
       "eyebrow": "Registro de proveedores",
@@ -9813,6 +9858,11 @@
       "onlyCompletedCancelledOrRejectedRequestsCanBe": "Solo se pueden suprimir los datos personales de las solicitudes completadas, canceladas o rechazadas.",
       "onlyOwnersAndAdminsCanManageDepartments": "Solo los propietarios y los administradores pueden gestionar los departamentos.",
       "onlyOwnersCanChangeMemberRoles": "Solo los propietarios pueden cambiar los roles de los miembros.",
+      "onlyOwnersCanInviteAnOwner": "Solo los propietarios pueden invitar a un propietario.",
+      "onlyOwnersCanRemoveAnOwner": "Solo los propietarios pueden quitar a un propietario.",
+      "thatDepartmentIsOutsideYourAccess": "Ese departamento queda fuera de tu acceso.",
+      "chooseOneOfYourDepartments": "Elige uno de tus departamentos para este registro.",
+      "linkTransferToYourActivity": "Vincula esta transferencia a una actividad de tratamiento de tu departamento.",
       "organizationIdIsRequired": "Falta el identificador de la organización.",
       "organizationNotFound": "No se ha encontrado la organización.",
       "organizationOrIntakeFormNotFound": "No se ha encontrado la organización o el formulario de recepción.",
@@ -9871,7 +9921,16 @@
       "dsarIntakeOrgBusy": "Este formulario está recibiendo hoy un número inusual de solicitudes. Inténtalo de nuevo mañana o ponte en contacto directamente con la organización.",
       "dsarModuleInactiveCreate": "El módulo de solicitudes de derechos no está activo en esta organización. Está disponible como complemento; las solicitudes que ya tienes siguen disponibles.",
       "dsarFormClosed": "Este formulario no admite solicitudes en este momento. Ponte en contacto directamente con la organización.",
-      "dsarUnfilledPlaceholders": "Completa todos los campos entre llaves del mensaje antes de enviarlo."
+      "dsarUnfilledPlaceholders": "Completa todos los campos entre llaves del mensaje antes de enviarlo.",
+      "onlyADraftAssessmentCanBeDeleted": "Solo se puede eliminar una evaluación en borrador.",
+      "invalidPeriod": "Periodo no válido.",
+      "hostedServiceQuestionOnly": "Esta pregunta solo corresponde al servicio alojado.",
+      "safeguardsRequestAlreadyReceived": "Ya tenemos tu solicitud y te escribiremos.",
+      "sayWhyRecordedInError": "Indica por qué el incidente se registró por error.",
+      "sendingTimeOnlyWithSent": "La hora de envío solo se registra con el estado Enviada.",
+      "sendingTimeNotInFuture": "La hora de envío no puede ser futura.",
+      "invitationNotFound": "No se ha encontrado la invitación.",
+      "webAddressOnly": "Usa una dirección web que empiece por https:// o http://."
     },
     "pattern": {
       "freeSlotsPortfolio": "Puedes importar hasta 5 proveedores gratis desde tu cartera de Vendor.Watch. {remaining, plural, one {Te queda # plaza gratuita} other {Te quedan # plazas gratuitas}}. Suscríbete al complemento Catálogo de proveedores para importar más.",
@@ -10277,6 +10336,8 @@
       "EXPORT_VENDOR_REGISTER": "Registro de proveedores exportado",
       "EXPORT_PRIVACY_PROGRAM": "Informe del programa de privacidad exportado",
       "EXPORT_PROGRAMME": "Programa exportado",
+      "EXPORT_ORGANIZATION_DATA": "Datos completos de la organización exportados",
+      "EXPORT_RIGHTS_REQUESTS": "Solicitudes de derechos exportadas",
       "IMPORT_PROGRAMME": "Programa importado",
       "IMPORT_REGISTER": "Registro importado desde una hoja de cálculo",
       "PILOT_LIMIT_REACHED": "Límite del piloto alcanzado",

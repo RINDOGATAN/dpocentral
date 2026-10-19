@@ -33,3 +33,25 @@ export function localizedIntakeText(
       form.thankYouMessage === DEFAULT_INTAKE_TEXT.thankYouMessage ? t("success.defaultThankYou") : form.thankYouMessage,
   };
 }
+
+/**
+ * The reverse of `localizedIntakeText`, for the settings page: the seeded
+ * defaults are shown there in the member's language, and saving them
+ * unchanged stores the English originals again, so the portal keeps showing
+ * each visitor their own language and the form still reads as not set up
+ * (isIntakeConfigured). Anything else is stored as typed.
+ */
+export function storedIntakeText(
+  values: { title: string; description: string; thankYouMessage: string },
+  t: Translate
+): { title: string; description: string; thankYouMessage: string } {
+  return {
+    title: values.title === t("header.defaultTitle") ? DEFAULT_INTAKE_TEXT.title : values.title,
+    description:
+      values.description === t("header.defaultDescription") ? DEFAULT_INTAKE_TEXT.description : values.description,
+    thankYouMessage:
+      values.thankYouMessage === t("success.defaultThankYou")
+        ? DEFAULT_INTAKE_TEXT.thankYouMessage
+        : values.thankYouMessage,
+  };
+}

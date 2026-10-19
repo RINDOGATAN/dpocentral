@@ -501,6 +501,13 @@ export const organizationRouter = createTRPCRouter({
         });
       }
 
+      // Only an owner may make someone an owner, whether or not an account
+      // already exists for the address: otherwise an admin could add a second
+      // account as owner and then demote the original owner.
+      if (input.role === OrganizationRole.OWNER && ctx.membership.role !== "OWNER") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can invite an owner" });
+      }
+
       const locale = pilotLocale(localeFromCookieGetter(ctx.getCookie));
       // E-mail policy (src/lib/email-policy.ts): both rules apply to every
       // invitation, whether or not an account exists for the address (a
@@ -517,9 +524,6 @@ export const organizationRouter = createTRPCRouter({
       // organisation and e-mail it; the membership is created at their first
       // sign-in (src/server/services/members/invitations.ts).
       if (!user) {
-        if (input.role === OrganizationRole.OWNER && ctx.membership.role !== "OWNER") {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can invite an owner" });
-        }
         const org = await ctx.prisma.organization.findUnique({
           where: { id: ctx.organization.id },
           select: { name: true, settings: true },
@@ -770,6 +774,11 @@ export const organizationRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Member not found in this organization",
         });
+      }
+
+      // Only an owner may remove an owner.
+      if (memberToRemove.role === "OWNER" && ctx.membership.role !== "OWNER") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Only owners can remove an owner" });
       }
 
       // Cannot remove the last owner

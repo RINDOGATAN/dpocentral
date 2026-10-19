@@ -122,6 +122,12 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
         return tp("timeline.system.markedInError");
       case "unmarkedInError":
         return tp("timeline.system.unmarkedInError");
+      case "notificationNowRequired":
+        return tp("timeline.system.notificationNowRequired");
+      case "notificationNoLongerRequired":
+        return tp("timeline.system.notificationNoLongerRequired");
+      case "notificationDeadlineRecalculated":
+        return tp("timeline.system.notificationDeadlineRecalculated");
       case "statusChanged":
         return tp("timeline.system.statusChanged", { status: enumLabel("incidentStatus", parsed.status) });
       case "notificationCreated":

@@ -63,6 +63,16 @@ const dsarOrganizationProcedure = organizationProcedure.use(requireDsarModule);
 const dsarOfficerProcedure = officerProcedure.use(requireDsarModule);
 const dsarAdminOrgProcedure = adminOrgProcedure.use(requireDsarModule);
 
+/**
+ * A link shown on a public page (the privacy notice, the response to a
+ * request): a web address only. z.string().url() alone also accepts
+ * javascript: and data: links.
+ */
+const webUrl = z
+  .string()
+  .url()
+  .refine((v) => /^https?:\/\//i.test(v), { message: "Use a web address that starts with https:// or http://." });
+
 export const dsarRouter = createTRPCRouter({
   // ============================================================
   // DSAR REQUESTS
@@ -389,19 +399,38 @@ export const dsarRouter = createTRPCRouter({
         });
       }
 
+      const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
+        where: { organizationId: ctx.organization.id },
+        ...DSAR_RULE_JURISDICTIONS,
+      });
+      // One statutory extension per request, never on a closed one.
+      const state = dsarExtensionState(
+        request,
+        dsarRuleForType(request.type, orgDsarRule(jurisdictions, request.receivedAt))
+      );
+
       let newDueDate: Date;
       if (input.extensionDays !== undefined) {
         newDueDate = addDays(request.dueDate, input.extensionDays);
+        // A set number of days is for a law that provides no extension. Where
+        // the law provides one, it is also the ceiling: no later date, and
+        // never a second extension or one on a closed request.
+        if (!state.allowed && state.reason !== "no_extension") {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              state.reason === "closed"
+                ? "This request is closed; its deadline cannot be extended"
+                : "The deadline already runs to the longest period the law allows",
+          });
+        }
+        if (state.allowed && newDueDate.getTime() > state.newDueDate.getTime()) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The deadline already runs to the longest period the law allows",
+          });
+        }
       } else {
-        const jurisdictions = await ctx.prisma.organizationJurisdiction.findMany({
-          where: { organizationId: ctx.organization.id },
-          ...DSAR_RULE_JURISDICTIONS,
-        });
-        // One statutory extension per request, never on a closed one.
-        const state = dsarExtensionState(
-          request,
-          dsarRuleForType(request.type, orgDsarRule(jurisdictions, request.receivedAt))
-        );
         if (!state.allowed) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -739,7 +768,7 @@ export const dsarRouter = createTRPCRouter({
         enabledTypes: z.array(z.nativeEnum(DSARType)),
         customCss: z.string().optional(),
         thankYouMessage: z.string().optional(),
-        privacyNoticeUrl: z.string().url().optional().or(z.literal("")),
+        privacyNoticeUrl: webUrl.optional().or(z.literal("")),
         // Shown on the public form when it is not taking requests.
         privacyContactEmail: z.string().email().max(320).optional().or(z.literal("")),
         // The kit's setting; the hosted service keeps 30 days whatever is stored.
@@ -1053,7 +1082,7 @@ export const dsarRouter = createTRPCRouter({
       z.object({
         organizationId: z.string(),
         id: z.string(),
-        responseUrl: z.string().url().nullable(),
+        responseUrl: webUrl.nullable(),
         responseExpiresAt: z.string().datetime().nullable().optional(),
       })
     )

@@ -130,6 +130,7 @@ per route class, keyed by client address (`src/lib/rate-limit.ts`,
 | Other `/api/auth` traffic (session, csrf, providers, sign-out) | 30 per minute |
 | Checkout and billing portal | 10 per minute |
 | Public DSAR intake and withdrawal | 5 per 10 minutes |
+| Other public procedures (request status, public form, feedback) | 30 per minute |
 | `/api/health` (its database probe is also cached for 10 seconds) | 60 per minute |
 | `/api/import/*` and `/api/admin/sync-templates` | 60 per minute |
 | `/api/cron/*` | 10 per minute |

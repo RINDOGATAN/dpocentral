@@ -51,7 +51,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!membership) {
+    // Billing (cancel, change card, invoices, purchases) is for owners and
+    // admins only, as on /api/plan/checkout.
+    if (!membership || (membership.role !== "OWNER" && membership.role !== "ADMIN")) {
       return NextResponse.json(
         { error: "Not authorized to manage billing for this organization" },
         { status: 403 }
