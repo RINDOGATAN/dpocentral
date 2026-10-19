@@ -11,7 +11,12 @@
  *   signIn      every other sign-in step: /api/auth/callback/* (credentials,
  *               OAuth return, magic-link consumption), POST /api/auth/signin/*,
  *               and the development-only /api/auth/dev-login
- *   auth        the rest of /api/auth (session, csrf, providers, signout)
+ *   authRead    the reads every page load and window focus makes: GET/POST
+ *               /api/auth/session, GET /api/auth/csrf, GET /api/auth/providers
+ *               and POST /api/auth/_log. A generous ceiling of its own, so
+ *               several people behind one office address can browse without
+ *               a 429, while sign-in attempts keep their strict bucket.
+ *   auth        the rest of /api/auth (signout, the sign-in page render)
  *   checkout    /api/checkout and /api/billing
  *   dsarPublic  the unauthenticated DSAR tRPC procedures
  *   health      /api/health
@@ -27,6 +32,7 @@
 export type LimitedRoute =
   | "magicLink"
   | "signIn"
+  | "authRead"
   | "auth"
   | "checkout"
   | "dsarPublic"
@@ -54,6 +60,11 @@ export function classifyRequest(rawPathname: string, method: string): LimitedRou
     if (pathname.startsWith("/api/auth/callback/")) return "signIn";
     if (pathname.startsWith("/api/auth/signin/") && upper === "POST") return "signIn";
     if (pathname === "/api/auth/dev-login") return "signIn";
+    if (pathname === "/api/auth/session" && (upper === "GET" || upper === "POST")) return "authRead";
+    if ((pathname === "/api/auth/csrf" || pathname === "/api/auth/providers") && upper === "GET") {
+      return "authRead";
+    }
+    if (pathname === "/api/auth/_log" && upper === "POST") return "authRead";
     return "auth";
   }
 

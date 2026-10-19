@@ -48,11 +48,14 @@ const COMPLETE: PathCounts = {
   quickstartCompleted: true,
   dataAssets: 4,
   dataAssetsDrafts: 0,
+  dataAssetsComplete: 4,
   processingActivities: 3,
   processingActivitiesDrafts: 0,
+  processingActivitiesComplete: 3,
   jurisdictions: 2,
   vendors: 2,
   vendorsDrafts: 0,
+  vendorsComplete: 2,
   vendorsAssessed: 2,
   vendorAssessments: 2,
   assessments: 2,
@@ -61,6 +64,7 @@ const COMPLETE: PathCounts = {
   liaApproved: 1,
   transfers: 1,
   transfersDrafts: 0,
+  transfersComplete: 1,
   dsarRequests: 1,
   dsarIntakeConfigured: true,
   incidents: 1,
@@ -230,18 +234,21 @@ describe("the done rules", () => {
     expect(statusOf("applies", { jurisdictions: 1 })).toBe("done");
   });
 
-  it("data inventory: one data asset", () => {
+  it("data inventory: one bare asset starts it, one that records its data finishes it", () => {
     expect(statusOf("dataInventory", {})).toBe("todo");
-    expect(statusOf("dataInventory", { dataAssets: 1 })).toBe("done");
+    expect(statusOf("dataInventory", { dataAssets: 1 })).toBe("started");
+    expect(statusOf("dataInventory", { dataAssets: 1, dataAssetsComplete: 1 })).toBe("done");
   });
 
-  it("records of processing: started with an asset, done with an activity", () => {
+  it("records of processing: a bare activity only starts it; the minimum fields finish it", () => {
     expect(statusOf("ropa", { dataAssets: 1 })).toBe("started");
-    expect(statusOf("ropa", { processingActivities: 1 })).toBe("done");
+    expect(statusOf("ropa", { processingActivities: 1 })).toBe("started");
+    expect(statusOf("ropa", { processingActivities: 1, processingActivitiesComplete: 1 })).toBe("done");
   });
 
-  it("vendors: one recorded vendor", () => {
-    expect(statusOf("vendors", { vendors: 1 })).toBe("done");
+  it("vendors: a prospect without data or countries only starts it", () => {
+    expect(statusOf("vendors", { vendors: 1 })).toBe("started");
+    expect(statusOf("vendors", { vendors: 1, vendorsComplete: 1 })).toBe("done");
   });
 
   it("AI systems: shown only with an AI system, read-only and never counted", () => {
@@ -257,8 +264,9 @@ describe("the done rules", () => {
     expect(statusOf("assessments", { assessments: 1, assessmentsApproved: 1 })).toBe("done");
   });
 
-  it("transfers: one recorded transfer", () => {
-    expect(statusOf("transfers", { transfers: 1 })).toBe("done");
+  it("transfers: a pending transfer only starts it; a recorded status finishes it", () => {
+    expect(statusOf("transfers", { transfers: 1 })).toBe("started");
+    expect(statusOf("transfers", { transfers: 1, transfersComplete: 1 })).toBe("done");
   });
 
   it("vendor due diligence: every vendor assessed", () => {
@@ -270,15 +278,26 @@ describe("the done rules", () => {
     );
   });
 
-  it("rights: not started with only the auto-seeded intake, started once it is set up, done on a request", () => {
+  it("rights: ready when needed once the intake is set up; a logged request alone does not finish it", () => {
     // A brand-new org (only the seeded default intake, no requests) stays "todo".
     expect(statusOf("dsar", {})).toBe("todo");
-    expect(statusOf("dsar", { dsarIntakeConfigured: true })).toBe("started");
-    expect(statusOf("dsar", { dsarRequests: 1 })).toBe("done");
+    expect(statusOf("dsar", { dsarIntakeConfigured: true })).toBe("ready");
+    expect(statusOf("dsar", { dsarRequests: 1 })).toBe("started");
+    expect(statusOf("dsar", { dsarRequests: 1, dsarIntakeConfigured: true })).toBe("done");
   });
 
-  it("incidents: one recorded incident", () => {
+  it("incidents: ready when needed once the record of processing is usable, done on an incident", () => {
+    expect(statusOf("incidents", {})).toBe("todo");
+    expect(statusOf("incidents", { processingActivitiesComplete: 1 })).toBe("ready");
     expect(statusOf("incidents", { incidents: 1 })).toBe("done");
+  });
+
+  it("a programme with no request and no breach can still reach 100%", () => {
+    const s = evaluatePath(PATH, { ...COMPLETE, dsarRequests: 0, incidents: 0 });
+    expect(s.dsar).toBe("ready");
+    expect(s.incidents).toBe("ready");
+    expect(nextStep(PATH, s)).toBeNull();
+    expect(overallProgress(PATH, s).done).toBe(overallProgress(PATH, s).total);
   });
 });
 
@@ -291,6 +310,7 @@ describe("progress and the next step", () => {
       ...EMPTY_PATH_COUNTS,
       quickstartCompleted: true,
       dataAssets: 1,
+      dataAssetsComplete: 1,
       vendors: 1,
       jurisdictions: 1,
     });

@@ -38,6 +38,8 @@ export function useProgramPathQuery(): {
   planStart: string | null;
   /** Records drafted and not yet confirmed; null while loading. */
   drafts: number | null;
+  /** Per step not yet done: the fields that would finish it (field keys only). */
+  missing: Partial<Record<string, string[]>>;
   refreshing: boolean;
 } {
   const { organization } = useOrganization();
@@ -49,6 +51,7 @@ export function useProgramPathQuery(): {
     steps: data?.steps ?? null,
     planStart: data?.planStart ?? null,
     drafts: data?.drafts ?? null,
+    missing: data?.missing ?? {},
     refreshing: isFetching,
   };
 }

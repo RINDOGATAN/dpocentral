@@ -95,6 +95,7 @@ describe("documents ready", () => {
     dataAssetsDrafts: 0,
     processingActivities: 2,
     processingActivitiesDrafts: 0,
+    processingActivitiesComplete: 2,
     vendors: 1,
     vendorsDrafts: 0,
     assessments: 0,
@@ -149,7 +150,7 @@ describe("the page and the server read what the dashboard reads", () => {
       confirmed: "Confirmed",
       areas: "Areas",
       documents: "Documents ready",
-      deadline: "Next deadline",
+      deadline: "Next due",
       action: "Next action",
       menu: "More",
     });

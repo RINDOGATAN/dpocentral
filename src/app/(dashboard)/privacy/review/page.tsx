@@ -101,6 +101,10 @@ export default function ReviewDraftsPage() {
           <CardContent className="py-10 text-center text-muted-foreground" data-testid="review-empty">
             <CheckCircle2 className="w-10 h-10 mx-auto mb-3 opacity-60" aria-hidden="true" />
             <p>{t("reviewEmpty")}</p>
+            {/* Not a dead end: back to the programme. */}
+            <Link href="/privacy" className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline">
+              {t("reviewEmptyNext")}
+            </Link>
           </CardContent>
         </Card>
       ) : (

@@ -32,6 +32,7 @@ import {
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
 import { catalogDescriptionFor } from "@/lib/vendor-catalog-display";
+import { suggestedDataCategories } from "@/lib/vendor-catalog-data";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
@@ -117,9 +118,20 @@ function NewVendorPageContent() {
     trustCenterUrl: "",
     dpaUrl: "",
     certifications: [] as string[],
+    // A vendor picked from the catalogue is usually one already in use.
+    status: (isCatalogMode ? "ACTIVE" : "PROSPECTIVE") as "ACTIVE" | "PROSPECTIVE",
+    processingActivityId: "",
   });
+  // Whether the data categories shown are the catalogue's suggestion.
+  const [categoriesSuggested, setCategoriesSuggested] = useState(false);
 
   const [newCountry, setNewCountry] = useState("");
+
+  // The organisation's processing activities, for "Used by which activity?".
+  const { data: activityList } = trpc.dataInventory.listActivities.useQuery(
+    { organizationId: organization?.id ?? "", isActive: true, limit: 200 },
+    { enabled: !!organization?.id }
+  );
 
   const utils = trpc.useUtils();
 
@@ -189,11 +201,15 @@ function NewVendorPageContent() {
       website: vendor.website || "",
       categories: [mappedCategory],
       countries: vendor.dataLocations || [],
+      // The catalogue has no per-vendor data categories: a suggestion from
+      // its category, preselected and labelled as such.
+      dataProcessed: suggestedDataCategories(vendor.category),
       privacyPolicyUrl: vendor.privacyPolicyUrl || "",
       trustCenterUrl: vendor.trustCenterUrl || "",
       dpaUrl: vendor.dpaUrl || "",
       certifications: vendor.certifications || [],
     });
+    setCategoriesSuggested(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -222,6 +238,8 @@ function NewVendorPageContent() {
       countries: formData.countries,
       certifications: formData.certifications,
       riskTier: (formData.riskTier || undefined) as any,
+      status: formData.status,
+      ...(formData.processingActivityId ? { processingActivityId: formData.processingActivityId } : {}),
       ...(Object.keys(metadata).length ? { metadata } : {}),
     });
   };
@@ -236,6 +254,7 @@ function NewVendorPageContent() {
   };
 
   const toggleDataProcessed = (value: string) => {
+    setCategoriesSuggested(false);
     setFormData({
       ...formData,
       dataProcessed: formData.dataProcessed.includes(value)
@@ -267,6 +286,8 @@ function NewVendorPageContent() {
       categories: [],
       dataProcessed: [],
       countries: [],
+      status: "ACTIVE",
+      processingActivityId: "",
       riskTier: "",
       privacyPolicyUrl: "",
       trustCenterUrl: "",
@@ -616,6 +637,11 @@ function NewVendorPageContent() {
                   </Badge>
                 ))}
               </div>
+              {categoriesSuggested && (
+                <p className="text-xs text-muted-foreground" data-testid="vendor-categories-suggested">
+                  {tp("dataProcessing.suggested")}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -644,7 +670,57 @@ function NewVendorPageContent() {
                   ))}
                 </div>
               )}
+              {selectedCatalogVendor && (selectedCatalogVendor.dataLocations?.length ?? 0) > 0 && (
+                <p className="text-xs text-muted-foreground">{tp("dataProcessing.fromCatalog")}</p>
+              )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{tp("usage.title")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="vendor-status">{tp("usage.status")}</Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => setFormData({ ...formData, status: value as "ACTIVE" | "PROSPECTIVE" })}
+              >
+                <SelectTrigger id="vendor-status" className="w-full sm:w-56">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">{tp("usage.inUse")}</SelectItem>
+                  <SelectItem value="PROSPECTIVE">{tp("usage.considering")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {(activityList?.activities?.length ?? 0) > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="vendor-activity">{tp("usage.activity")}</Label>
+                <Select
+                  value={formData.processingActivityId || "none"}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, processingActivityId: value === "none" ? "" : value })
+                  }
+                >
+                  <SelectTrigger id="vendor-activity" className="w-full sm:w-80" data-testid="vendor-activity">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{tp("usage.noActivity")}</SelectItem>
+                    {activityList!.activities.map((a) => (
+                      <SelectItem key={a.id} value={a.id}>
+                        {a.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">{tp("usage.activityHint")}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 

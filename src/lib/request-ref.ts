@@ -12,7 +12,21 @@
 
 const PREFIX: Record<string, string> = { en: "REQ", es: "SOL" };
 
+/** A publicId that is already a readable reference ("DSAR-2026-0003", from imports and demos). */
+const READABLE = /^[A-Z]{2,6}-\d{4}-\d{1,6}$/;
+
 export function formatRequestRef(publicId: string, locale = "en"): string {
+  if (READABLE.test(publicId)) return publicId;
   const prefix = PREFIX[locale.split("-")[0]] ?? PREFIX.en;
   return `${prefix}-${publicId.slice(-6).toUpperCase()}`;
+}
+
+/**
+ * The part of a typed search that matches a publicId: "REQ-ABC123" or
+ * "SOL-abc123" (the reference a person reads) becomes "abc123", which the
+ * publicId ends with. Anything else is returned unchanged.
+ */
+export function requestRefSearchTail(search: string): string | null {
+  const m = /^\s*(?:REQ|SOL)-([a-z0-9]{6})\s*$/i.exec(search);
+  return m ? m[1] : null;
 }

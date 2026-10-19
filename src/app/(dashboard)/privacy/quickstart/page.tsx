@@ -51,6 +51,7 @@ import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
 import { useOrganization } from "@/lib/organization-context";
+import { quickstartSeenCookie } from "@/lib/quickstart-seen";
 import { useEnumLabels } from "@/lib/enum-labels";
 import { pickVendor } from "@/lib/quickstart-vendor-pick";
 import { ApplicabilityQuestions, ApplicabilityResult } from "@/components/privacy/applicability-check";
@@ -192,9 +193,10 @@ export default function QuickstartPage() {
   // Mark quickstart as seen (1 year) so the dashboard's first-visit
   // auto-redirect (/privacy → /privacy/quickstart for empty orgs) fires only
   // once instead of looping on every visit. Quickstart stays reachable via nav.
+  // One cookie per organisation (src/lib/quickstart-seen.ts).
   useEffect(() => {
-    document.cookie = "dpo_quickstart_seen=1; path=/; max-age=31536000; samesite=lax";
-  }, []);
+    if (organization?.id) document.cookie = quickstartSeenCookie(organization.id);
+  }, [organization?.id]);
 
   // Debounce search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1585,6 +1587,15 @@ export default function QuickstartPage() {
               <p className="text-muted-foreground max-w-md mx-auto">
                 {nothingCreated ? tp("success.alreadySetBody") : tp("success.createdBody")}
               </p>
+              {/* The drafts count once confirmed: the next click is the review. */}
+              {!nothingCreated && (
+                <Link href="/privacy/review" className="inline-block mt-4" data-testid="quickstart-review">
+                  <Button className="gap-2">
+                    {tp("success.reviewCta")}
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </Button>
+                </Link>
+              )}
             </CardContent>
           </Card>
 

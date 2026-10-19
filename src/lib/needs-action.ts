@@ -26,7 +26,8 @@ export type NeedsActionKind = (typeof NEEDS_ACTION_KINDS)[number];
 
 /// The link each category points at.
 const HREF: Record<NeedsActionKind, string> = {
-  "review-due": "/privacy/data-inventory",
+  // Reviews due are processing activities (nextReviewAt): open their list.
+  "review-due": "/privacy/data-inventory/processing-activities",
   "dsar-due": "/privacy/dsar",
   "breach-window": "/privacy/incidents",
   "breach-decision": "/privacy/incidents",

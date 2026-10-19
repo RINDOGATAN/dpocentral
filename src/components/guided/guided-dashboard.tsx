@@ -541,7 +541,7 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
       <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {!overview ? (
           <CardSkeleton rows={2} />
-        ) : overview.deadlines.length === 0 && !milestone ? (
+        ) : overview.deadlines.length === 0 && overview.reviews.length === 0 && !milestone ? (
           <p className="text-sm text-muted-foreground">{t("deadlines.empty")}</p>
         ) : (
           <ul className="divide-y divide-border">
@@ -558,6 +558,29 @@ function DeadlinesCard({ overview }: { overview: ProgrammeOverview | null }) {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-3 py-2.5 hover:bg-secondary/40 rounded-md -mx-2 px-2"
                   >
                     <span className="text-sm min-w-0 break-words">{t(`deadlines.${d.kind}`, { ref })}</span>
+                    <span
+                      className={cn(
+                        "text-xs tabular-nums shrink-0",
+                        overdue ? "font-medium text-foreground" : "text-muted-foreground",
+                      )}
+                    >
+                      {overdue ? t("deadlines.overdue", { date: when }) : when}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+            {overview.reviews.map((r) => {
+              const at = new Date(r.at);
+              const overdue = at.getTime() < now;
+              const when = formatDateIn(at, locale);
+              return (
+                <li key={`${r.kind}-${r.id}`} data-testid="deadline-review">
+                  <Link
+                    href={r.href}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-3 py-2.5 hover:bg-secondary/40 rounded-md -mx-2 px-2"
+                  >
+                    <span className="text-sm min-w-0 break-words">{t(`deadlines.${r.kind}`, { name: r.name })}</span>
                     <span
                       className={cn(
                         "text-xs tabular-nums shrink-0",

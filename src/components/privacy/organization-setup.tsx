@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { DpaAcceptCheckbox } from "@/components/pilot/dpa-accept";
 import { organizationSlug } from "@/lib/organization-slug";
+import { toast } from "sonner";
 
 
 export function OrganizationSetup() {
@@ -27,6 +28,7 @@ export function OrganizationSetup() {
   const [acceptDpa, setAcceptDpa] = useState(false);
   const { setOrganization, refetchOrganizations } = useOrganization();
 
+  const tToasts = useTranslations("toasts");
   const createOrg = trpc.organization.create.useMutation({
     onSuccess: (org) => {
       setOrganization(org);
@@ -47,6 +49,8 @@ export function OrganizationSetup() {
       await createOrg.mutateAsync({ name: name.trim(), slug, acceptDpa: hosted ? acceptDpa : undefined });
     } catch (error) {
       console.error("Failed to create organization:", error);
+      // Not a dead end: the server's reason (a limit, the agreement), or a generic one.
+      toast.error(error instanceof Error && error.message ? error.message : tToasts("generic.somethingWentWrong"));
     } finally {
       setIsSubmitting(false);
     }

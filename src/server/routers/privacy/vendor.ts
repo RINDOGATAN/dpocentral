@@ -31,6 +31,7 @@ import {
 } from "@prisma/client";
 import { hasVendorCatalogAccess } from "../../services/licensing/entitlement";
 import { assertUsersAreMembers } from "../../org-ownership";
+import { departmentScopeConditions, loadBusinessUnitScope } from "@/server/services/business-units/scope";
 import { recordName } from "@/lib/record-name";
 
 export const vendorRouter = createTRPCRouter({
@@ -176,16 +177,42 @@ export const vendorRouter = createTRPCRouter({
         certifications: z.array(z.string()).default([]),
         riskTier: z.nativeEnum(VendorRiskTier).optional(),
         metadata: z.record(z.string(), z.any()).optional(),
+        /** "In use" (ACTIVE) or "being considered" (PROSPECTIVE, the default). */
+        status: z.enum([VendorStatus.ACTIVE, VendorStatus.PROSPECTIVE]).optional(),
+        /**
+         * The processing activity that uses this vendor (optional): the
+         * vendor's name is added to that activity's recipients (Art. 30(1)(d)),
+         * so it reaches the record of processing and the DPIA.
+         */
+        processingActivityId: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // The activity must be this organisation's, and within the member's departments.
+      const activity = input.processingActivityId
+        ? await (async () => {
+            const scope = await loadBusinessUnitScope(ctx.prisma, ctx.membership.id);
+            const dept = departmentScopeConditions(scope);
+            const found = await ctx.prisma.processingActivity.findFirst({
+              where: {
+                id: input.processingActivityId,
+                organizationId: ctx.organization.id,
+                ...(dept.length > 0 ? { AND: dept as never } : {}),
+              },
+              select: { id: true, recipients: true },
+            });
+            if (!found) throw new TRPCError({ code: "NOT_FOUND", message: "Processing activity not found" });
+            return found;
+          })()
+        : null;
+
       const vendor = await ctx.prisma.vendor.create({
         data: {
           organizationId: ctx.organization.id,
           name: input.name,
           description: input.description,
           website: input.website,
-          status: VendorStatus.PROSPECTIVE,
+          status: input.status ?? VendorStatus.PROSPECTIVE,
           riskTier: input.riskTier,
           primaryContact: input.primaryContact,
           contactEmail: input.contactEmail,
@@ -209,6 +236,23 @@ export const vendorRouter = createTRPCRouter({
           changes: input as any,
         },
       });
+
+      if (activity && !activity.recipients.includes(vendor.name)) {
+        await ctx.prisma.processingActivity.update({
+          where: { id: activity.id },
+          data: { recipients: [...activity.recipients, vendor.name] },
+        });
+        await ctx.prisma.auditLog.create({
+          data: {
+            organizationId: ctx.organization.id,
+            userId: ctx.session.user.id,
+            entityType: "ProcessingActivity",
+            entityId: activity.id,
+            action: "UPDATE",
+            changes: { recipients: { added: vendor.name } } as any,
+          },
+        });
+      }
 
       return vendor;
     }),

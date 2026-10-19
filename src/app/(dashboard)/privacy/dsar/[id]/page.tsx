@@ -64,6 +64,7 @@ import { StatusMark } from "@/components/ui/status-chip";
 import { toneBorder, toneChip } from "@/config/status-palette";
 
 import { formatDateIn, formatDateTimeIn } from "@/lib/utils";
+import { formatRequestRef } from "@/lib/request-ref";
 import {
   fillModelReply,
   modelRepliesFor,
@@ -336,9 +337,12 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
           </Link>
           <div className="min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
-              {/* The reference is a long unbroken token (it is also the key to
-                  the public status page): it must wrap on a phone. */}
-              <h1 className="text-xl sm:text-2xl font-semibold font-mono break-all min-w-0">{request.publicId}</h1>
+              {/* The short reference a person reads (REQ-ABC123); the full
+                  publicId, also the key to the public status page, stays in
+                  the title attribute for support and search. */}
+              <h1 className="text-xl sm:text-2xl font-semibold font-mono break-all min-w-0" title={request.publicId}>
+                {formatRequestRef(request.publicId, locale)}
+              </h1>
               <Badge variant="outline">{tList(`type.${request.type}` as `type.ACCESS` | `type.RECTIFICATION` | `type.ERASURE` | `type.PORTABILITY` | `type.OBJECTION` | `type.RESTRICTION`)}</Badge>
               <Badge variant="outline" className={statusColors[request.status] || ""}>
                 {tList(`status.${request.status}` as `status.SUBMITTED` | `status.IDENTITY_PENDING` | `status.IDENTITY_VERIFIED` | `status.IN_PROGRESS` | `status.DATA_COLLECTED` | `status.REVIEW_PENDING` | `status.COMPLETED` | `status.REJECTED`)}
@@ -388,11 +392,18 @@ export default function DSARDetailPage({ params }: { params: Promise<{ id: strin
             <CardTitle>{tp("progress.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between text-sm">
-              <span>{tp("progress.tasksCompleted", { completed: completedTasks, total: totalTasks })}</span>
-              <span className="font-medium">{progress}%</span>
-            </div>
-            <Progress value={progress} className="h-3" />
+            {/* "0 of 0 tasks, 0%" said nothing: with no task yet, say how to start. */}
+            {totalTasks === 0 ? (
+              <p className="text-sm text-muted-foreground" data-testid="dsar-no-tasks">{tp("progress.noTasks")}</p>
+            ) : (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span>{tp("progress.tasksCompleted", { completed: completedTasks, total: totalTasks })}</span>
+                  <span className="font-medium">{progress}%</span>
+                </div>
+                <Progress value={progress} className="h-3" />
+              </>
+            )}
           </CardContent>
         </Card>
 

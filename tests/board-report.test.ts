@@ -138,12 +138,24 @@ describe("the register and the menu", () => {
 
   it("needs a confirmed step while the programme figure is zero", () => {
     expect(state(FACTS)).toEqual({ state: "needsInput", input: "confirmedStep" });
-    // Drafts alone confirm nothing.
-    expect(state({ ...FACTS, vendors: 3, vendorsDrafts: 3 })).toEqual({ state: "needsInput", input: "confirmedStep" });
+    // Drafts alone confirm nothing: the way on is to review and confirm them.
+    expect(state({ ...FACTS, vendors: 3, vendorsDrafts: 3 })).toEqual({ state: "needsInput", input: "confirmDrafts" });
   });
 
-  it("is ready once one step is confirmed", () => {
-    expect(state({ ...FACTS, jurisdictions: 1 })).toEqual({ state: "ready" });
+  it("is not ready after the quick start alone (set-up steps give it no content)", () => {
+    expect(state({ ...FACTS, jurisdictions: 2, quickstartCompleted: true, dataAssets: 9, dataAssetsDrafts: 9 })).toEqual({
+      state: "needsInput",
+      input: "confirmDrafts",
+    });
+    // A bare confirmed activity is not enough either.
+    expect(state({ ...FACTS, jurisdictions: 1, processingActivities: 1 })).toEqual({
+      state: "needsInput",
+      input: "confirmedStep",
+    });
+  });
+
+  it("is ready once a Know your data step is done", () => {
+    expect(state({ ...FACTS, processingActivities: 1, processingActivitiesComplete: 1 })).toEqual({ state: "ready" });
   });
 
   it("is a real document with a page and a PDF, no longer among those not in DPO Central yet", () => {

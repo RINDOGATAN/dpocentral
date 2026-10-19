@@ -51,6 +51,8 @@ import { withoutSteps, type PathStatuses } from "@/components/guided/path";
 import { planState } from "@/components/guided/plan";
 import { figureFor, ProgramFigureLine } from "@/components/guided/program-figure";
 import {
+  clientDueItems,
+  clientStatus,
   documentsReady,
   nearestDeadline,
   nextActions,
@@ -58,6 +60,7 @@ import {
   programmeAreas,
   sortByNearestDeadline,
   type ClientDeadline,
+  type ClientStatus,
   type NextAction,
 } from "@/lib/programme-overview";
 import type { PathCounts } from "@/components/guided/path-config";
@@ -74,6 +77,7 @@ interface Row {
   docs: { ready: number; total: number };
   deadline: ClientDeadline | null;
   action: NextAction | null;
+  status: ClientStatus | null;
 }
 
 /** One client's row, read the way its own dashboard reads it. */
@@ -87,6 +91,10 @@ function toRow(client: Client, now: Date): Row {
     ? client.documents
     : client.documents.filter((d) => documentEntry(d.id)?.stepId !== "dsar");
   const hasStatuses = Object.keys(statuses).length > 0;
+  // The next due item: deadlines at risk, reviews coming due, and the nearest
+  // open request even beyond the dashboard's 30 days.
+  const due = clientDueItems(client.deadlines, client.reviews, dsar ? client.nextRequestDue : null);
+  const deadline = client.limited ? null : nearestDeadline(due, planMilestone(PLAN_WINDOWS, client.planStart, plan));
   return {
     client,
     name: client.organizationName,
@@ -94,8 +102,18 @@ function toRow(client: Client, now: Date): Row {
     statuses,
     areas: hasStatuses && !client.limited ? programmeAreas(config, statuses, client.needsAction) : [],
     docs: documentsReady(documents),
-    deadline: client.limited ? null : nearestDeadline(client.deadlines, planMilestone(PLAN_WINDOWS, client.planStart, plan)),
+    deadline,
     action: hasStatuses && !client.limited ? (nextActions(config, statuses, client.needsAction, 1)[0] ?? null) : null,
+    status:
+      hasStatuses && !client.limited
+        ? clientStatus({
+            confirmedSteps: figureFor(statuses)?.confirmed ?? 0,
+            drafts: client.drafts,
+            needsAttention: client.needsAttention,
+            nearest: deadline,
+            now,
+          })
+        : null,
   };
 }
 
@@ -274,6 +292,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function ClientName({ row, onOpen }: { row: Row; onOpen: () => void }) {
   const { label: enumLabel } = useEnumLabels();
+  const t = useTranslations("portfolio");
   return (
     <span className="flex flex-col items-start gap-1 min-w-0">
       <button
@@ -284,9 +303,21 @@ function ClientName({ row, onOpen }: { row: Row; onOpen: () => void }) {
       >
         {row.name}
       </button>
-      <Badge variant="outline" className="text-xs font-normal">
-        {enumLabel("role", row.client.role)}
-      </Badge>
+      <span className="flex flex-wrap gap-1">
+        {row.status && (
+          <Badge
+            variant={row.status === "action" ? "destructive" : row.status === "onTrack" ? "default" : "secondary"}
+            className="text-xs font-normal"
+            data-testid="client-status"
+            data-status={row.status}
+          >
+            {t(`status.${row.status}`)}
+          </Badge>
+        )}
+        <Badge variant="outline" className="text-xs font-normal">
+          {enumLabel("role", row.client.role)}
+        </Badge>
+      </span>
     </span>
   );
 }
@@ -346,8 +377,14 @@ function DeadlineText({
       </span>
     );
   }
-  const ref = deadline.kind === "dsarDue" ? formatRequestRef(deadline.publicId, locale) : formatIncidentRef(deadline.publicId);
-  const when = deadline.kind === "dsarDue" ? formatDateIn(at, locale) : formatDateTimeIn(at, locale);
+  const review = "name" in deadline;
+  const label =
+    "name" in deadline
+      ? tg(`deadlines.${deadline.kind}`, { name: deadline.name })
+      : tg(`deadlines.${deadline.kind}`, {
+          ref: deadline.kind === "dsarDue" ? formatRequestRef(deadline.publicId, locale) : formatIncidentRef(deadline.publicId),
+        });
+  const when = deadline.kind === "dsarDue" || review ? formatDateIn(at, locale) : formatDateTimeIn(at, locale);
   return (
     <span className="flex flex-col gap-0.5" data-testid="client-deadline">
       <button
@@ -355,7 +392,7 @@ function DeadlineText({
         onClick={() => onOpen(deadline.href)}
         className="text-left hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
       >
-        {tg(`deadlines.${deadline.kind}`, { ref })}
+        {label}
       </button>
       <span className={cn("text-xs tabular-nums", overdue ? "font-medium text-foreground" : "text-muted-foreground")}>
         {overdue ? tg("deadlines.overdue", { date: when }) : when}

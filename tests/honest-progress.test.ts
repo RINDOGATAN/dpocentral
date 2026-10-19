@@ -57,15 +57,35 @@ describe("d2: drafts count once confirmed", () => {
     expect(s.transfers).toBe("toConfirm");
   });
 
-  it("one confirmed record makes the step done", () => {
-    const s = statuses({ ...AFTER_QUICKSTART, dataAssetsDrafts: 8, processingActivitiesDrafts: 6, vendorsDrafts: 2 });
+  it("one confirmed record with its minimum fields makes the step done", () => {
+    const confirmedOne = { ...AFTER_QUICKSTART, dataAssetsDrafts: 8, processingActivitiesDrafts: 6, vendorsDrafts: 2 };
+    // Confirmed but bare: started, never done.
+    const bare = statuses(confirmedOne);
+    expect(bare.dataInventory).toBe("started");
+    expect(bare.ropa).toBe("started");
+    expect(bare.vendors).toBe("started");
+    const s = statuses({
+      ...confirmedOne,
+      dataAssetsComplete: 1,
+      processingActivitiesComplete: 1,
+      vendorsComplete: 1,
+    });
     expect(s.dataInventory).toBe("done");
     expect(s.ropa).toBe("done");
     expect(s.vendors).toBe("done");
   });
 
-  it("records a person entered count at once (no drafts)", () => {
-    const s = statuses({ dataAssets: 1, vendors: 1, processingActivities: 1, transfers: 1 });
+  it("records a person entered count at once (no drafts) once they carry the minimum fields", () => {
+    const s = statuses({
+      dataAssets: 1,
+      dataAssetsComplete: 1,
+      vendors: 1,
+      vendorsComplete: 1,
+      processingActivities: 1,
+      processingActivitiesComplete: 1,
+      transfers: 1,
+      transfersComplete: 1,
+    });
     expect(s.dataInventory).toBe("done");
     expect(s.vendors).toBe("done");
     expect(s.ropa).toBe("done");
@@ -259,9 +279,21 @@ describe("d3: one programme figure", () => {
   });
 
   it("confirming the drafts raises it", () => {
-    const confirmed = { ...AFTER_QUICKSTART, dataAssetsDrafts: 0, processingActivitiesDrafts: 0, vendorsDrafts: 0, transfersDrafts: 0 };
+    const confirmed = {
+      ...AFTER_QUICKSTART,
+      dataAssetsDrafts: 0,
+      processingActivitiesDrafts: 0,
+      vendorsDrafts: 0,
+      transfersDrafts: 0,
+      dataAssetsComplete: 9,
+      processingActivitiesComplete: 7,
+      vendorsComplete: 3,
+      transfersComplete: 2,
+    };
     const figure = programFigure(DPO_CENTRAL_PATH, statuses(confirmed));
-    expect(figure.confirmed).toBe(6);
+    // Set up (2), the three inventory steps, transfers, and the breach
+    // register, now ready when needed.
+    expect(figure.confirmed).toBe(7);
     expect(figure.toConfirm).toBe(0);
   });
 
@@ -298,7 +330,7 @@ describe("d3: one programme figure", () => {
     const reports = read("src/app/(dashboard)/privacy/reports/page.tsx");
     expect(reports).toMatch(/coverage\.ratedModules === coverage\.totalModules/);
     const label = reports.indexOf('data-testid="reports-score-label"');
-    const gate = reports.lastIndexOf("{fullCoverage ? (", label);
+    const gate = reports.lastIndexOf("fullCoverage ? (", label);
     expect(gate).toBeGreaterThan(0);
     expect(reports).toMatch(/score\.areasWithData/);
     expect(reports).not.toMatch(/function ScoreRing/);

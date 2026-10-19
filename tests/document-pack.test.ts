@@ -98,6 +98,7 @@ function facts(over: Partial<DocumentFacts> = {}): DocumentFacts {
     dataAssetsDrafts: 0,
     processingActivities: 2,
     processingActivitiesDrafts: 0,
+    processingActivitiesComplete: 2,
     vendors: 3,
     vendorsDrafts: 1,
     assessments: 2,

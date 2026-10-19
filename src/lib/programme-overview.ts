@@ -19,6 +19,7 @@
 import {
   isCounted,
   isShown,
+  isStepMet,
   stageNumber,
   stageWord,
   type PathConfig,
@@ -165,7 +166,7 @@ export interface Area<C> {
 function firstOpenStep<C>(stage: PathStage<C>, statuses: PathStatuses): PathStep<C> | null {
   return (
     stage.steps.find(
-      (s) => isCounted(s) && isShown(s, statuses) && !!s.href && statuses[s.id] !== "done",
+      (s) => isCounted(s) && isShown(s, statuses) && !!s.href && !isStepMet(statuses[s.id]),
     ) ?? null
   );
 }
@@ -235,7 +236,7 @@ export function nextActions<C>(
     for (const step of stage.steps) {
       if (!isCounted(step) || !isShown(step, statuses) || !step.href) continue;
       const status = statuses[step.id];
-      if (status === "done") continue;
+      if (isStepMet(status)) continue;
       if (status === "toConfirm" && confirmListed) continue;
       out.push({
         kind: "step",
@@ -263,8 +264,58 @@ export interface RecordDeadline {
   href: string;
 }
 
-/** A deadline of the firm view: a record's, or the plan's next milestone. */
-export type ClientDeadline = RecordDeadline | { kind: "plan"; at: string; day: number };
+/** A review coming due (src/server/services/program/reviews-due.ts). */
+export interface ReviewDeadline {
+  kind: "activityReview" | "vendorReview";
+  at: string;
+  id: string;
+  name: string;
+  href: string;
+}
+
+/** A deadline of the firm view: a record's, a review's, or the plan's next milestone. */
+export type ClientDeadline = RecordDeadline | ReviewDeadline | { kind: "plan"; at: string; day: number };
+
+/**
+ * One client's due items, merged: the deadlines at risk, the reviews coming
+ * due, and the nearest open request even beyond the 30 days the dashboard
+ * looks ahead (a request due in 32 days is still the next due item). The same
+ * request is listed once.
+ */
+export function clientDueItems(
+  deadlines: readonly RecordDeadline[],
+  reviews: readonly ReviewDeadline[],
+  nextRequest: RecordDeadline | null,
+): (RecordDeadline | ReviewDeadline)[] {
+  const all: (RecordDeadline | ReviewDeadline)[] = [...deadlines, ...reviews];
+  if (nextRequest && !deadlines.some((d) => d.kind === "dsarDue" && d.publicId === nextRequest.publicId)) {
+    all.push(nextRequest);
+  }
+  return all;
+}
+
+/**
+ * The one status word a client carries in All clients:
+ * - `action`    something is overdue, or a breach or request waits
+ * - `setup`     nothing confirmed yet (the quick start or set-up is not done)
+ * - `toConfirm` drafts wait to be confirmed
+ * - `onTrack`   none of the above
+ */
+export type ClientStatus = "action" | "setup" | "toConfirm" | "onTrack";
+
+export function clientStatus(input: {
+  confirmedSteps: number;
+  drafts: number;
+  needsAttention: boolean;
+  nearest: ClientDeadline | null;
+  now: Date;
+}): ClientStatus {
+  const overdue = !!input.nearest && new Date(input.nearest.at).getTime() < input.now.getTime();
+  if (input.needsAttention || overdue) return "action";
+  if (input.confirmedSteps === 0) return "setup";
+  if (input.drafts > 0) return "toConfirm";
+  return "onTrack";
+}
 
 /**
  * The plan's next milestone (day 30, 60 or 90) while the plan runs: the last
@@ -289,7 +340,7 @@ export function planMilestone(
  * the earliest of all, so it comes first.
  */
 export function nearestDeadline(
-  deadlines: readonly RecordDeadline[],
+  deadlines: readonly (RecordDeadline | ReviewDeadline)[],
   milestone: { day: number; at: Date } | null,
 ): ClientDeadline | null {
   const all: ClientDeadline[] = [...deadlines];
