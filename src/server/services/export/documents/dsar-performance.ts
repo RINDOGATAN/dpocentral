@@ -14,6 +14,8 @@ import {
   type DSARPerformanceData,
 } from "@/server/services/export/dsar-performance-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { pdfDate } from "@/server/services/export/pdf-locale";
+import { CLOSED_DSAR_STATUSES, dsarOnTime } from "@/lib/dsar-on-time";
 import { dsarDeadlineMonths as dsarMonths } from "@/server/services/privacy/slaCalculator";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
@@ -47,6 +49,8 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
       receivedAt: true,
       completedAt: true,
       dueDate: true,
+      extendedDueDate: true,
+      updatedAt: true,
       redactedAt: true,
     },
   });
@@ -54,15 +58,11 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
   const now = new Date();
   const total = allDsars.length;
   const completed = allDsars.filter((d) => d.status === "COMPLETED").length;
-  const open = allDsars.filter(
-    (d) => !["COMPLETED", "CANCELLED", "REJECTED"].includes(d.status)
-  ).length;
-  const overdue = allDsars.filter(
-    (d) =>
-      d.dueDate &&
-      new Date(d.dueDate) < now &&
-      !["COMPLETED", "CANCELLED", "REJECTED"].includes(d.status)
-  ).length;
+  const isOpen = (d: { status: string }) => !(CLOSED_DSAR_STATUSES as readonly string[]).includes(d.status);
+  const open = allDsars.filter(isOpen).length;
+  // The shared on-time measure (src/lib/dsar-on-time.ts), as every other report prints it.
+  const timing = dsarOnTime(allDsars, now);
+  const overdue = timing.openOverdue;
   const redacted = allDsars.filter((d) => d.redactedAt != null).length;
 
   // Avg resolution days
@@ -82,14 +82,8 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
         )
       : 0;
 
-  // On-time rate (completed within deadline)
-  const completedOnTime = completedWithDates.filter(
-    (d) => d.dueDate && d.completedAt! <= d.dueDate
-  ).length;
-  const onTimeRate =
-    completedWithDates.length > 0
-      ? Math.round((completedOnTime / completedWithDates.length) * 100)
-      : 100;
+  // On time: completed by the deadline, over completed plus open and overdue; null with nothing to measure.
+  const onTimeRate = timing.rate;
 
   // Last 30 days
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -122,16 +116,16 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
     where: { organizationId },
     include: { jurisdiction: { select: { name: true, code: true, dsarDeadlineDays: true } } },
   });
+  // A request carries its own deadline (the law's, computed when it was received),
+  // so the status reads the shared measure: met only when nothing measured was
+  // late or is open past its deadline.
+  const slaStatus: "Meeting" | "Not met" | "No data" =
+    timing.measured === 0 ? "No data" : timing.completedLate + timing.openOverdue > 0 ? "Not met" : "Meeting";
   const jurisdictionSLA = orgJurisdictions.map((oj) => ({
     name: lawName(oj.jurisdiction),
     deadlineDays: oj.jurisdiction.dsarDeadlineDays ?? 30,
     deadlineMonths: dsarMonths(oj.jurisdiction.code, oj.jurisdiction.dsarDeadlineDays),
-    status:
-      avgResolutionDays > 0 && avgResolutionDays <= (oj.jurisdiction.dsarDeadlineDays ?? 30)
-        ? "Meeting"
-        : avgResolutionDays > (oj.jurisdiction.dsarDeadlineDays ?? 30)
-          ? "At risk"
-          : "No data",
+    status: slaStatus,
   }));
 
   // ── Monthly Trend (last 12 months) ─────────────────────
@@ -139,7 +133,7 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
   for (let i = 11; i >= 0; i--) {
     const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
-    const monthLabel = `${monthStart.getFullYear()}-${String(monthStart.getMonth() + 1).padStart(2, "0")}`;
+    const monthLabel = pdfDate(new Date(Date.UTC(monthStart.getFullYear(), monthStart.getMonth(), 1)), "month", locale);
 
     const received = allDsars.filter(
       (d) => d.receivedAt >= monthStart && d.receivedAt <= monthEnd
@@ -155,15 +149,13 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
   }
 
   // ── Aging Analysis ─────────────────────────────────────
-  const openDsars = allDsars.filter(
-    (d) => !["COMPLETED", "CANCELLED", "REJECTED"].includes(d.status)
-  );
+  const openDsars = allDsars.filter(isOpen);
   const ageBands = [
-    { band: "0-7 days", min: 0, max: 7 },
-    { band: "7-14 days", min: 7, max: 14 },
-    { band: "14-30 days", min: 14, max: 30 },
-    { band: "30+ days", min: 30, max: Infinity },
-  ];
+    { band: "0-7", min: 0, max: 7 },
+    { band: "7-14", min: 7, max: 14 },
+    { band: "14-30", min: 14, max: 30 },
+    { band: "30+", min: 30, max: Infinity },
+  ] as const;
   const aging = ageBands.map((band) => ({
     band: band.band,
     count: openDsars.filter((d) => {
@@ -175,7 +167,7 @@ export async function buildDsarPerformanceExport(args: ExportArgs): Promise<Expo
   // ── Build Report ───────────────────────────────────────
   const reportData: DSARPerformanceData = {
     organization: { name: orgName },
-    generatedAt: fmtDate(new Date()),
+    generatedAt: pdfDate(now, "long", locale),
     primaryJurisdiction: primaryName,
     primaryDeadlineDays,
     primaryDeadlineMonths,

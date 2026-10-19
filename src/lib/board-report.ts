@@ -146,6 +146,12 @@ export interface BoardIncidents {
   notNotifiedYet: number;
   /** Incidents open on the date the report is generated, from any period. */
   openNow: number;
+  /**
+   * Open incidents marked as requiring notification and not notified to the
+   * authority yet, on the date generated, from any period. Optional for
+   * reports assembled before it was counted.
+   */
+  toNotifyNow?: number;
 }
 
 export interface BoardRights {
@@ -161,12 +167,20 @@ export interface BoardRights {
   openInTime: number;
   /** Of those, rejected or cancelled. */
   closedOther: number;
+  /** Open and past their deadline on the date generated, from any period. Optional, as above. */
+  overdueNow?: number;
 }
 
 export interface BoardVendors {
   /** Vendors a person has confirmed, not terminated. */
   total: number;
-  /** Of those, with a data processing agreement on file (not expired or terminated). */
+  /**
+   * Of those, in use (status ACTIVE): the vendors the coverage is counted over,
+   * as in the vendor register (src/lib/vendor-contracts.ts). Optional for
+   * reports assembled before it was counted, which used `total`.
+   */
+  active?: number;
+  /** Of those in use, with a data processing agreement in force (src/lib/vendor-contracts.ts). */
   withDpa: number;
   /** Of those, rated high or critical risk with no such agreement. */
   highRiskWithoutDpa: number;
@@ -199,6 +213,8 @@ export interface BoardAction {
   date: string | null;
   /** Where the date comes from. */
   dateSource: "deadline" | "plan" | null;
+  /** The deadline had passed on the date the report was generated. */
+  overdue?: boolean;
 }
 
 export interface BoardComment {
@@ -354,6 +370,8 @@ export function boardActions<C>(
     deadlines: readonly RecordDeadline[];
     planStart: Date | string | null;
     windows: readonly PlanWindow[];
+    /** The day the report is generated, to tell an overdue deadline. */
+    now?: Date;
   },
   limit = 3,
 ): BoardAction[] {
@@ -369,11 +387,13 @@ export function boardActions<C>(
             .sort()[0]
         : undefined;
       const plan = deadline ? null : planDateFor(NEEDS_ACTION_STAGE[action.item.kind], context.windows, context.planStart);
+      const overdue = !!deadline && !!context.now && new Date(deadline).getTime() < context.now.getTime();
       return {
         item: { kind: "needsAction", needsKind: action.item.kind, count: action.item.count },
         owner: context.owner,
         date: deadline ? deadline.slice(0, 10) : plan,
         dateSource: deadline ? "deadline" : plan ? "plan" : null,
+        ...(overdue ? { overdue: true } : {}),
       };
     }
     const plan = planDateFor(stageOfStep(action.step.id), context.windows, context.planStart);

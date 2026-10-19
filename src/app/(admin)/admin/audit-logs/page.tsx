@@ -170,7 +170,7 @@ export default function AuditLogsPage() {
                           {log.organization.name}
                         </Link>
                       ) : (
-                        <span className="text-sm text-muted-foreground">—</span>
+                        <span className="text-sm text-muted-foreground">None</span>
                       )}
                     </TableCell>
                     <TableCell>

@@ -54,6 +54,7 @@ interface AiPostureCardProps {
 
 export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
   const t = useTranslations("ai");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
   const utils = trpc.useUtils();
 
@@ -142,7 +143,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
           </Select>
           <p className="text-xs text-muted-foreground">
             {status.configured
-              ? t("postureCard.engineConfigured", { provider: status.providerName ?? "—" })
+              ? t("postureCard.engineConfigured", { provider: status.providerName ?? tCommon("notStated") })
               : t("postureCard.engineNotConfigured")}
           </p>
         </div>
@@ -157,7 +158,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
         {status.acknowledgedAt && status.acknowledgedBy && (
           <p className="text-xs text-muted-foreground">
             {t("postureCard.acknowledgedBy", {
-              name: status.acknowledgedBy.name || status.acknowledgedBy.email || "—",
+              name: status.acknowledgedBy.name || status.acknowledgedBy.email || tCommon("notStated"),
               date: formatDateIn(new Date(status.acknowledgedAt), locale),
             })}
           </p>

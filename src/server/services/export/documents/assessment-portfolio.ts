@@ -11,6 +11,7 @@ import {
   type PortfolioAssessment,
 } from "@/server/services/export/assessment-portfolio-report";
 import { fmtDate } from "@/server/services/export/pdf-styles";
+import { pdfDate } from "@/server/services/export/pdf-locale";
 import { assessmentProgress } from "@/server/services/assessment/progress";
 import { withDraftGapsPage } from "../draft-gaps-page";
 import { PDF, nameForFile, fileTitle, type ExportArgs, type ExportFile } from "./context";
@@ -112,7 +113,7 @@ export async function buildAssessmentPortfolioExport(args: ExportArgs): Promise<
 
   const reportData: AssessmentPortfolioData = {
     organization: { name: orgName },
-    generatedAt: fmtDate(new Date()),
+    generatedAt: pdfDate(new Date(), "long", locale),
     assessments: portfolioAssessments,
     stats: {
       total: portfolioAssessments.length,

@@ -24,10 +24,12 @@ export interface JurisdictionTextEs {
   applicabilityCriteria: string[];
   penalties: string;
   dpaName?: string;
+  /** The authority's address, where it differs from the English entry's. */
+  dpaUrl?: string;
 }
 
 const US_RIGHTS = "Derechos de los consumidores: acceso, rectificación, supresión, portabilidad y exclusión voluntaria (opt-out)";
-const US_AG = "Hasta 7500 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General)";
+const US_AG = "Hasta 7.500 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General)";
 const US_SENSITIVE_CONSENT = "Consentimiento para tratar datos sensibles";
 const US_UOOM = "Reconocimiento de los mecanismos universales de exclusión voluntaria";
 const US_HIGH_RISK_DPA = "Evaluaciones de protección de datos para los tratamientos de alto riesgo";
@@ -60,9 +62,13 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Controlar el comportamiento de residentes en la UE o el EEE",
     ],
     penalties: "Hasta 20 millones de euros o el 4 % del volumen de negocio total anual mundial, si esta cuantía es superior",
-    dpaName: "Comité Europeo de Protección de Datos (CEPD)",
+    dpaName:
+      "Agencia Española de Protección de Datos (AEPD) si tu establecimiento principal está en España; si está en otro Estado miembro, su autoridad de control nacional",
+    dpaUrl: "https://www.aepd.es",
   },
   "UK-GDPR": {
+    name: "RGPD del Reino Unido (UK GDPR)",
+    shortName: "RGPD del Reino Unido",
     regionLabel: "Reino Unido",
     description:
       "La versión del RGPD que el Reino Unido conservó tras el Brexit, que regula el tratamiento de datos personales en el Reino Unido.",
@@ -119,7 +125,8 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Obtener el 50 % o más de los ingresos anuales de la venta o cesión de información personal",
     ],
     penalties:
-      "Hasta 2500 USD por infracción no intencionada; 7500 USD por infracción intencionada o que afecte a menores",
+      "Hasta 2.663 USD por infracción; 7.988 USD por infracción intencionada o que afecte a menores (importes actualizados por inflación desde enero de 2025)",
+    dpaName: "Agencia de Protección de la Privacidad de California (CPPA) y fiscal general de California",
   },
   VCDPA: {
     name: "Ley de Protección de Datos del Consumidor de Virginia",
@@ -138,7 +145,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       consumers("100.000", "Virginia"),
       "Controlar o tratar datos de más de 25.000 consumidores y obtener más del 50 % de los ingresos de su venta",
     ],
-    penalties: "Hasta 7500 USD por infracción; la aplicación corresponde en exclusiva al fiscal general del estado (Attorney General)",
+    penalties: "Hasta 7.500 USD por infracción; la aplicación corresponde en exclusiva al fiscal general del estado (Attorney General)",
   },
   CPA: {
     name: "Ley de Privacidad de Colorado",
@@ -172,7 +179,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Aviso de privacidad con información clara",
     ],
     applicabilityCriteria: [doBusiness("Connecticut"), consumers("100.000", "Connecticut"), sales("25.000", "25 %")],
-    penalties: "Hasta 5000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General) conforme a la CUTPA",
+    penalties: "Hasta 5.000 USD por infracción; la aplicación corresponde al fiscal general del estado (Attorney General) conforme a la CUTPA",
   },
   UCPA: {
     name: "Ley de Privacidad del Consumidor de Utah",
@@ -387,7 +394,7 @@ export const JURISDICTION_CATALOG_ES: Record<string, JurisdictionTextEs> = {
       "Obligaciones propias de los encargados del tratamiento",
     ],
     applicabilityCriteria: [doBusiness("Minnesota"), consumers("100.000", "Minnesota"), sales("25.000", "25 %")],
-    penalties: "Hasta 7500 USD por infracción; acción privada limitada para determinadas infracciones",
+    penalties: "Hasta 7.500 USD por infracción; acción privada limitada para determinadas infracciones",
   },
   MODPA: {
     name: "Ley de Privacidad de Datos en Línea de Maryland",

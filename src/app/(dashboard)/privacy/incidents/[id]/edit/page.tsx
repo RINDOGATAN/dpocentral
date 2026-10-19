@@ -303,7 +303,7 @@ export default function EditIncidentPage() {
                     <SelectValue placeholder={tp("discoveryMethodPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">—</SelectItem>
+                    <SelectItem value="__none__">{tCommon("none")}</SelectItem>
                     {DISCOVERY_METHOD_KEYS.map((value) => (
                       <SelectItem key={value} value={value}>
                         {tp(`discoveryMethodOption.${value}` as `discoveryMethodOption.INTERNAL_MONITORING` | `discoveryMethodOption.EMPLOYEE_REPORT` | `discoveryMethodOption.CUSTOMER_REPORT` | `discoveryMethodOption.THIRD_PARTY` | `discoveryMethodOption.SECURITY_AUDIT` | `discoveryMethodOption.LAW_ENFORCEMENT` | `discoveryMethodOption.OTHER`)}
@@ -407,7 +407,7 @@ export default function EditIncidentPage() {
                     <SelectValue placeholder={tp("jurisdictionPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">—</SelectItem>
+                    <SelectItem value="__none__">{tCommon("none")}</SelectItem>
                     {jurisdictions.map((j) => (
                       <SelectItem key={j.id} value={j.id}>
                         {j.name}

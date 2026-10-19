@@ -399,7 +399,7 @@ function EngagementHistory({ orgId }: { orgId: string }) {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-medium">{eng.expertName}</span>
                     {eng.expertFirm && (
-                      <span className="text-xs text-muted-foreground">— {eng.expertFirm}</span>
+                      <span className="text-xs text-muted-foreground">({eng.expertFirm})</span>
                     )}
                     <Badge variant="outline" className={`text-[10px] ${STATUS_TONE[eng.status]}`}>
                       {tEng(`status.${eng.status}`)}

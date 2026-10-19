@@ -21,6 +21,7 @@ import {
   type ProgramInput,
   type PdfT,
 } from "../data-mapping";
+import { pdfDate } from "../../pdf-locale";
 
 const s = StyleSheet.create({
   twoCol: {
@@ -64,7 +65,7 @@ export function VendorDirectoryPage({
 }) {
   const stats = computeVendorStats(input);
   const critBars = computeCriticalityBars(input, tEnum);
-  const groups = groupVendorsByCategory(input);
+  const groups = groupVendorsByCategory(input, t("vendors.uncategorized"));
 
   return (
     <PageFrame eyebrow={t("eyebrow")} orgName={orgName} date={date}>
@@ -85,7 +86,7 @@ export function VendorDirectoryPage({
           <MiniCoverageBar
             label={t("vendors.coverageDpa")}
             value={stats.withDpa}
-            total={stats.active}
+            total={stats.counted}
           />
           <MiniCoverageBar
             label={t("vendors.coverageActive")}
@@ -128,20 +129,24 @@ export function VendorDirectoryPage({
                 ))}
               </View>
             ) : "",
-            v.hasDpa ? (
+            v.dpaStatus ? (
+              <PillBadge
+                key="d"
+                tone={v.hasDpa ? "success" : v.dpaStatus === "PENDING_SIGNATURE" || v.dpaStatus === "DRAFT" ? "warning" : "danger"}
+                uppercase
+              >
+                {tEnum(`contractStatus.${v.dpaStatus.replace(/ /g, "_").toUpperCase()}`)}
+              </PillBadge>
+            ) : v.hasDpa ? (
               <PillBadge key="d" tone="success" uppercase>
-                {v.dpaStatus
-                  ? tEnum(`contractStatus.${v.dpaStatus.replace(/ /g, "_").toUpperCase()}`)
-                  : t("vendors.dpaYes")}
+                {t("vendors.dpaYes")}
               </PillBadge>
             ) : v.status === "ACTIVE" ? (
               <PillBadge key="d" tone="danger" uppercase>
                 {t("vendors.dpaMissing")}
               </PillBadge>
             ) : "",
-            v.nextReview
-              ? new Date(v.nextReview).toISOString().split("T")[0]
-              : "",
+            pdfDate(v.nextReview),
           ])}
         />
       ))}

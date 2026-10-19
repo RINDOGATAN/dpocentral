@@ -53,6 +53,7 @@ const mocks = vi.hoisted(() => ({
     customer: { findUnique: vi.fn(), create: vi.fn() },
     customerOrganization: { create: vi.fn() },
     auditLog: { create: vi.fn(), findMany: vi.fn() },
+    businessUnitMember: { findMany: vi.fn().mockResolvedValue([]) },
     dSARRequest: { findMany: vi.fn(), findUnique: vi.fn(), findFirst: vi.fn(), count: vi.fn(), create: vi.fn() },
     dSARIntakeForm: { findMany: vi.fn(), findFirst: vi.fn() },
     dSARAuditLog: { create: vi.fn() },

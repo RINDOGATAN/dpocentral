@@ -66,6 +66,18 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "asc" },
     });
 
+    // The file holds the requesters' personal data: every download is on the audit trail.
+    await prisma.auditLog.create({
+      data: {
+        organizationId,
+        userId: membership.userId,
+        entityType: "Organization",
+        entityId: organizationId,
+        action: "EXPORT_RIGHTS_REQUESTS",
+        changes: { format: "json", count: dsarRequests.length },
+      },
+    });
+
     const org = membership.organization;
     const body = {
       exportedAt: new Date().toISOString(),

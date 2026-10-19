@@ -58,6 +58,7 @@ export default function SettingsPage() {
   const _t = useTranslations("toasts");
   void _t;
   const ts = useTranslations("pages.settings");
+  const tCommon = useTranslations("common");
   const tProfile = useTranslations("pages.settings.profile");
   const tAccountType = useTranslations("pages.settings.accountType");
   const tLang = useTranslations("pages.settings.language");
@@ -217,7 +218,7 @@ export default function SettingsPage() {
             <Label>{tProfile("email")}</Label>
             <div className="flex items-center gap-2 text-sm text-muted-foreground break-all">
               <Mail className="w-3.5 h-3.5 shrink-0" />
-              {profile?.email ?? "—"}
+              {profile?.email ?? tCommon("notStated")}
             </div>
             <p className="text-xs text-muted-foreground">{tProfile("emailHint")}</p>
           </div>
@@ -562,7 +563,7 @@ export default function SettingsPage() {
                         onClick={() =>
                           setMemberToRemove({
                             id: member.id,
-                            name: member.user.name || member.user.email || "—",
+                            name: member.user.name || member.user.email || tCommon("notStated"),
                           })
                         }
                         disabled={removeMember.isPending}
@@ -607,7 +608,7 @@ export default function SettingsPage() {
       <ConfirmDialog
         open={!!memberToRemove}
         onOpenChange={(open) => !open && setMemberToRemove(null)}
-        title={tMembers("removeConfirmTitle", { name: memberToRemove?.name ?? "—" })}
+        title={tMembers("removeConfirmTitle", { name: memberToRemove?.name ?? tCommon("notStated") })}
         description={tMembers("removeConfirmDescription")}
         confirmText={tMembers("removeConfirm")}
         danger

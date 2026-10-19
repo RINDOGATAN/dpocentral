@@ -11,7 +11,10 @@
  * one per period (no table, no migration).
  *
  * Incidents and rights requests are counted for the period; every other
- * figure is as on the day the report is generated (the report says so).
+ * figure is as on the day the report is generated (the report says so). The
+ * backlog that is still open on that day (open incidents, breaches to notify,
+ * overdue rights requests) is counted from any period as well, so a quiet
+ * quarter never hides a live problem.
  *
  * The caller has checked who is asking: a member of the organisation who
  * sees the whole organisation (src/lib/department-limit.ts).
@@ -41,6 +44,8 @@ import { collectNeedsAction } from "@/server/services/views/queries";
 import { loadDocumentFacts } from "./document-facts";
 import { loadPlanStart } from "./plan-start";
 import { loadDeadlines } from "./deadlines";
+import { dpaInForceWhere } from "@/lib/vendor-contracts";
+import { CLOSED_DSAR_STATUSES, dsarOnTime } from "@/lib/dsar-on-time";
 
 const HOUR_MS = 60 * 60 * 1000;
 const OPEN_INCIDENT = { notIn: ["CLOSED", "FALSE_POSITIVE"] as ("CLOSED" | "FALSE_POSITIVE")[] };
@@ -109,7 +114,9 @@ export async function loadBoardReport(
   // A member who may not read rights requests sees no rights-request step, as on the dashboard.
   const config = dsarAllowed ? DPO_CENTRAL_PATH : withoutSteps(DPO_CENTRAL_PATH, ["dsar"]);
   const confirmedVendor = { ...org, status: { not: "TERMINATED" as const }, NOT: DRAFT_WHERE };
-  const liveDpa = { type: "DPA" as const, status: { notIn: ["EXPIRED" as const, "TERMINATED" as const] } };
+  // A processor contract in force, as the vendor register and the programme report count it.
+  const liveDpa = dpaInForceWhere(now);
+  const activeVendor = { ...confirmedVendor, status: "ACTIVE" as const };
 
   const [
     facts,
@@ -119,8 +126,11 @@ export async function loadBoardReport(
     organization,
     incidents,
     openNow,
+    toNotifyNow,
     requests,
+    overdueNow,
     vendorsTotal,
+    vendorsActive,
     vendorsWithDpa,
     highRiskWithoutDpa,
     vendorDrafts,
@@ -143,16 +153,40 @@ export async function loadBoardReport(
       },
     }),
     prisma.incident.count({ where: { recordedInErrorAt: null, ...org, status: OPEN_INCIDENT } }),
+    // Open, marked as requiring notification, and not notified to the authority yet: from any period.
+    prisma.incident.count({
+      where: {
+        recordedInErrorAt: null,
+        ...org,
+        status: OPEN_INCIDENT,
+        notificationRequired: true,
+        notifications: { none: { recipientType: "DPA", sentAt: { not: null } } },
+      },
+    }),
     dsarAllowed
       ? prisma.dSARRequest.findMany({
           where: { ...org, receivedAt: inPeriod },
           select: { status: true, dueDate: true, extendedDueDate: true, completedAt: true },
         })
       : null,
+    // Open and past the deadline (the extended one where extended) on the day generated: from any period.
+    dsarAllowed
+      ? prisma.dSARRequest.count({
+          where: {
+            ...org,
+            status: { notIn: [...CLOSED_DSAR_STATUSES] },
+            OR: [
+              { extendedDueDate: { lt: now } },
+              { extendedDueDate: null, dueDate: { lt: now } },
+            ],
+          },
+        })
+      : null,
     prisma.vendor.count({ where: confirmedVendor }),
-    prisma.vendor.count({ where: { ...confirmedVendor, contracts: { some: liveDpa } } }),
+    prisma.vendor.count({ where: activeVendor }),
+    prisma.vendor.count({ where: { ...activeVendor, contracts: { some: liveDpa } } }),
     prisma.vendor.count({
-      where: { ...confirmedVendor, riskTier: { in: ["HIGH", "CRITICAL"] }, contracts: { none: liveDpa } },
+      where: { ...activeVendor, riskTier: { in: ["HIGH", "CRITICAL"] }, contracts: { none: liveDpa } },
     }),
     prisma.vendor.count({ where: { ...org, ...DRAFT_WHERE } }),
     prisma.assessment.count({ where: { ...org, status: "APPROVED", template: { type: "DPIA" } } }),
@@ -185,22 +219,19 @@ export async function loadBoardReport(
     }
   }
 
+  // The shared on-time measure (src/lib/dsar-on-time.ts), over the requests received in the period.
   let rights: BoardReport["rights"] = null;
   if (requests) {
-    rights = { received: requests.length, completedOnTime: 0, completedLate: 0, openOverdue: 0, openInTime: 0, closedOther: 0 };
-    for (const r of requests) {
-      const due = r.extendedDueDate ?? r.dueDate;
-      if (r.status === "COMPLETED") {
-        if (r.completedAt && r.completedAt.getTime() > due.getTime()) rights.completedLate++;
-        else rights.completedOnTime++;
-      } else if (r.status === "REJECTED" || r.status === "CANCELLED") {
-        rights.closedOther++;
-      } else if (due.getTime() < now.getTime()) {
-        rights.openOverdue++;
-      } else {
-        rights.openInTime++;
-      }
-    }
+    const timing = dsarOnTime(requests, now);
+    rights = {
+      received: requests.length,
+      completedOnTime: timing.completedOnTime,
+      completedLate: timing.completedLate,
+      openOverdue: timing.openOverdue,
+      openInTime: timing.openInTime,
+      closedOther: timing.closedOther,
+      overdueNow: overdueNow ?? 0,
+    };
   }
 
   const saved = savedReports(organization?.settings)[periodKey(period)];
@@ -220,9 +251,9 @@ export async function loadBoardReport(
     figure: programFigure(config, statuses),
     areas: programmeAreas(config, statuses, needsAction).map((area) => ({ stageId: area.stage.id, word: area.word })),
     documents,
-    incidents: { inPeriod: incidents.length, notifiedWithin72h, notifiedLate, notNotifiedYet, openNow },
+    incidents: { inPeriod: incidents.length, notifiedWithin72h, notifiedLate, notNotifiedYet, openNow, toNotifyNow },
     rights,
-    vendors: { total: vendorsTotal, withDpa: vendorsWithDpa, highRiskWithoutDpa, drafts: vendorDrafts },
+    vendors: { total: vendorsTotal, active: vendorsActive, withDpa: vendorsWithDpa, highRiskWithoutDpa, drafts: vendorDrafts },
     assessments: { dpiaApproved, dpiaPending, liaApproved, liaPending },
     risks: topRisks(needsAction, documents),
     actions: boardActions(config, statuses, needsAction, {
@@ -230,6 +261,7 @@ export async function loadBoardReport(
       deadlines: deadlines.filter((d) => dsarAllowed || d.kind !== "dsarDue"),
       planStart,
       windows: PLAN_WINDOWS,
+      now,
     }),
     comment,
     canSave: (OFFICER_ROLES as readonly string[]).includes(member.role ?? ""),
