@@ -47,6 +47,7 @@ export default function DpiaAutoFillPage() {
   const { organization } = useOrganization();
   const t = useTranslations("toasts");
   const tAutoFill = useTranslations("pages.dpiaAutoFill");
+  const tQuestion = useTranslations("templates.dpia.question");
   const hosted = useHostedPilot();
   const [step, setStep] = useState<WizardStep>("select");
   // Reached from an activity's page (?activity=<id>): that activity is chosen.
@@ -397,7 +398,7 @@ export default function DpiaAutoFillPage() {
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium">
-                    {s.questionId.replace(/_/g, " ").replace(/^s\d+ /, "")}
+                    {tQuestion.has(`${s.questionId}.text`) ? tQuestion(`${s.questionId}.text`) : s.questionId}
                   </CardTitle>
                   <Badge className={confidenceColor(s.confidence)}>
                     {tAutoFill("confidence", {

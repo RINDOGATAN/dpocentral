@@ -27,10 +27,38 @@ import {
 } from "../../services/pilot/caps";
 import {
   assessmentProgress,
-  describeUnanswered,
   unansweredRequired,
 } from "../../services/assessment/progress";
-import { calculateRiskScore, withDerivedRisk } from "../../services/assessment/risk-score";
+import {
+  calculateRiskScore,
+  inherentAndResidual,
+  withDerivedRisk,
+  type RiskTemplate,
+} from "../../services/assessment/risk-score";
+import { sectionsForLocale } from "../../services/assessment/template-locales";
+import {
+  stillToAnswerMessage,
+  workflowError,
+  type WorkflowErrorKey,
+} from "../../services/assessment/workflow-errors";
+import {
+  approvalRoundOutcome,
+  canEditContent,
+  canRequestApprovalFrom,
+  canSubmitFrom,
+  currentRound,
+  isReviewerRole,
+} from "@/lib/assessment-workflow";
+import {
+  closeRefusal,
+  registerRows,
+  registerSummary,
+  type RegisterSummary,
+} from "@/lib/assessment-risk-register";
+import { art36Conflict } from "@/config/assessment-frameworks";
+import { answerMapFrom } from "@/lib/assessment-conditions";
+import type { Db } from "@/lib/prisma";
+import { loadActivityFingerprint, reviewDueAssessments } from "../../services/assessment/review-due";
 import {
   AUTO_FILL_TARGETS,
   LEGAL_BASIS_OPTIONS,
@@ -39,11 +67,187 @@ import {
 } from "@/config/dpia-auto-fill-targets";
 import { assertIdsInOrg } from "../../org-ownership";
 import { preselectDpiaFrameworks } from "../../services/assessment/framework-preselect";
+import { dpiaTemplateSections } from "@/config/dpia-template-v2";
 import { isEmptyAnswer } from "@/lib/assessment-answer";
 import { tiaRecordDescription, tiaRecordName } from "@/lib/record-name";
 
 /** Assessments not yet submitted: the only ones that can be deleted. */
 export const DELETABLE_ASSESSMENT_STATUSES: AssessmentStatus[] = [AssessmentStatus.DRAFT, AssessmentStatus.IN_PROGRESS];
+
+/** Codes stored as version change notes; the page translates them. */
+export const VERSION_NOTES = {
+  submitted: "workflow:SUBMITTED",
+  approved: "workflow:APPROVED",
+  autoApproved: "workflow:AUTO_APPROVED",
+  reopened: "workflow:REOPENED",
+} as const;
+
+type CookieCtx = { getCookie: (name: string) => string | undefined };
+const requestLocale = (ctx: CookieCtx) => localeFromCookieGetter(ctx.getCookie);
+
+/** Refuses a change to the content of an assessment whose status freezes it. */
+function assertContentEditable(
+  status: AssessmentStatus,
+  role: string | null | undefined,
+  locale: string | null | undefined
+): void {
+  if (canEditContent(status, role)) return;
+  const key: WorkflowErrorKey =
+    status === AssessmentStatus.PENDING_APPROVAL
+      ? "frozenPendingApproval"
+      : status === AssessmentStatus.PENDING_REVIEW
+        ? "reviewersOnly"
+        : "approvedLocked";
+  throw workflowError(key, locale);
+}
+
+/** The register of an assessment: its rows and their highest levels. */
+async function loadRegister(prisma: Db, assessmentId: string) {
+  const [risks, measures] = await Promise.all([
+    prisma.assessmentRisk.findMany({ where: { assessmentId }, orderBy: { createdAt: "asc" } }),
+    prisma.assessmentMitigation.findMany({
+      where: { assessmentId },
+      select: { id: true, riskId: true, status: true, title: true },
+    }),
+  ]);
+  const rows = registerRows(risks, measures);
+  return { risks, measures, rows, summary: registerSummary(rows) };
+}
+
+/** Measures not tied to a register risk carry one of these markers. */
+const UNLINKED_RISK_IDS = new Set(["manual", "pet_suggestion"]);
+
+/** A measure may only point at a risk of its own assessment. */
+async function assertRiskOfAssessment(
+  prisma: Db,
+  assessmentId: string,
+  riskId: string,
+  locale: string | null | undefined
+): Promise<void> {
+  if (UNLINKED_RISK_IDS.has(riskId)) return;
+  const risk = await prisma.assessmentRisk.findFirst({ where: { id: riskId, assessmentId }, select: { id: true } });
+  if (!risk) throw workflowError("riskNotInAssessment", locale);
+}
+
+/** Every figure stored when an assessment is scored: combined, inherent and residual. */
+function scoreFigures(
+  template: RiskTemplate,
+  responses: ReadonlyArray<{ questionId: string; response: unknown }>,
+  summary: RegisterSummary
+) {
+  const combined = calculateRiskScore(responses, template);
+  const split = inherentAndResidual(template, responses, summary);
+  return {
+    riskScore: combined?.score ?? null,
+    riskLevel: combined?.level ?? null,
+    inherentRiskScore: split.inherentScore,
+    inherentRiskLevel: split.inherentLevel,
+    residualRiskLevel: split.residualLevel,
+  };
+}
+
+/** Refuses the answer pairs Article 36 does not allow (DPIA template only). */
+function assertArt36(
+  template: { type: string },
+  responses: ReadonlyArray<{ questionId: string; response: unknown }>,
+  summary: RegisterSummary,
+  locale: string | null | undefined
+): void {
+  if (template.type !== AssessmentType.DPIA) return;
+  const conflict = art36Conflict(
+    answerMapFrom(responses.filter((r) => !r.questionId.includes("::"))),
+    summary.residual
+  );
+  if (conflict === "HIGH_RESIDUAL_NO_CONSULTATION") throw workflowError("art36HighResidual", locale);
+  if (conflict === "CONSULTATION_UNDECIDED") throw workflowError("art36Undecided", locale);
+}
+
+/** "Still to answer (n): ..." with the question text in the reader's language. */
+function unansweredError(
+  template: { type: string; sections: unknown },
+  unanswered: string[],
+  locale: string | null | undefined
+): TRPCError {
+  type TextSection = { id: string; title: string; questions?: Array<{ id: string; text: string }> };
+  const stored = Array.isArray(template.sections) ? (template.sections as TextSection[]) : [];
+  const shown = sectionsForLocale(template.type, stored, locale === "es" ? "es" : "en");
+  const text = new Map<string, string>();
+  for (const s of shown) for (const q of s.questions ?? []) text.set(q.id, q.text);
+  return new TRPCError({
+    code: "BAD_REQUEST",
+    message: stillToAnswerMessage(
+      unanswered.map((id) => text.get(id.split("::")[0]) ?? id),
+      locale
+    ),
+  });
+}
+
+/**
+ * Approves an assessment and freezes what was approved: a version holding the
+ * answers, the risk register, the measures and every risk figure, and the
+ * figures on the assessment itself, which from now on are shown as stored
+ * (src/server/services/assessment/risk-score.ts, withDerivedRisk).
+ */
+async function freezeApproved(
+  prisma: Db,
+  args: {
+    assessment: {
+      id: string;
+      processingActivityId: string | null;
+      template: RiskTemplate & { version: string };
+      responses: Array<{ questionId: string; response: unknown }>;
+    };
+    userId: string;
+    note: string;
+    submittedAt?: Date;
+  }
+) {
+  const { assessment } = args;
+  const register = await loadRegister(prisma, assessment.id);
+  const figures = scoreFigures(assessment.template, assessment.responses, register.summary);
+  const latestVersion = await prisma.assessmentVersion.findFirst({
+    where: { assessmentId: assessment.id },
+    orderBy: { version: "desc" },
+  });
+  const version = (latestVersion?.version ?? 0) + 1;
+  const now = new Date();
+  // The activity's relevant facts at approval, the baseline that "review due"
+  // compares against (src/server/services/assessment/review-due.ts).
+  const activity = assessment.processingActivityId
+    ? await loadActivityFingerprint(prisma, assessment.processingActivityId)
+    : null;
+  await prisma.assessmentVersion.create({
+    data: {
+      assessmentId: assessment.id,
+      version,
+      snapshot: JSON.parse(
+        JSON.stringify({
+          approved: true,
+          frozenAt: now,
+          templateVersion: assessment.template.version,
+          responses: assessment.responses,
+          risks: register.risks,
+          mitigations: register.measures,
+          activity,
+          ...figures,
+        })
+      ),
+      changedBy: args.userId,
+      changeNotes: args.note,
+    },
+  });
+  return prisma.assessment.update({
+    where: { id: assessment.id },
+    data: {
+      status: AssessmentStatus.APPROVED,
+      ...(args.submittedAt ? { submittedAt: args.submittedAt } : {}),
+      completedAt: now,
+      ...figures,
+      riskFrozenAt: now,
+      approvedVersion: version,
+    },
+  });
+}
 
 export const assessmentRouter = createTRPCRouter({
   // ============================================================
@@ -281,6 +485,7 @@ export const assessmentRouter = createTRPCRouter({
             orderBy: { version: "desc" },
             take: 5,
           },
+          risks: { orderBy: { createdAt: "asc" } },
         },
       });
 
@@ -304,10 +509,17 @@ export const assessmentRouter = createTRPCRouter({
         assessment.responses
       );
 
+      const [due] =
+        assessment.status === AssessmentStatus.APPROVED
+          ? await reviewDueAssessments(ctx.prisma, ctx.organization.id, assessment.id)
+          : [];
+
       return {
         ...withDerivedRisk(assessment, template, assessment.responses),
         completionPercentage,
         totalQuestions,
+        /** Why the approved assessment should be reviewed, empty when it need not be. */
+        reviewDueReasons: due?.reasons ?? [],
       };
     }),
 
@@ -325,7 +537,8 @@ export const assessmentRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Verify template access
+      // Verify template access. A superseded or inactive template is not
+      // offered for new assessments (listTemplates), so it is not accepted here.
       const template = await ctx.prisma.assessmentTemplate.findFirst({
         where: {
           id: input.templateId,
@@ -333,6 +546,8 @@ export const assessmentRouter = createTRPCRouter({
             { organizationId: ctx.organization.id },
             { isSystem: true },
           ],
+          isActive: true,
+          supersededAt: null,
         },
       });
 
@@ -561,12 +776,7 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
-      if (assessment.status === AssessmentStatus.APPROVED) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Cannot modify an approved assessment",
-        });
-      }
+      assertContentEditable(assessment.status, ctx.membership.role, requestLocale(ctx));
 
       // A multi-select with every option unticked is no answer: remove the
       // stored response, so the question counts as unanswered again.
@@ -629,12 +839,7 @@ export const assessmentRouter = createTRPCRouter({
       if (!assessment) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
       }
-      if (assessment.status === AssessmentStatus.APPROVED) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Cannot modify an approved assessment",
-        });
-      }
+      assertContentEditable(assessment.status, ctx.membership.role, requestLocale(ctx));
       const result = await ctx.prisma.assessmentResponse.deleteMany({
         where: { assessmentId: input.assessmentId, questionId: { in: input.questionIds } },
       });
@@ -667,17 +872,13 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
-      const { score, level } = calculateRiskScore(
-        assessment.responses,
-        assessment.template
-      );
+      // Approved figures are frozen.
+      if (assessment.riskFrozenAt) return assessment;
 
+      const register = await loadRegister(ctx.prisma, assessment.id);
       const updated = await ctx.prisma.assessment.update({
         where: { id: input.assessmentId },
-        data: {
-          riskScore: score,
-          riskLevel: level,
-        },
+        data: scoreFigures(assessment.template, assessment.responses, register.summary),
       });
 
       return updated;
@@ -709,21 +910,25 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      const locale = requestLocale(ctx);
+
+      // Only a draft, an assessment in progress or a rejected one is
+      // submitted: an approved one is never sent back to review this way.
+      if (!canSubmitFrom(assessment.status)) throw workflowError("submitStatus", locale);
+
       // Check all required questions are answered (visible ones only)
       const unanswered = unansweredRequired(assessment.template, assessment.responses);
 
       if (unanswered.length > 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
-        });
+        throw unansweredError(assessment.template, unanswered, locale);
       }
 
-      // Calculate risk score
-      const { score, level } = calculateRiskScore(
-        assessment.responses,
-        assessment.template
-      );
+      const register = await loadRegister(ctx.prisma, assessment.id);
+      assertArt36(assessment.template, assessment.responses, register.summary, locale);
+
+      const figures = scoreFigures(assessment.template, assessment.responses, register.summary);
+      const score = figures.riskScore;
+      const level = figures.riskLevel;
 
       // Create version snapshot
       const latestVersion = await ctx.prisma.assessmentVersion.findFirst({
@@ -735,13 +940,15 @@ export const assessmentRouter = createTRPCRouter({
         data: {
           assessmentId: input.assessmentId,
           version: (latestVersion?.version ?? 0) + 1,
-          snapshot: {
-            responses: assessment.responses,
-            riskScore: score,
-            riskLevel: level,
-          },
+          snapshot: JSON.parse(
+            JSON.stringify({
+              responses: assessment.responses,
+              risks: register.risks,
+              ...figures,
+            })
+          ),
           changedBy: ctx.session.user.id,
-          changeNotes: "Submitted for review",
+          changeNotes: VERSION_NOTES.submitted,
         },
       });
 
@@ -750,8 +957,7 @@ export const assessmentRouter = createTRPCRouter({
         data: {
           status: AssessmentStatus.PENDING_REVIEW,
           submittedAt: new Date(),
-          riskScore: score,
-          riskLevel: level,
+          ...figures,
         },
       });
 
@@ -799,6 +1005,10 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      const locale = requestLocale(ctx);
+      assertContentEditable(assessment.status, ctx.membership.role, locale);
+      await assertRiskOfAssessment(ctx.prisma, input.assessmentId, input.riskId, locale);
+
       return ctx.prisma.assessmentMitigation.create({
         data: {
           assessmentId: input.assessmentId,
@@ -826,6 +1036,8 @@ export const assessmentRouter = createTRPCRouter({
         owner: z.string().optional().nullable(),
         dueDate: z.date().optional().nullable(),
         evidence: z.string().optional().nullable(),
+        /** The register risk this measure addresses ("manual" for none). */
+        riskId: z.string().min(1).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -842,6 +1054,10 @@ export const assessmentRouter = createTRPCRouter({
           message: "Mitigation not found",
         });
       }
+
+      const locale = requestLocale(ctx);
+      assertContentEditable(mitigation.assessment.status, ctx.membership.role, locale);
+      if (input.riskId) await assertRiskOfAssessment(ctx.prisma, mitigation.assessmentId, input.riskId, locale);
 
       const updateData: any = { ...data };
       if (input.status === MitigationStatus.IMPLEMENTED || input.status === MitigationStatus.VERIFIED) {
@@ -880,6 +1096,11 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      // A draft is never sent for approval: it is submitted (and checked) first.
+      if (!canRequestApprovalFrom(assessment.status)) {
+        throw workflowError("requestApprovalStatus", requestLocale(ctx));
+      }
+
       // Verify approver is in the organization
       const approverMembership = await ctx.prisma.organizationMember.findUnique({
         where: {
@@ -890,12 +1111,11 @@ export const assessmentRouter = createTRPCRouter({
         },
       });
 
-      if (!approverMembership) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Approver must be a member of the organization",
-        });
-      }
+      const locale = requestLocale(ctx);
+      if (!approverMembership) throw workflowError("approverMember", locale);
+      // Only reviewers decide (processApproval is an officer procedure), so
+      // naming anyone else would leave the assessment stuck.
+      if (!isReviewerRole(approverMembership.role)) throw workflowError("approverRole", locale);
 
       const approval = await ctx.prisma.assessmentApproval.create({
         data: {
@@ -949,6 +1169,32 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      const locale = requestLocale(ctx);
+
+      // A decision is taken once. Reversing it needs a new revision.
+      if (approval.status !== ApprovalStatus.PENDING) throw workflowError("approvalDecided", locale);
+      if (approval.assessment.status !== AssessmentStatus.PENDING_APPROVAL) {
+        throw workflowError("notAwaitingApproval", locale);
+      }
+
+      // Article 36 is checked again at approval: the answers are frozen while
+      // approval is pending, but an assessment submitted before this check
+      // existed may still hold the pair.
+      const full = await ctx.prisma.assessment.findFirst({
+        where: { id: approval.assessmentId },
+        include: { template: true, responses: true, approvals: true },
+      });
+      if (!full?.template) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Assessment template is missing: it may have been deleted",
+        });
+      }
+      if (input.decision === "APPROVED") {
+        const register = await loadRegister(ctx.prisma, full.id);
+        assertArt36(full.template, full.responses, register.summary, locale);
+      }
+
       const updated = await ctx.prisma.assessmentApproval.update({
         where: { id: input.approvalId },
         data: {
@@ -958,21 +1204,30 @@ export const assessmentRouter = createTRPCRouter({
         },
       });
 
-      // Update assessment status based on decision
-      const newStatus = input.decision === "APPROVED"
-        ? AssessmentStatus.APPROVED
-        : AssessmentStatus.REJECTED;
+      // The assessment is approved only when every level of the current round
+      // has approved; one rejection rejects it.
+      const round = currentRound(
+        full.approvals.map((a) => (a.id === updated.id ? updated : a)),
+        full.submittedAt
+      );
+      const outcome = approvalRoundOutcome(round);
 
-      const updatedAssessment = await ctx.prisma.assessment.update({
-        where: { id: approval.assessmentId },
-        data: {
-          status: newStatus,
-          completedAt: input.decision === "APPROVED" ? new Date() : null,
-        },
-      });
+      let updatedAssessment = full as { id: string; dataTransferId: string | null };
+      if (outcome === "APPROVED") {
+        updatedAssessment = await freezeApproved(ctx.prisma, {
+          assessment: full as typeof full & { template: NonNullable<typeof full.template> },
+          userId: ctx.session.user.id,
+          note: VERSION_NOTES.approved,
+        });
+      } else if (outcome === "REJECTED") {
+        updatedAssessment = await ctx.prisma.assessment.update({
+          where: { id: full.id },
+          data: { status: AssessmentStatus.REJECTED, completedAt: null },
+        });
+      }
 
       // If this is a TIA linked to a transfer, sync the transfer's tiaCompleted/tiaDate
-      if (input.decision === "APPROVED" && updatedAssessment.dataTransferId) {
+      if (outcome === "APPROVED" && updatedAssessment.dataTransferId) {
         await ctx.prisma.dataTransfer.update({
           where: { id: updatedAssessment.dataTransferId },
           data: { tiaCompleted: true, tiaDate: new Date() },
@@ -986,7 +1241,7 @@ export const assessmentRouter = createTRPCRouter({
           entityType: "Assessment",
           entityId: approval.assessmentId,
           action: `APPROVAL_${input.decision}`,
-          changes: { comments: input.comments },
+          changes: { comments: input.comments, level: approval.level, outcome },
         },
       });
 
@@ -1019,14 +1274,14 @@ export const assessmentRouter = createTRPCRouter({
         });
       }
 
+      const locale = requestLocale(ctx);
+      if (!canSubmitFrom(assessment.status)) throw workflowError("submitStatus", locale);
+
       // Check all required questions are answered (visible ones only)
       const unanswered = unansweredRequired(assessment.template, assessment.responses);
 
       if (unanswered.length > 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `Still to answer (${unanswered.length}): ${describeUnanswered(assessment.template, unanswered)}`,
-        });
+        throw unansweredError(assessment.template, unanswered, locale);
       }
 
       // Verify this is a single-user org
@@ -1034,38 +1289,10 @@ export const assessmentRouter = createTRPCRouter({
         where: { organizationId: ctx.organization.id },
       });
 
-      if (memberCount > 1) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Submit & Approve is only available for single-user organizations. Use the standard submit flow instead.",
-        });
-      }
+      if (memberCount > 1) throw workflowError("singleUserOnly", locale);
 
-      // Calculate risk score
-      const { score, level } = calculateRiskScore(
-        assessment.responses,
-        assessment.template
-      );
-
-      // Create version snapshot
-      const latestVersion = await ctx.prisma.assessmentVersion.findFirst({
-        where: { assessmentId: input.assessmentId },
-        orderBy: { version: "desc" },
-      });
-
-      await ctx.prisma.assessmentVersion.create({
-        data: {
-          assessmentId: input.assessmentId,
-          version: (latestVersion?.version ?? 0) + 1,
-          snapshot: {
-            responses: assessment.responses,
-            riskScore: score,
-            riskLevel: level,
-          },
-          changedBy: ctx.session.user.id,
-          changeNotes: "Submitted and auto-approved (single-user organization)",
-        },
-      });
+      const register = await loadRegister(ctx.prisma, assessment.id);
+      assertArt36(assessment.template, assessment.responses, register.summary, locale);
 
       // Create approval record for the current user, already approved
       await ctx.prisma.assessmentApproval.create({
@@ -1074,22 +1301,19 @@ export const assessmentRouter = createTRPCRouter({
           approverId: ctx.session.user.id,
           level: 1,
           status: ApprovalStatus.APPROVED,
-          comments: "Auto-approved (single-user organization)",
           decidedAt: new Date(),
         },
       });
 
-      // Update assessment to APPROVED
-      const updated = await ctx.prisma.assessment.update({
-        where: { id: input.assessmentId },
-        data: {
-          status: AssessmentStatus.APPROVED,
-          submittedAt: new Date(),
-          completedAt: new Date(),
-          riskScore: score,
-          riskLevel: level,
-        },
+      // Approve and freeze what was approved
+      const updated = await freezeApproved(ctx.prisma, {
+        assessment,
+        userId: ctx.session.user.id,
+        note: VERSION_NOTES.autoApproved,
+        submittedAt: new Date(),
       });
+      const score = updated.riskScore;
+      const level = updated.riskLevel;
 
       // If this is a TIA linked to a transfer, sync the transfer's tiaCompleted/tiaDate
       if (updated.dataTransferId) {
@@ -1111,6 +1335,156 @@ export const assessmentRouter = createTRPCRouter({
       });
 
       return updated;
+    }),
+
+  // Open a new revision of an approved assessment. The approved version stays
+  // in the history; the new revision goes through review and approval again.
+  reopen: officerProcedure
+    .input(z.object({ organizationId: z.string(), assessmentId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.assessmentId, organizationId: ctx.organization.id },
+      });
+      if (!assessment) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+      if (assessment.status !== AssessmentStatus.APPROVED) {
+        throw workflowError("reopenStatus", requestLocale(ctx));
+      }
+      const latestVersion = await ctx.prisma.assessmentVersion.findFirst({
+        where: { assessmentId: assessment.id },
+        orderBy: { version: "desc" },
+      });
+      await ctx.prisma.assessmentVersion.create({
+        data: {
+          assessmentId: assessment.id,
+          version: (latestVersion?.version ?? 0) + 1,
+          snapshot: { reopenedFrom: assessment.approvedVersion ?? null },
+          changedBy: ctx.session.user.id,
+          changeNotes: VERSION_NOTES.reopened,
+        },
+      });
+      const updated = await ctx.prisma.assessment.update({
+        where: { id: assessment.id },
+        data: { status: AssessmentStatus.IN_PROGRESS, completedAt: null, riskFrozenAt: null },
+      });
+      await ctx.prisma.auditLog.create({
+        data: {
+          organizationId: ctx.organization.id,
+          userId: ctx.session.user.id,
+          entityType: "Assessment",
+          entityId: assessment.id,
+          action: "REOPEN",
+          changes: { approvedVersion: assessment.approvedVersion },
+        },
+      });
+      return updated;
+    }),
+
+  // ============================================================
+  // RISK REGISTER (GDPR Art. 35(7)(c)): one row per risk, graded before and
+  // after measures on the same 1 to 4 scale.
+  // ============================================================
+
+  addRisk: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        assessmentId: z.string(),
+        title: z.string().trim().min(1).max(300),
+        description: z.string().max(10_000).optional(),
+        rightsAffected: z.string().max(2_000).optional(),
+        likelihood: z.number().int().min(1).max(4),
+        severity: z.number().int().min(1).max(4),
+        residualLikelihood: z.number().int().min(1).max(4).nullable().optional(),
+        residualSeverity: z.number().int().min(1).max(4).nullable().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const assessment = await ctx.prisma.assessment.findFirst({
+        where: { id: input.assessmentId, organizationId: ctx.organization.id },
+      });
+      if (!assessment) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assessment not found" });
+      }
+      assertContentEditable(assessment.status, ctx.membership.role, requestLocale(ctx));
+      const { assessmentId, title, description, rightsAffected, likelihood, severity, residualLikelihood, residualSeverity } = input;
+      return ctx.prisma.assessmentRisk.create({
+        data: { assessmentId, title, description, rightsAffected, likelihood, severity, residualLikelihood, residualSeverity },
+      });
+    }),
+
+  updateRisk: writerProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        id: z.string(),
+        title: z.string().trim().min(1).max(300).optional(),
+        description: z.string().max(10_000).nullable().optional(),
+        rightsAffected: z.string().max(2_000).nullable().optional(),
+        likelihood: z.number().int().min(1).max(4).optional(),
+        severity: z.number().int().min(1).max(4).optional(),
+        residualLikelihood: z.number().int().min(1).max(4).nullable().optional(),
+        residualSeverity: z.number().int().min(1).max(4).nullable().optional(),
+        status: z.enum(["OPEN", "CLOSED"]).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const risk = await ctx.prisma.assessmentRisk.findFirst({
+        where: { id: input.id, assessment: { organizationId: ctx.organization.id } },
+        include: { assessment: { select: { id: true, status: true } } },
+      });
+      if (!risk) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Risk not found" });
+      }
+      const locale = requestLocale(ctx);
+      assertContentEditable(risk.assessment.status, ctx.membership.role, locale);
+
+      const { id, status, title, description, rightsAffected, likelihood, severity, residualLikelihood, residualSeverity } = input;
+      const fields = { title, description, rightsAffected, likelihood, severity, residualLikelihood, residualSeverity };
+      const next = {
+        ...risk,
+        residualLikelihood: residualLikelihood === undefined ? risk.residualLikelihood : residualLikelihood,
+        residualSeverity: residualSeverity === undefined ? risk.residualSeverity : residualSeverity,
+      };
+      // A closed risk stays consistent: it keeps a measure and a graded residual.
+      const closing = status === "CLOSED" || (status === undefined && risk.status === "CLOSED");
+      if (closing) {
+        const measures = await ctx.prisma.assessmentMitigation.findMany({
+          where: { assessmentId: risk.assessmentId },
+          select: { riskId: true, status: true },
+        });
+        const refusal = closeRefusal(next, measures);
+        if (refusal === "NO_MEASURE") throw workflowError("riskNoMeasure", locale);
+        if (refusal === "NO_RESIDUAL") throw workflowError("riskNoResidual", locale);
+      }
+      return ctx.prisma.assessmentRisk.update({
+        where: { id },
+        data: {
+          ...fields,
+          ...(status ? { status, closedAt: status === "CLOSED" ? (risk.closedAt ?? new Date()) : null } : {}),
+        },
+      });
+    }),
+
+  deleteRisk: writerProcedure
+    .input(z.object({ organizationId: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const risk = await ctx.prisma.assessmentRisk.findFirst({
+        where: { id: input.id, assessment: { organizationId: ctx.organization.id } },
+        include: { assessment: { select: { status: true } } },
+      });
+      if (!risk) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Risk not found" });
+      }
+      assertContentEditable(risk.assessment.status, ctx.membership.role, requestLocale(ctx));
+      // Its measures stay, no longer tied to a risk.
+      await ctx.prisma.assessmentMitigation.updateMany({
+        where: { assessmentId: risk.assessmentId, riskId: risk.id },
+        data: { riskId: "manual" },
+      });
+      await ctx.prisma.assessmentRisk.delete({ where: { id: risk.id } });
+      return { deleted: true };
     }),
 
   // ============================================================
@@ -1242,6 +1616,12 @@ export const assessmentRouter = createTRPCRouter({
       };
     }),
 
+  // Approved assessments whose processing activity has changed in a way that
+  // matters since the approval (Art. 35(11)): for the items needing action.
+  reviewDue: organizationProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(({ ctx }) => reviewDueAssessments(ctx.prisma, ctx.organization.id)),
+
   // How many of the pilot tier's free DPIAs are left. Off the pilot tier (the
   // kit, or a licensed organisation) it reports no cap at all.
   dpiaQuota: organizationProcedure
@@ -1300,7 +1680,21 @@ export const assessmentRouter = createTRPCRouter({
         source: string
       ) => suggestions.push({ ...target, suggestedResponse, confidence, source });
 
-      const text = dpiaAutoFillText(localeFromCookieGetter(ctx.getCookie));
+      const autoFillLocale = localeFromCookieGetter(ctx.getCookie);
+      const text = dpiaAutoFillText(autoFillLocale);
+      // A fixed option is shown in the reader's language: the same position in
+      // that language's option list (answers are matched by position).
+      const optionInLocale = (questionId: string, stored: string): string => {
+        if (autoFillLocale !== "es") return stored;
+        type OptionSection = { id: string; questions: Array<{ id: string; options?: string[] }> };
+        const storedSections = dpiaTemplateSections as unknown as OptionSection[];
+        const storedQ = storedSections.flatMap((s) => s.questions).find((q) => q.id === questionId);
+        const shownQ = (sectionsForLocale("DPIA", dpiaTemplateSections as never, "es") as unknown as OptionSection[])
+          .flatMap((s) => s.questions ?? [])
+          .find((q) => q.id === questionId);
+        const i = storedQ?.options?.indexOf(stored) ?? -1;
+        return (i >= 0 && shownQ?.options?.[i]) || stored;
+      };
 
       // Purpose of the processing
       suggest(
@@ -1317,7 +1711,7 @@ export const assessmentRouter = createTRPCRouter({
       if (legalBasisOption) {
         suggest(
           AUTO_FILL_TARGETS.legalBasis,
-          legalBasisOption,
+          optionInLocale(AUTO_FILL_TARGETS.legalBasis.questionId, legalBasisOption),
           "high",
           text.source.legalBasis
         );
@@ -1341,7 +1735,7 @@ export const assessmentRouter = createTRPCRouter({
         if (specialCat.length > 0) {
           suggest(
             AUTO_FILL_TARGETS.sensitivity,
-            SENSITIVITY_SPECIAL_CATEGORY,
+            optionInLocale(AUTO_FILL_TARGETS.sensitivity.questionId, SENSITIVITY_SPECIAL_CATEGORY),
             "high",
             text.source.specialElements
           );
@@ -1349,11 +1743,11 @@ export const assessmentRouter = createTRPCRouter({
         }
       }
 
-      // Recipients, and the vendor that processes the data
+      // Recipients, and the vendor that processes the data. The data subjects
+      // are not recipients and are asked by their own question (q1_4).
       const recipientLines = [
         ...(activity.recipients.length > 0 ? [text.recipients(activity.recipients)] : []),
         ...(vendor ? [text.processedBy(vendor.name, vendor.certifications)] : []),
-        ...(activity.dataSubjects.length > 0 ? [text.dataSubjects(activity.dataSubjects)] : []),
       ];
       if (recipientLines.length > 0) {
         suggest(
@@ -1384,29 +1778,34 @@ export const assessmentRouter = createTRPCRouter({
         );
       }
 
-      // Data minimisation
-      suggest(
-        AUTO_FILL_TARGETS.minimisation,
-        text.minimisation(elements.length, assets.length, activity.purpose || activity.name),
-        "medium",
-        text.source.minimisation
-      );
+      // Data minimisation: only drafted from data elements actually recorded.
+      if (elements.length > 0) {
+        suggest(
+          AUTO_FILL_TARGETS.minimisation,
+          text.minimisation(elements.length, assets.length, activity.purpose || activity.name),
+          "medium",
+          text.source.minimisation
+        );
+      }
 
-      // Risks to data subjects
+      // Risks to data subjects, only from factors the records show. Large
+      // scale is a matter of the number of data subjects (q1_5), which the
+      // activity does not record, so it is never asserted here.
       const hasTransfers = transfers.length > 0;
-      const isLargeScale = elements.length > 10;
-      const hasRiskFactors = specialCat.length > 0 || hasTransfers || isLargeScale;
+      const hasRiskFactors = specialCat.length > 0 || hasTransfers;
 
-      suggest(
-        AUTO_FILL_TARGETS.risks,
-        text.risks({
-          specialCategory: specialCat.length > 0,
-          transferDestinations: transfers.length,
-          largeScale: isLargeScale,
-        }),
-        hasRiskFactors ? "medium" : "low",
-        text.source.risks
-      );
+      if (hasRiskFactors) {
+        suggest(
+          AUTO_FILL_TARGETS.risks,
+          text.risks({
+            specialCategory: specialCat.length > 0,
+            transferDestinations: transfers.length,
+            largeScale: false,
+          }),
+          "medium",
+          text.source.risks
+        );
+      }
       const hasSpecialData = specialCat.length > 0;
 
       return {

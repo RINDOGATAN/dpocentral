@@ -6,7 +6,7 @@
 import { getTranslations } from "next-intl/server";
 import type { CsvEnumKind, CsvLabels, CsvWords } from "./csv-labels";
 
-export type CsvRegister = "ropa" | "vendors" | "breaches";
+export type CsvRegister = "vendors" | "breaches";
 
 /**
  * The labels for `register` in `locale`, or undefined for English (the

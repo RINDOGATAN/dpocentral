@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 vi.mock("@/lib/prisma", () => ({ default: {}, prisma: {} }));
 
-import { createAssessmentFromActivity } from "@/server/services/assessment-auto-create";
+import { createAssessmentFromActivity, DPIA_NOT_CREATED } from "@/server/services/assessment-auto-create";
 
 function tx(createdDpias: number) {
   return {
@@ -55,11 +55,12 @@ describe("automatic DPIA drafts on the hosted pilot tier", () => {
     expect(db.auditLog.create.mock.calls[0][0].data.changes.templateType).toBe("DPIA");
   });
 
-  it("falls back to an LIA once both are used", async () => {
+  it("creates nothing in place of the DPIA once both are used, and says why", async () => {
     const db = tx(2);
     const result = await createAssessmentFromActivity(params(db));
-    expect(result.created).toBe(true);
-    expect(db.assessment.create.mock.calls[0][0].data.templateId).toBe("tpl-LIA");
+    expect(result.created).toBe(false);
+    expect(result.skippedReason).toBe(DPIA_NOT_CREATED.quota);
+    expect(db.assessment.create).not.toHaveBeenCalled();
   });
 
   it("is not capped on the kit", async () => {

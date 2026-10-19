@@ -299,7 +299,8 @@ describe("buildDocumentPack", () => {
         "02-records-of-processing-ropa.pdf",
         "02-records-of-processing-ropa.csv",
         "03-dpa/DPA-Mailer-2026-10-01.pdf",
-        "04-assessments/legitimate-interest-assessment-loyalty.pdf",
+        // The short type name, once: "lia" here, "eil" in Spanish.
+        "04-assessments/lia-loyalty.pdf",
       ]),
     );
     expect(pack.files.some((f) => f.includes("DRAFT"))).toBe(false);

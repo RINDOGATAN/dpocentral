@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ApplicabilityCard } from "@/components/privacy/applicability-check";
 import { TemplateItemsCard } from "@/components/privacy/template-items-card";
 import { DepartmentsCard } from "@/components/privacy/departments-card";
+import { ControllerDetailsCard } from "@/components/privacy/controller-details-card";
 import { ProgrammeExportCard } from "@/components/privacy/programme-export-card";
 import { ProgrammeImportCard } from "@/components/privacy/programme-import-card";
 import { Input } from "@/components/ui/input";
@@ -406,6 +407,14 @@ export default function SettingsPage() {
         <ApplicabilityCard
           organizationId={orgId}
           canWrite={!!org.currentUserRole && org.currentUserRole !== "VIEWER"}
+        />
+      )}
+
+      {/* The controller block of the record of processing (Art. 30). */}
+      {org && (
+        <ControllerDetailsCard
+          organizationId={orgId}
+          canEdit={["OWNER", "ADMIN", "PRIVACY_OFFICER"].includes(org.currentUserRole ?? "")}
         />
       )}
 

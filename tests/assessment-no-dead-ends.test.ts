@@ -34,7 +34,8 @@ describe("a refusal says what is missing", () => {
 
   it("is what the router sends", () => {
     const router = source("src/server/routers/privacy/assessment.ts");
-    expect(router).toContain("describeUnanswered(assessment.template, unanswered)");
+    // The question text, in the reader's language (unansweredError).
+    expect(router).toContain("throw unansweredError(assessment.template, unanswered, locale)");
     expect(router).not.toContain("Please answer all required questions");
   });
 
@@ -54,9 +55,10 @@ describe("a rejected assessment can be worked on again", () => {
     const page = source("src/app/(dashboard)/privacy/assessments/[id]/page.tsx");
     expect(page).toMatch(/canSubmit =[\s\S]{0,200}"REJECTED"/);
 
-    // The server locks an approved assessment and nothing else.
+    // The server locks the content by status (src/lib/assessment-workflow.ts),
+    // never a rejected assessment.
     const router = source("src/server/routers/privacy/assessment.ts");
-    expect(router).toContain("Cannot modify an approved assessment");
+    expect(router).toContain("assertContentEditable(");
     expect(router).not.toContain("Cannot modify a rejected assessment");
   });
 });

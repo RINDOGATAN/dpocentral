@@ -44,6 +44,7 @@ import { buildBreachRegisterExport } from "./documents/breach-register";
 import { buildPrivacyProgramExport } from "./documents/privacy-program";
 import { buildBoardReportExport } from "./documents/board-report";
 import { ASSESSMENT_EXPORT_INCLUDE, buildAssessmentExport } from "./documents/assessment";
+import { assessmentNameWithoutType, assessmentTypeShort } from "@/lib/assessment-file-name";
 import { buildDpaExport } from "./documents/dpa";
 import { pdfDate } from "./pdf-locale";
 
@@ -188,13 +189,17 @@ export async function buildDocumentPack(
         const file = await buildAssessmentExport({ ...assessment, template: assessment.template }, locale);
         const isDraft = assessment.status !== "APPROVED";
         const typeLabel = ta(`assessmentTypes.${assessment.template.type}`);
-        let base = `${isDraft ? `${draftMark}-` : ""}${fileSlug(`${typeLabel} ${assessment.name}`)}`;
+        // The short type name (EIPD in Spanish) and the name without its own
+        // leading type code, so a file name never says "dpia" in Spanish.
+        let base = `${isDraft ? `${draftMark}-` : ""}${fileSlug(
+          `${assessmentTypeShort(assessment.template.type, locale)} ${assessmentNameWithoutType(assessment.name)}`
+        )}`;
         for (let i = 2; used.has(base); i++) base = `${base}-${i}`;
         used.add(base);
         const fileName = `${dir}/${base}.pdf`;
         entries.push({ name: fileName, data: file.data });
         rows.push({
-          name: t("assessmentName", { type: typeLabel, name: assessment.name }),
+          name: t("assessmentName", { type: typeLabel, name: assessmentNameWithoutType(assessment.name) }),
           state: isDraft ? "draft" : "ready",
           gaps: isDraft ? [t("assessmentGaps")] : [],
           date: day(assessment.completedAt ?? assessment.updatedAt),

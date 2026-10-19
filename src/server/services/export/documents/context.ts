@@ -78,7 +78,8 @@ const FILE_TITLES_ES: Record<string, string> = {
   "DSAR-Performance": "Rendimiento-Solicitudes-de-Derechos",
   "Privacy-Program": "Programa-de-Privacidad",
   "Regulatory-Landscape": "Panorama-Normativo",
-  "ROPA": "Registro-de-Actividades",
+  "ROPA": "RAT-Registro-de-Actividades-de-Tratamiento",
+  "ROPA-Processor": "RAT-Encargado-Registro-de-Actividades-de-Tratamiento",
   "Vendor-Register": "Registro-de-Proveedores",
   "rights-requests": "solicitudes-de-derechos",
 };
