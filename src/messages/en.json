@@ -171,7 +171,18 @@
         "dataCategories": "Data Categories Processed",
         "countries": "Countries (Data Transfer)",
         "countriesPlaceholder": "e.g., United States",
-        "addCountry": "Add"
+        "addCountry": "Add",
+        "suggested": "Suggested from the catalog category. Adjust to what this vendor processes for you.",
+        "fromCatalog": "From the catalog: where the vendor says it processes data."
+      },
+      "usage": {
+        "title": "Use",
+        "status": "Status",
+        "inUse": "In use",
+        "considering": "Being considered",
+        "activity": "Used by which processing activity? (optional)",
+        "noActivity": "Not now",
+        "activityHint": "The vendor is added to that activity's recipients, so it appears in the record of processing."
       },
       "compliance": {
         "title": "Compliance Information",
@@ -1569,7 +1580,8 @@
       "complete": "Complete",
       "progress": {
         "title": "Progress",
-        "tasksCompleted": "{completed} of {total} tasks completed"
+        "tasksCompleted": "{completed} of {total} tasks completed",
+        "noTasks": "No tasks yet. Generate them under Tasks below."
       },
       "sla": {
         "title": "SLA Status",
@@ -1905,7 +1917,8 @@
         "createdAssessments": "{count, plural, one {# draft impact assessment (DPIA)} other {# draft impact assessments (DPIA)}}",
         "createdTransfers": "{count, plural, one {# international transfer} other {# international transfers}}",
         "alreadySetBody": "All the selected records already exist in your privacy program. You're good to go!",
-        "createdBody": "Your privacy program is set up. Explore your new records and customize them as needed.",
+        "createdBody": "Your first records are drafted. They count towards your program once you check and confirm them.",
+          "reviewCta": "Review and confirm",
         "cardDataInventory": "Data Inventory",
         "cardDataInventoryDesc": "View systems & elements",
         "cardActivities": "Processing Activities",
@@ -1936,11 +1949,34 @@
         "unrated": "Not yet rated",
         "unratedRing": "Not rated",
         "unratedSubtitle": "No module has data to score yet. Add systems, assessments, DSARs, incidents or vendors and the score will appear here.",
-        "partialSubtitle": "Based on {rated} of {total} areas ({pct}% of the weighting). No rating is given until every area has data; areas with no data are left out rather than counted as compliant.",
         "areasWithData": "Data in {rated} of {total} areas",
         "value": "{score} / 100",
         "draftsExcluded": "{count, plural, one {# drafted record is left out of these figures until a person confirms it.} other {# drafted records are left out of these figures until a person confirms them.}}",
-        "reviewDrafts": "Review and confirm"
+        "reviewDrafts": "Review and confirm",
+        "withheld": "No overall number is shown until every area has data: data in {rated} of {total} areas so far. Areas with no data are left out rather than counted as compliant.",
+        "raiseTitle": "What raises it"
+      },
+      "raise": {
+        "ropa": {
+          "unrated": "Systems: add a system and link it to a processing activity.",
+          "raise": "{count, plural, one {Systems: link the system that has no processing activity.} other {Systems: link the # systems that have no processing activity.}}"
+        },
+        "assessment": {
+          "unrated": "Assessments: start one, a DPIA where the risk is high.",
+          "raise": "{count, plural, one {Assessments: finish and approve the assessment still open.} other {Assessments: finish and approve the # assessments still open.}}"
+        },
+        "dsar": {
+          "unrated": "Rights requests: rated once a request has been received. Nothing to do until then.",
+          "raise": "{count, plural, one {Rights requests: answer the overdue request.} other {Rights requests: answer the # overdue requests.}}"
+        },
+        "incident": {
+          "unrated": "Breaches: rated once a breach that must be notified is recorded. Nothing to do until then.",
+          "raise": "{count, plural, one {Breaches: record the notification of the breach that needs one.} other {Breaches: record the notification of the # breaches that need one.}}"
+        },
+        "vendor": {
+          "unrated": "Vendors: set the vendors you use to Active.",
+          "raise": "{count, plural, one {Vendors: assess the active vendor not reviewed in the last 12 months.} other {Vendors: assess the # active vendors not reviewed in the last 12 months.}}"
+        }
       },
       "breakdown": {
         "heading": "Module Compliance Breakdown",
@@ -2819,6 +2855,7 @@
     "localSignInTitle": "Local sign-in",
     "localSignInBody": "Your account lives on this computer. Enter your email to open it (nothing is sent anywhere).",
     "signedOut": "You have been signed out. Sign in again to continue.",
+    "signInToContinue": "Sign in to continue. You will return to the page you were on.",
     "noSignInMethod": "No sign-in method is set up on this server. The administrator can turn on local sign-in, an e-mail key or Google sign-in.",
     "error": {
       "OAuthAccountNotLinked": "This email is already associated with a different sign-in method. Try using your magic link instead.",
@@ -3477,6 +3514,9 @@
     "privacyProfessionalDesc": "A law firm, a consultancy, or another adviser managing privacy for several organizations",
     "orgName": "Organization Name",
     "orgNamePlaceholder": "e.g., Acme Corporation",
+    "clientName": "Your first client's name",
+    "clientNamePlaceholder": "e.g., Harbour Bakery Ltd",
+    "clientNameHint": "Each organization you advise is a client here. Your own firm does not need one. You add the others from All clients.",
     "getStarted": "Get Started",
     "settingUp": "Setting up...",
     "persona": {
@@ -9833,6 +9873,7 @@
       "coming": "coming",
       "optional": "optional",
       "toConfirm": "to confirm",
+      "ready": "ready when needed",
       "action": "needs action"
     },
     "account": "Account",
@@ -9967,15 +10008,28 @@
       "next": "Next step",
       "finish": "Finish",
       "stageDone": "Stage {number} complete. Next: {next}.",
-      "lastStageDone": "Stage {number} complete. Every stage is done."
+      "lastStageDone": "Stage {number} complete. Every stage is done.",
+      "missing": "To finish this step, add to one record: {fields}.",
+      "missingLink": "See what is missing",
+      "readyWhenNeeded": "Ready when needed: nothing to do here until it happens.",
+      "fields": {
+        "dataSubjects": "the data subjects",
+        "categories": "the data categories",
+        "retention": "the retention period",
+        "dataElements": "the personal data it holds",
+        "inUse": "a status in use (not prospective)",
+        "dataProcessed": "the personal data it processes",
+        "countries": "where it processes data",
+        "complianceStatus": "a recorded compliance status"
+      }
     },
     "plan": {
       "label": "Plan",
       "day": "Program plan: day {day} of {total}",
       "onPlan": "On schedule",
-      "behind": "{days} days behind schedule",
+      "behind": "{days, plural, one {# day behind schedule} other {# days behind schedule}}",
       "complete": "Program plan complete",
-      "remaining": "{count} stages left: {stages}",
+      "remaining": "{count, plural, one {# stage left: {stages}} other {# stages left: {stages}}}",
       "notStarted": "Not started"
     },
     "figure": {
@@ -10010,6 +10064,8 @@
       "breachNotify": "Breach {ref}: notify",
       "dsarDue": "Rights request {ref} due",
       "plan": "Plan: day {day} milestone",
+      "activityReview": "Review of the activity {name} due",
+      "vendorReview": "Review of the vendor {name} due",
       "overdue": "overdue since {date}",
       "empty": "No deadline in the next 30 days."
     },
@@ -10077,13 +10133,19 @@
       "confirmed": "Confirmed",
       "areas": "Areas",
       "documents": "Documents ready",
-      "deadline": "Next deadline",
+      "deadline": "Next due",
       "action": "Next action",
       "menu": "More"
     },
     "docsReady": "{ready} of {total} ready",
-    "noDeadline": "None",
+    "noDeadline": "None in the next 30 days",
     "none": "No figure yet",
+    "status": {
+      "action": "Needs attention",
+      "setup": "Setting up",
+      "toConfirm": "Drafts to confirm",
+      "onTrack": "On track"
+    },
     "limited": "Limited to your departments: the organization-wide figures are not shown.",
     "sortNote": "Sorted by the nearest deadline, the soonest first; clients with no deadline follow, by name."
   },
@@ -10213,6 +10275,7 @@
         "breach-window": "Breaches to notify",
         "breach-decision": "Breaches waiting for a decision on notifying",
         "assessment-approval": "Assessments to approve",
+        "assessment-review": "Assessments to review",
         "drafts-to-confirm": "Drafted records to confirm"
       },
       "hint": {
@@ -10221,6 +10284,7 @@
         "breach-window": "Open breaches that must be notified.",
         "breach-decision": "Breaches logged in the last 72 hours with no notification recorded and not marked as requiring one. Decide whether to notify before the window ends.",
         "assessment-approval": "Assessments sent for review or approval.",
+        "assessment-review": "Approved assessments whose processing activity has changed since approval: review them (GDPR Art. 35(11)).",
         "drafts-to-confirm": "Records the quick start or a template drafted. They count towards your program once a person confirms them."
       }
     },
@@ -10439,6 +10503,7 @@
     "reviewTitle": "Review and confirm",
     "reviewSubtitle": "The quick start, templates, copies from another client and imports drafted these records. Open each one to check or correct it, then confirm it. Each counts towards your program once confirmed.",
     "reviewEmpty": "Nothing to confirm: every drafted record has been confirmed.",
+    "reviewEmptyNext": "Back to the dashboard",
     "selectAll": "Select all",
     "clearSelection": "Clear selection",
     "confirmSelected": "Confirm selected ({count})",
@@ -10487,7 +10552,8 @@
       "aiAssist": "AI assistance switched on",
       "notificationRecord": "a notification record on an incident",
       "dsarRequest": "a rights request",
-      "confirmedStep": "a confirmed step on the path"
+      "confirmedStep": "a complete, confirmed system, activity or vendor",
+      "confirmDrafts": "the drafts confirmed"
     },
     "inputAction": {
       "default": "Add it",
@@ -10496,7 +10562,8 @@
       "aiAssist": "Open settings",
       "dpaFacts": "Start",
       "dpiaStart": "Start",
-      "confirmedStep": "Start"
+      "confirmedStep": "Start",
+      "confirmDrafts": "Review and confirm"
     },
     "gaps": {
       "toConfirm": "{count, plural, one {# record to confirm} other {# records to confirm}}",

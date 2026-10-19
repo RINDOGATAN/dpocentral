@@ -24,6 +24,7 @@ import { useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { useOrganization } from "@/lib/organization-context";
 import { DPO_CENTRAL_PATH } from "./path-config";
+import { useProgramPathQuery } from "./use-program-path";
 import {
   nextStep,
   stageAfterCelebration,
@@ -34,6 +35,11 @@ import {
 } from "./path";
 
 const SEEN_KEY = "dpc_stages_done";
+
+/** Where "See what is missing" leads for a step whose records lack fields. */
+const MISSING_HREF: Partial<Record<string, string>> = {
+  ropa: "/privacy/incomplete",
+};
 
 function readSeen(key: string): string[] | null {
   try {
@@ -63,6 +69,7 @@ export function StepBand({
 }) {
   const t = useTranslations("guided");
   const { organization } = useOrganization();
+  const { missing } = useProgramPathQuery();
   const place = stepAndFollowing(DPO_CENTRAL_PATH, stepId, statuses);
   const orgId = organization?.id;
   const storageKey = orgId ? `${SEEN_KEY}:${orgId}` : null;
@@ -97,14 +104,19 @@ export function StepBand({
   const ahead = celebrate !== null && statuses ? nextStep(DPO_CENTRAL_PATH, statuses) : null;
   const following = celebrate !== null ? (ahead ? { step: ahead.step } : null) : place.following;
   const stages = DPO_CENTRAL_PATH.stages;
+  const currentStatus = statuses?.[current.step.id];
+  // A step with records that are not yet enough: say what one more edit needs.
+  const missingFields = currentStatus === "started" ? (missing[current.step.id] ?? []) : [];
+  const missingHref = MISSING_HREF[current.step.id];
 
   return (
     <div
       className="mb-4 sm:mb-6 flex min-h-11 items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm"
-      role="status"
     >
       {celebrate !== null ? (
-        <p className="flex min-w-0 flex-1 items-center gap-2 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+        // Only the "Stage N complete" message is announced: the step sentence
+        // is the same on every visit and would be read out on every page.
+        <p role="status" className="flex min-w-0 flex-1 items-center gap-2 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
           <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <Check className="size-3" strokeWidth={3} aria-hidden="true" />
           </span>
@@ -125,6 +137,24 @@ export function StepBand({
           <span aria-hidden="true"> · </span>
           <span className="sr-only">: </span>
           {t(`steps.${current.step.id}.do`)}
+          {missingFields.length > 0 && (
+            <span className="mt-0.5 block text-muted-foreground" data-testid="band-missing">
+              {t("band.missing", { fields: missingFields.map((f) => t(`band.fields.${f}`)).join(", ") })}
+              {missingHref && (
+                <>
+                  {" "}
+                  <Link href={missingHref} className="font-medium text-primary underline-offset-2 hover:underline">
+                    {t("band.missingLink")}
+                  </Link>
+                </>
+              )}
+            </span>
+          )}
+          {currentStatus === "ready" && (
+            <span className="mt-0.5 block text-muted-foreground" data-testid="band-ready">
+              {t("band.readyWhenNeeded")}
+            </span>
+          )}
         </p>
       )}
       {following?.step.href ? (

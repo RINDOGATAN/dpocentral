@@ -10,7 +10,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { useUserType } from "@/lib/use-user-type";
 import { OrganizationSetup } from "@/components/privacy/organization-setup";
 import { OnboardingWelcome } from "@/components/privacy/onboarding-welcome";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { AccountLanguageSwitcher, AccountLocaleSync } from "@/components/account-locale";
 import { features } from "@/config/features";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { sellingEnabled } from "@/lib/premium-gate";
@@ -46,6 +46,7 @@ export function DashboardShell({
   if (orgLoading || userTypeLoading || dpaLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
+        <AccountLocaleSync />
         <div className="text-muted-foreground">{tCommon("loading")}</div>
       </div>
     );
@@ -56,7 +57,12 @@ export function DashboardShell({
   // member (or joined by email domain) has no persona of their own and must
   // land in that organisation, never on a screen that creates a second one.
   if (needsOnboarding && organizations.length === 0) {
-    return <OnboardingWelcome />;
+    return (
+      <>
+        <AccountLocaleSync />
+        <OnboardingWelcome />
+      </>
+    );
   }
 
   // Step 2: Fallback — user has persona but no org (edge case)
@@ -79,6 +85,7 @@ export function DashboardShell({
   // dialog below.
   return (
     <>
+      <AccountLocaleSync />
       {dpa.data?.required && !dpa.data.canAccept && <DpaPendingNote />}
       <GuidedLayout
         footer={<DashboardFooter />}
@@ -137,7 +144,7 @@ function DashboardFooter() {
               {tFooter("dataSecurity")}
             </Link>
             <span aria-hidden className="text-muted-foreground">&middot;</span>
-            <LanguageSwitcher />
+            <AccountLanguageSwitcher />
           </div>
         </div>
       </footer>

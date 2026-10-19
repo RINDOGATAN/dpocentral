@@ -17,6 +17,7 @@ import { useOrganization } from "@/lib/organization-context";
 import { useMemberScope } from "@/lib/use-member-scope";
 import { GuidedDashboard } from "@/components/guided/guided-dashboard";
 import { WelcomeCard } from "@/components/safeguards/welcome-card";
+import { hasSeenQuickstart } from "@/lib/quickstart-seen";
 
 export default function PrivacyDashboardPage() {
   const router = useRouter();
@@ -45,8 +46,9 @@ export default function PrivacyDashboardPage() {
   // until then), as the cookie is not known when the page is rendered.
   const [quickstartSeen, setQuickstartSeen] = useState<boolean | null>(null);
   useEffect(() => {
-    setQuickstartSeen(document.cookie.split("; ").includes("dpo_quickstart_seen=1"));
-  }, []);
+    // Per organisation, so a consultant's next client gets its own quick start.
+    if (organization?.id) setQuickstartSeen(hasSeenQuickstart(document.cookie, organization.id));
+  }, [organization?.id]);
 
   // The first-visit welcome card (hosted service, organisation's creator
   // only; the server decides). It comes BEFORE the quick start: the redirect
@@ -78,8 +80,10 @@ export default function PrivacyDashboardPage() {
   // While it is not yet known whether this visit goes on to the quick start,
   // or while it is on its way there, the dashboard is not drawn: it used to
   // flash (with its "How it works" card) between "Get started" and the quick
-  // start. The welcome card, when due, is shown over this placeholder.
+  // start. While the welcome card is due the dashboard is drawn behind it
+  // (not a blank "Loading..."): nothing moves until the card is answered.
   const mayRedirect =
+    !welcomeShown &&
     !fromQuickstart &&
     quickstartSeen !== true &&
     (limited === null || orgWide) &&

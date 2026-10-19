@@ -207,6 +207,33 @@ describe("who sees the welcome card", () => {
     await create("someone");
     expect(mocks.prisma.organization.create.mock.calls[1][0].data.welcomeUserId).toBeNull();
   });
+
+  it("asks once per account: a consultant's next client does not ask again", async () => {
+    mocks.prisma.organization.findUnique.mockResolvedValue(null);
+    mocks.prisma.user.findUnique.mockResolvedValue(null);
+    mocks.prisma.organizationMember.count.mockResolvedValue(0);
+    mocks.prisma.organization.create.mockImplementation(async ({ data }: { data: object }) => ({
+      id: "org-next",
+      ...data,
+      members: [],
+    }));
+    // The person already answered (or was already asked) in another organisation.
+    mocks.prisma.organization.findMany.mockImplementation(async (args: { where?: { OR?: unknown } }) =>
+      args?.where?.OR ? [{ id: "org-first" }] : [],
+    );
+    const before = mocks.prisma.organization.create.mock.calls.length;
+    await (callerFor(organizationRouter, sessionFor("creator")) as ReturnType<
+      typeof organizationRouter.createCaller
+    >).create({ name: "Cliente dos", slug: "cliente-dos", acceptDpa: true });
+    expect(mocks.prisma.organization.create.mock.calls[before][0].data.welcomeUserId).toBeNull();
+    expect(mocks.prisma.organization.findMany).toHaveBeenCalledWith({
+      where: { OR: [{ safeguardsChoiceById: "creator" }, { welcomeUserId: "creator" }] },
+      select: { id: true },
+      take: 1,
+    });
+    mocks.prisma.organization.findMany.mockReset();
+    mocks.prisma.organization.findMany.mockResolvedValue([]);
+  });
 });
 
 describe("decide later", () => {

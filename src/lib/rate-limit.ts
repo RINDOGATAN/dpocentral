@@ -182,7 +182,13 @@ export function _resetRateLimitsForTests(): void {
 export const signInLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 }, "SIGNIN");
 /** Magic-link e-mail requests (POST /api/auth/signin/email). 5 per 15 minutes — each one sends an e-mail. */
 export const magicLinkLimiter = rateLimit({ limit: 5, windowMs: 15 * 60 * 1000 }, "MAGIC_LINK");
-/** Every other /api/auth request (session, csrf, providers, signout). 30 per minute. */
+/**
+ * Session, CSRF and provider reads plus the client error log. Polled on every
+ * page load and window focus by every tab, so it is shared by everyone behind
+ * one office address. 600 per minute; sign-in attempts are counted separately.
+ */
+export const authReadLimiter = rateLimit({ limit: 600, windowMs: 60 * 1000 }, "AUTH_READ");
+/** Every other /api/auth request (signout, the sign-in page render). 30 per minute. */
 export const authLimiter = rateLimit({ limit: 30, windowMs: 60 * 1000 }, "AUTH");
 /** Checkout and billing portal. 10 per minute. */
 export const checkoutLimiter = rateLimit({ limit: 10, windowMs: 60 * 1000 }, "CHECKOUT");

@@ -25,13 +25,21 @@ import type { LucideIcon } from "lucide-react";
  * - `toConfirm`  the rule would be met, but only by drafts: records the quick
  *                start, a template or another client's copy created, which
  *                count once a person confirms them. Never counted as done.
+ * - `ready`      ready when needed: a step that can only be "done" once
+ *                something happens (a rights request, a breach). The means are
+ *                in place, so it counts as met; nothing waits for a person.
  * - `started`    there is something, but not yet enough
  * - `todo`       nothing yet
  * - `coming`     the product has no page for it yet
  * - `hidden`     the step does not concern this organisation (its `shownWhen`
  *                rule is not met): not shown, not counted, never the next step
  */
-export type StepStatus = "done" | "toConfirm" | "started" | "todo" | "coming" | "hidden";
+export type StepStatus = "done" | "ready" | "toConfirm" | "started" | "todo" | "coming" | "hidden";
+
+/** Whether a step's rule is met: done, or ready for an event that has not happened. */
+export function isStepMet(status: StepStatus | null | undefined): boolean {
+  return status === "done" || status === "ready";
+}
 
 /**
  * A stage as a whole: not started, in progress, drafts waiting to be
@@ -217,9 +225,9 @@ export interface StageProgress {
  */
 export function stageProgress<C>(stage: PathStage<C>, statuses: PathStatuses): StageProgress {
   const counted = stage.steps.filter((s) => isCounted(s) && isShown(s, statuses));
-  const done = counted.filter((s) => statuses[s.id] === "done").length;
+  const done = counted.filter((s) => isStepMet(statuses[s.id])).length;
   const moving = counted.some(
-    (s) => statuses[s.id] === "done" || statuses[s.id] === "started" || statuses[s.id] === "toConfirm",
+    (s) => isStepMet(statuses[s.id]) || statuses[s.id] === "started" || statuses[s.id] === "toConfirm",
   );
   const drafts = counted.some((s) => statuses[s.id] === "toConfirm");
   const allComing = counted.length === 0 && stage.steps.some((s) => s.coming);
@@ -290,7 +298,7 @@ export function programFigure<C>(config: PathConfig<C>, statuses: PathStatuses):
       if (!isCounted(step) || !isShown(step, statuses)) continue;
       figure.total += 1;
       const status = statuses[step.id];
-      if (status === "done") figure.confirmed += 1;
+      if (isStepMet(status)) figure.confirmed += 1;
       else if (status === "toConfirm") figure.toConfirm += 1;
       else if (status === "started") figure.started += 1;
       else figure.notStarted += 1;
@@ -309,7 +317,7 @@ export interface NextStep<C> {
 export function nextStep<C>(config: PathConfig<C>, statuses: PathStatuses): NextStep<C> | null {
   for (const [stageIndex, stage] of config.stages.entries()) {
     for (const step of stage.steps) {
-      if (isCounted(step) && isShown(step, statuses) && statuses[step.id] !== "done") {
+      if (isCounted(step) && isShown(step, statuses) && !isStepMet(statuses[step.id])) {
         return { stage, stageIndex, step };
       }
     }

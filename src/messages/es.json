@@ -171,7 +171,18 @@
         "dataCategories": "Categorías de datos tratados",
         "countries": "Países (transferencia de datos)",
         "countriesPlaceholder": "p. ej., Estados Unidos",
-        "addCountry": "Añadir"
+        "addCountry": "Añadir",
+        "suggested": "Propuestas a partir de la categoría del catálogo. Ajústalas a lo que este proveedor trata por ti.",
+        "fromCatalog": "Del catálogo: dónde dice el proveedor que trata los datos."
+      },
+      "usage": {
+        "title": "Uso",
+        "status": "Estado",
+        "inUse": "En uso",
+        "considering": "En estudio",
+        "activity": "¿Qué actividad de tratamiento lo usa? (opcional)",
+        "noActivity": "Ahora no",
+        "activityHint": "El proveedor se añade a los destinatarios de esa actividad, así que aparece en el Registro de Actividades de Tratamiento."
       },
       "compliance": {
         "title": "Información de cumplimiento",
@@ -1569,7 +1580,8 @@
       "complete": "Completar",
       "progress": {
         "title": "Progreso",
-        "tasksCompleted": "{completed} de {total} tareas completadas"
+        "tasksCompleted": "{completed} de {total} tareas completadas",
+        "noTasks": "Aún no hay tareas. Genéralas más abajo, en Tareas."
       },
       "sla": {
         "title": "Estado del plazo",
@@ -1905,7 +1917,8 @@
         "createdAssessments": "{count, plural, one {# Evaluación de Impacto relativa a la Protección de Datos (EIPD) en borrador} other {# Evaluaciones de Impacto relativas a la Protección de Datos (EIPD) en borrador}}",
         "createdTransfers": "{count, plural, one {# transferencia internacional} other {# transferencias internacionales}}",
         "alreadySetBody": "Todos los registros seleccionados ya existen en tu programa de privacidad. ¡Listo para empezar!",
-        "createdBody": "Hemos puesto en marcha tu programa de privacidad. Explora los nuevos registros y personalízalos según necesites.",
+        "createdBody": "Hemos redactado tus primeros registros. Cuentan en tu programa cuando los revisas y confirmas.",
+          "reviewCta": "Revisar y confirmar",
         "cardDataInventory": "Inventario de datos",
         "cardDataInventoryDesc": "Ver sistemas y elementos",
         "cardActivities": "Actividades de tratamiento",
@@ -1936,11 +1949,34 @@
         "unrated": "Sin evaluar",
         "unratedRing": "Sin evaluar",
         "unratedSubtitle": "Todavía no hay datos que puntuar en ningún módulo. Añade sistemas, evaluaciones, solicitudes de derechos, incidentes o proveedores y la puntuación aparecerá aquí.",
-        "partialSubtitle": "Calculada sobre {rated} de {total} áreas ({pct} % de la ponderación). No se da ninguna valoración hasta que todas las áreas tengan datos; las áreas sin datos quedan fuera en lugar de contarse como conformes.",
         "areasWithData": "Datos en {rated} de {total} áreas",
         "value": "{score} / 100",
         "draftsExcluded": "{count, plural, one {# registro en borrador queda fuera de estas cifras hasta que una persona lo confirme.} other {# registros en borrador quedan fuera de estas cifras hasta que una persona los confirme.}}",
-        "reviewDrafts": "Revisar y confirmar"
+        "reviewDrafts": "Revisar y confirmar",
+        "withheld": "No se muestra una cifra global hasta que todas las áreas tengan datos: por ahora hay datos en {rated} de {total} áreas. Las áreas sin datos se dejan fuera en lugar de contarse como conformes.",
+        "raiseTitle": "Qué la sube"
+      },
+      "raise": {
+        "ropa": {
+          "unrated": "Sistemas: añade un sistema y vincúlalo a una actividad de tratamiento.",
+          "raise": "{count, plural, one {Sistemas: vincula el sistema que no tiene actividad de tratamiento.} other {Sistemas: vincula los # sistemas que no tienen actividad de tratamiento.}}"
+        },
+        "assessment": {
+          "unrated": "Evaluaciones: empieza una, una EIPD cuando el riesgo sea alto.",
+          "raise": "{count, plural, one {Evaluaciones: termina y aprueba la evaluación pendiente.} other {Evaluaciones: termina y aprueba las # evaluaciones pendientes.}}"
+        },
+        "dsar": {
+          "unrated": "Solicitudes de derechos: se valoran cuando se ha recibido una solicitud. Hasta entonces, no hay nada que hacer.",
+          "raise": "{count, plural, one {Solicitudes de derechos: responde la solicitud vencida.} other {Solicitudes de derechos: responde las # solicitudes vencidas.}}"
+        },
+        "incident": {
+          "unrated": "Brechas: se valoran cuando se ha registrado una brecha que deba notificarse. Hasta entonces, no hay nada que hacer.",
+          "raise": "{count, plural, one {Brechas: registra la notificación de la brecha que la necesita.} other {Brechas: registra la notificación de las # brechas que la necesitan.}}"
+        },
+        "vendor": {
+          "unrated": "Proveedores: marca como activos los proveedores que usas.",
+          "raise": "{count, plural, one {Proveedores: evalúa el proveedor activo sin revisar en los últimos 12 meses.} other {Proveedores: evalúa los # proveedores activos sin revisar en los últimos 12 meses.}}"
+        }
       },
       "breakdown": {
         "heading": "Desglose de cumplimiento por módulo",
@@ -2678,7 +2714,7 @@
     },
     "processingActivities": {
       "back": "Volver",
-      "title": "Registro de actividades",
+      "title": "Registro de Actividades de Tratamiento",
       "subtitle": "Tus actividades de tratamiento: el registro de actividades de tratamiento (RAT, artículo 30 del RGPD)",
       "exportRopa": "Exportar RAT",
       "downloadPdf": "Descargar en PDF",
@@ -2819,6 +2855,7 @@
     "localSignInTitle": "Acceso local",
     "localSignInBody": "Tu cuenta está guardada en este ordenador. Introduce tu correo para abrirla (no se envía nada a ningún sitio).",
     "signedOut": "Has cerrado la sesión. Vuelve a entrar para continuar.",
+    "signInToContinue": "Inicia sesión para continuar. Volverás a la página en la que estabas.",
     "noSignInMethod": "Este servidor no tiene ningún método de acceso configurado. El administrador puede activar el acceso local, una clave del servicio de correo o el acceso con Google.",
     "error": {
       "OAuthAccountNotLinked": "Este correo ya está asociado a otro método de inicio de sesión. Prueba con el enlace mágico.",
@@ -3477,6 +3514,9 @@
     "privacyProfessionalDesc": "Un despacho de abogados, una consultora u otro asesor que gestiona la privacidad de varias organizaciones",
     "orgName": "Nombre de la organización",
     "orgNamePlaceholder": "p. ej., Ejemplo Logística, S.L.",
+    "clientName": "Nombre de tu primer cliente",
+    "clientNamePlaceholder": "p. ej., Panadería del Puerto, S.L.",
+    "clientNameHint": "Cada organización a la que asesoras es aquí un cliente. Tu propio despacho no necesita una. Los demás los añades desde Todos los clientes.",
     "getStarted": "Comenzar",
     "settingUp": "Configurando...",
     "persona": {
@@ -9833,6 +9873,7 @@
       "coming": "próximamente",
       "optional": "opcional",
       "toConfirm": "por confirmar",
+      "ready": "a punto para cuando haga falta",
       "action": "requiere acción"
     },
     "account": "Cuenta",
@@ -9884,7 +9925,7 @@
         "do": "Registra tus sistemas: las aplicaciones, bases de datos y almacenes con datos personales."
       },
       "ropa": {
-        "label": "Registro de actividades",
+        "label": "Registro de Actividades de Tratamiento",
         "why": "Mantén el registro del artículo 30 sobre cómo tratas datos personales.",
         "do": "Registra cada actividad de tratamiento: su finalidad, base jurídica y datos."
       },
@@ -9967,15 +10008,28 @@
       "next": "Siguiente paso",
       "finish": "Finalizar",
       "stageDone": "Fase {number} completada. Siguiente: {next}.",
-      "lastStageDone": "Fase {number} completada. Todas las fases están completadas."
+      "lastStageDone": "Fase {number} completada. Todas las fases están completadas.",
+      "missing": "Para completar este paso, añade a un registro: {fields}.",
+      "missingLink": "Ver qué falta",
+      "readyWhenNeeded": "A punto para cuando haga falta: no hay nada que hacer aquí hasta que ocurra.",
+      "fields": {
+        "dataSubjects": "los interesados",
+        "categories": "las categorías de datos",
+        "retention": "el plazo de conservación",
+        "dataElements": "los datos personales que contiene",
+        "inUse": "un estado en uso (no potencial)",
+        "dataProcessed": "los datos personales que trata",
+        "countries": "dónde trata los datos",
+        "complianceStatus": "un estado de cumplimiento registrado"
+      }
     },
     "plan": {
       "label": "Plan",
       "day": "Plan del programa: día {day} de {total}",
       "onPlan": "Según lo previsto",
-      "behind": "Con {days} días de retraso",
+      "behind": "{days, plural, one {Con # día de retraso} other {Con # días de retraso}}",
       "complete": "Plan del programa completado",
-      "remaining": "Quedan {count} fases: {stages}",
+      "remaining": "{count, plural, one {Queda # fase: {stages}} other {Quedan # fases: {stages}}}",
       "notStarted": "Sin empezar"
     },
     "figure": {
@@ -10010,6 +10064,8 @@
       "breachNotify": "Brecha {ref}: notificar",
       "dsarDue": "La solicitud de derechos {ref} vence",
       "plan": "Plan: hito del día {day}",
+      "activityReview": "Vence la revisión de la actividad {name}",
+      "vendorReview": "Vence la revisión del proveedor {name}",
       "overdue": "vencido desde el {date}",
       "empty": "Ningún plazo en los próximos 30 días."
     },
@@ -10077,13 +10133,19 @@
       "confirmed": "Confirmado",
       "areas": "Áreas",
       "documents": "Documentos listos",
-      "deadline": "Próximo plazo",
+      "deadline": "Próximo vencimiento",
       "action": "Siguiente acción",
       "menu": "Más"
     },
     "docsReady": "{ready} de {total} listos",
-    "noDeadline": "Ninguno",
+    "noDeadline": "Ninguno en los próximos 30 días",
     "none": "Sin cifra todavía",
+    "status": {
+      "action": "Requiere atención",
+      "setup": "En configuración",
+      "toConfirm": "Borradores por confirmar",
+      "onTrack": "Al día"
+    },
     "limited": "Limitado a tus departamentos: no se muestran las cifras de toda la organización.",
     "sortNote": "Ordenados por el plazo más próximo, el más cercano primero; después, los clientes sin plazo, por nombre."
   },
@@ -10213,6 +10275,7 @@
         "breach-window": "Brechas por notificar",
         "breach-decision": "Brechas pendientes de decidir si se notifican",
         "assessment-approval": "Evaluaciones por aprobar",
+        "assessment-review": "Evaluaciones por revisar",
         "drafts-to-confirm": "Registros en borrador por confirmar"
       },
       "hint": {
@@ -10221,6 +10284,7 @@
         "breach-window": "Brechas abiertas que deben notificarse.",
         "breach-decision": "Brechas registradas en las últimas 72 horas sin ninguna notificación ni marca de que deban notificarse. Decide si hay que notificar antes de que venza el plazo.",
         "assessment-approval": "Evaluaciones enviadas para revisión o aprobación.",
+        "assessment-review": "Evaluaciones aprobadas cuya actividad de tratamiento ha cambiado desde la aprobación: revísalas (artículo 35.11 del RGPD).",
         "drafts-to-confirm": "Registros que ha redactado el inicio rápido o una plantilla. Cuentan para tu programa cuando una persona los confirma."
       }
     },
@@ -10439,6 +10503,7 @@
     "reviewTitle": "Revisar y confirmar",
     "reviewSubtitle": "El inicio rápido, las plantillas, las copias de otro cliente y las importaciones han redactado estos registros. Abre cada uno para revisarlo o corregirlo y después confírmalo. Cada uno cuenta para tu programa cuando está confirmado.",
     "reviewEmpty": "Nada que confirmar: todos los registros en borrador están confirmados.",
+    "reviewEmptyNext": "Volver al panel",
     "selectAll": "Seleccionar todo",
     "clearSelection": "Quitar selección",
     "confirmSelected": "Confirmar seleccionados ({count})",
@@ -10487,7 +10552,8 @@
       "aiAssist": "la asistencia de IA activada",
       "notificationRecord": "un registro de notificación en un incidente",
       "dsarRequest": "una solicitud de derechos",
-      "confirmedStep": "un paso confirmado en la ruta"
+      "confirmedStep": "un sistema, una actividad o un proveedor confirmados y completos",
+      "confirmDrafts": "los borradores confirmados"
     },
     "inputAction": {
       "default": "Añadir",
@@ -10496,7 +10562,8 @@
       "aiAssist": "Abrir ajustes",
       "dpaFacts": "Empezar",
       "dpiaStart": "Empezar",
-      "confirmedStep": "Empezar"
+      "confirmedStep": "Empezar",
+      "confirmDrafts": "Revisar y confirmar"
     },
     "gaps": {
       "toConfirm": "{count, plural, one {# registro por confirmar} other {# registros por confirmar}}",

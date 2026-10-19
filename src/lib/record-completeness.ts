@@ -54,3 +54,43 @@ export function missingRecordFields(subject: RecordSubject): RecordField[] {
 export function isRecordComplete(subject: RecordSubject): boolean {
   return missingRecordFields(subject).length === 0;
 }
+
+/// The minimum a processing record needs before it can make the "Records of
+/// processing" step done: who it is about, which personal data, and how long it
+/// is kept (the legal basis is required at creation). Recipients may lawfully be
+/// none, so their absence keeps a record on the Incomplete list but does not
+/// hold the step back.
+export const MINIMUM_RECORD_FIELDS: readonly RecordField[] = ["dataSubjects", "categories", "retention"];
+
+/// The minimum fields still missing on this record, in display order.
+export function missingMinimumFields(subject: RecordSubject): RecordField[] {
+  return missingRecordFields(subject).filter((f) => MINIMUM_RECORD_FIELDS.includes(f));
+}
+
+/// What a vendor needs before it can make the "Vendors and processors" step
+/// done: it is in use (not only a prospect), and the personal data it processes
+/// and where it processes them are recorded.
+export const VENDOR_FIELDS = ["inUse", "dataProcessed", "countries"] as const;
+export type VendorField = (typeof VENDOR_FIELDS)[number];
+
+export interface VendorSubject {
+  status?: string | null;
+  dataProcessed?: readonly string[] | null;
+  countries?: readonly string[] | null;
+}
+
+export function missingVendorFields(v: VendorSubject): VendorField[] {
+  const missing: VendorField[] = [];
+  if (!v.status || v.status === "PROSPECTIVE") missing.push("inUse");
+  if (isBlankList(v.dataProcessed)) missing.push("dataProcessed");
+  if (isBlankList(v.countries)) missing.push("countries");
+  return missing;
+}
+
+/// The fields missing on the record closest to complete: what one more edit
+/// needs to finish a step. Empty when one record is already complete, or when
+/// there is no record at all.
+export function closestMissing<F extends string>(rows: readonly F[][]): F[] {
+  if (rows.length === 0) return [];
+  return rows.reduce((best, row) => (row.length < best.length ? row : best));
+}

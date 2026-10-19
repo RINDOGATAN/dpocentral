@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { safeCallbackPath } from "@/lib/callback-url";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,9 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
   const searchParams = useSearchParams();
   // Set by the sign-out walk when it lands the user back here.
   const signedOut = searchParams.get("signedOut") === "1";
+  // Sent here because a session ended: say so, and return to that page.
+  const sessionEnded = searchParams.get("reason") === "signin-required";
+  const callbackUrl = safeCallbackPath(searchParams.get("callbackUrl"));
 
   // Capture OAuth errors from next-auth redirect (e.g. ?error=OAuthAccountNotLinked)
   useEffect(() => {
@@ -68,7 +72,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
       const result = await signIn("email", {
         email,
         redirect: false,
-        callbackUrl: "/privacy",
+        callbackUrl,
       });
 
       if (result?.error === BLOCKED_EMAIL_MESSAGE_KEY) {
@@ -93,7 +97,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
     // Using redirect:false loses the callbackUrl after the round trip,
     // causing next-auth to land back on /sign-in instead of /privacy.
     // Let next-auth handle the full redirect flow natively.
-    signIn("google", { callbackUrl: "/privacy" });
+    signIn("google", { callbackUrl });
   };
 
   const handleDevSignIn = async (e: React.FormEvent) => {
@@ -106,7 +110,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
       const result = await signIn("dev-credentials", {
         email: devEmail,
         redirect: false,
-        callbackUrl: "/privacy",
+        callbackUrl,
       });
 
       if (result?.error === BLOCKED_EMAIL_MESSAGE_KEY) {
@@ -116,7 +120,7 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
         setError(t("devSignInFailed"));
         setIsDevLoading(false);
       } else {
-        window.location.href = result?.url ?? "/privacy";
+        window.location.href = result?.url ?? callbackUrl;
       }
     } catch {
       setError(t("devSignInFailed"));
@@ -157,6 +161,11 @@ export function SignInForm({ methods }: { methods: SignInMethods }) {
           <p className="text-muted-foreground text-sm">
             {brand.customTagline ? brand.tagline : tMeta("tagline")}
           </p>
+          {sessionEnded && !signedOut && (
+            <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground" data-testid="session-ended">
+              {t("signInToContinue")}
+            </p>
+          )}
           {signedOut && (
             <p className="mt-4 p-3 border border-border text-xs text-left text-muted-foreground">
               {t("signedOut")}

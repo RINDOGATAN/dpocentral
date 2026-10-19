@@ -26,6 +26,8 @@ export interface ProgrammeOverview {
   recordCounts: Record<CountedStepId, RecordCounts> | null;
   needsAction: NeedsActionItem[];
   deadlines: { kind: "breachDecision" | "breachNotify" | "dsarDue"; at: string; publicId: string; href: string }[];
+  /** Reviews of activities and vendors due within 30 days, or overdue. */
+  reviews: { kind: "activityReview" | "vendorReview"; at: string; id: string; name: string; href: string }[];
 }
 
 /** Null while loading, and for a member limited to departments. */
@@ -37,7 +39,7 @@ export function useProgrammeOverview(): { overview: ProgrammeOverview | null; re
   );
   if (!data || data.limited) return { overview: null, refreshing: isFetching };
   return {
-    overview: { documents: data.documents, recordCounts: data.recordCounts, needsAction: data.needsAction, deadlines: data.deadlines },
+    overview: { documents: data.documents, recordCounts: data.recordCounts, needsAction: data.needsAction, deadlines: data.deadlines, reviews: data.reviews ?? [] },
     refreshing: isFetching,
   };
 }

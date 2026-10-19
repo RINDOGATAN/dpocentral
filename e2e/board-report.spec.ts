@@ -3,7 +3,7 @@
 
 /**
  * The board report, seen in a browser:
- * an organisation with one confirmed step and a few records of the last
+ * an organisation with a vendor in use (a Know-your-data step) and a few records of the last
  * quarter (written straight into the local test database, so the walk is
  * skipped against any other database). It checks:
  *
@@ -83,10 +83,11 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
   await page.goto("/privacy");
   await expect(page.getByTestId("doc-boardReport")).toHaveAttribute("data-state", "needsInput");
   await expect(page.getByTestId("doc-boardReport")).toContainText(
-    es ? "un paso confirmado en la ruta" : "a confirmed step on the path",
+    es ? "un sistema, una actividad o un proveedor confirmados y completos" : "a complete, confirmed system, activity or vendor",
   );
 
-  // One confirmed step: where the organisation operates.
+  // Set-up steps first (where the organisation operates); a Know-your-data
+  // step (a vendor in use, with its data and countries) gives the report content.
   await page.goto("/privacy/quickstart");
   await expect(page.getByTestId("jurisdiction-picker")).toBeVisible();
   await page.locator("#quickstart-place-GDPR").click();
@@ -139,7 +140,14 @@ test("the board report: page, comment, period, menu line, panel and PDF", async 
       },
     });
     const dpaVendor = await prisma.vendor.create({
-      data: { organizationId: org.id, name: `Board mailer ${stamp}`, status: "ACTIVE", riskTier: "MEDIUM" },
+      data: {
+        organizationId: org.id,
+        name: `Board mailer ${stamp}`,
+        status: "ACTIVE",
+        riskTier: "MEDIUM",
+        dataProcessed: ["IDENTIFIERS"],
+        countries: ["DE"],
+      },
     });
     await prisma.vendorContract.create({
       data: { vendorId: dpaVendor.id, type: "DPA", status: "ACTIVE", name: "DPA" },

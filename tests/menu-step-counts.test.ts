@@ -58,10 +58,20 @@ describe("menu step lines state counts", () => {
   it("activities: one confirmed and two drafts reads exactly that, with the tick unchanged", () => {
     expect(line(MIXED, "ropa", "en")).toBe("Records of processing (ROPA) · 1 confirmed, 2 in draft");
     expect(line(MIXED, "ropa", "es")).toContain("· 1 confirmada, 2 en borrador");
+    // The one confirmed record is bare, so the tick waits for its minimum fields.
     const statuses = evaluatePath(DPO_CENTRAL_PATH, MIXED);
-    expect(statuses.ropa).toBe("done");
-    expect(statuses.vendors).toBe("done");
-    expect(statuses.dataInventory).toBe("done");
+    expect(statuses.ropa).toBe("started");
+    expect(statuses.vendors).toBe("started");
+    expect(statuses.dataInventory).toBe("started");
+    const filled = evaluatePath(DPO_CENTRAL_PATH, {
+      ...MIXED,
+      processingActivitiesComplete: 1,
+      vendorsComplete: 1,
+      dataAssetsComplete: 1,
+    });
+    expect(filled.ropa).toBe("done");
+    expect(filled.vendors).toBe("done");
+    expect(filled.dataInventory).toBe("done");
   });
 
   it("Spanish agrees in gender and number per step", () => {

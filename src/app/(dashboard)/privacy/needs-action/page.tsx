@@ -37,6 +37,7 @@ const ICON: Record<NeedsActionKind, React.ElementType> = {
   "breach-window": AlertTriangle,
   "breach-decision": AlertTriangle,
   "assessment-approval": ClipboardCheck,
+  "assessment-review": CalendarClock,
   "drafts-to-confirm": CircleDashed,
 };
 

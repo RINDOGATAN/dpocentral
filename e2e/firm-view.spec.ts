@@ -29,6 +29,12 @@ const stamp = Date.now().toString(36);
 const LOCALE = process.env.FV_LOCALE === "es" ? "es" : "en";
 const OUT = process.env.FV_OUT ?? "";
 const es = LOCALE === "es";
+/** The firm view's words, read from the message files so the walk follows the copy. */
+const portfolio = (
+  JSON.parse(readFileSync(path.join(process.cwd(), "src/messages", `${LOCALE}.json`), "utf8")) as {
+    portfolio: { noDeadline: string };
+  }
+).portfolio;
 
 function localDatabase(): boolean {
   const url = process.env.DATABASE_URL ?? "";
@@ -184,7 +190,8 @@ test("the firm view by nearest deadline, and the document pack", async ({ page, 
   expect(rows.map((r) => r.name)).toEqual([names.breach, names.request, names.empty]);
   expect(rows[0].deadline).toContain("INC-");
   expect(rows[1].deadline).toContain(es ? "SOL-" : "REQ-");
-  expect(rows[2].deadline).toBe(es ? "Ninguno" : "None");
+  // No due item at all: "None in the next 30 days" / "Ninguno en los próximos 30 días".
+  expect(rows[2].deadline).toBe(portfolio.noDeadline);
   await expect(page.getByText(es ? "Añadir un cliente" : "Add a client")).toBeVisible();
   if (wide(page)) {
     await expect(page.getByTestId("clients-table")).toBeVisible();
@@ -206,7 +213,14 @@ test("the firm view by nearest deadline, and the document pack", async ({ page, 
     await page.goto("/privacy/clients");
     const container = page.locator(wide(page) ? "[data-testid='client-row']" : "[data-testid='client-card']").nth(i);
     await container.getByTestId("client-open").click();
-    await page.waitForURL(/\/privacy$/);
+    await page.waitForURL(/\/privacy(\/quickstart)?$/);
+    // A client with no records yet is taken to its own quick start on its
+    // first visit (remembered per organisation); its dashboard is then read
+    // the way the quick start's own "Dashboard" link opens it.
+    if (row.name !== names.breach) {
+      await page.waitForURL(/\/privacy\/quickstart$/);
+      await page.goto("/privacy?from=quickstart");
+    }
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(row.name);
     const figure = (await page.getByTestId("program-figure-card").getByTestId("program-figure").innerText()).trim();
     expect(figure, `${row.name}: figure`).toBe(row.figure);

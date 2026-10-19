@@ -27,7 +27,7 @@
  */
 
 import { DPO_CENTRAL_PATH, type PathCounts } from "@/components/guided/path-config";
-import { evaluatePath, programFigure } from "@/components/guided/path";
+import { evaluatePath, isStepMet } from "@/components/guided/path";
 
 export type DocumentState = "ready" | "draft" | "needsInput" | "notYet";
 
@@ -87,7 +87,8 @@ export type DocumentInput =
   | "aiAssist"
   | "notificationRecord"
   | "dsarRequest"
-  | "confirmedStep";
+  | "confirmedStep"
+  | "confirmDrafts";
 
 export type DocumentStatus =
   | { state: "ready" }
@@ -158,7 +159,12 @@ export const INPUTS: Record<DocumentInput, { href: string; external?: boolean }>
   dsarRequest: { href: "/privacy/dsar" },
   // The quick start drafts the first records; confirming one completes a step.
   confirmedStep: { href: "/privacy/quickstart" },
+  // Drafts exist: confirming them (with their minimum fields) is what is left.
+  confirmDrafts: { href: "/privacy/review" },
 };
+
+/** The steps whose records give a report real content (stage "Know your data"). */
+const KNOW_YOUR_DATA_STEPS = ["dataInventory", "ropa", "vendors"] as const;
 
 export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
   // ---- Produced today: the inventory's eleven, and the board report -------
@@ -324,12 +330,15 @@ export const DOCUMENT_REGISTER: readonly DocumentEntry[] = [
     href: "/privacy/board-report",
     download: "/api/export/board-report",
     formats: ["pdf"],
-    needs: "At least one confirmed step on the path. Read from data already in DPO Central, for a chosen period (the last full quarter by default).",
-    rule: "Ready when at least one step of the path is confirmed (the program figure is not zero); otherwise needs a confirmed step.",
-    evaluate: (f) =>
-      programFigure(DPO_CENTRAL_PATH, evaluatePath(DPO_CENTRAL_PATH, f)).confirmed > 0
-        ? ready()
-        : needs("confirmedStep"),
+    needs: "At least one done step under Know your data (a complete, confirmed data asset, processing activity or vendor). Read from data already in DPO Central, for a chosen period (the last full quarter by default).",
+    rule: "Ready when a Know your data step (data inventory, records of processing or vendors) is done: set-up steps alone (the quick start, where you operate) give the report no content. Otherwise needs the drafts confirmed on Review and confirm when there are drafts, or a confirmed step when there are none.",
+    evaluate: (f) => {
+      const statuses = evaluatePath(DPO_CENTRAL_PATH, f);
+      if (KNOW_YOUR_DATA_STEPS.some((id) => isStepMet(statuses[id]))) return ready();
+      return f.dataAssetsDrafts + f.processingActivitiesDrafts + f.vendorsDrafts > 0
+        ? needs("confirmDrafts")
+        : needs("confirmedStep");
+    },
   },
 
   // ---- Not in DPO Central yet --------------------------------------------

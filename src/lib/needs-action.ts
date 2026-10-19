@@ -19,6 +19,7 @@ export const NEEDS_ACTION_KINDS = [
   "breach-window",
   "breach-decision",
   "assessment-approval",
+  "assessment-review",
   "drafts-to-confirm",
 ] as const;
 
@@ -26,11 +27,14 @@ export type NeedsActionKind = (typeof NEEDS_ACTION_KINDS)[number];
 
 /// The link each category points at.
 const HREF: Record<NeedsActionKind, string> = {
-  "review-due": "/privacy/data-inventory",
+  // Reviews due are processing activities (nextReviewAt): open their list.
+  "review-due": "/privacy/data-inventory/processing-activities",
   "dsar-due": "/privacy/dsar",
   "breach-window": "/privacy/incidents",
   "breach-decision": "/privacy/incidents",
   "assessment-approval": "/privacy/assessments",
+  // Approved assessments whose activity changed since approval (Art. 35(11)).
+  "assessment-review": "/privacy/assessments",
   "drafts-to-confirm": "/privacy/review",
 };
 
@@ -55,6 +59,11 @@ export interface NeedsActionCounts {
   /// Assessments sent for approval (PENDING_APPROVAL or PENDING_REVIEW). Null
   /// when department-scoped.
   assessmentApproval: number | null;
+  /// Approved assessments due for review: their processing activity changed
+  /// since the approval in a way that matters (GDPR Art. 35(11);
+  /// src/server/services/assessment/review-due.ts). Optional; null when
+  /// department-scoped.
+  assessmentReview?: number | null;
   /// Records the quick start, a template or another client's copy drafted and
   /// nobody has confirmed (src/server/services/template-items/drafts.ts).
   /// Optional; null when department-scoped.
@@ -78,6 +87,7 @@ export function buildNeedsAction(counts: NeedsActionCounts): NeedsActionItem[] {
   push("breach-window", counts.breachWindow);
   push("breach-decision", counts.breachDecision ?? null);
   push("assessment-approval", counts.assessmentApproval);
+  push("assessment-review", counts.assessmentReview ?? null);
   push("drafts-to-confirm", counts.draftsToConfirm ?? null);
   return items;
 }

@@ -81,9 +81,22 @@ describe("middleware rate limits, per route", () => {
     expect((await hit("/api/auth/signin/email", "POST")).status).not.toBe(429);
   });
 
-  it("other auth traffic (session polling): 30 per minute, unaffected by exhausted sign-in", async () => {
-    await exhaust("/api/auth/callback/google", "GET", 10);
-    const refused = await exhaust("/api/auth/session", "GET", 30);
+  it("session and CSRF reads: 600 per minute, never counted against sign-in", async () => {
+    // An office behind one address: many tabs polling the session.
+    await passes("/api/auth/session", "GET", 300);
+    await passes("/api/auth/csrf", "GET", 100);
+    // Sign-in still has its full allowance of 10 after all that polling.
+    const refusedSignIn = await exhaust("/api/auth/callback/dev-credentials", "POST", 10);
+    expect(refusedSignIn.status).toBe(429);
+    // And exhausted sign-in does not block browsing.
+    expect((await hit("/api/auth/session", "GET")).status).not.toBe(429);
+    const refused = await exhaust("/api/auth/session", "GET", 600 - 401);
+    expect(refused.status).toBe(429);
+  });
+
+  it("other auth traffic (sign-out): 30 per minute, unaffected by session polling", async () => {
+    await passes("/api/auth/session", "GET", 50);
+    const refused = await exhaust("/api/auth/signout", "POST", 30);
     expect(refused.status).toBe(429);
   });
 

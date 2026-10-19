@@ -15,6 +15,7 @@
 // view rather than shown as an org-wide number under a department name.
 
 import { countDrafts } from "@/server/services/template-items/drafts";
+import { reviewDueAssessments } from "@/server/services/assessment/review-due";
 import type { Db } from "@/lib/prisma";
 import { isDsarModuleEnabled } from "@/config/features";
 import {
@@ -69,9 +70,10 @@ export async function collectNeedsAction(
   let breachDecision: number | null = null;
   let assessmentApproval: number | null = null;
   let draftsToConfirm: number | null = null;
+  let assessmentReview: number | null = null;
   if (!departmentScoped) {
     const dueBefore = new Date(now.getTime() + DSAR_DUE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
-    const [dsar, breach, undecided, assessment, drafts] = await Promise.all([
+    const [dsar, breach, undecided, assessment, drafts, assessmentsDue] = await Promise.all([
       // Not counted when the rights-request module is off.
       isDsarModuleEnabled()
         ? prisma.dSARRequest.count({
@@ -106,12 +108,18 @@ export async function collectNeedsAction(
       }),
       // Drafts waiting for a person to confirm them (they count once confirmed).
       countDrafts(prisma, organizationId).then((d) => d.total),
+      // Approved assessments whose activity changed since approval. A failed
+      // check never hides the rest of the list.
+      reviewDueAssessments(prisma, organizationId)
+        .then((rows) => rows.length)
+        .catch(() => 0),
     ]);
     dsarDue = dsar;
     breachWindow = breach;
     breachDecision = undecided;
     assessmentApproval = assessment;
     draftsToConfirm = drafts;
+    assessmentReview = assessmentsDue;
   }
 
   const counts: NeedsActionCounts = {
@@ -121,6 +129,7 @@ export async function collectNeedsAction(
     breachDecision,
     assessmentApproval,
     draftsToConfirm,
+    assessmentReview,
   };
   const items = buildNeedsAction(counts);
   return { items, total: needsActionTotal(items), departmentScoped };

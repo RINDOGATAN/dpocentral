@@ -68,6 +68,7 @@ export default async function DocsGettingStartedPage() {
     "breach-window",
     "breach-decision",
     "assessment-approval",
+    "assessment-review",
   ].filter((kind) => dsarOn || kind !== "dsar-due");
 
   const libraryItems = ["needsAction", "incomplete", "reports", "auditTrail", "experts", "skills", "help", "settings"] as const;
