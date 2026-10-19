@@ -1,88 +1,93 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-/** The records of processing (ROPA), as PDF or CSV. See ./context.ts. */
+/**
+ * The record of processing activities (GDPR Art. 30) as PDF, CSV, XLSX or
+ * JSON: the controller record (Art. 30(1)) or the processor record
+ * (Art. 30(2)). See ./context.ts.
+ */
 
 import { isDraftFlow } from "@/server/services/data-flows/auto-flows";
 import { pdfFlowLabels } from "@/server/services/export/flow-labels-pdf";
 import { getTranslations } from "next-intl/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { RopaDocument } from "@/server/services/export/ropa/RopaDocument";
-import { ROPA_CSV_KEYS, ropaToCSV } from "@/server/services/privacy/ropaGenerator";
-import { csvLabelsFor } from "@/server/services/export/csv-labels-i18n";
-import type { ROPAEntry } from "@/server/services/privacy/ropaGenerator";
+import type { RopaRecordKind } from "@/server/services/privacy/ropaGenerator";
+import type { BusinessUnitScope } from "@/server/services/business-units/scope";
+import { loadRopaData } from "@/server/services/export/ropa/record-data";
+import { controllerBlockRows, ropaTable, ropaText, tableToCsv } from "@/server/services/export/ropa/record-text";
+import { createXlsx, XLSX } from "@/lib/xlsx";
+import { evaluateRegister, registerFor } from "@/config/document-register";
+import { isDsarModuleEnabled } from "@/config/features";
+import { loadDocumentFacts } from "@/server/services/program/document-facts";
 import {
   renderFlowGraphPng,
   type PdfFlowAsset,
   type PdfFlowEdge,
   type PdfFlowCluster,
 } from "@/server/services/export/flow-graph-pdf";
-import { withDraftGapsPage } from "../draft-gaps-page";
+import { withDraftGapsPage, type DraftNote } from "../draft-gaps-page";
 import { CSV, PDF, nameForFile, fileTitle, today, type ExportArgs, type ExportFile } from "./context";
 import { withPdfLocale } from "@/server/services/export/pdf-locale";
+import type { Locale } from "@/i18n/config";
+import type { Db } from "@/lib/prisma";
 
-export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
+export type RopaFormat = "pdf" | "csv" | "xlsx" | "json";
+
+export interface RopaExportArgs extends Omit<ExportArgs, "format"> {
+  format?: RopaFormat;
+  /** Art. 30(1) (the default) or Art. 30(2). */
+  kind?: RopaRecordKind;
+  /** A department-limited member's scope; the whole organisation otherwise. */
+  scope?: BusinessUnitScope;
+}
+
+const JSON_TYPE = "application/json; charset=utf-8";
+
+/**
+ * The draft page of the standalone record, on the same rule as the document
+ * pack: while the register calls the record a draft, its first page says so
+ * and lists what is outstanding.
+ */
+export async function ropaDraftNote(prisma: Db, organizationId: string, locale: Locale): Promise<DraftNote | null> {
+  const facts = await loadDocumentFacts(prisma, organizationId);
+  const doc = evaluateRegister(registerFor({ dsarEnabled: isDsarModuleEnabled() }), facts).find(
+    (d) => d.id === "ropa",
+  );
+  if (!doc || doc.status.state !== "draft") return null;
+  const gaps = doc.status.gaps;
+  const [t, tr] = await Promise.all([
+    getTranslations({ locale, namespace: "pdf.documentPack" }),
+    getTranslations({ locale, namespace: "documentRegister" }),
+  ]);
+  return {
+    mark: t("draftMark"),
+    title: tr("items.ropa"),
+    intro: t("draftNote.intro"),
+    gapsTitle: t("draftNote.gapsTitle"),
+    gaps: gaps.map((g) => tr(`gaps.${g.key}` as never, { count: g.count } as never)),
+    generated: t("draftNote.generated", { date: today() }),
+  };
+}
+
+export async function buildRopaExport(args: RopaExportArgs): Promise<ExportFile> {
   const { prisma, organizationId, orgName, userId, locale } = args;
   const format = args.format ?? "pdf";
-  const [t, tCommon, tEnum] = await Promise.all([
+  const kind = args.kind ?? "controller";
+  const [t, tCommon, tEnum, x] = await Promise.all([
     getTranslations({ locale, namespace: "pdf.ropaReport" }),
     getTranslations({ locale, namespace: "pdf.common" }),
     getTranslations({ locale, namespace: "pdf.enum" }),
+    ropaText(locale),
   ]);
 
-  const activities = await prisma.processingActivity.findMany({
-    where: { organizationId, isActive: true },
-    include: {
-      assets: {
-        include: {
-          linkedElements: { include: { dataElement: true } },
-          dataAsset: { include: { dataElements: true } },
-        },
-      },
-      transfers: true,
-    },
-    orderBy: { name: "asc" },
-  });
-
-  const entries: ROPAEntry[] = activities.map((activity) => ({
-    name: activity.name,
-    description: activity.description,
-    purpose: activity.purpose,
-    legalBasis: activity.legalBasis,
-    legalBasisDetail: activity.legalBasisDetail,
-    dataSubjects: activity.dataSubjects,
-    dataCategories: activity.categories,
-    recipients: activity.recipients,
-    retentionPeriod: activity.retentionPeriod,
-    automatedDecisionMaking: activity.automatedDecisionMaking,
-    automatedDecisionDetail: activity.automatedDecisionDetail,
-    systems: activity.assets.map((a) => {
-      const effectiveElements = a.linkedElements.length > 0
-        ? a.linkedElements.map((le) => le.dataElement)
-        : a.dataAsset.dataElements;
-      return {
-        name: a.dataAsset.name,
-        type: a.dataAsset.type,
-        location: a.dataAsset.location,
-        elements: effectiveElements.map((e) => ({
-          name: e.name,
-          category: e.category,
-          sensitivity: e.sensitivity,
-        })),
-      };
-    }),
-    transfers: activity.transfers.map((t) => ({
-      destination: t.destinationCountry,
-      organization: t.destinationOrg,
-      mechanism: t.mechanism,
-      safeguards: t.safeguards,
-    })),
-    lastReviewed: activity.lastReviewedAt,
-    nextReview: activity.nextReviewAt,
-  }));
+  const scope: BusinessUnitScope = args.scope ?? { all: true };
+  const data = await loadRopaData(prisma, organizationId, { kind, scope });
+  const { entries, controller } = data;
+  const activities = data.activities;
 
   const dateStr = today();
-  const base = `${fileTitle("ROPA", locale)}-${nameForFile(orgName)}-${dateStr}`;
+  const base = `${fileTitle(kind === "processor" ? "ROPA-Processor" : "ROPA", locale)}-${nameForFile(orgName)}-${dateStr}`;
 
   if (args.audit) {
     await prisma.auditLog.create({
@@ -92,13 +97,42 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
         entityType: "ProcessingActivity",
         entityId: organizationId,
         action: "EXPORT_ROPA",
-        changes: { format, count: entries.length },
+        changes: { format, record: kind, count: entries.length, ...(scope.all ? {} : { departmentScoped: true }) },
       },
     });
   }
 
-  if (format === "csv") {
-    return { data: ropaToCSV(entries, await csvLabelsFor("ropa", ROPA_CSV_KEYS, locale)), filename: `${base}.csv`, contentType: CSV };
+  if (format === "csv" || format === "xlsx") {
+    const table = ropaTable(kind, entries, controller, x);
+    if (format === "csv") {
+      return { data: tableToCsv(table, locale), filename: `${base}.csv`, contentType: CSV };
+    }
+    const title = t(kind === "processor" ? "processor.coverTitle" : "coverTitle");
+    const blockRows = controllerBlockRows(controller, kind, x);
+    const xlsx = createXlsx(
+      [
+        { name: x.t(kind === "processor" ? "sheets.processorRecord" : "sheets.record"), rows: [table.headers, ...table.rows], header: true },
+        {
+          name: x.t(kind === "processor" ? "sheets.processor" : "sheets.controller"),
+          rows: [[x.t("sheets.field"), x.t("sheets.value")], ...blockRows],
+          header: true,
+          widths: [36, 90],
+        },
+      ],
+      { title: `${title} · ${orgName}`, language: locale },
+    );
+    return { data: xlsx, filename: `${base}.xlsx`, contentType: XLSX };
+  }
+
+  if (format === "json") {
+    const body = {
+      record: kind,
+      generatedAt: new Date().toISOString(),
+      controller,
+      activities: entries,
+      ...(kind === "controller" && scope.all ? { unassignedTransfers: data.unassignedTransfers } : {}),
+    };
+    return { data: JSON.stringify(body, null, 2), filename: `${base}.json`, contentType: JSON_TYPE };
   }
 
   // ─── Build the per-activity cluster flow graph ───────────────────────
@@ -116,6 +150,11 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
       },
     })
   ).filter((f) => !isDraftFlow(f.metadata));
+  // A department-limited reader sees only flows between its own activities' systems.
+  const ownAssets = new Set(activities.flatMap((a) => a.assets.map((l) => l.dataAsset.id)));
+  const visibleFlows = scope.all
+    ? flows
+    : flows.filter((f) => ownAssets.has(f.sourceAssetId) && ownAssets.has(f.destinationAssetId));
 
   const assetMap = new Map<string, PdfFlowAsset>();
   for (const a of activities) {
@@ -127,7 +166,7 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
       });
     }
   }
-  for (const f of flows) {
+  for (const f of visibleFlows) {
     assetMap.set(f.sourceAsset.id, f.sourceAsset);
     assetMap.set(f.destinationAsset.id, f.destinationAsset);
   }
@@ -153,7 +192,7 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
     .filter((c) => c.assetIds.length > 0);
 
   const flowLabels = await pdfFlowLabels(locale);
-  const flowEdges: PdfFlowEdge[] = flows.map((f) => {
+  const flowEdges: PdfFlowEdge[] = visibleFlows.map((f) => {
     const meta = f.metadata as { autoGenerated?: boolean } | null;
     return {
       sourceAssetId: f.sourceAssetId,
@@ -171,7 +210,19 @@ export async function buildRopaExport(args: ExportArgs): Promise<ExportFile> {
 
   const buffer = await withPdfLocale(locale, () => renderToBuffer(
     withDraftGapsPage(
-      RopaDocument({ entries, orgName, flowGraph, t, tCommon, tEnum, locale }),
+      RopaDocument({
+        entries,
+        orgName,
+        flowGraph: kind === "controller" && assetMap.size > 0 ? flowGraph : null,
+        t,
+        tCommon,
+        tEnum,
+        locale,
+        kind,
+        controller,
+        unassignedTransfers: data.unassignedTransfers,
+        x,
+      }),
       args.draftNote,
     ))
   );

@@ -15,6 +15,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   ArrowLeft,
@@ -34,7 +36,6 @@ import { useOrgRole } from "@/lib/use-org-role";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { useHostedPilot } from "@/components/pilot/hosted-pilot";
 import { useFormatPrice } from "@/components/region-provider";
-import { formatDateIn } from "@/lib/utils";
 import { NewActivityDialog } from "@/components/privacy/new-activity-dialog";
 import { TemplateBadge } from "@/components/privacy/template-badge";
 import { DraftBadge } from "@/components/privacy/draft-confirm";
@@ -57,23 +58,9 @@ const legalBasisColors: Record<string, string> = {
   LEGITIMATE_INTERESTS: "border-primary text-primary",
 };
 
-function escapeCSV(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
-}
-
-function formatArray(arr: unknown): string {
-  if (Array.isArray(arr)) return arr.join("; ");
-  return String(arr ?? "");
-}
-
-
 export default function ProcessingActivitiesPage() {
   const formatPrice = useFormatPrice();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isExporting, setIsExporting] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
   const { canWrite } = useOrgRole();
@@ -81,12 +68,6 @@ export default function ProcessingActivitiesPage() {
   const tBasis = useTranslations("pages.dataInventory.legalBasis");
   const tInv = useTranslations("pages.dataInventory");
   const locale = useLocale();
-  const tEnum = useTranslations("enums");
-  // English CSVs keep the stored codes; other languages get the screen labels.
-  const csvCode = (kind: "legalBasis" | "dataCategory" | "transferMechanism", value: string) => {
-    const key = `${kind}.${value}`;
-    return locale !== "en" && tEnum.has(key as never) ? tEnum(key as never) : value;
-  };
   const basisLabel = (basis: string) => (LEGAL_BASES.has(basis) ? tBasis(basis) : basis);
 
   const { data: ropaAccess } = trpc.dataInventory.hasRopaExportAccess.useQuery(
@@ -123,70 +104,20 @@ export default function ProcessingActivitiesPage() {
     { enabled: !!organization?.id, placeholderData: (prev) => prev, getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
-  const { refetch: fetchROPA } = trpc.dataInventory.exportROPA.useQuery(
-    { organizationId: organization?.id ?? "" },
-    { enabled: false }
-  );
-
   const activities = activitiesPages?.pages.flatMap((p) => p.activities) ?? [];
+  const hasProcessorActivities = activities.some((a) => a.role === "PROCESSOR");
 
-  async function handleExport(format: "csv" | "json") {
-    setIsExporting(true);
-    try {
-      const { data } = await fetchROPA();
-      if (!data) return;
-
-      let content: string;
-      let mimeType: string;
-      const ext = format;
-
-      if (format === "csv") {
-        const headers = [
-          t("csv.name"), t("csv.description"), t("csv.purpose"), t("csv.legalBasis"),
-          t("csv.legalBasisDetail"), t("csv.dataSubjects"), t("csv.dataCategories"),
-          t("csv.recipients"), t("csv.retention"), t("csv.systems"),
-          t("csv.transfers"), t("csv.lastReviewed"),
-        ];
-        const rows = data.map((entry) => [
-          entry.name,
-          entry.description ?? "",
-          entry.purpose,
-          csvCode("legalBasis", entry.legalBasis),
-          entry.legalBasisDetail ?? "",
-          formatArray(entry.dataSubjects),
-          Array.isArray(entry.dataCategories)
-            ? entry.dataCategories.map((c) => csvCode("dataCategory", String(c))).join("; ")
-            : formatArray(entry.dataCategories),
-          formatArray(entry.recipients),
-          entry.retentionPeriod ?? "",
-          entry.systems.map((s) => s.name).join("; "),
-          entry.transfers.map((t) => `${t.destination} (${csvCode("transferMechanism", t.mechanism)})`).join("; "),
-          entry.lastReviewed ? formatDateIn(entry.lastReviewed, locale) : "",
-        ]);
-        content = [
-          headers.map(escapeCSV).join(","),
-          ...rows.map((row) => row.map(escapeCSV).join(",")),
-        ].join("\n");
-        mimeType = "text/csv;charset=utf-8;";
-      } else {
-        content = JSON.stringify(data, null, 2);
-        mimeType = "application/json;charset=utf-8;";
-      }
-
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const date = new Date().toISOString().slice(0, 10);
-      a.href = url;
-      a.download = `${t("csv.fileName")}-${organization?.name ?? "export"}-${date}.${ext}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } finally {
-      setIsExporting(false);
-    }
-  }
+  // Every export is built on the server (one source for the PDF, the CSV, the
+  // XLSX and the JSON; audited; the department limit applied).
+  const exportUrl = (format: "pdf" | "csv" | "xlsx" | "json", record: "controller" | "processor" = "controller") =>
+    `/api/export/ropa?${new URLSearchParams({
+      organizationId: organization?.id ?? "",
+      format,
+      locale,
+      ...(record === "processor" ? { record } : {}),
+    }).toString()}`;
+  const download = (format: "pdf" | "csv" | "xlsx" | "json", record?: "controller" | "processor") =>
+    window.open(exportUrl(format, record), "_blank");
 
   const filteredActivities = activities.filter(
     (activity) =>
@@ -213,28 +144,48 @@ export default function ProcessingActivitiesPage() {
           {hasRopaAccess ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" disabled={isExporting}>
-                  {isExporting ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="w-4 h-4 mr-2" />
-                  )}
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
                   {t("exportRopa")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open(`/api/export/ropa?organizationId=${organization?.id}`, "_blank")}>
+                <DropdownMenuItem onClick={() => download("pdf")}>
                   <FileText className="w-4 h-4 mr-2" />
                   {t("downloadPdf")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport("csv")}>
+                <DropdownMenuItem onClick={() => download("xlsx")}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" />
+                  {t("downloadXlsx")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => download("csv")}>
                   <FileSpreadsheet className="w-4 h-4 mr-2" />
                   {t("downloadCsv")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport("json")}>
+                <DropdownMenuItem onClick={() => download("json")}>
                   <FileText className="w-4 h-4 mr-2" />
                   {t("downloadJson")}
                 </DropdownMenuItem>
+                {hasProcessorActivities && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                      {t("processorRecord")}
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => download("pdf", "processor")}>
+                      <FileText className="w-4 h-4 mr-2" />
+                      {t("downloadPdf")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => download("xlsx", "processor")}>
+                      <FileSpreadsheet className="w-4 h-4 mr-2" />
+                      {t("downloadXlsx")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => download("csv", "processor")}>
+                      <FileSpreadsheet className="w-4 h-4 mr-2" />
+                      {t("downloadCsv")}
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -421,6 +372,11 @@ export default function ProcessingActivitiesPage() {
                 <li>{t("about.required.retention")}</li>
                 <li>{t("about.required.security")}</li>
               </ul>
+              <p className="mt-3 text-muted-foreground">
+                <Link href="/privacy/settings#controller-details" className="underline">
+                  {t("about.controllerDetailsLink")}
+                </Link>
+              </p>
             </div>
             <div>
               <h4 className="font-medium mb-2">{t("about.whenTitle")}</h4>
