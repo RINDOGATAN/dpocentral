@@ -33,10 +33,12 @@ import { diagnosticsRouter } from "./diagnostics";
 import { auditRouter } from "./privacy/audit";
 import { safeguardsRouter } from "./privacy/safeguards";
 import { searchRouter } from "./privacy/search";
+import { recordOfProcessingRouter } from "./privacy/recordOfProcessing";
 
 export const appRouter = createTRPCRouter({
   organization: organizationRouter,
   dataInventory: dataInventoryRouter,
+  recordOfProcessing: recordOfProcessingRouter,
   dsar: dsarRouter,
   search: searchRouter,
   assessment: assessmentRouter,

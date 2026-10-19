@@ -574,7 +574,30 @@
         "VITAL_INTERESTS": "Vital interests",
         "PUBLIC_TASK": "Public task",
         "LEGITIMATE_INTERESTS": "Legitimate interests"
-      }
+      },
+      "roleAndSecurity": "Role and security",
+      "roleAndSecuritySubtitle": "How you take part in this processing, and how the data is protected (GDPR Article 30)",
+      "role": "Your role",
+      "role_option": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "roleHelp": "As processor, the activity goes in the record as processor (Article 30(2)) instead of the record as controller.",
+      "jointControllerDetails": "Joint controller: name and contact details",
+      "jointControllerDetailsPlaceholder": "For example: Example Partner Ltd, privacy@partner.example",
+      "clientHelp": "The controller on whose behalf you carry out this processing.",
+      "clientControllerName": "Controller",
+      "clientControllerContact": "Controller contact details",
+      "clientRepresentative": "Controller's representative in the Union",
+      "clientDpo": "Controller's data protection officer",
+      "securityMeasures": "Technical and organizational security measures",
+      "securityMeasuresPlaceholder": "For example: encryption at rest and in transit, access by role, logs kept for 12 months",
+      "securityMeasuresHelp": "Leave empty to use the organization's general description.",
+      "securityMeasuresLink": "Edit the general description",
+      "lastReviewedAt": "Last reviewed",
+      "nextReviewAt": "Next review",
+      "reviewHelp": "Both dates are printed in the record of processing. An activity never reviewed counts as pending review."
     },
     "editAiSystemExt": {
       "basics": "Basics",
@@ -995,7 +1018,22 @@
         "noAssets": "No systems in this organization yet",
         "selected": "{count, plural, one {# system selected} other {# systems selected}}"
       },
-      "draftDpia": "Draft a DPIA"
+      "draftDpia": "Draft a DPIA",
+      "retentionDays": "{count, plural, one {# day} other {# days}}",
+      "notSpecified": "Not specified",
+      "role": "Role",
+      "roleOption": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "jointController": "Joint controller",
+      "clientController": "Controller on whose behalf we act",
+      "securityMeasures": "Security measures",
+      "securityInherited": "The organization's general description of security measures applies.",
+      "lastReviewed": "Last reviewed",
+      "nextReview": "Next review",
+      "neverReviewed": "Never reviewed"
     },
     "assetDetail": {
       "notFound": "System not found",
@@ -2526,24 +2564,12 @@
           "notOccasional": "Processing is not occasional",
           "specialCategory": "Processing includes special category data",
           "criminal": "Processing includes criminal conviction data"
-        }
+        },
+        "controllerDetailsLink": "Controller, data protection officer, representative and security measures: set them in Settings"
       },
       "skillName": "ROPA Export",
-      "csv": {
-        "name": "Activity Name",
-        "description": "Description",
-        "purpose": "Purpose",
-        "legalBasis": "Legal Basis",
-        "legalBasisDetail": "Legal Basis Detail",
-        "dataSubjects": "Data Subjects",
-        "dataCategories": "Data Categories",
-        "recipients": "Recipients",
-        "retention": "Retention Period",
-        "systems": "Systems",
-        "transfers": "International Transfers",
-        "lastReviewed": "Last Reviewed",
-        "fileName": "ROPA"
-      }
+      "downloadXlsx": "Download as Excel (XLSX)",
+      "processorRecord": "Record as processor (Article 30(2))"
     },
     "elementDetail": {
       "notFound": "Data element not found",
@@ -4142,7 +4168,8 @@
         "processingActivities": "Processing Activities",
         "intlTransfers": "Int'l Transfers",
         "automatedDecisions": "Automated Decisions",
-        "needingReview": "Needing Review"
+        "needingReview": "Needing Review",
+        "incomplete": "Incomplete"
       },
       "byLegalBasis": "By Legal Basis",
       "dataFlowMap": "Data Flow Map",
@@ -4176,7 +4203,26 @@
           "mechanism": "Mechanism",
           "safeguards": "Safeguards"
         },
-        "warningPrefix": "Warning: "
+        "warningPrefix": "Warning: ",
+        "description": "Description",
+        "role": "Role",
+        "jointController": "Joint controller",
+        "securityMeasures": "Security measures",
+        "securityInherited": "The general description of security measures applies (see above).",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "securityTitle": "Security measures",
+      "securityLead": "General description of the technical and organizational security measures (GDPR Article 32), which applies to every activity that does not describe its own.",
+      "unassignedTransfers": "Transfers not linked to an activity",
+      "unassignedTransfersLead": "International transfers recorded for the organization but not yet linked to a processing activity. Link each one to its activity.",
+      "empty": "There are no active processing activities as controller.",
+      "processor": {
+        "eyebrow": "Record of processing as processor",
+        "coverTitle": "Record of processing as processor",
+        "coverSubtitle": "Article 30(2) register",
+        "coverReference": "GDPR · Article 30(2)",
+        "activities": "Processing carried out on behalf of each controller",
+        "empty": "There are no active processing activities carried out as processor."
       }
     },
     "assessmentReport": {
@@ -4748,20 +4794,6 @@
         "none": "None",
         "noDpa": "No DPA"
       },
-      "ropa": {
-        "activity": "Processing Activity",
-        "purpose": "Purpose",
-        "legalBasis": "Legal Basis",
-        "dataSubjects": "Data Subjects",
-        "dataCategories": "Data Categories",
-        "recipients": "Recipients",
-        "retentionPeriod": "Retention Period",
-        "automatedDecisions": "Automated Decision Making",
-        "systems": "Systems",
-        "transfers": "International Transfers",
-        "lastReviewed": "Last Reviewed",
-        "nextReview": "Next Review"
-      },
       "vendors": {
         "name": "Name",
         "status": "Status",
@@ -4796,6 +4828,88 @@
         "resolvedAt": "Resolved At",
         "notificationRequired": "Notification Required",
         "notificationDeadline": "Notification Deadline"
+      }
+    },
+    "ropaRecord": {
+      "role": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor"
+      },
+      "controller": {
+        "title": "Controller (GDPR Article 30(1)(a))",
+        "processorTitle": "Processor (GDPR Article 30(2)(a))",
+        "name": "Controller",
+        "processorName": "Processor",
+        "taxId": "Tax ID",
+        "address": "Address",
+        "email": "E-mail",
+        "phone": "Phone",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union (Article 27)",
+        "securityMeasures": "General description of security measures"
+      },
+      "columns": {
+        "activity": "Processing activity",
+        "controller": "Controller",
+        "controllerContact": "Controller contact details",
+        "jointController": "Joint controller",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union",
+        "purpose": "Purposes of the processing",
+        "legalBasis": "Legal basis",
+        "dataSubjects": "Categories of data subjects",
+        "dataCategories": "Categories of personal data",
+        "specialCategories": "Special categories (Articles 9 and 10)",
+        "recipients": "Categories of recipients",
+        "transfers": "International transfers and safeguards",
+        "retention": "Time limits for erasure",
+        "security": "Technical and organizational security measures",
+        "role": "Role",
+        "description": "Description",
+        "automatedDecisions": "Automated decision-making",
+        "systems": "Systems",
+        "lastReviewed": "Last reviewed",
+        "nextReview": "Next review",
+        "processor": "Processor",
+        "processorContact": "Processor contact details",
+        "clientController": "Controller on whose behalf we act",
+        "clientControllerContact": "Controller contact details",
+        "clientRepresentative": "Controller's representative",
+        "clientDpo": "Controller's data protection officer",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "warnings": {
+        "retentionMissing": "Retention period not specified",
+        "recipientsMissing": "No recipients specified",
+        "dataSubjectsMissing": "No categories of data subjects",
+        "categoriesMissing": "No categories of personal data",
+        "securityMissing": "No description of security measures",
+        "noSystems": "No systems linked",
+        "neverReviewed": "Never reviewed",
+        "reviewOverdue": "Review date has passed",
+        "automatedNoDetail": "Automated decision-making without details",
+        "clientControllerMissing": "The controller on whose behalf this is done is not named"
+      },
+      "words": {
+        "notSpecified": "Not specified",
+        "notDesignated": "Not designated",
+        "yes": "Yes",
+        "no": "No",
+        "none": "None",
+        "noTransfers": "No international transfers",
+        "neverReviewed": "Never reviewed",
+        "days": "{count, plural, one {# day} other {# days}}",
+        "tiaDone": "Transfer impact assessment done",
+        "tiaOn": "Transfer impact assessment done on {date}"
+      },
+      "sheets": {
+        "record": "Record of processing",
+        "processorRecord": "Processor record",
+        "controller": "Controller",
+        "processor": "Processor",
+        "field": "Field",
+        "value": "Value"
       }
     }
   },
@@ -10399,5 +10513,45 @@
       "desc": "Limit the use and disclosure of the consumer's sensitive personal information. The business may not require a verifiable consumer request."
     },
     "clock15": "As soon as feasibly possible and no later than 15 business days from receipt; no extension."
+  },
+  "controllerDetails": {
+    "title": "Controller details for the record of processing",
+    "description": "Printed on the cover of every record of processing (GDPR Article 30). As processor, the same details identify you in the record as processor.",
+    "groups": {
+      "controller": "Controller",
+      "dpo": "Data protection officer",
+      "representative": "Representative in the Union",
+      "security": "Security measures"
+    },
+    "fields": {
+      "controllerLegalName": "Name or company name",
+      "controllerTaxId": "Tax ID",
+      "controllerAddress": "Address",
+      "controllerEmail": "Contact e-mail",
+      "controllerPhone": "Phone",
+      "dpoName": "Name",
+      "dpoContact": "Contact details",
+      "euRepresentativeName": "Name",
+      "euRepresentativeContact": "Contact details",
+      "securityMeasures": "General description of technical and organizational measures"
+    },
+    "placeholders": {
+      "controllerLegalName": "Example Company Ltd",
+      "controllerTaxId": "For example: B12345678",
+      "controllerAddress": "Street, number, postal code, city, country",
+      "controllerEmail": "privacy@example.com",
+      "controllerPhone": "+34 900 000 000",
+      "dpoName": "Leave empty if no data protection officer is designated",
+      "dpoContact": "E-mail, phone or address",
+      "euRepresentativeName": "Leave empty if not required",
+      "euRepresentativeContact": "E-mail, phone or address",
+      "securityMeasures": "For example: encryption, access control by role, backups, staff training, incident procedure"
+    },
+    "prefilled": "Filled in from what DPO Central already knows. Check it and save.",
+    "representativeHelp": "Only for a controller established outside the Union (GDPR Article 27).",
+    "securityHelp": "Applies to every activity that does not describe its own measures (GDPR Articles 30(1)(g) and 32).",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Controller details saved"
   }
 }
