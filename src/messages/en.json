@@ -1,4 +1,26 @@
 {
+  "assessmentWorkflow": {
+    "errors": {
+      "approvedLocked": "This assessment is approved and can no longer be changed. An owner, administrator or privacy officer can open a new revision.",
+      "frozenPendingApproval": "The assessment is awaiting approval, so its answers, risks and measures cannot change now.",
+      "reviewersOnly": "The assessment is under review: only an owner, administrator or privacy officer can change it now.",
+      "submitStatus": "Only an assessment that is a draft, in progress or rejected can be submitted.",
+      "requestApprovalStatus": "Approval can only be requested once the assessment has been submitted for review.",
+      "approverMember": "The approver must be a member of the organization.",
+      "approverRole": "The approver must be an owner, administrator or privacy officer of the organization.",
+      "approvalDecided": "This approval has already been decided, and a decision cannot be changed. Open a new revision instead.",
+      "notAwaitingApproval": "The assessment is not awaiting approval.",
+      "art36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed. Article 36(1) GDPR requires consulting the supervisory authority before the processing starts: correct the residual risk or the consultation answer first.",
+      "art36Undecided": "Whether prior consultation with the supervisory authority is required is still under consideration. Decide it (Article 36 GDPR) first.",
+      "stillToAnswer": "Still to answer ({count}): {list}",
+      "andMore": "and {count} more",
+      "singleUserOnly": "Submit and approve is only available in an organization with a single member. Use the standard submission instead.",
+      "riskNoMeasure": "A risk can only be closed once at least one measure addresses it.",
+      "riskNoResidual": "Grade the residual likelihood and severity before closing the risk.",
+      "riskNotInAssessment": "The risk this measure addresses is not part of this assessment.",
+      "reopenStatus": "Only an approved assessment can be reopened as a new revision."
+    }
+  },
   "clientTemplate": {
     "titleCurrent": "Start from another client",
     "titleNew": "Start a new client from this one",
@@ -574,7 +596,30 @@
         "VITAL_INTERESTS": "Vital interests",
         "PUBLIC_TASK": "Public task",
         "LEGITIMATE_INTERESTS": "Legitimate interests"
-      }
+      },
+      "roleAndSecurity": "Role and security",
+      "roleAndSecuritySubtitle": "How you take part in this processing, and how the data is protected (GDPR Article 30)",
+      "role": "Your role",
+      "role_option": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "roleHelp": "As processor, the activity goes in the record as processor (Article 30(2)) instead of the record as controller.",
+      "jointControllerDetails": "Joint controller: name and contact details",
+      "jointControllerDetailsPlaceholder": "For example: Example Partner Ltd, privacy@partner.example",
+      "clientHelp": "The controller on whose behalf you carry out this processing.",
+      "clientControllerName": "Controller",
+      "clientControllerContact": "Controller contact details",
+      "clientRepresentative": "Controller's representative in the Union",
+      "clientDpo": "Controller's data protection officer",
+      "securityMeasures": "Technical and organizational security measures",
+      "securityMeasuresPlaceholder": "For example: encryption at rest and in transit, access by role, logs kept for 12 months",
+      "securityMeasuresHelp": "Leave empty to use the organization's general description.",
+      "securityMeasuresLink": "Edit the general description",
+      "lastReviewedAt": "Last reviewed",
+      "nextReviewAt": "Next review",
+      "reviewHelp": "Both dates are printed in the record of processing. An activity never reviewed counts as pending review."
     },
     "editAiSystemExt": {
       "basics": "Basics",
@@ -846,7 +891,73 @@
       "submit": "Create Request"
     },
     "assessmentDetail": {
+      "reviewDue": {
+        "title": "Review due",
+        "intro": "The processing activity has changed since this assessment was approved. Review it and open a new revision if the risk has changed (Art. 35(11) GDPR).",
+        "reasons": {
+          "SPECIAL_CATEGORY": "New special category data",
+          "RECIPIENT": "New recipient",
+          "SYSTEM": "New system",
+          "TRANSFER": "New international transfer",
+          "PURPOSE": "Purpose changed",
+          "LEGAL_BASIS": "Legal basis changed",
+          "AUTOMATED_DECISION": "Automated decision-making added",
+          "ACTIVITY_CHANGED": "Activity edited after the approval"
+        }
+      },
+      "frozenNotice": {
+        "PENDING_APPROVAL": "Awaiting approval: the answers are frozen until a decision is taken.",
+        "PENDING_REVIEW": "Under review: only an owner, administrator or privacy officer can change the answers now.",
+        "APPROVED": "Approved: this version is the record. Open a new revision to change it."
+      },
+      "reopen": {
+        "button": "Open a new revision",
+        "done": "A new revision is open. The approved version stays in the history."
+      },
+      "riskRegister": {
+        "intro": "One row per risk to the rights and freedoms of data subjects (Art. 35(7)(c) GDPR). Grade each risk for likelihood and severity before the measures and after them, and link the measures that address it.",
+        "inherentMax": "Highest inherent risk",
+        "residualMax": "Highest residual risk",
+        "unsupported": "At least one risk is lowered by two or more levels with no implemented measure. Check the residual grades or the status of its measures.",
+        "empty": "No risk has been entered yet.",
+        "add": "Add a risk",
+        "edit": "Edit",
+        "delete": "Delete risk",
+        "save": "Save risk",
+        "cancel": "Cancel",
+        "close": "Close risk",
+        "reopen": "Reopen risk",
+        "closeNeedsMeasure": "Link at least one measure before closing this risk.",
+        "closeNeedsResidual": "Grade the residual likelihood and severity before closing this risk.",
+        "rightsAffected": "Rights affected",
+        "rightsPlaceholder": "For example: privacy, non-discrimination, freedom of expression",
+        "titleLabel": "Risk",
+        "titlePlaceholder": "For example: unauthorised access to customer profiles",
+        "descriptionLabel": "Source and description",
+        "beforeMeasures": "Before the measures (inherent)",
+        "afterMeasures": "After the measures (residual)",
+        "likelihood": "Likelihood",
+        "severity": "Severity",
+        "choose": "Choose",
+        "notGraded": "Not graded",
+        "inherentPair": "Inherent: {level} (L{likelihood} × S{severity})",
+        "residualPair": "Residual: {level} (L{likelihood} × S{severity})",
+        "residualNotGraded": "Residual: not graded",
+        "measuresTitle": "Measures that address it ({count})",
+        "noMeasures": "No measure is linked to this risk yet.",
+        "measurePlaceholder": "New measure for this risk",
+        "addMeasure": "Add measure",
+        "grades": {
+          "1": "Negligible",
+          "2": "Limited",
+          "3": "Significant",
+          "4": "Maximum"
+        }
+      },
       "completeness": {
+        "priorConsultationRequired": "Prior consultation with the supervisory authority is required before the processing starts (Article 36(1) GDPR).",
+        "art36Undecided": "Whether prior consultation with the supervisory authority is required is still under consideration. Decide it (Article 36 GDPR) first.",
+        "art36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed. Article 36(1) GDPR requires consulting the supervisory authority before the processing starts: correct the residual risk or the consultation answer first.",
         "title": "What is still outstanding",
         "allDone": "Everything this assessment needs has been answered.",
         "questionsTitle": "Questions still to answer ({count})",
@@ -874,6 +985,8 @@
         "answered": "{answered} of {total} questions answered"
       },
       "stats": {
+        "notAssessed": "Not assessed",
+        "inherentResidual": "Inherent {inherent} · residual {residual}",
         "sections": "Sections",
         "questions": "Questions",
         "mitigations": "Mitigations",
@@ -882,6 +995,7 @@
         "noScore": "-"
       },
       "tabs": {
+        "risksWithCount": "Risks ({count})",
         "questions": "Questions",
         "mitigationsWithCount": "Mitigations ({count})",
         "approvalsWithCount": "Approvals ({count})",
@@ -933,6 +1047,12 @@
         "empty": "No approvals requested"
       },
       "history": {
+        "notes": {
+          "SUBMITTED": "Submitted for review",
+          "APPROVED": "Approved",
+          "AUTO_APPROVED": "Submitted and approved (organization with a single member)",
+          "REOPENED": "Reopened as a new revision"
+        },
         "version": "Version {n}",
         "empty": "No version history"
       },
@@ -1035,7 +1155,22 @@
         "noAssets": "No systems in this organization yet",
         "selected": "{count, plural, one {# system selected} other {# systems selected}}"
       },
-      "draftDpia": "Draft a DPIA"
+      "draftDpia": "Draft a DPIA",
+      "retentionDays": "{count, plural, one {# day} other {# days}}",
+      "notSpecified": "Not specified",
+      "role": "Role",
+      "roleOption": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor (on behalf of another controller)"
+      },
+      "jointController": "Joint controller",
+      "clientController": "Controller on whose behalf we act",
+      "securityMeasures": "Security measures",
+      "securityInherited": "The organization's general description of security measures applies.",
+      "lastReviewed": "Last reviewed",
+      "nextReview": "Next review",
+      "neverReviewed": "Never reviewed"
     },
     "assetDetail": {
       "notFound": "System not found",
@@ -2569,24 +2704,12 @@
           "notOccasional": "Processing is not occasional",
           "specialCategory": "Processing includes special category data",
           "criminal": "Processing includes criminal conviction data"
-        }
+        },
+        "controllerDetailsLink": "Controller, data protection officer, representative and security measures: set them in Settings"
       },
       "skillName": "ROPA Export",
-      "csv": {
-        "name": "Activity Name",
-        "description": "Description",
-        "purpose": "Purpose",
-        "legalBasis": "Legal Basis",
-        "legalBasisDetail": "Legal Basis Detail",
-        "dataSubjects": "Data Subjects",
-        "dataCategories": "Data Categories",
-        "recipients": "Recipients",
-        "retention": "Retention Period",
-        "systems": "Systems",
-        "transfers": "International Transfers",
-        "lastReviewed": "Last Reviewed",
-        "fileName": "ROPA"
-      }
+      "downloadXlsx": "Download as Excel (XLSX)",
+      "processorRecord": "Record as processor (Article 30(2))"
     },
     "elementDetail": {
       "notFound": "Data element not found",
@@ -2899,6 +3022,18 @@
     }
   },
   "enums": {
+    "assessmentRiskStatus": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
+    "mitigationStatus": {
+      "IDENTIFIED": "Identified",
+      "PLANNED": "Planned",
+      "IN_PROGRESS": "In progress",
+      "IMPLEMENTED": "Implemented",
+      "VERIFIED": "Verified",
+      "NOT_REQUIRED": "Not required"
+    },
     "vendorCategory": {
       "CLOUD_SERVICES": "Cloud Services",
       "DATA_PROCESSING": "Data Processing",
@@ -3125,6 +3260,7 @@
       "VIEWER": "Viewer"
     },
     "auditAction": {
+      "REOPEN": "Reopened as a new revision",
       "CREATE": "Created",
       "UPDATE": "Updated",
       "DELETE": "Deleted",
@@ -4205,7 +4341,8 @@
         "processingActivities": "Processing Activities",
         "intlTransfers": "Int'l Transfers",
         "automatedDecisions": "Automated Decisions",
-        "needingReview": "Needing Review"
+        "needingReview": "Needing Review",
+        "incomplete": "Incomplete"
       },
       "byLegalBasis": "By Legal Basis",
       "dataFlowMap": "Data Flow Map",
@@ -4239,10 +4376,79 @@
           "mechanism": "Mechanism",
           "safeguards": "Safeguards"
         },
-        "warningPrefix": "Warning: "
+        "warningPrefix": "Warning: ",
+        "description": "Description",
+        "role": "Role",
+        "jointController": "Joint controller",
+        "securityMeasures": "Security measures",
+        "securityInherited": "The general description of security measures applies (see above).",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "securityTitle": "Security measures",
+      "securityLead": "General description of the technical and organizational security measures (GDPR Article 32), which applies to every activity that does not describe its own.",
+      "unassignedTransfers": "Transfers not linked to an activity",
+      "unassignedTransfersLead": "International transfers recorded for the organization but not yet linked to a processing activity. Link each one to its activity.",
+      "empty": "There are no active processing activities as controller.",
+      "processor": {
+        "eyebrow": "Record of processing as processor",
+        "coverTitle": "Record of processing as processor",
+        "coverSubtitle": "Article 30(2) register",
+        "coverReference": "GDPR · Article 30(2)",
+        "activities": "Processing carried out on behalf of each controller",
+        "empty": "There are no active processing activities carried out as processor."
       }
     },
     "assessmentReport": {
+      "signOff": {
+        "templateVersion": "Template version",
+        "approvedVersion": "Approved version",
+        "preparedBy": "Prepared by",
+        "dpoAdvice": "Advice of the data protection officer (Art. 35(2) GDPR)",
+        "consultation": "Prior consultation (Art. 36 GDPR)",
+        "consultationRecord": "Consultation: date and outcome",
+        "review": "Review (Art. 35(11) GDPR)",
+        "decision": "Decision",
+        "decidedOn": "Decided on",
+        "signatures": "Signatures",
+        "forController": "For the controller",
+        "dpo": "Data protection officer",
+        "nameAndPosition": "Name and position",
+        "signature": "Signature",
+        "date": "Date"
+      },
+      "grades": {
+        "1": "Negligible",
+        "2": "Limited",
+        "3": "Significant",
+        "4": "Maximum"
+      },
+      "registerColumns": {
+        "risk": "Risk",
+        "rights": "Rights affected",
+        "inherent": "Inherent",
+        "measures": "Measures",
+        "residual": "Residual",
+        "status": "Status"
+      },
+      "notRecorded": "Not recorded",
+      "signOffTitle": "Conclusion and sign-off",
+      "matrixSeverity": "Severity",
+      "matrixLikelihood": "Likelihood",
+      "matrixIntro": "Each cell shows how many risks sit there before the measures and, after the slash, after them.",
+      "matrixTitle": "Risk matrix",
+      "registerUnsupported": "Residual risk lowered by two or more levels with no implemented measure: {risks}.",
+      "registerPair": "{level} (L{likelihood} × S{severity})",
+      "registerNotGraded": "Not graded",
+      "registerEmpty": "No risk has been entered in the risk register.",
+      "registerIntro": "One row per risk to the rights and freedoms of data subjects, graded for likelihood (L) and severity (S) before the measures (inherent) and after them (residual). Scale: 1 negligible, 2 limited, 3 significant, 4 maximum.",
+      "registerTitle": "Risk register",
+      "conformanceRuleNotMet": "Answered, not met",
+      "conformanceArt36Undecided": "Whether prior consultation is required (Art. 36 GDPR) is still under consideration.",
+      "conformanceArt36HighResidual": "The residual risk is high or critical, yet the answers say no prior consultation is needed: Art. 36(1) GDPR requires it.",
+      "conformancePriorConsultation": "Prior consultation with the supervisory authority is required before the processing starts (Art. 36(1) GDPR).",
+      "approvedLaterRequirements": "Added to the template after this approval, to be answered in a new revision:",
+      "approvedIntro": "This document records the assessment as it was approved.",
+      "approvedTitle": "Approved on {date}",
       "draftMark": "Draft",
       "draftTitle": "This document is a draft",
       "draftIntro": "The items below are still outstanding, so every page of this document is marked a draft. Answer them in the app and export again for a final version.",
@@ -4268,6 +4474,7 @@
       "coverConfidential": "CONFIDENTIAL. This document contains sensitive information about data protection practices. Distribution should be limited to authorized personnel and supervisory authorities upon request.",
       "executiveSummary": "Executive Summary",
       "stats": {
+        "notAssessed": "Not assessed",
         "riskLevel": "Risk Level",
         "completion": "Completion",
         "questionsAnswered": "Questions Answered",
@@ -4296,6 +4503,8 @@
       "noteLabel": "Note:",
       "riskAssessmentSummary": "Risk Assessment Summary",
       "stats2": {
+        "residualRisk": "Residual risk (after measures)",
+        "inherentRisk": "Inherent risk (before measures)",
         "overallRiskLevel": "Overall Risk Level",
         "riskScore": "Risk Score",
         "scoredQuestions": "Scored Questions"
@@ -4343,6 +4552,11 @@
         "CUSTOM": "Custom Assessment"
       },
       "articleRefs": {
+        "CUSTOM": "",
+        "PIA": "",
+        "VENDOR": "GDPR Article 28",
+        "TIA": "GDPR Chapter V (Articles 44 to 49)",
+        "LIA": "GDPR Article 6(1)(f)",
         "DPIA": "GDPR Article 35(7)"
       }
     },
@@ -4803,20 +5017,6 @@
         "none": "None",
         "noDpa": "No DPA"
       },
-      "ropa": {
-        "activity": "Processing Activity",
-        "purpose": "Purpose",
-        "legalBasis": "Legal Basis",
-        "dataSubjects": "Data Subjects",
-        "dataCategories": "Data Categories",
-        "recipients": "Recipients",
-        "retentionPeriod": "Retention Period",
-        "automatedDecisions": "Automated Decision Making",
-        "systems": "Systems",
-        "transfers": "International Transfers",
-        "lastReviewed": "Last Reviewed",
-        "nextReview": "Next Review"
-      },
       "vendors": {
         "name": "Name",
         "status": "Status",
@@ -4851,6 +5051,88 @@
         "resolvedAt": "Resolved At",
         "notificationRequired": "Notification Required",
         "notificationDeadline": "Notification Deadline"
+      }
+    },
+    "ropaRecord": {
+      "role": {
+        "CONTROLLER": "Controller",
+        "JOINT_CONTROLLER": "Joint controller",
+        "PROCESSOR": "Processor"
+      },
+      "controller": {
+        "title": "Controller (GDPR Article 30(1)(a))",
+        "processorTitle": "Processor (GDPR Article 30(2)(a))",
+        "name": "Controller",
+        "processorName": "Processor",
+        "taxId": "Tax ID",
+        "address": "Address",
+        "email": "E-mail",
+        "phone": "Phone",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union (Article 27)",
+        "securityMeasures": "General description of security measures"
+      },
+      "columns": {
+        "activity": "Processing activity",
+        "controller": "Controller",
+        "controllerContact": "Controller contact details",
+        "jointController": "Joint controller",
+        "dpo": "Data protection officer",
+        "representative": "Representative in the Union",
+        "purpose": "Purposes of the processing",
+        "legalBasis": "Legal basis",
+        "dataSubjects": "Categories of data subjects",
+        "dataCategories": "Categories of personal data",
+        "specialCategories": "Special categories (Articles 9 and 10)",
+        "recipients": "Categories of recipients",
+        "transfers": "International transfers and safeguards",
+        "retention": "Time limits for erasure",
+        "security": "Technical and organizational security measures",
+        "role": "Role",
+        "description": "Description",
+        "automatedDecisions": "Automated decision-making",
+        "systems": "Systems",
+        "lastReviewed": "Last reviewed",
+        "nextReview": "Next review",
+        "processor": "Processor",
+        "processorContact": "Processor contact details",
+        "clientController": "Controller on whose behalf we act",
+        "clientControllerContact": "Controller contact details",
+        "clientRepresentative": "Controller's representative",
+        "clientDpo": "Controller's data protection officer",
+        "processingCategories": "Categories of processing carried out"
+      },
+      "warnings": {
+        "retentionMissing": "Retention period not specified",
+        "recipientsMissing": "No recipients specified",
+        "dataSubjectsMissing": "No categories of data subjects",
+        "categoriesMissing": "No categories of personal data",
+        "securityMissing": "No description of security measures",
+        "noSystems": "No systems linked",
+        "neverReviewed": "Never reviewed",
+        "reviewOverdue": "Review date has passed",
+        "automatedNoDetail": "Automated decision-making without details",
+        "clientControllerMissing": "The controller on whose behalf this is done is not named"
+      },
+      "words": {
+        "notSpecified": "Not specified",
+        "notDesignated": "Not designated",
+        "yes": "Yes",
+        "no": "No",
+        "none": "None",
+        "noTransfers": "No international transfers",
+        "neverReviewed": "Never reviewed",
+        "days": "{count, plural, one {# day} other {# days}}",
+        "tiaDone": "Transfer impact assessment done",
+        "tiaOn": "Transfer impact assessment done on {date}"
+      },
+      "sheets": {
+        "record": "Record of processing",
+        "processorRecord": "Processor record",
+        "controller": "Controller",
+        "processor": "Processor",
+        "field": "Field",
+        "value": "Value"
       }
     }
   },
@@ -7875,6 +8157,10 @@
         }
       },
       "template": {
+        "system-lia-template": {
+          "name": "Legitimate Interest Assessment",
+          "description": "Document and balance legitimate interests against data subject rights (GDPR Article 6(1)(f))."
+        },
         "system-lia-template-v2": {
           "name": "Legitimate Interest Assessment",
           "description": "The three-part legitimate interest test of GDPR Article 6(1)(f) (purpose, necessity and balancing), with structured answers a regulator can read."
@@ -7982,6 +8268,10 @@
         }
       },
       "template": {
+        "system-custom-template": {
+          "name": "Custom Assessment",
+          "description": "A flexible assessment template for custom privacy reviews and evaluations."
+        },
         "system-custom-template-v2": {
           "name": "Custom Assessment",
           "description": "A flexible assessment for custom privacy reviews, with a structured risk answer and room for a written rationale."
@@ -8370,6 +8660,10 @@
         }
       },
       "template": {
+        "system-tia-template": {
+          "name": "Transfer Impact Assessment (TIA)",
+          "description": "Assess the risks of transferring personal data to a third country and determine whether supplementary measures are needed to ensure an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II)."
+        },
         "system-tia-template-v2": {
           "name": "Transfer Impact Assessment",
           "description": "Assess a transfer of personal data to a third country and whether supplementary measures are needed for an essentially equivalent level of protection (EDPB Recommendations 01/2020, Schrems II), with structured answers."
@@ -8559,9 +8853,17 @@
             "Not yet"
           ]
         },
+        "q1_7": {
+          "text": "The legitimate interest pursued",
+          "helpText": "Name the interest, whose interest it is (yours or a third party's) and why the processing is needed for it. Source: Regulation (EU) 2016/679, Article 35(7)(a)."
+        },
         "q4_3": {
           "text": "The views of data subjects or their representatives, or the reason for not seeking them",
           "helpText": "Record what was asked, who answered and what came of it. Where seeking those views is not appropriate, record why. Source: Regulation (EU) 2016/679, Article 35(9)."
+        },
+        "q7_5": {
+          "text": "Prior consultation with the supervisory authority: date of the request, and the outcome or its status",
+          "helpText": "The processing may not start until the authority has answered or the period of Article 36(2) has passed. Record the date the consultation was sent, the authority, and its written advice once received. Source: Regulation (EU) 2016/679, Article 36(1) and (2)."
         },
         "q7_4": {
           "text": "When this assessment will be reviewed, and the change in risk that brings the review forward",
@@ -8991,7 +9293,7 @@
         },
         "q5_6": {
           "text": "Describe the identified risks to data subjects, including likelihood and severity for each",
-          "helpText": "For each risk: describe the source, affected rights, likelihood (Remote / Possible / Likely), and severity (Minimal / Significant / Severe / Critical). Use the format: Risk N (Title): Description. Likelihood: X. Severity: Y."
+          "helpText": "For each risk: describe the source and the rights affected, and grade its likelihood and its severity on the same four levels (Negligible / Limited / Significant / Maximum). Then add each risk to the risk register, where it is graded before and after the measures."
         },
         "q6_1": {
           "text": "Technical measures in place or planned",
@@ -9742,6 +10044,7 @@
       "usStates": "US state privacy laws"
     },
     "reasons": {
+      "twoCriteria": "Under the EDPB guidelines a DPIA is usually required when two or more high-risk criteria are met, for example special category data on a large scale, profiling or vulnerable data subjects. Check the activity.",
       "operatesEu": "You operate in the EU.",
       "operatesUk": "You operate in the UK.",
       "operatesCalifornia": "You operate in California.",
@@ -10339,6 +10642,7 @@
       "Checkout": "Billing"
     },
     "actions": {
+      "REOPEN": "Reopened as a new revision",
       "CREATE": "Created",
       "UPDATE": "Updated",
       "DELETE": "Deleted",
@@ -10440,5 +10744,45 @@
       "desc": "Limit the use and disclosure of the consumer's sensitive personal information. The business may not require a verifiable consumer request."
     },
     "clock15": "As soon as feasibly possible and no later than 15 business days from receipt; no extension."
+  },
+  "controllerDetails": {
+    "title": "Controller details for the record of processing",
+    "description": "Printed on the cover of every record of processing (GDPR Article 30). As processor, the same details identify you in the record as processor.",
+    "groups": {
+      "controller": "Controller",
+      "dpo": "Data protection officer",
+      "representative": "Representative in the Union",
+      "security": "Security measures"
+    },
+    "fields": {
+      "controllerLegalName": "Name or company name",
+      "controllerTaxId": "Tax ID",
+      "controllerAddress": "Address",
+      "controllerEmail": "Contact e-mail",
+      "controllerPhone": "Phone",
+      "dpoName": "Name",
+      "dpoContact": "Contact details",
+      "euRepresentativeName": "Name",
+      "euRepresentativeContact": "Contact details",
+      "securityMeasures": "General description of technical and organizational measures"
+    },
+    "placeholders": {
+      "controllerLegalName": "Example Company Ltd",
+      "controllerTaxId": "For example: B12345678",
+      "controllerAddress": "Street, number, postal code, city, country",
+      "controllerEmail": "privacy@example.com",
+      "controllerPhone": "+34 900 000 000",
+      "dpoName": "Leave empty if no data protection officer is designated",
+      "dpoContact": "E-mail, phone or address",
+      "euRepresentativeName": "Leave empty if not required",
+      "euRepresentativeContact": "E-mail, phone or address",
+      "securityMeasures": "For example: encryption, access control by role, backups, staff training, incident procedure"
+    },
+    "prefilled": "Filled in from what DPO Central already knows. Check it and save.",
+    "representativeHelp": "Only for a controller established outside the Union (GDPR Article 27).",
+    "securityHelp": "Applies to every activity that does not describe its own measures (GDPR Articles 30(1)(g) and 32).",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Controller details saved"
   }
 }

@@ -8,7 +8,7 @@ import { createTRPCRouter, organizationProcedure, writerProcedure, adminOrgProce
 import { markConfirmed } from "@/server/services/template-items/mark";
 import { withDerivedRisk } from "@/server/services/assessment/risk-score";
 import { TRPCError } from "@trpc/server";
-import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, TransferMechanism, Prisma } from "@prisma/client";
+import { DataAssetType, DataSensitivity, DataCategory, LegalBasis, ProcessingRole, TransferMechanism, Prisma } from "@prisma/client";
 import { hasRopaExportAccess } from "../../services/licensing/entitlement";
 import { assertIdsInOrg } from "../../org-ownership";
 import {
@@ -57,6 +57,30 @@ async function resolveBusinessUnitId(
   }
   return businessUnitId;
 }
+
+/**
+ * Art. 30 fields of an activity: its role (controller, joint controller or
+ * processor), the joint controller, its own security measures (empty: the
+ * organisation's general description applies) and, for a processor activity,
+ * the controller on whose behalf it is carried out.
+ */
+const ART30_ACTIVITY_FIELDS = {
+  role: z.nativeEnum(ProcessingRole).optional(),
+  jointControllerDetails: z.string().max(5000).nullable().optional(),
+  securityMeasures: z.string().max(5000).nullable().optional(),
+  clientControllerName: z.string().max(300).nullable().optional(),
+  clientControllerContact: z.string().max(5000).nullable().optional(),
+  clientRepresentative: z.string().max(5000).nullable().optional(),
+  clientDpo: z.string().max(5000).nullable().optional(),
+};
+
+/** A review date as the form sends it ("YYYY-MM-DD"), stored at UTC midnight. */
+const reviewDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .nullable()
+  .optional()
+  .transform((v) => (v === undefined ? undefined : v === null ? null : new Date(`${v}T00:00:00.000Z`)));
 
 export const dataInventoryRouter = createTRPCRouter({
   // ============================================================
@@ -610,6 +634,7 @@ export const dataInventoryRouter = createTRPCRouter({
         retentionDays: z.number().optional(),
         automatedDecisionMaking: z.boolean().default(false),
         automatedDecisionDetail: z.string().optional(),
+        ...ART30_ACTIVITY_FIELDS,
         businessUnitId: z.string().nullable().optional(),
         assetIds: z.array(z.string()).default([]),
       })
@@ -683,6 +708,10 @@ export const dataInventoryRouter = createTRPCRouter({
         retentionDays: z.number().optional().nullable(),
         automatedDecisionMaking: z.boolean().optional(),
         automatedDecisionDetail: z.string().optional().nullable(),
+        ...ART30_ACTIVITY_FIELDS,
+        // When the activity was last reviewed and when it is next due (Art. 24(1)).
+        lastReviewedAt: reviewDate,
+        nextReviewAt: reviewDate,
         businessUnitId: z.string().nullable().optional(),
         isActive: z.boolean().optional(),
       })

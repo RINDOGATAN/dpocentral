@@ -34,6 +34,8 @@ const COMPLETENESS: Completeness = {
   frameworks: [],
   outstandingRequirements: [],
   californiaTrigger: "unknown" as Completeness["californiaTrigger"],
+  art36: null,
+  priorConsultationRequired: false,
   complete: false,
 };
 

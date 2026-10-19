@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
 import { displayAssessmentDescription, displayAssessmentName } from "@/lib/record-name";
 import { useEnumLabels } from "@/lib/enum-labels";
+import { formatDateIn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import { useOrganization } from "@/lib/organization-context";
 import { RecordHeader } from "@/components/privacy/record-header";
@@ -341,30 +342,72 @@ export default function ActivityDetailPage() {
         </Card>
       </div>
 
-      {/* Retention & Automated Decisions */}
-      {(activity.retentionPeriod || activity.automatedDecisionMaking) && (
-        <Card>
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex flex-wrap gap-6">
-              {activity.retentionPeriod && (
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {tp("retentionPeriod")}
-                  </p>
-                  <p className="text-sm">{activity.retentionPeriod}</p>
-                </div>
-              )}
-              {activity.automatedDecisionMaking && (
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium mb-1">{tp("automatedDecisionMaking")}</p>
-                  <p className="text-sm">{activity.automatedDecisionDetail || tc("yes")}</p>
-                </div>
-              )}
+      {/* Retention, automated decisions, role and security (Art. 30) */}
+      <Card>
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-wrap gap-6">
+            <div>
+              <p className="text-xs text-muted-foreground font-medium mb-1 flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {tp("retentionPeriod")}
+              </p>
+              <p className="text-sm">
+                {[
+                  activity.retentionPeriod?.trim() || null,
+                  activity.retentionDays != null && activity.retentionDays > 0
+                    ? tp("retentionDays", { count: activity.retentionDays })
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || tp("notSpecified")}
+              </p>
             </div>
-          </CardContent>
-        </Card>
-      )}
+            {activity.automatedDecisionMaking && (
+              <div>
+                <p className="text-xs text-muted-foreground font-medium mb-1">{tp("automatedDecisionMaking")}</p>
+                <p className="text-sm">{activity.automatedDecisionDetail || tc("yes")}</p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-muted-foreground font-medium mb-1">{tp("lastReviewed")}</p>
+              <p className="text-sm">
+                {activity.lastReviewedAt ? formatDateIn(activity.lastReviewedAt, locale, "UTC") : tp("neverReviewed")}
+              </p>
+            </div>
+            {activity.nextReviewAt && (
+              <div>
+                <p className="text-xs text-muted-foreground font-medium mb-1">{tp("nextReview")}</p>
+                <p className="text-sm">{formatDateIn(activity.nextReviewAt, locale, "UTC")}</p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-muted-foreground font-medium mb-1">{tp("role")}</p>
+              <p className="text-sm">{tp(`roleOption.${activity.role ?? "CONTROLLER"}`)}</p>
+            </div>
+            {activity.role === "JOINT_CONTROLLER" && (
+              <div>
+                <p className="text-xs text-muted-foreground font-medium mb-1">{tp("jointController")}</p>
+                <p className="text-sm whitespace-pre-line">{activity.jointControllerDetails || tp("notSpecified")}</p>
+              </div>
+            )}
+            {activity.role === "PROCESSOR" && (
+              <div>
+                <p className="text-xs text-muted-foreground font-medium mb-1">{tp("clientController")}</p>
+                <p className="text-sm whitespace-pre-line">
+                  {[activity.clientControllerName, activity.clientControllerContact].filter(Boolean).join(" · ") ||
+                    tp("notSpecified")}
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="mt-4">
+            <p className="text-xs text-muted-foreground font-medium mb-1">{tp("securityMeasures")}</p>
+            <p className="text-sm whitespace-pre-line">
+              {activity.securityMeasures?.trim() || tp("securityInherited")}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recipients */}
       {recipients.length > 0 && (

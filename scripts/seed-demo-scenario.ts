@@ -7,6 +7,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { dpiaTemplateData, DPIA_TEMPLATE_ID } from "../src/config/dpia-template-v2";
+import { completeApprovedDpias } from "./demo/complete-approved-dpias";
 
 const prisma = new PrismaClient();
 const ORG_ID = "demo-organization";
@@ -1165,6 +1166,10 @@ async function main() {
     });
   }
   console.log("  20 audit log entries\n");
+
+  // Approved DPIAs answer the current template, carry a risk register and are
+  // frozen as the app freezes an approval.
+  await completeApprovedDpias(prisma, org.id);
 
   // ── Summary ────────────────────────────────────────────────
   console.log("╔══════════════════════════════════════════════════╗");

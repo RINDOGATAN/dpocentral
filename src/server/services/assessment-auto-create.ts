@@ -35,13 +35,19 @@ interface AutoCreateParams {
 function autoAssessmentTypeName(type: AssessmentType, locale: "en" | "es"): string {
   if (locale === "es") {
     if (type === "LIA") return "Evaluación del interés legítimo";
-    if (type === "DPIA") return "Evaluación de impacto relativa a la protección de datos (EIPD)";
+    if (type === "DPIA") return "Evaluación de Impacto relativa a la Protección de Datos (EIPD)";
     return `Evaluación ${type}`;
   }
   if (type === "LIA") return "Legitimate Interests Assessment";
   if (type === "DPIA") return "Data Protection Impact Assessment";
   return `${type} Assessment`;
 }
+
+/** Why a required DPIA was not created (AutoCreateResult.skippedReason). */
+export const DPIA_NOT_CREATED = {
+  quota: "DPIA_REQUIRED_QUOTA_USED",
+  licence: "DPIA_REQUIRED_NO_LICENCE",
+} as const;
 
 interface AutoCreateResult {
   created: boolean;
@@ -70,18 +76,14 @@ export async function createAssessmentFromActivity(
   } = params;
 
   // The DPIA needs no licence on the pilot tier, but it counts against the
-  // two free ones there; with none left, fall back to LIA as before.
+  // two free ones there. With none left, or without a licence, no DPIA is
+  // created, and nothing else is created in its place: a legitimate-interest
+  // assessment is not a substitute for a required DPIA (GDPR Art. 35). The
+  // caller is told why, so it can say "DPIA required, not created".
   if (assessmentType === "DPIA" && (await isDpiaPilotTier(organizationId))) {
     const used = await countDpiaCreated(tx, organizationId);
     if (used >= PILOT_DPIA_LIMIT) {
-      return createAssessmentFromActivity({
-        ...params,
-        assessmentType: "LIA",
-        reason:
-          locale === "es"
-            ? `${reason} (evaluación del interés legítimo en su lugar: ya se han usado las EIPD gratuitas del piloto)`
-            : `${reason} (LIA fallback: the pilot tier's free DPIAs are used)`,
-      });
+      return { created: false, skippedReason: DPIA_NOT_CREATED.quota };
     }
   } else if (isPremiumAssessmentType(assessmentType)) {
     const entitlement = await checkAssessmentEntitlement(
@@ -89,20 +91,9 @@ export async function createAssessmentFromActivity(
       assessmentType
     );
     if (!entitlement.entitled) {
-      // Fall back to LIA if DPIA not entitled
-      if (assessmentType === "DPIA") {
-        return createAssessmentFromActivity({
-          ...params,
-          assessmentType: "LIA",
-          reason:
-            locale === "es"
-              ? `${reason} (evaluación del interés legítimo en su lugar: la EIPD necesita una licencia)`
-              : `${reason} (LIA fallback: DPIA requires premium license)`,
-        });
-      }
       return {
         created: false,
-        skippedReason: `No ${assessmentType} entitlement`,
+        skippedReason: assessmentType === "DPIA" ? DPIA_NOT_CREATED.licence : `No ${assessmentType} entitlement`,
       };
     }
   }
