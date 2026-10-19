@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo, useRef } from "react";
 import {
   ReactFlow,
   Background,
@@ -11,19 +11,22 @@ import {
   useNodesState,
   useEdgesState,
   type NodeMouseHandler,
+  type Node,
+  type Edge,
   Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Loader2, Plus, Database } from "lucide-react";
+import { Loader2, Plus, Database, List, Network } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { useRouter } from "next/navigation";
 
 import { AssetNode } from "./AssetNode";
+import { CountryNode, TransferEdge, VendorNode } from "./TransferLayer";
 import { FlowEdge } from "./FlowEdge";
 import { FlowDetailsPanel } from "./FlowDetailsPanel";
 import { CreateFlowSheet, type CreateFlowData } from "./CreateFlowSheet";
@@ -34,6 +37,7 @@ import {
 } from "./FlowFilterToolbar";
 import { classifyCategories, legendCategories } from "./flow-palette";
 import { FlowLegend } from "./FlowLegend";
+import { FlowListView } from "./FlowListView";
 import { DataCategory } from "@prisma/client";
 import {
   useDataFlowGraph,
@@ -46,10 +50,13 @@ import { useOrgRole } from "@/lib/use-org-role";
 
 const nodeTypes = {
   assetNode: AssetNode,
+  vendorNode: VendorNode,
+  countryNode: CountryNode,
 };
 
 const edgeTypes = {
   flowEdge: FlowEdge,
+  transferEdge: TransferEdge,
 };
 
 interface DataFlowVisualizationProps {
@@ -90,7 +97,7 @@ export function DataFlowVisualization({
     { enabled: !!organizationId }
   );
 
-  const { data: transferMarkerRows } = trpc.dataInventory.mapTransferMarkers.useQuery(
+  const { data: transferOverlay } = trpc.dataInventory.mapTransferMarkers.useQuery(
     { organizationId },
     { enabled: !!organizationId }
   );
@@ -100,49 +107,69 @@ export function DataFlowVisualization({
   const createFlow = trpc.dataInventory.createFlow.useMutation({
     onSuccess: () => {
       toast.success(t("dataFlow.created"));
-      utils.dataInventory.listFlows.invalidate();
+      // Flows, systems and transfer markers all feed the map.
+      utils.dataInventory.invalidate();
       setIsCreateFlowOpen(false);
     },
-    onError: (error) => toast.error(error.message || t("dataFlow.createFailed")),
+    onError: () => toast.error(t("dataFlow.createFailed")),
   });
 
   const updateFlow = trpc.dataInventory.updateFlow.useMutation({
     onSuccess: () => {
       toast.success(t("dataFlow.updated"));
-      utils.dataInventory.listFlows.invalidate();
+      utils.dataInventory.invalidate();
       setEditingFlow(null);
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
-    onError: (error) => toast.error(error.message || t("dataFlow.updateFailed")),
+    onError: () => toast.error(t("dataFlow.updateFailed")),
   });
 
   const deleteFlow = trpc.dataInventory.deleteFlow.useMutation({
     onSuccess: () => {
       toast.success(t("dataFlow.deleted"));
-      utils.dataInventory.listFlows.invalidate();
+      utils.dataInventory.invalidate();
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
-    onError: (error) => toast.error(error.message || t("dataFlow.deleteFailed")),
+    onError: () => toast.error(t("dataFlow.deleteFailed")),
   });
 
   const confirmFlow = trpc.dataInventory.confirmFlow.useMutation({
     onSuccess: () => {
       toast.success(tFlow("details.confirmed"));
-      utils.dataInventory.listFlows.invalidate();
+      utils.dataInventory.invalidate();
       setIsFlowPanelOpen(false);
       setSelectedFlow(null);
     },
-    onError: (error) => toast.error(error.message || t("dataFlow.updateFailed")),
+    onError: () => toast.error(t("dataFlow.updateFailed")),
   });
 
   const dataLoading = assetsLoading || flowsLoading;
 
   // Transform assets to our format
   const markerByAsset = useMemo(
-    () => new Map((transferMarkerRows ?? []).map((m) => [m.assetId, { transferIds: m.transferIds, countries: m.countries }])),
-    [transferMarkerRows]
+    () =>
+      new Map(
+        (transferOverlay?.markers ?? []).map((m) => [
+          m.assetId,
+          {
+            transferIds: m.transferIds,
+            countries: m.countries,
+            transfers: m.transfers,
+            worstStatus: m.worstStatus,
+            unrecordedCountries: m.unrecordedCountries,
+          },
+        ])
+      ),
+    [transferOverlay]
+  );
+  const transferLayer = useMemo(
+    () =>
+      transferOverlay
+        ? { transfers: transferOverlay.transfers, vendors: transferOverlay.vendors }
+        : null,
+    [transferOverlay]
   );
   const assets: AssetData[] = useMemo(() => {
     return (assetsData?.assets ?? []).map((a) => ({
@@ -205,19 +232,58 @@ export function DataFlowVisualization({
   );
 
   // Build graph
-  const { nodes: graphNodes, edges: graphEdges, isLoading: graphLoading } = useDataFlowGraph({
+  const {
+    nodes: graphNodes,
+    edges: graphEdges,
+    overlayNodes,
+    transferEdges,
+    isLoading: graphLoading,
+    summary,
+  } = useDataFlowGraph({
     mode,
     assetId,
     assets,
     flows,
+    transferLayer,
   });
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<AssetNodeType>(graphNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<FlowEdgeType>(graphEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   // ─── Filter + focus state ────────────────────────────────────────────────
   const [filters, setFilters] = useState<FlowFilters>(DEFAULT_FILTERS);
   const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null);
+  // Map or list (the list reads the same records, for keyboard, screen
+  // reader and phone use, and for an auditor's review).
+  const [view, setView] = useState<"map" | "list">("map");
+  // On a phone the list is the readable view: start there.
+  useEffect(() => {
+    try {
+      if (window.matchMedia("(max-width: 639px)").matches) setView("list");
+    } catch {
+      /* no matchMedia: keep the map */
+    }
+  }, []);
+
+  // Processing activities, for the activity filter.
+  const { data: activitiesPage } = trpc.dataInventory.listActivities.useQuery(
+    { organizationId, limit: 500, isActive: true },
+    { enabled: !!organizationId && mode === "all" }
+  );
+  const activityOptions = useMemo(
+    () =>
+      (activitiesPage?.activities ?? []).map((a) => ({
+        id: a.id,
+        name: a.name,
+        assetIds: a.assets.map((l) => l.dataAssetId),
+      })),
+    [activitiesPage]
+  );
+
+  const openFlow = useCallback((flow: FlowData) => {
+    setSelectedFlow(flow);
+    setIsFlowPanelOpen(true);
+  }, []);
 
   /**
    * Derive the displayed nodes/edges from graph + filters + focus.
@@ -229,6 +295,9 @@ export function DataFlowVisualization({
    *  - orphan node dim (a node becomes dim if none of its visible edges survive)
    */
   const { displayNodes, displayEdges, visibleEdgeCount } = useMemo(() => {
+    const activitySystems = filters.activityId
+      ? new Set(activityOptions.find((a) => a.id === filters.activityId)?.assetIds ?? [])
+      : null;
     const edgePasses = (e: FlowEdgeType): boolean => {
       const flow = e.data?.flow;
       if (!flow) return false;
@@ -242,6 +311,13 @@ export function DataFlowVisualization({
       if (filters.categories.size > 0) {
         const hit = flow.dataCategories.some((c) => filters.categories.has(c));
         if (!hit) return false;
+      }
+
+      if (activitySystems) {
+        const fromActivity =
+          (flow.metadata as { activityId?: string } | null | undefined)?.activityId === filters.activityId;
+        const between = activitySystems.has(flow.sourceAssetId) && activitySystems.has(flow.destinationAssetId);
+        if (!fromActivity && !between) return false;
       }
 
       return true;
@@ -276,14 +352,22 @@ export function DataFlowVisualization({
         data: {
           ...e.data!,
           isDimmed: pass && focusedNodeId !== null && !touchesFocus,
+          onSelect: openFlow,
         },
       };
     });
 
+    const filtering =
+      filters.sensitivity !== "all" ||
+      !filters.showAutoGenerated ||
+      filters.categories.size > 0 ||
+      !!filters.activityId;
     const displayNodes = graphNodes.map((n): AssetNodeType => {
       const hasVisibleEdge = activeAssetIds.has(n.id);
+      // A system without flows is drawn at full strength until a filter is on.
       const dim =
-        !hasVisibleEdge ||
+        (activitySystems ? !activitySystems.has(n.id) && !hasVisibleEdge : false) ||
+        (!activitySystems && !hasVisibleEdge && (filtering || !n.data.isIsolated)) ||
         (focusedNodeId !== null && !focusNeighbours.has(n.id));
       return {
         ...n,
@@ -298,40 +382,101 @@ export function DataFlowVisualization({
     });
 
     return { displayNodes, displayEdges, visibleEdgeCount: kept.length };
-  }, [graphNodes, graphEdges, filters, focusedNodeId]);
+  }, [graphNodes, graphEdges, filters, focusedNodeId, openFlow, activityOptions]);
 
-  // Update nodes/edges whenever derived output changes
+  // Update nodes/edges whenever derived output changes. A new layout places
+  // the nodes; a hover or a filter keeps where the person dragged them.
+  const laidOutFrom = useRef<AssetNodeType[] | null>(null);
   useEffect(() => {
-    setNodes(displayNodes);
-    setEdges(displayEdges);
-  }, [displayNodes, displayEdges, setNodes, setEdges]);
+    const freshLayout = laidOutFrom.current !== graphNodes;
+    laidOutFrom.current = graphNodes;
+    // Transfer edges and country/vendor nodes dim with the focus like the rest.
+    const focusTouches = (id: string) =>
+      !focusedNodeId ||
+      id === focusedNodeId ||
+      transferEdges.some(
+        (e) =>
+          (e.source === focusedNodeId && e.target === id) ||
+          (e.target === focusedNodeId && e.source === id)
+      );
+    const overlay: Node[] = overlayNodes.map((n) => ({
+      ...n,
+      data: { ...n.data, isDimmed: !focusTouches(n.id) },
+    }));
+    const tEdges: Edge[] = transferEdges.map((e) => ({
+      ...e,
+      data: {
+        ...e.data!,
+        isDimmed: !!focusedNodeId && e.source !== focusedNodeId && e.target !== focusedNodeId,
+      },
+    }));
+    const next: Node[] = [...displayNodes, ...overlay];
+    setNodes((prev) => {
+      if (freshLayout) return next;
+      const at = new Map(prev.map((n) => [n.id, n.position]));
+      return next.map((n) => ({ ...n, position: at.get(n.id) ?? n.position }));
+    });
+    setEdges([...displayEdges, ...tEdges]);
+  }, [graphNodes, displayNodes, displayEdges, overlayNodes, transferEdges, focusedNodeId, setNodes, setEdges]);
 
-  const handleNodeMouseEnter: NodeMouseHandler<AssetNodeType> = useCallback(
+  const handleNodeMouseEnter: NodeMouseHandler<Node> = useCallback(
     (_e, node) => setFocusedNodeId(node.id),
     []
   );
-  const handleNodeMouseLeave: NodeMouseHandler<AssetNodeType> = useCallback(
+  const handleNodeMouseLeave: NodeMouseHandler<Node> = useCallback(
     () => setFocusedNodeId(null),
     []
   );
 
   // Handle node double-click - navigate to asset detail
-  const handleNodeDoubleClick: NodeMouseHandler<AssetNodeType> = useCallback(
+  const nodeHref = useCallback((id: string): string | null => {
+    if (id.startsWith("vendor:")) return `/privacy/vendors/${id.slice("vendor:".length)}`;
+    if (id.startsWith("country:")) return "/privacy/transfers";
+    return `/privacy/data-inventory/${id}`;
+  }, []);
+  const handleNodeDoubleClick: NodeMouseHandler<Node> = useCallback(
     (_event, node) => {
-      router.push(`/privacy/data-inventory/${node.id}`);
+      const href = nodeHref(node.id);
+      if (href) router.push(href);
     },
-    [router]
+    [router, nodeHref]
   );
 
   // Handle edge click - show flow details
   const handleEdgeClick = useCallback(
-    (_event: React.MouseEvent, edge: FlowEdgeType) => {
-      if (edge.data?.flow) {
-        setSelectedFlow(edge.data.flow);
-        setIsFlowPanelOpen(true);
+    (_event: React.MouseEvent, edge: Edge) => {
+      const flow = (edge as FlowEdgeType).data?.flow;
+      if (edge.type === "flowEdge" && flow) openFlow(flow);
+    },
+    [openFlow]
+  );
+
+  // Keyboard: Enter or Space on a focused system opens it; on a focused
+  // flow, its details.
+  const flowById = useMemo(() => new Map(flows.map((f) => [f.id, f])), [flows]);
+  const handleCanvasKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const target = e.target as HTMLElement;
+      const nodeEl = target.closest(".react-flow__node");
+      const nodeId = nodeEl?.getAttribute("data-id");
+      if (nodeId) {
+        const href = nodeHref(nodeId);
+        if (href) {
+          e.preventDefault();
+          router.push(href);
+        }
+        return;
+      }
+      const edgeEl = target.closest(".react-flow__edge");
+      const edgeId = edgeEl?.getAttribute("data-id") ?? edgeEl?.getAttribute("data-testid")?.replace(/^rf__edge-/, "");
+      const flow = edgeId ? flowById.get(edgeId) : undefined;
+      if (flow) {
+        e.preventDefault();
+        openFlow(flow);
       }
     },
-    []
+    [router, flowById, openFlow, nodeHref]
   );
 
   // Handle create flow
@@ -385,22 +530,41 @@ export function DataFlowVisualization({
     });
   };
 
-  const editInitialData: CreateFlowData | undefined = editingFlow
-    ? {
-        name: editingFlow.name,
-        description: editingFlow.description ?? "",
-        sourceAssetId: editingFlow.sourceAssetId,
-        destinationAssetId: editingFlow.destinationAssetId,
-        dataCategories: editingFlow.dataCategories as DataCategory[],
-        frequency: editingFlow.frequency ?? "",
-        volume: editingFlow.volume ?? "",
-        encryptionMethod: editingFlow.encryptionMethod ?? "",
-        isAutomated: editingFlow.isAutomated,
-      }
-    : undefined;
+  // Memoised: the edit sheet refills its form only when it opens, so a
+  // failed save keeps the person's changes.
+  const editInitialData: CreateFlowData | undefined = useMemo(
+    () =>
+      editingFlow
+        ? {
+            name: editingFlow.name,
+            description: editingFlow.description ?? "",
+            sourceAssetId: editingFlow.sourceAssetId,
+            destinationAssetId: editingFlow.destinationAssetId,
+            dataCategories: editingFlow.dataCategories as DataCategory[],
+            frequency: editingFlow.frequency ?? "",
+            volume: editingFlow.volume ?? "",
+            encryptionMethod: editingFlow.encryptionMethod ?? "",
+            isAutomated: editingFlow.isAutomated,
+          }
+        : undefined,
+    [editingFlow]
+  );
 
-  // Loading state
-  if (dataLoading || graphLoading) {
+  // The system types on the map, for the key.
+  const shownTypes = useMemo(
+    () => [...new Set(graphNodes.map((n) => n.data.asset.type))].sort(),
+    [graphNodes]
+  );
+  const hasTransferBadges =
+    graphNodes.some((n) => (n.data.asset.transfersOutsideEea?.transferIds.length ?? 0) > 0) ||
+    overlayNodes.some((n) => n.data.kind === "country");
+  const hasUnrecordedBadges =
+    graphNodes.some((n) => (n.data.asset.transfersOutsideEea?.unrecordedCountries?.length ?? 0) > 0) ||
+    overlayNodes.some((n) => n.data.kind === "vendor" && n.data.vendor.unrecordedCountries.length > 0);
+
+  // Loading state: only before the first layout, so a later re-layout keeps
+  // the canvas (and its zoom and pan) in place.
+  if (dataLoading || (graphLoading && graphNodes.length === 0)) {
     return (
       <Card>
         <CardContent className="py-12">
@@ -430,37 +594,8 @@ export function DataFlowVisualization({
     );
   }
 
-  // No flows state
-  if (flows.length === 0 && mode === "all") {
-    return (
-      <Card>
-        <CardContent className="py-8 text-center text-muted-foreground">
-          <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>{tFlow("empty.noFlowsTitle")}</p>
-          <p className="text-sm mb-4">{tFlow("empty.noFlowsBody")}</p>
-          {canWrite && (
-            <>
-            <Button onClick={() => setIsCreateFlowOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              {tFlow("sheet.createFlow")}
-            </Button>
-            <CreateFlowSheet
-              isOpen={isCreateFlowOpen}
-              onClose={() => setIsCreateFlowOpen(false)}
-              assets={assets}
-              onSubmit={handleCreateFlow}
-              isSubmitting={createFlow.isPending}
-              error={createFlow.error?.message}
-            />
-            </>
-          )}
-        </CardContent>
-      </Card>
-    );
-  }
-
   // Asset mode with no connected flows
-  if (mode === "asset" && nodes.length <= 1) {
+  if (mode === "asset" && graphNodes.length <= 1 && overlayNodes.length === 0) {
     return (
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
@@ -487,11 +622,78 @@ export function DataFlowVisualization({
     );
   }
 
+  const noFlows = mode === "all" && summary.flows === 0;
+
   return (
     <>
+      {/* Counts, and the switch between the map and the list */}
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+        <p data-testid="flow-summary">
+          {tFlow("summary.counts", {
+            systems: summary.systems,
+            flows: summary.flows,
+            isolated: summary.isolatedSystems,
+            transfers: summary.transfers,
+            countries: summary.countries,
+            vendors: summary.vendors,
+          })}
+        </p>
+        <div className="flex gap-1" role="group" aria-label={tFlow("view.label")}>
+          <Button
+            type="button"
+            size="sm"
+            variant={view === "map" ? "default" : "outline"}
+            aria-pressed={view === "map"}
+            onClick={() => setView("map")}
+            data-testid="flow-view-map"
+          >
+            <Network className="w-4 h-4 mr-1.5" aria-hidden />
+            {tFlow("view.map")}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={view === "list" ? "default" : "outline"}
+            aria-pressed={view === "list"}
+            onClick={() => setView("list")}
+            data-testid="flow-view-list"
+          >
+            <List className="w-4 h-4 mr-1.5" aria-hidden />
+            {tFlow("view.list")}
+          </Button>
+        </div>
+      </div>
+
+      {/* Filters above the canvas, never over it (on a phone they wrap) */}
+      {view === "map" && !noFlows && (
+        <div className="mb-2">
+          <FlowFilterToolbar
+            filters={filters}
+            onChange={setFilters}
+            edgeCount={visibleEdgeCount}
+            totalEdges={graphEdges.length}
+            activities={activityOptions}
+          />
+        </div>
+      )}
+
+      {view === "list" ? (
+        <FlowListView
+          nodes={graphNodes}
+          flows={graphEdges.map((e) => e.data!.flow)}
+          overlay={overlayNodes}
+          onOpenFlow={openFlow}
+        />
+      ) : (
       <Card className="overflow-hidden">
         {/* Mobile: 360px fixed (any taller is unusable on a phone). sm+: caller's height. */}
-        <div className="relative h-[360px] sm:h-[var(--df-h)]" style={{ ["--df-h" as string]: height }}>
+        <div
+          className="relative h-[360px] sm:h-[var(--df-h)]"
+          style={{ ["--df-h" as string]: height }}
+          role="region"
+          aria-label={tFlow("view.canvasLabel", { systems: summary.systems, flows: summary.flows })}
+          onKeyDown={handleCanvasKeyDown}
+        >
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -504,8 +706,7 @@ export function DataFlowVisualization({
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             fitView
-            // Room at the top for the filter toolbar, so it never covers a node.
-            fitViewOptions={{ padding: { top: "72px", right: "40px", bottom: "40px", left: "40px" } }}
+            fitViewOptions={{ padding: 0.12 }}
             minZoom={0.1}
             maxZoom={2}
             defaultEdgeOptions={{
@@ -535,15 +736,20 @@ export function DataFlowVisualization({
               />
             )}
 
-            {/* Filter toolbar (left) */}
-            <Panel position="top-left" className="max-w-[calc(100%-72px)] sm:max-w-[calc(100%-140px)]">
-              <FlowFilterToolbar
-                filters={filters}
-                onChange={setFilters}
-                edgeCount={visibleEdgeCount}
-                totalEdges={graphEdges.length}
-              />
-            </Panel>
+
+            {/* No flow yet: the systems are drawn; say how to join them */}
+            {noFlows && (
+              <Panel position="bottom-center" className="max-w-[calc(100%-24px)] sm:max-w-md">
+                <div
+                  className="border bg-white px-3 py-2 text-xs shadow-sm"
+                  style={{ borderColor: "#e2e8f0", color: "#334155" }}
+                  data-testid="flow-empty-hint"
+                >
+                  <p className="font-semibold" style={{ color: "#0f172a" }}>{tFlow("empty.noFlowsTitle")}</p>
+                  <p className="mt-0.5">{tFlow("empty.noFlowsHint")}</p>
+                </div>
+              </Panel>
+            )}
 
             {/* Add-flow CTA (right) */}
             <Panel position="top-right" className="flex gap-2">
@@ -587,11 +793,21 @@ export function DataFlowVisualization({
           </ReactFlow>
         </div>
       </Card>
-      <FlowLegend categories={shownCategories} />
+      )}
+      <FlowLegend
+        categories={shownCategories}
+        types={shownTypes}
+        showTransfers={hasTransferBadges}
+        showUnrecorded={hasUnrecordedBadges}
+      />
 
       {/* Flow Details Panel */}
       <FlowDetailsPanel
-        flow={selectedFlow}
+        // The latest copy of the flow, so a renamed system shows its new name.
+        flow={selectedFlow ? flowById.get(selectedFlow.id) ?? selectedFlow : null}
+        destinationTransfers={
+          selectedFlow ? markerByAsset.get(selectedFlow.destinationAssetId) ?? null : null
+        }
         isOpen={isFlowPanelOpen}
         onClose={() => {
           setIsFlowPanelOpen(false);

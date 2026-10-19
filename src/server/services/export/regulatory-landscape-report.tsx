@@ -44,6 +44,8 @@ export interface TransferExposure {
   count: number;
   mechanisms: string[];
   hasAdequacy: boolean;
+  /** The adequacy cell in the reader's language ("Partial (...)" for the US and Canada). */
+  adequacyLabel?: string;
 }
 
 export interface VendorExposure {
@@ -522,7 +524,7 @@ export function RegulatoryLandscapeReport({
               .map((tr2) => [
                 tr2.country,
                 String(tr2.count),
-                tr2.hasAdequacy ? tr("yes") : tr("no"),
+                tr2.adequacyLabel ?? (tr2.hasAdequacy ? tr("yes") : tr("no")),
                 tr2.mechanisms.join(", ") || "",
               ])}
           />
