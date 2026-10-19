@@ -18,6 +18,8 @@ import {
   fmtDate,
 } from "./pdf-styles";
 import type { PdfT } from "./privacy-program/data-mapping";
+import { pdfEnumLabel } from "./pdf-locale";
+import { RISK_GRADES, RISK_MATRIX } from "@/lib/assessment-risk-register";
 import { HealthAdtechPages } from "./health-adtech-report";
 import type { HealthAdtechResult } from "@/lib/health-adtech/results";
 
@@ -100,6 +102,53 @@ const EN_FALLBACK: Record<string, string> = {
   "assessmentTypes.VENDOR": "Vendor Risk Assessment",
   "assessmentTypes.CUSTOM": "Custom Assessment",
   "articleRefs.DPIA": "GDPR Article 35(7)",
+  "articleRefs.LIA": "GDPR Article 6(1)(f)",
+  "articleRefs.TIA": "GDPR Chapter V (Articles 44 to 49)",
+  "articleRefs.VENDOR": "GDPR Article 28",
+  "articleRefs.PIA": "",
+  "articleRefs.CUSTOM": "",
+  approvedIntro: "This document records the assessment as it was approved.",
+  approvedLaterRequirements: "Added to the template after this approval, to be answered in a new revision:",
+  conformanceRuleNotMet: "Answered, not met",
+  "stats.notAssessed": "Not assessed",
+  "stats2.inherentRisk": "Inherent risk (before measures)",
+  "stats2.residualRisk": "Residual risk (after measures)",
+  registerTitle: "Risk register",
+  registerIntro:
+    "One row per risk to the rights and freedoms of data subjects, graded for likelihood (L) and severity (S) before the measures (inherent) and after them (residual). Scale: 1 negligible, 2 limited, 3 significant, 4 maximum.",
+  registerEmpty: "No risk has been entered in the risk register.",
+  registerNotGraded: "Not graded",
+  "registerColumns.risk": "Risk",
+  "registerColumns.rights": "Rights affected",
+  "registerColumns.inherent": "Inherent",
+  "registerColumns.measures": "Measures",
+  "registerColumns.residual": "Residual",
+  "registerColumns.status": "Status",
+  matrixTitle: "Risk matrix",
+  matrixIntro: "Each cell shows how many risks sit there before the measures and, after the slash, after them.",
+  matrixLikelihood: "Likelihood",
+  matrixSeverity: "Severity",
+  "grades.1": "Negligible",
+  "grades.2": "Limited",
+  "grades.3": "Significant",
+  "grades.4": "Maximum",
+  signOffTitle: "Conclusion and sign-off",
+  notRecorded: "Not recorded",
+  "signOff.templateVersion": "Template version",
+  "signOff.approvedVersion": "Approved version",
+  "signOff.preparedBy": "Prepared by",
+  "signOff.dpoAdvice": "Advice of the data protection officer (Art. 35(2) GDPR)",
+  "signOff.consultation": "Prior consultation (Art. 36 GDPR)",
+  "signOff.consultationRecord": "Consultation: date and outcome",
+  "signOff.review": "Review (Art. 35(11) GDPR)",
+  "signOff.decision": "Decision",
+  "signOff.decidedOn": "Decided on",
+  "signOff.signatures": "Signatures",
+  "signOff.forController": "For the controller",
+  "signOff.dpo": "Data protection officer",
+  "signOff.nameAndPosition": "Name and position",
+  "signOff.signature": "Signature",
+  "signOff.date": "Date",
 };
 
 function fallbackT(key: string, values?: Record<string, string | number | Date>): string {
@@ -113,6 +162,9 @@ function fallbackT(key: string, values?: Record<string, string | number | Date>)
     priorityCode: "P{n}",
     approvalLevel: "Level {n}",
     draftMore: "and {count} more",
+    approvedTitle: "Approved on {date}",
+    registerPair: "{level} (L{likelihood} × S{severity})",
+    registerUnsupported: "Residual risk lowered by two or more levels with no implemented measure: {risks}.",
   };
   const template = templates[key] ?? key;
   if (!values) return template;
@@ -187,6 +239,47 @@ export interface AssessmentExportData {
     outstandingRequirements: Array<{ citation: string; label: string }>;
   };
   /**
+   * Set when the assessment is approved: it is never marked a draft. Lists
+   * what the template asks for that was added after the approval.
+   */
+  approved?: { date: string; laterRequirements: string[] };
+  /** Inherent risk (before measures) and residual risk (after measures), kept apart. */
+  inherentRiskLevel?: string | null;
+  inherentRiskScore?: number | null;
+  residualRiskLevel?: string | null;
+  /** The risk register (one row per risk), for DPIAs or wherever it holds rows. */
+  register?: {
+    rows: Array<{
+      title: string;
+      description: string | null;
+      rightsAffected: string | null;
+      likelihood: number;
+      severity: number;
+      inherent: string | null;
+      residualLikelihood: number | null;
+      residualSeverity: number | null;
+      residual: string | null;
+      status: string;
+      measures: string[];
+    }>;
+    /** Titles of risks lowered two levels or more with no implemented measure. */
+    unsupported: string[];
+  };
+  /** The DPIA's conclusion and sign-off page. */
+  signOff?: {
+    templateVersion: string;
+    approvedVersion: number | null;
+    preparedBy: string[];
+    dpoAdvice: string | null;
+    consultation: string | null;
+    consultationRecord: string | null;
+    review: string | null;
+    decision: string;
+    decidedAt: Date | null;
+  };
+  /** The legal source on the cover, from the frameworks chosen (DPIA). */
+  citation?: string | null;
+  /**
    * The conformance table, already resolved into the report's language.
    * Absent for a template that has no requirement table.
    */
@@ -196,6 +289,8 @@ export interface AssessmentExportData {
       citation: string;
       label: string;
       covered: boolean;
+      /** Answered, but the answers do not meet the requirement. */
+      ruleNotMet?: boolean;
       /** Section of the assessment that answers it, null when nothing does. */
       step: string | null;
     }>;
@@ -235,6 +330,59 @@ function OutstandingList({
   );
 }
 
+/** The 4 x 4 matrix with the number of risks in each cell: before / after measures. */
+function RiskMatrix({
+  rows,
+  tr,
+}: {
+  rows: NonNullable<AssessmentExportData["register"]>["rows"];
+  tr: PdfT;
+}) {
+  const fill: Record<string, string> = {
+    LOW: "#dcfce7",
+    MEDIUM: "#fef9c3",
+    HIGH: "#fed7aa",
+    CRITICAL: "#fecaca",
+  };
+  const cell = { flex: 1, borderWidth: 0.5, borderColor: "#cbd5e1", padding: 4, minHeight: 26 } as const;
+  const likelihoods = [...RISK_GRADES].reverse();
+  return (
+    <View style={{ marginTop: 6 }}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={{ width: 90, fontSize: 7, color: PDF_COLORS.MUTED }}>
+          {tr("matrixLikelihood")} / {tr("matrixSeverity")}
+        </Text>
+        {RISK_GRADES.map((sev) => (
+          <Text key={sev} style={[cell, { fontSize: 7, fontFamily: "Inter", fontWeight: 700 }]}>
+            {sev}. {tr(`grades.${sev}`)}
+          </Text>
+        ))}
+      </View>
+      {likelihoods.map((lik) => (
+        <View key={lik} style={{ flexDirection: "row" }}>
+          <Text style={{ width: 90, fontSize: 7, fontFamily: "Inter", fontWeight: 700, paddingTop: 4 }}>
+            {lik}. {tr(`grades.${lik}`)}
+          </Text>
+          {RISK_GRADES.map((sev) => {
+            const before = rows.filter((r) => r.likelihood === lik && r.severity === sev).length;
+            const after = rows.filter(
+              (r) => (r.residualLikelihood ?? r.likelihood) === lik && (r.residualSeverity ?? r.severity) === sev
+            ).length;
+            return (
+              <Text
+                key={sev}
+                style={[cell, { fontSize: 9, textAlign: "center", backgroundColor: fill[RISK_MATRIX[lik - 1][sev - 1]] }]}
+              >
+                {before || after ? `${before} / ${after}` : ""}
+              </Text>
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export function AssessmentReport({
   data,
   t,
@@ -249,8 +397,20 @@ export function AssessmentReport({
   healthAdtech?: { result: HealthAdtechResult; t: PdfT };
 }) {
   const tr: PdfT = t ?? fallbackT;
-  const draftLabel = data.draft ? tr("draftMark") : undefined;
-  const date = fmtDate(new Date());
+  const draftLabel = data.draft && !data.approved ? tr("draftMark") : undefined;
+  const lang = locale === "es" ? "es" : "en";
+  /** Dates in the report's language: dd/mm/yyyy in Spanish. */
+  const fmt = (d: Date | string | null | undefined): string => {
+    const iso = fmtDate(d);
+    if (!iso || lang !== "es") return iso;
+    const [y, m, day] = iso.split("-");
+    return `${day}/${m}/${y}`;
+  };
+  const date = fmt(new Date());
+  const levelLabel = (level: string | null | undefined) =>
+    level ? pdfEnumLabel("riskLevel", level) : tr("stats.notAssessed");
+  const scoreLabel = (score: number | null | undefined) =>
+    score != null ? `${Math.round(score)} / 100` : null;
   const orgName = data.organization.name;
   const type = data.template.type;
   const sections = data.template.sections || [];
@@ -263,11 +423,12 @@ export function AssessmentReport({
   ).length;
   const typeLabel = tr(`assessmentTypes.${type}`);
   const articleRef = (() => {
+    // A DPIA cites the frameworks chosen for it (the GDPR, the Californian
+    // rules or both); other types cite their own article, where they have one.
+    if (data.citation) return data.citation;
     const ref = tr(`articleRefs.${type}`);
-    // articleRefs only defines DPIA. For other types the translator returns the
-    // unresolved key — "articleRefs.LIA" via the local fallback, or the full path
-    // "pdf.assessmentReport.articleRefs.LIA" via next-intl — so match either and skip.
-    return ref.includes("articleRefs.") ? null : ref;
+    // An unresolved key comes back as the key itself; an empty one means none.
+    return !ref || ref.includes("articleRefs.") ? null : ref;
   })();
 
   return (
@@ -285,6 +446,20 @@ export function AssessmentReport({
           </Text>
         )}
         <Text style={s.coverDate}>{tr("coverGenerated", { date })}</Text>
+
+        {/* An approved assessment: the approval date, and anything the
+            template gained after it, for the next revision. */}
+        {data.approved && (
+          <View style={[s.calloutBox, { alignSelf: "stretch", marginTop: 16 }]}>
+            <Text style={s.calloutTitle}>{tr("approvedTitle", { date: data.approved.date })}</Text>
+            <Text style={s.calloutText}>{tr("approvedIntro")}</Text>
+            <OutstandingList
+              title={tr("approvedLaterRequirements")}
+              items={data.approved.laterRequirements}
+              more={(count) => tr("draftMore", { count })}
+            />
+          </View>
+        )}
 
         {/* What is outstanding, on the first page, so nobody has to hunt. */}
         {data.draft && (
@@ -313,10 +488,7 @@ export function AssessmentReport({
 
         {/* Stat cards */}
         <View style={s.statsGrid}>
-          <StatCard
-            value={data.riskLevel?.replace("_", " ") || tr("stats.notAvailable")}
-            label={tr("stats.riskLevel")}
-          />
+          <StatCard value={levelLabel(data.riskLevel)} label={tr("stats.riskLevel")} />
           <StatCard
             value={`${data.completionPercentage}%`}
             label={tr("stats.completion")}
@@ -336,15 +508,23 @@ export function AssessmentReport({
           items={[
             { label: tr("meta.assessmentType"), value: typeLabel },
             { label: tr("meta.template"), value: `${data.template.name} v${data.template.version}` },
-            { label: tr("meta.status"), value: data.status.replace(/_/g, " ") },
-            {
-              label: tr("meta.riskScore"),
-              value: data.riskScore != null ? `${data.riskScore.toFixed(0)} / 100` : null,
-            },
-            { label: tr("meta.started"), value: fmtDate(data.startedAt) },
-            { label: tr("meta.submitted"), value: fmtDate(data.submittedAt) },
-            { label: tr("meta.completed"), value: fmtDate(data.completedAt) },
-            { label: tr("meta.dueDate"), value: fmtDate(data.dueDate) },
+            { label: tr("meta.status"), value: pdfEnumLabel("assessmentStatus", data.status) },
+            { label: tr("meta.riskScore"), value: scoreLabel(data.riskScore) },
+            ...(data.inherentRiskLevel || data.residualRiskLevel
+              ? [
+                  {
+                    label: tr("stats2.inherentRisk"),
+                    value: data.inherentRiskLevel
+                      ? `${levelLabel(data.inherentRiskLevel)}${data.inherentRiskScore != null ? ` (${scoreLabel(data.inherentRiskScore)})` : ""}`
+                      : tr("stats.notAssessed"),
+                  },
+                  { label: tr("stats2.residualRisk"), value: levelLabel(data.residualRiskLevel) },
+                ]
+              : []),
+            { label: tr("meta.started"), value: fmt(data.startedAt) },
+            { label: tr("meta.submitted"), value: fmt(data.submittedAt) },
+            { label: tr("meta.completed"), value: fmt(data.completedAt) },
+            { label: tr("meta.dueDate"), value: fmt(data.dueDate) },
             { label: tr("meta.linkedActivity"), value: data.processingActivity?.name },
             { label: tr("meta.linkedVendor"), value: data.vendor?.name },
           ]}
@@ -388,7 +568,11 @@ export function AssessmentReport({
             rows={data.conformance.rows.map((row) => [
               row.citation,
               row.label,
-              row.covered ? tr("conformanceCovered") : tr("conformanceOutstanding"),
+              row.covered
+                ? tr("conformanceCovered")
+                : row.ruleNotMet
+                  ? tr("conformanceRuleNotMet")
+                  : tr("conformanceOutstanding"),
               row.step ?? tr("conformanceNotAnswered"),
             ])}
           />
@@ -529,66 +713,77 @@ export function AssessmentReport({
       )}
 
       {/* ── Risk Assessment Summary ───────────────────── */}
-      {data.riskLevel && (
+      {(data.riskLevel || data.register) && (
         <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
           <Text style={s.sectionTitle}>{tr("riskAssessmentSummary")}</Text>
 
           <View style={s.statsGrid}>
+            <StatCard value={levelLabel(data.riskLevel)} label={tr("stats2.overallRiskLevel")} />
             <StatCard
-              value={data.riskLevel.replace("_", " ")}
-              label={tr("stats2.overallRiskLevel")}
-            />
-            <StatCard
-              value={data.riskScore != null ? data.riskScore.toFixed(1) : tr("stats.notAvailable")}
+              value={scoreLabel(data.riskScore) ?? tr("stats.notAssessed")}
               label={tr("stats2.riskScore")}
             />
-            <StatCard
-              value={data.responses.filter((r) => r.riskScore != null).length}
-              label={tr("stats2.scoredQuestions")}
-            />
+            {(data.inherentRiskLevel !== undefined || data.residualRiskLevel !== undefined) && (
+              <StatCard value={levelLabel(data.inherentRiskLevel)} label={tr("stats2.inherentRisk")} />
+            )}
+            {(data.inherentRiskLevel !== undefined || data.residualRiskLevel !== undefined) && (
+              <StatCard value={levelLabel(data.residualRiskLevel)} label={tr("stats2.residualRisk")} />
+            )}
           </View>
 
-          {/* Per-question risk scores table */}
-          {data.responses.some((r) => r.riskScore != null) && (
+          {/* The risk register: one row per risk, before and after measures. */}
+          {data.register && (
             <View style={{ marginTop: 8 }}>
-              <Text style={s.sectionSubtitle}>{tr("questionRiskScores")}</Text>
-              <DataTable
-                headers={[
-                  tr("riskColumns.section"),
-                  tr("riskColumns.question"),
-                  tr("riskColumns.score"),
-                  tr("riskColumns.level"),
-                ]}
-                colWidths={[2, 4, 1, 1.5]}
-                rows={data.responses
-                  .filter((r) => r.riskScore != null)
-                  .map((r) => {
-                    const section = sections.find((sec) =>
-                      sec.id === r.sectionId
-                    );
-                    const question = section?.questions.find(
-                      (q) => q.id === r.questionId
-                    );
-                    const level =
-                      r.riskScore! <= 1
-                        ? "LOW"
-                        : r.riskScore! <= 2.5
-                          ? "MEDIUM"
-                          : r.riskScore! <= 3.5
-                            ? "HIGH"
-                            : "CRITICAL";
-                    return [
-                      section?.title ?? "",
-                      question?.text
-                        ? question.text.length > 60
-                          ? question.text.slice(0, 57) + "..."
-                          : question.text
-                        : "",
-                      r.riskScore!.toFixed(1),
-                      level,
-                    ];
-                  })}
-              />
+              <Text style={s.sectionSubtitle}>{tr("registerTitle")}</Text>
+              <Text style={s.paragraph}>{tr("registerIntro")}</Text>
+              {data.register.rows.length === 0 ? (
+                <Text style={s.notesText}>{tr("registerEmpty")}</Text>
+              ) : (
+                <DataTable
+                  headers={[
+                    tr("registerColumns.risk"),
+                    tr("registerColumns.rights"),
+                    tr("registerColumns.inherent"),
+                    tr("registerColumns.measures"),
+                    tr("registerColumns.residual"),
+                    tr("registerColumns.status"),
+                  ]}
+                  colWidths={[2.6, 1.8, 1.5, 2.4, 1.5, 1]}
+                  rows={data.register.rows.map((r) => [
+                    r.description ? `${r.title}: ${r.description}` : r.title,
+                    r.rightsAffected,
+                    tr("registerPair", {
+                      level: levelLabel(r.inherent),
+                      likelihood: r.likelihood,
+                      severity: r.severity,
+                    }),
+                    r.measures.join("; "),
+                    r.residual
+                      ? tr("registerPair", {
+                          level: levelLabel(r.residual),
+                          likelihood: r.residualLikelihood ?? "",
+                          severity: r.residualSeverity ?? "",
+                        })
+                      : tr("registerNotGraded"),
+                    pdfEnumLabel("assessmentRiskStatus", r.status),
+                  ])}
+                />
+              )}
+              {data.register.unsupported.length > 0 && (
+                <View style={[s.calloutBox, { marginTop: 8 }]}>
+                  <Text style={s.calloutText}>
+                    {tr("registerUnsupported", { risks: data.register.unsupported.join("; ") })}
+                  </Text>
+                </View>
+              )}
+
+              {data.register.rows.length > 0 && (
+                <View style={{ marginTop: 12 }} wrap={false}>
+                  <Text style={s.sectionSubtitle}>{tr("matrixTitle")}</Text>
+                  <Text style={s.notesText}>{tr("matrixIntro")}</Text>
+                  <RiskMatrix rows={data.register.rows} tr={tr} />
+                </View>
+              )}
             </View>
           )}
         </ContentPage>
@@ -620,10 +815,10 @@ export function AssessmentReport({
             colWidths={[3, 1.5, 0.8, 1.5, 1.5, 1]}
             rows={data.mitigations.map((m) => [
               m.title,
-              m.status.replace(/_/g, " "),
+              pdfEnumLabel("mitigationStatus", m.status),
               tr("priorityCode", { n: m.priority }),
               m.owner,
-              fmtDate(m.dueDate),
+              fmt(m.dueDate),
               m.evidence ? tr("yes") : tr("no"),
             ])}
           />
@@ -670,11 +865,69 @@ export function AssessmentReport({
             rows={data.approvals.map((a) => [
               tr("approvalLevel", { n: a.level }),
               a.approver.name || a.approver.email,
-              a.status.replace(/_/g, " "),
-              fmtDate(a.decidedAt),
+              pdfEnumLabel("approvalStatus", a.status),
+              fmt(a.decidedAt),
               a.comments,
             ])}
           />
+        </ContentPage>
+      )}
+
+      {/* ── Conclusion and sign-off (DPIA) ────────────── */}
+      {data.signOff && (
+        <ContentPage title={data.name} orgName={orgName} date={date} draftLabel={draftLabel}>
+          <Text style={s.sectionTitle}>{tr("signOffTitle")}</Text>
+          <MetadataBlock
+            items={[
+              { label: tr("signOff.templateVersion"), value: data.signOff.templateVersion },
+              {
+                label: tr("signOff.approvedVersion"),
+                value: data.signOff.approvedVersion != null ? String(data.signOff.approvedVersion) : tr("notRecorded"),
+              },
+              {
+                label: tr("signOff.preparedBy"),
+                value: data.signOff.preparedBy.length > 0 ? data.signOff.preparedBy.join(", ") : tr("notRecorded"),
+              },
+              { label: tr("signOff.decision"), value: pdfEnumLabel("assessmentStatus", data.signOff.decision) },
+              { label: tr("signOff.decidedOn"), value: fmt(data.signOff.decidedAt) || tr("notRecorded") },
+            ]}
+          />
+          {(
+            [
+              ["signOff.dpoAdvice", data.signOff.dpoAdvice],
+              ["signOff.consultation", data.signOff.consultation],
+              ["signOff.consultationRecord", data.signOff.consultationRecord],
+              ["signOff.review", data.signOff.review],
+            ] as Array<[string, string | null]>
+          )
+            .filter(([key, value]) => value != null || key !== "signOff.consultationRecord")
+            .map(([key, value]) => (
+              <View key={key} style={s.questionCard}>
+                <Text
+                  style={{ fontSize: 9, fontFamily: "Inter", fontWeight: 700, color: PDF_COLORS.DARK, marginBottom: 4 }}
+                >
+                  {tr(key)}
+                </Text>
+                <Text style={s.answerText}>{value ?? tr("notRecorded")}</Text>
+              </View>
+            ))}
+
+          <View wrap={false}>
+          <Text style={[s.sectionSubtitle, { marginTop: 12 }]}>{tr("signOff.signatures")}</Text>
+          <DataTable
+            headers={[
+              "",
+              tr("signOff.nameAndPosition"),
+              tr("signOff.signature"),
+              tr("signOff.date"),
+            ]}
+            colWidths={[2, 3, 2.5, 1.5]}
+            rows={[
+              [tr("signOff.forController"), " \n ", "", ""],
+              [tr("signOff.dpo"), " \n ", "", ""],
+            ]}
+          />
+          </View>
         </ContentPage>
       )}
     </Document>

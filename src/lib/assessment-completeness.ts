@@ -14,7 +14,11 @@
  */
 
 import {
+  art36Conflict,
   californiaTriggerState,
+  priorConsultationRequired,
+  type Art36Conflict,
+  type ResidualLevel,
   conformanceElementsFor,
   coverageSummary,
   frameworkCoverage,
@@ -56,6 +60,10 @@ export interface Completeness {
   /** Requirements of a chosen framework that nothing answers yet. */
   outstandingRequirements: CoverageRow[];
   californiaTrigger: CaliforniaTriggerState;
+  /** A pair of answers Article 36 does not allow, or null. */
+  art36: Art36Conflict | null;
+  /** The answers say the supervisory authority must be consulted before processing. */
+  priorConsultationRequired: boolean;
   /** Nothing outstanding: no missing required answer, no missing requirement. */
   complete: boolean;
 }
@@ -65,6 +73,10 @@ export interface CompletenessInput {
   /** Sections the answers make visible, in the language to show. */
   visibleSections: ReadonlyArray<CompletenessSection>;
   responses: ReadonlyArray<{ questionId: string; response: unknown }>;
+  /** Rows of the risk register, when known (the page and the export know it). */
+  registerRisks?: number;
+  /** Highest residual level of the register, when known. */
+  registerResidual?: ResidualLevel | null;
 }
 
 export function assessmentCompleteness(input: CompletenessInput): Completeness {
@@ -92,8 +104,12 @@ export function assessmentCompleteness(input: CompletenessInput): Completeness {
         frameworks,
         visibleSections: input.visibleSections,
         answeredQuestionIds,
+        answers,
+        registerRisks: input.registerRisks,
+        registerResidual: input.registerResidual,
       })
     : null;
+  const art36 = elements ? art36Conflict(answers, input.registerResidual) : null;
   const outstandingRequirements = (coverage ?? []).filter((row) => !row.covered);
 
   return {
@@ -103,6 +119,9 @@ export function assessmentCompleteness(input: CompletenessInput): Completeness {
     frameworks,
     outstandingRequirements,
     californiaTrigger: californiaTriggerState(answers),
-    complete: outstandingQuestions.length === 0 && outstandingRequirements.length === 0,
+    art36,
+    priorConsultationRequired: elements ? priorConsultationRequired(answers) : false,
+    complete:
+      outstandingQuestions.length === 0 && outstandingRequirements.length === 0 && art36 == null,
   };
 }

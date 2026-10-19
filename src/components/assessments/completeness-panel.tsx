@@ -51,6 +51,8 @@ export function CompletenessPanel({
     summary,
     frameworks,
     californiaTrigger,
+    art36,
+    priorConsultationRequired,
     complete,
   } = completeness;
 
@@ -98,6 +100,21 @@ export function CompletenessPanel({
 
         {californiaNotRequired && (
           <p className="text-sm text-muted-foreground">{t("californiaNotRequired")}</p>
+        )}
+
+        {/* Article 36: a pair of answers that cannot be submitted, or the
+            consultation the answers say is needed before processing. */}
+        {art36 && (
+          <p className="text-sm flex items-start gap-2" data-testid="art36-conflict">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-600" />
+            <span>{t(art36 === "CONSULTATION_UNDECIDED" ? "art36Undecided" : "art36HighResidual")}</span>
+          </p>
+        )}
+        {!art36 && priorConsultationRequired && (
+          <p className="text-sm flex items-start gap-2">
+            <Scale className="w-3.5 h-3.5 mt-0.5 shrink-0 text-muted-foreground" />
+            <span>{t("priorConsultationRequired")}</span>
+          </p>
         )}
 
         {complete ? (

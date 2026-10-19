@@ -164,8 +164,13 @@ describe("the template follows the framework chosen", () => {
   });
 
   it("shows both when both are chosen", () => {
+    // The conditional questions appear with the answers that ask for them:
+    // the legitimate interest under Art. 6(1)(f), the consultation record when
+    // prior consultation is required.
     const ids = answerEveryVisible({
       [FRAMEWORK_QUESTION_ID]: JSON.stringify([EU_OPTION, CA_OPTION]),
+      q1_3: allQuestions.get("q1_3")!.options!.at(-1),
+      q7_2: allQuestions.get("q7_2")!.options!.at(-1),
     });
     for (const e of DPIA_FRAMEWORK_ELEMENTS) {
       for (const id of e.questionIds) expect(ids.has(id), `${e.id} -> ${id}`).toBe(true);
@@ -340,7 +345,7 @@ describe("message bundles", () => {
   it("names the template the generic one, in a sentence a card can hold", () => {
     const meta = (locale: "en" | "es") => dpiaFrameworkMessages(locale).template[DPIA_TEMPLATE_ID];
     expect(meta("en").name).toBe("Data Protection Impact Assessment (generic)");
-    expect(meta("es").name).toBe("Evaluación de impacto relativa a la protección de datos (genérica)");
+    expect(meta("es").name).toBe("Evaluación de Impacto relativa a la Protección de Datos (genérica)");
     for (const locale of ["en", "es"] as const) {
       const description = meta(locale).description;
       expect(description.match(/\.\s/g) ?? [], locale).toHaveLength(0);
