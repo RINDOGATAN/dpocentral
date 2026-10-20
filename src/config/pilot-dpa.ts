@@ -23,7 +23,7 @@
 export type PilotDpaLocale = "en" | "es";
 
 export const PILOT_DPA = {
-  version: "1.1",
+  version: "1.3",
   href: {
     en: "https://www.todo.law/legal/eu-cloud-plan-dpa",
     es: "https://www.todo.law/es/legal/encargo-tratamiento-plan-nube-ue",
