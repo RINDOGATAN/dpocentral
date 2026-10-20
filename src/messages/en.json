@@ -9764,7 +9764,8 @@
       "ai_off": "AI assistance is off for this organization. An administrator can enable it in Settings.",
       "ai_not_configured": "No AI engine is available yet. Ask your server administrator to configure one (see the suite's .env.example: LLM_GATEWAY_URL).",
       "ai_rate_limited": "This organization has reached its hourly AI limit. Try again later.",
-      "ai_failed": "The AI engine did not return a draft. Try again."
+      "ai_failed": "The AI engine did not return a draft. Try again.",
+      "ai_us_jurisdiction": "AI features are not yet available to organizations that declare a US state."
     }
   },
   "safeguards": {

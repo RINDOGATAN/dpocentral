@@ -5,6 +5,8 @@
  * Per-organization AI posture gate + metadata-only generation audit.
  *
  * Truth table (requireAi):
+ *   org declares a US state            -> PRECONDITION_FAILED "ai_us_jurisdiction"
+ *                                         (unless AI_ALLOW_US_JURISDICTIONS=true)
  *   no OrganizationAiSettings row      -> PRECONDITION_FAILED "ai_off"
  *   posture "off"                      -> PRECONDITION_FAILED "ai_off"
  *   posture on, no engine configured   -> PRECONDITION_FAILED "ai_not_configured"
@@ -53,17 +55,60 @@ export function getLaneAvailability(): Record<AiLane, boolean> {
 }
 
 // The subset of the (extended) client these helpers touch — unit tests pass a mock.
-type PrismaLike = Pick<Db, "organizationAiSettings" | "aiGeneration">;
+type PrismaLike = Pick<Db, "organizationAiSettings" | "aiGeneration" | "organizationJurisdiction">;
+
+/**
+ * US state jurisdictions in the catalogue carry a "US-<state>" region
+ * (CCPA "US-CA", VCDPA "US-VA", ...). Canada's region is "CA", so the
+ * prefix, not the bare state code, is what identifies a US state.
+ */
+export function declaresUsState(regions: readonly string[]): boolean {
+  return regions.some((r) => {
+    const region = r.trim().toUpperCase();
+    return region === "US" || region.startsWith("US-");
+  });
+}
+
+/**
+ * The AI engine's processing terms on the hosted service do not yet carry
+ * the service provider commitments US state privacy laws require, so AI is
+ * unavailable to organizations that declare a US state. On by default;
+ * a deployment whose engine terms do cover them (for example a local
+ * engine on self-host) sets AI_ALLOW_US_JURISDICTIONS=true.
+ */
+export function usJurisdictionAiBlockActive(): boolean {
+  return process.env.AI_ALLOW_US_JURISDICTIONS?.trim().toLowerCase() !== "true";
+}
+
+/** True when the organization may not use AI because it declares a US state. */
+export async function isAiBlockedForUsJurisdiction(
+  prisma: Pick<PrismaLike, "organizationJurisdiction">,
+  organizationId: string
+): Promise<boolean> {
+  if (!usJurisdictionAiBlockActive()) return false;
+  const rows = await prisma.organizationJurisdiction.findMany({
+    where: { organizationId },
+    select: { jurisdiction: { select: { region: true } } },
+  });
+  return declaresUsState(rows.map((row) => row.jurisdiction.region));
+}
 
 /**
  * Gate an AI feature on the organization's posture AND engine availability.
- * Throws PRECONDITION_FAILED ("ai_off" | "ai_not_configured") when the
+ * Throws PRECONDITION_FAILED ("ai_us_jurisdiction" | "ai_off" |
+ * "ai_not_configured") when the
  * feature must not run; returns the settings row when generation may proceed.
  */
 export async function requireAi(
   prisma: PrismaLike,
   organizationId: string
 ): Promise<OrganizationAiSettings> {
+  // Checked first and regardless of the stored posture: a posture saved
+  // before the organization declared a US state does not reopen AI.
+  if (await isAiBlockedForUsJurisdiction(prisma, organizationId)) {
+    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_us_jurisdiction" });
+  }
+
   const settings = await prisma.organizationAiSettings.findUnique({
     where: { organizationId },
   });

@@ -17,7 +17,7 @@ import { getEntitledAssessmentTypes, isDpiaPilotTier } from "@/server/services/l
 import { ensureHostedTemplates } from "@/server/services/pilot/hosted-templates";
 import { pilotDpiaQuota } from "@/server/services/pilot/caps";
 import { isAIConfigured } from "@/server/services/ai/llm-door";
-import { postureLane } from "@/server/services/ai/posture";
+import { isAiBlockedForUsJurisdiction, postureLane } from "@/server/services/ai/posture";
 import { collectIncompleteRecords } from "@/server/services/views/queries";
 import { features } from "@/config/features";
 import { loadPathCounts } from "./path-counts";
@@ -65,6 +65,7 @@ export async function loadDocumentFacts(prisma: Db, organizationId: string): Pro
   ]);
 
   const posture = aiSettings?.posture ?? "off";
+  const aiUsBlocked = posture !== "off" && (await isAiBlockedForUsJurisdiction(prisma, organizationId));
   return {
     ...counts,
     activitiesIncomplete: incomplete.length,
@@ -74,7 +75,8 @@ export async function loadDocumentFacts(prisma: Db, organizationId: string): Pro
     dpaContracts,
     incidentsMissingImpact,
     incidentNotifications,
-    aiAssistOn: features.aiAssistEnabled && posture !== "off" && isAIConfigured(postureLane(posture)),
+    aiAssistOn:
+      features.aiAssistEnabled && posture !== "off" && !aiUsBlocked && isAIConfigured(postureLane(posture)),
     dsarCompleted,
   };
 }
