@@ -31,7 +31,7 @@ import { localeFromCookieGetter } from "@/i18n/locale-cookie";
 import { GROUP_STATE_SELECT, inheritedGroupState } from "@/server/services/pilot/umbrella";
 import { isHostedDeployment } from "@/lib/hosted";
 import { BLOCKED_EMAIL_MESSAGES, isBlockedAccountEmail } from "@/lib/email-policy";
-import { PILOT_DPA, PILOT_DPA_ACTION, PILOT_DPA_REQUIRED } from "@/config/pilot-dpa";
+import { PILOT_DPA, PILOT_DPA_ACTION, PILOT_DPA_REQUIRED, isAcceptedDpaVersion } from "@/config/pilot-dpa";
 import {
   departmentScopeConditions,
   loadBusinessUnitScope,
@@ -79,7 +79,7 @@ function withoutPlanNote<
   return rest;
 }
 
-/** Whether the organisation has an acceptance of the current agreement on record. */
+/** Whether the organisation has a still-valid acceptance of the agreement on record (see PILOT_DPA.minimumAccepted). */
 async function hasAcceptedCurrentDpa(
   prisma: { auditLog: { findMany: (args: object) => Promise<Array<{ changes: unknown }>> } },
   organizationId: string
@@ -89,7 +89,7 @@ async function hasAcceptedCurrentDpa(
     select: { changes: true },
   });
   return entries.some(
-    (e) => (e.changes as { dpaVersion?: unknown } | null)?.dpaVersion === PILOT_DPA.version
+    (e) => isAcceptedDpaVersion((e.changes as { dpaVersion?: unknown } | null)?.dpaVersion)
   );
 }
 
