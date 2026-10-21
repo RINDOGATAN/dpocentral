@@ -60,7 +60,13 @@ export interface AiDraft {
   generationId: string;
 }
 
-const KNOWN_ERROR_CODES = ["ai_off", "ai_not_configured", "ai_rate_limited", "ai_failed"] as const;
+const KNOWN_ERROR_CODES = [
+  "ai_off",
+  "ai_not_configured",
+  "ai_rate_limited",
+  "ai_failed",
+  "ai_us_jurisdiction",
+] as const;
 type KnownErrorCode = (typeof KNOWN_ERROR_CODES)[number];
 
 function knownErrorCode(message: string | undefined): KnownErrorCode | null {
@@ -103,6 +109,16 @@ export function AiDraftPanel({
   const markAccepted = trpc.assessment.markAiAccepted.useMutation();
 
   if (!features.aiAssistEnabled || !status) return null;
+
+  // Organization declares a US state: AI is unavailable whatever the posture. No calls.
+  if (status.usJurisdictionBlocked) {
+    return (
+      <div className={`flex items-start gap-2 text-xs text-muted-foreground ${className ?? ""}`}>
+        <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+        <span>{t("errors.ai_us_jurisdiction")}</span>
+      </div>
+    );
+  }
 
   // Posture off (or no row): the assist is invisible-but-explained. No calls.
   if (status.posture === "off") {

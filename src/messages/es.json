@@ -9764,7 +9764,8 @@
       "ai_off": "La asistencia de IA está desactivada en esta organización. Un administrador puede activarla en Ajustes.",
       "ai_not_configured": "Todavía no hay ningún motor de IA disponible. Pide al administrador del servidor que configure uno (consulta el .env.example de la suite: LLM_GATEWAY_URL).",
       "ai_rate_limited": "Esta organización ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
-      "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo."
+      "ai_failed": "El motor de IA no ha devuelto ningún borrador. Inténtalo de nuevo.",
+      "ai_us_jurisdiction": "Las funciones de IA aún no están disponibles para las organizaciones que declaran un estado de EE. UU."
     }
   },
   "safeguards": {

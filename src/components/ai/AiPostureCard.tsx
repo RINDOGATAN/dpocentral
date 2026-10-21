@@ -36,6 +36,7 @@ import { features } from "@/config/features";
 import { toneBorder, toneMark, toneTint } from "@/config/status-palette";
 
 import { formatDateIn } from "@/lib/utils";
+import { isPickerDisabled, isPostureSelectable, showPostureSave } from "@/lib/ai-posture-picker";
 type Posture = "off" | "local_gateway" | "cloud_eu" | "cloud_us";
 
 // Mirrors AI Sentinel #19: the picker offers a
@@ -86,6 +87,13 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
   if (!features.aiAssistEnabled || !status) return null;
 
   const showNotConfiguredWarning = posture !== "off" && !status.configured;
+  const pickerState = {
+    isAdmin,
+    pending: setPostureMutation.isPending,
+    usJurisdictionBlocked: status.usJurisdictionBlocked,
+    posture,
+    dirty,
+  };
 
   return (
     <Card>
@@ -104,7 +112,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
               setPosture(v as Posture);
               setDirty(true);
             }}
-            disabled={!isAdmin || setPostureMutation.isPending}
+            disabled={isPickerDisabled(pickerState)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -119,7 +127,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
                 // allowed — the server still answers ai_not_configured.
                 const laneAvailable = p === "off" ? null : status.lanes?.[p];
                 return (
-                  <SelectItem key={p} value={p}>
+                  <SelectItem key={p} value={p} disabled={!isPostureSelectable(p, status.usJurisdictionBlocked)}>
                     <span className="flex items-center gap-2">
                       {t(`posture.${p}`)}
                       {laneAvailable !== null && laneAvailable !== undefined && (
@@ -141,6 +149,9 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
               })}
             </SelectContent>
           </Select>
+          {status.usJurisdictionBlocked && (
+            <p className="text-xs text-muted-foreground">{t("errors.ai_us_jurisdiction")}</p>
+          )}
           <p className="text-xs text-muted-foreground">
             {status.configured
               ? t("postureCard.engineConfigured", { provider: status.providerName ?? tCommon("notStated") })
@@ -164,7 +175,7 @@ export function AiPostureCard({ organizationId, isAdmin }: AiPostureCardProps) {
           </p>
         )}
 
-        {isAdmin && dirty && (
+        {showPostureSave(pickerState) && (
           <>
             <div className="flex items-start gap-2">
               <Checkbox
