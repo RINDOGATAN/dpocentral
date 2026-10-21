@@ -26,6 +26,7 @@ import {
 const prisma = {
   organizationAiSettings: { findUnique: vi.fn() },
   aiGeneration: { count: vi.fn(), create: vi.fn(), updateMany: vi.fn() },
+  organizationJurisdiction: { findMany: vi.fn() },
 } as any;
 
 const AI_ENV_KEYS = [
@@ -43,6 +44,7 @@ const AI_ENV_KEYS = [
   "LLM_GATEWAY_URL_US",
   "LLM_GATEWAY_KEY_US",
   "LLM_MODEL_ALIAS_US",
+  "AI_ALLOW_US_JURISDICTIONS",
 ] as const;
 
 function configureEngine() {
@@ -53,6 +55,8 @@ function configureEngine() {
 beforeEach(() => {
   vi.clearAllMocks();
   for (const key of AI_ENV_KEYS) vi.stubEnv(key, "");
+  // No declared jurisdictions unless a test says otherwise.
+  prisma.organizationJurisdiction.findMany.mockResolvedValue([]);
 });
 
 afterEach(() => {

@@ -16,11 +16,13 @@
  */
 
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, organizationProcedure, adminOrgProcedure } from "../../trpc";
 import { getAIProviderName, isAIConfigured } from "../../services/ai/llm-door";
 import {
   AI_RATE_LIMIT_PER_ORG_PER_HOUR,
   getLaneAvailability,
+  isAiBlockedForUsJurisdiction,
   postureLane,
 } from "../../services/ai/posture";
 
@@ -39,6 +41,10 @@ export const aiRouter = createTRPCRouter({
       });
 
       const posture = settings?.posture ?? "off";
+      const usJurisdictionBlocked = await isAiBlockedForUsJurisdiction(
+        ctx.prisma,
+        ctx.organization.id
+      );
       // configured/providerName describe the CURRENT posture's lane (posture
       // off -> the no-lane default engine), so the UI reports the engine that
       // would actually answer, not just "some engine exists".
@@ -54,8 +60,11 @@ export const aiRouter = createTRPCRouter({
         lanes: getLaneAvailability(),
         acknowledgedAt: settings?.acknowledgedAt ?? null,
         acknowledgedBy: settings?.acknowledgedBy ?? null,
-        // Generation can actually run only when both are true.
-        active: posture !== "off" && configured,
+        // AI is unavailable to an organization that declares a US state,
+        // whatever posture it saved (services/ai/posture.ts).
+        usJurisdictionBlocked,
+        // Generation can actually run only when all of these hold.
+        active: posture !== "off" && configured && !usJurisdictionBlocked,
         rateLimitPerHour: AI_RATE_LIMIT_PER_ORG_PER_HOUR,
       };
     }),
@@ -71,6 +80,15 @@ export const aiRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Switching AI on is refused while the organization declares a US
+      // state; switching it off stays possible.
+      if (
+        input.posture !== "off" &&
+        (await isAiBlockedForUsJurisdiction(ctx.prisma, ctx.organization.id))
+      ) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_us_jurisdiction" });
+      }
+
       const now = new Date();
       const settings = await ctx.prisma.organizationAiSettings.upsert({
         where: { organizationId: ctx.organization.id },
