@@ -10,7 +10,7 @@
  * On the self-hosted kit none of this applies.
  */
 
-import { PILOT_DPA, PILOT_DPA_ACTION } from "@/config/pilot-dpa";
+import { PILOT_DPA, PILOT_DPA_ACTION, isAcceptedDpaVersion } from "@/config/pilot-dpa";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { OrganizationRole } from "@prisma/client";
 
@@ -262,11 +262,38 @@ describe("an organisation with no acceptance on record is asked once", () => {
     expect(dpaEntries()).toHaveLength(0);
   });
 
-  it("asks again when only an earlier version is on record", async () => {
+  it("asks again when only a version before the minimum is on record", async () => {
     hosted();
     mocks.prisma.auditLog.findMany.mockResolvedValue([{ changes: { dpaVersion: "1.0" } }]);
     const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
     expect(status.required).toBe(true);
+  });
+
+  it.each(["1.1", "1.2"])("keeps an earlier acceptance of %s valid after a new version is published", async (v) => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([{ changes: { dpaVersion: v } }]);
+    const status = await callerWithRole("OWNER").getDpaStatus({ organizationId: "org-1" });
+    expect(status.required).toBe(false);
+    await callerWithRole("OWNER").acceptDpa({ organizationId: "org-1", accept: true });
+    expect(dpaEntries()).toHaveLength(0);
+  });
+
+  it("records the current version on a new acceptance", async () => {
+    hosted();
+    mocks.prisma.auditLog.findMany.mockResolvedValue([]);
+    await callerWithRole("OWNER").acceptDpa({ organizationId: "org-1", accept: true });
+    expect((dpaEntries()[0] as unknown as { changes: { dpaVersion: string } }).changes.dpaVersion).toBe("1.3");
+  });
+
+  it("reads versions numerically and ignores malformed entries", () => {
+    expect(isAcceptedDpaVersion("1.1")).toBe(true);
+    expect(isAcceptedDpaVersion("1.10")).toBe(true);
+    expect(isAcceptedDpaVersion("2.0")).toBe(true);
+    expect(isAcceptedDpaVersion("1.0")).toBe(false);
+    expect(isAcceptedDpaVersion("0.9")).toBe(false);
+    expect(isAcceptedDpaVersion(undefined)).toBe(false);
+    expect(isAcceptedDpaVersion("v1.2")).toBe(false);
+    expect(isAcceptedDpaVersion(1.2)).toBe(false);
   });
 
   it("never asks on the kit", async () => {
