@@ -42,6 +42,14 @@ function httpUrlOrNull(value: string | null | undefined): string | null {
   return value && /^https?:\/\//i.test(value) ? value : null;
 }
 
+export const TRAINING_USE_VALUES = ["no", "opt-out", "opt-in", "yes", "not-stated"] as const;
+
+function trainingUseOrNull(value: unknown): string | null {
+  return typeof value === "string" && (TRAINING_USE_VALUES as readonly string[]).includes(value)
+    ? value
+    : null;
+}
+
 export function mapVendorToUpsert(v: VendorWatchVendor) {
   return {
     name: v.name,
@@ -50,6 +58,9 @@ export function mapVendorToUpsert(v: VendorWatchVendor) {
     description: v.description,
     // Older snapshots carry no Spanish field: leave the column as it is then.
     ...("descriptionEs" in v ? { descriptionEs: v.descriptionEs ?? null } : {}),
+    // Older snapshots carry neither field: leave the columns as they are then.
+    ...("trainingUse" in v ? { trainingUse: trainingUseOrNull(v.trainingUse) } : {}),
+    ...("retention" in v ? { retention: v.retention ?? null } : {}),
     tags: v.tags || [],
     website: v.website,
     privacyPolicyUrl: httpUrlOrNull(v.privacyPolicyUrl),

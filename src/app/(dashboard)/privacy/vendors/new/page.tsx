@@ -58,6 +58,8 @@ interface CatalogVendor {
   subcategory: string | null;
   description: string | null;
   descriptionEs?: string | null;
+  trainingUse?: string | null;
+  retention?: string | null;
   website: string | null;
   privacyPolicyUrl: string | null;
   trustCenterUrl: string | null;
@@ -72,6 +74,17 @@ interface CatalogVendor {
   hasEuDataCenter: boolean | null;
   privacyTechnologies: string[];
   isVerified: boolean;
+}
+
+/** Message key for a catalogue training-use value; "not-stated" and unknown values are not shown. */
+function trainingUseKey(value: string | null | undefined): "no" | "optOut" | "optIn" | "yes" | null {
+  switch (value) {
+    case "no": return "no";
+    case "opt-out": return "optOut";
+    case "opt-in": return "optIn";
+    case "yes": return "yes";
+    default: return null;
+  }
 }
 
 function NewVendorPageContent() {
@@ -418,6 +431,23 @@ function NewVendorPageContent() {
                     </a>
                   )}
                 </div>
+
+                {(trainingUseKey(selectedCatalogVendor.trainingUse) || selectedCatalogVendor.retention) && (
+                  <dl className="space-y-2 text-sm">
+                    {trainingUseKey(selectedCatalogVendor.trainingUse) && (
+                      <div>
+                        <dt className="text-muted-foreground">{tp("catalog.trainingUse")}</dt>
+                        <dd>{tp(`catalog.trainingUseValue.${trainingUseKey(selectedCatalogVendor.trainingUse)}`)}</dd>
+                      </div>
+                    )}
+                    {selectedCatalogVendor.retention && (
+                      <div>
+                        <dt className="text-muted-foreground">{tp("catalog.retention")}</dt>
+                        <dd>{selectedCatalogVendor.retention}</dd>
+                      </div>
+                    )}
+                  </dl>
+                )}
 
                 <p className="text-xs text-muted-foreground">
                   {tp("catalog.autoFilled")}
