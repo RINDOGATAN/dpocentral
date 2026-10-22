@@ -1,7 +1,7 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-22T16:37:36.540Z",
-  "sourceCommit": "9d4ce55",
+  "generatedAt": "2026-10-22T16:58:06.623Z",
+  "sourceCommit": "b4af372",
   "count": 933,
   "vendors": [
     {
@@ -6026,8 +6026,8 @@
       "description": "Content delivery network and cloud security company providing web performance, media delivery, and cybersecurity solutions.",
       "descriptionEs": "Empresa de redes de distribución de contenido y de seguridad en la nube que ofrece soluciones de rendimiento web, distribución de contenido multimedia y ciberseguridad.",
       "website": "https://www.akamai.com",
-      "privacyPolicyUrl": "https://www.akamai.com/legal/privacy-and-policies",
-      "trustCenterUrl": "https://www.akamai.com/legal/compliance",
+      "privacyPolicyUrl": "https://www.akamai.com/legal/privacy-statement",
+      "trustCenterUrl": "https://trust.akamai.com/",
       "dpaUrl": null,
       "securityPageUrl": null,
       "termsUrl": null,
@@ -6062,9 +6062,9 @@
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
+      "transferSafeguards": "EU-U.S. Data Privacy Framework with UK Extension and Swiss-U.S. DPF (Akamai Technologies, Inc.)",
       "supportsDsars": null,
-      "hasDesignatedDpo": null,
+      "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
       "aiCapabilities": [],
@@ -6098,7 +6098,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:43.908Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -15556,11 +15556,11 @@
       "description": "Box is a cloud content management platform for enterprise file sharing, collaboration, and workflow automation with security controls.",
       "descriptionEs": "Box es una plataforma en la nube de gestión de contenidos para empresas, que permite compartir archivos, colaborar y automatizar flujos de trabajo, con controles de seguridad.",
       "website": "https://www.box.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://www.box.com/legal/privacypolicy",
       "trustCenterUrl": "https://www.box.com/trust",
       "dpaUrl": null,
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://www.box.com/legal/termsofservice",
       "certifications": [
         "SOC 1",
         "SOC 2",
@@ -15576,10 +15576,158 @@
       "hipaaCompliant": null,
       "dataLocations": [],
       "hasEuDataCenter": null,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
+      "subprocessors": [
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Analytics, compute, database, AI, machine learning, networking and storage",
+          "location": "US (and other regions if selected by the customer)",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Google, LLC.",
+          "source": "subprocessor-page",
+          "purpose": "Analytics, compute, database, AI, machine learning, networking and storage",
+          "location": "US (and other regions if selected by the customer)",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "International Business Machines (IBM) Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Analytics, compute, database, AI, machine learning, networking and storage",
+          "location": "US (and other regions if selected by the customer)",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Analytics, compute, database, AI, machine learning, networking and storage",
+          "location": "US (and other regions if selected by the customer)",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "TaskUs, LLC.",
+          "source": "subprocessor-page",
+          "purpose": "Billing, technical and customer support",
+          "location": "PH",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Zendesk, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "User relationship management, customer and user support",
+          "location": "US",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "OpenAI Group PBC",
+          "source": "subprocessor-page",
+          "purpose": "Artificial intelligence, machine learning",
+          "location": "US",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Anthropic PBC",
+          "source": "subprocessor-page",
+          "purpose": "Artificial intelligence, machine learning (unless restrictions apply)",
+          "location": "US",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "SpaceXAI LLC",
+          "source": "subprocessor-page",
+          "purpose": "Artificial intelligence, machine learning (effective 5 October 2026)",
+          "location": "US",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "KK Box Japan (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "JP",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Intl. Holdings Ltd. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "GB",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Intl. Technology Ltd. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "GB",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box.com (UK) Ltd. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "GB",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box France SARL (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "FR",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Deutschland GmbH (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "DE",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Canada, Inc. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "CA",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box.com Australia Pty Ltd. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "AU",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Secure Cloud Collaboration Sweden AB (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "SE",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Netherlands BV (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "NL",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box, Inc. (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "US",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        },
+        {
+          "name": "Box Poland Spółka z ograniczoną odpowiedzialnością (Box Group)",
+          "source": "subprocessor-page",
+          "purpose": "Box Group Company",
+          "location": "PL",
+          "sourceUrl": "https://www.box.com/legal/subprocessors"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "Processor and Controller Binding Corporate Rules (EU and UK); EU-U.S. Data Privacy Framework with UK Extension and Swiss-U.S. DPF; EU SCCs (2021) and UK SCCs in the DPA; APEC and Global CBPR/PRP",
       "supportsDsars": null,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
@@ -15587,7 +15735,7 @@
       "aiCapabilities": [
         "Box AI answers questions over customer content, retrieving relevant parts of a file and sending them with the query to an AI model"
       ],
-      "modelHosting": null,
+      "modelHosting": "Third-party foundation models from multiple vendors (Microsoft Azure OpenAI, Google and others); AI sub-processors include OpenAI, Anthropic and SpaceXAI",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -15599,7 +15747,7 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": "no",
+      "trainingUse": "opt-in",
       "retention": "Box model providers do not log or store information a customer submits; the provider keeps it in memory only for the time needed to return the response",
       "privacyTechnologies": [],
       "tags": [],
@@ -15617,7 +15765,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:55.066Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -17688,9 +17836,9 @@
       "website": "https://www.canva.com",
       "privacyPolicyUrl": "https://www.canva.com/policies/privacy-policy/",
       "trustCenterUrl": "https://trust.canva.com/",
-      "dpaUrl": null,
-      "securityPageUrl": null,
-      "termsUrl": null,
+      "dpaUrl": "https://www.canva.com/policies/data-processing-addendum/",
+      "securityPageUrl": "https://www.canva.com/security/",
+      "termsUrl": "https://www.canva.com/policies/terms-of-use/",
       "certifications": [
         "ISO 27001",
         "SOC 2 Type II",
@@ -17710,9 +17858,171 @@
         "NZ"
       ],
       "hasEuDataCenter": true,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
+      "subprocessors": [
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Platform hosting, infrastructure and Canva AI services",
+          "location": "US, EU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Anthropic PBC",
+          "source": "subprocessor-page",
+          "purpose": "Canva AI services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "ElevenLabs Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Canva AI services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Features & Labels, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Canva AI services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Google LLC",
+          "source": "subprocessor-page",
+          "purpose": "Platform hosting, infrastructure, security and Canva AI services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "MongoDB, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Platform hosting and infrastructure",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Nanonoble Pte. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Canva AI services (not for Canva Education, Canva Enterprise or customers with a signed Order Form)",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "OpenAI, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Canva AI services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Snowflake Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Platform hosting and infrastructure",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Assembled, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Support management",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Concentrix Daksh Services Philippines Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "PH",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "DeepL GmbH",
+          "source": "subprocessor-page",
+          "purpose": "Translation services (customer support)",
+          "location": "EU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Kaizo Operations B.V.",
+          "source": "subprocessor-page",
+          "purpose": "Support management",
+          "location": "EU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "IBEX Global Solutions",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Zendesk, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Support management",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Canva Austria GmbH (group)",
+          "source": "subprocessor-page",
+          "purpose": "Canva and Affinity photo and video AI services",
+          "location": "EU, US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Canva Pty Ltd (group)",
+          "source": "subprocessor-page",
+          "purpose": "Support management",
+          "location": "AU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Canva Solutions Inc. (group)",
+          "source": "subprocessor-page",
+          "purpose": "Support management",
+          "location": "PH",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Canva US, Inc. (group)",
+          "source": "subprocessor-page",
+          "purpose": "Support management and print services",
+          "location": "US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Canva UK Operations Limited (group)",
+          "source": "subprocessor-page",
+          "purpose": "Support management; service provider of Flourish and Canva Charts",
+          "location": "EU (as stated)",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Leonardo.AI (group)",
+          "source": "subprocessor-page",
+          "purpose": "Canva and Affinity AI services",
+          "location": "AU, US",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Scene Group Ltd (group)",
+          "source": "subprocessor-page",
+          "purpose": "Service provider of Cavalry",
+          "location": "EU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        },
+        {
+          "name": "Serif (Europe) Limited (group)",
+          "source": "subprocessor-page",
+          "purpose": "Service provider of Affinity",
+          "location": "EU",
+          "sourceUrl": "https://content-management-files.canva.com/assets/en/f6022a49-58d4-40d8-88d3-803529880cc0"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
       "transferSafeguards": "Canva's U.S. subsidiary adheres to the EU-U.S. DPF, Swiss-U.S. DPF and UK Extension; EU Model Clauses (SCCs) and UK International Data Transfer Addendum",
       "supportsDsars": true,
       "hasDesignatedDpo": null,
@@ -17727,7 +18037,7 @@
         "Canva Code",
         "Translate"
       ],
-      "modelHosting": null,
+      "modelHosting": "Third-party AI providers listed as sub-processors for Canva AI services (Amazon Web Services, Anthropic, ElevenLabs, Features & Labels, Google, Nanonoble, OpenAI; US), plus group companies Canva Austria GmbH and Leonardo.AI",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -17763,7 +18073,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-01T17:06:44.536Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -19041,11 +19351,11 @@
       "description": "ChatGPT is OpenAI's AI chat assistant for individuals, used on the web at chatgpt.com. This record covers the personal plans; OpenAI's API and its plans for companies have their own records.",
       "descriptionEs": "ChatGPT es el asistente de chat con IA de OpenAI para particulares, que se usa en la web en chatgpt.com. Este registro cubre los planes personales; la API de OpenAI y sus planes para empresas tienen registros propios.",
       "website": "https://chatgpt.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://openai.com/policies/privacy-policy/",
       "trustCenterUrl": null,
       "dpaUrl": null,
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://openai.com/policies/terms-of-use/",
       "certifications": [],
       "frameworks": [],
       "gdprCompliant": null,
@@ -19074,8 +19384,8 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
-      "retention": null,
+      "trainingUse": "opt-out",
+      "retention": "Saved chats kept until the user deletes them; deleted chats scheduled for permanent deletion within 30 days unless de-identified or needed for security or legal obligations; Temporary Chats may be kept up to 30 days for safety",
       "privacyTechnologies": [],
       "tags": [
         "shadow-ai"
@@ -19088,7 +19398,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-10-19T03:29:11.526Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -19105,9 +19415,9 @@
       "website": "https://openai.com/business/",
       "privacyPolicyUrl": null,
       "trustCenterUrl": "https://trust.openai.com/",
-      "dpaUrl": null,
+      "dpaUrl": "https://openai.com/policies/data-processing-addendum/",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://openai.com/policies/services-agreement/",
       "certifications": [
         "SOC 2 Type II",
         "ISO/IEC 27001",
@@ -19121,12 +19431,153 @@
       "hipaaCompliant": null,
       "dataLocations": [],
       "hasEuDataCenter": null,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
-      "supportsDsars": null,
-      "hasDesignatedDpo": null,
+      "subprocessors": [
+        {
+          "name": "Cloudflare, Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Content delivery network provider; web hosting",
+          "location": "Data center closest to the end user; US for web hosting",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "AU, BE, BR, CA, DK, FR, DE, IN, ID, IE, IT, JP, MY, MX, NL, NZ, NO, PL, SG, ZA, KR, ES, SE, CH, AE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "CoreWeave, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "NO, ES, SE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Oracle Cloud Infrastructure",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "BR, JP, MY, NL, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Google Cloud Platform",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "FI, JP, NL, NO, SG, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Cerebras",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "US, CA",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Snowflake, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data warehousing (not where Zero Data Retention is used, for the API)",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "TaskUs, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Customer support; moderation of content and of GPTs",
+          "location": "PH",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Salesforce",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "AU, BR, CA, FR, DE, IN, ID, IE, IT, JP, SG, ZA, KR, SE, CH, NL, AE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Accenture International Limited",
+          "source": "subprocessor-page",
+          "purpose": "Customer support; moderation of content",
+          "location": "US, CA, PH",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Fivetran, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "ETL provider",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Cinder Technologies, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Platform for content moderation and moderation of GPTs",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "WorkOS, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cross-domain identity management (at the customer's election)",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Merge API, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Infrastructure management (only when Connectors are enabled; at the customer's election)",
+          "location": "AU, CA, FR, IN, IE, JP, SG, KR, SE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI OpCo, LLC (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OAI International, Inc. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI Ireland Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "IE",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI UK Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "GB",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI Japan Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "JP",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "EU SCCs for EEA and Swiss data via OpenAI Ireland Limited (or an adequacy decision); SCCs with the UK Addendum for UK data; SCCs among OpenAI affiliates",
+      "supportsDsars": true,
+      "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
       "aiCapabilities": [],
@@ -19142,8 +19593,8 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
-      "retention": null,
+      "trainingUse": "opt-in",
+      "retention": "Workspace admins control retention; deleted or unsaved conversations removed within 30 days unless law requires longer or needed to protect the services (Business); deleted conversations removed within 30 days unless legally required (Enterprise)",
       "privacyTechnologies": [],
       "tags": [
         "shadow-ai"
@@ -19156,7 +19607,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-10-19T03:29:11.526Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -23821,17 +24272,17 @@
       "id": "cmm4xdnlk001fxcj8pja0ef3i",
       "slug": "constant-contact",
       "name": "Constant Contact",
-      "legalName": null,
+      "legalName": "Constant Contact, Inc.",
       "category": "Marketing Automation",
       "subcategory": "Email Marketing",
       "description": "Email and digital marketing platform offering email campaigns, social media marketing, and e-commerce tools for small businesses.",
       "descriptionEs": "Plataforma de marketing digital y por correo electrónico con campañas de correo electrónico, marketing en redes sociales y herramientas de comercio electrónico para pequeñas empresas.",
       "website": "https://www.constantcontact.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://www.constantcontact.com/legal/privacy-notice",
       "trustCenterUrl": "https://www.constantcontact.com/disclosure",
-      "dpaUrl": null,
+      "dpaUrl": "https://www.constantcontact.com/legal/data-processing-addendum",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://www.constantcontact.com/legal/terms",
       "certifications": [
         "SOC 2"
       ],
@@ -23839,18 +24290,360 @@
       "gdprCompliant": true,
       "ccpaCompliant": null,
       "hipaaCompliant": null,
-      "dataLocations": [],
+      "dataLocations": [
+        "US"
+      ],
       "hasEuDataCenter": null,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
-      "supportsDsars": null,
+      "subprocessors": [
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data center operations",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Google LLC",
+          "source": "subprocessor-page",
+          "purpose": "Data center operations",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Snowflake, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data center operations",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "ATG Business Solutions Private Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "IN, MX",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "GlowTouch LLC",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "IN",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Acuity Scheduler, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Alchemer, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Atlassian, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Avalara, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Boomi, LP",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Canva US, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Clarabridge, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "ClickHouse, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "eHawk LLC",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Episerver Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Five9, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Foundever Operating Corporation Limited",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "GB",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "G2 Crowd, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Gong.Io",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Halon Security, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Looker Data Sciences, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Linkedin Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Matilion Limited",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "GB",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Meta Platforms, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Okta, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Oracle Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Pendo.io, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Quantum Metric, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Splunk Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Statsig, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Sundaysky Parent, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Syncari, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Tidio LLC",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Wistia, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Zapier, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Zoom Video Communications, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Software provider",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Cloudflare, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Content delivery",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Sinch America, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "SMS services",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Telgorithm Inc.",
+          "source": "subprocessor-page",
+          "purpose": "SMS services",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Litmus Software, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Email functionality",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Twilio, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Email functionality",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Salesforce, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer success management",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "OpenAI, L.L.C.",
+          "source": "subprocessor-page",
+          "purpose": "AI products",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "DLocal Corp LLC",
+          "source": "subprocessor-page",
+          "purpose": "Payment processor",
+          "location": "GB",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "PayPal Holdings, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Payment processor",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Stripe, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Payment processor",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "WePay, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Payment processor",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        },
+        {
+          "name": "Wordpay, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Payment processor",
+          "location": "US",
+          "sourceUrl": "https://www.constantcontact.com/legal/privacy/third-party-data"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "EU-U.S. Data Privacy Framework with UK Extension and Swiss-U.S. DPF (primary); EU SCCs (Module 2 or 3) and UK Addendum if the frameworks are invalidated",
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
-      "aiCapabilities": [],
-      "modelHosting": null,
+      "aiCapabilities": [
+        "AI Tools generating marketing content from text, images and instructions",
+        "AI assistance within the Services"
+      ],
+      "modelHosting": "Third-party AI services (OpenAI listed as the 'AI Products' sub-processor)",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -23868,8 +24661,8 @@
           "source": "vendor-declared"
         }
       ],
-      "trainingUse": null,
-      "retention": null,
+      "trainingUse": "yes",
+      "retention": "No AI-specific period: third-party AI providers may process, use and store inputs and outputs under their own terms; Customer Personal Data kept for the term and a reasonable period after, or until the customer asks for deletion; inactive accounts (over 120 days) may be deleted",
       "privacyTechnologies": [],
       "tags": [],
       "logoUrl": null,
@@ -23886,7 +24679,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:50.648Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -23905,7 +24698,7 @@
       "trustCenterUrl": "https://trust.contentful.com",
       "dpaUrl": "https://www.contentful.com/legal/privacy-and-data-protection/data-processing-addendum-for-customers/",
       "securityPageUrl": "https://www.contentful.com/security/",
-      "termsUrl": null,
+      "termsUrl": "https://www.contentful.com/legal/customers/terms-of-service/",
       "certifications": [
         "ISO 27001"
       ],
@@ -23984,8 +24777,14 @@
       "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
-      "aiCapabilities": [],
-      "modelHosting": null,
+      "aiCapabilities": [
+        "AI Actions (translate, rewrite, review, summarize content)",
+        "AI Content Type Generator",
+        "Personalization Audience Suggestions",
+        "Personalization Experience Suggestions",
+        "Personalization Variant Generation"
+      ],
+      "modelHosting": "Third-party AI providers as Contentful sub-processors (OpenAI, AWS Bedrock, Google Gemini); customers may connect their own provider through Azure, OpenAI or AWS Bedrock",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -24013,7 +24812,7 @@
           "source": "documentation"
         }
       ],
-      "trainingUse": null,
+      "trainingUse": "opt-in",
       "retention": null,
       "privacyTechnologies": [],
       "tags": [],
@@ -24031,7 +24830,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-09T00:01:39.809Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": 76,
       "dpaGdprScore": 88,
       "dpaCcpaScore": 67
@@ -47207,17 +48006,17 @@
       "id": "cmm4xdqny0029xcj8wvq7faak",
       "slug": "gusto",
       "name": "Gusto",
-      "legalName": null,
+      "legalName": "Gusto, Inc.",
       "category": "HR & People",
       "subcategory": "Payroll",
       "description": "Gusto is a cloud-based payroll, benefits, and HR platform for small businesses with automated payroll and tax filing.",
       "descriptionEs": "Gusto es una plataforma en la nube de nóminas, beneficios sociales y recursos humanos para pequeñas empresas, con nóminas y presentación de impuestos automatizadas.",
       "website": "https://gusto.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://gusto.com/legal/terms/privacy",
       "trustCenterUrl": "https://gusto.com/security",
-      "dpaUrl": null,
-      "securityPageUrl": null,
-      "termsUrl": null,
+      "dpaUrl": "https://gusto.com/legal/terms/employer-dpa",
+      "securityPageUrl": "https://gusto.com/security",
+      "termsUrl": "https://gusto.com/legal/terms",
       "certifications": [
         "SOC 1",
         "SOC 2"
@@ -47226,18 +48025,23 @@
       "gdprCompliant": true,
       "ccpaCompliant": null,
       "hipaaCompliant": null,
-      "dataLocations": [],
+      "dataLocations": [
+        "US"
+      ],
       "hasEuDataCenter": null,
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
       "transferSafeguards": null,
-      "supportsDsars": null,
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
-      "aiCapabilities": [],
-      "modelHosting": null,
+      "aiCapabilities": [
+        "AI assistant (Gus) answering questions about Gusto services and the employer account",
+        "AI-powered integrations with third-party AI providers via MCP"
+      ],
+      "modelHosting": "Third-party artificial intelligence and large language model service providers (not permitted to train on personal information)",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -47249,8 +48053,8 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
-      "retention": null,
+      "trainingUse": "yes",
+      "retention": "No period stated: Gusto may retain and use AI Assistant inputs and outputs at its sole discretion to improve its services and Gus; other personal information kept as long as necessary for the stated purposes",
       "privacyTechnologies": [],
       "tags": [],
       "logoUrl": null,
@@ -47267,7 +48071,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:54.622Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -56628,7 +57432,7 @@
       "id": "cmmc1q0zo002edaj85fxathtg",
       "slug": "klarna",
       "name": "Klarna",
-      "legalName": null,
+      "legalName": "Klarna Bank AB (publ)",
       "category": "Payment Processing",
       "subcategory": "Gateway",
       "description": "Buy-now-pay-later and payment platform offering flexible checkout experiences for consumers and merchants worldwide.",
@@ -56651,9 +57455,9 @@
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
+      "transferSafeguards": "EU adequacy decisions; EU Standard Contractual Clauses; EU-U.S. Data Privacy Framework (for certified recipients); some suppliers use Binding Corporate Rules",
       "supportsDsars": null,
-      "hasDesignatedDpo": null,
+      "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
       "aiCapabilities": [],
@@ -56687,7 +57491,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-04T13:01:49.572Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -76007,11 +76811,11 @@
       "description": "OpenAI is an AI research and deployment company that builds and operates large language models including GPT-4 and the ChatGPT platform.",
       "descriptionEs": "OpenAI es una empresa de investigación y despliegue de IA que desarrolla y opera grandes modelos de lenguaje, como GPT-4, y la plataforma ChatGPT.",
       "website": "https://openai.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://openai.com/policies/privacy-policy/",
       "trustCenterUrl": "https://trust.openai.com/",
       "dpaUrl": "https://cdn.openai.com/pdf/openai-data-processing-addendum.pdf",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://openai.com/policies/services-agreement/",
       "certifications": [
         "ISO 27001",
         "ISO 42001",
@@ -76040,11 +76844,145 @@
         "United Kingdom"
       ],
       "hasEuDataCenter": true,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
+      "subprocessors": [
+        {
+          "name": "Cloudflare, Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Content delivery network provider; web hosting",
+          "location": "Data center closest to the end user; US for web hosting",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "AU, BE, BR, CA, DK, FR, DE, IN, ID, IE, IT, JP, MY, MX, NL, NZ, NO, PL, SG, ZA, KR, ES, SE, CH, AE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "CoreWeave, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "NO, ES, SE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Oracle Cloud Infrastructure",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "BR, JP, MY, NL, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Google Cloud Platform",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "FI, JP, NL, NO, SG, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Cerebras",
+          "source": "subprocessor-page",
+          "purpose": "Cloud infrastructure",
+          "location": "US, CA",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Snowflake, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data warehousing (not where Zero Data Retention is used, for the API)",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "TaskUs, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Customer support; moderation of content and of GPTs",
+          "location": "PH",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Salesforce",
+          "source": "subprocessor-page",
+          "purpose": "Customer support",
+          "location": "AU, BR, CA, FR, DE, IN, ID, IE, IT, JP, SG, ZA, KR, SE, CH, NL, AE, GB, US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Pylon Labs",
+          "source": "subprocessor-page",
+          "purpose": "Customer support (premium support, at the customer's election)",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Accenture International Limited",
+          "source": "subprocessor-page",
+          "purpose": "Customer support; moderation of content",
+          "location": "US, CA, PH",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Fivetran, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "ETL provider",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "Cinder Technologies, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Platform for content moderation and moderation of GPTs",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI OpCo, LLC (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OAI International, Inc. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "US",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI Ireland Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "IE",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI UK Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "GB",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        },
+        {
+          "name": "OpenAI Japan Ltd. (affiliate)",
+          "source": "subprocessor-page",
+          "purpose": "Technical and operational support",
+          "location": "JP",
+          "sourceUrl": "https://openai.com/policies/sub-processor-list/"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
       "transferSafeguards": "EU SCCs (Module 2 and Module 3) for EEA and Swiss data via OpenAI Ireland Limited; UK Addendum to the SCCs for UK data",
-      "supportsDsars": null,
+      "supportsDsars": true,
       "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -76116,7 +77054,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:52.487Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": 24,
       "dpaGdprScore": 38,
       "dpaCcpaScore": 17
@@ -79436,11 +80374,11 @@
       "website": "https://www.pandadoc.com",
       "privacyPolicyUrl": "https://www.pandadoc.com/legal/privacy-notice/",
       "trustCenterUrl": "https://www.pandadoc.com/security/",
-      "dpaUrl": null,
+      "dpaUrl": "https://www.pandadoc.com/legal/dpa/",
       "securityPageUrl": "https://www.pandadoc.com/security/",
-      "termsUrl": null,
+      "termsUrl": "https://www.pandadoc.com/legal/master-services-agreement/",
       "certifications": [
-        "SOC 2",
+        "SOC 2 Type II",
         "HIPAA"
       ],
       "frameworks": [],
@@ -79452,11 +80390,292 @@
         "EU"
       ],
       "hasEuDataCenter": true,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
-      "supportsDsars": null,
+      "subprocessors": [
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud service provider",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Amplitude, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Product and user analytics",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Appcues, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Onboarding tours, announcements and surveys",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Bird.com, Inc. (Pusher)",
+          "source": "subprocessor-page",
+          "purpose": "Hosted API service",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Catalyst Software, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer success and analytics",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Chili Piper, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Meeting scheduler",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Common Room, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "AI buyer intelligence solution",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Cube Dev, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data analytics and visualization",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Deeto, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "AI platform for conversations between customers and prospects",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Dovetail Research Pty. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "AI research and qualitative data analytics (with customer consent)",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Fivetran, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data ingestion for analytic purposes",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Gong.io, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer call recordings (with consent)",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Google, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Infrastructure; Google Workspace and analytics",
+          "location": "EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "HubSpot, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Inbound marketing, sales and customer service software",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Imperva, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "WAF and DDoS protection",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Intercom, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer support platform, including AI capabilities and chatbot",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Loom, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Support and research recordings (customer optional)",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Mailgun Technologies, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Email delivery",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Maze.Design Inc.",
+          "source": "subprocessor-page",
+          "purpose": "User testing tool",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Metabase, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Product analytics and business intelligence",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Nooks Communications, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "AI-enabled sales dialing assistant",
+          "location": "EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "OpenAI, LLC.",
+          "source": "subprocessor-page",
+          "purpose": "Large language model processing via APIs in the PandaDoc application",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Oracle Corporation (Netsuite)",
+          "source": "subprocessor-page",
+          "purpose": "Billing and accounting",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "PartnerStack, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Partner support and referral services",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Persona Identities, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Identity verification",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Recurly, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Payment subscription management",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "SAASFLOW OÜ (Guideflow)",
+          "source": "subprocessor-page",
+          "purpose": "Demo environment",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "salesforce.com Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Customer relationship management",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "SalesLoft, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Sales engagement platform",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Segment.io, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Product and user analytics",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Slack Technologies, LLC",
+          "source": "subprocessor-page",
+          "purpose": "Messaging channel, including AI capabilities",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Snowflake, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Data warehouse",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Supermetrics Oy",
+          "source": "subprocessor-page",
+          "purpose": "Revenue analytics",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Telynx, LLC",
+          "source": "subprocessor-page",
+          "purpose": "SMS functionality and delivery",
+          "location": "US, EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Twilio, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "SMS for two-factor authentication",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "UserVoice",
+          "source": "subprocessor-page",
+          "purpose": "Voluntary suggestion portal for customers",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Wootric, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "NPS surveys",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Workato, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Workflow automation",
+          "location": "EEA",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "Zoom Video Communications Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Meeting platform including AI transcription and summary",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        },
+        {
+          "name": "ZoomInfo Technologies Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Marketing platform",
+          "location": "US",
+          "sourceUrl": "https://www.pandadoc.com/legal/subprocessors/"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
+      "transferSafeguards": "EU-U.S. Data Privacy Framework with UK Extension and Swiss-U.S. DPF; Standard Contractual Clauses (DPA Exhibit 3)",
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -79477,7 +80696,7 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
+      "trainingUse": "yes",
       "retention": "Third-party AI providers used as sub-processors are prohibited from retaining customer data; no retention period for PandaDoc's own AI inputs and outputs stated.",
       "privacyTechnologies": [],
       "tags": [],
@@ -79495,7 +80714,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:51.301Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": 61,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 50
@@ -80598,9 +81817,9 @@
       "website": "https://www.personio.com",
       "privacyPolicyUrl": null,
       "trustCenterUrl": "https://trust.personio.com/",
-      "dpaUrl": null,
+      "dpaUrl": "https://www.personio.com/terms/",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://www.personio.com/terms/",
       "certifications": [
         "SOC 2",
         "ISO 27001",
@@ -80611,7 +81830,7 @@
       "ccpaCompliant": null,
       "hipaaCompliant": null,
       "dataLocations": [],
-      "hasEuDataCenter": null,
+      "hasEuDataCenter": true,
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
@@ -80620,8 +81839,12 @@
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
-      "aiCapabilities": [],
-      "modelHosting": null,
+      "aiCapabilities": [
+        "Personio Assistant",
+        "Talent Screening Agent",
+        "Support AI"
+      ],
+      "modelHosting": "Anthropic large language models and AWS models hosted on Personio's own AWS account via AWS Bedrock in the EU",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -80632,9 +81855,15 @@
       "hasModelCard": null,
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
-      "aiModels": null,
-      "trainingUse": null,
-      "retention": null,
+      "aiModels": [
+        {
+          "name": "Anthropic LLMs (via AWS Bedrock)",
+          "type": "LLM",
+          "source": "documentation"
+        }
+      ],
+      "trainingUse": "no",
+      "retention": "Input and output data stored for quality assurance and service improvement (never for training), no period stated; opting out means deactivating Personio Assistant and the Talent Screening Agent; one-time deletion of past data on request; AWS Bedrock and the LLMs store no personal data (zero storage)",
       "privacyTechnologies": [],
       "tags": [],
       "logoUrl": null,
@@ -80651,7 +81880,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-04T13:01:38.511Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -87117,17 +88346,17 @@
       "id": "513372ba-b4c3-4f7b-bfdb-77768db691d1",
       "slug": "quillbot",
       "name": "QuillBot",
-      "legalName": null,
+      "legalName": "Learneo, Inc.",
       "category": "AI & Machine Learning",
       "subcategory": "Writing and Translation",
       "description": "QuillBot is an AI writing tool for paraphrasing, grammar checking and related tasks, offered as a browser extension among other ways. Its browser extension also offers an AI detector, as its Chrome Web Store listing shows.",
       "descriptionEs": "QuillBot es una herramienta de escritura con IA para parafrasear, corregir la gramática y otras tareas, que se ofrece, entre otros medios, como extensión del navegador. La extensión también incluye un detector de IA, según muestra su ficha en Chrome Web Store.",
       "website": "https://quillbot.com",
-      "privacyPolicyUrl": null,
-      "trustCenterUrl": null,
+      "privacyPolicyUrl": "https://quillbot.com/privacy",
+      "trustCenterUrl": "https://quillbot.com/trust-center",
       "dpaUrl": null,
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://quillbot.com/terms",
       "certifications": [],
       "frameworks": [],
       "gdprCompliant": null,
@@ -87138,12 +88367,21 @@
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
+      "transferSafeguards": "EU-U.S. Data Privacy Framework with UK Extension and Swiss-U.S. DPF; adequacy decisions; EU Standard Contractual Clauses with the UK Annex",
       "supportsDsars": null,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
-      "aiCapabilities": [],
+      "aiCapabilities": [
+        "paraphrasing",
+        "grammar checking",
+        "AI content detection",
+        "AI humanizer",
+        "AI chat",
+        "AI image generation",
+        "translation",
+        "summarization"
+      ],
       "modelHosting": null,
       "aiTechniques": [],
       "euAiActRole": null,
@@ -87156,7 +88394,7 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
+      "trainingUse": "no",
       "retention": null,
       "privacyTechnologies": [],
       "tags": [
@@ -87171,7 +88409,7 @@
       "source": "manual",
       "senecaLitigation": null,
       "createdAt": "2026-10-19T03:29:11.526Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -97887,11 +99125,11 @@
       "description": "ServiceNow is a cloud platform for IT service management, operations, and business workflow automation.",
       "descriptionEs": "ServiceNow es una plataforma en la nube para la gestión de servicios de TI, las operaciones y la automatización de flujos de trabajo empresariales.",
       "website": "https://www.servicenow.com",
-      "privacyPolicyUrl": null,
+      "privacyPolicyUrl": "https://www.servicenow.com/privacy-statement.html",
       "trustCenterUrl": "https://www.servicenow.com/company/trust.html",
-      "dpaUrl": null,
+      "dpaUrl": "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/data-processing-addendum.pdf",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/servicenow-ordering-agreement.pdf",
       "certifications": [
         "SOC 1",
         "SOC 2",
@@ -97907,13 +99145,13 @@
       "ccpaCompliant": null,
       "hipaaCompliant": null,
       "dataLocations": [],
-      "hasEuDataCenter": null,
+      "hasEuDataCenter": true,
       "subprocessors": null,
       "subprocessorsCheckedAt": null,
       "subprocessorsSourceStatus": null,
-      "transferSafeguards": null,
+      "transferSafeguards": "EU adequacy decisions; EU Standard Contractual Clauses; UK International Data Transfer Addendum; Swiss transfer language; EU-U.S. Data Privacy Framework certification; transfer impact assessment",
       "supportsDsars": null,
-      "hasDesignatedDpo": null,
+      "hasDesignatedDpo": true,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
       "aiCapabilities": [],
@@ -97947,7 +99185,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-03-01T17:06:39.924Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -98686,9 +99924,248 @@
         "CA"
       ],
       "hasEuDataCenter": null,
-      "subprocessors": null,
-      "subprocessorsCheckedAt": null,
-      "subprocessorsSourceStatus": null,
+      "subprocessors": [
+        {
+          "name": "Shopify Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Providing the Shopify platform and related services",
+          "location": "CA (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify International Limited",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform; initial processor for EEA, UK and Swiss personal data",
+          "location": "IE (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Singapore Pte. Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "SG (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Global Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Payments (USA) Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Capital Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify (USA) Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce France, SAS",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "FR (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Germany GmbH",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "DE (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Italy S.r.l.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "IT (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Lithuania UAB",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "LT (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Netherlands B.V.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "NL (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Poland Sp. z.o.o.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "PL (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce Spain, S.L.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "ES (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Sweden AB",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "SE (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify UK Limited",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "GB (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify (Australia) Pty Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "AU (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce India Private Limited",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "IN (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Japan Kabushiki Kaisha",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "JP (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Shopify Commerce New Zealand Limited",
+          "source": "subprocessor-page",
+          "purpose": "Services related to the Shopify platform",
+          "location": "NZ (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Adyen N.V.",
+          "source": "subprocessor-page",
+          "purpose": "Supporting payment functionality",
+          "location": "NL (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Amazon Web Services, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Cloud hosting",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Anthropic PBC",
+          "source": "subprocessor-page",
+          "purpose": "Conversational AI services (Sidekick)",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Applied Compute Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Conversational AI services (Sidekick)",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Cloudflare, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Load balancing and DDoS protection",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Fireworks.ai, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Conversational AI services (Sidekick)",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Google Cloud Canada Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Cloud hosting and data processing",
+          "location": "CA (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Groq, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Artificial intelligence services",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Mailgun Technologies, Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Email and SMS transmission",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Microsoft Corporation",
+          "source": "subprocessor-page",
+          "purpose": "Conversational AI services (Sidekick)",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Nebius B.V.",
+          "source": "subprocessor-page",
+          "purpose": "Optimizing computational workloads and hosting technical environments",
+          "location": "NL (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "OpenAI, L.L.C.",
+          "source": "subprocessor-page",
+          "purpose": "Conversational AI services (Sidekick)",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Stripe, LLC; Stripe Payments Europe, Ltd.",
+          "source": "subprocessor-page",
+          "purpose": "Supporting payment functionality",
+          "location": "US, IE (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        },
+        {
+          "name": "Twilio Inc.",
+          "source": "subprocessor-page",
+          "purpose": "Email and SMS transmission",
+          "location": "US (corporate headquarters)",
+          "sourceUrl": "https://help.shopify.com/en/manual/privacy-and-security/privacy/subprocessors"
+        }
+      ],
+      "subprocessorsCheckedAt": "2026-10-22T00:00:00.000Z",
+      "subprocessorsSourceStatus": "ok",
       "transferSafeguards": "Shopify Binding Corporate Rules (intra-group transfers from the EEA and Switzerland); EU Standard Contractual Clauses (2021) and UK International Data Transfer Addendum; EU adequacy decision for Canada",
       "supportsDsars": true,
       "hasDesignatedDpo": null,
@@ -98697,7 +100174,7 @@
       "aiCapabilities": [
         "Sidekick AI assistant for merchants"
       ],
-      "modelHosting": null,
+      "modelHosting": "Third-party AI providers for Sidekick (Anthropic, Applied Compute, Fireworks.ai, Microsoft, OpenAI) and Groq for AI services",
       "aiTechniques": [],
       "euAiActRole": null,
       "euAiActAnnexIIIDomains": [],
@@ -98727,7 +100204,7 @@
         "riskProfile": null
       },
       "createdAt": "2026-02-27T13:25:45.107Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": 86,
       "dpaGdprScore": 100,
       "dpaCcpaScore": 67
@@ -126896,7 +128373,7 @@
       "trustCenterUrl": "https://www.zendesk.com/trust-center/",
       "dpaUrl": "https://www.zendesk.com/company/data-processing-agreement/",
       "securityPageUrl": null,
-      "termsUrl": null,
+      "termsUrl": "https://www.zendesk.com/company/agreements-and-terms/zendesk-customer-agreement/",
       "certifications": [
         "ISO 27001",
         "ISO 27018",
@@ -127154,7 +128631,7 @@
       "aiIncidentNotificationSLA": null,
       "dataProcessingTransparency": null,
       "aiModels": null,
-      "trainingUse": null,
+      "trainingUse": "opt-out",
       "retention": "Generative AI requests to third-party LLM providers use zero data retention endpoints: request and response bodies are not persisted and exist only in memory; LLMs hosted on AWS Bedrock, Azure, Groq or Fireworks AI never give the provider access to Service Data",
       "privacyTechnologies": [],
       "tags": [],
@@ -127248,7 +128725,7 @@
         "suggestedTechnology": "chat-widget"
       },
       "createdAt": "2026-02-27T13:25:53.682Z",
-      "updatedAt": "2026-10-22T16:35:19.329Z",
+      "updatedAt": "2026-10-22T16:57:50.679Z",
       "dpaComplianceScore": 65,
       "dpaGdprScore": 75,
       "dpaCcpaScore": 50
