@@ -1686,6 +1686,11 @@ model VendorCatalog {
   description String? @db.Text
   /// Spanish description from the vendor.watch catalogue; null when it has none.
   descriptionEs String? @db.Text
+  /// Vendor's statement on training models with customer data: "no", "opt-out",
+  /// "opt-in" or "yes"; null when unknown or not stated.
+  trainingUse String?
+  /// Vendor's statement on retention of inputs and outputs, free text.
+  retention   String? @db.Text
 
   // Contact & Links
   website          String?

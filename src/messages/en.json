@@ -136,6 +136,14 @@
         "dpa": "DPA",
         "trustCenter": "Trust Center",
         "autoFilled": "Form fields have been auto-filled from catalog data. Review and edit as needed.",
+        "trainingUse": "Use of customer data to train models (vendor's statement)",
+        "trainingUseValue": {
+          "no": "No",
+          "optOut": "Yes, unless the customer opts out",
+          "optIn": "Only if the customer opts in",
+          "yes": "Yes"
+        },
+        "retention": "Retention of inputs and outputs (vendor's statement)",
         "searchPlaceholder": "Search for a vendor",
         "searching": "Searching catalog...",
         "noResults": "No vendors found for \"{query}\"",

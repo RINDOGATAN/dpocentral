@@ -136,6 +136,14 @@
         "dpa": "Contrato de encargo",
         "trustCenter": "Centro de confianza",
         "autoFilled": "Los campos del formulario se han rellenado a partir del catálogo. Revisa y edita lo que necesites.",
+        "trainingUse": "Uso de los datos del cliente para entrenar modelos (según el proveedor)",
+        "trainingUseValue": {
+          "no": "No",
+          "optOut": "Sí, salvo que el cliente lo desactive",
+          "optIn": "Solo si el cliente lo activa",
+          "yes": "Sí"
+        },
+        "retention": "Conservación de entradas y resultados (según el proveedor)",
         "searchPlaceholder": "Busca un proveedor",
         "searching": "Buscando en el catálogo...",
         "noResults": "No se han encontrado proveedores para «{query}»",

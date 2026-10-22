@@ -25,6 +25,10 @@ export interface VendorWatchVendor {
   description: string | null;
   /** Spanish description. Optional: absent from older snapshots, null when the catalogue has none. */
   descriptionEs?: string | null;
+  /** Vendor's statement on training with customer data. Optional: absent from older snapshots. */
+  trainingUse?: string | null;
+  /** Vendor's statement on retention of inputs and outputs. Optional: absent from older snapshots. */
+  retention?: string | null;
   tags: string[];
   website: string | null;
   privacyPolicyUrl: string | null;
