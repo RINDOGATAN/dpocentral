@@ -23,6 +23,8 @@ const PLACE_EN: Record<string, string> = {
   EU: "European Union",
   UK: "United Kingdom",
   CH: "Switzerland",
+  AD: "Andorra",
+  ES: "Spain",
   "US-CA": "California",
   "US-VA": "Virginia",
   "US-CO": "Colorado",
@@ -74,7 +76,7 @@ export interface PlaceOption {
 
 function groupOf(entry: JurisdictionEntry): PlaceGroup {
   if (entry.region.startsWith("US-")) return "us";
-  if (["EU", "UK", "CH"].includes(entry.region)) return "europe";
+  if (["EU", "UK", "CH", "AD", "ES"].includes(entry.region)) return "europe";
   return "other";
 }
 
@@ -85,6 +87,24 @@ export const PLACE_CODES: readonly string[] = JURISDICTION_CATALOG.filter(
 
 export function isPlaceCode(code: string): boolean {
   return PLACE_CODES.includes(code);
+}
+
+/**
+ * Laws that only apply together with another: the LOPDGDD complements the
+ * GDPR and never applies without it, so choosing Spain also applies GDPR.
+ */
+export const IMPLIED_LAWS: Readonly<Record<string, readonly string[]>> = { LOPDGDD: ["GDPR"] };
+
+/** The codes chosen plus every law they bring with them, without repeats, in order. */
+export function withImpliedLaws(codes: readonly string[]): string[] {
+  const out: string[] = [];
+  for (const code of codes) for (const c of [code, ...(IMPLIED_LAWS[code] ?? [])]) if (!out.includes(c)) out.push(c);
+  return out;
+}
+
+/** Codes that another chosen code brings with it (shown as included, not removable on their own). */
+export function impliedBy(codes: readonly string[]): string[] {
+  return withImpliedLaws(codes).filter((c) => codes.some((k) => (IMPLIED_LAWS[k] ?? []).includes(c)));
 }
 
 /** The places in the reader's language, in catalog order within each group. */

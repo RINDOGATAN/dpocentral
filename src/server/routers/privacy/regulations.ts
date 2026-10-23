@@ -160,6 +160,35 @@ export const regulationsRouter = createTRPCRouter({
         });
       }
 
+      // A law that only applies with another (Spain's LOPDGDD with the GDPR)
+      // brings it along; an existing link is left as it is.
+      const { IMPLIED_LAWS } = await import("@/config/jurisdiction-places");
+      for (const impliedCode of IMPLIED_LAWS[catalogEntry.code] ?? []) {
+        const implied = JURISDICTION_CATALOG.find((j) => j.code === impliedCode);
+        if (!implied) continue;
+        const row = await ctx.prisma.jurisdiction.upsert({
+          where: { code: implied.code },
+          update: {},
+          create: {
+            code: implied.code,
+            name: implied.name,
+            region: implied.region,
+            dsarDeadlineDays: implied.dsarDeadlineDays,
+            breachNotificationHours: implied.breachNotificationHours,
+            requirements: {
+              keyRequirements: implied.keyRequirements,
+              applicabilityCriteria: implied.applicabilityCriteria,
+              penalties: implied.penalties,
+            },
+          },
+        });
+        await ctx.prisma.organizationJurisdiction.upsert({
+          where: { organizationId_jurisdictionId: { organizationId: ctx.organization.id, jurisdictionId: row.id } },
+          update: {},
+          create: { organizationId: ctx.organization.id, jurisdictionId: row.id },
+        });
+      }
+
       // Upsert the jurisdiction in the DB
       const jurisdiction = await ctx.prisma.jurisdiction.upsert({
         where: { code: input.jurisdictionCode },
@@ -222,8 +251,10 @@ export const regulationsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { JURISDICTION_CATALOG } = await import("@/config/jurisdiction-catalog");
-      const { isPlaceCode, PLACE_CODES } = await import("@/config/jurisdiction-places");
-      const codes = [...new Set(input.codes)];
+      const { isPlaceCode, PLACE_CODES, withImpliedLaws } = await import("@/config/jurisdiction-places");
+      // A law that only applies with another (Spain's LOPDGDD with the GDPR)
+      // brings it along, so the GDPR cannot be left out while Spain is chosen.
+      const codes = withImpliedLaws([...new Set(input.codes)]);
       const unknown = codes.filter((c) => !isPlaceCode(c));
       if (unknown.length > 0) {
         throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown place: ${unknown.join(", ")}` });

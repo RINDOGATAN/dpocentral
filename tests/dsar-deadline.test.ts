@@ -104,11 +104,20 @@ describe("which frameworks run in months", () => {
     }
   });
 
-  it("the month frameworks are exactly GDPR and UK GDPR, in both lists", () => {
+  it("the month frameworks: GDPR, UK GDPR, Andorra's LQPD and Spain's LOPDGDD (the seeded ones: GDPR and UK GDPR)", () => {
     const catalog = JURISDICTION_CATALOG.filter((j) => j.dsarDeadlineMonths).map((j) => j.code);
     const core = JURISDICTION_CORE_DATA.filter((j) => j.dsarDeadlineMonths).map((j) => j.code);
-    expect(catalog.sort()).toEqual(["GDPR", "UK-GDPR"]);
+    expect(catalog.sort()).toEqual(["GDPR", "LOPDGDD", "LQPD", "UK-GDPR"]);
     expect(core.sort()).toEqual(["GDPR", "UK-GDPR"]);
+  });
+
+  it("Andorra and Spain: one month, extendable by two months", () => {
+    for (const code of ["LQPD", "LOPDGDD"]) {
+      expect(dsarDeadlineRuleFor(code, 30)).toEqual({
+        deadline: { amount: 1, unit: "months" },
+        extension: { amount: 2, unit: "months" },
+      });
+    }
   });
 
   it("no organisation jurisdiction: the GDPR rule", () => {

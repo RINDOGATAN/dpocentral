@@ -26,6 +26,9 @@ describe("the experts directory is off", () => {
       "src/components/privacy/deployment-expert-cta.tsx",
       "src/components/help/page-help-button.tsx",
       "src/app/(dashboard)/privacy/experts/page.tsx",
+      "src/app/(dashboard)/privacy/docs/experts/page.tsx",
+      "src/components/docs/toc-sidebar.tsx",
+      "src/app/(dashboard)/privacy/docs/reports/page.tsx",
     ]) {
       expect(read(file), file).toContain("features.expertDirectoryEnabled");
     }

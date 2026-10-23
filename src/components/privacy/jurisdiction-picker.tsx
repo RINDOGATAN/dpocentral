@@ -18,7 +18,7 @@ import { useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PLACE_GROUPS, placeOptions, type PlaceGroup } from "@/config/jurisdiction-places";
+import { IMPLIED_LAWS, PLACE_GROUPS, impliedBy, placeOptions, withImpliedLaws, type PlaceGroup } from "@/config/jurisdiction-places";
 
 /** Groups shown open whatever is chosen; the others fold. */
 export const OPEN_PLACE_GROUPS: readonly PlaceGroup[] = ["europe"];
@@ -43,12 +43,20 @@ export function JurisdictionPicker({
   // arrive after the first render).
   const [toggled, setToggled] = useState<Partial<Record<PlaceGroup, boolean>>>({});
 
+  // A law another chosen place brings with it (the GDPR with Spain) stays
+  // ticked and cannot be unticked on its own.
+  const implied = new Set(impliedBy(value));
+  const bringer = (code: string) =>
+    options.find((o) => chosen.has(o.code) && (IMPLIED_LAWS[o.code] ?? []).includes(code))?.place;
+
   const toggle = (code: string) => {
+    if (implied.has(code)) return;
     const next = new Set(chosen);
     if (next.has(code)) next.delete(code);
     else next.add(code);
+    const withLaws = new Set(withImpliedLaws([...next]));
     // Keep the catalog's order, so the saved list reads the same every time.
-    onChange(options.filter((o) => next.has(o.code)).map((o) => o.code));
+    onChange(options.filter((o) => withLaws.has(o.code)).map((o) => o.code));
   };
 
   const isOpen = (group: PlaceGroup, chosenHere: number) =>
@@ -105,12 +113,18 @@ export function JurisdictionPicker({
                       <Checkbox
                         id={id}
                         checked={chosen.has(o.code)}
+                        disabled={implied.has(o.code)}
                         onCheckedChange={() => toggle(o.code)}
                         className="mt-0.5"
                       />
                       <span className="min-w-0 break-words leading-snug">
                         {o.place}
                         <span className="text-muted-foreground"> ({o.law})</span>
+                        {implied.has(o.code) && (
+                          <span className="block text-xs text-muted-foreground" data-testid={`place-included-${o.code}`}>
+                            {t("includedWith", { place: bringer(o.code) ?? "" })}
+                          </span>
+                        )}
                       </span>
                     </label>
                   );
