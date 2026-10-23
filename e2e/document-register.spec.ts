@@ -105,7 +105,10 @@ async function expectMenuAgrees(page: Page): Promise<Record<string, string>> {
   const all = Object.values(lines).join(" | ");
   for (const row of rows) {
     if (row.name === (es ? "Informe del programa de privacidad" : "Privacy program report")) continue;
-    const words = row.kind === "needsInput" ? row.detail : row.state;
+    // The panel's own line is capitalised ("Needs: ..."); inline in the menu
+    // it reads "· needs: ...". Same words otherwise.
+    const words =
+      row.kind === "needsInput" ? row.detail.charAt(0).toLowerCase() + row.detail.slice(1) : row.state;
     // The activities and vendors registers state counts ("1 confirmed, 2 in
     // draft") where the panel says "draft"; the state is the same.
     const counted = row.kind === "draft" && all.includes(`${row.name} · `) && new RegExp(`${row.name.replace(/[()]/g, "\\$&")} · \\d+ `).test(all);
@@ -123,7 +126,8 @@ async function expectRemovedPieces(page: Page) {
   await expect(page.getByTestId("kpi-assets")).toHaveCount(0);
   await expect(page.getByText(es ? /Actividad reciente/ : /Recent activity/)).toHaveCount(0);
   await expect(page.getByText(es ? /Acciones rápidas/ : /Quick actions/)).toHaveCount(0);
-  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(6);
+  // Five areas: the one whose steps are all still coming is left out.
+  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(5);
 }
 
 test("documents you can produce today, the menu lines and the simpler dashboard", async ({ page, context }, testInfo) => {
@@ -150,11 +154,12 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   expect(states.programmeReport).toBe("draft");
   // d5: on this self-hosted build the DPIA module is not installed.
   expect(states.dpia).toBe("needsInput");
-  await expect(page.getByTestId("doc-dpia")).toContainText(es ? "necesita: el módulo de EIPD" : "needs: the DPIA module");
+  await expect(page.getByTestId("doc-dpia")).toContainText(es ? "Necesita: el módulo de EIPD" : "Needs: the DPIA module");
   await expect(page.getByTestId("doc-input-dpia")).toHaveAttribute("href", "/privacy/skills");
   await expect(page.getByTestId("doc-dpia")).not.toContainText(/[$€]\s?\d/);
   await expect(page.getByTestId("doc-not-yet")).toBeVisible();
-  await expect(page.getByTestId("area-people")).toHaveAttribute("data-word", "coming");
+  // The area whose steps are all still coming has no tile.
+  await expect(page.getByTestId("area-people")).toHaveCount(0);
   await expectMenuAgrees(page);
   await expectNoSidewaysScroll(page, "empty dashboard");
   await shot(page, "01-empty", project);
@@ -257,9 +262,9 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
     await closeMenu(page);
   }
 
-  // Help keeps one line about experts.
+  // Help shows no line about experts while the directory is off.
   await page.getByTitle(es ? /Ayuda de esta página/i : /Help for this page/i).first().click();
-  await expect(page.getByTestId("help-experts-line")).toBeVisible();
+  await expect(page.getByTestId("help-experts-line")).toHaveCount(0);
   await page.keyboard.press("Escape");
 
   // The retired Classic cookie is ignored: the same dashboard opens.

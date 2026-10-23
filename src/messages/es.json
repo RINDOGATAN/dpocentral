@@ -2253,6 +2253,7 @@
     "vendors": {
       "title": "Proveedores y encargados",
       "subtitle": "Los proveedores externos y los encargados que tratan datos personales por ti (gestión de proveedores)",
+      "missingDpa": "Falta un contrato de encargo: abre un proveedor y, en Contratos, pulsa «Generar contrato de encargo + EIT».",
       "exportRegister": "Exportar registro",
       "exportPdf": "Descargar como PDF",
       "exportCsv": "Descargar como CSV",
@@ -10617,6 +10618,7 @@
       "notYet": "Aún no en DPO Central"
     },
     "needs": "necesita: {input}",
+    "needsLine": "Necesita: {input}",
     "inputs": {
       "jurisdiction": "dónde operas",
       "activity": "una actividad de tratamiento",

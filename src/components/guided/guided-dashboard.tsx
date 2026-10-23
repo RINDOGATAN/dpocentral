@@ -43,6 +43,7 @@ import {
   nextActions,
   panelRows,
   planMilestone,
+  actionableAreas,
   programmeAreas,
   type Area,
   type NextAction,
@@ -153,7 +154,7 @@ function AreasCard({
   const t = useTranslations("guided");
   const tv = useTranslations("views");
   const plan = usePlanState();
-  const areas = statuses && overview ? programmeAreas(config, statuses, overview.needsAction) : null;
+  const areas = statuses && overview ? actionableAreas(programmeAreas(config, statuses, overview.needsAction)) : null;
 
   return (
     <Card data-testid="area-tiles" aria-busy={!areas}>
@@ -332,7 +333,9 @@ function DocumentRow({ row }: { row: RegisterRow }) {
     status.state === "draft"
       ? gapsText(t, status.gaps)
       : status.state === "needsInput"
-        ? documentStateText(t, status)
+        ? // Its own line, so capitalised like the other lines (the menu's
+          // inline "· needs: ..." keeps the lower case).
+          t("needsLine", { input: t(`inputs.${status.input}`) })
         : status.state === "ready"
           ? t("readyLine")
           : "";

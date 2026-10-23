@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +70,10 @@ export default function VendorsPage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { organization } = useOrganization();
   const { canWrite } = useOrgRole();
+  // Reached from the documents panel when no DPA has been produced yet
+  // (src/config/document-register.ts, INPUTS.dpaFacts): say what is missing
+  // and open each vendor on its Contracts tab.
+  const missingDpa = useSearchParams().get("missing") === "dpa";
 
   const {
     data: vendorsPages,
@@ -168,6 +173,13 @@ export default function VendorsPage() {
           </>
         }
       />
+
+      {missingDpa && (
+        <p className="flex items-start gap-2 text-sm" data-testid="missing-dpa">
+          <StatusMark tone="warning" className="h-4 w-4 mt-0.5 shrink-0" />
+          <span>{t("missingDpa")}</span>
+        </p>
+      )}
 
       {/* Stats */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
@@ -283,7 +295,7 @@ export default function VendorsPage() {
       ) : sortedVendors.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {sortedVendors.map((vendor) => (
-            <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full">
+            <Link key={vendor.id} href={`/privacy/vendors/${vendor.id}${missingDpa ? "?tab=contracts" : ""}`}className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-full">
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">

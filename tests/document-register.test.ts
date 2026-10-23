@@ -43,6 +43,7 @@ import {
   notYetRows,
   panelRows,
   programmeAreas,
+  actionableAreas,
   stepDocumentRows,
 } from "@/lib/programme-overview";
 import { documentStateText, stepNoteText } from "@/components/guided/document-words";
@@ -184,6 +185,12 @@ describe("d4: the register", () => {
     expect(es.documentRegister.needs.replace("{input}", es.documentRegister.inputs.dpiaModule)).toBe(
       "necesita: el módulo de EIPD",
     );
+    // The panel's own subtitle line is capitalised like every other line there.
+    expect(es.documentRegister.needsLine.replace("{input}", es.documentRegister.inputs.dpaFacts)).toBe(
+      "Necesita: los datos del contrato con un proveedor",
+    );
+    expect(en.documentRegister.needsLine.replace("{input}", en.documentRegister.inputs.dpaFacts)).toMatch(/^Needs: /);
+    expect(read("src/components/guided/guided-dashboard.tsx")).toContain('t("needsLine"');
     expect(en.guided.notYetGroup).toBe("Not in DPO Central yet");
     expect(es.guided.notYetGroup).toBe("Aún no en DPO Central");
   });
@@ -336,6 +343,31 @@ describe("the menu and the dashboard cannot disagree", () => {
     const docs = evaluateRegister(registerFor({ dsarEnabled: false }), FILLED);
     const menu = stepDocumentRows(config, evaluatePath(config, FILLED), docs);
     expect(Object.keys(menu)).not.toContain("dsar");
+  });
+
+  it("the dashboard's Areas panel leaves out an area that is all still coming", () => {
+    const statuses = evaluatePath(DPO_CENTRAL_PATH, AFTER_QUICKSTART);
+    const all = programmeAreas(DPO_CENTRAL_PATH, statuses, []);
+    const shown = actionableAreas(all);
+    expect(all.map((a) => a.stage.id)).toContain("people");
+    expect(shown.map((a) => a.stage.id)).not.toContain("people");
+    expect(shown.every((a) => a.word !== "coming")).toBe(true);
+    expect(shown).toHaveLength(all.length - 1);
+    const dashboard = read("src/components/guided/guided-dashboard.tsx");
+    expect(dashboard).toContain("actionableAreas(programmeAreas(");
+  });
+
+  it("the DPA's missing input says what is missing and opens the Contracts tab", () => {
+    expect(INPUTS.dpaFacts.href).toBe("/privacy/vendors?missing=dpa");
+    const list = read("src/app/(dashboard)/privacy/vendors/page.tsx");
+    expect(list).toContain('get("missing") === "dpa"');
+    expect(list).toContain('t("missingDpa")');
+    expect(list).toContain('?tab=contracts');
+    const detail = read("src/app/(dashboard)/privacy/vendors/[id]/page.tsx");
+    expect(detail).toContain("defaultValue={initialTab}");
+    expect(es.pages.vendors.missingDpa).toContain(es.pages.vendorDetail.dpa.produce);
+    expect(en.pages.vendors.missingDpa).toContain(en.pages.vendorDetail.dpa.produce);
+    for (const s of [es.pages.vendors.missingDpa, en.pages.vendors.missingDpa]) expect(s).not.toMatch(/[—–]/);
   });
 
   it("the area tiles and the menu use the same state word", () => {

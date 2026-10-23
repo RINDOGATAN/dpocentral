@@ -94,10 +94,11 @@ test("the Guided screens fit a 390 px phone", async ({ page }, testInfo) => {
   await expect(page.getByTestId("record-header")).toBeVisible();
   await expectNoSidewaysScroll(page, "asset page");
 
-  // The Guided home: the six areas and the documents panel (they
-  // replaced the counters), the records of processing drafted by the quick start.
+  // The Guided home: the areas that can be acted on (five; the one still
+  // coming is left out) and the documents panel (they replaced the counters),
+  // the records of processing drafted by the quick start.
   await page.goto("/privacy");
-  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(6);
+  await expect(page.getByTestId("area-tiles").locator("li")).toHaveCount(5);
   await expect(page.getByTestId("doc-ropa")).toHaveAttribute("data-state", "draft");
   await expectNoSidewaysScroll(page, "Guided home");
 
