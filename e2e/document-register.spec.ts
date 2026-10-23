@@ -155,7 +155,8 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   await expect(page.getByTestId("doc-input-dpia")).toHaveAttribute("href", "/privacy/skills");
   await expect(page.getByTestId("doc-dpia")).not.toContainText(/[$€]\s?\d/);
   await expect(page.getByTestId("doc-not-yet")).toBeVisible();
-  await expect(page.getByTestId("area-people")).toHaveAttribute("data-word", "coming");
+  // The area whose steps are all still coming has no tile.
+  await expect(page.getByTestId("area-people")).toHaveCount(0);
   await expectMenuAgrees(page);
   await expectNoSidewaysScroll(page, "empty dashboard");
   await shot(page, "01-empty", project);
