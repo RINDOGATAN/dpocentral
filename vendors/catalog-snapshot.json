@@ -1,7 +1,7 @@
 {
   "version": "1",
-  "generatedAt": "2026-10-23T15:29:18.720Z",
-  "sourceCommit": "230c752",
+  "generatedAt": "2026-10-23T18:00:43.294Z",
+  "sourceCommit": "435232d",
   "count": 937,
   "vendors": [
     {
@@ -3712,9 +3712,9 @@
       },
       "createdAt": "2026-02-09T00:01:31.008Z",
       "updatedAt": "2026-10-23T15:28:41.000Z",
-      "dpaComplianceScore": null,
-      "dpaGdprScore": null,
-      "dpaCcpaScore": null
+      "dpaComplianceScore": 74,
+      "dpaGdprScore": 75,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleepybh000gkov2mmz0p9k6",
@@ -39247,9 +39247,15 @@
       "verifiedAt": null,
       "verifiedBy": null,
       "source": "manual",
-      "senecaLitigation": null,
+      "senecaLitigation": {
+        "cases": [],
+        "found": false,
+        "vendor": "Font Awesome",
+        "fetchedAt": "2026-10-23T15:39:20.492Z",
+        "riskProfile": null
+      },
       "createdAt": "2026-10-23T15:28:34.749Z",
-      "updatedAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:39:20.506Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -47895,9 +47901,15 @@
       "verifiedAt": null,
       "verifiedBy": null,
       "source": "manual",
-      "senecaLitigation": null,
+      "senecaLitigation": {
+        "cases": [],
+        "found": false,
+        "vendor": "Google reCAPTCHA",
+        "fetchedAt": "2026-10-23T15:32:26.410Z",
+        "riskProfile": null
+      },
       "createdAt": "2026-10-23T15:28:34.749Z",
-      "updatedAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:32:26.430Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -54614,7 +54626,7 @@
       "subprocessorsCheckedAt": "2026-10-23T00:00:00.000Z",
       "subprocessorsSourceStatus": "ok",
       "transferSafeguards": "Standard Contractual Clauses",
-      "supportsDsars": null,
+      "supportsDsars": true,
       "hasDesignatedDpo": null,
       "hasRecentBreach": null,
       "euAiActCompliant": null,
@@ -54641,12 +54653,18 @@
       "verifiedAt": null,
       "verifiedBy": null,
       "source": "manual",
-      "senecaLitigation": null,
+      "senecaLitigation": {
+        "cases": [],
+        "found": false,
+        "vendor": "Imperva",
+        "fetchedAt": "2026-10-23T15:32:28.946Z",
+        "riskProfile": null
+      },
       "createdAt": "2026-10-23T15:28:34.749Z",
-      "updatedAt": "2026-10-23T15:28:34.749Z",
-      "dpaComplianceScore": null,
-      "dpaGdprScore": null,
-      "dpaCcpaScore": null
+      "updatedAt": "2026-10-23T18:00:25.670Z",
+      "dpaComplianceScore": 96,
+      "dpaGdprScore": 100,
+      "dpaCcpaScore": 100
     },
     {
       "id": "cmsxkt089000ootc520hte3kz",
@@ -59053,9 +59071,15 @@
       "verifiedAt": null,
       "verifiedBy": null,
       "source": "manual",
-      "senecaLitigation": null,
+      "senecaLitigation": {
+        "cases": [],
+        "found": false,
+        "vendor": "jsDelivr",
+        "fetchedAt": "2026-10-23T15:32:27.674Z",
+        "riskProfile": null
+      },
       "createdAt": "2026-10-23T15:28:34.749Z",
-      "updatedAt": "2026-10-23T15:28:34.749Z",
+      "updatedAt": "2026-10-23T15:32:27.681Z",
       "dpaComplianceScore": null,
       "dpaGdprScore": null,
       "dpaCcpaScore": null
@@ -81111,9 +81135,9 @@
       },
       "createdAt": "2026-02-27T13:25:46.942Z",
       "updatedAt": "2026-10-23T15:28:41.000Z",
-      "dpaComplianceScore": 42,
-      "dpaGdprScore": 50,
-      "dpaCcpaScore": 17
+      "dpaComplianceScore": 66,
+      "dpaGdprScore": 75,
+      "dpaCcpaScore": 67
     },
     {
       "id": "cmleeqnjo007ikov2ccozog0y",
