@@ -195,7 +195,8 @@ export function GuidedLayout({
             </Link>
           </div>
           <div className="flex min-w-0 flex-1 justify-end sm:justify-center">
-            <GlobalSearch />
+            {/* Not during the quick start: its vendor step has its own catalogue search. */}
+            {pathname !== "/privacy/quickstart" && <GlobalSearch />}
           </div>
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <PageHelpButton />

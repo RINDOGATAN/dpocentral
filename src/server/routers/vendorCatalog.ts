@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { dedupeCatalogRows } from "@/lib/vendor-catalog-display";
+import { rankCatalogSearch } from "@/lib/vendor-catalog-search";
 
 // Vendor catalog is now owned by Vendor.Watch.
 // DPO Central retains read-only access for vendor form autofill.
@@ -23,26 +24,34 @@ export const vendorCatalogRouter = createTRPCRouter({
       // A vendor recorded twice in the catalogue (same website, same name)
       // shows once, as its richer record (lib/vendor-catalog-display.ts). A
       // few extra rows are read so the list still fills the limit.
-      const rows = await ctx.prisma.vendorCatalog.findMany({
+      // Name and slug matches first, ranked by how well the name matches;
+      // description matches only when nothing matches by name
+      // (lib/vendor-catalog-search.ts).
+      const category = input.category ? { category: input.category } : {};
+      const slugQuery = input.query.trim().replace(/\s+/g, "-");
+      const byName = await ctx.prisma.vendorCatalog.findMany({
         where: {
           AND: [
-            input.category ? { category: input.category } : {},
+            category,
             {
               OR: [
-                { name: { contains: input.query, mode: "insensitive" } },
-                { slug: { contains: input.query, mode: "insensitive" } },
-                { description: { contains: input.query, mode: "insensitive" } },
+                { name: { contains: input.query.trim(), mode: "insensitive" } },
+                { slug: { contains: slugQuery, mode: "insensitive" } },
               ],
             },
           ],
         },
-        orderBy: [
-          { isVerified: "desc" },
-          { name: "asc" },
-        ],
-        take: input.limit + 10,
+        take: 200,
       });
-      return dedupeCatalogRows(rows).slice(0, input.limit);
+      const rows =
+        byName.length > 0
+          ? byName
+          : await ctx.prisma.vendorCatalog.findMany({
+              where: { AND: [category, { description: { contains: input.query.trim(), mode: "insensitive" } }] },
+              orderBy: [{ isVerified: "desc" }, { name: "asc" }],
+              take: input.limit + 10,
+            });
+      return dedupeCatalogRows(rankCatalogSearch(rows, input.query)).slice(0, input.limit);
     }),
 
   // Get single vendor by slug

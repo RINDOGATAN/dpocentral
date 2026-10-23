@@ -172,10 +172,12 @@ test("documents you can produce today, the menu lines and the simpler dashboard"
   // 2. The quick start: where it operates, then an industry template.
   await page.goto("/privacy/quickstart");
   await expect(page.getByTestId("jurisdiction-picker")).toBeVisible();
+  // The United States fold behind one line until opened.
+  await page.getByTestId("place-group-us").click();
   await page.locator("#quickstart-place-CCPA").click();
   await page.locator("#quickstart-place-GDPR").click();
   await page.getByRole("button", { name: /^(save and continue|guardar y continuar)$/i }).click();
-  const industryPath = page.getByRole("button", { name: /start from industry template|comenzar con una plantilla sectorial/i });
+  const industryPath = page.getByRole("button", { name: /start from (an )?industry template|comenzar con una plantilla sectorial/i });
   await expect(industryPath).toBeVisible();
   await industryPath.press("Enter");
   await page.getByRole("button", { name: /^(continue|continuar)$/i }).click();
