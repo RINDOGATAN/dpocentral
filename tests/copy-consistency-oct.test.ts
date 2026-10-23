@@ -6,7 +6,7 @@
  *
  * C1 risk indicators on the compliance page are worded in the reader's language
  * C2 counts read "1 system", not "1 systems"
- * C3 one name in Spanish for "What applies" ("Qué se te aplica")
+ * C3 one name in Spanish for "What applies" ("Normativa aplicable")
  * C4 the Spanish sign-in sentence agrees in gender
  * C5 the DPIA hint points at the list below it; no "rules of European Union"
  * C6 no "bootstrap" jargon; no "industria" in Spanish
@@ -69,6 +69,9 @@ describe("C3 to C6: wording", () => {
 
   it("names What applies one way in Spanish", () => {
     expect(esText).not.toContain("Qué te aplica");
+    expect(esText).not.toContain("Qué se te aplica");
+    expect(esText).not.toContain("Lo que se te aplica");
+    expect(tEs("guided.steps.applies.label")).toBe("Normativa aplicable");
     expect(tEs("pages.quickstart.steps.applies")).toBe(tEs("guided.steps.applies.label"));
   });
 
